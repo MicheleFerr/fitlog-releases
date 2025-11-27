@@ -2389,6 +2389,12 @@ abstract class AppLocalizations {
   /// **'Pause Workout'**
   String get pauseWorkout;
 
+  /// Resume workout button label
+  ///
+  /// In en, this message translates to:
+  /// **'Resume Workout'**
+  String get resumeWorkout;
+
   /// End workout menu item
   ///
   /// In en, this message translates to:

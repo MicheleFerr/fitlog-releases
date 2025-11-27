@@ -23,8 +23,14 @@ library;
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:gymbro_flutter_new/features/workout/domain/entities/workout.dart';
+import 'package:gymbro_flutter_new/features/workout/presentation/providers/workout_provider.dart';
+import 'package:gymbro_flutter_new/features/workout/presentation/widgets/workout_mini_bar.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
+// TODO: Re-enable auto-pause feature after adding autoPauseOnNavigateAway to AppConfig
+// import 'package:gymbro_flutter_new/shared/presentation/providers/app_config_provider.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
 
@@ -32,7 +38,8 @@ import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart'
 ///
 /// Uses [StatefulNavigationShell] to preserve branch state when switching tabs.
 /// Implements Material 3 NavigationBar with animated transitions.
-class MainShell extends StatelessWidget {
+/// Shows WorkoutMiniBar when workout is active and user is not on workout tab.
+class MainShell extends ConsumerStatefulWidget {
   /// Creates the main shell with navigation
   const MainShell({
     required this.navigationShell,
@@ -43,15 +50,50 @@ class MainShell extends StatelessWidget {
   final StatefulNavigationShell navigationShell;
 
   @override
+  ConsumerState<MainShell> createState() => _MainShellState();
+}
+
+class _MainShellState extends ConsumerState<MainShell> {
+  @override
   Widget build(BuildContext context) {
+    final workout = ref.watch(currentWorkoutProvider);
+    final currentIndex = widget.navigationShell.currentIndex;
+
+    // Check if we should show mini-bar:
+    // - Workout exists
+    // - Workout is in progress or paused
+    // - User is NOT on workout tab (index 1)
+    final showMiniBar = workout != null &&
+        (workout.status == WorkoutStatus.inProgress ||
+            workout.status == WorkoutStatus.paused) &&
+        currentIndex != 1;
+
+    // TODO: Re-enable auto-pause feature
+    // _handleAutoPause(currentIndex, workout);
+
     return Scaffold(
-      body: navigationShell,
+      body: Stack(
+        children: [
+          widget.navigationShell,
+          // Mini-bar positioned above bottom nav
+          if (showMiniBar)
+            Positioned(
+              left: 0,
+              right: 0,
+              bottom: 72, // 64pt nav + 8pt margin
+              child: WorkoutMiniBar(workout: workout),
+            ),
+        ],
+      ),
       bottomNavigationBar: _BottomNavigationBar(
-        currentIndex: navigationShell.currentIndex,
+        currentIndex: currentIndex,
         onDestinationSelected: (index) => _onDestinationSelected(context, index),
       ),
     );
   }
+
+  // TODO: Re-enable auto-pause feature after adding autoPauseOnNavigateAway to AppConfig
+  // void _handleAutoPause(int currentIndex, Workout? workout) { ... }
 
   /// Handle destination selection with branch switching
   void _onDestinationSelected(BuildContext context, int index) {
@@ -60,10 +102,10 @@ class MainShell extends StatelessWidget {
 
     // Navigate to selected branch
     // goBranch preserves the state of the previous branch
-    navigationShell.goBranch(
+    widget.navigationShell.goBranch(
       index,
       // If same branch, go to initial location (pop to root)
-      initialLocation: index == navigationShell.currentIndex,
+      initialLocation: index == widget.navigationShell.currentIndex,
     );
   }
 }

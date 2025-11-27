@@ -1273,6 +1273,9 @@ class AppLocalizationsIt extends AppLocalizations {
   String get pauseWorkout => 'Pausa Allenamento';
 
   @override
+  String get resumeWorkout => 'Riprendi Allenamento';
+
+  @override
   String get endWorkout => 'Termina Allenamento';
 
   @override

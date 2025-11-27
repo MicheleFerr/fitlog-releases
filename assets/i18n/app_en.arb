@@ -1596,6 +1596,10 @@
   "@pauseWorkout": {
     "description": "Pause workout menu item"
   },
+  "resumeWorkout": "Resume Workout",
+  "@resumeWorkout": {
+    "description": "Resume workout button label"
+  },
   "endWorkout": "End Workout",
   "@endWorkout": {
     "description": "End workout menu item"
