@@ -6137,7 +6137,7 @@ abstract class AppLocalizations {
   /// **'Insights'**
   String get insights;
 
-  /// Muscle balance insight title
+  /// Muscle balance feature title
   ///
   /// In en, this message translates to:
   /// **'Muscle Balance'**
@@ -6203,7 +6203,7 @@ abstract class AppLocalizations {
   /// **'Estimated 1RM'**
   String get estimated1RM;
 
-  /// Label for volume progression metric
+  /// Volume progression feature title
   ///
   /// In en, this message translates to:
   /// **'Volume Progression'**
@@ -6353,7 +6353,7 @@ abstract class AppLocalizations {
   /// **'Recovery Recommendation'**
   String get recoveryRecommendation;
 
-  /// Training intensity metric label
+  /// Label for training intensity in muscle heatmap legend
   ///
   /// In en, this message translates to:
   /// **'Training Intensity'**
@@ -9311,168 +9311,6 @@ abstract class AppLocalizations {
   /// **'Added {exerciseName} to workout'**
   String addedToWorkout(String exerciseName);
 
-  /// Label for APRE protocol
-  ///
-  /// In en, this message translates to:
-  /// **'APRE Protocol'**
-  String get apreProtocol;
-
-  /// Label for APRE weight adjustment
-  ///
-  /// In en, this message translates to:
-  /// **'APRE Adjustment'**
-  String get apreAdjustment;
-
-  /// Label for set weight in APRE
-  ///
-  /// In en, this message translates to:
-  /// **'Set {setNumber} Weight:'**
-  String apreSetWeight(int setNumber);
-
-  /// APRE reps completed message
-  ///
-  /// In en, this message translates to:
-  /// **'You completed {actual} reps (target: {target})'**
-  String apreCompletedReps(int actual, int target);
-
-  /// Button to apply APRE suggestion
-  ///
-  /// In en, this message translates to:
-  /// **'Apply'**
-  String get apreApply;
-
-  /// Confirmation message for APRE weight adjustment
-  ///
-  /// In en, this message translates to:
-  /// **'APRE: Set {setNumber} weight adjusted to {weight} kg'**
-  String apreWeightAdjusted(int setNumber, String weight);
-
-  /// APRE autoregulation toggle label
-  ///
-  /// In en, this message translates to:
-  /// **'APRE Autoregulation'**
-  String get apreAutoregulation;
-
-  /// APRE autoregulation description
-  ///
-  /// In en, this message translates to:
-  /// **'Automatic weight adjustment based on performance'**
-  String get apreAutoregulationDescription;
-
-  /// Label for APRE protocol selection
-  ///
-  /// In en, this message translates to:
-  /// **'Select APRE Protocol'**
-  String get apreProtocolSelect;
-
-  /// Description for APRE 3 protocol
-  ///
-  /// In en, this message translates to:
-  /// **'Heavy strength protocol (3 reps target)'**
-  String get apreProtocol3Description;
-
-  /// Description for APRE 6 protocol
-  ///
-  /// In en, this message translates to:
-  /// **'Strength and hypertrophy protocol (6 reps target)'**
-  String get apreProtocol6Description;
-
-  /// Description for APRE 10 protocol
-  ///
-  /// In en, this message translates to:
-  /// **'Hypertrophy and endurance protocol (10 reps target)'**
-  String get apreProtocol10Description;
-
-  /// Label for APRE base weight input
-  ///
-  /// In en, this message translates to:
-  /// **'APRE Base Weight'**
-  String get apreBaseWeight;
-
-  /// Hint for APRE base weight input
-  ///
-  /// In en, this message translates to:
-  /// **'Enter your 3RM, 6RM or 10RM weight'**
-  String get apreBaseWeightHint;
-
-  /// Helper text for APRE 3 protocol
-  ///
-  /// In en, this message translates to:
-  /// **'Use your 3 rep max weight'**
-  String get apreProtocol3Helper;
-
-  /// Helper text for APRE 6 protocol
-  ///
-  /// In en, this message translates to:
-  /// **'Use your 6 rep max weight'**
-  String get apreProtocol6Helper;
-
-  /// Helper text for APRE 10 protocol
-  ///
-  /// In en, this message translates to:
-  /// **'Use your 10 rep max weight'**
-  String get apreProtocol10Helper;
-
-  /// Title for APRE protocol change preview
-  ///
-  /// In en, this message translates to:
-  /// **'Protocol Change Preview'**
-  String get apreProtocolPreview;
-
-  /// Description for protocol preview feature
-  ///
-  /// In en, this message translates to:
-  /// **'Preview how your weights will change with the new protocol'**
-  String get aprePreviewDescription;
-
-  /// Label for current protocol in preview
-  ///
-  /// In en, this message translates to:
-  /// **'Current (APRE {protocol})'**
-  String apreCurrentProtocol(int protocol);
-
-  /// Label for new protocol in preview
-  ///
-  /// In en, this message translates to:
-  /// **'New (APRE {protocol})'**
-  String apreNewProtocol(int protocol);
-
-  /// Label for Set 1 in protocol preview
-  ///
-  /// In en, this message translates to:
-  /// **'Set 1 (50%)'**
-  String get apreSet1Preview;
-
-  /// Label for Set 2 in protocol preview
-  ///
-  /// In en, this message translates to:
-  /// **'Set 2 (75%)'**
-  String get apreSet2Preview;
-
-  /// Label for Set 3 in protocol preview
-  ///
-  /// In en, this message translates to:
-  /// **'Set 3 (100%)'**
-  String get apreSet3Preview;
-
-  /// Label for Set 4 in protocol preview
-  ///
-  /// In en, this message translates to:
-  /// **'Set 4'**
-  String get apreSet4Preview;
-
-  /// Description for Set 4 adjustment in protocol preview
-  ///
-  /// In en, this message translates to:
-  /// **'Adjusted based on performance'**
-  String get apreAdjustedBasedOnPerformance;
-
-  /// Button to apply protocol changes in preview
-  ///
-  /// In en, this message translates to:
-  /// **'Apply Changes'**
-  String get apreApplyChanges;
-
   /// Label for automatic load adjustment feature
   ///
   /// In en, this message translates to:
@@ -10000,96 +9838,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'⚡ Intelligent Auto-Regulation'**
   String get intelligentAutoRegulation;
-
-  /// APRE system subsection title
-  ///
-  /// In en, this message translates to:
-  /// **'📈 APRE System'**
-  String get apreSystemTitle;
-
-  /// APRE system subsection subtitle
-  ///
-  /// In en, this message translates to:
-  /// **'Reps-Based Auto-Regulation'**
-  String get apreSystemSubtitle;
-
-  /// Enable APRE toggle title
-  ///
-  /// In en, this message translates to:
-  /// **'Enable APRE'**
-  String get enableApreTitle;
-
-  /// Enable APRE toggle description
-  ///
-  /// In en, this message translates to:
-  /// **'Automatic weight calculation from history for new exercises'**
-  String get enableApreDescription;
-
-  /// Enable APRE tooltip
-  ///
-  /// In en, this message translates to:
-  /// **'APRE analyzes your training history to calculate your 1RM and automatically suggests appropriate weights for each protocol (3, 6, or 10 reps).'**
-  String get enableApreTooltip;
-
-  /// APRE protocol selector title
-  ///
-  /// In en, this message translates to:
-  /// **'APRE Protocol'**
-  String get apreProtocolTitle;
-
-  /// APRE 3 protocol label
-  ///
-  /// In en, this message translates to:
-  /// **'APRE 3'**
-  String get apre3;
-
-  /// APRE 6 protocol label
-  ///
-  /// In en, this message translates to:
-  /// **'APRE 6'**
-  String get apre6;
-
-  /// APRE 10 protocol label
-  ///
-  /// In en, this message translates to:
-  /// **'APRE 10'**
-  String get apre10;
-
-  /// APRE 3 protocol description
-  ///
-  /// In en, this message translates to:
-  /// **'Ideal for maximum strength (3+ reps to failure)'**
-  String get apre3Description;
-
-  /// APRE 6 protocol description
-  ///
-  /// In en, this message translates to:
-  /// **'Balanced for strength and hypertrophy (6+ reps)'**
-  String get apre6Description;
-
-  /// APRE 10 protocol description
-  ///
-  /// In en, this message translates to:
-  /// **'Perfect for hypertrophy and endurance (10+ reps)'**
-  String get apre10Description;
-
-  /// Auto-adjust rest from APRE toggle title
-  ///
-  /// In en, this message translates to:
-  /// **'Auto-Adjust Rest Time'**
-  String get autoAdjustRestApreTitle;
-
-  /// Auto-adjust rest from APRE toggle description
-  ///
-  /// In en, this message translates to:
-  /// **'Increase rest if load decreases'**
-  String get autoAdjustRestApreDescription;
-
-  /// Auto-adjust rest from APRE tooltip
-  ///
-  /// In en, this message translates to:
-  /// **'When your lifted weight decreases, the system automatically increases rest time to help manage fatigue.'**
-  String get autoAdjustRestApreTooltip;
 
   /// RPE system subsection title
   ///
@@ -10751,10 +10499,10 @@ abstract class AppLocalizations {
   /// **'An unexpected error occurred. Please try again.'**
   String get errorUnexpected;
 
-  /// No description provided for @pushPullRatio.
+  /// Title for push/pull muscle balance ratio
   ///
   /// In en, this message translates to:
-  /// **'Push:Pull Ratio'**
+  /// **'Push/Pull Ratio'**
   String get pushPullRatio;
 
   /// No description provided for @quadHamstringRatio.
@@ -10997,16 +10745,16 @@ abstract class AppLocalizations {
   /// **'All Time Progress'**
   String get allTimeProgress;
 
-  /// Subtitle for last 7 days period
+  /// 7 days time filter option
   ///
   /// In en, this message translates to:
-  /// **'Last 7 days'**
+  /// **'Last 7 Days'**
   String get last7Days;
 
-  /// Subtitle for last 30 days period
+  /// 30 days time filter option
   ///
   /// In en, this message translates to:
-  /// **'Last 30 days'**
+  /// **'Last 30 Days'**
   String get last30Days;
 
   /// Subtitle for last 365 days period
@@ -11015,10 +10763,10 @@ abstract class AppLocalizations {
   /// **'Last 365 days'**
   String get last365Days;
 
-  /// Subtitle for all time period
+  /// All time filter option
   ///
   /// In en, this message translates to:
-  /// **'All time'**
+  /// **'All Time'**
   String get allTime;
 
   /// Encouragement message for active streak
@@ -12437,10 +12185,10 @@ abstract class AppLocalizations {
   /// **'{count} total sets analyzed'**
   String totalSetsAnalyzed(int count);
 
-  /// Strength zone label
+  /// Strength training zone label (1-5 reps)
   ///
   /// In en, this message translates to:
-  /// **'Strength (1-5 reps)'**
+  /// **'Strength'**
   String get strengthZone;
 
   /// Strength zone description
@@ -12449,10 +12197,10 @@ abstract class AppLocalizations {
   /// **'Max force, neural adaptations'**
   String get strengthZoneDesc;
 
-  /// Hypertrophy zone label
+  /// Hypertrophy training zone label (6-12 reps)
   ///
   /// In en, this message translates to:
-  /// **'Hypertrophy (6-15 reps)'**
+  /// **'Hypertrophy'**
   String get hypertrophyZone;
 
   /// Hypertrophy zone description
@@ -12461,10 +12209,10 @@ abstract class AppLocalizations {
   /// **'Muscle growth, metabolic stress'**
   String get hypertrophyZoneDesc;
 
-  /// Endurance zone label
+  /// Endurance training zone label (13+ reps)
   ///
   /// In en, this message translates to:
-  /// **'Endurance (15+ reps)'**
+  /// **'Endurance'**
   String get enduranceZone;
 
   /// Endurance zone description
@@ -15818,10 +15566,10 @@ abstract class AppLocalizations {
   /// **'Focus'**
   String get focusLabel;
 
-  /// Success message for adding exercise
+  /// Confirmation message when exercise is added to workout from suggestions
   ///
   /// In en, this message translates to:
-  /// **'Added {exerciseName} to workout'**
+  /// **'{exerciseName} added to next workout'**
   String exerciseAddedToWorkout(String exerciseName);
 
   /// Success message for adding drop set
@@ -15889,12 +15637,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Please enter a valid rest time (1-3600 seconds)'**
   String get invalidRestTimeError;
-
-  /// Invalid APRE base weight error
-  ///
-  /// In en, this message translates to:
-  /// **'Please enter a valid APRE base weight'**
-  String get invalidApreBaseWeight;
 
   /// Notes saved success message
   ///
@@ -18348,7 +18090,7 @@ abstract class AppLocalizations {
   /// **'Light'**
   String get intensityLight;
 
-  /// Medium haptic intensity
+  /// Medium intensity label in heatmap legend
   ///
   /// In en, this message translates to:
   /// **'Medium'**
@@ -22650,7 +22392,7 @@ abstract class AppLocalizations {
   /// **'vs last period'**
   String get vsLastPeriod;
 
-  /// Last year time period
+  /// 1 year time filter option
   ///
   /// In en, this message translates to:
   /// **'Last Year'**
@@ -23112,19 +22854,19 @@ abstract class AppLocalizations {
   /// **'Technique'**
   String get contributionTypeTechnique;
 
-  /// Beginner difficulty level badge
+  /// Beginner difficulty level
   ///
   /// In en, this message translates to:
   /// **'Beginner'**
   String get difficultyBeginner;
 
-  /// Intermediate difficulty level badge
+  /// Intermediate difficulty level
   ///
   /// In en, this message translates to:
   /// **'Intermediate'**
   String get difficultyIntermediate;
 
-  /// Advanced difficulty level badge
+  /// Advanced difficulty level
   ///
   /// In en, this message translates to:
   /// **'Advanced'**
@@ -23262,138 +23004,6 @@ abstract class AppLocalizations {
   /// **'Error loading document. Please try again.'**
   String get errorLoadingDocument;
 
-  /// Header for APRE calculation metadata display
-  ///
-  /// In en, this message translates to:
-  /// **'Calculation Analysis'**
-  String get apreCalculationMetadata;
-
-  /// Button to expand calculation metadata banner
-  ///
-  /// In en, this message translates to:
-  /// **'Show Calculation Details'**
-  String get apreShowCalculationDetails;
-
-  /// Button to collapse calculation metadata banner
-  ///
-  /// In en, this message translates to:
-  /// **'Hide Calculation Details'**
-  String get apreHideCalculationDetails;
-
-  /// Label for 1RM calculation formula
-  ///
-  /// In en, this message translates to:
-  /// **'Formula'**
-  String get apreFormula;
-
-  /// Label for number of sets analyzed
-  ///
-  /// In en, this message translates to:
-  /// **'Data Points'**
-  String get apreDataPoints;
-
-  /// Label for age of data used in calculation
-  ///
-  /// In en, this message translates to:
-  /// **'Data Age'**
-  String get apreDataAge;
-
-  /// Label for standard deviation of estimates
-  ///
-  /// In en, this message translates to:
-  /// **'Variability'**
-  String get apreStandardDeviation;
-
-  /// Label for confidence level of calculation
-  ///
-  /// In en, this message translates to:
-  /// **'Confidence'**
-  String get apreConfidence;
-
-  /// Label for last calculation date
-  ///
-  /// In en, this message translates to:
-  /// **'Last Updated'**
-  String get apreLastCalculation;
-
-  /// Format for displaying days since data
-  ///
-  /// In en, this message translates to:
-  /// **'{days, plural, =0{Today} =1{Yesterday} other{{days} days ago}}'**
-  String apreDaysAgo(int days);
-
-  /// Title when user has no APRE historical data
-  ///
-  /// In en, this message translates to:
-  /// **'No Historical Data'**
-  String get apreNoHistory;
-
-  /// Description when user has no APRE historical data
-  ///
-  /// In en, this message translates to:
-  /// **'No historical data available for APRE calculations. Please select how you\'d like to estimate your 1RM to get started.'**
-  String get apreNoHistoryDescription;
-
-  /// Option to use last workout weight/reps as estimate
-  ///
-  /// In en, this message translates to:
-  /// **'From Last Workout'**
-  String get apreOptionFromLastWorkout;
-
-  /// Option to manually enter estimated 1RM
-  ///
-  /// In en, this message translates to:
-  /// **'Manual Estimate'**
-  String get apreOptionManualEstimate;
-
-  /// Option to guide user to do a test set
-  ///
-  /// In en, this message translates to:
-  /// **'Test Set'**
-  String get apreOptionTestSet;
-
-  /// Description for from last workout option
-  ///
-  /// In en, this message translates to:
-  /// **'Use last set weight/reps as estimate'**
-  String get apreOptionFromLastWorkoutDescription;
-
-  /// Description for manual estimate option
-  ///
-  /// In en, this message translates to:
-  /// **'Enter estimated 1RM directly'**
-  String get apreOptionManualEstimateDescription;
-
-  /// Description for test set option
-  ///
-  /// In en, this message translates to:
-  /// **'Guide to do a test set first'**
-  String get apreOptionTestSetDescription;
-
-  /// Label for 1RM input field
-  ///
-  /// In en, this message translates to:
-  /// **'Enter Estimated 1RM (kg)'**
-  String get apreEnter1RM;
-
-  /// Label for weight preview section
-  ///
-  /// In en, this message translates to:
-  /// **'Preview Weights'**
-  String get aprePreviewWeights;
-
-  /// Continue button in APRE modal
-  ///
-  /// In en, this message translates to:
-  /// **'Continue'**
-  String get apreContinue;
-
-  /// Cancel button in APRE modal
-  ///
-  /// In en, this message translates to:
-  /// **'Cancel'**
-  String get apreCancel;
-
   /// Title for age verification screen
   ///
   /// In en, this message translates to:
@@ -23471,36 +23081,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Tap for full disclaimer'**
   String get footerDisclaimerTapHint;
-
-  /// Title for APRE protocol change warning dialog
-  ///
-  /// In en, this message translates to:
-  /// **'Workout in Progress'**
-  String get apreProtocolChangeWarningTitle;
-
-  /// Message explaining why APRE protocol cannot be changed during workout
-  ///
-  /// In en, this message translates to:
-  /// **'You cannot change APRE protocol during an active workout. Please finish your current workout first, then return to adjust protocol settings.'**
-  String get apreProtocolChangeWarningMessage;
-
-  /// Button to dismiss APRE workout-in-progress warning
-  ///
-  /// In en, this message translates to:
-  /// **'Got it'**
-  String get apreGotIt;
-
-  /// Title for APRE calculation method setting
-  ///
-  /// In en, this message translates to:
-  /// **'APRE Calculation Method'**
-  String get apreCalculationMethodTitle;
-
-  /// Description explaining APRE calculation method options
-  ///
-  /// In en, this message translates to:
-  /// **'Choose how historical sets are selected for 1RM estimation in APRE workouts. Different strategies optimize for recency, data volume, or stability.'**
-  String get apreCalculationMethodDescription;
 
   /// Auto-generated for about
   ///
@@ -23676,10 +23256,10 @@ abstract class AppLocalizations {
   /// **'Compared to last'**
   String get comparedToLast;
 
-  /// Auto-generated for comparedToPrevious
+  /// Label for comparison with previous period
   ///
   /// In en, this message translates to:
-  /// **'Compared to previous'**
+  /// **'vs Previous Period'**
   String get comparedToPrevious;
 
   /// Auto-generated for completeAllSets
@@ -24840,10 +24420,10 @@ abstract class AppLocalizations {
   /// **'Weekly distribution info'**
   String get weeklyDistributionInfo;
 
-  /// Auto-generated for weeklyVolume
+  /// Weekly volume chart label
   ///
   /// In en, this message translates to:
-  /// **'Weekly volume'**
+  /// **'Weekly Volume'**
   String get weeklyVolume;
 
   /// Auto-generated for weightLoss
@@ -26183,12 +25763,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Reset Timer Position'**
   String get resetTimerPosition;
-
-  /// From quick wins migration - 2 occurrences
-  ///
-  /// In en, this message translates to:
-  /// **'APRE Calculation Method'**
-  String get apreCalculationMethod;
 
   /// From quick wins migration - 2 occurrences
   ///
@@ -29058,29 +28632,11 @@ abstract class AppLocalizations {
   /// **'Tutorials reset successfully! Tips will appear again as you use the app.'**
   String get settingsTutorialsResetSuccess;
 
-  /// No description provided for @settingsApreCalculationMethodUpdated.
-  ///
-  /// In en, this message translates to:
-  /// **'APRE calculation method updated to {method}'**
-  String settingsApreCalculationMethodUpdated(Object method);
-
-  /// No description provided for @settingsApreCalculationMethodLoading.
-  ///
-  /// In en, this message translates to:
-  /// **'APRE Calculation Method'**
-  String get settingsApreCalculationMethodLoading;
-
   /// No description provided for @settingsLoadingGeneric.
   ///
   /// In en, this message translates to:
   /// **'Loading...'**
   String get settingsLoadingGeneric;
-
-  /// No description provided for @settingsApreCalculationMethodError.
-  ///
-  /// In en, this message translates to:
-  /// **'APRE Calculation Method'**
-  String get settingsApreCalculationMethodError;
 
   /// No description provided for @settingsErrorGeneric.
   ///
@@ -29652,36 +29208,6 @@ abstract class AppLocalizations {
   /// **'Workout'**
   String get settingsWorkoutEssentials;
 
-  /// No description provided for @settingsApreAutoAdjustment.
-  ///
-  /// In en, this message translates to:
-  /// **'APRE Auto-Adjustment'**
-  String get settingsApreAutoAdjustment;
-
-  /// No description provided for @settingsApreAutoAdjustmentDesc.
-  ///
-  /// In en, this message translates to:
-  /// **'Automatic weight progression'**
-  String get settingsApreAutoAdjustmentDesc;
-
-  /// No description provided for @settingsApreProtocol.
-  ///
-  /// In en, this message translates to:
-  /// **'APRE Protocol'**
-  String get settingsApreProtocol;
-
-  /// No description provided for @settingsApreProtocolDesc.
-  ///
-  /// In en, this message translates to:
-  /// **'Protocol {number}'**
-  String settingsApreProtocolDesc(Object number);
-
-  /// No description provided for @settingsApreProtocolUpdated.
-  ///
-  /// In en, this message translates to:
-  /// **'APRE protocol updated to {protocol}'**
-  String settingsApreProtocolUpdated(Object protocol);
-
   /// Title for day cutoff hour setting
   ///
   /// In en, this message translates to:
@@ -30119,6 +29645,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Awesome'**
   String get awesome;
+
+  /// Text indicating XP remaining to next tier
+  ///
+  /// In en, this message translates to:
+  /// **'left'**
+  String get remaining;
+
+  /// Label for maximum tier reached
+  ///
+  /// In en, this message translates to:
+  /// **'MAX'**
+  String get maxLevel;
 
   /// Tab title for alternative exercises
   ///
@@ -32424,19 +31962,19 @@ abstract class AppLocalizations {
   /// **'Low'**
   String get severityLow;
 
-  /// Feedback severity: medium priority
+  /// Medium neglect severity
   ///
   /// In en, this message translates to:
   /// **'Medium'**
   String get severityMedium;
 
-  /// Feedback severity: high priority
+  /// High neglect severity
   ///
   /// In en, this message translates to:
   /// **'High'**
   String get severityHigh;
 
-  /// Feedback severity: critical priority
+  /// Critical neglect severity
   ///
   /// In en, this message translates to:
   /// **'Critical'**
@@ -37265,6 +36803,1248 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Learn more'**
   String get tutorialActionLearnMore;
+
+  /// Title for upgrade dialog
+  ///
+  /// In en, this message translates to:
+  /// **'Unlock Pro Insights'**
+  String get unlockProInsights;
+
+  /// Description in upgrade dialog
+  ///
+  /// In en, this message translates to:
+  /// **'Get deeper insights into your training with advanced analytics'**
+  String get proInsightsDescription;
+
+  /// Rep zone feature title
+  ///
+  /// In en, this message translates to:
+  /// **'Rep Zone Analysis'**
+  String get repZoneAnalysis;
+
+  /// Rep zone feature description
+  ///
+  /// In en, this message translates to:
+  /// **'See how your training splits across strength, hypertrophy, and endurance zones'**
+  String get repZoneDescription;
+
+  /// Volume progression feature description
+  ///
+  /// In en, this message translates to:
+  /// **'Track your weekly training volume and spot trends over time'**
+  String get volumeProgressionDescription;
+
+  /// Muscle balance feature description
+  ///
+  /// In en, this message translates to:
+  /// **'Discover which muscle groups get the most work and find imbalances'**
+  String get muscleBalanceDescription;
+
+  /// CTA button to upgrade to premium
+  ///
+  /// In en, this message translates to:
+  /// **'Upgrade to Pro'**
+  String get upgradeToPro;
+
+  /// Dismiss button in upgrade dialog
+  ///
+  /// In en, this message translates to:
+  /// **'Maybe Later'**
+  String get maybeLater;
+
+  /// Label indicating example/demo data
+  ///
+  /// In en, this message translates to:
+  /// **'Example with your style'**
+  String get exampleData;
+
+  /// Benefit-driven title for rep zone analysis
+  ///
+  /// In en, this message translates to:
+  /// **'See Which Rep Zones Dominate'**
+  String get seeWhichRepZones;
+
+  /// Benefit-driven title for volume progression
+  ///
+  /// In en, this message translates to:
+  /// **'Watch Your Volume Grow'**
+  String get watchVolumeGrow;
+
+  /// Benefit-driven title for muscle balance
+  ///
+  /// In en, this message translates to:
+  /// **'Analyze Muscle Balance'**
+  String get analyzeBalance;
+
+  /// Title for Pro Insights section
+  ///
+  /// In en, this message translates to:
+  /// **'Pro Insights'**
+  String get proInsights;
+
+  /// Subtitle for Pro Insights section
+  ///
+  /// In en, this message translates to:
+  /// **'Advanced analytics for your training'**
+  String get proInsightsSubtitle;
+
+  /// Quick preview of rep zone distribution in pro insights badge
+  ///
+  /// In en, this message translates to:
+  /// **'Strength {strength}% • Hypertrophy {hypertrophy}% • Endurance {endurance}%'**
+  String proInsightsPreview(int strength, int hypertrophy, int endurance);
+
+  /// Title for pro analytics full screen
+  ///
+  /// In en, this message translates to:
+  /// **'Advanced Analytics'**
+  String get proAnalyticsTitle;
+
+  /// Status text when user has premium access to analytics
+  ///
+  /// In en, this message translates to:
+  /// **'Full analytics unlocked'**
+  String get proAnalyticsUnlocked;
+
+  /// Title for locked pro analytics section
+  ///
+  /// In en, this message translates to:
+  /// **'Unlock Pro Analytics'**
+  String get unlockProAnalytics;
+
+  /// Description of what pro analytics offers
+  ///
+  /// In en, this message translates to:
+  /// **'Get deeper insights into your training with rep zones, volume trends, and muscle balance analysis'**
+  String get proAnalyticsDescription;
+
+  /// Title for rep zone distribution chart
+  ///
+  /// In en, this message translates to:
+  /// **'Rep Zone Distribution'**
+  String get repZoneDistribution;
+
+  /// Message when there is no data to display
+  ///
+  /// In en, this message translates to:
+  /// **'No data yet'**
+  String get noDataYet;
+
+  /// Message asking user if they want to recover a workout draft
+  ///
+  /// In en, this message translates to:
+  /// **'A previous workout draft was found. Would you like to recover it?'**
+  String get recoverWorkoutMessage;
+
+  /// Button to recover a draft workout
+  ///
+  /// In en, this message translates to:
+  /// **'Recover'**
+  String get recover;
+
+  /// Success message when workout draft is recovered
+  ///
+  /// In en, this message translates to:
+  /// **'Workout recovered successfully!'**
+  String get workoutRecovered;
+
+  /// Option to make a template publicly available
+  ///
+  /// In en, this message translates to:
+  /// **'Make Public'**
+  String get makePublic;
+
+  /// Success message when template is duplicated
+  ///
+  /// In en, this message translates to:
+  /// **'Template \"{name}\" duplicated'**
+  String templateDuplicated(String name);
+
+  /// Label for locked edit button
+  ///
+  /// In en, this message translates to:
+  /// **'Edit (locked)'**
+  String get editWorkoutLocked;
+
+  /// Explanation that only latest workout is editable
+  ///
+  /// In en, this message translates to:
+  /// **'Only your most recent workout can be edited for free'**
+  String get onlyLatestWorkoutEditable;
+
+  /// CTA to upgrade for editing all workouts
+  ///
+  /// In en, this message translates to:
+  /// **'Upgrade to edit all workouts'**
+  String get upgradeToEditAll;
+
+  /// Title for journey themes selection screen
+  ///
+  /// In en, this message translates to:
+  /// **'Journey Themes'**
+  String get journeyThemes;
+
+  /// Title for sharing a workout template
+  ///
+  /// In en, this message translates to:
+  /// **'Share Template'**
+  String get shareTemplate;
+
+  /// Label for format selection
+  ///
+  /// In en, this message translates to:
+  /// **'Format'**
+  String get format;
+
+  /// Text format option for sharing
+  ///
+  /// In en, this message translates to:
+  /// **'Text'**
+  String get textFormat;
+
+  /// Compact format option for sharing
+  ///
+  /// In en, this message translates to:
+  /// **'Compact'**
+  String get compactFormat;
+
+  /// Label for options section
+  ///
+  /// In en, this message translates to:
+  /// **'Options'**
+  String get options;
+
+  /// Label for exercise techniques
+  ///
+  /// In en, this message translates to:
+  /// **'Techniques'**
+  String get techniques;
+
+  /// Label for preview section
+  ///
+  /// In en, this message translates to:
+  /// **'Preview'**
+  String get preview;
+
+  /// Success message when content is copied
+  ///
+  /// In en, this message translates to:
+  /// **'Copied to clipboard'**
+  String get copiedToClipboard;
+
+  /// Title when recorded workout time is suspiciously short
+  ///
+  /// In en, this message translates to:
+  /// **'Workout time seems short'**
+  String get workoutTimeSeemsShort;
+
+  /// Explanation for why workout time might be short
+  ///
+  /// In en, this message translates to:
+  /// **'The recorded time is shorter than expected based on your exercises. This can happen if the app was in background.'**
+  String get workoutTimeExplanation;
+
+  /// Button to keep the original recorded time
+  ///
+  /// In en, this message translates to:
+  /// **'Keep Original Time'**
+  String get keepOriginalTime;
+
+  /// Label for the recorded workout time
+  ///
+  /// In en, this message translates to:
+  /// **'Recorded'**
+  String get recordedTime;
+
+  /// Label for the suggested workout time
+  ///
+  /// In en, this message translates to:
+  /// **'Suggested'**
+  String get suggestedTime;
+
+  /// Button to use the suggested workout time
+  ///
+  /// In en, this message translates to:
+  /// **'Use Suggested Time'**
+  String get useSuggestedTime;
+
+  /// Button to manually modify the workout time
+  ///
+  /// In en, this message translates to:
+  /// **'Modify Manually'**
+  String get modifyManually;
+
+  /// Title for manual duration picker
+  ///
+  /// In en, this message translates to:
+  /// **'Set Workout Duration'**
+  String get setWorkoutDuration;
+
+  /// Title for rep range analysis chart
+  ///
+  /// In en, this message translates to:
+  /// **'Rep Range Analysis'**
+  String get repRangeAnalysis;
+
+  /// Description for rep range analysis
+  ///
+  /// In en, this message translates to:
+  /// **'See how your sets distribute across strength, hypertrophy, and endurance zones'**
+  String get repRangeDesc;
+
+  /// Description for volume progression chart
+  ///
+  /// In en, this message translates to:
+  /// **'Track your weekly training volume trends over time'**
+  String get volumeProgressionDesc;
+
+  /// Subtitle showing unlocked features count
+  ///
+  /// In en, this message translates to:
+  /// **'{unlocked} of {total} features unlocked'**
+  String journeyThemeSubtitle(int unlocked, int total);
+
+  /// Indicates theme preview mode is active
+  ///
+  /// In en, this message translates to:
+  /// **'Preview Mode'**
+  String get previewMode;
+
+  /// Button to apply the selected theme
+  ///
+  /// In en, this message translates to:
+  /// **'Apply Theme'**
+  String get applyTheme;
+
+  /// Title for level information modal
+  ///
+  /// In en, this message translates to:
+  /// **'Level Info'**
+  String get levelInfo;
+
+  /// Subtitle for level info modal
+  ///
+  /// In en, this message translates to:
+  /// **'Your progress and rewards'**
+  String get levelInfoSubtitle;
+
+  /// Shows XP needed to reach next tier
+  ///
+  /// In en, this message translates to:
+  /// **'{xp} XP to reach {tier}'**
+  String xpToNextTier(int xp, String tier);
+
+  /// Message when user is at max tier
+  ///
+  /// In en, this message translates to:
+  /// **'Maximum tier reached!'**
+  String get maxTierReached;
+
+  /// Section title for all tiers list
+  ///
+  /// In en, this message translates to:
+  /// **'All Tiers'**
+  String get allTiers;
+
+  /// Label for locked content
+  ///
+  /// In en, this message translates to:
+  /// **'Locked'**
+  String get locked;
+
+  /// Shows XP requirement for tier
+  ///
+  /// In en, this message translates to:
+  /// **'Requires {xp} XP'**
+  String tierRequirement(int xp);
+
+  /// Label for unlocked content
+  ///
+  /// In en, this message translates to:
+  /// **'Unlocked'**
+  String get unlocked;
+
+  /// Section title explaining XP earning
+  ///
+  /// In en, this message translates to:
+  /// **'How to Earn XP'**
+  String get howToEarnXP;
+
+  /// XP earning method - workouts
+  ///
+  /// In en, this message translates to:
+  /// **'Complete Workouts'**
+  String get earnXPWorkout;
+
+  /// Description of workout XP earning
+  ///
+  /// In en, this message translates to:
+  /// **'Earn 10-50 XP per completed workout based on intensity'**
+  String get earnXPWorkoutDesc;
+
+  /// XP earning method - streaks
+  ///
+  /// In en, this message translates to:
+  /// **'Maintain Streaks'**
+  String get earnXPStreak;
+
+  /// Description of streak XP earning
+  ///
+  /// In en, this message translates to:
+  /// **'Bonus XP for maintaining your workout streak'**
+  String get earnXPStreakDesc;
+
+  /// XP earning method - achievements
+  ///
+  /// In en, this message translates to:
+  /// **'Unlock Achievements'**
+  String get earnXPAchievement;
+
+  /// Description of achievement XP earning
+  ///
+  /// In en, this message translates to:
+  /// **'Get XP rewards when you unlock new achievements'**
+  String get earnXPAchievementDesc;
+
+  /// Hint text for swipe to save gesture
+  ///
+  /// In en, this message translates to:
+  /// **'Swipe down to save'**
+  String get swipeDownToSave;
+
+  /// Morning time preset label
+  ///
+  /// In en, this message translates to:
+  /// **'Morning'**
+  String get reminderTimePresetMorning;
+
+  /// Afternoon time preset label
+  ///
+  /// In en, this message translates to:
+  /// **'Afternoon'**
+  String get reminderTimePresetAfternoon;
+
+  /// Evening time preset label
+  ///
+  /// In en, this message translates to:
+  /// **'Evening'**
+  String get reminderTimePresetEvening;
+
+  /// Custom time preset label
+  ///
+  /// In en, this message translates to:
+  /// **'Custom'**
+  String get reminderTimePresetCustom;
+
+  /// Morning time range description
+  ///
+  /// In en, this message translates to:
+  /// **'6:00 - 9:00'**
+  String get reminderTimePresetMorningRange;
+
+  /// Afternoon time range description
+  ///
+  /// In en, this message translates to:
+  /// **'12:00 - 14:00'**
+  String get reminderTimePresetAfternoonRange;
+
+  /// Evening time range description
+  ///
+  /// In en, this message translates to:
+  /// **'17:00 - 20:00'**
+  String get reminderTimePresetEveningRange;
+
+  /// Shows progression of unlocked features
+  ///
+  /// In en, this message translates to:
+  /// **'{count} / {total} features unlocked'**
+  String featuresUnlocked(int count, int total);
+
+  /// Section header for locked features
+  ///
+  /// In en, this message translates to:
+  /// **'Features Locked'**
+  String get featuresLocked;
+
+  /// Shows XP needed to unlock feature
+  ///
+  /// In en, this message translates to:
+  /// **'{xp} XP to unlock'**
+  String xpToUnlock(int xp);
+
+  /// Shows tier required to unlock
+  ///
+  /// In en, this message translates to:
+  /// **'Unlocks at {tier}'**
+  String unlockAt(String tier);
+
+  /// Semantic label for expand exercise button
+  ///
+  /// In en, this message translates to:
+  /// **'Expand exercise details'**
+  String get expandExercise;
+
+  /// Hint text telling user to tap to expand content
+  ///
+  /// In en, this message translates to:
+  /// **'Tap to expand'**
+  String get tapToExpand;
+
+  /// Label for admin-only premium toggle section
+  ///
+  /// In en, this message translates to:
+  /// **'Admin Premium Toggle'**
+  String get adminPremiumToggle;
+
+  /// Label for premium status toggle
+  ///
+  /// In en, this message translates to:
+  /// **'Premium Status'**
+  String get adminPremiumStatus;
+
+  /// Shows current premium tier
+  ///
+  /// In en, this message translates to:
+  /// **'Active ({tier})'**
+  String adminPremiumActive(String tier);
+
+  /// Shows premium is not active
+  ///
+  /// In en, this message translates to:
+  /// **'Not active (free tier)'**
+  String get adminPremiumInactive;
+
+  /// Snackbar message when premium is enabled
+  ///
+  /// In en, this message translates to:
+  /// **'Premium enabled for testing'**
+  String get adminPremiumEnabled;
+
+  /// Snackbar message when premium is disabled
+  ///
+  /// In en, this message translates to:
+  /// **'Premium disabled (back to free)'**
+  String get adminPremiumDisabled;
+
+  /// Journey theme name: Hunter
+  ///
+  /// In en, this message translates to:
+  /// **'Hunter'**
+  String get themeHunter;
+
+  /// Journey theme name: Hero
+  ///
+  /// In en, this message translates to:
+  /// **'Hero'**
+  String get themeHero;
+
+  /// Journey theme name: Warrior Goddess
+  ///
+  /// In en, this message translates to:
+  /// **'Warrior Goddess'**
+  String get themeWarriorGoddess;
+
+  /// Journey theme name: Nature Spirit
+  ///
+  /// In en, this message translates to:
+  /// **'Nature Spirit'**
+  String get themeNatureSpirit;
+
+  /// Journey theme name: Phoenix
+  ///
+  /// In en, this message translates to:
+  /// **'Phoenix'**
+  String get themePhoenix;
+
+  /// Journey theme name: Frost
+  ///
+  /// In en, this message translates to:
+  /// **'Frost'**
+  String get themeFrost;
+
+  /// Journey theme tagline: Hunter
+  ///
+  /// In en, this message translates to:
+  /// **'Track your prey'**
+  String get taglineHunter;
+
+  /// Journey theme tagline: Hero
+  ///
+  /// In en, this message translates to:
+  /// **'Rise to legend'**
+  String get taglineHero;
+
+  /// Journey theme tagline: Warrior Goddess
+  ///
+  /// In en, this message translates to:
+  /// **'Elegant power'**
+  String get taglineWarriorGoddess;
+
+  /// Journey theme tagline: Nature Spirit
+  ///
+  /// In en, this message translates to:
+  /// **'Flow with nature'**
+  String get taglineNatureSpirit;
+
+  /// Journey theme tagline: Phoenix
+  ///
+  /// In en, this message translates to:
+  /// **'Rise from ashes'**
+  String get taglinePhoenix;
+
+  /// Journey theme tagline: Frost
+  ///
+  /// In en, this message translates to:
+  /// **'Cold precision'**
+  String get taglineFrost;
+
+  /// Subtitle for journey themes selection
+  ///
+  /// In en, this message translates to:
+  /// **'Select Your Theme'**
+  String get selectYourTheme;
+
+  /// Button to confirm theme selection
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm Theme'**
+  String get confirmTheme;
+
+  /// Button to cancel theme preview
+  ///
+  /// In en, this message translates to:
+  /// **'Cancel Preview'**
+  String get cancelPreview;
+
+  /// Shows which tier unlocks a theme feature
+  ///
+  /// In en, this message translates to:
+  /// **'Unlocks at {tier}'**
+  String themeUnlockedAt(String tier);
+
+  /// Title for muscle balance score metric
+  ///
+  /// In en, this message translates to:
+  /// **'Balance Score'**
+  String get balanceScore;
+
+  /// Balance rating: 9.0-10.0 score
+  ///
+  /// In en, this message translates to:
+  /// **'Excellent'**
+  String get balanceRatingExcellent;
+
+  /// Balance rating: 7.5-8.9 score
+  ///
+  /// In en, this message translates to:
+  /// **'Good'**
+  String get balanceRatingGood;
+
+  /// Balance rating: 6.0-7.4 score
+  ///
+  /// In en, this message translates to:
+  /// **'Fair'**
+  String get balanceRatingFair;
+
+  /// Balance rating: 4.0-5.9 score
+  ///
+  /// In en, this message translates to:
+  /// **'Needs Improvement'**
+  String get balanceRatingNeedsImprovement;
+
+  /// Balance rating: 0.0-3.9 score
+  ///
+  /// In en, this message translates to:
+  /// **'Poor'**
+  String get balanceRatingPoor;
+
+  /// Title for upper/lower body balance ratio
+  ///
+  /// In en, this message translates to:
+  /// **'Upper/Lower Ratio'**
+  String get upperLowerRatio;
+
+  /// Shows optimal ratio value
+  ///
+  /// In en, this message translates to:
+  /// **'Optimal: {ratio}'**
+  String optimalRatio(String ratio);
+
+  /// Header for balance warnings section
+  ///
+  /// In en, this message translates to:
+  /// **'Warnings Detected'**
+  String get warningsDetected;
+
+  /// Warning: push/pull ratio is not optimal
+  ///
+  /// In en, this message translates to:
+  /// **'Push/Pull imbalance detected'**
+  String get pushPullImbalance;
+
+  /// Warning: upper/lower ratio is not optimal
+  ///
+  /// In en, this message translates to:
+  /// **'Upper/Lower imbalance detected'**
+  String get upperLowerImbalance;
+
+  /// Warning: some muscles are undertrained
+  ///
+  /// In en, this message translates to:
+  /// **'{count} neglected muscle groups'**
+  String neglectedMusclesWarning(int count);
+
+  /// Header for top trained muscle groups
+  ///
+  /// In en, this message translates to:
+  /// **'Top Trained Muscles'**
+  String get topTrainedMuscles;
+
+  /// Shows muscle group volume percentage
+  ///
+  /// In en, this message translates to:
+  /// **'{muscle}: {percentage}%'**
+  String muscleVolumePercentage(String muscle, String percentage);
+
+  /// Label for front body view in muscle heatmap
+  ///
+  /// In en, this message translates to:
+  /// **'Front View'**
+  String get frontView;
+
+  /// Label for back body view in muscle heatmap
+  ///
+  /// In en, this message translates to:
+  /// **'Back View'**
+  String get backView;
+
+  /// Low intensity label in heatmap legend
+  ///
+  /// In en, this message translates to:
+  /// **'Low'**
+  String get intensityLow;
+
+  /// High intensity label in heatmap legend
+  ///
+  /// In en, this message translates to:
+  /// **'High'**
+  String get intensityHigh;
+
+  /// Title for neglected muscles section
+  ///
+  /// In en, this message translates to:
+  /// **'Neglected Muscles'**
+  String get neglectedMuscles;
+
+  /// Title for exercise suggestions
+  ///
+  /// In en, this message translates to:
+  /// **'Exercise Suggestions'**
+  String get exerciseSuggestions;
+
+  /// Button to add suggested exercise to workout
+  ///
+  /// In en, this message translates to:
+  /// **'Add to Next Workout'**
+  String get addToNextWorkout;
+
+  /// Label for priority score
+  ///
+  /// In en, this message translates to:
+  /// **'Priority'**
+  String get priority;
+
+  /// Message when no muscles are neglected
+  ///
+  /// In en, this message translates to:
+  /// **'No neglected muscles detected. Great balance!'**
+  String get noNeglectedMuscles;
+
+  /// Label for time filter dropdown
+  ///
+  /// In en, this message translates to:
+  /// **'Time Period'**
+  String get timeFilter;
+
+  /// 3 months time filter option
+  ///
+  /// In en, this message translates to:
+  /// **'Last 3 Months'**
+  String get last3Months;
+
+  /// Trend status: improving
+  ///
+  /// In en, this message translates to:
+  /// **'Improving'**
+  String get trendImproving;
+
+  /// Trend status: stable
+  ///
+  /// In en, this message translates to:
+  /// **'Stable'**
+  String get trendStable;
+
+  /// Trend status: declining
+  ///
+  /// In en, this message translates to:
+  /// **'Declining'**
+  String get trendDeclining;
+
+  /// Morning greeting (5:00-11:59)
+  ///
+  /// In en, this message translates to:
+  /// **'Good morning'**
+  String get greetingMorning;
+
+  /// Afternoon greeting (12:00-17:59)
+  ///
+  /// In en, this message translates to:
+  /// **'Good afternoon'**
+  String get greetingAfternoon;
+
+  /// Evening greeting (18:00-21:59)
+  ///
+  /// In en, this message translates to:
+  /// **'Good evening'**
+  String get greetingEvening;
+
+  /// Night greeting (22:00-4:59)
+  ///
+  /// In en, this message translates to:
+  /// **'Good night'**
+  String get greetingNight;
+
+  /// Hero theme morning phrase 1
+  ///
+  /// In en, this message translates to:
+  /// **'let\'s crush those weights!'**
+  String get heroMorning1;
+
+  /// Hero theme morning phrase 2
+  ///
+  /// In en, this message translates to:
+  /// **'time to become legendary!'**
+  String get heroMorning2;
+
+  /// Hero theme morning phrase 3
+  ///
+  /// In en, this message translates to:
+  /// **'the villains won\'t defeat themselves!'**
+  String get heroMorning3;
+
+  /// Hero theme afternoon phrase 1
+  ///
+  /// In en, this message translates to:
+  /// **'train to become the strongest!'**
+  String get heroAfternoon1;
+
+  /// Hero theme afternoon phrase 2
+  ///
+  /// In en, this message translates to:
+  /// **'your power grows with each rep!'**
+  String get heroAfternoon2;
+
+  /// Hero theme afternoon phrase 3
+  ///
+  /// In en, this message translates to:
+  /// **'heroes never skip training!'**
+  String get heroAfternoon3;
+
+  /// Hero theme evening phrase 1
+  ///
+  /// In en, this message translates to:
+  /// **'ready for an evening of heroics?'**
+  String get heroEvening1;
+
+  /// Hero theme evening phrase 2
+  ///
+  /// In en, this message translates to:
+  /// **'the night needs a hero!'**
+  String get heroEvening2;
+
+  /// Hero theme evening phrase 3
+  ///
+  /// In en, this message translates to:
+  /// **'time to save the day!'**
+  String get heroEvening3;
+
+  /// Hero theme night phrase 1
+  ///
+  /// In en, this message translates to:
+  /// **'evil never sleeps!'**
+  String get heroNight1;
+
+  /// Hero theme night phrase 2
+  ///
+  /// In en, this message translates to:
+  /// **'guardians train at night!'**
+  String get heroNight2;
+
+  /// Hero theme night phrase 3
+  ///
+  /// In en, this message translates to:
+  /// **'the darkness awaits your strength!'**
+  String get heroNight3;
+
+  /// Hunter theme morning phrase 1
+  ///
+  /// In en, this message translates to:
+  /// **'the hunt begins!'**
+  String get hunterMorning1;
+
+  /// Hunter theme morning phrase 2
+  ///
+  /// In en, this message translates to:
+  /// **'track your prey!'**
+  String get hunterMorning2;
+
+  /// Hunter theme morning phrase 3
+  ///
+  /// In en, this message translates to:
+  /// **'sharpen your skills!'**
+  String get hunterMorning3;
+
+  /// Hunter theme afternoon phrase 1
+  ///
+  /// In en, this message translates to:
+  /// **'stay focused on the target!'**
+  String get hunterAfternoon1;
+
+  /// Hunter theme afternoon phrase 2
+  ///
+  /// In en, this message translates to:
+  /// **'predators never rest!'**
+  String get hunterAfternoon2;
+
+  /// Hunter theme afternoon phrase 3
+  ///
+  /// In en, this message translates to:
+  /// **'precision is everything!'**
+  String get hunterAfternoon3;
+
+  /// Hunter theme evening phrase 1
+  ///
+  /// In en, this message translates to:
+  /// **'the perfect time to strike!'**
+  String get hunterEvening1;
+
+  /// Hunter theme evening phrase 2
+  ///
+  /// In en, this message translates to:
+  /// **'shadows are your ally!'**
+  String get hunterEvening2;
+
+  /// Hunter theme evening phrase 3
+  ///
+  /// In en, this message translates to:
+  /// **'silent but deadly!'**
+  String get hunterEvening3;
+
+  /// Hunter theme night phrase 1
+  ///
+  /// In en, this message translates to:
+  /// **'nocturnal hunters are the best!'**
+  String get hunterNight1;
+
+  /// Hunter theme night phrase 2
+  ///
+  /// In en, this message translates to:
+  /// **'the night is your domain!'**
+  String get hunterNight2;
+
+  /// Hunter theme night phrase 3
+  ///
+  /// In en, this message translates to:
+  /// **'darkness hides the strongest!'**
+  String get hunterNight3;
+
+  /// Warrior Goddess theme morning phrase 1
+  ///
+  /// In en, this message translates to:
+  /// **'grace and power await!'**
+  String get warriorGoddessMorning1;
+
+  /// Warrior Goddess theme morning phrase 2
+  ///
+  /// In en, this message translates to:
+  /// **'rise with elegance!'**
+  String get warriorGoddessMorning2;
+
+  /// Warrior Goddess theme morning phrase 3
+  ///
+  /// In en, this message translates to:
+  /// **'your crown awaits!'**
+  String get warriorGoddessMorning3;
+
+  /// Warrior Goddess theme afternoon phrase 1
+  ///
+  /// In en, this message translates to:
+  /// **'rule with strength!'**
+  String get warriorGoddessAfternoon1;
+
+  /// Warrior Goddess theme afternoon phrase 2
+  ///
+  /// In en, this message translates to:
+  /// **'queens don\'t quit!'**
+  String get warriorGoddessAfternoon2;
+
+  /// Warrior Goddess theme afternoon phrase 3
+  ///
+  /// In en, this message translates to:
+  /// **'fierce and fabulous!'**
+  String get warriorGoddessAfternoon3;
+
+  /// Warrior Goddess theme evening phrase 1
+  ///
+  /// In en, this message translates to:
+  /// **'the throne awaits!'**
+  String get warriorGoddessEvening1;
+
+  /// Warrior Goddess theme evening phrase 2
+  ///
+  /// In en, this message translates to:
+  /// **'power meets elegance!'**
+  String get warriorGoddessEvening2;
+
+  /// Warrior Goddess theme evening phrase 3
+  ///
+  /// In en, this message translates to:
+  /// **'conquer with grace!'**
+  String get warriorGoddessEvening3;
+
+  /// Warrior Goddess theme night phrase 1
+  ///
+  /// In en, this message translates to:
+  /// **'even goddesses train at night!'**
+  String get warriorGoddessNight1;
+
+  /// Warrior Goddess theme night phrase 2
+  ///
+  /// In en, this message translates to:
+  /// **'moonlit power session!'**
+  String get warriorGoddessNight2;
+
+  /// Warrior Goddess theme night phrase 3
+  ///
+  /// In en, this message translates to:
+  /// **'the stars shine for you!'**
+  String get warriorGoddessNight3;
+
+  /// Nature Spirit theme morning phrase 1
+  ///
+  /// In en, this message translates to:
+  /// **'flow with the sunrise!'**
+  String get natureSpiritMorning1;
+
+  /// Nature Spirit theme morning phrase 2
+  ///
+  /// In en, this message translates to:
+  /// **'energy from nature!'**
+  String get natureSpiritMorning2;
+
+  /// Nature Spirit theme morning phrase 3
+  ///
+  /// In en, this message translates to:
+  /// **'breathe, grow, thrive!'**
+  String get natureSpiritMorning3;
+
+  /// Nature Spirit theme afternoon phrase 1
+  ///
+  /// In en, this message translates to:
+  /// **'harmony in motion!'**
+  String get natureSpiritAfternoon1;
+
+  /// Nature Spirit theme afternoon phrase 2
+  ///
+  /// In en, this message translates to:
+  /// **'strong as the oak!'**
+  String get natureSpiritAfternoon2;
+
+  /// Nature Spirit theme afternoon phrase 3
+  ///
+  /// In en, this message translates to:
+  /// **'root deep, grow tall!'**
+  String get natureSpiritAfternoon3;
+
+  /// Nature Spirit theme evening phrase 1
+  ///
+  /// In en, this message translates to:
+  /// **'sunset strength session!'**
+  String get natureSpiritEvening1;
+
+  /// Nature Spirit theme evening phrase 2
+  ///
+  /// In en, this message translates to:
+  /// **'balance body and soul!'**
+  String get natureSpiritEvening2;
+
+  /// Nature Spirit theme evening phrase 3
+  ///
+  /// In en, this message translates to:
+  /// **'flow like water!'**
+  String get natureSpiritEvening3;
+
+  /// Nature Spirit theme night phrase 1
+  ///
+  /// In en, this message translates to:
+  /// **'calm night, strong spirit!'**
+  String get natureSpiritNight1;
+
+  /// Nature Spirit theme night phrase 2
+  ///
+  /// In en, this message translates to:
+  /// **'moonlit meditation workout!'**
+  String get natureSpiritNight2;
+
+  /// Nature Spirit theme night phrase 3
+  ///
+  /// In en, this message translates to:
+  /// **'rest prepares growth!'**
+  String get natureSpiritNight3;
+
+  /// Phoenix theme morning phrase 1
+  ///
+  /// In en, this message translates to:
+  /// **'rise and burn!'**
+  String get phoenixMorning1;
+
+  /// Phoenix theme morning phrase 2
+  ///
+  /// In en, this message translates to:
+  /// **'reborn with fire!'**
+  String get phoenixMorning2;
+
+  /// Phoenix theme morning phrase 3
+  ///
+  /// In en, this message translates to:
+  /// **'ashes to glory!'**
+  String get phoenixMorning3;
+
+  /// Phoenix theme afternoon phrase 1
+  ///
+  /// In en, this message translates to:
+  /// **'flames of determination!'**
+  String get phoenixAfternoon1;
+
+  /// Phoenix theme afternoon phrase 2
+  ///
+  /// In en, this message translates to:
+  /// **'burn through limits!'**
+  String get phoenixAfternoon2;
+
+  /// Phoenix theme afternoon phrase 3
+  ///
+  /// In en, this message translates to:
+  /// **'unstoppable fire!'**
+  String get phoenixAfternoon3;
+
+  /// Phoenix theme evening phrase 1
+  ///
+  /// In en, this message translates to:
+  /// **'evening inferno awaits!'**
+  String get phoenixEvening1;
+
+  /// Phoenix theme evening phrase 2
+  ///
+  /// In en, this message translates to:
+  /// **'sunset flames burn bright!'**
+  String get phoenixEvening2;
+
+  /// Phoenix theme evening phrase 3
+  ///
+  /// In en, this message translates to:
+  /// **'ignite your power!'**
+  String get phoenixEvening3;
+
+  /// Phoenix theme night phrase 1
+  ///
+  /// In en, this message translates to:
+  /// **'flames never fade!'**
+  String get phoenixNight1;
+
+  /// Phoenix theme night phrase 2
+  ///
+  /// In en, this message translates to:
+  /// **'midnight fire session!'**
+  String get phoenixNight2;
+
+  /// Phoenix theme night phrase 3
+  ///
+  /// In en, this message translates to:
+  /// **'rebirth in darkness!'**
+  String get phoenixNight3;
+
+  /// Frost theme morning phrase 1
+  ///
+  /// In en, this message translates to:
+  /// **'cold precision awaits!'**
+  String get frostMorning1;
+
+  /// Frost theme morning phrase 2
+  ///
+  /// In en, this message translates to:
+  /// **'sharp as ice!'**
+  String get frostMorning2;
+
+  /// Frost theme morning phrase 3
+  ///
+  /// In en, this message translates to:
+  /// **'cool focus, strong body!'**
+  String get frostMorning3;
+
+  /// Frost theme afternoon phrase 1
+  ///
+  /// In en, this message translates to:
+  /// **'calculated power!'**
+  String get frostAfternoon1;
+
+  /// Frost theme afternoon phrase 2
+  ///
+  /// In en, this message translates to:
+  /// **'ice cold determination!'**
+  String get frostAfternoon2;
+
+  /// Frost theme afternoon phrase 3
+  ///
+  /// In en, this message translates to:
+  /// **'freeze the competition!'**
+  String get frostAfternoon3;
+
+  /// Frost theme evening phrase 1
+  ///
+  /// In en, this message translates to:
+  /// **'winter never rests!'**
+  String get frostEvening1;
+
+  /// Frost theme evening phrase 2
+  ///
+  /// In en, this message translates to:
+  /// **'chill zone power session!'**
+  String get frostEvening2;
+
+  /// Frost theme evening phrase 3
+  ///
+  /// In en, this message translates to:
+  /// **'cool under pressure!'**
+  String get frostEvening3;
+
+  /// Frost theme night phrase 1
+  ///
+  /// In en, this message translates to:
+  /// **'frozen night, hot gains!'**
+  String get frostNight1;
+
+  /// Frost theme night phrase 2
+  ///
+  /// In en, this message translates to:
+  /// **'the cold sharpens the mind!'**
+  String get frostNight2;
+
+  /// Frost theme night phrase 3
+  ///
+  /// In en, this message translates to:
+  /// **'winter warriors unite!'**
+  String get frostNight3;
 }
 
 class _AppLocalizationsDelegate

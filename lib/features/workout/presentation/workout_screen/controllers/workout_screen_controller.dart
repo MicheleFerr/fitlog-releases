@@ -8,9 +8,12 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:go_router/go_router.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/workout_template.dart' as wt;
+import 'package:gymbro_flutter_new/features/workout/domain/services/workout_time_calculator.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/providers/workout_provider.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/providers/workout_template_provider.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/widgets/template_save_dialog.dart';
+import 'package:gymbro_flutter_new/features/workout/presentation/widgets/workout_completion_celebration.dart';
+import 'package:gymbro_flutter_new/features/workout/presentation/widgets/workout_time_edit_sheet.dart';
 import 'package:gymbro_flutter_new/features/onboarding/presentation/providers/onboarding_state_provider.dart';
 import 'package:gymbro_flutter_new/features/analytics/domain/entities/pr_celebration.dart';
 import 'package:gymbro_flutter_new/features/analytics/presentation/providers/achievement_provider.dart';
@@ -132,15 +135,45 @@ class WorkoutScreenController extends Notifier<WorkoutScreenState> {
         }
       }
 
-      // Check if workout was started from a template
+      // Check if workout duration seems suspiciously short
       final currentWorkout = ref.read(currentWorkoutProvider);
-      if (currentWorkout != null &&
-          currentWorkout.templateId != null &&
-          currentWorkout.templateId!.isNotEmpty &&
+      if (currentWorkout != null && context.mounted) {
+        final timeMetrics = WorkoutTimeCalculator.getTimeMetrics(currentWorkout);
+
+        if (timeMetrics.isSuspicious) {
+          if (kDebugMode) {
+            debugPrint('⏱️ [WorkoutScreenController] Workout time suspicious: '
+                '${timeMetrics.actualDurationFormatted} < ${timeMetrics.totalRestTimeFormatted}');
+          }
+
+          // Show time edit sheet
+          final newDuration = await WorkoutTimeEditSheet.show(
+            context: context,
+            workout: currentWorkout,
+          );
+
+          // If user selected new duration, update workout
+          if (newDuration != null && context.mounted) {
+            ref.read(currentWorkoutProvider.notifier).updateWorkoutDuration(newDuration);
+
+            if (kDebugMode) {
+              debugPrint('✅ [WorkoutScreenController] Workout duration updated to: $newDuration');
+            }
+          }
+        }
+      }
+
+      // Re-read workout after potential duration update
+      final updatedWorkout = ref.read(currentWorkoutProvider);
+
+      // Check if workout was started from a template
+      if (updatedWorkout != null &&
+          updatedWorkout.templateId != null &&
+          updatedWorkout.templateId!.isNotEmpty &&
           context.mounted) {
         // Fetch original template
         final originalTemplate = await ref.read(
-          templateByIdProvider(currentWorkout.templateId!).future,
+          templateByIdProvider(updatedWorkout.templateId!).future,
         );
 
         if (originalTemplate != null && context.mounted) {
@@ -151,7 +184,7 @@ class WorkoutScreenController extends Notifier<WorkoutScreenState> {
           // Show template save dialog
           await showTemplateSaveDialog(
             context: context,
-            completedWorkout: currentWorkout,
+            completedWorkout: updatedWorkout,
             originalTemplate: originalTemplate,
           );
 
@@ -164,6 +197,12 @@ class WorkoutScreenController extends Notifier<WorkoutScreenState> {
       // Complete workout (saves to database)
       if (context.mounted) {
         ref.read(currentWorkoutProvider.notifier).completeWorkout(context);
+      }
+
+      // Show celebration overlay with confetti 🎉
+      final completedWorkout = ref.read(currentWorkoutProvider);
+      if (completedWorkout != null && context.mounted) {
+        showWorkoutCompletionCelebration(context, completedWorkout);
       }
 
       // Haptic feedback
@@ -289,9 +328,8 @@ class WorkoutScreenController extends Notifier<WorkoutScreenState> {
   ///
   /// Adds the exercise to the end of the workout's exercise list.
   Future<void> addExercise(Exercise exercise) async {
-    if (kDebugMode) {
-      debugPrint('➕ [WorkoutScreenController] Adding exercise: ${exercise.name}');
-    }
+    // ignore: avoid_print
+    print('➕ [WorkoutScreenController] Adding exercise: ${exercise.name}, countingMode=${exercise.countingMode}');
 
     try {
       ref.read(currentWorkoutProvider.notifier).addExercise(exercise);

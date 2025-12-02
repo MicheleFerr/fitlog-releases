@@ -5041,102 +5041,6 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String get apreProtocol => 'APRE Protocol';
-
-  @override
-  String get apreAdjustment => 'APRE Adjustment';
-
-  @override
-  String apreSetWeight(int setNumber) {
-    return 'Set $setNumber Weight:';
-  }
-
-  @override
-  String apreCompletedReps(int actual, int target) {
-    return 'You completed $actual reps (target: $target)';
-  }
-
-  @override
-  String get apreApply => 'Apply';
-
-  @override
-  String apreWeightAdjusted(int setNumber, String weight) {
-    return 'APRE: Set $setNumber weight adjusted to $weight kg';
-  }
-
-  @override
-  String get apreAutoregulation => 'APRE Autoregulation';
-
-  @override
-  String get apreAutoregulationDescription =>
-      'Automatic weight adjustment based on performance';
-
-  @override
-  String get apreProtocolSelect => 'Select APRE Protocol';
-
-  @override
-  String get apreProtocol3Description =>
-      'Heavy strength protocol (3 reps target)';
-
-  @override
-  String get apreProtocol6Description =>
-      'Strength and hypertrophy protocol (6 reps target)';
-
-  @override
-  String get apreProtocol10Description =>
-      'Hypertrophy and endurance protocol (10 reps target)';
-
-  @override
-  String get apreBaseWeight => 'APRE Base Weight';
-
-  @override
-  String get apreBaseWeightHint => 'Enter your 3RM, 6RM or 10RM weight';
-
-  @override
-  String get apreProtocol3Helper => 'Use your 3 rep max weight';
-
-  @override
-  String get apreProtocol6Helper => 'Use your 6 rep max weight';
-
-  @override
-  String get apreProtocol10Helper => 'Use your 10 rep max weight';
-
-  @override
-  String get apreProtocolPreview => 'Protocol Change Preview';
-
-  @override
-  String get aprePreviewDescription =>
-      'Preview how your weights will change with the new protocol';
-
-  @override
-  String apreCurrentProtocol(int protocol) {
-    return 'Current (APRE $protocol)';
-  }
-
-  @override
-  String apreNewProtocol(int protocol) {
-    return 'New (APRE $protocol)';
-  }
-
-  @override
-  String get apreSet1Preview => 'Set 1 (50%)';
-
-  @override
-  String get apreSet2Preview => 'Set 2 (75%)';
-
-  @override
-  String get apreSet3Preview => 'Set 3 (100%)';
-
-  @override
-  String get apreSet4Preview => 'Set 4';
-
-  @override
-  String get apreAdjustedBasedOnPerformance => 'Adjusted based on performance';
-
-  @override
-  String get apreApplyChanges => 'Apply Changes';
-
-  @override
   String get autoAdjustment => 'Auto Adjustment';
 
   @override
@@ -5436,57 +5340,6 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get intelligentAutoRegulation => '⚡ Intelligent Auto-Regulation';
-
-  @override
-  String get apreSystemTitle => '📈 APRE System';
-
-  @override
-  String get apreSystemSubtitle => 'Reps-Based Auto-Regulation';
-
-  @override
-  String get enableApreTitle => 'Enable APRE';
-
-  @override
-  String get enableApreDescription =>
-      'Automatic weight calculation from history for new exercises';
-
-  @override
-  String get enableApreTooltip =>
-      'APRE analyzes your training history to calculate your 1RM and automatically suggests appropriate weights for each protocol (3, 6, or 10 reps).';
-
-  @override
-  String get apreProtocolTitle => 'APRE Protocol';
-
-  @override
-  String get apre3 => 'APRE 3';
-
-  @override
-  String get apre6 => 'APRE 6';
-
-  @override
-  String get apre10 => 'APRE 10';
-
-  @override
-  String get apre3Description =>
-      'Ideal for maximum strength (3+ reps to failure)';
-
-  @override
-  String get apre6Description =>
-      'Balanced for strength and hypertrophy (6+ reps)';
-
-  @override
-  String get apre10Description =>
-      'Perfect for hypertrophy and endurance (10+ reps)';
-
-  @override
-  String get autoAdjustRestApreTitle => 'Auto-Adjust Rest Time';
-
-  @override
-  String get autoAdjustRestApreDescription => 'Increase rest if load decreases';
-
-  @override
-  String get autoAdjustRestApreTooltip =>
-      'When your lifted weight decreases, the system automatically increases rest time to help manage fatigue.';
 
   @override
   String get rpeSystemTitle => '💪 RPE/RIR System';
@@ -5907,7 +5760,7 @@ class AppLocalizationsEn extends AppLocalizations {
       'An unexpected error occurred. Please try again.';
 
   @override
-  String get pushPullRatio => 'Push:Pull Ratio';
+  String get pushPullRatio => 'Push/Pull Ratio';
 
   @override
   String get quadHamstringRatio => 'Quad:Hamstring Ratio';
@@ -6054,16 +5907,16 @@ class AppLocalizationsEn extends AppLocalizations {
   String get allTimeProgress => 'All Time Progress';
 
   @override
-  String get last7Days => 'Last 7 days';
+  String get last7Days => 'Last 7 Days';
 
   @override
-  String get last30Days => 'Last 30 days';
+  String get last30Days => 'Last 30 Days';
 
   @override
   String get last365Days => 'Last 365 days';
 
   @override
-  String get allTime => 'All time';
+  String get allTime => 'All Time';
 
   @override
   String get keepItUp => 'Keep it up!';
@@ -6965,19 +6818,19 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String get strengthZone => 'Strength (1-5 reps)';
+  String get strengthZone => 'Strength';
 
   @override
   String get strengthZoneDesc => 'Max force, neural adaptations';
 
   @override
-  String get hypertrophyZone => 'Hypertrophy (6-15 reps)';
+  String get hypertrophyZone => 'Hypertrophy';
 
   @override
   String get hypertrophyZoneDesc => 'Muscle growth, metabolic stress';
 
   @override
-  String get enduranceZone => 'Endurance (15+ reps)';
+  String get enduranceZone => 'Endurance';
 
   @override
   String get enduranceZoneDesc => 'Muscular endurance, conditioning';
@@ -8857,7 +8710,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String exerciseAddedToWorkout(String exerciseName) {
-    return 'Added $exerciseName to workout';
+    return '$exerciseName added to next workout';
   }
 
   @override
@@ -8903,9 +8756,6 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get invalidRestTimeError =>
       'Please enter a valid rest time (1-3600 seconds)';
-
-  @override
-  String get invalidApreBaseWeight => 'Please enter a valid APRE base weight';
 
   @override
   String get notesSavedMessage => 'Notes saved';
@@ -13166,84 +13016,6 @@ class AppLocalizationsEn extends AppLocalizations {
       'Error loading document. Please try again.';
 
   @override
-  String get apreCalculationMetadata => 'Calculation Analysis';
-
-  @override
-  String get apreShowCalculationDetails => 'Show Calculation Details';
-
-  @override
-  String get apreHideCalculationDetails => 'Hide Calculation Details';
-
-  @override
-  String get apreFormula => 'Formula';
-
-  @override
-  String get apreDataPoints => 'Data Points';
-
-  @override
-  String get apreDataAge => 'Data Age';
-
-  @override
-  String get apreStandardDeviation => 'Variability';
-
-  @override
-  String get apreConfidence => 'Confidence';
-
-  @override
-  String get apreLastCalculation => 'Last Updated';
-
-  @override
-  String apreDaysAgo(int days) {
-    String _temp0 = intl.Intl.pluralLogic(
-      days,
-      locale: localeName,
-      other: '$days days ago',
-      one: 'Yesterday',
-      zero: 'Today',
-    );
-    return '$_temp0';
-  }
-
-  @override
-  String get apreNoHistory => 'No Historical Data';
-
-  @override
-  String get apreNoHistoryDescription =>
-      'No historical data available for APRE calculations. Please select how you\'d like to estimate your 1RM to get started.';
-
-  @override
-  String get apreOptionFromLastWorkout => 'From Last Workout';
-
-  @override
-  String get apreOptionManualEstimate => 'Manual Estimate';
-
-  @override
-  String get apreOptionTestSet => 'Test Set';
-
-  @override
-  String get apreOptionFromLastWorkoutDescription =>
-      'Use last set weight/reps as estimate';
-
-  @override
-  String get apreOptionManualEstimateDescription =>
-      'Enter estimated 1RM directly';
-
-  @override
-  String get apreOptionTestSetDescription => 'Guide to do a test set first';
-
-  @override
-  String get apreEnter1RM => 'Enter Estimated 1RM (kg)';
-
-  @override
-  String get aprePreviewWeights => 'Preview Weights';
-
-  @override
-  String get apreContinue => 'Continue';
-
-  @override
-  String get apreCancel => 'Cancel';
-
-  @override
   String get ageGateTitle => 'Verify Your Age';
 
   @override
@@ -13285,23 +13057,6 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get footerDisclaimerTapHint => 'Tap for full disclaimer';
-
-  @override
-  String get apreProtocolChangeWarningTitle => 'Workout in Progress';
-
-  @override
-  String get apreProtocolChangeWarningMessage =>
-      'You cannot change APRE protocol during an active workout. Please finish your current workout first, then return to adjust protocol settings.';
-
-  @override
-  String get apreGotIt => 'Got it';
-
-  @override
-  String get apreCalculationMethodTitle => 'APRE Calculation Method';
-
-  @override
-  String get apreCalculationMethodDescription =>
-      'Choose how historical sets are selected for 1RM estimation in APRE workouts. Different strategies optimize for recency, data volume, or stability.';
 
   @override
   String get about => 'About';
@@ -13391,7 +13146,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get comparedToLast => 'Compared to last';
 
   @override
-  String get comparedToPrevious => 'Compared to previous';
+  String get comparedToPrevious => 'vs Previous Period';
 
   @override
   String get completeAllSets => 'Complete all sets';
@@ -13978,7 +13733,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get weeklyDistributionInfo => 'Weekly distribution info';
 
   @override
-  String get weeklyVolume => 'Weekly volume';
+  String get weeklyVolume => 'Weekly Volume';
 
   @override
   String get weightLoss => 'Weight loss';
@@ -14705,9 +14460,6 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get resetTimerPosition => 'Reset Timer Position';
-
-  @override
-  String get apreCalculationMethod => 'APRE Calculation Method';
 
   @override
   String get errorDetails => 'Error Details';
@@ -16263,18 +16015,7 @@ class AppLocalizationsEn extends AppLocalizations {
       'Tutorials reset successfully! Tips will appear again as you use the app.';
 
   @override
-  String settingsApreCalculationMethodUpdated(Object method) {
-    return 'APRE calculation method updated to $method';
-  }
-
-  @override
-  String get settingsApreCalculationMethodLoading => 'APRE Calculation Method';
-
-  @override
   String get settingsLoadingGeneric => 'Loading...';
-
-  @override
-  String get settingsApreCalculationMethodError => 'APRE Calculation Method';
 
   @override
   String settingsErrorGeneric(Object error) {
@@ -16594,25 +16335,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get settingsWorkoutEssentials => 'Workout';
 
   @override
-  String get settingsApreAutoAdjustment => 'APRE Auto-Adjustment';
-
-  @override
-  String get settingsApreAutoAdjustmentDesc => 'Automatic weight progression';
-
-  @override
-  String get settingsApreProtocol => 'APRE Protocol';
-
-  @override
-  String settingsApreProtocolDesc(Object number) {
-    return 'Protocol $number';
-  }
-
-  @override
-  String settingsApreProtocolUpdated(Object protocol) {
-    return 'APRE protocol updated to $protocol';
-  }
-
-  @override
   String get settingsDayCutoffHour => 'Day Cutoff Hour';
 
   @override
@@ -16855,6 +16577,12 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get awesome => 'Awesome';
+
+  @override
+  String get remaining => 'left';
+
+  @override
+  String get maxLevel => 'MAX';
 
   @override
   String get alternativeExercises => 'Alternative Exercises';
@@ -20882,4 +20610,664 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get tutorialActionLearnMore => 'Learn more';
+
+  @override
+  String get unlockProInsights => 'Unlock Pro Insights';
+
+  @override
+  String get proInsightsDescription =>
+      'Get deeper insights into your training with advanced analytics';
+
+  @override
+  String get repZoneAnalysis => 'Rep Zone Analysis';
+
+  @override
+  String get repZoneDescription =>
+      'See how your training splits across strength, hypertrophy, and endurance zones';
+
+  @override
+  String get volumeProgressionDescription =>
+      'Track your weekly training volume and spot trends over time';
+
+  @override
+  String get muscleBalanceDescription =>
+      'Discover which muscle groups get the most work and find imbalances';
+
+  @override
+  String get upgradeToPro => 'Upgrade to Pro';
+
+  @override
+  String get maybeLater => 'Maybe Later';
+
+  @override
+  String get exampleData => 'Example with your style';
+
+  @override
+  String get seeWhichRepZones => 'See Which Rep Zones Dominate';
+
+  @override
+  String get watchVolumeGrow => 'Watch Your Volume Grow';
+
+  @override
+  String get analyzeBalance => 'Analyze Muscle Balance';
+
+  @override
+  String get proInsights => 'Pro Insights';
+
+  @override
+  String get proInsightsSubtitle => 'Advanced analytics for your training';
+
+  @override
+  String proInsightsPreview(int strength, int hypertrophy, int endurance) {
+    return 'Strength $strength% • Hypertrophy $hypertrophy% • Endurance $endurance%';
+  }
+
+  @override
+  String get proAnalyticsTitle => 'Advanced Analytics';
+
+  @override
+  String get proAnalyticsUnlocked => 'Full analytics unlocked';
+
+  @override
+  String get unlockProAnalytics => 'Unlock Pro Analytics';
+
+  @override
+  String get proAnalyticsDescription =>
+      'Get deeper insights into your training with rep zones, volume trends, and muscle balance analysis';
+
+  @override
+  String get repZoneDistribution => 'Rep Zone Distribution';
+
+  @override
+  String get noDataYet => 'No data yet';
+
+  @override
+  String get recoverWorkoutMessage =>
+      'A previous workout draft was found. Would you like to recover it?';
+
+  @override
+  String get recover => 'Recover';
+
+  @override
+  String get workoutRecovered => 'Workout recovered successfully!';
+
+  @override
+  String get makePublic => 'Make Public';
+
+  @override
+  String templateDuplicated(String name) {
+    return 'Template \"$name\" duplicated';
+  }
+
+  @override
+  String get editWorkoutLocked => 'Edit (locked)';
+
+  @override
+  String get onlyLatestWorkoutEditable =>
+      'Only your most recent workout can be edited for free';
+
+  @override
+  String get upgradeToEditAll => 'Upgrade to edit all workouts';
+
+  @override
+  String get journeyThemes => 'Journey Themes';
+
+  @override
+  String get shareTemplate => 'Share Template';
+
+  @override
+  String get format => 'Format';
+
+  @override
+  String get textFormat => 'Text';
+
+  @override
+  String get compactFormat => 'Compact';
+
+  @override
+  String get options => 'Options';
+
+  @override
+  String get techniques => 'Techniques';
+
+  @override
+  String get preview => 'Preview';
+
+  @override
+  String get copiedToClipboard => 'Copied to clipboard';
+
+  @override
+  String get workoutTimeSeemsShort => 'Workout time seems short';
+
+  @override
+  String get workoutTimeExplanation =>
+      'The recorded time is shorter than expected based on your exercises. This can happen if the app was in background.';
+
+  @override
+  String get keepOriginalTime => 'Keep Original Time';
+
+  @override
+  String get recordedTime => 'Recorded';
+
+  @override
+  String get suggestedTime => 'Suggested';
+
+  @override
+  String get useSuggestedTime => 'Use Suggested Time';
+
+  @override
+  String get modifyManually => 'Modify Manually';
+
+  @override
+  String get setWorkoutDuration => 'Set Workout Duration';
+
+  @override
+  String get repRangeAnalysis => 'Rep Range Analysis';
+
+  @override
+  String get repRangeDesc =>
+      'See how your sets distribute across strength, hypertrophy, and endurance zones';
+
+  @override
+  String get volumeProgressionDesc =>
+      'Track your weekly training volume trends over time';
+
+  @override
+  String journeyThemeSubtitle(int unlocked, int total) {
+    return '$unlocked of $total features unlocked';
+  }
+
+  @override
+  String get previewMode => 'Preview Mode';
+
+  @override
+  String get applyTheme => 'Apply Theme';
+
+  @override
+  String get levelInfo => 'Level Info';
+
+  @override
+  String get levelInfoSubtitle => 'Your progress and rewards';
+
+  @override
+  String xpToNextTier(int xp, String tier) {
+    return '$xp XP to reach $tier';
+  }
+
+  @override
+  String get maxTierReached => 'Maximum tier reached!';
+
+  @override
+  String get allTiers => 'All Tiers';
+
+  @override
+  String get locked => 'Locked';
+
+  @override
+  String tierRequirement(int xp) {
+    return 'Requires $xp XP';
+  }
+
+  @override
+  String get unlocked => 'Unlocked';
+
+  @override
+  String get howToEarnXP => 'How to Earn XP';
+
+  @override
+  String get earnXPWorkout => 'Complete Workouts';
+
+  @override
+  String get earnXPWorkoutDesc =>
+      'Earn 10-50 XP per completed workout based on intensity';
+
+  @override
+  String get earnXPStreak => 'Maintain Streaks';
+
+  @override
+  String get earnXPStreakDesc => 'Bonus XP for maintaining your workout streak';
+
+  @override
+  String get earnXPAchievement => 'Unlock Achievements';
+
+  @override
+  String get earnXPAchievementDesc =>
+      'Get XP rewards when you unlock new achievements';
+
+  @override
+  String get swipeDownToSave => 'Swipe down to save';
+
+  @override
+  String get reminderTimePresetMorning => 'Morning';
+
+  @override
+  String get reminderTimePresetAfternoon => 'Afternoon';
+
+  @override
+  String get reminderTimePresetEvening => 'Evening';
+
+  @override
+  String get reminderTimePresetCustom => 'Custom';
+
+  @override
+  String get reminderTimePresetMorningRange => '6:00 - 9:00';
+
+  @override
+  String get reminderTimePresetAfternoonRange => '12:00 - 14:00';
+
+  @override
+  String get reminderTimePresetEveningRange => '17:00 - 20:00';
+
+  @override
+  String featuresUnlocked(int count, int total) {
+    return '$count / $total features unlocked';
+  }
+
+  @override
+  String get featuresLocked => 'Features Locked';
+
+  @override
+  String xpToUnlock(int xp) {
+    return '$xp XP to unlock';
+  }
+
+  @override
+  String unlockAt(String tier) {
+    return 'Unlocks at $tier';
+  }
+
+  @override
+  String get expandExercise => 'Expand exercise details';
+
+  @override
+  String get tapToExpand => 'Tap to expand';
+
+  @override
+  String get adminPremiumToggle => 'Admin Premium Toggle';
+
+  @override
+  String get adminPremiumStatus => 'Premium Status';
+
+  @override
+  String adminPremiumActive(String tier) {
+    return 'Active ($tier)';
+  }
+
+  @override
+  String get adminPremiumInactive => 'Not active (free tier)';
+
+  @override
+  String get adminPremiumEnabled => 'Premium enabled for testing';
+
+  @override
+  String get adminPremiumDisabled => 'Premium disabled (back to free)';
+
+  @override
+  String get themeHunter => 'Hunter';
+
+  @override
+  String get themeHero => 'Hero';
+
+  @override
+  String get themeWarriorGoddess => 'Warrior Goddess';
+
+  @override
+  String get themeNatureSpirit => 'Nature Spirit';
+
+  @override
+  String get themePhoenix => 'Phoenix';
+
+  @override
+  String get themeFrost => 'Frost';
+
+  @override
+  String get taglineHunter => 'Track your prey';
+
+  @override
+  String get taglineHero => 'Rise to legend';
+
+  @override
+  String get taglineWarriorGoddess => 'Elegant power';
+
+  @override
+  String get taglineNatureSpirit => 'Flow with nature';
+
+  @override
+  String get taglinePhoenix => 'Rise from ashes';
+
+  @override
+  String get taglineFrost => 'Cold precision';
+
+  @override
+  String get selectYourTheme => 'Select Your Theme';
+
+  @override
+  String get confirmTheme => 'Confirm Theme';
+
+  @override
+  String get cancelPreview => 'Cancel Preview';
+
+  @override
+  String themeUnlockedAt(String tier) {
+    return 'Unlocks at $tier';
+  }
+
+  @override
+  String get balanceScore => 'Balance Score';
+
+  @override
+  String get balanceRatingExcellent => 'Excellent';
+
+  @override
+  String get balanceRatingGood => 'Good';
+
+  @override
+  String get balanceRatingFair => 'Fair';
+
+  @override
+  String get balanceRatingNeedsImprovement => 'Needs Improvement';
+
+  @override
+  String get balanceRatingPoor => 'Poor';
+
+  @override
+  String get upperLowerRatio => 'Upper/Lower Ratio';
+
+  @override
+  String optimalRatio(String ratio) {
+    return 'Optimal: $ratio';
+  }
+
+  @override
+  String get warningsDetected => 'Warnings Detected';
+
+  @override
+  String get pushPullImbalance => 'Push/Pull imbalance detected';
+
+  @override
+  String get upperLowerImbalance => 'Upper/Lower imbalance detected';
+
+  @override
+  String neglectedMusclesWarning(int count) {
+    return '$count neglected muscle groups';
+  }
+
+  @override
+  String get topTrainedMuscles => 'Top Trained Muscles';
+
+  @override
+  String muscleVolumePercentage(String muscle, String percentage) {
+    return '$muscle: $percentage%';
+  }
+
+  @override
+  String get frontView => 'Front View';
+
+  @override
+  String get backView => 'Back View';
+
+  @override
+  String get intensityLow => 'Low';
+
+  @override
+  String get intensityHigh => 'High';
+
+  @override
+  String get neglectedMuscles => 'Neglected Muscles';
+
+  @override
+  String get exerciseSuggestions => 'Exercise Suggestions';
+
+  @override
+  String get addToNextWorkout => 'Add to Next Workout';
+
+  @override
+  String get priority => 'Priority';
+
+  @override
+  String get noNeglectedMuscles =>
+      'No neglected muscles detected. Great balance!';
+
+  @override
+  String get timeFilter => 'Time Period';
+
+  @override
+  String get last3Months => 'Last 3 Months';
+
+  @override
+  String get trendImproving => 'Improving';
+
+  @override
+  String get trendStable => 'Stable';
+
+  @override
+  String get trendDeclining => 'Declining';
+
+  @override
+  String get greetingMorning => 'Good morning';
+
+  @override
+  String get greetingAfternoon => 'Good afternoon';
+
+  @override
+  String get greetingEvening => 'Good evening';
+
+  @override
+  String get greetingNight => 'Good night';
+
+  @override
+  String get heroMorning1 => 'let\'s crush those weights!';
+
+  @override
+  String get heroMorning2 => 'time to become legendary!';
+
+  @override
+  String get heroMorning3 => 'the villains won\'t defeat themselves!';
+
+  @override
+  String get heroAfternoon1 => 'train to become the strongest!';
+
+  @override
+  String get heroAfternoon2 => 'your power grows with each rep!';
+
+  @override
+  String get heroAfternoon3 => 'heroes never skip training!';
+
+  @override
+  String get heroEvening1 => 'ready for an evening of heroics?';
+
+  @override
+  String get heroEvening2 => 'the night needs a hero!';
+
+  @override
+  String get heroEvening3 => 'time to save the day!';
+
+  @override
+  String get heroNight1 => 'evil never sleeps!';
+
+  @override
+  String get heroNight2 => 'guardians train at night!';
+
+  @override
+  String get heroNight3 => 'the darkness awaits your strength!';
+
+  @override
+  String get hunterMorning1 => 'the hunt begins!';
+
+  @override
+  String get hunterMorning2 => 'track your prey!';
+
+  @override
+  String get hunterMorning3 => 'sharpen your skills!';
+
+  @override
+  String get hunterAfternoon1 => 'stay focused on the target!';
+
+  @override
+  String get hunterAfternoon2 => 'predators never rest!';
+
+  @override
+  String get hunterAfternoon3 => 'precision is everything!';
+
+  @override
+  String get hunterEvening1 => 'the perfect time to strike!';
+
+  @override
+  String get hunterEvening2 => 'shadows are your ally!';
+
+  @override
+  String get hunterEvening3 => 'silent but deadly!';
+
+  @override
+  String get hunterNight1 => 'nocturnal hunters are the best!';
+
+  @override
+  String get hunterNight2 => 'the night is your domain!';
+
+  @override
+  String get hunterNight3 => 'darkness hides the strongest!';
+
+  @override
+  String get warriorGoddessMorning1 => 'grace and power await!';
+
+  @override
+  String get warriorGoddessMorning2 => 'rise with elegance!';
+
+  @override
+  String get warriorGoddessMorning3 => 'your crown awaits!';
+
+  @override
+  String get warriorGoddessAfternoon1 => 'rule with strength!';
+
+  @override
+  String get warriorGoddessAfternoon2 => 'queens don\'t quit!';
+
+  @override
+  String get warriorGoddessAfternoon3 => 'fierce and fabulous!';
+
+  @override
+  String get warriorGoddessEvening1 => 'the throne awaits!';
+
+  @override
+  String get warriorGoddessEvening2 => 'power meets elegance!';
+
+  @override
+  String get warriorGoddessEvening3 => 'conquer with grace!';
+
+  @override
+  String get warriorGoddessNight1 => 'even goddesses train at night!';
+
+  @override
+  String get warriorGoddessNight2 => 'moonlit power session!';
+
+  @override
+  String get warriorGoddessNight3 => 'the stars shine for you!';
+
+  @override
+  String get natureSpiritMorning1 => 'flow with the sunrise!';
+
+  @override
+  String get natureSpiritMorning2 => 'energy from nature!';
+
+  @override
+  String get natureSpiritMorning3 => 'breathe, grow, thrive!';
+
+  @override
+  String get natureSpiritAfternoon1 => 'harmony in motion!';
+
+  @override
+  String get natureSpiritAfternoon2 => 'strong as the oak!';
+
+  @override
+  String get natureSpiritAfternoon3 => 'root deep, grow tall!';
+
+  @override
+  String get natureSpiritEvening1 => 'sunset strength session!';
+
+  @override
+  String get natureSpiritEvening2 => 'balance body and soul!';
+
+  @override
+  String get natureSpiritEvening3 => 'flow like water!';
+
+  @override
+  String get natureSpiritNight1 => 'calm night, strong spirit!';
+
+  @override
+  String get natureSpiritNight2 => 'moonlit meditation workout!';
+
+  @override
+  String get natureSpiritNight3 => 'rest prepares growth!';
+
+  @override
+  String get phoenixMorning1 => 'rise and burn!';
+
+  @override
+  String get phoenixMorning2 => 'reborn with fire!';
+
+  @override
+  String get phoenixMorning3 => 'ashes to glory!';
+
+  @override
+  String get phoenixAfternoon1 => 'flames of determination!';
+
+  @override
+  String get phoenixAfternoon2 => 'burn through limits!';
+
+  @override
+  String get phoenixAfternoon3 => 'unstoppable fire!';
+
+  @override
+  String get phoenixEvening1 => 'evening inferno awaits!';
+
+  @override
+  String get phoenixEvening2 => 'sunset flames burn bright!';
+
+  @override
+  String get phoenixEvening3 => 'ignite your power!';
+
+  @override
+  String get phoenixNight1 => 'flames never fade!';
+
+  @override
+  String get phoenixNight2 => 'midnight fire session!';
+
+  @override
+  String get phoenixNight3 => 'rebirth in darkness!';
+
+  @override
+  String get frostMorning1 => 'cold precision awaits!';
+
+  @override
+  String get frostMorning2 => 'sharp as ice!';
+
+  @override
+  String get frostMorning3 => 'cool focus, strong body!';
+
+  @override
+  String get frostAfternoon1 => 'calculated power!';
+
+  @override
+  String get frostAfternoon2 => 'ice cold determination!';
+
+  @override
+  String get frostAfternoon3 => 'freeze the competition!';
+
+  @override
+  String get frostEvening1 => 'winter never rests!';
+
+  @override
+  String get frostEvening2 => 'chill zone power session!';
+
+  @override
+  String get frostEvening3 => 'cool under pressure!';
+
+  @override
+  String get frostNight1 => 'frozen night, hot gains!';
+
+  @override
+  String get frostNight2 => 'the cold sharpens the mind!';
+
+  @override
+  String get frostNight3 => 'winter warriors unite!';
 }

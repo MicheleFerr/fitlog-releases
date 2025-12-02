@@ -198,7 +198,7 @@
   "onboardingAdvancedFeaturesDescription": "Esplora le features Pro:\\n\\n• Superset e Dropset\\n• Rest-Pause e tecniche avanzate\\n• Analytics e insights\\n• Suggerimenti community\\n• Warmup automatici\\n• Calcolo 1-Rep Max\\n• Export e condivisione",
   "onboardingCongratulations": "Congratulazioni!",
   "onboardingCompletedMessage": "Hai completato il tutorial completo di FitLog Pro. Ora sei pronto per iniziare i tuoi allenamenti!",
-  "selected": "selezionati",
+  "selected": "Selezionato",
   "onboardingFeaturesTitle": "Funzionalità Potenti",
   "onboardingFeature1": "Traccia serie, ripetizioni e peso",
   "onboardingFeature2": "Timer riposo con Live Activities",
@@ -1864,152 +1864,6 @@
       }
     }
   },
-  "apreProtocol": "Protocollo APRE",
-  "@apreProtocol": {
-    "description": "Label for APRE protocol"
-  },
-  "apreAdjustment": "Regolazione APRE",
-  "@apreAdjustment": {
-    "description": "Label for APRE weight adjustment"
-  },
-  "apreSetWeight": "Peso Serie {setNumber}:",
-  "@apreSetWeight": {
-    "description": "Label for set weight in APRE",
-    "placeholders": {
-      "setNumber": {
-        "type": "int",
-        "example": "4"
-      }
-    }
-  },
-  "apreCompletedReps": "Hai completato {actual} reps (target: {target})",
-  "@apreCompletedReps": {
-    "description": "APRE reps completed message",
-    "placeholders": {
-      "actual": {
-        "type": "int",
-        "example": "9"
-      },
-      "target": {
-        "type": "int",
-        "example": "6"
-      }
-    }
-  },
-  "apreApply": "Applica",
-  "@apreApply": {
-    "description": "Button to apply APRE suggestion"
-  },
-  "apreWeightAdjusted": "APRE: Peso serie {setNumber} regolato a {weight} kg",
-  "@apreWeightAdjusted": {
-    "description": "Confirmation message for APRE weight adjustment",
-    "placeholders": {
-      "setNumber": {
-        "type": "int",
-        "example": "4"
-      },
-      "weight": {
-        "type": "String",
-        "example": "85.0"
-      }
-    }
-  },
-  "apreAutoregulation": "Autoregolazione APRE",
-  "@apreAutoregulation": {
-    "description": "APRE autoregulation toggle label"
-  },
-  "apreAutoregulationDescription": "Regolazione automatica del peso basata sulla performance",
-  "@apreAutoregulationDescription": {
-    "description": "APRE autoregulation description"
-  },
-  "apreProtocolSelect": "Seleziona Protocollo APRE",
-  "@apreProtocolSelect": {
-    "description": "Label for APRE protocol selection"
-  },
-  "apreProtocol3Description": "Protocollo forza pesante (target 3 reps)",
-  "@apreProtocol3Description": {
-    "description": "Description for APRE 3 protocol"
-  },
-  "apreProtocol6Description": "Protocollo forza e ipertrofia (target 6 reps)",
-  "@apreProtocol6Description": {
-    "description": "Description for APRE 6 protocol"
-  },
-  "apreProtocol10Description": "Protocollo ipertrofia e resistenza (target 10 reps)",
-  "@apreProtocol10Description": {
-    "description": "Description for APRE 10 protocol"
-  },
-  "apreBaseWeight": "Peso Base APRE",
-  "@apreBaseWeight": {
-    "description": "Label for APRE base weight input"
-  },
-  "apreBaseWeightHint": "Inserisci il tuo peso per 3RM, 6RM o 10RM",
-  "@apreBaseWeightHint": {
-    "description": "Hint for APRE base weight input"
-  },
-  "apreProtocol3Helper": "Usa il tuo massimale per 3 ripetizioni",
-  "@apreProtocol3Helper": {
-    "description": "Helper text for APRE 3 protocol"
-  },
-  "apreProtocol6Helper": "Usa il tuo massimale per 6 ripetizioni",
-  "@apreProtocol6Helper": {
-    "description": "Helper text for APRE 6 protocol"
-  },
-  "apreProtocol10Helper": "Usa il tuo massimale per 10 ripetizioni",
-  "@apreProtocol10Helper": {
-    "description": "Helper text for APRE 10 protocol"
-  },
-  "apreProtocolPreview": "Anteprima Cambio Protocollo",
-  "@apreProtocolPreview": {
-    "description": "Title for APRE protocol change preview"
-  },
-  "aprePreviewDescription": "Vedi come cambieranno i tuoi pesi con il nuovo protocollo",
-  "@aprePreviewDescription": {
-    "description": "Description for protocol preview feature"
-  },
-  "apreCurrentProtocol": "Attuale (APRE {protocol})",
-  "@apreCurrentProtocol": {
-    "description": "Label for current protocol in preview",
-    "placeholders": {
-      "protocol": {
-        "type": "int",
-        "description": "Current protocol number (3, 6, or 10)"
-      }
-    }
-  },
-  "apreNewProtocol": "Nuovo (APRE {protocol})",
-  "@apreNewProtocol": {
-    "description": "Label for new protocol in preview",
-    "placeholders": {
-      "protocol": {
-        "type": "int",
-        "description": "New protocol number (3, 6, or 10)"
-      }
-    }
-  },
-  "apreSet1Preview": "Serie 1 (50%)",
-  "@apreSet1Preview": {
-    "description": "Label for Set 1 in protocol preview"
-  },
-  "apreSet2Preview": "Serie 2 (75%)",
-  "@apreSet2Preview": {
-    "description": "Label for Set 2 in protocol preview"
-  },
-  "apreSet3Preview": "Serie 3 (100%)",
-  "@apreSet3Preview": {
-    "description": "Label for Set 3 in protocol preview"
-  },
-  "apreSet4Preview": "Serie 4",
-  "@apreSet4Preview": {
-    "description": "Label for Set 4 in protocol preview"
-  },
-  "apreAdjustedBasedOnPerformance": "Adattato in base alla performance",
-  "@apreAdjustedBasedOnPerformance": {
-    "description": "Description for Set 4 adjustment in protocol preview"
-  },
-  "apreApplyChanges": "Applica Modifiche",
-  "@apreApplyChanges": {
-    "description": "Button to apply protocol changes in preview"
-  },
   "autoAdjustment": "Regolazione Automatica",
   "@autoAdjustment": {
     "description": "Label for automatic load adjustment feature"
@@ -2143,21 +1997,6 @@
   "autoCollapseDescription": "Collassa automaticamente gli esercizi completati",
   "autoCollapseTooltip": "Gli esercizi completati verranno minimizzati automaticamente per mantenere la schermata pulita e focalizzata sugli esercizi attivi.",
   "intelligentAutoRegulation": "⚡ Auto-Regolazione Intelligente",
-  "apreSystemTitle": "📈 Sistema APRE",
-  "apreSystemSubtitle": "Auto-Regolazione Basata su Ripetizioni",
-  "enableApreTitle": "Abilita APRE",
-  "enableApreDescription": "Calcolo automatico pesi da storico per nuovi esercizi",
-  "enableApreTooltip": "APRE analizza lo storico degli allenamenti per calcolare il tuo 1RM e suggerire automaticamente i pesi appropriati per ogni protocollo (3, 6 o 10 ripetizioni).",
-  "apreProtocolTitle": "Protocollo APRE",
-  "apre3": "APRE 3",
-  "apre6": "APRE 6",
-  "apre10": "APRE 10",
-  "apre3Description": "Ideale per forza massima (3+ reps fino al cedimento)",
-  "apre6Description": "Bilanciato per forza e ipertrofia (6+ reps)",
-  "apre10Description": "Perfetto per ipertrofia e resistenza (10+ reps)",
-  "autoAdjustRestApreTitle": "Auto-Regola Recupero",
-  "autoAdjustRestApreDescription": "Aumenta recupero se cali il carico",
-  "autoAdjustRestApreTooltip": "Quando il peso sollevato diminuisce, il sistema aumenta automaticamente il tempo di recupero per aiutarti a gestire la fatica.",
   "rpeSystemTitle": "💪 Sistema RPE/RIR",
   "rpeSystemSubtitle": "Auto-Regolazione Basata su Sforzo",
   "enableRpeTitle": "Abilita Monitoraggio RPE",
@@ -3240,7 +3079,7 @@
   "templateNameHint": "Es: Push Day, Upper Body...",
   "descriptionHint": "Descrivi brevemente questo workout...",
   "templateSyncInfo": "Il template verrà salvato su Firebase e sarà disponibile su tutti i tuoi dispositivi",
-  "enterTemplateName": "Inserisci un nome per il template",
+  "enterTemplateName": "Inserisci nome template",
   "savingToFirebase": "Salvataggio su Firebase...",
   "templateSavedSuccess": "Template \"{name}\" salvato con successo!",
   "view": "Visualizza",
@@ -3267,8 +3106,6 @@
   "templateCreated": "Nuovo template creato",
   "failedToSaveTemplate": "Impossibile salvare il template",
   "pleaseEnterTemplateName": "Inserisci un nome per il template",
-  "enterTemplateName": "Inserisci nome template",
-  "selected": "Selezionato",
   "errorSavingTemplate": "Errore nel salvataggio del template",
   "templateConfiguration": "Configurazione",
   "tagsOptional": "Tag (opzionale)",
@@ -3372,7 +3209,6 @@
   "errorUpdatingExercise": "Errore nell'aggiornamento dell'esercizio. Riprova.",
   "exerciseNameCannotBeEmpty": "{exerciseName} non può essere vuoto",
   "invalidRestTimeError": "Inserisci un tempo di riposo valido (1-3600 secondi)",
-  "invalidApreBaseWeight": "Inserisci un peso base APRE valido",
   "notesSavedMessage": "Note salvate",
   "exerciseCompletedTapToExpand": "{exerciseName} completato! Tocca per espandere",
   "expandLabel": "Espandi",
@@ -5945,100 +5781,6 @@
   "@errorLoadingDocument": {
     "description": "Messaggio di errore quando il caricamento del documento fallisce"
   },
-  "apreCalculationMetadata": "Analisi Calcolo",
-  "@apreCalculationMetadata": {
-    "description": "Intestazione per il display dei metadati di calcolo APRE"
-  },
-  "apreShowCalculationDetails": "Mostra Dettagli Calcolo",
-  "@apreShowCalculationDetails": {
-    "description": "Pulsante per espandere il banner dei metadati di calcolo"
-  },
-  "apreHideCalculationDetails": "Nascondi Dettagli Calcolo",
-  "@apreHideCalculationDetails": {
-    "description": "Pulsante per comprimere il banner dei metadati di calcolo"
-  },
-  "apreFormula": "Formula",
-  "@apreFormula": {
-    "description": "Etichetta per la formula di calcolo 1RM"
-  },
-  "apreDataPoints": "Dati Analizzati",
-  "@apreDataPoints": {
-    "description": "Etichetta per il numero di serie analizzate"
-  },
-  "apreDataAge": "Età Dati",
-  "@apreDataAge": {
-    "description": "Etichetta per l'età dei dati utilizzati nel calcolo"
-  },
-  "apreStandardDeviation": "Variabilità",
-  "@apreStandardDeviation": {
-    "description": "Etichetta per la deviazione standard delle stime"
-  },
-  "apreConfidence": "Affidabilità",
-  "@apreConfidence": {
-    "description": "Etichetta per il livello di confidenza del calcolo"
-  },
-  "apreLastCalculation": "Ultimo Aggiornamento",
-  "@apreLastCalculation": {
-    "description": "Etichetta per la data dell'ultimo calcolo"
-  },
-  "apreDaysAgo": "{days, plural, =0{Oggi} =1{Ieri} other{{days} giorni fa}}",
-  "@apreDaysAgo": {
-    "description": "Formato per visualizzare i giorni dall'ultimo dato",
-    "placeholders": {
-      "days": {
-        "type": "int",
-        "example": "5"
-      }
-    }
-  },
-  "apreNoHistory": "Nessuno Storico Disponibile",
-  "@apreNoHistory": {
-    "description": "Titolo quando l'utente non ha dati storici APRE"
-  },
-  "apreNoHistoryDescription": "Nessun dato storico disponibile per i calcoli APRE. Seleziona come vuoi stimare il tuo 1RM per iniziare.",
-  "@apreNoHistoryDescription": {
-    "description": "Descrizione quando l'utente non ha dati storici APRE"
-  },
-  "apreOptionFromLastWorkout": "Dall'Ultimo Allenamento",
-  "@apreOptionFromLastWorkout": {
-    "description": "Opzione per usare peso/ripetizioni dell'ultimo allenamento come stima"
-  },
-  "apreOptionManualEstimate": "Stima Manuale",
-  "@apreOptionManualEstimate": {
-    "description": "Opzione per inserire manualmente il 1RM stimato"
-  },
-  "apreOptionTestSet": "Serie di Test",
-  "@apreOptionTestSet": {
-    "description": "Opzione per guidare l'utente a fare una serie di test"
-  },
-  "apreOptionFromLastWorkoutDescription": "Usa peso/ripetizioni dell'ultima serie come stima",
-  "@apreOptionFromLastWorkoutDescription": {
-    "description": "Descrizione per l'opzione dall'ultimo allenamento"
-  },
-  "apreOptionManualEstimateDescription": "Inserisci direttamente il 1RM stimato",
-  "@apreOptionManualEstimateDescription": {
-    "description": "Descrizione per l'opzione stima manuale"
-  },
-  "apreOptionTestSetDescription": "Guida per fare prima una serie di test",
-  "@apreOptionTestSetDescription": {
-    "description": "Descrizione per l'opzione serie di test"
-  },
-  "apreEnter1RM": "Inserisci 1RM Stimato (kg)",
-  "@apreEnter1RM": {
-    "description": "Etichetta per il campo di input 1RM"
-  },
-  "aprePreviewWeights": "Anteprima Pesi",
-  "@aprePreviewWeights": {
-    "description": "Etichetta per la sezione anteprima pesi"
-  },
-  "apreContinue": "Continua",
-  "@apreContinue": {
-    "description": "Pulsante continua nel modal APRE"
-  },
-  "apreCancel": "Annulla",
-  "@apreCancel": {
-    "description": "Pulsante annulla nel modal APRE"
-  },
   "ageGateTitle": "Verifica la Tua Età",
   "@ageGateTitle": {
     "description": "Titolo per schermata di verifica età"
@@ -6090,26 +5832,6 @@
   "footerDisclaimerTapHint": "Tocca per disclaimer completo",
   "@footerDisclaimerTapHint": {
     "description": "Suggerimento per toccare il footer per il disclaimer completo"
-  },
-  "apreProtocolChangeWarningTitle": "Allenamento in Corso",
-  "@apreProtocolChangeWarningTitle": {
-    "description": "Titolo del dialog di avviso cambio protocollo APRE"
-  },
-  "apreProtocolChangeWarningMessage": "Non puoi cambiare protocollo APRE durante un allenamento attivo. Completa prima l'allenamento corrente, poi torna per modificare le impostazioni del protocollo.",
-  "@apreProtocolChangeWarningMessage": {
-    "description": "Messaggio che spiega perché il protocollo APRE non può essere cambiato durante l'allenamento"
-  },
-  "apreGotIt": "Ho capito",
-  "@apreGotIt": {
-    "description": "Pulsante per chiudere l'avviso allenamento in corso"
-  },
-  "apreCalculationMethodTitle": "Metodo Calcolo APRE",
-  "@apreCalculationMethodTitle": {
-    "description": "Titolo per impostazione metodo calcolo APRE"
-  },
-  "apreCalculationMethodDescription": "Scegli come vengono selezionate le serie storiche per la stima del 1RM negli allenamenti APRE. Strategie diverse ottimizzano recency, volume dati o stabilità.",
-  "@apreCalculationMethodDescription": {
-    "description": "Descrizione che spiega le opzioni del metodo calcolo APRE"
   },
   "about": "About",
   "accurate": "Accurate",
@@ -7008,11 +6730,6 @@
   },
   "resetTimerPosition": "Reset Timer Position",
   "@resetTimerPosition": {
-    "description": "From quick wins migration - 2 occurrences",
-    "context": "Found in: lib/features/settings/presentation/settings_screen.dart"
-  },
-  "apreCalculationMethod": "APRE Calculation Method",
-  "@apreCalculationMethod": {
     "description": "From quick wins migration - 2 occurrences",
     "context": "Found in: lib/features/settings/presentation/settings_screen.dart"
   },
@@ -8913,8 +8630,12 @@
   "settingsTutorialsSeenCount": "{seen} di {total} tutorial visti",
   "@settingsTutorialsSeenCount": {
     "placeholders": {
-      "seen": {"type": "int"},
-      "total": {"type": "int"}
+      "seen": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
     }
   },
   "settingsResetTutorials": "Resetta Tutorial",
@@ -8922,10 +8643,7 @@
   "settingsResetTutorialsConfirmTitle": "Resettare i Tutorial?",
   "settingsResetTutorialsConfirmBody": "Questo ti permetterà di rivedere tutti i tutorial contestuali. I tuoi dati di allenamento e le impostazioni non saranno modificati.",
   "settingsTutorialsResetSuccess": "Tutorial resettati con successo! I suggerimenti appariranno nuovamente mentre usi l'app.",
-  "settingsApreCalculationMethodUpdated": "Metodo di calcolo APRE aggiornato a {method}",
-  "settingsApreCalculationMethodLoading": "Metodo Calcolo APRE",
   "settingsLoadingGeneric": "Caricamento...",
-  "settingsApreCalculationMethodError": "Metodo Calcolo APRE",
   "settingsErrorGeneric": "Errore: {error}",
   "exerciseListEdit": "Modifica",
   "exerciseListDuplicate": "Duplica",
@@ -9021,11 +8739,6 @@
   "settingsTextSize": "Dimensione Testo",
   "settingsTextSizePreview": "Testo di esempio ({size})",
   "settingsWorkoutEssentials": "Allenamento",
-  "settingsApreAutoAdjustment": "Auto-Regolazione APRE",
-  "settingsApreAutoAdjustmentDesc": "Progressione automatica del peso",
-  "settingsApreProtocol": "Protocollo APRE",
-  "settingsApreProtocolDesc": "Protocollo {number}",
-  "settingsApreProtocolUpdated": "Protocollo APRE aggiornato a {protocol}",
   "settingsDayCutoffHour": "Orario Limite Giornata",
   "settingsDayCutoffHourDesc": "Allenamenti dopo le {hour}:00 contano come 'oggi'",
   "settingsDayCutoffHourDialog": "Orario Limite Giornata",
@@ -9372,6 +9085,14 @@
   "awesome": "Fantastico",
   "@awesome": {
     "description": "Testo pulsante celebrazione"
+  },
+  "remaining": "mancanti",
+  "@remaining": {
+    "description": "Testo che indica XP mancanti al prossimo livello"
+  },
+  "maxLevel": "MAX",
+  "@maxLevel": {
+    "description": "Etichetta per livello massimo raggiunto"
   },
   "alternativeExercises": "Esercizi Alternativi",
   "@alternativeExercises": {
@@ -15081,7 +14802,6 @@
   "@startScheduledWorkout": {
     "description": "Button to start a scheduled workout"
   },
-
   "tutorialLoggingSetTitle": "Come registrare una serie",
   "@tutorialLoggingSetTitle": {
     "description": "Title for the logging set tutorial"
@@ -15209,5 +14929,732 @@
   "tutorialActionLearnMore": "Scopri di più",
   "@tutorialActionLearnMore": {
     "description": "Action button text to learn more about feature"
+  },
+  "unlockProInsights": "Sblocca Pro Insights",
+  "@unlockProInsights": {
+    "description": "Title for upgrade dialog"
+  },
+  "proInsightsDescription": "Ottieni analisi approfondite del tuo allenamento con statistiche avanzate",
+  "@proInsightsDescription": {
+    "description": "Description in upgrade dialog"
+  },
+  "repZoneAnalysis": "Analisi Zone Rep",
+  "@repZoneAnalysis": {
+    "description": "Rep zone feature title"
+  },
+  "repZoneDescription": "Scopri come si distribuisce il tuo allenamento tra forza, ipertrofia e resistenza",
+  "@repZoneDescription": {
+    "description": "Rep zone feature description"
+  },
+  "volumeProgression": "Progressione Volume",
+  "@volumeProgression": {
+    "description": "Volume progression feature title"
+  },
+  "volumeProgressionDescription": "Monitora il volume settimanale e identifica i trend nel tempo",
+  "@volumeProgressionDescription": {
+    "description": "Volume progression feature description"
+  },
+  "muscleBalance": "Bilanciamento Muscoli",
+  "@muscleBalance": {
+    "description": "Muscle balance feature title"
+  },
+  "muscleBalanceDescription": "Scopri quali gruppi muscolari alleni di più e trova squilibri",
+  "@muscleBalanceDescription": {
+    "description": "Muscle balance feature description"
+  },
+  "upgradeToPro": "Passa a Pro",
+  "@upgradeToPro": {
+    "description": "CTA button to upgrade to premium"
+  },
+  "maybeLater": "Forse Dopo",
+  "@maybeLater": {
+    "description": "Dismiss button in upgrade dialog"
+  },
+  "exampleData": "Esempio con il tuo stile",
+  "@exampleData": {
+    "description": "Label indicating example/demo data"
+  },
+  "strengthZone": "Forza",
+  "@strengthZone": {
+    "description": "Strength training zone label (1-5 reps)"
+  },
+  "hypertrophyZone": "Ipertrofia",
+  "@hypertrophyZone": {
+    "description": "Hypertrophy training zone label (6-12 reps)"
+  },
+  "enduranceZone": "Resistenza",
+  "@enduranceZone": {
+    "description": "Endurance training zone label (13+ reps)"
+  },
+  "seeWhichRepZones": "Vedi Quali Zone Rep Dominano",
+  "@seeWhichRepZones": {
+    "description": "Benefit-driven title for rep zone analysis"
+  },
+  "watchVolumeGrow": "Guarda Crescere il Volume",
+  "@watchVolumeGrow": {
+    "description": "Benefit-driven title for volume progression"
+  },
+  "analyzeBalance": "Analizza il Bilanciamento",
+  "@analyzeBalance": {
+    "description": "Benefit-driven title for muscle balance"
+  },
+  "weeklyVolume": "Volume Settimanale",
+  "@weeklyVolume": {
+    "description": "Weekly volume chart label"
+  },
+  "proInsights": "Pro Insights",
+  "@proInsights": {
+    "description": "Title for Pro Insights section"
+  },
+  "proInsightsSubtitle": "Analisi avanzate per il tuo allenamento",
+  "@proInsightsSubtitle": {
+    "description": "Subtitle for Pro Insights section"
+  },
+  "proInsightsPreview": "Forza {strength}% • Ipertrofia {hypertrophy}% • Resistenza {endurance}%",
+  "@proInsightsPreview": {
+    "description": "Quick preview of rep zone distribution in pro insights badge",
+    "placeholders": {
+      "strength": {
+        "type": "int",
+        "example": "33"
+      },
+      "hypertrophy": {
+        "type": "int",
+        "example": "34"
+      },
+      "endurance": {
+        "type": "int",
+        "example": "33"
+      }
+    }
+  },
+  "proAnalyticsTitle": "Analisi Avanzate",
+  "@proAnalyticsTitle": {
+    "description": "Title for pro analytics full screen"
+  },
+  "proAnalyticsUnlocked": "Analytics complete sbloccate",
+  "@proAnalyticsUnlocked": {
+    "description": "Status text when user has premium access to analytics"
+  },
+  "unlockProAnalytics": "Sblocca Analytics Pro",
+  "@unlockProAnalytics": {
+    "description": "Title for locked pro analytics section"
+  },
+  "proAnalyticsDescription": "Ottieni insights più approfonditi sul tuo allenamento con zone di ripetizioni, trend di volume e analisi del bilanciamento muscolare",
+  "@proAnalyticsDescription": {
+    "description": "Description of what pro analytics offers"
+  },
+  "repZoneDistribution": "Distribuzione Zone Ripetizioni",
+  "@repZoneDistribution": {
+    "description": "Title for rep zone distribution chart"
+  },
+  "noDataYet": "Nessun dato disponibile",
+  "@noDataYet": {
+    "description": "Message when there is no data to display"
+  },
+  "recoverWorkoutMessage": "È stata trovata una bozza di allenamento precedente. Vuoi recuperarla?",
+  "@recoverWorkoutMessage": {
+    "description": "Message asking user if they want to recover a workout draft"
+  },
+  "recover": "Recupera",
+  "@recover": {
+    "description": "Button to recover a draft workout"
+  },
+  "workoutRecovered": "Allenamento recuperato con successo!",
+  "@workoutRecovered": {
+    "description": "Success message when workout draft is recovered"
+  },
+  "makePublic": "Rendi Pubblico",
+  "@makePublic": {
+    "description": "Option to make a template publicly available"
+  },
+  "templateDuplicated": "Template \"{name}\" duplicato",
+  "@templateDuplicated": {
+    "description": "Success message when template is duplicated",
+    "placeholders": {
+      "name": {
+        "type": "String",
+        "example": "Push Day"
+      }
+    }
+  },
+  "editWorkoutLocked": "Modifica (bloccato)",
+  "@editWorkoutLocked": {
+    "description": "Label for locked edit button"
+  },
+  "onlyLatestWorkoutEditable": "Solo l'allenamento più recente può essere modificato gratuitamente",
+  "@onlyLatestWorkoutEditable": {
+    "description": "Explanation that only latest workout is editable"
+  },
+  "upgradeToEditAll": "Aggiorna per modificare tutti gli allenamenti",
+  "@upgradeToEditAll": {
+    "description": "CTA to upgrade for editing all workouts"
+  },
+  "journeyThemes": "Temi Viaggio",
+  "@journeyThemes": {
+    "description": "Title for journey themes section"
+  },
+  "shareTemplate": "Condividi Template",
+  "@shareTemplate": {
+    "description": "Title for sharing a workout template"
+  },
+  "format": "Formato",
+  "@format": {
+    "description": "Label for format selection"
+  },
+  "textFormat": "Testo",
+  "@textFormat": {
+    "description": "Text format option for sharing"
+  },
+  "compactFormat": "Compatto",
+  "@compactFormat": {
+    "description": "Compact format option for sharing"
+  },
+  "options": "Opzioni",
+  "@options": {
+    "description": "Label for options section"
+  },
+  "techniques": "Tecniche",
+  "@techniques": {
+    "description": "Label for exercise techniques"
+  },
+  "preview": "Anteprima",
+  "@preview": {
+    "description": "Label for preview section"
+  },
+  "copiedToClipboard": "Copiato negli appunti",
+  "@copiedToClipboard": {
+    "description": "Success message when content is copied"
+  },
+  "workoutTimeSeemsShort": "La durata sembra breve",
+  "@workoutTimeSeemsShort": {
+    "description": "Title when recorded workout time is suspiciously short"
+  },
+  "workoutTimeExplanation": "Il tempo registrato è inferiore al previsto in base ai tuoi esercizi. Può succedere se l'app era in background.",
+  "@workoutTimeExplanation": {
+    "description": "Explanation for why workout time might be short"
+  },
+  "keepOriginalTime": "Mantieni Tempo Originale",
+  "@keepOriginalTime": {
+    "description": "Button to keep the original recorded time"
+  },
+  "recordedTime": "Registrato",
+  "@recordedTime": {
+    "description": "Label for the recorded workout time"
+  },
+  "suggestedTime": "Suggerito",
+  "@suggestedTime": {
+    "description": "Label for the suggested workout time"
+  },
+  "useSuggestedTime": "Usa Tempo Suggerito",
+  "@useSuggestedTime": {
+    "description": "Button to use the suggested workout time"
+  },
+  "modifyManually": "Modifica Manualmente",
+  "@modifyManually": {
+    "description": "Button to manually modify the workout time"
+  },
+  "setWorkoutDuration": "Imposta Durata Allenamento",
+  "@setWorkoutDuration": {
+    "description": "Title for manual duration picker"
+  },
+  "repRangeAnalysis": "Analisi Rep Range",
+  "@repRangeAnalysis": {
+    "description": "Title for rep range analysis chart"
+  },
+  "repRangeDesc": "Vedi come i tuoi set si distribuiscono tra zone di forza, ipertrofia e resistenza",
+  "@repRangeDesc": {
+    "description": "Description for rep range analysis"
+  },
+  "volumeProgressionDesc": "Monitora le tendenze del volume di allenamento settimanale nel tempo",
+  "@volumeProgressionDesc": {
+    "description": "Description for volume progression chart"
+  },
+  "journeyThemeSubtitle": "{unlocked} di {total} funzionalità sbloccate",
+  "@journeyThemeSubtitle": {
+    "description": "Subtitle showing unlocked features count",
+    "placeholders": {
+      "unlocked": {
+        "type": "int",
+        "example": "3"
+      },
+      "total": {
+        "type": "int",
+        "example": "5"
+      }
+    }
+  },
+  "previewMode": "Modalità Anteprima",
+  "@previewMode": {
+    "description": "Label indicating preview mode is active"
+  },
+  "applyTheme": "Applica Tema",
+  "@applyTheme": {
+    "description": "Button to apply the selected theme"
+  },
+  "levelInfo": "Info Livello",
+  "@levelInfo": {
+    "description": "Title for level information modal"
+  },
+  "levelInfoSubtitle": "I tuoi progressi e ricompense",
+  "@levelInfoSubtitle": {
+    "description": "Subtitle for level info modal"
+  },
+  "xpToNextTier": "{xp} XP per raggiungere {tier}",
+  "@xpToNextTier": {
+    "description": "Shows XP needed to reach next tier",
+    "placeholders": {
+      "xp": {
+        "type": "int",
+        "example": "150"
+      },
+      "tier": {
+        "type": "String",
+        "example": "Gold"
+      }
+    }
+  },
+  "maxTierReached": "Livello massimo raggiunto!",
+  "@maxTierReached": {
+    "description": "Message when user is at max tier"
+  },
+  "allTiers": "Tutti i Livelli",
+  "@allTiers": {
+    "description": "Section title for all tiers list"
+  },
+  "locked": "Bloccato",
+  "@locked": {
+    "description": "Label for locked content"
+  },
+  "tierRequirement": "Richiede {xp} XP",
+  "@tierRequirement": {
+    "description": "Shows XP requirement for tier",
+    "placeholders": {
+      "xp": {
+        "type": "int",
+        "example": "500"
+      }
+    }
+  },
+  "unlocked": "Sbloccato",
+  "@unlocked": {
+    "description": "Label for unlocked content"
+  },
+  "howToEarnXP": "Come Guadagnare XP",
+  "@howToEarnXP": {
+    "description": "Section title explaining XP earning"
+  },
+  "earnXPWorkout": "Completa Allenamenti",
+  "@earnXPWorkout": {
+    "description": "XP earning method - workouts"
+  },
+  "earnXPWorkoutDesc": "Guadagna 10-50 XP per allenamento completato in base all'intensità",
+  "@earnXPWorkoutDesc": {
+    "description": "Description of workout XP earning"
+  },
+  "earnXPStreak": "Mantieni le Serie",
+  "@earnXPStreak": {
+    "description": "XP earning method - streaks"
+  },
+  "earnXPStreakDesc": "XP bonus per mantenere la tua serie di allenamenti",
+  "@earnXPStreakDesc": {
+    "description": "Description of streak XP earning"
+  },
+  "earnXPAchievement": "Sblocca Achievement",
+  "@earnXPAchievement": {
+    "description": "XP earning method - achievements"
+  },
+  "earnXPAchievementDesc": "Ricevi XP quando sblocchi nuovi achievement",
+  "@earnXPAchievementDesc": {
+    "description": "Description of achievement XP earning"
+  },
+  "swipeDownToSave": "Scorri verso il basso per salvare",
+  "@swipeDownToSave": {
+    "description": "Hint text for swipe to save gesture"
+  },
+  "reminderTimePresetMorning": "Mattina",
+  "@reminderTimePresetMorning": {
+    "description": "Morning time preset label"
+  },
+  "reminderTimePresetAfternoon": "Pomeriggio",
+  "@reminderTimePresetAfternoon": {
+    "description": "Afternoon time preset label"
+  },
+  "reminderTimePresetEvening": "Sera",
+  "@reminderTimePresetEvening": {
+    "description": "Evening time preset label"
+  },
+  "reminderTimePresetCustom": "Personalizzato",
+  "@reminderTimePresetCustom": {
+    "description": "Custom time preset label"
+  },
+  "reminderTimePresetMorningRange": "6:00 - 9:00",
+  "@reminderTimePresetMorningRange": {
+    "description": "Morning time range description"
+  },
+  "reminderTimePresetAfternoonRange": "12:00 - 14:00",
+  "@reminderTimePresetAfternoonRange": {
+    "description": "Afternoon time range description"
+  },
+  "reminderTimePresetEveningRange": "17:00 - 20:00",
+  "@reminderTimePresetEveningRange": {
+    "description": "Evening time range description"
+  },
+  "featuresUnlocked": "Funzionalità Sbloccate",
+  "@featuresUnlocked": {
+    "description": "Section header for unlocked features"
+  },
+  "featuresLocked": "Funzionalità Bloccate",
+  "@featuresLocked": {
+    "description": "Section header for locked features"
+  },
+  "xpToUnlock": "{xp} XP per sbloccare",
+  "@xpToUnlock": {
+    "description": "Shows XP needed to unlock feature",
+    "placeholders": {
+      "xp": {
+        "type": "int",
+        "example": "200"
+      }
+    }
+  },
+  "unlockAt": "Si sblocca a {tier}",
+  "@unlockAt": {
+    "description": "Shows tier required to unlock",
+    "placeholders": {
+      "tier": {
+        "type": "String",
+        "example": "Gold"
+      }
+    }
   }
+
+,
+  "expandExercise": "Espandi dettagli esercizio",
+  "@expandExercise": {
+    "description": "Semantic label for expand exercise button"
+  },
+  "tapToExpand": "Tocca per espandere",
+  "@tapToExpand": {
+    "description": "Hint text telling user to tap to expand content"
+  },
+  "adminPremiumToggle": "Toggle Premium Admin",
+  "@adminPremiumToggle": {
+    "description": "Label for admin-only premium toggle section"
+  },
+  "adminPremiumStatus": "Stato Premium",
+  "@adminPremiumStatus": {
+    "description": "Label for premium status toggle"
+  },
+  "adminPremiumActive": "Attivo ({tier})",
+  "@adminPremiumActive": {
+    "description": "Shows current premium tier",
+    "placeholders": {
+      "tier": {
+        "type": "String",
+        "example": "premium"
+      }
+    }
+  },
+  "adminPremiumInactive": "Non attivo (piano free)",
+  "@adminPremiumInactive": {
+    "description": "Shows premium is not active"
+  },
+  "adminPremiumEnabled": "Premium attivato per testing",
+  "@adminPremiumEnabled": {
+    "description": "Snackbar message when premium is enabled"
+  },
+  "adminPremiumDisabled": "Premium disattivato (tornato a free)",
+  "@adminPremiumDisabled": {
+    "description": "Snackbar message when premium is disabled"
+  },
+
+  "themeHunter": "Cacciatore",
+  "@themeHunter": {
+    "description": "Journey theme name: Hunter"
+  },
+  "themeHero": "Eroe",
+  "@themeHero": {
+    "description": "Journey theme name: Hero"
+  },
+  "themeWarriorGoddess": "Dea Guerriera",
+  "@themeWarriorGoddess": {
+    "description": "Journey theme name: Warrior Goddess"
+  },
+  "themeNatureSpirit": "Spirito della Natura",
+  "@themeNatureSpirit": {
+    "description": "Journey theme name: Nature Spirit"
+  },
+  "themePhoenix": "Fenice",
+  "@themePhoenix": {
+    "description": "Journey theme name: Phoenix"
+  },
+  "themeFrost": "Gelo",
+  "@themeFrost": {
+    "description": "Journey theme name: Frost"
+  },
+
+  "taglineHunter": "Insegui la tua preda",
+  "@taglineHunter": {
+    "description": "Journey theme tagline: Hunter"
+  },
+  "taglineHero": "Diventa leggenda",
+  "@taglineHero": {
+    "description": "Journey theme tagline: Hero"
+  },
+  "taglineWarriorGoddess": "Potere elegante",
+  "@taglineWarriorGoddess": {
+    "description": "Journey theme tagline: Warrior Goddess"
+  },
+  "taglineNatureSpirit": "Fluisci con la natura",
+  "@taglineNatureSpirit": {
+    "description": "Journey theme tagline: Nature Spirit"
+  },
+  "taglinePhoenix": "Risorgi dalle ceneri",
+  "@taglinePhoenix": {
+    "description": "Journey theme tagline: Phoenix"
+  },
+  "taglineFrost": "Precisione fredda",
+  "@taglineFrost": {
+    "description": "Journey theme tagline: Frost"
+  },
+
+  "journeyThemes": "Temi Percorso",
+  "@journeyThemes": {
+    "description": "Title for journey themes selection screen"
+  },
+  "selectYourTheme": "Scegli il Tuo Tema",
+  "@selectYourTheme": {
+    "description": "Subtitle for journey themes selection"
+  },
+  "previewMode": "Modalità Anteprima",
+  "@previewMode": {
+    "description": "Indicates theme preview mode is active"
+  },
+  "confirmTheme": "Conferma Tema",
+  "@confirmTheme": {
+    "description": "Button to confirm theme selection"
+  },
+  "cancelPreview": "Annulla Anteprima",
+  "@cancelPreview": {
+    "description": "Button to cancel theme preview"
+  },
+  "themeUnlockedAt": "Si sblocca a {tier}",
+  "@themeUnlockedAt": {
+    "description": "Shows which tier unlocks a theme feature",
+    "placeholders": {
+      "tier": {
+        "type": "String",
+        "example": "Gold"
+      }
+    }
+  },
+  "featuresUnlocked": "{count} / {total} funzionalità sbloccate",
+  "@featuresUnlocked": {
+    "description": "Shows progression of unlocked features",
+    "placeholders": {
+      "count": {
+        "type": "int",
+        "example": "3"
+      },
+      "total": {
+        "type": "int",
+        "example": "10"
+      }
+    }
+  },
+
+  "balanceScore": "Punteggio Bilanciamento",
+  "@balanceScore": {
+    "description": "Title for muscle balance score metric"
+  },
+  "balanceRatingExcellent": "Eccellente",
+  "@balanceRatingExcellent": {
+    "description": "Balance rating: 9.0-10.0 score"
+  },
+  "balanceRatingGood": "Buono",
+  "@balanceRatingGood": {
+    "description": "Balance rating: 7.5-8.9 score"
+  },
+  "balanceRatingFair": "Discreto",
+  "@balanceRatingFair": {
+    "description": "Balance rating: 6.0-7.4 score"
+  },
+  "balanceRatingNeedsImprovement": "Da Migliorare",
+  "@balanceRatingNeedsImprovement": {
+    "description": "Balance rating: 4.0-5.9 score"
+  },
+  "balanceRatingPoor": "Scarso",
+  "@balanceRatingPoor": {
+    "description": "Balance rating: 0.0-3.9 score"
+  },
+  "pushPullRatio": "Rapporto Spinta/Trazione",
+  "@pushPullRatio": {
+    "description": "Title for push/pull muscle balance ratio"
+  },
+  "upperLowerRatio": "Rapporto Superiore/Inferiore",
+  "@upperLowerRatio": {
+    "description": "Title for upper/lower body balance ratio"
+  },
+  "optimalRatio": "Ottimale: {ratio}",
+  "@optimalRatio": {
+    "description": "Shows optimal ratio value",
+    "placeholders": {
+      "ratio": {
+        "type": "String",
+        "example": "1.0"
+      }
+    }
+  },
+  "warningsDetected": "Avvisi Rilevati",
+  "@warningsDetected": {
+    "description": "Header for balance warnings section"
+  },
+  "pushPullImbalance": "Squilibrio spinta/trazione rilevato",
+  "@pushPullImbalance": {
+    "description": "Warning: push/pull ratio is not optimal"
+  },
+  "upperLowerImbalance": "Squilibrio superiore/inferiore rilevato",
+  "@upperLowerImbalance": {
+    "description": "Warning: upper/lower ratio is not optimal"
+  },
+  "neglectedMusclesWarning": "{count} gruppi muscolari trascurati",
+  "@neglectedMusclesWarning": {
+    "description": "Warning: some muscles are undertrained",
+    "placeholders": {
+      "count": {
+        "type": "int",
+        "example": "3"
+      }
+    }
+  },
+  "topTrainedMuscles": "Muscoli Più Allenati",
+  "@topTrainedMuscles": {
+    "description": "Header for top trained muscle groups"
+  },
+  "muscleVolumePercentage": "{muscle}: {percentage}%",
+  "@muscleVolumePercentage": {
+    "description": "Shows muscle group volume percentage",
+    "placeholders": {
+      "muscle": {
+        "type": "String",
+        "example": "Petto"
+      },
+      "percentage": {
+        "type": "String",
+        "example": "25.5"
+      }
+    }
+  },
+  "frontView": "Vista Frontale",
+  "backView": "Vista Posteriore",
+  "trainingIntensity": "Intensità Allenamento",
+  "intensityLow": "Bassa",
+  "intensityMedium": "Media",
+  "intensityHigh": "Alta",
+  "neglectedMuscles": "Muscoli Trascurati",
+  "exerciseSuggestions": "Esercizi Consigliati",
+  "addToNextWorkout": "Aggiungi al Prossimo Workout",
+  "priority": "Priorità",
+  "difficultyBeginner": "Principiante",
+  "difficultyIntermediate": "Intermedio",
+  "difficultyAdvanced": "Avanzato",
+  "severityCritical": "Critico",
+  "severityHigh": "Alto",
+  "severityMedium": "Medio",
+  "noNeglectedMuscles": "Nessun muscolo trascurato rilevato. Ottimo bilanciamento!",
+  "timeFilter": "Periodo Temporale",
+  "last7Days": "Ultimi 7 Giorni",
+  "last30Days": "Ultimi 30 Giorni",
+  "last3Months": "Ultimi 3 Mesi",
+  "lastYear": "Ultimo Anno",
+  "allTime": "Tutto il Tempo",
+  "trendImproving": "In Miglioramento",
+  "trendStable": "Stabile",
+  "trendDeclining": "In Declino",
+  "comparedToPrevious": "vs Periodo Precedente",
+
+  "greetingMorning": "Buongiorno",
+  "greetingAfternoon": "Buon pomeriggio",
+  "greetingEvening": "Buonasera",
+  "greetingNight": "Buonanotte",
+
+  "heroMorning1": "andiamo a distruggere i pesi cattivi!",
+  "heroMorning2": "è tempo di diventare leggendario!",
+  "heroMorning3": "i cattivi non si sconfiggono da soli!",
+  "heroAfternoon1": "allenati per diventare il più forte!",
+  "heroAfternoon2": "la tua potenza cresce ad ogni ripetizione!",
+  "heroAfternoon3": "gli eroi non saltano mai l'allenamento!",
+  "heroEvening1": "pronto per una serata all'insegna dei cattivi?",
+  "heroEvening2": "la notte ha bisogno di un eroe!",
+  "heroEvening3": "è tempo di salvare la giornata!",
+  "heroNight1": "il male non dorme mai!",
+  "heroNight2": "i guardiani si allenano di notte!",
+  "heroNight3": "l'oscurità attende la tua forza!",
+
+  "hunterMorning1": "la caccia ha inizio!",
+  "hunterMorning2": "segui la tua preda!",
+  "hunterMorning3": "affila le tue abilità!",
+  "hunterAfternoon1": "resta concentrato sull'obiettivo!",
+  "hunterAfternoon2": "i predatori non riposano mai!",
+  "hunterAfternoon3": "la precisione è tutto!",
+  "hunterEvening1": "il momento perfetto per colpire!",
+  "hunterEvening2": "le ombre sono tue alleate!",
+  "hunterEvening3": "silenzioso ma letale!",
+  "hunterNight1": "i cacciatori notturni sono i migliori!",
+  "hunterNight2": "la notte è il tuo dominio!",
+  "hunterNight3": "l'oscurità nasconde i più forti!",
+
+  "warriorGoddessMorning1": "grazia e potenza ti attendono!",
+  "warriorGoddessMorning2": "alzati con eleganza!",
+  "warriorGoddessMorning3": "la tua corona ti attende!",
+  "warriorGoddessAfternoon1": "regna con forza!",
+  "warriorGoddessAfternoon2": "le regine non mollano mai!",
+  "warriorGoddessAfternoon3": "fiera e favolosa!",
+  "warriorGoddessEvening1": "il trono ti attende!",
+  "warriorGoddessEvening2": "potenza ed eleganza insieme!",
+  "warriorGoddessEvening3": "conquista con grazia!",
+  "warriorGoddessNight1": "anche le dee si allenano di notte!",
+  "warriorGoddessNight2": "sessione di potenza al chiaro di luna!",
+  "warriorGoddessNight3": "le stelle brillano per te!",
+
+  "natureSpiritMorning1": "fluisci con l'alba!",
+  "natureSpiritMorning2": "energia dalla natura!",
+  "natureSpiritMorning3": "respira, cresci, prospera!",
+  "natureSpiritAfternoon1": "armonia in movimento!",
+  "natureSpiritAfternoon2": "forte come la quercia!",
+  "natureSpiritAfternoon3": "radici profonde, crescita alta!",
+  "natureSpiritEvening1": "sessione di forza al tramonto!",
+  "natureSpiritEvening2": "equilibra corpo e anima!",
+  "natureSpiritEvening3": "fluisci come l'acqua!",
+  "natureSpiritNight1": "notte calma, spirito forte!",
+  "natureSpiritNight2": "allenamento meditativo al chiaro di luna!",
+  "natureSpiritNight3": "il riposo prepara la crescita!",
+
+  "phoenixMorning1": "alzati e brucia!",
+  "phoenixMorning2": "rinato con il fuoco!",
+  "phoenixMorning3": "dalle ceneri alla gloria!",
+  "phoenixAfternoon1": "fiamme di determinazione!",
+  "phoenixAfternoon2": "brucia oltre i limiti!",
+  "phoenixAfternoon3": "fuoco inarrestabile!",
+  "phoenixEvening1": "l'inferno serale ti attende!",
+  "phoenixEvening2": "le fiamme del tramonto brillano!",
+  "phoenixEvening3": "accendi la tua potenza!",
+  "phoenixNight1": "le fiamme non si spengono mai!",
+  "phoenixNight2": "sessione di fuoco a mezzanotte!",
+  "phoenixNight3": "rinascita nell'oscurità!",
+
+  "frostMorning1": "precisione glaciale ti attende!",
+  "frostMorning2": "affilato come il ghiaccio!",
+  "frostMorning3": "focus freddo, corpo forte!",
+  "frostAfternoon1": "potenza calcolata!",
+  "frostAfternoon2": "determinazione glaciale!",
+  "frostAfternoon3": "congela la competizione!",
+  "frostEvening1": "l'inverno non riposa mai!",
+  "frostEvening2": "sessione di potenza nella zona fredda!",
+  "frostEvening3": "freddo sotto pressione!",
+  "frostNight1": "notte gelida, guadagni caldi!",
+  "frostNight2": "il freddo affila la mente!",
+  "frostNight3": "guerrieri invernali unitevi!",
+  "exerciseAddedToWorkout": "{exerciseName} aggiunto al prossimo allenamento"
 }
