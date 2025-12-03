@@ -9407,6 +9407,96 @@ abstract class AppLocalizations {
   /// **'Target RIR'**
   String get targetRir;
 
+  /// RPE mode label
+  ///
+  /// In en, this message translates to:
+  /// **'RPE Based'**
+  String get rpeMode;
+
+  /// RIR mode label
+  ///
+  /// In en, this message translates to:
+  /// **'RIR Based'**
+  String get rirMode;
+
+  /// Minimum RPE label
+  ///
+  /// In en, this message translates to:
+  /// **'Min RPE'**
+  String get minRpe;
+
+  /// Maximum RPE label
+  ///
+  /// In en, this message translates to:
+  /// **'Max RPE'**
+  String get maxRpe;
+
+  /// RPE adjustment explanation
+  ///
+  /// In en, this message translates to:
+  /// **'Weight will be adjusted to keep your RPE within the target range'**
+  String get rpeAdjustmentExplanation;
+
+  /// RIR adjustment explanation
+  ///
+  /// In en, this message translates to:
+  /// **'Weight will be adjusted to maintain target RIR'**
+  String get rirAdjustmentExplanation;
+
+  /// Effort scale setting label
+  ///
+  /// In en, this message translates to:
+  /// **'Effort Scale'**
+  String get effortScaleSetting;
+
+  /// Effort scale setting description
+  ///
+  /// In en, this message translates to:
+  /// **'Choose how to track your effort during workouts'**
+  String get effortScaleDescription;
+
+  /// RPE scale description
+  ///
+  /// In en, this message translates to:
+  /// **'Rate of Perceived Exertion (1-10)'**
+  String get rpeScaleDescription;
+
+  /// RIR scale description
+  ///
+  /// In en, this message translates to:
+  /// **'Reps In Reserve (0-5+)'**
+  String get rirScaleDescription;
+
+  /// RIR helper text
+  ///
+  /// In en, this message translates to:
+  /// **'Repetitions in Reserve'**
+  String get repetitionsInReserve;
+
+  /// Success message when auto adjustment is enabled
+  ///
+  /// In en, this message translates to:
+  /// **'Auto adjustment configured'**
+  String get autoAdjustmentConfigured;
+
+  /// Success message when auto adjustment is disabled
+  ///
+  /// In en, this message translates to:
+  /// **'Auto adjustment cleared'**
+  String get autoAdjustmentCleared;
+
+  /// Error message for invalid RPE range
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter valid RPE range (1-10)'**
+  String get invalidRpeRange;
+
+  /// Error message for invalid RIR
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter valid RIR (0-10)'**
+  String get invalidRir;
+
   /// Suggested weight label
   ///
   /// In en, this message translates to:
@@ -37614,6 +37704,78 @@ abstract class AppLocalizations {
   /// **'Good night'**
   String get greetingNight;
 
+  /// Classic theme morning phrase 1
+  ///
+  /// In en, this message translates to:
+  /// **'let\'s make today count!'**
+  String get classicMorning1;
+
+  /// Classic theme morning phrase 2
+  ///
+  /// In en, this message translates to:
+  /// **'time to build your strength!'**
+  String get classicMorning2;
+
+  /// Classic theme morning phrase 3
+  ///
+  /// In en, this message translates to:
+  /// **'ready to make progress?'**
+  String get classicMorning3;
+
+  /// Classic theme afternoon phrase 1
+  ///
+  /// In en, this message translates to:
+  /// **'keep pushing forward!'**
+  String get classicAfternoon1;
+
+  /// Classic theme afternoon phrase 2
+  ///
+  /// In en, this message translates to:
+  /// **'every rep brings results!'**
+  String get classicAfternoon2;
+
+  /// Classic theme afternoon phrase 3
+  ///
+  /// In en, this message translates to:
+  /// **'stay focused on your goals!'**
+  String get classicAfternoon3;
+
+  /// Classic theme evening phrase 1
+  ///
+  /// In en, this message translates to:
+  /// **'finish the day strong!'**
+  String get classicEvening1;
+
+  /// Classic theme evening phrase 2
+  ///
+  /// In en, this message translates to:
+  /// **'one more step toward your goal!'**
+  String get classicEvening2;
+
+  /// Classic theme evening phrase 3
+  ///
+  /// In en, this message translates to:
+  /// **'consistency is key!'**
+  String get classicEvening3;
+
+  /// Classic theme night phrase 1
+  ///
+  /// In en, this message translates to:
+  /// **'dedication knows no time!'**
+  String get classicNight1;
+
+  /// Classic theme night phrase 2
+  ///
+  /// In en, this message translates to:
+  /// **'late night gains!'**
+  String get classicNight2;
+
+  /// Classic theme night phrase 3
+  ///
+  /// In en, this message translates to:
+  /// **'burning the midnight iron!'**
+  String get classicNight3;
+
   /// Hero theme morning phrase 1
   ///
   /// In en, this message translates to:
@@ -38045,6 +38207,238 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'winter warriors unite!'**
   String get frostNight3;
+
+  /// Tab label for rep zone distribution
+  ///
+  /// In en, this message translates to:
+  /// **'Rep Zones'**
+  String get repZones;
+
+  /// Section header for volume per muscle group
+  ///
+  /// In en, this message translates to:
+  /// **'Volume by Muscle'**
+  String get volumeByMuscle;
+
+  /// Label for weekly volume change indicator
+  ///
+  /// In en, this message translates to:
+  /// **'Weekly Volume Change'**
+  String get weeklyVolumeChange;
+
+  /// Header for 4-week volume chart
+  ///
+  /// In en, this message translates to:
+  /// **'Last 4 Weeks'**
+  String get last4Weeks;
+
+  /// Empty state when no muscle volume data
+  ///
+  /// In en, this message translates to:
+  /// **'No muscle data this week'**
+  String get noMuscleDataThisWeek;
+
+  /// MEV volume landmark explanation
+  ///
+  /// In en, this message translates to:
+  /// **'Minimum Effective Volume'**
+  String get minimumEffectiveVolume;
+
+  /// Volume zone: below maintenance
+  ///
+  /// In en, this message translates to:
+  /// **'Below maintenance'**
+  String get belowMaintenance;
+
+  /// Volume zone: maintenance level
+  ///
+  /// In en, this message translates to:
+  /// **'Maintenance'**
+  String get maintenance;
+
+  /// Volume zone: effective for growth
+  ///
+  /// In en, this message translates to:
+  /// **'Effective'**
+  String get effective;
+
+  /// Section header for push/pull and upper/lower ratios
+  ///
+  /// In en, this message translates to:
+  /// **'Ratio Analysis'**
+  String get ratioAnalysis;
+
+  /// Section header for muscle volume heatmap
+  ///
+  /// In en, this message translates to:
+  /// **'Muscle Heatmap'**
+  String get muscleHeatmap;
+
+  /// Explanation of push/pull ratio importance
+  ///
+  /// In en, this message translates to:
+  /// **'Optimal ratio is 1:1. Imbalances may lead to posture issues'**
+  String get pushPullDescription;
+
+  /// Explanation of upper/lower ratio importance
+  ///
+  /// In en, this message translates to:
+  /// **'Balanced training between upper and lower body for symmetry'**
+  String get upperLowerDescription;
+
+  /// Suffix for balance score display
+  ///
+  /// In en, this message translates to:
+  /// **'out of 10'**
+  String get outOf10;
+
+  /// Empty state message encouraging workouts
+  ///
+  /// In en, this message translates to:
+  /// **'Complete workouts to see your stats'**
+  String get completeWorkoutsToSeeStats;
+
+  /// Volume zone: optimal for growth
+  ///
+  /// In en, this message translates to:
+  /// **'Optimal'**
+  String get optimal;
+
+  /// Volume zone: too much volume
+  ///
+  /// In en, this message translates to:
+  /// **'Excessive'**
+  String get excessive;
+
+  /// Header for stress index card
+  ///
+  /// In en, this message translates to:
+  /// **'Training Stress'**
+  String get stressIndex;
+
+  /// Stress level: light workout
+  ///
+  /// In en, this message translates to:
+  /// **'Light Session'**
+  String get stressLevelLight;
+
+  /// Stress level: moderate workout
+  ///
+  /// In en, this message translates to:
+  /// **'Moderate Session'**
+  String get stressLevelModerate;
+
+  /// Stress level: hard workout
+  ///
+  /// In en, this message translates to:
+  /// **'Hard Session'**
+  String get stressLevelHard;
+
+  /// Stress level: very hard workout
+  ///
+  /// In en, this message translates to:
+  /// **'Very Hard Session'**
+  String get stressLevelVeryHard;
+
+  /// Description for light stress level
+  ///
+  /// In en, this message translates to:
+  /// **'Easy recovery, ready to train again soon'**
+  String get stressDescriptionLight;
+
+  /// Description for moderate stress level
+  ///
+  /// In en, this message translates to:
+  /// **'Standard training load, good progress'**
+  String get stressDescriptionModerate;
+
+  /// Description for hard stress level
+  ///
+  /// In en, this message translates to:
+  /// **'Intense session, allow adequate recovery'**
+  String get stressDescriptionHard;
+
+  /// Description for very hard stress level
+  ///
+  /// In en, this message translates to:
+  /// **'Maximum effort, prioritize rest'**
+  String get stressDescriptionVeryHard;
+
+  /// Hint to encourage RPE logging
+  ///
+  /// In en, this message translates to:
+  /// **'Log RPE for more accurate insights'**
+  String get lowConfidenceHint;
+
+  /// Header for muscle recovery section
+  ///
+  /// In en, this message translates to:
+  /// **'Muscle Recovery'**
+  String get muscleRecovery;
+
+  /// Header for stress breakdown by muscle
+  ///
+  /// In en, this message translates to:
+  /// **'Stress Breakdown'**
+  String get stressBreakdown;
+
+  /// Header for confidence explanation section
+  ///
+  /// In en, this message translates to:
+  /// **'Accuracy Info'**
+  String get accuracyInfo;
+
+  /// Explanation of confidence score
+  ///
+  /// In en, this message translates to:
+  /// **'{confidencePercent}% of sets ({setsWithRpe}/{totalSets}) include RPE data'**
+  String confidenceExplanation(
+    int confidencePercent,
+    int setsWithRpe,
+    int totalSets,
+  );
+
+  /// Tip to improve stress calculation accuracy
+  ///
+  /// In en, this message translates to:
+  /// **'Adding RPE to sets improves accuracy'**
+  String get rpeImproveAccuracy;
+
+  /// Shows estimated score range when confidence is low
+  ///
+  /// In en, this message translates to:
+  /// **'Estimated range: {range}'**
+  String estimatedRange(String range);
+
+  /// Recovery state: 100%
+  ///
+  /// In en, this message translates to:
+  /// **'Fully Recovered'**
+  String get fullyRecovered;
+
+  /// Recovery state: 75-99%
+  ///
+  /// In en, this message translates to:
+  /// **'Almost Ready'**
+  String get almostReady;
+
+  /// Recovery state: 50-74%
+  ///
+  /// In en, this message translates to:
+  /// **'Recovering'**
+  String get recovering;
+
+  /// Recovery state: 25-49%
+  ///
+  /// In en, this message translates to:
+  /// **'Fatigued'**
+  String get fatiguedMuscle;
+
+  /// Recovery state: 0-24%
+  ///
+  /// In en, this message translates to:
+  /// **'Needs Rest'**
+  String get exhaustedMuscle;
 }
 
 class _AppLocalizationsDelegate

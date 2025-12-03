@@ -25,7 +25,7 @@ class AppConfig { // Auto-adjust rest time based on RPE feedback
     this.syncWithHealthKit = false,
     this.fontSize = 1.0,
     this.preferredTemplateId,
-    this.rpeTracking = true, // Track RPE for APRE system
+    this.rpeTracking = true, // Track RPE for workout feedback
     this.autoRestTimer = true, // Auto-start rest timer for convenience
     this.setDurationTracking,
     this.plateCalculator = true, // Useful tool enabled by default
@@ -44,14 +44,15 @@ class AppConfig { // Auto-adjust rest time based on RPE feedback
     this.hasSeenWorkoutOnboarding = false,
     this.onboardingVersion = 1,
     this.betaModeEnabled,
-    this.enableApre = true, // APRE auto-regulation enabled by default
-    this.defaultApreProtocol = 6, // 6-set protocol as balanced default
-    this.autoAdjustRestTime = true, // Default to true for APRE users
+    @Deprecated('APRE feature removed') this.enableApre,
+    @Deprecated('APRE feature removed') this.defaultApreProtocol,
+    this.autoAdjustRestTime = true, // Auto-adjust rest time based on RPE
     this.showQuickInfoIcon,
     this.showWarmupIcon,
     this.showPreventionIcon,
     this.autoAdjustWeightFromRpe,
     this.autoAdjustRestFromRpe,
+    this.effortScale = 'rpe', // 'rpe' or 'rir' - global effort tracking preference
   });
 
   factory AppConfig.fromJson(Map<String, dynamic> json) {
@@ -84,8 +85,7 @@ class AppConfig { // Auto-adjust rest time based on RPE feedback
       hasSeenWorkoutOnboarding: json['hasSeenWorkoutOnboarding'] ?? false,
       onboardingVersion: json['onboardingVersion'] ?? 1,
       betaModeEnabled: json['betaModeEnabled'] ?? false,
-      enableApre: json['enableApre'] ?? true,
-      defaultApreProtocol: json['defaultApreProtocol'] ?? 6,
+      effortScale: json['effortScale'] ?? 'rpe',
     );
   }
   @HiveField(0)
@@ -200,13 +200,15 @@ class AppConfig { // Auto-adjust rest time based on RPE feedback
   final bool? betaModeEnabled;
 
   @HiveField(37)
-  final bool? enableApre; // Enable APRE auto-regulation
+  @Deprecated('APRE feature removed - kept for Hive backwards compat')
+  final bool? enableApre;
 
   @HiveField(38)
-  final int? defaultApreProtocol; // Default APRE protocol: 3, 6, or 10
+  @Deprecated('APRE feature removed - kept for Hive backwards compat')
+  final int? defaultApreProtocol;
 
   @HiveField(39)
-  final bool? autoAdjustRestTime; // Auto-adjust rest time based on APRE performance
+  final bool? autoAdjustRestTime; // Auto-adjust rest time based on RPE
 
   @HiveField(40)
   final bool? showQuickInfoIcon; // Show quick info icon in exercise card
@@ -222,6 +224,9 @@ class AppConfig { // Auto-adjust rest time based on RPE feedback
 
   @HiveField(44)
   final bool? autoAdjustRestFromRpe;
+
+  @HiveField(45)
+  final String effortScale; // 'rpe' or 'rir' - global effort tracking preference
 
   Locale get locale => Locale(languageCode, countryCode);
 
@@ -271,6 +276,7 @@ class AppConfig { // Auto-adjust rest time based on RPE feedback
     bool? showPreventionIcon,
     bool? autoAdjustWeightFromRpe,
     bool? autoAdjustRestFromRpe,
+    String? effortScale,
   }) {
     return AppConfig(
       languageCode: languageCode ?? this.languageCode,
@@ -318,6 +324,7 @@ class AppConfig { // Auto-adjust rest time based on RPE feedback
       showPreventionIcon: showPreventionIcon ?? this.showPreventionIcon,
       autoAdjustWeightFromRpe: autoAdjustWeightFromRpe ?? this.autoAdjustWeightFromRpe,
       autoAdjustRestFromRpe: autoAdjustRestFromRpe ?? this.autoAdjustRestFromRpe,
+      effortScale: effortScale ?? this.effortScale,
     );
   }
 
@@ -344,6 +351,7 @@ class AppConfig { // Auto-adjust rest time based on RPE feedback
       'hasSeenWorkoutOnboarding': hasSeenWorkoutOnboarding,
       'onboardingVersion': onboardingVersion,
       'betaModeEnabled': betaModeEnabled,
+      'effortScale': effortScale,
     };
   }
 

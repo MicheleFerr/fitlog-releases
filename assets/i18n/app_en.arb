@@ -6728,6 +6728,66 @@
   "@targetRir": {
     "description": "Target RIR label"
   },
+  "rpeMode": "RPE Based",
+  "@rpeMode": {
+    "description": "RPE mode label"
+  },
+  "rirMode": "RIR Based",
+  "@rirMode": {
+    "description": "RIR mode label"
+  },
+  "minRpe": "Min RPE",
+  "@minRpe": {
+    "description": "Minimum RPE label"
+  },
+  "maxRpe": "Max RPE",
+  "@maxRpe": {
+    "description": "Maximum RPE label"
+  },
+  "rpeAdjustmentExplanation": "Weight will be adjusted to keep your RPE within the target range",
+  "@rpeAdjustmentExplanation": {
+    "description": "RPE adjustment explanation"
+  },
+  "rirAdjustmentExplanation": "Weight will be adjusted to maintain target RIR",
+  "@rirAdjustmentExplanation": {
+    "description": "RIR adjustment explanation"
+  },
+  "effortScaleSetting": "Effort Scale",
+  "@effortScaleSetting": {
+    "description": "Effort scale setting label"
+  },
+  "effortScaleDescription": "Choose how to track your effort during workouts",
+  "@effortScaleDescription": {
+    "description": "Effort scale setting description"
+  },
+  "rpeScaleDescription": "Rate of Perceived Exertion (1-10)",
+  "@rpeScaleDescription": {
+    "description": "RPE scale description"
+  },
+  "rirScaleDescription": "Reps In Reserve (0-5+)",
+  "@rirScaleDescription": {
+    "description": "RIR scale description"
+  },
+  "repetitionsInReserve": "Repetitions in Reserve",
+  "@repetitionsInReserve": {
+    "description": "RIR helper text"
+  },
+  "autoAdjustmentConfigured": "Auto adjustment configured",
+  "@autoAdjustmentConfigured": {
+    "description": "Success message when auto adjustment is enabled"
+  },
+  "autoAdjustmentCleared": "Auto adjustment cleared",
+  "@autoAdjustmentCleared": {
+    "description": "Success message when auto adjustment is disabled"
+  },
+  "invalidRpeRange": "Please enter valid RPE range (1-10)",
+  "@invalidRpeRange": {
+    "description": "Error message for invalid RPE range"
+  },
+  "invalidRir": "Please enter valid RIR (0-10)",
+  "@invalidRir": {
+    "description": "Error message for invalid RIR"
+  },
   "suggestedWeight": "Suggested Weight",
   "@suggestedWeight": {
     "description": "Suggested weight label"
@@ -26191,6 +26251,31 @@
   "greetingNight": "Good night",
   "@greetingNight": { "description": "Night greeting (22:00-4:59)" },
 
+  "classicMorning1": "let's make today count!",
+  "@classicMorning1": { "description": "Classic theme morning phrase 1" },
+  "classicMorning2": "time to build your strength!",
+  "@classicMorning2": { "description": "Classic theme morning phrase 2" },
+  "classicMorning3": "ready to make progress?",
+  "@classicMorning3": { "description": "Classic theme morning phrase 3" },
+  "classicAfternoon1": "keep pushing forward!",
+  "@classicAfternoon1": { "description": "Classic theme afternoon phrase 1" },
+  "classicAfternoon2": "every rep brings results!",
+  "@classicAfternoon2": { "description": "Classic theme afternoon phrase 2" },
+  "classicAfternoon3": "stay focused on your goals!",
+  "@classicAfternoon3": { "description": "Classic theme afternoon phrase 3" },
+  "classicEvening1": "finish the day strong!",
+  "@classicEvening1": { "description": "Classic theme evening phrase 1" },
+  "classicEvening2": "one more step toward your goal!",
+  "@classicEvening2": { "description": "Classic theme evening phrase 2" },
+  "classicEvening3": "consistency is key!",
+  "@classicEvening3": { "description": "Classic theme evening phrase 3" },
+  "classicNight1": "dedication knows no time!",
+  "@classicNight1": { "description": "Classic theme night phrase 1" },
+  "classicNight2": "late night gains!",
+  "@classicNight2": { "description": "Classic theme night phrase 2" },
+  "classicNight3": "burning the midnight iron!",
+  "@classicNight3": { "description": "Classic theme night phrase 3" },
+
   "heroMorning1": "let's crush those weights!",
   "@heroMorning1": { "description": "Hero theme morning phrase 1" },
   "heroMorning2": "time to become legendary!",
@@ -26349,5 +26434,95 @@
         "example": "Bench Press"
       }
     }
-  }
+  },
+
+  "repZones": "Rep Zones",
+  "@repZones": { "description": "Tab label for rep zone distribution" },
+  "volumeByMuscle": "Volume by Muscle",
+  "@volumeByMuscle": { "description": "Section header for volume per muscle group" },
+  "weeklyVolumeChange": "Weekly Volume Change",
+  "@weeklyVolumeChange": { "description": "Label for weekly volume change indicator" },
+  "last4Weeks": "Last 4 Weeks",
+  "@last4Weeks": { "description": "Header for 4-week volume chart" },
+  "noMuscleDataThisWeek": "No muscle data this week",
+  "@noMuscleDataThisWeek": { "description": "Empty state when no muscle volume data" },
+  "minimumEffectiveVolume": "Minimum Effective Volume",
+  "@minimumEffectiveVolume": { "description": "MEV volume landmark explanation" },
+  "belowMaintenance": "Below maintenance",
+  "@belowMaintenance": { "description": "Volume zone: below maintenance" },
+  "maintenance": "Maintenance",
+  "@maintenance": { "description": "Volume zone: maintenance level" },
+  "effective": "Effective",
+  "@effective": { "description": "Volume zone: effective for growth" },
+  "ratioAnalysis": "Ratio Analysis",
+  "@ratioAnalysis": { "description": "Section header for push/pull and upper/lower ratios" },
+  "muscleHeatmap": "Muscle Heatmap",
+  "@muscleHeatmap": { "description": "Section header for muscle volume heatmap" },
+  "pushPullDescription": "Optimal ratio is 1:1. Imbalances may lead to posture issues",
+  "@pushPullDescription": { "description": "Explanation of push/pull ratio importance" },
+  "upperLowerDescription": "Balanced training between upper and lower body for symmetry",
+  "@upperLowerDescription": { "description": "Explanation of upper/lower ratio importance" },
+  "outOf10": "out of 10",
+  "@outOf10": { "description": "Suffix for balance score display" },
+  "completeWorkoutsToSeeStats": "Complete workouts to see your stats",
+  "@completeWorkoutsToSeeStats": { "description": "Empty state message encouraging workouts" },
+  "optimal": "Optimal",
+  "@optimal": { "description": "Volume zone: optimal for growth" },
+  "excessive": "Excessive",
+  "@excessive": { "description": "Volume zone: too much volume" },
+
+  "stressIndex": "Training Stress",
+  "@stressIndex": { "description": "Header for stress index card" },
+  "stressLevelLight": "Light Session",
+  "@stressLevelLight": { "description": "Stress level: light workout" },
+  "stressLevelModerate": "Moderate Session",
+  "@stressLevelModerate": { "description": "Stress level: moderate workout" },
+  "stressLevelHard": "Hard Session",
+  "@stressLevelHard": { "description": "Stress level: hard workout" },
+  "stressLevelVeryHard": "Very Hard Session",
+  "@stressLevelVeryHard": { "description": "Stress level: very hard workout" },
+  "stressDescriptionLight": "Easy recovery, ready to train again soon",
+  "@stressDescriptionLight": { "description": "Description for light stress level" },
+  "stressDescriptionModerate": "Standard training load, good progress",
+  "@stressDescriptionModerate": { "description": "Description for moderate stress level" },
+  "stressDescriptionHard": "Intense session, allow adequate recovery",
+  "@stressDescriptionHard": { "description": "Description for hard stress level" },
+  "stressDescriptionVeryHard": "Maximum effort, prioritize rest",
+  "@stressDescriptionVeryHard": { "description": "Description for very hard stress level" },
+  "lowConfidenceHint": "Log RPE for more accurate insights",
+  "@lowConfidenceHint": { "description": "Hint to encourage RPE logging" },
+  "muscleRecovery": "Muscle Recovery",
+  "@muscleRecovery": { "description": "Header for muscle recovery section" },
+  "stressBreakdown": "Stress Breakdown",
+  "@stressBreakdown": { "description": "Header for stress breakdown by muscle" },
+  "accuracyInfo": "Accuracy Info",
+  "@accuracyInfo": { "description": "Header for confidence explanation section" },
+  "confidenceExplanation": "{confidencePercent}% of sets ({setsWithRpe}/{totalSets}) include RPE data",
+  "@confidenceExplanation": {
+    "description": "Explanation of confidence score",
+    "placeholders": {
+      "confidencePercent": { "type": "int", "example": "75" },
+      "setsWithRpe": { "type": "int", "example": "9" },
+      "totalSets": { "type": "int", "example": "12" }
+    }
+  },
+  "rpeImproveAccuracy": "Adding RPE to sets improves accuracy",
+  "@rpeImproveAccuracy": { "description": "Tip to improve stress calculation accuracy" },
+  "estimatedRange": "Estimated range: {range}",
+  "@estimatedRange": {
+    "description": "Shows estimated score range when confidence is low",
+    "placeholders": {
+      "range": { "type": "String", "example": "72-84" }
+    }
+  },
+  "fullyRecovered": "Fully Recovered",
+  "@fullyRecovered": { "description": "Recovery state: 100%" },
+  "almostReady": "Almost Ready",
+  "@almostReady": { "description": "Recovery state: 75-99%" },
+  "recovering": "Recovering",
+  "@recovering": { "description": "Recovery state: 50-74%" },
+  "fatiguedMuscle": "Fatigued",
+  "@fatiguedMuscle": { "description": "Recovery state: 25-49%" },
+  "exhaustedMuscle": "Needs Rest",
+  "@exhaustedMuscle": { "description": "Recovery state: 0-24%" }
 }

@@ -5133,6 +5133,54 @@ class AppLocalizationsIt extends AppLocalizations {
   String get targetRir => 'RIR Obiettivo';
 
   @override
+  String get rpeMode => 'Basato su RPE';
+
+  @override
+  String get rirMode => 'Basato su RIR';
+
+  @override
+  String get minRpe => 'RPE Min';
+
+  @override
+  String get maxRpe => 'RPE Max';
+
+  @override
+  String get rpeAdjustmentExplanation =>
+      'Il peso sarà regolato per mantenere l\'RPE nel range target';
+
+  @override
+  String get rirAdjustmentExplanation =>
+      'Il peso sarà regolato per mantenere il RIR target';
+
+  @override
+  String get effortScaleSetting => 'Scala di Sforzo';
+
+  @override
+  String get effortScaleDescription =>
+      'Scegli come tracciare lo sforzo durante gli allenamenti';
+
+  @override
+  String get rpeScaleDescription => 'Valutazione dello Sforzo Percepito (1-10)';
+
+  @override
+  String get rirScaleDescription => 'Ripetizioni In Riserva (0-5+)';
+
+  @override
+  String get repetitionsInReserve => 'Ripetizioni in riserva';
+
+  @override
+  String get autoAdjustmentConfigured => 'Regolazione automatica configurata';
+
+  @override
+  String get autoAdjustmentCleared => 'Regolazione automatica disattivata';
+
+  @override
+  String get invalidRpeRange => 'Inserisci un range RPE valido (1-10)';
+
+  @override
+  String get invalidRir => 'Inserisci un RIR valido (0-10)';
+
+  @override
   String get suggestedWeight => 'Peso Suggerito';
 
   @override
@@ -21253,6 +21301,42 @@ class AppLocalizationsIt extends AppLocalizations {
   String get greetingNight => 'Buonanotte';
 
   @override
+  String get classicMorning1 => 'facciamo che oggi conti!';
+
+  @override
+  String get classicMorning2 => 'tempo di costruire la tua forza!';
+
+  @override
+  String get classicMorning3 => 'pronto a fare progressi?';
+
+  @override
+  String get classicAfternoon1 => 'continua a spingere avanti!';
+
+  @override
+  String get classicAfternoon2 => 'ogni ripetizione porta risultati!';
+
+  @override
+  String get classicAfternoon3 => 'resta concentrato sui tuoi obiettivi!';
+
+  @override
+  String get classicEvening1 => 'concludi la giornata alla grande!';
+
+  @override
+  String get classicEvening2 => 'un altro passo verso il tuo obiettivo!';
+
+  @override
+  String get classicEvening3 => 'la costanza è la chiave!';
+
+  @override
+  String get classicNight1 => 'la dedizione non conosce orari!';
+
+  @override
+  String get classicNight2 => 'guadagni notturni!';
+
+  @override
+  String get classicNight3 => 'bruciando il ferro a mezzanotte!';
+
+  @override
   String get heroMorning1 => 'andiamo a distruggere i pesi cattivi!';
 
   @override
@@ -21467,4 +21551,133 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get frostNight3 => 'guerrieri invernali unitevi!';
+
+  @override
+  String get repZones => 'Zone Ripetizioni';
+
+  @override
+  String get volumeByMuscle => 'Volume per Muscolo';
+
+  @override
+  String get weeklyVolumeChange => 'Variazione Volume Settimanale';
+
+  @override
+  String get last4Weeks => 'Ultime 4 Settimane';
+
+  @override
+  String get noMuscleDataThisWeek => 'Nessun dato muscolare questa settimana';
+
+  @override
+  String get minimumEffectiveVolume => 'Volume Minimo Efficace';
+
+  @override
+  String get belowMaintenance => 'Sotto mantenimento';
+
+  @override
+  String get maintenance => 'Mantenimento';
+
+  @override
+  String get effective => 'Efficace';
+
+  @override
+  String get ratioAnalysis => 'Analisi Rapporti';
+
+  @override
+  String get muscleHeatmap => 'Mappa Muscolare';
+
+  @override
+  String get pushPullDescription =>
+      'Rapporto ottimale 1:1. Gli squilibri possono causare problemi posturali';
+
+  @override
+  String get upperLowerDescription =>
+      'Allenamento bilanciato tra parte superiore e inferiore per simmetria';
+
+  @override
+  String get outOf10 => 'su 10';
+
+  @override
+  String get completeWorkoutsToSeeStats =>
+      'Completa allenamenti per vedere le tue statistiche';
+
+  @override
+  String get optimal => 'Ottimale';
+
+  @override
+  String get excessive => 'Eccessivo';
+
+  @override
+  String get stressIndex => 'Stress Allenamento';
+
+  @override
+  String get stressLevelLight => 'Sessione Leggera';
+
+  @override
+  String get stressLevelModerate => 'Sessione Moderata';
+
+  @override
+  String get stressLevelHard => 'Sessione Intensa';
+
+  @override
+  String get stressLevelVeryHard => 'Sessione Molto Intensa';
+
+  @override
+  String get stressDescriptionLight => 'Recupero veloce, pronto per domani';
+
+  @override
+  String get stressDescriptionModerate =>
+      'Buon equilibrio tra intensità e recupero';
+
+  @override
+  String get stressDescriptionHard =>
+      'Alto stress, recupero adeguato necessario';
+
+  @override
+  String get stressDescriptionVeryHard =>
+      'Stress massimo, dai priorità al recupero';
+
+  @override
+  String get lowConfidenceHint =>
+      'Aggiungi valori RPE durante l\'allenamento per uno stress index più accurato';
+
+  @override
+  String get muscleRecovery => 'Recupero Muscolare';
+
+  @override
+  String get stressBreakdown => 'Dettaglio Stress';
+
+  @override
+  String get accuracyInfo => 'Info Precisione';
+
+  @override
+  String confidenceExplanation(
+    int confidencePercent,
+    int setsWithRpe,
+    int totalSets,
+  ) {
+    return '$confidencePercent% delle serie ($setsWithRpe/$totalSets) includono dati RPE';
+  }
+
+  @override
+  String get rpeImproveAccuracy => 'Aggiungi RPE per calcoli più precisi';
+
+  @override
+  String estimatedRange(String range) {
+    return 'Range stimato: $range';
+  }
+
+  @override
+  String get fullyRecovered => 'Fully Recovered';
+
+  @override
+  String get almostReady => 'Almost Ready';
+
+  @override
+  String get recovering => 'Recovering';
+
+  @override
+  String get fatiguedMuscle => 'Fatigued';
+
+  @override
+  String get exhaustedMuscle => 'Needs Rest';
 }

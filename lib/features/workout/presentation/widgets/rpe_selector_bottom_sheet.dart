@@ -18,13 +18,24 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise.dart';
-import 'package:gymbro_flutter_new/features/workout/domain/services/apre_service.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/services/rpe_autoregulation_service.dart';
 import 'package:gymbro_flutter_new/features/exercise_database/domain/entities/exercise_counting_mode.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/providers/app_config_provider.dart';
+
+/// Helper function to convert RPE to RIR
+int rpeToRir(double rpe) => (10 - rpe).round();
+
+/// Helper function to format effort value based on user preference
+String formatEffortValue(double rpe, bool useRir) {
+  if (useRir) {
+    return 'RIR ${rpeToRir(rpe)}';
+  }
+  return 'RPE ${rpe.toStringAsFixed(1)}';
+}
 
 class SupersetExerciseCompleteData {
 
@@ -46,7 +57,6 @@ class RpeSelectorBottomSheet extends ConsumerStatefulWidget {
     required this.targetReps,
     required this.onConfirm,
     this.exercise,
-    this.onAPRESuggestion,
     this.onRPESuggestion,
     this.isPartOfSuperset = false,
     this.supersetName,
@@ -59,9 +69,8 @@ class RpeSelectorBottomSheet extends ConsumerStatefulWidget {
   final int targetReps;
   final Function(int actualReps, double actualWeight, int rpe) onConfirm;
 
-  // APRE parameters
-  final Exercise? exercise; // Full exercise for APRE checking
-  final Function(double suggestedWeight)? onAPRESuggestion;
+  // Exercise for RPE checking
+  final Exercise? exercise;
 
   // RPE Autoregulation parameters
   final Function(double suggestedWeight)? onRPESuggestion;
@@ -80,7 +89,6 @@ class RpeSelectorBottomSheet extends ConsumerStatefulWidget {
     required int targetReps,
     required Function(int actualReps, double actualWeight, int rpe) onConfirm,
     Exercise? exercise,
-    Function(double suggestedWeight)? onAPRESuggestion,
     Function(double suggestedWeight)? onRPESuggestion,
     bool isPartOfSuperset = false,
     String? supersetName,
@@ -98,7 +106,6 @@ class RpeSelectorBottomSheet extends ConsumerStatefulWidget {
         targetReps: targetReps,
         onConfirm: onConfirm,
         exercise: exercise,
-        onAPRESuggestion: onAPRESuggestion,
         onRPESuggestion: onRPESuggestion,
         isPartOfSuperset: isPartOfSuperset,
         supersetName: supersetName,
@@ -359,13 +366,15 @@ class _RpeSelectorBottomSheetState extends ConsumerState<RpeSelectorBottomSheet>
     ];
   }
 
-  Widget _buildRpeScale(ThemeData theme, ColorScheme colorScheme) {
+  Widget _buildRpeScale(ThemeData theme, ColorScheme colorScheme, bool useRir) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: List.generate(5, (index) {
         final rpe = index + 6; // RPE from 6 to 10
         final isSelected = _selectedRpe == rpe;
-        
+        // Convert to RIR if needed: RIR = 10 - RPE
+        final displayValue = useRir ? rpeToRir(rpe.toDouble()) : rpe;
+
         return Expanded(
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 3),
@@ -417,7 +426,7 @@ class _RpeSelectorBottomSheetState extends ConsumerState<RpeSelectorBottomSheet>
                     ),
                     const SizedBox(height: 2),
                     Text(
-                      '$rpe',
+                      '$displayValue',
                       style: theme.textTheme.titleSmall?.copyWith(
                         fontWeight: FontWeight.bold,
                         color: isSelected
@@ -540,9 +549,8 @@ class _RpeSelectorBottomSheetState extends ConsumerState<RpeSelectorBottomSheet>
   }
 
   Widget _buildMainContent(BuildContext context, ThemeData theme, AppLocalizations l10n, ColorScheme colorScheme) {
-    // Check for APRE suggestion
-    final showAPRESuggestion = _shouldShowAPRESuggestion();
-    final apreSuggestion = showAPRESuggestion ? _calculateAPRESuggestion() : null;
+    // Watch the global RIR mode setting
+    final useRir = ref.watch(useRirModeProvider);
 
     // Check for RPE suggestion
     final showRPESuggestion = _shouldShowRPESuggestion();
@@ -551,13 +559,9 @@ class _RpeSelectorBottomSheetState extends ConsumerState<RpeSelectorBottomSheet>
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        // APRE Suggestion Card (if applicable)
-        if (showAPRESuggestion && apreSuggestion != null)
-          _buildAPRESuggestionCard(context, theme, l10n, colorScheme, apreSuggestion),
-
         // RPE Suggestion Card (if applicable)
         if (showRPESuggestion && rpeSuggestion != null && rpeSuggestion.adjustmentPercent != 0)
-          _buildRPESuggestionCard(context, theme, l10n, colorScheme, rpeSuggestion),
+          _buildRPESuggestionCard(context, theme, l10n, colorScheme, rpeSuggestion, useRir),
 
         // Toggle for Weight & Reps (dynamic text based on counting mode)
         Padding(
@@ -662,7 +666,7 @@ class _RpeSelectorBottomSheetState extends ConsumerState<RpeSelectorBottomSheet>
 
         const SizedBox(height: 16),
 
-        // RPE Section
+        // RPE/RIR Section (adapts based on user preference)
         Container(
           margin: const EdgeInsets.symmetric(horizontal: 16),
           padding: const EdgeInsets.all(12),
@@ -676,7 +680,7 @@ class _RpeSelectorBottomSheetState extends ConsumerState<RpeSelectorBottomSheet>
               Row(
                 children: [
                   Text(
-                    l10n.rpe,
+                    useRir ? l10n.rir : l10n.rpe,
                     style: theme.textTheme.titleMedium,
                   ),
                   const SizedBox(width: 8),
@@ -685,8 +689,8 @@ class _RpeSelectorBottomSheetState extends ConsumerState<RpeSelectorBottomSheet>
                       showDialog(
                         context: context,
                         builder: (context) => AlertDialog(
-                          title: Text(l10n.rpe),
-                          content: Text(l10n.rpeDescription),
+                          title: Text(useRir ? l10n.rir : l10n.rpe),
+                          content: Text(useRir ? l10n.rirDescription : l10n.rpeDescription),
                           actions: [
                             TextButton(
                               onPressed: () => Navigator.of(context).pop(),
@@ -714,11 +718,11 @@ class _RpeSelectorBottomSheetState extends ConsumerState<RpeSelectorBottomSheet>
                 ),
               ),
               const SizedBox(height: 12),
-              
-              // RPE buttons - Responsive row
-              _buildRpeScale(theme, colorScheme),
-              
-              // RIR display
+
+              // RPE/RIR buttons - Responsive row (displays based on preference)
+              _buildRpeScale(theme, colorScheme, useRir),
+
+              // Complementary display (show RIR when in RPE mode, show RPE when in RIR mode)
               AnimatedSize(
                 duration: const Duration(milliseconds: 300),
                 child: _calculatedRir != null
@@ -764,18 +768,23 @@ class _RpeSelectorBottomSheetState extends ConsumerState<RpeSelectorBottomSheet>
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  '${l10n.rir}: $_calculatedRir',
+                                  // Show opposite scale for reference
+                                  useRir
+                                    ? '${l10n.rpe}: ${_selectedRpe ?? 0}'
+                                    : '${l10n.rir}: $_calculatedRir',
                                   style: theme.textTheme.titleSmall?.copyWith(
                                     fontWeight: FontWeight.bold,
                                     color: colorScheme.primary,
                                   ),
                                 ),
                                 Text(
-                                  l10n.repsInReserve,
+                                  useRir ? l10n.rpeDescription : l10n.repsInReserve,
                                   style: theme.textTheme.bodySmall?.copyWith(
                                     color: colorScheme.onSurfaceVariant,
                                     fontSize: 11,
                                   ),
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
                                 ),
                               ],
                             ),
@@ -942,14 +951,6 @@ class _RpeSelectorBottomSheetState extends ConsumerState<RpeSelectorBottomSheet>
     );
   }
   
-  // APRE Helper Methods
-  bool _shouldShowAPRESuggestion() {
-    if (widget.exercise == null || !widget.exercise!.useAPRE) return false;
-    if (widget.exercise!.apreProtocol == null) return false;
-    if (_currentExerciseSet.setNumber != 3) return false; // APRE only applies to set 3
-    return true;
-  }
-
   // RPE Autoregulation Helper Methods
   bool _shouldShowRPESuggestion() {
     if (widget.exercise == null) return false;
@@ -993,19 +994,13 @@ class _RpeSelectorBottomSheetState extends ConsumerState<RpeSelectorBottomSheet>
     return null;
   }
 
-  APREAdjustment? _calculateAPRESuggestion() {
-    if (widget.exercise == null || widget.exercise!.apreProtocol == null) {
-      return null;
-    }
-    return APREService.getAdjustment(widget.exercise!.apreProtocol!, _actualReps);
-  }
-
   Widget _buildRPESuggestionCard(
     BuildContext context,
     ThemeData theme,
     AppLocalizations l10n,
     ColorScheme colorScheme,
     WeightAdjustment suggestion,
+    bool useRir,
   ) {
     return Container(
       margin: const EdgeInsets.all(16),
@@ -1059,15 +1054,30 @@ class _RpeSelectorBottomSheetState extends ConsumerState<RpeSelectorBottomSheet>
             ],
           ),
           const SizedBox(height: 12),
+          // Display actual effort value based on preference
           Text(
             suggestion.actualRPE != null
-                ? '${l10n.actualRpe}: ${suggestion.actualRPE!.toStringAsFixed(0)}'
+                ? useRir
+                    ? '${l10n.actualRir}: ${rpeToRir(suggestion.actualRPE!)}'
+                    : '${l10n.actualRpe}: ${suggestion.actualRPE!.toStringAsFixed(0)}'
                 : '${l10n.actualRir}: ${suggestion.actualRIR}',
             style: theme.textTheme.bodyMedium,
           ),
+          // Display target range based on preference
           if (suggestion.targetRPERange != null)
             Text(
-              '${l10n.targetRange}: ${suggestion.targetRPERange}',
+              useRir
+                ? () {
+                    // Parse RPE range and convert to RIR
+                    final parts = suggestion.targetRPERange!.split('-');
+                    if (parts.length == 2) {
+                      final minRpe = double.tryParse(parts.first.trim()) ?? 6.0;
+                      final maxRpe = double.tryParse(parts.last.trim()) ?? 10.0;
+                      return '${l10n.targetRir}: ${rpeToRir(maxRpe)} - ${rpeToRir(minRpe)}';
+                    }
+                    return l10n.targetRange(suggestion.targetRPERange!);
+                  }()
+                : l10n.targetRange(suggestion.targetRPERange!),
               style: theme.textTheme.bodyMedium,
             )
           else if (suggestion.targetRIR != null)
@@ -1143,7 +1153,7 @@ class _RpeSelectorBottomSheetState extends ConsumerState<RpeSelectorBottomSheet>
           ),
           const SizedBox(height: 8),
           Text(
-            suggestion.reason,
+            _getLocalizedAdjustmentReason(l10n, suggestion),
             style: theme.textTheme.bodySmall?.copyWith(
               fontStyle: FontStyle.italic,
               color: colorScheme.onSurfaceVariant,
@@ -1154,141 +1164,17 @@ class _RpeSelectorBottomSheetState extends ConsumerState<RpeSelectorBottomSheet>
     );
   }
 
-  Widget _buildAPRESuggestionCard(
-    BuildContext context,
-    ThemeData theme,
-    AppLocalizations l10n,
-    ColorScheme colorScheme,
-    APREAdjustment suggestion,
-  ) {
-    final suggestedWeight = APREService.calculateNextWeight(
-      _actualWeight,
-      _actualReps,
-      widget.exercise!.apreProtocol!,
-      isForSet4: true,
-    );
+  /// Returns a localized reason message based on the adjustment suggestion
+  String _getLocalizedAdjustmentReason(AppLocalizations l10n, WeightAdjustment suggestion) {
+    final percent = suggestion.adjustmentPercent.abs().toStringAsFixed(1);
 
-    return Container(
-      margin: const EdgeInsets.all(16),
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          colors: [
-            colorScheme.primaryContainer.withValues(alpha: 0.5),
-            colorScheme.primaryContainer.withValues(alpha: 0.3),
-          ],
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-        ),
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(
-          color: colorScheme.primary.withValues(alpha: 0.3),
-          width: 1.5,
-        ),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              SemanticIcon(
-  icon: AppIcons.autoAwesome,
-  semanticLabel: 'Auto awesome',
-  size: AppIconSize.small,
-  color: colorScheme.primary,
-),
-              const SizedBox(width: 8),
-              Text(
-                'APRE ${widget.exercise!.apreProtocol} Protocol',
-                style: theme.textTheme.titleSmall?.copyWith(
-                  fontWeight: FontWeight.bold,
-                  color: colorScheme.primary,
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 12),
-          Text(
-            'You completed $_actualReps reps (target: ${widget.exercise!.apreProtocol})',
-            style: theme.textTheme.bodyMedium,
-          ),
-          const SizedBox(height: 8),
-          Container(
-            padding: const EdgeInsets.all(12),
-            decoration: BoxDecoration(
-              color: colorScheme.surface.withValues(alpha: 0.7),
-              borderRadius: BorderRadius.circular(8),
-            ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Set 4 Weight:',
-                      style: theme.textTheme.bodySmall?.copyWith(
-                        color: colorScheme.onSurfaceVariant,
-                      ),
-                    ),
-                    Text(
-                      '${suggestedWeight.toStringAsFixed(1)} kg',
-                      style: theme.textTheme.titleLarge?.copyWith(
-                        fontWeight: FontWeight.bold,
-                        color: colorScheme.primary,
-                      ),
-                    ),
-                    Text(
-                      suggestion.set4AdjustmentKg > 0
-                          ? '+${suggestion.set4AdjustmentKg.toStringAsFixed(1)} kg'
-                          : '${suggestion.set4AdjustmentKg.toStringAsFixed(1)} kg',
-                      style: theme.textTheme.bodySmall?.copyWith(
-                        color: suggestion.set4AdjustmentKg > 0
-                            ? context.colors.success
-                            : suggestion.set4AdjustmentKg < 0
-                                ? context.colors.warning
-                                : colorScheme.onSurfaceVariant,
-                      ),
-                    ),
-                  ],
-                ),
-                ElevatedButton(
-                  onPressed: () {
-                    HapticFeedback.mediumImpact();
-                    if (widget.onAPRESuggestion != null) {
-                      widget.onAPRESuggestion!(suggestedWeight);
-                    }
-                    // Show confirmation
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: Text('Set 4 weight: ${suggestedWeight.toStringAsFixed(1)} kg'),
-                        duration: const Duration(seconds: 2),
-                      ),
-                    );
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: colorScheme.primary,
-                    foregroundColor: colorScheme.onPrimary,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                  ),
-                  child: const Text('Apply'),
-                ),
-              ],
-            ),
-          ),
-          const SizedBox(height: 8),
-          Text(
-            suggestion.description,
-            style: theme.textTheme.bodySmall?.copyWith(
-              fontStyle: FontStyle.italic,
-              color: colorScheme.onSurfaceVariant,
-            ),
-          ),
-        ],
-      ),
-    );
+    if (suggestion.shouldIncrease) {
+      return l10n.increaseWeightBy(percent);
+    } else if (suggestion.shouldDecrease) {
+      return l10n.decreaseWeightBy(percent);
+    } else {
+      return l10n.maintainWeight;
+    }
   }
 
   Widget _buildWeightAndRepsSection(BuildContext context, ThemeData theme, ColorScheme colorScheme) {
@@ -1703,7 +1589,7 @@ class _RpeSelectorBottomSheetState extends ConsumerState<RpeSelectorBottomSheet>
 ),
                     const SizedBox(width: 4),
                     Text(
-                      'Minuti', // TODO: Add localization
+                      l10n.exerciseListMinutes,
                       style: theme.textTheme.labelLarge?.copyWith(
                         fontWeight: FontWeight.w600,
                       ),
@@ -1759,7 +1645,7 @@ class _RpeSelectorBottomSheetState extends ConsumerState<RpeSelectorBottomSheet>
                             ),
                           ),
                           Text(
-                            'min',
+                            l10n.minutes,
                             style: theme.textTheme.bodySmall?.copyWith(
                               fontSize: 10,
                               color: colorScheme.onSurfaceVariant,
@@ -1820,7 +1706,7 @@ class _RpeSelectorBottomSheetState extends ConsumerState<RpeSelectorBottomSheet>
 ),
                     const SizedBox(width: 4),
                     Text(
-                      'Secondi', // TODO: Add localization
+                      l10n.exerciseListSeconds,
                       style: theme.textTheme.labelLarge?.copyWith(
                         fontWeight: FontWeight.w600,
                       ),
@@ -1876,7 +1762,7 @@ class _RpeSelectorBottomSheetState extends ConsumerState<RpeSelectorBottomSheet>
                             ),
                           ),
                           Text(
-                            'sec',
+                            l10n.seconds,
                             style: theme.textTheme.bodySmall?.copyWith(
                               fontSize: 10,
                               color: colorScheme.onSurfaceVariant,
@@ -1961,15 +1847,19 @@ class _RpeSelectorBottomSheetState extends ConsumerState<RpeSelectorBottomSheet>
 
     // If part of a superset, use a PageView
     if (widget.isPartOfSuperset) {
-      return SizedBox(
-        height: MediaQuery.of(context).size.height * 0.9,
-        child: PageView.builder(
-          controller: _pageController,
-          itemCount: widget.supersetExercises?.length ?? 0,
-          onPageChanged: _onPageChanged,
-          itemBuilder: (context, index) {
-            return mainContent;
-          },
+      return ConstrainedBox(
+        constraints: BoxConstraints(
+          maxHeight: MediaQuery.of(context).size.height * 0.80,
+        ),
+        child: IntrinsicHeight(
+          child: PageView.builder(
+            controller: _pageController,
+            itemCount: widget.supersetExercises?.length ?? 0,
+            onPageChanged: _onPageChanged,
+            itemBuilder: (context, index) {
+              return mainContent;
+            },
+          ),
         ),
       );
     }

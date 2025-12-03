@@ -18,6 +18,10 @@ import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dar
 import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
 import 'package:gymbro_flutter_new/features/onboarding/presentation/providers/tutorial_state_notifier.dart';
 import 'package:gymbro_flutter_new/features/onboarding/domain/registry/tutorial_registry.dart';
+import 'package:gymbro_flutter_new/features/journey_themes/presentation/widgets/journey_theme_selector_modal.dart';
+import 'package:gymbro_flutter_new/features/journey_themes/presentation/providers/journey_theme_provider.dart';
+import 'package:gymbro_flutter_new/features/auth/presentation/providers/admin_provider.dart';
+import 'package:gymbro_flutter_new/features/auth/domain/entities/user_profile.dart';
 
 class SettingsScreen extends ConsumerWidget {
   const SettingsScreen({super.key});
@@ -225,6 +229,13 @@ class SettingsScreen extends ConsumerWidget {
                             ),
                           ),
                         ),
+                        // Admin Premium Toggle (admin only)
+                        if (ref.watch(isAdminCachedProvider)) ...[
+                          const SizedBox(height: 16),
+                          const Divider(),
+                          const SizedBox(height: 8),
+                          _buildAdminPremiumToggle(context, ref),
+                        ],
                       ],
                     )
                   : Text(context.l10n.settingsNotLoggedIn),
@@ -233,6 +244,75 @@ class SettingsScreen extends ConsumerWidget {
             ),
           ],
         ),
+      ),
+    );
+  }
+
+  Widget _buildAdminPremiumToggle(BuildContext context, WidgetRef ref) {
+    // FIX: Read from userProfileProvider (stream with data), not notifier (may be loading)
+    final profileAsync = ref.watch(userProfileProvider);
+    final profile = profileAsync.valueOrNull;
+    final accountTier = profile?.accountTier ?? AccountTier.free;
+    final isPremium = accountTier == AccountTier.premium || accountTier == AccountTier.pro;
+
+    return Container(
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        color: context.colors.tertiary.withValues(alpha: 0.1),
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(
+          color: context.colors.tertiary.withValues(alpha: 0.3),
+        ),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              SemanticIcon(
+                icon: AppIcons.admin,
+                semanticLabel: context.l10n.adminPremiumToggle,
+                size: AppIconSize.small,
+                color: context.colors.tertiary,
+              ),
+              const SizedBox(width: 8),
+              Text(
+                context.l10n.adminPremiumToggle,
+                style: context.textTheme.labelMedium?.copyWith(
+                  color: context.colors.tertiary,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 8),
+          SwitchListTile(
+            title: Text(context.l10n.adminPremiumStatus),
+            subtitle: Text(
+              isPremium
+                  ? context.l10n.adminPremiumActive(accountTier.name)
+                  : context.l10n.adminPremiumInactive,
+            ),
+            value: isPremium,
+            activeTrackColor: context.colors.tertiary.withValues(alpha: 0.5),
+            contentPadding: EdgeInsets.zero,
+            onChanged: (value) async {
+              final newTier = value ? AccountTier.premium : AccountTier.free;
+              await ref
+                  .read(userProfileNotifierProvider.notifier)
+                  .upgradeTier(newTier);
+
+              if (context.mounted) {
+                SnackBarService.showSuccess(
+                  context,
+                  value
+                      ? context.l10n.adminPremiumEnabled
+                      : context.l10n.adminPremiumDisabled,
+                );
+              }
+            },
+          ),
+        ],
       ),
     );
   }
@@ -331,6 +411,11 @@ class SettingsScreen extends ConsumerWidget {
 
             const Divider(),
 
+            // Journey Themes (gamification visual themes)
+            _buildJourneyThemesTile(context, ref),
+
+            const Divider(),
+
             // Font Size (with live preview text)
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -420,37 +505,6 @@ class SettingsScreen extends ConsumerWidget {
 ),
               onTap: () => _showRestTimeDialog(context, ref, config.defaultRestTime),
             ),
-
-            const Divider(),
-
-            // 🔒 APRE System Toggle (hidden if feature disabled)
-            if (FeatureFlags.enableAPRE)
-              _buildSwitchTile(
-                context,
-                title: context.l10n.settingsApreAutoAdjustment,
-                subtitle: context.l10n.settingsApreAutoAdjustmentDesc,
-                value: config.enableApre ?? false,
-                onChanged: (value) {
-                  ref.read(appConfigProvider.notifier).updateWorkoutSettings(
-                    enableApre: value,
-                  );
-                },
-              ),
-
-            // APRE Protocol Config (only if feature AND setting enabled)
-            if (FeatureFlags.enableAPRE && config.enableApre == true) ...[
-              const Divider(),
-              _buildSettingTile(
-                context,
-                title: context.l10n.settingsApreProtocol,
-                subtitle: context.l10n.settingsApreProtocolDesc(config.defaultApreProtocol ?? 3),
-                leading: const SemanticIcon(
-  icon: AppIcons.settings,
-  semanticLabel: 'Settings',
-),
-                onTap: () => _showApreProtocolDialog(context, ref, config.defaultApreProtocol ?? 3),
-              ),
-            ],
 
             const Divider(),
 
@@ -611,6 +665,22 @@ class SettingsScreen extends ConsumerWidget {
   semanticLabel: 'Weight',
 ),
               onTap: () => _showUnitsDialog(context, ref, config.measurementUnit),
+            ),
+
+            const Divider(),
+
+            // Effort Scale (RPE/RIR)
+            _buildSettingTile(
+              context,
+              title: context.l10n.effortScaleSetting,
+              subtitle: ref.watch(effortScaleProvider) == 'rpe'
+                  ? context.l10n.rpeMode
+                  : context.l10n.rirMode,
+              leading: const SemanticIcon(
+  icon: AppIcons.trending,
+  semanticLabel: 'Effort scale',
+),
+              onTap: () => _showEffortScaleDialog(context, ref, ref.read(effortScaleProvider)),
             ),
           ],
         ),
@@ -796,6 +866,45 @@ class SettingsScreen extends ConsumerWidget {
     );
   }
 
+  Widget _buildJourneyThemesTile(BuildContext context, WidgetRef ref) {
+    final themeState = ref.watch(journeyThemeProvider);
+    final theme = themeState.effectiveTheme;
+
+    return ListTile(
+      title: Text(context.l10n.journeyThemes),
+      subtitle: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Text(theme.emoji, style: context.textTheme.bodyMedium),
+          const SizedBox(width: 8),
+          Text(theme.displayName),
+        ],
+      ),
+      leading: Container(
+        width: 40,
+        height: 40,
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            colors: [
+              theme.primaryColor.withValues(alpha: 0.3),
+              theme.secondaryColor.withValues(alpha: 0.2),
+            ],
+          ),
+          borderRadius: BorderRadius.circular(12),
+        ),
+        child: Center(
+          child: Text(theme.emoji, style: context.textTheme.titleLarge),
+        ),
+      ),
+      trailing: const SemanticIcon(
+        icon: AppIcons.chevronRight,
+        semanticLabel: 'Chevron right',
+      ),
+      onTap: () => JourneyThemeSelectorModal.show(context),
+      contentPadding: EdgeInsets.zero,
+    );
+  }
+
   // Dialog Methods
   void _showThemeDialog(BuildContext context, WidgetRef ref, ThemeMode currentMode) {
     final l10n = AppLocalizations.of(context);
@@ -902,6 +1011,39 @@ class SettingsScreen extends ConsumerWidget {
     );
   }
 
+  void _showEffortScaleDialog(BuildContext context, WidgetRef ref, String currentScale) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text(context.l10n.effortScaleSetting),
+        content: RadioGroup<String>(
+          groupValue: currentScale,
+          onChanged: (value) {
+            if (value != null) {
+              ref.read(appConfigProvider.notifier).setEffortScale(value);
+              Navigator.pop(context);
+            }
+          },
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              RadioListTile<String>(
+                title: Text(context.l10n.rpeMode),
+                subtitle: Text(context.l10n.rpeScaleDescription),
+                value: 'rpe',
+              ),
+              RadioListTile<String>(
+                title: Text(context.l10n.rirMode),
+                subtitle: Text(context.l10n.rirScaleDescription),
+                value: 'rir',
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
   void _showColorDialog(BuildContext context, WidgetRef ref, String currentColor) {
     final colors = ['blue', 'red', 'green', 'purple', 'orange', 'teal'];
     
@@ -983,51 +1125,6 @@ class SettingsScreen extends ConsumerWidget {
         ),
       ),
     );
-  }
-
-  void _showApreProtocolDialog(BuildContext context, WidgetRef ref, int currentProtocol) {
-    final protocols = [3, 6, 10];
-
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: Text(context.l10n.settingsApreProtocol),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: protocols.map((protocol) => RadioListTile<int>(
-            title: Text(context.l10n.settingsApreProtocolDesc(protocol)),
-            subtitle: Text(_getApreProtocolDescription(context, protocol)),
-            value: protocol,
-            groupValue: currentProtocol,
-            onChanged: (value) {
-              if (value != null) {
-                ref.read(appConfigProvider.notifier).updateWorkoutSettings(
-                  defaultApreProtocol: value,
-                );
-                Navigator.pop(context);
-                SnackBarService.showSuccess(
-                  context,
-                  context.l10n.settingsApreProtocolUpdated(value),
-                );
-              }
-            },
-          )).toList(),
-        ),
-      ),
-    );
-  }
-
-  String _getApreProtocolDescription(BuildContext context, int protocol) {
-    switch (protocol) {
-      case 3:
-        return '3 sets to failure (fastest)';
-      case 6:
-        return '6 sets progressive (balanced)';
-      case 10:
-        return '10 sets progressive (advanced)';
-      default:
-        return 'Protocol $protocol';
-    }
   }
 
   void _showDayCutoffDialog(BuildContext context, WidgetRef ref) {

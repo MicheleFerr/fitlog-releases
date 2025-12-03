@@ -56,23 +56,22 @@ class AppConfigAdapter extends TypeAdapter<AppConfig> {
       hasSeenWorkoutOnboarding: fields[34] == null ? false : fields[34] as bool,
       onboardingVersion: fields[35] == null ? 1 : (fields[35] as num).toInt(),
       betaModeEnabled: fields[36] as bool?,
-      enableApre: fields[37] == null ? true : fields[37] as bool?,
-      defaultApreProtocol: fields[38] == null
-          ? 6
-          : (fields[38] as num?)?.toInt(),
+      enableApre: fields[37] as bool?,
+      defaultApreProtocol: (fields[38] as num?)?.toInt(),
       autoAdjustRestTime: fields[39] == null ? true : fields[39] as bool?,
       showQuickInfoIcon: fields[40] as bool?,
       showWarmupIcon: fields[41] as bool?,
       showPreventionIcon: fields[42] as bool?,
       autoAdjustWeightFromRpe: fields[43] as bool?,
       autoAdjustRestFromRpe: fields[44] as bool?,
+      effortScale: fields[45] == null ? 'rpe' : fields[45] as String,
     );
   }
 
   @override
   void write(BinaryWriter writer, AppConfig obj) {
     writer
-      ..writeByte(45)
+      ..writeByte(46)
       ..writeByte(0)
       ..write(obj.languageCode)
       ..writeByte(1)
@@ -162,7 +161,9 @@ class AppConfigAdapter extends TypeAdapter<AppConfig> {
       ..writeByte(43)
       ..write(obj.autoAdjustWeightFromRpe)
       ..writeByte(44)
-      ..write(obj.autoAdjustRestFromRpe);
+      ..write(obj.autoAdjustRestFromRpe)
+      ..writeByte(45)
+      ..write(obj.effortScale);
   }
 
   @override

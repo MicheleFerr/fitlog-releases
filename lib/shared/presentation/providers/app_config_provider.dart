@@ -270,6 +270,34 @@ class AppConfigNotifier extends Notifier<AppConfig> {
     }
   }
 
+  // Effort scale settings (RPE or RIR)
+  Future<void> setEffortScale(String scale) async {
+    try {
+      await _ensureInitialized();
+      if (_isDisposed) return;
+
+      // Input validation
+      if (scale != 'rpe' && scale != 'rir') {
+        if (kDebugMode) {
+          debugPrint('⚠️ [AppConfig] Invalid effort scale: $scale');
+        }
+        return;
+      }
+
+      state = state.copyWith(effortScale: scale);
+      await _saveConfig();
+
+      if (kDebugMode) {
+        debugPrint('✅ [AppConfig] Effort scale set to: $scale');
+      }
+    } catch (e, stackTrace) {
+      if (kDebugMode) {
+        debugPrint('❌ [AppConfig] Error setting effort scale: $e');
+        debugPrint('📍 Stack trace: $stackTrace');
+      }
+    }
+  }
+
   // Measurement settings
   Future<void> setMeasurementUnit(String unit) async {
     try {
@@ -454,8 +482,6 @@ class AppConfigNotifier extends Notifier<AppConfig> {
     bool? warmupSuggestions,
     bool? autoCollapseCompleted,
     bool? isProMode,
-    bool? enableApre,
-    int? defaultApreProtocol,
     bool? autoAdjustRestTime,
     bool? autoAdjustWeightFromRpe,
     bool? autoAdjustRestFromRpe,
@@ -463,14 +489,6 @@ class AppConfigNotifier extends Notifier<AppConfig> {
     try {
       await _ensureInitialized();
       if (_isDisposed) return;
-
-      // Input validation for defaultApreProtocol
-      if (defaultApreProtocol != null && (defaultApreProtocol < 1 || defaultApreProtocol > 10)) {
-        if (kDebugMode) {
-          debugPrint('⚠️ [AppConfig] Invalid APRE protocol: $defaultApreProtocol (must be 1-10)');
-        }
-        return;
-      }
 
       state = state.copyWith(
         rpeTracking: rpeTracking,
@@ -480,8 +498,6 @@ class AppConfigNotifier extends Notifier<AppConfig> {
         warmupSuggestions: warmupSuggestions,
         autoCollapseCompleted: autoCollapseCompleted,
         isProMode: isProMode,
-        enableApre: enableApre,
-        defaultApreProtocol: defaultApreProtocol,
         autoAdjustRestTime: autoAdjustRestTime,
         autoAdjustWeightFromRpe: autoAdjustWeightFromRpe,
         autoAdjustRestFromRpe: autoAdjustRestFromRpe,
@@ -681,6 +697,16 @@ final preferredTemplateIdProvider = Provider<String?>((ref) {
 
 final onboardingVersionProvider = Provider<int>((ref) {
   return ref.watch(appConfigProvider).onboardingVersion;
+});
+
+/// Effort scale provider - 'rpe' or 'rir'
+final effortScaleProvider = Provider<String>((ref) {
+  return ref.watch(appConfigProvider).effortScale;
+});
+
+/// Helper to check if using RIR mode
+final useRirModeProvider = Provider<bool>((ref) {
+  return ref.watch(effortScaleProvider) == 'rir';
 });
 
 // Beta mode provider
