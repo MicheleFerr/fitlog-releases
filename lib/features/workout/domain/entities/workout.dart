@@ -99,6 +99,10 @@ abstract class Workout with _$Workout {
       status: WorkoutStatus.inProgress,
       startTime: DateTime.now(),
       updatedAt: DateTime.now(),
+      // 🐛 BUG FIX: Clear preload flags when starting workout
+      // Without this, cleanup timer kills active workouts after preloadExpiry
+      isPreloaded: false,
+      preloadExpiry: null,
     );
   }
 
@@ -121,6 +125,9 @@ abstract class Workout with _$Workout {
     return copyWith(
       status: WorkoutStatus.inProgress,
       updatedAt: DateTime.now(),
+      // 🐛 BUG FIX: Clear preload flags when resuming workout (safety measure)
+      isPreloaded: false,
+      preloadExpiry: null,
     );
   }
 }

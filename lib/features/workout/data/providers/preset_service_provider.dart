@@ -94,9 +94,9 @@ final presetServiceProvider = Provider<IPresetService>((ref) {
 ///   error: (e, s) => ErrorWidget(e),
 /// );
 /// ```
-/// 🔧 MEMORY FIX: Added autoDispose to prevent memory leaks
-/// Automatically disposes provider instances when widget is disposed
-final presetServiceAsyncProvider = FutureProvider.autoDispose<IPresetService>((ref) async {
+/// Provider variant that ensures service is fully initialized before use
+/// NOTE: NOT auto-dispose to prevent recreation and race conditions
+final presetServiceAsyncProvider = FutureProvider<IPresetService>((ref) async {
   // Create service
   final service = JSONPresetService();
 
