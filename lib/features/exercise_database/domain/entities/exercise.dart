@@ -10,6 +10,7 @@ library;
 
 import 'package:equatable/equatable.dart';
 import 'package:hive_ce/hive.dart';
+import 'package:gymbro_flutter_new/features/exercise_database/domain/entities/warmup_suggestion.dart';
 
 part 'exercise.g.dart';
 
@@ -57,6 +58,7 @@ class ExerciseDefinition extends Equatable {
     this.aliases = const [],
     String? normalizedNome,
     List<String>? searchableFields,
+    this.warmupSuggestions,
   })  : normalizedNome = normalizedNome ?? _normalize(nome),
         searchableFields = searchableFields ?? _buildSearchableFields(nome, aliases);
 
@@ -86,6 +88,9 @@ class ExerciseDefinition extends Equatable {
       tempoNote: json['tempoNote']?.isEmpty == true ? null : json['tempoNote'],
       // Fuzzy matching fields
       aliases: (json['aliases'] as List<dynamic>?)?.cast<String>() ?? [],
+      warmupSuggestions: (json['warmupSuggestions'] as List<dynamic>?)
+          ?.map((e) => WarmupSuggestion.fromJson(e as Map<String, dynamic>))
+          .toList(),
     );
   }
   @HiveField(0)
@@ -160,6 +165,9 @@ class ExerciseDefinition extends Equatable {
 
   @HiveField(23)
   final List<String> searchableFields; // Campi pre-calcolati per fuzzy search
+
+  @HiveField(24)
+  final List<WarmupSuggestion>? warmupSuggestions;
 
   // Metodo helper per parsare stringhe separate da virgole
   static List<String> _parseCommaSeparated(String? value) {
@@ -257,6 +265,7 @@ class ExerciseDefinition extends Equatable {
       // Fuzzy matching fields
       'aliases': aliases,
       'normalizedNome': normalizedNome,
+      'warmupSuggestions': warmupSuggestions?.map((e) => e.toJson()).toList(),
     };
   }
 
@@ -287,5 +296,6 @@ class ExerciseDefinition extends Equatable {
         aliases,
         normalizedNome,
         searchableFields,
+        warmupSuggestions,
       ];
 }

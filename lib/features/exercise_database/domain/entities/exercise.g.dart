@@ -43,13 +43,14 @@ class ExerciseDefinitionAdapter extends TypeAdapter<ExerciseDefinition> {
           : (fields[21] as List).cast<String>(),
       normalizedNome: fields[22] as String?,
       searchableFields: (fields[23] as List?)?.cast<String>(),
+      warmupSuggestions: (fields[24] as List?)?.cast<WarmupSuggestion>(),
     );
   }
 
   @override
   void write(BinaryWriter writer, ExerciseDefinition obj) {
     writer
-      ..writeByte(24)
+      ..writeByte(25)
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)
@@ -97,7 +98,9 @@ class ExerciseDefinitionAdapter extends TypeAdapter<ExerciseDefinition> {
       ..writeByte(22)
       ..write(obj.normalizedNome)
       ..writeByte(23)
-      ..write(obj.searchableFields);
+      ..write(obj.searchableFields)
+      ..writeByte(24)
+      ..write(obj.warmupSuggestions);
   }
 
   @override
