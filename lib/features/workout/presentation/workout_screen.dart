@@ -212,8 +212,8 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen> {
           // if (shouldShowTimer)
           //   const Tier1MinimalTimerOverlay(),
 
-          // FAB for adding exercises
-          if (isActive && !controllerState.isReorderMode)
+          // FAB for adding exercises (show in both active AND preloaded states)
+          if ((isActive || isPreloaded) && !controllerState.isReorderMode)
             _buildDraggableFAB(),
         ],
       ),
