@@ -5,26 +5,49 @@ import 'package:gymbro_flutter_new/features/exercise_database/presentation/widge
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
+import 'package:gymbro_flutter_new/features/exercise_database/presentation/widgets/warmup_suggestion_chips.dart';
+import 'package:gymbro_flutter_new/features/exercise_database/domain/entities/warmup_suggestion.dart';
 
 /// Enhanced modal for displaying exercise details with improved aesthetics
 /// following Apple HIG and Material Design 3 principles
-class ExerciseDetailsModal extends StatelessWidget {
+class ExerciseDetailsModal extends StatefulWidget {
 
   const ExerciseDetailsModal({
     super.key,
     required this.exercise,
+    this.currentExerciseIndex,
+    this.onWarmupExerciseAdded,
   });
+
   final Exercise exercise;
+  final int? currentExerciseIndex;
+  final void Function(WarmupSuggestion suggestion, int beforeIndex)? onWarmupExerciseAdded;
 
   /// Show the modal as a bottom sheet
-  static Future<void> show(BuildContext context, Exercise exercise) {
+  static Future<void> show(
+    BuildContext context,
+    Exercise exercise, {
+    int? currentExerciseIndex,
+    void Function(WarmupSuggestion, int)? onWarmupExerciseAdded,
+  }) {
     return showModalBottomSheet(
       context: context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
-      builder: (context) => ExerciseDetailsModal(exercise: exercise),
+      builder: (context) => ExerciseDetailsModal(
+        exercise: exercise,
+        currentExerciseIndex: currentExerciseIndex,
+        onWarmupExerciseAdded: onWarmupExerciseAdded,
+      ),
     );
   }
+
+  @override
+  State<ExerciseDetailsModal> createState() => _ExerciseDetailsModalState();
+}
+
+class _ExerciseDetailsModalState extends State<ExerciseDetailsModal> {
+  final Set<String> _addedExerciseIds = {};
 
   @override
   Widget build(BuildContext context) {
@@ -55,7 +78,7 @@ class ExerciseDetailsModal extends StatelessWidget {
                     const SizedBox(height: 24),
 
                     // Technical Notes Section
-                    if (exercise.noteTecniche != null) ...[
+                    if (widget.exercise.noteTecniche != null) ...[
                       _buildTechnicalNotesSection(context),
                       const SizedBox(height: 24),
                     ],
@@ -92,7 +115,7 @@ class ExerciseDetailsModal extends StatelessWidget {
       children: [
         // Exercise Name
         Text(
-          exercise.nome,
+          widget.exercise.nome,
           style: context.textTheme.headlineMedium?.copyWith(
             fontWeight: FontWeight.bold,
             color: context.colors.onSurface,
@@ -107,7 +130,7 @@ class ExerciseDetailsModal extends StatelessWidget {
             _buildInfoChip(
               context,
               icon: AppIcons.workout,
-              label: exercise.focusDisplayName,
+              label: widget.exercise.focusDisplayName,
               color: context.colors.primary,
             ),
             const SizedBox(width: 8),
@@ -123,7 +146,7 @@ class ExerciseDetailsModal extends StatelessWidget {
         _buildInfoChip(
           context,
           icon: AppIcons.sportsGymnastics,
-          label: exercise.attrezzatura,
+          label: widget.exercise.attrezzatura,
           color: context.colors.tertiary,
         ),
       ],
@@ -176,7 +199,7 @@ class ExerciseDetailsModal extends StatelessWidget {
         ),
       ),
       child: Text(
-        exercise.difficolta,
+        widget.exercise.difficolta,
         style: context.textTheme.bodyMedium?.copyWith(
           color: color,
           fontWeight: FontWeight.w600,
@@ -186,7 +209,7 @@ class ExerciseDetailsModal extends StatelessWidget {
   }
 
   Color _getDifficultyColor(BuildContext context) {
-    switch (exercise.difficolta.toLowerCase()) {
+    switch (widget.exercise.difficolta.toLowerCase()) {
       case 'principiante':
         return context.colors.success;
       case 'intermedio':
@@ -241,7 +264,7 @@ class ExerciseDetailsModal extends StatelessWidget {
           const SizedBox(height: 16),
 
           // Steps
-          ..._buildFormattedSteps(context, exercise.noteTecniche!),
+          ..._buildFormattedSteps(context, widget.exercise.noteTecniche!),
         ],
       ),
     );
@@ -300,44 +323,55 @@ class ExerciseDetailsModal extends StatelessWidget {
           ),
           const SizedBox(height: 16),
 
+          // Structured chips (if available and callback provided)
+          if (widget.exercise.warmupSuggestions?.isNotEmpty == true &&
+              widget.onWarmupExerciseAdded != null) ...[
+            WarmupSuggestionChips(
+              suggestions: widget.exercise.warmupSuggestions!,
+              addedExerciseIds: _addedExerciseIds,
+              onAdd: _handleAddWarmupExercise,
+            ),
+            const SizedBox(height: 16),
+          ],
+
           // Warmup Phases
-          if (exercise.mobilitaPre != null) ...[
+          if (widget.exercise.mobilitaPre != null) ...[
             _buildWarmupPhase(
               context,
               icon: '🔄',
               title: context.l10n.warmupPhase1Title.replaceAll('🔄 ', ''),
-              content: exercise.mobilitaPre!,
+              content: widget.exercise.mobilitaPre!,
             ),
             const SizedBox(height: 12),
           ],
 
-          if (exercise.attivazionePre != null) ...[
+          if (widget.exercise.attivazionePre != null) ...[
             _buildWarmupPhase(
               context,
               icon: '⚡',
               title: context.l10n.warmupPhase2Title.replaceAll('⚡ ', ''),
-              content: exercise.attivazionePre!,
+              content: widget.exercise.attivazionePre!,
             ),
             const SizedBox(height: 12),
           ],
 
-          if (exercise.warmupSets != null) ...[
+          if (widget.exercise.warmupSets != null) ...[
             _buildWarmupPhase(
               context,
               icon: '🏋️',
               title: context.l10n.warmupSetsLabel,
-              content: exercise.warmupSets!,
+              content: widget.exercise.warmupSets!,
               isMonospace: true,
             ),
             const SizedBox(height: 12),
           ],
 
-          if (exercise.tempoWarmup != null) ...[
+          if (widget.exercise.tempoWarmup != null) ...[
             _buildWarmupPhase(
               context,
               icon: '⏱️',
               title: context.l10n.warmupTimeLabel,
-              content: exercise.tempoWarmup!,
+              content: widget.exercise.tempoWarmup!,
             ),
           ],
         ],
@@ -369,7 +403,7 @@ class ExerciseDetailsModal extends StatelessWidget {
             children: [
               Text(
                 icon,
-                style: const TextStyle(fontSize: 18),
+                style: context.textTheme.bodyLarge,
               ),
               const SizedBox(width: 8),
               Expanded(
@@ -453,9 +487,32 @@ class ExerciseDetailsModal extends StatelessWidget {
   }
 
   bool _hasWarmupProtocol() {
-    return exercise.mobilitaPre != null ||
-        exercise.attivazionePre != null ||
-        exercise.warmupSets != null ||
-        exercise.tempoWarmup != null;
+    return widget.exercise.mobilitaPre != null ||
+        widget.exercise.attivazionePre != null ||
+        widget.exercise.warmupSets != null ||
+        widget.exercise.tempoWarmup != null;
+  }
+
+  void _handleAddWarmupExercise(WarmupSuggestion suggestion) {
+    if (widget.currentExerciseIndex == null ||
+        widget.onWarmupExerciseAdded == null) {
+      return;
+    }
+
+    setState(() {
+      _addedExerciseIds.add(suggestion.exerciseId);
+    });
+
+    widget.onWarmupExerciseAdded!(suggestion, widget.currentExerciseIndex!);
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(
+          '${suggestion.exerciseName} aggiunto prima di ${widget.exercise.nome}',
+        ),
+        duration: const Duration(seconds: 2),
+        behavior: SnackBarBehavior.floating,
+      ),
+    );
   }
 }
