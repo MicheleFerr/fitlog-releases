@@ -78,6 +78,18 @@ abstract class Workout with _$Workout {
     );
   }
 
+  /// Insert exercise at specific position
+  Workout insertExerciseAt(int index, Exercise exercise) {
+    final newExercises = List<Exercise>.from(exercises);
+    // Clamp index to valid range
+    final safeIndex = index.clamp(0, newExercises.length);
+    newExercises.insert(safeIndex, exercise);
+    return copyWith(
+      exercises: newExercises,
+      updatedAt: DateTime.now(),
+    );
+  }
+
   Workout removeExercise(String exerciseId) {
     return copyWith(
       exercises: exercises.where((e) => e.id != exerciseId).toList(),
