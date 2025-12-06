@@ -3165,6 +3165,12 @@
     "noteTecniche": "Passo 1: Inizia stando con i piedi alla larghezza delle spalle, punte leggermente rivolte verso l'esterno. | Passo 2: Tieni il bilanciere davanti alle spalle, appoggiandolo sulla clavicola e sulle spalle. | Passo 3: Attiva il core e mantieni il petto in alto mentre abbassi il corpo in posizione squat, spingendo le anche indietro e piegando le ginocchia. | Passo 4: Abbassati finché le cosce sono parallele al pavimento, o il più in basso possibile comodamente. | Passo 5: Fermati un momento in basso, poi spingi attraverso i talloni per tornare alla posizione di partenza. | Passo 6: Ripeti per il numero desiderato di ripetizioni.",
     "mobilitaPre": "Cerchi anche 2x10, ponte glutei 2x12, fire hydrant 2x10",
     "attivazionePre": "Ponte glutei 2x15, clamshell 2x12 per lato, ponte a una gamba 2x10",
+    "warmupSuggestions": [
+      {"exerciseId": "hip-circles", "exerciseName": "Hip Circles", "sets": 2, "reps": 10, "type": "mobility"},
+      {"exerciseId": "arm-circles", "exerciseName": "Cerchi con le Braccia", "sets": 2, "reps": 12, "type": "mobility"},
+      {"exerciseId": "cat-cow", "exerciseName": "Cat-Cow", "sets": 2, "reps": 10, "type": "mobility"},
+      {"exerciseId": "glute-bridge", "exerciseName": "Ponte Glutei", "sets": 2, "reps": 12, "type": "activation"}
+    ],
     "aliases": [
       "sfcb",
       "sq",
@@ -3193,6 +3199,12 @@
     "spiegazioneTermini": null,
     "tempoEsecuzione": null,
     "tempoNote": null,
+    "warmupSuggestions": [
+      {"exerciseId": "hip-circles", "exerciseName": "Hip Circles", "sets": 2, "reps": 10, "type": "mobility"},
+      {"exerciseId": "torso-rotations", "exerciseName": "Rotazioni Torso", "sets": 2, "reps": 12, "type": "mobility"},
+      {"exerciseId": "glute-bridge", "exerciseName": "Ponte Glutei", "sets": 2, "reps": 12, "type": "activation"},
+      {"exerciseId": "fire-hydrant", "exerciseName": "Fire Hydrant", "sets": 2, "reps": 10, "type": "activation"}
+    ],
     "aliases": [
       "sfcb",
       "sq",
