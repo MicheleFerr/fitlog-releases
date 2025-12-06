@@ -26,12 +26,10 @@ import 'package:gymbro_flutter_new/features/workout/presentation/providers/scree
 import 'package:gymbro_flutter_new/features/progress/presentation/providers/cached_progress_provider.dart';
 // Progress providers for streak and volume tracking
 import 'package:gymbro_flutter_new/features/progress/presentation/providers/progress_provider.dart';
-// App config for default APRE settings
+// App config for workout settings
 import 'package:gymbro_flutter_new/shared/presentation/providers/app_config_provider.dart';
-// APRE auto-regulation
+// Exercise history provider
 import 'package:gymbro_flutter_new/features/workout/presentation/providers/exercise_history_provider.dart';
-import 'package:gymbro_flutter_new/features/workout/domain/services/apre_auto_regulation_service.dart';
-import 'package:gymbro_flutter_new/features/settings/presentation/providers/apre_calculation_config_provider.dart';
 // 🔒 Feature Flags
 import 'package:gymbro_flutter_new/shared/config/feature_flags.dart';
 // 🔒 Security: Input validation & sanitization (consolidated)
@@ -60,6 +58,8 @@ import 'package:gymbro_flutter_new/features/analytics/data/repositories/workout_
 import 'package:gymbro_flutter_new/features/analytics/presentation/providers/exercise_records_provider.dart';
 // 📊 Analytics Repository for updating analytics collection
 import 'package:gymbro_flutter_new/features/analytics/presentation/providers/analytics_providers.dart';
+// 📈 Stress Index for training load tracking
+import 'package:gymbro_flutter_new/features/stress_index/presentation/providers/stress_index_provider.dart';
 // 📊 Workout to Analytics Converter utility
 import 'package:gymbro_flutter_new/features/analytics/data/converters/workout_to_analytics_converter.dart';
 import 'package:gymbro_flutter_new/core/analytics/trackers/workout_event_tracker.dart';
@@ -71,6 +71,8 @@ import 'package:gymbro_flutter_new/shared/domain/auth/providers/security_provide
 // 🐛 Debug Log Manager for categorized logging
 import 'package:gymbro_flutter_new/shared/data/services/debug_log_manager.dart';
 import 'package:gymbro_flutter_new/shared/domain/entities/log_category.dart';
+// 💾 BUG FIX #5: Auto-save provider for draft recovery
+import 'package:gymbro_flutter_new/features/workout/presentation/providers/workout_auto_save_provider.dart';
 // 🏆 PR Celebration for workout completion achievements
 import 'package:gymbro_flutter_new/features/analytics/domain/services/pr_tracker.dart' as service_pr show PersonalRecord;
 // 🔔 NOTIFICATIONS: Import for retention notification scheduling
@@ -80,6 +82,8 @@ import 'package:gymbro_flutter_new/features/analytics/domain/entities/pr_celebra
 import 'package:gymbro_flutter_new/shared/domain/entities/pr_type.dart';
 import 'package:gymbro_flutter_new/features/analytics/presentation/providers/achievement_provider.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise_activity.dart';
+// 🎮 Gamification: XP awarding on workout completion
+import 'package:gymbro_flutter_new/features/home/providers/user_xp_provider.dart';
 
 // Hive datasource provider
 final hiveWorkoutDataSourceProvider = Provider<HiveWorkoutDataSource>((ref) {
@@ -106,6 +110,12 @@ final currentWorkoutProvider = NotifierProvider<CurrentWorkoutNotifier, Workout?
 class CurrentWorkoutNotifier extends Notifier<Workout?> {
   @override
   Workout? build() {
+    // 🔒 CRITICAL FIX: Keep provider alive even when no widgets are listening!
+    // Without this, the provider is disposed when user navigates away from WorkoutScreen,
+    // causing workout data loss. This is the ROOT CAUSE of the workout loss bug.
+    // See: https://codewithandrea.com/articles/flutter-riverpod-data-caching-providers-lifecycle/
+    ref.keepAlive();
+
     _startCleanupTimer();
     ref.onDispose(() {
       _isDisposed = true;
@@ -117,9 +127,6 @@ class CurrentWorkoutNotifier extends Notifier<Workout?> {
   // CRITICAL FIX: Track disposal state to prevent operations after dispose
   bool _isDisposed = false;
 
-  // CRITICAL FIX: Atomic flag to prevent concurrent APRE calculations
-  bool _apreCalculationInProgress = false;
-
   // 💾 Track current template ID for auto-save
   String? _currentTemplateId;
 
@@ -129,12 +136,19 @@ class CurrentWorkoutNotifier extends Notifier<Workout?> {
 
   // 💾 Helper method to auto-save modifications
   void _autoSaveIfNeeded() {
+    // Save to template cache (for template modifications)
     if (_currentTemplateId != null && state != null) {
       final cacheService = ref.read(workoutTemplateCacheServiceProvider);
       cacheService.saveWorkoutModifications(
         templateId: _currentTemplateId!,
         workout: state!,
       );
+    }
+
+    // 💾 BUG FIX #5: Also save to draft repository for crash recovery
+    // This prevents losing workout data if app crashes or is killed
+    if (state != null && state!.status == WorkoutStatus.inProgress) {
+      ref.read(workoutAutoSaveProvider.notifier).triggerSave(state!);
     }
   }
 
@@ -191,20 +205,9 @@ class CurrentWorkoutNotifier extends Notifier<Workout?> {
     final workout = state;
     if (workout == null) return;
 
-    // Convert ExerciseTemplate list to Exercise list
+    // ✅ FIX: Use toWorkoutExercise() to properly handle superset/dropset types
     final exercises = template.exercises.map((templateExercise) {
-      return Exercise(
-        name: templateExercise.exerciseName,
-        type: templateExercise.type,
-        category: templateExercise.category,
-        sets: templateExercise.sets.map((templateSet) {
-          return ExerciseSet(
-            setNumber: templateSet.setNumber,
-            weight: templateSet.targetWeight,
-            reps: templateSet.targetReps,
-          );
-        }).toList(),
-      );
+      return templateExercise.toWorkoutExercise();
     }).toList();
 
     state = workout.copyWith(
@@ -232,10 +235,6 @@ class CurrentWorkoutNotifier extends Notifier<Workout?> {
       // 💾 Store template ID for auto-save
       _currentTemplateId = workoutTemplate.id;
 
-      // Check if APRE is enabled globally
-      final config = ref.read(appConfigProvider);
-      final isApreEnabled = config.enableApre ?? false;
-
       // 💾 Check if there's a cached version of this template
       final cacheService = ref.read(workoutTemplateCacheServiceProvider);
       final cachedWorkout = await cacheService.getCachedWorkout(workoutTemplate.id);
@@ -249,12 +248,8 @@ class CurrentWorkoutNotifier extends Notifier<Workout?> {
         }
         workout = cachedWorkout;
       } else {
-        if (kDebugMode) {
-          debugLog(LogCategory.workout, '[APRE] Starting workout from template: ${workoutTemplate.name}');
-          debugLog(LogCategory.workout, '[APRE] APRE system enabled: $isApreEnabled');
-        }
-
         // Crea un nuovo workout dal template
+        // ✅ FIX: Use toWorkoutExercise() to properly handle superset/dropset types
         workout = Workout(
         id: const Uuid().v4(),
         name: workoutTemplate.name,
@@ -262,52 +257,7 @@ class CurrentWorkoutNotifier extends Notifier<Workout?> {
         updatedAt: DateTime.now(),
         templateId: workoutTemplate.id, // ✅ CRITICAL FIX: Pass templateId for routine auto-detection
         exercises: workoutTemplate.exercises.map((templateExercise) {
-          // Crea l'esercizio con i set predefiniti dal template
-          var exercise = Exercise(
-            name: templateExercise.exerciseName,
-            type: templateExercise.type,
-            category: templateExercise.category,
-            sets: templateExercise.sets.map((templateSet) {
-              return ExerciseSet(
-                setNumber: templateSet.setNumber,
-                weight: templateSet.targetWeight,
-                reps: templateSet.targetReps,
-              );
-            }).toList(),
-          );
-
-          // Apply APRE configuration if enabled globally
-          // 🔒 KILL SWITCH: Check feature flag first
-          if (FeatureFlags.enableAPRE && isApreEnabled && exercise.type == ExerciseType.single && exercise.sets.isNotEmpty) {
-            // Auto-select protocol based on target reps of first set
-            final targetReps = exercise.sets.first.reps ?? 6;
-            final protocol = APREAutoRegulationService.selectProtocolFromTargetReps(targetReps);
-
-            if (kDebugMode) {
-              debugLog(LogCategory.workout, '[APRE] Auto-selected protocol $protocol for ${exercise.name} (target reps: $targetReps)');
-            }
-
-            // Get appropriate rest time for protocol
-            final restTime = APREAutoRegulationService.getRestTimeForProtocol(
-              protocol,
-              strengthRestTime: config.strengthRestTime,
-              hypertrophyRestTime: config.hypertrophyRestTime,
-              enduranceRestTime: config.enduranceRestTime,
-              defaultRestTime: config.defaultRestTime,
-            );
-
-            exercise = exercise.copyWith(
-              autoAdjustmentType: AutoAdjustmentType.apre,
-              useAPRE: true,
-              apreProtocol: protocol,
-              restTime: restTime,
-            );
-
-            // Calculate base weight from history in background
-            _calculateAndSetBaseWeight(exercise);
-          }
-
-          return exercise;
+          return templateExercise.toWorkoutExercise();
         }).toList(),
       );
       }
@@ -326,14 +276,6 @@ class CurrentWorkoutNotifier extends Notifier<Workout?> {
         source: 'template',
         templateId: workoutTemplate.id,
       );
-
-      // Pre-calculate APRE weights for all exercises with APRE enabled
-      if (isApreEnabled) {
-        if (kDebugMode) {
-          debugLog(LogCategory.workout, '[APRE] Triggering pre-calculation of APRE weights for all exercises');
-        }
-        _preCalculateAllAPREWeights();
-      }
 
       // Attiva wakelock se abilitato nelle impostazioni
       ref.read(screenWakelockProvider.notifier).startWakelock();
@@ -366,11 +308,64 @@ class CurrentWorkoutNotifier extends Notifier<Workout?> {
 
       state = state!.startWorkout();
 
-      // Pre-calculate APRE weights for all exercises with APRE enabled
-      _preCalculateAllAPREWeights();
+      // 💾 BUG FIX #5: Start auto-save when workout starts
+      ref.read(workoutAutoSaveProvider.notifier).startAutoSave(state!);
 
       // Attiva wakelock se abilitato nelle impostazioni
       ref.read(screenWakelockProvider.notifier).startWakelock();
+    }
+  }
+
+  /// 💾 BUG FIX #6: Restore workout from draft (after app killed by OS)
+  ///
+  /// Called when app resumes and finds a saved draft in local storage.
+  /// This restores the full workout state including all exercises and sets.
+  void restoreFromDraft(Workout workout) {
+    if (kDebugMode) {
+      debugPrint('🔄 [WorkoutProvider] Restoring workout from draft: ${workout.name}');
+      debugPrint('   - Exercises: ${workout.exercises.length}');
+      debugPrint('   - Status: ${workout.status}');
+    }
+
+    // Restore the workout state
+    state = workout;
+
+    // Start auto-save for the restored workout
+    if (workout.isActive) {
+      ref.read(workoutAutoSaveProvider.notifier).startAutoSave(workout);
+
+      // Re-enable wakelock if workout is active
+      ref.read(screenWakelockProvider.notifier).startWakelock();
+    }
+
+    // Track restoration event
+    final analytics = ref.read(analyticsServiceProvider);
+    final tracker = WorkoutEventTracker(analytics);
+    tracker.trackWorkoutStarted(
+      workoutId: workout.id,
+      workoutType: 'strength',
+      workoutName: workout.name,
+      source: 'draft_recovery',
+    );
+  }
+
+  /// Update workout duration by setting a new endTime
+  ///
+  /// Use this when the user wants to adjust the recorded workout time,
+  /// e.g., when actual time < total rest time.
+  ///
+  /// [newDuration] is the desired workout duration from startTime.
+  void updateWorkoutDuration(Duration newDuration) {
+    if (state == null || state!.startTime == null) return;
+
+    final newEndTime = state!.startTime!.add(newDuration);
+    state = state!.copyWith(
+      endTime: newEndTime,
+      updatedAt: DateTime.now(),
+    );
+
+    if (kDebugMode) {
+      debugPrint('⏱️ [WorkoutProvider] Duration updated to: ${newDuration.inMinutes}m');
     }
   }
 
@@ -433,6 +428,10 @@ class CurrentWorkoutNotifier extends Notifier<Workout?> {
         cacheService.clearCache(_currentTemplateId!);
         _currentTemplateId = null;
       }
+
+      // 💾 BUG FIX #5: Stop auto-save and clear draft after completion
+      // Workout is now saved to Firestore, so draft is no longer needed
+      ref.read(workoutAutoSaveProvider.notifier).stopAutoSave(clearDraft: true);
 
       // Salva automaticamente il workout completato in Firestore
       _saveCompletedWorkoutToFirestore(context);
@@ -612,6 +611,7 @@ class CurrentWorkoutNotifier extends Notifier<Workout?> {
 
           // 🏆 PR CELEBRATION: Check for new personal records after successful save
           // Records PRs to repository for future celebration and tracking
+          bool hasNewPersonalRecords = false; // Tracked for XP bonus
           try {
             final prTracker = ref.read(prTrackerProvider);
             final prCelebrationRepo = ref.read(prCelebrationRepositoryProvider);
@@ -636,6 +636,7 @@ class CurrentWorkoutNotifier extends Notifier<Workout?> {
             }
 
             if (allNewPRs.isNotEmpty) {
+              hasNewPersonalRecords = true; // For XP bonus calculation
               if (kDebugMode) {
                 debugLog(LogCategory.workout, '🎉 [WorkoutProvider] ${allNewPRs.length} new PR(s) detected!');
                 for (final pr in allNewPRs) {
@@ -737,6 +738,73 @@ class CurrentWorkoutNotifier extends Notifier<Workout?> {
               debugLog(LogCategory.workout, '⚠️ [WorkoutProvider] Failed to reset inactivity sequence: $notificationError');
             }
           }
+
+          // 📈 STRESS INDEX: Calculate and save training stress for this workout
+          // Non-critical feature - failure won't affect workout save
+          try {
+            final stressNotifier = ref.read(stressIndexNotifierProvider.notifier);
+            final stressResult = await stressNotifier.calculateAndSave(workout);
+
+            if (stressResult != null && kDebugMode) {
+              debugLog(
+                LogCategory.workout,
+                '📈 [WorkoutProvider] Stress index calculated: ${stressResult.displayScore.toStringAsFixed(0)} '
+                '(${stressResult.stressLevel.name}, ${(stressResult.confidence * 100).toStringAsFixed(0)}% confidence)',
+              );
+            }
+          } catch (stressError) {
+            // Non-critical error - log but don't fail workout save
+            if (kDebugMode) {
+              debugLog(LogCategory.workout, '⚠️ [WorkoutProvider] Failed to calculate stress index: $stressError');
+            }
+          }
+
+          // 🎮 XP AWARDING: Calculate and award XP for completed workout
+          // Non-critical feature - failure won't affect workout save
+          try {
+            // Calculate total volume (weight × reps for all completed sets)
+            double totalVolume = 0;
+            for (final exercise in workout.exercises) {
+              for (final set in exercise.sets) {
+                if (set.isCompleted) {
+                  final weight = double.tryParse(set.weight.toString()) ?? 0;
+                  final reps = int.tryParse(set.reps.toString()) ?? 0;
+                  totalVolume += weight * reps;
+                }
+              }
+            }
+
+            // Get workout duration in minutes
+            final durationMinutes = workout.duration?.inMinutes ?? 0;
+
+            // Get current streak from progress provider
+            final streakAsync = ref.read(currentStreakProvider);
+            final streakDays = streakAsync.valueOrNull ?? 0;
+
+            // Award XP through central provider
+            final xpAwarded = await ref.read(userXPProvider.notifier).addWorkoutXP(
+              workoutId: workout.id,
+              durationMinutes: durationMinutes,
+              exerciseCount: workout.exercises.length,
+              totalVolume: totalVolume,
+              isPersonalRecord: hasNewPersonalRecords,
+              streakDays: streakDays,
+            );
+
+            if (kDebugMode && xpAwarded > 0) {
+              debugLog(
+                LogCategory.workout,
+                '🎮 [WorkoutProvider] XP awarded: +$xpAwarded XP '
+                '(duration: ${durationMinutes}min, exercises: ${workout.exercises.length}, '
+                'volume: ${totalVolume.toStringAsFixed(0)}kg, PR: $hasNewPersonalRecords, streak: $streakDays)',
+              );
+            }
+          } catch (xpError) {
+            // Non-critical error - log but don't fail workout save
+            if (kDebugMode) {
+              debugLog(LogCategory.workout, '⚠️ [WorkoutProvider] Failed to award XP: $xpError');
+            }
+          }
         }
       } catch (saveError, stackTrace) {
         if (kDebugMode) {
@@ -821,10 +889,10 @@ class CurrentWorkoutNotifier extends Notifier<Workout?> {
           debugLog(LogCategory.workout, '✅ [WorkoutProvider] Workout queued for batch cloud sync');
         }
 
-        // 📢 UI Feedback: Show final success toast
+        // 📢 UI Feedback: Show final success toast with motivation
         // Local save complete + cloud sync queued = workout saved successfully
         if (context != null) {
-          SyncStatusToast.showWorkoutSaved(context);
+          SyncStatusToast.showWorkoutCompletedWithMotivation(context);
         }
       } catch (batchError) {
         if (kDebugMode) {
@@ -1097,6 +1165,9 @@ class CurrentWorkoutNotifier extends Notifier<Workout?> {
       );
 
       state = state!.pauseWorkout();
+
+      // 💾 BUG FIX #5: Force save when pausing (user expects data saved)
+      _autoSaveIfNeeded();
     }
   }
 
@@ -1118,48 +1189,19 @@ class CurrentWorkoutNotifier extends Notifier<Workout?> {
   void addExercise(Exercise exercise) {
     if (state == null) return;
 
+    if (kDebugMode) {
+      debugPrint('🔍 [WorkoutProvider] addExercise RECEIVED: name=${exercise.name}, countingMode=${exercise.countingMode}');
+    }
+
     // 🔒 SESSION: Record activity to prevent auto-logout during workout
     ref.read(sessionActivityRecorderProvider);
 
     try {
-      // Check if APRE is enabled globally and exercise doesn't have APRE configured yet
-      final config = ref.read(appConfigProvider);
-      final isApreEnabled = config.enableApre ?? false;
+      state = state!.addExercise(exercise);
 
-      Exercise exerciseToAdd = exercise;
-
-      // Apply default APRE settings if enabled and exercise doesn't already have auto-adjustment
-      // 🔒 KILL SWITCH: Check feature flag first
-      if (FeatureFlags.enableAPRE && isApreEnabled && exercise.autoAdjustmentType == null && exercise.type == ExerciseType.single) {
-        // Auto-select protocol based on target reps
-        final targetReps = exercise.sets.isNotEmpty ? (exercise.sets.first.reps ?? 6) : 6;
-        final protocol = APREAutoRegulationService.selectProtocolFromTargetReps(targetReps);
-
-        if (kDebugMode) {
-          debugLog(LogCategory.workout, '[APRE] Auto-selected protocol $protocol for ${exercise.name} (target reps: $targetReps)');
-        }
-
-        // Get appropriate rest time for protocol
-        final restTime = APREAutoRegulationService.getRestTimeForProtocol(
-          protocol,
-          strengthRestTime: config.strengthRestTime,
-          hypertrophyRestTime: config.hypertrophyRestTime,
-          enduranceRestTime: config.enduranceRestTime,
-          defaultRestTime: config.defaultRestTime,
-        );
-
-        exerciseToAdd = exercise.copyWith(
-          autoAdjustmentType: AutoAdjustmentType.apre,
-          useAPRE: true,
-          apreProtocol: protocol,
-          restTime: restTime,
-        );
-
-        // Calculate base weight from history in background
-        _calculateAndSetBaseWeight(exerciseToAdd);
+      if (kDebugMode) {
+        debugPrint('🔍 [WorkoutProvider] addExercise FINAL exercise.countingMode=${exercise.countingMode}');
       }
-
-      state = state!.addExercise(exerciseToAdd);
 
       // 💾 Auto-save modifications
       _autoSaveIfNeeded();
@@ -1170,10 +1212,10 @@ class CurrentWorkoutNotifier extends Notifier<Workout?> {
 
       tracker.trackExerciseAdded(
         workoutId: state!.id,
-        exerciseId: exerciseToAdd.id,
-        exerciseName: exerciseToAdd.name,
-        exerciseCategory: exerciseToAdd.category.name,
-        sets: exerciseToAdd.sets.length,
+        exerciseId: exercise.id,
+        exerciseName: exercise.name,
+        exerciseCategory: exercise.category.name,
+        sets: exercise.sets.length,
         source: 'add_exercise_modal',
       );
     } catch (e, stackTrace) {
@@ -1182,6 +1224,43 @@ class CurrentWorkoutNotifier extends Notifier<Workout?> {
         debugLog(LogCategory.workout, '📍 Stack trace: $stackTrace');
       }
       // Don't rethrow - silently fail to avoid disrupting user experience
+    }
+  }
+
+  /// Insert exercise at specific position (before another exercise)
+  void insertExerciseAt(int index, Exercise exercise) {
+    if (state == null) return;
+
+    if (kDebugMode) {
+      debugPrint('🔍 [WorkoutProvider] insertExerciseAt index=$index, name=${exercise.name}');
+    }
+
+    // Record session activity
+    ref.read(sessionActivityRecorderProvider);
+
+    try {
+      state = state!.insertExerciseAt(index, exercise);
+
+      // Auto-save
+      _autoSaveIfNeeded();
+
+      // Track analytics
+      final analytics = ref.read(analyticsServiceProvider);
+      final tracker = WorkoutEventTracker(analytics);
+
+      tracker.trackExerciseAdded(
+        workoutId: state!.id,
+        exerciseId: exercise.id,
+        exerciseName: exercise.name,
+        exerciseCategory: exercise.category.name,
+        sets: exercise.sets.length,
+        source: 'warmup_suggestion',
+      );
+    } catch (e, stackTrace) {
+      if (kDebugMode) {
+        debugLog(LogCategory.workout, '❌ [WorkoutProvider] Error inserting exercise: $e');
+        debugLog(LogCategory.workout, '📍 Stack trace: $stackTrace');
+      }
     }
   }
 
@@ -1241,6 +1320,9 @@ class CurrentWorkoutNotifier extends Notifier<Workout?> {
       exercises.insert(newIndex, exercise);
 
       state = state!.copyWith(exercises: exercises);
+
+      // 💾 BUG FIX #5: Save after reordering
+      _autoSaveIfNeeded();
     } catch (e, stackTrace) {
       if (kDebugMode) {
         debugLog(LogCategory.workout, '❌ [WorkoutProvider] Error reordering exercises: $e');
@@ -1351,34 +1433,27 @@ class CurrentWorkoutNotifier extends Notifier<Workout?> {
   }
 
   void updateExerciseOnly(Exercise updatedExercise) {
-    // print('🔄 updateExerciseOnly called with exercise: ${updatedExercise.name}');
+    if (state == null) return;
 
-    if (state == null) {
-      // print('⚠️ State is null, cannot update exercise');
-      return;
-    }
-    
     try {
-      // print('🔄 Current exercises count: ${state!.exercises.length}');
-      
       final updatedExercises = state!.exercises.map((exercise) {
         if (exercise.id == updatedExercise.id) {
-          // print('✅ Found matching exercise to update: ${exercise.name} -> ${updatedExercise.name}');
           return updatedExercise;
         }
         return exercise;
       }).toList();
 
-      // print('🔄 Updated exercises count: ${updatedExercises.length}');
       state = state!.copyWith(exercises: updatedExercises);
 
       // 💾 Auto-save modifications
       _autoSaveIfNeeded();
 
-      // print('✅ State updated successfully');
-    } catch (e) {
-      // print('❌ Error updating exercise: $e');
-      // print('Stack: $stackTrace');
+    } catch (e, stackTrace) {
+      if (kDebugMode) {
+        debugLog(LogCategory.workout, '❌ [WorkoutProvider] Error in updateExerciseOnly: $e');
+        debugLog(LogCategory.workout, '📍 Stack trace: $stackTrace');
+      }
+      // Don't rethrow - silently fail to avoid disrupting user experience
     }
   }
 
@@ -1414,6 +1489,36 @@ class CurrentWorkoutNotifier extends Notifier<Workout?> {
       }).toList();
 
       state = state!.copyWith(exercises: updatedExercises);
+
+      // 🔄 WEIGHT CARRY-FORWARD: Propagate weight to subsequent incomplete sets
+      if (completedSet != null && completedSet!.weight != null && completedSet!.weight! > 0) {
+        final completedWeight = completedSet!.weight!;
+
+        final exercisesWithCarryForward = state!.exercises.map((exercise) {
+          if (exercise.id == exerciseId) {
+            var weightUpdated = false;
+            final updatedSets = exercise.sets.map((set) {
+              // Only update sets AFTER the completed one that have 0 or null weight
+              if (set.setNumber > completedSetNumber &&
+                  !set.isCompleted &&
+                  (set.weight == null || set.weight == 0)) {
+                weightUpdated = true;
+                return set.copyWith(weight: completedWeight);
+              }
+              return set;
+            }).toList();
+
+            if (weightUpdated && kDebugMode) {
+              debugLog(LogCategory.workout, '🔄 [WEIGHT-CARRY] Propagated ${completedWeight}kg from set $completedSetNumber to subsequent sets');
+            }
+
+            return exercise.copyWith(sets: updatedSets);
+          }
+          return exercise;
+        }).toList();
+
+        state = state!.copyWith(exercises: exercisesWithCarryForward);
+      }
 
       // 📊 Track set completed
       if (targetExercise != null && completedSet != null) {
@@ -1748,6 +1853,9 @@ class CurrentWorkoutNotifier extends Notifier<Workout?> {
 
       state = null;
 
+      // 💾 BUG FIX #5: Stop auto-save and clear draft when workout is cancelled
+      ref.read(workoutAutoSaveProvider.notifier).stopAutoSave(clearDraft: true);
+
       // Disattiva wakelock quando si cancella il workout
       ref.read(screenWakelockProvider.notifier).stopWakelock();
     } catch (e, stackTrace) {
@@ -1757,195 +1865,8 @@ class CurrentWorkoutNotifier extends Notifier<Workout?> {
       }
       // Ensure state is cleared even if wakelock fails
       state = null;
-    }
-  }
-
-  /// Pre-calculate APRE weights for all exercises when starting workout
-  Future<void> _preCalculateAllAPREWeights() async {
-    // 🔒 KILL SWITCH: Early exit if APRE disabled
-    if (!FeatureFlags.enableAPRE) {
-      debugLog(LogCategory.workout, '⚠️ APRE disabled (feature flag) - skipping pre-calculation');
-      return; // No calculations = zero CPU overhead
-    }
-
-    if (state == null) return;
-
-    // CRITICAL FIX: Prevent concurrent APRE calculations
-    if (_apreCalculationInProgress) {
-      debugLog(LogCategory.workout, '[APRE] ⚠️ Calculation already in progress - skipping duplicate request');
-      return;
-    }
-
-    _apreCalculationInProgress = true;
-    debugLog(LogCategory.workout, '[APRE] 🔒 Calculation started - locking concurrent access');
-
-    try {
-      await _preCalculateAllAPREWeightsInternal();
-    } finally {
-      _apreCalculationInProgress = false;
-      debugLog(LogCategory.workout, '[APRE] 🔓 Calculation complete - unlocking');
-    }
-  }
-
-  /// Internal method for APRE calculation (called with lock held)
-  Future<void> _preCalculateAllAPREWeightsInternal() async {
-    debugLog(LogCategory.workout, '[APRE] Pre-calculating weights for all APRE exercises...');
-
-    // Get all exercises with APRE enabled that need calculation
-    final apreExercises = state!.exercises
-        .where((ex) => ex.useAPRE && ex.type == ExerciseType.single)
-        .toList();
-
-    if (apreExercises.isEmpty) {
-      debugLog(LogCategory.workout, '[APRE] No APRE exercises to calculate');
-      return;
-    }
-
-    debugLog(LogCategory.workout, '[APRE] Found ${apreExercises.length} APRE exercises to process');
-    for (final ex in apreExercises) {
-      debugLog(LogCategory.workout, '[APRE]   - ${ex.name}: protocol=${ex.apreProtocol}, cached1RM=${ex.calculated1RM?.toStringAsFixed(1)}');
-    }
-
-    // Calculate weights for each exercise in parallel
-    final futures = apreExercises.map((exercise) async {
-      // Skip if calculations are recent AND values exist
-      if (exercise.calculated1RM != null &&
-          !APREAutoRegulationService.shouldRecalculate(exercise)) {
-        debugLog(LogCategory.workout, '[APRE] Skipping ${exercise.name} - calculations are recent and exist');
-        debugLog(LogCategory.workout, '[APRE]   Existing 1RM: ${exercise.calculated1RM?.toStringAsFixed(1)}kg');
-        return null;
-      }
-
-      try {
-        // Get exercise history
-        final historyData = await ref.read(exerciseHistoryFromWorkoutsProvider(exercise.name).future);
-
-        if (historyData.isEmpty) {
-          debugLog(LogCategory.workout, '[APRE] No history for ${exercise.name}');
-          return null;
-        }
-
-        // Calculate APRE weights with user's preferred config
-        final config = await ref.read(apreCalculationConfigProvider.future);
-        final calculations = APREAutoRegulationService.calculateAPREWeights(
-          historicalSets: historyData,
-          protocol: exercise.apreProtocol ?? 6,
-          useMetricSystem: true,
-          config: config,
-        );
-
-        if (calculations.isEmpty) {
-          debugLog(LogCategory.workout, '[APRE] No calculations returned for ${exercise.name}');
-          return null;
-        }
-
-        debugLog(LogCategory.workout, '[APRE] Calculations for ${exercise.name}:');
-        debugLog(LogCategory.workout, '[APRE]   1RM: ${calculations['calculated1RM']?.toStringAsFixed(1)}kg');
-        debugLog(LogCategory.workout, '[APRE]   3RM: ${calculations['calculated3RM']?.toStringAsFixed(1)}kg');
-        debugLog(LogCategory.workout, '[APRE]   6RM: ${calculations['calculated6RM']?.toStringAsFixed(1)}kg');
-        debugLog(LogCategory.workout, '[APRE]   10RM: ${calculations['calculated10RM']?.toStringAsFixed(1)}kg');
-
-        // Return updated exercise
-        return exercise.copyWith(
-          apreBaseWeight: calculations['baseWeight']?.toDouble(),
-          calculated1RM: calculations['calculated1RM']?.toDouble(),
-          calculated3RM: calculations['calculated3RM']?.toDouble(),
-          calculated6RM: calculations['calculated6RM']?.toDouble(),
-          calculated10RM: calculations['calculated10RM']?.toDouble(),
-          lastCalculationDate: DateTime.now(),
-          calculationMetadata: calculations['metadata'],
-        );
-      } catch (e) {
-        debugLog(LogCategory.workout, '[APRE] Error calculating for ${exercise.name}: $e');
-        return null;
-      }
-    });
-
-    // Wait for all calculations to complete
-    final results = await Future.wait(futures);
-
-    // CRITICAL FIX: Check disposal state before updating state
-    if (_isDisposed) {
-      debugLog(LogCategory.workout, '[APRE] ⚠️ Provider disposed during calculations - aborting state update');
-      return;
-    }
-
-    // Update state with calculated exercises
-    if (state != null) {
-      final updatedExercises = state!.exercises.map((exercise) {
-        // Find if this exercise was updated
-        final updatedExercise = results.firstWhere(
-          (result) => result != null && result.id == exercise.id,
-          orElse: () => null,
-        );
-        return updatedExercise ?? exercise;
-      }).toList();
-
-      state = state!.copyWith(exercises: updatedExercises);
-      debugLog(LogCategory.workout, '[APRE] Pre-calculation complete for ${results.where((r) => r != null).length} exercises');
-    }
-  }
-
-  /// Calculate and set base weight for APRE from exercise history
-  Future<void> _calculateAndSetBaseWeight(Exercise exercise) async {
-    try {
-      // Skip if calculations are recent AND values exist
-      if (exercise.calculated1RM != null &&
-          !APREAutoRegulationService.shouldRecalculate(exercise)) {
-        debugLog(LogCategory.workout, '[APRE] Using cached calculations for ${exercise.name}');
-        debugLog(LogCategory.workout, '[APRE]   Cached 1RM: ${exercise.calculated1RM?.toStringAsFixed(1)}kg');
-        return;
-      }
-
-      // Get exercise history from Firebase
-      final historyData = await ref.read(exerciseHistoryFromWorkoutsProvider(exercise.name).future);
-
-      if (historyData.isEmpty) {
-        debugLog(LogCategory.workout, '⚠️ [APRE] No history for ${exercise.name}, skipping base weight calculation');
-        return;
-      }
-
-      // Calculate APRE weights using the service with user's preferred config
-      final config = await ref.read(apreCalculationConfigProvider.future);
-      final calculations = APREAutoRegulationService.calculateAPREWeights(
-        historicalSets: historyData,
-        protocol: exercise.apreProtocol ?? 6,
-        useMetricSystem: true, // TODO: Get from user settings
-        config: config,
-      );
-
-      if (calculations.isEmpty) {
-        debugLog(LogCategory.workout, '⚠️ [APRE] Could not calculate weights for ${exercise.name}');
-        return;
-      }
-
-      // CRITICAL FIX: Check disposal state before updating state
-      if (_isDisposed) {
-        debugLog(LogCategory.workout, '[APRE] ⚠️ Provider disposed during calculation - aborting state update');
-        return;
-      }
-
-      // Update exercise with calculated values
-      if (state != null) {
-        final updatedExercises = state!.exercises.map((ex) {
-          if (ex.id == exercise.id) {
-            return ex.copyWith(
-              apreBaseWeight: calculations['baseWeight']?.toDouble(),
-              calculated1RM: calculations['calculated1RM']?.toDouble(),
-              calculated3RM: calculations['calculated3RM']?.toDouble(),
-              calculated6RM: calculations['calculated6RM']?.toDouble(),
-              calculated10RM: calculations['calculated10RM']?.toDouble(),
-              lastCalculationDate: DateTime.now(),
-              calculationMetadata: calculations['metadata'],
-            );
-          }
-          return ex;
-        }).toList();
-
-        state = state!.copyWith(exercises: updatedExercises);
-      }
-    } catch (e) {
-      debugLog(LogCategory.workout, '❌ [APRE] Error calculating base weight for ${exercise.name}: $e');
+      // Still try to stop auto-save
+      ref.read(workoutAutoSaveProvider.notifier).stopAutoSave(clearDraft: true);
     }
   }
 
