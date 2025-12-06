@@ -1,9 +1,9 @@
-import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise.dart';
+import 'package:gymbro_flutter_new/features/workout/presentation/providers/exercise_gif_provider.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise_activity.dart';
 import 'package:gymbro_flutter_new/features/workout/data/repositories/exercise_activity_repository.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/providers/exercise_history_provider.dart';
@@ -12,7 +12,8 @@ import 'package:gymbro_flutter_new/features/workout/presentation/widgets/auto_ad
 import 'package:gymbro_flutter_new/shared/presentation/providers/app_config_provider.dart';
 import 'package:gymbro_flutter_new/features/timer/presentation/providers/unified_timer_extensions.dart';
 import 'package:gymbro_flutter_new/features/auth/presentation/providers/auth_provider.dart';
-import 'package:gymbro_flutter_new/features/workout/presentation/widgets/tut_info_dialog.dart' show showTutInfoBottomSheet;
+import 'package:gymbro_flutter_new/features/workout/presentation/widgets/tut_info_dialog.dart'
+    show showTutInfoBottomSheet;
 import 'package:gymbro_flutter_new/features/community/presentation/providers/community_provider.dart';
 import 'package:gymbro_flutter_new/features/community/presentation/providers/exercise_data_provider.dart';
 import 'package:gymbro_flutter_new/features/community/domain/entities/community_contribution.dart';
@@ -23,10 +24,19 @@ import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_
 import 'package:gymbro_flutter_new/shared/presentation/services/snackbar_service.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/widgets/community_advice_modal.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/widgets/exercise_list_item/exercise_list_item_header.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/widgets/exercise_list_item/exercise_list_item_sets.dart';
 import 'package:gymbro_flutter_new/features/community/presentation/widgets/smart_suggestion_chip.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/widgets/exercise_history_bottom_sheet.dart';
+import 'package:gymbro_flutter_new/features/workout/presentation/widgets/counting_mode_picker_modal.dart';
+import 'package:gymbro_flutter_new/features/workout/presentation/widgets/rest_time_picker_modal.dart';
+import 'package:gymbro_flutter_new/features/workout/presentation/widgets/weight_jump_indicator.dart';
+import 'package:gymbro_flutter_new/features/exercise_database/domain/entities/exercise.dart'
+    as db;
+import 'package:gymbro_flutter_new/features/exercise_database/domain/entities/warmup_suggestion.dart';
+import 'package:gymbro_flutter_new/features/exercise_database/presentation/widgets/exercise_details_modal.dart';
 
 /// Orchestrator widget that coordinates ExerciseListItemHeader and ExerciseListItemSets
 ///
@@ -69,26 +79,36 @@ class ExerciseListItem extends ConsumerStatefulWidget {
   ConsumerState<ExerciseListItem> createState() => _ExerciseListItemState();
 }
 
-class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
+class _ExerciseListItemState extends ConsumerState<ExerciseListItem>
+    with AutomaticKeepAliveClientMixin {
   ExerciseActivity? _lastActivity;
   Map<String, dynamic>? _exerciseData;
+
+  // ✅ PERFORMANCE FIX: Keep widget alive when scrolling out of view
+  // This prevents dispose/initState cycle when scrolling up/down
+  // which was causing repeated JSON loads and GIF requests
+  @override
+  bool get wantKeepAlive => true;
 
   bool get isProMode => ref.read(appConfigProvider).isProMode ?? false;
 
   // Expansion state - watch individual properties
   bool get _isExpanded => ref.watch(
-    exerciseExpansionProvider(widget.exercise.id)
-      .select((state) => state.isExpanded),
+    exerciseExpansionProvider(
+      widget.exercise.id,
+    ).select((state) => state.isExpanded),
   );
 
   bool get _hasAutoCollapsed => ref.watch(
-    exerciseExpansionProvider(widget.exercise.id)
-      .select((state) => state.hasAutoCollapsed),
+    exerciseExpansionProvider(
+      widget.exercise.id,
+    ).select((state) => state.hasAutoCollapsed),
   );
 
   bool get _userManuallyExpanded => ref.watch(
-    exerciseExpansionProvider(widget.exercise.id)
-      .select((state) => state.userManuallyExpanded),
+    exerciseExpansionProvider(
+      widget.exercise.id,
+    ).select((state) => state.userManuallyExpanded),
   );
 
   ExerciseExpansionNotifier get _expansionNotifier =>
@@ -102,9 +122,8 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
       ref.read(exerciseAutoCollapseProvider(widget.exercise.id).notifier);
 
   // Smart suggestions - watch list to get actual suggestions
-  List<SmartSuggestion> get _suggestions => ref.watch(
-    exerciseSuggestionsProvider(widget.exercise.id),
-  );
+  List<SmartSuggestion> get _suggestions =>
+      ref.watch(exerciseSuggestionsProvider(widget.exercise.id));
 
   ExerciseSuggestionsNotifier get _suggestionsNotifier =>
       ref.read(exerciseSuggestionsProvider(widget.exercise.id).notifier);
@@ -196,16 +215,11 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
         }
 
         final config = ref.read(appConfigProvider);
-        final delay = (config.simplifiedAnimations ?? false)
-            ? const Duration(milliseconds: 1500)
-            : const Duration(milliseconds: 2500);
+        // Fixed values - no need for toggle (was simplifiedAnimations)
+        const delay = Duration(milliseconds: 1800);
+        const countdownDuration = 2;
 
-        final countdownDuration = (config.simplifiedAnimations ?? false)
-            ? 2
-            : 3;
-
-        final showCountdown =
-            config.showCollapseCountdown ?? (config.isProMode ?? false);
+        final showCountdown = config.showCollapseCountdown ?? false;
 
         _autoCollapseNotifier.startAutoCollapse(
           initialDelay: delay,
@@ -317,8 +331,7 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
         ? DateTime.now().difference(user!.metadata.creationTime!).inDays
         : 0;
 
-    final totalWorkoutsCompleted =
-        accountAgeInDays ~/ 3;
+    final totalWorkoutsCompleted = accountAgeInDays ~/ 3;
     final workoutStartTime = currentWorkout?.startTime;
 
     final averageWorkoutVolume = totalVolume > 0 ? totalVolume : 2000.0;
@@ -398,12 +411,31 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
     );
   }
 
-  void _handleShowQuickTimerSettings() {
-    // Show timer bottom sheet - implementation from original file
-    // This would show a bottom sheet for quick timer configuration
-    if (kDebugMode) {
-      debugPrint('Show quick timer settings for ${widget.exercise.name}');
-    }
+  Future<void> _handleShowQuickTimerSettings() async {
+    await showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: context.colors.surface,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+      ),
+      builder: (context) => RestTimePickerModal(
+        initialRestTime: widget.exercise.restTime,
+        onRestTimeSelected: (newRestTime) {
+          // Update exercise with new rest time
+          if (widget.onExerciseUpdate != null) {
+            final updatedExercise = widget.exercise.copyWith(
+              restTime: newRestTime,
+              updatedAt: DateTime.now(),
+            );
+            widget.onExerciseUpdate!(updatedExercise);
+          }
+          Navigator.of(context).pop();
+        },
+        source: 'exercise_list_item_header',
+        exerciseId: widget.exercise.id,
+      ),
+    );
   }
 
   void _handleShowTutExplanationModal() {
@@ -413,52 +445,33 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
     showTutInfoBottomSheet(context, tutValue);
   }
 
+  /// ⚡ PERFORMANCE: Uses cached exerciseDataProvider which uses exercisesDatabaseProvider
+  /// JSON is loaded ONCE and cached for entire session - no repeated file loads
   Future<Map<String, dynamic>?> _loadExerciseDataFromJson() async {
     try {
+      // exerciseDataProvider uses exercisesDatabaseProvider (cached JSON)
       final mergedData = await ref.read(
         exerciseDataProvider(widget.exercise.name).future,
       );
 
       if (mergedData.isNotEmpty) {
-        if (mergedData['hasCommunityCorrections'] == true) {
-          if (kDebugMode) {
-            debugPrint(
-              'Using community-corrected data for ${widget.exercise.name}',
-            );
-          }
-        }
         return mergedData;
       }
-    } catch (e) {
-      if (kDebugMode) {
-        debugPrint('Could not load merged data, falling back to JSON: $e');
-      }
+    } catch (_) {
+      // Silently fall through to cached database lookup
     }
 
     if (!mounted) return null;
 
+    // ⚡ Fallback: Use cached database directly (no JSON reload)
     try {
-      final config = ref.read(appConfigProvider);
-      final isItalian = config.languageCode == 'it';
-      final jsonFile = isItalian
-          ? 'assets/data/exercises_it.json'
-          : 'assets/data/exercises.json';
-
-      if (kDebugMode) {
-        debugPrint(
-          'Loading exercise data from: $jsonFile (locale: ${config.languageCode})',
-        );
-      }
-
-      final String jsonString = await rootBundle.loadString(jsonFile);
-      final List<dynamic> exercises = json.decode(jsonString);
-
+      final exercises = await ref.read(exercisesDatabaseProvider.future);
       final exerciseName = widget.exercise.name.toLowerCase();
 
       // Try exact match first
       for (var exercise in exercises) {
         if (exercise['nome']?.toString().toLowerCase() == exerciseName) {
-          return exercise as Map<String, dynamic>;
+          return exercise;
         }
       }
 
@@ -468,49 +481,400 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
             exercise['nome']?.toString().toLowerCase() ?? '';
         if (exerciseNameInJson.contains(exerciseName) ||
             exerciseName.contains(exerciseNameInJson)) {
-          return exercise as Map<String, dynamic>;
+          return exercise;
         }
       }
 
       return null;
-    } catch (e) {
-      debugPrint('Error loading exercise data: $e');
+    } catch (_) {
       return null;
     }
   }
 
   void _handleShowExerciseInfoModal(Map<String, dynamic> data) {
+    // Use the existing ExerciseDetailsModal which has proper styling
+    // and shows both technical notes and warmup sections
+    final exerciseDefinition = db.ExerciseDefinition.fromJson(data);
+
+    // Find current exercise index for warmup insertion
+    final workout = ref.read(currentWorkoutProvider);
+    final exerciseIndex =
+        workout?.exercises.indexWhere((e) => e.id == widget.exercise.id) ?? -1;
+
+    ExerciseDetailsModal.show(
+      context,
+      exerciseDefinition,
+      currentExerciseIndex: exerciseIndex >= 0 ? exerciseIndex : null,
+      onWarmupExerciseAdded: exerciseIndex >= 0
+          ? (suggestion, beforeIndex) {
+              _addWarmupExercise(suggestion, beforeIndex);
+            }
+          : null,
+    );
+  }
+
+  /// Add a warmup exercise before the current exercise
+  void _addWarmupExercise(WarmupSuggestion suggestion, int beforeIndex) {
+    // Create Exercise from suggestion
+    final exercise = Exercise(
+      name: suggestion.exerciseName,
+      type: ExerciseType.single,
+      category: ExerciseCategory.other,
+      sets: List.generate(
+        suggestion.sets,
+        (i) => ExerciseSet(
+          setNumber: i + 1,
+          reps: suggestion.reps,
+          isCompleted: false,
+          isWarmup: true,
+        ),
+      ),
+    );
+
+    // Insert before current exercise
+    ref.read(currentWorkoutProvider.notifier).insertExerciseAt(
+          beforeIndex,
+          exercise,
+        );
+
     if (kDebugMode) {
-      debugPrint('Show exercise info modal for ${widget.exercise.name}');
+      debugPrint(
+        '🔥 [Warmup] Added ${suggestion.exerciseName} before ${widget.exercise.name}',
+      );
     }
-    // Implementation would show exercise info modal with data
   }
 
   void _handleShowWarmupModal(Map<String, dynamic> data) {
-    if (kDebugMode) {
-      debugPrint('Show warmup modal for ${widget.exercise.name}');
-    }
-    // Implementation would show warmup modal with data
+    final theme = Theme.of(context);
+    // Use correct JSON field names: mobilitaPre, attivazionePre, warmupSets, tempoWarmup
+    final mobilita = data['mobilitaPre'] as String?;
+    final attivazione = data['attivazionePre'] as String?;
+    final warmupSets = data['warmupSets'] as String?;
+    final tempoWarmup = data['tempoWarmup'] as String?;
+
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: theme.colorScheme.surface,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      builder: (ctx) => DraggableScrollableSheet(
+        initialChildSize: 0.5,
+        minChildSize: 0.3,
+        maxChildSize: 0.8,
+        expand: false,
+        builder: (_, scrollController) => ListView(
+          controller: scrollController,
+          padding: const EdgeInsets.all(20),
+          children: [
+            // Handle
+            Center(
+              child: Container(
+                width: 40,
+                height: 4,
+                margin: const EdgeInsets.only(bottom: 16),
+                decoration: BoxDecoration(
+                  color: theme.colorScheme.onSurface.withValues(alpha: 0.2),
+                  borderRadius: BorderRadius.circular(2),
+                ),
+              ),
+            ),
+            // Title
+            Row(
+              children: [
+                Icon(AppIcons.whatshot, color: context.warningColor),
+                const SizedBox(width: 12),
+                Text(
+                  context.l10n.warmupProtocol,
+                  style: theme.textTheme.titleLarge?.copyWith(
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 20),
+            // Phase 1: Mobility
+            if (mobilita != null && mobilita.isNotEmpty) ...[
+              _buildWarmupPhase(
+                theme,
+                context.l10n.warmupPhase1Title,
+                mobilita,
+                context.colors.primary,
+              ),
+              const SizedBox(height: 16),
+            ],
+            // Phase 2: Activation
+            if (attivazione != null && attivazione.isNotEmpty) ...[
+              _buildWarmupPhase(
+                theme,
+                context.l10n.warmupPhase2Title,
+                attivazione,
+                context.warningColor,
+              ),
+              const SizedBox(height: 16),
+            ],
+            // Phase 3: Warmup Sets
+            if (warmupSets != null && warmupSets.isNotEmpty) ...[
+              _buildWarmupPhase(
+                theme,
+                context.l10n.warmupSetsLabel,
+                warmupSets,
+                context.successColor,
+              ),
+              const SizedBox(height: 16),
+            ],
+            // Phase 4: Warmup Time
+            if (tempoWarmup != null && tempoWarmup.isNotEmpty) ...[
+              _buildWarmupPhase(
+                theme,
+                context.l10n.warmupTimeLabel,
+                tempoWarmup,
+                context.colors.tertiary,
+              ),
+            ],
+            // Fallback if no warmup data
+            if ((mobilita == null || mobilita.isEmpty) &&
+                (attivazione == null || attivazione.isEmpty) &&
+                (warmupSets == null || warmupSets.isEmpty) &&
+                (tempoWarmup == null || tempoWarmup.isEmpty))
+              Text(
+                context.l10n.noWarmupProtocolAvailable,
+                style: theme.textTheme.bodyMedium?.copyWith(
+                  color: theme.colorScheme.onSurfaceVariant,
+                ),
+              ),
+          ],
+        ),
+      ),
+    );
   }
 
   void _handleShowInjuryPreventionModal(Map<String, dynamic> data) {
-    if (kDebugMode) {
-      debugPrint('Show injury prevention modal for ${widget.exercise.name}');
-    }
-    // Implementation would show injury prevention modal with data
+    final theme = Theme.of(context);
+    // Use correct JSON field names: prevenzioneInfortuni, cooldownConsigliato, drillTecnico
+    final prevention = data['prevenzioneInfortuni'] as String?;
+    final cooldown = data['cooldownConsigliato'] as String?;
+    final drillTecnico = data['drillTecnico'] as String?;
+
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: theme.colorScheme.surface,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      builder: (ctx) => DraggableScrollableSheet(
+        initialChildSize: 0.5,
+        minChildSize: 0.3,
+        maxChildSize: 0.8,
+        expand: false,
+        builder: (_, scrollController) => ListView(
+          controller: scrollController,
+          padding: const EdgeInsets.all(20),
+          children: [
+            // Handle
+            Center(
+              child: Container(
+                width: 40,
+                height: 4,
+                margin: const EdgeInsets.only(bottom: 16),
+                decoration: BoxDecoration(
+                  color: theme.colorScheme.onSurface.withValues(alpha: 0.2),
+                  borderRadius: BorderRadius.circular(2),
+                ),
+              ),
+            ),
+            // Title
+            Row(
+              children: [
+                Icon(AppIcons.shieldOutlined, color: context.successColor),
+                const SizedBox(width: 12),
+                Text(
+                  context.l10n.injuryPrevention,
+                  style: theme.textTheme.titleLarge?.copyWith(
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 20),
+            // Prevention Tips
+            if (prevention != null && prevention.isNotEmpty) ...[
+              Container(
+                padding: const EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                  color: context.successColor.withValues(alpha: 0.1),
+                  borderRadius: BorderRadius.circular(12),
+                  border: Border.all(
+                    color: context.successColor.withValues(alpha: 0.3),
+                  ),
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      context.l10n.safetyTips,
+                      style: theme.textTheme.titleMedium?.copyWith(
+                        fontWeight: FontWeight.w600,
+                        color: context.successColor,
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    Text(
+                      prevention,
+                      style: theme.textTheme.bodyMedium?.copyWith(
+                        color: theme.colorScheme.onSurface,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 16),
+            ],
+            // Technical Drill
+            if (drillTecnico != null && drillTecnico.isNotEmpty) ...[
+              Container(
+                padding: const EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                  color: context.colors.primary.withValues(alpha: 0.1),
+                  borderRadius: BorderRadius.circular(12),
+                  border: Border.all(
+                    color: context.colors.primary.withValues(alpha: 0.3),
+                  ),
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      children: [
+                        Icon(
+                          AppIcons.trackChanges,
+                          size: 18,
+                          color: context.colors.primary,
+                        ),
+                        const SizedBox(width: 8),
+                        Text(
+                          context.l10n.technicalDrill,
+                          style: theme.textTheme.titleMedium?.copyWith(
+                            fontWeight: FontWeight.w600,
+                            color: context.colors.primary,
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 8),
+                    Text(
+                      drillTecnico,
+                      style: theme.textTheme.bodyMedium?.copyWith(
+                        color: theme.colorScheme.onSurface,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 16),
+            ],
+            // Cooldown
+            if (cooldown != null && cooldown.isNotEmpty) ...[
+              Container(
+                padding: const EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                  color: context.colors.tertiary.withValues(alpha: 0.1),
+                  borderRadius: BorderRadius.circular(12),
+                  border: Border.all(
+                    color: context.colors.tertiary.withValues(alpha: 0.3),
+                  ),
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      children: [
+                        Icon(
+                          AppIcons.spa,
+                          size: 18,
+                          color: context.colors.tertiary,
+                        ),
+                        const SizedBox(width: 8),
+                        Text(
+                          context.l10n.recommendedCooldown,
+                          style: theme.textTheme.titleMedium?.copyWith(
+                            fontWeight: FontWeight.w600,
+                            color: context.colors.tertiary,
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 8),
+                    Text(
+                      cooldown,
+                      style: theme.textTheme.bodyMedium?.copyWith(
+                        color: theme.colorScheme.onSurface,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+            // Fallback if no data
+            if ((prevention == null || prevention.isEmpty) &&
+                (cooldown == null || cooldown.isEmpty) &&
+                (drillTecnico == null || drillTecnico.isEmpty))
+              Text(
+                context.l10n.noInjuryPreventionInfo,
+                style: theme.textTheme.bodyMedium?.copyWith(
+                  color: theme.colorScheme.onSurfaceVariant,
+                ),
+              ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildWarmupPhase(
+    ThemeData theme,
+    String title,
+    String content,
+    Color color,
+  ) {
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: color.withValues(alpha: 0.1),
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: color.withValues(alpha: 0.3)),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            title,
+            style: theme.textTheme.titleMedium?.copyWith(
+              fontWeight: FontWeight.w600,
+              color: color,
+            ),
+          ),
+          const SizedBox(height: 8),
+          Text(
+            content,
+            style: theme.textTheme.bodyMedium?.copyWith(
+              color: theme.colorScheme.onSurface,
+            ),
+          ),
+        ],
+      ),
+    );
   }
 
   void _handleShowExerciseHistory() {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
-      backgroundColor: context.colors.surface,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-      ),
-      builder: (context) => ExerciseHistoryBottomSheet(
-        exerciseName: widget.exercise.name,
-      ),
+      backgroundColor: Colors.transparent,
+      builder: (context) =>
+          ExerciseHistoryBottomSheet(exerciseName: widget.exercise.name),
     );
   }
 
@@ -547,10 +911,117 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
       ),
-      builder: (context) => CommunityAdviceModal(
-        exercise: widget.exercise,
-      ),
+      builder: (context) => CommunityAdviceModal(exercise: widget.exercise),
     );
+  }
+
+  /// BUG FIX: Show counting mode picker to change exercise counting mode
+  /// This was missing from the new orchestrator implementation
+  Future<void> _handleShowCountingModePicker() async {
+    final newMode = await CountingModePickerModal.show(
+      context,
+      currentMode: widget.exercise.countingMode,
+    );
+
+    if (newMode != null && newMode != widget.exercise.countingMode && mounted) {
+      // Update exercise with new counting mode
+      final updatedExercise = widget.exercise.copyWith(
+        countingMode: newMode,
+        updatedAt: DateTime.now(),
+      );
+
+      // Update via provider
+      ref
+          .read(currentWorkoutProvider.notifier)
+          .updateExercise(widget.exercise.id, updatedExercise);
+
+      // Show confirmation
+      if (mounted) {
+        HapticFeedback.mediumImpact();
+        SnackBarService.showSuccess(
+          context,
+          'Counting mode changed to ${newMode.name}',
+        );
+      }
+
+      if (kDebugMode) {
+        debugPrint(
+          '🔄 [CountingMode] Changed from ${widget.exercise.countingMode.name} to ${newMode.name}',
+        );
+      }
+    }
+  }
+
+  /// Add warmup sets to the exercise
+  /// Generates 3 warmup sets at 40%, 60%, 80% of target weight
+  void _handleAddWarmupSets() {
+    // Find the first non-warmup set to get target weight
+    final workingSets = widget.exercise.sets.where((s) => !s.isWarmup).toList();
+
+    if (workingSets.isEmpty) {
+      SnackBarService.showError(
+        context,
+        context.l10n.addWorkingSetFirst,
+      );
+      return;
+    }
+
+    final targetWeight = workingSets.first.weight ?? 0.0;
+
+    if (targetWeight <= 0) {
+      SnackBarService.showError(
+        context,
+        context.l10n.setTargetWeightFirst,
+      );
+      return;
+    }
+
+    // Generate warmup sets: 40%, 60%, 80% of target weight
+    final warmupPercentages = [0.4, 0.6, 0.8];
+    final warmupReps = [12, 8, 5]; // Decreasing reps as weight increases
+
+    final warmupSets = <ExerciseSet>[];
+    for (var i = 0; i < warmupPercentages.length; i++) {
+      final warmupWeight = (targetWeight * warmupPercentages[i]).roundToDouble();
+      warmupSets.add(ExerciseSet(
+        setNumber: i + 1,
+        weight: warmupWeight,
+        reps: warmupReps[i],
+        isWarmup: true,
+        isCompleted: false,
+      ));
+    }
+
+    // Combine warmup sets with existing sets, renumbering
+    final existingSets = widget.exercise.sets;
+    final allSets = [...warmupSets];
+
+    for (var i = 0; i < existingSets.length; i++) {
+      allSets.add(existingSets[i].copyWith(
+        setNumber: warmupSets.length + i + 1,
+      ));
+    }
+
+    // Update exercise
+    final updatedExercise = widget.exercise.copyWith(
+      sets: allSets,
+      updatedAt: DateTime.now(),
+    );
+
+    ref
+        .read(currentWorkoutProvider.notifier)
+        .updateExercise(widget.exercise.id, updatedExercise);
+
+    // Show feedback
+    HapticFeedback.mediumImpact();
+    SnackBarService.showSuccess(
+      context,
+      context.l10n.warmupSetsAdded(warmupSets.length.toString()),
+    );
+
+    if (kDebugMode) {
+      debugPrint('🔥 [Warmup] Added ${warmupSets.length} warmup sets for ${widget.exercise.name}');
+    }
   }
 
   bool _hasWarmupData(Map<String, dynamic> data) {
@@ -573,9 +1044,11 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
 
   void _handleStartRestTimer(BuildContext context, ExerciseSet set) {
     // Start rest timer using tier1 timer actions (includes UI + sound preference)
+    // BUG FIX: Use set.restTime → exercise.restTime → 90s fallback chain
+    // Previously only used set.restTime ?? 90, ignoring exercise-level custom timer
     final timerActions = ref.read(tier1TimerActionsProvider);
     timerActions.startExerciseRest(
-      seconds: set.restTime ?? 90,
+      seconds: set.restTime ?? widget.exercise.restTime ?? 90,
       exerciseName: widget.exercise.name,
       exerciseId: widget.exercise.id,
       currentSet: set.setNumber,
@@ -626,7 +1099,29 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
 
   @override
   Widget build(BuildContext context) {
+    // ✅ Required when using AutomaticKeepAliveClientMixin
+    super.build(context);
+
     final config = ref.watch(appConfigProvider);
+
+    // Listen for auto-collapse completion
+    ref.listen(
+      exerciseAutoCollapseProvider(widget.exercise.id)
+          .select((state) => state.shouldExecuteCollapse),
+      (previous, shouldCollapse) {
+        if (shouldCollapse) {
+          // Execute the collapse
+          _expansionNotifier.markAutoCollapsed();
+          _autoCollapseNotifier.acknowledgeCollapse();
+
+          if (kDebugMode) {
+            debugPrint(
+              '✅ [AutoCollapse] Exercise "${widget.exercise.name}" auto-collapsed',
+            );
+          }
+        }
+      },
+    );
 
     // Reorder mode - show simplified card
     if (widget.isReorderMode) {
@@ -650,86 +1145,251 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
       );
     }
 
-    return Card(
-      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // Header section
-          Padding(
-            padding: const EdgeInsets.all(16),
-            child: ExerciseListItemHeader(
-              exercise: widget.exercise,
-              config: config,
-              isProMode: isProMode,
-              autoCollapseState: _autoCollapseState,
-              lastActivity: _lastActivity,
-              onCancelAutoCollapse: _handleCancelAutoCollapse,
-              onShowAutoAdjustmentModal: _handleShowAutoAdjustmentModal,
-              onShowQuickTimerSettings: _handleShowQuickTimerSettings,
-              onShowTutExplanationModal: _handleShowTutExplanationModal,
-              onLoadExerciseData: _loadExerciseDataFromJson,
-              onShowExerciseInfoModal: _handleShowExerciseInfoModal,
-              onShowWarmupModal: _handleShowWarmupModal,
-              onShowInjuryPreventionModal: _handleShowInjuryPreventionModal,
-              onShowExerciseHistory: _handleShowExerciseHistory,
-              onShowExerciseEditor: _handleShowExerciseEditor,
-              onShowExerciseReplacement: _handleShowExerciseReplacement,
-              onDuplicateExercise: _handleDuplicateExercise,
-              onShowDeleteConfirmation: _handleShowDeleteConfirmation,
-              onShowCommunityAdvice: _handleShowCommunityAdvice,
-              hasWarmupData: _hasWarmupData,
-              hasInjuryPreventionData: _hasInjuryPreventionData,
+    // BUG FIX #4: Wrap card in GestureDetector to allow expanding collapsed exercises
+    // When exercise is collapsed, tapping anywhere on the card expands it
+    // Journey theme gradient for exercise cards
+    final journeyTheme = context.journeyThemeOrDefault;
+
+    return GestureDetector(
+      onTap: !_isExpanded
+          ? () {
+              _expansionNotifier.expand();
+              HapticFeedback.lightImpact();
+              if (kDebugMode) {
+                debugPrint(
+                  '📖 [Expand] Exercise "${widget.exercise.name}" expanded by tap',
+                );
+              }
+            }
+          : null,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+        child: Container(
+          decoration: BoxDecoration(
+            // Base card color from theme
+            color: context.colors.surfaceContainerHighest,
+            borderRadius: BorderRadius.circular(12),
+            // Subtle gradient overlay from journey theme
+            gradient: journeyTheme.cardGradient,
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withValues(alpha: 0.05),
+                blurRadius: 8,
+                offset: const Offset(0, 2),
+              ),
+              // Optional glow from journey theme if unlocked
+              if (journeyTheme.isGlowEnabled)
+                BoxShadow(
+                  color: journeyTheme.glowColor.withValues(alpha: 0.1),
+                  blurRadius: 12,
+                  spreadRadius: 0,
+                ),
+            ],
+          ),
+          child: Material(
+            color: Colors.transparent,
+            borderRadius: BorderRadius.circular(12),
+            clipBehavior: Clip.antiAlias,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // Header section
+                Padding(
+                  padding: const EdgeInsets.all(16),
+                  child: ExerciseListItemHeader(
+                    exercise: widget.exercise,
+                    config: config,
+                    isProMode: isProMode,
+                    autoCollapseState: _autoCollapseState,
+                    lastActivity: _lastActivity,
+                    onCancelAutoCollapse: _handleCancelAutoCollapse,
+                    onShowAutoAdjustmentModal: _handleShowAutoAdjustmentModal,
+                    onShowQuickTimerSettings: _handleShowQuickTimerSettings,
+                    onShowTutExplanationModal: _handleShowTutExplanationModal,
+                    onLoadExerciseData: _loadExerciseDataFromJson,
+                    onShowExerciseInfoModal: _handleShowExerciseInfoModal,
+                    onShowWarmupModal: _handleShowWarmupModal,
+                    onShowInjuryPreventionModal:
+                        _handleShowInjuryPreventionModal,
+                    onShowExerciseHistory: _handleShowExerciseHistory,
+                    onShowExerciseEditor: _handleShowExerciseEditor,
+                    onShowExerciseReplacement: _handleShowExerciseReplacement,
+                    onDuplicateExercise: _handleDuplicateExercise,
+                    onShowDeleteConfirmation: _handleShowDeleteConfirmation,
+                    onShowCommunityAdvice: _handleShowCommunityAdvice,
+                    onShowCountingModePicker: _handleShowCountingModePicker,
+                    onAddWarmupSets: _handleAddWarmupSets,
+                    hasWarmupData: _hasWarmupData,
+                    hasInjuryPreventionData: _hasInjuryPreventionData,
+                  ),
+                ),
+
+                // Weight Jump Indicator (minimal, stable, no auto-dismiss)
+                // Calculated locally to avoid provider re-renders
+                Builder(
+                  builder: (context) {
+                    final weights = widget.exercise.sets
+                        .where((s) => s.isCompleted && !s.isWarmup)
+                        .map((s) => s.weight)
+                        .whereType<double>()
+                        .where((w) => w > 0)
+                        .toList();
+
+                    if (weights.length < 2) {
+                      return const SizedBox.shrink();
+                    }
+
+                    final minWeight = weights.reduce((a, b) => a < b ? a : b);
+                    final maxWeight = weights.reduce((a, b) => a > b ? a : b);
+
+                    if (!WeightJumpIndicator.hasWeightJump(
+                      minWeight: minWeight,
+                      maxWeight: maxWeight,
+                    )) {
+                      return const SizedBox.shrink();
+                    }
+
+                    return Padding(
+                      padding: const EdgeInsets.fromLTRB(16, 0, 16, 8),
+                      child: WeightJumpIndicator(
+                        minWeight: minWeight,
+                        maxWeight: maxWeight,
+                        showLabel: true,
+                      ),
+                    );
+                  },
+                ),
+
+                // Smart suggestions (filtered: excludes weight_jump warnings)
+                Builder(
+                  builder: (context) {
+                    // Filter out weight jump suggestions (handled by indicator above)
+                    final filteredSuggestions = _suggestions
+                        .where((s) => !s.id.contains('weight_jump'))
+                        .toList();
+
+                    if (filteredSuggestions.isEmpty) {
+                      return const SizedBox.shrink();
+                    }
+
+                    return Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 16),
+                      child: Column(
+                        children: [
+                          Wrap(
+                            spacing: 8,
+                            runSpacing: 8,
+                            children: filteredSuggestions.map((suggestion) {
+                              return SmartSuggestionChip(
+                                key: ValueKey(suggestion.id),
+                                suggestion: suggestion.text,
+                                icon: _getSuggestionIcon(suggestion.type),
+                                fullSuggestion: suggestion,
+                                onDismiss: () {
+                                  _suggestionsNotifier.dismissSuggestion(
+                                    suggestion.id,
+                                  );
+                                },
+                              );
+                            }).toList(),
+                          ),
+                          const SizedBox(height: 12),
+                        ],
+                      ),
+                    );
+                  },
+                ),
+
+                // Sets section (expanded only)
+                if (_isExpanded)
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
+                    child: ExerciseListItemSets(
+                      exercise: widget.exercise,
+                      config: config,
+                      onExerciseUpdate: (exercise) {
+                        widget.onExerciseUpdate?.call(exercise);
+                      },
+                      onSetToggleComplete: (set) {
+                        widget.onSetToggleComplete?.call(set);
+                      },
+                      onStartRestTimer: _handleStartRestTimer,
+                      onExecuteDropSet: _handleExecuteDropSet,
+                      onExecuteRestPause: _handleExecuteRestPause,
+                      onCollapseExercise: _handleCollapseExercise,
+                    ),
+                  ),
+
+                // BUG FIX #4: Visual hint to expand collapsed exercise
+                // ✅ FIX: Removed infinite rebuild loop caused by onEnd + setState
+                // Previous implementation called setState() in onEnd to restart animation,
+                // causing ~1.6s rebuild loops for ALL collapsed exercise cards.
+                // Now uses static hint without pulsing - better for performance.
+                // 🐛 BUG FIX #5: Added InkWell to make hint tappable
+                // The outer GestureDetector doesn't receive taps because Material widget
+                // and header's interactive widgets (InkWell, PopupMenuButton) consume them.
+                if (!_isExpanded)
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 12),
+                    child: Center(
+                      child: Material(
+                        color: Colors.transparent,
+                        child: InkWell(
+                          onTap: () {
+                            _expansionNotifier.expand();
+                            HapticFeedback.lightImpact();
+                            if (kDebugMode) {
+                              debugPrint(
+                                '📖 [Expand] Exercise "${widget.exercise.name}" expanded via hint tap',
+                              );
+                            }
+                          },
+                          borderRadius: BorderRadius.circular(20),
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 16,
+                              vertical: 8,
+                            ),
+                            decoration: BoxDecoration(
+                              color: context.colors.primaryContainer.withValues(
+                                alpha: 0.3,
+                              ),
+                              borderRadius: BorderRadius.circular(20),
+                              border: Border.all(
+                                color: context.colors.primary.withValues(
+                                  alpha: 0.4,
+                                ),
+                                width: 1,
+                              ),
+                            ),
+                            child: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                SemanticIcon(
+                                  icon: AppIcons.expandMore,
+                                  semanticLabel: context.l10n.expandExercise,
+                                  size: AppIconSize.small,
+                                  color: context.colors.primary,
+                                ),
+                                const SizedBox(width: 8),
+                                Text(
+                                  context.l10n.tapToExpand,
+                                  style: context.textTheme.bodyMedium?.copyWith(
+                                    color: context.colors.primary,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+              ],
             ),
           ),
-
-          // Smart suggestions
-          if (_suggestions.isNotEmpty) ...[
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: Wrap(
-                spacing: 8,
-                runSpacing: 8,
-                children: _suggestions.map((suggestion) {
-                  return SmartSuggestionChip(
-                    suggestion: suggestion.text,
-                    icon: _getSuggestionIcon(suggestion.type),
-                    onTap: () {
-                      // Handle suggestion tap
-                      if (kDebugMode) {
-                        debugPrint('Suggestion tapped: ${suggestion.text}');
-                      }
-                    },
-                    onDismiss: () {
-                      _suggestionsNotifier.dismissSuggestion(suggestion.id);
-                    },
-                  );
-                }).toList(),
-              ),
-            ),
-            const SizedBox(height: 12),
-          ],
-
-          // Sets section (expanded only)
-          if (_isExpanded)
-            Padding(
-              padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
-              child: ExerciseListItemSets(
-                exercise: widget.exercise,
-                config: config,
-                onExerciseUpdate: (exercise) {
-                  widget.onExerciseUpdate?.call(exercise);
-                },
-                onSetToggleComplete: (set) {
-                  widget.onSetToggleComplete?.call(set);
-                },
-                onStartRestTimer: _handleStartRestTimer,
-                onExecuteDropSet: _handleExecuteDropSet,
-                onExecuteRestPause: _handleExecuteRestPause,
-                onCollapseExercise: _handleCollapseExercise,
-              ),
-            ),
-        ],
+        ),
       ),
     );
   }
