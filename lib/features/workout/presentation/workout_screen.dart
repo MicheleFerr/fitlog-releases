@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -12,7 +13,6 @@ import 'package:gymbro_flutter_new/features/workout/domain/entities/pdf_detail_l
 import 'package:gymbro_flutter_new/features/workout/services/pdf_template_service.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/providers/workout_provider.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/providers/workout_template_provider.dart';
-import 'package:gymbro_flutter_new/features/workout/presentation/providers/workout_auto_save_provider.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/providers/pdf_preferences_provider.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/widgets/add_exercise_modal.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/widgets/pdf_export_options_dialog.dart';
@@ -81,8 +81,7 @@ class WorkoutScreen extends ConsumerStatefulWidget {
   ConsumerState<WorkoutScreen> createState() => _WorkoutScreenState();
 }
 
-class _WorkoutScreenState extends ConsumerState<WorkoutScreen>
-    with WidgetsBindingObserver {
+class _WorkoutScreenState extends ConsumerState<WorkoutScreen> {
   // PHASE 2: GlobalKeys for contextual overlays
   final GlobalKey _addExerciseFABKey = GlobalKey();
   final GlobalKey _completeWorkoutButtonKey = GlobalKey();
@@ -94,51 +93,25 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen>
     // Preload interstitial ad for workout completion
     ref.read(workoutScreenControllerProvider.notifier).preloadCompletionAd();
 
-    // Add lifecycle observer for force-saving when app goes to background
-    WidgetsBinding.instance.addObserver(this);
+    // NOTE: Lifecycle observer REMOVED - handled centrally by AppLifecycleManager
+    // AppLifecycleManager handles: emergency save, template cache save, draft recovery
 
-    // PHASE 2: Show welcome overlay for beginners on first workout
+    // Show onboarding overlay if needed
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _showFirstWorkoutWelcomeIfNeeded();
     });
   }
 
-  @override
-  void dispose() {
-    // Remove lifecycle observer
-    WidgetsBinding.instance.removeObserver(this);
-    super.dispose();
-  }
+  // NOTE: _checkAndRecoverDraft REMOVED - handled centrally by AppLifecycleManager
+  // Draft recovery now happens globally on app startup via AppLifecycleManager._checkAndRecoverDraftGlobally()
 
-  @override
-  void didChangeAppLifecycleState(AppLifecycleState state) {
-    super.didChangeAppLifecycleState(state);
-
-    // Force save when app goes to background
-    if (state == AppLifecycleState.paused ||
-        state == AppLifecycleState.inactive) {
-      // Save template cache
-      final cacheService = ref.read(workoutTemplateCacheServiceProvider);
-      cacheService.forceSave();
-
-      // Emergency save current workout if active
-      final currentWorkout = ref.read(currentWorkoutProvider);
-      if (currentWorkout != null && currentWorkout.isActive) {
-        final autoSave = ref.read(workoutAutoSaveProvider.notifier);
-        autoSave.emergencySave(currentWorkout);
-
-        if (kDebugMode) {
-          debugPrint(
-              '💾 [WorkoutScreen] Emergency saved active workout due to app lifecycle: $state');
-        }
-      }
-
-      if (kDebugMode) {
-        debugPrint(
-            '💾 [WorkoutScreen] Force saved template cache due to app lifecycle: $state');
-      }
-    }
-  }
+  // NOTE: dispose() with removeObserver REMOVED - no observer to remove
+  // NOTE: didChangeAppLifecycleState REMOVED - handled centrally by AppLifecycleManager
+  // AppLifecycleManager handles:
+  // - Emergency save current workout
+  // - Force save template cache
+  // - Schedule workout forgotten notification
+  // - Draft recovery on app startup
 
   /// PHASE 2: Show welcome overlay to guide beginner through first workout
   Future<void> _showFirstWorkoutWelcomeIfNeeded() async {
@@ -175,14 +148,49 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen>
 
   @override
   Widget build(BuildContext context) {
-    final currentWorkout = ref.watch(currentWorkoutProvider);
+    // ✅ PERFORMANCE FIX: Use select() to only rebuild when exercises change
+    // Previously watched full workout object, causing rebuild on EVERY change
+    // (including updatedAt timestamp changes that don't affect UI)
+    // Now only rebuilds when: status, exercises list, or name changes
+    final currentWorkout = ref.watch(
+      currentWorkoutProvider.select((workout) => workout == null
+          ? null
+          : (
+              id: workout.id,
+              name: workout.name,
+              status: workout.status,
+              exercises: workout.exercises,
+              isActive: workout.isActive,
+              startTime: workout.startTime,
+            )),
+    );
+
+    // Convert back to Workout for downstream widgets
+    // This is a lightweight operation since we're just reading from provider
+    final fullWorkout = ref.read(currentWorkoutProvider);
+
     final controllerState = ref.watch(workoutScreenControllerProvider);
     final shouldShowTimer = ref.watch(shouldShowTier1TimerProvider);
 
     // Determine which view to show
-    final isPreloaded = currentWorkout != null && !currentWorkout.isActive;
-    final isActive = currentWorkout != null && currentWorkout.isActive;
+    // Note: paused workouts should show WorkoutView (not PreloadedView)
+    final isActiveOrPaused = currentWorkout != null &&
+        (currentWorkout.status == WorkoutStatus.inProgress ||
+            currentWorkout.status == WorkoutStatus.paused);
+    final isPreloaded = currentWorkout != null && !isActiveOrPaused;
+    final isActive = isActiveOrPaused;
     final isEmpty = currentWorkout == null;
+
+    // Debug logging for workout status determination
+    if (kDebugMode) {
+      debugPrint('🏋️ [WorkoutScreen] Build called:');
+      debugPrint('  - currentWorkout: ${currentWorkout?.name ?? "null"}');
+      debugPrint('  - status: ${currentWorkout?.status}');
+      debugPrint('  - isActiveOrPaused: $isActiveOrPaused');
+      debugPrint('  - isPreloaded: $isPreloaded');
+      debugPrint('  - isActive: $isActive');
+      debugPrint('  - isEmpty: $isEmpty');
+    }
 
     return PopScope(
       canPop: false,
@@ -194,22 +202,17 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen>
       child: Stack(
         children: [
           // Main content based on state
+          // ✅ Use fullWorkout (from ref.read) for passing to child widgets
+          // The select() above ensures we only rebuild when meaningful changes occur
           if (isEmpty) _buildWelcomeView(),
-          if (isPreloaded) _buildPreloadedView(currentWorkout),
-          if (isActive) _buildWorkoutView(currentWorkout, controllerState),
+          if (isPreloaded && fullWorkout != null) _buildPreloadedView(fullWorkout),
+          if (isActive && fullWorkout != null) _buildWorkoutView(fullWorkout, controllerState),
 
-          // Timer overlay (only when timer should be shown)
-          if (shouldShowTimer)
-            const Tier1MinimalTimerOverlay(),
+          // Timer overlay - COMMENTED OUT: timer now in header
+          // if (shouldShowTimer)
+          //   const Tier1MinimalTimerOverlay(),
 
-          // Draggable tutorial overlay (only in active workout)
-          if (isActive && !controllerState.isReorderMode)
-            const DraggableTutorialOverlay(
-              tutorialKey: 'workout_fab',
-              child: SizedBox.shrink(),
-            ),
-
-          // FAB for adding exercises (only in active workout, outside Scaffold)
+          // FAB for adding exercises
           if (isActive && !controllerState.isReorderMode)
             _buildDraggableFAB(),
         ],
@@ -265,19 +268,61 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen>
   Widget _buildWorkoutView(Workout workout, WorkoutScreenState state) {
     final l10n = AppLocalizations.of(context);
 
+    final colorScheme = Theme.of(context).colorScheme;
+
     return Scaffold(
       appBar: AppBar(
-        title: Text(l10n.workout),
-        leading: IconButton(
-          icon: SemanticIcon(
-            icon: AppIcons.back,
-            size: AppIconSize.medium,
-            semanticLabel: l10n.back,
-          ),
-          onPressed: () => _handleBackNavigation(context),
-        ),
+        // ✅ IMPROVED: Different title and styling in reorder mode
+        title: Text(state.isReorderMode ? l10n.reorderExercises : l10n.workout),
+        backgroundColor: state.isReorderMode
+            ? colorScheme.primaryContainer.withValues(alpha: 0.3)
+            : null,
+        leading: state.isReorderMode
+            // In reorder mode: X to cancel
+            ? IconButton(
+                icon: SemanticIcon(
+                  icon: AppIcons.close,
+                  size: AppIconSize.medium,
+                  semanticLabel: l10n.cancel,
+                ),
+                onPressed: () {
+                  ref.read(workoutScreenControllerProvider.notifier).toggleReorderMode();
+                  HapticFeedback.lightImpact();
+                },
+              )
+            // Normal mode: back arrow
+            : IconButton(
+                icon: SemanticIcon(
+                  icon: AppIcons.back,
+                  size: AppIconSize.medium,
+                  semanticLabel: l10n.back,
+                ),
+                onPressed: () => _handleBackNavigation(context),
+              ),
         actions: [
-          // Reorder mode toggle (only if exercises exist)
+          // ✅ REORDER MODE: Done button in app bar (iOS style)
+          if (state.isReorderMode)
+            TextButton.icon(
+              onPressed: () {
+                ref.read(workoutScreenControllerProvider.notifier).toggleReorderMode();
+                HapticFeedback.mediumImpact();
+              },
+              icon: SemanticIcon(
+                icon: AppIcons.check,
+                size: AppIconSize.small,
+                semanticLabel: l10n.done,
+                color: colorScheme.primary,
+              ),
+              label: Text(
+                l10n.done,
+                style: context.textTheme.labelLarge?.copyWith(
+                  color: colorScheme.primary,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ),
+
+          // Reorder mode toggle (only if exercises exist and not in reorder mode)
           if (workout.exercises.isNotEmpty && !state.isReorderMode)
             IconButton(
               icon: SemanticIcon(
@@ -287,26 +332,43 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen>
               ),
               onPressed: () {
                 ref.read(workoutScreenControllerProvider.notifier).toggleReorderMode();
+                HapticFeedback.lightImpact();
               },
             ),
 
-          // Complete workout (only if not in reorder mode)
+          // ✅ IMPROVED: More prominent "Finish" button (best practice UX)
           if (!state.isReorderMode)
-            IconButton(
-              key: _completeWorkoutButtonKey,
-              icon: SemanticIcon(
-                icon: AppIcons.check,
-                size: AppIconSize.medium,
-                semanticLabel: l10n.completeWorkout,
+            Padding(
+              padding: const EdgeInsets.only(right: 4),
+              child: FilledButton.tonalIcon(
+                key: _completeWorkoutButtonKey,
+                onPressed: () {
+                  HapticFeedback.mediumImpact();
+                  ref.read(workoutScreenControllerProvider.notifier).endWorkout(
+                    context: context,
+                  );
+                },
+                icon: SemanticIcon(
+                  icon: AppIcons.check,
+                  size: AppIconSize.small,
+                  semanticLabel: l10n.finish,
+                ),
+                label: Text(
+                  l10n.finish,
+                  style: context.textTheme.labelLarge?.copyWith(
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+                style: FilledButton.styleFrom(
+                  backgroundColor: colorScheme.primaryContainer,
+                  foregroundColor: colorScheme.onPrimaryContainer,
+                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                  visualDensity: VisualDensity.compact,
+                ),
               ),
-              onPressed: () {
-                ref.read(workoutScreenControllerProvider.notifier).endWorkout(
-                  context: context,
-                );
-              },
             ),
 
-          // Settings menu
+          // Settings menu (only if not in reorder mode)
           if (!state.isReorderMode)
             IconButton(
               icon: SemanticIcon(
@@ -339,26 +401,10 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen>
     );
   }
 
-  /// Build floating action button based on state (only used for reorder mode)
+  /// Build floating action button based on state
+  /// ✅ IMPROVED: No FAB in reorder mode - "Done" is now in AppBar (iOS style)
   Widget? _buildFAB(WorkoutScreenState state) {
-    final l10n = AppLocalizations.of(context);
-
-    if (state.isReorderMode) {
-      // Exit reorder mode button
-      return FloatingActionButton.extended(
-        key: const ValueKey('exitReorderFAB'),
-        onPressed: () {
-          ref.read(workoutScreenControllerProvider.notifier).toggleReorderMode();
-        },
-        icon: SemanticIcon(
-          icon: AppIcons.check,
-          size: AppIconSize.medium,
-          semanticLabel: l10n.done,
-        ),
-        label: Text(l10n.done),
-      );
-    }
-
+    // No FAB in reorder mode - action buttons are in app bar
     // Normal mode: FAB is handled by _buildDraggableFAB() in the main Stack
     return null;
   }
@@ -476,8 +522,11 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen>
       backgroundColor: Colors.transparent,
       builder: (context) => AddExerciseModal(
         onExerciseAdded: (exercise) {
+          // ignore: avoid_print
+          print('🎯 [WorkoutScreen] CALLBACK RECEIVED: name=${exercise.name}, countingMode=${exercise.countingMode}');
           ref.read(workoutScreenControllerProvider.notifier).addExercise(exercise);
-          Navigator.of(context).pop();
+          // Note: Navigator.pop() is called by AddExerciseModal after this callback
+          // Do NOT call pop() here - it would cause double-pop and black screen!
         },
       ),
     );
