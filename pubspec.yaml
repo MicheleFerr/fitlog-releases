@@ -26,7 +26,11 @@ dependencies:
   sign_in_with_apple: ^7.0.0  # Upgraded for Flutter Android embedding compatibility
   
   # State Management
-  flutter_riverpod: ^2.4.9
+  # ✅ MEMORY FIX: Upgraded from ^2.4.9 to ^2.6.1 (2025-11-29)
+  # - v2.5.0: Fixed FutureProvider memory leak
+  # - v2.5.1: Fixed provider rebuild memory issues
+  # - v2.6.x: Multiple memory optimizations
+  flutter_riverpod: ^2.6.1
 
   # Functional Programming (Clean Architecture)
   fpdart: ^1.1.0
@@ -114,6 +118,10 @@ dependencies:
   # 🔍 Unified logging + HTTP inspector (debug builds)
   voo_logging: ^0.4.7
   calendar_date_picker2: ^2.0.1
+  muscle_selector: ^1.0.4
+  svg_path_parser: ^1.1.2
+  flutter_svg: ^2.2.3
+  motor: ^1.1.0
 dev_dependencies:
   flutter_test:
     sdk: flutter

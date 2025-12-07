@@ -1,17 +1,18 @@
 /// 🏋️‍♂️ GymBro TrackLog - Flutter Fitness App
-/// 
+///
 /// 📁 Layer: presentation
 /// 🎯 Feature: shared
 /// 🔧 Type: widget
 /// 🌍 Localization: ✅ AppLocalizations used
 /// 🎨 Theme: ✅ ColorScheme responsive
 /// 📱 Platform: Universal
-/// 
-/// Draggable action button con salvataggio posizione
+///
+/// Draggable action button con animazioni spring physics (motor package)
 library;
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:motor/motor.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/premium_action_button.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
@@ -22,7 +23,7 @@ import 'package:gymbro_flutter_new/core/cache/user_cache_key_manager.dart';
 
 /// Opzione aggiuntiva per il menu del long press
 class DraggableActionOption {
-  
+
   const DraggableActionOption({
     required this.icon,
     required this.label,
@@ -35,8 +36,8 @@ class DraggableActionOption {
   final Color? color;
 }
 
-class DraggableActionButton extends StatefulWidget { // Opzioni aggiuntive nel menu
-  
+class DraggableActionButton extends StatefulWidget {
+
   const DraggableActionButton({
     super.key,
     required this.onPressed,
@@ -53,46 +54,35 @@ class DraggableActionButton extends StatefulWidget { // Opzioni aggiuntive nel m
   final String label;
   final Color? backgroundColor;
   final Color? foregroundColor;
-  final String positionKey; // Chiave unica per salvare la posizione
-  final VoidCallback? onShowHistory; // Callback per mostrare lo storico
+  final String positionKey;
+  final VoidCallback? onShowHistory;
   final List<DraggableActionOption>? additionalOptions;
-  
+
   @override
   State<DraggableActionButton> createState() => _DraggableActionButtonState();
 }
 
-class _DraggableActionButtonState extends State<DraggableActionButton>
-    with SingleTickerProviderStateMixin {
-  late AnimationController _animationController;
-
-  double _currentX = 0;
-  double _dragStartX = 0;
+class _DraggableActionButtonState extends State<DraggableActionButton> {
+  // Position tracking
+  Offset _dragOffset = Offset.zero;
+  Offset _targetPosition = Offset.zero;
   bool _isDragging = false;
   bool _isOnLeft = false;
-  bool _isHidden = false; // PiP-style hidden state
-  bool _isAnimatingIn = false; // Tracks slide-in animation
+  bool _isHidden = false;
+  bool _initialized = false;
 
-  // Soglie per snap
+  // Layout constants
   static const double _edgePadding = 16.0;
-  static const double _hideThreshold = 50.0; // Distanza per triggerare hide
-  static const double _buttonWidth = 180.0; // Larghezza stimata del button
-  
+  static const double _hideThreshold = 60.0;
+  static const double _buttonWidth = 160.0;
+  static const double _bottomPadding = 20.0;
+
   @override
   void initState() {
     super.initState();
-    _animationController = AnimationController(
-      duration: const Duration(milliseconds: 300),
-      vsync: this,
-    );
     _loadPosition();
   }
-  
-  @override
-  void dispose() {
-    _animationController.dispose();
-    super.dispose();
-  }
-  
+
   // 🔐 User-scoped cache keys
   String get _positionKey => userCacheKeys.userScopedKey('fab_position_${widget.positionKey}');
   String get _hiddenKey => userCacheKeys.userScopedKey('fab_hidden_${widget.positionKey}');
@@ -102,113 +92,88 @@ class _DraggableActionButtonState extends State<DraggableActionButton>
     final savedPosition = prefs.getString(_positionKey);
     final savedHidden = prefs.getBool(_hiddenKey) ?? false;
 
-    setState(() {
-      if (savedPosition == 'left') {
-        _isOnLeft = true;
-      }
-      _isHidden = savedHidden;
-    });
+    if (mounted) {
+      setState(() {
+        _isOnLeft = savedPosition == 'left';
+        _isHidden = savedHidden;
+        _initialized = true;
+      });
+    }
   }
 
   Future<void> _savePosition() async {
     final prefs = await SharedPreferences.getInstance();
-    await prefs.setString(
-      _positionKey,
-      _isOnLeft ? 'left' : 'right',
-    );
+    await prefs.setString(_positionKey, _isOnLeft ? 'left' : 'right');
     await prefs.setBool(_hiddenKey, _isHidden);
   }
 
-  /// Toggle hide state (PiP-style) with smooth animation
+  /// Toggle hide state with haptic feedback
   void _toggleHidden() {
-    if (_isHidden) {
-      // Unhiding: trigger slide-in animation
-      setState(() {
-        _isHidden = false;
-        _isAnimatingIn = true;
-      });
-      _animationController.forward(from: 0).then((_) {
-        if (mounted) {
-          setState(() {
-            _isAnimatingIn = false;
-          });
-        }
-      });
-    } else {
-      // Hiding: instant transition to tab
-      setState(() {
-        _isHidden = true;
-      });
-    }
+    setState(() {
+      _isHidden = !_isHidden;
+    });
     HapticFeedback.mediumImpact();
     _savePosition();
   }
-  
-  void _onHorizontalDragStart(DragStartDetails details) {
+
+  Offset _getTargetPosition(Size screenSize) {
+    final double x = _isOnLeft
+        ? _edgePadding
+        : screenSize.width - _buttonWidth - _edgePadding;
+    return Offset(x, screenSize.height - _bottomPadding - 56);
+  }
+
+  void _onPanStart(DragStartDetails details) {
     setState(() {
       _isDragging = true;
-      _dragStartX = details.localPosition.dx;
+      _dragOffset = Offset.zero;
     });
     HapticFeedback.lightImpact();
   }
-  
-  void _onHorizontalDragUpdate(DragUpdateDetails details) {
+
+  void _onPanUpdate(DragUpdateDetails details) {
     setState(() {
-      _currentX = details.localPosition.dx - _dragStartX;
+      _dragOffset += details.delta;
     });
   }
-  
-  void _onHorizontalDragEnd(DragEndDetails details) {
-    final screenWidth = MediaQuery.of(context).size.width;
-    const buttonWidth = 180.0; // Larghezza stimata del button
-    final centerX = (screenWidth - buttonWidth) / 2;
 
-    // Check if dragging towards edge to hide (PiP-style)
-    final velocity = details.velocity.pixelsPerSecond.dx;
+  void _onPanEnd(DragEndDetails details, Size screenSize) {
+    final velocity = details.velocity.pixelsPerSecond;
+    final currentPos = _targetPosition + _dragOffset;
+
+    // Check if dragging towards edge to hide
     final isDraggingToHide = _isOnLeft
-        ? (_currentX < -_hideThreshold || velocity < -500)
-        : (_currentX > _hideThreshold || velocity > 500);
+        ? (currentPos.dx < -_hideThreshold || velocity.dx < -800)
+        : (currentPos.dx > screenSize.width - _buttonWidth + _hideThreshold || velocity.dx > 800);
 
-    if (isDraggingToHide && !_isHidden) {
-      // Hide the FAB with PiP-style tab
+    if (isDraggingToHide) {
       setState(() {
         _isDragging = false;
         _isHidden = true;
-        _currentX = 0;
+        _dragOffset = Offset.zero;
       });
       HapticFeedback.heavyImpact();
       _savePosition();
       return;
     }
 
-    // Calcola se siamo più vicini a sinistra o destra
-    final absoluteX = _isOnLeft
-        ? _currentX
-        : (screenWidth - buttonWidth - _edgePadding) + _currentX;
-
-    final shouldSnapLeft = absoluteX < centerX;
+    // Determine snap side based on position
+    final centerX = screenSize.width / 2;
+    final shouldSnapLeft = currentPos.dx + _buttonWidth / 2 < centerX;
 
     setState(() {
       _isDragging = false;
       _isOnLeft = shouldSnapLeft;
-      _currentX = 0;
+      _dragOffset = Offset.zero;
     });
 
-    // Haptic feedback per lo snap
     HapticFeedback.mediumImpact();
-
-    // Salva la nuova posizione
     _savePosition();
-
-    // Anima il ritorno alla posizione
-    _animationController.forward(from: 0).then((_) {
-      _animationController.reset();
-    });
   }
-  
+
   void _showOptionsMenu(BuildContext context) {
     HapticFeedback.mediumImpact();
-    
+
     showModalBottomSheet(
       context: context,
       shape: const RoundedRectangleBorder(
@@ -229,8 +194,8 @@ class _DraggableActionButtonState extends State<DraggableActionButton>
               ),
             ),
             const SizedBox(height: 16),
-            
-            // Titolo
+
+            // Title
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16),
               child: Row(
@@ -250,8 +215,8 @@ class _DraggableActionButtonState extends State<DraggableActionButton>
               ),
             ),
             const SizedBox(height: 20),
-            
-            // Opzione principale (azione normale)
+
+            // Main action
             ListTile(
               leading: Container(
                 width: 40,
@@ -272,8 +237,8 @@ class _DraggableActionButtonState extends State<DraggableActionButton>
                 widget.onPressed();
               },
             ),
-            
-            // Opzione storico se disponibile
+
+            // History option
             if (widget.onShowHistory != null)
               ListTile(
                 leading: Container(
@@ -295,8 +260,8 @@ class _DraggableActionButtonState extends State<DraggableActionButton>
                   widget.onShowHistory!();
                 },
               ),
-            
-            // Opzioni aggiuntive se presenti
+
+            // Additional options
             if (widget.additionalOptions != null)
               ...widget.additionalOptions!.map((option) => ListTile(
                 leading: Container(
@@ -317,8 +282,8 @@ class _DraggableActionButtonState extends State<DraggableActionButton>
                   option.onTap();
                 },
               )),
-            
-            // Hide button option (PiP-style)
+
+            // Hide button option
             ListTile(
               leading: Container(
                 width: 40,
@@ -343,7 +308,7 @@ class _DraggableActionButtonState extends State<DraggableActionButton>
               },
             ),
 
-            // Informazione drag
+            // Drag info
             const SizedBox(height: 8),
             Container(
               margin: const EdgeInsets.symmetric(horizontal: 16),
@@ -387,67 +352,67 @@ class _DraggableActionButtonState extends State<DraggableActionButton>
       ),
     );
   }
-  
+
   @override
   Widget build(BuildContext context) {
-    final screenWidth = MediaQuery.of(context).size.width;
-    final theme = Theme.of(context);
-    final colorScheme = theme.colorScheme;
-
-    // When hidden, show only the tab handle at the edge
-    if (_isHidden) {
-      return _buildHiddenTab(context, screenWidth, colorScheme);
+    if (!_initialized) {
+      return const SizedBox.shrink();
     }
 
-    // Calcola la posizione base (sinistra o destra)
-    final double baseX = _isOnLeft
-        ? _edgePadding
-        : screenWidth - _buttonWidth - _edgePadding;
+    final screenSize = MediaQuery.of(context).size;
+    final colorScheme = Theme.of(context).colorScheme;
 
-    // Aggiungi l'offset del drag
-    double currentX = baseX + (_isDragging ? _currentX : 0);
+    // When hidden, show only the tab handle
+    if (_isHidden) {
+      return _buildHiddenTab(context, colorScheme);
+    }
 
-    // Limita il movimento ai bordi dello schermo
-    currentX = currentX.clamp(_edgePadding, screenWidth - _buttonWidth - _edgePadding);
+    _targetPosition = _getTargetPosition(screenSize);
 
-    // Calculate slide-in animation offset with smooth easing
-    final double slideOffset = _isAnimatingIn
-        ? (_isOnLeft ? -_buttonWidth : _buttonWidth) *
-            (1 - Curves.easeOutCubic.transform(_animationController.value))
-        : 0;
+    // During drag, show at drag position; otherwise animate to target
+    final displayPosition = _isDragging
+        ? _targetPosition + _dragOffset
+        : _targetPosition;
 
-    return AnimatedBuilder(
-      animation: _animationController,
-      builder: (context, child) {
-        return Positioned(
-          bottom: 16,
-          left: currentX + (_isAnimatingIn ? slideOffset : 0),
-          child: AnimatedOpacity(
-            duration: const Duration(milliseconds: 150),
-            opacity: _isAnimatingIn ? _animationController.value : 1.0,
-            child: AnimatedContainer(
-              duration: _isDragging
-                  ? Duration.zero
-                  : const Duration(milliseconds: 300),
-              curve: Curves.easeOutCubic,
-              child: child,
-            ),
-          ),
+    return MotionBuilder<Offset>(
+      motion: _isDragging
+          ? const NoMotion() // Instant follow during drag
+          : const CupertinoMotion.bouncy(), // Spring snap when released
+      value: displayPosition,
+      from: _targetPosition,
+      converter: const OffsetMotionConverter(),
+      builder: (context, animatedPosition, child) {
+        // Clamp position to screen bounds
+        final clampedX = animatedPosition.dx.clamp(
+          _edgePadding,
+          screenSize.width - _buttonWidth - _edgePadding,
         );
-      },
-      child: Stack(
-          children: [
-            // Button principale con gesture detector
-            GestureDetector(
-              onHorizontalDragStart: _onHorizontalDragStart,
-              onHorizontalDragUpdate: _onHorizontalDragUpdate,
-              onHorizontalDragEnd: _onHorizontalDragEnd,
-              onLongPress: () {
-                // Mostra menu opzioni
-                _showOptionsMenu(context);
-              },
+        final clampedY = animatedPosition.dy.clamp(
+          100.0,
+          screenSize.height - 80,
+        );
+
+        return Positioned(
+          left: clampedX,
+          top: clampedY,
+          child: GestureDetector(
+            onPanStart: _onPanStart,
+            onPanUpdate: _onPanUpdate,
+            onPanEnd: (details) => _onPanEnd(details, screenSize),
+            onLongPress: () => _showOptionsMenu(context),
+            child: AnimatedContainer(
+              duration: const Duration(milliseconds: 100),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(16),
+                border: _isDragging
+                    ? Border.all(
+                        color: colorScheme.outline.withValues(alpha: 0.3),
+                        width: 1.5,
+                      )
+                    : null,
+              ),
               child: AbsorbPointer(
-                absorbing: _isDragging, // Disabilita tap durante drag
+                absorbing: _isDragging,
                 child: PremiumActionButton(
                   onPressed: widget.onPressed,
                   icon: widget.icon,
@@ -455,97 +420,82 @@ class _DraggableActionButtonState extends State<DraggableActionButton>
                   backgroundColor: widget.backgroundColor,
                   foregroundColor: widget.foregroundColor,
                   showShadow: !_isDragging,
-                  width: 160,
+                  width: _buttonWidth,
                 ),
-              ),
-            ),
-
-            // Subtle drag indicator - only during active drag
-            if (_isDragging)
-              Positioned.fill(
-                child: Container(
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(16),
-                    border: Border.all(
-                      color: colorScheme.outline.withValues(alpha: 0.3),
-                      width: 1.5,
-                    ),
-                  ),
-                ),
-              ),
-          ],
-        ),
-    );
-  }
-
-  /// Build the PiP-style hidden tab that peeks from edge
-  Widget _buildHiddenTab(
-    BuildContext context,
-    double screenWidth,
-    ColorScheme colorScheme,
-  ) {
-    // Tab appears on the side where FAB was positioned
-    final isLeftSide = _isOnLeft;
-
-    return Positioned(
-      bottom: 20,
-      left: isLeftSide ? 0 : null,
-      right: isLeftSide ? null : 0,
-      child: GestureDetector(
-        onTap: _toggleHidden,
-        onHorizontalDragEnd: (details) {
-          // Swipe from edge to show FAB
-          final velocity = details.velocity.pixelsPerSecond.dx;
-          if (isLeftSide && velocity > 200) {
-            _toggleHidden();
-          } else if (!isLeftSide && velocity < -200) {
-            _toggleHidden();
-          }
-        },
-        child: AnimatedContainer(
-          duration: const Duration(milliseconds: 250),
-          curve: Curves.easeOutCubic,
-          child: Container(
-            width: 20,
-            height: 48,
-            decoration: BoxDecoration(
-              // Use surfaceContainerHighest for a subtle, non-intrusive look
-              color: colorScheme.surfaceContainerHighest,
-              borderRadius: BorderRadius.only(
-                topLeft: isLeftSide ? Radius.zero : const Radius.circular(8),
-                bottomLeft: isLeftSide ? Radius.zero : const Radius.circular(8),
-                topRight: isLeftSide ? const Radius.circular(8) : Radius.zero,
-                bottomRight: isLeftSide ? const Radius.circular(8) : Radius.zero,
-              ),
-              border: Border.all(
-                color: colorScheme.outlineVariant.withValues(alpha: 0.5),
-                width: 1,
-              ),
-              boxShadow: [
-                BoxShadow(
-                  color: colorScheme.shadow.withValues(alpha: 0.1),
-                  blurRadius: 4,
-                  offset: Offset(isLeftSide ? 1 : -1, 1),
-                ),
-              ],
-            ),
-            child: Center(
-              child: Icon(
-                isLeftSide ? AppIcons.chevronRight : AppIcons.chevronLeft,
-                color: colorScheme.onSurfaceVariant,
-                size: AppIconSize.small,
               ),
             ),
           ),
-        ),
-      ),
+        );
+      },
+    );
+  }
+
+  /// Build the hidden tab with spring animation
+  Widget _buildHiddenTab(BuildContext context, ColorScheme colorScheme) {
+    final isLeftSide = _isOnLeft;
+
+    // Animate the tab sliding in from edge
+    return SingleMotionBuilder(
+      motion: const CupertinoMotion.snappy(),
+      value: 0.0, // Target: fully visible
+      builder: (context, slideValue, child) {
+        final slideOffset = isLeftSide ? -20 * slideValue : 20 * slideValue;
+
+        return Positioned(
+          bottom: _bottomPadding,
+          left: isLeftSide ? slideOffset : null,
+          right: isLeftSide ? null : slideOffset,
+          child: GestureDetector(
+            onTap: _toggleHidden,
+            onHorizontalDragEnd: (details) {
+              final velocity = details.velocity.pixelsPerSecond.dx;
+              if (isLeftSide && velocity > 200) {
+                _toggleHidden();
+              } else if (!isLeftSide && velocity < -200) {
+                _toggleHidden();
+              }
+            },
+            child: Container(
+              width: 20,
+              height: 48,
+              decoration: BoxDecoration(
+                color: colorScheme.surfaceContainerHighest,
+                borderRadius: BorderRadius.only(
+                  topLeft: isLeftSide ? Radius.zero : const Radius.circular(8),
+                  bottomLeft: isLeftSide ? Radius.zero : const Radius.circular(8),
+                  topRight: isLeftSide ? const Radius.circular(8) : Radius.zero,
+                  bottomRight: isLeftSide ? const Radius.circular(8) : Radius.zero,
+                ),
+                border: Border.all(
+                  color: colorScheme.outlineVariant.withValues(alpha: 0.5),
+                  width: 1,
+                ),
+                boxShadow: [
+                  BoxShadow(
+                    color: colorScheme.shadow.withValues(alpha: 0.1),
+                    blurRadius: 4,
+                    offset: Offset(isLeftSide ? 1 : -1, 1),
+                  ),
+                ],
+              ),
+              child: Center(
+                child: Icon(
+                  isLeftSide ? AppIcons.chevronRight : AppIcons.chevronLeft,
+                  color: colorScheme.onSurfaceVariant,
+                  size: AppIconSize.small,
+                ),
+              ),
+            ),
+          ),
+        );
+      },
     );
   }
 }
 
-/// Widget wrapper che gestisce il posizionamento assoluto
+/// Widget wrapper for absolute positioning
 class DraggableActionButtonWrapper extends StatelessWidget {
-  
+
   const DraggableActionButtonWrapper({
     super.key,
     required this.onPressed,
@@ -561,15 +511,12 @@ class DraggableActionButtonWrapper extends StatelessWidget {
   final String positionKey;
   final Color? backgroundColor;
   final Widget child;
-  
+
   @override
   Widget build(BuildContext context) {
     return Stack(
       children: [
-        // Il contenuto principale della schermata
         child,
-        
-        // Il FAB draggabile sovrapposto
         DraggableActionButton(
           onPressed: onPressed,
           icon: icon,
@@ -582,9 +529,8 @@ class DraggableActionButtonWrapper extends StatelessWidget {
   }
 }
 
-/// Provider per gestire le preferenze di posizione globalmente
+/// Provider for global position preferences
 class ActionButtonPosition {
-  // 🔐 User-scoped key helper
   static String _userKey(String key) => userCacheKeys.userScopedKey('fab_position_$key');
 
   static Future<bool> isOnLeft(String key) async {
@@ -599,7 +545,6 @@ class ActionButtonPosition {
 
   static Future<void> resetAllPositions() async {
     final prefs = await SharedPreferences.getInstance();
-    // Reset FAB positions for current user
     final userPrefix = userCacheKeys.userScopedKey('fab_position_');
     final keys = prefs.getKeys().where((k) => k.startsWith(userPrefix));
     for (final key in keys) {
