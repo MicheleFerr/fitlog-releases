@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/physics.dart';
 import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/workout.dart';
@@ -18,14 +17,28 @@ import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dar
 /// - Smooth entrance animation
 /// - Infinite rubber-band drag in both directions (never blocks)
 /// - Natural spring physics for return animation
+/// - Horizontal swipe gestures:
+///   - Swipe left→right: Save workout (green circle + check icon)
+///   - Swipe right→left: Discard workout (red circle + trash icon)
 /// - Haptic feedback on interactions
+/// - No background overlay during swipe (transparent behind card)
 class WorkoutMiniBar extends StatefulWidget {
   const WorkoutMiniBar({
     required this.workout,
+    this.onDiscard,
+    this.onSave,
     super.key,
   });
 
   final Workout workout;
+
+  /// Called when user swipes right-to-left to discard workout.
+  /// Returns `Future<bool>` - true if action was confirmed, false if canceled.
+  final Future<bool> Function()? onDiscard;
+
+  /// Called when user swipes left-to-right to save workout.
+  /// Returns `Future<bool>` - true if action was confirmed, false if canceled.
+  final Future<bool> Function()? onSave;
 
   @override
   State<WorkoutMiniBar> createState() => _WorkoutMiniBarState();
@@ -37,22 +50,18 @@ class _WorkoutMiniBarState extends State<WorkoutMiniBar>
   late AnimationController _entranceController;
   late Animation<Offset> _slideAnimation;
 
-  // Drag animation with spring physics
-  late AnimationController _springController;
-  late Animation<double> _springAnimation;
-  double _dragOffset = 0.0;
-  bool _isDragging = false;
+  // Vertical drag disabled - was causing bugs with horizontal swipe
+
+  // Horizontal swipe
+  late AnimationController _horizontalController;
+  double _horizontalDragOffset = 0.0;
+  bool _isHorizontalDragging = false;
+
+  // Swipe threshold (percentage of width)
+  static const double _swipeThreshold = 0.35;
 
   // Timer for updating duration display
   Timer? _timerUpdateTimer;
-
-  // Spring physics for ultra-smooth rubber-band return
-  // Lower stiffness + higher damping = more natural, slower rubber feel
-  static const SpringDescription _springDescription = SpringDescription(
-    mass: 1.2,      // Slightly heavier for more natural feel
-    stiffness: 180.0, // Lower = slower, more elastic return
-    damping: 18.0,   // Higher = less oscillation, smoother stop
-  );
 
   @override
   void initState() {
@@ -71,9 +80,11 @@ class _WorkoutMiniBarState extends State<WorkoutMiniBar>
       curve: Curves.easeOutCubic,
     ));
 
-    // Spring animation controller
-    _springController = AnimationController(vsync: this);
-    _springAnimation = _springController.drive(Tween<double>(begin: 0, end: 0));
+    // Horizontal animation controller
+    _horizontalController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 200),
+    );
 
     // Start entrance animation
     _entranceController.forward();
@@ -89,85 +100,157 @@ class _WorkoutMiniBarState extends State<WorkoutMiniBar>
   @override
   void dispose() {
     _entranceController.dispose();
-    _springController.dispose();
+    _horizontalController.dispose();
     _timerUpdateTimer?.cancel();
     super.dispose();
   }
 
-  /// Rubber-band resistance formula - infinite, never blocks
-  /// Returns a multiplier between 0 and 1 that decreases as offset increases
-  double _calculateResistance(double offset) {
-    // Logarithmic resistance - gets harder but never reaches zero
-    // Formula: 1 / (1 + k * |offset|^p) where k controls intensity, p controls curve shape
-    const k = 0.008; // Intensity factor (higher = more resistance)
-    const p = 1.4;   // Curve power (higher = steeper resistance curve)
-    return 1.0 / (1.0 + k * _pow(offset.abs(), p));
+  // ============================================================
+  // HORIZONTAL DRAG (Swipe to discard/save)
+  // ============================================================
+
+  void _onHorizontalDragStart(DragStartDetails details) {
+    _isHorizontalDragging = true;
+    _horizontalController.stop();
   }
 
-  /// Safe power function
-  double _pow(double base, double exp) {
-    if (base <= 0) return 0;
-    return base <= 0 ? 0 : (base == 1 ? 1 : (base < 1 ? base : _fastPow(base, exp)));
-  }
-
-  double _fastPow(double base, double exp) {
-    // Approximation for small exponents
-    return base * (1 + (exp - 1) * (base - 1) * 0.5);
-  }
-
-  void _onVerticalDragStart(DragStartDetails details) {
-    _isDragging = true;
-    _springController.stop();
-  }
-
-  void _onVerticalDragUpdate(DragUpdateDetails details) {
-    if (!_isDragging) return;
+  void _onHorizontalDragUpdate(DragUpdateDetails details) {
+    if (!_isHorizontalDragging) return;
 
     setState(() {
-      // Apply rubber-band resistance based on current offset
-      final resistance = _calculateResistance(_dragOffset);
-      _dragOffset += details.delta.dy * resistance;
+      _horizontalDragOffset += details.delta.dx;
     });
   }
 
-  void _onVerticalDragEnd(DragEndDetails details) {
-    _isDragging = false;
+  void _onHorizontalDragEnd(DragEndDetails details) {
+    _isHorizontalDragging = false;
 
-    // Create spring simulation for smooth return
-    final simulation = SpringSimulation(
-      _springDescription,
-      _dragOffset,
-      0.0, // Target: back to original position
-      details.velocity.pixelsPerSecond.dy * 0.001, // Convert velocity
-    );
+    final screenWidth = MediaQuery.of(context).size.width;
+    final threshold = screenWidth * _swipeThreshold;
+    final velocity = details.velocity.pixelsPerSecond.dx;
 
-    // Animate with spring physics
-    _springController.reset();
-    _springAnimation = _springController.drive(
-      Tween<double>(begin: _dragOffset, end: 0.0),
-    );
+    // Check if swipe exceeded threshold or has high velocity
+    // Swipe left→right (positive offset): Save workout (green)
+    if (_horizontalDragOffset > threshold || velocity > 800) {
+      _triggerSave();
+    }
+    // Swipe right→left (negative offset): Discard workout (red)
+    else if (_horizontalDragOffset < -threshold || velocity < -800) {
+      _triggerDiscard();
+    } else {
+      // Return to original position
+      _animateHorizontalReturn();
+    }
+  }
 
-    _springController.animateWith(simulation).then((_) {
+  void _animateHorizontalReturn() {
+    final startOffset = _horizontalDragOffset;
+    _horizontalController.reset();
+
+    _horizontalController.addListener(() {
       if (mounted) {
         setState(() {
-          _dragOffset = 0.0;
+          _horizontalDragOffset = startOffset * (1 - _horizontalController.value);
         });
       }
     });
 
-    // Listen to animation updates
-    _springController.addListener(_onSpringUpdate);
-
-    // Haptic feedback when releasing
-    HapticFeedback.lightImpact();
+    _horizontalController.forward().then((_) {
+      if (mounted) {
+        setState(() {
+          _horizontalDragOffset = 0;
+        });
+      }
+    });
   }
 
-  void _onSpringUpdate() {
-    if (!_isDragging && mounted) {
-      setState(() {
-        _dragOffset = _springAnimation.value;
-      });
+  Future<void> _triggerDiscard() async {
+    unawaited(HapticFeedback.mediumImpact());
+
+    // Animate out to the left (swipe right-to-left = discard)
+    final screenWidth = MediaQuery.of(context).size.width;
+    final startOffset = _horizontalDragOffset;
+    final endOffset = -screenWidth;
+
+    _horizontalController.reset();
+    _horizontalController.addListener(() {
+      if (mounted) {
+        setState(() {
+          _horizontalDragOffset = startOffset + (endOffset - startOffset) * _horizontalController.value;
+        });
+      }
+    });
+
+    await _horizontalController.forward();
+
+    // Call callback and check if action was confirmed
+    final confirmed = await widget.onDiscard?.call() ?? false;
+
+    // If action was canceled, animate back to original position
+    if (!confirmed && mounted) {
+      _animateHorizontalReturn();
     }
+  }
+
+  Future<void> _triggerSave() async {
+    unawaited(HapticFeedback.mediumImpact());
+
+    // Animate out to the right (swipe left-to-right = save)
+    final screenWidth = MediaQuery.of(context).size.width;
+    final startOffset = _horizontalDragOffset;
+    final endOffset = screenWidth;
+
+    _horizontalController.reset();
+    _horizontalController.addListener(() {
+      if (mounted) {
+        setState(() {
+          _horizontalDragOffset = startOffset + (endOffset - startOffset) * _horizontalController.value;
+        });
+      }
+    });
+
+    await _horizontalController.forward();
+
+    // Call callback and check if action was confirmed
+    final confirmed = await widget.onSave?.call() ?? false;
+
+    // If action was canceled, animate back to original position
+    if (!confirmed && mounted) {
+      _animateHorizontalReturn();
+    }
+  }
+
+  /// Builds the action indicator icon with circular background
+  Widget _buildActionIndicator({
+    required IconData icon,
+    required Color backgroundColor,
+    required Color iconColor,
+    required double opacity,
+  }) {
+    return AnimatedOpacity(
+      opacity: opacity.clamp(0.0, 1.0),
+      duration: const Duration(milliseconds: 100),
+      child: Container(
+        width: 44,
+        height: 44,
+        decoration: BoxDecoration(
+          color: backgroundColor,
+          shape: BoxShape.circle,
+          boxShadow: [
+            BoxShadow(
+              color: backgroundColor.withValues(alpha: 0.3),
+              blurRadius: 8,
+              offset: const Offset(0, 2),
+            ),
+          ],
+        ),
+        child: Icon(
+          icon,
+          color: iconColor,
+          size: AppIconSize.medium,
+        ),
+      ),
+    );
   }
 
   @override
@@ -177,114 +260,169 @@ class _WorkoutMiniBarState extends State<WorkoutMiniBar>
     final duration = workout.duration ?? Duration.zero;
     final progress = workout.progressPercentage;
 
+    // Calculate opacity for action indicators based on swipe progress
+    final screenWidth = MediaQuery.of(context).size.width;
+    final swipeProgress = _horizontalDragOffset.abs() / (screenWidth * _swipeThreshold);
+
+    // Save indicator opacity (swipe right, positive offset)
+    final saveOpacity = _horizontalDragOffset > 0 ? swipeProgress : 0.0;
+
+    // Discard indicator opacity (swipe left, negative offset)
+    final discardOpacity = _horizontalDragOffset < 0 ? swipeProgress : 0.0;
+
     return SlideTransition(
       position: _slideAnimation,
-      child: Transform.translate(
-        offset: Offset(0, _dragOffset),
-        child: GestureDetector(
-          onTap: () => _navigateToWorkout(context),
-          onVerticalDragStart: _onVerticalDragStart,
-          onVerticalDragUpdate: _onVerticalDragUpdate,
-          onVerticalDragEnd: _onVerticalDragEnd,
-          child: Container(
-            height: 60,
-            margin: const EdgeInsets.symmetric(horizontal: AppSpacing.sm),
-            decoration: BoxDecoration(
-              color: context.colors.surfaceContainerHighest,
-              borderRadius: BorderRadius.circular(AppSpacing.md),
-              boxShadow: [
-                BoxShadow(
-                  color: context.colors.shadow.withValues(alpha: 0.15),
-                  blurRadius: AppSpacing.sm,
-                  offset: const Offset(0, 4),
+      child: Container(
+          height: 60,
+          margin: const EdgeInsets.symmetric(horizontal: AppSpacing.sm),
+          child: Stack(
+            alignment: Alignment.center,
+            clipBehavior: Clip.none,
+            children: [
+              // Save indicator (left side, revealed when swiping right)
+              if (_horizontalDragOffset > 10)
+                Positioned(
+                  left: AppSpacing.md,
+                  child: _buildActionIndicator(
+                    icon: AppIcons.checkCircle,
+                    backgroundColor: context.colors.success,
+                    iconColor: Colors.white,
+                    opacity: saveOpacity,
+                  ),
                 ),
-              ],
-            ),
-            child: Column(
-              children: [
-                // Main content
-                Expanded(
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: AppSpacing.md),
-                    child: Row(
+
+              // Discard indicator (right side, revealed when swiping left)
+              if (_horizontalDragOffset < -10)
+                Positioned(
+                  right: AppSpacing.md,
+                  child: _buildActionIndicator(
+                    icon: AppIcons.delete,
+                    backgroundColor: context.colors.error,
+                    iconColor: Colors.white,
+                    opacity: discardOpacity,
+                  ),
+                ),
+
+              // Main card (slides horizontally) - NO background behind it
+              Transform.translate(
+                offset: Offset(_horizontalDragOffset, 0),
+                child: GestureDetector(
+                  onTap: () => _navigateToWorkout(context),
+                  onHorizontalDragStart: _onHorizontalDragStart,
+                  onHorizontalDragUpdate: _onHorizontalDragUpdate,
+                  onHorizontalDragEnd: _onHorizontalDragEnd,
+                  child: Container(
+                    decoration: BoxDecoration(
+                      // Use surface for true floating effect (brighter than background)
+                      color: context.colors.surface,
+                      borderRadius: BorderRadius.circular(AppSpacing.md),
+                      border: Border.all(
+                        color: context.colors.outlineVariant.withValues(alpha: 0.3),
+                        width: 1,
+                      ),
+                      boxShadow: [
+                        // Primary shadow for depth
+                        BoxShadow(
+                          color: context.colors.shadow.withValues(alpha: 0.12),
+                          blurRadius: 16,
+                          offset: const Offset(0, 6),
+                        ),
+                        // Secondary subtle shadow for softness
+                        BoxShadow(
+                          color: context.colors.shadow.withValues(alpha: 0.06),
+                          blurRadius: 4,
+                          offset: const Offset(0, 2),
+                        ),
+                      ],
+                    ),
+                    child: Column(
                       children: [
-                        // Workout icon
-                        SemanticIcon(
-                          icon: AppIcons.workout,
-                          semanticLabel: context.l10n.workout,
-                          size: AppIconSize.medium,
-                          color: isPaused
-                              ? context.colors.onSurfaceVariant
-                              : context.colors.primary,
-                        ),
-                        const SizedBox(width: AppSpacing.sm),
-
-                        // Workout name
+                        // Main content
                         Expanded(
-                          child: Text(
-                            workout.name,
-                            style: context.textTheme.titleSmall?.copyWith(
-                              fontWeight: FontWeight.w600,
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: AppSpacing.md),
+                            child: Row(
+                              children: [
+                                // Workout icon
+                                SemanticIcon(
+                                  icon: AppIcons.workout,
+                                  semanticLabel: context.l10n.workout,
+                                  size: AppIconSize.medium,
+                                  color: isPaused
+                                      ? context.colors.onSurfaceVariant
+                                      : context.colors.primary,
+                                ),
+                                const SizedBox(width: AppSpacing.sm),
+
+                                // Workout name
+                                Expanded(
+                                  child: Text(
+                                    workout.name,
+                                    style: context.textTheme.titleSmall?.copyWith(
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                ),
+
+                                // Timer (stops updating when paused)
+                                Text(
+                                  _formatDuration(duration),
+                                  style: context.textTheme.titleMedium?.copyWith(
+                                    fontWeight: FontWeight.w600,
+                                    fontFeatures: const [FontFeature.tabularFigures()],
+                                    color: isPaused
+                                        ? context.colors.warning
+                                        : context.colors.onSurface,
+                                  ),
+                                ),
+                                const SizedBox(width: AppSpacing.xs),
+
+                                // Arrow to indicate tap action
+                                SemanticIcon(
+                                  icon: AppIcons.chevronRight,
+                                  semanticLabel: context.l10n.goToWorkout,
+                                  size: AppIconSize.small,
+                                  color: context.colors.onSurfaceVariant,
+                                ),
+                              ],
                             ),
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
                           ),
                         ),
 
-                        // Timer (stops updating when paused)
-                        Text(
-                          _formatDuration(duration),
-                          style: context.textTheme.titleMedium?.copyWith(
-                            fontWeight: FontWeight.w600,
-                            fontFeatures: const [FontFeature.tabularFigures()],
-                            color: isPaused
-                                ? context.colors.warning
-                                : context.colors.onSurface,
+                        // Progress bar
+                        Container(
+                          height: 4,
+                          decoration: BoxDecoration(
+                            borderRadius: const BorderRadius.vertical(
+                              bottom: Radius.circular(AppSpacing.md),
+                            ),
+                            color: context.colors.surfaceContainerLow,
                           ),
-                        ),
-                        const SizedBox(width: AppSpacing.xs),
-
-                        // Arrow to indicate tap action
-                        SemanticIcon(
-                          icon: AppIcons.chevronRight,
-                          semanticLabel: context.l10n.goToWorkout,
-                          size: AppIconSize.small,
-                          color: context.colors.onSurfaceVariant,
+                          child: FractionallySizedBox(
+                            alignment: Alignment.centerLeft,
+                            widthFactor: progress.clamp(0.0, 1.0),
+                            child: DecoratedBox(
+                              decoration: BoxDecoration(
+                                borderRadius: const BorderRadius.vertical(
+                                  bottom: Radius.circular(AppSpacing.md),
+                                ),
+                                color: isPaused
+                                    ? context.colors.warning
+                                    : context.colors.primary,
+                              ),
+                            ),
+                          ),
                         ),
                       ],
                     ),
                   ),
                 ),
-
-                // Progress bar
-                Container(
-                  height: 4,
-                  decoration: BoxDecoration(
-                    borderRadius: const BorderRadius.vertical(
-                      bottom: Radius.circular(AppSpacing.md),
-                    ),
-                    color: context.colors.surfaceContainerLow,
-                  ),
-                  child: FractionallySizedBox(
-                    alignment: Alignment.centerLeft,
-                    widthFactor: progress.clamp(0.0, 1.0),
-                    child: Container(
-                      decoration: BoxDecoration(
-                        borderRadius: const BorderRadius.vertical(
-                          bottom: Radius.circular(AppSpacing.md),
-                        ),
-                        color: isPaused
-                            ? context.colors.warning
-                            : context.colors.primary,
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            ),
+              ),
+            ],
           ),
         ),
-      ),
     );
   }
 
