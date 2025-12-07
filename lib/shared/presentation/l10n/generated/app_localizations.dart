@@ -3613,6 +3613,18 @@ abstract class AppLocalizations {
   /// **'Apply Filters'**
   String get applyFilters;
 
+  /// Apply current values to all sets
+  ///
+  /// In en, this message translates to:
+  /// **'Apply to All'**
+  String get applyToAll;
+
+  /// Copy values from previous set
+  ///
+  /// In en, this message translates to:
+  /// **'Copy Previous'**
+  String get copyPrevious;
+
   /// Improving progress summary message
   ///
   /// In en, this message translates to:
@@ -4069,10 +4081,10 @@ abstract class AppLocalizations {
   /// **'Warmup'**
   String get warmup;
 
-  /// Safety tips chip label
+  /// Header for safety tips section
   ///
   /// In en, this message translates to:
-  /// **'Prevention'**
+  /// **'Safety Tips'**
   String get safetyTips;
 
   /// Warmup modal title
@@ -4199,11 +4211,65 @@ abstract class AppLocalizations {
   /// **'Added {count} warmup sets'**
   String warmupSetsAdded(String count);
 
+  /// Snackbar message when warmup exercise is added before target exercise
+  ///
+  /// In en, this message translates to:
+  /// **'{exerciseName} added before {targetExercise}'**
+  String warmupExerciseAddedBefore(String exerciseName, String targetExercise);
+
   /// Warmup duration section title
   ///
   /// In en, this message translates to:
   /// **'Warmup Duration'**
   String get warmupDuration;
+
+  /// Label for swipe action to mark set as warmup
+  ///
+  /// In en, this message translates to:
+  /// **'Warmup'**
+  String get warmupSet;
+
+  /// Label for swipe action to mark set as working set
+  ///
+  /// In en, this message translates to:
+  /// **'Working'**
+  String get workingSet;
+
+  /// Feedback when set is converted to warmup
+  ///
+  /// In en, this message translates to:
+  /// **'Set marked as warmup'**
+  String get setMarkedAsWarmup;
+
+  /// Feedback when set is converted to working set
+  ///
+  /// In en, this message translates to:
+  /// **'Set marked as working'**
+  String get setMarkedAsWorking;
+
+  /// Option to add warmup sets to exercise
+  ///
+  /// In en, this message translates to:
+  /// **'Add Warmup Sets'**
+  String get addWarmupSets;
+
+  /// Subtitle for add warmup sets option
+  ///
+  /// In en, this message translates to:
+  /// **'Generate warmup sets based on working weight'**
+  String get addWarmupSetsSubtitle;
+
+  /// Error when trying to add warmup sets without working sets
+  ///
+  /// In en, this message translates to:
+  /// **'Add a working set first'**
+  String get addWorkingSetFirst;
+
+  /// Error when trying to add warmup sets without weight
+  ///
+  /// In en, this message translates to:
+  /// **'Set a target weight first'**
+  String get setTargetWeightFirst;
 
   /// Primary muscles section title
   ///
@@ -6119,6 +6185,72 @@ abstract class AppLocalizations {
   /// **'Core Muscles'**
   String get coreFull;
 
+  /// Short name for chest muscle group
+  ///
+  /// In en, this message translates to:
+  /// **'Chest'**
+  String get chestShort;
+
+  /// Short name for back muscle group
+  ///
+  /// In en, this message translates to:
+  /// **'Back'**
+  String get backShort;
+
+  /// Short name for shoulders muscle group
+  ///
+  /// In en, this message translates to:
+  /// **'Delts'**
+  String get shouldersShort;
+
+  /// Short name for arms muscle group
+  ///
+  /// In en, this message translates to:
+  /// **'Arms'**
+  String get armsShort;
+
+  /// Short name for legs muscle group
+  ///
+  /// In en, this message translates to:
+  /// **'Legs'**
+  String get legsShort;
+
+  /// Short name for core muscle group
+  ///
+  /// In en, this message translates to:
+  /// **'Core'**
+  String get coreShort;
+
+  /// Radar chart view option
+  ///
+  /// In en, this message translates to:
+  /// **'Radar'**
+  String get radarView;
+
+  /// Trend line chart view option
+  ///
+  /// In en, this message translates to:
+  /// **'Trend'**
+  String get trendView;
+
+  /// Weekly sets label
+  ///
+  /// In en, this message translates to:
+  /// **'Weekly Sets'**
+  String get weeklySets;
+
+  /// Current volume zone label
+  ///
+  /// In en, this message translates to:
+  /// **'Current Zone'**
+  String get currentZone;
+
+  /// Hint to open landscape expanded view
+  ///
+  /// In en, this message translates to:
+  /// **'Tap for full screen view'**
+  String get tapForExpandedView;
+
   /// Section title for statistics overview
   ///
   /// In en, this message translates to:
@@ -6371,10 +6503,10 @@ abstract class AppLocalizations {
   /// **'Prev'**
   String get previous;
 
-  /// Instruction to tap for more details
+  /// Hint to tap ratio card for details
   ///
   /// In en, this message translates to:
-  /// **'Tap for details'**
+  /// **'Tap for exercise breakdown'**
   String get tapForDetails;
 
   /// Option to compare with historical data
@@ -7556,7 +7688,7 @@ abstract class AppLocalizations {
   /// Rest time label
   ///
   /// In en, this message translates to:
-  /// **'Rest Time'**
+  /// **'Rest'**
   String get restTime;
 
   /// Shows current exercise position in superset
@@ -9149,6 +9281,12 @@ abstract class AppLocalizations {
   /// **'Workout saved!'**
   String get workoutSaved;
 
+  /// Motivational message shown after completing a workout
+  ///
+  /// In en, this message translates to:
+  /// **'Consistency is the key!'**
+  String get consistencyIsKey;
+
   /// Error message when workout save fails
   ///
   /// In en, this message translates to:
@@ -9382,6 +9520,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'RPE Autoregulation'**
   String get rpeAutoregulation;
+
+  /// RIR autoregulation title
+  ///
+  /// In en, this message translates to:
+  /// **'RIR Autoregulation'**
+  String get rirAutoregulation;
 
   /// Actual RPE label
   ///
@@ -9814,6 +9958,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'A proper warmup reduces injury risk, improves performance, prepares your nervous system, and optimizes your workout quality.'**
   String get warmupWhyImportantAnswer;
+
+  /// Message when no warmup data is available
+  ///
+  /// In en, this message translates to:
+  /// **'No specific warmup protocol available for this exercise.'**
+  String get noWarmupProtocolAvailable;
+
+  /// Message when no injury prevention data is available
+  ///
+  /// In en, this message translates to:
+  /// **'No injury prevention information available for this exercise.'**
+  String get noInjuryPreventionInfo;
 
   /// Customize workout menu item
   ///
@@ -12197,7 +12353,7 @@ abstract class AppLocalizations {
   /// **'Scientific Basis'**
   String get scientificBasis;
 
-  /// Section title for exercise list
+  /// Title for exercise breakdown sheet
   ///
   /// In en, this message translates to:
   /// **'Exercise Breakdown'**
@@ -36714,10 +36870,10 @@ abstract class AppLocalizations {
   /// **'Tap here to enter your weight and reps. Each completed set will be saved automatically.'**
   String get tutorialLoggingSetDesc;
 
-  /// Title for the rest timer tutorial
+  /// Tutorial rest timer title
   ///
   /// In en, this message translates to:
-  /// **'Rest Timer'**
+  /// **'Rest Timer Started'**
   String get tutorialRestTimerTitle;
 
   /// Description for the rest timer tutorial
@@ -36858,10 +37014,10 @@ abstract class AppLocalizations {
   /// **'Create and manage your workout routines. Save templates for quick starts and organize your training programs.'**
   String get tutorialRoutineCenterDesc;
 
-  /// Title for the settings tutorial
+  /// Tutorial settings title
   ///
   /// In en, this message translates to:
-  /// **'Settings'**
+  /// **'Workout Settings'**
   String get tutorialSettingsTitle;
 
   /// Description for the settings tutorial
@@ -37013,6 +37169,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Rep Zone Distribution'**
   String get repZoneDistribution;
+
+  /// Hint text to tap on chart to change view mode
+  ///
+  /// In en, this message translates to:
+  /// **'Tap to change view'**
+  String get tapToChangeView;
+
+  /// Label for bar chart view option
+  ///
+  /// In en, this message translates to:
+  /// **'Bar'**
+  String get barChart;
+
+  /// Label for pie chart view option
+  ///
+  /// In en, this message translates to:
+  /// **'Pie'**
+  String get pieChart;
 
   /// Message when there is no data to display
   ///
@@ -38439,6 +38613,479 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Needs Rest'**
   String get exhaustedMuscle;
+
+  /// Empty state message for stress index
+  ///
+  /// In en, this message translates to:
+  /// **'Complete a workout to see your training stress analysis'**
+  String get completeWorkoutForStressIndex;
+
+  /// Section title for recent stress history
+  ///
+  /// In en, this message translates to:
+  /// **'Recent History'**
+  String get recentHistory;
+
+  /// Hint to drag sheet to fullscreen
+  ///
+  /// In en, this message translates to:
+  /// **'Drag up for full screen'**
+  String get dragToExpand;
+
+  /// Push muscle category label
+  ///
+  /// In en, this message translates to:
+  /// **'Push'**
+  String get pushCategory;
+
+  /// Pull muscle category label
+  ///
+  /// In en, this message translates to:
+  /// **'Pull'**
+  String get pullCategory;
+
+  /// Upper body category label
+  ///
+  /// In en, this message translates to:
+  /// **'Upper Body'**
+  String get upperCategory;
+
+  /// Lower body category label
+  ///
+  /// In en, this message translates to:
+  /// **'Lower Body'**
+  String get lowerCategory;
+
+  /// Percentage contribution to total
+  ///
+  /// In en, this message translates to:
+  /// **'{percentage}% of total'**
+  String percentageOfTotal(String percentage);
+
+  /// Empty state for category with no exercises
+  ///
+  /// In en, this message translates to:
+  /// **'No exercises in this category yet'**
+  String get noExercisesInCategory;
+
+  /// Label for total volume
+  ///
+  /// In en, this message translates to:
+  /// **'Total Volume'**
+  String get totalVolumeLabel;
+
+  /// Title for add exercise to template sheet
+  ///
+  /// In en, this message translates to:
+  /// **'Add to Template'**
+  String get addToTemplate;
+
+  /// Instruction for template selection
+  ///
+  /// In en, this message translates to:
+  /// **'Select a template to add this exercise to'**
+  String get selectTemplateToAddExercise;
+
+  /// Empty state when no templates exist
+  ///
+  /// In en, this message translates to:
+  /// **'No templates found'**
+  String get noTemplatesFound;
+
+  /// Error message when adding exercise fails
+  ///
+  /// In en, this message translates to:
+  /// **'Error adding exercise to template'**
+  String get errorAddingExercise;
+
+  /// Loading state while adding
+  ///
+  /// In en, this message translates to:
+  /// **'Adding...'**
+  String get adding;
+
+  /// Button to add exercise to selected template
+  ///
+  /// In en, this message translates to:
+  /// **'Add to Template'**
+  String get addExerciseToTemplate;
+
+  /// Success message after adding exercise
+  ///
+  /// In en, this message translates to:
+  /// **'Exercise added to {templateName}'**
+  String exerciseAddedToTemplate(String templateName);
+
+  /// Success message showing personalized volume when exercise is added to template
+  ///
+  /// In en, this message translates to:
+  /// **'{exerciseName} added: {sets} sets x {reps} reps, {restSeconds}s rest'**
+  String exerciseAddedWithVolume(
+    String exerciseName,
+    int sets,
+    int reps,
+    int restSeconds,
+  );
+
+  /// Short label for weight jump indicator
+  ///
+  /// In en, this message translates to:
+  /// **'Weight jump'**
+  String get weightJump;
+
+  /// Title for weight jump warning
+  ///
+  /// In en, this message translates to:
+  /// **'Weight jump detected'**
+  String get weightJumpDetected;
+
+  /// Label for minimum weight in jump info
+  ///
+  /// In en, this message translates to:
+  /// **'Min weight'**
+  String get minimumWeight;
+
+  /// Label for maximum weight in jump info
+  ///
+  /// In en, this message translates to:
+  /// **'Max weight'**
+  String get maximumWeight;
+
+  /// Safety tip 1 for weight jump
+  ///
+  /// In en, this message translates to:
+  /// **'Pay attention to form on heavier sets'**
+  String get weightJumpTip1;
+
+  /// Safety tip 2 for weight jump
+  ///
+  /// In en, this message translates to:
+  /// **'Consider adding warm-up sets between weights'**
+  String get weightJumpTip2;
+
+  /// Safety tip 3 for weight jump
+  ///
+  /// In en, this message translates to:
+  /// **'Listen to your body and stop if something feels wrong'**
+  String get weightJumpTip3;
+
+  /// Safety tip 4 for weight jump
+  ///
+  /// In en, this message translates to:
+  /// **'Make sure to maintain proper breathing'**
+  String get weightJumpTip4;
+
+  /// Button to dismiss info sheet
+  ///
+  /// In en, this message translates to:
+  /// **'Got it'**
+  String get understood;
+
+  /// Header for exercise summary in workout completion
+  ///
+  /// In en, this message translates to:
+  /// **'Exercise Summary'**
+  String get exerciseSummary;
+
+  /// Countdown text
+  ///
+  /// In en, this message translates to:
+  /// **'Redirecting to home in {seconds}...'**
+  String redirectingToHome(String seconds);
+
+  /// Button to go to home
+  ///
+  /// In en, this message translates to:
+  /// **'Continue to Home'**
+  String get continueToHome;
+
+  /// Subtitle for custom timer modal
+  ///
+  /// In en, this message translates to:
+  /// **'Select rest duration'**
+  String get selectRestDuration;
+
+  /// Divider text between presets and custom picker
+  ///
+  /// In en, this message translates to:
+  /// **'or custom'**
+  String get orCustom;
+
+  /// Hint for skipping timer with long press
+  ///
+  /// In en, this message translates to:
+  /// **'Long press to skip'**
+  String get longPressToSkip;
+
+  /// Subtitle for PR celebration
+  ///
+  /// In en, this message translates to:
+  /// **'You beat your previous best!'**
+  String get youBeatYourRecord;
+
+  /// Subtitle for motivational messages
+  ///
+  /// In en, this message translates to:
+  /// **'Keep up the great work!'**
+  String get keepUpTheGoodWork;
+
+  /// Generic subtitle for suggestions
+  ///
+  /// In en, this message translates to:
+  /// **'Based on your workout'**
+  String get suggestionBasedOnYourWorkout;
+
+  /// Section header for tips
+  ///
+  /// In en, this message translates to:
+  /// **'What this means'**
+  String get whatThisMeans;
+
+  /// PR tip 1
+  ///
+  /// In en, this message translates to:
+  /// **'Record your achievement and celebrate!'**
+  String get prTip1;
+
+  /// PR tip 2
+  ///
+  /// In en, this message translates to:
+  /// **'Consider a small rest before pushing harder'**
+  String get prTip2;
+
+  /// PR tip 3
+  ///
+  /// In en, this message translates to:
+  /// **'Progressive overload is working - keep it up'**
+  String get prTip3;
+
+  /// Motivation tip 1
+  ///
+  /// In en, this message translates to:
+  /// **'Consistency beats intensity every time'**
+  String get motivationTip1;
+
+  /// Motivation tip 2
+  ///
+  /// In en, this message translates to:
+  /// **'Your dedication is paying off'**
+  String get motivationTip2;
+
+  /// Motivation tip 3
+  ///
+  /// In en, this message translates to:
+  /// **'Small gains add up to big results'**
+  String get motivationTip3;
+
+  /// Generic tip advice 1
+  ///
+  /// In en, this message translates to:
+  /// **'Apply this tip to improve your form'**
+  String get tipAdvice1;
+
+  /// Generic tip advice 2
+  ///
+  /// In en, this message translates to:
+  /// **'Focus on quality over quantity'**
+  String get tipAdvice2;
+
+  /// Warning advice 1
+  ///
+  /// In en, this message translates to:
+  /// **'Take this warning seriously for your safety'**
+  String get warningAdvice1;
+
+  /// Warning advice 2
+  ///
+  /// In en, this message translates to:
+  /// **'Consider reducing weight if needed'**
+  String get warningAdvice2;
+
+  /// Apply current values to remaining sets
+  ///
+  /// In en, this message translates to:
+  /// **'Apply to {count} remaining sets'**
+  String applyToRemainingNSets(int count);
+
+  /// Button to save current set and move to next
+  ///
+  /// In en, this message translates to:
+  /// **'Save + Next'**
+  String get saveAndNext;
+
+  /// Button to show RPE selector
+  ///
+  /// In en, this message translates to:
+  /// **'Add RPE'**
+  String get showRpe;
+
+  /// Tutorial welcome title
+  ///
+  /// In en, this message translates to:
+  /// **'Welcome to Your Workout!'**
+  String get tutorialWelcomeTitle;
+
+  /// Tutorial welcome message
+  ///
+  /// In en, this message translates to:
+  /// **'I\'ll guide you step by step through your first workout. Let\'s start!'**
+  String get tutorialWelcomeMessage;
+
+  /// Tutorial add exercise title
+  ///
+  /// In en, this message translates to:
+  /// **'Add Your First Exercise'**
+  String get tutorialAddExerciseTitle;
+
+  /// Tutorial add exercise message
+  ///
+  /// In en, this message translates to:
+  /// **'Tap the \'Add Exercise\' button to add your first exercise.'**
+  String get tutorialAddExerciseMessage;
+
+  /// Tutorial search exercise title
+  ///
+  /// In en, this message translates to:
+  /// **'Find Your Exercise'**
+  String get tutorialSearchExerciseTitle;
+
+  /// Tutorial search exercise message
+  ///
+  /// In en, this message translates to:
+  /// **'Search by name or browse by muscle group. Pick any exercise to begin!'**
+  String get tutorialSearchExerciseMessage;
+
+  /// Tutorial first set title
+  ///
+  /// In en, this message translates to:
+  /// **'Log Your First Set'**
+  String get tutorialFirstSetTitle;
+
+  /// Tutorial first set message
+  ///
+  /// In en, this message translates to:
+  /// **'Great! Tap on a set to enter the weight and reps you performed.'**
+  String get tutorialFirstSetMessage;
+
+  /// Tutorial set input title
+  ///
+  /// In en, this message translates to:
+  /// **'Enter Your Numbers'**
+  String get tutorialSetInputTitle;
+
+  /// Tutorial set input message
+  ///
+  /// In en, this message translates to:
+  /// **'Enter the weight and reps, then tap ✓ to save. Simple!'**
+  String get tutorialSetInputMessage;
+
+  /// Tutorial rest timer message
+  ///
+  /// In en, this message translates to:
+  /// **'Great job! 💪 The rest timer starts automatically. Take a break between sets.'**
+  String get tutorialRestTimerMessage;
+
+  /// Tutorial exercise menu title
+  ///
+  /// In en, this message translates to:
+  /// **'Customize Exercise'**
+  String get tutorialExerciseMenuTitle;
+
+  /// Tutorial exercise menu message
+  ///
+  /// In en, this message translates to:
+  /// **'Tap the menu (⋮) to customize, replace, or remove this exercise.'**
+  String get tutorialExerciseMenuMessage;
+
+  /// Tutorial reorder title
+  ///
+  /// In en, this message translates to:
+  /// **'Reorder Exercises'**
+  String get tutorialReorderTitle;
+
+  /// Tutorial reorder message
+  ///
+  /// In en, this message translates to:
+  /// **'Tap here to drag and reorder your exercises.'**
+  String get tutorialReorderMessage;
+
+  /// Tutorial settings message
+  ///
+  /// In en, this message translates to:
+  /// **'Here you can customize your workout, save it as a template, or discard it.'**
+  String get tutorialSettingsMessage;
+
+  /// Tutorial finish title
+  ///
+  /// In en, this message translates to:
+  /// **'Finish Your Workout'**
+  String get tutorialFinishTitle;
+
+  /// Tutorial finish message
+  ///
+  /// In en, this message translates to:
+  /// **'When you\'re done, tap here to complete your workout and save your progress!'**
+  String get tutorialFinishMessage;
+
+  /// Tutorial completed title
+  ///
+  /// In en, this message translates to:
+  /// **'You\'re Ready!'**
+  String get tutorialCompletedTitle;
+
+  /// Tutorial completed message
+  ///
+  /// In en, this message translates to:
+  /// **'You now know how to use the workout screen. Get lifting! 🏋️'**
+  String get tutorialCompletedMessage;
+
+  /// Tutorial dismiss button
+  ///
+  /// In en, this message translates to:
+  /// **'Got it!'**
+  String get tutorialGotIt;
+
+  /// Tutorial next step button
+  ///
+  /// In en, this message translates to:
+  /// **'Next'**
+  String get tutorialNext;
+
+  /// Tutorial skip button
+  ///
+  /// In en, this message translates to:
+  /// **'Skip tutorial'**
+  String get tutorialSkip;
+
+  /// Tutorial drag FAB title
+  ///
+  /// In en, this message translates to:
+  /// **'Move This Button'**
+  String get tutorialDragFabTitle;
+
+  /// Tutorial drag FAB message
+  ///
+  /// In en, this message translates to:
+  /// **'Drag this button left or right to reposition it.'**
+  String get tutorialDragFabMessage;
+
+  /// Count of alternative exercises found
+  ///
+  /// In en, this message translates to:
+  /// **'{count} similar exercises'**
+  String alternativeExercisesCount(int count);
+
+  /// Empty state when no alternative exercises are available
+  ///
+  /// In en, this message translates to:
+  /// **'No alternative exercises found'**
+  String get noAlternativesFound;
+
+  /// Hint text for empty alternatives state
+  ///
+  /// In en, this message translates to:
+  /// **'Try searching for similar exercises in the database'**
+  String get noAlternativesHint;
 }
 
 class _AppLocalizationsDelegate

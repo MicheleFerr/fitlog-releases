@@ -1916,6 +1916,12 @@ class AppLocalizationsIt extends AppLocalizations {
   String get applyFilters => 'Applica Filtri';
 
   @override
+  String get applyToAll => 'Applica a Tutti';
+
+  @override
+  String get copyPrevious => 'Copia Precedente';
+
+  @override
   String get improvingProgressSummary =>
       'I tuoi progressi stanno migliorando! Continua così!';
 
@@ -2232,7 +2238,37 @@ class AppLocalizationsIt extends AppLocalizations {
   }
 
   @override
+  String warmupExerciseAddedBefore(String exerciseName, String targetExercise) {
+    return '$exerciseName aggiunto prima di $targetExercise';
+  }
+
+  @override
   String get warmupDuration => 'Durata Riscaldamento';
+
+  @override
+  String get warmupSet => 'Risc.';
+
+  @override
+  String get workingSet => 'Lavoro';
+
+  @override
+  String get setMarkedAsWarmup => 'Set segnato come riscaldamento';
+
+  @override
+  String get setMarkedAsWorking => 'Set segnato come lavoro';
+
+  @override
+  String get addWarmupSets => 'Aggiungi Set Riscaldamento';
+
+  @override
+  String get addWarmupSetsSubtitle =>
+      'Genera set di riscaldamento in base al peso di lavoro';
+
+  @override
+  String get addWorkingSetFirst => 'Aggiungi prima un set di lavoro';
+
+  @override
+  String get setTargetWeightFirst => 'Imposta prima un peso target';
 
   @override
   String get primaryMuscles => 'Muscoli Primari';
@@ -3308,6 +3344,39 @@ class AppLocalizationsIt extends AppLocalizations {
   String get coreFull => 'Muscoli del Core';
 
   @override
+  String get chestShort => 'Petto';
+
+  @override
+  String get backShort => 'Dorso';
+
+  @override
+  String get shouldersShort => 'Spalle';
+
+  @override
+  String get armsShort => 'Braccia';
+
+  @override
+  String get legsShort => 'Gambe';
+
+  @override
+  String get coreShort => 'Core';
+
+  @override
+  String get radarView => 'Radar';
+
+  @override
+  String get trendView => 'Trend';
+
+  @override
+  String get weeklySets => 'Serie Settimanali';
+
+  @override
+  String get currentZone => 'Zona Attuale';
+
+  @override
+  String get tapForExpandedView => 'Tocca per vista a schermo intero';
+
+  @override
   String get overview => 'Panoramica';
 
   @override
@@ -3439,7 +3508,7 @@ class AppLocalizationsIt extends AppLocalizations {
   String get previous => 'Prec';
 
   @override
-  String get tapForDetails => 'Tocca per dettagli';
+  String get tapForDetails => 'Tocca per dettagli esercizi';
 
   @override
   String get compareWithHistory => 'Confronta con storico';
@@ -4114,7 +4183,7 @@ class AppLocalizationsIt extends AppLocalizations {
   String get miniSets => 'mini-set';
 
   @override
-  String get restTime => 'Tempo di Riposo';
+  String get restTime => 'Riposo';
 
   @override
   String supersetProgress(int current, int total) {
@@ -4987,6 +5056,9 @@ class AppLocalizationsIt extends AppLocalizations {
   String get workoutSaved => 'Allenamento salvato!';
 
   @override
+  String get consistencyIsKey => 'La costanza è la chiave!';
+
+  @override
   String get errorSavingWorkout => 'Errore nel salvataggio';
 
   @override
@@ -5117,6 +5189,9 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get rpeAutoregulation => 'Autoregolazione RPE';
+
+  @override
+  String get rirAutoregulation => 'Autoregolazione RIR';
 
   @override
   String get actualRpe => 'RPE Effettivo';
@@ -5365,6 +5440,14 @@ class AppLocalizationsIt extends AppLocalizations {
   @override
   String get warmupWhyImportantAnswer =>
       'Un riscaldamento adeguato riduce il rischio di infortuni, migliora le prestazioni, prepara il sistema nervoso e ottimizza la qualità dell\'allenamento.';
+
+  @override
+  String get noWarmupProtocolAvailable =>
+      'Nessun protocollo di riscaldamento specifico disponibile per questo esercizio.';
+
+  @override
+  String get noInjuryPreventionInfo =>
+      'Nessuna informazione di prevenzione disponibile per questo esercizio.';
 
   @override
   String get customizeWorkout => 'Personalizza Workout';
@@ -20751,7 +20834,7 @@ class AppLocalizationsIt extends AppLocalizations {
       'Tocca qui per inserire peso e ripetizioni. Ogni serie completata sarà salvata automaticamente.';
 
   @override
-  String get tutorialRestTimerTitle => 'Timer di recupero';
+  String get tutorialRestTimerTitle => 'Timer Riposo Avviato';
 
   @override
   String get tutorialRestTimerDesc =>
@@ -20835,7 +20918,7 @@ class AppLocalizationsIt extends AppLocalizations {
       'Crea e gestisci le tue routine di allenamento. Salva template per avvii rapidi e organizza i tuoi programmi.';
 
   @override
-  String get tutorialSettingsTitle => 'Impostazioni';
+  String get tutorialSettingsTitle => 'Impostazioni Allenamento';
 
   @override
   String get tutorialSettingsDesc =>
@@ -20920,6 +21003,15 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get repZoneDistribution => 'Distribuzione Zone Ripetizioni';
+
+  @override
+  String get tapToChangeView => 'Tocca per cambiare vista';
+
+  @override
+  String get barChart => 'Barra';
+
+  @override
+  String get pieChart => 'Torta';
 
   @override
   String get noDataYet => 'Nessun dato disponibile';
@@ -21553,7 +21645,7 @@ class AppLocalizationsIt extends AppLocalizations {
   String get frostNight3 => 'guerrieri invernali unitevi!';
 
   @override
-  String get repZones => 'Zone Ripetizioni';
+  String get repZones => 'Zone Rep';
 
   @override
   String get volumeByMuscle => 'Volume per Muscolo';
@@ -21607,7 +21699,7 @@ class AppLocalizationsIt extends AppLocalizations {
   String get excessive => 'Eccessivo';
 
   @override
-  String get stressIndex => 'Stress Allenamento';
+  String get stressIndex => 'Stress';
 
   @override
   String get stressLevelLight => 'Sessione Leggera';
@@ -21680,4 +21772,275 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get exhaustedMuscle => 'Needs Rest';
+
+  @override
+  String get completeWorkoutForStressIndex =>
+      'Completa un allenamento per vedere l\'analisi dello stress';
+
+  @override
+  String get recentHistory => 'Cronologia Recente';
+
+  @override
+  String get dragToExpand => 'Trascina su per schermo intero';
+
+  @override
+  String get pushCategory => 'Spinta';
+
+  @override
+  String get pullCategory => 'Trazione';
+
+  @override
+  String get upperCategory => 'Parte Superiore';
+
+  @override
+  String get lowerCategory => 'Parte Inferiore';
+
+  @override
+  String percentageOfTotal(String percentage) {
+    return '$percentage% del totale';
+  }
+
+  @override
+  String get noExercisesInCategory => 'Nessun esercizio in questa categoria';
+
+  @override
+  String get totalVolumeLabel => 'Volume Totale';
+
+  @override
+  String get addToTemplate => 'Aggiungi a Template';
+
+  @override
+  String get selectTemplateToAddExercise =>
+      'Seleziona un template a cui aggiungere questo esercizio';
+
+  @override
+  String get noTemplatesFound => 'Nessun template trovato';
+
+  @override
+  String get errorAddingExercise => 'Errore nell\'aggiunta dell\'esercizio';
+
+  @override
+  String get adding => 'Aggiunta...';
+
+  @override
+  String get addExerciseToTemplate => 'Aggiungi al Template';
+
+  @override
+  String exerciseAddedToTemplate(String templateName) {
+    return 'Esercizio aggiunto a $templateName';
+  }
+
+  @override
+  String exerciseAddedWithVolume(
+    String exerciseName,
+    int sets,
+    int reps,
+    int restSeconds,
+  ) {
+    return '$exerciseName aggiunto: $sets serie x $reps reps, ${restSeconds}s riposo';
+  }
+
+  @override
+  String get weightJump => 'Salto di peso';
+
+  @override
+  String get weightJumpDetected => 'Salto di peso rilevato';
+
+  @override
+  String get minimumWeight => 'Peso minimo';
+
+  @override
+  String get maximumWeight => 'Peso massimo';
+
+  @override
+  String get weightJumpTip1 =>
+      'Presta attenzione alla forma sui set più pesanti';
+
+  @override
+  String get weightJumpTip2 =>
+      'Considera di aggiungere set di riscaldamento tra i pesi';
+
+  @override
+  String get weightJumpTip3 =>
+      'Ascolta il tuo corpo e fermati se qualcosa non va';
+
+  @override
+  String get weightJumpTip4 => 'Mantieni una respirazione corretta';
+
+  @override
+  String get understood => 'Ho capito';
+
+  @override
+  String get exerciseSummary => 'Riepilogo Esercizi';
+
+  @override
+  String redirectingToHome(String seconds) {
+    return 'Ritorno alla home tra $seconds...';
+  }
+
+  @override
+  String get continueToHome => 'Vai alla Home';
+
+  @override
+  String get selectRestDuration => 'Seleziona la durata del riposo';
+
+  @override
+  String get orCustom => 'o personalizzato';
+
+  @override
+  String get longPressToSkip => 'Tieni premuto per saltare';
+
+  @override
+  String get youBeatYourRecord => 'Hai battuto il tuo record!';
+
+  @override
+  String get keepUpTheGoodWork => 'Continua così!';
+
+  @override
+  String get suggestionBasedOnYourWorkout => 'Basato sul tuo allenamento';
+
+  @override
+  String get whatThisMeans => 'Cosa significa';
+
+  @override
+  String get prTip1 => 'Celebra il tuo risultato!';
+
+  @override
+  String get prTip2 => 'Considera un breve riposo prima di aumentare ancora';
+
+  @override
+  String get prTip3 =>
+      'Il sovraccarico progressivo sta funzionando - continua così';
+
+  @override
+  String get motivationTip1 => 'La costanza batte l\'intensità ogni volta';
+
+  @override
+  String get motivationTip2 => 'La tua dedizione sta dando i suoi frutti';
+
+  @override
+  String get motivationTip3 => 'Piccoli progressi portano a grandi risultati';
+
+  @override
+  String get tipAdvice1 => 'Applica questo consiglio per migliorare la forma';
+
+  @override
+  String get tipAdvice2 => 'Concentrati sulla qualità, non sulla quantità';
+
+  @override
+  String get warningAdvice1 =>
+      'Prendi questo avviso seriamente per la tua sicurezza';
+
+  @override
+  String get warningAdvice2 => 'Considera di ridurre il peso se necessario';
+
+  @override
+  String applyToRemainingNSets(int count) {
+    return 'Applica ai $count set rimanenti';
+  }
+
+  @override
+  String get saveAndNext => 'Salva + Prossimo';
+
+  @override
+  String get showRpe => 'Aggiungi RPE';
+
+  @override
+  String get tutorialWelcomeTitle => 'Benvenuto nel Tuo Allenamento!';
+
+  @override
+  String get tutorialWelcomeMessage =>
+      'Ti guiderò passo passo nel tuo primo allenamento. Iniziamo!';
+
+  @override
+  String get tutorialAddExerciseTitle => 'Aggiungi il Tuo Primo Esercizio';
+
+  @override
+  String get tutorialAddExerciseMessage =>
+      'Tocca il pulsante \'Aggiungi Esercizio\' per aggiungere il tuo primo esercizio.';
+
+  @override
+  String get tutorialSearchExerciseTitle => 'Trova il Tuo Esercizio';
+
+  @override
+  String get tutorialSearchExerciseMessage =>
+      'Cerca per nome o sfoglia per gruppo muscolare. Scegli un esercizio per iniziare!';
+
+  @override
+  String get tutorialFirstSetTitle => 'Registra la Tua Prima Serie';
+
+  @override
+  String get tutorialFirstSetMessage =>
+      'Ottimo! Tocca una serie per inserire peso e ripetizioni eseguiti.';
+
+  @override
+  String get tutorialSetInputTitle => 'Inserisci i Tuoi Numeri';
+
+  @override
+  String get tutorialSetInputMessage =>
+      'Inserisci peso e ripetizioni, poi premi ✓ per salvare. Semplice!';
+
+  @override
+  String get tutorialRestTimerMessage =>
+      'Ottimo lavoro! 💪 Il timer riposo parte automaticamente. Riposati tra le serie.';
+
+  @override
+  String get tutorialExerciseMenuTitle => 'Personalizza Esercizio';
+
+  @override
+  String get tutorialExerciseMenuMessage =>
+      'Tocca il menu (⋮) per personalizzare, sostituire o rimuovere questo esercizio.';
+
+  @override
+  String get tutorialReorderTitle => 'Riordina Esercizi';
+
+  @override
+  String get tutorialReorderMessage =>
+      'Premi qui per trascinare e riordinare i tuoi esercizi.';
+
+  @override
+  String get tutorialSettingsMessage =>
+      'Qui puoi personalizzare l\'allenamento, salvarlo come template o scartarlo.';
+
+  @override
+  String get tutorialFinishTitle => 'Completa l\'Allenamento';
+
+  @override
+  String get tutorialFinishMessage =>
+      'Quando hai finito, premi qui per completare l\'allenamento e salvare i progressi!';
+
+  @override
+  String get tutorialCompletedTitle => 'Sei Pronto!';
+
+  @override
+  String get tutorialCompletedMessage =>
+      'Ora sai come usare la schermata allenamento. Buon allenamento! 🏋️';
+
+  @override
+  String get tutorialGotIt => 'Capito!';
+
+  @override
+  String get tutorialNext => 'Avanti';
+
+  @override
+  String get tutorialSkip => 'Salta tutorial';
+
+  @override
+  String get tutorialDragFabTitle => 'Sposta Questo Pulsante';
+
+  @override
+  String get tutorialDragFabMessage =>
+      'Trascina questo pulsante a sinistra o destra per riposizionarlo.';
+
+  @override
+  String alternativeExercisesCount(int count) {
+    return '$count esercizi simili';
+  }
+
+  @override
+  String get noAlternativesFound => 'Nessun esercizio alternativo trovato';
+
+  @override
+  String get noAlternativesHint =>
+      'Prova a cercare esercizi simili nel database';
 }

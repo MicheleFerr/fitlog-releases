@@ -5,7 +5,7 @@ import 'package:share_plus/share_plus.dart';
 import 'package:intl/intl.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/tabs/exercise_summary_tab.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/tabs/exercise_history_tab.dart';
-import 'package:gymbro_flutter_new/features/workout/presentation/tabs/exercise_instructions_tab.dart';
+import 'package:gymbro_flutter_new/features/workout/presentation/tabs/exercise_alternatives_tab.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/providers/exercise_history_provider.dart';
 import 'package:gymbro_flutter_new/features/workout/data/services/exercise_history_service.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
@@ -275,7 +275,7 @@ class _WorkoutExerciseDetailScreenState
         children: [
           ExerciseSummaryTab(exerciseName: widget.exerciseName),
           ExerciseHistoryTab(exerciseName: widget.exerciseName),
-          ExerciseInstructionsTab(exerciseName: widget.exerciseName),
+          ExerciseAlternativesTab(exerciseName: widget.exerciseName),
         ],
       ),
     );

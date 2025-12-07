@@ -8,7 +8,6 @@ import 'package:gymbro_flutter_new/features/exercise_database/domain/entities/ex
 import 'package:gymbro_flutter_new/shared/domain/converters/exercise_converter.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
-import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
 
 /// Provider per filtrare esercizi alternativi basati sulla categoria
 final alternativeExercisesProvider = FutureProvider.autoDispose.family<List<Exercise>, String>((ref, currentExerciseName) async {
@@ -48,9 +47,9 @@ final alternativeExercisesProvider = FutureProvider.autoDispose.family<List<Exer
 });
 
 /// Tab Esercizi Alternativi: mostra esercizi simili nella stessa categoria
-class ExerciseInstructionsTab extends ConsumerWidget {
+class ExerciseAlternativesTab extends ConsumerWidget {
 
-  const ExerciseInstructionsTab({
+  const ExerciseAlternativesTab({
     super.key,
     required this.exerciseName,
   });
@@ -92,7 +91,7 @@ class ExerciseInstructionsTab extends ConsumerWidget {
                           ),
                         ),
                         Text(
-                          '${alternatives.length} esercizi simili',
+                          context.l10n.alternativeExercisesCount(alternatives.length),
                           style: context.textTheme.bodySmall?.copyWith(
                             color: context.colors.outline,
                           ),
@@ -224,15 +223,14 @@ class ExerciseInstructionsTab extends ConsumerWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             SemanticIcon(
-  icon: AppIcons.searchOff,
-  semanticLabel: 'Search off',
-  size: AppIconSize.medium,
-  color: context.colors.outline.withValues(alpha: 0.5,
-),
+              icon: AppIcons.searchOff,
+              semanticLabel: context.l10n.noAlternativesFound,
+              size: AppIconSize.medium,
+              color: context.colors.outline.withValues(alpha: 0.5),
             ),
             const SizedBox(height: 16),
             Text(
-              'Nessun esercizio alternativo trovato',
+              context.l10n.noAlternativesFound,
               style: context.textTheme.titleMedium?.copyWith(
                 color: context.colors.onSurface.withValues(alpha: 0.7),
               ),
@@ -240,7 +238,7 @@ class ExerciseInstructionsTab extends ConsumerWidget {
             ),
             const SizedBox(height: 8),
             Text(
-              'Prova a cercare esercizi simili nel database',
+              context.l10n.noAlternativesHint,
               style: context.textTheme.bodySmall?.copyWith(
                 color: context.colors.outline,
               ),

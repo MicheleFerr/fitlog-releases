@@ -2467,6 +2467,14 @@
   "@applyFilters": {
     "description": "Apply filters button"
   },
+  "applyToAll": "Apply to All",
+  "@applyToAll": {
+    "description": "Apply current values to all sets"
+  },
+  "copyPrevious": "Copy Previous",
+  "@copyPrevious": {
+    "description": "Copy values from previous set"
+  },
   "improvingProgressSummary": "Your progress is improving! Keep it up!",
   "@improvingProgressSummary": {
     "description": "Improving progress summary message"
@@ -2796,9 +2804,9 @@
   "@warmup": {
     "description": "Warmup chip label"
   },
-  "safetyTips": "Prevention",
+  "safetyTips": "Safety Tips",
   "@safetyTips": {
-    "description": "Safety tips chip label"
+    "description": "Header for safety tips section"
   },
   "warmupAndMobility": "Warmup & Mobility",
   "@warmupAndMobility": {
@@ -2901,9 +2909,53 @@
       }
     }
   },
+  "warmupExerciseAddedBefore": "{exerciseName} added before {targetExercise}",
+  "@warmupExerciseAddedBefore": {
+    "description": "Snackbar message when warmup exercise is added before target exercise",
+    "placeholders": {
+      "exerciseName": {
+        "type": "String"
+      },
+      "targetExercise": {
+        "type": "String"
+      }
+    }
+  },
   "warmupDuration": "Warmup Duration",
   "@warmupDuration": {
     "description": "Warmup duration section title"
+  },
+  "warmupSet": "Warmup",
+  "@warmupSet": {
+    "description": "Label for swipe action to mark set as warmup"
+  },
+  "workingSet": "Working",
+  "@workingSet": {
+    "description": "Label for swipe action to mark set as working set"
+  },
+  "setMarkedAsWarmup": "Set marked as warmup",
+  "@setMarkedAsWarmup": {
+    "description": "Feedback when set is converted to warmup"
+  },
+  "setMarkedAsWorking": "Set marked as working",
+  "@setMarkedAsWorking": {
+    "description": "Feedback when set is converted to working set"
+  },
+  "addWarmupSets": "Add Warmup Sets",
+  "@addWarmupSets": {
+    "description": "Option to add warmup sets to exercise"
+  },
+  "addWarmupSetsSubtitle": "Generate warmup sets based on working weight",
+  "@addWarmupSetsSubtitle": {
+    "description": "Subtitle for add warmup sets option"
+  },
+  "addWorkingSetFirst": "Add a working set first",
+  "@addWorkingSetFirst": {
+    "description": "Error when trying to add warmup sets without working sets"
+  },
+  "setTargetWeightFirst": "Set a target weight first",
+  "@setTargetWeightFirst": {
+    "description": "Error when trying to add warmup sets without weight"
   },
   "primaryMuscles": "Primary Muscles",
   "@primaryMuscles": {
@@ -4375,6 +4427,50 @@
   "@coreFull": {
     "description": "Full core muscle group name"
   },
+  "chestShort": "Chest",
+  "@chestShort": {
+    "description": "Short name for chest muscle group"
+  },
+  "backShort": "Back",
+  "@backShort": {
+    "description": "Short name for back muscle group"
+  },
+  "shouldersShort": "Delts",
+  "@shouldersShort": {
+    "description": "Short name for shoulders muscle group"
+  },
+  "armsShort": "Arms",
+  "@armsShort": {
+    "description": "Short name for arms muscle group"
+  },
+  "legsShort": "Legs",
+  "@legsShort": {
+    "description": "Short name for legs muscle group"
+  },
+  "coreShort": "Core",
+  "@coreShort": {
+    "description": "Short name for core muscle group"
+  },
+  "radarView": "Radar",
+  "@radarView": {
+    "description": "Radar chart view option"
+  },
+  "trendView": "Trend",
+  "@trendView": {
+    "description": "Trend line chart view option"
+  },
+  "weeklySets": "Weekly Sets",
+  "@weeklySets": {
+    "description": "Weekly sets label"
+  },
+  "currentZone": "Current Zone",
+  "@currentZone": {
+    "description": "Current volume zone label"
+  },
+  "tapForExpandedView": "Tap for full screen view",
+  "@tapForExpandedView": {
+    "description": "Hint to open landscape expanded view"
+  },
   "overview": "Overview",
   "@overview": {
     "description": "Section title for statistics overview"
@@ -4389,7 +4485,7 @@
   },
   "muscleBalance": "Muscle Balance",
   "@muscleBalance": {
-    "description": "Muscle balance insight title"
+    "description": "Muscle balance feature title"
   },
   "allExercises": "All Exercises",
   "@allExercises": {
@@ -4433,7 +4529,7 @@
   },
   "volumeProgression": "Volume Progression",
   "@volumeProgression": {
-    "description": "Label for volume progression metric"
+    "description": "Volume progression feature title"
   },
   "weekly": "Weekly",
   "@weekly": {
@@ -4533,7 +4629,7 @@
   },
   "trainingIntensity": "Training Intensity",
   "@trainingIntensity": {
-    "description": "Training intensity metric label"
+    "description": "Label for training intensity in muscle heatmap legend"
   },
   "noDataForSelectedPeriod": "No data available for the selected period",
   "@noDataForSelectedPeriod": {
@@ -4543,9 +4639,9 @@
   "@previous": {
     "description": "Short label for previous period value"
   },
-  "tapForDetails": "Tap for details",
+  "tapForDetails": "Tap for exercise breakdown",
   "@tapForDetails": {
-    "description": "Instruction to tap for more details"
+    "description": "Hint to tap ratio card for details"
   },
   "compareWithHistory": "Compare with history",
   "@compareWithHistory": {
@@ -5377,7 +5473,7 @@
   "@miniSets": {
     "description": "Label for number of mini-sets in rest-pause"
   },
-  "restTime": "Rest Time",
+  "restTime": "Rest",
   "@restTime": {
     "description": "Rest time label"
   },
@@ -6530,6 +6626,10 @@
   "@workoutSaved": {
     "description": "Success message after workout is saved"
   },
+  "consistencyIsKey": "Consistency is the key!",
+  "@consistencyIsKey": {
+    "description": "Motivational message shown after completing a workout"
+  },
   "errorSavingWorkout": "Error saving workout",
   "@errorSavingWorkout": {
     "description": "Error message when workout save fails"
@@ -6711,6 +6811,10 @@
   "rpeAutoregulation": "RPE Autoregulation",
   "@rpeAutoregulation": {
     "description": "RPE autoregulation title"
+  },
+  "rirAutoregulation": "RIR Autoregulation",
+  "@rirAutoregulation": {
+    "description": "RIR autoregulation title"
   },
   "actualRpe": "Actual RPE",
   "@actualRpe": {
@@ -6999,6 +7103,14 @@
   "warmupWhyImportantAnswer": "A proper warmup reduces injury risk, improves performance, prepares your nervous system, and optimizes your workout quality.",
   "@warmupWhyImportantAnswer": {
     "description": "Answer about warmup importance"
+  },
+  "noWarmupProtocolAvailable": "No specific warmup protocol available for this exercise.",
+  "@noWarmupProtocolAvailable": {
+    "description": "Message when no warmup data is available"
+  },
+  "noInjuryPreventionInfo": "No injury prevention information available for this exercise.",
+  "@noInjuryPreventionInfo": {
+    "description": "Message when no injury prevention data is available"
   },
   "customizeWorkout": "Customize Workout",
   "@customizeWorkout": {
@@ -7606,7 +7718,7 @@
   "@errorUnexpected": {
     "description": "Generic error message for unexpected errors"
   },
-  "pushPullRatio": "Push:Pull Ratio",
+  "pushPullRatio": "Push/Pull Ratio",
   "quadHamstringRatio": "Quad:Hamstring Ratio",
   "pushSetsLabel": "{count} Push sets",
   "pullSetsLabel": "{count} Pull sets",
@@ -7706,21 +7818,21 @@
   "@allTimeProgress": {
     "description": "Title for all time progress"
   },
-  "last7Days": "Last 7 days",
+  "last7Days": "Last 7 Days",
   "@last7Days": {
-    "description": "Subtitle for last 7 days period"
+    "description": "7 days time filter option"
   },
-  "last30Days": "Last 30 days",
+  "last30Days": "Last 30 Days",
   "@last30Days": {
-    "description": "Subtitle for last 30 days period"
+    "description": "30 days time filter option"
   },
   "last365Days": "Last 365 days",
   "@last365Days": {
     "description": "Subtitle for last 365 days period"
   },
-  "allTime": "All time",
+  "allTime": "All Time",
   "@allTime": {
-    "description": "Subtitle for all time period"
+    "description": "All time filter option"
   },
   "keepItUp": "Keep it up!",
   "@keepItUp": {
@@ -8126,7 +8238,7 @@
   },
   "exerciseBreakdown": "Exercise Breakdown",
   "@exerciseBreakdown": {
-    "description": "Section title for exercise list"
+    "description": "Title for exercise breakdown sheet"
   },
   "total": "Total",
   "@total": {
@@ -8181,25 +8293,25 @@
       }
     }
   },
-  "strengthZone": "Strength (1-5 reps)",
+  "strengthZone": "Strength",
   "@strengthZone": {
-    "description": "Strength zone label"
+    "description": "Strength training zone label (1-5 reps)"
   },
   "strengthZoneDesc": "Max force, neural adaptations",
   "@strengthZoneDesc": {
     "description": "Strength zone description"
   },
-  "hypertrophyZone": "Hypertrophy (6-15 reps)",
+  "hypertrophyZone": "Hypertrophy",
   "@hypertrophyZone": {
-    "description": "Hypertrophy zone label"
+    "description": "Hypertrophy training zone label (6-12 reps)"
   },
   "hypertrophyZoneDesc": "Muscle growth, metabolic stress",
   "@hypertrophyZoneDesc": {
     "description": "Hypertrophy zone description"
   },
-  "enduranceZone": "Endurance (15+ reps)",
+  "enduranceZone": "Endurance",
   "@enduranceZone": {
-    "description": "Endurance zone label"
+    "description": "Endurance training zone label (13+ reps)"
   },
   "enduranceZoneDesc": "Muscular endurance, conditioning",
   "@enduranceZoneDesc": {
@@ -10375,12 +10487,13 @@
   "@focusLabel": {
     "description": "Exercise focus label"
   },
-  "exerciseAddedToWorkout": "Added {exerciseName} to workout",
+  "exerciseAddedToWorkout": "{exerciseName} added to next workout",
   "@exerciseAddedToWorkout": {
-    "description": "Success message for adding exercise",
+    "description": "Confirmation message when exercise is added to workout from suggestions",
     "placeholders": {
       "exerciseName": {
-        "type": "String"
+        "type": "String",
+        "example": "Bench Press"
       }
     }
   },
@@ -12236,7 +12349,7 @@
   },
   "intensityMedium": "Medium",
   "@intensityMedium": {
-    "description": "Medium haptic intensity"
+    "description": "Medium intensity label in heatmap legend"
   },
   "intensityHeavy": "Heavy",
   "@intensityHeavy": {
@@ -15231,7 +15344,7 @@
   },
   "lastYear": "Last Year",
   "@lastYear": {
-    "description": "Last year time period"
+    "description": "1 year time filter option"
   },
   "shade400": "Shade 400",
   "@shade400": {
@@ -15587,15 +15700,15 @@
   },
   "difficultyBeginner": "Beginner",
   "@difficultyBeginner": {
-    "description": "Beginner difficulty level badge"
+    "description": "Beginner difficulty level"
   },
   "difficultyIntermediate": "Intermediate",
   "@difficultyIntermediate": {
-    "description": "Intermediate difficulty level badge"
+    "description": "Intermediate difficulty level"
   },
   "difficultyAdvanced": "Advanced",
   "@difficultyAdvanced": {
-    "description": "Advanced difficulty level badge"
+    "description": "Advanced difficulty level"
   },
   "authorTierCommunity": "Community",
   "@authorTierCommunity": {
@@ -15853,9 +15966,9 @@
   "@comparedToLast": {
     "description": "Auto-generated for comparedToLast"
   },
-  "comparedToPrevious": "Compared to previous",
+  "comparedToPrevious": "vs Previous Period",
   "@comparedToPrevious": {
-    "description": "Auto-generated for comparedToPrevious"
+    "description": "Label for comparison with previous period"
   },
   "completeAllSets": "Complete all sets",
   "@completeAllSets": {
@@ -16629,9 +16742,9 @@
   "@weeklyDistributionInfo": {
     "description": "Auto-generated for weeklyDistributionInfo"
   },
-  "weeklyVolume": "Weekly volume",
+  "weeklyVolume": "Weekly Volume",
   "@weeklyVolume": {
-    "description": "Auto-generated for weeklyVolume"
+    "description": "Weekly volume chart label"
   },
   "weightLoss": "Weight loss",
   "@weightLoss": {
@@ -21707,15 +21820,15 @@
   },
   "severityMedium": "Medium",
   "@severityMedium": {
-    "description": "Feedback severity: medium priority"
+    "description": "Medium neglect severity"
   },
   "severityHigh": "High",
   "@severityHigh": {
-    "description": "Feedback severity: high priority"
+    "description": "High neglect severity"
   },
   "severityCritical": "Critical",
   "@severityCritical": {
-    "description": "Feedback severity: critical priority"
+    "description": "Critical neglect severity"
   },
   "typeExercise": "Exercise",
   "@typeExercise": {
@@ -25533,17 +25646,9 @@
   "@repZoneDescription": {
     "description": "Rep zone feature description"
   },
-  "volumeProgression": "Volume Progression",
-  "@volumeProgression": {
-    "description": "Volume progression feature title"
-  },
   "volumeProgressionDescription": "Track your weekly training volume and spot trends over time",
   "@volumeProgressionDescription": {
     "description": "Volume progression feature description"
-  },
-  "muscleBalance": "Muscle Balance",
-  "@muscleBalance": {
-    "description": "Muscle balance feature title"
   },
   "muscleBalanceDescription": "Discover which muscle groups get the most work and find imbalances",
   "@muscleBalanceDescription": {
@@ -25561,18 +25666,6 @@
   "@exampleData": {
     "description": "Label indicating example/demo data"
   },
-  "strengthZone": "Strength",
-  "@strengthZone": {
-    "description": "Strength training zone label (1-5 reps)"
-  },
-  "hypertrophyZone": "Hypertrophy",
-  "@hypertrophyZone": {
-    "description": "Hypertrophy training zone label (6-12 reps)"
-  },
-  "enduranceZone": "Endurance",
-  "@enduranceZone": {
-    "description": "Endurance training zone label (13+ reps)"
-  },
   "seeWhichRepZones": "See Which Rep Zones Dominate",
   "@seeWhichRepZones": {
     "description": "Benefit-driven title for rep zone analysis"
@@ -25584,10 +25677,6 @@
   "analyzeBalance": "Analyze Muscle Balance",
   "@analyzeBalance": {
     "description": "Benefit-driven title for muscle balance"
-  },
-  "weeklyVolume": "Weekly Volume",
-  "@weeklyVolume": {
-    "description": "Weekly volume chart label"
   },
   "proInsights": "Pro Insights",
   "@proInsights": {
@@ -25635,6 +25724,18 @@
   "@repZoneDistribution": {
     "description": "Title for rep zone distribution chart"
   },
+  "tapToChangeView": "Tap to change view",
+  "@tapToChangeView": {
+    "description": "Hint text to tap on chart to change view mode"
+  },
+  "barChart": "Bar",
+  "@barChart": {
+    "description": "Label for bar chart view option"
+  },
+  "pieChart": "Pie",
+  "@pieChart": {
+    "description": "Label for pie chart view option"
+  },
   "noDataYet": "No data yet",
   "@noDataYet": {
     "description": "Message when there is no data to display"
@@ -25679,7 +25780,7 @@
   },
   "journeyThemes": "Journey Themes",
   "@journeyThemes": {
-    "description": "Title for journey themes section"
+    "description": "Title for journey themes selection screen"
   },
   "shareTemplate": "Share Template",
   "@shareTemplate": {
@@ -25773,7 +25874,7 @@
   },
   "previewMode": "Preview Mode",
   "@previewMode": {
-    "description": "Label indicating preview mode is active"
+    "description": "Indicates theme preview mode is active"
   },
   "applyTheme": "Apply Theme",
   "@applyTheme": {
@@ -25887,9 +25988,19 @@
   "@reminderTimePresetEveningRange": {
     "description": "Evening time range description"
   },
-  "featuresUnlocked": "Features Unlocked",
+  "featuresUnlocked": "{count} / {total} features unlocked",
   "@featuresUnlocked": {
-    "description": "Section header for unlocked features"
+    "description": "Shows progression of unlocked features",
+    "placeholders": {
+      "count": {
+        "type": "int",
+        "example": "3"
+      },
+      "total": {
+        "type": "int",
+        "example": "10"
+      }
+    }
   },
   "featuresLocked": "Features Locked",
   "@featuresLocked": {
@@ -25914,9 +26025,7 @@
         "example": "Gold"
       }
     }
-  }
-
-,
+  },
   "expandExercise": "Expand exercise details",
   "@expandExercise": {
     "description": "Semantic label for expand exercise button"
@@ -25955,7 +26064,6 @@
   "@adminPremiumDisabled": {
     "description": "Snackbar message when premium is disabled"
   },
-
   "themeHunter": "Hunter",
   "@themeHunter": {
     "description": "Journey theme name: Hunter"
@@ -25980,7 +26088,6 @@
   "@themeFrost": {
     "description": "Journey theme name: Frost"
   },
-
   "taglineHunter": "Track your prey",
   "@taglineHunter": {
     "description": "Journey theme tagline: Hunter"
@@ -26005,18 +26112,9 @@
   "@taglineFrost": {
     "description": "Journey theme tagline: Frost"
   },
-
-  "journeyThemes": "Journey Themes",
-  "@journeyThemes": {
-    "description": "Title for journey themes selection screen"
-  },
   "selectYourTheme": "Select Your Theme",
   "@selectYourTheme": {
     "description": "Subtitle for journey themes selection"
-  },
-  "previewMode": "Preview Mode",
-  "@previewMode": {
-    "description": "Indicates theme preview mode is active"
   },
   "confirmTheme": "Confirm Theme",
   "@confirmTheme": {
@@ -26036,21 +26134,6 @@
       }
     }
   },
-  "featuresUnlocked": "{count} / {total} features unlocked",
-  "@featuresUnlocked": {
-    "description": "Shows progression of unlocked features",
-    "placeholders": {
-      "count": {
-        "type": "int",
-        "example": "3"
-      },
-      "total": {
-        "type": "int",
-        "example": "10"
-      }
-    }
-  },
-
   "balanceScore": "Balance Score",
   "@balanceScore": {
     "description": "Title for muscle balance score metric"
@@ -26075,7 +26158,6 @@
   "@balanceRatingPoor": {
     "description": "Balance rating: 0.0-3.9 score"
   },
-  "pushPullRatio": "Push/Pull Ratio",
   "@pushPullRatio": {
     "description": "Title for push/pull muscle balance ratio"
   },
@@ -26141,17 +26223,9 @@
   "@backView": {
     "description": "Label for back body view in muscle heatmap"
   },
-  "trainingIntensity": "Training Intensity",
-  "@trainingIntensity": {
-    "description": "Label for training intensity in muscle heatmap legend"
-  },
   "intensityLow": "Low",
   "@intensityLow": {
     "description": "Low intensity label in heatmap legend"
-  },
-  "intensityMedium": "Medium",
-  "@intensityMedium": {
-    "description": "Medium intensity label in heatmap legend"
   },
   "intensityHigh": "High",
   "@intensityHigh": {
@@ -26173,30 +26247,6 @@
   "@priority": {
     "description": "Label for priority score"
   },
-  "difficultyBeginner": "Beginner",
-  "@difficultyBeginner": {
-    "description": "Beginner difficulty level"
-  },
-  "difficultyIntermediate": "Intermediate",
-  "@difficultyIntermediate": {
-    "description": "Intermediate difficulty level"
-  },
-  "difficultyAdvanced": "Advanced",
-  "@difficultyAdvanced": {
-    "description": "Advanced difficulty level"
-  },
-  "severityCritical": "Critical",
-  "@severityCritical": {
-    "description": "Critical neglect severity"
-  },
-  "severityHigh": "High",
-  "@severityHigh": {
-    "description": "High neglect severity"
-  },
-  "severityMedium": "Medium",
-  "@severityMedium": {
-    "description": "Medium neglect severity"
-  },
   "noNeglectedMuscles": "No neglected muscles detected. Great balance!",
   "@noNeglectedMuscles": {
     "description": "Message when no muscles are neglected"
@@ -26205,25 +26255,9 @@
   "@timeFilter": {
     "description": "Label for time filter dropdown"
   },
-  "last7Days": "Last 7 Days",
-  "@last7Days": {
-    "description": "7 days time filter option"
-  },
-  "last30Days": "Last 30 Days",
-  "@last30Days": {
-    "description": "30 days time filter option"
-  },
   "last3Months": "Last 3 Months",
   "@last3Months": {
     "description": "3 months time filter option"
-  },
-  "lastYear": "Last Year",
-  "@lastYear": {
-    "description": "1 year time filter option"
-  },
-  "allTime": "All Time",
-  "@allTime": {
-    "description": "All time filter option"
   },
   "trendImproving": "Improving",
   "@trendImproving": {
@@ -26237,292 +26271,883 @@
   "@trendDeclining": {
     "description": "Trend status: declining"
   },
-  "comparedToPrevious": "vs Previous Period",
-  "@comparedToPrevious": {
-    "description": "Label for comparison with previous period"
-  },
-
   "greetingMorning": "Good morning",
-  "@greetingMorning": { "description": "Morning greeting (5:00-11:59)" },
-  "greetingAfternoon": "Good afternoon",
-  "@greetingAfternoon": { "description": "Afternoon greeting (12:00-17:59)" },
-  "greetingEvening": "Good evening",
-  "@greetingEvening": { "description": "Evening greeting (18:00-21:59)" },
-  "greetingNight": "Good night",
-  "@greetingNight": { "description": "Night greeting (22:00-4:59)" },
-
-  "classicMorning1": "let's make today count!",
-  "@classicMorning1": { "description": "Classic theme morning phrase 1" },
-  "classicMorning2": "time to build your strength!",
-  "@classicMorning2": { "description": "Classic theme morning phrase 2" },
-  "classicMorning3": "ready to make progress?",
-  "@classicMorning3": { "description": "Classic theme morning phrase 3" },
-  "classicAfternoon1": "keep pushing forward!",
-  "@classicAfternoon1": { "description": "Classic theme afternoon phrase 1" },
-  "classicAfternoon2": "every rep brings results!",
-  "@classicAfternoon2": { "description": "Classic theme afternoon phrase 2" },
-  "classicAfternoon3": "stay focused on your goals!",
-  "@classicAfternoon3": { "description": "Classic theme afternoon phrase 3" },
-  "classicEvening1": "finish the day strong!",
-  "@classicEvening1": { "description": "Classic theme evening phrase 1" },
-  "classicEvening2": "one more step toward your goal!",
-  "@classicEvening2": { "description": "Classic theme evening phrase 2" },
-  "classicEvening3": "consistency is key!",
-  "@classicEvening3": { "description": "Classic theme evening phrase 3" },
-  "classicNight1": "dedication knows no time!",
-  "@classicNight1": { "description": "Classic theme night phrase 1" },
-  "classicNight2": "late night gains!",
-  "@classicNight2": { "description": "Classic theme night phrase 2" },
-  "classicNight3": "burning the midnight iron!",
-  "@classicNight3": { "description": "Classic theme night phrase 3" },
-
-  "heroMorning1": "let's crush those weights!",
-  "@heroMorning1": { "description": "Hero theme morning phrase 1" },
-  "heroMorning2": "time to become legendary!",
-  "@heroMorning2": { "description": "Hero theme morning phrase 2" },
-  "heroMorning3": "the villains won't defeat themselves!",
-  "@heroMorning3": { "description": "Hero theme morning phrase 3" },
-  "heroAfternoon1": "train to become the strongest!",
-  "@heroAfternoon1": { "description": "Hero theme afternoon phrase 1" },
-  "heroAfternoon2": "your power grows with each rep!",
-  "@heroAfternoon2": { "description": "Hero theme afternoon phrase 2" },
-  "heroAfternoon3": "heroes never skip training!",
-  "@heroAfternoon3": { "description": "Hero theme afternoon phrase 3" },
-  "heroEvening1": "ready for an evening of heroics?",
-  "@heroEvening1": { "description": "Hero theme evening phrase 1" },
-  "heroEvening2": "the night needs a hero!",
-  "@heroEvening2": { "description": "Hero theme evening phrase 2" },
-  "heroEvening3": "time to save the day!",
-  "@heroEvening3": { "description": "Hero theme evening phrase 3" },
-  "heroNight1": "evil never sleeps!",
-  "@heroNight1": { "description": "Hero theme night phrase 1" },
-  "heroNight2": "guardians train at night!",
-  "@heroNight2": { "description": "Hero theme night phrase 2" },
-  "heroNight3": "the darkness awaits your strength!",
-  "@heroNight3": { "description": "Hero theme night phrase 3" },
-
-  "hunterMorning1": "the hunt begins!",
-  "@hunterMorning1": { "description": "Hunter theme morning phrase 1" },
-  "hunterMorning2": "track your prey!",
-  "@hunterMorning2": { "description": "Hunter theme morning phrase 2" },
-  "hunterMorning3": "sharpen your skills!",
-  "@hunterMorning3": { "description": "Hunter theme morning phrase 3" },
-  "hunterAfternoon1": "stay focused on the target!",
-  "@hunterAfternoon1": { "description": "Hunter theme afternoon phrase 1" },
-  "hunterAfternoon2": "predators never rest!",
-  "@hunterAfternoon2": { "description": "Hunter theme afternoon phrase 2" },
-  "hunterAfternoon3": "precision is everything!",
-  "@hunterAfternoon3": { "description": "Hunter theme afternoon phrase 3" },
-  "hunterEvening1": "the perfect time to strike!",
-  "@hunterEvening1": { "description": "Hunter theme evening phrase 1" },
-  "hunterEvening2": "shadows are your ally!",
-  "@hunterEvening2": { "description": "Hunter theme evening phrase 2" },
-  "hunterEvening3": "silent but deadly!",
-  "@hunterEvening3": { "description": "Hunter theme evening phrase 3" },
-  "hunterNight1": "nocturnal hunters are the best!",
-  "@hunterNight1": { "description": "Hunter theme night phrase 1" },
-  "hunterNight2": "the night is your domain!",
-  "@hunterNight2": { "description": "Hunter theme night phrase 2" },
-  "hunterNight3": "darkness hides the strongest!",
-  "@hunterNight3": { "description": "Hunter theme night phrase 3" },
-
-  "warriorGoddessMorning1": "grace and power await!",
-  "@warriorGoddessMorning1": { "description": "Warrior Goddess theme morning phrase 1" },
-  "warriorGoddessMorning2": "rise with elegance!",
-  "@warriorGoddessMorning2": { "description": "Warrior Goddess theme morning phrase 2" },
-  "warriorGoddessMorning3": "your crown awaits!",
-  "@warriorGoddessMorning3": { "description": "Warrior Goddess theme morning phrase 3" },
-  "warriorGoddessAfternoon1": "rule with strength!",
-  "@warriorGoddessAfternoon1": { "description": "Warrior Goddess theme afternoon phrase 1" },
-  "warriorGoddessAfternoon2": "queens don't quit!",
-  "@warriorGoddessAfternoon2": { "description": "Warrior Goddess theme afternoon phrase 2" },
-  "warriorGoddessAfternoon3": "fierce and fabulous!",
-  "@warriorGoddessAfternoon3": { "description": "Warrior Goddess theme afternoon phrase 3" },
-  "warriorGoddessEvening1": "the throne awaits!",
-  "@warriorGoddessEvening1": { "description": "Warrior Goddess theme evening phrase 1" },
-  "warriorGoddessEvening2": "power meets elegance!",
-  "@warriorGoddessEvening2": { "description": "Warrior Goddess theme evening phrase 2" },
-  "warriorGoddessEvening3": "conquer with grace!",
-  "@warriorGoddessEvening3": { "description": "Warrior Goddess theme evening phrase 3" },
-  "warriorGoddessNight1": "even goddesses train at night!",
-  "@warriorGoddessNight1": { "description": "Warrior Goddess theme night phrase 1" },
-  "warriorGoddessNight2": "moonlit power session!",
-  "@warriorGoddessNight2": { "description": "Warrior Goddess theme night phrase 2" },
-  "warriorGoddessNight3": "the stars shine for you!",
-  "@warriorGoddessNight3": { "description": "Warrior Goddess theme night phrase 3" },
-
-  "natureSpiritMorning1": "flow with the sunrise!",
-  "@natureSpiritMorning1": { "description": "Nature Spirit theme morning phrase 1" },
-  "natureSpiritMorning2": "energy from nature!",
-  "@natureSpiritMorning2": { "description": "Nature Spirit theme morning phrase 2" },
-  "natureSpiritMorning3": "breathe, grow, thrive!",
-  "@natureSpiritMorning3": { "description": "Nature Spirit theme morning phrase 3" },
-  "natureSpiritAfternoon1": "harmony in motion!",
-  "@natureSpiritAfternoon1": { "description": "Nature Spirit theme afternoon phrase 1" },
-  "natureSpiritAfternoon2": "strong as the oak!",
-  "@natureSpiritAfternoon2": { "description": "Nature Spirit theme afternoon phrase 2" },
-  "natureSpiritAfternoon3": "root deep, grow tall!",
-  "@natureSpiritAfternoon3": { "description": "Nature Spirit theme afternoon phrase 3" },
-  "natureSpiritEvening1": "sunset strength session!",
-  "@natureSpiritEvening1": { "description": "Nature Spirit theme evening phrase 1" },
-  "natureSpiritEvening2": "balance body and soul!",
-  "@natureSpiritEvening2": { "description": "Nature Spirit theme evening phrase 2" },
-  "natureSpiritEvening3": "flow like water!",
-  "@natureSpiritEvening3": { "description": "Nature Spirit theme evening phrase 3" },
-  "natureSpiritNight1": "calm night, strong spirit!",
-  "@natureSpiritNight1": { "description": "Nature Spirit theme night phrase 1" },
-  "natureSpiritNight2": "moonlit meditation workout!",
-  "@natureSpiritNight2": { "description": "Nature Spirit theme night phrase 2" },
-  "natureSpiritNight3": "rest prepares growth!",
-  "@natureSpiritNight3": { "description": "Nature Spirit theme night phrase 3" },
-
-  "phoenixMorning1": "rise and burn!",
-  "@phoenixMorning1": { "description": "Phoenix theme morning phrase 1" },
-  "phoenixMorning2": "reborn with fire!",
-  "@phoenixMorning2": { "description": "Phoenix theme morning phrase 2" },
-  "phoenixMorning3": "ashes to glory!",
-  "@phoenixMorning3": { "description": "Phoenix theme morning phrase 3" },
-  "phoenixAfternoon1": "flames of determination!",
-  "@phoenixAfternoon1": { "description": "Phoenix theme afternoon phrase 1" },
-  "phoenixAfternoon2": "burn through limits!",
-  "@phoenixAfternoon2": { "description": "Phoenix theme afternoon phrase 2" },
-  "phoenixAfternoon3": "unstoppable fire!",
-  "@phoenixAfternoon3": { "description": "Phoenix theme afternoon phrase 3" },
-  "phoenixEvening1": "evening inferno awaits!",
-  "@phoenixEvening1": { "description": "Phoenix theme evening phrase 1" },
-  "phoenixEvening2": "sunset flames burn bright!",
-  "@phoenixEvening2": { "description": "Phoenix theme evening phrase 2" },
-  "phoenixEvening3": "ignite your power!",
-  "@phoenixEvening3": { "description": "Phoenix theme evening phrase 3" },
-  "phoenixNight1": "flames never fade!",
-  "@phoenixNight1": { "description": "Phoenix theme night phrase 1" },
-  "phoenixNight2": "midnight fire session!",
-  "@phoenixNight2": { "description": "Phoenix theme night phrase 2" },
-  "phoenixNight3": "rebirth in darkness!",
-  "@phoenixNight3": { "description": "Phoenix theme night phrase 3" },
-
-  "frostMorning1": "cold precision awaits!",
-  "@frostMorning1": { "description": "Frost theme morning phrase 1" },
-  "frostMorning2": "sharp as ice!",
-  "@frostMorning2": { "description": "Frost theme morning phrase 2" },
-  "frostMorning3": "cool focus, strong body!",
-  "@frostMorning3": { "description": "Frost theme morning phrase 3" },
-  "frostAfternoon1": "calculated power!",
-  "@frostAfternoon1": { "description": "Frost theme afternoon phrase 1" },
-  "frostAfternoon2": "ice cold determination!",
-  "@frostAfternoon2": { "description": "Frost theme afternoon phrase 2" },
-  "frostAfternoon3": "freeze the competition!",
-  "@frostAfternoon3": { "description": "Frost theme afternoon phrase 3" },
-  "frostEvening1": "winter never rests!",
-  "@frostEvening1": { "description": "Frost theme evening phrase 1" },
-  "frostEvening2": "chill zone power session!",
-  "@frostEvening2": { "description": "Frost theme evening phrase 2" },
-  "frostEvening3": "cool under pressure!",
-  "@frostEvening3": { "description": "Frost theme evening phrase 3" },
-  "frostNight1": "frozen night, hot gains!",
-  "@frostNight1": { "description": "Frost theme night phrase 1" },
-  "frostNight2": "the cold sharpens the mind!",
-  "@frostNight2": { "description": "Frost theme night phrase 2" },
-  "frostNight3": "winter warriors unite!",
-  "@frostNight3": { "description": "Frost theme night phrase 3" },
-  "exerciseAddedToWorkout": "{exerciseName} added to next workout",
-  "@exerciseAddedToWorkout": {
-    "description": "Confirmation message when exercise is added to workout from suggestions",
-    "placeholders": {
-      "exerciseName": {
-        "type": "String",
-        "example": "Bench Press"
-      }
-    }
+  "@greetingMorning": {
+    "description": "Morning greeting (5:00-11:59)"
   },
-
+  "greetingAfternoon": "Good afternoon",
+  "@greetingAfternoon": {
+    "description": "Afternoon greeting (12:00-17:59)"
+  },
+  "greetingEvening": "Good evening",
+  "@greetingEvening": {
+    "description": "Evening greeting (18:00-21:59)"
+  },
+  "greetingNight": "Good night",
+  "@greetingNight": {
+    "description": "Night greeting (22:00-4:59)"
+  },
+  "classicMorning1": "let's make today count!",
+  "@classicMorning1": {
+    "description": "Classic theme morning phrase 1"
+  },
+  "classicMorning2": "time to build your strength!",
+  "@classicMorning2": {
+    "description": "Classic theme morning phrase 2"
+  },
+  "classicMorning3": "ready to make progress?",
+  "@classicMorning3": {
+    "description": "Classic theme morning phrase 3"
+  },
+  "classicAfternoon1": "keep pushing forward!",
+  "@classicAfternoon1": {
+    "description": "Classic theme afternoon phrase 1"
+  },
+  "classicAfternoon2": "every rep brings results!",
+  "@classicAfternoon2": {
+    "description": "Classic theme afternoon phrase 2"
+  },
+  "classicAfternoon3": "stay focused on your goals!",
+  "@classicAfternoon3": {
+    "description": "Classic theme afternoon phrase 3"
+  },
+  "classicEvening1": "finish the day strong!",
+  "@classicEvening1": {
+    "description": "Classic theme evening phrase 1"
+  },
+  "classicEvening2": "one more step toward your goal!",
+  "@classicEvening2": {
+    "description": "Classic theme evening phrase 2"
+  },
+  "classicEvening3": "consistency is key!",
+  "@classicEvening3": {
+    "description": "Classic theme evening phrase 3"
+  },
+  "classicNight1": "dedication knows no time!",
+  "@classicNight1": {
+    "description": "Classic theme night phrase 1"
+  },
+  "classicNight2": "late night gains!",
+  "@classicNight2": {
+    "description": "Classic theme night phrase 2"
+  },
+  "classicNight3": "burning the midnight iron!",
+  "@classicNight3": {
+    "description": "Classic theme night phrase 3"
+  },
+  "heroMorning1": "let's crush those weights!",
+  "@heroMorning1": {
+    "description": "Hero theme morning phrase 1"
+  },
+  "heroMorning2": "time to become legendary!",
+  "@heroMorning2": {
+    "description": "Hero theme morning phrase 2"
+  },
+  "heroMorning3": "the villains won't defeat themselves!",
+  "@heroMorning3": {
+    "description": "Hero theme morning phrase 3"
+  },
+  "heroAfternoon1": "train to become the strongest!",
+  "@heroAfternoon1": {
+    "description": "Hero theme afternoon phrase 1"
+  },
+  "heroAfternoon2": "your power grows with each rep!",
+  "@heroAfternoon2": {
+    "description": "Hero theme afternoon phrase 2"
+  },
+  "heroAfternoon3": "heroes never skip training!",
+  "@heroAfternoon3": {
+    "description": "Hero theme afternoon phrase 3"
+  },
+  "heroEvening1": "ready for an evening of heroics?",
+  "@heroEvening1": {
+    "description": "Hero theme evening phrase 1"
+  },
+  "heroEvening2": "the night needs a hero!",
+  "@heroEvening2": {
+    "description": "Hero theme evening phrase 2"
+  },
+  "heroEvening3": "time to save the day!",
+  "@heroEvening3": {
+    "description": "Hero theme evening phrase 3"
+  },
+  "heroNight1": "evil never sleeps!",
+  "@heroNight1": {
+    "description": "Hero theme night phrase 1"
+  },
+  "heroNight2": "guardians train at night!",
+  "@heroNight2": {
+    "description": "Hero theme night phrase 2"
+  },
+  "heroNight3": "the darkness awaits your strength!",
+  "@heroNight3": {
+    "description": "Hero theme night phrase 3"
+  },
+  "hunterMorning1": "the hunt begins!",
+  "@hunterMorning1": {
+    "description": "Hunter theme morning phrase 1"
+  },
+  "hunterMorning2": "track your prey!",
+  "@hunterMorning2": {
+    "description": "Hunter theme morning phrase 2"
+  },
+  "hunterMorning3": "sharpen your skills!",
+  "@hunterMorning3": {
+    "description": "Hunter theme morning phrase 3"
+  },
+  "hunterAfternoon1": "stay focused on the target!",
+  "@hunterAfternoon1": {
+    "description": "Hunter theme afternoon phrase 1"
+  },
+  "hunterAfternoon2": "predators never rest!",
+  "@hunterAfternoon2": {
+    "description": "Hunter theme afternoon phrase 2"
+  },
+  "hunterAfternoon3": "precision is everything!",
+  "@hunterAfternoon3": {
+    "description": "Hunter theme afternoon phrase 3"
+  },
+  "hunterEvening1": "the perfect time to strike!",
+  "@hunterEvening1": {
+    "description": "Hunter theme evening phrase 1"
+  },
+  "hunterEvening2": "shadows are your ally!",
+  "@hunterEvening2": {
+    "description": "Hunter theme evening phrase 2"
+  },
+  "hunterEvening3": "silent but deadly!",
+  "@hunterEvening3": {
+    "description": "Hunter theme evening phrase 3"
+  },
+  "hunterNight1": "nocturnal hunters are the best!",
+  "@hunterNight1": {
+    "description": "Hunter theme night phrase 1"
+  },
+  "hunterNight2": "the night is your domain!",
+  "@hunterNight2": {
+    "description": "Hunter theme night phrase 2"
+  },
+  "hunterNight3": "darkness hides the strongest!",
+  "@hunterNight3": {
+    "description": "Hunter theme night phrase 3"
+  },
+  "warriorGoddessMorning1": "grace and power await!",
+  "@warriorGoddessMorning1": {
+    "description": "Warrior Goddess theme morning phrase 1"
+  },
+  "warriorGoddessMorning2": "rise with elegance!",
+  "@warriorGoddessMorning2": {
+    "description": "Warrior Goddess theme morning phrase 2"
+  },
+  "warriorGoddessMorning3": "your crown awaits!",
+  "@warriorGoddessMorning3": {
+    "description": "Warrior Goddess theme morning phrase 3"
+  },
+  "warriorGoddessAfternoon1": "rule with strength!",
+  "@warriorGoddessAfternoon1": {
+    "description": "Warrior Goddess theme afternoon phrase 1"
+  },
+  "warriorGoddessAfternoon2": "queens don't quit!",
+  "@warriorGoddessAfternoon2": {
+    "description": "Warrior Goddess theme afternoon phrase 2"
+  },
+  "warriorGoddessAfternoon3": "fierce and fabulous!",
+  "@warriorGoddessAfternoon3": {
+    "description": "Warrior Goddess theme afternoon phrase 3"
+  },
+  "warriorGoddessEvening1": "the throne awaits!",
+  "@warriorGoddessEvening1": {
+    "description": "Warrior Goddess theme evening phrase 1"
+  },
+  "warriorGoddessEvening2": "power meets elegance!",
+  "@warriorGoddessEvening2": {
+    "description": "Warrior Goddess theme evening phrase 2"
+  },
+  "warriorGoddessEvening3": "conquer with grace!",
+  "@warriorGoddessEvening3": {
+    "description": "Warrior Goddess theme evening phrase 3"
+  },
+  "warriorGoddessNight1": "even goddesses train at night!",
+  "@warriorGoddessNight1": {
+    "description": "Warrior Goddess theme night phrase 1"
+  },
+  "warriorGoddessNight2": "moonlit power session!",
+  "@warriorGoddessNight2": {
+    "description": "Warrior Goddess theme night phrase 2"
+  },
+  "warriorGoddessNight3": "the stars shine for you!",
+  "@warriorGoddessNight3": {
+    "description": "Warrior Goddess theme night phrase 3"
+  },
+  "natureSpiritMorning1": "flow with the sunrise!",
+  "@natureSpiritMorning1": {
+    "description": "Nature Spirit theme morning phrase 1"
+  },
+  "natureSpiritMorning2": "energy from nature!",
+  "@natureSpiritMorning2": {
+    "description": "Nature Spirit theme morning phrase 2"
+  },
+  "natureSpiritMorning3": "breathe, grow, thrive!",
+  "@natureSpiritMorning3": {
+    "description": "Nature Spirit theme morning phrase 3"
+  },
+  "natureSpiritAfternoon1": "harmony in motion!",
+  "@natureSpiritAfternoon1": {
+    "description": "Nature Spirit theme afternoon phrase 1"
+  },
+  "natureSpiritAfternoon2": "strong as the oak!",
+  "@natureSpiritAfternoon2": {
+    "description": "Nature Spirit theme afternoon phrase 2"
+  },
+  "natureSpiritAfternoon3": "root deep, grow tall!",
+  "@natureSpiritAfternoon3": {
+    "description": "Nature Spirit theme afternoon phrase 3"
+  },
+  "natureSpiritEvening1": "sunset strength session!",
+  "@natureSpiritEvening1": {
+    "description": "Nature Spirit theme evening phrase 1"
+  },
+  "natureSpiritEvening2": "balance body and soul!",
+  "@natureSpiritEvening2": {
+    "description": "Nature Spirit theme evening phrase 2"
+  },
+  "natureSpiritEvening3": "flow like water!",
+  "@natureSpiritEvening3": {
+    "description": "Nature Spirit theme evening phrase 3"
+  },
+  "natureSpiritNight1": "calm night, strong spirit!",
+  "@natureSpiritNight1": {
+    "description": "Nature Spirit theme night phrase 1"
+  },
+  "natureSpiritNight2": "moonlit meditation workout!",
+  "@natureSpiritNight2": {
+    "description": "Nature Spirit theme night phrase 2"
+  },
+  "natureSpiritNight3": "rest prepares growth!",
+  "@natureSpiritNight3": {
+    "description": "Nature Spirit theme night phrase 3"
+  },
+  "phoenixMorning1": "rise and burn!",
+  "@phoenixMorning1": {
+    "description": "Phoenix theme morning phrase 1"
+  },
+  "phoenixMorning2": "reborn with fire!",
+  "@phoenixMorning2": {
+    "description": "Phoenix theme morning phrase 2"
+  },
+  "phoenixMorning3": "ashes to glory!",
+  "@phoenixMorning3": {
+    "description": "Phoenix theme morning phrase 3"
+  },
+  "phoenixAfternoon1": "flames of determination!",
+  "@phoenixAfternoon1": {
+    "description": "Phoenix theme afternoon phrase 1"
+  },
+  "phoenixAfternoon2": "burn through limits!",
+  "@phoenixAfternoon2": {
+    "description": "Phoenix theme afternoon phrase 2"
+  },
+  "phoenixAfternoon3": "unstoppable fire!",
+  "@phoenixAfternoon3": {
+    "description": "Phoenix theme afternoon phrase 3"
+  },
+  "phoenixEvening1": "evening inferno awaits!",
+  "@phoenixEvening1": {
+    "description": "Phoenix theme evening phrase 1"
+  },
+  "phoenixEvening2": "sunset flames burn bright!",
+  "@phoenixEvening2": {
+    "description": "Phoenix theme evening phrase 2"
+  },
+  "phoenixEvening3": "ignite your power!",
+  "@phoenixEvening3": {
+    "description": "Phoenix theme evening phrase 3"
+  },
+  "phoenixNight1": "flames never fade!",
+  "@phoenixNight1": {
+    "description": "Phoenix theme night phrase 1"
+  },
+  "phoenixNight2": "midnight fire session!",
+  "@phoenixNight2": {
+    "description": "Phoenix theme night phrase 2"
+  },
+  "phoenixNight3": "rebirth in darkness!",
+  "@phoenixNight3": {
+    "description": "Phoenix theme night phrase 3"
+  },
+  "frostMorning1": "cold precision awaits!",
+  "@frostMorning1": {
+    "description": "Frost theme morning phrase 1"
+  },
+  "frostMorning2": "sharp as ice!",
+  "@frostMorning2": {
+    "description": "Frost theme morning phrase 2"
+  },
+  "frostMorning3": "cool focus, strong body!",
+  "@frostMorning3": {
+    "description": "Frost theme morning phrase 3"
+  },
+  "frostAfternoon1": "calculated power!",
+  "@frostAfternoon1": {
+    "description": "Frost theme afternoon phrase 1"
+  },
+  "frostAfternoon2": "ice cold determination!",
+  "@frostAfternoon2": {
+    "description": "Frost theme afternoon phrase 2"
+  },
+  "frostAfternoon3": "freeze the competition!",
+  "@frostAfternoon3": {
+    "description": "Frost theme afternoon phrase 3"
+  },
+  "frostEvening1": "winter never rests!",
+  "@frostEvening1": {
+    "description": "Frost theme evening phrase 1"
+  },
+  "frostEvening2": "chill zone power session!",
+  "@frostEvening2": {
+    "description": "Frost theme evening phrase 2"
+  },
+  "frostEvening3": "cool under pressure!",
+  "@frostEvening3": {
+    "description": "Frost theme evening phrase 3"
+  },
+  "frostNight1": "frozen night, hot gains!",
+  "@frostNight1": {
+    "description": "Frost theme night phrase 1"
+  },
+  "frostNight2": "the cold sharpens the mind!",
+  "@frostNight2": {
+    "description": "Frost theme night phrase 2"
+  },
+  "frostNight3": "winter warriors unite!",
+  "@frostNight3": {
+    "description": "Frost theme night phrase 3"
+  },
   "repZones": "Rep Zones",
-  "@repZones": { "description": "Tab label for rep zone distribution" },
+  "@repZones": {
+    "description": "Tab label for rep zone distribution"
+  },
   "volumeByMuscle": "Volume by Muscle",
-  "@volumeByMuscle": { "description": "Section header for volume per muscle group" },
+  "@volumeByMuscle": {
+    "description": "Section header for volume per muscle group"
+  },
   "weeklyVolumeChange": "Weekly Volume Change",
-  "@weeklyVolumeChange": { "description": "Label for weekly volume change indicator" },
+  "@weeklyVolumeChange": {
+    "description": "Label for weekly volume change indicator"
+  },
   "last4Weeks": "Last 4 Weeks",
-  "@last4Weeks": { "description": "Header for 4-week volume chart" },
+  "@last4Weeks": {
+    "description": "Header for 4-week volume chart"
+  },
   "noMuscleDataThisWeek": "No muscle data this week",
-  "@noMuscleDataThisWeek": { "description": "Empty state when no muscle volume data" },
+  "@noMuscleDataThisWeek": {
+    "description": "Empty state when no muscle volume data"
+  },
   "minimumEffectiveVolume": "Minimum Effective Volume",
-  "@minimumEffectiveVolume": { "description": "MEV volume landmark explanation" },
+  "@minimumEffectiveVolume": {
+    "description": "MEV volume landmark explanation"
+  },
   "belowMaintenance": "Below maintenance",
-  "@belowMaintenance": { "description": "Volume zone: below maintenance" },
+  "@belowMaintenance": {
+    "description": "Volume zone: below maintenance"
+  },
   "maintenance": "Maintenance",
-  "@maintenance": { "description": "Volume zone: maintenance level" },
+  "@maintenance": {
+    "description": "Volume zone: maintenance level"
+  },
   "effective": "Effective",
-  "@effective": { "description": "Volume zone: effective for growth" },
+  "@effective": {
+    "description": "Volume zone: effective for growth"
+  },
   "ratioAnalysis": "Ratio Analysis",
-  "@ratioAnalysis": { "description": "Section header for push/pull and upper/lower ratios" },
+  "@ratioAnalysis": {
+    "description": "Section header for push/pull and upper/lower ratios"
+  },
   "muscleHeatmap": "Muscle Heatmap",
-  "@muscleHeatmap": { "description": "Section header for muscle volume heatmap" },
+  "@muscleHeatmap": {
+    "description": "Section header for muscle volume heatmap"
+  },
   "pushPullDescription": "Optimal ratio is 1:1. Imbalances may lead to posture issues",
-  "@pushPullDescription": { "description": "Explanation of push/pull ratio importance" },
+  "@pushPullDescription": {
+    "description": "Explanation of push/pull ratio importance"
+  },
   "upperLowerDescription": "Balanced training between upper and lower body for symmetry",
-  "@upperLowerDescription": { "description": "Explanation of upper/lower ratio importance" },
+  "@upperLowerDescription": {
+    "description": "Explanation of upper/lower ratio importance"
+  },
   "outOf10": "out of 10",
-  "@outOf10": { "description": "Suffix for balance score display" },
+  "@outOf10": {
+    "description": "Suffix for balance score display"
+  },
   "completeWorkoutsToSeeStats": "Complete workouts to see your stats",
-  "@completeWorkoutsToSeeStats": { "description": "Empty state message encouraging workouts" },
+  "@completeWorkoutsToSeeStats": {
+    "description": "Empty state message encouraging workouts"
+  },
   "optimal": "Optimal",
-  "@optimal": { "description": "Volume zone: optimal for growth" },
+  "@optimal": {
+    "description": "Volume zone: optimal for growth"
+  },
   "excessive": "Excessive",
-  "@excessive": { "description": "Volume zone: too much volume" },
-
+  "@excessive": {
+    "description": "Volume zone: too much volume"
+  },
   "stressIndex": "Training Stress",
-  "@stressIndex": { "description": "Header for stress index card" },
+  "@stressIndex": {
+    "description": "Header for stress index card"
+  },
   "stressLevelLight": "Light Session",
-  "@stressLevelLight": { "description": "Stress level: light workout" },
+  "@stressLevelLight": {
+    "description": "Stress level: light workout"
+  },
   "stressLevelModerate": "Moderate Session",
-  "@stressLevelModerate": { "description": "Stress level: moderate workout" },
+  "@stressLevelModerate": {
+    "description": "Stress level: moderate workout"
+  },
   "stressLevelHard": "Hard Session",
-  "@stressLevelHard": { "description": "Stress level: hard workout" },
+  "@stressLevelHard": {
+    "description": "Stress level: hard workout"
+  },
   "stressLevelVeryHard": "Very Hard Session",
-  "@stressLevelVeryHard": { "description": "Stress level: very hard workout" },
+  "@stressLevelVeryHard": {
+    "description": "Stress level: very hard workout"
+  },
   "stressDescriptionLight": "Easy recovery, ready to train again soon",
-  "@stressDescriptionLight": { "description": "Description for light stress level" },
+  "@stressDescriptionLight": {
+    "description": "Description for light stress level"
+  },
   "stressDescriptionModerate": "Standard training load, good progress",
-  "@stressDescriptionModerate": { "description": "Description for moderate stress level" },
+  "@stressDescriptionModerate": {
+    "description": "Description for moderate stress level"
+  },
   "stressDescriptionHard": "Intense session, allow adequate recovery",
-  "@stressDescriptionHard": { "description": "Description for hard stress level" },
+  "@stressDescriptionHard": {
+    "description": "Description for hard stress level"
+  },
   "stressDescriptionVeryHard": "Maximum effort, prioritize rest",
-  "@stressDescriptionVeryHard": { "description": "Description for very hard stress level" },
+  "@stressDescriptionVeryHard": {
+    "description": "Description for very hard stress level"
+  },
   "lowConfidenceHint": "Log RPE for more accurate insights",
-  "@lowConfidenceHint": { "description": "Hint to encourage RPE logging" },
+  "@lowConfidenceHint": {
+    "description": "Hint to encourage RPE logging"
+  },
   "muscleRecovery": "Muscle Recovery",
-  "@muscleRecovery": { "description": "Header for muscle recovery section" },
+  "@muscleRecovery": {
+    "description": "Header for muscle recovery section"
+  },
   "stressBreakdown": "Stress Breakdown",
-  "@stressBreakdown": { "description": "Header for stress breakdown by muscle" },
+  "@stressBreakdown": {
+    "description": "Header for stress breakdown by muscle"
+  },
   "accuracyInfo": "Accuracy Info",
-  "@accuracyInfo": { "description": "Header for confidence explanation section" },
+  "@accuracyInfo": {
+    "description": "Header for confidence explanation section"
+  },
   "confidenceExplanation": "{confidencePercent}% of sets ({setsWithRpe}/{totalSets}) include RPE data",
   "@confidenceExplanation": {
     "description": "Explanation of confidence score",
     "placeholders": {
-      "confidencePercent": { "type": "int", "example": "75" },
-      "setsWithRpe": { "type": "int", "example": "9" },
-      "totalSets": { "type": "int", "example": "12" }
+      "confidencePercent": {
+        "type": "int",
+        "example": "75"
+      },
+      "setsWithRpe": {
+        "type": "int",
+        "example": "9"
+      },
+      "totalSets": {
+        "type": "int",
+        "example": "12"
+      }
     }
   },
   "rpeImproveAccuracy": "Adding RPE to sets improves accuracy",
-  "@rpeImproveAccuracy": { "description": "Tip to improve stress calculation accuracy" },
+  "@rpeImproveAccuracy": {
+    "description": "Tip to improve stress calculation accuracy"
+  },
   "estimatedRange": "Estimated range: {range}",
   "@estimatedRange": {
     "description": "Shows estimated score range when confidence is low",
     "placeholders": {
-      "range": { "type": "String", "example": "72-84" }
+      "range": {
+        "type": "String",
+        "example": "72-84"
+      }
     }
   },
   "fullyRecovered": "Fully Recovered",
-  "@fullyRecovered": { "description": "Recovery state: 100%" },
+  "@fullyRecovered": {
+    "description": "Recovery state: 100%"
+  },
   "almostReady": "Almost Ready",
-  "@almostReady": { "description": "Recovery state: 75-99%" },
+  "@almostReady": {
+    "description": "Recovery state: 75-99%"
+  },
   "recovering": "Recovering",
-  "@recovering": { "description": "Recovery state: 50-74%" },
+  "@recovering": {
+    "description": "Recovery state: 50-74%"
+  },
   "fatiguedMuscle": "Fatigued",
-  "@fatiguedMuscle": { "description": "Recovery state: 25-49%" },
+  "@fatiguedMuscle": {
+    "description": "Recovery state: 25-49%"
+  },
   "exhaustedMuscle": "Needs Rest",
-  "@exhaustedMuscle": { "description": "Recovery state: 0-24%" }
+  "@exhaustedMuscle": {
+    "description": "Recovery state: 0-24%"
+  },
+  "completeWorkoutForStressIndex": "Complete a workout to see your training stress analysis",
+  "@completeWorkoutForStressIndex": {
+    "description": "Empty state message for stress index"
+  },
+  "recentHistory": "Recent History",
+  "@recentHistory": {
+    "description": "Section title for recent stress history"
+  },
+  "dragToExpand": "Drag up for full screen",
+  "@dragToExpand": {
+    "description": "Hint to drag sheet to fullscreen"
+  },
+  "pushCategory": "Push",
+  "@pushCategory": {
+    "description": "Push muscle category label"
+  },
+  "pullCategory": "Pull",
+  "@pullCategory": {
+    "description": "Pull muscle category label"
+  },
+  "upperCategory": "Upper Body",
+  "@upperCategory": {
+    "description": "Upper body category label"
+  },
+  "lowerCategory": "Lower Body",
+  "@lowerCategory": {
+    "description": "Lower body category label"
+  },
+  "percentageOfTotal": "{percentage}% of total",
+  "@percentageOfTotal": {
+    "description": "Percentage contribution to total",
+    "placeholders": {
+      "percentage": {
+        "type": "String",
+        "example": "25.5"
+      }
+    }
+  },
+  "noExercisesInCategory": "No exercises in this category yet",
+  "@noExercisesInCategory": {
+    "description": "Empty state for category with no exercises"
+  },
+  "totalVolumeLabel": "Total Volume",
+  "@totalVolumeLabel": {
+    "description": "Label for total volume"
+  },
+  "addToTemplate": "Add to Template",
+  "@addToTemplate": {
+    "description": "Title for add exercise to template sheet"
+  },
+  "selectTemplateToAddExercise": "Select a template to add this exercise to",
+  "@selectTemplateToAddExercise": {
+    "description": "Instruction for template selection"
+  },
+  "noTemplatesFound": "No templates found",
+  "@noTemplatesFound": {
+    "description": "Empty state when no templates exist"
+  },
+  "errorAddingExercise": "Error adding exercise to template",
+  "@errorAddingExercise": {
+    "description": "Error message when adding exercise fails"
+  },
+  "adding": "Adding...",
+  "@adding": {
+    "description": "Loading state while adding"
+  },
+  "addExerciseToTemplate": "Add to Template",
+  "@addExerciseToTemplate": {
+    "description": "Button to add exercise to selected template"
+  },
+  "exerciseAddedToTemplate": "Exercise added to {templateName}",
+  "@exerciseAddedToTemplate": {
+    "description": "Success message after adding exercise",
+    "placeholders": {
+      "templateName": {
+        "type": "String"
+      }
+    }
+  },
+  "exerciseAddedWithVolume": "{exerciseName} added: {sets} sets x {reps} reps, {restSeconds}s rest",
+  "@exerciseAddedWithVolume": {
+    "description": "Success message showing personalized volume when exercise is added to template",
+    "placeholders": {
+      "exerciseName": {
+        "type": "String",
+        "example": "Bench Press"
+      },
+      "sets": {
+        "type": "int",
+        "example": "3"
+      },
+      "reps": {
+        "type": "int",
+        "example": "10"
+      },
+      "restSeconds": {
+        "type": "int",
+        "example": "90"
+      }
+    }
+  },
+  "weightJump": "Weight jump",
+  "@weightJump": {
+    "description": "Short label for weight jump indicator"
+  },
+  "weightJumpDetected": "Weight jump detected",
+  "@weightJumpDetected": {
+    "description": "Title for weight jump warning"
+  },
+  "minimumWeight": "Min weight",
+  "@minimumWeight": {
+    "description": "Label for minimum weight in jump info"
+  },
+  "maximumWeight": "Max weight",
+  "@maximumWeight": {
+    "description": "Label for maximum weight in jump info"
+  },
+  "weightJumpTip1": "Pay attention to form on heavier sets",
+  "@weightJumpTip1": {
+    "description": "Safety tip 1 for weight jump"
+  },
+  "weightJumpTip2": "Consider adding warm-up sets between weights",
+  "@weightJumpTip2": {
+    "description": "Safety tip 2 for weight jump"
+  },
+  "weightJumpTip3": "Listen to your body and stop if something feels wrong",
+  "@weightJumpTip3": {
+    "description": "Safety tip 3 for weight jump"
+  },
+  "weightJumpTip4": "Make sure to maintain proper breathing",
+  "@weightJumpTip4": {
+    "description": "Safety tip 4 for weight jump"
+  },
+  "understood": "Got it",
+  "exerciseSummary": "Exercise Summary",
+  "@exerciseSummary": { "description": "Header for exercise summary in workout completion" },
+  "redirectingToHome": "Redirecting to home in {seconds}...",
+  "@redirectingToHome": { "description": "Countdown text", "placeholders": { "seconds": { "type": "String" } } },
+  "continueToHome": "Continue to Home",
+  "@continueToHome": { "description": "Button to go to home" },
+  "@understood": {
+    
+    "description": "Button to dismiss info sheet"
+  },
+  "selectRestDuration": "Select rest duration",
+  "@selectRestDuration": {
+    "description": "Subtitle for custom timer modal"
+  },
+  "orCustom": "or custom",
+  "@orCustom": {
+    "description": "Divider text between presets and custom picker"
+  },
+  "longPressToSkip": "Long press to skip",
+  "@longPressToSkip": {
+    "description": "Hint for skipping timer with long press"
+  },
+  "youBeatYourRecord": "You beat your previous best!",
+  "@youBeatYourRecord": {
+    "description": "Subtitle for PR celebration"
+  },
+  "keepUpTheGoodWork": "Keep up the great work!",
+  "@keepUpTheGoodWork": {
+    "description": "Subtitle for motivational messages"
+  },
+  "suggestionBasedOnYourWorkout": "Based on your workout",
+  "@suggestionBasedOnYourWorkout": {
+    "description": "Generic subtitle for suggestions"
+  },
+  "whatThisMeans": "What this means",
+  "@whatThisMeans": {
+    "description": "Section header for tips"
+  },
+  "prTip1": "Record your achievement and celebrate!",
+  "@prTip1": {
+    "description": "PR tip 1"
+  },
+  "prTip2": "Consider a small rest before pushing harder",
+  "@prTip2": {
+    "description": "PR tip 2"
+  },
+  "prTip3": "Progressive overload is working - keep it up",
+  "@prTip3": {
+    "description": "PR tip 3"
+  },
+  "motivationTip1": "Consistency beats intensity every time",
+  "@motivationTip1": {
+    "description": "Motivation tip 1"
+  },
+  "motivationTip2": "Your dedication is paying off",
+  "@motivationTip2": {
+    "description": "Motivation tip 2"
+  },
+  "motivationTip3": "Small gains add up to big results",
+  "@motivationTip3": {
+    "description": "Motivation tip 3"
+  },
+  "tipAdvice1": "Apply this tip to improve your form",
+  "@tipAdvice1": {
+    "description": "Generic tip advice 1"
+  },
+  "tipAdvice2": "Focus on quality over quantity",
+  "@tipAdvice2": {
+    "description": "Generic tip advice 2"
+  },
+  "warningAdvice1": "Take this warning seriously for your safety",
+  "@warningAdvice1": {
+    "description": "Warning advice 1"
+  },
+  "warningAdvice2": "Consider reducing weight if needed",
+  "@warningAdvice2": {
+    "description": "Warning advice 2"
+  },
+  "applyToRemainingNSets": "Apply to {count} remaining sets",
+  "@applyToRemainingNSets": {
+    "description": "Apply current values to remaining sets",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "saveAndNext": "Save + Next",
+  "@saveAndNext": {
+    "description": "Button to save current set and move to next"
+  },
+  "showRpe": "Add RPE",
+  "@showRpe": {
+    "description": "Button to show RPE selector"
+  },
+  "tutorialWelcomeTitle": "Welcome to Your Workout!",
+  "@tutorialWelcomeTitle": {
+    "description": "Tutorial welcome title"
+  },
+  "tutorialWelcomeMessage": "I'll guide you step by step through your first workout. Let's start!",
+  "@tutorialWelcomeMessage": {
+    "description": "Tutorial welcome message"
+  },
+  "tutorialAddExerciseTitle": "Add Your First Exercise",
+  "@tutorialAddExerciseTitle": {
+    "description": "Tutorial add exercise title"
+  },
+  "tutorialAddExerciseMessage": "Tap the 'Add Exercise' button to add your first exercise.",
+  "@tutorialAddExerciseMessage": {
+    "description": "Tutorial add exercise message"
+  },
+  "tutorialSearchExerciseTitle": "Find Your Exercise",
+  "@tutorialSearchExerciseTitle": {
+    "description": "Tutorial search exercise title"
+  },
+  "tutorialSearchExerciseMessage": "Search by name or browse by muscle group. Pick any exercise to begin!",
+  "@tutorialSearchExerciseMessage": {
+    "description": "Tutorial search exercise message"
+  },
+  "tutorialFirstSetTitle": "Log Your First Set",
+  "@tutorialFirstSetTitle": {
+    "description": "Tutorial first set title"
+  },
+  "tutorialFirstSetMessage": "Great! Tap on a set to enter the weight and reps you performed.",
+  "@tutorialFirstSetMessage": {
+    "description": "Tutorial first set message"
+  },
+  "tutorialSetInputTitle": "Enter Your Numbers",
+  "@tutorialSetInputTitle": {
+    "description": "Tutorial set input title"
+  },
+  "tutorialSetInputMessage": "Enter the weight and reps, then tap ✓ to save. Simple!",
+  "@tutorialSetInputMessage": {
+    "description": "Tutorial set input message"
+  },
+  "tutorialRestTimerTitle": "Rest Timer Started",
+  "@tutorialRestTimerTitle": {
+    "description": "Tutorial rest timer title"
+  },
+  "tutorialRestTimerMessage": "Great job! 💪 The rest timer starts automatically. Take a break between sets.",
+  "@tutorialRestTimerMessage": {
+    "description": "Tutorial rest timer message"
+  },
+  "tutorialExerciseMenuTitle": "Customize Exercise",
+  "@tutorialExerciseMenuTitle": {
+    "description": "Tutorial exercise menu title"
+  },
+  "tutorialExerciseMenuMessage": "Tap the menu (⋮) to customize, replace, or remove this exercise.",
+  "@tutorialExerciseMenuMessage": {
+    "description": "Tutorial exercise menu message"
+  },
+  "tutorialReorderTitle": "Reorder Exercises",
+  "@tutorialReorderTitle": {
+    "description": "Tutorial reorder title"
+  },
+  "tutorialReorderMessage": "Tap here to drag and reorder your exercises.",
+  "@tutorialReorderMessage": {
+    "description": "Tutorial reorder message"
+  },
+  "tutorialSettingsTitle": "Workout Settings",
+  "@tutorialSettingsTitle": {
+    "description": "Tutorial settings title"
+  },
+  "tutorialSettingsMessage": "Here you can customize your workout, save it as a template, or discard it.",
+  "@tutorialSettingsMessage": {
+    "description": "Tutorial settings message"
+  },
+  "tutorialFinishTitle": "Finish Your Workout",
+  "@tutorialFinishTitle": {
+    "description": "Tutorial finish title"
+  },
+  "tutorialFinishMessage": "When you're done, tap here to complete your workout and save your progress!",
+  "@tutorialFinishMessage": {
+    "description": "Tutorial finish message"
+  },
+  "tutorialCompletedTitle": "You're Ready!",
+  "@tutorialCompletedTitle": {
+    "description": "Tutorial completed title"
+  },
+  "tutorialCompletedMessage": "You now know how to use the workout screen. Get lifting! 🏋️",
+  "@tutorialCompletedMessage": {
+    "description": "Tutorial completed message"
+  },
+  "tutorialGotIt": "Got it!",
+  "@tutorialGotIt": {
+    "description": "Tutorial dismiss button"
+  },
+  "tutorialNext": "Next",
+  "@tutorialNext": {
+    "description": "Tutorial next step button"
+  },
+  "tutorialSkip": "Skip tutorial",
+  "@tutorialSkip": {
+    "description": "Tutorial skip button"
+  },
+  "tutorialDragFabTitle": "Move This Button",
+  "@tutorialDragFabTitle": {
+    "description": "Tutorial drag FAB title"
+  },
+  "tutorialDragFabMessage": "Drag this button left or right to reposition it.",
+  "@tutorialDragFabMessage": {
+    "description": "Tutorial drag FAB message"
+  },
+  "alternativeExercisesCount": "{count} similar exercises",
+  "@alternativeExercisesCount": {
+    "description": "Count of alternative exercises found",
+    "placeholders": {
+      "count": {
+        "type": "int",
+        "example": "8"
+      }
+    }
+  },
+  "noAlternativesFound": "No alternative exercises found",
+  "@noAlternativesFound": {
+    "description": "Empty state when no alternative exercises are available"
+  },
+  "noAlternativesHint": "Try searching for similar exercises in the database",
+  "@noAlternativesHint": {
+    "description": "Hint text for empty alternatives state"
+  }
 }
