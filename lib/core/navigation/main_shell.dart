@@ -21,6 +21,8 @@
 /// 4. Settings (index 3) - App configuration
 library;
 
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -59,6 +61,12 @@ class _MainShellState extends ConsumerState<MainShell> {
   String? _lastWorkoutId;
 
   @override
+  void initState() {
+    super.initState();
+    // Journey Themes now auto-initialize via Notifier.build()
+  }
+
+  @override
   Widget build(BuildContext context) {
     final workout = ref.watch(currentWorkoutProvider);
     final currentIndex = widget.navigationShell.currentIndex;
@@ -94,18 +102,28 @@ class _MainShellState extends ConsumerState<MainShell> {
             workout.status == WorkoutStatus.paused);
 
     return Scaffold(
+      // ✨ Material 3 2025: Subtle background veil instead of pure white
+      backgroundColor: context.colors.surfaceContainer,
       body: widget.navigationShell,
       bottomNavigationBar: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
           // Mini-bar with slide up/down animation
-          ClipRect(
-            child: AnimatedSize(
-              duration: const Duration(milliseconds: 300),
-              curve: Curves.easeOutCubic,
-              child: shouldRenderMiniBar && showMiniBar
-                  ? WorkoutMiniBar(workout: workout)
-                  : const SizedBox.shrink(),
+          // Background matches scaffold to avoid color bleed from nav bar
+          ColoredBox(
+            color: context.colors.surfaceContainer,
+            child: ClipRect(
+              child: AnimatedSize(
+                duration: const Duration(milliseconds: 300),
+                curve: Curves.easeOutCubic,
+                child: shouldRenderMiniBar && showMiniBar
+                    ? WorkoutMiniBar(
+                        workout: workout,
+                        onDiscard: () => _showDiscardConfirmation(context),
+                        onSave: () => _showSaveConfirmation(context),
+                      )
+                    : const SizedBox.shrink(),
+              ),
             ),
           ),
           _BottomNavigationBar(
@@ -134,6 +152,86 @@ class _MainShellState extends ConsumerState<MainShell> {
       initialLocation: index == widget.navigationShell.currentIndex,
     );
   }
+
+  /// Show confirmation dialog before discarding workout
+  /// Returns true if user confirmed discard, false if canceled
+  Future<bool> _showDiscardConfirmation(BuildContext context) async {
+    unawaited(HapticFeedback.mediumImpact());
+
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (dialogContext) => AlertDialog(
+        title: Text(context.l10n.discardWorkoutTitle),
+        content: Text(context.l10n.discardWorkoutQuestion),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(dialogContext).pop(false),
+            child: Text(context.l10n.cancel),
+          ),
+          TextButton(
+            onPressed: () => Navigator.of(dialogContext).pop(true),
+            style: TextButton.styleFrom(
+              foregroundColor: context.colors.error,
+            ),
+            child: Text(context.l10n.discard),
+          ),
+        ],
+      ),
+    );
+
+    if (confirmed == true && context.mounted) {
+      // Clear workout and navigate to home
+      ref.read(currentWorkoutProvider.notifier).clearWorkout();
+      context.go('/');
+      return true;
+    }
+
+    return false;
+  }
+
+  /// Show confirmation dialog before saving workout
+  /// Returns true if user confirmed save, false if canceled
+  Future<bool> _showSaveConfirmation(BuildContext context) async {
+    unawaited(HapticFeedback.mediumImpact());
+
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (dialogContext) => AlertDialog(
+        title: Text(context.l10n.save),
+        content: Text(context.l10n.saveWorkoutQuestion),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(dialogContext).pop(false),
+            child: Text(context.l10n.cancel),
+          ),
+          TextButton(
+            onPressed: () => Navigator.of(dialogContext).pop(true),
+            style: TextButton.styleFrom(
+              foregroundColor: context.colors.primary,
+            ),
+            child: Text(context.l10n.save),
+          ),
+        ],
+      ),
+    );
+
+    if (confirmed == true && context.mounted) {
+      // Pause workout to save state
+      ref.read(currentWorkoutProvider.notifier).pauseWorkout();
+
+      // Show confirmation snackbar
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(context.l10n.workoutSaved),
+          duration: const Duration(seconds: 2),
+          behavior: SnackBarBehavior.floating,
+        ),
+      );
+      return true;
+    }
+
+    return false;
+  }
 }
 
 /// Material 3 NavigationBar with 3 destinations
@@ -158,7 +256,7 @@ class _BottomNavigationBar extends StatelessWidget {
               fontSize: 11,
               fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
               color: isSelected
-                  ? context.colors.primary
+                  ? (context.journeyTheme?.primaryColor ?? context.colors.primary)
                   : context.colors.onSurfaceVariant,
             );
           }),
@@ -169,7 +267,8 @@ class _BottomNavigationBar extends StatelessWidget {
         onDestinationSelected: onDestinationSelected,
         // Material 3 styling - iOS standard 64px height
         elevation: 0,
-        backgroundColor: context.colors.surface,
+        // ✨ Material 3 2025: Slightly elevated surface for depth
+        backgroundColor: context.colors.surfaceContainerLow,
         indicatorColor: Colors.transparent, // No indicator background
         surfaceTintColor: Colors.transparent,
         height: 64,
@@ -186,7 +285,7 @@ class _BottomNavigationBar extends StatelessWidget {
             selectedIcon: Icon(
               AppIcons.homeOutlined,
               size: AppIconSize.medium,
-              color: context.colors.primary,
+              color: context.journeyTheme?.primaryColor ?? context.colors.primary,
             ),
             label: context.l10n.home,
             tooltip: context.l10n.home,
@@ -201,7 +300,7 @@ class _BottomNavigationBar extends StatelessWidget {
             selectedIcon: Icon(
               AppIcons.workoutOutlined,
               size: AppIconSize.medium,
-              color: context.colors.primary,
+              color: context.journeyTheme?.primaryColor ?? context.colors.primary,
             ),
             label: context.l10n.workout,
             tooltip: context.l10n.workout,
@@ -216,7 +315,7 @@ class _BottomNavigationBar extends StatelessWidget {
             selectedIcon: Icon(
               AppIcons.profileOutlined,
               size: AppIconSize.medium,
-              color: context.colors.primary,
+              color: context.journeyTheme?.primaryColor ?? context.colors.primary,
             ),
             label: context.l10n.profile,
             tooltip: context.l10n.profile,
