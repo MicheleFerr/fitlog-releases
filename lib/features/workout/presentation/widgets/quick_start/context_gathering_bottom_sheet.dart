@@ -8,6 +8,7 @@
 /// 📱 Platform: iOS/Android/Universal
 library;
 
+import 'package:flutter/foundation.dart' show kDebugMode;
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -131,7 +132,7 @@ class _ContextGatheringBottomSheetState
             color: isCompleted || isActive
                 ? context.colors.primary
                 : context.colors.surfaceContainerHighest,
-            borderRadius: BorderRadius.circular(4),
+            borderRadius: BorderRadius.circular(8),
           ),
         );
       }),
@@ -239,31 +240,39 @@ class _ContextGatheringBottomSheetState
       label: context.l10n.selectTimeMinutes(minutes),
       button: true,
       enabled: true,
-      child: FilterChip(
-        label: Center(
-          child: Column(
-            children: [
-              Text(emoji, style: const TextStyle(fontSize: 24)),
-              const SizedBox(height: 4),
-              Text(
-                context.l10n.timeMinutes(minutes),
-                style: context.textTheme.bodyLarge?.copyWith(
-                  fontWeight: FontWeight.bold,
-                ),
+      child: Material(
+        color: Colors.transparent,
+        borderRadius: BorderRadius.circular(16),
+        child: InkWell(
+          onTap: () => _onTimeSelected(minutes),
+          borderRadius: BorderRadius.circular(16),
+          child: Container(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+            decoration: BoxDecoration(
+              color: isSelected
+                  ? color.withValues(alpha: 0.2)
+                  : context.colors.surfaceContainerHighest,
+              borderRadius: BorderRadius.circular(16),
+              border: Border.all(
+                color: isSelected ? color : Colors.transparent,
+                width: 2,
               ),
-            ],
+            ),
+            child: Column(
+              children: [
+                Text(emoji, style: context.textTheme.headlineMedium),
+                const SizedBox(height: 6),
+                Text(
+                  context.l10n.timeMinutes(minutes),
+                  style: context.textTheme.titleMedium?.copyWith(
+                    fontWeight: FontWeight.w600,
+                    color: isSelected ? color : context.colors.onSurface,
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
-        selected: isSelected,
-        onSelected: (selected) => _onTimeSelected(minutes),
-        backgroundColor: color.withValues(alpha: 0.1),
-        selectedColor: color.withValues(alpha: 0.3),
-        checkmarkColor: context.colors.onPrimary,
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
-        materialTapTargetSize: MaterialTapTargetSize.padded,
-        elevation: 0,
-        pressElevation: 4,
-        shadowColor: context.colors.shadow,
       ),
     );
   }
@@ -276,7 +285,9 @@ class _ContextGatheringBottomSheetState
 
     // Log step 1 completion time
     final step1Time = DateTime.now().difference(_step1StartTime!).inMilliseconds;
-    debugPrint('Step 1 completed in ${step1Time}ms');
+    if (kDebugMode) {
+      debugPrint('Step 1 completed in ${step1Time}ms');
+    }
 
     // Navigate to Step 2 after animation
     Future.delayed(const Duration(milliseconds: 300), () {
@@ -348,53 +359,67 @@ class _ContextGatheringBottomSheetState
     required bool showDescription,
   }) {
     final isSelected = selectedLevel == level;
+    final levelColor = level.badgeColor(context.isDarkMode);
 
     return Semantics(
       label: context.l10n.selectExperienceLevel(level.localizedName(context)),
       button: true,
       enabled: true,
-      child: FilterChip(
-        label: SizedBox(
-          width: double.infinity,
-          child: Row(
-            children: [
-              Text(level.emoji, style: const TextStyle(fontSize: 24)),
-              const SizedBox(width: 12),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      level.localizedName(context),
-                      style: context.textTheme.bodyLarge?.copyWith(
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    if (showDescription) ...[
-                      const SizedBox(height: 4),
+      child: Material(
+        color: Colors.transparent,
+        borderRadius: BorderRadius.circular(16),
+        child: InkWell(
+          onTap: () => _onExperienceSelected(level),
+          borderRadius: BorderRadius.circular(16),
+          child: Container(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+            decoration: BoxDecoration(
+              color: isSelected
+                  ? levelColor.withValues(alpha: 0.15)
+                  : context.colors.surfaceContainerHighest,
+              borderRadius: BorderRadius.circular(16),
+              border: Border.all(
+                color: isSelected ? levelColor : Colors.transparent,
+                width: 2,
+              ),
+            ),
+            child: Row(
+              children: [
+                Text(level.emoji, style: context.textTheme.headlineMedium),
+                const SizedBox(width: 14),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
                       Text(
-                        level.localizedDescription(context),
-                        style: context.textTheme.bodySmall?.copyWith(
-                          color: context.colors.onSurfaceVariant,
+                        level.localizedName(context),
+                        style: context.textTheme.titleMedium?.copyWith(
+                          fontWeight: FontWeight.w600,
+                          color: isSelected ? levelColor : context.colors.onSurface,
                         ),
                       ),
+                      if (showDescription) ...[
+                        const SizedBox(height: 4),
+                        Text(
+                          level.localizedDescription(context),
+                          style: context.textTheme.bodySmall?.copyWith(
+                            color: context.colors.onSurfaceVariant,
+                          ),
+                        ),
+                      ],
                     ],
-                  ],
+                  ),
                 ),
-              ),
-            ],
+                if (isSelected)
+                  Icon(
+                    AppIcons.checkCircle,
+                    color: levelColor,
+                    size: AppIconSize.medium,
+                  ),
+              ],
+            ),
           ),
         ),
-        selected: isSelected,
-        onSelected: (selected) => _onExperienceSelected(level),
-        backgroundColor: context.colors.surfaceContainerHighest,
-        selectedColor: level.badgeColorWithOpacity(context.isDarkMode),
-        checkmarkColor: level.badgeColor(context.isDarkMode),
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-        materialTapTargetSize: MaterialTapTargetSize.padded,
-        elevation: 0,
-        pressElevation: 4,
-        shadowColor: context.colors.shadow,
       ),
     );
   }
@@ -406,7 +431,9 @@ class _ContextGatheringBottomSheetState
 
     // Log step 2 completion time
     final step2Time = DateTime.now().difference(_step2StartTime!).inMilliseconds;
-    debugPrint('Step 2 completed in ${step2Time}ms');
+    if (kDebugMode) {
+      debugPrint('Step 2 completed in ${step2Time}ms');
+    }
 
     // Check if turbo user (total time <6 sec)
     final totalTime = _stopwatch.elapsedMilliseconds;
@@ -498,33 +525,48 @@ class _ContextGatheringBottomSheetState
       label: context.l10n.selectGender(label),
       button: true,
       enabled: true,
-      child: FilterChip(
-        label: SizedBox(
-          width: double.infinity,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text(emoji, style: const TextStyle(fontSize: 24)),
-              const SizedBox(width: 12),
-              Text(
-                label,
-                style: context.textTheme.bodyLarge?.copyWith(
-                  fontWeight: FontWeight.bold,
-                ),
+      child: Material(
+        color: Colors.transparent,
+        borderRadius: BorderRadius.circular(16),
+        child: InkWell(
+          onTap: () => _onGenderSelected(value),
+          borderRadius: BorderRadius.circular(16),
+          child: Container(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+            decoration: BoxDecoration(
+              color: isSelected
+                  ? context.colors.primary.withValues(alpha: 0.15)
+                  : context.colors.surfaceContainerHighest,
+              borderRadius: BorderRadius.circular(16),
+              border: Border.all(
+                color: isSelected ? context.colors.primary : Colors.transparent,
+                width: 2,
               ),
-            ],
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(emoji, style: context.textTheme.headlineMedium),
+                const SizedBox(width: 14),
+                Text(
+                  label,
+                  style: context.textTheme.titleMedium?.copyWith(
+                    fontWeight: FontWeight.w600,
+                    color: isSelected ? context.colors.primary : context.colors.onSurface,
+                  ),
+                ),
+                if (isSelected) ...[
+                  const SizedBox(width: 12),
+                  Icon(
+                    AppIcons.checkCircle,
+                    color: context.colors.primary,
+                    size: AppIconSize.medium,
+                  ),
+                ],
+              ],
+            ),
           ),
         ),
-        selected: isSelected,
-        onSelected: (selected) => _onGenderSelected(value),
-        backgroundColor: context.colors.surfaceContainerHighest,
-        selectedColor: context.colors.primary.withValues(alpha: 0.2),
-        checkmarkColor: context.colors.primary,
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-        materialTapTargetSize: MaterialTapTargetSize.padded,
-        elevation: 0,
-        pressElevation: 4,
-        shadowColor: context.colors.shadow,
       ),
     );
   }
@@ -601,11 +643,17 @@ class _ContextGatheringBottomSheetState
     ref.read(workoutContextProvider.notifier).setContext(context);
 
     // Log analytics
-    debugPrint('Context gathering completed:');
+    if (kDebugMode) {
+      debugPrint('Context gathering completed:');
+    }
     debugPrint('  Time: ${context.timeAvailable}min');
-    debugPrint('  Level: ${context.experienceLevel?.name ?? 'none'}');
+    if (kDebugMode) {
+      debugPrint('  Level: ${context.experienceLevel?.name ?? 'none'}');
+    }
     debugPrint('  Gender: ${context.gender ?? 'none'}');
-    debugPrint('  Total time: ${totalTime}ms (${context.completionSpeedCategory})');
+    if (kDebugMode) {
+      debugPrint('  Total time: ${totalTime}ms (${context.completionSpeedCategory})');
+    }
     debugPrint('  Suggested exercises: ${context.suggestedExerciseCount}');
 
     // Close this bottom sheet

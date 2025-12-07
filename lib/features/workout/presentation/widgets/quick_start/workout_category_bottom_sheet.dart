@@ -1,16 +1,20 @@
-/// 🏋️‍♂️ GymBro TrackLog - Flutter Fitness App
+/// GymBro TrackLog - Flutter Fitness App
 ///
-/// 📁 Layer: presentation
-/// 🎯 Feature: workout
-/// 🔧 Type: widget
-/// 🌍 Localization: ✅ AppLocalizations used
-/// 🎨 Theme: ✅ ColorScheme responsive
-/// 📱 Platform: iOS/Android/Universal
+/// Layer: presentation
+/// Feature: workout
+/// Type: widget
+///
+/// Bottom sheet for selecting workout category.
+/// When a category is selected, it uses the TemplateSuggestionService
+/// to find a matching predefined template based on user context
+/// (time, level, gender) and creates a workout with pre-populated exercises.
 library;
 
 import 'package:flutter/material.dart';
 import 'package:flutter/semantics.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:gymbro_flutter_new/features/workout/domain/services/template_suggestion_service.dart';
+import 'package:gymbro_flutter_new/features/workout/presentation/providers/workout_context_provider.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/providers/workout_provider.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 
@@ -18,23 +22,26 @@ import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_
 ///
 /// Features:
 /// - 8 category chips (Chest, Legs, Back, Arms, Cardio, Full Body, HIIT, Custom)
+/// - Template suggestion based on user context (time, level, gender)
+/// - Pre-populated exercises from matched templates
 /// - Custom name input with validation
 /// - Full accessibility support (screen reader, keyboard navigation)
 /// - Material Design 3 compliant
 /// - Theme-aware colors (dark/light mode)
-class WorkoutCategoryBottomSheet extends StatefulWidget {
+class WorkoutCategoryBottomSheet extends ConsumerStatefulWidget {
   const WorkoutCategoryBottomSheet({super.key});
 
   @override
-  State<WorkoutCategoryBottomSheet> createState() =>
+  ConsumerState<WorkoutCategoryBottomSheet> createState() =>
       _WorkoutCategoryBottomSheetState();
 }
 
 class _WorkoutCategoryBottomSheetState
-    extends State<WorkoutCategoryBottomSheet> {
+    extends ConsumerState<WorkoutCategoryBottomSheet> {
   bool _isCustomMode = false;
   final TextEditingController _customNameController = TextEditingController();
   final FocusNode _customFieldFocus = FocusNode();
+  final TemplateSuggestionService _templateService = TemplateSuggestionService();
 
   @override
   void dispose() {
@@ -142,47 +149,56 @@ class _WorkoutCategoryBottomSheetState
     String label;
     String workoutName;
     String semanticLabel;
+    Color categoryColor;
 
     switch (category) {
       case 'chest':
         label = context.l10n.chest;
         workoutName = context.l10n.chestWorkout;
         semanticLabel = context.l10n.selectChestWorkout;
+        categoryColor = context.colors.error;
         break;
       case 'legs':
         label = context.l10n.legs;
         workoutName = context.l10n.legsWorkout;
         semanticLabel = context.l10n.selectLegsWorkout;
+        categoryColor = context.colors.primary;
         break;
       case 'back':
         label = context.l10n.back;
         workoutName = context.l10n.backWorkout;
         semanticLabel = context.l10n.selectBackWorkout;
+        categoryColor = context.colors.tertiary;
         break;
       case 'arms':
         label = context.l10n.arms;
         workoutName = context.l10n.armsWorkout;
         semanticLabel = context.l10n.selectArmsWorkout;
+        categoryColor = context.colors.secondary;
         break;
       case 'cardio':
         label = context.l10n.cardio;
         workoutName = context.l10n.cardioWorkout;
         semanticLabel = context.l10n.selectCardioWorkout;
+        categoryColor = context.colors.error;
         break;
       case 'fullBody':
         label = context.l10n.fullBody;
         workoutName = context.l10n.fullBodyWorkout;
         semanticLabel = context.l10n.selectFullBodyWorkout;
+        categoryColor = context.colors.success;
         break;
       case 'hiit':
         label = context.l10n.hiit;
         workoutName = context.l10n.hiitWorkout;
         semanticLabel = context.l10n.selectHiitWorkout;
+        categoryColor = context.colors.warning;
         break;
       default:
         label = category;
         workoutName = '$category Workout';
         semanticLabel = 'Select $category workout';
+        categoryColor = context.colors.primary;
     }
 
     return FocusTraversalOrder(
@@ -191,18 +207,40 @@ class _WorkoutCategoryBottomSheetState
         label: semanticLabel,
         button: true,
         enabled: true,
-        child: FilterChip(
-          label: Center(child: Text('$emoji $label')),
-          selected: false,
-          onSelected: (selected) => _onCategorySelected(context, workoutName),
-          backgroundColor: context.colors.surfaceContainerHighest,
-          selectedColor: context.colors.primary.withValues(alpha: 0.2),
-          labelStyle: context.textTheme.bodyLarge,
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-          materialTapTargetSize: MaterialTapTargetSize.padded,
-          elevation: 0,
-          pressElevation: 4,
-          shadowColor: context.colors.shadow,
+        child: Material(
+          color: Colors.transparent,
+          borderRadius: BorderRadius.circular(16),
+          child: InkWell(
+            onTap: () => _onCategorySelected(context, category, workoutName),
+            borderRadius: BorderRadius.circular(16),
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+              decoration: BoxDecoration(
+                color: context.colors.surfaceContainerHighest,
+                borderRadius: BorderRadius.circular(16),
+                border: Border.all(
+                  color: categoryColor.withValues(alpha: 0.3),
+                  width: 1,
+                ),
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(emoji, style: context.textTheme.headlineSmall),
+                  const SizedBox(width: 10),
+                  Flexible(
+                    child: Text(
+                      label,
+                      style: context.textTheme.titleMedium?.copyWith(
+                        fontWeight: FontWeight.w600,
+                      ),
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
         ),
       ),
     );
@@ -315,27 +353,52 @@ class _WorkoutCategoryBottomSheetState
     });
   }
 
-  void _onCategorySelected(BuildContext context, String workoutName) {
-    // Get WidgetRef from context
-    final ref = ProviderScope.containerOf(context);
+  void _onCategorySelected(BuildContext context, String category, String workoutName) {
+    // Get workout context from provider
+    final workoutContext = ref.read(workoutContextProvider);
 
     // Add time-of-day prefix: "🌅 Morning Chest" / "🌅 Petto Mattutino"
     final timePrefix = _getTimeOfDayPrefix(context);
-    final fullWorkoutName = '$timePrefix $workoutName';
+    String fullWorkoutName = '$timePrefix $workoutName';
 
-    // Announce to screen reader (BEFORE navigate)
+    // Try to find a matching template based on context
+    if (workoutContext != null) {
+      final suggestedTemplate = _templateService.getSuggestedTemplate(
+        context: workoutContext,
+        category: category,
+      );
+
+      if (suggestedTemplate != null) {
+        // Use template name with time prefix
+        fullWorkoutName = '$timePrefix ${suggestedTemplate.name}';
+
+        // Announce to screen reader (BEFORE navigate)
+        SemanticsService.announce(
+          context.l10n.workoutCreated(fullWorkoutName),
+          TextDirection.ltr,
+        );
+
+        // Create a modified template with custom name
+        final templateWithName = suggestedTemplate.copyWith(name: fullWorkoutName);
+
+        // Start workout from template with pre-populated exercises
+        ref.read(currentWorkoutProvider.notifier).startFromTemplate(templateWithName);
+
+        // Close bottom sheet
+        Navigator.pop(context);
+        return;
+      }
+    }
+
+    // Fallback: create empty workout if no template matches
     SemanticsService.announce(
       context.l10n.workoutCreated(fullWorkoutName),
       TextDirection.ltr,
     );
 
-    // Create workout with time-prefixed name
     ref.read(currentWorkoutProvider.notifier).createWorkout(fullWorkoutName);
-
-    // Start workout
     ref.read(currentWorkoutProvider.notifier).startWorkout();
 
-    // Close bottom sheet
     Navigator.pop(context);
   }
 
@@ -375,7 +438,7 @@ class _WorkoutCategoryBottomSheetState
       return;
     }
 
-    // Validation passed, create workout
-    _onCategorySelected(context, name);
+    // Validation passed, create workout with custom category (no template matching)
+    _onCategorySelected(context, 'custom', name);
   }
 }
