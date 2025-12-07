@@ -74,115 +74,93 @@ class WelcomeView extends ConsumerWidget {
     );
   }
 
-  /// Builds the prominent quick start card with gradient and shadow
+  /// Builds the prominent quick start card - Clean Apple-style CTA
   Widget _buildQuickStartCard(BuildContext context) {
-    return InkWell(
-      onTap: onQuickStart,
-      borderRadius: BorderRadius.circular(20),
-      child: Container(
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(20),
-          gradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: [
-              context.colors.primary,
-              context.colors.primary.withValues(alpha: 0.85),
-              HSLColor.fromColor(context.colors.primary)
-                  .withLightness(
-                    (HSLColor.fromColor(context.colors.primary).lightness - 0.1)
-                        .clamp(0.0, 1.0),
-                  )
-                  .toColor(),
+    return Material(
+      color: Colors.transparent,
+      borderRadius: BorderRadius.circular(16),
+      child: InkWell(
+        onTap: onQuickStart,
+        borderRadius: BorderRadius.circular(16),
+        child: Ink(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(16),
+            gradient: LinearGradient(
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+              colors: [
+                context.colors.primary,
+                HSLColor.fromColor(context.colors.primary)
+                    .withLightness(
+                      (HSLColor.fromColor(context.colors.primary).lightness - 0.08)
+                          .clamp(0.0, 1.0),
+                    )
+                    .toColor(),
+              ],
+            ),
+            boxShadow: [
+              BoxShadow(
+                color: context.colors.primary.withValues(alpha: 0.25),
+                blurRadius: 16,
+                offset: const Offset(0, 6),
+              ),
             ],
-            stops: const [0.0, 0.5, 1.0],
           ),
-          boxShadow: [
-            BoxShadow(
-              color: context.colors.primary.withValues(alpha: 0.35),
-              blurRadius: 20,
-              offset: const Offset(0, 8),
-              spreadRadius: 2,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(
+              horizontal: AppSpacing.lg,
+              vertical: AppSpacing.md,
             ),
-            BoxShadow(
-              color: context.colors.primary.withValues(alpha: 0.15),
-              blurRadius: 8,
-              offset: const Offset(0, 2),
-            ),
-          ],
-          border: Border.all(
-            color: context.colors.onPrimary.withValues(alpha: 0.15),
-            width: 1,
-          ),
-        ),
-        padding: const EdgeInsets.all(AppSpacing.lg),
-        child: Row(
-          children: [
-            // Enhanced icon container with gradient
-            Container(
-              width: 56,
-              height: 56,
-              decoration: BoxDecoration(
-                gradient: RadialGradient(
-                  colors: [
-                    context.colors.onPrimary.withValues(alpha: 0.3),
-                    context.colors.onPrimary.withValues(alpha: 0.15),
-                  ],
+            child: Row(
+              children: [
+                // Clean icon container
+                Container(
+                  width: 48,
+                  height: 48,
+                  decoration: BoxDecoration(
+                    color: context.colors.onPrimary.withValues(alpha: 0.2),
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: SemanticIcon(
+                    icon: AppIcons.flashOn,
+                    semanticLabel: 'Start workout now',
+                    size: AppIconSize.large,
+                    color: context.colors.onPrimary,
+                  ),
                 ),
-                borderRadius: BorderRadius.circular(16),
-                boxShadow: [
-                  BoxShadow(
-                    color: context.colors.onPrimary.withValues(alpha: 0.1),
-                    blurRadius: 8,
-                    spreadRadius: 1,
+                const SizedBox(width: AppSpacing.md),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text(
+                        context.l10n.startNow,
+                        style: context.textTheme.titleLarge?.copyWith(
+                          fontWeight: FontWeight.bold,
+                          color: context.colors.onPrimary,
+                        ),
+                      ),
+                      const SizedBox(height: 2),
+                      Text(
+                        context.l10n.startImmediately,
+                        style: context.textTheme.bodySmall?.copyWith(
+                          color: context.colors.onPrimary.withValues(alpha: 0.85),
+                        ),
+                      ),
+                    ],
                   ),
-                ],
-              ),
-              child: SemanticIcon(
-                icon: AppIcons.flashOn,
-                semanticLabel: 'Start workout now',
-                size: AppIconSize.xlarge,
-                color: context.colors.onPrimary,
-              ),
+                ),
+                // Simple chevron
+                SemanticIcon(
+                  icon: AppIcons.forwardIos,
+                  semanticLabel: 'Start',
+                  size: AppIconSize.small,
+                  color: context.colors.onPrimary.withValues(alpha: 0.7),
+                ),
+              ],
             ),
-            const SizedBox(width: AppSpacing.md),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    context.l10n.startNow,
-                    style: context.textTheme.headlineSmall?.copyWith(
-                      fontWeight: FontWeight.bold,
-                      color: context.colors.onPrimary,
-                    ),
-                  ),
-                  const SizedBox(height: AppSpacing.xxs),
-                  Text(
-                    context.l10n.startImmediately,
-                    style: context.textTheme.bodyMedium?.copyWith(
-                      color: context.colors.onPrimary.withValues(alpha: 0.9),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            // Enhanced chevron with subtle background
-            Container(
-              width: 32,
-              height: 32,
-              decoration: BoxDecoration(
-                color: context.colors.onPrimary.withValues(alpha: 0.15),
-                borderRadius: BorderRadius.circular(8),
-              ),
-              child: SemanticIcon(
-                icon: AppIcons.forwardIos,
-                semanticLabel: 'Start',
-                size: AppIconSize.small,
-                color: context.colors.onPrimary,
-              ),
-            ),
-          ],
+          ),
         ),
       ),
     );
@@ -195,32 +173,42 @@ class WelcomeView extends ConsumerWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Tab Bar
-          ColoredBox(
-            color: context.colors.surface,
+          // Tab Bar - Clean text-only design matching Apple Fitness+ style
+          Container(
+            margin: const EdgeInsets.only(bottom: AppSpacing.xs),
+            decoration: BoxDecoration(
+              color: context.colors.surfaceContainerHighest.withValues(alpha: 0.5),
+              borderRadius: BorderRadius.circular(12),
+            ),
             child: TabBar(
-              labelColor: context.colors.primary,
+              labelColor: context.colors.onSurface,
               unselectedLabelColor:
-                  context.colors.onSurface.withValues(alpha: 0.6),
-              indicatorColor: context.colors.primary,
-              indicatorWeight: 3,
-              labelStyle: context.textTheme.titleMedium
-                  ?.copyWith(fontWeight: FontWeight.bold),
+                  context.colors.onSurface.withValues(alpha: 0.5),
+              indicator: BoxDecoration(
+                color: context.colors.surface,
+                borderRadius: BorderRadius.circular(8),
+                boxShadow: [
+                  BoxShadow(
+                    color: context.colors.shadow.withValues(alpha: 0.08),
+                    blurRadius: 4,
+                    offset: const Offset(0, 1),
+                  ),
+                ],
+              ),
+              indicatorSize: TabBarIndicatorSize.tab,
+              dividerColor: Colors.transparent,
+              labelStyle: context.textTheme.labelLarge
+                  ?.copyWith(fontWeight: FontWeight.w600),
+              unselectedLabelStyle: context.textTheme.labelLarge,
+              padding: const EdgeInsets.all(4),
+              labelPadding: EdgeInsets.zero,
               tabs: [
                 Tab(
-                  icon: SemanticIcon(
-                    icon: AppIcons.person,
-                    semanticLabel: context.l10n.yourTemplates,
-                    size: AppIconSize.medium,
-                  ),
+                  height: 36,
                   text: context.l10n.yourTemplates,
                 ),
                 Tab(
-                  icon: SemanticIcon(
-                    icon: AppIcons.stars,
-                    semanticLabel: context.l10n.predefinedWorkouts,
-                    size: AppIconSize.medium,
-                  ),
+                  height: 36,
                   text: context.l10n.predefinedWorkouts,
                 ),
               ],
