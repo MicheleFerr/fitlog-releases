@@ -274,7 +274,12 @@ class _WorkoutMiniBarState extends State<WorkoutMiniBar>
       position: _slideAnimation,
       child: Container(
           height: 60,
-          margin: const EdgeInsets.symmetric(horizontal: AppSpacing.sm),
+          margin: const EdgeInsets.fromLTRB(
+            AppSpacing.sm,
+            0,
+            AppSpacing.sm,
+            AppSpacing.xs, // Small bottom margin to separate from nav bar
+          ),
           child: Stack(
             alignment: Alignment.center,
             clipBehavior: Clip.none,
