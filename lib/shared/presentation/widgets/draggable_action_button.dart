@@ -63,9 +63,9 @@ class DraggableActionButton extends StatefulWidget {
 }
 
 class _DraggableActionButtonState extends State<DraggableActionButton> {
-  // Position tracking
-  Offset _dragOffset = Offset.zero;
-  Offset _targetPosition = Offset.zero;
+  // Position tracking - only horizontal for spring animation
+  double _dragOffsetX = 0;
+  double _targetX = 0;
   bool _isDragging = false;
   bool _isOnLeft = false;
   bool _isHidden = false;
@@ -75,7 +75,7 @@ class _DraggableActionButtonState extends State<DraggableActionButton> {
   static const double _edgePadding = 16.0;
   static const double _hideThreshold = 60.0;
   static const double _buttonWidth = 160.0;
-  static const double _bottomPadding = 20.0;
+  static const double _bottomPadding = 16.0;
 
   @override
   void initState() {
@@ -116,41 +116,40 @@ class _DraggableActionButtonState extends State<DraggableActionButton> {
     _savePosition();
   }
 
-  Offset _getTargetPosition(Size screenSize) {
-    final double x = _isOnLeft
+  double _getTargetX(double screenWidth) {
+    return _isOnLeft
         ? _edgePadding
-        : screenSize.width - _buttonWidth - _edgePadding;
-    return Offset(x, screenSize.height - _bottomPadding - 56);
+        : screenWidth - _buttonWidth - _edgePadding;
   }
 
   void _onPanStart(DragStartDetails details) {
     setState(() {
       _isDragging = true;
-      _dragOffset = Offset.zero;
+      _dragOffsetX = 0;
     });
     HapticFeedback.lightImpact();
   }
 
   void _onPanUpdate(DragUpdateDetails details) {
     setState(() {
-      _dragOffset += details.delta;
+      _dragOffsetX += details.delta.dx;
     });
   }
 
-  void _onPanEnd(DragEndDetails details, Size screenSize) {
-    final velocity = details.velocity.pixelsPerSecond;
-    final currentPos = _targetPosition + _dragOffset;
+  void _onPanEnd(DragEndDetails details, double screenWidth) {
+    final velocity = details.velocity.pixelsPerSecond.dx;
+    final currentX = _targetX + _dragOffsetX;
 
     // Check if dragging towards edge to hide
     final isDraggingToHide = _isOnLeft
-        ? (currentPos.dx < -_hideThreshold || velocity.dx < -800)
-        : (currentPos.dx > screenSize.width - _buttonWidth + _hideThreshold || velocity.dx > 800);
+        ? (currentX < -_hideThreshold || velocity < -800)
+        : (currentX > screenWidth - _buttonWidth + _hideThreshold || velocity > 800);
 
     if (isDraggingToHide) {
       setState(() {
         _isDragging = false;
         _isHidden = true;
-        _dragOffset = Offset.zero;
+        _dragOffsetX = 0;
       });
       HapticFeedback.heavyImpact();
       _savePosition();
@@ -158,13 +157,13 @@ class _DraggableActionButtonState extends State<DraggableActionButton> {
     }
 
     // Determine snap side based on position
-    final centerX = screenSize.width / 2;
-    final shouldSnapLeft = currentPos.dx + _buttonWidth / 2 < centerX;
+    final centerX = screenWidth / 2;
+    final shouldSnapLeft = currentX + _buttonWidth / 2 < centerX;
 
     setState(() {
       _isDragging = false;
       _isOnLeft = shouldSnapLeft;
-      _dragOffset = Offset.zero;
+      _dragOffsetX = 0;
     });
 
     HapticFeedback.mediumImpact();
@@ -359,7 +358,7 @@ class _DraggableActionButtonState extends State<DraggableActionButton> {
       return const SizedBox.shrink();
     }
 
-    final screenSize = MediaQuery.of(context).size;
+    final screenWidth = MediaQuery.of(context).size.width;
     final colorScheme = Theme.of(context).colorScheme;
 
     // When hidden, show only the tab handle
@@ -367,38 +366,30 @@ class _DraggableActionButtonState extends State<DraggableActionButton> {
       return _buildHiddenTab(context, colorScheme);
     }
 
-    _targetPosition = _getTargetPosition(screenSize);
+    _targetX = _getTargetX(screenWidth);
 
     // During drag, show at drag position; otherwise animate to target
-    final displayPosition = _isDragging
-        ? _targetPosition + _dragOffset
-        : _targetPosition;
+    final displayX = _isDragging ? _targetX + _dragOffsetX : _targetX;
 
-    return MotionBuilder<Offset>(
+    return SingleMotionBuilder(
       motion: _isDragging
           ? const NoMotion() // Instant follow during drag
           : const CupertinoMotion.bouncy(), // Spring snap when released
-      value: displayPosition,
-      from: _targetPosition,
-      converter: const OffsetMotionConverter(),
-      builder: (context, animatedPosition, child) {
+      value: displayX,
+      builder: (context, animatedX, child) {
         // Clamp position to screen bounds
-        final clampedX = animatedPosition.dx.clamp(
+        final clampedX = animatedX.clamp(
           _edgePadding,
-          screenSize.width - _buttonWidth - _edgePadding,
-        );
-        final clampedY = animatedPosition.dy.clamp(
-          100.0,
-          screenSize.height - 80,
+          screenWidth - _buttonWidth - _edgePadding,
         );
 
         return Positioned(
           left: clampedX,
-          top: clampedY,
+          bottom: _bottomPadding,
           child: GestureDetector(
             onPanStart: _onPanStart,
             onPanUpdate: _onPanUpdate,
-            onPanEnd: (details) => _onPanEnd(details, screenSize),
+            onPanEnd: (details) => _onPanEnd(details, screenWidth),
             onLongPress: () => _showOptionsMenu(context),
             child: AnimatedContainer(
               duration: const Duration(milliseconds: 100),
