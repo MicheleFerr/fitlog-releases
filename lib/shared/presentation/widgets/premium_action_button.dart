@@ -144,17 +144,18 @@ class _PremiumActionButtonState extends State<PremiumActionButton>
             width: widget.width,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(16),
+              // Subtle neutral shadow instead of colored glow
               boxShadow: widget.showShadow ? [
                 BoxShadow(
-                  color: backgroundColor.withValues(alpha: 0.4),
-                  blurRadius: _isPressed ? 8 : 12,
-                  offset: Offset(0, _isPressed ? 2 : 4),
-                  spreadRadius: _isPressed ? 0 : 1,
+                  color: colorScheme.shadow.withValues(alpha: _isPressed ? 0.15 : 0.25),
+                  blurRadius: _isPressed ? 4 : 8,
+                  offset: Offset(0, _isPressed ? 1 : 2),
                 ),
               ] : null,
             ),
             child: Material(
-              color: Colors.transparent,
+              color: backgroundColor,
+              borderRadius: BorderRadius.circular(16),
               child: InkWell(
                 onTapDown: _handleTapDown,
                 onTapUp: _handleTapUp,
@@ -168,17 +169,6 @@ class _PremiumActionButtonState extends State<PremiumActionButton>
                   padding: EdgeInsets.symmetric(
                     horizontal: widget.isCompact ? 16 : 20,
                     vertical: widget.isCompact ? 12 : 16,
-                  ),
-                  decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      colors: [
-                        backgroundColor,
-                        backgroundColor.withValues(alpha: 0.9),
-                      ],
-                      begin: Alignment.topLeft,
-                      end: Alignment.bottomRight,
-                    ),
-                    borderRadius: BorderRadius.circular(16),
                   ),
                   child: Row(
                     mainAxisSize: MainAxisSize.min,

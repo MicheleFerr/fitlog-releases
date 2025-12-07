@@ -18,6 +18,7 @@ import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
+import 'package:gymbro_flutter_new/core/cache/user_cache_key_manager.dart';
 
 /// Opzione aggiuntiva per il menu del long press
 class DraggableActionOption {
@@ -73,7 +74,6 @@ class _DraggableActionButtonState extends State<DraggableActionButton>
 
   // Soglie per snap
   static const double _edgePadding = 16.0;
-  static const double _hiddenTabWidth = 24.0; // Larghezza linguetta visibile
   static const double _hideThreshold = 50.0; // Distanza per triggerare hide
   static const double _buttonWidth = 180.0; // Larghezza stimata del button
   
@@ -93,10 +93,14 @@ class _DraggableActionButtonState extends State<DraggableActionButton>
     super.dispose();
   }
   
+  // 🔐 User-scoped cache keys
+  String get _positionKey => userCacheKeys.userScopedKey('fab_position_${widget.positionKey}');
+  String get _hiddenKey => userCacheKeys.userScopedKey('fab_hidden_${widget.positionKey}');
+
   Future<void> _loadPosition() async {
     final prefs = await SharedPreferences.getInstance();
-    final savedPosition = prefs.getString('fab_position_${widget.positionKey}');
-    final savedHidden = prefs.getBool('fab_hidden_${widget.positionKey}') ?? false;
+    final savedPosition = prefs.getString(_positionKey);
+    final savedHidden = prefs.getBool(_hiddenKey) ?? false;
 
     setState(() {
       if (savedPosition == 'left') {
@@ -109,10 +113,10 @@ class _DraggableActionButtonState extends State<DraggableActionButton>
   Future<void> _savePosition() async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString(
-      'fab_position_${widget.positionKey}',
+      _positionKey,
       _isOnLeft ? 'left' : 'right',
     );
-    await prefs.setBool('fab_hidden_${widget.positionKey}', _isHidden);
+    await prefs.setBool(_hiddenKey, _isHidden);
   }
 
   /// Toggle hide state (PiP-style) with smooth animation
@@ -369,8 +373,7 @@ class _DraggableActionButtonState extends State<DraggableActionButton>
                   Expanded(
                     child: Text(
                       context.l10n.fabDragToHide,
-                      style: TextStyle(
-                        fontSize: 12,
+                      style: Theme.of(context).textTheme.labelSmall?.copyWith(
                         color: Theme.of(context).colorScheme.onPrimaryContainer,
                       ),
                     ),
@@ -407,10 +410,10 @@ class _DraggableActionButtonState extends State<DraggableActionButton>
     // Limita il movimento ai bordi dello schermo
     currentX = currentX.clamp(_edgePadding, screenWidth - _buttonWidth - _edgePadding);
 
-    // Calculate slide-in animation offset
+    // Calculate slide-in animation offset with smooth easing
     final double slideOffset = _isAnimatingIn
         ? (_isOnLeft ? -_buttonWidth : _buttonWidth) *
-            (1 - Curves.elasticOut.transform(_animationController.value))
+            (1 - Curves.easeOutCubic.transform(_animationController.value))
         : 0;
 
     return AnimatedBuilder(
@@ -457,49 +460,15 @@ class _DraggableActionButtonState extends State<DraggableActionButton>
               ),
             ),
 
-            // Indicatore di drag (appare solo durante il trascinamento)
+            // Subtle drag indicator - only during active drag
             if (_isDragging)
               Positioned.fill(
                 child: Container(
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(16),
                     border: Border.all(
-                      color: colorScheme.primary.withValues(alpha: 0.5),
-                      width: 2,
-                    ),
-                  ),
-                ),
-              ),
-
-            // Indicatore drag handle (più visibile)
-            if (!_isDragging)
-              Positioned(
-                left: 8,
-                top: 0,
-                bottom: 0,
-                child: Center(
-                  child: Container(
-                    width: 4,
-                    height: 24,
-                    decoration: BoxDecoration(
-                      color: colorScheme.onSurface.withValues(alpha: 0.2),
-                      borderRadius: BorderRadius.circular(2),
-                    ),
-                  ),
-                ),
-              ),
-            if (!_isDragging)
-              Positioned(
-                right: 8,
-                top: 0,
-                bottom: 0,
-                child: Center(
-                  child: Container(
-                    width: 4,
-                    height: 24,
-                    decoration: BoxDecoration(
-                      color: colorScheme.onSurface.withValues(alpha: 0.2),
-                      borderRadius: BorderRadius.circular(2),
+                      color: colorScheme.outline.withValues(alpha: 0.3),
+                      width: 1.5,
                     ),
                   ),
                 ),
@@ -519,7 +488,7 @@ class _DraggableActionButtonState extends State<DraggableActionButton>
     final isLeftSide = _isOnLeft;
 
     return Positioned(
-      bottom: 16,
+      bottom: 20,
       left: isLeftSide ? 0 : null,
       right: isLeftSide ? null : 0,
       child: GestureDetector(
@@ -534,34 +503,37 @@ class _DraggableActionButtonState extends State<DraggableActionButton>
           }
         },
         child: AnimatedContainer(
-          duration: const Duration(milliseconds: 300),
+          duration: const Duration(milliseconds: 250),
           curve: Curves.easeOutCubic,
           child: Container(
-            width: _hiddenTabWidth,
-            height: 56,
+            width: 20,
+            height: 48,
             decoration: BoxDecoration(
-              color: colorScheme.primary,
+              // Use surfaceContainerHighest for a subtle, non-intrusive look
+              color: colorScheme.surfaceContainerHighest,
               borderRadius: BorderRadius.only(
-                topLeft: isLeftSide ? Radius.zero : const Radius.circular(12),
-                bottomLeft:
-                    isLeftSide ? Radius.zero : const Radius.circular(12),
-                topRight: isLeftSide ? const Radius.circular(12) : Radius.zero,
-                bottomRight:
-                    isLeftSide ? const Radius.circular(12) : Radius.zero,
+                topLeft: isLeftSide ? Radius.zero : const Radius.circular(8),
+                bottomLeft: isLeftSide ? Radius.zero : const Radius.circular(8),
+                topRight: isLeftSide ? const Radius.circular(8) : Radius.zero,
+                bottomRight: isLeftSide ? const Radius.circular(8) : Radius.zero,
+              ),
+              border: Border.all(
+                color: colorScheme.outlineVariant.withValues(alpha: 0.5),
+                width: 1,
               ),
               boxShadow: [
                 BoxShadow(
-                  color: colorScheme.shadow.withValues(alpha: 0.2),
-                  blurRadius: 8,
-                  offset: Offset(isLeftSide ? 2 : -2, 2),
+                  color: colorScheme.shadow.withValues(alpha: 0.1),
+                  blurRadius: 4,
+                  offset: Offset(isLeftSide ? 1 : -1, 1),
                 ),
               ],
             ),
             child: Center(
               child: Icon(
                 isLeftSide ? AppIcons.chevronRight : AppIcons.chevronLeft,
-                color: colorScheme.onPrimary,
-                size: AppIconSize.medium,
+                color: colorScheme.onSurfaceVariant,
+                size: AppIconSize.small,
               ),
             ),
           ),
@@ -612,21 +584,24 @@ class DraggableActionButtonWrapper extends StatelessWidget {
 
 /// Provider per gestire le preferenze di posizione globalmente
 class ActionButtonPosition {
-  static const String _prefixKey = 'fab_position_';
-  
+  // 🔐 User-scoped key helper
+  static String _userKey(String key) => userCacheKeys.userScopedKey('fab_position_$key');
+
   static Future<bool> isOnLeft(String key) async {
     final prefs = await SharedPreferences.getInstance();
-    return prefs.getString('$_prefixKey$key') == 'left';
+    return prefs.getString(_userKey(key)) == 'left';
   }
-  
+
   static Future<void> setPosition(String key, bool isLeft) async {
     final prefs = await SharedPreferences.getInstance();
-    await prefs.setString('$_prefixKey$key', isLeft ? 'left' : 'right');
+    await prefs.setString(_userKey(key), isLeft ? 'left' : 'right');
   }
-  
+
   static Future<void> resetAllPositions() async {
     final prefs = await SharedPreferences.getInstance();
-    final keys = prefs.getKeys().where((k) => k.startsWith(_prefixKey));
+    // Reset FAB positions for current user
+    final userPrefix = userCacheKeys.userScopedKey('fab_position_');
+    final keys = prefs.getKeys().where((k) => k.startsWith(userPrefix));
     for (final key in keys) {
       await prefs.remove(key);
     }
