@@ -16,6 +16,7 @@ library;
 import 'package:gymbro_flutter_new/features/ai_coach/domain/search/bm25_search.dart';
 import 'package:gymbro_flutter_new/features/ai_coach/domain/search/query_expander.dart';
 import 'package:gymbro_flutter_new/features/ai_coach/data/datasources/intent_detector.dart';
+import 'package:gymbro_flutter_new/features/ai_coach/data/utils/document_data_extractor.dart';
 import 'package:intl/intl.dart';
 
 /// Generates enhanced responses using search results
@@ -528,50 +529,349 @@ class EnhancedResponseGenerator {
     return lines.take(3).join('\n');
   }
 
-  Map<String, dynamic> _analyzeProgression(List<SearchResult> results) {
-    // Simplified progression analysis
-    return {};
+  /// Analyze real progression from search results
+  Map<String, Map<String, dynamic>> _analyzeProgression(List<SearchResult> results) {
+    if (results.isEmpty) return {};
+
+    final extractor = DocumentDataExtractor();
+    final progressionData = <String, Map<String, dynamic>>{};
+
+    // Group results by exercise
+    final exerciseData = <String, List<_ExerciseDataPoint>>{};
+
+    for (final result in results) {
+      if (!result.document.id.startsWith('exercise_')) continue;
+
+      final content = result.document.content;
+      final exerciseName = extractor.extractExerciseNameFromContent(content);
+      final date = result.document.timestamp;
+
+      if (exerciseName == null || date == null) continue;
+
+      final sets = extractor.extractSets(content);
+      if (sets.isEmpty) continue;
+
+      final maxWeight = extractor.calculateMaxWeight(sets);
+      if (maxWeight == null) continue;
+
+      exerciseData.putIfAbsent(exerciseName, () => []);
+      exerciseData[exerciseName]!.add(_ExerciseDataPoint(
+        date: date,
+        maxWeight: maxWeight,
+        volume: extractor.calculateTotalVolume(sets),
+      ));
+    }
+
+    // Calculate progression for each exercise
+    for (final entry in exerciseData.entries) {
+      final dataPoints = entry.value..sort((a, b) => a.date.compareTo(b.date));
+
+      if (dataPoints.length < 2) continue;
+
+      final first = dataPoints.first;
+      final last = dataPoints.last;
+
+      final improvement = ((last.maxWeight - first.maxWeight) / first.maxWeight * 100);
+
+      // Determine frequency
+      final daySpan = last.date.difference(first.date).inDays;
+      final frequency = daySpan > 0
+          ? '${(dataPoints.length / (daySpan / 7)).toStringAsFixed(1)}x/week'
+          : 'N/A';
+
+      progressionData[entry.key] = {
+        'start': first.maxWeight.round(),
+        'current': last.maxWeight.round(),
+        'improvement': improvement.round(),
+        'frequency': frequency,
+        'sessions': dataPoints.length,
+      };
+    }
+
+    return progressionData;
   }
 
+  /// Extract real metrics from exercise search results
   Map<String, dynamic> _extractExerciseMetrics(List<SearchResult> results) {
-    // Simplified metric extraction
+    if (results.isEmpty) return {};
+
+    final extractor = DocumentDataExtractor();
+
+    double? maxWeight;
+    final allWeights = <double>[];
+    double totalVolume = 0;
+    int sessionCount = 0;
+
+    for (final result in results) {
+      final content = result.document.content;
+
+      // Extract sets and calculate metrics
+      final sets = extractor.extractSets(content);
+
+      for (final set in sets) {
+        if (set.weight != null) {
+          allWeights.add(set.weight!);
+          if (maxWeight == null || set.weight! > maxWeight) {
+            maxWeight = set.weight;
+          }
+        }
+      }
+
+      // Extract volume
+      final exerciseVolume = extractor.extractExerciseVolume(content);
+      if (exerciseVolume != null) {
+        totalVolume += exerciseVolume;
+      } else {
+        // Calculate from sets if not explicitly stated
+        totalVolume += extractor.calculateTotalVolume(sets);
+      }
+
+      // Count sessions (documents with exercise_ prefix)
+      if (result.document.id.startsWith('exercise_')) {
+        sessionCount++;
+      }
+    }
+
+    // Calculate average weight
+    final avgWeight = allWeights.isNotEmpty
+        ? allWeights.reduce((a, b) => a + b) / allWeights.length
+        : null;
+
+    // Determine frequency description
+    String frequency;
+    if (sessionCount >= 12) {
+      frequency = '3+ times per week';
+    } else if (sessionCount >= 8) {
+      frequency = '2-3 times per week';
+    } else if (sessionCount >= 4) {
+      frequency = '1-2 times per week';
+    } else {
+      frequency = 'Less than weekly';
+    }
+
     return {
-      'maxWeight': 100,
-      'avgWeight': 85,
-      'totalVolume': 5000,
-      'frequency': '2-3 times per week',
+      if (maxWeight != null) 'maxWeight': maxWeight.round(),
+      if (avgWeight != null) 'avgWeight': avgWeight.round(),
+      if (totalVolume > 0) 'totalVolume': totalVolume.round(),
+      'frequency': frequency,
+      'sessionCount': sessionCount,
     };
   }
 
+  /// Extract real recent sessions from search results
   List<String> _extractRecentSessions(String exercise, List<SearchResult> results) {
-    return [
-      '• Monday: 3×8 @ 80kg',
-      '• Thursday: 4×6 @ 85kg',
-      '• Sunday: 3×10 @ 75kg',
-    ];
+    final extractor = DocumentDataExtractor();
+    final sessions = <String>[];
+    final dateFormat = DateFormat('EEEE'); // Day name
+
+    // Filter for exercise documents and sort by date
+    final exerciseResults = results
+        .where((r) => r.document.id.startsWith('exercise_'))
+        .where((r) => r.document.content.toLowerCase().contains(exercise.toLowerCase()))
+        .toList()
+      ..sort((a, b) {
+        final dateA = a.document.timestamp ?? DateTime(1970);
+        final dateB = b.document.timestamp ?? DateTime(1970);
+        return dateB.compareTo(dateA); // Most recent first
+      });
+
+    for (final result in exerciseResults.take(5)) {
+      final content = result.document.content;
+      final sets = extractor.extractSets(content);
+      final date = result.document.timestamp;
+
+      if (sets.isNotEmpty && date != null) {
+        final dayName = dateFormat.format(date);
+
+        // Build set summary (e.g., "3x8 @ 80kg")
+        if (sets.length > 1 && _areSetsHomogeneous(sets)) {
+          // If all sets have same reps, show as NxR format
+          final avgWeight = sets
+              .where((s) => s.weight != null)
+              .map((s) => s.weight!)
+              .fold(0.0, (a, b) => a + b) / sets.length;
+
+          sessions.add('$dayName: ${sets.length}x${sets.first.reps} @ ${avgWeight.round()}kg');
+        } else {
+          // Show individual sets
+          final setSummary = sets.take(3).map((s) {
+            if (s.weight != null && s.reps != null) {
+              return '${s.reps}@${s.weight!.round()}kg';
+            } else if (s.reps != null) {
+              return '${s.reps} reps';
+            }
+            return '';
+          }).where((s) => s.isNotEmpty).join(', ');
+
+          sessions.add('$dayName: $setSummary');
+        }
+      }
+    }
+
+    return sessions;
   }
 
+  /// Analyze real training frequency from search results
   Map<String, dynamic> _analyzeTrainingFrequency(List<SearchResult> results) {
+    if (results.isEmpty) return {};
+
+    // Get workout documents only
+    final workoutResults = results
+        .where((r) => r.document.id.startsWith('workout_'))
+        .toList();
+
+    if (workoutResults.isEmpty) return {};
+
+    // Get dates and sort
+    final workoutDates = workoutResults
+        .map((r) => r.document.timestamp)
+        .whereType<DateTime>()
+        .toList()
+      ..sort();
+
+    if (workoutDates.isEmpty) return {};
+
+    // Calculate sessions per week (last 4 weeks)
+    final now = DateTime.now();
+    final fourWeeksAgo = now.subtract(const Duration(days: 28));
+    final recentWorkouts = workoutDates.where((d) => d.isAfter(fourWeeksAgo)).length;
+    final sessionsPerWeek = (recentWorkouts / 4).round();
+
+    // Calculate average rest days
+    double avgRestDays = 0;
+    if (workoutDates.length > 1) {
+      int totalRestDays = 0;
+      for (int i = 1; i < workoutDates.length; i++) {
+        totalRestDays += workoutDates[i].difference(workoutDates[i - 1]).inDays - 1;
+      }
+      avgRestDays = totalRestDays / (workoutDates.length - 1);
+    }
+
+    // Analyze muscle group distribution
+    final muscleGroupCount = <String, int>{};
+    for (final result in results) {
+      final content = result.document.content.toLowerCase();
+
+      // Check for category mentions
+      for (final category in ['chest', 'back', 'legs', 'shoulders', 'arms', 'core']) {
+        if (content.contains(category)) {
+          muscleGroupCount[category] = (muscleGroupCount[category] ?? 0) + 1;
+        }
+      }
+    }
+
+    // Find most and least trained
+    String? mostTrained;
+    String? leastTrained;
+
+    if (muscleGroupCount.isNotEmpty) {
+      final sorted = muscleGroupCount.entries.toList()
+        ..sort((a, b) => b.value.compareTo(a.value));
+
+      mostTrained = sorted.first.key;
+      mostTrained = mostTrained[0].toUpperCase() + mostTrained.substring(1);
+
+      leastTrained = sorted.last.key;
+      leastTrained = leastTrained[0].toUpperCase() + leastTrained.substring(1);
+    }
+
+    // Check for muscle imbalance (>2x difference)
+    final muscleImbalance = muscleGroupCount.isNotEmpty &&
+        muscleGroupCount.values.reduce((a, b) => a > b ? a : b) >
+            muscleGroupCount.values.reduce((a, b) => a < b ? a : b) * 2;
+
     return {
-      'sessionsPerWeek': 4,
-      'avgRestDays': 1.75,
-      'mostTrained': 'Chest',
-      'leastTrained': 'Legs',
-      'muscleImbalance': false,
+      'sessionsPerWeek': sessionsPerWeek,
+      'avgRestDays': double.parse(avgRestDays.toStringAsFixed(1)),
+      if (mostTrained != null) 'mostTrained': mostTrained,
+      if (leastTrained != null) 'leastTrained': leastTrained,
+      'muscleImbalance': muscleImbalance,
+      'totalWorkouts': workoutDates.length,
     };
   }
 
+  /// Extract real volume data from search results
   Map<String, dynamic> _extractVolumeData(List<SearchResult> results) {
+    if (results.isEmpty) return {};
+
+    final extractor = DocumentDataExtractor();
+
+    final volumes = <double>[];
+    final muscleGroupVolumes = <String, double>{};
+
+    for (final result in results) {
+      final content = result.document.content;
+
+      // Try to get total volume from workout documents
+      if (result.document.id.startsWith('workout_')) {
+        final volume = extractor.extractVolume(content);
+        if (volume != null && volume > 0) {
+          volumes.add(volume);
+        }
+
+        // Track muscle group distribution
+        for (final category in ['chest', 'back', 'legs', 'shoulders', 'arms', 'core']) {
+          if (content.toLowerCase().contains(category)) {
+            muscleGroupVolumes[category] =
+                (muscleGroupVolumes[category] ?? 0) + (volume ?? 0) / 3; // Approximate split
+          }
+        }
+      }
+
+      // Get exercise-specific volume
+      if (result.document.id.startsWith('exercise_')) {
+        final exerciseVolume = extractor.extractExerciseVolume(content);
+        if (exerciseVolume != null) {
+          // Add to appropriate muscle group
+          final exerciseName = extractor.extractExerciseNameFromContent(content);
+          final category = _inferMuscleGroup(exerciseName ?? '');
+          if (category != null) {
+            muscleGroupVolumes[category] =
+                (muscleGroupVolumes[category] ?? 0) + exerciseVolume;
+          }
+        }
+      }
+    }
+
+    if (volumes.isEmpty) return {};
+
+    final totalVolume = volumes.reduce((a, b) => a + b);
+    final averageVolume = totalVolume / volumes.length;
+    final peakVolume = volumes.reduce((a, b) => a > b ? a : b);
+
+    // Determine trend
+    String? trend;
+    if (volumes.length >= 3) {
+      final firstHalf = volumes.take(volumes.length ~/ 2).toList();
+      final secondHalf = volumes.skip(volumes.length ~/ 2).toList();
+
+      final firstAvg = firstHalf.reduce((a, b) => a + b) / firstHalf.length;
+      final secondAvg = secondHalf.reduce((a, b) => a + b) / secondHalf.length;
+
+      if (secondAvg > firstAvg * 1.1) {
+        trend = 'Increasing';
+      } else if (secondAvg < firstAvg * 0.9) {
+        trend = 'Decreasing';
+      } else {
+        trend = 'Stable';
+      }
+    }
+
+    // Format muscle group volumes
+    final distribution = <String, double>{};
+    for (final entry in muscleGroupVolumes.entries) {
+      if (entry.value > 0) {
+        final formattedName = entry.key[0].toUpperCase() + entry.key.substring(1);
+        distribution[formattedName] = entry.value.roundToDouble();
+      }
+    }
+
     return {
-      'total': 25000,
-      'average': 5000,
-      'peak': 7500,
-      'trend': 'Increasing',
-      'distribution': {
-        'Chest': 8000,
-        'Back': 7000,
-        'Legs': 10000,
-      },
+      'total': totalVolume.round(),
+      'average': averageVolume.round(),
+      'peak': peakVolume.round(),
+      if (trend != null) 'trend': trend,
+      if (distribution.isNotEmpty) 'distribution': distribution,
     };
   }
 
@@ -664,4 +964,56 @@ class EnhancedResponseGenerator {
     }
     return 'Keep up the great work!';
   }
+
+  /// Check if sets have similar reps (within 2 reps)
+  bool _areSetsHomogeneous(List<ParsedSet> sets) {
+    if (sets.isEmpty) return false;
+
+    final reps = sets.where((s) => s.reps != null).map((s) => s.reps!).toList();
+    if (reps.isEmpty) return false;
+
+    final minReps = reps.reduce((a, b) => a < b ? a : b);
+    final maxReps = reps.reduce((a, b) => a > b ? a : b);
+
+    return (maxReps - minReps) <= 2;
+  }
+
+  /// Infer muscle group from exercise name
+  String? _inferMuscleGroup(String exerciseName) {
+    final name = exerciseName.toLowerCase();
+
+    if (name.contains('bench') || name.contains('chest') || name.contains('fly')) {
+      return 'chest';
+    }
+    if (name.contains('row') || name.contains('pull') || name.contains('lat') || name.contains('back')) {
+      return 'back';
+    }
+    if (name.contains('squat') || name.contains('leg') || name.contains('lunge') || name.contains('deadlift')) {
+      return 'legs';
+    }
+    if (name.contains('press') || name.contains('shoulder') || name.contains('delt')) {
+      return 'shoulders';
+    }
+    if (name.contains('curl') || name.contains('tricep') || name.contains('bicep') || name.contains('arm')) {
+      return 'arms';
+    }
+    if (name.contains('crunch') || name.contains('plank') || name.contains('ab') || name.contains('core')) {
+      return 'core';
+    }
+
+    return null;
+  }
+}
+
+/// Helper class for exercise progression tracking
+class _ExerciseDataPoint {
+  const _ExerciseDataPoint({
+    required this.date,
+    required this.maxWeight,
+    required this.volume,
+  });
+
+  final DateTime date;
+  final double maxWeight;
+  final double volume;
 }
