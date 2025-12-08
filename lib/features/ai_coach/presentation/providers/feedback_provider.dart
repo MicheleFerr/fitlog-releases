@@ -10,6 +10,7 @@ library;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/features/ai_coach/data/repositories/feedback_repository.dart';
 import 'package:gymbro_flutter_new/features/ai_coach/domain/entities/feedback_data.dart';
+import 'package:gymbro_flutter_new/features/auth/presentation/providers/consolidated_user_provider.dart';
 import 'package:gymbro_flutter_new/features/feedback/presentation/providers/unified_feedback_provider.dart';
 import 'package:uuid/uuid.dart';
 
@@ -52,14 +53,13 @@ class FeedbackState {
 /// - Calculating insight effectiveness
 class FeedbackNotifier extends AsyncNotifier<FeedbackState> {
   late final FeedbackRepository _repository;
-  late final String _userId;
   final _uuid = const Uuid();
+
+  String get _userId => ref.read(currentUserIdProvider) ?? 'anonymous';
 
   @override
   Future<FeedbackState> build() async {
     _repository = ref.read(feedbackRepositoryProvider);
-    // TODO: Get user ID from auth provider
-    _userId = 'dev_user'; // Placeholder for development
     return await _initialize();
   }
 

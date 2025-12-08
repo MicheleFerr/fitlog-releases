@@ -20,6 +20,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/features/ai_coach/presentation/providers/chat_providers.dart';
 import 'package:gymbro_flutter_new/features/ai_coach/presentation/widgets/message_bubble.dart';
 import 'package:gymbro_flutter_new/features/ai_coach/presentation/widgets/chat_input.dart';
+import 'package:gymbro_flutter_new/features/auth/presentation/providers/consolidated_user_provider.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
@@ -50,8 +51,7 @@ class _ChatModalContentState extends ConsumerState<ChatModalContent> {
 
   @override
   Widget build(BuildContext context) {
-    // TODO: Get user ID from auth provider
-    const userId = 'test-user';
+    final userId = ref.watch(currentUserIdProvider) ?? 'anonymous';
     final chatState = ref.watch(chatNotifierProvider(userId));
 
     // Get keyboard height to avoid input being covered
@@ -227,8 +227,9 @@ class _ChatModalContentState extends ConsumerState<ChatModalContent> {
         return ActionChip(
           label: Text(question),
           onPressed: () {
+            final userId = ref.read(currentUserIdProvider) ?? 'anonymous';
             _textController.text = question;
-            _sendMessage(context, 'test-user', question);
+            _sendMessage(context, userId, question);
           },
         );
       }).toList(),

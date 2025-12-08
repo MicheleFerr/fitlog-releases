@@ -13,6 +13,7 @@ import 'package:gymbro_flutter_new/features/ai_coach/data/repositories/feature_g
 import 'package:gymbro_flutter_new/features/ai_coach/data/services/feature_gate_polling_service.dart';
 import 'package:gymbro_flutter_new/features/ai_coach/domain/entities/feature_gate_config.dart';
 import 'package:gymbro_flutter_new/features/ai_coach/domain/entities/user_context.dart';
+import 'package:gymbro_flutter_new/features/auth/presentation/providers/consolidated_user_provider.dart';
 
 /// Feature Gate State
 class FeatureGateState {
@@ -74,8 +75,7 @@ class FeatureGateNotifier extends AsyncNotifier<FeatureGateState> {
   /// - Result: 4 reads/day instead of 40 (90% reduction vs real-time streams)
   Future<FeatureGateState> _initialize() async {
     // Load user preferences from Firebase (with cache)
-    // TODO: Get userId from auth provider
-    const userId = 'temp-user-id'; // Placeholder until auth integration
+    final userId = ref.read(currentUserIdProvider) ?? 'anonymous';
     final userPreferences = await _repository.loadUserPreferences(userId);
 
     final featureStatuses = await _repository.evaluateAllFeatureGates(
@@ -103,7 +103,7 @@ class FeatureGateNotifier extends AsyncNotifier<FeatureGateState> {
   /// to avoid UI flicker during background polls
   Future<void> _refreshSilently() async {
     try {
-      const userId = 'temp-user-id'; // Placeholder until auth integration
+      final userId = ref.read(currentUserIdProvider) ?? 'anonymous';
       final userPreferences = await _repository.loadUserPreferences(userId);
 
       final featureStatuses = await _repository.evaluateAllFeatureGates(
@@ -161,8 +161,7 @@ class FeatureGateNotifier extends AsyncNotifier<FeatureGateState> {
       updatedPreferences[feature] = newValue;
 
       // Save to Firebase (with cache update)
-      // TODO: Get userId from auth provider
-      const userId = 'temp-user-id'; // Placeholder until auth integration
+      final userId = ref.read(currentUserIdProvider) ?? 'anonymous';
       await _repository.saveUserPreference(
         userId: userId,
         feature: feature,
@@ -199,8 +198,7 @@ class FeatureGateNotifier extends AsyncNotifier<FeatureGateState> {
     int? newWorkoutCount,
   }) async {
     // Update user context in Firebase
-    // TODO: Get userId from auth provider
-    const userId = 'temp-user-id'; // Placeholder until auth integration
+    final userId = ref.read(currentUserIdProvider) ?? 'anonymous';
 
     if (newExperienceLevel != null || newWorkoutCount != null) {
       await _repository.updateUserContext(
@@ -228,8 +226,7 @@ class FeatureGateNotifier extends AsyncNotifier<FeatureGateState> {
   /// - Play haptic feedback
   /// - Display confetti animation
   Future<void> onFeatureUnlock(AiCoachFeature feature) async {
-    // TODO: Get userId from auth provider
-    const userId = 'temp-user-id'; // Placeholder until auth integration
+    final userId = ref.read(currentUserIdProvider) ?? 'anonymous';
 
     // Invalidate cache
     _repository.invalidateCacheOnUnlock(userId, feature);

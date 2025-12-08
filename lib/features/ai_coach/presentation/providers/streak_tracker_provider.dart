@@ -10,6 +10,8 @@ library;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/features/ai_coach/data/repositories/streak_calculator.dart';
 import 'package:gymbro_flutter_new/features/ai_coach/domain/entities/streak_data.dart';
+import 'package:gymbro_flutter_new/features/auth/presentation/providers/consolidated_user_provider.dart';
+import 'package:gymbro_flutter_new/features/workout/presentation/providers/workout_repository_provider.dart';
 
 /// Streak Tracker State Notifier
 ///
@@ -30,23 +32,57 @@ class StreakTrackerNotifier extends AsyncNotifier<StreakData> {
 
   /// Initialize streak data
   ///
-  /// In production, this would:
-  /// 1. Fetch workout history from WorkoutRepository
-  /// 2. Calculate streak from history
-  /// 3. Load previous streak data from local storage
+  /// Fetches real workout history from WorkoutRepository
+  /// and calculates streak based on actual completed workouts
   Future<StreakData> _initialize() async {
-    // TODO: Replace with actual workout history from WorkoutRepository
-    // final workoutDates = await _workoutRepository.getWorkoutDates();
+    final userId = ref.read(currentUserIdProvider);
+    if (userId == null) {
+      // No user authenticated, return empty streak
+      return const StreakData(
+        currentStreak: 0,
+        longestStreak: 0,
+        lastWorkoutDate: null,
+        workedOutToday: false,
+        milestonesAchieved: [],
+        totalWorkouts: 0,
+      );
+    }
 
-    // For now, use mock data for demonstration
-    final mockWorkoutDates = _getMockWorkoutDates();
+    // Fetch real workout dates from repository
+    final workoutDates = await _getWorkoutDates(userId);
 
     final streakData = _repository.calculateStreak(
-      workoutDates: mockWorkoutDates,
+      workoutDates: workoutDates,
       previousStreakData: null, // TODO: Load from storage
     );
 
     return streakData;
+  }
+
+  /// Fetch workout dates from WorkoutRepository
+  Future<List<DateTime>> _getWorkoutDates(String userId) async {
+    try {
+      final workoutRepository = ref.read(workoutRepositoryProvider);
+      final workoutsResult = await workoutRepository.getWorkouts();
+
+      return workoutsResult.fold(
+        (failure) {
+          // On error, return empty list (will result in 0 streak)
+          return <DateTime>[];
+        },
+        (workouts) {
+          // Extract dates from completed workouts
+          return workouts
+              .where((workout) => workout.endTime != null) // Only completed workouts
+              .map((workout) => workout.endTime!)
+              .toList()
+            ..sort((a, b) => b.compareTo(a)); // Sort descending (newest first)
+        },
+      );
+    } catch (e) {
+      // On error, return empty list
+      return <DateTime>[];
+    }
   }
 
   /// Record new workout completion
@@ -56,15 +92,15 @@ class StreakTrackerNotifier extends AsyncNotifier<StreakData> {
     final currentData = state.value;
     if (currentData == null) return;
 
+    final userId = ref.read(currentUserIdProvider);
+    if (userId == null) return;
+
     try {
-      // TODO: Fetch updated workout history from WorkoutRepository
-      final mockWorkoutDates = [
-        ..._getMockWorkoutDates(),
-        workoutDate,
-      ];
+      // Fetch updated workout history from WorkoutRepository
+      final workoutDates = await _getWorkoutDates(userId);
 
       final updatedStreak = _repository.calculateStreak(
-        workoutDates: mockWorkoutDates,
+        workoutDates: workoutDates,
         previousStreakData: currentData,
       );
 
@@ -107,22 +143,6 @@ class StreakTrackerNotifier extends AsyncNotifier<StreakData> {
     if (streakData == null) return 0.0;
 
     return _repository.calculateProgressToNextMilestone(streakData);
-  }
-
-  /// Mock workout dates for demonstration
-  ///
-  /// TODO: Replace with actual workout history from WorkoutRepository
-  List<DateTime> _getMockWorkoutDates() {
-    final now = DateTime.now();
-
-    // Simulate 5-day streak
-    return [
-      now, // Today
-      now.subtract(const Duration(days: 1)), // Yesterday
-      now.subtract(const Duration(days: 2)), // 2 days ago
-      now.subtract(const Duration(days: 3)), // 3 days ago
-      now.subtract(const Duration(days: 4)), // 4 days ago
-    ];
   }
 }
 
