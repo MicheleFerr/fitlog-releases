@@ -12,66 +12,66 @@ final firebaseUserProvider = StreamProvider<User?>(
 );
 
 // Current User Model Provider
-final currentUserProvider = StreamProvider<UserModel?>(
-  (ref) async* {
-    final authService = ref.watch(authServiceProvider);
-    
-    await for (final user in authService.authStateChanges) {
-      if (user != null) {
-        try {
-          final userDoc = await authService.getUserDocument(user.uid);
-          if (userDoc.exists) {
-            yield UserModel.fromDocumentSnapshot(userDoc);
+final currentUserProvider = StreamProvider<UserModel?>((ref) async* {
+  final authService = ref.watch(authServiceProvider);
+
+  await for (final user in authService.authStateChanges) {
+    if (user != null) {
+      try {
+        final userDoc = await authService.getUserDocument(user.uid);
+        if (userDoc.exists) {
+          yield UserModel.fromDocumentSnapshot(userDoc);
+        } else {
+          // User document will be created by AuthService automatically
+          final newUserDoc = await authService.getUserDocument(user.uid);
+          if (newUserDoc.exists) {
+            yield UserModel.fromDocumentSnapshot(newUserDoc);
           } else {
-            // User document will be created by AuthService automatically
-            final newUserDoc = await authService.getUserDocument(user.uid);
-            if (newUserDoc.exists) {
-              yield UserModel.fromDocumentSnapshot(newUserDoc);
-            } else {
-              // Fallback: create basic user model
-              yield UserModel(
-                uid: user.uid,
-                email: user.email ?? '',
-                displayName: user.displayName ?? 'GymBro User',
-                photoURL: user.photoURL,
-                isGuest: false,
-                preferences: const UserPreferences(),
-                stats: const UserStats(),
-              );
-            }
+            // Fallback: create basic user model
+            yield UserModel(
+              uid: user.uid,
+              email: user.email ?? '',
+              displayName: user.displayName ?? 'GymBro User',
+              photoURL: user.photoURL,
+              isGuest: false,
+              preferences: const UserPreferences(),
+              stats: const UserStats(),
+            );
           }
-        } catch (e) {
-          // Handle error by creating a basic UserModel from Firebase User
-          yield UserModel(
-            uid: user.uid,
-            email: user.email ?? '',
-            displayName: user.displayName ?? 'GymBro User',
-            photoURL: user.photoURL,
-            isGuest: false,
-            preferences: const UserPreferences(),
-            stats: const UserStats(),
-          );
         }
-      } else {
-        yield null;
+      } catch (e) {
+        // Handle error by creating a basic UserModel from Firebase User
+        yield UserModel(
+          uid: user.uid,
+          email: user.email ?? '',
+          displayName: user.displayName ?? 'GymBro User',
+          photoURL: user.photoURL,
+          isGuest: false,
+          preferences: const UserPreferences(),
+          stats: const UserStats(),
+        );
       }
+    } else {
+      yield null;
     }
-  },
-);
+  }
+});
 
 // Auth State Provider (loading, authenticated, unauthenticated)
 final authStateProvider = Provider<AuthState>((ref) {
   final asyncUser = ref.watch(firebaseUserProvider);
-  
+
   return asyncUser.when(
-    data: (user) => user != null ? AuthState.authenticated : AuthState.unauthenticated,
+    data: (user) =>
+        user != null ? AuthState.authenticated : AuthState.unauthenticated,
     loading: () => AuthState.loading,
     error: (_, __) => AuthState.unauthenticated,
   );
 });
 
 // Auth Controller
-final authControllerProvider = NotifierProvider<AuthController, AsyncValue<void>>(AuthController.new);
+final authControllerProvider =
+    NotifierProvider<AuthController, AsyncValue<void>>(AuthController.new);
 
 class AuthController extends Notifier<AsyncValue<void>> {
   @override
@@ -88,7 +88,7 @@ class AuthController extends Notifier<AsyncValue<void>> {
     required String displayName,
   }) async {
     state = const AsyncValue.loading();
-    
+
     try {
       await _authService.registerWithEmailAndPassword(
         email: email,
@@ -107,7 +107,7 @@ class AuthController extends Notifier<AsyncValue<void>> {
     required String password,
   }) async {
     state = const AsyncValue.loading();
-    
+
     try {
       await _authService.signInWithEmailAndPassword(
         email: email,
@@ -122,7 +122,7 @@ class AuthController extends Notifier<AsyncValue<void>> {
   // Sign In with Google
   Future<void> signInWithGoogle() async {
     state = const AsyncValue.loading();
-    
+
     try {
       await _authService.signInWithGoogle();
       state = const AsyncValue.data(null);
@@ -134,7 +134,7 @@ class AuthController extends Notifier<AsyncValue<void>> {
   // Sign In with Apple
   Future<void> signInWithApple() async {
     state = const AsyncValue.loading();
-    
+
     try {
       await _authService.signInWithApple();
       state = const AsyncValue.data(null);
@@ -146,7 +146,7 @@ class AuthController extends Notifier<AsyncValue<void>> {
   // Sign Out
   Future<void> signOut() async {
     state = const AsyncValue.loading();
-    
+
     try {
       await _authService.signOut();
       state = const AsyncValue.data(null);
@@ -158,7 +158,7 @@ class AuthController extends Notifier<AsyncValue<void>> {
   // Send Password Reset Email
   Future<void> sendPasswordResetEmail(String email) async {
     state = const AsyncValue.loading();
-    
+
     try {
       await _authService.sendPasswordResetEmail(email);
       state = const AsyncValue.data(null);
@@ -168,8 +168,4 @@ class AuthController extends Notifier<AsyncValue<void>> {
   }
 }
 
-enum AuthState {
-  loading,
-  authenticated,
-  unauthenticated,
-}
+enum AuthState { loading, authenticated, unauthenticated }

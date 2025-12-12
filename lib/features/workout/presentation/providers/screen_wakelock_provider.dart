@@ -3,6 +3,7 @@ import 'package:flutter/foundation.dart' show kDebugMode, debugPrint;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:wakelock_plus/wakelock_plus.dart';
+import 'package:gymbro_flutter_new/core/cache/user_cache_key_manager.dart';
 
 /// Provider per gestire lo stato dello schermo always on durante l'allenamento
 final screenWakelockProvider = NotifierProvider<ScreenWakelockNotifier, ScreenWakelockState>(ScreenWakelockNotifier.new);
@@ -53,7 +54,8 @@ class ScreenWakelockNotifier extends Notifier<ScreenWakelockState> {
     return const ScreenWakelockState(isEnabled: false, isActive: false);
   }
 
-  static const String _prefsKey = 'workout_screen_always_on';
+  // 🔐 User-scoped cache key
+  String get _prefsKey => userCacheKeys.userScopedKey('workout_screen_always_on');
 
   Future<void> _loadPreference() async {
     final prefs = await SharedPreferences.getInstance();

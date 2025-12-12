@@ -18,7 +18,8 @@ mixin _$UserFitnessQuestionnaire {
 // Step 1: Demographics
 /// User's bodyweight in kg
  double get bodyweightKg;/// User's age
- int get age;/// User's biological sex (affects strength standards)
+ int get age;/// User's height in cm
+ double get heightCm;/// User's biological sex (affects strength standards)
  BiologicalSex get sex;// Step 2: Experience Level
 /// Self-reported experience level
  ExperienceLevel get experienceLevel;/// Months of consistent training (optional, helps validate experience level)
@@ -51,16 +52,16 @@ $UserFitnessQuestionnaireCopyWith<UserFitnessQuestionnaire> get copyWith => _$Us
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is UserFitnessQuestionnaire&&(identical(other.bodyweightKg, bodyweightKg) || other.bodyweightKg == bodyweightKg)&&(identical(other.age, age) || other.age == age)&&(identical(other.sex, sex) || other.sex == sex)&&(identical(other.experienceLevel, experienceLevel) || other.experienceLevel == experienceLevel)&&(identical(other.monthsOfTraining, monthsOfTraining) || other.monthsOfTraining == monthsOfTraining)&&(identical(other.benchPressMax, benchPressMax) || other.benchPressMax == benchPressMax)&&(identical(other.squatMax, squatMax) || other.squatMax == squatMax)&&(identical(other.deadliftMax, deadliftMax) || other.deadliftMax == deadliftMax)&&(identical(other.overheadPressMax, overheadPressMax) || other.overheadPressMax == overheadPressMax)&&(identical(other.trainingGoal, trainingGoal) || other.trainingGoal == trainingGoal)&&(identical(other.hasInjuryHistory, hasInjuryHistory) || other.hasInjuryHistory == hasInjuryHistory)&&(identical(other.injuryDetails, injuryDetails) || other.injuryDetails == injuryDetails)&&(identical(other.currentPainLevel, currentPainLevel) || other.currentPainLevel == currentPainLevel)&&(identical(other.suggestionStyle, suggestionStyle) || other.suggestionStyle == suggestionStyle)&&(identical(other.completedAt, completedAt) || other.completedAt == completedAt)&&(identical(other.allowPeriodicUpdates, allowPeriodicUpdates) || other.allowPeriodicUpdates == allowPeriodicUpdates)&&(identical(other.selfReportCalibration, selfReportCalibration) || other.selfReportCalibration == selfReportCalibration));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is UserFitnessQuestionnaire&&(identical(other.bodyweightKg, bodyweightKg) || other.bodyweightKg == bodyweightKg)&&(identical(other.age, age) || other.age == age)&&(identical(other.heightCm, heightCm) || other.heightCm == heightCm)&&(identical(other.sex, sex) || other.sex == sex)&&(identical(other.experienceLevel, experienceLevel) || other.experienceLevel == experienceLevel)&&(identical(other.monthsOfTraining, monthsOfTraining) || other.monthsOfTraining == monthsOfTraining)&&(identical(other.benchPressMax, benchPressMax) || other.benchPressMax == benchPressMax)&&(identical(other.squatMax, squatMax) || other.squatMax == squatMax)&&(identical(other.deadliftMax, deadliftMax) || other.deadliftMax == deadliftMax)&&(identical(other.overheadPressMax, overheadPressMax) || other.overheadPressMax == overheadPressMax)&&(identical(other.trainingGoal, trainingGoal) || other.trainingGoal == trainingGoal)&&(identical(other.hasInjuryHistory, hasInjuryHistory) || other.hasInjuryHistory == hasInjuryHistory)&&(identical(other.injuryDetails, injuryDetails) || other.injuryDetails == injuryDetails)&&(identical(other.currentPainLevel, currentPainLevel) || other.currentPainLevel == currentPainLevel)&&(identical(other.suggestionStyle, suggestionStyle) || other.suggestionStyle == suggestionStyle)&&(identical(other.completedAt, completedAt) || other.completedAt == completedAt)&&(identical(other.allowPeriodicUpdates, allowPeriodicUpdates) || other.allowPeriodicUpdates == allowPeriodicUpdates)&&(identical(other.selfReportCalibration, selfReportCalibration) || other.selfReportCalibration == selfReportCalibration));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,bodyweightKg,age,sex,experienceLevel,monthsOfTraining,benchPressMax,squatMax,deadliftMax,overheadPressMax,trainingGoal,hasInjuryHistory,injuryDetails,currentPainLevel,suggestionStyle,completedAt,allowPeriodicUpdates,selfReportCalibration);
+int get hashCode => Object.hash(runtimeType,bodyweightKg,age,heightCm,sex,experienceLevel,monthsOfTraining,benchPressMax,squatMax,deadliftMax,overheadPressMax,trainingGoal,hasInjuryHistory,injuryDetails,currentPainLevel,suggestionStyle,completedAt,allowPeriodicUpdates,selfReportCalibration);
 
 @override
 String toString() {
-  return 'UserFitnessQuestionnaire(bodyweightKg: $bodyweightKg, age: $age, sex: $sex, experienceLevel: $experienceLevel, monthsOfTraining: $monthsOfTraining, benchPressMax: $benchPressMax, squatMax: $squatMax, deadliftMax: $deadliftMax, overheadPressMax: $overheadPressMax, trainingGoal: $trainingGoal, hasInjuryHistory: $hasInjuryHistory, injuryDetails: $injuryDetails, currentPainLevel: $currentPainLevel, suggestionStyle: $suggestionStyle, completedAt: $completedAt, allowPeriodicUpdates: $allowPeriodicUpdates, selfReportCalibration: $selfReportCalibration)';
+  return 'UserFitnessQuestionnaire(bodyweightKg: $bodyweightKg, age: $age, heightCm: $heightCm, sex: $sex, experienceLevel: $experienceLevel, monthsOfTraining: $monthsOfTraining, benchPressMax: $benchPressMax, squatMax: $squatMax, deadliftMax: $deadliftMax, overheadPressMax: $overheadPressMax, trainingGoal: $trainingGoal, hasInjuryHistory: $hasInjuryHistory, injuryDetails: $injuryDetails, currentPainLevel: $currentPainLevel, suggestionStyle: $suggestionStyle, completedAt: $completedAt, allowPeriodicUpdates: $allowPeriodicUpdates, selfReportCalibration: $selfReportCalibration)';
 }
 
 
@@ -71,7 +72,7 @@ abstract mixin class $UserFitnessQuestionnaireCopyWith<$Res>  {
   factory $UserFitnessQuestionnaireCopyWith(UserFitnessQuestionnaire value, $Res Function(UserFitnessQuestionnaire) _then) = _$UserFitnessQuestionnaireCopyWithImpl;
 @useResult
 $Res call({
- double bodyweightKg, int age, BiologicalSex sex, ExperienceLevel experienceLevel, int? monthsOfTraining, double? benchPressMax, double? squatMax, double? deadliftMax, double? overheadPressMax, TrainingGoal trainingGoal, bool hasInjuryHistory, InjuryDetails? injuryDetails, int currentPainLevel, SuggestionStyle suggestionStyle, DateTime? completedAt, bool allowPeriodicUpdates, SelfReportCalibration selfReportCalibration
+ double bodyweightKg, int age, double heightCm, BiologicalSex sex, ExperienceLevel experienceLevel, int? monthsOfTraining, double? benchPressMax, double? squatMax, double? deadliftMax, double? overheadPressMax, TrainingGoal trainingGoal, bool hasInjuryHistory, InjuryDetails? injuryDetails, int currentPainLevel, SuggestionStyle suggestionStyle, DateTime? completedAt, bool allowPeriodicUpdates, SelfReportCalibration selfReportCalibration
 });
 
 
@@ -88,11 +89,12 @@ class _$UserFitnessQuestionnaireCopyWithImpl<$Res>
 
 /// Create a copy of UserFitnessQuestionnaire
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? bodyweightKg = null,Object? age = null,Object? sex = null,Object? experienceLevel = null,Object? monthsOfTraining = freezed,Object? benchPressMax = freezed,Object? squatMax = freezed,Object? deadliftMax = freezed,Object? overheadPressMax = freezed,Object? trainingGoal = null,Object? hasInjuryHistory = null,Object? injuryDetails = freezed,Object? currentPainLevel = null,Object? suggestionStyle = null,Object? completedAt = freezed,Object? allowPeriodicUpdates = null,Object? selfReportCalibration = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? bodyweightKg = null,Object? age = null,Object? heightCm = null,Object? sex = null,Object? experienceLevel = null,Object? monthsOfTraining = freezed,Object? benchPressMax = freezed,Object? squatMax = freezed,Object? deadliftMax = freezed,Object? overheadPressMax = freezed,Object? trainingGoal = null,Object? hasInjuryHistory = null,Object? injuryDetails = freezed,Object? currentPainLevel = null,Object? suggestionStyle = null,Object? completedAt = freezed,Object? allowPeriodicUpdates = null,Object? selfReportCalibration = null,}) {
   return _then(_self.copyWith(
 bodyweightKg: null == bodyweightKg ? _self.bodyweightKg : bodyweightKg // ignore: cast_nullable_to_non_nullable
 as double,age: null == age ? _self.age : age // ignore: cast_nullable_to_non_nullable
-as int,sex: null == sex ? _self.sex : sex // ignore: cast_nullable_to_non_nullable
+as int,heightCm: null == heightCm ? _self.heightCm : heightCm // ignore: cast_nullable_to_non_nullable
+as double,sex: null == sex ? _self.sex : sex // ignore: cast_nullable_to_non_nullable
 as BiologicalSex,experienceLevel: null == experienceLevel ? _self.experienceLevel : experienceLevel // ignore: cast_nullable_to_non_nullable
 as ExperienceLevel,monthsOfTraining: freezed == monthsOfTraining ? _self.monthsOfTraining : monthsOfTraining // ignore: cast_nullable_to_non_nullable
 as int?,benchPressMax: freezed == benchPressMax ? _self.benchPressMax : benchPressMax // ignore: cast_nullable_to_non_nullable
@@ -204,10 +206,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( double bodyweightKg,  int age,  BiologicalSex sex,  ExperienceLevel experienceLevel,  int? monthsOfTraining,  double? benchPressMax,  double? squatMax,  double? deadliftMax,  double? overheadPressMax,  TrainingGoal trainingGoal,  bool hasInjuryHistory,  InjuryDetails? injuryDetails,  int currentPainLevel,  SuggestionStyle suggestionStyle,  DateTime? completedAt,  bool allowPeriodicUpdates,  SelfReportCalibration selfReportCalibration)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( double bodyweightKg,  int age,  double heightCm,  BiologicalSex sex,  ExperienceLevel experienceLevel,  int? monthsOfTraining,  double? benchPressMax,  double? squatMax,  double? deadliftMax,  double? overheadPressMax,  TrainingGoal trainingGoal,  bool hasInjuryHistory,  InjuryDetails? injuryDetails,  int currentPainLevel,  SuggestionStyle suggestionStyle,  DateTime? completedAt,  bool allowPeriodicUpdates,  SelfReportCalibration selfReportCalibration)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _UserFitnessQuestionnaire() when $default != null:
-return $default(_that.bodyweightKg,_that.age,_that.sex,_that.experienceLevel,_that.monthsOfTraining,_that.benchPressMax,_that.squatMax,_that.deadliftMax,_that.overheadPressMax,_that.trainingGoal,_that.hasInjuryHistory,_that.injuryDetails,_that.currentPainLevel,_that.suggestionStyle,_that.completedAt,_that.allowPeriodicUpdates,_that.selfReportCalibration);case _:
+return $default(_that.bodyweightKg,_that.age,_that.heightCm,_that.sex,_that.experienceLevel,_that.monthsOfTraining,_that.benchPressMax,_that.squatMax,_that.deadliftMax,_that.overheadPressMax,_that.trainingGoal,_that.hasInjuryHistory,_that.injuryDetails,_that.currentPainLevel,_that.suggestionStyle,_that.completedAt,_that.allowPeriodicUpdates,_that.selfReportCalibration);case _:
   return orElse();
 
 }
@@ -225,10 +227,10 @@ return $default(_that.bodyweightKg,_that.age,_that.sex,_that.experienceLevel,_th
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( double bodyweightKg,  int age,  BiologicalSex sex,  ExperienceLevel experienceLevel,  int? monthsOfTraining,  double? benchPressMax,  double? squatMax,  double? deadliftMax,  double? overheadPressMax,  TrainingGoal trainingGoal,  bool hasInjuryHistory,  InjuryDetails? injuryDetails,  int currentPainLevel,  SuggestionStyle suggestionStyle,  DateTime? completedAt,  bool allowPeriodicUpdates,  SelfReportCalibration selfReportCalibration)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( double bodyweightKg,  int age,  double heightCm,  BiologicalSex sex,  ExperienceLevel experienceLevel,  int? monthsOfTraining,  double? benchPressMax,  double? squatMax,  double? deadliftMax,  double? overheadPressMax,  TrainingGoal trainingGoal,  bool hasInjuryHistory,  InjuryDetails? injuryDetails,  int currentPainLevel,  SuggestionStyle suggestionStyle,  DateTime? completedAt,  bool allowPeriodicUpdates,  SelfReportCalibration selfReportCalibration)  $default,) {final _that = this;
 switch (_that) {
 case _UserFitnessQuestionnaire():
-return $default(_that.bodyweightKg,_that.age,_that.sex,_that.experienceLevel,_that.monthsOfTraining,_that.benchPressMax,_that.squatMax,_that.deadliftMax,_that.overheadPressMax,_that.trainingGoal,_that.hasInjuryHistory,_that.injuryDetails,_that.currentPainLevel,_that.suggestionStyle,_that.completedAt,_that.allowPeriodicUpdates,_that.selfReportCalibration);case _:
+return $default(_that.bodyweightKg,_that.age,_that.heightCm,_that.sex,_that.experienceLevel,_that.monthsOfTraining,_that.benchPressMax,_that.squatMax,_that.deadliftMax,_that.overheadPressMax,_that.trainingGoal,_that.hasInjuryHistory,_that.injuryDetails,_that.currentPainLevel,_that.suggestionStyle,_that.completedAt,_that.allowPeriodicUpdates,_that.selfReportCalibration);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -245,10 +247,10 @@ return $default(_that.bodyweightKg,_that.age,_that.sex,_that.experienceLevel,_th
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( double bodyweightKg,  int age,  BiologicalSex sex,  ExperienceLevel experienceLevel,  int? monthsOfTraining,  double? benchPressMax,  double? squatMax,  double? deadliftMax,  double? overheadPressMax,  TrainingGoal trainingGoal,  bool hasInjuryHistory,  InjuryDetails? injuryDetails,  int currentPainLevel,  SuggestionStyle suggestionStyle,  DateTime? completedAt,  bool allowPeriodicUpdates,  SelfReportCalibration selfReportCalibration)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( double bodyweightKg,  int age,  double heightCm,  BiologicalSex sex,  ExperienceLevel experienceLevel,  int? monthsOfTraining,  double? benchPressMax,  double? squatMax,  double? deadliftMax,  double? overheadPressMax,  TrainingGoal trainingGoal,  bool hasInjuryHistory,  InjuryDetails? injuryDetails,  int currentPainLevel,  SuggestionStyle suggestionStyle,  DateTime? completedAt,  bool allowPeriodicUpdates,  SelfReportCalibration selfReportCalibration)?  $default,) {final _that = this;
 switch (_that) {
 case _UserFitnessQuestionnaire() when $default != null:
-return $default(_that.bodyweightKg,_that.age,_that.sex,_that.experienceLevel,_that.monthsOfTraining,_that.benchPressMax,_that.squatMax,_that.deadliftMax,_that.overheadPressMax,_that.trainingGoal,_that.hasInjuryHistory,_that.injuryDetails,_that.currentPainLevel,_that.suggestionStyle,_that.completedAt,_that.allowPeriodicUpdates,_that.selfReportCalibration);case _:
+return $default(_that.bodyweightKg,_that.age,_that.heightCm,_that.sex,_that.experienceLevel,_that.monthsOfTraining,_that.benchPressMax,_that.squatMax,_that.deadliftMax,_that.overheadPressMax,_that.trainingGoal,_that.hasInjuryHistory,_that.injuryDetails,_that.currentPainLevel,_that.suggestionStyle,_that.completedAt,_that.allowPeriodicUpdates,_that.selfReportCalibration);case _:
   return null;
 
 }
@@ -260,7 +262,7 @@ return $default(_that.bodyweightKg,_that.age,_that.sex,_that.experienceLevel,_th
 @JsonSerializable()
 
 class _UserFitnessQuestionnaire implements UserFitnessQuestionnaire {
-  const _UserFitnessQuestionnaire({required this.bodyweightKg, required this.age, required this.sex, required this.experienceLevel, this.monthsOfTraining, this.benchPressMax, this.squatMax, this.deadliftMax, this.overheadPressMax, this.trainingGoal = TrainingGoal.hypertrophy, this.hasInjuryHistory = false, this.injuryDetails, this.currentPainLevel = 0, this.suggestionStyle = SuggestionStyle.balanced, this.completedAt, this.allowPeriodicUpdates = true, this.selfReportCalibration = SelfReportCalibration.realistic});
+  const _UserFitnessQuestionnaire({required this.bodyweightKg, required this.age, required this.heightCm, required this.sex, required this.experienceLevel, this.monthsOfTraining, this.benchPressMax, this.squatMax, this.deadliftMax, this.overheadPressMax, this.trainingGoal = TrainingGoal.hypertrophy, this.hasInjuryHistory = false, this.injuryDetails, this.currentPainLevel = 0, this.suggestionStyle = SuggestionStyle.balanced, this.completedAt, this.allowPeriodicUpdates = true, this.selfReportCalibration = SelfReportCalibration.realistic});
   factory _UserFitnessQuestionnaire.fromJson(Map<String, dynamic> json) => _$UserFitnessQuestionnaireFromJson(json);
 
 // Step 1: Demographics
@@ -268,6 +270,8 @@ class _UserFitnessQuestionnaire implements UserFitnessQuestionnaire {
 @override final  double bodyweightKg;
 /// User's age
 @override final  int age;
+/// User's height in cm
+@override final  double heightCm;
 /// User's biological sex (affects strength standards)
 @override final  BiologicalSex sex;
 // Step 2: Experience Level
@@ -317,16 +321,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _UserFitnessQuestionnaire&&(identical(other.bodyweightKg, bodyweightKg) || other.bodyweightKg == bodyweightKg)&&(identical(other.age, age) || other.age == age)&&(identical(other.sex, sex) || other.sex == sex)&&(identical(other.experienceLevel, experienceLevel) || other.experienceLevel == experienceLevel)&&(identical(other.monthsOfTraining, monthsOfTraining) || other.monthsOfTraining == monthsOfTraining)&&(identical(other.benchPressMax, benchPressMax) || other.benchPressMax == benchPressMax)&&(identical(other.squatMax, squatMax) || other.squatMax == squatMax)&&(identical(other.deadliftMax, deadliftMax) || other.deadliftMax == deadliftMax)&&(identical(other.overheadPressMax, overheadPressMax) || other.overheadPressMax == overheadPressMax)&&(identical(other.trainingGoal, trainingGoal) || other.trainingGoal == trainingGoal)&&(identical(other.hasInjuryHistory, hasInjuryHistory) || other.hasInjuryHistory == hasInjuryHistory)&&(identical(other.injuryDetails, injuryDetails) || other.injuryDetails == injuryDetails)&&(identical(other.currentPainLevel, currentPainLevel) || other.currentPainLevel == currentPainLevel)&&(identical(other.suggestionStyle, suggestionStyle) || other.suggestionStyle == suggestionStyle)&&(identical(other.completedAt, completedAt) || other.completedAt == completedAt)&&(identical(other.allowPeriodicUpdates, allowPeriodicUpdates) || other.allowPeriodicUpdates == allowPeriodicUpdates)&&(identical(other.selfReportCalibration, selfReportCalibration) || other.selfReportCalibration == selfReportCalibration));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _UserFitnessQuestionnaire&&(identical(other.bodyweightKg, bodyweightKg) || other.bodyweightKg == bodyweightKg)&&(identical(other.age, age) || other.age == age)&&(identical(other.heightCm, heightCm) || other.heightCm == heightCm)&&(identical(other.sex, sex) || other.sex == sex)&&(identical(other.experienceLevel, experienceLevel) || other.experienceLevel == experienceLevel)&&(identical(other.monthsOfTraining, monthsOfTraining) || other.monthsOfTraining == monthsOfTraining)&&(identical(other.benchPressMax, benchPressMax) || other.benchPressMax == benchPressMax)&&(identical(other.squatMax, squatMax) || other.squatMax == squatMax)&&(identical(other.deadliftMax, deadliftMax) || other.deadliftMax == deadliftMax)&&(identical(other.overheadPressMax, overheadPressMax) || other.overheadPressMax == overheadPressMax)&&(identical(other.trainingGoal, trainingGoal) || other.trainingGoal == trainingGoal)&&(identical(other.hasInjuryHistory, hasInjuryHistory) || other.hasInjuryHistory == hasInjuryHistory)&&(identical(other.injuryDetails, injuryDetails) || other.injuryDetails == injuryDetails)&&(identical(other.currentPainLevel, currentPainLevel) || other.currentPainLevel == currentPainLevel)&&(identical(other.suggestionStyle, suggestionStyle) || other.suggestionStyle == suggestionStyle)&&(identical(other.completedAt, completedAt) || other.completedAt == completedAt)&&(identical(other.allowPeriodicUpdates, allowPeriodicUpdates) || other.allowPeriodicUpdates == allowPeriodicUpdates)&&(identical(other.selfReportCalibration, selfReportCalibration) || other.selfReportCalibration == selfReportCalibration));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,bodyweightKg,age,sex,experienceLevel,monthsOfTraining,benchPressMax,squatMax,deadliftMax,overheadPressMax,trainingGoal,hasInjuryHistory,injuryDetails,currentPainLevel,suggestionStyle,completedAt,allowPeriodicUpdates,selfReportCalibration);
+int get hashCode => Object.hash(runtimeType,bodyweightKg,age,heightCm,sex,experienceLevel,monthsOfTraining,benchPressMax,squatMax,deadliftMax,overheadPressMax,trainingGoal,hasInjuryHistory,injuryDetails,currentPainLevel,suggestionStyle,completedAt,allowPeriodicUpdates,selfReportCalibration);
 
 @override
 String toString() {
-  return 'UserFitnessQuestionnaire(bodyweightKg: $bodyweightKg, age: $age, sex: $sex, experienceLevel: $experienceLevel, monthsOfTraining: $monthsOfTraining, benchPressMax: $benchPressMax, squatMax: $squatMax, deadliftMax: $deadliftMax, overheadPressMax: $overheadPressMax, trainingGoal: $trainingGoal, hasInjuryHistory: $hasInjuryHistory, injuryDetails: $injuryDetails, currentPainLevel: $currentPainLevel, suggestionStyle: $suggestionStyle, completedAt: $completedAt, allowPeriodicUpdates: $allowPeriodicUpdates, selfReportCalibration: $selfReportCalibration)';
+  return 'UserFitnessQuestionnaire(bodyweightKg: $bodyweightKg, age: $age, heightCm: $heightCm, sex: $sex, experienceLevel: $experienceLevel, monthsOfTraining: $monthsOfTraining, benchPressMax: $benchPressMax, squatMax: $squatMax, deadliftMax: $deadliftMax, overheadPressMax: $overheadPressMax, trainingGoal: $trainingGoal, hasInjuryHistory: $hasInjuryHistory, injuryDetails: $injuryDetails, currentPainLevel: $currentPainLevel, suggestionStyle: $suggestionStyle, completedAt: $completedAt, allowPeriodicUpdates: $allowPeriodicUpdates, selfReportCalibration: $selfReportCalibration)';
 }
 
 
@@ -337,7 +341,7 @@ abstract mixin class _$UserFitnessQuestionnaireCopyWith<$Res> implements $UserFi
   factory _$UserFitnessQuestionnaireCopyWith(_UserFitnessQuestionnaire value, $Res Function(_UserFitnessQuestionnaire) _then) = __$UserFitnessQuestionnaireCopyWithImpl;
 @override @useResult
 $Res call({
- double bodyweightKg, int age, BiologicalSex sex, ExperienceLevel experienceLevel, int? monthsOfTraining, double? benchPressMax, double? squatMax, double? deadliftMax, double? overheadPressMax, TrainingGoal trainingGoal, bool hasInjuryHistory, InjuryDetails? injuryDetails, int currentPainLevel, SuggestionStyle suggestionStyle, DateTime? completedAt, bool allowPeriodicUpdates, SelfReportCalibration selfReportCalibration
+ double bodyweightKg, int age, double heightCm, BiologicalSex sex, ExperienceLevel experienceLevel, int? monthsOfTraining, double? benchPressMax, double? squatMax, double? deadliftMax, double? overheadPressMax, TrainingGoal trainingGoal, bool hasInjuryHistory, InjuryDetails? injuryDetails, int currentPainLevel, SuggestionStyle suggestionStyle, DateTime? completedAt, bool allowPeriodicUpdates, SelfReportCalibration selfReportCalibration
 });
 
 
@@ -354,11 +358,12 @@ class __$UserFitnessQuestionnaireCopyWithImpl<$Res>
 
 /// Create a copy of UserFitnessQuestionnaire
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? bodyweightKg = null,Object? age = null,Object? sex = null,Object? experienceLevel = null,Object? monthsOfTraining = freezed,Object? benchPressMax = freezed,Object? squatMax = freezed,Object? deadliftMax = freezed,Object? overheadPressMax = freezed,Object? trainingGoal = null,Object? hasInjuryHistory = null,Object? injuryDetails = freezed,Object? currentPainLevel = null,Object? suggestionStyle = null,Object? completedAt = freezed,Object? allowPeriodicUpdates = null,Object? selfReportCalibration = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? bodyweightKg = null,Object? age = null,Object? heightCm = null,Object? sex = null,Object? experienceLevel = null,Object? monthsOfTraining = freezed,Object? benchPressMax = freezed,Object? squatMax = freezed,Object? deadliftMax = freezed,Object? overheadPressMax = freezed,Object? trainingGoal = null,Object? hasInjuryHistory = null,Object? injuryDetails = freezed,Object? currentPainLevel = null,Object? suggestionStyle = null,Object? completedAt = freezed,Object? allowPeriodicUpdates = null,Object? selfReportCalibration = null,}) {
   return _then(_UserFitnessQuestionnaire(
 bodyweightKg: null == bodyweightKg ? _self.bodyweightKg : bodyweightKg // ignore: cast_nullable_to_non_nullable
 as double,age: null == age ? _self.age : age // ignore: cast_nullable_to_non_nullable
-as int,sex: null == sex ? _self.sex : sex // ignore: cast_nullable_to_non_nullable
+as int,heightCm: null == heightCm ? _self.heightCm : heightCm // ignore: cast_nullable_to_non_nullable
+as double,sex: null == sex ? _self.sex : sex // ignore: cast_nullable_to_non_nullable
 as BiologicalSex,experienceLevel: null == experienceLevel ? _self.experienceLevel : experienceLevel // ignore: cast_nullable_to_non_nullable
 as ExperienceLevel,monthsOfTraining: freezed == monthsOfTraining ? _self.monthsOfTraining : monthsOfTraining // ignore: cast_nullable_to_non_nullable
 as int?,benchPressMax: freezed == benchPressMax ? _self.benchPressMax : benchPressMax // ignore: cast_nullable_to_non_nullable

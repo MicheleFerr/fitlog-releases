@@ -22,7 +22,6 @@ import 'package:gymbro_flutter_new/features/workout/domain/entities/last_workout
 import 'package:gymbro_flutter_new/shared/presentation/providers/app_config_provider.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/widgets/plate_calculator_widget.dart';
-import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
@@ -43,6 +42,12 @@ class QuickEditOverlayV2 extends ConsumerStatefulWidget {
     this.onSupersetSave,
     this.isSuperset = false,
     this.countingMode = ExerciseCountingMode.weighted, // ✅ NUOVO
+    // ✅ NEW: Quick edit workflow parameters
+    this.currentSetIndex,
+    this.totalSets,
+    this.onSaveAndNext,
+    this.onSaveAndPrevious,
+    this.onApplyToRemaining,
   }) : assert(
          (!isSuperset && exerciseSet != null && onSave != null) ||
          (isSuperset && exerciseNames != null && exerciseSets != null && onSupersetSave != null),
@@ -56,6 +61,13 @@ class QuickEditOverlayV2 extends ConsumerStatefulWidget {
   final String? exerciseName;
   final int? setNumber; // For querying last workout data (1-based)
   final ExerciseCountingMode countingMode; // ✅ NUOVO: Determines which fields to show/edit
+
+  // ✅ NEW: Quick edit workflow parameters
+  final int? currentSetIndex; // 0-based index of current set being edited
+  final int? totalSets; // Total number of sets in exercise
+  final Function(ExerciseSet)? onSaveAndNext; // Callback for swipe left / "Save + Next"
+  final Function(ExerciseSet)? onSaveAndPrevious; // Callback for swipe right (go to previous set)
+  final Function(ExerciseSet, int remainingCount)? onApplyToRemaining; // Callback for applying to remaining sets
 
   // Superset support
   final List<String>? exerciseNames;
@@ -88,6 +100,9 @@ class _QuickEditOverlayV2State extends ConsumerState<QuickEditOverlayV2>
   // Apply to All states
   bool _isWeightAppliedToAll = false;
   bool _isRepsAppliedToAll = false;
+
+  // ✅ NEW: Apply to remaining sets toggle
+  bool _applyToRemaining = false;
   
   // Controllers
   late FixedExtentScrollController _weightController;
@@ -216,24 +231,12 @@ class _QuickEditOverlayV2State extends ConsumerState<QuickEditOverlayV2>
   }
 
   _SmartPositioning _calculateInitialPosition() {
-    // Get initial screen measurements
-    final mediaQuery = MediaQuery.of(context);
-    final screenSize = mediaQuery.size;
-    final statusBarHeight = mediaQuery.padding.top;
-    final bottomPadding = mediaQuery.padding.bottom;
-
-    const overlayWidth = 340.0;
-    const overlayHeight = 600.0;
-    const padding = 16.0;
-
-    return _calculateSmartPosition(
-      tapPosition: widget.position,
-      screenSize: screenSize,
-      overlaySize: const Size(overlayWidth, overlayHeight),
-      keyboardHeight: 0, // Don't consider keyboard on initial positioning
-      statusBarHeight: statusBarHeight,
-      bottomPadding: bottomPadding,
-      padding: padding,
+    // ✅ CHANGED: Always use bottom sheet mode for better UX
+    // The old positioned overlay approach caused issues with keyboard and space
+    return const _SmartPositioning(
+      left: 0,
+      top: 0,
+      showAsBottomSheet: true, // Always show as bottom sheet
     );
   }
 
@@ -272,7 +275,7 @@ class _QuickEditOverlayV2State extends ConsumerState<QuickEditOverlayV2>
     final bool showAsBottomSheet = _positioning.showAsBottomSheet;
 
     if (showAsBottomSheet) {
-      // Show as bottom sheet when no space available
+      // Show as bottom sheet - always used now
       return AnimatedBuilder(
         animation: _animationController,
         builder: (context, child) {
@@ -282,35 +285,42 @@ class _QuickEditOverlayV2State extends ConsumerState<QuickEditOverlayV2>
               opacity: _fadeAnimation.value,
               child: Align(
                 alignment: Alignment.bottomCenter,
-                child: Container(
-                  width: double.infinity,
-                  margin: const EdgeInsets.all(16),
-                  constraints: BoxConstraints(
-                    maxHeight: screenSize.height * 0.75,
-                  ),
-                  decoration: BoxDecoration(
-                    color: theme.colorScheme.surface,
-                    borderRadius: BorderRadius.circular(20),
-                    border: Border.all(
-                      color: theme.colorScheme.outline.withValues(alpha: 0.1),
-                      width: 1,
+                // ✅ NEW: Wrap in GestureDetector for swipe navigation
+                child: GestureDetector(
+                  onHorizontalDragEnd: _handleHorizontalSwipe,
+                  onVerticalDragEnd: _handleVerticalSwipe,
+                  child: Container(
+                    width: double.infinity,
+                    margin: const EdgeInsets.all(16),
+                    constraints: BoxConstraints(
+                      maxHeight: screenSize.height * 0.75,
                     ),
-                    boxShadow: [
-                      BoxShadow(
-                        color: theme.colorScheme.shadow.withValues(alpha: 0.2),
-                        blurRadius: 24,
-                        offset: const Offset(0, -8),
+                    decoration: BoxDecoration(
+                      color: theme.colorScheme.surface,
+                      borderRadius: BorderRadius.circular(20),
+                      border: Border.all(
+                        color: theme.colorScheme.outline.withValues(alpha: 0.1),
+                        width: 1,
                       ),
-                    ],
-                  ),
-                  child: SingleChildScrollView(
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        _buildHeader(theme),
-                        const SizedBox(height: 12),
-                        _buildContent(theme, measurementUnit),
+                      boxShadow: [
+                        BoxShadow(
+                          color: theme.colorScheme.shadow.withValues(alpha: 0.2),
+                          blurRadius: 24,
+                          offset: const Offset(0, -8),
+                        ),
                       ],
+                    ),
+                    child: SingleChildScrollView(
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          _buildHeader(theme),
+                          // ✅ NEW: Show swipe hint if navigation is available
+                          if (_hasSwipeNavigation) _buildSwipeHint(theme),
+                          const SizedBox(height: 12),
+                          _buildContent(theme, measurementUnit),
+                        ],
+                      ),
                     ),
                   ),
                 ),
@@ -1514,43 +1524,141 @@ class _QuickEditOverlayV2State extends ConsumerState<QuickEditOverlayV2>
   }
 
   Widget _buildActionButtons(ThemeData theme) {
-    return Row(
+    // Calculate remaining sets for "Apply to remaining" toggle
+    final hasRemainingSets = widget.currentSetIndex != null &&
+        widget.totalSets != null &&
+        widget.currentSetIndex! < widget.totalSets! - 1;
+    final remainingCount = hasRemainingSets
+        ? widget.totalSets! - widget.currentSetIndex! - 1
+        : 0;
+
+    // Check if "Save + Next" should be shown
+    final showSaveAndNext = widget.onSaveAndNext != null && hasRemainingSets;
+
+    return Column(
+      mainAxisSize: MainAxisSize.min,
       children: [
-        // Cancel button
-        Expanded(
-          child: OutlinedButton.icon(
-            onPressed: _cancel,
-            icon: const SemanticIcon(
-  icon: AppIcons.closeRounded,
-  semanticLabel: 'Close rounded',
-  size: AppIconSize.small,
-),
-            label: Text(AppLocalizations.of(context).cancel),
-            style: OutlinedButton.styleFrom(
-              padding: const EdgeInsets.symmetric(vertical: 12),
-              side: BorderSide(
-                color: theme.colorScheme.outline.withValues(alpha: 0.3),
+        // ✅ NEW: Apply to remaining sets toggle (only if there are remaining sets)
+        if (hasRemainingSets && widget.onApplyToRemaining != null) ...[
+          Material(
+            color: Colors.transparent,
+            child: InkWell(
+              onTap: () {
+                setState(() => _applyToRemaining = !_applyToRemaining);
+                HapticFeedback.selectionClick();
+              },
+              borderRadius: BorderRadius.circular(12),
+              child: Container(
+                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                decoration: BoxDecoration(
+                  color: _applyToRemaining
+                      ? theme.colorScheme.primaryContainer.withValues(alpha: 0.5)
+                      : theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
+                  borderRadius: BorderRadius.circular(12),
+                  border: Border.all(
+                    color: _applyToRemaining
+                        ? theme.colorScheme.primary.withValues(alpha: 0.5)
+                        : theme.colorScheme.outline.withValues(alpha: 0.2),
+                  ),
+                ),
+                child: Row(
+                  children: [
+                    SemanticIcon(
+                      icon: _applyToRemaining
+                          ? AppIcons.checkCircle
+                          : AppIcons.circleOutlined,
+                      semanticLabel: 'Apply toggle',
+                      size: AppIconSize.small,
+                      color: _applyToRemaining
+                          ? theme.colorScheme.primary
+                          : theme.colorScheme.onSurfaceVariant,
+                    ),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: Text(
+                        AppLocalizations.of(context).applyToRemainingNSets(remainingCount),
+                        style: theme.textTheme.bodyMedium?.copyWith(
+                          color: _applyToRemaining
+                              ? theme.colorScheme.primary
+                              : theme.colorScheme.onSurface,
+                          fontWeight: _applyToRemaining
+                              ? FontWeight.w600
+                              : FontWeight.normal,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
           ),
-        ),
-        const SizedBox(width: 12),
-        // Save button
-        Expanded(
-          flex: 2,
-          child: FilledButton.icon(
-            onPressed: _save,
-            icon: const SemanticIcon(
-  icon: AppIcons.checkRounded,
-  semanticLabel: 'Check rounded',
-  size: AppIconSize.small,
-),
-            label: Text(AppLocalizations.of(context).save),
-            style: FilledButton.styleFrom(
-              padding: const EdgeInsets.symmetric(vertical: 12),
-              backgroundColor: theme.colorScheme.primary,
+          const SizedBox(height: 12),
+        ],
+
+        // Action buttons row
+        Row(
+          children: [
+            // Cancel button
+            Expanded(
+              child: OutlinedButton.icon(
+                onPressed: _cancel,
+                icon: const SemanticIcon(
+                  icon: AppIcons.closeRounded,
+                  semanticLabel: 'Close rounded',
+                  size: AppIconSize.small,
+                ),
+                label: Text(AppLocalizations.of(context).cancel),
+                style: OutlinedButton.styleFrom(
+                  padding: const EdgeInsets.symmetric(vertical: 12),
+                  side: BorderSide(
+                    color: theme.colorScheme.outline.withValues(alpha: 0.3),
+                  ),
+                ),
+              ),
             ),
-          ),
+            const SizedBox(width: 8),
+
+            // ✅ NEW: Save + Next button (only if there are more sets)
+            if (showSaveAndNext) ...[
+              Expanded(
+                child: OutlinedButton.icon(
+                  onPressed: _saveAndNext,
+                  icon: const SemanticIcon(
+                    icon: AppIcons.skipNext,
+                    semanticLabel: 'Next',
+                    size: AppIconSize.small,
+                  ),
+                  label: Text(AppLocalizations.of(context).saveAndNext),
+                  style: OutlinedButton.styleFrom(
+                    padding: const EdgeInsets.symmetric(vertical: 12),
+                    side: BorderSide(
+                      color: theme.colorScheme.primary.withValues(alpha: 0.5),
+                    ),
+                    foregroundColor: theme.colorScheme.primary,
+                  ),
+                ),
+              ),
+              const SizedBox(width: 8),
+            ],
+
+            // Save button
+            Expanded(
+              flex: showSaveAndNext ? 1 : 2,
+              child: FilledButton.icon(
+                onPressed: _save,
+                icon: const SemanticIcon(
+                  icon: AppIcons.checkRounded,
+                  semanticLabel: 'Check rounded',
+                  size: AppIconSize.small,
+                ),
+                label: Text(AppLocalizations.of(context).save),
+                style: FilledButton.styleFrom(
+                  padding: const EdgeInsets.symmetric(vertical: 12),
+                  backgroundColor: theme.colorScheme.primary,
+                ),
+              ),
+            ),
+          ],
         ),
       ],
     );
@@ -1922,6 +2030,15 @@ class _QuickEditOverlayV2State extends ConsumerState<QuickEditOverlayV2>
     HapticFeedback.mediumImpact();
   }
 
+  /// Creates the updated ExerciseSet with current values
+  ExerciseSet _createUpdatedSet() {
+    return widget.exerciseSet!.copyWith(
+      weight: widget.countingMode.requiresWeight && _selectedWeight > 0 ? _selectedWeight : null,
+      reps: widget.countingMode.requiresReps && _selectedReps > 0 ? _selectedReps : null,
+      seconds: widget.countingMode.requiresTime && _selectedSeconds > 0 ? _selectedSeconds : null,
+    );
+  }
+
   void _save() {
     HapticFeedback.lightImpact();
 
@@ -1952,15 +2069,164 @@ class _QuickEditOverlayV2State extends ConsumerState<QuickEditOverlayV2>
           widget.onSupersetSave!(updatedSets);
         } else {
           // ✅ NUOVO: Single exercise save based on counting mode
-          final updatedSet = widget.exerciseSet!.copyWith(
-            weight: widget.countingMode.requiresWeight && _selectedWeight > 0 ? _selectedWeight : null,
-            reps: widget.countingMode.requiresReps && _selectedReps > 0 ? _selectedReps : null,
-            seconds: widget.countingMode.requiresTime && _selectedSeconds > 0 ? _selectedSeconds : null,
-          );
-          widget.onSave!(updatedSet);
+          final updatedSet = _createUpdatedSet();
+
+          // ✅ NEW: Handle "Apply to remaining" if toggled
+          if (_applyToRemaining && widget.onApplyToRemaining != null) {
+            final remainingCount = widget.totalSets! - widget.currentSetIndex! - 1;
+            widget.onApplyToRemaining!(updatedSet, remainingCount);
+          } else {
+            widget.onSave!(updatedSet);
+          }
         }
       }
     });
+  }
+
+  /// ✅ NEW: Save current set and immediately open edit for next set (swipe left)
+  void _saveAndNext() {
+    HapticFeedback.lightImpact();
+
+    if (widget.onSaveAndNext == null) return;
+
+    // Create the updated set
+    final updatedSet = _createUpdatedSet();
+
+    // Animate out first, then call the callback
+    _animationController.reverse().then((_) {
+      if (mounted) {
+        // Handle "Apply to remaining" if toggled AND save+next
+        if (_applyToRemaining && widget.onApplyToRemaining != null) {
+          final remainingCount = widget.totalSets! - widget.currentSetIndex! - 1;
+          widget.onApplyToRemaining!(updatedSet, remainingCount);
+        } else {
+          widget.onSaveAndNext!(updatedSet);
+        }
+      }
+    });
+  }
+
+  /// ✅ NEW: Save current set and go back to previous set (swipe right)
+  void _saveAndPrevious() {
+    HapticFeedback.lightImpact();
+
+    if (widget.onSaveAndPrevious == null) return;
+
+    // Create the updated set
+    final updatedSet = _createUpdatedSet();
+
+    // Animate out first, then call the callback
+    _animationController.reverse().then((_) {
+      if (mounted) {
+        widget.onSaveAndPrevious!(updatedSet);
+      }
+    });
+  }
+
+  // ═══════════════════════════════════════════════════════════════════════════
+  // SWIPE GESTURE HANDLERS
+  // ═══════════════════════════════════════════════════════════════════════════
+
+  /// Check if swipe navigation is available
+  bool get _hasSwipeNavigation {
+    final hasNext = widget.onSaveAndNext != null &&
+        widget.currentSetIndex != null &&
+        widget.totalSets != null &&
+        widget.currentSetIndex! < widget.totalSets! - 1;
+    final hasPrevious = widget.onSaveAndPrevious != null &&
+        widget.currentSetIndex != null &&
+        widget.currentSetIndex! > 0;
+    return hasNext || hasPrevious;
+  }
+
+  /// Check if can swipe to next set
+  bool get _canSwipeNext {
+    return widget.onSaveAndNext != null &&
+        widget.currentSetIndex != null &&
+        widget.totalSets != null &&
+        widget.currentSetIndex! < widget.totalSets! - 1;
+  }
+
+  /// Check if can swipe to previous set
+  bool get _canSwipePrevious {
+    return widget.onSaveAndPrevious != null &&
+        widget.currentSetIndex != null &&
+        widget.currentSetIndex! > 0;
+  }
+
+  /// Handle horizontal swipe gestures
+  void _handleHorizontalSwipe(DragEndDetails details) {
+    const swipeThreshold = 300.0; // Velocity threshold for swipe detection
+    final velocity = details.primaryVelocity ?? 0;
+
+    if (velocity.abs() < swipeThreshold) return;
+
+    if (velocity < 0 && _canSwipeNext) {
+      // Swipe left → go to next set
+      _saveAndNext();
+    } else if (velocity > 0 && _canSwipePrevious) {
+      // Swipe right → go to previous set
+      _saveAndPrevious();
+    }
+  }
+
+  /// Handle vertical swipe gestures (swipe down to save and close)
+  void _handleVerticalSwipe(DragEndDetails details) {
+    const swipeThreshold = 300.0;
+    final velocity = details.primaryVelocity ?? 0;
+
+    if (velocity > swipeThreshold) {
+      // Swipe down → save and close
+      _save();
+    }
+  }
+
+  /// Build swipe hint indicator
+  Widget _buildSwipeHint(ThemeData theme) {
+    final currentSet = (widget.currentSetIndex ?? 0) + 1;
+    final totalSets = widget.totalSets ?? 1;
+
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          // Left arrow (previous)
+          if (_canSwipePrevious) ...[
+            Icon(
+              AppIcons.arrowBack,
+              size: 16,
+              color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.6),
+            ),
+            const SizedBox(width: 8),
+          ],
+          // Set indicator
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+            decoration: BoxDecoration(
+              color: theme.colorScheme.primaryContainer.withValues(alpha: 0.5),
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: Text(
+              'Set $currentSet / $totalSets',
+              style: theme.textTheme.labelMedium?.copyWith(
+                color: theme.colorScheme.primary,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+          ),
+          // Right arrow (next)
+          if (_canSwipeNext) ...[
+            const SizedBox(width: 8),
+            Icon(
+              AppIcons.forwardIos,
+              size: 16,
+              color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.6),
+            ),
+          ],
+        ],
+      ),
+    );
   }
 
   void _cancel() {
@@ -2049,69 +2315,8 @@ class _QuickEditOverlayV2State extends ConsumerState<QuickEditOverlayV2>
     
     HapticFeedback.lightImpact();
   }
-  
-  // Smart positioning calculation
-  _SmartPositioning _calculateSmartPosition({
-    required Offset tapPosition,
-    required Size screenSize,
-    required Size overlaySize,
-    required double keyboardHeight,
-    required double statusBarHeight,
-    required double bottomPadding,
-    required double padding,
-  }) {
-    final availableHeight = screenSize.height - keyboardHeight - statusBarHeight - bottomPadding;
-    final availableWidth = screenSize.width;
-    
-    // Calculate preferred position (centered on tap)
-    final double preferredLeft = tapPosition.dx - (overlaySize.width / 2);
-    double preferredTop = tapPosition.dy - (overlaySize.height / 2);
-    
-    // Check available space above and below tap point
-    final spaceAbove = tapPosition.dy - statusBarHeight - padding;
-    final spaceBelow = availableHeight - tapPosition.dy + statusBarHeight - padding;
-    
-    // Minimum space required for overlay
-    const minSpaceRequired = 400.0;
-    
-    // If neither above nor below has enough space, show as bottom sheet
-    if (spaceAbove < minSpaceRequired && spaceBelow < minSpaceRequired) {
-      return const _SmartPositioning(
-        left: 0,
-        top: 0,
-        showAsBottomSheet: true,
-      );
-    }
-    
-    // Determine optimal vertical position
-    if (spaceBelow >= minSpaceRequired) {
-      // Show below tap point
-      preferredTop = tapPosition.dy + 20;
-    } else if (spaceAbove >= minSpaceRequired) {
-      // Show above tap point
-      preferredTop = tapPosition.dy - overlaySize.height - 20;
-    }
-    
-    // Constrain horizontal position
-    final constrainedLeft = preferredLeft.clamp(
-      padding,
-      availableWidth - overlaySize.width - padding,
-    );
-    
-    // Constrain vertical position
-    final constrainedTop = preferredTop.clamp(
-      statusBarHeight + padding,
-      availableHeight - overlaySize.height + statusBarHeight - padding,
-    );
-    
-    return _SmartPositioning(
-      left: constrainedLeft,
-      top: constrainedTop,
-      showAsBottomSheet: false,
-    );
-  }
-  
-  // Removed: All gesture handlers and hint methods to fix overlay issues
+
+  // NOTE: _calculateSmartPosition removed - now always using bottom sheet mode
 }
 
 // Helper class for smart positioning
@@ -2132,44 +2337,60 @@ extension QuickEditOverlayV2Extension on BuildContext {
   Future<void> showQuickEditOverlayV2({
     required ExerciseSet exerciseSet,
     required Function(ExerciseSet) onSave,
-    required Offset position,
+    required Offset position, // Kept for API compatibility
     ExerciseSet? previousSet,
     String? exerciseName,
     int? setNumber, // For querying last workout data
-    ExerciseCountingMode countingMode = ExerciseCountingMode.weighted, // ✅ NUOVO
+    ExerciseCountingMode countingMode = ExerciseCountingMode.weighted,
+    // Quick edit workflow parameters
+    int? currentSetIndex,
+    int? totalSets,
+    Function(ExerciseSet)? onSaveAndNext,
+    Function(ExerciseSet)? onSaveAndPrevious,
+    Function(ExerciseSet, int remainingCount)? onApplyToRemaining,
   }) {
-    return showDialog(
+    // ✅ CHANGED: Use showModalBottomSheet instead of showDialog
+    return showModalBottomSheet<void>(
       context: this,
-      barrierColor: colors.onSurface.withValues(alpha: 0.54),
-      builder: (context) => Stack(
-        children: [
-          GestureDetector(
-            onTap: () => Navigator.of(context).pop(),
-            child: Container(
-              width: double.infinity,
-              height: double.infinity,
-              color: Colors.transparent,
-            ),
-          ),
-          QuickEditOverlayV2(
-            exerciseSet: exerciseSet,
-            onSave: (updatedSet) {
-              // First close the dialog
-              Navigator.of(context).pop();
-              // Then call the save callback
-              onSave(updatedSet);
-            },
-            onCancel: () {
-              // Just close the dialog, no need to call anything else
-              Navigator.of(context).pop();
-            },
-            position: position,
-            previousSet: previousSet,
-            exerciseName: exerciseName,
-            setNumber: setNumber, // For last workout pre-fill
-            countingMode: countingMode, // ✅ NUOVO
-          ),
-        ],
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (context) => Padding(
+        padding: EdgeInsets.only(
+          bottom: MediaQuery.of(context).viewInsets.bottom,
+        ),
+        child: QuickEditOverlayV2(
+          exerciseSet: exerciseSet,
+          onSave: (updatedSet) {
+            Navigator.of(context).pop();
+            onSave(updatedSet);
+          },
+          onCancel: () => Navigator.of(context).pop(),
+          position: position,
+          previousSet: previousSet,
+          exerciseName: exerciseName,
+          setNumber: setNumber,
+          countingMode: countingMode,
+          currentSetIndex: currentSetIndex,
+          totalSets: totalSets,
+          onSaveAndNext: onSaveAndNext != null
+              ? (updatedSet) {
+                  Navigator.of(context).pop();
+                  onSaveAndNext(updatedSet);
+                }
+              : null,
+          onSaveAndPrevious: onSaveAndPrevious != null
+              ? (updatedSet) {
+                  Navigator.of(context).pop();
+                  onSaveAndPrevious(updatedSet);
+                }
+              : null,
+          onApplyToRemaining: onApplyToRemaining != null
+              ? (updatedSet, remainingCount) {
+                  Navigator.of(context).pop();
+                  onApplyToRemaining(updatedSet, remainingCount);
+                }
+              : null,
+        ),
       ),
     );
   }
@@ -2180,36 +2401,26 @@ extension QuickEditOverlayV2Extension on BuildContext {
     required Function(Map<String, ExerciseSet>) onSave,
     required Offset position,
   }) {
-    return showDialog(
+    // ✅ CHANGED: Use showModalBottomSheet for superset too
+    return showModalBottomSheet<void>(
       context: this,
-      barrierColor: Colors.transparent,
-      builder: (context) => Stack(
-        children: [
-          GestureDetector(
-            onTap: () => Navigator.of(context).pop(),
-            child: Container(
-              width: double.infinity,
-              height: double.infinity,
-              color: Colors.transparent,
-            ),
-          ),
-          QuickEditOverlayV2(
-            isSuperset: true,
-            exerciseNames: exerciseNames,
-            exerciseSets: exerciseSets,
-            onSupersetSave: (updatedSets) {
-              // First close the dialog
-              Navigator.of(context).pop();
-              // Then call the save callback
-              onSave(updatedSets);
-            },
-            onCancel: () {
-              // Just close the dialog
-              Navigator.of(context).pop();
-            },
-            position: position,
-          ),
-        ],
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (context) => Padding(
+        padding: EdgeInsets.only(
+          bottom: MediaQuery.of(context).viewInsets.bottom,
+        ),
+        child: QuickEditOverlayV2(
+          isSuperset: true,
+          exerciseNames: exerciseNames,
+          exerciseSets: exerciseSets,
+          onSupersetSave: (updatedSets) {
+            Navigator.of(context).pop();
+            onSave(updatedSets);
+          },
+          onCancel: () => Navigator.of(context).pop(),
+          position: position,
+        ),
       ),
     );
   }

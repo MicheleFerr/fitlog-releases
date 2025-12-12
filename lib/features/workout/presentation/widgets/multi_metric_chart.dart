@@ -318,18 +318,20 @@ class _MultiMetricChartState extends State<MultiMetricChart> {
   /// Build tooltip items mostrando **valori reali** (non normalizzati)
   ///
   /// ✅ FIX TOOLTIP:
+  /// - Ritorna esattamente touchedSpots.length items (richiesto da fl_chart)
+  /// - Primo item contiene data + tutti i valori metriche
+  /// - Restanti items sono null
   /// - Usa _originalValues per recuperare valori reali
-  /// - Mappa correttamente touchedSpots a visibleMetrics
-  /// - Mostra "Peso: 120.0 kg" invece di valore normalizzato "85.3"
   List<LineTooltipItem?> _buildTooltipItems(BuildContext context, List<LineBarSpot> touchedSpots) {
-    final items = <LineTooltipItem>[];
-
-    if (touchedSpots.isEmpty) return items;
+    if (touchedSpots.isEmpty) return [];
 
     final dateIndex = touchedSpots.first.x.toInt();
     final allDates = _getAllUniqueDates();
 
-    if (dateIndex < 0 || dateIndex >= allDates.length) return items;
+    if (dateIndex < 0 || dateIndex >= allDates.length) {
+      // Return list of nulls matching touchedSpots length
+      return List.filled(touchedSpots.length, null);
+    }
 
     final date = allDates[dateIndex];
 
@@ -338,42 +340,63 @@ class _MultiMetricChartState extends State<MultiMetricChart> {
         .where((metric) => !_hiddenMetrics.contains(metric))
         .toList();
 
-    // Header con data
-    items.add(
-      LineTooltipItem(
-        '${DateFormat('dd/MM').format(date)}\n',
-        TextStyle(
-          color: context.colors.onSurface,
-          fontWeight: FontWeight.bold,
-          fontSize: 11,
-        ),
-      ),
-    );
+    // ✅ Build single tooltip text with all metrics
+    final buffer = StringBuffer();
+    buffer.write(DateFormat('dd/MM').format(date));
 
-    // ✅ Valori per ogni metrica VISIBILE con valori REALI
+    // Collect metric values with their colors for TextSpan
+    final metricLines = <({String text, Color color})>[];
+
     for (int i = 0; i < touchedSpots.length && i < visibleMetrics.length; i++) {
-      final metric = visibleMetrics[i]; // ✅ Correct mapping
+      final metric = visibleMetrics[i];
       final color = _getMetricColor(context, metric);
       final unit = _getUnit(metric);
-
-      // ✅ Recupera valore REALE (non normalizzato)
       final realValue = _originalValues[metric]?[dateIndex];
 
       if (realValue != null) {
-        items.add(
-          LineTooltipItem(
-            '$metric: ${realValue.toStringAsFixed(1)}$unit\n',
-            TextStyle(
-              color: color,
-              fontWeight: FontWeight.w500,
-              fontSize: 10,
-            ),
-          ),
-        );
+        metricLines.add((
+          text: '$metric: ${realValue.toStringAsFixed(1)}$unit',
+          color: color,
+        ));
       }
     }
 
-    return items;
+    // ✅ Create list with exactly touchedSpots.length items
+    // First item has all content, rest are null
+    final result = <LineTooltipItem?>[];
+
+    for (int i = 0; i < touchedSpots.length; i++) {
+      if (i == 0) {
+        // First item contains all tooltip content
+        final children = <TextSpan>[];
+
+        for (final line in metricLines) {
+          children.add(TextSpan(
+            text: '\n${line.text}',
+            style: TextStyle(
+              color: line.color,
+              fontWeight: FontWeight.w500,
+              fontSize: 10,
+            ),
+          ));
+        }
+
+        result.add(LineTooltipItem(
+          DateFormat('dd/MM').format(date),
+          TextStyle(
+            color: context.colors.onSurface,
+            fontWeight: FontWeight.bold,
+            fontSize: 11,
+          ),
+          children: children,
+        ));
+      } else {
+        // Remaining items are null (fl_chart requires exactly touchedSpots.length)
+        result.add(null);
+      }
+    }
+
+    return result;
   }
 
   /// Get all unique dates from all metrics

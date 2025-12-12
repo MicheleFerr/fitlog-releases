@@ -53,17 +53,25 @@ class SchedulingState {
 }
 
 /// Notifier for managing scheduled workouts
-class SchedulingNotifier extends StateNotifier<SchedulingState> {
-  SchedulingNotifier(
-    this._repository,
-    this._notificationService,
-    this._liveActivityService,
-  ) : super(const SchedulingState());
-
-  final SchedulingRepository _repository;
-  final SchedulingNotificationService _notificationService;
-  final ScheduleLiveActivityService _liveActivityService;
+///
+/// Migrated from StateNotifier to Notifier (Riverpod 2.0+ pattern)
+class SchedulingNotifier extends Notifier<SchedulingState> {
+  late final SchedulingRepository _repository;
+  late final SchedulingNotificationService _notificationService;
+  late final ScheduleLiveActivityService _liveActivityService;
   final _uuid = const Uuid();
+
+  @override
+  SchedulingState build() {
+    _repository = ref.watch(schedulingRepositoryProvider);
+    _notificationService = ref.watch(schedulingNotificationServiceProvider);
+    _liveActivityService = ref.watch(scheduleLiveActivityServiceProvider);
+
+    // Initialize on creation (fire-and-forget)
+    Future.microtask(() => initialize());
+
+    return const SchedulingState();
+  }
 
   /// Threshold for starting Live Activity (minutes before workout)
   static const int _liveActivityThresholdMinutes = 120; // 2 hours before
@@ -73,6 +81,9 @@ class SchedulingNotifier extends StateNotifier<SchedulingState> {
     state = state.copyWith(isLoading: true, error: null);
 
     try {
+      // Initialize notification service (creates notification channel)
+      await _notificationService.initialize();
+
       // Update missed workouts on load
       await _repository.updateMissedWorkouts();
 
@@ -180,6 +191,9 @@ class SchedulingNotifier extends StateNotifier<SchedulingState> {
         scheduledWorkouts: updated,
         isLoading: false,
       );
+
+      // Check if any newly scheduled workout is within threshold and start Live Activity
+      await _checkAndStartLiveActivity();
     } catch (e) {
       state = state.copyWith(isLoading: false, error: e);
     }
@@ -255,20 +269,12 @@ class SchedulingNotifier extends StateNotifier<SchedulingState> {
 }
 
 /// Provider for scheduling state
+///
+/// Migrated to NotifierProvider (Riverpod 2.0+ pattern)
 final schedulingProvider =
-    StateNotifierProvider<SchedulingNotifier, SchedulingState>((ref) {
-  final repository = ref.watch(schedulingRepositoryProvider);
-  final notificationService = ref.watch(schedulingNotificationServiceProvider);
-  final liveActivityService = ref.watch(scheduleLiveActivityServiceProvider);
-  final notifier = SchedulingNotifier(
-    repository,
-    notificationService,
-    liveActivityService,
-  );
-  // Initialize on creation
-  notifier.initialize();
-  return notifier;
-});
+    NotifierProvider<SchedulingNotifier, SchedulingState>(
+  SchedulingNotifier.new,
+);
 
 /// Provider for upcoming scheduled workouts only
 final upcomingScheduledWorkoutsProvider =

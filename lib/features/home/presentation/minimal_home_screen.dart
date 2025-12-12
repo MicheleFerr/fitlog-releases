@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/features/home/presentation/widgets/start_workout_card.dart';
 import 'package:gymbro_flutter_new/features/home/presentation/widgets/templates_carousel_compact.dart';
@@ -6,19 +7,21 @@ import 'package:gymbro_flutter_new/features/home/presentation/widgets/xp_progres
 import 'package:gymbro_flutter_new/features/home/presentation/widgets/ai_coach_card.dart';
 import 'package:gymbro_flutter_new/features/home/presentation/widgets/exercise_wiki_card_compact.dart';
 import 'package:gymbro_flutter_new/features/home/presentation/providers/ai_coach_provider.dart';
+import 'package:gymbro_flutter_new/features/home/presentation/providers/motivational_quote_provider.dart';
 import 'package:gymbro_flutter_new/features/auth/presentation/providers/admin_provider.dart';
+import 'package:gymbro_flutter_new/features/auth/presentation/providers/consolidated_user_provider.dart';
 import 'package:gymbro_flutter_new/features/admin/presentation/screens/exercise_feedback_screen.dart';
 import 'package:gymbro_flutter_new/features/profile/presentation/widgets/settings_bottom_sheet.dart';
 import 'package:gymbro_flutter_new/features/debug/presentation/screens/debug_logs_screen.dart';
 import 'package:gymbro_flutter_new/features/debug/presentation/screens/modal_showcase_screen.dart';
-import 'package:gymbro_flutter_new/features/journey_themes/presentation/providers/journey_theme_provider.dart';
-import 'package:gymbro_flutter_new/features/journey_themes/domain/services/journey_greeting_service.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_spacing.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
 import 'package:gymbro_flutter_new/shared/presentation/services/snackbar_service.dart';
+import 'package:gymbro_flutter_new/shared/presentation/services/modal_service.dart';
+import 'package:gymbro_flutter_new/features/home/presentation/widgets/activity_rings_widget.dart';
 
 /// Minimal Home Screen - Clean dark premium design
 ///
@@ -36,7 +39,6 @@ class MinimalHomeScreen extends ConsumerWidget {
     final primaryAdviceAsync = ref.watch(primaryAIAdviceProvider);
     final isAdmin = ref.watch(isAdminCachedProvider);
     final isDeveloper = ref.watch(isDeveloperProvider);
-    final journeyThemeState = ref.watch(journeyThemeProvider);
 
     return Scaffold(
       backgroundColor: context.colors.surface,
@@ -62,11 +64,26 @@ class MinimalHomeScreen extends ConsumerWidget {
             surfaceTintColor: Colors.transparent,
             flexibleSpace: FlexibleSpaceBar(
               titlePadding: const EdgeInsets.only(left: 16, bottom: 12),
-              title: Text(
-                'FitLog Pro',
-                style: context.textTheme.titleLarge?.copyWith(
-                  fontWeight: FontWeight.bold,
-                ),
+              title: Row(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.baseline,
+                textBaseline: TextBaseline.alphabetic,
+                children: [
+                  // "FitLog" - main brand name
+                  Text(
+                    'FitLog',
+                    style: context.textTheme.titleLarge?.copyWith(
+                      fontWeight: FontWeight.bold,
+                      color: context.colors.onSurface,
+                    ),
+                  )
+                      .animate()
+                      .fadeIn(duration: 600.ms, curve: Curves.easeOut)
+                      .slideX(begin: -0.2, end: 0, duration: 600.ms),
+                  const SizedBox(width: 6),
+                  // "Pro" - premium badge style with separate animation
+                  _AnimatedProBadge(),
+                ],
               ),
             ),
             actions: [
@@ -88,12 +105,19 @@ class MinimalHomeScreen extends ConsumerWidget {
             padding: const EdgeInsets.only(top: 8),
             sliver: SliverList(
               delegate: SliverChildListDelegate([
-                // 0. Personalized Greeting
-                _buildGreetingSection(context, journeyThemeState),
+                // 0. Personalized Greeting with Motivational Quote
+                _buildGreetingSection(context, ref),
                 const SizedBox(height: 16),
 
                 // 0.5 XP Progress Bar
                 const XPProgressBar(),
+                const SizedBox(height: 20),
+
+                // 0.75 Activity Rings (HealthKit Integration)
+                const Padding(
+                  padding: EdgeInsets.symmetric(horizontal: AppSpacing.md),
+                  child: ActivityRingsWidget(),
+                ),
                 const SizedBox(height: 20),
 
                 // 1. Start Workout Card (Hero)
@@ -143,38 +167,80 @@ class MinimalHomeScreen extends ConsumerWidget {
     );
   }
 
-  /// Build personalized greeting section based on journey theme
-  Widget _buildGreetingSection(BuildContext context, JourneyThemeState state) {
-    final timeOfDay = JourneyGreetingService.getCurrentTimeOfDay();
-    final timeGreeting = JourneyGreetingService.getTimeGreeting(context, timeOfDay);
-    final motivationalPhrase = JourneyGreetingService.getMotivationalPhrase(
-      context,
-      state.effectiveTheme,
-      timeOfDay,
-    );
-    final greetingName = state.greetingName;
+  /// Build personalized motivational greeting section
+  ///
+  /// Dynamic design with:
+  /// - Personalized greeting with user's name
+  /// - Motivational quote as HERO element
+  /// - Visual accent for premium feel
+  Widget _buildGreetingSection(BuildContext context, WidgetRef ref) {
+    // Get user's display name
+    final userName = ref.watch(userDisplayNameProvider);
+    final firstName = userName.split(' ').first;
+
+    // Get time-based greeting
+    final hour = DateTime.now().hour;
+    String timeGreeting;
+    if (hour >= 5 && hour < 12) {
+      timeGreeting = context.l10n.greetingMorning;
+    } else if (hour >= 12 && hour < 18) {
+      timeGreeting = context.l10n.greetingAfternoon;
+    } else {
+      timeGreeting = context.l10n.greetingEvening;
+    }
+
+    // Get motivational quote from provider
+    final languageCode = Localizations.localeOf(context).languageCode;
+    final motivationalQuote = ref.watch(currentQuoteProvider(languageCode));
 
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16),
+      padding: const EdgeInsets.symmetric(horizontal: AppSpacing.md),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Main greeting with name
+          // Personalized greeting with name
           Text(
-            '$timeGreeting $greetingName,',
-            style: context.textTheme.headlineSmall?.copyWith(
-              fontWeight: FontWeight.w600,
-              color: context.journeyThemeOrDefault.primaryColor,
+            '$timeGreeting, $firstName',
+            style: context.textTheme.titleMedium?.copyWith(
+              color: context.colors.onSurfaceVariant,
+              fontWeight: FontWeight.w500,
             ),
           ),
-          const SizedBox(height: 4),
-          // Motivational phrase
-          Text(
-            motivationalPhrase,
-            style: context.textTheme.bodyLarge?.copyWith(
-              color: context.colors.onSurfaceVariant,
-              fontStyle: FontStyle.italic,
-            ),
+          const SizedBox(height: 6),
+          // Motivational quote - HERO element
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Accent bar
+              Container(
+                width: 4,
+                height: 52,
+                margin: const EdgeInsets.only(right: 12, top: 2),
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                    colors: [
+                      context.colors.primary,
+                      context.colors.primary.withValues(alpha: 0.2),
+                    ],
+                  ),
+                  borderRadius: BorderRadius.circular(2),
+                ),
+              ),
+              // Quote text
+              Expanded(
+                child: Text(
+                  motivationalQuote,
+                  style: context.textTheme.headlineSmall?.copyWith(
+                    fontWeight: FontWeight.w700,
+                    color: context.colors.onSurface,
+                    height: 1.25,
+                    letterSpacing: -0.5,
+                  ),
+                ),
+              ),
+            ],
           ),
         ],
       ),
@@ -196,10 +262,11 @@ class _DeveloperToolsSheet extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final safeMax = ModalService.safeMaxChildSize(context, preferredMax: 0.9);
     return DraggableScrollableSheet(
       initialChildSize: 0.6,
       minChildSize: 0.4,
-      maxChildSize: 0.9,
+      maxChildSize: safeMax,
       expand: false,
       builder: (context, scrollController) => Container(
         decoration: BoxDecoration(
@@ -423,6 +490,75 @@ class _DeveloperToolItem extends StatelessWidget {
         ),
       ),
     );
+  }
+}
+
+/// Animated "PRO" badge with entry animation + continuous shimmer
+class _AnimatedProBadge extends StatefulWidget {
+  @override
+  State<_AnimatedProBadge> createState() => _AnimatedProBadgeState();
+}
+
+class _AnimatedProBadgeState extends State<_AnimatedProBadge> {
+  bool _entryComplete = false;
+
+  @override
+  void initState() {
+    super.initState();
+    // Mark entry animation as complete after it finishes
+    Future.delayed(const Duration(milliseconds: 900), () {
+      if (mounted) {
+        setState(() => _entryComplete = true);
+      }
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final badge = Container(
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          colors: [
+            context.colors.primary,
+            context.colors.primary.withValues(alpha: 0.8),
+          ],
+        ),
+        borderRadius: BorderRadius.circular(6),
+      ),
+      child: Text(
+        'PRO',
+        style: context.textTheme.labelSmall?.copyWith(
+          fontWeight: FontWeight.w800,
+          color: context.colors.onPrimary,
+          letterSpacing: 1.2,
+          fontSize: 10,
+        ),
+      ),
+    );
+
+    if (!_entryComplete) {
+      // Entry animation: fade + elastic scale
+      return badge
+          .animate()
+          .fadeIn(delay: 400.ms, duration: 500.ms)
+          .scale(
+            begin: const Offset(0.5, 0.5),
+            end: const Offset(1, 1),
+            delay: 400.ms,
+            duration: 500.ms,
+            curve: Curves.elasticOut,
+          );
+    }
+
+    // After entry: continuous shimmer
+    return badge
+        .animate(onPlay: (controller) => controller.repeat())
+        .shimmer(
+          delay: 2000.ms,
+          duration: 1500.ms,
+          color: context.colors.onPrimary.withValues(alpha: 0.5),
+        );
   }
 }
 

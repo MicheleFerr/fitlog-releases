@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart' show kDebugMode;
 import 'dart:async';
 
 import 'package:flutter/material.dart';
@@ -111,7 +112,9 @@ class OnboardingTourManager extends ChangeNotifier {
 
     // Save tour completion state via callback
     _onTourCompleted?.call();
-    debugPrint('✅ [TOUR] Tour completed and state saved');
+    if (kDebugMode) {
+      debugPrint('✅ [TOUR] Tour completed and state saved');
+    }
   }
 
   /// Advances to the next step
@@ -181,7 +184,9 @@ class OnboardingTourManager extends ChangeNotifier {
       // Get the step definition
       final step = OnboardingTourConfig.getStepByPosition(stepIndex);
       if (step == null) {
-        debugPrint('❌ [OnboardingTourManager] Invalid step index: $stepIndex');
+        if (kDebugMode) {
+          debugPrint('❌ [OnboardingTourManager] Invalid step index: $stepIndex');
+        }
         _isTransitioning = false;
         notifyListeners();
         return;
@@ -190,9 +195,11 @@ class OnboardingTourManager extends ChangeNotifier {
       // Get the target widget key
       final targetKey = _targetKeys[step.id];
       if (targetKey == null) {
-        debugPrint(
-          '❌ [OnboardingTourManager] No target key for step: ${step.id}',
-        );
+        if (kDebugMode) {
+          debugPrint(
+            '❌ [OnboardingTourManager] No target key for step: ${step.id}',
+          );
+        }
         _isTransitioning = false;
         notifyListeners();
         return;
@@ -201,9 +208,11 @@ class OnboardingTourManager extends ChangeNotifier {
       // Get the widget's context and ensure it's in the widget tree
       final targetContext = targetKey.currentContext;
       if (targetContext == null) {
-        debugPrint(
-          '❌ [OnboardingTourManager] Target widget not found: ${step.id}',
-        );
+        if (kDebugMode) {
+          debugPrint(
+            '❌ [OnboardingTourManager] Target widget not found: ${step.id}',
+          );
+        }
         _isTransitioning = false;
         notifyListeners();
         return;
@@ -219,9 +228,11 @@ class OnboardingTourManager extends ChangeNotifier {
       _currentSpotlightBounds = targetContext.globalPaintBounds;
 
       if (_currentSpotlightBounds == null) {
-        debugPrint(
-          '❌ [OnboardingTourManager] Could not get bounds for: ${step.id}',
-        );
+        if (kDebugMode) {
+          debugPrint(
+            '❌ [OnboardingTourManager] Could not get bounds for: ${step.id}',
+          );
+        }
         _isTransitioning = false;
         notifyListeners();
         return;
@@ -229,7 +240,9 @@ class OnboardingTourManager extends ChangeNotifier {
 
       // Validate the bounds (check context is still valid after async gap)
       if (!context.mounted) {
-        debugPrint('⚠️ [OnboardingTourManager] Context no longer mounted');
+        if (kDebugMode) {
+          debugPrint('⚠️ [OnboardingTourManager] Context no longer mounted');
+        }
         return;
       }
       final screenSize = MediaQuery.of(context).size;
@@ -237,9 +250,11 @@ class OnboardingTourManager extends ChangeNotifier {
         _currentSpotlightBounds,
         screenSize,
       )) {
-        debugPrint(
-          '⚠️ [OnboardingTourManager] Bounds validation failed for: ${step.id}',
-        );
+        if (kDebugMode) {
+          debugPrint(
+            '⚠️ [OnboardingTourManager] Bounds validation failed for: ${step.id}',
+          );
+        }
       }
 
       // Calculate centering offset
@@ -248,11 +263,13 @@ class OnboardingTourManager extends ChangeNotifier {
         screenSize: screenSize,
       );
 
-      debugPrint(
-        '✅ [OnboardingTourManager] Showing step: ${step.id} '
-        'at bounds: $_currentSpotlightBounds '
-        'with offset: $_currentSpotlightOffset',
-      );
+      if (kDebugMode) {
+        debugPrint(
+          '✅ [OnboardingTourManager] Showing step: ${step.id} '
+          'at bounds: $_currentSpotlightBounds '
+          'with offset: $_currentSpotlightOffset',
+        );
+      }
 
       // Store context for timer callbacks
       _tourContext = context;
@@ -263,7 +280,9 @@ class OnboardingTourManager extends ChangeNotifier {
       // Start auto-advance timer if this is a SIMPLE step
       _startAutoAdvanceIfNeeded();
     } catch (e) {
-      debugPrint('❌ [OnboardingTourManager] Error showing spotlight: $e');
+      if (kDebugMode) {
+        debugPrint('❌ [OnboardingTourManager] Error showing spotlight: $e');
+      }
       _isTransitioning = false;
       notifyListeners();
     }
@@ -292,7 +311,9 @@ class OnboardingTourManager extends ChangeNotifier {
       // Wait for scroll animation to complete
       await Future.delayed(const Duration(milliseconds: 100));
     } catch (e) {
-      debugPrint('⚠️ [OnboardingTourManager] Scroll into view failed: $e');
+      if (kDebugMode) {
+        debugPrint('⚠️ [OnboardingTourManager] Scroll into view failed: $e');
+      }
       // Don't fail entirely if scrolling fails
     }
   }
@@ -300,9 +321,11 @@ class OnboardingTourManager extends ChangeNotifier {
   /// Cancels the auto-advance timer (if active)
   void _cancelAutoAdvance() {
     if (_autoAdvanceTimer != null && _autoAdvanceTimer!.isActive) {
-      debugPrint(
-        '⏹️ [OnboardingTourManager] Cancelling auto-advance timer',
-      );
+      if (kDebugMode) {
+        debugPrint(
+          '⏹️ [OnboardingTourManager] Cancelling auto-advance timer',
+        );
+      }
       _autoAdvanceTimer!.cancel();
       _autoAdvanceTimer = null;
     }
@@ -320,24 +343,30 @@ class OnboardingTourManager extends ChangeNotifier {
 
     // Only start timer for SIMPLE steps
     if (step.type != TourStepType.simple || step.autoAdvanceDuration == null) {
-      debugPrint(
-        '⏸️ [OnboardingTourManager] Step ${step.id} is COMPLEX - waiting for user input',
-      );
+      if (kDebugMode) {
+        debugPrint(
+          '⏸️ [OnboardingTourManager] Step ${step.id} is COMPLEX - waiting for user input',
+        );
+      }
       return;
     }
 
     // Store duration for logging
     final durationSeconds = step.autoAdvanceDuration!.inSeconds;
 
-    debugPrint(
-      '⏱️ [OnboardingTourManager] Starting auto-advance timer for ${step.id} '
-      '(${durationSeconds}s)',
-    );
+    if (kDebugMode) {
+      debugPrint(
+        '⏱️ [OnboardingTourManager] Starting auto-advance timer for ${step.id} '
+        '(${durationSeconds}s)',
+      );
+    }
 
     _autoAdvanceTimer = Timer(step.autoAdvanceDuration!, () {
-      debugPrint(
-        '⏭️ [OnboardingTourManager] Auto-advancing from ${step.id} to next step',
-      );
+      if (kDebugMode) {
+        debugPrint(
+          '⏭️ [OnboardingTourManager] Auto-advancing from ${step.id} to next step',
+        );
+      }
 
       // Only advance if tour is still active and context is valid
       if (_isActive && _tourContext != null && _tourContext!.mounted) {
@@ -368,9 +397,11 @@ class OnboardingTourManager extends ChangeNotifier {
     }
 
     if (missingSteps.isNotEmpty) {
-      debugPrint(
-        '⚠️ [OnboardingTourManager] Missing target keys: $missingSteps',
-      );
+      if (kDebugMode) {
+        debugPrint(
+          '⚠️ [OnboardingTourManager] Missing target keys: $missingSteps',
+        );
+      }
     }
 
     return missingSteps;
@@ -389,7 +420,9 @@ class OnboardingTourManager extends ChangeNotifier {
   /// Uses saved _tourContext for safe async operations.
   Future<void> jumpToStep(int stepIndex, [BuildContext? context]) async {
     if (stepIndex < 0 || stepIndex >= totalSteps) {
-      debugPrint('❌ [OnboardingTourManager] Invalid jump index: $stepIndex');
+      if (kDebugMode) {
+        debugPrint('❌ [OnboardingTourManager] Invalid jump index: $stepIndex');
+      }
       return;
     }
 

@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:gymbro_flutter_new/core/providers/tier_entitlements_provider.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/providers/workout_provider.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/providers/workout_template_provider.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
@@ -18,22 +19,22 @@ class SaveTemplateHelper {
     final currentWorkout = ref.read(currentWorkoutProvider);
     if (currentWorkout == null) return;
 
-    // Import the provider (assuming it's available)
-    // Check user quota
+    // Get tier-based template limit
+    final maxTemplates = ref.read(maxTemplatesProvider);
+
+    // Check user quota from Firestore
     final userDoc = await FirebaseFirestore.instance
         .collection('users')
         .doc(FirebaseAuth.instance.currentUser?.uid)
         .get();
 
     int usedTemplates = 0;
-    int maxTemplates = 5;  // QUOTA: 5 templates for free users
 
     if (userDoc.exists) {
       final data = userDoc.data()!;
       final quotaData = data['templateQuota'] as Map<String, dynamic>?;
       if (quotaData != null) {
         usedTemplates = quotaData['usedPrivateTemplates'] ?? 0;
-        maxTemplates = quotaData['maxPrivateTemplates'] ?? 5;  // QUOTA: 5 templates for free users
       }
     }
 
@@ -196,7 +197,7 @@ class SaveTemplateHelper {
                     const SizedBox(width: 12),
                     Expanded(
                       child: Text(
-                        'Il template verrà salvato su Firebase e sarà disponibile su tutti i tuoi dispositivi',
+                        context.l10n.templateSyncDescription,
                         style: context.textTheme.labelSmall?.copyWith(
                           fontSize: 12,
                           color: context.colors.onSurfaceVariant,

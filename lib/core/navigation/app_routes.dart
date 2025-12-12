@@ -106,6 +106,9 @@ abstract final class AppRoutes {
   static const String exerciseProgressPath = '/profile/analytics/exercise-progress';
   static const String exerciseProgressName = 'exercise-progress';
 
+  static const String proAnalyticsPath = '/profile/analytics/pro';
+  static const String proAnalyticsName = 'pro-analytics';
+
   // ═══════════════════════════════════════════════════════════════════════════
   // Settings Sub-Routes
   // ═══════════════════════════════════════════════════════════════════════════
@@ -115,6 +118,12 @@ abstract final class AppRoutes {
 
   static const String healthSyncPath = '/settings/health-sync';
   static const String healthSyncName = 'health-sync';
+
+  static const String healthDebugPath = '/settings/health-debug';
+  static const String healthDebugName = 'health-debug';
+
+  static const String importDataPath = '/profile/settings/import';
+  static const String importDataName = 'import-data';
 
   // ═══════════════════════════════════════════════════════════════════════════
   // Feature Routes (outside shell)

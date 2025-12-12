@@ -1,33 +1,28 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'dart:convert';
-import 'package:flutter/services.dart';
-import 'package:gymbro_flutter_new/shared/presentation/providers/app_config_provider.dart';
+import 'package:gymbro_flutter_new/features/workout/presentation/providers/exercise_gif_provider.dart';
 
 /// Provider che fornisce i dati degli esercizi con merge delle contribuzioni community
-/// 🔧 MEMORY FIX: Added autoDispose to prevent memory leaks
-/// Automatically disposes provider instances when widget is disposed
-final exerciseDataProvider = FutureProvider.autoDispose.family<Map<String, dynamic>, String>((ref, exerciseName) async {
-  // 1. Carica i dati base dal JSON localizzato
-  final config = ref.watch(appConfigProvider);
-  final isItalian = config.languageCode == 'it';
-  final jsonFile = isItalian
-      ? 'assets/data/exercises_it.json'
-      : 'assets/data/exercises.json';
+/// ⚡ PERFORMANCE FIX: Uses centralized exercisesDatabaseProvider (loads JSON ONCE)
+/// Prevents repeated JSON loads during scroll - database is cached for entire session
+final exerciseDataProvider = FutureProvider.family<Map<String, dynamic>, String>((ref, exerciseName) async {
+  // Keep alive to cache per-exercise results
+  ref.keepAlive();
 
-  final String jsonString = await rootBundle.loadString(jsonFile);
-  final List<dynamic> exercises = json.decode(jsonString);
-  
+  // ⚡ Use CACHED database instead of loading JSON directly
+  // exercisesDatabaseProvider loads JSON ONCE and caches for entire session
+  final exercises = await ref.watch(exercisesDatabaseProvider.future);
+
   // Trova l'esercizio per nome
   final baseData = exercises.firstWhere(
     (e) => e['nome'] == exerciseName,
     orElse: () => <String, dynamic>{},
   );
-  
+
   if (baseData.isEmpty) {
     return {};
   }
-  
+
   // Crea una copia modificabile
   final mergedData = Map<String, dynamic>.from(baseData);
   
@@ -57,7 +52,6 @@ final exerciseDataProvider = FutureProvider.autoDispose.family<Map<String, dynam
         final newValue = data['suggestedValue'] ?? data['description'];
         
         // APPLICA L'OVERRIDE
-        // print('🔄 Applying correction: $fieldToCorrect = $newValue');
         mergedData[_mapFieldName(fieldToCorrect)] = newValue;
       }
     }
@@ -105,7 +99,6 @@ final exerciseDataProvider = FutureProvider.autoDispose.family<Map<String, dynam
     }
     
   } catch (e) {
-    // print('Error fetching community corrections: $e');
     // In caso di errore, ritorna solo i dati base
   }
   
@@ -181,9 +174,12 @@ final cachedExerciseDataProvider = Provider.family<AsyncValue<Map<String, dynami
 });
 
 /// Provider per verificare se ci sono aggiornamenti community per un esercizio
-/// 🔧 MEMORY FIX: Added autoDispose to prevent memory leaks
-/// Automatically disposes provider instances when widget is disposed
-final hasCommunityCorrectionProvider = FutureProvider.autoDispose.family<bool, String>((ref, exerciseName) async {
+/// ⚡ PERFORMANCE FIX: keepAlive to cache results for session
+/// Prevents repeated Firestore queries during scroll
+final hasCommunityCorrectionProvider = FutureProvider.family<bool, String>((ref, exerciseName) async {
+  // Keep alive to cache results
+  ref.keepAlive();
+
   try {
     final corrections = await FirebaseFirestore.instance
         .collection('community_contributions')
@@ -197,7 +193,6 @@ final hasCommunityCorrectionProvider = FutureProvider.autoDispose.family<bool, S
       doc.data()['status'] == 'approved'
     );
   } catch (e) {
-    // print('Error checking community corrections: $e');
     return false;
   }
 });

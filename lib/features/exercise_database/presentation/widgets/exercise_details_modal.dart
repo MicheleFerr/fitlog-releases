@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:gymbro_flutter_new/features/exercise_database/domain/entities/exercise.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/features/exercise_database/presentation/widgets/warmup_info_dialog.dart';
+import 'package:gymbro_flutter_new/shared/presentation/services/snackbar_service.dart';
+import 'package:gymbro_flutter_new/shared/presentation/services/modal_service.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
@@ -51,9 +53,10 @@ class _ExerciseDetailsModalState extends State<ExerciseDetailsModal> {
 
   @override
   Widget build(BuildContext context) {
+    final safeMax = ModalService.safeMaxChildSize(context, preferredMax: 0.9);
     return DraggableScrollableSheet(
       initialChildSize: 0.7,
-      maxChildSize: 0.9,
+      maxChildSize: safeMax,
       minChildSize: 0.5,
       builder: (context, scrollController) => DecoratedBox(
         decoration: BoxDecoration(
@@ -113,71 +116,102 @@ class _ExerciseDetailsModalState extends State<ExerciseDetailsModal> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        // Exercise Name
+        // Exercise Name - Large title
         Text(
           widget.exercise.nome,
           style: context.textTheme.headlineMedium?.copyWith(
             fontWeight: FontWeight.bold,
             color: context.colors.onSurface,
+            letterSpacing: -0.5,
           ),
         ),
-        const SizedBox(height: 12),
+        const SizedBox(height: 16),
 
-        // Focus and Equipment Row
-        Row(
-          children: [
-            // Focus Badge
-            _buildInfoChip(
-              context,
-              icon: AppIcons.workout,
-              label: widget.exercise.focusDisplayName,
-              color: context.colors.primary,
-            ),
-            const SizedBox(width: 8),
+        // Full-width info section
+        Container(
+          width: double.infinity,
+          padding: const EdgeInsets.all(16),
+          decoration: BoxDecoration(
+            color: context.colors.surfaceContainerHighest.withValues(alpha: 0.3),
+            borderRadius: BorderRadius.circular(16),
+          ),
+          child: Column(
+            children: [
+              // Focus Row
+              _buildInfoRow(
+                context,
+                icon: AppIcons.workout,
+                label: context.l10n.primaryMuscle,
+                value: widget.exercise.focusDisplayName,
+              ),
+              _buildDivider(context),
 
-            // Difficulty Badge
-            _buildDifficultyChip(context),
-          ],
-        ),
+              // Equipment Row
+              _buildInfoRow(
+                context,
+                icon: AppIcons.sportsGymnastics,
+                label: context.l10n.equipment,
+                value: widget.exercise.attrezzatura,
+              ),
+              _buildDivider(context),
 
-        const SizedBox(height: 8),
-
-        // Equipment
-        _buildInfoChip(
-          context,
-          icon: AppIcons.sportsGymnastics,
-          label: widget.exercise.attrezzatura,
-          color: context.colors.tertiary,
+              // Difficulty Row
+              _buildInfoRow(
+                context,
+                icon: AppIcons.barChart,
+                label: context.l10n.difficulty,
+                value: widget.exercise.difficolta,
+                valueColor: _getDifficultyColor(context),
+              ),
+            ],
+          ),
         ),
       ],
     );
   }
 
-  Widget _buildInfoChip(
+  Widget _buildInfoRow(
     BuildContext context, {
     required IconData icon,
     required String label,
-    required Color color,
+    required String value,
+    Color? valueColor,
   }) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-      decoration: BoxDecoration(
-        color: color.withValues(alpha: 0.1),
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(
-          color: color.withValues(alpha: 0.3),
-          width: 1,
-        ),
-      ),
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8),
       child: Row(
-        mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(icon, size: 16, color: color),
-          const SizedBox(width: 6),
+          // Icon
+          Container(
+            width: 36,
+            height: 36,
+            decoration: BoxDecoration(
+              color: context.colors.primary.withValues(alpha: 0.1),
+              borderRadius: BorderRadius.circular(10),
+            ),
+            child: Icon(
+              icon,
+              size: 18,
+              color: context.colors.primary,
+            ),
+          ),
+          const SizedBox(width: 12),
+
+          // Label
           Text(
             label,
             style: context.textTheme.bodyMedium?.copyWith(
-              color: color,
+              color: context.colors.onSurfaceVariant,
+            ),
+          ),
+
+          const Spacer(),
+
+          // Value
+          Text(
+            value,
+            style: context.textTheme.bodyMedium?.copyWith(
+              color: valueColor ?? context.colors.onSurface,
               fontWeight: FontWeight.w600,
             ),
           ),
@@ -186,25 +220,11 @@ class _ExerciseDetailsModalState extends State<ExerciseDetailsModal> {
     );
   }
 
-  Widget _buildDifficultyChip(BuildContext context) {
-    final color = _getDifficultyColor(context);
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-      decoration: BoxDecoration(
-        color: color.withValues(alpha: 0.1),
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(
-          color: color.withValues(alpha: 0.3),
-          width: 1,
-        ),
-      ),
-      child: Text(
-        widget.exercise.difficolta,
-        style: context.textTheme.bodyMedium?.copyWith(
-          color: color,
-          fontWeight: FontWeight.w600,
-        ),
-      ),
+  Widget _buildDivider(BuildContext context) {
+    return Divider(
+      height: 1,
+      thickness: 1,
+      color: context.colors.outline.withValues(alpha: 0.1),
     );
   }
 
@@ -505,13 +525,11 @@ class _ExerciseDetailsModalState extends State<ExerciseDetailsModal> {
 
     widget.onWarmupExerciseAdded!(suggestion, widget.currentExerciseIndex!);
 
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(
-          '${suggestion.exerciseName} aggiunto prima di ${widget.exercise.nome}',
-        ),
-        duration: const Duration(seconds: 2),
-        behavior: SnackBarBehavior.floating,
+    SnackBarService.showSuccess(
+      context,
+      context.l10n.warmupExerciseAddedBefore(
+        suggestion.exerciseName,
+        widget.exercise.nome,
       ),
     );
   }

@@ -19,6 +19,7 @@ import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/services/modal_service.dart';
 import 'package:gymbro_flutter_new/core/cache/user_cache_key_manager.dart';
 
 /// Opzione aggiuntiva per il menu del long press
@@ -66,9 +67,12 @@ class _DraggableActionButtonState extends State<DraggableActionButton> {
   // Position tracking - only horizontal for spring animation
   double _dragOffsetX = 0;
   double _targetX = 0;
+  double? _lastAnimatedX; // Track last position for smooth transitions
   bool _isDragging = false;
   bool _isOnLeft = false;
   bool _isHidden = false;
+  bool _isAnimatingToHide = false; // Track slide-off animation
+  bool _isAnimatingFromHidden = false; // Track slide-in animation
   bool _initialized = false;
 
   // Layout constants
@@ -109,11 +113,61 @@ class _DraggableActionButtonState extends State<DraggableActionButton> {
 
   /// Toggle hide state with haptic feedback
   void _toggleHidden() {
-    setState(() {
-      _isHidden = !_isHidden;
-    });
-    HapticFeedback.mediumImpact();
+    if (_isHidden) {
+      // Coming back from hidden - start slide-in animation
+      _startShowAnimation();
+    } else {
+      // Hiding - start slide-off animation
+      _startHideAnimation();
+    }
+    HapticFeedback.lightImpact(); // Light haptic for both directions
     _savePosition();
+  }
+
+  /// Start the slide-in animation when showing button
+  void _startShowAnimation() {
+    final screenWidth = MediaQuery.of(context).size.width;
+
+    // Set starting position off-screen
+    _lastAnimatedX = _isOnLeft
+        ? -_buttonWidth - 20 // Start from left off-screen
+        : screenWidth + 20; // Start from right off-screen
+
+    setState(() {
+      _isHidden = false;
+      _isAnimatingFromHidden = true;
+      _isAnimatingToHide = false;
+    });
+
+    // Clear the flag after animation settles
+    Future.delayed(const Duration(milliseconds: 400), () {
+      if (mounted) {
+        setState(() {
+          _isAnimatingFromHidden = false;
+        });
+      }
+    });
+  }
+
+  /// Start the slide-off animation before fully hiding
+  void _startHideAnimation() {
+    setState(() {
+      _isAnimatingToHide = true;
+      _isDragging = false;
+      _dragOffsetX = 0;
+    });
+
+    // Wait for animation to complete, then show hidden tab smoothly
+    Future.delayed(const Duration(milliseconds: 400), () {
+      if (mounted && _isAnimatingToHide) {
+        setState(() {
+          _isHidden = true;
+          _isAnimatingToHide = false;
+          // Reset last position so next show animation starts correctly
+          _lastAnimatedX = null;
+        });
+      }
+    });
   }
 
   double _getTargetX(double screenWidth) {
@@ -146,12 +200,9 @@ class _DraggableActionButtonState extends State<DraggableActionButton> {
         : (currentX > screenWidth - _buttonWidth + _hideThreshold || velocity > 800);
 
     if (isDraggingToHide) {
-      setState(() {
-        _isDragging = false;
-        _isHidden = true;
-        _dragOffsetX = 0;
-      });
-      HapticFeedback.heavyImpact();
+      // Start slide-off animation instead of instant hide
+      HapticFeedback.lightImpact(); // Lighter haptic for smoother feel
+      _startHideAnimation();
       _savePosition();
       return;
     }
@@ -173,180 +224,197 @@ class _DraggableActionButtonState extends State<DraggableActionButton> {
   void _showOptionsMenu(BuildContext context) {
     HapticFeedback.mediumImpact();
 
+    final safeMax = ModalService.safeMaxChildSize(context, preferredMax: 0.9);
     showModalBottomSheet(
       context: context,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-      ),
-      builder: (context) => Container(
-        padding: const EdgeInsets.symmetric(vertical: 16),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            // Handle bar
-            Container(
-              width: 40,
-              height: 4,
-              decoration: BoxDecoration(
-                color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.2),
-                borderRadius: BorderRadius.circular(2),
-              ),
-            ),
-            const SizedBox(height: 16),
-
-            // Title
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: Row(
+      isScrollControlled: true, // Required for DraggableScrollableSheet
+      backgroundColor: Colors.transparent,
+      builder: (context) => DraggableScrollableSheet(
+        initialChildSize: 0.5, // Start at 50%
+        minChildSize: 0.3, // Can shrink to 30%
+        maxChildSize: safeMax, // Safe max (avoids notch)
+        snap: true,
+        snapSizes: [0.5, safeMax], // Snap points
+        builder: (context, scrollController) => Container(
+          decoration: BoxDecoration(
+            color: Theme.of(context).colorScheme.surface,
+            borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
+          ),
+          child: SingleChildScrollView(
+            controller: scrollController,
+            child: Padding(
+              padding: const EdgeInsets.symmetric(vertical: 16),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
                 children: [
-                  Icon(
-                    widget.icon,
-                    color: Theme.of(context).colorScheme.primary,
-                  ),
-                  const SizedBox(width: 8),
-                  Text(
-                    widget.label,
-                    style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                      fontWeight: FontWeight.bold,
+                  // Handle bar
+                  Container(
+                    width: 40,
+                    height: 4,
+                    decoration: BoxDecoration(
+                      color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.2),
+                      borderRadius: BorderRadius.circular(2),
                     ),
                   ),
-                ],
-              ),
-            ),
-            const SizedBox(height: 20),
+                  const SizedBox(height: 16),
 
-            // Main action
-            ListTile(
-              leading: Container(
-                width: 40,
-                height: 40,
-                decoration: BoxDecoration(
-                  color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.1),
-                  shape: BoxShape.circle,
-                ),
-                child: Icon(
-                  widget.icon,
-                  color: Theme.of(context).colorScheme.primary,
-                ),
-              ),
-              title: Text(widget.label),
-              subtitle: Text(context.l10n.fabMainAction),
-              onTap: () {
-                Navigator.of(context).pop();
-                widget.onPressed();
-              },
-            ),
+                  // Title
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    child: Row(
+                      children: [
+                        Icon(
+                          widget.icon,
+                          color: Theme.of(context).colorScheme.primary,
+                        ),
+                        const SizedBox(width: 8),
+                        Text(
+                          widget.label,
+                          style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: 20),
 
-            // History option
-            if (widget.onShowHistory != null)
-              ListTile(
-                leading: Container(
-                  width: 40,
-                  height: 40,
-                  decoration: BoxDecoration(
-                    color: Theme.of(context).colorScheme.secondary.withValues(alpha: 0.1),
-                    shape: BoxShape.circle,
-                  ),
-                  child: Icon(
-                    AppIcons.history,
-                    color: Theme.of(context).colorScheme.secondary,
-                  ),
-                ),
-                title: Text(context.l10n.fabHistory),
-                subtitle: Text(context.l10n.fabViewPreviousWorkouts),
-                onTap: () {
-                  Navigator.of(context).pop();
-                  widget.onShowHistory!();
-                },
-              ),
-
-            // Additional options
-            if (widget.additionalOptions != null)
-              ...widget.additionalOptions!.map((option) => ListTile(
-                leading: Container(
-                  width: 40,
-                  height: 40,
-                  decoration: BoxDecoration(
-                    color: (option.color ?? Theme.of(context).colorScheme.tertiary).withValues(alpha: 0.1),
-                    shape: BoxShape.circle,
-                  ),
-                  child: Icon(
-                    option.icon,
-                    color: option.color ?? Theme.of(context).colorScheme.tertiary,
-                  ),
-                ),
-                title: Text(option.label),
-                onTap: () {
-                  Navigator.of(context).pop();
-                  option.onTap();
-                },
-              )),
-
-            // Hide button option
-            ListTile(
-              leading: Container(
-                width: 40,
-                height: 40,
-                decoration: BoxDecoration(
-                  color: Theme.of(context)
-                      .colorScheme
-                      .surfaceContainerHighest
-                      .withValues(alpha: 0.5),
-                  shape: BoxShape.circle,
-                ),
-                child: Icon(
-                  AppIcons.chevronRight,
-                  color: Theme.of(context).colorScheme.onSurfaceVariant,
-                ),
-              ),
-              title: Text(context.l10n.fabHideButton),
-              subtitle: Text(context.l10n.fabHideDescription),
-              onTap: () {
-                Navigator.of(context).pop();
-                _toggleHidden();
-              },
-            ),
-
-            // Drag info
-            const SizedBox(height: 8),
-            Container(
-              margin: const EdgeInsets.symmetric(horizontal: 16),
-              padding: const EdgeInsets.all(12),
-              decoration: BoxDecoration(
-                color: Theme.of(context)
-                    .colorScheme
-                    .primaryContainer
-                    .withValues(alpha: 0.3),
-                borderRadius: BorderRadius.circular(12),
-                border: Border.all(
-                  color: Theme.of(context)
-                      .colorScheme
-                      .primary
-                      .withValues(alpha: 0.2),
-                ),
-              ),
-              child: Row(
-                children: [
-                  SemanticIcon(
-                    icon: AppIcons.swipe,
-                    semanticLabel: 'Swipe',
-                    size: AppIconSize.small,
-                    color: Theme.of(context).colorScheme.onPrimaryContainer,
-                  ),
-                  const SizedBox(width: 8),
-                  Expanded(
-                    child: Text(
-                      context.l10n.fabDragToHide,
-                      style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                        color: Theme.of(context).colorScheme.onPrimaryContainer,
+                  // Main action
+                  ListTile(
+                    leading: Container(
+                      width: 40,
+                      height: 40,
+                      decoration: BoxDecoration(
+                        color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.1),
+                        shape: BoxShape.circle,
+                      ),
+                      child: Icon(
+                        widget.icon,
+                        color: Theme.of(context).colorScheme.primary,
                       ),
                     ),
+                    title: Text(widget.label),
+                    subtitle: Text(context.l10n.fabMainAction),
+                    onTap: () {
+                      Navigator.of(context).pop();
+                      widget.onPressed();
+                    },
                   ),
+
+                  // History option
+                  if (widget.onShowHistory != null)
+                    ListTile(
+                      leading: Container(
+                        width: 40,
+                        height: 40,
+                        decoration: BoxDecoration(
+                          color: Theme.of(context).colorScheme.secondary.withValues(alpha: 0.1),
+                          shape: BoxShape.circle,
+                        ),
+                        child: Icon(
+                          AppIcons.history,
+                          color: Theme.of(context).colorScheme.secondary,
+                        ),
+                      ),
+                      title: Text(context.l10n.fabHistory),
+                      subtitle: Text(context.l10n.fabViewPreviousWorkouts),
+                      onTap: () {
+                        Navigator.of(context).pop();
+                        widget.onShowHistory!();
+                      },
+                    ),
+
+                  // Additional options
+                  if (widget.additionalOptions != null)
+                    ...widget.additionalOptions!.map((option) => ListTile(
+                      leading: Container(
+                        width: 40,
+                        height: 40,
+                        decoration: BoxDecoration(
+                          color: (option.color ?? Theme.of(context).colorScheme.tertiary).withValues(alpha: 0.1),
+                          shape: BoxShape.circle,
+                        ),
+                        child: Icon(
+                          option.icon,
+                          color: option.color ?? Theme.of(context).colorScheme.tertiary,
+                        ),
+                      ),
+                      title: Text(option.label),
+                      onTap: () {
+                        Navigator.of(context).pop();
+                        option.onTap();
+                      },
+                    )),
+
+                  // Hide button option
+                  ListTile(
+                    leading: Container(
+                      width: 40,
+                      height: 40,
+                      decoration: BoxDecoration(
+                        color: Theme.of(context)
+                            .colorScheme
+                            .surfaceContainerHighest
+                            .withValues(alpha: 0.5),
+                        shape: BoxShape.circle,
+                      ),
+                      child: Icon(
+                        AppIcons.chevronRight,
+                        color: Theme.of(context).colorScheme.onSurfaceVariant,
+                      ),
+                    ),
+                    title: Text(context.l10n.fabHideButton),
+                    subtitle: Text(context.l10n.fabHideDescription),
+                    onTap: () {
+                      Navigator.of(context).pop();
+                      _toggleHidden();
+                    },
+                  ),
+
+                  // Drag info
+                  const SizedBox(height: 8),
+                  Container(
+                    margin: const EdgeInsets.symmetric(horizontal: 16),
+                    padding: const EdgeInsets.all(12),
+                    decoration: BoxDecoration(
+                      color: Theme.of(context)
+                          .colorScheme
+                          .primaryContainer
+                          .withValues(alpha: 0.3),
+                      borderRadius: BorderRadius.circular(12),
+                      border: Border.all(
+                        color: Theme.of(context)
+                            .colorScheme
+                            .primary
+                            .withValues(alpha: 0.2),
+                      ),
+                    ),
+                    child: Row(
+                      children: [
+                        SemanticIcon(
+                          icon: AppIcons.swipe,
+                          semanticLabel: 'Swipe',
+                          size: AppIconSize.small,
+                          color: Theme.of(context).colorScheme.onPrimaryContainer,
+                        ),
+                        const SizedBox(width: 8),
+                        Expanded(
+                          child: Text(
+                            context.l10n.fabDragToHide,
+                            style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                              color: Theme.of(context).colorScheme.onPrimaryContainer,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  // Extra padding at bottom for safe area
+                  SizedBox(height: MediaQuery.of(context).padding.bottom + 16),
                 ],
               ),
             ),
-            const SizedBox(height: 16),
-          ],
+          ),
         ),
       ),
     );
@@ -368,20 +436,46 @@ class _DraggableActionButtonState extends State<DraggableActionButton> {
 
     _targetX = _getTargetX(screenWidth);
 
-    // During drag, show at drag position; otherwise animate to target
-    final displayX = _isDragging ? _targetX + _dragOffsetX : _targetX;
+    // Calculate display position based on state
+    double displayX;
+    if (_isAnimatingToHide) {
+      // Animate to off-screen position
+      displayX = _isOnLeft
+          ? -_buttonWidth - 20 // Slide left off screen
+          : screenWidth + 20; // Slide right off screen
+    } else if (_isDragging) {
+      displayX = _targetX + _dragOffsetX;
+    } else {
+      displayX = _targetX;
+    }
+
+    // Use last known position as starting point to prevent jumping
+    final fromX = _lastAnimatedX ?? _targetX;
+
+    // Use slower motion for hide animation to make it visible
+    final motion = _isDragging
+        ? const NoMotion() // Instant follow during drag
+        : _isAnimatingToHide
+            ? const CupertinoMotion() // Smooth slide-off
+            : const CupertinoMotion(); // Smooth spring for normal movement
 
     return SingleMotionBuilder(
-      motion: _isDragging
-          ? const NoMotion() // Instant follow during drag
-          : const CupertinoMotion.bouncy(), // Spring snap when released
+      motion: motion,
       value: displayX,
+      from: fromX, // Start from last position
       builder: (context, animatedX, child) {
-        // Clamp position to screen bounds
-        final clampedX = animatedX.clamp(
-          _edgePadding,
-          screenWidth - _buttonWidth - _edgePadding,
-        );
+        // Store last animated position for next transition
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          _lastAnimatedX = animatedX;
+        });
+
+        // Don't clamp when animating to/from hide - let it go off screen
+        final clampedX = (_isAnimatingToHide || _isAnimatingFromHidden)
+            ? animatedX
+            : animatedX.clamp(
+                _edgePadding,
+                screenWidth - _buttonWidth - _edgePadding,
+              );
 
         return Positioned(
           left: clampedX,
@@ -421,65 +515,56 @@ class _DraggableActionButtonState extends State<DraggableActionButton> {
     );
   }
 
-  /// Build the hidden tab with spring animation
+  /// Build the hidden tab - simple, no animation needed
   Widget _buildHiddenTab(BuildContext context, ColorScheme colorScheme) {
     final isLeftSide = _isOnLeft;
 
-    // Animate the tab sliding in from edge
-    return SingleMotionBuilder(
-      motion: const CupertinoMotion.snappy(),
-      value: 0.0, // Target: fully visible
-      builder: (context, slideValue, child) {
-        final slideOffset = isLeftSide ? -20 * slideValue : 20 * slideValue;
-
-        return Positioned(
-          bottom: _bottomPadding,
-          left: isLeftSide ? slideOffset : null,
-          right: isLeftSide ? null : slideOffset,
-          child: GestureDetector(
-            onTap: _toggleHidden,
-            onHorizontalDragEnd: (details) {
-              final velocity = details.velocity.pixelsPerSecond.dx;
-              if (isLeftSide && velocity > 200) {
-                _toggleHidden();
-              } else if (!isLeftSide && velocity < -200) {
-                _toggleHidden();
-              }
-            },
-            child: Container(
-              width: 20,
-              height: 48,
-              decoration: BoxDecoration(
-                color: colorScheme.surfaceContainerHighest,
-                borderRadius: BorderRadius.only(
-                  topLeft: isLeftSide ? Radius.zero : const Radius.circular(8),
-                  bottomLeft: isLeftSide ? Radius.zero : const Radius.circular(8),
-                  topRight: isLeftSide ? const Radius.circular(8) : Radius.zero,
-                  bottomRight: isLeftSide ? const Radius.circular(8) : Radius.zero,
-                ),
-                border: Border.all(
-                  color: colorScheme.outlineVariant.withValues(alpha: 0.5),
-                  width: 1,
-                ),
-                boxShadow: [
-                  BoxShadow(
-                    color: colorScheme.shadow.withValues(alpha: 0.1),
-                    blurRadius: 4,
-                    offset: Offset(isLeftSide ? 1 : -1, 1),
-                  ),
-                ],
+    return Positioned(
+      bottom: _bottomPadding,
+      left: isLeftSide ? 0 : null,
+      right: isLeftSide ? null : 0,
+      child: GestureDetector(
+        onTap: _toggleHidden,
+        onHorizontalDragEnd: (details) {
+          final velocity = details.velocity.pixelsPerSecond.dx;
+          if (isLeftSide && velocity > 200) {
+            _toggleHidden();
+          } else if (!isLeftSide && velocity < -200) {
+            _toggleHidden();
+          }
+        },
+        child: Container(
+          width: 20,
+          height: 48,
+          decoration: BoxDecoration(
+            color: colorScheme.surfaceContainerHighest,
+            borderRadius: BorderRadius.only(
+              topLeft: isLeftSide ? Radius.zero : const Radius.circular(8),
+              bottomLeft: isLeftSide ? Radius.zero : const Radius.circular(8),
+              topRight: isLeftSide ? const Radius.circular(8) : Radius.zero,
+              bottomRight: isLeftSide ? const Radius.circular(8) : Radius.zero,
+            ),
+            border: Border.all(
+              color: colorScheme.outlineVariant.withValues(alpha: 0.5),
+              width: 1,
+            ),
+            boxShadow: [
+              BoxShadow(
+                color: colorScheme.shadow.withValues(alpha: 0.1),
+                blurRadius: 4,
+                offset: Offset(isLeftSide ? 1 : -1, 1),
               ),
-              child: Center(
-                child: Icon(
-                  isLeftSide ? AppIcons.chevronRight : AppIcons.chevronLeft,
-                  color: colorScheme.onSurfaceVariant,
-                  size: AppIconSize.small,
-                ),
-              ),
+            ],
+          ),
+          child: Center(
+            child: Icon(
+              isLeftSide ? AppIcons.chevronRight : AppIcons.chevronLeft,
+              color: colorScheme.onSurfaceVariant,
+              size: AppIconSize.small,
             ),
           ),
-        );
-      },
+        ),
+      ),
     );
   }
 }

@@ -137,17 +137,37 @@ class _MetricRingCardState extends State<MetricRingCard>
           return Container(
             height: MetricRingCard.cardHeight,
             decoration: BoxDecoration(
-              color: context.colors.surfaceContainerHighest,
+              // ✨ Material 3 2025: Elevated surface with defined border
+              color: context.colors.surfaceContainerLow,
               borderRadius: BorderRadius.circular(16),
+              border: Border.all(
+                color: showGlow
+                    ? widget.config.color.withValues(alpha: 0.4)
+                    : context.colors.outlineVariant.withValues(alpha: 0.5),
+                width: showGlow ? 1.5 : 1,
+              ),
               boxShadow: showGlow
                   ? [
+                      // Enhanced glow when complete
                       BoxShadow(
-                        color: widget.config.color.withValues(alpha: 0.3),
-                        blurRadius: 12,
+                        color: widget.config.color.withValues(alpha: 0.25),
+                        blurRadius: 16,
                         spreadRadius: 2,
                       ),
+                      BoxShadow(
+                        color: widget.config.color.withValues(alpha: 0.1),
+                        blurRadius: 8,
+                        offset: const Offset(0, 2),
+                      ),
                     ]
-                  : null,
+                  : [
+                      // Subtle shadow when not complete
+                      BoxShadow(
+                        color: context.colors.shadow.withValues(alpha: 0.05),
+                        blurRadius: 8,
+                        offset: const Offset(0, 2),
+                      ),
+                    ],
             ),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,

@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/workout.dart';
+import 'package:gymbro_flutter_new/features/workout/presentation/widgets/header_rest_timer.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
@@ -86,18 +87,21 @@ class _WorkoutHeaderState extends State<WorkoutHeader>
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+
     return GestureDetector(
       onTap: _toggleMinimized,
       child: Container(
         margin: const EdgeInsets.all(16),
-        child: Card(
-          elevation: 3,
-          child: AnimatedContainer(
-            duration: const Duration(milliseconds: 400),
-            curve: Curves.easeInOut,
-            padding: EdgeInsets.all(_isMinimized ? 12 : 20),
-            child: _isMinimized ? _buildMinimizedView() : _buildExpandedView(),
-          ),
+        decoration: BoxDecoration(
+          color: colorScheme.surfaceContainerLow,
+          borderRadius: BorderRadius.circular(16),
+        ),
+        child: AnimatedContainer(
+          duration: const Duration(milliseconds: 400),
+          curve: Curves.easeInOut,
+          padding: EdgeInsets.all(_isMinimized ? 12 : 20),
+          child: _isMinimized ? _buildMinimizedView() : _buildExpandedView(),
         ),
       ),
     );
@@ -116,15 +120,21 @@ class _WorkoutHeaderState extends State<WorkoutHeader>
                 children: [
                   Text(
                     widget.workout.name,
-                    style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
                       fontWeight: FontWeight.bold,
                     ),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
                   ),
                   const SizedBox(height: 4),
                   _buildStatusChip(context),
                 ],
               ),
             ),
+            const SizedBox(width: 8),
+            // Rest Timer integrato nell'header
+            const HeaderRestTimer(compact: false),
+            const SizedBox(width: 12),
             if (widget.workout.duration != null)
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
@@ -258,13 +268,15 @@ class _WorkoutHeaderState extends State<WorkoutHeader>
                 Theme.of(context).colorScheme.tertiary,
               ),
               const Spacer(),
+              // Rest Timer compatto
+              const HeaderRestTimer(compact: true),
+              const SizedBox(width: 12),
               // Expand indicator
               SemanticIcon(
-  icon: AppIcons.expandMore,
-  semanticLabel: 'Expand',
-  size: AppIconSize.small,
-  color: Theme.of(context,
-).colorScheme.onSurfaceVariant.withValues(alpha: 0.6),
+                icon: AppIcons.expandMore,
+                semanticLabel: 'Expand',
+                size: AppIconSize.small,
+                color: Theme.of(context).colorScheme.onSurfaceVariant.withValues(alpha: 0.6),
               ),
             ],
           ),
@@ -386,10 +398,7 @@ class _WorkoutHeaderState extends State<WorkoutHeader>
       decoration: BoxDecoration(
         color: color.withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(
-          color: color.withValues(alpha: 0.2),
-          width: 1,
-        ),
+        // Rimosso border per eliminare effetto rumore visivo
       ),
       child: Column(
         children: [

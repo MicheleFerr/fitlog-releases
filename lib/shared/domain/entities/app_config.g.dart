@@ -41,7 +41,7 @@ class AppConfigAdapter extends TypeAdapter<AppConfig> {
       autoRestTimer: fields[19] == null ? true : fields[19] as bool?,
       setDurationTracking: fields[20] as bool?,
       plateCalculator: fields[21] == null ? true : fields[21] as bool?,
-      warmupSuggestions: fields[22] == null ? true : fields[22] as bool?,
+      warmupSuggestions: fields[22] as bool?,
       availablePlates: (fields[23] as List?)?.cast<double>(),
       isProMode: fields[24] as bool?,
       autoCollapseCompleted: fields[25] as bool?,

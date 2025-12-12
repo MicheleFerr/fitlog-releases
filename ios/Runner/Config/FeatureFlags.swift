@@ -16,11 +16,11 @@ final class FeatureFlags {
         var defaultValue: Bool {
             switch self {
             case .useNewAudioManager:
-                #if DEBUG
-                return false  // ⚠️ DISABLED: OSStatus -50 errors persist, using legacy audio manager
-                #else
-                return false  // ⚠️ DISABLED: CoreAudio SessionCore failures, reverting to legacy
-                #endif
+                // ✅ ENABLED: OSStatus -50 errors fixed by:
+                // 1. Removed .allowAirPlay from SilentAudioLoopManager
+                // 2. Added .mixWithOthers when using .duckOthers
+                // 3. Centralized audio session management
+                return true
                 
             case .useNewBackgroundTaskManager:
                 #if DEBUG

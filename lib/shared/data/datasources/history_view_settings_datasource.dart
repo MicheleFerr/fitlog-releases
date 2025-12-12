@@ -12,13 +12,15 @@ import 'package:gymbro_flutter_new/shared/data/models/history_view_settings_mode
 import 'package:gymbro_flutter_new/shared/domain/entities/history_view_settings.dart';
 import 'package:gymbro_flutter_new/core/data/hive_box_manager_enhanced.dart';
 import 'package:gymbro_flutter_new/core/data/hive_box_names.dart';
+import 'package:gymbro_flutter_new/core/cache/user_cache_key_manager.dart';
 
 class HistoryViewSettingsDataSource {
 
   /// Constructor with dependency injection
   HistoryViewSettingsDataSource(this._boxManager);
   final HiveBoxManagerEnhanced _boxManager;
-  static const String _settingsKey = 'history_view_settings';
+  // 🔐 User-scoped cache key
+  String get _settingsKey => userCacheKeys.userScopedKey('history_view_settings');
 
   /// Get settings box via HiveBoxManagerEnhanced
   Future<Box> _getSettingsBox() async {

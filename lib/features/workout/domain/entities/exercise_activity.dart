@@ -15,6 +15,7 @@ class ExerciseActivity {
     required this.sets,
     required this.createdAt,
     required this.lastModified,
+    required this.category,
   });
 
   /// Crea ExerciseActivity da un Exercise completato
@@ -69,6 +70,7 @@ class ExerciseActivity {
       sets: activitySets,
       createdAt: activityDate,
       lastModified: now,
+      category: exercise.category, // Add category here
     );
   }
 
@@ -90,6 +92,10 @@ class ExerciseActivity {
           .toList() ?? [],
       createdAt: (data['createdAt'] as Timestamp?)?.toDate() ?? DateTime.now(),
       lastModified: (data['lastModified'] as Timestamp?)?.toDate() ?? DateTime.now(),
+      category: ExerciseCategory.values.firstWhere(
+          (e) => e.name == data['category'],
+          orElse: () => ExerciseCategory.other,
+      ),
     );
   }
   final String id;
@@ -101,6 +107,7 @@ class ExerciseActivity {
   final List<ExerciseActivitySet> sets;
   final DateTime createdAt;
   final DateTime lastModified;
+  final ExerciseCategory category; // Added category here
 
   /// Calcola l'effort basato su reps e peso (1-5 scale)
   static int _calculateEffort(ExerciseSet set) {
@@ -173,6 +180,7 @@ class ExerciseActivity {
     List<ExerciseActivitySet>? sets,
     DateTime? createdAt,
     DateTime? lastModified,
+    ExerciseCategory? category,
   }) {
     return ExerciseActivity(
       id: id,
@@ -184,6 +192,7 @@ class ExerciseActivity {
       sets: sets ?? this.sets,
       createdAt: createdAt ?? this.createdAt,
       lastModified: lastModified ?? this.lastModified,
+      category: category ?? this.category,
     );
   }
 }

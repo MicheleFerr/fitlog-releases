@@ -17,6 +17,7 @@ import 'package:gymbro_flutter_new/features/workout/presentation/providers/fireb
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
+import 'package:gymbro_flutter_new/features/auth/presentation/providers/consolidated_user_provider.dart';
 
 class EditTemplateScreen extends ConsumerStatefulWidget {
 
@@ -352,7 +353,12 @@ class _EditTemplateScreenState extends ConsumerState<EditTemplateScreen> {
                             Row(
                               children: [
                                 Text(
-                                  '${exerciseTemplate.sets.length} set • ${exerciseTemplate.category.name}',
+                                  // ✅ FIX: For superset, show "X round x Y exercises" instead of "X set"
+                                  exerciseTemplate.type == ExerciseType.superset &&
+                                  exerciseTemplate.subExercises != null &&
+                                  exerciseTemplate.subExercises!.isNotEmpty
+                                      ? '${exerciseTemplate.sets.length} round × ${exerciseTemplate.subExercises!.length} esercizi • ${exerciseTemplate.category.name}'
+                                      : '${exerciseTemplate.sets.length} set • ${exerciseTemplate.category.name}',
                                   style: context.textTheme.bodySmall?.copyWith(
                                     color: context.colors.onSurface
                                         .withValues(alpha: 0.7),
@@ -480,6 +486,11 @@ class _EditTemplateScreenState extends ConsumerState<EditTemplateScreen> {
 
   Widget _buildSetsEditor(
       int exerciseIndex, ExerciseTemplate exerciseTemplate) {
+    // ✅ FIX: For superset, show different UI - click to edit all exercises in round
+    final isSupersetWithSubExercises = exerciseTemplate.type == ExerciseType.superset &&
+        exerciseTemplate.subExercises != null &&
+        exerciseTemplate.subExercises!.isNotEmpty;
+
     return DecoratedBox(
       decoration: BoxDecoration(
         color: context.colors.surfaceContainerHighest.withValues(alpha: 0.3),
@@ -491,7 +502,7 @@ class _EditTemplateScreenState extends ConsumerState<EditTemplateScreen> {
       ),
       child: Column(
         children: [
-          // Sets list
+          // Sets/Rounds list
           ListView.builder(
             shrinkWrap: true,
             physics: const NeverScrollableScrollPhysics(),
@@ -499,6 +510,92 @@ class _EditTemplateScreenState extends ConsumerState<EditTemplateScreen> {
             itemCount: exerciseTemplate.sets.length,
             itemBuilder: (context, setIndex) {
               final set = exerciseTemplate.sets[setIndex];
+
+              // ✅ For superset: show round card that opens edit modal
+              if (isSupersetWithSubExercises) {
+                return Padding(
+                  padding: const EdgeInsets.only(bottom: 8),
+                  child: InkWell(
+                    onTap: () => _editSupersetRound(exerciseIndex, setIndex),
+                    borderRadius: BorderRadius.circular(12),
+                    child: Container(
+                      padding: const EdgeInsets.all(12),
+                      decoration: BoxDecoration(
+                        color: context.colors.primary.withValues(alpha: 0.05),
+                        borderRadius: BorderRadius.circular(12),
+                        border: Border.all(
+                          color: context.colors.primary.withValues(alpha: 0.2),
+                        ),
+                      ),
+                      child: Row(
+                        children: [
+                          // Round number badge
+                          Container(
+                            width: 40,
+                            height: 40,
+                            decoration: BoxDecoration(
+                              color: context.colors.primary,
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            child: Center(
+                              child: Text(
+                                '${set.setNumber}',
+                                style: context.textTheme.titleMedium?.copyWith(
+                                  fontWeight: FontWeight.bold,
+                                  color: context.colors.onPrimary,
+                                ),
+                              ),
+                            ),
+                          ),
+                          const SizedBox(width: 12),
+                          // Round info
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  'Round ${set.setNumber}',
+                                  style: context.textTheme.titleSmall?.copyWith(
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                const SizedBox(height: 2),
+                                Text(
+                                  '${exerciseTemplate.subExercises!.length} esercizi',
+                                  style: context.textTheme.bodySmall?.copyWith(
+                                    color: context.colors.onSurface.withValues(alpha: 0.7),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          // Edit icon
+                          Icon(
+                            AppIcons.edit,
+                            size: 20,
+                            color: context.colors.primary,
+                          ),
+                          const SizedBox(width: 4),
+                          // Remove round button
+                          if (exerciseTemplate.sets.length > 1)
+                            IconButton(
+                              onPressed: () => _removeSet(exerciseIndex, setIndex),
+                              icon: const SemanticIcon(
+                                icon: AppIcons.removeCircleOutline,
+                                semanticLabel: 'Remove round',
+                              ),
+                              color: context.colors.error,
+                              iconSize: 20,
+                              tooltip: 'Rimuovi round',
+                            ),
+                        ],
+                      ),
+                    ),
+                  ),
+                );
+              }
+
+              // ✅ For standard exercise: show weight/reps pickers
               return Padding(
                 padding: const EdgeInsets.only(bottom: 8),
                 child: Row(
@@ -584,7 +681,7 @@ class _EditTemplateScreenState extends ConsumerState<EditTemplateScreen> {
               );
             },
           ),
-          // Add set button
+          // Add set/round button
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
             child: OutlinedButton.icon(
@@ -593,7 +690,9 @@ class _EditTemplateScreenState extends ConsumerState<EditTemplateScreen> {
   icon: AppIcons.add,
   semanticLabel: 'Add',
 ),
-              label: Text(context.l10n.addSet),
+              label: Text(
+                isSupersetWithSubExercises ? 'Aggiungi round' : context.l10n.addSet,
+              ),
               style: OutlinedButton.styleFrom(
                 minimumSize: const Size(double.infinity, 40),
               ),
@@ -702,34 +801,178 @@ class _EditTemplateScreenState extends ConsumerState<EditTemplateScreen> {
     _markAsChanged();
   }
 
-  void _showAddExercise() {
-    ModalService.showBottomSheet(
-      context,
-      child: AddExerciseModal(
-        onExerciseAdded: (exercise) {
-          _addExercise(exercise);
-        },
+  /// ✅ Edit superset round - opens modal to set target weight/reps for all exercises in round
+  void _editSupersetRound(int exerciseIndex, int roundIndex) async {
+    final exerciseTemplate = _exercises[exerciseIndex];
+    final round = exerciseTemplate.sets[roundIndex];
+
+    // Show modal with weight/reps pickers for this round
+    await showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (context) => Container(
+        decoration: BoxDecoration(
+          color: context.colors.surface,
+          borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
+        ),
+        padding: EdgeInsets.only(
+          bottom: MediaQuery.of(context).viewInsets.bottom,
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            // Header
+            Padding(
+              padding: const EdgeInsets.all(20),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        'Round ${round.setNumber}',
+                        style: context.textTheme.headlineSmall?.copyWith(
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      IconButton(
+                        onPressed: () => Navigator.pop(context),
+                        icon: const SemanticIcon(
+                          icon: AppIcons.close,
+                          semanticLabel: 'Close',
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    'Imposta peso e ripetizioni per questo round',
+                    style: context.textTheme.bodyMedium?.copyWith(
+                      color: context.colors.onSurface.withValues(alpha: 0.7),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            const Divider(height: 1),
+            // Exercises list
+            Padding(
+              padding: const EdgeInsets.all(20),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Esercizi in questo round:',
+                    style: context.textTheme.titleSmall?.copyWith(
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  const SizedBox(height: 12),
+                  ...?exerciseTemplate.subExercises?.map((subExercise) {
+                    return Padding(
+                      padding: const EdgeInsets.only(bottom: 8),
+                      child: Row(
+                        children: [
+                          Container(
+                            width: 4,
+                            height: 24,
+                            decoration: BoxDecoration(
+                              color: context.colors.primary,
+                              borderRadius: BorderRadius.circular(2),
+                            ),
+                          ),
+                          const SizedBox(width: 12),
+                          Expanded(
+                            child: Text(
+                              subExercise.exerciseName,
+                              style: context.textTheme.bodyMedium,
+                            ),
+                          ),
+                        ],
+                      ),
+                    );
+                  }),
+                  const SizedBox(height: 20),
+                  const Divider(height: 1),
+                  const SizedBox(height: 20),
+                  // Weight/Reps pickers
+                  Row(
+                    children: [
+                      Expanded(
+                        child: _buildPickerButton(
+                          label: context.l10n.weight,
+                          value: round.targetWeight == 0
+                              ? '-'
+                              : '${round.targetWeight?.toStringAsFixed(1)} kg',
+                          icon: AppIcons.workout,
+                          color: context.colors.primary,
+                          onTap: () async {
+                            final newWeight = await WeightPickerModal.show(
+                              context,
+                              initialWeight: round.targetWeight ?? 0,
+                            );
+                            if (newWeight != null) {
+                              _updateSetWeight(exerciseIndex, roundIndex, newWeight);
+                              Navigator.pop(context);
+                            }
+                          },
+                        ),
+                      ),
+                      const SizedBox(width: 12),
+                      Text(
+                        '×',
+                        style: context.textTheme.titleLarge?.copyWith(
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      const SizedBox(width: 12),
+                      Expanded(
+                        child: _buildPickerButton(
+                          label: context.l10n.reps,
+                          value: '${round.targetReps ?? 0}',
+                          icon: AppIcons.repeat,
+                          color: context.colors.secondary,
+                          onTap: () async {
+                            final newReps = await RepsPickerModal.show(
+                              context,
+                              initialReps: round.targetReps ?? 0,
+                            );
+                            if (newReps != null) {
+                              _updateSetReps(exerciseIndex, roundIndex, newReps);
+                              Navigator.pop(context);
+                            }
+                          },
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(height: 20),
+          ],
+        ),
       ),
     );
   }
 
-  void _addExercise(Exercise exercise) {
-    final exerciseTemplate = ExerciseTemplate(
-      exerciseId: exercise.id,  // ✅ Use original ID (e.g., "barbell_bench_press")
-      exerciseName: exercise.name,  // Exercise name
-      category: exercise.category,
-      type: exercise.type,
-      sets: exercise.sets.map((set) {
-        return SetTemplate(
-          setNumber: set.setNumber,
-          targetWeight: set.weight,
-          targetReps: set.reps,
-          notes: set.notes,
-        );
-      }).toList(),
-      notes: exercise.notes,
-      restTime: exercise.restTime,
+  void _showAddExercise() {
+    // ✅ UX: Use the new static show method for proper sizing
+    AddExerciseModal.show(
+      context,
+      onExerciseAdded: (exercise) {
+        _addExercise(exercise);
+      },
     );
+  }
+
+  void _addExercise(Exercise exercise) {
+    // ✅ FIX: Use factory method instead of manual conversion
+    // ExerciseTemplate.fromExercise() handles all exercise types (standard, superset, dropset, restpause)
+    final exerciseTemplate = ExerciseTemplate.fromExercise(exercise);
 
     setState(() {
       _exercises.add(exerciseTemplate);
@@ -755,11 +998,14 @@ class _EditTemplateScreenState extends ConsumerState<EditTemplateScreen> {
     setState(() => _isLoading = true);
 
     try {
+      // Ensure userId is set (safety net for templates created without it)
+      final currentUserId = ref.read(currentUserIdProvider);
       final templateToSave = widget.template.copyWith(
         name: _nameController.text.trim(),
         description: _descriptionController.text.trim(),
         exercises: _exercises,
         updatedAt: DateTime.now(),
+        userId: widget.template.userId ?? currentUserId, // ✅ Safety net for Firestore rules
       );
 
       await ref.read(workoutTemplateNotifierProvider.notifier).saveTemplate(templateToSave);

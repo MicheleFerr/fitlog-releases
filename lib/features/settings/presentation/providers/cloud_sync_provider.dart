@@ -8,6 +8,7 @@
 /// Essential for premium users with multiple devices
 library;
 
+import 'package:flutter/foundation.dart' show kDebugMode;
 import 'dart:async';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -112,7 +113,9 @@ class CloudSyncNotifier extends Notifier<CloudSyncState> {
         state = state.copyWith(lastSyncTime: lastSync);
       }
     } catch (e) {
-      debugPrint('Failed to load last sync time: $e');
+      if (kDebugMode) {
+        debugPrint('Failed to load last sync time: $e');
+      }
     }
   }
   
@@ -122,7 +125,9 @@ class CloudSyncNotifier extends Notifier<CloudSyncState> {
       final box = await _boxManager.openBox('sync_preferences');
       await box.put('last_cloud_sync_time', time);
     } catch (e) {
-      debugPrint('Failed to save last sync time: $e');
+      if (kDebugMode) {
+        debugPrint('Failed to save last sync time: $e');
+      }
     }
   }
   
@@ -143,7 +148,9 @@ class CloudSyncNotifier extends Notifier<CloudSyncState> {
     );
     
     try {
-      debugPrint('🔄 Starting cloud sync for user: ${user.email}');
+      if (kDebugMode) {
+        debugPrint('🔄 Starting cloud sync for user: ${user.email}');
+      }
       
       int workoutsSynced = 0;
       int templatesSynced = 0;
@@ -227,10 +234,14 @@ class CloudSyncNotifier extends Notifier<CloudSyncState> {
         ),
       );
       
-      debugPrint('✅ Cloud sync complete: ${summary.totalItemsSynced} items synced');
+      if (kDebugMode) {
+        debugPrint('✅ Cloud sync complete: ${summary.totalItemsSynced} items synced');
+      }
       
     } catch (e) {
-      debugPrint('❌ Cloud sync failed: $e');
+      if (kDebugMode) {
+        debugPrint('❌ Cloud sync failed: $e');
+      }
       state = state.copyWith(
         isSyncing: false,
         errors: ['Sync failed: $e'],
@@ -241,17 +252,24 @@ class CloudSyncNotifier extends Notifier<CloudSyncState> {
   /// Sync workouts from Firestore to local
   Future<int> _syncWorkouts(String userId) async {
     try {
-      final box = await _boxManager.openBox<Map>('workouts_data');
-      
-      // Get workouts from Firestore
+      // ✅ FIX: Use 'workouts' box (same as HiveWorkoutDataSource)
+      // Previously used 'workouts_data' which caused progress providers to read empty box
+      final box = await _boxManager.openBox<Map>('workouts');
+
+      // ✅ FIX: Get workouts from correct Firestore path
+      // Workouts are stored at users/{userId}/workouts/{workoutId}
+      // NOT at root collection 'workouts' with userId field
       final snapshot = await _firestore
+          .collection('users')
+          .doc(userId)
           .collection('workouts')
-          .where('userId', isEqualTo: userId)
-          .orderBy('startTime', descending: true)
+          .orderBy('createdAt', descending: true)
           .limit(500) // Limit to prevent memory issues
           .get();
       
-      debugPrint('📥 Found ${snapshot.docs.length} workouts in cloud');
+      if (kDebugMode) {
+        debugPrint('📥 Found ${snapshot.docs.length} workouts in cloud');
+      }
       
       int synced = 0;
       for (final doc in snapshot.docs) {
@@ -278,11 +296,15 @@ class CloudSyncNotifier extends Notifier<CloudSyncState> {
         }
       }
       
-      debugPrint('✅ Synced $synced workouts to local storage');
+      if (kDebugMode) {
+        debugPrint('✅ Synced $synced workouts to local storage');
+      }
       return synced;
       
     } catch (e) {
-      debugPrint('❌ Failed to sync workouts: $e');
+      if (kDebugMode) {
+        debugPrint('❌ Failed to sync workouts: $e');
+      }
       return 0;
     }
   }
@@ -291,22 +313,26 @@ class CloudSyncNotifier extends Notifier<CloudSyncState> {
   Future<int> _syncTemplates(String userId) async {
     try {
       final box = await _boxManager.openBox<Map>('templates_data');
-      
+
+      // ✅ FIX: Use 'workoutTemplates' collection (same as TemplateRepository)
+      // Previously used 'templates' which doesn't exist
       // Get user's templates
       final snapshot = await _firestore
-          .collection('templates')
+          .collection('workoutTemplates')
           .where('userId', isEqualTo: userId)
           .get();
-      
+
       // Also get public templates
       final publicSnapshot = await _firestore
-          .collection('templates')
+          .collection('workoutTemplates')
           .where('isPublic', isEqualTo: true)
           .limit(100)
           .get();
       
       final allTemplates = [...snapshot.docs, ...publicSnapshot.docs];
-      debugPrint('📥 Found ${allTemplates.length} templates in cloud');
+      if (kDebugMode) {
+        debugPrint('📥 Found ${allTemplates.length} templates in cloud');
+      }
       
       int synced = 0;
       for (final doc in allTemplates) {
@@ -322,11 +348,15 @@ class CloudSyncNotifier extends Notifier<CloudSyncState> {
         synced++;
       }
       
-      debugPrint('✅ Synced $synced templates to local storage');
+      if (kDebugMode) {
+        debugPrint('✅ Synced $synced templates to local storage');
+      }
       return synced;
       
     } catch (e) {
-      debugPrint('❌ Failed to sync templates: $e');
+      if (kDebugMode) {
+        debugPrint('❌ Failed to sync templates: $e');
+      }
       return 0;
     }
   }
@@ -343,7 +373,9 @@ class CloudSyncNotifier extends Notifier<CloudSyncState> {
           .collection('customExercises')
           .get();
       
-      debugPrint('📥 Found ${snapshot.docs.length} custom exercises in cloud');
+      if (kDebugMode) {
+        debugPrint('📥 Found ${snapshot.docs.length} custom exercises in cloud');
+      }
       
       int synced = 0;
       for (final doc in snapshot.docs) {
@@ -359,11 +391,15 @@ class CloudSyncNotifier extends Notifier<CloudSyncState> {
         synced++;
       }
       
-      debugPrint('✅ Synced $synced exercises to local storage');
+      if (kDebugMode) {
+        debugPrint('✅ Synced $synced exercises to local storage');
+      }
       return synced;
       
     } catch (e) {
-      debugPrint('❌ Failed to sync exercises: $e');
+      if (kDebugMode) {
+        debugPrint('❌ Failed to sync exercises: $e');
+      }
       return 0;
     }
   }
@@ -372,15 +408,21 @@ class CloudSyncNotifier extends Notifier<CloudSyncState> {
   Future<int> _syncPersonalRecords(String userId) async {
     try {
       final box = await _boxManager.openBox<Map>('personal_records_data');
-      
-      // Get user's PRs
+
+      // ✅ FIX: Use root 'personalRecords' collection with userId filter
+      // PRs are stored at /personalRecords/{recordId} with userId field
+      // NOT as subcollection /users/{userId}/personalRecords/
+      // See: pr_tracker.dart line 149 and firestore.rules line 1355
       final snapshot = await _firestore
-          .collection('users')
-          .doc(userId)
           .collection('personalRecords')
+          .where('userId', isEqualTo: userId)
+          .orderBy('achievedAt', descending: true)
+          .limit(500)
           .get();
       
-      debugPrint('📥 Found ${snapshot.docs.length} personal records in cloud');
+      if (kDebugMode) {
+        debugPrint('📥 Found ${snapshot.docs.length} personal records in cloud');
+      }
       
       int synced = 0;
       for (final doc in snapshot.docs) {
@@ -396,11 +438,15 @@ class CloudSyncNotifier extends Notifier<CloudSyncState> {
         synced++;
       }
       
-      debugPrint('✅ Synced $synced personal records to local storage');
+      if (kDebugMode) {
+        debugPrint('✅ Synced $synced personal records to local storage');
+      }
       return synced;
       
     } catch (e) {
-      debugPrint('❌ Failed to sync personal records: $e');
+      if (kDebugMode) {
+        debugPrint('❌ Failed to sync personal records: $e');
+      }
       return 0;
     }
   }
@@ -439,14 +485,18 @@ class CloudSyncNotifier extends Notifier<CloudSyncState> {
           }
         }
         
-        debugPrint('✅ Synced user settings and profile');
+        if (kDebugMode) {
+          debugPrint('✅ Synced user settings and profile');
+        }
         return 1;
       }
       
       return 0;
       
     } catch (e) {
-      debugPrint('❌ Failed to sync user settings: $e');
+      if (kDebugMode) {
+        debugPrint('❌ Failed to sync user settings: $e');
+      }
       return 0;
     }
   }
@@ -454,10 +504,13 @@ class CloudSyncNotifier extends Notifier<CloudSyncState> {
   /// Clear all local data (useful before fresh sync)
   Future<void> clearLocalData() async {
     try {
-      debugPrint('🗑️ Clearing local data...');
+      if (kDebugMode) {
+        debugPrint('🗑️ Clearing local data...');
+      }
 
       // Clear workout data
-      final workoutsBox = await _boxManager.openBox<Map>('workouts_data');
+      // ✅ FIX: Clear 'workouts' box (same as HiveWorkoutDataSource)
+      final workoutsBox = await _boxManager.openBox<Map>('workouts');
       await workoutsBox.clear();
 
       // Clear templates
@@ -472,10 +525,14 @@ class CloudSyncNotifier extends Notifier<CloudSyncState> {
       final prsBox = await _boxManager.openBox<Map>('personal_records_data');
       await prsBox.clear();
       
-      debugPrint('✅ Local data cleared');
+      if (kDebugMode) {
+        debugPrint('✅ Local data cleared');
+      }
       
     } catch (e) {
-      debugPrint('❌ Failed to clear local data: $e');
+      if (kDebugMode) {
+        debugPrint('❌ Failed to clear local data: $e');
+      }
     }
   }
   

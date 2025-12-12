@@ -6,6 +6,10 @@ class RepsPickerModal {
   static Future<int?> show(BuildContext context, {required int initialReps}) {
     return showModalBottomSheet<int>(
       context: context,
+      isScrollControlled: true,
+      isDismissible: true,
+      enableDrag: true,
+      backgroundColor: Colors.transparent,
       builder: (context) => _RepsPicker(initialReps: initialReps),
     );
   }
@@ -41,33 +45,30 @@ class _RepsPickerState extends State<_RepsPicker> {
 
   @override
   Widget build(BuildContext context) {
-    final theme = context.theme;
-    final l10n = context.l10n;
-
     return StatefulBuilder(
       builder: (context, setModalState) => Container(
-        height: 350,
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
-          color: theme.colorScheme.surface,
-          borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
+          color: context.colors.surface,
+          borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
         ),
         child: Column(
+          mainAxisSize: MainAxisSize.min,
           children: [
             // Handle bar
             Container(
               width: 40,
               height: 4,
-              margin: const EdgeInsets.only(bottom: 16),
+              margin: const EdgeInsets.only(bottom: 12),
               decoration: BoxDecoration(
-                color: theme.colorScheme.outline.withValues(alpha: 0.3),
+                color: context.colors.onSurfaceVariant.withValues(alpha: 0.4),
                 borderRadius: BorderRadius.circular(2),
               ),
             ),
             // Title
             Text(
-              l10n.reps,
-              style: theme.textTheme.titleMedium?.copyWith(
+              context.l10n.reps,
+              style: context.textTheme.titleMedium?.copyWith(
                 fontWeight: FontWeight.bold,
               ),
             ),
@@ -91,21 +92,17 @@ class _RepsPickerState extends State<_RepsPicker> {
                       curve: Curves.easeInOut,
                     );
                   },
-                  backgroundColor: theme.colorScheme.surface,
-                  selectedColor: theme.colorScheme.secondaryContainer,
-                  labelStyle: TextStyle(
-                    color: isSelected
-                        ? theme.colorScheme.onSecondaryContainer
-                        : theme.colorScheme.onSurface,
-                    fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
-                  ),
+                  selectedColor: context.colors.primaryContainer,
+                  checkmarkColor: context.colors.primary,
                 );
               }).toList(),
             ),
 
             const SizedBox(height: 16),
-            // Picker
-            Expanded(
+
+            // Picker - fixed height container
+            SizedBox(
+              height: 150,
               child: ListWheelScrollView.useDelegate(
                 controller: controller,
                 itemExtent: 50,
@@ -120,11 +117,11 @@ class _RepsPickerState extends State<_RepsPicker> {
                     return Center(
                       child: Text(
                         reps.toString(),
-                        style: theme.textTheme.headlineSmall?.copyWith(
+                        style: context.textTheme.headlineSmall?.copyWith(
                           fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
                           color: isSelected
-                              ? theme.colorScheme.secondary
-                              : theme.colorScheme.onSurface,
+                              ? context.colors.primary
+                              : context.colors.onSurface,
                         ),
                       ),
                     );
@@ -135,7 +132,9 @@ class _RepsPickerState extends State<_RepsPicker> {
                 },
               ),
             ),
+
             const SizedBox(height: 16),
+
             // Confirm button
             SizedBox(
               width: double.infinity,
@@ -144,12 +143,14 @@ class _RepsPickerState extends State<_RepsPicker> {
                   Navigator.of(context).pop(selectedReps);
                 },
                 style: FilledButton.styleFrom(
-                  backgroundColor: theme.colorScheme.secondary,
-                  foregroundColor: theme.colorScheme.onSecondary,
+                  padding: const EdgeInsets.symmetric(vertical: 12),
                 ),
-                child: Text(l10n.confirm),
+                child: Text(context.l10n.confirm),
               ),
             ),
+
+            // Bottom safe area
+            SizedBox(height: MediaQuery.of(context).padding.bottom),
           ],
         ),
       ),

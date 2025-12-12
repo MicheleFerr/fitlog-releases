@@ -9,9 +9,9 @@
  * import { withRateLimit, RATE_LIMITS } from './security/rateLimiterV1';
  *
  * export const myFunction = withRateLimit(
- *   functions.https.onCall(async (data, context) => {
- *     // Your function logic here
- *   }),
+ *   async (data, context) => {
+ *     // Your function logic here (NOT wrapped in functions.https.onCall)
+ *   },
  *   {
  *     ...RATE_LIMITS.STRICT,
  *     identifier: 'myFunction',
@@ -69,16 +69,16 @@ exports.RATE_LIMITS = {
 /**
  * Wrap a Firebase Functions v1 onCall handler with rate limiting
  *
- * @param handler Original onCall handler
+ * @param handler The handler function (NOT wrapped in functions.https.onCall)
  * @param config Rate limit configuration
- * @returns Wrapped handler with rate limiting
+ * @returns Wrapped CloudFunction
  *
  * @example
  * ```typescript
  * export const setAdminRole = withRateLimit(
- *   functions.https.onCall(async (data, context) => {
- *     // ... your logic
- *   }),
+ *   async (data, context) => {
+ *     // ... your logic (NOT wrapped in functions.https.onCall)
+ *   },
  *   { ...RATE_LIMITS.STRICT, identifier: 'setAdminRole' }
  * );
  * ```

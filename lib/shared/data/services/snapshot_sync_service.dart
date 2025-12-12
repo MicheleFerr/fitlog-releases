@@ -161,7 +161,9 @@ class SnapshotSyncService extends Notifier<void> {
     // Start periodic sync timer
     _periodicSyncTimer = Timer.periodic(_periodicSyncInterval, (_) {
       if (kDebugMode) {
-        debugPrint('⏰ [SnapshotSync] Periodic sync triggered (${_periodicSyncInterval.inMinutes}m)');
+        debugPrint(
+          '⏰ [SnapshotSync] Periodic sync triggered (${_periodicSyncInterval.inMinutes}m)',
+        );
       }
       syncPendingEntities();
     });
@@ -171,9 +173,12 @@ class SnapshotSyncService extends Notifier<void> {
       _periodicSyncTimer?.cancel();
 
       // CRITICAL: Sync operazioni rimanenti prima del dispose
-      if (_snapshots.values.where((s) => s.pendingSync).isNotEmpty && !_syncInProgress) {
+      if (_snapshots.values.where((s) => s.pendingSync).isNotEmpty &&
+          !_syncInProgress) {
         if (kDebugMode) {
-          debugPrint('⚠️ [SnapshotSync] Syncing ${_getPendingCount()} pending entities on dispose');
+          debugPrint(
+            '⚠️ [SnapshotSync] Syncing ${_getPendingCount()} pending entities on dispose',
+          );
         }
         // Fire-and-forget: non possiamo attendere in onDispose
         syncPendingEntities();
@@ -227,7 +232,9 @@ class SnapshotSyncService extends Notifier<void> {
           .get();
 
       if (cloudDoc.exists && cloudDoc.data() != null) {
-        final cloudChecksum = EntitySnapshot._calculateChecksum(cloudDoc.data()!);
+        final cloudChecksum = EntitySnapshot._calculateChecksum(
+          cloudDoc.data()!,
+        );
 
         if (cloudChecksum == localSnapshot.checksum) {
           // Dati identici → no sync necessario
@@ -257,7 +264,9 @@ class SnapshotSyncService extends Notifier<void> {
       }
     } catch (e) {
       if (kDebugMode) {
-        debugPrint('⚠️ [SnapshotSync] Could not verify cloud checksum for $key: $e');
+        debugPrint(
+          '⚠️ [SnapshotSync] Could not verify cloud checksum for $key: $e',
+        );
       }
       // Continue - mark pending sync comunque
     }
@@ -266,7 +275,9 @@ class SnapshotSyncService extends Notifier<void> {
     _snapshots[key] = localSnapshot;
 
     if (kDebugMode) {
-      debugPrint('📝 [SnapshotSync] $key marked as pending sync (total pending: ${_getPendingCount()})');
+      debugPrint(
+        '📝 [SnapshotSync] $key marked as pending sync (total pending: ${_getPendingCount()})',
+      );
     }
   }
 
@@ -282,12 +293,16 @@ class SnapshotSyncService extends Notifier<void> {
   Future<void> syncPendingEntities() async {
     if (_syncInProgress) {
       if (kDebugMode) {
-        debugPrint('⚠️ [SnapshotSync] Sync already in progress, skipping duplicate call');
+        debugPrint(
+          '⚠️ [SnapshotSync] Sync already in progress, skipping duplicate call',
+        );
       }
       return;
     }
 
-    final pendingEntities = _snapshots.values.where((s) => s.pendingSync).toList();
+    final pendingEntities = _snapshots.values
+        .where((s) => s.pendingSync)
+        .toList();
 
     if (pendingEntities.isEmpty) {
       if (kDebugMode) {
@@ -300,7 +315,9 @@ class SnapshotSyncService extends Notifier<void> {
 
     try {
       if (kDebugMode) {
-        debugPrint('🚀 [SnapshotSync] Syncing ${pendingEntities.length} pending entities');
+        debugPrint(
+          '🚀 [SnapshotSync] Syncing ${pendingEntities.length} pending entities',
+        );
       }
 
       final batchWriter = ref.read(firestoreBatchWriterProvider.notifier);
@@ -326,7 +343,9 @@ class SnapshotSyncService extends Notifier<void> {
       }
 
       if (kDebugMode) {
-        debugPrint('✅ [SnapshotSync] Queued ${pendingEntities.length} entities for batch sync');
+        debugPrint(
+          '✅ [SnapshotSync] Queued ${pendingEntities.length} entities for batch sync',
+        );
       }
     } catch (e, stackTrace) {
       if (kDebugMode) {
@@ -378,7 +397,6 @@ class SnapshotSyncService extends Notifier<void> {
       debugPrint('🗑️ [SnapshotSync] Removed tracking for $key');
     }
   }
-
 }
 
 /// Provider per SnapshotSyncService

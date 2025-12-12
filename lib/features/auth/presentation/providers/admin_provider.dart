@@ -122,6 +122,32 @@ final debugSectionCollapsedProvider = StateProvider<bool>((ref) => true);
 /// Provider for individual debug sections collapsed state
 final debugSectionStatesProvider = NotifierProvider<DebugSectionStates, Map<String, bool>>(DebugSectionStates.new);
 
+/// Developer email for debug features in production
+///
+/// This provider checks if the current user's email matches the developer email.
+/// Unlike admin claims, this is a simple email check that works in release mode.
+///
+/// ⚠️ NOTE: This is NOT for security-sensitive features.
+/// Only use for debug/development features that are safe to expose.
+const String _developerEmail = 'ferrara-michele@hotmail.it';
+
+/// Provider to check if current user is the developer
+///
+/// Returns true if the authenticated user's email matches the developer email.
+/// Works in both debug and release mode.
+final isDeveloperProvider = Provider<bool>((ref) {
+  final user = FirebaseAuth.instance.currentUser;
+  if (user == null || user.email == null) return false;
+
+  final isDeveloper = user.email!.toLowerCase() == _developerEmail.toLowerCase();
+
+  if (kDebugMode && isDeveloper) {
+    debugPrint('🔧 Developer access: ${user.email}');
+  }
+
+  return isDeveloper;
+});
+
 class DebugSectionStates extends Notifier<Map<String, bool>> {
   @override
   Map<String, bool> build() => {};

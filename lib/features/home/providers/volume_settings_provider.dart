@@ -1,6 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:gymbro_flutter_new/shared/providers/shared_preferences_provider.dart';
+import 'package:gymbro_flutter_new/core/cache/user_cache_key_manager.dart';
 
 enum WeightUnit {
   kg,
@@ -83,8 +84,9 @@ class VolumeSettingsNotifier extends Notifier<VolumeSettings> {
     _loadSettings();
     return VolumeSettings();
   }
-  static const String _unitKey = 'volume_weight_unit';
-  static const String _periodKey = 'volume_period';
+  // 🔐 User-scoped cache keys
+  String get _unitKey => userCacheKeys.userScopedKey('volume_weight_unit');
+  String get _periodKey => userCacheKeys.userScopedKey('volume_period');
   
   void _loadSettings() {
     final unitIndex = _prefs.getInt(_unitKey) ?? 0;

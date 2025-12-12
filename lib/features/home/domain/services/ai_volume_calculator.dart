@@ -64,8 +64,8 @@ class AIVolumeCalculator {
     final volumeByMuscle = <String, _MuscleGroupData>{};
 
     for (final activity in weeklyActivities) {
-      // Ottieni l'esercizio dal database per mappatura muscoli corretta
-      final exercise = exerciseDatabase[activity.exerciseName];
+      // Ottieni l'esercizio dal database per mappatura muscoli corretta (case-insensitive)
+      final exercise = exerciseDatabase[activity.exerciseName.toLowerCase()];
 
       // Calcola sets completati per questa attività
       final completedSets = activity.sets.where((s) => s.done).length;
@@ -96,7 +96,7 @@ class AIVolumeCalculator {
           );
         }
       } else {
-        // Fallback: usa categorizzazione base se esercizio non trovato
+        // Fallback: usa categorizzazione base se esercizio non trovato (custom exercise)
         final muscleGroup = _fallbackCategorization(activity.exerciseName);
         _addVolumeToMuscle(
           volumeByMuscle,
@@ -156,19 +156,55 @@ class AIVolumeCalculator {
   }
 
   /// Categorizzazione fallback quando esercizio non è nel database
+  /// Supporta keyword in italiano e inglese
   static String _fallbackCategorization(String exerciseName) {
     final name = exerciseName.toLowerCase();
 
-    if (name.contains('squat') || name.contains('leg press')) return 'QUAD';
-    if (name.contains('deadlift') || name.contains('romanian')) return 'FEMOR';
-    if (name.contains('bench') || name.contains('chest')) return 'PETT';
-    if (name.contains('pull') || name.contains('row') || name.contains('lat')) return 'DORS';
-    if (name.contains('shoulder') || name.contains('press') && !name.contains('leg')) return 'DELT';
-    if (name.contains('curl') && !name.contains('leg')) return 'BRAC';
-    if (name.contains('tricep') || name.contains('dip')) return 'TRIC';
-    if (name.contains('calf')) return 'POLP';
-    if (name.contains('glute') || name.contains('hip')) return 'GLUT';
-    if (name.contains('ab') || name.contains('core') || name.contains('plank')) return 'CORE';
+    // QUAD - Quadricipiti
+    if (name.contains('squat') || name.contains('leg press') ||
+        name.contains('leg extension') || name.contains('affondi') ||
+        name.contains('lunge')) return 'QUAD';
+
+    // FEMOR - Femorali
+    if (name.contains('deadlift') || name.contains('romanian') ||
+        name.contains('stacco') || name.contains('leg curl') ||
+        name.contains('hamstring')) return 'FEMOR';
+
+    // PETT - Pettorali
+    if (name.contains('bench') || name.contains('chest') ||
+        name.contains('panca') || name.contains('pettoral') ||
+        name.contains('croci') || name.contains('fly')) return 'PETT';
+
+    // DORS - Dorsali
+    if (name.contains('pull') || name.contains('row') || name.contains('lat') ||
+        name.contains('pulley') || name.contains('rematore') ||
+        name.contains('trazion') || name.contains('dorsal')) return 'DORS';
+
+    // TRIC - Tricipiti (check before DELT because "french press" contains "press")
+    if (name.contains('tricep') || name.contains('dip') ||
+        name.contains('french press') || name.contains('pushdown') ||
+        name.contains('skull')) return 'TRIC';
+
+    // DELT - Deltoidi/Spalle
+    if (name.contains('shoulder') || name.contains('lateral') ||
+        name.contains('spall') || name.contains('alzat') ||
+        name.contains('military') || name.contains('delt') ||
+        (name.contains('press') && !name.contains('leg') && !name.contains('chest') && !name.contains('french'))) return 'DELT';
+
+    // BICI/BRAC - Bicipiti
+    if (name.contains('curl') && !name.contains('leg')) return 'BICI';
+    if (name.contains('bicep') || name.contains('bicip')) return 'BICI';
+
+    // POLP - Polpacci
+    if (name.contains('calf') || name.contains('polpacc')) return 'POLP';
+
+    // GLUT - Glutei
+    if (name.contains('glute') || name.contains('glut') ||
+        name.contains('hip thrust')) return 'GLUT';
+
+    // CORE - Addominali
+    if (name.contains('ab') || name.contains('core') || name.contains('plank') ||
+        name.contains('crunch') || name.contains('addominal')) return 'CORE';
 
     return 'VARIO';
   }

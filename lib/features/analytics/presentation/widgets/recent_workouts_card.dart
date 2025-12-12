@@ -197,9 +197,10 @@ class RecentWorkoutsCard extends StatelessWidget {
         borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
       ),
       builder: (context) {
+        final safeMax = ModalService.safeMaxChildSize(context, preferredMax: 0.95);
         return DraggableScrollableSheet(
           initialChildSize: 0.7,
-          maxChildSize: 0.95,
+          maxChildSize: safeMax,
           minChildSize: 0.4,
           expand: false,
           builder: (context, scrollController) {

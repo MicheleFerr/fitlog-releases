@@ -169,7 +169,7 @@ class _HomeScreenPerformanceState extends ConsumerState<HomeScreenPerformance>
       children: [
         // Main scaffold content
         Scaffold(
-          backgroundColor: context.colors.surface,
+          backgroundColor: context.colors.surfaceContainer,
           body: CustomScrollView(
             key: const PageStorageKey('home_screen_scroll'),
             slivers: [

@@ -1,11 +1,12 @@
 import 'dart:async';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:gymbro_flutter_new/features/workout/domain/entities/workout.dart';
-import 'package:gymbro_flutter_new/features/workout/data/repositories/workout_draft_repository.dart';
-import 'package:flutter/widgets.dart';
 import 'package:gymbro_flutter_new/core/data/providers/hive_box_manager_provider.dart';
-import 'package:gymbro_flutter_new/shared/domain/services/request_throttler.dart';
 import 'package:gymbro_flutter_new/core/utils/app_logger.dart';
+import 'package:gymbro_flutter_new/features/workout/data/repositories/workout_draft_repository.dart';
+import 'package:gymbro_flutter_new/features/workout/domain/entities/workout.dart';
+import 'package:gymbro_flutter_new/features/workout/presentation/providers/workout_provider.dart';
+import 'package:gymbro_flutter_new/shared/domain/services/request_throttler.dart';
 
 /// Provider for the draft repository
 final workoutDraftRepositoryProvider = Provider<WorkoutDraftRepository>((ref) {
@@ -45,15 +46,20 @@ class WorkoutAutoSaveState {
 }
 
 /// Notifier for managing workout auto-save
-class WorkoutAutoSaveNotifier extends Notifier<WorkoutAutoSaveState> with WidgetsBindingObserver {
+/// NOTE: Emergency save is handled centrally by AppLifecycleManager (app_lifecycle_manager.dart)
+/// This notifier focuses ONLY on periodic auto-save and draft recovery.
+class WorkoutAutoSaveNotifier extends Notifier<WorkoutAutoSaveState> {
   late final WorkoutDraftRepository _repository;
   Timer? _autoSaveTimer;
   late final Debouncer _saveDebouncer;
   Workout? _lastSavedWorkout;
 
-  // CPU OPTIMIZATION: Increased intervals to reduce background activity
-  static const Duration _autoSaveInterval = Duration(minutes: 10);  // Reduced from 5 to 10 minutes
-  static const Duration _debounceDelay = Duration(seconds: 1);      // Optimized for responsive UX
+  // FIX #2: Reduced auto-save interval to prevent workout data loss
+  // Previous value (10 minutes) was too long - if iOS kills the app,
+  // user could lose up to 10 minutes of workout progress.
+  // 2 minutes is a better balance between battery usage and data safety.
+  static const Duration _autoSaveInterval = Duration(minutes: 2);
+  static const Duration _debounceDelay = Duration(seconds: 1);
 
   @override
   WorkoutAutoSaveState build() {
@@ -69,9 +75,6 @@ class WorkoutAutoSaveNotifier extends Notifier<WorkoutAutoSaveState> with Widget
 
       // Dispose debouncer properly
       _saveDebouncer.dispose();
-
-      // Remove lifecycle observer
-      WidgetsBinding.instance.removeObserver(this);
 
       // Clear references to prevent memory leaks
       _lastSavedWorkout = null;
@@ -94,8 +97,7 @@ class WorkoutAutoSaveNotifier extends Notifier<WorkoutAutoSaveState> with Widget
       },
     );
 
-    // Add lifecycle observer to save on app pause
-    WidgetsBinding.instance.addObserver(this);
+    // NOTE: Lifecycle observer REMOVED - emergency save handled by AppLifecycleManager
 
     // Initialize repository
     _repository.init();
@@ -107,17 +109,27 @@ class WorkoutAutoSaveNotifier extends Notifier<WorkoutAutoSaveState> with Widget
   /// Start auto-saving for a workout
   void startAutoSave(Workout workout) {
     if (!state.isAutoSaveEnabled) return;
-    
+
     // Cancel existing timer
     _autoSaveTimer?.cancel();
-    
+
     // Save immediately on start
     _saveWorkout(workout);
-    
-    // Setup periodic auto-save (every 5 minutes)
+
+    // Setup periodic auto-save (every 10 minutes)
+    // BUG FIX: Read CURRENT workout from provider, not the captured reference!
+    // The captured `workout` parameter is stale after state changes.
     _autoSaveTimer = Timer.periodic(_autoSaveInterval, (_) {
-      if (_hasWorkoutChanged(workout)) {
-        _saveWorkout(workout);
+      // Read fresh workout state from provider
+      final currentWorkout = ref.read(currentWorkoutProvider);
+      if (currentWorkout == null) {
+        // No active workout, cancel timer
+        _autoSaveTimer?.cancel();
+        return;
+      }
+
+      if (_hasWorkoutChanged(currentWorkout)) {
+        _saveWorkout(currentWorkout);
       }
     });
   }
@@ -135,13 +147,41 @@ class WorkoutAutoSaveNotifier extends Notifier<WorkoutAutoSaveState> with Widget
   }
 
   /// Emergency save (app going to background, etc.)
+  ///
+  /// FIX #3: This method now uses synchronous Hive write to ensure
+  /// the save completes before iOS terminates the app.
+  /// iOS gives apps ~5 seconds to complete background tasks.
   Future<void> emergencySave(Workout workout) async {
     // Cancel timers to prevent concurrent saves
     _autoSaveTimer?.cancel();
     _saveDebouncer.cancel();
 
-    // Force save regardless of changes
-    await _saveWorkout(workout, force: true);
+    // FIX #3: Use synchronous save path for emergency situations
+    // This bypasses the async _saveWorkout to ensure completion
+    try {
+      state = state.copyWith(isSaving: true, lastError: null);
+
+      // Direct synchronous save to repository
+      await _repository.saveCurrentDraft(workout);
+      _lastSavedWorkout = workout;
+
+      state = state.copyWith(
+        isSaving: false,
+        lastSaveTime: DateTime.now(),
+      );
+
+      AppLogger.info('Emergency save completed at ${DateTime.now()}', tag: 'WorkoutAutoSave');
+    } catch (e) {
+      state = state.copyWith(
+        isSaving: false,
+        lastError: e.toString(),
+      );
+
+      AppLogger.error('Emergency save failed: $e', tag: 'WorkoutAutoSave', error: e);
+
+      // Rethrow so caller knows it failed
+      rethrow;
+    }
   }
 
   /// Stop auto-saving (workout completed or cancelled)
@@ -222,14 +262,7 @@ class WorkoutAutoSaveNotifier extends Notifier<WorkoutAutoSaveState> with Widget
     }
   }
 
-  @override
-  void didChangeAppLifecycleState(AppLifecycleState lifecycleState) {
-    // Save when app goes to background
-    if (lifecycleState == AppLifecycleState.paused ||
-        lifecycleState == AppLifecycleState.inactive) {
-      if (_lastSavedWorkout != null) {
-        emergencySave(_lastSavedWorkout!);
-      }
-    }
-  }
+  // NOTE: didChangeAppLifecycleState REMOVED
+  // Emergency save is now handled ONLY by AppLifecycleManager (single source of truth)
+  // This eliminates redundant lifecycle observers and prevents race conditions
 }

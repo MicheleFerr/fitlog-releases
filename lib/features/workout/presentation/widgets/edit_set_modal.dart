@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise.dart';
-import 'package:gymbro_flutter_new/features/workout/domain/services/rest_time_suggestion_service.dart';
-import 'package:gymbro_flutter_new/features/workout/domain/services/apre_auto_regulation_service.dart';
 import 'package:gymbro_flutter_new/shared/presentation/providers/app_config_provider.dart';
 import 'package:gymbro_flutter_new/shared/domain/entities/app_config.dart';
+import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/widgets/weight_picker_modal.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/widgets/reps_picker_modal.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
@@ -48,12 +46,6 @@ class _EditSetModalState extends ConsumerState<EditSetModal> {
 
   bool _isCompleted = false;
   int? _selectedRpe;
-
-  // APRE suggestion state
-  RestTimeSuggestion? _restTimeSuggestion;
-  bool _showRestSuggestionBanner = false;
-  double? _suggestedWeight;
-  bool _showWeightSuggestionBanner = false;
 
   @override
   void initState() {
@@ -342,18 +334,6 @@ class _EditSetModalState extends ConsumerState<EditSetModal> {
             ],
           ),
 
-          // Rest Time Suggestion Banner
-          if (_showRestSuggestionBanner && _restTimeSuggestion != null) ...[
-            const SizedBox(height: 16),
-            _buildRestTimeSuggestionBanner(context),
-          ],
-
-          // Weight Adjustment Suggestion Banner
-          if (_showWeightSuggestionBanner && _suggestedWeight != null) ...[
-            const SizedBox(height: 16),
-            _buildWeightSuggestionBanner(context),
-          ],
-
           // Bottom padding for safe area
           SizedBox(height: context.mediaQuery.viewInsets.bottom),
         ],
@@ -445,60 +425,7 @@ class _EditSetModalState extends ConsumerState<EditSetModal> {
         );
       }
 
-      // Check for APRE suggestions (rest time and weight adjustments)
-      if (_isCompleted && widget.exercise != null) {
-        final config = ref.read(appConfigProvider);
-        final autoAdjustEnabled = config.autoAdjustRestTime ?? false;
-
-        // Check for rest time suggestion
-        if (widget.previousSet != null && weight != null) {
-          final previousWeight = widget.previousSet!.weight ?? weight;
-
-          final restSuggestion = RestTimeSuggestionService.checkRestTimeSuggestion(
-            exercise: widget.exercise!,
-            newWeight: weight,
-            lastWeight: previousWeight,
-            currentRestTime: widget.exercise!.restTime ?? 90,
-            autoAdjustEnabled: autoAdjustEnabled,
-          );
-
-          if (restSuggestion != null) {
-            setState(() {
-              _restTimeSuggestion = restSuggestion;
-              _showRestSuggestionBanner = true;
-            });
-            return; // Don't close modal yet, show suggestion
-          }
-        }
-
-        // Check for APRE weight adjustment
-        if (widget.exercise!.autoAdjustmentType == AutoAdjustmentType.apre &&
-            reps != null &&
-            actualReps != null &&
-            weight != null) {
-          final targetReps = reps;
-          final protocol = widget.exercise!.apreProtocol ??
-              APREAutoRegulationService.selectProtocolFromTargetReps(targetReps);
-
-          final suggestedWeight = APREAutoRegulationService.calculateNextSetWeight(
-            protocol: protocol,
-            currentWeight: weight,
-            targetReps: targetReps,
-            actualReps: actualReps,
-          );
-
-          // Show suggestion if weight changed
-          if ((suggestedWeight - weight).abs() > 0.1) {
-            setState(() {
-              _suggestedWeight = suggestedWeight;
-              _showWeightSuggestionBanner = true;
-            });
-            return; // Don't close modal yet, show suggestion
-          }
-        }
-      }
-
-      // No suggestions, close normally
+      // Close modal and show success
       if (mounted) {
         Navigator.pop(context);
 
@@ -799,145 +726,6 @@ class _EditSetModalState extends ConsumerState<EditSetModal> {
     );
   }
 
-  /// Build rest time suggestion banner
-  Widget _buildRestTimeSuggestionBanner(BuildContext context) {
-    final l10n = context.l10n;
-
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: context.colors.secondary.withValues(alpha: 0.1),
-        border: Border.all(color: context.colors.secondary),
-        borderRadius: BorderRadius.circular(8),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              Icon(AppIcons.timer, color: context.colors.secondary),
-              const SizedBox(width: 8),
-              Expanded(
-                child: Text(
-                  l10n.restTimeSuggestion,
-                  style: context.textTheme.titleSmall?.copyWith(
-                    fontWeight: FontWeight.bold,
-                    color: context.colors.secondary,
-                  ),
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 8),
-          Text(
-            _restTimeSuggestion!.message,
-            style: context.textTheme.bodyMedium,
-          ),
-          const SizedBox(height: 12),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              TextButton(
-                onPressed: () {
-                  setState(() {
-                    _showRestSuggestionBanner = false;
-                  });
-                  Navigator.pop(context);
-                },
-                child: Text(l10n.dismiss),
-              ),
-              const SizedBox(width: 8),
-              FilledButton(
-                onPressed: () {
-                  setState(() {
-                    _showRestSuggestionBanner = false;
-                  });
-                  // Apply suggestion logic would go here in workout_provider
-                  Navigator.pop(context);
-                },
-                child: Text(l10n.accept),
-              ),
-            ],
-          ),
-        ],
-      ),
-    );
-  }
-
-  /// Build weight adjustment suggestion banner
-  Widget _buildWeightSuggestionBanner(BuildContext context) {
-    final l10n = context.l10n;
-    final weightDiff = _suggestedWeight! - double.parse(_weightController.text);
-    final isIncrease = weightDiff > 0;
-
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: isIncrease
-            ? context.colors.success.withValues(alpha: 0.1)
-            : context.colors.primary.withValues(alpha: 0.1),
-        border: Border.all(
-          color: isIncrease ? context.colors.success : context.colors.primary,
-        ),
-        borderRadius: BorderRadius.circular(8),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              Icon(
-                isIncrease ? AppIcons.trendUp : AppIcons.trendDown,
-                color: isIncrease ? context.colors.success : context.colors.primary,
-              ),
-              const SizedBox(width: 8),
-              Expanded(
-                child: Text(
-                  'APRE Weight Adjustment',
-                  style: context.textTheme.titleSmall?.copyWith(
-                    fontWeight: FontWeight.bold,
-                    color: isIncrease ? context.colors.success : context.colors.primary,
-                  ),
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 8),
-          Text(
-            'Suggested weight for next set: ${_suggestedWeight!.toStringAsFixed(1)}kg '
-            '(${weightDiff > 0 ? "+" : ""}${weightDiff.toStringAsFixed(1)}kg)',
-            style: context.textTheme.bodyMedium,
-          ),
-          const SizedBox(height: 12),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              TextButton(
-                onPressed: () {
-                  setState(() {
-                    _showWeightSuggestionBanner = false;
-                  });
-                  Navigator.pop(context);
-                },
-                child: Text(l10n.dismiss),
-              ),
-              const SizedBox(width: 8),
-              FilledButton(
-                onPressed: () {
-                  setState(() {
-                    _weightController.text = _suggestedWeight!.toStringAsFixed(1);
-                    _showWeightSuggestionBanner = false;
-                  });
-                  // Don't close modal, let user review the updated weight
-                },
-                child: Text(l10n.accept),
-              ),
-            ],
-          ),
-        ],
-      ),
-    );
-  }
 }
 
 // Extension for easy modal showing

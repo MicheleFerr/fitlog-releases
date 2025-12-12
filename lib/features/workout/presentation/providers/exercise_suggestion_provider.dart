@@ -280,7 +280,18 @@ class ExerciseSuggestionsNotifier extends FamilyNotifier<List<SmartSuggestion>, 
 
     // Sort by priority (highest first) and take top 3
     suggestions.sort((a, b) => b.priority.compareTo(a.priority));
-    state = suggestions.take(3).toList();
+    final newSuggestions = suggestions.take(3).toList();
+
+    // Only update state if suggestions have changed (prevent unnecessary rebuilds)
+    final hasChanged = !_areSuggestionsEqual(state, newSuggestions);
+    if (!hasChanged) {
+      if (kDebugMode) {
+        debugPrint('🎯 [Suggestions] No changes detected, skipping update');
+      }
+      return;
+    }
+
+    state = newSuggestions;
 
     if (kDebugMode) {
       debugPrint('🎯 [Suggestions] App: ${context.appExperienceLevel.name.toUpperCase()} | Fitness: ${context.fitnessExperienceLevel.name.toUpperCase()}');
@@ -291,6 +302,19 @@ class ExerciseSuggestionsNotifier extends FamilyNotifier<List<SmartSuggestion>, 
         debugPrint('   - [${s.priority}] ${s.trigger}: ${s.text}');
       }
     }
+  }
+
+  /// Compare two suggestion lists for equality
+  bool _areSuggestionsEqual(List<SmartSuggestion> a, List<SmartSuggestion> b) {
+    if (a.length != b.length) return false;
+    for (int i = 0; i < a.length; i++) {
+      if (a[i].id != b[i].id ||
+          a[i].text != b[i].text ||
+          a[i].type != b[i].type) {
+        return false;
+      }
+    }
+    return true;
   }
 
   /// App education suggestions (for app beginners, regardless of fitness level)
@@ -337,20 +361,7 @@ class ExerciseSuggestionsNotifier extends FamilyNotifier<List<SmartSuggestion>, 
       trigger: 'teach_rest_timer',
     ));
 
-    // 4. Consistency tip (if it's last exercise)
-    if (context.isLastExerciseInWorkout) {
-      suggestions.add(SmartSuggestion(
-        id: 'consistency_tip',
-        text: '🎯 Suggerimento: completa almeno 3 allenamenti questa settimana',
-        type: ContributionType.tip,
-        contextType: 'motivation',
-        priority: 70,
-        createdAt: DateTime.now(),
-        trigger: 'teach_consistency',
-      ));
-    }
-
-    // 5. RPE tracking
+    // 4. RPE tracking
     suggestions.add(SmartSuggestion(
       id: 'discover_rpe',
       text: '📊 Prova a tracciare RPE per misurare la fatica percepita',
@@ -394,18 +405,8 @@ class ExerciseSuggestionsNotifier extends FamilyNotifier<List<SmartSuggestion>, 
       ));
     }
 
-    // Motivation at end of workout
-    if (context.isLastExerciseInWorkout) {
-      suggestions.add(SmartSuggestion(
-        id: 'consistency_motivation',
-        text: '💪 Ottimo allenamento! La costanza è la chiave del progresso',
-        type: ContributionType.tip,
-        contextType: 'motivation',
-        priority: 50,
-        createdAt: DateTime.now(),
-        trigger: 'workout_complete',
-      ));
-    }
+    // NOTE: Workout-level motivation messages moved to workout completion flow
+    // (shown via snackbar/modal when finishing workout, not on exercise cards)
   }
 
   /// Fitness intermediate suggestions: Light community engagement
@@ -453,18 +454,8 @@ class ExerciseSuggestionsNotifier extends FamilyNotifier<List<SmartSuggestion>, 
       ));
     }
 
-    // Light community: Share experience (only at end of workout)
-    if (context.isLastExerciseInWorkout && !context.hasExistingTips) {
-      suggestions.add(SmartSuggestion(
-        id: 'share_experience',
-        text: '💭 Come è andato l\'allenamento di oggi?',
-        type: ContributionType.tip,
-        contextType: 'workout_reflection',
-        priority: 40,
-        createdAt: DateTime.now(),
-        trigger: 'workout_complete',
-      ));
-    }
+    // NOTE: Workout-level reflection messages moved to workout completion flow
+    // (shown via snackbar/modal when finishing workout, not on exercise cards)
   }
 
   /// Fitness expert suggestions: Full community engagement + data corrections

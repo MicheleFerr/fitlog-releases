@@ -29,7 +29,7 @@ class AppConfig { // Auto-adjust rest time based on RPE feedback
     this.autoRestTimer = true, // Auto-start rest timer for convenience
     this.setDurationTracking,
     this.plateCalculator = true, // Useful tool enabled by default
-    this.warmupSuggestions = true, // Helpful for user safety
+    @Deprecated('Warmup suggestions toggle removed') this.warmupSuggestions,
     this.availablePlates,
     this.isProMode,
     this.autoCollapseCompleted,
@@ -81,7 +81,6 @@ class AppConfig { // Auto-adjust rest time based on RPE feedback
       rpeTracking: json['rpeTracking'] ?? true,
       autoRestTimer: json['autoRestTimer'] ?? true,
       plateCalculator: json['plateCalculator'] ?? true,
-      warmupSuggestions: json['warmupSuggestions'] ?? true,
       hasSeenWorkoutOnboarding: json['hasSeenWorkoutOnboarding'] ?? false,
       onboardingVersion: json['onboardingVersion'] ?? 1,
       betaModeEnabled: json['betaModeEnabled'] ?? false,
@@ -155,7 +154,8 @@ class AppConfig { // Auto-adjust rest time based on RPE feedback
   final bool? plateCalculator; // Show plate calculator
   
   @HiveField(22)
-  final bool? warmupSuggestions; // Show warmup suggestions
+  @Deprecated('Warmup suggestions toggle removed - warmup sets always available via menu')
+  final bool? warmupSuggestions;
   
   @HiveField(23)
   final List<double>? availablePlates; // Available plates in gym
@@ -253,7 +253,7 @@ class AppConfig { // Auto-adjust rest time based on RPE feedback
     bool? autoRestTimer,
     bool? setDurationTracking,
     bool? plateCalculator,
-    bool? warmupSuggestions,
+    @Deprecated('Warmup suggestions toggle removed') bool? warmupSuggestions,
     List<double>? availablePlates,
     bool? isProMode,
     bool? autoCollapseCompleted,
@@ -301,7 +301,7 @@ class AppConfig { // Auto-adjust rest time based on RPE feedback
       autoRestTimer: autoRestTimer ?? this.autoRestTimer,
       setDurationTracking: setDurationTracking ?? this.setDurationTracking,
       plateCalculator: plateCalculator ?? this.plateCalculator,
-      warmupSuggestions: warmupSuggestions ?? this.warmupSuggestions,
+      warmupSuggestions: warmupSuggestions, // Deprecated - ignored
       availablePlates: availablePlates ?? this.availablePlates,
       isProMode: isProMode ?? this.isProMode,
       autoCollapseCompleted: autoCollapseCompleted ?? this.autoCollapseCompleted,

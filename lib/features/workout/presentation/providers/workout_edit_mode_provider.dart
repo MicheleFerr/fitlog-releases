@@ -36,6 +36,7 @@ class WorkoutEditModeNotifier extends Notifier<WorkoutEditModeState> {
     ref.onDispose(() {
       _hintTimer?.cancel();
       _autoExitTimer?.cancel();
+      _hideHintTimer?.cancel(); // ✅ MEMORY FIX: Cancel nested timer
     });
 
     _startHintTimer();
@@ -44,16 +45,19 @@ class WorkoutEditModeNotifier extends Notifier<WorkoutEditModeState> {
 
   Timer? _hintTimer;
   Timer? _autoExitTimer;
+  Timer? _hideHintTimer; // ✅ MEMORY FIX: Store nested timer reference
 
   void _startHintTimer() {
     _hintTimer?.cancel();
+    _hideHintTimer?.cancel(); // ✅ MEMORY FIX: Cancel any existing hide timer
+
     // Show hint after 2 seconds, hide after 6 seconds total
     _hintTimer = Timer(const Duration(seconds: 2), () {
       if (!state.isEditMode) {
         state = state.copyWith(showSwipeHint: true);
-        
-        // Hide hint after 4 more seconds
-        Timer(const Duration(seconds: 4), () {
+
+        // ✅ MEMORY FIX: Store timer reference for proper disposal
+        _hideHintTimer = Timer(const Duration(seconds: 4), () {
           if (!state.isEditMode) {
             state = state.copyWith(showSwipeHint: false);
           }

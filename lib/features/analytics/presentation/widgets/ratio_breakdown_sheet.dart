@@ -197,9 +197,7 @@ class RatioBreakdownSheet extends StatelessWidget {
           decoration: BoxDecoration(
             color: accentColor.withValues(alpha: 0.1),
             borderRadius: BorderRadius.circular(12),
-            border: Border.all(
-              color: accentColor.withValues(alpha: 0.3),
-            ),
+            // Rimosso border per eliminare effetto rumore
           ),
           child: Row(
             children: [

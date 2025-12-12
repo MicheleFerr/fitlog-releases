@@ -2,11 +2,12 @@
 ///
 /// 📁 Exercise List Item Component
 /// Barrel file exporting all exercise list item sub-components
-///
-/// NOTE: Sets component NOT extracted yet - too tightly coupled with main widget state.
-/// See refactoring status report for details.
 library;
 
+// Main widget - refactored modular version
+export 'exercise_list_item_orchestrator.dart';
+
+// Sub-components
 export 'exercise_list_item_header.dart';
 export 'exercise_list_item_actions.dart';
-// TODO: export 'exercise_list_item_sets.dart'; // Requires state management refactor first
+export 'exercise_list_item_sets.dart';

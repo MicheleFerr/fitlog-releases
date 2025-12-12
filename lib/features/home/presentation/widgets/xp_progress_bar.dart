@@ -4,220 +4,177 @@
 /// Feature: Gamification
 /// Type: Widget
 ///
-/// XP Progress bar with journey theme styling.
+/// XP Progress bar with clean, minimal design.
 /// Shows current XP and progress to next tier.
 library;
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:gymbro_flutter_new/features/home/providers/achievement_xp_provider.dart';
+import 'package:gymbro_flutter_new/core/domain/entities/user_tier.dart';
+import 'package:gymbro_flutter_new/features/home/providers/user_xp_provider.dart';
 import 'package:gymbro_flutter_new/features/profile/presentation/widgets/compact_profile_header.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
 
-/// XP Progress bar widget with journey theme styling
-class XPProgressBar extends ConsumerStatefulWidget {
+/// XP Progress bar widget with clean minimal design
+/// Uses userXPProvider (single source of truth) for XP data
+class XPProgressBar extends ConsumerWidget {
   const XPProgressBar({super.key});
 
   @override
-  ConsumerState<XPProgressBar> createState() => _XPProgressBarState();
-}
+  Widget build(BuildContext context, WidgetRef ref) {
+    // Use userXPProvider - same as profile for consistency
+    final xpState = ref.watch(userXPProvider);
 
-class _XPProgressBarState extends ConsumerState<XPProgressBar>
-    with SingleTickerProviderStateMixin {
-  late AnimationController _shimmerController;
+    // Show loading skeleton while loading
+    if (xpState.isLoading) {
+      return _buildLoadingSkeleton(context);
+    }
 
-  @override
-  void initState() {
-    super.initState();
-    _shimmerController = AnimationController(
-      vsync: this,
-      duration: const Duration(milliseconds: 2000),
-    )..repeat();
-  }
+    // Show nothing on error
+    if (xpState.error != null) {
+      return const SizedBox.shrink();
+    }
 
-  @override
-  void dispose() {
-    _shimmerController.dispose();
-    super.dispose();
-  }
+    final currentXP = xpState.totalXP;
+    final currentTier = xpState.currentTier;
+    final nextTier = _getNextTier(currentTier);
+    final progress = xpState.tierProgress;
 
-  @override
-  Widget build(BuildContext context) {
-    final achievementData = ref.watch(achievementXPProvider);
-    final journeyTheme = context.journeyThemeOrDefault;
-
-    return achievementData.when(
-      data: (data) {
-        final currentXP = data.totalXP;
-        final currentTier = UserTier.fromXP(currentXP);
-        final nextTier = _getNextTier(currentTier);
-        final progress = _calculateProgress(currentXP, currentTier, nextTier);
-
-        return Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16),
-          child: Container(
-            padding: const EdgeInsets.all(16),
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-                colors: [
-                  journeyTheme.primaryColor.withValues(alpha: 0.15),
-                  journeyTheme.secondaryColor.withValues(alpha: 0.1),
-                ],
-              ),
-              borderRadius: BorderRadius.circular(16),
-              border: Border.all(
-                color: journeyTheme.primaryColor.withValues(alpha: 0.3),
-                width: 1,
-              ),
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisSize: MainAxisSize.min,
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16),
+      child: Container(
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: context.colors.surfaceContainerLow,
+          borderRadius: BorderRadius.circular(16),
+          border: Border.all(
+            color: context.colors.outlineVariant.withValues(alpha: 0.5),
+            width: 1,
+          ),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            // Header row with tier info
+            Row(
               children: [
-                // Header row with tier info
-                Row(
-                  children: [
-                    // Tier icon
-                    _buildTierIcon(context, currentTier, journeyTheme.primaryColor),
-                    const SizedBox(width: 12),
+                // Tier icon - simple, no glow
+                _buildTierIcon(context, currentTier),
+                const SizedBox(width: 12),
 
-                    // Tier and XP info
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            currentTier.displayName,
-                            style: context.textTheme.titleMedium?.copyWith(
-                              fontWeight: FontWeight.bold,
-                              color: journeyTheme.primaryColor,
-                            ),
-                          ),
-                          Text(
-                            '$currentXP XP',
-                            style: context.textTheme.bodySmall?.copyWith(
-                              color: context.colors.onSurfaceVariant,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-
-                    // Next tier indicator
-                    if (nextTier != null) ...[
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.end,
-                        children: [
-                          Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Icon(
-                                AppIcons.trendUp,
-                                size: AppIconSize.tiny,
-                                color: journeyTheme.secondaryColor,
-                              ),
-                              const SizedBox(width: 4),
-                              Text(
-                                nextTier.displayName,
-                                style: context.textTheme.labelMedium?.copyWith(
-                                  color: nextTier.color,
-                                  fontWeight: FontWeight.w600,
-                                ),
-                              ),
-                            ],
-                          ),
-                          Text(
-                            '${nextTier.minXP - currentXP} XP ${context.l10n.remaining}',
-                            style: context.textTheme.labelSmall?.copyWith(
-                              color: context.colors.onSurfaceVariant,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ] else ...[
-                      // Max tier reached
-                      Container(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 10,
-                          vertical: 4,
+                // Tier and XP info
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        currentTier.displayName,
+                        style: context.textTheme.titleMedium?.copyWith(
+                          fontWeight: FontWeight.bold,
+                          color: context.colors.onSurface,
                         ),
-                        decoration: BoxDecoration(
-                          color: journeyTheme.primaryColor.withValues(alpha: 0.2),
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        child: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Icon(
-                              AppIcons.star,
-                              size: AppIconSize.tiny,
-                              color: journeyTheme.primaryColor,
-                            ),
-                            const SizedBox(width: 4),
-                            Text(
-                              context.l10n.maxLevel,
-                              style: context.textTheme.labelSmall?.copyWith(
-                                color: journeyTheme.primaryColor,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ],
+                      ),
+                      Text(
+                        '$currentXP XP',
+                        style: context.textTheme.bodySmall?.copyWith(
+                          color: context.colors.onSurfaceVariant,
                         ),
                       ),
                     ],
-                  ],
+                  ),
                 ),
 
-                const SizedBox(height: 12),
-
-                // Progress bar
-                _buildProgressBar(
-                  context,
-                  progress,
-                  journeyTheme.primaryColor,
-                  journeyTheme.secondaryColor,
-                ),
+                // Next tier indicator
+                if (nextTier != null) ...[
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Icon(
+                            AppIcons.trendUp,
+                            size: AppIconSize.tiny,
+                            color: context.colors.primary,
+                          ),
+                          const SizedBox(width: 4),
+                          Text(
+                            nextTier.displayName,
+                            style: context.textTheme.labelMedium?.copyWith(
+                              color: context.colors.onSurfaceVariant,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                        ],
+                      ),
+                      Text(
+                        '${xpState.xpToNextTier} XP ${context.l10n.remaining}',
+                        style: context.textTheme.labelSmall?.copyWith(
+                          color: context.colors.onSurfaceVariant,
+                        ),
+                      ),
+                    ],
+                  ),
+                ] else ...[
+                  // Max tier reached
+                  Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 10,
+                      vertical: 4,
+                    ),
+                    decoration: BoxDecoration(
+                      color: context.colors.primaryContainer,
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Icon(
+                          AppIcons.star,
+                          size: AppIconSize.tiny,
+                          color: context.colors.onPrimaryContainer,
+                        ),
+                        const SizedBox(width: 4),
+                        Text(
+                          context.l10n.maxLevel,
+                          style: context.textTheme.labelSmall?.copyWith(
+                            color: context.colors.onPrimaryContainer,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
               ],
             ),
-          ),
-        );
-      },
-      loading: () => _buildLoadingSkeleton(context),
-      error: (_, __) => const SizedBox.shrink(),
+
+            const SizedBox(height: 12),
+
+            // Progress bar - clean, no shimmer
+            _buildProgressBar(context, progress),
+          ],
+        ),
+      ),
     );
   }
 
-  Widget _buildTierIcon(BuildContext context, UserTier tier, Color themeColor) {
+  Widget _buildTierIcon(BuildContext context, UserTier tier) {
     return Container(
-      width: 48,
-      height: 48,
+      width: 44,
+      height: 44,
       decoration: BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          colors: [
-            tier.color,
-            tier.color.withValues(alpha: 0.7),
-          ],
-        ),
+        color: context.colors.primaryContainer,
         shape: BoxShape.circle,
-        boxShadow: [
-          BoxShadow(
-            color: tier.color.withValues(alpha: 0.4),
-            blurRadius: 8,
-            offset: const Offset(0, 2),
-          ),
-        ],
       ),
       child: Center(
         child: Icon(
           _getTierIcon(tier),
-          color: Colors.white,
-          size: AppIconSize.medium,
+          color: context.colors.onPrimaryContainer,
+          size: AppIconSize.small,
         ),
       ),
     );
@@ -238,88 +195,29 @@ class _XPProgressBarState extends ConsumerState<XPProgressBar>
     }
   }
 
-  Widget _buildProgressBar(
-    BuildContext context,
-    double progress,
-    Color primaryColor,
-    Color secondaryColor,
-  ) {
+  Widget _buildProgressBar(BuildContext context, double progress) {
     return ClipRRect(
-      borderRadius: BorderRadius.circular(6),
+      borderRadius: BorderRadius.circular(4),
       child: Stack(
         children: [
           // Background
           Container(
-            height: 12,
+            height: 8,
             decoration: BoxDecoration(
               color: context.colors.surfaceContainerHighest,
             ),
           ),
 
-          // Progress fill with gradient
+          // Progress fill - solid color, no gradient
           AnimatedContainer(
-            duration: const Duration(milliseconds: 500),
+            duration: const Duration(milliseconds: 400),
             curve: Curves.easeOutCubic,
-            height: 12,
+            height: 8,
             width: (MediaQuery.of(context).size.width - 64) * progress,
             decoration: BoxDecoration(
-              gradient: LinearGradient(
-                colors: [primaryColor, secondaryColor],
-              ),
+              color: context.colors.primary,
             ),
           ),
-
-          // Shimmer effect
-          AnimatedBuilder(
-            animation: _shimmerController,
-            builder: (context, child) {
-              final shimmerPosition = _shimmerController.value;
-              return Positioned.fill(
-                child: ClipRect(
-                  child: Transform.translate(
-                    offset: Offset(
-                      (MediaQuery.of(context).size.width - 64) *
-                          (shimmerPosition * 2 - 0.5),
-                      0,
-                    ),
-                    child: Container(
-                      width: 40,
-                      decoration: BoxDecoration(
-                        gradient: LinearGradient(
-                          colors: [
-                            Colors.white.withValues(alpha: 0.0),
-                            Colors.white.withValues(alpha: 0.3),
-                            Colors.white.withValues(alpha: 0.0),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-              );
-            },
-          ),
-
-          // Progress dots
-          if (progress > 0.1)
-            Positioned(
-              left: (MediaQuery.of(context).size.width - 64) * progress - 8,
-              top: 2,
-              child: Container(
-                width: 8,
-                height: 8,
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  shape: BoxShape.circle,
-                  boxShadow: [
-                    BoxShadow(
-                      color: primaryColor.withValues(alpha: 0.5),
-                      blurRadius: 4,
-                    ),
-                  ],
-                ),
-              ),
-            ),
         ],
       ),
     );
@@ -351,18 +249,5 @@ class _XPProgressBarState extends ConsumerState<XPProgressBar>
       case UserTier.platinum:
         return null; // Max tier
     }
-  }
-
-  double _calculateProgress(int currentXP, UserTier current, UserTier? next) {
-    if (next == null) return 1.0; // Max tier
-
-    final tierStart = current.minXP;
-    final tierEnd = next.minXP;
-    final range = tierEnd - tierStart;
-
-    if (range <= 0) return 1.0;
-
-    final progress = (currentXP - tierStart) / range;
-    return progress.clamp(0.0, 1.0);
   }
 }

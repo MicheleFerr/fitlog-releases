@@ -17,10 +17,15 @@ import 'package:gymbro_flutter_new/features/auth/presentation/providers/auth_pro
 import 'package:gymbro_flutter_new/features/auth/presentation/providers/consolidated_user_provider.dart';
 import 'package:gymbro_flutter_new/features/progress/domain/entities/progress_data.dart';
 import 'package:flutter/foundation.dart';
+import 'package:gymbro_flutter_new/shared/data/mixins/firestore_cache_first_mixin.dart';
+
+/// Helper class for cache-first Firestore operations
+class _CacheHelper with FirestoreCacheFirstMixin {}
+
+final _cache = _CacheHelper();
 
 /// Dashboard stats entity for home screen
 class DashboardStats {
-
   const DashboardStats({
     required this.currentStreak,
     required this.totalWorkouts,
@@ -54,43 +59,48 @@ class DashboardStats {
 /// Provider for dashboard stats - combines multiple optimized providers
 /// 🔧 MEMORY FIX: Added autoDispose to prevent memory leaks
 /// Automatically disposes provider instances when widget is disposed
-final optimizedDashboardStatsProvider = FutureProvider.autoDispose<DashboardStats>((ref) async {
-  final streak = await ref.watch(optimizedStreakProvider.future);
-  final quickStats = await ref.watch(optimizedQuickStatsProvider.future);
-  final frequency = await ref.watch(optimizedMonthlyFrequencyProvider.future);
+final optimizedDashboardStatsProvider =
+    FutureProvider.autoDispose<DashboardStats>((ref) async {
+      final streak = await ref.watch(optimizedStreakProvider.future);
+      final quickStats = await ref.watch(optimizedQuickStatsProvider.future);
+      final frequency = await ref.watch(
+        optimizedMonthlyFrequencyProvider.future,
+      );
 
-  if (kDebugMode) {
-    debugPrint('📊 Dashboard Stats Debug:');
-  }
-  if (kDebugMode) {
-    debugPrint('  - Streak: $streak');
-  }
-  if (kDebugMode) {
-    debugPrint('  - Total Workouts: ${quickStats?.totalWorkouts ?? 0}');
-  }
-  if (kDebugMode) {
-    debugPrint('  - Weekly Frequency: $frequency');
-  }
-  if (kDebugMode) {
-    debugPrint('  - Total Volume: ${quickStats?.totalVolume ?? 0.0}');
-  }
+      if (kDebugMode) {
+        debugPrint('📊 Dashboard Stats Debug:');
+      }
+      if (kDebugMode) {
+        debugPrint('  - Streak: $streak');
+      }
+      if (kDebugMode) {
+        debugPrint('  - Total Workouts: ${quickStats?.totalWorkouts ?? 0}');
+      }
+      if (kDebugMode) {
+        debugPrint('  - Weekly Frequency: $frequency');
+      }
+      if (kDebugMode) {
+        debugPrint('  - Total Volume: ${quickStats?.totalVolume ?? 0.0}');
+      }
 
-  return DashboardStats(
-    currentStreak: streak,
-    totalWorkouts: quickStats?.totalWorkouts ?? 0,
-    weeklyFrequency: frequency,
-    totalVolume: quickStats?.totalVolume ?? 0.0,
-    volumeIncrease: quickStats?.volumeIncrease ?? 0.0,
-    maxPR: quickStats?.maxPR ?? 0.0,
-    prExercise: quickStats?.prExercise ?? 'N/A',
-  );
-});
+      return DashboardStats(
+        currentStreak: streak,
+        totalWorkouts: quickStats?.totalWorkouts ?? 0,
+        weeklyFrequency: frequency,
+        totalVolume: quickStats?.totalVolume ?? 0.0,
+        volumeIncrease: quickStats?.volumeIncrease ?? 0.0,
+        maxPR: quickStats?.maxPR ?? 0.0,
+        prExercise: quickStats?.prExercise ?? 'N/A',
+      );
+    });
 
 /// Provider for quick stats using pre-calculated counters
 /// MUCH MORE EFFICIENT than counting all documents
 /// 🔧 MEMORY FIX: Added autoDispose to prevent memory leaks
 /// Automatically disposes provider instances when widget is disposed
-final optimizedQuickStatsProvider = FutureProvider.autoDispose<QuickStats?>((ref) async {
+final optimizedQuickStatsProvider = FutureProvider.autoDispose<QuickStats?>((
+  ref,
+) async {
   final authService = ref.watch(authServiceProvider);
   final currentUser = authService.currentUser;
 
@@ -100,12 +110,11 @@ final optimizedQuickStatsProvider = FutureProvider.autoDispose<QuickStats?>((ref
 
   try {
     // Get user document with pre-calculated stats
-    final userDoc = await FirebaseFirestore.instance
-        .collection('users')
-        .doc(currentUser.uid)
-        .get();
+    final userDoc = await _cache.getCacheFirst(
+      FirebaseFirestore.instance.collection('users').doc(currentUser.uid),
+    );
 
-    if (!userDoc.exists) {
+    if (userDoc == null || !userDoc.exists) {
       if (kDebugMode) {
         debugPrint('⚠️ User document does not exist for ${currentUser.uid}');
       }
@@ -131,15 +140,18 @@ final optimizedQuickStatsProvider = FutureProvider.autoDispose<QuickStats?>((ref
     // FALLBACK: If stats don't exist, count actual workouts
     if (totalWorkouts == 0 && stats.isEmpty) {
       if (kDebugMode) {
-        debugPrint('⚠️ No pre-calculated stats found, counting workouts manually...');
+        debugPrint(
+          '⚠️ No pre-calculated stats found, counting workouts manually...',
+        );
       }
 
       // Count actual workouts from exerciseActivities
-      final workoutQuery = await FirebaseFirestore.instance
-          .collection('exerciseActivities')
-          .where('email', isEqualTo: currentUser.email!.toLowerCase().trim())
-          .limit(500)  // Limit to prevent excessive reads
-          .get();
+      final workoutQuery = await _cache.queryCacheFirst(
+        FirebaseFirestore.instance
+            .collection('exerciseActivities')
+            .where('email', isEqualTo: currentUser.email!.toLowerCase().trim())
+            .limit(500), // Limit to prevent excessive reads
+      );
 
       totalWorkouts = workoutQuery.docs.length;
       if (kDebugMode) {
@@ -152,7 +164,8 @@ final optimizedQuickStatsProvider = FutureProvider.autoDispose<QuickStats?>((ref
         final sets = data['sets'] as List<dynamic>? ?? [];
 
         for (final set in sets) {
-          if (set is Map<String, dynamic> && (set['done'] == true || set['isCompleted'] == true)) {
+          if (set is Map<String, dynamic> &&
+              (set['done'] == true || set['isCompleted'] == true)) {
             final weight = (set['weight'] as num?)?.toDouble() ?? 0;
             final reps = (set['reps'] as num?)?.toInt() ?? 0;
             totalVolume += weight * reps;
@@ -166,10 +179,10 @@ final optimizedQuickStatsProvider = FutureProvider.autoDispose<QuickStats?>((ref
             .collection('users')
             .doc(currentUser.uid)
             .update({
-          'stats.totalWorkouts': totalWorkouts,
-          'stats.totalVolume': totalVolume,
-          'stats.lastUpdated': FieldValue.serverTimestamp(),
-        });
+              'stats.totalWorkouts': totalWorkouts,
+              'stats.totalVolume': totalVolume,
+              'stats.lastUpdated': FieldValue.serverTimestamp(),
+            });
         if (kDebugMode) {
           debugPrint('✅ Updated user stats in Firebase');
         }
@@ -183,13 +196,14 @@ final optimizedQuickStatsProvider = FutureProvider.autoDispose<QuickStats?>((ref
     // For volume increase, we still need recent data (last 30 days)
     // But we can limit the query significantly
     final thirtyDaysAgo = DateTime.now().subtract(const Duration(days: 30));
-    final recentQuery = await FirebaseFirestore.instance
-        .collection('exerciseActivities')
-        .where('email', isEqualTo: currentUser.email!.toLowerCase().trim())
-        .where('createdAt', isGreaterThan: Timestamp.fromDate(thirtyDaysAgo))
-        .orderBy('createdAt', descending: true)
-        .limit(50)  // Only need recent ones for trend
-        .get();
+    final recentQuery = await _cache.queryCacheFirst(
+      FirebaseFirestore.instance
+          .collection('exerciseActivities')
+          .where('email', isEqualTo: currentUser.email!.toLowerCase().trim())
+          .where('createdAt', isGreaterThan: Timestamp.fromDate(thirtyDaysAgo))
+          .orderBy('createdAt', descending: true)
+          .limit(50), // Only need recent ones for trend
+    );
 
     double recentVolume = 0;
     double maxPR = 0;
@@ -200,7 +214,8 @@ final optimizedQuickStatsProvider = FutureProvider.autoDispose<QuickStats?>((ref
       final sets = data['sets'] as List<dynamic>? ?? [];
 
       for (final set in sets) {
-        if (set is Map<String, dynamic> && (set['done'] == true || set['isCompleted'] == true)) {
+        if (set is Map<String, dynamic> &&
+            (set['done'] == true || set['isCompleted'] == true)) {
           final weight = (set['weight'] as num?)?.toDouble() ?? 0;
           final reps = (set['reps'] as num?)?.toInt() ?? 0;
           recentVolume += weight * reps;
@@ -215,7 +230,8 @@ final optimizedQuickStatsProvider = FutureProvider.autoDispose<QuickStats?>((ref
     }
 
     // Calculate volume increase (simplified)
-    final monthlyAverage = totalVolume / (totalWorkouts > 0 ? totalWorkouts : 1) * 4;
+    final monthlyAverage =
+        totalVolume / (totalWorkouts > 0 ? totalWorkouts : 1) * 4;
     final volumeIncrease = monthlyAverage > 0
         ? ((recentVolume - monthlyAverage) / monthlyAverage * 100)
         : 0;
@@ -265,20 +281,23 @@ final optimizedStreakProvider = FutureProvider.autoDispose<int>((ref) async {
   // If no last workout date, try to find workouts
   if (lastWorkoutTimestamp == null) {
     if (kDebugMode) {
-      debugPrint('⚠️ No lastWorkoutDate in stats, checking for actual workouts...');
+      debugPrint(
+        '⚠️ No lastWorkoutDate in stats, checking for actual workouts...',
+      );
     }
   }
 
   // Only query last 7 days for streak calculation
   final sevenDaysAgo = DateTime.now().subtract(const Duration(days: 7));
 
-  final query = await FirebaseFirestore.instance
-      .collection('exerciseActivities')
-      .where('email', isEqualTo: currentUser!.email!.toLowerCase().trim())
-      .where('createdAt', isGreaterThan: Timestamp.fromDate(sevenDaysAgo))
-      .orderBy('createdAt', descending: true)
-      .limit(20)  // Max 20 workouts in 7 days is plenty
-      .get();
+  final query = await _cache.queryCacheFirst(
+    FirebaseFirestore.instance
+        .collection('exerciseActivities')
+        .where('email', isEqualTo: currentUser!.email!.toLowerCase().trim())
+        .where('createdAt', isGreaterThan: Timestamp.fromDate(sevenDaysAgo))
+        .orderBy('createdAt', descending: true)
+        .limit(20), // Max 20 workouts in 7 days is plenty
+  );
 
   if (query.docs.isEmpty) return 0;
 
@@ -288,7 +307,8 @@ final optimizedStreakProvider = FutureProvider.autoDispose<int>((ref) async {
     final timestamp = doc.data()['createdAt'] as Timestamp?;
     if (timestamp != null) {
       final date = timestamp.toDate();
-      final dayKey = '${date.year}-${date.month.toString().padLeft(2, '0')}-${date.day.toString().padLeft(2, '0')}';
+      final dayKey =
+          '${date.year}-${date.month.toString().padLeft(2, '0')}-${date.day.toString().padLeft(2, '0')}';
       workoutDays.add(dayKey);
     }
   }
@@ -299,7 +319,8 @@ final optimizedStreakProvider = FutureProvider.autoDispose<int>((ref) async {
 
   for (int i = 0; i < 7; i++) {
     final checkDate = today.subtract(Duration(days: i));
-    final dayKey = '${checkDate.year}-${checkDate.month.toString().padLeft(2, '0')}-${checkDate.day.toString().padLeft(2, '0')}';
+    final dayKey =
+        '${checkDate.year}-${checkDate.month.toString().padLeft(2, '0')}-${checkDate.day.toString().padLeft(2, '0')}';
 
     if (workoutDays.contains(dayKey)) {
       streak++;
@@ -323,7 +344,9 @@ final optimizedCurrentStreakProvider = optimizedStreakProvider;
 
 /// 🔧 MEMORY FIX: Added autoDispose to prevent memory leaks
 /// Automatically disposes provider instances when widget is disposed
-final optimizedMonthlyFrequencyProvider = FutureProvider.autoDispose<double>((ref) async {
+final optimizedMonthlyFrequencyProvider = FutureProvider.autoDispose<double>((
+  ref,
+) async {
   final userProfile = await ref.watch(cachedUserProfileProvider.future);
 
   if (userProfile == null) {
@@ -336,7 +359,9 @@ final optimizedMonthlyFrequencyProvider = FutureProvider.autoDispose<double>((re
   // FALLBACK: If no monthly count, count from last 30 days
   if (monthlyWorkouts == 0 && stats.isEmpty) {
     if (kDebugMode) {
-      debugPrint('⚠️ No monthly workout count, calculating from recent workouts...');
+      debugPrint(
+        '⚠️ No monthly workout count, calculating from recent workouts...',
+      );
     }
 
     final authService = ref.read(authServiceProvider);
@@ -345,12 +370,16 @@ final optimizedMonthlyFrequencyProvider = FutureProvider.autoDispose<double>((re
     if (currentUser?.email != null) {
       final thirtyDaysAgo = DateTime.now().subtract(const Duration(days: 30));
 
-      final monthQuery = await FirebaseFirestore.instance
-          .collection('exerciseActivities')
-          .where('email', isEqualTo: currentUser!.email!.toLowerCase().trim())
-          .where('createdAt', isGreaterThan: Timestamp.fromDate(thirtyDaysAgo))
-          .limit(100)
-          .get();
+      final monthQuery = await _cache.queryCacheFirst(
+        FirebaseFirestore.instance
+            .collection('exerciseActivities')
+            .where('email', isEqualTo: currentUser!.email!.toLowerCase().trim())
+            .where(
+              'createdAt',
+              isGreaterThan: Timestamp.fromDate(thirtyDaysAgo),
+            )
+            .limit(100),
+      );
 
       monthlyWorkouts = monthQuery.docs.length;
       if (kDebugMode) {

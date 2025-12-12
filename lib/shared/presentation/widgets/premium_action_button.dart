@@ -127,9 +127,9 @@ class _PremiumActionButtonState extends State<PremiumActionButton>
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
 
-    final backgroundColor = widget.backgroundColor ?? colorScheme.primary;
-    final foregroundColor = widget.foregroundColor ??
-        (backgroundColor.computeLuminance() > 0.5 ? context.colors.onSurface : context.colors.surface);
+    // Use muted surface color instead of flashy primary for softer look
+    final backgroundColor = widget.backgroundColor ?? colorScheme.surfaceContainerHighest;
+    final foregroundColor = widget.foregroundColor ?? colorScheme.primary;
 
     // Combine press animation + pulse animation
     return AnimatedBuilder(
@@ -229,10 +229,10 @@ class CompactActionButton extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
-    
-    final backgroundColor = this.backgroundColor ?? colorScheme.primary;
-    final foregroundColor = this.foregroundColor ?? 
-        (backgroundColor.computeLuminance() > 0.5 ? context.colors.onSurface : context.colors.surface);
+
+    // Use muted surface color instead of flashy primary for softer look
+    final backgroundColor = this.backgroundColor ?? colorScheme.surfaceContainerHighest;
+    final foregroundColor = this.foregroundColor ?? colorScheme.primary;
     
     return Stack(
       children: [
@@ -243,7 +243,7 @@ class CompactActionButton extends StatelessWidget {
             shape: BoxShape.circle,
             boxShadow: [
               BoxShadow(
-                color: backgroundColor.withValues(alpha: 0.3),
+                color: colorScheme.shadow.withValues(alpha: 0.2),
                 blurRadius: 8,
                 offset: const Offset(0, 3),
               ),

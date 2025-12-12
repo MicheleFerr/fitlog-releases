@@ -705,13 +705,14 @@ class _AnalyticsInsightsTabState extends ConsumerState<AnalyticsInsightsTab> {
 
     if (data == null) return;
 
+    final safeMax = ModalService.safeMaxChildSize(context, preferredMax: 0.9);
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
       builder: (context) => DraggableScrollableSheet(
         initialChildSize: 0.6,
         minChildSize: 0.4,
-        maxChildSize: 0.9,
+        maxChildSize: safeMax,
         expand: false,
         builder: (context, scrollController) => Container(
           padding: const EdgeInsets.all(24),

@@ -174,19 +174,12 @@ class ExerciseHeader extends ConsumerWidget {
     );
   }
 
-  /// Builds the badge row with APRE, timer, and countdown indicators
+  /// Builds the badge row with timer and countdown indicators
   Widget _buildBadgeRow(BuildContext context, WidgetRef ref) {
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
       child: Row(
         children: [
-          // APRE badge indicator (tappable)
-          if (exercise.autoAdjustmentType == AutoAdjustmentType.apre &&
-              (config.enableApre ?? false)) ...[
-            _buildApreBadge(context),
-            const SizedBox(width: 8),
-          ],
-
           // Timer indicator (if TUT/duration configured)
           if (exercise.tut != null) ...[
             _buildTimerBadge(context),
@@ -196,43 +189,6 @@ class ExerciseHeader extends ConsumerWidget {
           // Auto-collapse countdown indicator
           if (countdown > 0 && isExpanded) _buildCountdownBadge(context),
         ],
-      ),
-    );
-  }
-
-  Widget _buildApreBadge(BuildContext context) {
-    return InkWell(
-      onTap: onShowAutoAdjustmentModal,
-      borderRadius: BorderRadius.circular(8),
-      child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-        decoration: BoxDecoration(
-          color: context.colors.primary.withValues(alpha: 0.15),
-          borderRadius: BorderRadius.circular(8),
-          border: Border.all(
-            color: context.colors.primary.withValues(alpha: 0.4),
-            width: 1,
-          ),
-        ),
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            SemanticIcon(
-              icon: AppIcons.autoAwesome,
-              semanticLabel: 'AI suggestion',
-              size: AppIconSize.tiny,
-              color: context.colors.primary,
-            ),
-            const SizedBox(width: 4),
-            Text(
-              'APRE',
-              style: context.textTheme.labelSmall?.copyWith(
-                color: context.colors.primary,
-                fontWeight: FontWeight.w600,
-              ),
-            ),
-          ],
-        ),
       ),
     );
   }

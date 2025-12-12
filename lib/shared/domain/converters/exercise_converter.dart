@@ -29,6 +29,7 @@ class ExerciseConverter {
     DatabaseExercise.Exercise exercise,
   ) {
     return WorkoutExercise.Exercise(
+      id: exercise.id, // ✅ Preserve original database exercise ID
       name: exercise.nome,
       type: WorkoutExercise.ExerciseType.single,
       category: mapFocusToCategory(exercise.focus),
@@ -60,6 +61,7 @@ class ExerciseConverter {
     List<WorkoutExercise.ExerciseSet> sets,
   ) {
     return WorkoutExercise.Exercise(
+      id: exercise.id, // ✅ Preserve original database exercise ID
       name: exercise.nome,
       type: WorkoutExercise.ExerciseType.single,
       category: mapFocusToCategory(exercise.focus),

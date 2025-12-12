@@ -1,12 +1,12 @@
 /// 🏋️‍♂️ GymBro TrackLog - Flutter Fitness App
-/// 
+///
 /// 📁 Layer: data
 /// 🎯 Feature: analytics
 /// 🔧 Type: repository implementation
 /// 🌍 Localization: ✅ AppLocalizations used
 /// 🎨 Theme: ✅ ColorScheme responsive
 /// 📱 Platform: Universal
-/// 
+///
 /// Dependencies:
 /// - Firebase: Firestore
 /// - Hive: Local storage
@@ -35,8 +35,9 @@ import 'package:gymbro_flutter_new/features/analytics/data/services/analytics_ca
 /// ✅ UPDATED for HiveBoxManagerEnhanced pattern (Oct 2025)
 /// 🔒 RATE LIMITING: All Firestore operations are rate-limited to prevent quota exhaustion
 /// 💾 CACHING: Aggressive 1-hour cache for analytics to reduce Firebase reads
-class WorkoutAnalyticsRepositoryImpl with RateLimitedFirestoreMixin implements WorkoutAnalyticsRepository {
-
+class WorkoutAnalyticsRepositoryImpl
+    with RateLimitedFirestoreMixin
+    implements WorkoutAnalyticsRepository {
   WorkoutAnalyticsRepositoryImpl({
     FirebaseFirestore? firestore,
     required Box metricsCache,
@@ -45,10 +46,11 @@ class WorkoutAnalyticsRepositoryImpl with RateLimitedFirestoreMixin implements W
     HiveWorkoutDataSource? hiveWorkoutDataSource,
     AnalyticsCacheService? cacheService,
   }) : _firestore = firestore ?? FirebaseFirestore.instance,
-        _metricsCache = metricsCache,
-        _prTracker = prTracker ?? PRTracker(),
-        _hiveWorkoutDataSource = hiveWorkoutDataSource ?? HiveWorkoutDataSource(boxManager),
-        _cacheService = cacheService ?? AnalyticsCacheService(boxManager);
+       _metricsCache = metricsCache,
+       _prTracker = prTracker ?? PRTracker(),
+       _hiveWorkoutDataSource =
+           hiveWorkoutDataSource ?? HiveWorkoutDataSource(boxManager),
+       _cacheService = cacheService ?? AnalyticsCacheService(boxManager);
   final FirebaseFirestore _firestore;
   final Box _metricsCache;
   final PRTracker _prTracker;
@@ -56,7 +58,8 @@ class WorkoutAnalyticsRepositoryImpl with RateLimitedFirestoreMixin implements W
   final AnalyticsCacheService _cacheService;
 
   // Stream controllers for real-time updates
-  final Map<String, StreamController<WorkoutAnalyticsUpdate>> _updateControllers = {};
+  final Map<String, StreamController<WorkoutAnalyticsUpdate>>
+  _updateControllers = {};
 
   // Sync progress callback (can be set externally)
   Function(int current, int total)? _syncProgressCallback;
@@ -74,7 +77,11 @@ class WorkoutAnalyticsRepositoryImpl with RateLimitedFirestoreMixin implements W
   }) async {
     try {
       // 💾 CACHING: Check cache first
-      final cacheKey = AnalyticsCacheKeys.workoutHistory(userId, limit: limit, since: since);
+      final cacheKey = AnalyticsCacheKeys.workoutHistory(
+        userId,
+        limit: limit,
+        since: since,
+      );
       final cached = await _cacheService.get<List<Map<String, dynamic>>>(
         cacheKey,
         (json) => (json['workouts'] as List).cast<Map<String, dynamic>>(),
@@ -82,28 +89,38 @@ class WorkoutAnalyticsRepositoryImpl with RateLimitedFirestoreMixin implements W
 
       if (cached != null) {
         if (kDebugMode) {
-          debugPrint('💾 [Analytics] Using cached workouts (${cached.length} workouts)');
+          debugPrint(
+            '💾 [Analytics] Using cached workouts (${cached.length} workouts)',
+          );
         }
         // Convert cached data to Workout entities
-        return cached.map((workoutMap) {
-          try {
-            return Workout.fromJson(workoutMap);
-          } catch (e) {
-            if (kDebugMode) {
-              debugPrint('❌ [Analytics] Failed to parse cached workout: $e');
-            }
-            return null;
-          }
-        }).whereType<Workout>().toList();
+        return cached
+            .map((workoutMap) {
+              try {
+                return Workout.fromJson(workoutMap);
+              } catch (e) {
+                if (kDebugMode) {
+                  debugPrint(
+                    '❌ [Analytics] Failed to parse cached workout: $e',
+                  );
+                }
+                return null;
+              }
+            })
+            .whereType<Workout>()
+            .toList();
       }
 
       // ✅ HiveBoxManagerEnhanced handles initialization automatically
 
       // 🎯 PAGINATION: Default to 30 days if no since date provided
-      final effectiveSince = since ?? DateTime.now().subtract(const Duration(days: 30));
+      final effectiveSince =
+          since ?? DateTime.now().subtract(const Duration(days: 30));
 
       if (kDebugMode) {
-        debugPrint('📊 [Analytics] Fetching workouts since: ${effectiveSince.toIso8601String()}');
+        debugPrint(
+          '📊 [Analytics] Fetching workouts since: ${effectiveSince.toIso8601String()}',
+        );
       }
 
       // 🎯 SMART SYNC: Check if Firebase has more workouts than Hive
@@ -111,7 +128,9 @@ class WorkoutAnalyticsRepositoryImpl with RateLimitedFirestoreMixin implements W
       final hiveCount = await _getHiveWorkoutCount(userId);
 
       if (kDebugMode) {
-        debugPrint('📊 [Analytics] Workout count - Firebase: $firebaseCount, Hive: $hiveCount');
+        debugPrint(
+          '📊 [Analytics] Workout count - Firebase: $firebaseCount, Hive: $hiveCount',
+        );
       }
 
       // If Firebase has more workouts, sync is needed
@@ -128,11 +147,17 @@ class WorkoutAnalyticsRepositoryImpl with RateLimitedFirestoreMixin implements W
       }
 
       // Get workouts from Hive (now synced) with pagination
-      final localWorkouts = await _getLocalWorkouts(userId, limit: limit, since: effectiveSince);
+      final localWorkouts = await _getLocalWorkouts(
+        userId,
+        limit: limit,
+        since: effectiveSince,
+      );
 
       if (localWorkouts.isNotEmpty) {
         if (kDebugMode) {
-          debugPrint('📊 Analytics: Returning ${localWorkouts.length} workouts from Hive');
+          debugPrint(
+            '📊 Analytics: Returning ${localWorkouts.length} workouts from Hive',
+          );
         }
 
         // 💾 CACHING: Save to cache for next time
@@ -148,12 +173,9 @@ class WorkoutAnalyticsRepositoryImpl with RateLimitedFirestoreMixin implements W
       }
 
       return [];
-
     } catch (e, stackTrace) {
       if (kDebugMode) {
         debugPrint('❌ Error fetching historical workouts: $e');
-      }
-      if (kDebugMode) {
         debugPrint('📍 Stack trace: $stackTrace');
       }
       return [];
@@ -217,7 +239,9 @@ class WorkoutAnalyticsRepositoryImpl with RateLimitedFirestoreMixin implements W
         await _cacheService.set(cacheKey, validWorkoutCount);
 
         if (kDebugMode) {
-          debugPrint('✅ [Count] Cached $validWorkoutCount workouts for user $userId');
+          debugPrint(
+            '✅ [Count] Cached $validWorkoutCount workouts for user $userId',
+          );
         }
 
         return validWorkoutCount;
@@ -233,10 +257,11 @@ class WorkoutAnalyticsRepositoryImpl with RateLimitedFirestoreMixin implements W
   /// Get count of workouts in local Hive storage
   Future<int> _getHiveWorkoutCount(String userId) async {
     try {
-      final workoutModels = await _hiveWorkoutDataSource.getWorkoutsForAnalytics(
-        userId,
-        limit: null, // Get all to count
-      );
+      final workoutModels = await _hiveWorkoutDataSource
+          .getWorkoutsForAnalytics(
+            userId,
+            limit: null, // Get all to count
+          );
 
       // Count only completed workouts
       final completedCount = workoutModels
@@ -261,7 +286,9 @@ class WorkoutAnalyticsRepositoryImpl with RateLimitedFirestoreMixin implements W
     return await rateLimitedQuery(() async {
       try {
         if (kDebugMode) {
-          debugPrint('🔄 [Sync] Starting Firebase → Hive sync for user: $userId');
+          debugPrint(
+            '🔄 [Sync] Starting Firebase → Hive sync for user: $userId',
+          );
         }
 
         // Get ALL workouts from Firebase (many have status=null)
@@ -271,107 +298,108 @@ class WorkoutAnalyticsRepositoryImpl with RateLimitedFirestoreMixin implements W
             .where('userId', isEqualTo: userId)
             .get();
 
-      if (kDebugMode) {
-        debugPrint('🔄 [Sync] Found ${snapshot.docs.length} total workouts in Firebase');
-      }
-
-      if (snapshot.docs.isEmpty) {
         if (kDebugMode) {
-          debugPrint('⚠️ [Sync] No workouts found in Firebase for user: $userId');
-        }
-        return;
-      }
-
-      // Filter to only workouts with actual data (exercises or name)
-      final validDocs = snapshot.docs.where((doc) {
-        final data = doc.data();
-        final exercises = data['exercises'] as List?;
-        final name = data['name'] as String?;
-
-        final hasExercises = exercises != null && exercises.isNotEmpty;
-        final hasName = name != null && name.isNotEmpty;
-
-        return hasExercises || hasName;
-      }).toList();
-
-      // Sort by createdAt or updatedAt descending
-      validDocs.sort((a, b) {
-        final aData = a.data();
-        final bData = b.data();
-
-        // Try endTime first, then updatedAt, then createdAt
-        final aTime = aData['endTime'] ?? aData['updatedAt'] ?? aData['createdAt'];
-        final bTime = bData['endTime'] ?? bData['updatedAt'] ?? bData['createdAt'];
-
-        if (aTime == null || bTime == null) return 0;
-
-        if (aTime is Timestamp && bTime is Timestamp) {
-          return bTime.compareTo(aTime);
+          debugPrint(
+            '🔄 [Sync] Found ${snapshot.docs.length} total workouts in Firebase',
+          );
         }
 
-        return 0;
-      });
-
-      final total = totalCount ?? validDocs.length;
-      if (kDebugMode) {
-        debugPrint('🔄 [Sync] Found ${validDocs.length} valid workouts to sync (with exercises/name)');
-      }
-
-      if (validDocs.isEmpty) {
-        if (kDebugMode) {
-          debugPrint('⚠️ [Sync] No valid workouts found in Firebase for user: $userId');
-        }
-        return;
-      }
-
-      // Convert valid docs to WorkoutModel and save to Hive
-      int savedCount = 0;
-      for (final doc in validDocs) {
-        try {
+        // Filter to only workouts with actual data (exercises or name)
+        final validDocs = snapshot.docs.where((doc) {
           final data = doc.data();
-          data['id'] = doc.id;
+          final exercises = data['exercises'] as List?;
+          final name = data['name'] as String?;
 
-          // Parse WorkoutModel from Firebase data
-          final workoutModel = WorkoutModel.fromJson(data);
+          final hasExercises = exercises != null && exercises.isNotEmpty;
+          final hasName = name != null && name.isNotEmpty;
 
-          // Save to Hive
-          await _hiveWorkoutDataSource.saveWorkout(workoutModel, userId);
-          savedCount++;
+          return hasExercises || hasName;
+        }).toList();
 
-          // Notify progress
-          if (onProgress != null) {
-            onProgress(savedCount, total);
+        // Sort by createdAt or updatedAt descending
+        validDocs.sort((a, b) {
+          final aData = a.data();
+          final bData = b.data();
+
+          // Try endTime first, then updatedAt, then createdAt
+          final aTime =
+              aData['endTime'] ?? aData['updatedAt'] ?? aData['createdAt'];
+          final bTime =
+              bData['endTime'] ?? bData['updatedAt'] ?? bData['createdAt'];
+
+          if (aTime == null || bTime == null) return 0;
+
+          if (aTime is Timestamp && bTime is Timestamp) {
+            return bTime.compareTo(aTime);
           }
 
-          if (kDebugMode) {
-            debugPrint('💾 [Sync] Saved workout ${doc.id} ($savedCount/$total)');
-          }
-        } catch (e, stackTrace) {
-          if (kDebugMode) {
-            debugPrint('❌ [Sync] Failed to parse/save workout ${doc.id}: $e');
-          }
-          if (kDebugMode) {
-            debugPrint('📍 Stack trace: $stackTrace');
-          }
-          // Continue with next workout instead of failing completely
+          return 0;
+        });
+
+        final total = totalCount ?? validDocs.length;
+        if (kDebugMode) {
+          debugPrint(
+            '🔄 [Sync] Found ${validDocs.length} valid workouts to sync (with exercises/name)',
+          );
         }
-      }
+
+        if (validDocs.isEmpty) {
+          if (kDebugMode) {
+            debugPrint(
+              '⚠️ [Sync] No valid workouts found in Firebase for user: $userId',
+            );
+          }
+          return;
+        }
+
+        // Convert valid docs to WorkoutModel and save to Hive
+        int savedCount = 0;
+        for (final doc in validDocs) {
+          try {
+            final data = doc.data();
+            data['id'] = doc.id;
+
+            // Parse WorkoutModel from Firebase data
+            final workoutModel = WorkoutModel.fromJson(data);
+
+            // Save to Hive
+            await _hiveWorkoutDataSource.saveWorkout(workoutModel, userId);
+            savedCount++;
+
+            // Notify progress
+            if (onProgress != null) {
+              onProgress(savedCount, total);
+            }
+
+            if (kDebugMode) {
+              debugPrint(
+                '💾 [Sync] Saved workout ${doc.id} ($savedCount/$total)',
+              );
+            }
+          } catch (e, stackTrace) {
+            if (kDebugMode) {
+              debugPrint('❌ [Sync] Failed to parse/save workout ${doc.id}: $e');
+              debugPrint('📍 Stack trace: $stackTrace');
+            }
+            // Continue with next workout instead of failing completely
+          }
+        }
 
         if (kDebugMode) {
-          debugPrint('✅ [Sync] Successfully synced $savedCount/$total workouts to Hive');
+          debugPrint(
+            '✅ [Sync] Successfully synced $savedCount/$total workouts to Hive',
+          );
         }
       } catch (e, stackTrace) {
         if (kDebugMode) {
           debugPrint('❌ [Sync] Firebase → Hive sync failed: $e');
-        }
-        if (kDebugMode) {
           debugPrint('📍 [Sync] Stack trace: $stackTrace');
         }
         rethrow; // Re-throw to allow error handling in UI
       }
     });
   }
-  
+
   /// Get workouts from local Hive storage via HiveWorkoutDataSource
   Future<List<Workout>> _getLocalWorkouts(
     String userId, {
@@ -380,20 +408,21 @@ class WorkoutAnalyticsRepositoryImpl with RateLimitedFirestoreMixin implements W
   }) async {
     try {
       if (kDebugMode) {
-        debugPrint('📊 [Analytics] Attempting to get local workouts via HiveWorkoutDataSource for user: $userId');
+        debugPrint(
+          '📊 [Analytics] Attempting to get local workouts via HiveWorkoutDataSource for user: $userId',
+        );
       }
 
       // ✅ HiveBoxManagerEnhanced handles initialization automatically
 
       // 🔧 CRITICAL FIX: Use HiveWorkoutDataSource directly for consistency
-      final workoutModels = await _hiveWorkoutDataSource.getWorkoutsForAnalytics(
-        userId,
-        limit: limit,
-        since: since,
-      );
+      final workoutModels = await _hiveWorkoutDataSource
+          .getWorkoutsForAnalytics(userId, limit: limit, since: since);
 
       if (kDebugMode) {
-        debugPrint('📊 [Analytics] Retrieved ${workoutModels.length} workout models from HiveWorkoutDataSource');
+        debugPrint(
+          '📊 [Analytics] Retrieved ${workoutModels.length} workout models from HiveWorkoutDataSource',
+        );
       }
 
       // Convert to domain entities and filter by completion status
@@ -403,28 +432,34 @@ class WorkoutAnalyticsRepositoryImpl with RateLimitedFirestoreMixin implements W
           .toList();
 
       if (kDebugMode) {
-        debugPrint('📊 [Analytics] Found ${workouts.length} completed workouts');
+        debugPrint(
+          '📊 [Analytics] Found ${workouts.length} completed workouts',
+        );
       }
 
       // Sort by date (most recent first)
-      workouts.sort((a, b) =>
-        (b.endTime ?? b.updatedAt).compareTo(a.endTime ?? a.updatedAt)
+      workouts.sort(
+        (a, b) =>
+            (b.endTime ?? b.updatedAt).compareTo(a.endTime ?? a.updatedAt),
       );
 
       if (kDebugMode) {
-        debugPrint('✅ [Analytics] Returning ${workouts.length} local workouts via HiveWorkoutDataSource');
+        debugPrint(
+          '✅ [Analytics] Returning ${workouts.length} local workouts via HiveWorkoutDataSource',
+        );
       }
       return workouts;
     } catch (e, stackTrace) {
       if (kDebugMode) {
-        debugPrint('❌ [Analytics] CRITICAL ERROR fetching local workouts via HiveWorkoutDataSource: $e');
-      }
-      if (kDebugMode) {
+        debugPrint(
+          '❌ [Analytics] CRITICAL ERROR fetching local workouts via HiveWorkoutDataSource: $e',
+        );
         debugPrint('📍 [Analytics] Stack trace: $stackTrace');
       }
 
       // Check if it's a Hive box error
-      if (e.toString().contains('Box not found') || e.toString().contains('HiveError')) {
+      if (e.toString().contains('Box not found') ||
+          e.toString().contains('HiveError')) {
         if (kDebugMode) {
           debugPrint('🔧 [Analytics] Hive box error detected. Retrying...');
         }
@@ -432,23 +467,23 @@ class WorkoutAnalyticsRepositoryImpl with RateLimitedFirestoreMixin implements W
           // ✅ HiveBoxManagerEnhanced handles box lifecycle, just retry
 
           // Retry operation
-          final workoutModels = await _hiveWorkoutDataSource.getWorkoutsForAnalytics(
-            userId,
-            limit: limit,
-            since: since,
-          );
+          final workoutModels = await _hiveWorkoutDataSource
+              .getWorkoutsForAnalytics(userId, limit: limit, since: since);
 
           final workouts = workoutModels
               .map((model) => model.toDomain())
               .where((workout) => workout.status == WorkoutStatus.completed)
               .toList();
 
-          workouts.sort((a, b) =>
-            (b.endTime ?? b.updatedAt).compareTo(a.endTime ?? a.updatedAt)
+          workouts.sort(
+            (a, b) =>
+                (b.endTime ?? b.updatedAt).compareTo(a.endTime ?? a.updatedAt),
           );
 
           if (kDebugMode) {
-            debugPrint('✅ [Analytics] Retry successful! Returning ${workouts.length} workouts');
+            debugPrint(
+              '✅ [Analytics] Retry successful! Returning ${workouts.length} workouts',
+            );
           }
           return workouts;
         } catch (retryError) {
@@ -471,23 +506,28 @@ class WorkoutAnalyticsRepositoryImpl with RateLimitedFirestoreMixin implements W
   }) async {
     // For now, get recent workouts and filter by muscle groups
     // In a full implementation, this would use ML/vector similarity
-    
+
     final recentWorkouts = await getHistoricalWorkouts(userId, limit: 100);
     final targetMuscleGroups = targetWorkout.exercises
         .map((e) => e.category)
         .toSet();
 
-    final similarWorkouts = recentWorkouts.where((workout) {
-      final workoutMuscleGroups = workout.exercises
-          .map((e) => e.category)
-          .toSet();
-      
-      final overlap = targetMuscleGroups.intersection(workoutMuscleGroups);
-      final union = targetMuscleGroups.union(workoutMuscleGroups);
-      
-      final similarity = union.isEmpty ? 0.0 : overlap.length / union.length;
-      return similarity >= minSimilarity;
-    }).take(limit).toList();
+    final similarWorkouts = recentWorkouts
+        .where((workout) {
+          final workoutMuscleGroups = workout.exercises
+              .map((e) => e.category)
+              .toSet();
+
+          final overlap = targetMuscleGroups.intersection(workoutMuscleGroups);
+          final union = targetMuscleGroups.union(workoutMuscleGroups);
+
+          final similarity = union.isEmpty
+              ? 0.0
+              : overlap.length / union.length;
+          return similarity >= minSimilarity;
+        })
+        .take(limit)
+        .toList();
 
     return similarWorkouts;
   }
@@ -508,7 +548,7 @@ class WorkoutAnalyticsRepositoryImpl with RateLimitedFirestoreMixin implements W
   @override
   Future<void> savePR(PersonalRecord pr) async {
     await _prTracker.savePR(pr);
-    
+
     // Notify subscribers of PR achievement
     _notifyPRUpdate(pr);
   }
@@ -527,16 +567,18 @@ class WorkoutAnalyticsRepositoryImpl with RateLimitedFirestoreMixin implements W
           .limit(limit);
 
       if (since != null) {
-        query = query.where('calculatedAt', isGreaterThan: Timestamp.fromDate(since));
+        query = query.where(
+          'calculatedAt',
+          isGreaterThan: Timestamp.fromDate(since),
+        );
       }
 
       final snapshot = await query.get();
-      
+
       return snapshot.docs.map((doc) {
         final data = doc.data() as Map<String, dynamic>;
         return _workoutMetricsFromFirestore(data);
       }).toList();
-      
     } catch (e) {
       if (kDebugMode) {
         debugPrint('Error fetching workout metrics history: $e');
@@ -562,7 +604,7 @@ class WorkoutAnalyticsRepositoryImpl with RateLimitedFirestoreMixin implements W
     try {
       final data = _metricsCache.get(workoutId);
       if (data == null) return null;
-      
+
       return _workoutMetricsFromMap(data);
     } catch (e) {
       if (kDebugMode) {
@@ -592,11 +634,17 @@ class WorkoutAnalyticsRepositoryImpl with RateLimitedFirestoreMixin implements W
       // Get workout statistics from local storage first, then Firestore
       // 🎯 PAGINATION: Limit to 1 year for performance
       final oneYearAgo = DateTime.now().subtract(const Duration(days: 365));
-      final workouts = await getHistoricalWorkouts(userId, limit: 1000, since: oneYearAgo);
+      final workouts = await getHistoricalWorkouts(
+        userId,
+        limit: 1000,
+        since: oneYearAgo,
+      );
       final prs = await getUserPRs(userId);
 
       if (kDebugMode) {
-        debugPrint('📊 Analytics Stats: Found ${workouts.length} total workouts for stats calculation');
+        debugPrint(
+          '📊 Analytics Stats: Found ${workouts.length} total workouts for stats calculation',
+        );
       }
 
       if (workouts.isEmpty) {
@@ -659,7 +707,6 @@ class WorkoutAnalyticsRepositoryImpl with RateLimitedFirestoreMixin implements W
       );
 
       return stats;
-
     } catch (e) {
       if (kDebugMode) {
         debugPrint('Error calculating analytics stats: $e');
@@ -679,7 +726,8 @@ class WorkoutAnalyticsRepositoryImpl with RateLimitedFirestoreMixin implements W
   @override
   Stream<WorkoutAnalyticsUpdate> watchWorkoutUpdates(String workoutId) {
     if (!_updateControllers.containsKey(workoutId)) {
-      _updateControllers[workoutId] = StreamController<WorkoutAnalyticsUpdate>.broadcast();
+      _updateControllers[workoutId] =
+          StreamController<WorkoutAnalyticsUpdate>.broadcast();
     }
 
     return _updateControllers[workoutId]!.stream;
@@ -689,24 +737,29 @@ class WorkoutAnalyticsRepositoryImpl with RateLimitedFirestoreMixin implements W
   void notifyWorkoutUpdate(WorkoutMetrics metrics) {
     final controller = _updateControllers[metrics.workoutId];
     if (controller != null && !controller.isClosed) {
-      controller.add(WorkoutAnalyticsUpdate(
-        workoutId: metrics.workoutId,
-        metrics: metrics,
-        newPRs: metrics.personalRecords,
-        timestamp: DateTime.now(),
-      ));
+      controller.add(
+        WorkoutAnalyticsUpdate(
+          workoutId: metrics.workoutId,
+          metrics: metrics,
+          newPRs: metrics.personalRecords,
+          timestamp: DateTime.now(),
+        ),
+      );
     }
   }
 
   @override
-  Future<void> syncWorkoutsFromFirebase(String userId, {
+  Future<void> syncWorkoutsFromFirebase(
+    String userId, {
     Function(int current, int total)? onProgress,
   }) async {
     await _syncFirebaseToHive(userId, onProgress: onProgress);
   }
 
   /// Get sync status (counts comparison)
-  Future<({int firebase, int hive, bool needsSync})> getSyncStatus(String userId) async {
+  Future<({int firebase, int hive, bool needsSync})> getSyncStatus(
+    String userId,
+  ) async {
     final firebaseCount = await _getFirebaseWorkoutCount(userId);
     final hiveCount = await _getHiveWorkoutCount(userId);
 
@@ -734,12 +787,14 @@ class WorkoutAnalyticsRepositoryImpl with RateLimitedFirestoreMixin implements W
     // Find the appropriate controller (would need workout context)
     for (final controller in _updateControllers.values) {
       if (!controller.isClosed) {
-        controller.add(WorkoutAnalyticsUpdate(
-          workoutId: 'unknown', // Would need workout context
-          metrics: WorkoutMetrics.empty('unknown'),
-          newPRs: [prAchieved],
-          timestamp: DateTime.now(),
-        ));
+        controller.add(
+          WorkoutAnalyticsUpdate(
+            workoutId: 'unknown', // Would need workout context
+            metrics: WorkoutMetrics.empty('unknown'),
+            newPRs: [prAchieved],
+            timestamp: DateTime.now(),
+          ),
+        );
       }
     }
   }
@@ -763,7 +818,9 @@ class WorkoutAnalyticsRepositoryImpl with RateLimitedFirestoreMixin implements W
     try {
       await _cacheService.invalidateUser(userId);
       if (kDebugMode) {
-        debugPrint('🗑️ [Analytics] Invalidated all analytics cache for user: $userId');
+        debugPrint(
+          '🗑️ [Analytics] Invalidated all analytics cache for user: $userId',
+        );
       }
     } catch (e) {
       if (kDebugMode) {
@@ -795,7 +852,10 @@ class WorkoutAnalyticsRepositoryImpl with RateLimitedFirestoreMixin implements W
 
   // Private helper methods
 
-  Map<String, dynamic> _workoutMetricsToFirestore(WorkoutMetrics metrics, String userId) {
+  Map<String, dynamic> _workoutMetricsToFirestore(
+    WorkoutMetrics metrics,
+    String userId,
+  ) {
     return {
       'userId': userId,
       'workoutId': metrics.workoutId,
@@ -832,7 +892,9 @@ class WorkoutAnalyticsRepositoryImpl with RateLimitedFirestoreMixin implements W
       totalVolume: (data['totalVolume'] as num?)?.toDouble() ?? 0,
       workingSetsVolume: (data['workingSetsVolume'] as num?)?.toDouble() ?? 0,
       warmupVolume: (data['warmupVolume'] as num?)?.toDouble() ?? 0,
-      volumeByMuscleGroup: _parseVolumeByMuscleGroup(data['volumeByMuscleGroup']),
+      volumeByMuscleGroup: _parseVolumeByMuscleGroup(
+        data['volumeByMuscleGroup'],
+      ),
       totalSets: data['totalSets'] ?? 0,
       completedSets: data['completedSets'] ?? 0,
       workingSets: data['workingSets'] ?? 0,
@@ -845,7 +907,8 @@ class WorkoutAnalyticsRepositoryImpl with RateLimitedFirestoreMixin implements W
       workingTime: Duration(minutes: data['workingTimeMinutes'] ?? 0),
       restTime: Duration(minutes: data['restTimeMinutes'] ?? 0),
       trainingDensity: (data['trainingDensity'] as num?)?.toDouble() ?? 0,
-      completionPercentage: (data['completionPercentage'] as num?)?.toDouble() ?? 0,
+      completionPercentage:
+          (data['completionPercentage'] as num?)?.toDouble() ?? 0,
       exercisesCompleted: data['exercisesCompleted'] ?? 0,
       totalExercises: data['totalExercises'] ?? 0,
     );
@@ -868,7 +931,9 @@ class WorkoutAnalyticsRepositoryImpl with RateLimitedFirestoreMixin implements W
   WorkoutMetrics _workoutMetricsFromMap(Map<String, dynamic> data) {
     return WorkoutMetrics(
       workoutId: data['workoutId'] ?? '',
-      calculatedAt: DateTime.parse(data['calculatedAt'] ?? DateTime.now().toIso8601String()),
+      calculatedAt: DateTime.parse(
+        data['calculatedAt'] ?? DateTime.now().toIso8601String(),
+      ),
       totalVolume: (data['totalVolume'] as num?)?.toDouble() ?? 0,
       workingSetsVolume: 0, // Simplified for cache
       warmupVolume: 0,
@@ -885,7 +950,8 @@ class WorkoutAnalyticsRepositoryImpl with RateLimitedFirestoreMixin implements W
       workingTime: Duration.zero,
       restTime: Duration.zero,
       trainingDensity: (data['trainingDensity'] as num?)?.toDouble() ?? 0,
-      completionPercentage: (data['completionPercentage'] as num?)?.toDouble() ?? 0,
+      completionPercentage:
+          (data['completionPercentage'] as num?)?.toDouble() ?? 0,
       exercisesCompleted: 0,
       totalExercises: 0,
     );

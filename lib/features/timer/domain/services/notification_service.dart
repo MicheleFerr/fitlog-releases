@@ -5,6 +5,30 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:gymbro_flutter_new/core/utils/debug_logger.dart';
 
+/// Localization helper for notification strings (IT/EN)
+/// Used in domain layer where context.l10n is not available
+class _NotificationStrings {
+  static bool get _isItalian {
+    final locale = PlatformDispatcher.instance.locale;
+    return locale.languageCode == 'it';
+  }
+
+  static String get restComplete => _isItalian ? 'Riposo Completato! 💪' : 'Rest Complete! 💪';
+  static String get exerciseComplete => _isItalian ? 'Esercizio Completato! 🎉' : 'Exercise Complete! 🎉';
+
+  static String readyForSet(String exerciseName, int currentSet, int totalSets) {
+    return _isItalian
+        ? 'Pronto per $exerciseName - Serie $currentSet/$totalSets'
+        : 'Ready for $exerciseName - Set $currentSet/$totalSets';
+  }
+
+  static String exerciseFinished(String exerciseName) {
+    return _isItalian
+        ? '$exerciseName completato! Ottimo lavoro!'
+        : '$exerciseName finished! Great work!';
+  }
+}
+
 class NotificationService {
   factory NotificationService() {
     _instance ??= NotificationService._internal();
@@ -163,13 +187,13 @@ class NotificationService {
     DebugLogger.log(LogCategory.notification, 'Invio notifica con suono: ${customSoundFile ?? 'sound'}');
     DebugLogger.log(LogCategory.notification, 'File audio iOS: ${customSoundFile ?? 'sound'}.caf');
 
-    final title = currentSet < totalSets 
-        ? 'Rest Complete! 💪'
-        : 'Exercise Complete! 🎉';
-        
+    final title = currentSet < totalSets
+        ? _NotificationStrings.restComplete
+        : _NotificationStrings.exerciseComplete;
+
     final body = currentSet < totalSets
-        ? 'Ready for $exerciseName - Set $currentSet/$totalSets'
-        : '$exerciseName finished! Great work!';
+        ? _NotificationStrings.readyForSet(exerciseName, currentSet, totalSets)
+        : _NotificationStrings.exerciseFinished(exerciseName);
 
     // CRITICAL FIX: Use ONLY native channel for iOS to prevent duplicates
     if (Platform.isIOS) {
@@ -212,7 +236,7 @@ class NotificationService {
         ticker: 'Rest complete!',
       );
 
-      // iOS fallback (no custom sound)
+      // iOS details with custom sound support
       final iOSDetails = _createIOSNotificationDetails(customSoundFile ?? 'sound');
 
       final notificationDetails = NotificationDetails(
@@ -345,13 +369,13 @@ class NotificationService {
       DebugLogger.log(LogCategory.notification, 'Will fire in: ${delay.inSeconds} seconds');
       DebugLogger.log(LogCategory.notification, 'Sound: ${customSoundFile ?? 'sound'}');
       
-      final title = currentSet < totalSets 
-          ? 'Rest Complete! 💪'
-          : 'Exercise Complete! 🎉';
-          
+      final title = currentSet < totalSets
+          ? _NotificationStrings.restComplete
+          : _NotificationStrings.exerciseComplete;
+
       final body = currentSet < totalSets
-          ? 'Ready for $exerciseName - Set $currentSet/$totalSets'
-          : '$exerciseName finished! Great work!';
+          ? _NotificationStrings.readyForSet(exerciseName, currentSet, totalSets)
+          : _NotificationStrings.exerciseFinished(exerciseName);
 
       // CRITICAL FIX: Use ONLY native channel for iOS scheduled notifications
       if (Platform.isIOS) {
@@ -445,34 +469,31 @@ class NotificationService {
     }
   }
 
-  /// ✅ Create iOS notification details - ENABLE CUSTOM SOUNDS
+  /// ✅ Create iOS notification details - CUSTOM SOUNDS ENABLED
   DarwinNotificationDetails _createIOSNotificationDetails(String soundName) {
     DebugLogger.log(LogCategory.notification, '=== iOS NOTIFICATION CONFIGURATION ===');
-    DebugLogger.log(LogCategory.notification, 'Sound requested (ignored): $soundName');
-    
-    // v3.0.2 TEMP: Disabled custom sounds - using default iOS notification sound
-    // This avoids conflicts with native iOS system sounds
-    // String? soundFile;
-    // if (soundName != 'timer_complete' && soundName.isNotEmpty) {
-    //   // Use custom sound with .caf extension (Apple's preferred format)
-    //   soundFile = '$soundName.caf';
-    //   DebugLogger.log(LogCategory.notification, '✅ Using custom sound: $soundFile');
-    // } else {
-    //   // Use default timer sound
-    //   soundFile = 'timer_complete.caf';
-    //   DebugLogger.log(LogCategory.notification, '✅ Using default timer sound: $soundFile');
-    // }
-    
-    DebugLogger.log(LogCategory.notification, '🔊 Using DEFAULT iOS notification sound');
-    
-    return const DarwinNotificationDetails(
+    DebugLogger.log(LogCategory.notification, 'Sound requested: $soundName');
+
+    // Build custom sound filename with .caf extension (Apple's preferred format)
+    String soundFile;
+    if (soundName.isNotEmpty && soundName != 'timer_complete' && soundName != 'sound') {
+      // Use custom sound (LightWeight, YehBuddie, etc.)
+      soundFile = soundName.endsWith('.caf') ? soundName : '$soundName.caf';
+      DebugLogger.log(LogCategory.notification, '✅ Using CUSTOM sound: $soundFile');
+    } else {
+      // Use default timer sound
+      soundFile = 'sound.caf';
+      DebugLogger.log(LogCategory.notification, '✅ Using default timer sound: $soundFile');
+    }
+
+    return DarwinNotificationDetails(
       presentAlert: true,
       presentBadge: true,
       presentSound: true,
       presentBanner: true,
       presentList: true,
-      sound: null, // v3.0.2: null = use default iOS notification sound
-      interruptionLevel: InterruptionLevel.critical, // Use critical for timer notifications
+      sound: soundFile,
+      interruptionLevel: InterruptionLevel.timeSensitive,
       categoryIdentifier: 'TIMER_COMPLETE',
       threadIdentifier: 'gym-timer',
     );

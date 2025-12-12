@@ -21,30 +21,34 @@ import 'package:gymbro_flutter_new/features/history/domain/entities/workout_hist
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
+import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 
 /// Modal showing full workout details
 class WorkoutDetailModal extends StatelessWidget {
   const WorkoutDetailModal({
     super.key,
     required this.workout,
+    this.scrollController,
   });
 
   final WorkoutHistoryDetail workout;
+  final ScrollController? scrollController;
 
   @override
   Widget build(BuildContext context) {
-    final l10n = AppLocalizations.of(context);
+    final l10n = context.l10n;
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
 
-    return Container(
-      height: MediaQuery.of(context).size.height * 0.8,
+    return DecoratedBox(
       decoration: BoxDecoration(
         color: colorScheme.surface,
         borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
       ),
-      child: Column(
-        children: [
+      child: SafeArea(
+        top: false,
+        child: Column(
+          children: [
           // Handle
           Container(
             width: 40,
@@ -95,6 +99,7 @@ class WorkoutDetailModal extends StatelessWidget {
           // Exercise Details
           Expanded(
             child: ListView.builder(
+              controller: scrollController,
               key: PageStorageKey('workout_detail_exercises_${workout.id}'),
               padding: const EdgeInsets.symmetric(horizontal: 20),
               itemCount: workout.exercises.length,
@@ -173,8 +178,9 @@ class WorkoutDetailModal extends StatelessWidget {
             ),
           ),
         ],
-      ),
-    );
+      ), // Column
+      ), // SafeArea
+    ); // DecoratedBox
   }
 
   Color _getRPEColor(int rpe, ColorScheme colorScheme) {

@@ -33,6 +33,31 @@ class SupersetSequentialExecutionSheet extends ConsumerStatefulWidget {
   final Function(SupersetSet completedRound) onRoundCompleted;
   final VoidCallback? onAllRoundsCompleted;
 
+  /// Static method to show the sheet with proper sizing (like RPE selector)
+  ///
+  /// Content-based height, swipe down to close
+  static Future<void> show({
+    required BuildContext context,
+    required SupersetExercise superset,
+    required int roundIndex,
+    required Function(SupersetSet completedRound) onRoundCompleted,
+    VoidCallback? onAllRoundsCompleted,
+  }) {
+    return showModalBottomSheet<void>(
+      context: context,
+      isScrollControlled: true,
+      isDismissible: true,
+      enableDrag: true,
+      backgroundColor: Colors.transparent,
+      builder: (context) => SupersetSequentialExecutionSheet(
+        superset: superset,
+        roundIndex: roundIndex,
+        onRoundCompleted: onRoundCompleted,
+        onAllRoundsCompleted: onAllRoundsCompleted,
+      ),
+    );
+  }
+
   @override
   ConsumerState<SupersetSequentialExecutionSheet> createState() =>
       _SupersetSequentialExecutionSheetState();
@@ -54,7 +79,7 @@ class _SupersetSequentialExecutionSheetState
     final exerciseData = currentRound.exerciseData[firstExercise.id];
 
     if (exerciseData == null) {
-      _showError('Dati esercizio non trovati');
+      _showError(context.l10n.exerciseDataNotFound);
       return;
     }
 
@@ -66,6 +91,16 @@ class _SupersetSequentialExecutionSheetState
       reps: exerciseData.targetReps,
       isCompleted: false,
     );
+
+    // ✅ FIX: Chiudi questo modal PRIMA di aprire il RPE selector
+    // Altrimenti due modal sovrapposti causano freeze
+    Navigator.of(context).pop();
+
+    // Attendi un frame per permettere l'animazione di chiusura
+    await Future.delayed(const Duration(milliseconds: 100));
+
+    // Usa mounted check per evitare errori dopo pop
+    if (!mounted) return;
 
     // Mostra RPE Selector con supporto superset
     await RpeSelectorBottomSheet.show(
@@ -135,28 +170,27 @@ class _SupersetSequentialExecutionSheetState
       // Era l'ultimo round → completa tutto
       widget.onAllRoundsCompleted?.call();
 
-      // Mostra feedback e chiudi
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(context.l10n.supersetCompleted),
-          backgroundColor: context.colors.tertiary,
-        ),
-      );
-
-      Future.delayed(const Duration(milliseconds: 500), () {
-        if (mounted) Navigator.of(context).pop();
-      });
+      // ✅ FIX: Non chiudere modal (già chiuso), solo mostra feedback
+      // Il SupersetSequentialExecutionSheet è già stato chiuso in _executeRound()
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(context.l10n.supersetCompleted),
+            backgroundColor: context.colors.tertiary,
+          ),
+        );
+      }
     } else {
-      // Avvia timer riposo per round successivo
+      // Avvia timer riposo tra round
       _startRestTimer();
-
-      // Chiudi sheet (timer mostrerà UI tier-1)
-      Navigator.of(context).pop();
     }
   }
 
   /// Avvia timer usando tier1TimerActions (stesso dell'app)
   Future<void> _startRestTimer() async {
+    // Check mounted perché questo widget potrebbe essere già smontato
+    if (!mounted) return;
+
     final timerActions = ref.read(tier1TimerActionsProvider);
 
     // Durata rest: usa quella del superset o default 90 sec
@@ -164,7 +198,7 @@ class _SupersetSequentialExecutionSheetState
 
     await timerActions.startExerciseRest(
       seconds: restDuration,
-      exerciseName: '${widget.superset.name} - ${context.l10n.restBetweenSets}',
+      exerciseName: context.l10n.supersetRestLabel(widget.superset.name),
       currentSet: widget.roundIndex + 2, // Prossimo round
       totalSets: widget.superset.supersetSets.length,
     );
@@ -425,7 +459,7 @@ class _SupersetSequentialExecutionSheetState
                   const SizedBox(width: 8),
                   Expanded(
                     child: Text(
-                      'Esegui tutti gli esercizi in sequenza senza riposo',
+                      context.l10n.executeAllSequentially,
                       style: context.textTheme.bodySmall?.copyWith(
                         color: context.colors.onPrimaryContainer,
                       ),

@@ -77,10 +77,7 @@ class HomeStateNotifier extends AutoDisposeNotifier<HomeState> {
     final stopwatch = Stopwatch()..start();
 
     try {
-      final results = await Future.wait([
-        _loadAICoach(),
-        _loadStreak(),
-      ]);
+      final results = await Future.wait([_loadAICoach(), _loadStreak()]);
 
       state = state.copyWith(
         aiCoachSection: results[0] as AICoachSection,
@@ -141,8 +138,12 @@ class HomeStateNotifier extends AutoDisposeNotifier<HomeState> {
 
     // Calculate progress
     final totalExercises = workout.exercises.length;
-    final completedExercises = workout.exercises.where((e) => e.isCompleted).length;
-    final progress = totalExercises > 0 ? completedExercises / totalExercises : 0.0;
+    final completedExercises = workout.exercises
+        .where((e) => e.isCompleted)
+        .length;
+    final progress = totalExercises > 0
+        ? completedExercises / totalExercises
+        : 0.0;
 
     return WorkoutSection(
       hasActiveWorkout: true,
@@ -183,5 +184,4 @@ class HomeStateNotifier extends AutoDisposeNotifier<HomeState> {
 
     _logger.logDataFetch('${section}_error', Duration.zero, 0);
   }
-
 }

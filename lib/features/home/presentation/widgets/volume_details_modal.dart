@@ -6,18 +6,20 @@ import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_
 import 'package:gymbro_flutter_new/features/home/providers/volume_settings_provider.dart';
 
 class VolumeDetailsModal extends ConsumerWidget {
-  
+
   const VolumeDetailsModal({
     super.key,
     required this.currentVolume,
     required this.dailyVolumeData,
+    this.scrollController,
   });
   final double currentVolume;
   final Map<DateTime, double> dailyVolumeData;
+  final ScrollController? scrollController;
   
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final l10n = AppLocalizations.of(context);
+    final l10n = context.l10n;
     final theme = Theme.of(context);
     final settings = ref.watch(volumeSettingsProvider);
     
@@ -53,14 +55,17 @@ class VolumeDetailsModal extends ConsumerWidget {
       ? 0.0
       : dailyVolumeData.values.fold(0.0, (sum, val) => sum + val) / dailyVolumeData.length;
     
-    return Container(
-      height: MediaQuery.of(context).size.height * 0.85,
+    return DecoratedBox(
       decoration: BoxDecoration(
         color: theme.colorScheme.surface,
         borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
       ),
-      child: Column(
-        children: [
+      child: SafeArea(
+        top: false,
+        child: ListView(
+          controller: scrollController,
+          padding: EdgeInsets.zero,
+          children: [
           // Handle bar
           const SizedBox(height: 8),
           Container(
@@ -231,7 +236,8 @@ class VolumeDetailsModal extends ConsumerWidget {
           const SizedBox(height: 20),
           
           // Chart
-          Expanded(
+          SizedBox(
+            height: 350,
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20),
               child: Container(
@@ -454,8 +460,9 @@ class VolumeDetailsModal extends ConsumerWidget {
           ),
           const SizedBox(height: 20),
         ],
-      ),
-    );
+      ), // ListView
+      ), // SafeArea
+    ); // DecoratedBox
   }
   
   String _formatVolume(double volume) {
@@ -553,7 +560,7 @@ class _QuickStatCard extends StatelessWidget {
             ],
           ),
         ],
-      ),
-    );
+      ), // Column
+    ); // Container
   }
 }

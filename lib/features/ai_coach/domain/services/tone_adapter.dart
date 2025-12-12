@@ -209,13 +209,61 @@ class ToneAdapter {
     }
   }
 
-  /// Get encouraging phrases based on profile
-  List<String> getEncouragingPhrases(ToneProfile profile) {
+  /// Get encouraging phrases based on profile and locale
+  ///
+  /// **Parameters**:
+  /// - `profile`: User's tone profile
+  /// - `locale`: Language code ('en' or 'it')
+  ///
+  /// **Returns**: List of localized encouraging phrases
+  List<String> getEncouragingPhrases(ToneProfile profile, {String locale = 'en'}) {
     if (!profile.isEncouraging) {
       return []; // No encouraging phrases for direct/concise tone
     }
 
-    switch (profile.experienceLevel) {
+    if (locale == 'it') {
+      return _getItalianEncouragingPhrases(profile.experienceLevel);
+    }
+    return _getEnglishEncouragingPhrases(profile.experienceLevel);
+  }
+
+  /// Italian encouraging phrases by experience level
+  List<String> _getItalianEncouragingPhrases(ExperienceLevel level) {
+    switch (level) {
+      case ExperienceLevel.beginner:
+        return [
+          'Ottimo inizio!',
+          'Stai andando alla grande!',
+          'Ogni ripetizione conta!',
+          'Ce la puoi fare!',
+          'Continua così!',
+          'I progressi richiedono tempo - sii paziente!',
+          'Bravissimo!',
+          'Forza!',
+        ];
+
+      case ExperienceLevel.intermediate:
+        return [
+          'Progressi solidi!',
+          'Continua a spingere!',
+          'Sei sulla strada giusta!',
+          'Ottimo lavoro!',
+          'Prestazione forte!',
+        ];
+
+      case ExperienceLevel.advanced:
+        return [
+          'Esecuzione eccellente.',
+          'Ottimo lavoro.',
+          'Ben fatto.',
+          'Impressionante.',
+        ];
+    }
+  }
+
+  /// English encouraging phrases by experience level
+  List<String> _getEnglishEncouragingPhrases(ExperienceLevel level) {
+    switch (level) {
       case ExperienceLevel.beginner:
         return [
           'Great start!',

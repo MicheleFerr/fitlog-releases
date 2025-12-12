@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/workout.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/widgets/workout_header.dart';
-import 'package:gymbro_flutter_new/features/workout/presentation/widgets/exercise_list_item.dart';
+import 'package:gymbro_flutter_new/features/workout/presentation/widgets/exercise_list_item/exercise_list_item.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/widgets/empty_states/empty_exercise_list.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/providers/workout_provider.dart';
 

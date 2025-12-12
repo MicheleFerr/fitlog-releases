@@ -1,6 +1,9 @@
+import 'dart:io';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:gymbro_flutter_new/features/scheduling/domain/entities/scheduled_workout.dart';
+import 'package:timezone/data/latest.dart' as tz_data;
 import 'package:timezone/timezone.dart' as tz;
 
 /// Service for scheduling workout reminder notifications
@@ -27,11 +30,14 @@ class SchedulingNotificationService {
 
   /// Initialize the notification channel (call on app startup)
   Future<void> initialize() async {
+    // Initialize timezone data (required for zonedSchedule)
+    tz_data.initializeTimeZones();
+
     const androidSettings = AndroidInitializationSettings('@mipmap/ic_launcher');
     const iosSettings = DarwinInitializationSettings(
-      requestAlertPermission: false,
-      requestBadgePermission: false,
-      requestSoundPermission: false,
+      requestAlertPermission: true,
+      requestBadgePermission: true,
+      requestSoundPermission: true,
     );
 
     const initSettings = InitializationSettings(
@@ -56,6 +62,37 @@ class SchedulingNotificationService {
         ),
       );
     }
+
+    // Request iOS permissions explicitly
+    if (Platform.isIOS) {
+      await _requestIOSPermissions();
+    }
+
+    if (kDebugMode) {
+      debugPrint('[SchedulingNotification] Service initialized successfully');
+    }
+  }
+
+  /// Request notification permissions on iOS
+  Future<bool> _requestIOSPermissions() async {
+    final iosPlugin = _notificationsPlugin
+        .resolvePlatformSpecificImplementation<IOSFlutterLocalNotificationsPlugin>();
+
+    if (iosPlugin != null) {
+      final result = await iosPlugin.requestPermissions(
+        alert: true,
+        badge: true,
+        sound: true,
+      );
+
+      if (kDebugMode) {
+        debugPrint('[SchedulingNotification] iOS permissions granted: $result');
+      }
+
+      return result ?? false;
+    }
+
+    return false;
   }
 
   /// Schedule a workout reminder notification
@@ -84,34 +121,49 @@ class SchedulingNotificationService {
       tz.local,
     );
 
-    await _notificationsPlugin.zonedSchedule(
-      notificationId,
-      title,
-      body,
-      tzScheduledDateTime,
-      NotificationDetails(
-        android: AndroidNotificationDetails(
-          channelId,
-          channelName,
-          channelDescription: channelDescription,
-          importance: Importance.high,
-          priority: Priority.high,
-          icon: '@mipmap/ic_launcher',
-        ),
-        iOS: const DarwinNotificationDetails(
-          presentAlert: true,
-          presentBadge: true,
-          presentSound: true,
-        ),
-      ),
-      androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
-      payload: 'scheduled_workout:${workout.id}',
-    );
-
     if (kDebugMode) {
-      debugPrint(
-        '[SchedulingNotification] Scheduled reminder for "${workout.templateName}" at $tzScheduledDateTime (ID: $notificationId)',
+      debugPrint('[SchedulingNotification] Scheduling notification...');
+      debugPrint('[SchedulingNotification] - Title: $title');
+      debugPrint('[SchedulingNotification] - Body: $body');
+      debugPrint('[SchedulingNotification] - Scheduled for: $tzScheduledDateTime');
+      debugPrint('[SchedulingNotification] - Notification ID: $notificationId');
+    }
+
+    try {
+      await _notificationsPlugin.zonedSchedule(
+        notificationId,
+        title,
+        body,
+        tzScheduledDateTime,
+        const NotificationDetails(
+          android: AndroidNotificationDetails(
+            channelId,
+            channelName,
+            channelDescription: channelDescription,
+            importance: Importance.high,
+            priority: Priority.high,
+            icon: '@mipmap/ic_launcher',
+          ),
+          iOS: const DarwinNotificationDetails(
+            presentAlert: true,
+            presentBadge: true,
+            presentSound: true,
+          ),
+        ),
+        androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
+        payload: 'scheduled_workout:${workout.id}',
       );
+
+      if (kDebugMode) {
+        debugPrint(
+          '[SchedulingNotification] ✅ Scheduled reminder for "${workout.templateName}" at $tzScheduledDateTime (ID: $notificationId)',
+        );
+      }
+    } catch (e) {
+      if (kDebugMode) {
+        debugPrint('[SchedulingNotification] ❌ Error scheduling notification: $e');
+      }
+      rethrow;
     }
 
     return notificationId;

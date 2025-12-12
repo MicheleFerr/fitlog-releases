@@ -17,6 +17,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:gymbro_flutter_new/core/providers/tier_entitlements_provider.dart';
 import 'package:gymbro_flutter_new/features/analytics/domain/entities/exercise_history.dart';
 import 'package:gymbro_flutter_new/features/analytics/domain/entities/muscle_heatmap_data.dart';
 import 'package:gymbro_flutter_new/features/analytics/domain/services/balance_trend_calculator.dart';
@@ -56,7 +57,10 @@ class _ProAnalyticsSectionState extends ConsumerState<ProAnalyticsSection> {
 
   @override
   Widget build(BuildContext context) {
-    final isPremium = ref.watch(isPremiumUserProvider);
+    // Check if user has access via paid premium OR tier-based entitlement (Platinum)
+    final isPaidPremium = ref.watch(isPremiumUserProvider);
+    final hasTierProAnalytics = ref.watch(hasProAnalyticsProvider);
+    final isPremium = isPaidPremium || hasTierProAnalytics;
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
 
@@ -1033,19 +1037,6 @@ class _MuscleBalanceChartState extends State<_MuscleBalanceChart> {
 
             return ExerciseSuggestionsWidget(
               neglectedMuscles: neglectedMuscles,
-              onAddExercise: (exerciseName, targetMuscle) {
-                // TODO: Implement add to workout functionality
-                // This will be implemented in next iteration
-                HapticFeedback.mediumImpact();
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    content: Text(
-                      context.l10n.exerciseAddedToWorkout(exerciseName),
-                    ),
-                    duration: const Duration(seconds: 2),
-                  ),
-                );
-              },
             );
           },
         ),
@@ -1093,7 +1084,7 @@ class _BalanceScoreHeader extends StatelessWidget {
     if (balanceScore >= 7.5) {
       scoreColor = colorScheme.primary; // Green - Excellent/Good
     } else if (balanceScore >= 6.0) {
-      scoreColor = const Color(0xFFFFA726); // Orange - Fair
+      scoreColor = context.warningColor; // Orange - Fair
     } else {
       scoreColor = colorScheme.error; // Red - Poor
     }

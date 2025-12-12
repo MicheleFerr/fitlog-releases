@@ -74,11 +74,13 @@ class PRModal extends StatelessWidget {
   const PRModal({
     required this.exerciseHistories,
     required this.recentPRCount,
+    this.scrollController,
     super.key,
   });
 
   final List<ExerciseHistory> exerciseHistories;
   final int recentPRCount;
+  final ScrollController? scrollController;
 
   /// Get all PRs with details
   List<_PRInfo> _getAllPRs() {
@@ -182,36 +184,33 @@ class PRModal extends StatelessWidget {
       ),
       child: SafeArea(
         top: false,
-        child: SingleChildScrollView(
+        child: ListView(
+          controller: scrollController,
           padding: const EdgeInsets.all(20),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // Header
-              _buildHeader(context),
-              const SizedBox(height: 20),
+          children: [
+            // Header
+            _buildHeader(context),
+            const SizedBox(height: 20),
 
-              // Recent PRs card
-              _buildRecentPRsCard(context),
-              const SizedBox(height: 24),
+            // Recent PRs card
+            _buildRecentPRsCard(context),
+            const SizedBox(height: 24),
 
-              // Explanation
-              _buildExplanation(context),
-              const SizedBox(height: 24),
+            // Explanation
+            _buildExplanation(context),
+            const SizedBox(height: 24),
 
-              // PR list
-              _buildPRList(context, allPRs),
-              const SizedBox(height: 24),
+            // PR list
+            _buildPRList(context, allPRs),
+            const SizedBox(height: 24),
 
-              // Reset button
-              _buildResetButton(context, totalPRs),
-              const SizedBox(height: 24),
+            // Reset button
+            _buildResetButton(context, totalPRs),
+            const SizedBox(height: 24),
 
-              // Close button
-              _buildCloseButton(context),
-            ],
-          ),
+            // Close button
+            _buildCloseButton(context),
+          ],
         ),
       ),
     );

@@ -134,6 +134,15 @@ class WorkoutTemplateCacheService {
     }
 
     _debounceTimer?.cancel();
+
+    // FIX: Skip if not initialized (box not opened yet)
+    if (!_isInitialized) {
+      if (kDebugMode) {
+        debugPrint('⏭️ [TemplateCache] forceSave() skipped - not initialized yet');
+      }
+      return;
+    }
+
     await _executePendingSave();
 
     // 🔥 CRITICAL FIX: Force flush to disk

@@ -32,7 +32,6 @@ class DemoProfilesLoader {
     }
     
     await batch.commit();
-    // print('✅ Loaded ${profiles.length} demo profiles');
   }
 
   /// Load demo profiles for a specific city
@@ -47,7 +46,6 @@ class DemoProfilesLoader {
     }
     
     await batch.commit();
-    // print('✅ Loaded ${profiles.length} local demo profiles for $cityCode');
   }
 
   /// Reload existing demo profiles with fresh data
@@ -70,7 +68,6 @@ class DemoProfilesLoader {
     }
     
     await batch.commit();
-    // print('✅ Cleared ${querySnapshot.docs.length} demo profiles');
   }
 
   List<Map<String, dynamic>> _generateDemoProfiles({String? cityCode}) {

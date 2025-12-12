@@ -1,16 +1,14 @@
-import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise.dart';
-import 'package:gymbro_flutter_new/features/workout/presentation/widgets/edit_set_modal.dart';
-import 'package:gymbro_flutter_new/features/workout/presentation/widgets/quick_edit_overlay_v2.dart';
+import 'package:gymbro_flutter_new/features/workout/presentation/widgets/minimal_set_edit_sheet.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/widgets/rpe_selector_bottom_sheet.dart';
-import 'package:gymbro_flutter_new/features/workout/presentation/widgets/calculation_metadata_display.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/providers/exercise_expansion_provider.dart';
+import 'package:gymbro_flutter_new/features/workout/presentation/providers/set_display_provider.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/providers/set_duration_tracker_provider.dart';
-import 'package:gymbro_flutter_new/features/workout/domain/services/apre_auto_regulation_service.dart';
 import 'package:gymbro_flutter_new/shared/domain/entities/app_config.dart';
 import 'package:gymbro_flutter_new/shared/presentation/providers/app_config_provider.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
@@ -33,14 +31,13 @@ import 'package:gymbro_flutter_new/features/exercise_database/domain/services/ex
 /// - Set editing via tap, double-tap, long-press
 /// - Swipe to delete with undo
 /// - RPE selector on completion
-/// - APRE metadata banner (after Set 4)
 /// - DropSet/RestPause execute buttons
 ///
 /// Handles:
 /// - Set completion with duration tracking
 /// - Set editing (quick edit on double-tap, full edit on long-press)
 /// - Set deletion with undo functionality
-/// - APRE and RPE auto-regulation suggestions
+/// - RPE auto-regulation suggestions
 /// - Rest timer starting after set completion
 ///
 /// Extracted from exercise_list_item.dart for Single Responsibility Principle.
@@ -56,6 +53,7 @@ class ExerciseListItemSets extends ConsumerStatefulWidget {
     required this.onExecuteDropSet,
     required this.onExecuteRestPause,
     required this.onCollapseExercise,
+    this.tutorialFirstSetKey,
   });
 
   final Exercise exercise;
@@ -67,12 +65,34 @@ class ExerciseListItemSets extends ConsumerStatefulWidget {
   final Function(RestPauseExercise) onExecuteRestPause;
   final VoidCallback onCollapseExercise;
 
+  /// Optional key for tutorial overlay on the first set row
+  final GlobalKey? tutorialFirstSetKey;
+
   @override
   ConsumerState<ExerciseListItemSets> createState() => _ExerciseListItemSetsState();
 }
 
 class _ExerciseListItemSetsState extends ConsumerState<ExerciseListItemSets> {
-  bool _showMetadataBanner = false; // Collapsed by default
+  // ✅ OPTIMIZATION: Cache counting mode to avoid calling service for every set
+  // Previous implementation called ExerciseCountingModeService.getModeFromWorkoutExercise()
+  // inside _buildSetDetailsForMode() which was executed for EVERY set on EVERY rebuild.
+  late ExerciseCountingMode _cachedCountingMode;
+
+  @override
+  void initState() {
+    super.initState();
+    _cachedCountingMode = ExerciseCountingModeService.getModeFromWorkoutExercise(widget.exercise);
+  }
+
+  @override
+  void didUpdateWidget(ExerciseListItemSets oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    // Only recalculate counting mode if exercise changed
+    if (oldWidget.exercise.countingMode != widget.exercise.countingMode ||
+        oldWidget.exercise.id != widget.exercise.id) {
+      _cachedCountingMode = ExerciseCountingModeService.getModeFromWorkoutExercise(widget.exercise);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -233,34 +253,31 @@ class _ExerciseListItemSetsState extends ConsumerState<ExerciseListItemSets> {
           ],
         ),
         const SizedBox(height: 8),
-        ...widget.exercise.sets.asMap().entries.expand(
-          (entry) => [
-            _buildSetItem(context, entry.key, entry.value, config),
-            // Inject metadata banner after Set 4 if APRE enabled
-            if (entry.key == 3 && widget.exercise.useAPRE && widget.exercise.sets.length >= 4)
-              _buildMetadataBanner(context),
-          ],
+        ...widget.exercise.sets.asMap().entries.map(
+          (entry) => _buildSetItem(context, entry.key, entry.value, config),
         ),
         const SizedBox(height: 8),
         // Add set button (with smooth animated collapse button when completed)
-        AnimatedSwitcher(
-          duration: const Duration(milliseconds: 400),
-          switchInCurve: Curves.easeOutCubic,
-          switchOutCurve: Curves.easeInCubic,
-          transitionBuilder: (Widget child, Animation<double> animation) {
-            return SlideTransition(
-              position: Tween<Offset>(
-                begin: const Offset(0.0, 0.1),
-                end: Offset.zero,
-              ).animate(
-                CurvedAnimation(
-                  parent: animation,
-                  curve: Curves.easeOutCubic,
+        // ✅ FIX: Wrap in ClipRect to prevent red box overflow during slide animation
+        ClipRect(
+          child: AnimatedSwitcher(
+            duration: const Duration(milliseconds: 400),
+            switchInCurve: Curves.easeOutCubic,
+            switchOutCurve: Curves.easeInCubic,
+            transitionBuilder: (Widget child, Animation<double> animation) {
+              return SlideTransition(
+                position: Tween<Offset>(
+                  begin: const Offset(0.0, 0.1),
+                  end: Offset.zero,
+                ).animate(
+                  CurvedAnimation(
+                    parent: animation,
+                    curve: Curves.easeOutCubic,
+                  ),
                 ),
-              ),
-              child: FadeTransition(opacity: animation, child: child),
-            );
-          },
+                child: FadeTransition(opacity: animation, child: child),
+              );
+            },
           child: _areAllSetsCompleted() && isExpanded
               ? Row(
                   key: const ValueKey('buttons_with_collapse'),
@@ -304,54 +321,43 @@ class _ExerciseListItemSetsState extends ConsumerState<ExerciseListItemSets> {
                       ),
                     ),
                     const SizedBox(width: 8),
-                    // Collapse button (right)
+                    // Collapse button (right) - no animation to prevent flash on scroll rebuild
                     Expanded(
-                      child: TweenAnimationBuilder<double>(
-                        duration: const Duration(milliseconds: 500),
-                        tween: Tween<double>(begin: 0.0, end: 1.0),
-                        curve: Curves.easeOutBack,
-                        builder: (context, value, child) {
-                          return Transform.scale(
-                            scale: 0.8 + (0.2 * value),
-                            child: Opacity(opacity: value, child: child),
-                          );
+                      child: InkWell(
+                        onTap: () {
+                          widget.onCollapseExercise();
+                          HapticFeedback.lightImpact();
                         },
-                        child: InkWell(
-                          onTap: () {
-                            widget.onCollapseExercise();
-                            HapticFeedback.lightImpact();
-                          },
-                          borderRadius: BorderRadius.circular(8),
-                          child: Container(
-                            padding: const EdgeInsets.symmetric(vertical: 12),
-                            decoration: BoxDecoration(
-                              color: context.colors.secondaryContainer.withValues(alpha: 0.2),
-                              borderRadius: BorderRadius.circular(8),
-                              border: Border.all(
-                                color: context.colors.secondary.withValues(alpha: 0.3),
-                                style: BorderStyle.solid,
-                                width: 1.5,
+                        borderRadius: BorderRadius.circular(8),
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(vertical: 12),
+                          decoration: BoxDecoration(
+                            color: context.colors.secondaryContainer.withValues(alpha: 0.2),
+                            borderRadius: BorderRadius.circular(8),
+                            border: Border.all(
+                              color: context.colors.secondary.withValues(alpha: 0.3),
+                              style: BorderStyle.solid,
+                              width: 1.5,
+                            ),
+                          ),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              SemanticIcon(
+                                icon: AppIcons.unfoldLess,
+                                semanticLabel: context.l10n.collapseExercise,
+                                size: AppIconSize.small,
+                                color: context.colors.secondary,
                               ),
-                            ),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                SemanticIcon(
-                                  icon: AppIcons.unfoldLess,
-                                  semanticLabel: context.l10n.collapseExercise,
-                                  size: AppIconSize.small,
+                              const SizedBox(width: 8),
+                              Text(
+                                context.l10n.collapseExercise,
+                                style: context.textTheme.labelLarge?.copyWith(
                                   color: context.colors.secondary,
+                                  fontWeight: FontWeight.w600,
                                 ),
-                                const SizedBox(width: 8),
-                                Text(
-                                  context.l10n.collapseExercise,
-                                  style: context.textTheme.labelLarge?.copyWith(
-                                    color: context.colors.secondary,
-                                    fontWeight: FontWeight.w600,
-                                  ),
-                                ),
-                              ],
-                            ),
+                              ),
+                            ],
                           ),
                         ),
                       ),
@@ -394,6 +400,7 @@ class _ExerciseListItemSetsState extends ConsumerState<ExerciseListItemSets> {
                     ),
                   ),
                 ),
+          ),
         ),
       ],
     );
@@ -406,92 +413,110 @@ class _ExerciseListItemSetsState extends ConsumerState<ExerciseListItemSets> {
     AppConfig config,
   ) {
     final isWarmup = set.isWarmup;
+    final displayMode = ref.watch(setDisplayProvider);
 
-    return Dismissible(
-      key: Key('${widget.exercise.id}_set_${set.id}'),
-      direction: DismissDirection.endToStart,
-      background: Container(
-        alignment: Alignment.centerRight,
-        padding: const EdgeInsets.only(right: 20),
-        margin: const EdgeInsets.only(bottom: 6),
-        decoration: BoxDecoration(
-          color: context.errorColor,
-          borderRadius: BorderRadius.circular(8),
+    // Use robust key that includes index as fallback in case IDs are empty
+    final exerciseId = widget.exercise.id.isNotEmpty ? widget.exercise.id : 'ex_$index';
+    final setId = set.id.isNotEmpty ? set.id : 'set_$index';
+
+    return Slidable(
+      key: ValueKey('slidable_${exerciseId}_${setId}_$index'),
+      // Swipe RIGHT → Toggle Warmup (swipe completo = toggle diretto)
+      startActionPane: ActionPane(
+        motion: const StretchMotion(),
+        extentRatio: 0.3,
+        dismissible: DismissiblePane(
+          onDismissed: () {
+            // Non viene mai chiamato perché confirmDismiss ritorna false
+          },
+          closeOnCancel: true,
+          confirmDismiss: () async {
+            // Esegui toggle e poi ritorna false per NON rimuovere la riga
+            HapticFeedback.mediumImpact();
+            _toggleWarmupSet(set, index);
+            return false; // NON dismissare, solo toggle
+          },
         ),
-        child: SemanticIcon(
-          icon: AppIcons.deleteOutline,
-          semanticLabel: context.l10n.delete,
-          size: AppIconSize.medium,
-          color: context.colors.surface,
-        ),
+        children: [
+          CustomSlidableAction(
+            onPressed: (slideContext) {
+              HapticFeedback.mediumImpact();
+              _toggleWarmupSet(set, index);
+              Slidable.of(slideContext)?.close();
+            },
+            backgroundColor: Colors.transparent,
+            foregroundColor: isWarmup
+                ? context.colors.onSurfaceVariant
+                : context.warningColor,
+            padding: EdgeInsets.zero,
+            child: SemanticIcon(
+              icon: isWarmup ? AppIcons.workout : AppIcons.streak,
+              semanticLabel: isWarmup
+                  ? context.l10n.workingSet
+                  : context.l10n.warmupSet,
+              size: AppIconSize.large,
+              color: isWarmup
+                  ? context.colors.onSurfaceVariant
+                  : context.warningColor,
+            ),
+          ),
+        ],
       ),
-      confirmDismiss: (direction) async {
-        final l10n = context.l10n;
-
-        return await showGeneralDialog<bool>(
-          context: context,
-          barrierDismissible: true,
-          barrierLabel: 'Dismiss',
-          barrierColor: context.colors.onSurface.withValues(alpha: 0.54),
-          transitionDuration: const Duration(milliseconds: 250),
-          pageBuilder: (context, animation, secondaryAnimation) {
-            return Container();
+      // Swipe LEFT → Delete (with confirmation)
+      endActionPane: ActionPane(
+        motion: const StretchMotion(),
+        extentRatio: 0.3,
+        dismissible: DismissiblePane(
+          onDismissed: () {
+            // Will be handled after confirmation
           },
-          transitionBuilder: (context, animation, secondaryAnimation, child) {
-            final curvedAnimation = CurvedAnimation(
-              parent: animation,
-              curve: Curves.easeOutCubic,
-              reverseCurve: Curves.easeInCubic,
-            );
-
-            return ScaleTransition(
-              scale: Tween<double>(
-                begin: 0.8,
-                end: 1.0,
-              ).animate(curvedAnimation),
-              child: FadeTransition(
-                opacity: curvedAnimation,
-                child: AlertDialog(
-                  title: Text(
-                    isWarmup
-                        ? l10n.deleteWarmupSetTitle
-                        : l10n.deleteSetTitle(index + 1),
-                  ),
-                  content: Text(l10n.deleteSetMessage),
-                  actions: [
-                    TextButton(
-                      onPressed: () => Navigator.of(context).pop(false),
-                      child: Text(l10n.cancel),
-                    ),
-                    TextButton(
-                      onPressed: () => Navigator.of(context).pop(true),
-                      style: TextButton.styleFrom(foregroundColor: context.errorColor),
-                      child: Text(l10n.delete),
-                    ),
-                  ],
-                ),
-              ),
-            );
+          closeOnCancel: true,
+          confirmDismiss: () async {
+            HapticFeedback.heavyImpact();
+            final confirmed = await _showDeleteConfirmation(context, set, index, isWarmup);
+            if (confirmed) {
+              _deleteSet(set, index);
+            }
+            return false; // Don't actually dismiss, we handle it manually
           },
-        );
-      },
-      onDismissed: (direction) {
-        _deleteSet(set, index);
-      },
+        ),
+        children: [
+          CustomSlidableAction(
+            onPressed: (slideContext) {
+              HapticFeedback.heavyImpact();
+              Slidable.of(slideContext)?.close();
+              _confirmDeleteSet(context, set, index, isWarmup);
+            },
+            backgroundColor: Colors.transparent,
+            foregroundColor: context.errorColor,
+            padding: EdgeInsets.zero,
+            child: SemanticIcon(
+              icon: AppIcons.deleteOutline,
+              semanticLabel: context.l10n.delete,
+              size: AppIconSize.large,
+              color: context.errorColor,
+            ),
+          ),
+        ],
+      ),
+      // ✅ IMPROVED UX: Larger row with visible action icons
       child: GestureDetector(
         onTap: () => _toggleSetCompletionWithFeedback(context, set),
-        onDoubleTap: () => _quickEditSet(context, set),
-        onLongPress: () => _editSet(context, set),
         child: Container(
-          margin: const EdgeInsets.only(bottom: 6),
-          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+          // Apply tutorial key only to the first set (index 0)
+          key: index == 0 ? widget.tutorialFirstSetKey : null,
+          margin: EdgeInsets.only(bottom: displayMode.bottomMargin),
+          padding: EdgeInsets.symmetric(
+            horizontal: displayMode.horizontalPadding,
+            vertical: displayMode.verticalPadding,
+          ),
           decoration: BoxDecoration(
             color: isWarmup
                 ? context.warningContainer
                 : set.isCompleted
                     ? context.colors.tertiary.withValues(alpha: 0.1)
                     : context.colors.surfaceContainerHighest.withValues(alpha: 0.5),
-            borderRadius: BorderRadius.circular(8),
+            borderRadius: BorderRadius.circular(displayMode.borderRadius),
             border: isWarmup
                 ? Border.all(color: context.warningColor.withValues(alpha: 0.3))
                 : set.isCompleted
@@ -502,8 +527,8 @@ class _ExerciseListItemSetsState extends ConsumerState<ExerciseListItemSets> {
             children: [
               // Set number with warmup indicator
               Container(
-                width: 24,
-                height: 24,
+                width: displayMode.circleSize,
+                height: displayMode.circleSize,
                 decoration: BoxDecoration(
                   color: isWarmup
                       ? context.warningColor.withValues(alpha: 0.3)
@@ -527,7 +552,7 @@ class _ExerciseListItemSetsState extends ConsumerState<ExerciseListItemSets> {
                                 ? context.colors.onTertiary
                                 : context.colors.onSurfaceVariant,
                             fontWeight: FontWeight.bold,
-                            fontSize: 11,
+                            fontSize: 12,
                           ),
                         ),
                 ),
@@ -571,14 +596,36 @@ class _ExerciseListItemSetsState extends ConsumerState<ExerciseListItemSets> {
                 ),
               ),
 
-              // Completion checkmark
-              if (set.isCompleted)
-                SemanticIcon(
-                  icon: AppIcons.checkCircle,
-                  semanticLabel: 'Completed',
-                  size: AppIconSize.small,
-                  color: context.colors.tertiary,
-                ),
+              // ✅ NEW: Visible action icons (edit + delete)
+              Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  // Completion checkmark
+                  if (set.isCompleted) ...[
+                    SemanticIcon(
+                      icon: AppIcons.checkCircle,
+                      semanticLabel: 'Completed',
+                      size: AppIconSize.small,
+                      color: context.colors.tertiary,
+                    ),
+                    const SizedBox(width: 8),
+                  ],
+                  // Edit button (delete via swipe left)
+                  InkWell(
+                    onTap: () => _quickEditSet(context, set),
+                    borderRadius: BorderRadius.circular(8),
+                    child: Padding(
+                      padding: const EdgeInsets.all(6),
+                      child: SemanticIcon(
+                        icon: AppIcons.edit,
+                        semanticLabel: context.l10n.edit,
+                        size: AppIconSize.small,
+                        color: context.colors.primary,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ],
           ),
         ),
@@ -587,19 +634,18 @@ class _ExerciseListItemSetsState extends ConsumerState<ExerciseListItemSets> {
   }
 
   /// Build set details widgets based on counting mode
+  /// ✅ OPTIMIZATION: Uses cached counting mode instead of calling service per set
   List<Widget> _buildSetDetailsForMode(ExerciseSet set, AppConfig config) {
-    final mode = ExerciseCountingModeService.getModeFromWorkoutExercise(widget.exercise);
-
-    switch (mode) {
+    switch (_cachedCountingMode) {
       case ExerciseCountingMode.weighted:
         // Weighted: Show weight × reps
+        // ✅ Removed lineThrough - completed sets already show check icon
         return [
           if (set.weight != null) ...[
             Text(
               set.weight!.formatWeight(config.measurementUnit),
               style: context.textTheme.bodyMedium?.copyWith(
                 fontWeight: FontWeight.w500,
-                decoration: set.isCompleted ? TextDecoration.lineThrough : null,
               ),
             ),
             const SizedBox(width: 4),
@@ -613,13 +659,13 @@ class _ExerciseListItemSetsState extends ConsumerState<ExerciseListItemSets> {
                   : '${set.reps} reps',
               style: context.textTheme.bodyMedium?.copyWith(
                 fontWeight: FontWeight.w500,
-                decoration: set.isCompleted ? TextDecoration.lineThrough : null,
               ),
             ),
         ];
 
       case ExerciseCountingMode.reps:
         // Reps-only: Show reps only (bodyweight exercises)
+        // ✅ Removed lineThrough - completed sets already show check icon
         return [
           if (set.reps != null)
             Text(
@@ -628,31 +674,22 @@ class _ExerciseListItemSetsState extends ConsumerState<ExerciseListItemSets> {
                   : '${set.reps} reps',
               style: context.textTheme.bodyMedium?.copyWith(
                 fontWeight: FontWeight.w500,
-                decoration: set.isCompleted ? TextDecoration.lineThrough : null,
               ),
             ),
         ];
 
       case ExerciseCountingMode.time:
         // Time-based: Show duration (isometric exercises)
+        // ✅ FIX: Prioritize seconds field for time mode, fallback to reps for backward compatibility
+        // ✅ Removed lineThrough - completed sets already show check icon
+        final duration = set.seconds ?? set.reps ?? 60;
         return [
-          if (set.reps != null)
-            Text(
-              '${set.reps}s',
-              style: context.textTheme.bodyMedium?.copyWith(
-                fontWeight: FontWeight.w500,
-                decoration: set.isCompleted ? TextDecoration.lineThrough : null,
-              ),
+          Text(
+            _formatDuration(duration),
+            style: context.textTheme.bodyMedium?.copyWith(
+              fontWeight: FontWeight.w500,
             ),
-          // Also show 'seconds' field if exists (for backward compatibility)
-          if (set.seconds != null && set.reps == null)
-            Text(
-              '${set.seconds}s',
-              style: context.textTheme.bodyMedium?.copyWith(
-                fontWeight: FontWeight.w500,
-                decoration: set.isCompleted ? TextDecoration.lineThrough : null,
-              ),
-            ),
+          ),
         ];
     }
   }
@@ -685,6 +722,142 @@ class _ExerciseListItemSetsState extends ConsumerState<ExerciseListItemSets> {
     );
 
     HapticFeedback.lightImpact();
+  }
+
+  /// Toggle warmup state of a set (swipe right gesture)
+  void _toggleWarmupSet(ExerciseSet set, int index) {
+    final isCurrentlyWarmup = set.isWarmup;
+    final updatedSet = set.copyWith(isWarmup: !isCurrentlyWarmup);
+
+    final updatedSets = List<ExerciseSet>.from(widget.exercise.sets);
+    updatedSets[index] = updatedSet;
+
+    final updatedExercise = widget.exercise.copyWith(sets: updatedSets);
+    widget.onExerciseUpdate(updatedExercise);
+
+    // Show feedback
+    if (!isCurrentlyWarmup) {
+      SnackBarService.showCustom(
+        context,
+        message: '🔥 ${context.l10n.setMarkedAsWarmup}',
+        backgroundColor: context.warningColor,
+      );
+    } else {
+      SnackBarService.showInfo(
+        context,
+        '💪 ${context.l10n.setMarkedAsWorking}',
+      );
+    }
+  }
+
+  /// Show delete confirmation dialog and return result
+  Future<bool> _showDeleteConfirmation(BuildContext context, ExerciseSet set, int index, bool isWarmup) async {
+    final l10n = context.l10n;
+
+    final confirmed = await showGeneralDialog<bool>(
+      context: context,
+      barrierDismissible: true,
+      barrierLabel: 'Dismiss',
+      barrierColor: context.colors.onSurface.withValues(alpha: 0.54),
+      transitionDuration: const Duration(milliseconds: 250),
+      pageBuilder: (context, animation, secondaryAnimation) {
+        return Container();
+      },
+      transitionBuilder: (context, animation, secondaryAnimation, child) {
+        final curvedAnimation = CurvedAnimation(
+          parent: animation,
+          curve: Curves.easeOutCubic,
+          reverseCurve: Curves.easeInCubic,
+        );
+
+        return ScaleTransition(
+          scale: Tween<double>(
+            begin: 0.8,
+            end: 1.0,
+          ).animate(curvedAnimation),
+          child: FadeTransition(
+            opacity: curvedAnimation,
+            child: AlertDialog(
+              title: Text(
+                isWarmup
+                    ? l10n.deleteWarmupSetTitle
+                    : l10n.deleteSetTitle(index + 1),
+              ),
+              content: Text(l10n.deleteSetMessage),
+              actions: [
+                TextButton(
+                  onPressed: () => Navigator.of(context).pop(false),
+                  child: Text(l10n.cancel),
+                ),
+                TextButton(
+                  onPressed: () => Navigator.of(context).pop(true),
+                  style: TextButton.styleFrom(foregroundColor: context.errorColor),
+                  child: Text(l10n.delete),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+
+    return confirmed == true;
+  }
+
+  /// ✅ Confirm delete with dialog (visible button action)
+  Future<void> _confirmDeleteSet(BuildContext context, ExerciseSet set, int index, bool isWarmup) async {
+    final l10n = context.l10n;
+
+    final confirmed = await showGeneralDialog<bool>(
+      context: context,
+      barrierDismissible: true,
+      barrierLabel: 'Dismiss',
+      barrierColor: context.colors.onSurface.withValues(alpha: 0.54),
+      transitionDuration: const Duration(milliseconds: 250),
+      pageBuilder: (context, animation, secondaryAnimation) {
+        return Container();
+      },
+      transitionBuilder: (context, animation, secondaryAnimation, child) {
+        final curvedAnimation = CurvedAnimation(
+          parent: animation,
+          curve: Curves.easeOutCubic,
+          reverseCurve: Curves.easeInCubic,
+        );
+
+        return ScaleTransition(
+          scale: Tween<double>(
+            begin: 0.8,
+            end: 1.0,
+          ).animate(curvedAnimation),
+          child: FadeTransition(
+            opacity: curvedAnimation,
+            child: AlertDialog(
+              title: Text(
+                isWarmup
+                    ? l10n.deleteWarmupSetTitle
+                    : l10n.deleteSetTitle(index + 1),
+              ),
+              content: Text(l10n.deleteSetMessage),
+              actions: [
+                TextButton(
+                  onPressed: () => Navigator.of(context).pop(false),
+                  child: Text(l10n.cancel),
+                ),
+                TextButton(
+                  onPressed: () => Navigator.of(context).pop(true),
+                  style: TextButton.styleFrom(foregroundColor: context.errorColor),
+                  child: Text(l10n.delete),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+
+    if (confirmed == true) {
+      _deleteSet(set, index);
+    }
   }
 
   void _deleteSet(ExerciseSet set, int index) {
@@ -725,50 +898,15 @@ class _ExerciseListItemSetsState extends ConsumerState<ExerciseListItemSets> {
     HapticFeedback.mediumImpact();
   }
 
-  void _editSet(BuildContext context, ExerciseSet set) {
-    // Find previous set for APRE calculations
-    ExerciseSet? previousSet;
-    final currentSetIndex = widget.exercise.sets.indexWhere((s) => s.id == set.id);
-    if (currentSetIndex > 0) {
-      previousSet = widget.exercise.sets[currentSetIndex - 1];
-    }
-
-    context.showEditSetModal(
-      set,
-      (updatedSet) {
-        final updatedSets = List<ExerciseSet>.from(
-          widget.exercise.sets.map((s) {
-            return s.id == set.id ? updatedSet : s;
-          }),
-        );
-        final updatedExercise = widget.exercise.copyWith(sets: updatedSets);
-        widget.onExerciseUpdate(updatedExercise);
-      },
-      exercise: widget.exercise,
-      previousSet: previousSet,
-    );
-  }
-
   void _quickEditSet(BuildContext context, ExerciseSet set) {
-    // Get the position of the set item for the overlay
-    final RenderBox renderBox = context.findRenderObject() as RenderBox;
-    final position = renderBox.localToGlobal(Offset.zero);
-
-    // Find the previous set for copying values
-    ExerciseSet? previousSet;
     final currentSetIndex = widget.exercise.sets.indexWhere((s) => s.id == set.id);
-    if (currentSetIndex > 0) {
-      previousSet = widget.exercise.sets[currentSetIndex - 1];
-    }
+    final previousSet = currentSetIndex > 0 ? widget.exercise.sets[currentSetIndex - 1] : null;
 
     // Haptic feedback for quick edit
     HapticFeedback.selectionClick();
 
-    // Get counting mode
-    final countingMode = ExerciseCountingModeService.getModeFromWorkoutExercise(widget.exercise);
-
-    // Show quick edit overlay using BuildContext extension
-    context.showQuickEditOverlayV2(
+    // ✅ NEW: Use MinimalSetEditSheet for cleaner UX
+    context.showMinimalSetEditSheet(
       exerciseSet: set,
       onSave: (updatedSet) {
         final updatedSets = widget.exercise.sets.map((s) {
@@ -777,11 +915,57 @@ class _ExerciseListItemSetsState extends ConsumerState<ExerciseListItemSets> {
         final updatedExercise = widget.exercise.copyWith(sets: updatedSets);
         widget.onExerciseUpdate(updatedExercise);
       },
-      position: position,
+      currentSetIndex: currentSetIndex,
+      totalSets: widget.exercise.sets.length,
+      allSets: widget.exercise.sets,
       previousSet: previousSet,
-      exerciseName: widget.exercise.name,
-      countingMode: countingMode,
-      setNumber: set.setNumber, // For pre-fill from last workout
+      // Apply to all sets (first set only)
+      onApplyToAll: (updatedSet) {
+        final updatedSets = widget.exercise.sets.map((s) {
+          return s.copyWith(
+            weight: updatedSet.weight,
+            reps: updatedSet.reps,
+          );
+        }).toList();
+        final updatedExercise = widget.exercise.copyWith(sets: updatedSets);
+        widget.onExerciseUpdate(updatedExercise);
+      },
+      onSaveAndNext: (updatedSet) {
+        // Save current set
+        final updatedSets = widget.exercise.sets.map((s) {
+          return s.id == set.id ? updatedSet : s;
+        }).toList();
+        final updatedExercise = widget.exercise.copyWith(sets: updatedSets);
+        widget.onExerciseUpdate(updatedExercise);
+
+        // Open edit for next set (if exists)
+        final nextSetIndex = currentSetIndex + 1;
+        if (nextSetIndex < widget.exercise.sets.length) {
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            if (mounted) {
+              _quickEditSet(context, widget.exercise.sets[nextSetIndex]);
+            }
+          });
+        }
+      },
+      onSaveAndPrevious: (updatedSet) {
+        // Save current set
+        final updatedSets = widget.exercise.sets.map((s) {
+          return s.id == set.id ? updatedSet : s;
+        }).toList();
+        final updatedExercise = widget.exercise.copyWith(sets: updatedSets);
+        widget.onExerciseUpdate(updatedExercise);
+
+        // Open edit for previous set (if exists)
+        final prevSetIndex = currentSetIndex - 1;
+        if (prevSetIndex >= 0) {
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            if (mounted) {
+              _quickEditSet(context, widget.exercise.sets[prevSetIndex]);
+            }
+          });
+        }
+      },
     );
   }
 
@@ -903,9 +1087,6 @@ class _ExerciseListItemSetsState extends ConsumerState<ExerciseListItemSets> {
         set: set,
         targetReps: targetReps,
         exercise: widget.exercise,
-        onAPRESuggestion: (suggestedWeight) {
-          _handleAPRESuggestion(set, suggestedWeight);
-        },
         onRPESuggestion: (suggestedWeight) {
           _handleRPESuggestion(suggestedWeight);
         },
@@ -950,26 +1131,6 @@ class _ExerciseListItemSetsState extends ConsumerState<ExerciseListItemSets> {
     }
   }
 
-  void _handleAPRESuggestion(ExerciseSet currentSet, double suggestedWeight) {
-    // Find the next set (Set 4 in APRE protocol)
-    final nextSetIndex = currentSet.setNumber;
-    if (nextSetIndex < widget.exercise.sets.length) {
-      final updatedSets = List<ExerciseSet>.from(widget.exercise.sets);
-      updatedSets[nextSetIndex] = updatedSets[nextSetIndex].copyWith(
-        weight: suggestedWeight,
-      );
-
-      final updatedExercise = widget.exercise.copyWith(sets: updatedSets);
-      widget.onExerciseUpdate(updatedExercise);
-
-      // Show confirmation
-      SnackBarService.showInfo(
-        context,
-        'APRE: Set ${nextSetIndex + 1} weight adjusted to ${suggestedWeight.toStringAsFixed(1)} ${widget.config.measurementUnit}',
-      );
-    }
-  }
-
   void _handleRPESuggestion(double suggestedWeight) {
     // Apply suggested weight to all remaining incomplete sets
     final updatedSets = List<ExerciseSet>.from(widget.exercise.sets);
@@ -999,113 +1160,14 @@ class _ExerciseListItemSetsState extends ConsumerState<ExerciseListItemSets> {
     return widget.exercise.sets.every((set) => set.isCompleted);
   }
 
-  /// Builds collapsible metadata banner for APRE calculations
-  Widget _buildMetadataBanner(BuildContext context) {
-    final calculations = _parseCalculationMetadata();
-
-    // Don't show banner if no calculations available
-    if (calculations == null) return const SizedBox.shrink();
-
-    return AnimatedSize(
-      duration: const Duration(milliseconds: 300),
-      curve: Curves.easeInOut,
-      child: Column(
-        children: [
-          const SizedBox(height: 12),
-          // Collapsible header
-          InkWell(
-            onTap: () {
-              setState(() {
-                _showMetadataBanner = !_showMetadataBanner;
-              });
-            },
-            borderRadius: BorderRadius.circular(8),
-            child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-              decoration: BoxDecoration(
-                color: context.colors.primaryContainer.withValues(alpha: 0.3),
-                borderRadius: BorderRadius.circular(8),
-                border: Border.all(
-                  color: context.colors.primary.withValues(alpha: 0.3),
-                ),
-              ),
-              child: Row(
-                children: [
-                  SemanticIcon(
-                    icon: _showMetadataBanner ? AppIcons.expandLess : AppIcons.expandMore,
-                    semanticLabel: _showMetadataBanner ? 'Collapse' : 'Expand',
-                    size: AppIconSize.small,
-                    color: context.colors.primary,
-                  ),
-                  const SizedBox(width: 8),
-                  Expanded(
-                    child: Text(
-                      _showMetadataBanner
-                          ? context.l10n.apreHideCalculationDetails
-                          : context.l10n.apreShowCalculationDetails,
-                      style: context.textTheme.labelMedium?.copyWith(
-                        color: context.colors.primary,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                  ),
-                  SemanticIcon(
-                    icon: AppIcons.info,
-                    semanticLabel: 'Information',
-                    size: AppIconSize.small,
-                    color: context.colors.primary,
-                  )
-                ],
-              ),
-            ),
-          ),
-          // Expanded metadata details
-          if (_showMetadataBanner) ...[
-            const SizedBox(height: 8),
-            CalculationMetadataDisplay(
-              calculations: calculations,
-              lastCalculationDate: widget.exercise.lastCalculationDate,
-            ),
-          ],
-        ],
-      ),
-    );
-  }
-
-  /// Parses calculation metadata from JSON string
-  Map<String, dynamic>? _parseCalculationMetadata() {
-    if (widget.exercise.calculationMetadata == null) return null;
-
-    try {
-      final decoded = jsonDecode(widget.exercise.calculationMetadata!);
-      return {
-        'confidence': _parseConfidence(decoded['confidence']),
-        'dataPoints': decoded['dataPoints'] ?? 0,
-        'formula': decoded['formula'] ?? 'Brzycki',
-        'dataAge': Duration(days: decoded['dataAge']?['inDays'] ?? 0),
-        'standardDeviation': decoded['standardDeviation']?.toDouble() ?? 0.0,
-      };
-    } catch (e) {
-      debugPrint('⚠️ Error parsing calculation metadata: $e');
-      return null;
+  /// Format duration in seconds to human readable format
+  /// e.g., 60 -> "1:00", 90 -> "1:30", 30 -> "0:30"
+  String _formatDuration(int seconds) {
+    final minutes = seconds ~/ 60;
+    final remainingSeconds = seconds % 60;
+    if (minutes > 0) {
+      return '$minutes:${remainingSeconds.toString().padLeft(2, '0')}';
     }
-  }
-
-  /// Parses confidence string to enum
-  CalculationConfidence _parseConfidence(dynamic confidence) {
-    if (confidence == null) return CalculationConfidence.unknown;
-    if (confidence is CalculationConfidence) return confidence;
-
-    final confStr = confidence.toString().toLowerCase();
-    switch (confStr) {
-      case 'high':
-        return CalculationConfidence.high;
-      case 'medium':
-        return CalculationConfidence.medium;
-      case 'low':
-        return CalculationConfidence.low;
-      default:
-        return CalculationConfidence.unknown;
-    }
+    return '${seconds}s';
   }
 }

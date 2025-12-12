@@ -10,6 +10,7 @@ library;
 import 'dart:convert';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/foundation.dart' show kDebugMode;
 import 'package:gymbro_flutter_new/features/exercise_database/domain/entities/exercise.dart';
 
 /// Enum per tipologia attrezzatura con flag peso richiesto
@@ -76,7 +77,9 @@ class DatabaseManagerService {
     try {
       // Usa cache se valida e non forzato refresh
       if (!forceRefresh && _isCacheValid()) {
-        debugPrint('📦 Using cached exercises');
+        if (kDebugMode) {
+          debugPrint('📦 Using cached exercises');
+        }
         return _filterExercises(
           _cachedExercises!,
           searchQuery: searchQuery,
@@ -87,7 +90,9 @@ class DatabaseManagerService {
         );
       }
 
-      debugPrint('🔄 Fetching exercises from Firebase (exercises_it)');
+      if (kDebugMode) {
+        debugPrint('🔄 Fetching exercises from Firebase (exercises_it)');
+      }
       Query<Map<String, dynamic>> query = _firestore.collection('exercises_it');
 
       // Applica filtri Firebase dove possibile per performance
@@ -118,7 +123,9 @@ class DatabaseManagerService {
       );
 
     } catch (e) {
-      debugPrint('❌ Error fetching exercises: $e');
+      if (kDebugMode) {
+        debugPrint('❌ Error fetching exercises: $e');
+      }
       return [];
     }
   }
@@ -171,7 +178,9 @@ class DatabaseManagerService {
     required dynamic value,
   }) async {
     try {
-      debugPrint('⚡ Quick update: $exerciseId.$fieldName = $value');
+      if (kDebugMode) {
+        debugPrint('⚡ Quick update: $exerciseId.$fieldName = $value');
+      }
 
       await _firestore.collection('exercises_it').doc(exerciseId).update({
         fieldName: value,
@@ -183,7 +192,9 @@ class DatabaseManagerService {
 
       // Se è stato cambiato attrezzatura a corpo libero, logga per tracking
       if (fieldName == 'attrezzatura' && value == 'Corpo Libero') {
-        debugPrint('🏃 Exercise $exerciseId set to bodyweight - weights disabled');
+        if (kDebugMode) {
+          debugPrint('🏃 Exercise $exerciseId set to bodyweight - weights disabled');
+        }
       }
 
       return DatabaseOperationResult(
@@ -193,7 +204,9 @@ class DatabaseManagerService {
       );
 
     } catch (e) {
-      debugPrint('❌ Quick update failed: $e');
+      if (kDebugMode) {
+        debugPrint('❌ Quick update failed: $e');
+      }
       return DatabaseOperationResult(
         success: false,
         message: 'Errore aggiornamento: $e',
@@ -208,7 +221,9 @@ class DatabaseManagerService {
     required dynamic value,
   }) async {
     try {
-      debugPrint('📦 Bulk update: ${exerciseIds.length} exercises');
+      if (kDebugMode) {
+        debugPrint('📦 Bulk update: ${exerciseIds.length} exercises');
+      }
 
       final batch = _firestore.batch();
 
@@ -230,7 +245,9 @@ class DatabaseManagerService {
       );
 
     } catch (e) {
-      debugPrint('❌ Bulk update failed: $e');
+      if (kDebugMode) {
+        debugPrint('❌ Bulk update failed: $e');
+      }
       return DatabaseOperationResult(
         success: false,
         message: 'Errore bulk update: $e',
@@ -241,7 +258,9 @@ class DatabaseManagerService {
   /// Update completo esercizio
   Future<DatabaseOperationResult> updateExercise(Exercise exercise) async {
     try {
-      debugPrint('📝 Updating exercise: ${exercise.id}');
+      if (kDebugMode) {
+        debugPrint('📝 Updating exercise: ${exercise.id}');
+      }
 
       final data = exercise.toJson();
       data['lastModified'] = FieldValue.serverTimestamp();
@@ -256,7 +275,9 @@ class DatabaseManagerService {
       );
 
     } catch (e) {
-      debugPrint('❌ Update exercise failed: $e');
+      if (kDebugMode) {
+        debugPrint('❌ Update exercise failed: $e');
+      }
       return DatabaseOperationResult(
         success: false,
         message: 'Errore aggiornamento: $e',
@@ -267,7 +288,9 @@ class DatabaseManagerService {
   /// Aggiungi nuovo esercizio
   Future<DatabaseOperationResult> addExercise(Exercise exercise) async {
     try {
-      debugPrint('➕ Adding new exercise: ${exercise.nome}');
+      if (kDebugMode) {
+        debugPrint('➕ Adding new exercise: ${exercise.nome}');
+      }
 
       final data = exercise.toJson();
       data['createdAt'] = FieldValue.serverTimestamp();
@@ -283,7 +306,9 @@ class DatabaseManagerService {
       );
 
     } catch (e) {
-      debugPrint('❌ Add exercise failed: $e');
+      if (kDebugMode) {
+        debugPrint('❌ Add exercise failed: $e');
+      }
       return DatabaseOperationResult(
         success: false,
         message: 'Errore aggiunta: $e',
@@ -294,7 +319,9 @@ class DatabaseManagerService {
   /// Elimina esercizio
   Future<DatabaseOperationResult> deleteExercise(String exerciseId) async {
     try {
-      debugPrint('🗑️ Deleting exercise: $exerciseId');
+      if (kDebugMode) {
+        debugPrint('🗑️ Deleting exercise: $exerciseId');
+      }
 
       await _firestore.collection('exercises').doc(exerciseId).delete();
       _invalidateCache();
@@ -306,7 +333,9 @@ class DatabaseManagerService {
       );
 
     } catch (e) {
-      debugPrint('❌ Delete exercise failed: $e');
+      if (kDebugMode) {
+        debugPrint('❌ Delete exercise failed: $e');
+      }
       return DatabaseOperationResult(
         success: false,
         message: 'Errore eliminazione: $e',
@@ -317,7 +346,9 @@ class DatabaseManagerService {
   /// Elimina multipli esercizi
   Future<DatabaseOperationResult> bulkDeleteExercises(List<String> exerciseIds) async {
     try {
-      debugPrint('🗑️ Bulk deleting: ${exerciseIds.length} exercises');
+      if (kDebugMode) {
+        debugPrint('🗑️ Bulk deleting: ${exerciseIds.length} exercises');
+      }
 
       final batch = _firestore.batch();
 
@@ -336,7 +367,9 @@ class DatabaseManagerService {
       );
 
     } catch (e) {
-      debugPrint('❌ Bulk delete failed: $e');
+      if (kDebugMode) {
+        debugPrint('❌ Bulk delete failed: $e');
+      }
       return DatabaseOperationResult(
         success: false,
         message: 'Errore eliminazione multipla: $e',
@@ -347,7 +380,9 @@ class DatabaseManagerService {
   /// Export esercizi in JSON
   Future<String> exportToJson({List<String>? exerciseIds}) async {
     try {
-      debugPrint('📤 Exporting exercises to JSON');
+      if (kDebugMode) {
+        debugPrint('📤 Exporting exercises to JSON');
+      }
 
       List<Exercise> exercises;
 
@@ -387,7 +422,9 @@ class DatabaseManagerService {
       return const JsonEncoder.withIndent('  ').convert(jsonData);
 
     } catch (e) {
-      debugPrint('❌ Export failed: $e');
+      if (kDebugMode) {
+        debugPrint('❌ Export failed: $e');
+      }
       throw Exception('Export fallito: $e');
     }
   }
@@ -395,7 +432,9 @@ class DatabaseManagerService {
   /// Import esercizi da JSON
   Future<DatabaseOperationResult> importFromJson(String jsonString) async {
     try {
-      debugPrint('📥 Importing exercises from JSON');
+      if (kDebugMode) {
+        debugPrint('📥 Importing exercises from JSON');
+      }
 
       final jsonData = json.decode(jsonString);
       final exercisesList = jsonData['exercises'] as List;
@@ -425,7 +464,9 @@ class DatabaseManagerService {
       );
 
     } catch (e) {
-      debugPrint('❌ Import failed: $e');
+      if (kDebugMode) {
+        debugPrint('❌ Import failed: $e');
+      }
       return DatabaseOperationResult(
         success: false,
         message: 'Errore import: $e',
@@ -458,7 +499,9 @@ class DatabaseManagerService {
           .length,
       };
     } catch (e) {
-      debugPrint('❌ Stats failed: $e');
+      if (kDebugMode) {
+        debugPrint('❌ Stats failed: $e');
+      }
       return {};
     }
   }

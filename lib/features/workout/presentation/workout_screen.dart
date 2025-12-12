@@ -4,7 +4,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
-import 'package:gymbro_flutter_new/shared/presentation/widgets/draggable_tutorial_overlay.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/draggable_action_button.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/workout.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise.dart';
@@ -33,9 +32,11 @@ import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart'
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_spacing.dart';
 import 'package:gymbro_flutter_new/features/onboarding/presentation/providers/onboarding_state_provider.dart';
 import 'package:gymbro_flutter_new/features/onboarding/domain/services/contextual_overlay_manager.dart';
+import 'package:gymbro_flutter_new/features/onboarding/domain/services/workout_tutorial_service.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/services/workout_template_cache_service.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator.dart';
+import 'package:gymbro_flutter_new/features/health_sync/presentation/providers/watch_connectivity_provider.dart';
 
 // Sub-component imports
 import 'package:gymbro_flutter_new/features/workout/presentation/workout_screen/widgets/welcome_view.dart';
@@ -82,9 +83,23 @@ class WorkoutScreen extends ConsumerStatefulWidget {
 }
 
 class _WorkoutScreenState extends ConsumerState<WorkoutScreen> {
-  // PHASE 2: GlobalKeys for contextual overlays
+  // GlobalKeys for contextual overlays and tutorial targets
   final GlobalKey _addExerciseFABKey = GlobalKey();
   final GlobalKey _completeWorkoutButtonKey = GlobalKey();
+  final GlobalKey _reorderButtonKey = GlobalKey();
+  final GlobalKey _settingsButtonKey = GlobalKey();
+  final GlobalKey _firstSetRowKey = GlobalKey();
+  final GlobalKey _exerciseMenuKey = GlobalKey();
+
+  /// Map of tutorial step keys for the WorkoutTutorialService
+  Map<WorkoutTutorialStep, GlobalKey> get _tutorialTargetKeys => {
+        WorkoutTutorialStep.addExercise: _addExerciseFABKey,
+        WorkoutTutorialStep.tapSet: _firstSetRowKey,
+        WorkoutTutorialStep.exerciseMenu: _exerciseMenuKey,
+        WorkoutTutorialStep.reorder: _reorderButtonKey,
+        WorkoutTutorialStep.settings: _settingsButtonKey,
+        WorkoutTutorialStep.finish: _completeWorkoutButtonKey,
+      };
 
   @override
   void initState() {
@@ -239,6 +254,7 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen> {
     final l10n = AppLocalizations.of(context);
 
     return Scaffold(
+      backgroundColor: Theme.of(context).colorScheme.surfaceContainer,
       appBar: AppBar(
         title: Text(l10n.workout),
         leading: IconButton(
@@ -270,10 +286,60 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen> {
 
     final colorScheme = Theme.of(context).colorScheme;
 
+    // Watch connectivity for HR display
+    final watchData = ref.watch(watchConnectivityProvider);
+    final hasValidHR = watchData.currentHeartRate > 0 &&
+                       watchData.hasRecentHealthMetrics;
+
     return Scaffold(
+      backgroundColor: colorScheme.surfaceContainer,
       appBar: AppBar(
         // ✅ IMPROVED: Different title and styling in reorder mode
-        title: Text(state.isReorderMode ? l10n.reorderExercises : l10n.workout),
+        title: Row(
+          children: [
+            // Titolo (solo in reorder mode mostra testo specifico)
+            if (state.isReorderMode)
+              Flexible(
+                child: Text(
+                  l10n.reorderExercises,
+                  overflow: TextOverflow.ellipsis,
+                  maxLines: 1,
+                ),
+              )
+            else ...[
+              // HR Badge from Apple Watch (only when connected and valid)
+              if (hasValidHR)
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                  decoration: BoxDecoration(
+                    color: Colors.red.withValues(alpha: 0.15),
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      const Icon(
+                        Icons.favorite,
+                        size: 14,
+                        color: Colors.red,
+                      ),
+                      const SizedBox(width: 4),
+                      Text(
+                        '${watchData.currentHeartRate.toInt()}',
+                        style: context.textTheme.labelMedium?.copyWith(
+                          fontWeight: FontWeight.bold,
+                          color: colorScheme.onSurface,
+                        ),
+                      ),
+                    ],
+                  ),
+                )
+              else
+                // Fallback: mostra titolo se non c'è HR
+                Text(l10n.workout),
+            ],
+          ],
+        ),
         backgroundColor: state.isReorderMode
             ? colorScheme.primaryContainer.withValues(alpha: 0.3)
             : null,
@@ -325,6 +391,7 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen> {
           // Reorder mode toggle (only if exercises exist and not in reorder mode)
           if (workout.exercises.isNotEmpty && !state.isReorderMode)
             IconButton(
+              key: _reorderButtonKey,
               icon: SemanticIcon(
                 icon: AppIcons.dragHandle,
                 size: AppIconSize.medium,
@@ -371,6 +438,7 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen> {
           // Settings menu (only if not in reorder mode)
           if (!state.isReorderMode)
             IconButton(
+              key: _settingsButtonKey,
               icon: SemanticIcon(
                 icon: AppIcons.moreVert,
                 size: AppIconSize.medium,
@@ -396,6 +464,9 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen> {
           ref.read(workoutScreenControllerProvider.notifier)
               .reorderExercises(oldIndex, newIndex);
         },
+        // Tutorial keys for interactive onboarding
+        tutorialFirstSetKey: _firstSetRowKey,
+        tutorialExerciseMenuKey: _exerciseMenuKey,
       ),
       floatingActionButton: _buildFAB(state),
     );
@@ -527,6 +598,9 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen> {
           ref.read(workoutScreenControllerProvider.notifier).addExercise(exercise);
           // Note: Navigator.pop() is called by AddExerciseModal after this callback
           // Do NOT call pop() here - it would cause double-pop and black screen!
+
+          // Trigger tutorial step if active
+          onExerciseAdded();
         },
       ),
     );
@@ -838,6 +912,21 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen> {
                   _saveCurrentWorkoutAsTemplate(context);
                 },
               ),
+              // Start tutorial
+              ListTile(
+                leading: SemanticIcon(
+                  icon: AppIcons.help,
+                  size: AppIconSize.medium,
+                  semanticLabel: l10n.tutorialWelcomeTitle,
+                ),
+                title: Text(l10n.tutorialWelcomeTitle),
+                subtitle: Text(l10n.tutorialWelcomeMessage),
+                onTap: () {
+                  Navigator.of(context).pop();
+                  _startWorkoutTutorial();
+                },
+              ),
+              const Divider(height: 1),
               // Discard workout
               ListTile(
                 leading: SemanticIcon(
@@ -875,5 +964,95 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen> {
   /// Show workout customization modal
   void _showWorkoutCustomization(BuildContext context) {
     WorkoutCustomizationModalV3.show(context);
+  }
+
+  /// Start the workout tutorial from the beginning
+  void _startWorkoutTutorial() {
+    // Start the interactive tutorial
+    ref.read(workoutTutorialProvider.notifier).startTutorial();
+
+    // Show the first step after a short delay to let the UI settle
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _showCurrentTutorialStep();
+    });
+  }
+
+  /// Show the current tutorial step based on state
+  void _showCurrentTutorialStep() {
+    final tutorialState = ref.read(workoutTutorialProvider);
+    if (!tutorialState.isActive) return;
+
+    final targetKey = _tutorialTargetKeys[tutorialState.currentStep];
+    if (targetKey == null) return;
+
+    ref.read(workoutTutorialProvider.notifier).showCurrentStep(
+      context: context,
+      targetKey: targetKey,
+      onComplete: () => _handleTutorialStepComplete(tutorialState.currentStep),
+    );
+  }
+
+  /// Handle tutorial step completion and advance to next step
+  void _handleTutorialStepComplete(WorkoutTutorialStep completedStep) {
+    if (!mounted) return;
+
+    final nextStep = _getNextTutorialStep(completedStep);
+    if (nextStep == null) {
+      // Tutorial completed
+      ref.read(workoutTutorialProvider.notifier).completeTutorial();
+      SnackBarService.showSuccess(
+        context,
+        AppLocalizations.of(context).tutorialCompletedMessage,
+      );
+      return;
+    }
+
+    // For addExercise step, we wait for user to actually add an exercise
+    // For other steps, show immediately
+    if (completedStep == WorkoutTutorialStep.addExercise) {
+      // User needs to add exercise first, advance state but don't show overlay yet
+      ref.read(workoutTutorialProvider.notifier).advanceToStep(nextStep);
+      // The next step will be triggered when exercise is added (via onExerciseAdded)
+    } else {
+      // Advance and show next step
+      ref.read(workoutTutorialProvider.notifier).advanceToStep(nextStep);
+      Future.delayed(const Duration(milliseconds: 500), () {
+        if (mounted) _showCurrentTutorialStep();
+      });
+    }
+  }
+
+  /// Get the next tutorial step
+  WorkoutTutorialStep? _getNextTutorialStep(WorkoutTutorialStep current) {
+    switch (current) {
+      case WorkoutTutorialStep.addExercise:
+        return WorkoutTutorialStep.tapSet;
+      case WorkoutTutorialStep.tapSet:
+        return WorkoutTutorialStep.exerciseMenu;
+      case WorkoutTutorialStep.exerciseMenu:
+        return WorkoutTutorialStep.reorder;
+      case WorkoutTutorialStep.reorder:
+        return WorkoutTutorialStep.settings;
+      case WorkoutTutorialStep.settings:
+        return WorkoutTutorialStep.finish;
+      case WorkoutTutorialStep.finish:
+        return null; // Tutorial complete
+      case WorkoutTutorialStep.completed:
+        return null;
+    }
+  }
+
+  /// Called when an exercise is added to the workout
+  /// Triggers next tutorial step if tutorial is active
+  void onExerciseAdded() {
+    final tutorialState = ref.read(workoutTutorialProvider);
+    if (!tutorialState.isActive) return;
+
+    // If we're waiting for exercise to be added, show the next step
+    if (tutorialState.currentStep == WorkoutTutorialStep.tapSet) {
+      Future.delayed(const Duration(milliseconds: 800), () {
+        if (mounted) _showCurrentTutorialStep();
+      });
+    }
   }
 }

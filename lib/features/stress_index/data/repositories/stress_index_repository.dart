@@ -1,0 +1,287 @@
+/// Stress Index Repository
+///
+/// Handles persistence of stress index results.
+/// Uses local-first storage with optional cloud sync.
+library;
+
+import 'dart:async';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/foundation.dart';
+import 'package:hive_ce_flutter/hive_flutter.dart';
+import 'package:gymbro_flutter_new/core/data/hive_box_manager_enhanced.dart';
+import 'package:gymbro_flutter_new/core/data/hive_box_names.dart';
+import 'package:gymbro_flutter_new/features/stress_index/domain/entities/stress_index_result.dart';
+
+/// Repository interface for stress index data
+abstract class StressIndexRepositoryInterface {
+  /// Save a stress index result
+  Future<void> save(StressIndexResult result);
+
+  /// Get stress index result for a specific workout
+  Future<StressIndexResult?> getForWorkout(String workoutId);
+
+  /// Get recent stress index results (last N days)
+  Future<List<StressIndexResult>> getRecent({int days = 7});
+
+  /// Watch recent stress index results
+  Stream<List<StressIndexResult>> watchRecent({int days = 7});
+
+  /// Delete stress index result for a workout
+  Future<void> delete(String workoutId);
+
+  /// Dispose resources
+  Future<void> dispose();
+}
+
+/// Implementation of stress index repository
+///
+/// Uses Hive for local storage with optional Firestore sync.
+class StressIndexRepository implements StressIndexRepositoryInterface {
+  StressIndexRepository({
+    HiveBoxManagerEnhanced? boxManager,
+    FirebaseFirestore? firestore,
+    FirebaseAuth? auth,
+  })  : _boxManager = boxManager ?? HiveBoxManagerEnhanced(),
+        _firestore = firestore ?? FirebaseFirestore.instance,
+        _auth = auth ?? FirebaseAuth.instance {
+    _initialize();
+  }
+
+  final HiveBoxManagerEnhanced _boxManager;
+  final FirebaseFirestore _firestore;
+  final FirebaseAuth _auth;
+
+  static const String _boxName = HiveBoxNames.stressIndexData;
+  static const String _collectionName = 'stress_index';
+
+  Box<Map>? _localBox;
+  bool _isInitialized = false;
+  bool _isDisposed = false;
+
+  final StreamController<List<StressIndexResult>> _recentController =
+      StreamController<List<StressIndexResult>>.broadcast();
+
+  /// Deep convert a dynamic map to proper typed Map.
+  ///
+  /// Hive returns nested maps as `_Map<dynamic, dynamic>` which causes
+  /// type cast errors with freezed models. This recursively converts all
+  /// nested maps to the correct type.
+  static Map<String, dynamic> _deepConvertMap(dynamic data) {
+    if (data is Map) {
+      return data.map<String, dynamic>(
+        (key, value) => MapEntry(
+          key.toString(),
+          value is Map ? _deepConvertMap(value) : value,
+        ),
+      );
+    }
+    throw ArgumentError('Expected Map, got ${data.runtimeType}');
+  }
+
+  /// Initialize the repository
+  Future<void> _initialize() async {
+    if (_isInitialized) return;
+
+    try {
+      _localBox = await _boxManager.openBox<Map>(_boxName);
+      _isInitialized = true;
+      if (kDebugMode) {
+        debugPrint('[StressIndexRepository] Initialized');
+      }
+    } catch (e) {
+      if (kDebugMode) {
+        debugPrint('[StressIndexRepository] Failed to initialize: $e');
+      }
+    }
+  }
+
+  /// Ensure repository is initialized before operations
+  Future<void> _ensureInitialized() async {
+    if (!_isInitialized) {
+      await _initialize();
+    }
+  }
+
+  @override
+  Future<void> save(StressIndexResult result) async {
+    if (_isDisposed) return;
+    await _ensureInitialized();
+
+    try {
+      // Save locally
+      final json = result.toJson();
+      await _localBox?.put(result.workoutId, json);
+
+      // Emit update
+      _emitRecentUpdate();
+
+      // Sync to cloud if user is logged in
+      await _syncToCloud(result);
+
+      if (kDebugMode) {
+        debugPrint('[StressIndexRepository] Saved stress index for workout: ${result.workoutId}');
+      }
+    } catch (e) {
+      if (kDebugMode) {
+        debugPrint('[StressIndexRepository] Failed to save: $e');
+      }
+    }
+  }
+
+  @override
+  Future<StressIndexResult?> getForWorkout(String workoutId) async {
+    if (_isDisposed) return null;
+    await _ensureInitialized();
+
+    try {
+      final json = _localBox?.get(workoutId);
+      if (json == null) return null;
+
+      return StressIndexResult.fromJson(_deepConvertMap(json));
+    } catch (e) {
+      if (kDebugMode) {
+        debugPrint('[StressIndexRepository] Failed to get for workout: $e');
+      }
+      return null;
+    }
+  }
+
+  @override
+  Future<List<StressIndexResult>> getRecent({int days = 7}) async {
+    if (_isDisposed) return [];
+    await _ensureInitialized();
+
+    try {
+      final cutoff = DateTime.now().subtract(Duration(days: days));
+      final results = <StressIndexResult>[];
+
+      for (final key in _localBox?.keys ?? []) {
+        final json = _localBox?.get(key);
+        if (json == null) continue;
+
+        try {
+          final result = StressIndexResult.fromJson(_deepConvertMap(json));
+          if (result.calculatedAt.isAfter(cutoff)) {
+            results.add(result);
+          }
+        } catch (e) {
+          // Skip invalid entries
+          if (kDebugMode) {
+            debugPrint('[StressIndexRepository] Skipping invalid entry: $e');
+          }
+        }
+      }
+
+      // Sort by date descending (most recent first)
+      results.sort((a, b) => b.calculatedAt.compareTo(a.calculatedAt));
+
+      return results;
+    } catch (e) {
+      if (kDebugMode) {
+        debugPrint('[StressIndexRepository] Failed to get recent: $e');
+      }
+      return [];
+    }
+  }
+
+  @override
+  Stream<List<StressIndexResult>> watchRecent({int days = 7}) {
+    // Emit initial value
+    getRecent(days: days).then((results) {
+      if (!_isDisposed) {
+        _recentController.add(results);
+      }
+    });
+
+    return _recentController.stream;
+  }
+
+  @override
+  Future<void> delete(String workoutId) async {
+    if (_isDisposed) return;
+    await _ensureInitialized();
+
+    try {
+      await _localBox?.delete(workoutId);
+      _emitRecentUpdate();
+
+      // Delete from cloud if user is logged in
+      await _deleteFromCloud(workoutId);
+
+      if (kDebugMode) {
+        debugPrint('[StressIndexRepository] Deleted stress index for workout: $workoutId');
+      }
+    } catch (e) {
+      if (kDebugMode) {
+        debugPrint('[StressIndexRepository] Failed to delete: $e');
+      }
+    }
+  }
+
+  /// Emit update to recent stream
+  void _emitRecentUpdate() {
+    if (_isDisposed) return;
+    getRecent().then((results) {
+      if (!_isDisposed) {
+        _recentController.add(results);
+      }
+    });
+  }
+
+  /// Sync result to Firestore
+  Future<void> _syncToCloud(StressIndexResult result) async {
+    final userId = _auth.currentUser?.uid;
+    if (userId == null) return;
+
+    try {
+      await _firestore
+          .collection('users')
+          .doc(userId)
+          .collection(_collectionName)
+          .doc(result.workoutId)
+          .set(result.toJson());
+
+      if (kDebugMode) {
+        debugPrint('[StressIndexRepository] Synced to cloud: ${result.workoutId}');
+      }
+    } catch (e) {
+      if (kDebugMode) {
+        debugPrint('[StressIndexRepository] Failed to sync to cloud: $e');
+      }
+      // Don't throw - local save succeeded
+    }
+  }
+
+  /// Delete from Firestore
+  Future<void> _deleteFromCloud(String workoutId) async {
+    final userId = _auth.currentUser?.uid;
+    if (userId == null) return;
+
+    try {
+      await _firestore
+          .collection('users')
+          .doc(userId)
+          .collection(_collectionName)
+          .doc(workoutId)
+          .delete();
+    } catch (e) {
+      if (kDebugMode) {
+        debugPrint('[StressIndexRepository] Failed to delete from cloud: $e');
+      }
+    }
+  }
+
+  @override
+  Future<void> dispose() async {
+    if (_isDisposed) return;
+    _isDisposed = true;
+
+    await _recentController.close();
+    // Box is managed by HiveBoxManagerEnhanced
+    if (kDebugMode) {
+      debugPrint('[StressIndexRepository] Disposed');
+    }
+  }
+}

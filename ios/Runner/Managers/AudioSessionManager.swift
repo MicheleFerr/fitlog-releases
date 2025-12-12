@@ -128,52 +128,35 @@ final class AudioSessionManager: AudioSessionManaging {
     func reactivate() {
         Logger.shared.log(.info, "[TIMER-DEBUG] reactivate called")
 
-        // OPTIMIZATION: Deactivate in background to avoid UI blocking (~500ms improvement)
+        // Configure on background queue to avoid UI blocking
         DispatchQueue.global(qos: .userInteractive).async { [weak self] in
             guard let self = self else { return }
 
-            // ✅ FIX #3: CRITICAL - Always deactivate first (ignore errors) + add delay
-            try? self.session.setActive(false, options: .notifyOthersOnDeactivation)
-            Thread.sleep(forTimeInterval: 0.01)  // 10ms delay for CoreAudio to process
-            Logger.shared.log(.debug, "[TIMER-DEBUG] Audio session deactivated with delay")
+            do {
+                // ✅ FIX: Do NOT deactivate first! That releases audio to other apps.
+                // Just set category directly (safe to call even if already set)
+                let currentCategory = self.session.category
+                let currentOptions = self.session.categoryOptions
 
-            // Configure on main queue for safety
-            DispatchQueue.main.async {
+                if currentCategory != .playback || !currentOptions.contains(.mixWithOthers) {
+                    Logger.shared.log(.info, "[TIMER-DEBUG] Reconfiguring (current: \(currentCategory.rawValue))")
+                    try self.session.setCategory(.playback, mode: .default, options: [.mixWithOthers])
+                }
+
+                // Activate (safe to call even if already active)
+                try self.session.setActive(true, options: [])
+
+                Logger.shared.log(.info, "[TIMER-DEBUG] ✅ Audio session reactivated successfully")
+
+            } catch {
+                Logger.shared.log(.error, "[TIMER-DEBUG] ❌ Reactivation failed: \(error.audioSessionErrorDescription)")
+
+                // Last resort: just try to activate without changing category
                 do {
-                    // ✅ FIX #3: TWO-STAGE APPROACH - Activate WITHOUT .duckOthers first
-                    // This avoids OSStatus -50 when combining options
-                    try self.session.setCategory(.playback, mode: .default, options: [
-                        .mixWithOthers,
-                        .allowBluetooth,
-                        .allowBluetoothA2DP
-                    ])
-
-                    // Activate with high priority
                     try self.session.setActive(true, options: [])
-                    Logger.shared.log(.debug, "[TIMER-DEBUG] Audio session activated (stage 1)")
-
-                    // ✅ FIX #3: NOW add .duckOthers AFTER activation
-                    try self.session.setCategory(.playback, mode: .default, options: [
-                        .mixWithOthers,
-                        .duckOthers,  // Add ducking AFTER activation
-                        .allowBluetooth,
-                        .allowBluetoothA2DP
-                    ])
-
-                    Logger.shared.log(.info, "[TIMER-DEBUG] ✅ Audio session reactivated with ducking (stage 2)")
-
+                    Logger.shared.log(.info, "[TIMER-DEBUG] ✅ Fallback: session activated (kept existing category)")
                 } catch {
-                    Logger.shared.log(.error, "[TIMER-DEBUG] ❌ Reactivation failed: \(error.audioSessionErrorDescription)")
-
-                    // ✅ FIX #3: Fallback to minimal configuration
-                    do {
-                        try? self.session.setActive(false, options: [])
-                        try self.session.setCategory(.playback, mode: .default, options: [.mixWithOthers])
-                        try self.session.setActive(true, options: [])
-                        Logger.shared.log(.info, "[TIMER-DEBUG] ✅ Fallback audio configuration applied")
-                    } catch {
-                        Logger.shared.log(.error, "[TIMER-DEBUG] ❌ Even fallback failed: \(error.localizedDescription)")
-                    }
+                    Logger.shared.log(.error, "[TIMER-DEBUG] ❌ Even activation-only failed: \(error.localizedDescription)")
                 }
             }
         }
@@ -232,13 +215,9 @@ final class AudioSessionManager: AudioSessionManaging {
     }
     
     private func configureForegroundAudio() throws {
-        // ✅ FIX #3: Simplified configuration to fix OSStatus -50
-        // Removed .allowAirPlay which may cause conflicts
-        let targetOptions: AVAudioSession.CategoryOptions = [
-            .mixWithOthers,      // Allow mixing with Spotify and other audio
-            .allowBluetooth,
-            .allowBluetoothA2DP
-        ]
+        // ✅ FIX: MINIMAL configuration to fix OSStatus -50
+        // Only use .mixWithOthers - other options can fail at app startup
+        let targetOptions: AVAudioSession.CategoryOptions = [.mixWithOthers]
 
         // Check if already configured correctly
         if lastConfiguredCategory == .playback,
@@ -250,15 +229,11 @@ final class AudioSessionManager: AudioSessionManaging {
 
         Logger.shared.log(.info, "Configuring foreground audio...")
 
-        // ✅ FIX #3: CRITICAL - Always deactivate first (ignore errors) + add delay
-        try? session.setActive(false, options: .notifyOthersOnDeactivation)
-        Thread.sleep(forTimeInterval: 0.01)  // 10ms delay for CoreAudio to process
-        Logger.shared.log(.debug, "Audio session deactivated with delay")
+        // ✅ FIX: Do NOT deactivate first! That releases audio to other apps.
+        // Just set category directly - this is safe to call even if already set
 
-        // Configure for foreground with simplified options
+        // Configure with minimal options
         try session.setCategory(.playback, mode: .default, options: targetOptions)
-
-        // Activate with high priority
         try session.setActive(true, options: [])
 
         // Cache configuration
@@ -269,13 +244,9 @@ final class AudioSessionManager: AudioSessionManaging {
     }
     
     private func configureBackgroundAudio() throws {
-        // ✅ FIX #3: Simplified configuration to fix OSStatus -50
-        // Removed .allowAirPlay which may cause conflicts
-        let targetOptions: AVAudioSession.CategoryOptions = [
-            .mixWithOthers,     // Allow mixing with Spotify and other audio
-            .allowBluetooth,    // Allow Bluetooth audio
-            .allowBluetoothA2DP // Allow high-quality Bluetooth
-        ]
+        // ✅ FIX: MINIMAL configuration to fix OSStatus -50
+        // Only use .mixWithOthers - safest option
+        let targetOptions: AVAudioSession.CategoryOptions = [.mixWithOthers]
 
         // Check if already configured correctly
         if lastConfiguredCategory == .playback,
@@ -287,18 +258,15 @@ final class AudioSessionManager: AudioSessionManaging {
 
         Logger.shared.log(.info, "Configuring background audio...")
 
-        // ✅ FIX #3: CRITICAL - Always deactivate first (ignore errors) + add delay
-        try? session.setActive(false, options: .notifyOthersOnDeactivation)
-        Thread.sleep(forTimeInterval: 0.01)  // 10ms delay for CoreAudio to process
-        Logger.shared.log(.debug, "Audio session deactivated with delay")
+        // ✅ FIX: Do NOT deactivate first! That releases audio to other apps.
+        // Just set category directly - this is safe to call even if already set
 
-        // Configure for background silent track + completion sounds
+        // Configure with minimal options
         try session.setCategory(.playback, mode: .default, options: targetOptions)
 
-        // ENHANCED: Set preferred buffer duration for efficient silent loop
-        try session.setPreferredIOBufferDuration(0.1) // 100ms buffer for efficiency
+        // Buffer duration is optional - don't fail if not supported
+        try? session.setPreferredIOBufferDuration(0.1)
 
-        // Activate with high priority for lockscreen
         try session.setActive(true, options: [])
 
         // Cache configuration
@@ -330,24 +298,28 @@ final class AudioSessionManager: AudioSessionManaging {
     func configureSilentLoopSession() throws {
         Logger.shared.log(.info, "Configuring audio session for lockscreen audio support")
 
-        // ✅ FIX #3: CRITICAL - Deactivate first with delay to avoid OSStatus -50
-        try? session.setActive(false, options: .notifyOthersOnDeactivation)
-        Thread.sleep(forTimeInterval: 0.01)  // 10ms delay for CoreAudio to process
+        // ✅ FIX: Do NOT deactivate first! That releases audio to other apps.
+        // Instead, check if already configured correctly and just set category.
 
-        // ✅ FIX #3: Simplified configuration (removed .allowAirPlay)
-        try session.setCategory(.playback, mode: .default, options: [
-            .mixWithOthers,   // Don't interrupt Spotify or other audio
-            .allowBluetooth,  // Allow Bluetooth
-            .allowBluetoothA2DP // Allow high-quality Bluetooth
-        ])
+        let currentCategory = session.category
+        let currentOptions = session.categoryOptions
+        let needsReconfigure = currentCategory != .playback || !currentOptions.contains(.mixWithOthers)
 
-        // Set optimal buffer for battery efficiency
-        try session.setPreferredIOBufferDuration(0.1)
+        if needsReconfigure {
+            Logger.shared.log(.info, "📱 Reconfiguring audio session (current: \(currentCategory.rawValue), options: \(currentOptions.rawValue))")
 
-        // Set low sample rate for efficiency (silent audio doesn't need high quality)
-        try session.setPreferredSampleRate(22050) // Half of CD quality is enough
+            // ✅ KEY FIX: Just set category WITHOUT deactivating first
+            // This preserves our audio session ownership
+            try session.setCategory(.playback, mode: .default, options: [.mixWithOthers])
 
-        // Activate session with high priority
+            // Optional preferences (ignore failures)
+            try? session.setPreferredIOBufferDuration(0.1)
+            try? session.setPreferredSampleRate(22050)
+        } else {
+            Logger.shared.log(.info, "📱 Audio session already configured correctly, skipping category change")
+        }
+
+        // Activate session (safe to call even if already active)
         try session.setActive(true, options: [])
 
         Logger.shared.log(.info, "✅ Audio session configured for lockscreen playback")

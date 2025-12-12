@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart' show kDebugMode;
 import 'dart:async';
 
 import 'package:flutter/foundation.dart';
@@ -67,7 +68,9 @@ class OnboardingTourNotifier extends Notifier<OnboardingTourState> {
 
   /// Start the tour from the beginning
   void startTour() {
-    debugPrint('🎯 [TOUR] Starting onboarding tour');
+    if (kDebugMode) {
+      debugPrint('🎯 [TOUR] Starting onboarding tour');
+    }
     state = const OnboardingTourState(
       isActive: true,
       currentStepPosition: 0,
@@ -89,7 +92,9 @@ class OnboardingTourNotifier extends Notifier<OnboardingTourState> {
     _cancelAutoAdvance();
 
     final nextPosition = state.currentStepPosition + 1;
-    debugPrint('🎯 [TOUR] Moving to step ${nextPosition + 1}/${OnboardingTourConfig.totalSteps}');
+    if (kDebugMode) {
+      debugPrint('🎯 [TOUR] Moving to step ${nextPosition + 1}/${OnboardingTourConfig.totalSteps}');
+    }
 
     state = state.copyWith(
       currentStepPosition: nextPosition,
@@ -107,7 +112,9 @@ class OnboardingTourNotifier extends Notifier<OnboardingTourState> {
     _cancelAutoAdvance();
 
     final previousPosition = state.currentStepPosition - 1;
-    debugPrint('🎯 [TOUR] Moving back to step ${previousPosition + 1}/${OnboardingTourConfig.totalSteps}');
+    if (kDebugMode) {
+      debugPrint('🎯 [TOUR] Moving back to step ${previousPosition + 1}/${OnboardingTourConfig.totalSteps}');
+    }
 
     state = state.copyWith(
       currentStepPosition: previousPosition,
@@ -120,7 +127,9 @@ class OnboardingTourNotifier extends Notifier<OnboardingTourState> {
 
   /// Skip the entire tour
   void skipTour() {
-    debugPrint('🎯 [TOUR] Tour skipped by user');
+    if (kDebugMode) {
+      debugPrint('🎯 [TOUR] Tour skipped by user');
+    }
     _cancelAutoAdvance();
 
     state = const OnboardingTourState(
@@ -135,7 +144,9 @@ class OnboardingTourNotifier extends Notifier<OnboardingTourState> {
 
   /// Complete the tour successfully
   void completeTour() {
-    debugPrint('🎯 [TOUR] Tour completed successfully');
+    if (kDebugMode) {
+      debugPrint('🎯 [TOUR] Tour completed successfully');
+    }
     _cancelAutoAdvance();
 
     state = const OnboardingTourState(
@@ -153,15 +164,19 @@ class OnboardingTourNotifier extends Notifier<OnboardingTourState> {
     final currentStep = state.currentStep;
 
     if (currentStep.isSimple && currentStep.autoAdvanceDuration != null) {
-      debugPrint(
-        '🎯 [TOUR] Starting auto-advance timer for ${currentStep.id} '
-        '(${currentStep.autoAdvanceDuration!.inSeconds}s)',
-      );
+      if (kDebugMode) {
+        debugPrint(
+          '🎯 [TOUR] Starting auto-advance timer for ${currentStep.id} '
+          '(${currentStep.autoAdvanceDuration!.inSeconds}s)',
+        );
+      }
 
       state = state.copyWith(isAutoAdvancing: true);
 
       _autoAdvanceTimer = Timer(currentStep.autoAdvanceDuration!, () {
-        debugPrint('🎯 [TOUR] Auto-advancing from ${currentStep.id}');
+        if (kDebugMode) {
+          debugPrint('🎯 [TOUR] Auto-advancing from ${currentStep.id}');
+        }
         nextStep();
       });
     }

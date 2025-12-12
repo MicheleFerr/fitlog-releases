@@ -143,7 +143,7 @@ class HybridTemplateRepository {
     );
   }
 
-  /// Check template quota (5 for free users, unlimited for premium)
+  /// Check template quota (4 for free users, unlimited for premium)
   Future<void> _checkQuota() async {
     // Premium users have unlimited templates
     if (_isPremiumUser) {
@@ -155,7 +155,7 @@ class HybridTemplateRepository {
     final customTemplates = await getUserTemplates();
     final customCount = customTemplates.where((t) => t.isCustom).length;
 
-    const maxFreeTemplates = 5;
+    const maxFreeTemplates = 4;
     _HybridTemplateLogger.log('Quota check: FREE user - $customCount/$maxFreeTemplates templates used');
 
     if (customCount >= maxFreeTemplates) {
@@ -221,9 +221,7 @@ class HybridTemplateRepository {
         // Remove from sync queue on success
         await _templateSyncBox.delete(template.id);
         
-        // print('✅ Template synced to cloud: ${template.id}');
       } catch (e) {
-        // print('⚠️ Template cloud sync failed (will retry): $e');
         // Keep in sync queue for retry
       }
     });
@@ -441,7 +439,6 @@ class HybridTemplateRepository {
             .doc(template.id)
             .update(template.toJson());
       } catch (e) {
-        // print('Template cloud update failed: $e');
       }
     });
   }
@@ -466,7 +463,6 @@ class HybridTemplateRepository {
             .doc(templateId)
             .delete();
       } catch (e) {
-        // print('Template cloud deletion failed: $e');
       }
     });
   }
@@ -536,7 +532,6 @@ class HybridTemplateRepository {
         // Remove from sync queue on success
         await _templateSyncBox.delete(templateId);
       } catch (e) {
-        // print('Sync queue processing failed for $templateId: $e');
         // Increment retry count
         item['retryCount'] = (item['retryCount'] ?? 0) + 1;
         await _templateSyncBox.put(templateId, item);

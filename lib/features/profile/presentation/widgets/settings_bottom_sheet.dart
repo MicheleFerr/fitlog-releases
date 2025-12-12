@@ -17,7 +17,6 @@ import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_
 import 'package:gymbro_flutter_new/shared/presentation/providers/app_config_provider.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
-import 'package:gymbro_flutter_new/features/auth/presentation/providers/auth_provider.dart';
 
 /// Shows the quick settings bottom sheet
 void showSettingsBottomSheet(BuildContext context) {
@@ -127,24 +126,6 @@ class _SettingsBottomSheetContent extends ConsumerWidget {
                 ),
               ),
             ),
-            const SizedBox(height: 12),
-
-            // Sign out button
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20),
-              child: SizedBox(
-                width: double.infinity,
-                child: TextButton(
-                  onPressed: () => _confirmSignOut(context, ref),
-                  child: Text(
-                    context.l10n.signOut,
-                    style: context.textTheme.bodyLarge?.copyWith(
-                      color: context.colors.error,
-                    ),
-                  ),
-                ),
-              ),
-            ),
             const SizedBox(height: 20),
           ],
         ),
@@ -209,33 +190,6 @@ class _SettingsBottomSheetContent extends ConsumerWidget {
     );
   }
 
-  void _confirmSignOut(BuildContext context, WidgetRef ref) {
-    HapticFeedback.mediumImpact();
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: Text(context.l10n.signOut),
-        content: Text(context.l10n.signOutConfirm),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: Text(context.l10n.cancel),
-          ),
-          FilledButton(
-            onPressed: () async {
-              Navigator.pop(context); // Close dialog
-              Navigator.pop(context); // Close bottom sheet
-              await ref.read(authServiceProvider).signOut();
-            },
-            style: FilledButton.styleFrom(
-              backgroundColor: context.colors.error,
-            ),
-            child: Text(context.l10n.signOut),
-          ),
-        ],
-      ),
-    );
-  }
 }
 
 /// Individual settings tile

@@ -34,6 +34,7 @@ import 'package:gymbro_flutter_new/core/data/hive_migration_service.dart'; // �
 // NOTE: Notification deep linking imports removed - will be rebuilt from scratch
 import 'package:voo_logging/voo_logging.dart'; // 🔍 Unified logging + HTTP inspector
 import 'package:gymbro_flutter_new/features/auth/data/auth_service.dart'; // google_sign_in 7.x init
+import 'package:gymbro_flutter_new/features/workout/domain/entities/workout_draft.dart'; // 💾 Workout Draft for auto-save
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -147,6 +148,10 @@ void main() async {
   }
   if (!Hive.isAdapterRegistered(ExerciseUsageModelAdapter().typeId)) {
     Hive.registerAdapter(ExerciseUsageModelAdapter());
+  }
+  // 💾 Workout Draft adapter for auto-save functionality
+  if (!Hive.isAdapterRegistered(WorkoutDraftAdapter().typeId)) {
+    Hive.registerAdapter(WorkoutDraftAdapter());
   }
 
   // ✅ CRITICAL FIX: Initialize HiveBoxManagerEnhanced with pre-opened critical boxes

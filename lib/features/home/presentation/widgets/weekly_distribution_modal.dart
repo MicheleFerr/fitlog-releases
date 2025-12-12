@@ -5,16 +5,18 @@ import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_locali
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 
 class WeeklyDistributionModal extends ConsumerWidget {
-  
+
   const WeeklyDistributionModal({
     super.key,
     required this.weeklyData,
+    this.scrollController,
   });
   final Map<String, double> weeklyData;
+  final ScrollController? scrollController;
   
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final l10n = AppLocalizations.of(context);
+    final l10n = context.l10n;
     final theme = Theme.of(context);
     
     // Calculate statistics
@@ -23,14 +25,17 @@ class WeeklyDistributionModal extends ConsumerWidget {
     final maxVolume = weeklyData.values.isEmpty ? 0.0 : weeklyData.values.reduce((a, b) => a > b ? a : b);
     final trainingDays = weeklyData.values.where((v) => v > 0).length;
     
-    return Container(
-      height: MediaQuery.of(context).size.height * 0.75,
+    return DecoratedBox(
       decoration: BoxDecoration(
         color: theme.colorScheme.surface,
         borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
       ),
-      child: Column(
-        children: [
+      child: SafeArea(
+        top: false,
+        child: ListView(
+          controller: scrollController,
+          padding: EdgeInsets.zero,
+          children: [
           // Handle bar
           const SizedBox(height: 8),
           Container(
@@ -124,7 +129,8 @@ class WeeklyDistributionModal extends ConsumerWidget {
           const SizedBox(height: 20),
           
           // Chart
-          Expanded(
+          SizedBox(
+            height: 300,
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20),
               child: Container(
@@ -276,9 +282,9 @@ class WeeklyDistributionModal extends ConsumerWidget {
                 ),
               ),
             ),
-          ),
+          ), // SizedBox for chart
           const SizedBox(height: 20),
-          
+
           // Info Section
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -313,8 +319,9 @@ class WeeklyDistributionModal extends ConsumerWidget {
           ),
           const SizedBox(height: 20),
         ],
-      ),
-    );
+      ), // ListView
+      ), // SafeArea
+    ); // DecoratedBox
   }
   
   String _getDayKey(int index) {

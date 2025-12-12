@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:gymbro_flutter_new/features/health_sync/domain/entities/health_data_type.dart';
 import 'package:gymbro_flutter_new/features/health_sync/domain/entities/health_permission_status.dart';
 import 'package:gymbro_flutter_new/features/health_sync/presentation/providers/health_permission_provider.dart';
@@ -116,6 +117,11 @@ class HealthSyncSettingsScreen extends ConsumerWidget {
 
         // Clear cache button
         _buildClearCacheButton(context, ref),
+
+        const SizedBox(height: 16),
+
+        // Debug button (for testing HealthKit/Health Connect)
+        _buildDebugButton(context),
       ],
     );
   }
@@ -402,6 +408,23 @@ class HealthSyncSettingsScreen extends ConsumerWidget {
       label: const Text('Clear Sync Cache'), // TODO: Localize
       style: OutlinedButton.styleFrom(
         foregroundColor: context.colors.error,
+      ),
+    );
+  }
+
+  /// Builds debug button for diagnostic testing
+  Widget _buildDebugButton(BuildContext context) {
+    return OutlinedButton.icon(
+      onPressed: () => context.pushNamed('health-debug'),
+      icon: SemanticIcon(
+        icon: AppIcons.bugReport,
+        semanticLabel: 'Debug',
+        size: AppIconSize.small,
+        color: context.colors.primary,
+      ),
+      label: const Text('Run Diagnostic Tests'), // Debug only
+      style: OutlinedButton.styleFrom(
+        foregroundColor: context.colors.primary,
       ),
     );
   }

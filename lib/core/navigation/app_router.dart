@@ -46,7 +46,7 @@ import 'package:gymbro_flutter_new/features/auth/presentation/providers/auth_pro
 
 // Home branch
 import 'package:gymbro_flutter_new/features/home/presentation/minimal_home_screen.dart';
-import 'package:gymbro_flutter_new/features/ai_coach/presentation/screens/ai_coach_screen.dart';
+import 'package:gymbro_flutter_new/features/help_center/presentation/screens/help_center_screen.dart';
 import 'package:gymbro_flutter_new/features/community/presentation/screens/community_hub_screen.dart';
 import 'package:gymbro_flutter_new/features/onboarding/presentation/global_onboarding_screen.dart';
 import 'package:gymbro_flutter_new/features/workout_templates/presentation/screens/templates_home_screen.dart';
@@ -64,11 +64,14 @@ import 'package:gymbro_flutter_new/features/analytics/presentation/analytics_scr
 import 'package:gymbro_flutter_new/features/analytics/presentation/tabbed_analytics_screen.dart';
 import 'package:gymbro_flutter_new/features/analytics/presentation/screens/exercise_detail_screen.dart';
 import 'package:gymbro_flutter_new/features/analytics/presentation/screens/exercise_progress_screen.dart';
+import 'package:gymbro_flutter_new/features/analytics/presentation/screens/pro_analytics_tabbed_screen.dart';
 
 // Settings (pushed from Profile)
 import 'package:gymbro_flutter_new/features/settings/presentation/settings_screen.dart';
 import 'package:gymbro_flutter_new/features/settings/presentation/screens/debug_log_settings_screen.dart';
 import 'package:gymbro_flutter_new/features/health_sync/presentation/screens/health_sync_settings_screen.dart';
+import 'package:gymbro_flutter_new/features/ai_coach/presentation/screens/healthkit_debug_screen.dart';
+import 'package:gymbro_flutter_new/features/import/presentation/screens/import_screen.dart';
 
 // Profile branch
 import 'package:gymbro_flutter_new/features/profile/presentation/screens/profile_hub_screen.dart';
@@ -201,11 +204,11 @@ final appRouterProvider = Provider<GoRouter>((ref) {
                 name: AppRoutes.homeName,
                 builder: (context, state) => const MinimalHomeScreen(),
                 routes: [
-                  // AI Coach (sub-route of home)
+                  // Help Center (replaces AI Coach)
                   GoRoute(
-                    path: 'ai-coach',
+                    path: 'ai-coach', // Keep same path for backwards compatibility
                     name: AppRoutes.aiCoachName,
-                    builder: (context, state) => const AICoachScreen(),
+                    builder: (context, state) => const HelpCenterScreen(),
                   ),
                   // Community
                   GoRoute(
@@ -325,6 +328,12 @@ final appRouterProvider = Provider<GoRouter>((ref) {
                         name: AppRoutes.exerciseProgressName,
                         builder: (context, state) => const ExerciseProgressScreen(),
                       ),
+                      // Pro Analytics (tabbed version)
+                      GoRoute(
+                        path: 'pro',
+                        name: AppRoutes.proAnalyticsName,
+                        builder: (context, state) => const ProAnalyticsTabbedScreen(),
+                      ),
                     ],
                   ),
                   // Settings (pushed from ⚙️ icon)
@@ -345,6 +354,19 @@ final appRouterProvider = Provider<GoRouter>((ref) {
                         name: AppRoutes.healthSyncName,
                         builder: (context, state) =>
                             const HealthSyncSettingsScreen(),
+                      ),
+                      // Health debug (HealthKit/Health Connect diagnostic)
+                      GoRoute(
+                        path: 'health-debug',
+                        name: AppRoutes.healthDebugName,
+                        builder: (context, state) =>
+                            const HealthKitDebugScreen(),
+                      ),
+                      // Import data from other apps
+                      GoRoute(
+                        path: 'import',
+                        name: AppRoutes.importDataName,
+                        builder: (context, state) => const ImportScreen(),
                       ),
                     ],
                   ),

@@ -1,0 +1,1940 @@
+{
+  "active_style_cable_pushdown": {
+    "nome": "Pushdown",
+    "focus": "TRIC",
+    "muscoliSecondari": "DELT, PETT",
+    "tipoEsercizio": "Compound"
+  },
+  "assisted_standing_triceps_extension_with_towel": {
+    "nome": "Estensione Tricipiti in Piedi con Asciugamano",
+    "focus": "TRIC",
+    "muscoliSecondari": "DELT",
+    "tipoEsercizio": "Isolamento"
+  },
+  "assisted_standing_triceps_extension_with_towel_with_horizontal": {
+    "nome": "Estensione Tricipiti in Piedi",
+    "focus": "TRIC",
+    "muscoliSecondari": "DELT",
+    "tipoEsercizio": "Isolamento"
+  },
+  "assisted_triceps_dip_kneeling": {
+    "nome": "Dip Tricipiti in Ginocchio",
+    "focus": "TRIC",
+    "muscoliSecondari": "DELT, PETT",
+    "tipoEsercizio": "Compound"
+  },
+  "band_alternating_biceps_curl": {
+    "nome": "Curl Alternato Bicipiti con Elastico",
+    "focus": "BICI",
+    "muscoliSecondari": "AVA",
+    "tipoEsercizio": "Isolamento"
+  },
+  "band_close_grip_push_up": {
+    "nome": "Piegamenti Presa Stretta con Elastico",
+    "focus": "TRIC",
+    "muscoliSecondari": "DELT, PETT",
+    "tipoEsercizio": "Compound"
+  },
+  "band_concentration_curl": {
+    "nome": "Curl di Concentrazione con Elastico",
+    "focus": "BICI",
+    "muscoliSecondari": "AVA",
+    "tipoEsercizio": "Isolamento"
+  },
+  "band_one_arm_overhead_biceps_curl": {
+    "nome": "Curl Un Braccio Sopra la Testa Bicipiti con Elastico",
+    "focus": "BICI",
+    "muscoliSecondari": "AVA",
+    "tipoEsercizio": "Isolamento"
+  },
+  "band_side_triceps_extension": {
+    "nome": "Estensione Tricipiti Laterale con Elastico",
+    "focus": "TRIC",
+    "muscoliSecondari": "DELT",
+    "tipoEsercizio": "Isolamento"
+  },
+  "barbell_alternate_biceps_curl": {
+    "nome": "Curl Alternato Bicipiti con Bilanciere",
+    "focus": "BICI",
+    "muscoliSecondari": "AVA",
+    "tipoEsercizio": "Isolamento"
+  },
+  "barbell_biceps_curl_with_arm_blaster": {
+    "nome": "Curl Bicipiti con Bilanciere(Arm Blaster)",
+    "focus": "BICI",
+    "muscoliSecondari": "AVA",
+    "tipoEsercizio": "Isolamento"
+  },
+  "barbell_close_grip_bench_press": {
+    "nome": "Panca Piana Presa Stretta con Bilanciere",
+    "focus": "TRIC",
+    "muscoliSecondari": "DELT, PETT",
+    "tipoEsercizio": "Compound"
+  },
+  "barbell_curl": {
+    "nome": "Curl con Bilanciere",
+    "focus": "BICI",
+    "muscoliSecondari": "AVA",
+    "tipoEsercizio": "Isolamento"
+  },
+  "barbell_decline_close_grip_to_skull_press": {
+    "nome": "Presa Stretta Panca Declinata Press",
+    "focus": "TRIC",
+    "muscoliSecondari": "DELT, PETT",
+    "tipoEsercizio": "Compound"
+  },
+  "barbell_drag_curl": {
+    "nome": "Curl Drag con Bilanciere",
+    "focus": "BICI",
+    "muscoliSecondari": "AVA",
+    "tipoEsercizio": "Isolamento"
+  },
+  "barbell_incline_close_grip_bench_press": {
+    "nome": "Distensioni Presa Stretta Inclinate con Bilanciere",
+    "focus": "TRIC",
+    "muscoliSecondari": "DELT, PETT",
+    "tipoEsercizio": "Compound"
+  },
+  "barbell_incline_reverse_grip_press": {
+    "nome": "Distensioni Inclinate Presa Inversa con Bilanciere",
+    "focus": "TRIC",
+    "muscoliSecondari": "DELT, PETT",
+    "tipoEsercizio": "Compound"
+  },
+  "barbell_jm_bench_press": {
+    "nome": "Jm Panca Piana con Bilanciere",
+    "focus": "TRIC",
+    "muscoliSecondari": "DELT, PETT",
+    "tipoEsercizio": "Compound"
+  },
+  "barbell_lying_back_of_the_head_tricep_extension": {
+    "nome": "Estensione Sdraiato Tricipiti Dietro la Testa con Bilanciere",
+    "focus": "TRIC",
+    "muscoliSecondari": "DELT",
+    "tipoEsercizio": "Isolamento"
+  },
+  "barbell_lying_close_grip_press": {
+    "nome": "Panca Piana Presa Stretta con Bilanciere",
+    "focus": "TRIC",
+    "muscoliSecondari": "DELT, PETT",
+    "tipoEsercizio": "Compound"
+  },
+  "barbell_lying_close_grip_triceps_extension": {
+    "nome": "Estensione Sdraiato Presa Stretta Tricipiti con Bilanciere",
+    "focus": "TRIC",
+    "muscoliSecondari": "DELT",
+    "tipoEsercizio": "Isolamento"
+  },
+  "barbell_lying_extension": {
+    "nome": "Estensione Sdraiato con Bilanciere",
+    "focus": "TRIC",
+    "muscoliSecondari": "DELT",
+    "tipoEsercizio": "Isolamento"
+  },
+  "barbell_lying_preacher_curl": {
+    "nome": "Curl Sdraiato Preacher con Bilanciere",
+    "focus": "BICI",
+    "muscoliSecondari": "AVA",
+    "tipoEsercizio": "Isolamento"
+  },
+  "barbell_lying_triceps_extension": {
+    "nome": "Estensione Sdraiato Tricipiti con Bilanciere",
+    "focus": "TRIC",
+    "muscoliSecondari": "DELT",
+    "tipoEsercizio": "Isolamento"
+  },
+  "barbell_lying_triceps_extension_double": {
+    "nome": "Estensione Sdraiato Tricipiti Doppio",
+    "focus": "TRIC",
+    "muscoliSecondari": "DELT",
+    "tipoEsercizio": "Isolamento"
+  },
+  "barbell_lying_triceps_extension_skull_crusher": {
+    "nome": "Estensione Sdraiato Skullcrusher Tricipiti",
+    "focus": "TRIC",
+    "muscoliSecondari": "DELT",
+    "tipoEsercizio": "Isolamento"
+  },
+  "barbell_one_arm_floor_press": {
+    "nome": "Spinta Un Braccio a Terra con Bilanciere",
+    "focus": "TRIC",
+    "muscoliSecondari": "DELT, PETT",
+    "tipoEsercizio": "Compound"
+  },
+  "barbell_pin_presses": {
+    "nome": "Distensioni con Blocchi con Bilanciere",
+    "focus": "TRIC",
+    "muscoliSecondari": "DELT, PETT",
+    "tipoEsercizio": "Compound"
+  },
+  "barbell_preacher_curl": {
+    "nome": "Curl Preacher con Bilanciere",
+    "focus": "BICI",
+    "muscoliSecondari": "AVA",
+    "tipoEsercizio": "Isolamento"
+  },
+  "barbell_prone_incline_curl": {
+    "nome": "Curl Inclinato Prono con Bilanciere",
+    "focus": "BICI",
+    "muscoliSecondari": "AVA",
+    "tipoEsercizio": "Isolamento"
+  },
+  "barbell_prone_incline_curl_with_intensive": {
+    "nome": "Curl Inclinato Prono con Bilanciere con Intensivo",
+    "focus": "BICI",
+    "muscoliSecondari": "AVA",
+    "tipoEsercizio": "Isolamento"
+  },
+  "barbell_reverse_close_grip_bench_press": {
+    "nome": "Distensioni Piana Presa Stretta Inversa",
+    "focus": "TRIC",
+    "muscoliSecondari": "DELT, PETT",
+    "tipoEsercizio": "Compound"
+  },
+  "barbell_reverse_curl": {
+    "nome": "Curl Inverso con Bilanciere",
+    "focus": "BICI",
+    "muscoliSecondari": "AVA",
+    "tipoEsercizio": "Isolamento"
+  },
+  "barbell_reverse_grip_skullcrusher": {
+    "nome": "Skullcrusher Presa Inversa con Bilanciere",
+    "focus": "TRIC",
+    "muscoliSecondari": null,
+    "tipoEsercizio": "Isolamento"
+  },
+  "barbell_reverse_preacher_curl": {
+    "nome": "Curl Preacher Inverso con Bilanciere",
+    "focus": "BICI",
+    "muscoliSecondari": "AVA",
+    "tipoEsercizio": "Isolamento"
+  },
+  "barbell_reverse_preacher_curl_inclined": {
+    "nome": "Curl Inclinato Preacher Inverso con Bilanciere",
+    "focus": "BICI",
+    "muscoliSecondari": "AVA",
+    "tipoEsercizio": "Isolamento"
+  },
+  "barbell_seated_close_grip_behind_neck_triceps_extension": {
+    "nome": "Estensione Seduto Presa Stretta Tricipiti Dietro la Testa",
+    "focus": "TRIC",
+    "muscoliSecondari": "DELT",
+    "tipoEsercizio": "Isolamento"
+  },
+  "barbell_seated_close_grip_concentration_curl": {
+    "nome": "Curl Seduto Presa Stretta Bilanciere",
+    "focus": "TRIC",
+    "muscoliSecondari": null,
+    "tipoEsercizio": "Isolamento"
+  },
+  "barbell_seated_overhead_triceps_extension": {
+    "nome": "Estensione Seduto Tricipiti Sopra la Testa con Bilanciere",
+    "focus": "TRIC",
+    "muscoliSecondari": "DELT",
+    "tipoEsercizio": "Isolamento"
+  },
+  "barbell_standing_close_grip_curl": {
+    "nome": "Curl in Piedi Presa Stretta con Bilanciere",
+    "focus": "TRIC",
+    "muscoliSecondari": null,
+    "tipoEsercizio": "Isolamento"
+  },
+  "barbell_standing_concentration_curl": {
+    "nome": "Curl in Piedi di Concentrazione con Bilanciere",
+    "focus": "BICI",
+    "muscoliSecondari": "AVA",
+    "tipoEsercizio": "Isolamento"
+  },
+  "barbell_standing_overhead_triceps_extension": {
+    "nome": "Estensione in Piedi Sopra la Testa Tricipiti",
+    "focus": "TRIC",
+    "muscoliSecondari": "DELT",
+    "tipoEsercizio": "Isolamento"
+  },
+  "barbell_standing_reverse_grip_curl": {
+    "nome": "Curl in Piedi con Presa Inversa con Bilanciere",
+    "focus": "BICI",
+    "muscoliSecondari": "AVA",
+    "tipoEsercizio": "Isolamento"
+  },
+  "barbell_standing_reverse_grip_curl_resistance": {
+    "nome": "Curl in Piedi Presa Inversa Resistenza",
+    "focus": "BICI",
+    "muscoliSecondari": "AVA",
+    "tipoEsercizio": "Isolamento"
+  },
+  "barbell_standing_wide_grip_biceps_curl": {
+    "nome": "Curl in Piedi Presa Larga Bicipiti con Bilanciere",
+    "focus": "BICI",
+    "muscoliSecondari": "AVA",
+    "tipoEsercizio": "Isolamento"
+  },
+  "barbell_standing_wide_grip_curl": {
+    "nome": "Curl in Piedi Presa Larga con Bilanciere",
+    "focus": "BICI",
+    "muscoliSecondari": "AVA",
+    "tipoEsercizio": "Isolamento"
+  },
+  "bench_dip_knees_bent": {
+    "nome": "Dip su Panca con Ginocchia Piegate",
+    "focus": "TRIC",
+    "muscoliSecondari": "DELT, PETT",
+    "tipoEsercizio": "Compound"
+  },
+  "bench_dip_on_floor": {
+    "nome": "Dip su Panca a Terra",
+    "focus": "TRIC",
+    "muscoliSecondari": "DELT, PETT",
+    "tipoEsercizio": "Compound"
+  },
+  "biceps_leg_concentration_curl": {
+    "nome": "Curl Bicipiti Gambe Concentration",
+    "focus": "BICI",
+    "muscoliSecondari": "AVA",
+    "tipoEsercizio": "Isolamento"
+  },
+  "biceps_narrow_pull_ups": {
+    "nome": "Trazioni Presa Stretta Bicipiti",
+    "focus": "BICI",
+    "muscoliSecondari": "AVA",
+    "tipoEsercizio": "Isolamento"
+  },
+  "biceps_pull_up": {
+    "nome": "Trazioni Bicipiti",
+    "focus": "BICI",
+    "muscoliSecondari": "AVA",
+    "tipoEsercizio": "Isolamento"
+  },
+  "body_up": {
+    "nome": "Body-up",
+    "focus": "TRIC",
+    "muscoliSecondari": "DELT, PETT",
+    "tipoEsercizio": "Isolamento"
+  },
+  "bodyweight_kneeling_triceps_extension": {
+    "nome": "Estensione a Corpo Libero in Ginocchio Tricipiti",
+    "focus": "TRIC",
+    "muscoliSecondari": "DELT",
+    "tipoEsercizio": "Isolamento"
+  },
+  "bodyweight_side_lying_biceps_curl": {
+    "nome": "Curl Sdraiato Bicipiti su Un Lato a Corpo Libero",
+    "focus": "BICI",
+    "muscoliSecondari": "AVA",
+    "tipoEsercizio": "Isolamento"
+  },
+  "cable_alternate_triceps_extension": {
+    "nome": "Estensione Alternato Tricipiti ai Cavi",
+    "focus": "TRIC",
+    "muscoliSecondari": "DELT",
+    "tipoEsercizio": "Isolamento"
+  },
+  "cable_close_grip_curl": {
+    "nome": "Curl Presa Stretta ai Cavi",
+    "focus": "TRIC",
+    "muscoliSecondari": null,
+    "tipoEsercizio": "Isolamento"
+  },
+  "cable_concentration_curl": {
+    "nome": "Curl di Concentrazione ai Cavi",
+    "focus": "BICI",
+    "muscoliSecondari": "AVA",
+    "tipoEsercizio": "Isolamento"
+  },
+  "cable_concentration_curl_tempo": {
+    "nome": "Curl di Concentrazione Tempo ai Cavi",
+    "focus": "BICI",
+    "muscoliSecondari": "AVA",
+    "tipoEsercizio": "Isolamento"
+  },
+  "cable_concentration_extension_on_knee": {
+    "nome": "Estensione in Concentrazione su Ginocchio ai Cavi",
+    "focus": "TRIC",
+    "muscoliSecondari": "DELT",
+    "tipoEsercizio": "Isolamento"
+  },
+  "cable_curl": {
+    "nome": "Curl ai Cavi",
+    "focus": "BICI",
+    "muscoliSecondari": "AVA",
+    "tipoEsercizio": "Isolamento"
+  },
+  "cable_drag_curl": {
+    "nome": "Curl Drag ai Cavi",
+    "focus": "BICI",
+    "muscoliSecondari": "AVA",
+    "tipoEsercizio": "Isolamento"
+  },
+  "cable_hammer_curl_with_rope": {
+    "nome": "Curl Hammer con Corda ai Cavi",
+    "focus": "BICI",
+    "muscoliSecondari": "AVA",
+    "tipoEsercizio": "Isolamento"
+  },
+  "cable_high_pulley_overhead_tricep_extension": {
+    "nome": "Estensione Tricipiti Sopra La Testa Puleggia Alta",
+    "focus": "TRIC",
+    "muscoliSecondari": "DELT",
+    "tipoEsercizio": "Isolamento"
+  },
+  "cable_incline_triceps_extension": {
+    "nome": "Estensione Tricipiti su Panca Inclinata ai Cavi",
+    "focus": "TRIC",
+    "muscoliSecondari": "DELT",
+    "tipoEsercizio": "Isolamento"
+  },
+  "cable_kickback": {
+    "nome": "Kickback ai Cavi",
+    "focus": "TRIC",
+    "muscoliSecondari": "DELT",
+    "tipoEsercizio": "Isolamento"
+  },
+  "cable_kneeling_triceps_extension": {
+    "nome": "Estensione Tricipiti in Ginocchio ai Cavi",
+    "focus": "TRIC",
+    "muscoliSecondari": "DELT",
+    "tipoEsercizio": "Isolamento"
+  },
+  "cable_lying_bicep_curl": {
+    "nome": "Curl Sdraiato Bicipite ai Cavi",
+    "focus": "BICI",
+    "muscoliSecondari": "AVA",
+    "tipoEsercizio": "Isolamento"
+  },
+  "cable_lying_close_grip_curl": {
+    "nome": "Curl Sdraiato Presa Stretta ai Cavi",
+    "focus": "TRIC",
+    "muscoliSecondari": null,
+    "tipoEsercizio": "Isolamento"
+  },
+  "cable_lying_triceps_extension_v_2": {
+    "nome": "Estensione Sdraiato Tricipiti V. 2 ai Cavi",
+    "focus": "TRIC",
+    "muscoliSecondari": "DELT",
+    "tipoEsercizio": "Isolamento"
+  },
+  "cable_lying_triceps_extension_v_bar": {
+    "nome": "Estensione Sdraiato Tricipiti Barra V ai Cavi",
+    "focus": "TRIC",
+    "muscoliSecondari": "DELT",
+    "tipoEsercizio": "Isolamento"
+  },
+  "cable_one_arm_curl": {
+    "nome": "Curl Un Braccio ai Cavi",
+    "focus": "BICI",
+    "muscoliSecondari": "AVA",
+    "tipoEsercizio": "Isolamento"
+  },
+  "cable_one_arm_preacher_curl": {
+    "nome": "Curl Un Braccio Preacher ai Cavi",
+    "focus": "BICI",
+    "muscoliSecondari": "AVA",
+    "tipoEsercizio": "Isolamento"
+  },
+  "cable_one_arm_reverse_preacher_curl": {
+    "nome": "Curl Un Braccio Inversa Preacher ai Cavi",
+    "focus": "BICI",
+    "muscoliSecondari": "AVA",
+    "tipoEsercizio": "Isolamento"
+  },
+  "cable_one_arm_tricep_pushdown": {
+    "nome": "Un Braccio Pushdown Tricipiti ai Cavi",
+    "focus": "TRIC",
+    "muscoliSecondari": "DELT, PETT",
+    "tipoEsercizio": "Compound"
+  },
+  "cable_overhead_curl": {
+    "nome": "Curl Sopra la Testa ai Cavi",
+    "focus": "BICI",
+    "muscoliSecondari": "AVA",
+    "tipoEsercizio": "Isolamento"
+  },
+  "cable_overhead_curl_on_exercise_ball": {
+    "nome": "Curl Sopra La Testa su Palla da Esercizio ai Cavi",
+    "focus": "BICI",
+    "muscoliSecondari": "AVA",
+    "tipoEsercizio": "Isolamento"
+  },
+  "cable_overhead_triceps_extension_rope_attachment": {
+    "nome": "Estensione Tricipiti Sopra La Testa ai Cavi",
+    "focus": "TRIC",
+    "muscoliSecondari": "DELT",
+    "tipoEsercizio": "Isolamento"
+  },
+  "cable_pulldown_bicep_curl": {
+    "nome": "Curl Lat Machine Bicipite ai Cavi",
+    "focus": "BICI",
+    "muscoliSecondari": "AVA",
+    "tipoEsercizio": "Isolamento"
+  },
+  "cable_pushdown": {
+    "nome": "Pushdown ai Cavi",
+    "focus": "TRIC",
+    "muscoliSecondari": "DELT, PETT",
+    "tipoEsercizio": "Compound"
+  },
+  "cable_pushdown_with_rope_attachment": {
+    "nome": "Pushdown Tricipiti con Corda ai Cavi",
+    "focus": "TRIC",
+    "muscoliSecondari": "DELT, PETT",
+    "tipoEsercizio": "Compound"
+  },
+  "cable_rear_drive": {
+    "nome": "Spinta Posteriore ai Cavi",
+    "focus": "TRIC",
+    "muscoliSecondari": "DELT, LAT, TRAP",
+    "tipoEsercizio": "Isolamento"
+  },
+  "cable_reverse_curl": {
+    "nome": "Curl Inversa ai Cavi",
+    "focus": "BICI",
+    "muscoliSecondari": "AVA",
+    "tipoEsercizio": "Isolamento"
+  },
+  "cable_reverse_grip_pushdown": {
+    "nome": "Presa Inversa Pushdown ai Cavi",
+    "focus": "TRIC",
+    "muscoliSecondari": "DELT, PETT",
+    "tipoEsercizio": "Compound"
+  },
+  "cable_reverse_grip_triceps_pushdown_sz_bar_with_arm_blaster": {
+    "nome": "Pushdown Tricipiti Presa Inversa(barra Sz) Braccio",
+    "focus": "TRIC",
+    "muscoliSecondari": "DELT, PETT",
+    "tipoEsercizio": "Compound"
+  },
+  "cable_reverse_one_arm_curl": {
+    "nome": "Curl Un Braccio Inverso ai Cavi",
+    "focus": "BICI",
+    "muscoliSecondari": "AVA",
+    "tipoEsercizio": "Isolamento"
+  },
+  "cable_reverse_preacher_curl": {
+    "nome": "Curl Preacher Inverso ai Cavi",
+    "focus": "BICI",
+    "muscoliSecondari": "AVA",
+    "tipoEsercizio": "Isolamento"
+  },
+  "cable_rope_hammer_preacher_curl": {
+    "nome": "Curl Corda Hammer Preacher ai Cavi",
+    "focus": "BICI",
+    "muscoliSecondari": "AVA",
+    "tipoEsercizio": "Isolamento"
+  },
+  "cable_rope_high_pulley_overhead_tricep_extension": {
+    "nome": "Estensione con Corda Puleggia Alta Sopra la Testa Tricipiti ai Cavi",
+    "focus": "TRIC",
+    "muscoliSecondari": "DELT",
+    "tipoEsercizio": "Isolamento"
+  },
+  "cable_rope_incline_tricep_extension": {
+    "nome": "Estensione Inclinato Corda Tricipite ai Cavi",
+    "focus": "TRIC",
+    "muscoliSecondari": "DELT",
+    "tipoEsercizio": "Isolamento"
+  },
+  "cable_rope_incline_tricep_extension_reverse_variation": {
+    "nome": "Estensione Tricipiti Inclinati Variazione Inversa",
+    "focus": "TRIC",
+    "muscoliSecondari": "DELT",
+    "tipoEsercizio": "Isolamento"
+  },
+  "cable_rope_lying_on_floor_tricep_extension": {
+    "nome": "Estensione Sdraiato Corda a Terra Tricipite ai Cavi",
+    "focus": "TRIC",
+    "muscoliSecondari": "DELT",
+    "tipoEsercizio": "Isolamento"
+  },
+  "cable_rope_one_arm_hammer_preacher_curl": {
+    "nome": "Curl Un Braccio Preacher Hammer Corda ai Cavi",
+    "focus": "BICI",
+    "muscoliSecondari": "AVA",
+    "tipoEsercizio": "Isolamento"
+  },
+  "cable_rope_overhead_triceps_extension": {
+    "nome": "Estensione Tricipiti Sopra La Testa ai Cavi",
+    "focus": "TRIC",
+    "muscoliSecondari": "DELT",
+    "tipoEsercizio": "Isolamento"
+  },
+  "cable_seated_curl": {
+    "nome": "Curl Seduto ai Cavi",
+    "focus": "BICI",
+    "muscoliSecondari": "AVA",
+    "tipoEsercizio": "Isolamento"
+  },
+  "cable_seated_one_arm_concentration_curl": {
+    "nome": "Curl Seduto Un Braccio di Concentrazione ai Cavi",
+    "focus": "BICI",
+    "muscoliSecondari": "AVA",
+    "tipoEsercizio": "Isolamento"
+  },
+  "cable_seated_overhead_curl": {
+    "nome": "Curl Seduto Sopra La Testa ai Cavi",
+    "focus": "BICI",
+    "muscoliSecondari": "AVA",
+    "tipoEsercizio": "Isolamento"
+  },
+  "cable_squatting_curl": {
+    "nome": "Squat Curl ai Cavi",
+    "focus": "BICI",
+    "muscoliSecondari": "AVA",
+    "tipoEsercizio": "Isolamento"
+  },
+  "cable_standing_inner_curl": {
+    "nome": "Curl in Piedi Interno ai Cavi",
+    "focus": "BICI",
+    "muscoliSecondari": "AVA",
+    "tipoEsercizio": "Isolamento"
+  },
+  "cable_standing_one_arm_tricep_extension": {
+    "nome": "Estensione in Piedi Un Braccio Tricipiti ai Cavi",
+    "focus": "TRIC",
+    "muscoliSecondari": "DELT",
+    "tipoEsercizio": "Isolamento"
+  },
+  "cable_standing_one_arm_triceps_extension": {
+    "nome": "Estensione in Piedi Un Braccio Tricipiti ai Cavi",
+    "focus": "TRIC",
+    "muscoliSecondari": "DELT",
+    "tipoEsercizio": "Isolamento"
+  },
+  "cable_standing_pulldown_with_rope": {
+    "nome": "In Piedi Lat Machine(Corda)ai Cavi",
+    "focus": "TRIC",
+    "muscoliSecondari": "DELT",
+    "tipoEsercizio": "Isolamento"
+  },
+  "cable_standing_reverse_grip_one_arm_overhead_tricep_extension": {
+    "nome": "Estensione in Piedi Un Braccio Presa Supina Overhead ai Cavi",
+    "focus": "TRIC",
+    "muscoliSecondari": "DELT",
+    "tipoEsercizio": "Isolamento"
+  },
+  "cable_triceps_pushdown_v_bar": {
+    "nome": "Pushdown Tricipiti con Barra a V ai Cavi",
+    "focus": "TRIC",
+    "muscoliSecondari": "DELT, PETT",
+    "tipoEsercizio": "Compound"
+  },
+  "cable_triceps_pushdown_v_bar_with_arm_blaster": {
+    "nome": "Pushdown Tricipiti V e Arm Blaster ai Cavi",
+    "focus": "TRIC",
+    "muscoliSecondari": "DELT, PETT",
+    "tipoEsercizio": "Compound"
+  },
+  "cable_two_arm_curl_on_incline_bench": {
+    "nome": "Curl a Due Braccia su Panca Inclinata ai Cavi",
+    "focus": "BICI",
+    "muscoliSecondari": "AVA",
+    "tipoEsercizio": "Isolamento"
+  },
+  "cable_two_arm_tricep_kickback": {
+    "nome": "Kickback Tricipiti a Due Braccia ai Cavi",
+    "focus": "TRIC",
+    "muscoliSecondari": "DELT",
+    "tipoEsercizio": "Isolamento"
+  },
+  "close_grip_push_up": {
+    "nome": "Presa Stretta Piegamento",
+    "focus": "TRIC",
+    "muscoliSecondari": "DELT, PETT",
+    "tipoEsercizio": "Compound"
+  },
+  "close_grip_push_up_on_knees": {
+    "nome": "Piegamenti Presa Stretta sulle Ginocchia",
+    "focus": "TRIC",
+    "muscoliSecondari": "DELT, PETT",
+    "tipoEsercizio": "Compound"
+  },
+  "complete_style_ez_bar_lying_close_grip_triceps_extension_behind_head": {
+    "nome": "Estensione Sdraiato Presa Stretta Tricipiti Stile Completo",
+    "focus": "TRIC",
+    "muscoliSecondari": "DELT",
+    "tipoEsercizio": "Isolamento"
+  },
+  "diamond_push_up": {
+    "nome": "Piegamenti Diamante",
+    "focus": "TRIC",
+    "muscoliSecondari": "DELT, PETT",
+    "tipoEsercizio": "Compound"
+  },
+  "dumbbell_alternate_biceps_curl": {
+    "nome": "Curl Alternato Bicipiti con Manubri",
+    "focus": "BICI",
+    "muscoliSecondari": "AVA",
+    "tipoEsercizio": "Isolamento"
+  },
+  "dumbbell_alternate_biceps_curl_with_arm_blaster": {
+    "nome": "Curl Alternato Bicipiti(Arm Blaster) Manubr",
+    "focus": "BICI",
+    "muscoliSecondari": "AVA",
+    "tipoEsercizio": "Isolamento"
+  },
+  "dumbbell_alternate_hammer_preacher_curl": {
+    "nome": "Curl Alternato Preacher Hammer con Manubri",
+    "focus": "BICI",
+    "muscoliSecondari": "AVA",
+    "tipoEsercizio": "Isolamento"
+  },
+  "dumbbell_alternate_preacher_curl": {
+    "nome": "Curl Alternato Preacher con Manubri",
+    "focus": "BICI",
+    "muscoliSecondari": "AVA",
+    "tipoEsercizio": "Isolamento"
+  },
+  "dumbbell_alternate_seated_hammer_curl": {
+    "nome": "Curl Seduto Alternato Hammer con Manubri",
+    "focus": "BICI",
+    "muscoliSecondari": "AVA",
+    "tipoEsercizio": "Isolamento"
+  },
+  "dumbbell_alternating_bicep_curl_with_leg_raised_on_exercise_ball": {
+    "nome": "Curl Alternato Bicipiti Sollevata su Palla",
+    "focus": "BICI",
+    "muscoliSecondari": "AVA",
+    "tipoEsercizio": "Isolamento"
+  },
+  "dumbbell_alternating_seated_bicep_curl_on_exercise_ball": {
+    "nome": "Curl Seduto Alternato Bicipiti su Palla",
+    "focus": "BICI",
+    "muscoliSecondari": "AVA",
+    "tipoEsercizio": "Isolamento"
+  },
+  "dumbbell_bicep_curl_lunge_with_bowling_motion": {
+    "nome": "Curl Affondo e Movimento",
+    "focus": "BICI",
+    "muscoliSecondari": "AVA",
+    "tipoEsercizio": "Isolamento"
+  },
+  "dumbbell_bicep_curl_on_exercise_ball_with_leg_raised": {
+    "nome": "Curl Bicipiti su Palla Sollevata",
+    "focus": "BICI",
+    "muscoliSecondari": "AVA",
+    "tipoEsercizio": "Isolamento"
+  },
+  "dumbbell_bicep_curl_with_stork_stance": {
+    "nome": "Curl Bicipiti con Stance a Cicogna con Manubri",
+    "focus": "BICI",
+    "muscoliSecondari": "AVA",
+    "tipoEsercizio": "Isolamento"
+  },
+  "dumbbell_biceps_curl": {
+    "nome": "Curl Bicipiti con Manubri",
+    "focus": "BICI",
+    "muscoliSecondari": "AVA",
+    "tipoEsercizio": "Isolamento"
+  },
+  "dumbbell_biceps_curl_reverse": {
+    "nome": "Curl Bicipiti Inverso con Manubri",
+    "focus": "BICI",
+    "muscoliSecondari": "AVA",
+    "tipoEsercizio": "Isolamento"
+  },
+  "dumbbell_biceps_curl_squat": {
+    "nome": "Squat Curl Bicipiti con Manubri",
+    "focus": "BICI",
+    "muscoliSecondari": "AVA",
+    "tipoEsercizio": "Isolamento"
+  },
+  "dumbbell_biceps_curl_v_sit_on_bosu_ball": {
+    "nome": "Curl Bicipiti V-sit su Bosu Fitball con Manubri",
+    "focus": "BICI",
+    "muscoliSecondari": "AVA",
+    "tipoEsercizio": "Isolamento"
+  },
+  "dumbbell_biceps_curl_with_arm_blaster": {
+    "nome": "Curl Bicipiti con Arm Blaster con Manubri",
+    "focus": "BICI",
+    "muscoliSecondari": "AVA",
+    "tipoEsercizio": "Isolamento"
+  },
+  "dumbbell_close_grip_press": {
+    "nome": "Distensioni Presa Stretta con Manubri",
+    "focus": "TRIC",
+    "muscoliSecondari": "DELT, PETT",
+    "tipoEsercizio": "Compound"
+  },
+  "dumbbell_concentration_curl": {
+    "nome": "Curl di Concentrazione con Manubri",
+    "focus": "BICI",
+    "muscoliSecondari": "AVA",
+    "tipoEsercizio": "Isolamento"
+  },
+  "dumbbell_cross_body_hammer_curl": {
+    "nome": "Curl Hammer Trasversale con Manubri",
+    "focus": "BICI",
+    "muscoliSecondari": "AVA",
+    "tipoEsercizio": "Isolamento"
+  },
+  "dumbbell_cross_body_hammer_curl_v_2": {
+    "nome": "Curl Cross Hammer Inclinato V.2 con Manubri",
+    "focus": "BICI",
+    "muscoliSecondari": "AVA",
+    "tipoEsercizio": "Isolamento"
+  },
+  "dumbbell_decline_one_arm_hammer_press": {
+    "nome": "Distensioni Un Braccio Hammer con Manubri",
+    "focus": "BICI",
+    "muscoliSecondari": "AVA",
+    "tipoEsercizio": "Isolamento"
+  },
+  "dumbbell_decline_triceps_extension": {
+    "nome": "Estensione Tricipiti su Panca Declinata",
+    "focus": "TRIC",
+    "muscoliSecondari": "DELT",
+    "tipoEsercizio": "Isolamento"
+  },
+  "dumbbell_forward_lunge_triceps_extension": {
+    "nome": "Estensione Affondo Avanti",
+    "focus": "TRIC",
+    "muscoliSecondari": "DELT",
+    "tipoEsercizio": "Isolamento"
+  },
+  "dumbbell_hammer_curl": {
+    "nome": "Curl Hammer con Manubri",
+    "focus": "BICI",
+    "muscoliSecondari": "AVA",
+    "tipoEsercizio": "Isolamento"
+  },
+  "dumbbell_hammer_curl_on_exercise_ball": {
+    "nome": "Curl Hammer su Palla da Esercizio con Manubri",
+    "focus": "BICI",
+    "muscoliSecondari": "AVA",
+    "tipoEsercizio": "Isolamento"
+  },
+  "dumbbell_hammer_curl_v_2": {
+    "nome": "Curl Hammer V. 2 con Manubri",
+    "focus": "BICI",
+    "muscoliSecondari": "AVA",
+    "tipoEsercizio": "Isolamento"
+  },
+  "dumbbell_hammer_curl_with_traditional": {
+    "nome": "Curl Hammer con Tradizionale con Manubri",
+    "focus": "BICI",
+    "muscoliSecondari": "AVA",
+    "tipoEsercizio": "Isolamento"
+  },
+  "dumbbell_hammer_curls_with_arm_blaster": {
+    "nome": "Curl Hammer(Arm Blaster) Manubri",
+    "focus": "BICI",
+    "muscoliSecondari": "AVA",
+    "tipoEsercizio": "Isolamento"
+  },
+  "dumbbell_high_curl": {
+    "nome": "Curl Alto con Manubri",
+    "focus": "BICI",
+    "muscoliSecondari": "AVA",
+    "tipoEsercizio": "Isolamento"
+  },
+  "dumbbell_incline_biceps_curl": {
+    "nome": "Curl Bicipiti su Panca Inclinata con Manubri",
+    "focus": "BICI",
+    "muscoliSecondari": "AVA",
+    "tipoEsercizio": "Isolamento"
+  },
+  "dumbbell_incline_curl": {
+    "nome": "Curl Inclinato con Manubri",
+    "focus": "BICI",
+    "muscoliSecondari": "AVA",
+    "tipoEsercizio": "Isolamento"
+  },
+  "dumbbell_incline_curl_v_2": {
+    "nome": "Curl Inclinato V. 2 con Manubri",
+    "focus": "BICI",
+    "muscoliSecondari": "AVA",
+    "tipoEsercizio": "Isolamento"
+  },
+  "dumbbell_incline_hammer_curl": {
+    "nome": "Curl Inclinato Hammer con Manubri",
+    "focus": "BICI",
+    "muscoliSecondari": "AVA",
+    "tipoEsercizio": "Isolamento"
+  },
+  "dumbbell_incline_hammer_press_on_exercise_ball": {
+    "nome": "Distensioni Hammer su Panca Inclinata e Manubri",
+    "focus": "BICI",
+    "muscoliSecondari": "AVA",
+    "tipoEsercizio": "Isolamento"
+  },
+  "dumbbell_incline_inner_biceps_curl": {
+    "nome": "Curl Bicipiti Interno su Panca Inclinata",
+    "focus": "BICI",
+    "muscoliSecondari": "AVA",
+    "tipoEsercizio": "Isolamento"
+  },
+  "dumbbell_incline_one_arm_hammer_press": {
+    "nome": "Distensioni Un Braccio Hammer con Manubri",
+    "focus": "BICI",
+    "muscoliSecondari": "AVA",
+    "tipoEsercizio": "Isolamento"
+  },
+  "dumbbell_incline_one_arm_hammer_press_on_exercise_ball": {
+    "nome": "Spinta Inclinata Un Braccio Hammer su Fitball",
+    "focus": "BICI",
+    "muscoliSecondari": "AVA",
+    "tipoEsercizio": "Isolamento"
+  },
+  "dumbbell_incline_triceps_extension": {
+    "nome": "Estensione Tricipiti su Panca Inclinata",
+    "focus": "TRIC",
+    "muscoliSecondari": "DELT",
+    "tipoEsercizio": "Isolamento"
+  },
+  "dumbbell_incline_two_arm_extension": {
+    "nome": "Estensione Inclinato Due Braccia con Manubri",
+    "focus": "TRIC",
+    "muscoliSecondari": "DELT",
+    "tipoEsercizio": "Isolamento"
+  },
+  "dumbbell_kickback": {
+    "nome": "Kickback con Manubri",
+    "focus": "TRIC",
+    "muscoliSecondari": "DELT",
+    "tipoEsercizio": "Isolamento"
+  },
+  "dumbbell_kickbacks_on_exercise_ball": {
+    "nome": "Kickback su Fitball con Manubri",
+    "focus": "TRIC",
+    "muscoliSecondari": "DELT",
+    "tipoEsercizio": "Isolamento"
+  },
+  "dumbbell_kneeling_bicep_curl_exercise_ball": {
+    "nome": "Curl Bicipiti in Ginocchio su Palla",
+    "focus": "BICI",
+    "muscoliSecondari": "AVA",
+    "tipoEsercizio": "Isolamento"
+  },
+  "dumbbell_lunge_with_bicep_curl": {
+    "nome": "Curl Affondo con Bicipiti con Manubri",
+    "focus": "BICI",
+    "muscoliSecondari": "AVA",
+    "tipoEsercizio": "Isolamento"
+  },
+  "dumbbell_lying_alternate_extension": {
+    "nome": "Estensione Sdraiato Alternato con Manubri",
+    "focus": "TRIC",
+    "muscoliSecondari": "DELT",
+    "tipoEsercizio": "Isolamento"
+  },
+  "dumbbell_lying_elbow_press": {
+    "nome": "Distensioni Sdraiato Sui Gomiti con Manubri",
+    "focus": "TRIC",
+    "muscoliSecondari": "DELT, PETT",
+    "tipoEsercizio": "Compound"
+  },
+  "dumbbell_lying_extension_across_face": {
+    "nome": "Estensione Sdraiato(across Face) Manubri",
+    "focus": "TRIC",
+    "muscoliSecondari": "DELT",
+    "tipoEsercizio": "Isolamento"
+  },
+  "dumbbell_lying_one_arm_pronated_triceps_extension": {
+    "nome": "Estensione Sdraiato Un Braccio Tricipiti Prono",
+    "focus": "TRIC",
+    "muscoliSecondari": "DELT",
+    "tipoEsercizio": "Isolamento"
+  },
+  "dumbbell_lying_one_arm_supinated_triceps_extension": {
+    "nome": "Estensione Sdraiato Un Braccio Supinated Tricipiti",
+    "focus": "TRIC",
+    "muscoliSecondari": "DELT",
+    "tipoEsercizio": "Isolamento"
+  },
+  "dumbbell_lying_single_extension": {
+    "nome": "Estensione Sdraiato Singole con Manubri",
+    "focus": "TRIC",
+    "muscoliSecondari": "DELT",
+    "tipoEsercizio": "Isolamento"
+  },
+  "dumbbell_lying_supine_biceps_curl": {
+    "nome": "Curl Sdraiato Bicipiti Supino con Manubri",
+    "focus": "BICI",
+    "muscoliSecondari": "AVA",
+    "tipoEsercizio": "Isolamento"
+  },
+  "dumbbell_lying_supine_curl": {
+    "nome": "Curl Sdraiato Supino con Manubri",
+    "focus": "BICI",
+    "muscoliSecondari": "AVA",
+    "tipoEsercizio": "Isolamento"
+  },
+  "dumbbell_lying_triceps_extension": {
+    "nome": "Estensione Sdraiato Tricipiti con Manubri",
+    "focus": "TRIC",
+    "muscoliSecondari": "DELT",
+    "tipoEsercizio": "Isolamento"
+  },
+  "dumbbell_lying_wide_curl": {
+    "nome": "Curl Sdraiato Largo con Manubri",
+    "focus": "BICI",
+    "muscoliSecondari": "AVA",
+    "tipoEsercizio": "Isolamento"
+  },
+  "dumbbell_neutral_grip_bench_press": {
+    "nome": "Panca Piana Presa Neutra con Manubri",
+    "focus": "TRIC",
+    "muscoliSecondari": "DELT, PETT",
+    "tipoEsercizio": "Compound"
+  },
+  "dumbbell_one_arm_concentration_curl_on_stability_ball": {
+    "nome": "Curl Un Braccio su Fitball con Manubri",
+    "focus": "BICI",
+    "muscoliSecondari": "AVA",
+    "tipoEsercizio": "Isolamento"
+  },
+  "dumbbell_one_arm_french_press_on_exercise_ball": {
+    "nome": "Un Braccio French Press a su Fitball con Manubri",
+    "focus": "TRIC",
+    "muscoliSecondari": "DELT, PETT",
+    "tipoEsercizio": "Compound"
+  },
+  "dumbbell_one_arm_hammer_preacher_curl": {
+    "nome": "Curl Un Braccio Preacher Hammer con Manubri",
+    "focus": "BICI",
+    "muscoliSecondari": "AVA",
+    "tipoEsercizio": "Isolamento"
+  },
+  "dumbbell_one_arm_hammer_press_on_exercise_ball": {
+    "nome": "Distensioni Un Braccio Hammer su Fitball",
+    "focus": "BICI",
+    "muscoliSecondari": "AVA",
+    "tipoEsercizio": "Isolamento"
+  },
+  "dumbbell_one_arm_kickback": {
+    "nome": "Un Braccio Kickback con Manubri",
+    "focus": "TRIC",
+    "muscoliSecondari": "DELT",
+    "tipoEsercizio": "Isolamento"
+  },
+  "dumbbell_one_arm_prone_curl": {
+    "nome": "Curl Un Braccio Prono con Manubri",
+    "focus": "BICI",
+    "muscoliSecondari": "AVA",
+    "tipoEsercizio": "Isolamento"
+  },
+  "dumbbell_one_arm_prone_hammer_curl": {
+    "nome": "Curl Un Braccio Hammer Prono con Manubri",
+    "focus": "BICI",
+    "muscoliSecondari": "AVA",
+    "tipoEsercizio": "Isolamento"
+  },
+  "dumbbell_one_arm_prone_hammer_curl_macro_variation": {
+    "nome": "Curl Un Braccio Hammer Prono Variante con Manubri",
+    "focus": "BICI",
+    "muscoliSecondari": "AVA",
+    "tipoEsercizio": "Isolamento"
+  },
+  "dumbbell_one_arm_reverse_preacher_curl": {
+    "nome": "Curl Un Braccio Preacher Inverso con Manubri",
+    "focus": "BICI",
+    "muscoliSecondari": "AVA",
+    "tipoEsercizio": "Isolamento"
+  },
+  "dumbbell_one_arm_reverse_spider_curl": {
+    "nome": "Curl Un Braccio Spider Inverso con Manubri",
+    "focus": "BICI",
+    "muscoliSecondari": "AVA",
+    "tipoEsercizio": "Isolamento"
+  },
+  "dumbbell_one_arm_seated_bicep_curl_on_exercise_ball": {
+    "nome": "Curl Seduto Un Braccio Bicipiti su Fitball",
+    "focus": "BICI",
+    "muscoliSecondari": "AVA",
+    "tipoEsercizio": "Isolamento"
+  },
+  "dumbbell_one_arm_seated_hammer_curl": {
+    "nome": "Curl Seduto Un Braccio Hammer con Manubri",
+    "focus": "BICI",
+    "muscoliSecondari": "AVA",
+    "tipoEsercizio": "Isolamento"
+  },
+  "dumbbell_one_arm_standing_curl": {
+    "nome": "Curl in Piedi Un Braccio con Manubri",
+    "focus": "BICI",
+    "muscoliSecondari": "AVA",
+    "tipoEsercizio": "Isolamento"
+  },
+  "dumbbell_one_arm_standing_hammer_curl": {
+    "nome": "Curl in Piedi Un Braccio Hammer con Manubri",
+    "focus": "BICI",
+    "muscoliSecondari": "AVA",
+    "tipoEsercizio": "Isolamento"
+  },
+  "dumbbell_one_arm_triceps_extension_on_bench": {
+    "nome": "Estensione Un Braccio Tricipiti su Panca con Manubri",
+    "focus": "TRIC",
+    "muscoliSecondari": "DELT",
+    "tipoEsercizio": "Isolamento"
+  },
+  "dumbbell_one_arm_zottman_preacher_curl": {
+    "nome": "Curl Un Braccio Preacher Zottman con Manubri",
+    "focus": "BICI",
+    "muscoliSecondari": "AVA",
+    "tipoEsercizio": "Isolamento"
+  },
+  "dumbbell_over_bench_neutral_wrist_curl": {
+    "nome": "Curl Polso Neutro su Panca con Manubri",
+    "focus": "BICI",
+    "muscoliSecondari": "AVA",
+    "tipoEsercizio": "Isolamento"
+  },
+  "dumbbell_over_bench_one_arm_neutral_wrist_curl": {
+    "nome": "Curl Un Braccio Polso Neutro su Panca con Manubri",
+    "focus": "BICI",
+    "muscoliSecondari": "AVA",
+    "tipoEsercizio": "Isolamento"
+  },
+  "dumbbell_palms_in_incline_bench_press": {
+    "nome": "Distensioni Inclinate Palmi Interni con Manubri",
+    "focus": "TRIC",
+    "muscoliSecondari": "DELT, PETT",
+    "tipoEsercizio": "Compound"
+  },
+  "dumbbell_peacher_hammer_curl": {
+    "nome": "Curl Hammer Preacher con Manubri",
+    "focus": "BICI",
+    "muscoliSecondari": "AVA",
+    "tipoEsercizio": "Isolamento"
+  },
+  "dumbbell_preacher_curl": {
+    "nome": "Curl Preacher con Manubri",
+    "focus": "BICI",
+    "muscoliSecondari": "AVA",
+    "tipoEsercizio": "Isolamento"
+  },
+  "dumbbell_preacher_curl_over_exercise_ball": {
+    "nome": "Curl Preacher su Palla da Esercizio con Manubri",
+    "focus": "BICI",
+    "muscoliSecondari": "AVA",
+    "tipoEsercizio": "Isolamento"
+  },
+  "dumbbell_pronate_grip_triceps_extension": {
+    "nome": "Estensione Presa Prona Tricipiti con Manubri",
+    "focus": "TRIC",
+    "muscoliSecondari": "DELT",
+    "tipoEsercizio": "Isolamento"
+  },
+  "dumbbell_prone_incline_curl": {
+    "nome": "Curl Inclinato Prono con Manubri",
+    "focus": "BICI",
+    "muscoliSecondari": "AVA",
+    "tipoEsercizio": "Isolamento"
+  },
+  "dumbbell_prone_incline_hammer_curl": {
+    "nome": "Curl Inclinato Hammer Prono con Manubri",
+    "focus": "BICI",
+    "muscoliSecondari": "AVA",
+    "tipoEsercizio": "Isolamento"
+  },
+  "dumbbell_revers_grip_biceps_curl": {
+    "nome": "Curl Revers Presa Bicipiti con Manubri",
+    "focus": "BICI",
+    "muscoliSecondari": "AVA",
+    "tipoEsercizio": "Isolamento"
+  },
+  "dumbbell_reverse_preacher_curl": {
+    "nome": "Curl Inversa Preacher con Manubri",
+    "focus": "BICI",
+    "muscoliSecondari": "AVA",
+    "tipoEsercizio": "Isolamento"
+  },
+  "dumbbell_reverse_spider_curl": {
+    "nome": "Curl Spider Inverso con Manubri",
+    "focus": "BICI",
+    "muscoliSecondari": "AVA",
+    "tipoEsercizio": "Isolamento"
+  },
+  "dumbbell_seated_alternate_hammer_curl_on_exercise_ball": {
+    "nome": "Curl Seduto Alternato Hammer su Palla",
+    "focus": "BICI",
+    "muscoliSecondari": "AVA",
+    "tipoEsercizio": "Isolamento"
+  },
+  "dumbbell_seated_bench_extension": {
+    "nome": "Estensione Seduto Panca con Manubri",
+    "focus": "TRIC",
+    "muscoliSecondari": "DELT",
+    "tipoEsercizio": "Isolamento"
+  },
+  "dumbbell_seated_bent_over_alternate_kickback": {
+    "nome": "Kickback Alternato Seduto Piegato con Manubri",
+    "focus": "TRIC",
+    "muscoliSecondari": "DELT",
+    "tipoEsercizio": "Isolamento"
+  },
+  "dumbbell_seated_bent_over_triceps_extension": {
+    "nome": "Estensione Seduto Tricipiti in Avanti",
+    "focus": "TRIC",
+    "muscoliSecondari": "DELT",
+    "tipoEsercizio": "Isolamento"
+  },
+  "dumbbell_seated_bicep_curl": {
+    "nome": "Curl Seduto Bicipiti con Manubri",
+    "focus": "BICI",
+    "muscoliSecondari": "AVA",
+    "tipoEsercizio": "Isolamento"
+  },
+  "dumbbell_seated_biceps_curl_on_stability_ball": {
+    "nome": "Curl Seduto Bicipiti su Palla",
+    "focus": "BICI",
+    "muscoliSecondari": "AVA",
+    "tipoEsercizio": "Isolamento"
+  },
+  "dumbbell_seated_biceps_curl_to_shoulder_press": {
+    "nome": "Curl Seduto Bicipiti a Lento Avanti con Manubri",
+    "focus": "BICI",
+    "muscoliSecondari": "AVA",
+    "tipoEsercizio": "Isolamento"
+  },
+  "dumbbell_seated_curl": {
+    "nome": "Curl Seduto con Manubri",
+    "focus": "BICI",
+    "muscoliSecondari": "AVA",
+    "tipoEsercizio": "Isolamento"
+  },
+  "dumbbell_seated_hammer_curl": {
+    "nome": "Curl Seduto Hammer con Manubri",
+    "focus": "BICI",
+    "muscoliSecondari": "AVA",
+    "tipoEsercizio": "Isolamento"
+  },
+  "dumbbell_seated_inner_biceps_curl": {
+    "nome": "Curl Seduto Bicipiti Interno con Manubri",
+    "focus": "BICI",
+    "muscoliSecondari": "AVA",
+    "tipoEsercizio": "Isolamento"
+  },
+  "dumbbell_seated_kickback": {
+    "nome": "Seduto Kickback con Manubri",
+    "focus": "TRIC",
+    "muscoliSecondari": "DELT",
+    "tipoEsercizio": "Isolamento"
+  },
+  "dumbbell_seated_neutral_wrist_curl": {
+    "nome": "Curl Seduto Polso Neutro con Manubri",
+    "focus": "BICI",
+    "muscoliSecondari": "AVA",
+    "tipoEsercizio": "Isolamento"
+  },
+  "dumbbell_seated_one_arm_bicep_curl_on_exercise_ball_with_leg_raised": {
+    "nome": "Curl Seduto Un Braccio Bicipiti su Fitball Sollevato",
+    "focus": "BICI",
+    "muscoliSecondari": "AVA",
+    "tipoEsercizio": "Isolamento"
+  },
+  "dumbbell_seated_one_arm_kickback": {
+    "nome": "Seduto Un Braccio Kickback con Manubri",
+    "focus": "TRIC",
+    "muscoliSecondari": "DELT",
+    "tipoEsercizio": "Isolamento"
+  },
+  "dumbbell_seated_preacher_curl": {
+    "nome": "Curl Seduto Preacher con Manubri",
+    "focus": "BICI",
+    "muscoliSecondari": "AVA",
+    "tipoEsercizio": "Isolamento"
+  },
+  "dumbbell_seated_revers_grip_concentration_curl": {
+    "nome": "Curl Seduto Inversa",
+    "focus": "BICI",
+    "muscoliSecondari": "AVA",
+    "tipoEsercizio": "Isolamento"
+  },
+  "dumbbell_seated_reverse_grip_one_arm_overhead_tricep_extension": {
+    "nome": "Estensione Seduto Un Braccio Tricipiti Sopra la Testa",
+    "focus": "TRIC",
+    "muscoliSecondari": "DELT",
+    "tipoEsercizio": "Isolamento"
+  },
+  "dumbbell_seated_triceps_extension": {
+    "nome": "Estensione Seduto Tricipiti con Manubri",
+    "focus": "TRIC",
+    "muscoliSecondari": "DELT",
+    "tipoEsercizio": "Isolamento"
+  },
+  "dumbbell_standing_alternate_hammer_curl_and_press": {
+    "nome": "Curl Spinta in Piedi Alternato Hammer e",
+    "focus": "BICI",
+    "muscoliSecondari": "AVA",
+    "tipoEsercizio": "Isolamento"
+  },
+  "dumbbell_standing_alternating_tricep_kickback": {
+    "nome": "In Piedi Alternato Kickback Tricipiti con Manubri",
+    "focus": "TRIC",
+    "muscoliSecondari": "DELT",
+    "tipoEsercizio": "Isolamento"
+  },
+  "dumbbell_standing_bent_over_one_arm_triceps_extension": {
+    "nome": "Estensione in Piedi Un Braccio Bent Over Tricipiti con Manubri",
+    "focus": "TRIC",
+    "muscoliSecondari": "DELT",
+    "tipoEsercizio": "Isolamento"
+  },
+  "dumbbell_standing_bent_over_two_arm_triceps_extension": {
+    "nome": "Estensione in Piedi Bent Over Due Braccia Tricipiti con Manubri",
+    "focus": "TRIC",
+    "muscoliSecondari": "DELT",
+    "tipoEsercizio": "Isolamento"
+  },
+  "dumbbell_standing_biceps_curl": {
+    "nome": "Curl in Piedi Bicipiti con Manubri",
+    "focus": "BICI",
+    "muscoliSecondari": "AVA",
+    "tipoEsercizio": "Isolamento"
+  },
+  "dumbbell_standing_concentration_curl": {
+    "nome": "Curl in Piedi Concentration con Manubri",
+    "focus": "BICI",
+    "muscoliSecondari": "AVA",
+    "tipoEsercizio": "Isolamento"
+  },
+  "dumbbell_standing_inner_biceps_curl_v_2": {
+    "nome": "Curl in Piedi Bicipiti Interno V. 2 con Manubri",
+    "focus": "BICI",
+    "muscoliSecondari": "AVA",
+    "tipoEsercizio": "Isolamento"
+  },
+  "dumbbell_standing_kickback": {
+    "nome": "In Piedi Kickback con Manubri",
+    "focus": "TRIC",
+    "muscoliSecondari": "DELT",
+    "tipoEsercizio": "Isolamento"
+  },
+  "dumbbell_standing_one_arm_concentration_curl": {
+    "nome": "Curl in Piedi Un Braccio",
+    "focus": "BICI",
+    "muscoliSecondari": "AVA",
+    "tipoEsercizio": "Isolamento"
+  },
+  "dumbbell_standing_one_arm_curl_over_incline_bench": {
+    "nome": "Curl in Piedi Un Braccio su Panca Inclinata con Manubri",
+    "focus": "BICI",
+    "muscoliSecondari": "AVA",
+    "tipoEsercizio": "Isolamento"
+  },
+  "dumbbell_standing_one_arm_extension": {
+    "nome": "Estensione in Piedi Un Braccio con Manubri",
+    "focus": "TRIC",
+    "muscoliSecondari": "DELT",
+    "tipoEsercizio": "Isolamento"
+  },
+  "dumbbell_standing_one_arm_reverse_curl": {
+    "nome": "Curl in Piedi Un Braccio Inversa con Manubri",
+    "focus": "BICI",
+    "muscoliSecondari": "AVA",
+    "tipoEsercizio": "Isolamento"
+  },
+  "dumbbell_standing_preacher_curl": {
+    "nome": "Curl in Piedi Preacher con Manubri",
+    "focus": "BICI",
+    "muscoliSecondari": "AVA",
+    "tipoEsercizio": "Isolamento"
+  },
+  "dumbbell_standing_reverse_curl": {
+    "nome": "Curl in Piedi Inversa con Manubri",
+    "focus": "BICI",
+    "muscoliSecondari": "AVA",
+    "tipoEsercizio": "Isolamento"
+  },
+  "dumbbell_standing_triceps_extension": {
+    "nome": "Estensione in Piedi Tricipiti con Manubri",
+    "focus": "TRIC",
+    "muscoliSecondari": "DELT",
+    "tipoEsercizio": "Isolamento"
+  },
+  "dumbbell_standing_zottman_preacher_curl": {
+    "nome": "Curl in Piedi Zottman Preacher con Manubri",
+    "focus": "BICI",
+    "muscoliSecondari": "AVA",
+    "tipoEsercizio": "Isolamento"
+  },
+  "dumbbell_step_up_single_leg_balance_with_bicep_curl": {
+    "nome": "Curl Step Up Gamba Singola e Bicipiti",
+    "focus": "BICI",
+    "muscoliSecondari": "AVA",
+    "tipoEsercizio": "Isolamento"
+  },
+  "dumbbell_step_up_single_leg_balance_with_bicep_curl_chair_variation": {
+    "nome": "Curl Step Up Gamba Singola e Bicipiti Variante Sed",
+    "focus": "BICI",
+    "muscoliSecondari": "AVA",
+    "tipoEsercizio": "Isolamento"
+  },
+  "dumbbell_tate_press": {
+    "nome": "Tate Press con Manubri",
+    "focus": "TRIC",
+    "muscoliSecondari": "DELT, PETT",
+    "tipoEsercizio": "Compound"
+  },
+  "dumbbell_tricep_kickback_with_stork_stance": {
+    "nome": "Kickback Tricipiti in Posizione Cicogna con Manubri",
+    "focus": "TRIC",
+    "muscoliSecondari": "DELT",
+    "tipoEsercizio": "Isolamento"
+  },
+  "dumbbell_twisting_bench_press": {
+    "nome": "Distensioni Twisting su Panca con Manubri",
+    "focus": "TRIC",
+    "muscoliSecondari": "DELT, PETT",
+    "tipoEsercizio": "Compound"
+  },
+  "dumbbell_waiter_biceps_curl": {
+    "nome": "Curl Waiter Bicipiti con Manubri",
+    "focus": "BICI",
+    "muscoliSecondari": "AVA",
+    "tipoEsercizio": "Isolamento"
+  },
+  "dumbbell_zottman_curl": {
+    "nome": "Curl Zottman con Manubri",
+    "focus": "BICI",
+    "muscoliSecondari": "AVA",
+    "tipoEsercizio": "Isolamento"
+  },
+  "dumbbell_zottman_preacher_curl": {
+    "nome": "Curl Zottman Preacher con Manubri",
+    "focus": "BICI",
+    "muscoliSecondari": "AVA",
+    "tipoEsercizio": "Isolamento"
+  },
+  "dumbbells_seated_triceps_extension": {
+    "nome": "Estensione Seduto Tricipiti con Manubri",
+    "focus": "TRIC",
+    "muscoliSecondari": "DELT",
+    "tipoEsercizio": "Isolamento"
+  },
+  "dynamic_style_band_side_triceps_extension": {
+    "nome": "Estensione Tricipiti Laterali Stile Dinamico",
+    "focus": "TRIC",
+    "muscoliSecondari": "DELT",
+    "tipoEsercizio": "Isolamento"
+  },
+  "dynamic_style_barbell_lying_back_of_the_head_tricep_extension": {
+    "nome": "Estensione Sdraiato Stile Dinamico Tricipiti",
+    "focus": "TRIC",
+    "muscoliSecondari": "DELT",
+    "tipoEsercizio": "Isolamento"
+  },
+  "elbow_dips": {
+    "nome": "Dip Sui Gomiti",
+    "focus": "TRIC",
+    "muscoliSecondari": "DELT, PETT",
+    "tipoEsercizio": "Compound"
+  },
+  "endurance_style_one_arm_dip": {
+    "nome": "Dip Un Braccio Stile Endurance",
+    "focus": "TRIC",
+    "muscoliSecondari": "DELT, PETT",
+    "tipoEsercizio": "Compound"
+  },
+  "exercise_ball_dip": {
+    "nome": "Dip su Fitball",
+    "focus": "TRIC",
+    "muscoliSecondari": "DELT, PETT",
+    "tipoEsercizio": "Compound"
+  },
+  "exercise_ball_seated_triceps_stretch": {
+    "nome": "Stretching Tricipiti Seduto su Fitball",
+    "focus": "TRIC",
+    "muscoliSecondari": "DELT",
+    "tipoEsercizio": "Isolamento"
+  },
+  "exercise_ball_seated_triceps_stretch_wide": {
+    "nome": "Stretching Tricipiti Largo Seduto su Fitball",
+    "focus": "TRIC",
+    "muscoliSecondari": "DELT",
+    "tipoEsercizio": "Isolamento"
+  },
+  "exercise_ball_supine_triceps_extension": {
+    "nome": "Estensione Tricipiti Supino su Fitball",
+    "focus": "TRIC",
+    "muscoliSecondari": "DELT",
+    "tipoEsercizio": "Isolamento"
+  },
+  "ez_bar_biceps_curl_with_arm_blaster": {
+    "nome": "Curl Bicipiti con Bilanciere Ez con Arm Blaster",
+    "focus": "BICI",
+    "muscoliSecondari": "AVA",
+    "tipoEsercizio": "Isolamento"
+  },
+  "ez_bar_close_grip_bench_press": {
+    "nome": "Panca Piana Presa Stretta con Bilanciere EZ",
+    "focus": "TRIC",
+    "muscoliSecondari": "DELT, PETT",
+    "tipoEsercizio": "Compound"
+  },
+  "ez_bar_french_press_on_exercise_ball": {
+    "nome": "French Press Ez su Fitball con Bilanciere",
+    "focus": "TRIC",
+    "muscoliSecondari": "DELT, PETT",
+    "tipoEsercizio": "Compound"
+  },
+  "ez_bar_lying_close_grip_triceps_extension_behind_head": {
+    "nome": "Estensione Sdraiato Presa Stretta Tricipiti Dietro",
+    "focus": "TRIC",
+    "muscoliSecondari": "DELT",
+    "tipoEsercizio": "Isolamento"
+  },
+  "ez_bar_seated_close_grip_concentration_curl": {
+    "nome": "Curl Seduto Presa Stretta Bilanciere Ez",
+    "focus": "TRIC",
+    "muscoliSecondari": null,
+    "tipoEsercizio": "Isolamento"
+  },
+  "ez_bar_standing_french_press": {
+    "nome": "In Piedi French Press con Bilanciere EZ",
+    "focus": "TRIC",
+    "muscoliSecondari": "DELT, PETT",
+    "tipoEsercizio": "Compound"
+  },
+  "ez_barbell_close_grip_curl": {
+    "nome": "Curl Presa Stretta con Bilanciere Ez",
+    "focus": "TRIC",
+    "muscoliSecondari": null,
+    "tipoEsercizio": "Isolamento"
+  },
+  "ez_barbell_close_grip_preacher_curl": {
+    "nome": "Curl Presa Stretta Preacher con Bilanciere Ez",
+    "focus": "TRIC",
+    "muscoliSecondari": null,
+    "tipoEsercizio": "Isolamento"
+  },
+  "ez_barbell_close_grip_preacher_curl_precision_variation": {
+    "nome": "Curl Presa Stretta Preacher Ez Variante Precision",
+    "focus": "TRIC",
+    "muscoliSecondari": null,
+    "tipoEsercizio": "Isolamento"
+  },
+  "ez_barbell_curl": {
+    "nome": "Curl con Bilanciere Ez",
+    "focus": "BICI",
+    "muscoliSecondari": "AVA",
+    "tipoEsercizio": "Isolamento"
+  },
+  "ez_barbell_decline_close_grip_face_press": {
+    "nome": "Distensioni Presa Stretta Faccia Declinata Ez",
+    "focus": "TRIC",
+    "muscoliSecondari": "DELT, PETT",
+    "tipoEsercizio": "Compound"
+  },
+  "ez_barbell_decline_close_grip_face_press_mini_variation": {
+    "nome": "Distensioni Presa Stretta Faccia Declinata Ez Mini",
+    "focus": "TRIC",
+    "muscoliSecondari": "DELT, PETT",
+    "tipoEsercizio": "Compound"
+  },
+  "ez_barbell_decline_triceps_extension": {
+    "nome": "Estensione Tricipiti su Panca Declinata Ez",
+    "focus": "TRIC",
+    "muscoliSecondari": "DELT",
+    "tipoEsercizio": "Isolamento"
+  },
+  "ez_barbell_incline_triceps_extension": {
+    "nome": "Estensione Tricipiti su Panca Inclinata Ez",
+    "focus": "TRIC",
+    "muscoliSecondari": "DELT",
+    "tipoEsercizio": "Isolamento"
+  },
+  "ez_barbell_jm_bench_press": {
+    "nome": "Jm Panca Piana con Bilanciere EZ",
+    "focus": "TRIC",
+    "muscoliSecondari": "DELT, PETT",
+    "tipoEsercizio": "Compound"
+  },
+  "ez_barbell_reverse_grip_curl": {
+    "nome": "Curl con Presa Inversa con Bilanciere Ez",
+    "focus": "BICI",
+    "muscoliSecondari": "AVA",
+    "tipoEsercizio": "Isolamento"
+  },
+  "ez_barbell_reverse_grip_preacher_curl": {
+    "nome": "Curl Preacher con Presa Inversa con Bilanciere Ez",
+    "focus": "BICI",
+    "muscoliSecondari": "AVA",
+    "tipoEsercizio": "Isolamento"
+  },
+  "ez_barbell_seated_curls": {
+    "nome": "Curl Seduto con Bilanciere Ez",
+    "focus": "BICI",
+    "muscoliSecondari": "AVA",
+    "tipoEsercizio": "Isolamento"
+  },
+  "ez_barbell_seated_triceps_extension": {
+    "nome": "Estensione Seduto Ez Tricipiti con Bilanciere",
+    "focus": "TRIC",
+    "muscoliSecondari": "DELT",
+    "tipoEsercizio": "Isolamento"
+  },
+  "ez_barbell_spider_curl": {
+    "nome": "Curl Spider con Bilanciere Ez",
+    "focus": "BICI",
+    "muscoliSecondari": "AVA",
+    "tipoEsercizio": "Isolamento"
+  },
+  "ez_barbell_standing_wide_grip_biceps_curl": {
+    "nome": "Curl in Piedi Presa Larga Bicipiti Bilanciere Ez",
+    "focus": "BICI",
+    "muscoliSecondari": "AVA",
+    "tipoEsercizio": "Isolamento"
+  },
+  "flexible_cable_triceps_pushdown_v_bar": {
+    "nome": "Pushdown Tricipiti Flessibile con Barra V ai Cavi",
+    "focus": "TRIC",
+    "muscoliSecondari": "DELT, PETT",
+    "tipoEsercizio": "Compound"
+  },
+  "handstand": {
+    "nome": "Verticale",
+    "focus": "TRIC",
+    "muscoliSecondari": "CORE, DELT",
+    "tipoEsercizio": "Isolamento"
+  },
+  "handstand_push_up": {
+    "nome": "Piegamenti in Verticale",
+    "focus": "TRIC",
+    "muscoliSecondari": "DELT, PETT",
+    "tipoEsercizio": "Compound"
+  },
+  "hold_style_dumbbell_alternating_seated_bicep_curl_on_exercise_ball": {
+    "nome": "Curl Seduto Alternato Bicipiti su Fitball Stile Hold",
+    "focus": "BICI",
+    "muscoliSecondari": "AVA",
+    "tipoEsercizio": "Isolamento"
+  },
+  "horizontal_style_band_overhead_triceps_extension": {
+    "nome": "Estensione Tricipiti Sopra la Testa Stile Orizzontale",
+    "focus": "TRIC",
+    "muscoliSecondari": "DELT",
+    "tipoEsercizio": "Isolamento"
+  },
+  "impossible_dips": {
+    "nome": "Dip Impossibili",
+    "focus": "TRIC",
+    "muscoliSecondari": "DELT, PETT",
+    "tipoEsercizio": "Compound"
+  },
+  "incline_close_grip_push_up": {
+    "nome": "Inclinato Presa Stretta Piegamenti",
+    "focus": "TRIC",
+    "muscoliSecondari": "DELT, PETT",
+    "tipoEsercizio": "Compound"
+  },
+  "intermediate_style_dumbbell_preacher_curl_over_exercise_ball": {
+    "nome": "Curl Preacher su Fitball Stile Intermedio",
+    "focus": "BICI",
+    "muscoliSecondari": "AVA",
+    "tipoEsercizio": "Isolamento"
+  },
+  "kettlebell_bottoms_up_clean_from_the_hang_position": {
+    "nome": "Kettlebell Bottoms Up Clean from Hang",
+    "focus": "TRIC",
+    "muscoliSecondari": "DELT",
+    "tipoEsercizio": "Isolamento"
+  },
+  "kettlebell_double_alternating_hang_clean": {
+    "nome": "Kettlebell Alternato Hang Clean Doppio",
+    "focus": "TRIC",
+    "muscoliSecondari": "DELT",
+    "tipoEsercizio": "Isolamento"
+  },
+  "lever_bicep_curl": {
+    "nome": "Curl Bicipiti Alla Macchina",
+    "focus": "BICI",
+    "muscoliSecondari": "AVA",
+    "tipoEsercizio": "Isolamento"
+  },
+  "lever_hammer_grip_preacher_curl": {
+    "nome": "Curl Preacher con Presa a Martello Alla Macchina",
+    "focus": "BICI",
+    "muscoliSecondari": "AVA",
+    "tipoEsercizio": "Isolamento"
+  },
+  "lever_overhand_triceps_dip": {
+    "nome": "Dip Tricipiti Lever Prono alla Macchina",
+    "focus": "TRIC",
+    "muscoliSecondari": "DELT, PETT",
+    "tipoEsercizio": "Compound"
+  },
+  "lever_preacher_curl": {
+    "nome": "Curl Preacher Alla Macchina",
+    "focus": "BICI",
+    "muscoliSecondari": "AVA",
+    "tipoEsercizio": "Isolamento"
+  },
+  "lever_preacher_curl_v_2": {
+    "nome": "Curl Preacher Alla Macchina V. 2",
+    "focus": "BICI",
+    "muscoliSecondari": "AVA",
+    "tipoEsercizio": "Isolamento"
+  },
+  "lever_reverse_grip_preacher_curl": {
+    "nome": "Curl Presa Supina Lever Preacher",
+    "focus": "BICI",
+    "muscoliSecondari": "AVA",
+    "tipoEsercizio": "Isolamento"
+  },
+  "lever_reverse_grip_preacher_curl_with_precision": {
+    "nome": "Curl Preacher Presa Inversa Alla Leva",
+    "focus": "BICI",
+    "muscoliSecondari": "AVA",
+    "tipoEsercizio": "Isolamento"
+  },
+  "lever_seated_dip": {
+    "nome": "Dip Seduto alla Macchina",
+    "focus": "TRIC",
+    "muscoliSecondari": "DELT, PETT",
+    "tipoEsercizio": "Compound"
+  },
+  "lever_triceps_extension": {
+    "nome": "Estensione Tricipiti Alla Macchina",
+    "focus": "TRIC",
+    "muscoliSecondari": "DELT",
+    "tipoEsercizio": "Isolamento"
+  },
+  "macro_style_close_grip_push_up": {
+    "nome": "Piegamenti Presa Stretta - Stile Macro",
+    "focus": "TRIC",
+    "muscoliSecondari": "DELT, PETT",
+    "tipoEsercizio": "Compound"
+  },
+  "medicine_ball_close_grip_push_up": {
+    "nome": "Piegamenti Presa Stretta con Palla Medica",
+    "focus": "TRIC",
+    "muscoliSecondari": "DELT, PETT",
+    "tipoEsercizio": "Compound"
+  },
+  "medicine_ball_supine_chest_throw": {
+    "nome": "Lancio Petto da Supino con Palla Medica",
+    "focus": "TRIC",
+    "muscoliSecondari": "DELT, PETT",
+    "tipoEsercizio": "Isolamento"
+  },
+  "narrow_push_up_on_exercise_ball": {
+    "nome": "Piegamenti Rematore su Fitball",
+    "focus": "TRIC",
+    "muscoliSecondari": "DELT, PETT",
+    "tipoEsercizio": "Compound"
+  },
+  "olympic_barbell_hammer_curl": {
+    "nome": "Curl Hammer con Bilanciere Olimpico",
+    "focus": "BICI",
+    "muscoliSecondari": "AVA",
+    "tipoEsercizio": "Isolamento"
+  },
+  "olympic_barbell_triceps_extension": {
+    "nome": "Estensione Tricipiti Olimpico con Bilanciere",
+    "focus": "TRIC",
+    "muscoliSecondari": "DELT",
+    "tipoEsercizio": "Isolamento"
+  },
+  "one_arm_dip": {
+    "nome": "Dip Un Braccio",
+    "focus": "TRIC",
+    "muscoliSecondari": "DELT, PETT",
+    "tipoEsercizio": "Compound"
+  },
+  "overhead_triceps_stretch": {
+    "nome": "Sopra la Testa Tricipiti Allungamento",
+    "focus": "TRIC",
+    "muscoliSecondari": "DELT",
+    "tipoEsercizio": "Isolamento"
+  },
+  "prone_medicine_ball_close_grip_push_up": {
+    "nome": "Piegamenti Presa Stretta Proni su Palla Medica",
+    "focus": "TRIC",
+    "muscoliSecondari": "DELT, PETT",
+    "tipoEsercizio": "Compound"
+  },
+  "push_up_close_grip_off_dumbbell": {
+    "nome": "Piegamenti Presa Stretta su Manubri",
+    "focus": "TRIC",
+    "muscoliSecondari": "DELT, PETT",
+    "tipoEsercizio": "Compound"
+  },
+  "push_up_on_lower_arms": {
+    "nome": "Piegamenti su Avambracci",
+    "focus": "TRIC",
+    "muscoliSecondari": "DELT, PETT",
+    "tipoEsercizio": "Compound"
+  },
+  "push_up_on_lower_arms_resistance_variation": {
+    "nome": "Piegamenti su Avambracci - Resistenza Variazione",
+    "focus": "TRIC",
+    "muscoliSecondari": "DELT, PETT",
+    "tipoEsercizio": "Compound"
+  },
+  "resistance_band_seated_biceps_curl": {
+    "nome": "Curl Seduto Bicipiti con Elastico",
+    "focus": "BICI",
+    "muscoliSecondari": "AVA",
+    "tipoEsercizio": "Isolamento"
+  },
+  "reverse_dip": {
+    "nome": "Dip Inverso",
+    "focus": "TRIC",
+    "muscoliSecondari": "DELT, PETT",
+    "tipoEsercizio": "Compound"
+  },
+  "ring_dips": {
+    "nome": "Dip Agli Anelli",
+    "focus": "TRIC",
+    "muscoliSecondari": "DELT, PETT",
+    "tipoEsercizio": "Compound"
+  },
+  "rotated_dumbbell_pronate_grip_triceps_extension": {
+    "nome": "Estensione Presa Prona Tricipiti Ruotato con Manubri",
+    "focus": "TRIC",
+    "muscoliSecondari": "DELT",
+    "tipoEsercizio": "Isolamento"
+  },
+  "rough_cable_standing_one_arm_triceps_extension": {
+    "nome": "Estensione in Piedi Un Braccio Tricipiti Rough ai Cavi",
+    "focus": "TRIC",
+    "muscoliSecondari": "DELT",
+    "tipoEsercizio": "Isolamento"
+  },
+  "side_push_up": {
+    "nome": "Piegamenti Laterali",
+    "focus": "TRIC",
+    "muscoliSecondari": "DELT, PETT",
+    "tipoEsercizio": "Compound"
+  },
+  "ski_ergometer": {
+    "nome": "Ski Ergometer",
+    "focus": "TRIC",
+    "muscoliSecondari": "DELT",
+    "tipoEsercizio": "Isolamento"
+  },
+  "smith_close_grip_bench_press": {
+    "nome": "Distensioni Presa Stretta su Panca alla Smith",
+    "focus": "TRIC",
+    "muscoliSecondari": "DELT, PETT",
+    "tipoEsercizio": "Compound"
+  },
+  "smith_machine_bicep_curl": {
+    "nome": "Curl Bicipiti alla Smith Machine",
+    "focus": "BICI",
+    "muscoliSecondari": "AVA",
+    "tipoEsercizio": "Isolamento"
+  },
+  "smith_machine_decline_close_grip_bench_press": {
+    "nome": "Distensioni Presa Stretta Declinate alla Smith Machine",
+    "focus": "TRIC",
+    "muscoliSecondari": "DELT, PETT",
+    "tipoEsercizio": "Compound"
+  },
+  "smith_machine_incline_tricep_extension": {
+    "nome": "Estensione Inclinata Tricipiti alla Smith Machine",
+    "focus": "TRIC",
+    "muscoliSecondari": "DELT",
+    "tipoEsercizio": "Isolamento"
+  },
+  "smith_machine_incline_tricep_extension_straight_variation": {
+    "nome": "Estensione Inclinata Tricipiti alla Smith Machine Dritto",
+    "focus": "TRIC",
+    "muscoliSecondari": "DELT",
+    "tipoEsercizio": "Isolamento"
+  },
+  "stalder_press": {
+    "nome": "Spinta Stalder",
+    "focus": "TRIC",
+    "muscoliSecondari": "DELT, PETT",
+    "tipoEsercizio": "Compound"
+  },
+  "targeted_style_smith_close_grip_bench_press": {
+    "nome": "Distensioni Piana Presa Stretta Stile Mirato alla Macchina",
+    "focus": "TRIC",
+    "muscoliSecondari": "DELT, PETT",
+    "tipoEsercizio": "Compound"
+  },
+  "three_bench_dip": {
+    "nome": "Dip su Tre Panche",
+    "focus": "TRIC",
+    "muscoliSecondari": "DELT, PETT",
+    "tipoEsercizio": "Compound"
+  },
+  "triceps_dip": {
+    "nome": "Dip Tricipiti",
+    "focus": "TRIC",
+    "muscoliSecondari": "DELT, PETT",
+    "tipoEsercizio": "Compound"
+  },
+  "triceps_dip_bench_leg": {
+    "nome": "Dip Tricipiti su Panca con Gambe",
+    "focus": "TRIC",
+    "muscoliSecondari": "DELT, PETT",
+    "tipoEsercizio": "Compound"
+  },
+  "triceps_dip_between_benches": {
+    "nome": "Dip Tricipiti tra Panche",
+    "focus": "TRIC",
+    "muscoliSecondari": "DELT, PETT",
+    "tipoEsercizio": "Compound"
+  },
+  "triceps_dip_between_benches_extreme_variation": {
+    "nome": "Dip Tricipiti tra Panche - Variazione Estrema",
+    "focus": "TRIC",
+    "muscoliSecondari": "DELT, PETT",
+    "tipoEsercizio": "Compound"
+  },
+  "triceps_dips_floor": {
+    "nome": "Dip Tricipiti a Terra",
+    "focus": "TRIC",
+    "muscoliSecondari": "DELT, PETT",
+    "tipoEsercizio": "Compound"
+  },
+  "triceps_press": {
+    "nome": "Pressioni Tricipiti",
+    "focus": "TRIC",
+    "muscoliSecondari": "DELT, PETT",
+    "tipoEsercizio": "Compound"
+  },
+  "triceps_stretch": {
+    "nome": "Allungamento Tricipiti",
+    "focus": "TRIC",
+    "muscoliSecondari": null,
+    "tipoEsercizio": "Isolamento"
+  },
+  "wall_style_dumbbell_one_arm_french_press_on_exercise_ball": {
+    "nome": "Un Braccio French Press su Fitball Stile Muro",
+    "focus": "TRIC",
+    "muscoliSecondari": "DELT, PETT",
+    "tipoEsercizio": "Compound"
+  },
+  "weighted_bench_dip": {
+    "nome": "Dip su Panca con Zavorra",
+    "focus": "TRIC",
+    "muscoliSecondari": "DELT, PETT",
+    "tipoEsercizio": "Compound"
+  },
+  "weighted_seated_bicep_curl_on_stability_ball": {
+    "nome": "Curl Seduto Bicipiti su Palla",
+    "focus": "BICI",
+    "muscoliSecondari": "AVA",
+    "tipoEsercizio": "Isolamento"
+  },
+  "weighted_standing_curl": {
+    "nome": "Curl in Piedi con Pesi",
+    "focus": "BICI",
+    "muscoliSecondari": "AVA",
+    "tipoEsercizio": "Isolamento"
+  },
+  "weighted_three_bench_dips": {
+    "nome": "Dip su Tre Panche con Zavorra",
+    "focus": "TRIC",
+    "muscoliSecondari": "DELT, PETT",
+    "tipoEsercizio": "Compound"
+  },
+  "weighted_tricep_dips": {
+    "nome": "Tricipite con Zavorra Dips",
+    "focus": "TRIC",
+    "muscoliSecondari": "DELT, PETT",
+    "tipoEsercizio": "Compound"
+  },
+  "weighted_triceps_dip_on_high_parallel_bars": {
+    "nome": "Dip Tricipiti con Zavorra Alle Parallele Alte",
+    "focus": "TRIC",
+    "muscoliSecondari": "DELT, PETT",
+    "tipoEsercizio": "Compound"
+  }
+}

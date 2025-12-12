@@ -35,7 +35,6 @@ final exerciseJsonProvider = FutureProvider.autoDispose<List<Exercise>>((ref) as
     
     return exercises;
   } catch (e) {
-    // print('Error loading exercises: $e');
     // Ritorna una lista di fallback
     return _getFallbackExercises();
   }

@@ -140,6 +140,14 @@ class AchievementXPNotifier extends AsyncNotifier<AchievementData> {
 
   @override
   Future<AchievementData> build() async {
+    // ✅ MEMORY FIX: Ensure proper cleanup when provider is disposed
+    // ref.listen subscriptions are automatically cleaned up by Riverpod 2.6.x
+    // but we add explicit onDispose for any future manual subscriptions
+    ref.onDispose(() {
+      // Listeners set up via ref.listen are auto-cleaned by Riverpod
+      // This is a safety net for any future manual subscriptions
+    });
+
     // Inizializza immediatamente con dati vuoti
     final initialData = AchievementData(
       totalXP: 0,
@@ -504,7 +512,6 @@ class AchievementXPNotifier extends AsyncNotifier<AchievementData> {
       
       // TODO: Mostrare notifica di achievement sbloccato
     } catch (e) {
-      // print('Error unlocking achievement: $e');
     }
   }
   

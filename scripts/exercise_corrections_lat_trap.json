@@ -1,0 +1,1010 @@
+{
+  "barbell_bent_over_row": {
+    "nome": "Rematore con Bilanciere",
+    "focus": "LAT, TRAP",
+    "muscoliSecondari": "BICI, DELT",
+    "tipoEsercizio": "Compound"
+  },
+  "barbell_decline_bent_arm_pullover": {
+    "nome": "Pullover Declinato con Bilanciere",
+    "focus": "LAT",
+    "muscoliSecondari": "PETT, TRIC",
+    "tipoEsercizio": "Compound"
+  },
+  "barbell_decline_wide_grip_pullover": {
+    "nome": "Pullover Declinato Presa Larga",
+    "focus": "LAT",
+    "muscoliSecondari": "PETT, TRIC",
+    "tipoEsercizio": "Compound"
+  },
+  "barbell_one_arm_bent_over_row": {
+    "nome": "Rematore Un Braccio con Bilanciere",
+    "focus": "LAT, TRAP",
+    "muscoliSecondari": "BICI, DELT",
+    "tipoEsercizio": "Compound"
+  },
+  "barbell_pullover_to_press": {
+    "nome": "Pullover to Press con Bilanciere",
+    "focus": "LAT, PETT",
+    "muscoliSecondari": "TRIC, DELT",
+    "tipoEsercizio": "Compound"
+  },
+  "barbell_reverse_grip_bent_over_row": {
+    "nome": "Rematore Presa Supina con Bilanciere",
+    "focus": "LAT, TRAP",
+    "muscoliSecondari": "BICI, DELT",
+    "tipoEsercizio": "Compound"
+  },
+  "barbell_reverse_grip_incline_bench_row": {
+    "nome": "Rematore Presa Supina su Panca Inclinata",
+    "focus": "LAT, TRAP",
+    "muscoliSecondari": "BICI, DELT",
+    "tipoEsercizio": "Compound"
+  },
+  "barbell_shrug": {
+    "nome": "Scrollate con Bilanciere",
+    "focus": "TRAP",
+    "muscoliSecondari": "DELT",
+    "tipoEsercizio": "Isolation"
+  },
+  "bodyweight_squatting_row": {
+    "nome": "Squat Rematore a Corpo Libero",
+    "focus": "LAT, TRAP",
+    "muscoliSecondari": "BICI, QUAD",
+    "tipoEsercizio": "Compound"
+  },
+  "bodyweight_squatting_row_with_towel": {
+    "nome": "Squat Rematore con Asciugamano",
+    "focus": "LAT, TRAP",
+    "muscoliSecondari": "BICI, QUAD",
+    "tipoEsercizio": "Compound"
+  },
+  "bodyweight_standing_close_grip_one_arm_row": {
+    "nome": "Rematore Un Braccio Presa Stretta a Corpo Libero",
+    "focus": "LAT, TRAP",
+    "muscoliSecondari": "BICI",
+    "tipoEsercizio": "Compound"
+  },
+  "bodyweight_standing_one_arm_row": {
+    "nome": "Rematore Un Braccio a Corpo Libero",
+    "focus": "LAT, TRAP",
+    "muscoliSecondari": "BICI",
+    "tipoEsercizio": "Compound"
+  },
+  "bodyweight_standing_one_arm_row_with_towel": {
+    "nome": "Rematore Un Braccio con Asciugamano a Corpo Libero",
+    "focus": "LAT, TRAP",
+    "muscoliSecondari": "BICI",
+    "tipoEsercizio": "Compound"
+  },
+  "cable_bar_lateral_pulldown": {
+    "nome": "Lat Machine ai Cavi",
+    "focus": "LAT",
+    "muscoliSecondari": "BICI, TRAP",
+    "tipoEsercizio": "Compound"
+  },
+  "cable_cross_over_lateral_pulldown": {
+    "nome": "Lat Machine Crossover ai Cavi",
+    "focus": "LAT",
+    "muscoliSecondari": "BICI, TRAP",
+    "tipoEsercizio": "Compound"
+  },
+  "cable_decline_seated_wide_grip_row": {
+    "nome": "Rematore Declinato Presa Larga ai Cavi",
+    "focus": "LAT, TRAP",
+    "muscoliSecondari": "BICI, DELT",
+    "tipoEsercizio": "Compound"
+  },
+  "cable_floor_seated_wide_grip_row": {
+    "nome": "Rematore a Terra Presa Larga ai Cavi",
+    "focus": "LAT, TRAP",
+    "muscoliSecondari": "BICI, DELT",
+    "tipoEsercizio": "Compound"
+  },
+  "cable_high_row_kneeling": {
+    "nome": "Rematore Alto in Ginocchio ai Cavi",
+    "focus": "LAT, TRAP",
+    "muscoliSecondari": "BICI, DELT",
+    "tipoEsercizio": "Compound"
+  },
+  "cable_incline_bench_row": {
+    "nome": "Rematore su Panca Inclinata ai Cavi",
+    "focus": "LAT, TRAP",
+    "muscoliSecondari": "BICI, DELT",
+    "tipoEsercizio": "Compound"
+  },
+  "cable_incline_bench_row_elite_variation": {
+    "nome": "Rematore su Panca Inclinata Elite ai Cavi",
+    "focus": "LAT, TRAP",
+    "muscoliSecondari": "BICI, DELT",
+    "tipoEsercizio": "Compound"
+  },
+  "cable_incline_pushdown": {
+    "nome": "Pushdown Inclinato ai Cavi",
+    "focus": "LAT",
+    "muscoliSecondari": "TRIC",
+    "tipoEsercizio": "Isolation"
+  },
+  "cable_lat_pulldown_full_range_of_motion": {
+    "nome": "Lat Machine Full ROM ai Cavi",
+    "focus": "LAT",
+    "muscoliSecondari": "BICI, TRAP",
+    "tipoEsercizio": "Compound"
+  },
+  "cable_lateral_pulldown_with_rope_attachment": {
+    "nome": "Lat Machine con Corda",
+    "focus": "LAT",
+    "muscoliSecondari": "BICI, TRAP",
+    "tipoEsercizio": "Compound"
+  },
+  "cable_lateral_pulldown_with_rope_attachment_core": {
+    "nome": "Lat Machine con Corda Focus Core",
+    "focus": "LAT, CORE",
+    "muscoliSecondari": "BICI",
+    "tipoEsercizio": "Compound"
+  },
+  "cable_lateral_pulldown_with_v_bar": {
+    "nome": "Lat Machine con Barra V",
+    "focus": "LAT",
+    "muscoliSecondari": "BICI, TRAP",
+    "tipoEsercizio": "Compound"
+  },
+  "cable_low_seated_row": {
+    "nome": "Rematore Seduto Basso ai Cavi",
+    "focus": "LAT, TRAP",
+    "muscoliSecondari": "BICI, DELT",
+    "tipoEsercizio": "Compound"
+  },
+  "cable_low_seated_row_controlled": {
+    "nome": "Rematore Seduto Basso Controllato ai Cavi",
+    "focus": "LAT, TRAP",
+    "muscoliSecondari": "BICI, DELT",
+    "tipoEsercizio": "Compound"
+  },
+  "cable_lying_extension_pullover_with_rope_attachment": {
+    "nome": "Pullover Sdraiato con Corda ai Cavi",
+    "focus": "LAT",
+    "muscoliSecondari": "PETT, TRIC",
+    "tipoEsercizio": "Compound"
+  },
+  "cable_one_arm_bent_over_row": {
+    "nome": "Rematore Un Braccio Piegato ai Cavi",
+    "focus": "LAT, TRAP",
+    "muscoliSecondari": "BICI, DELT",
+    "tipoEsercizio": "Compound"
+  },
+  "cable_one_arm_pulldown": {
+    "nome": "Lat Machine Un Braccio",
+    "focus": "LAT",
+    "muscoliSecondari": "BICI",
+    "tipoEsercizio": "Compound"
+  },
+  "cable_one_arm_straight_back_high_row_kneeling": {
+    "nome": "Rematore Un Braccio Alto in Ginocchio ai Cavi",
+    "focus": "LAT, TRAP",
+    "muscoliSecondari": "BICI, DELT",
+    "tipoEsercizio": "Compound"
+  },
+  "cable_palm_rotational_row": {
+    "nome": "Rematore con Rotazione del Palmo ai Cavi",
+    "focus": "LAT, TRAP",
+    "muscoliSecondari": "BICI, DELT",
+    "tipoEsercizio": "Compound"
+  },
+  "cable_pulldown": {
+    "nome": "Lat Machine ai Cavi",
+    "focus": "LAT",
+    "muscoliSecondari": "BICI, TRAP",
+    "tipoEsercizio": "Compound"
+  },
+  "cable_pulldown_pro_lat_bar": {
+    "nome": "Lat Machine Pro Bar",
+    "focus": "LAT",
+    "muscoliSecondari": "BICI, TRAP",
+    "tipoEsercizio": "Compound"
+  },
+  "cable_pushdown_straight_arm_v_2": {
+    "nome": "Pushdown Braccia Dritte v2 ai Cavi",
+    "focus": "LAT",
+    "muscoliSecondari": "TRIC",
+    "tipoEsercizio": "Compound"
+  },
+  "cable_rear_delt_row": {
+    "nome": "Rematore Deltoidi Posteriori ai Cavi",
+    "focus": "DELT, TRAP",
+    "muscoliSecondari": "LAT",
+    "tipoEsercizio": "Compound"
+  },
+  "cable_rear_pulldown": {
+    "nome": "Lat Machine Posteriore",
+    "focus": "LAT, TRAP",
+    "muscoliSecondari": "BICI, DELT",
+    "tipoEsercizio": "Compound"
+  },
+  "cable_reverse_grip_straight_back_seated_high_row": {
+    "nome": "Rematore Seduto Presa Supina Alto ai Cavi",
+    "focus": "LAT, TRAP",
+    "muscoliSecondari": "BICI, DELT",
+    "tipoEsercizio": "Compound"
+  },
+  "cable_rope_crossover_seated_row": {
+    "nome": "Rematore Crossover Seduto con Corda ai Cavi",
+    "focus": "LAT, TRAP",
+    "muscoliSecondari": "BICI, DELT",
+    "tipoEsercizio": "Compound"
+  },
+  "cable_rope_elevated_seated_row": {
+    "nome": "Rematore Seduto Rialzato con Corda ai Cavi",
+    "focus": "LAT, TRAP",
+    "muscoliSecondari": "BICI, DELT",
+    "tipoEsercizio": "Compound"
+  },
+  "cable_rope_extension_incline_bench_row": {
+    "nome": "Rematore con Corda su Panca Inclinata ai Cavi",
+    "focus": "LAT, TRAP",
+    "muscoliSecondari": "BICI, DELT",
+    "tipoEsercizio": "Compound"
+  },
+  "cable_rope_seated_row": {
+    "nome": "Rematore Seduto con Corda ai Cavi",
+    "focus": "LAT, TRAP",
+    "muscoliSecondari": "BICI, DELT",
+    "tipoEsercizio": "Compound"
+  },
+  "cable_seated_high_row_v_bar": {
+    "nome": "Rematore Seduto Alto con Barra V ai Cavi",
+    "focus": "LAT, TRAP",
+    "muscoliSecondari": "BICI, DELT",
+    "tipoEsercizio": "Compound"
+  },
+  "cable_seated_one_arm_alternate_row": {
+    "nome": "Rematore Seduto Alternato ai Cavi",
+    "focus": "LAT, TRAP",
+    "muscoliSecondari": "BICI, DELT",
+    "tipoEsercizio": "Compound"
+  },
+  "cable_seated_row": {
+    "nome": "Rematore Seduto ai Cavi",
+    "focus": "LAT, TRAP",
+    "muscoliSecondari": "BICI, DELT",
+    "tipoEsercizio": "Compound"
+  },
+  "cable_seated_row_with_reverse": {
+    "nome": "Rematore Seduto Presa Supina ai Cavi",
+    "focus": "LAT, TRAP",
+    "muscoliSecondari": "BICI, DELT",
+    "tipoEsercizio": "Compound"
+  },
+  "cable_seated_wide_grip_row": {
+    "nome": "Rematore Seduto Presa Larga ai Cavi",
+    "focus": "LAT, TRAP",
+    "muscoliSecondari": "BICI, DELT",
+    "tipoEsercizio": "Compound"
+  },
+  "cable_shrug": {
+    "nome": "Scrollate ai Cavi",
+    "focus": "TRAP",
+    "muscoliSecondari": "DELT",
+    "tipoEsercizio": "Isolation"
+  },
+  "cable_squat_row_with_rope_attachment": {
+    "nome": "Squat Rematore con Corda ai Cavi",
+    "focus": "LAT, TRAP",
+    "muscoliSecondari": "QUAD, BICI",
+    "tipoEsercizio": "Compound"
+  },
+  "cable_squat_row_with_rope_attachment_heavy": {
+    "nome": "Squat Rematore con Corda Pesante ai Cavi",
+    "focus": "LAT, TRAP",
+    "muscoliSecondari": "QUAD, BICI",
+    "tipoEsercizio": "Compound"
+  },
+  "cable_standing_row_v_bar": {
+    "nome": "Rematore in Piedi con Barra V ai Cavi",
+    "focus": "LAT, TRAP",
+    "muscoliSecondari": "BICI, DELT",
+    "tipoEsercizio": "Compound"
+  },
+  "cable_standing_twist_row_v_bar": {
+    "nome": "Rematore in Piedi con Torsione Barra V ai Cavi",
+    "focus": "LAT, TRAP",
+    "muscoliSecondari": "BICI, DELT, CORE",
+    "tipoEsercizio": "Compound"
+  },
+  "cable_straight_arm_pulldown": {
+    "nome": "Lat Machine Braccia Dritte",
+    "focus": "LAT",
+    "muscoliSecondari": "TRIC",
+    "tipoEsercizio": "Isolation"
+  },
+  "cable_straight_arm_pulldown_with_rope": {
+    "nome": "Lat Machine Braccia Dritte con Corda",
+    "focus": "LAT",
+    "muscoliSecondari": "TRIC",
+    "tipoEsercizio": "Isolation"
+  },
+  "cable_straight_back_seated_row": {
+    "nome": "Rematore Seduto Schiena Dritta ai Cavi",
+    "focus": "LAT, TRAP",
+    "muscoliSecondari": "BICI, DELT",
+    "tipoEsercizio": "Compound"
+  },
+  "cable_thibaudeau_kayak_row": {
+    "nome": "Rematore Thibaudeau Kayak ai Cavi",
+    "focus": "LAT, TRAP",
+    "muscoliSecondari": "BICI, DELT, CORE",
+    "tipoEsercizio": "Compound"
+  },
+  "cable_twisting_pull": {
+    "nome": "Tirata Rotazionale ai Cavi",
+    "focus": "LAT, CORE",
+    "muscoliSecondari": "DELT",
+    "tipoEsercizio": "Compound"
+  },
+  "cable_twisting_pull_with_intensified": {
+    "nome": "Tirata Rotazionale Intensificata ai Cavi",
+    "focus": "LAT, CORE",
+    "muscoliSecondari": "DELT",
+    "tipoEsercizio": "Compound"
+  },
+  "cable_underhand_pulldown": {
+    "nome": "Lat Machine Presa Supina",
+    "focus": "LAT",
+    "muscoliSecondari": "BICI, TRAP",
+    "tipoEsercizio": "Compound"
+  },
+  "cable_upper_row": {
+    "nome": "Rematore Alto ai Cavi",
+    "focus": "LAT, TRAP",
+    "muscoliSecondari": "BICI, DELT",
+    "tipoEsercizio": "Compound"
+  },
+  "cable_wide_grip_rear_pulldown_behind_neck": {
+    "nome": "Lat Machine Presa Larga Dietro il Collo",
+    "focus": "LAT, TRAP",
+    "muscoliSecondari": "BICI, DELT",
+    "tipoEsercizio": "Compound"
+  },
+  "cambered_bar_lying_row": {
+    "nome": "Rematore Sdraiato con Bilanciere Curvo",
+    "focus": "LAT, TRAP",
+    "muscoliSecondari": "BICI, DELT",
+    "tipoEsercizio": "Compound"
+  },
+  "dumbbell_decline_shrug": {
+    "nome": "Scrollate Declinate con Manubri",
+    "focus": "TRAP",
+    "muscoliSecondari": "DELT",
+    "tipoEsercizio": "Isolation"
+  },
+  "dumbbell_decline_shrug_rigid_variation": {
+    "nome": "Scrollate Declinate Rigide con Manubri",
+    "focus": "TRAP",
+    "muscoliSecondari": "DELT",
+    "tipoEsercizio": "Isolation"
+  },
+  "dumbbell_decline_shrug_v_2": {
+    "nome": "Scrollate Declinate v2 con Manubri",
+    "focus": "TRAP",
+    "muscoliSecondari": "DELT",
+    "tipoEsercizio": "Isolation"
+  },
+  "dumbbell_incline_shrug": {
+    "nome": "Scrollate Inclinate con Manubri",
+    "focus": "TRAP",
+    "muscoliSecondari": "DELT",
+    "tipoEsercizio": "Isolation"
+  },
+  "dumbbell_incline_y_raise": {
+    "nome": "Alzate a Y su Panca Inclinata con Manubri",
+    "focus": "TRAP, DELT",
+    "muscoliSecondari": "LAT",
+    "tipoEsercizio": "Isolation"
+  },
+  "dumbbell_lying_rear_delt_row": {
+    "nome": "Rematore Sdraiato Deltoidi Posteriori",
+    "focus": "DELT, TRAP",
+    "muscoliSecondari": "LAT",
+    "tipoEsercizio": "Compound"
+  },
+  "dumbbell_one_arm_bent_over_row": {
+    "nome": "Rematore Un Braccio con Manubri",
+    "focus": "LAT, TRAP",
+    "muscoliSecondari": "BICI, DELT",
+    "tipoEsercizio": "Compound"
+  },
+  "dumbbell_palm_rotational_bent_over_row": {
+    "nome": "Rematore con Rotazione del Palmo con Manubri",
+    "focus": "LAT, TRAP",
+    "muscoliSecondari": "BICI, DELT",
+    "tipoEsercizio": "Compound"
+  },
+  "dumbbell_reverse_grip_incline_bench_one_arm_row": {
+    "nome": "Rematore Un Braccio Presa Supina su Panca Inclinata",
+    "focus": "LAT, TRAP",
+    "muscoliSecondari": "BICI, DELT",
+    "tipoEsercizio": "Compound"
+  },
+  "dumbbell_reverse_grip_incline_bench_two_arm_row": {
+    "nome": "Rematore Presa Supina su Panca Inclinata con Manubri",
+    "focus": "LAT, TRAP",
+    "muscoliSecondari": "BICI, DELT",
+    "tipoEsercizio": "Compound"
+  },
+  "dumbbell_reverse_grip_row_female": {
+    "nome": "Rematore Presa Supina con Manubri",
+    "focus": "LAT, TRAP",
+    "muscoliSecondari": "BICI, DELT",
+    "tipoEsercizio": "Compound"
+  },
+  "dumbbell_reverse_grip_row_female_hold": {
+    "nome": "Rematore Presa Supina Isometrico con Manubri",
+    "focus": "LAT, TRAP",
+    "muscoliSecondari": "BICI, DELT",
+    "tipoEsercizio": "Compound"
+  },
+  "dumbbell_shrug": {
+    "nome": "Scrollate con Manubri",
+    "focus": "TRAP",
+    "muscoliSecondari": "DELT",
+    "tipoEsercizio": "Isolation"
+  },
+  "dumbbell_side_plank_with_rear_fly": {
+    "nome": "Plank Laterale con Alzata Posteriore con Manubri",
+    "focus": "CORE, DELT",
+    "muscoliSecondari": "TRAP",
+    "tipoEsercizio": "Compound"
+  },
+  "exercise_ball_alternating_arm_ups": {
+    "nome": "Sollevamento Braccia Alternato su Fitball",
+    "focus": "TRAP, DELT",
+    "muscoliSecondari": "CORE",
+    "tipoEsercizio": "Isolation"
+  },
+  "exercise_ball_alternating_arm_ups_with_fast": {
+    "nome": "Sollevamento Braccia Veloce su Fitball",
+    "focus": "TRAP, DELT",
+    "muscoliSecondari": "CORE",
+    "tipoEsercizio": "Isolation"
+  },
+  "exercise_ball_back_extension_with_arms_extended": {
+    "nome": "Estensione Lombari su Fitball con Braccia Estese",
+    "focus": "CORE, LAT",
+    "muscoliSecondari": "GLUT",
+    "tipoEsercizio": "Compound"
+  },
+  "exercise_ball_back_extension_with_hands_behind_head": {
+    "nome": "Estensione Lombari su Fitball Mani Dietro Testa",
+    "focus": "CORE",
+    "muscoliSecondari": "GLUT, LAT",
+    "tipoEsercizio": "Compound"
+  },
+  "exercise_ball_back_extension_with_knees_off_ground": {
+    "nome": "Estensione Lombari su Fitball Ginocchia Sollevate",
+    "focus": "CORE",
+    "muscoliSecondari": "GLUT, LAT",
+    "tipoEsercizio": "Compound"
+  },
+  "exercise_ball_lat_stretch": {
+    "nome": "Allungamento Dorsali su Fitball",
+    "focus": "LAT",
+    "muscoliSecondari": "TRAP",
+    "tipoEsercizio": "Stretching"
+  },
+  "exercise_ball_lower_back_stretch_pyramid": {
+    "nome": "Allungamento Lombare Piramide su Fitball",
+    "focus": "CORE",
+    "muscoliSecondari": "LAT",
+    "tipoEsercizio": "Stretching"
+  },
+  "exercise_ball_lying_side_lat_stretch": {
+    "nome": "Allungamento Dorsali Laterale Sdraiato su Fitball",
+    "focus": "LAT",
+    "muscoliSecondari": "CORE",
+    "tipoEsercizio": "Stretching"
+  },
+  "exercise_ball_prone_leg_raise": {
+    "nome": "Sollevamento Gambe Prono su Fitball",
+    "focus": "GLUT, FEMOR",
+    "muscoliSecondari": "CORE",
+    "tipoEsercizio": "Isolation"
+  },
+  "ez_bar_lying_bent_arms_pullover": {
+    "nome": "Pullover Sdraiato con EZ Bar",
+    "focus": "LAT",
+    "muscoliSecondari": "PETT, TRIC",
+    "tipoEsercizio": "Compound"
+  },
+  "ez_bar_reverse_grip_bent_over_row": {
+    "nome": "Rematore Presa Supina con EZ Bar",
+    "focus": "LAT, TRAP",
+    "muscoliSecondari": "BICI, DELT",
+    "tipoEsercizio": "Compound"
+  },
+  "fast_band_straight_leg_deadlift": {
+    "nome": "Stacco Gambe Tese Veloce con Elastico",
+    "focus": "FEMOR, GLUT",
+    "muscoliSecondari": "CORE",
+    "tipoEsercizio": "Compound"
+  },
+  "front_lever_reps": {
+    "nome": "Front Lever Ripetizioni",
+    "focus": "LAT, CORE",
+    "muscoliSecondari": "DELT, TRAP",
+    "tipoEsercizio": "Compound"
+  },
+  "gentle_style_cable_pulldown_pro_lat_bar": {
+    "nome": "Lat Machine Delicata",
+    "focus": "LAT",
+    "muscoliSecondari": "BICI, TRAP",
+    "tipoEsercizio": "Compound"
+  },
+  "gironda_sternum_chin": {
+    "nome": "Trazioni Gironda allo Sterno",
+    "focus": "LAT, TRAP",
+    "muscoliSecondari": "BICI, DELT",
+    "tipoEsercizio": "Compound"
+  },
+  "hyperextension": {
+    "nome": "Iperestensioni",
+    "focus": "CORE, FEMOR",
+    "muscoliSecondari": "GLUT",
+    "tipoEsercizio": "Compound"
+  },
+  "hyperextension_on_bench": {
+    "nome": "Iperestensioni su Panca",
+    "focus": "CORE, FEMOR",
+    "muscoliSecondari": "GLUT",
+    "tipoEsercizio": "Compound"
+  },
+  "improved_sphinx": {
+    "nome": "Sfinge Migliorata",
+    "focus": "CORE",
+    "muscoliSecondari": "LAT",
+    "tipoEsercizio": "Stretching"
+  },
+  "inverted_row_v_2": {
+    "nome": "Rematore Inverso v2",
+    "focus": "LAT, TRAP",
+    "muscoliSecondari": "BICI, DELT",
+    "tipoEsercizio": "Compound"
+  },
+  "kettlebell_one_arm_row": {
+    "nome": "Rematore Un Braccio con Kettlebell",
+    "focus": "LAT, TRAP",
+    "muscoliSecondari": "BICI, DELT",
+    "tipoEsercizio": "Compound"
+  },
+  "kettlebell_sumo_high_pull": {
+    "nome": "Tirate Alte Sumo con Kettlebell",
+    "focus": "TRAP, DELT",
+    "muscoliSecondari": "LAT, QUAD",
+    "tipoEsercizio": "Compound"
+  },
+  "l_pull_up": {
+    "nome": "Trazioni a L",
+    "focus": "LAT, CORE",
+    "muscoliSecondari": "TRAP, BICI",
+    "tipoEsercizio": "Compound"
+  },
+  "lever_alternating_narrow_grip_seated_row": {
+    "nome": "Rematore Alternato Presa Stretta alla Macchina",
+    "focus": "LAT, TRAP",
+    "muscoliSecondari": "BICI, DELT",
+    "tipoEsercizio": "Compound"
+  },
+  "lever_assisted_chin_up": {
+    "nome": "Trazioni Supine Assistite alla Macchina",
+    "focus": "LAT, TRAP",
+    "muscoliSecondari": "BICI",
+    "tipoEsercizio": "Compound"
+  },
+  "lever_assisted_chin_up_with_twisted": {
+    "nome": "Trazioni Supine con Torsione alla Macchina",
+    "focus": "LAT, TRAP",
+    "muscoliSecondari": "BICI, CORE",
+    "tipoEsercizio": "Compound"
+  },
+  "lever_back_extension": {
+    "nome": "Estensione Lombari alla Macchina",
+    "focus": "CORE, FEMOR",
+    "muscoliSecondari": "GLUT",
+    "tipoEsercizio": "Compound"
+  },
+  "lever_bent_over_row": {
+    "nome": "Rematore alla Macchina",
+    "focus": "LAT, TRAP",
+    "muscoliSecondari": "BICI, DELT",
+    "tipoEsercizio": "Compound"
+  },
+  "lever_bent_over_row_with_v_bar": {
+    "nome": "Rematore con Barra V alla Macchina",
+    "focus": "LAT, TRAP",
+    "muscoliSecondari": "BICI, DELT",
+    "tipoEsercizio": "Compound"
+  },
+  "lever_front_pulldown": {
+    "nome": "Lat Machine Frontale",
+    "focus": "LAT",
+    "muscoliSecondari": "BICI, TRAP",
+    "tipoEsercizio": "Compound"
+  },
+  "lever_gripless_shrug": {
+    "nome": "Scrollate Senza Presa alla Macchina",
+    "focus": "TRAP",
+    "muscoliSecondari": "DELT",
+    "tipoEsercizio": "Isolation"
+  },
+  "lever_gripless_shrug_v_2": {
+    "nome": "Scrollate Senza Presa alla Macchina v2",
+    "focus": "TRAP",
+    "muscoliSecondari": "DELT",
+    "tipoEsercizio": "Isolation"
+  },
+  "lever_high_row": {
+    "nome": "Rematore Alto alla Macchina",
+    "focus": "LAT, TRAP",
+    "muscoliSecondari": "BICI, DELT",
+    "tipoEsercizio": "Compound"
+  },
+  "lever_narrow_grip_seated_row": {
+    "nome": "Rematore Seduto Presa Stretta alla Macchina",
+    "focus": "LAT, TRAP",
+    "muscoliSecondari": "BICI, DELT",
+    "tipoEsercizio": "Compound"
+  },
+  "lever_narrow_grip_seated_row_strength_variation": {
+    "nome": "Rematore Seduto Presa Stretta Forza alla Macchina",
+    "focus": "LAT, TRAP",
+    "muscoliSecondari": "BICI, DELT",
+    "tipoEsercizio": "Compound"
+  },
+  "lever_one_arm_bent_over_row": {
+    "nome": "Rematore Un Braccio alla Macchina",
+    "focus": "LAT, TRAP",
+    "muscoliSecondari": "BICI, DELT",
+    "tipoEsercizio": "Compound"
+  },
+  "lever_one_arm_lateral_high_row": {
+    "nome": "Rematore Un Braccio Alto alla Macchina",
+    "focus": "LAT, TRAP",
+    "muscoliSecondari": "BICI, DELT",
+    "tipoEsercizio": "Compound"
+  },
+  "lever_one_arm_lateral_wide_pulldown": {
+    "nome": "Lat Machine Un Braccio Presa Larga",
+    "focus": "LAT",
+    "muscoliSecondari": "BICI, TRAP",
+    "tipoEsercizio": "Compound"
+  },
+  "lever_pullover": {
+    "nome": "Pullover alla Macchina",
+    "focus": "LAT",
+    "muscoliSecondari": "PETT, TRIC",
+    "tipoEsercizio": "Compound"
+  },
+  "lever_reverse_grip_lateral_pulldown": {
+    "nome": "Lat Machine Presa Supina",
+    "focus": "LAT",
+    "muscoliSecondari": "BICI, TRAP",
+    "tipoEsercizio": "Compound"
+  },
+  "lever_reverse_grip_vertical_row": {
+    "nome": "Rematore Verticale Presa Supina alla Macchina",
+    "focus": "LAT, TRAP",
+    "muscoliSecondari": "BICI, DELT",
+    "tipoEsercizio": "Compound"
+  },
+  "lever_reverse_t_bar_row": {
+    "nome": "Rematore T-Bar Inverso alla Macchina",
+    "focus": "LAT, TRAP",
+    "muscoliSecondari": "BICI, DELT",
+    "tipoEsercizio": "Compound"
+  },
+  "lever_seated_row": {
+    "nome": "Rematore Seduto alla Macchina",
+    "focus": "LAT, TRAP",
+    "muscoliSecondari": "BICI, DELT",
+    "tipoEsercizio": "Compound"
+  },
+  "lever_shrug": {
+    "nome": "Scrollate alla Macchina",
+    "focus": "TRAP",
+    "muscoliSecondari": "DELT",
+    "tipoEsercizio": "Isolation"
+  },
+  "lever_t_bar_reverse_grip_row": {
+    "nome": "Rematore T-Bar Presa Supina alla Macchina",
+    "focus": "LAT, TRAP",
+    "muscoliSecondari": "BICI, DELT",
+    "tipoEsercizio": "Compound"
+  },
+  "lever_t_bar_row": {
+    "nome": "Rematore T-Bar alla Macchina",
+    "focus": "LAT, TRAP",
+    "muscoliSecondari": "BICI, DELT",
+    "tipoEsercizio": "Compound"
+  },
+  "lever_unilateral_row": {
+    "nome": "Rematore Unilaterale alla Macchina",
+    "focus": "LAT, TRAP",
+    "muscoliSecondari": "BICI, DELT",
+    "tipoEsercizio": "Compound"
+  },
+  "london_bridge": {
+    "nome": "London Bridge",
+    "focus": "LAT, CORE",
+    "muscoliSecondari": "DELT, TRAP",
+    "tipoEsercizio": "Compound"
+  },
+  "lower_back_curl": {
+    "nome": "Curl Lombare",
+    "focus": "CORE",
+    "muscoliSecondari": "GLUT",
+    "tipoEsercizio": "Isolation"
+  },
+  "macro_style_weighted_one_hand_pull_up": {
+    "nome": "Trazioni Un Braccio con Zavorra",
+    "focus": "LAT, TRAP",
+    "muscoliSecondari": "BICI",
+    "tipoEsercizio": "Compound"
+  },
+  "medicine_ball_catch_and_overhead_throw": {
+    "nome": "Lancio Sopra la Testa con Palla Medica",
+    "focus": "LAT, DELT",
+    "muscoliSecondari": "CORE, TRAP",
+    "tipoEsercizio": "Compound"
+  },
+  "medicine_ball_overhead_slam": {
+    "nome": "Medicine Ball Slam",
+    "focus": "LAT, CORE",
+    "muscoliSecondari": "DELT, TRAP",
+    "tipoEsercizio": "Compound"
+  },
+  "mixed_grip_chin_up": {
+    "nome": "Trazioni Presa Mista",
+    "focus": "LAT, TRAP",
+    "muscoliSecondari": "BICI",
+    "tipoEsercizio": "Compound"
+  },
+  "one_arm_against_wall": {
+    "nome": "Allungamento Un Braccio al Muro",
+    "focus": "LAT",
+    "muscoliSecondari": "DELT",
+    "tipoEsercizio": "Stretching"
+  },
+  "one_arm_against_wall_compressed": {
+    "nome": "Allungamento Un Braccio al Muro Compresso",
+    "focus": "LAT",
+    "muscoliSecondari": "DELT",
+    "tipoEsercizio": "Stretching"
+  },
+  "one_arm_chin_up": {
+    "nome": "Trazioni Un Braccio",
+    "focus": "LAT, TRAP",
+    "muscoliSecondari": "BICI",
+    "tipoEsercizio": "Compound"
+  },
+  "one_arm_towel_row": {
+    "nome": "Rematore Un Braccio con Asciugamano",
+    "focus": "LAT, TRAP",
+    "muscoliSecondari": "BICI",
+    "tipoEsercizio": "Compound"
+  },
+  "pointed_cable_palm_rotational_row": {
+    "nome": "Rematore Rotazionale Palmo ai Cavi",
+    "focus": "LAT, TRAP",
+    "muscoliSecondari": "BICI, DELT",
+    "tipoEsercizio": "Compound"
+  },
+  "precision_style_lever_bent_over_row_with_v_bar": {
+    "nome": "Rematore con Barra V Precision alla Macchina",
+    "focus": "LAT, TRAP",
+    "muscoliSecondari": "BICI, DELT",
+    "tipoEsercizio": "Compound"
+  },
+  "pull_up": {
+    "nome": "Trazioni alla Sbarra",
+    "focus": "LAT, TRAP",
+    "muscoliSecondari": "BICI, DELT",
+    "tipoEsercizio": "Compound"
+  },
+  "pure_chin_up": {
+    "nome": "Trazioni Supine Strette",
+    "focus": "LAT, TRAP",
+    "muscoliSecondari": "BICI",
+    "tipoEsercizio": "Compound"
+  },
+  "rear_pull_up": {
+    "nome": "Trazioni Posteriori",
+    "focus": "LAT, TRAP",
+    "muscoliSecondari": "BICI, DELT",
+    "tipoEsercizio": "Compound"
+  },
+  "reverse_grip_machine_lat_pulldown": {
+    "nome": "Lat Machine Presa Supina",
+    "focus": "LAT",
+    "muscoliSecondari": "BICI, TRAP",
+    "tipoEsercizio": "Compound"
+  },
+  "reverse_grip_pull_up": {
+    "nome": "Trazioni Presa Supina",
+    "focus": "LAT, TRAP",
+    "muscoliSecondari": "BICI",
+    "tipoEsercizio": "Compound"
+  },
+  "roller_side_lat_stretch": {
+    "nome": "Allungamento Dorsali Laterale con Rullo",
+    "focus": "LAT",
+    "muscoliSecondari": "TRAP",
+    "tipoEsercizio": "Stretching"
+  },
+  "seated_lower_back_stretch": {
+    "nome": "Allungamento Lombare Seduto",
+    "focus": "CORE",
+    "muscoliSecondari": "LAT",
+    "tipoEsercizio": "Stretching"
+  },
+  "shoulder_grip_pull_up": {
+    "nome": "Trazioni Presa alle Spalle",
+    "focus": "LAT, TRAP",
+    "muscoliSecondari": "BICI, DELT",
+    "tipoEsercizio": "Compound"
+  },
+  "side_cable_high_row_kneeling": {
+    "nome": "Rematore Alto Laterale in Ginocchio ai Cavi",
+    "focus": "LAT, TRAP",
+    "muscoliSecondari": "BICI, DELT",
+    "tipoEsercizio": "Compound"
+  },
+  "side_to_side_chin": {
+    "nome": "Trazioni Lato a Lato",
+    "focus": "LAT, TRAP",
+    "muscoliSecondari": "BICI",
+    "tipoEsercizio": "Compound"
+  },
+  "side_to_side_chin_with_reverse": {
+    "nome": "Trazioni Laterali Inverse",
+    "focus": "LAT, TRAP",
+    "muscoliSecondari": "BICI",
+    "tipoEsercizio": "Compound"
+  },
+  "smith_back_shrug": {
+    "nome": "Scrollate Dorsali al Multipower",
+    "focus": "TRAP",
+    "muscoliSecondari": "DELT",
+    "tipoEsercizio": "Isolation"
+  },
+  "smith_bent_over_row": {
+    "nome": "Rematore al Multipower",
+    "focus": "LAT, TRAP",
+    "muscoliSecondari": "BICI, DELT",
+    "tipoEsercizio": "Compound"
+  },
+  "smith_bent_over_row_with_declined": {
+    "nome": "Rematore Declinato al Multipower",
+    "focus": "LAT, TRAP",
+    "muscoliSecondari": "BICI, DELT",
+    "tipoEsercizio": "Compound"
+  },
+  "smith_narrow_row": {
+    "nome": "Rematore Stretto al Multipower",
+    "focus": "LAT, TRAP",
+    "muscoliSecondari": "BICI, DELT",
+    "tipoEsercizio": "Compound"
+  },
+  "smith_one_arm_row": {
+    "nome": "Rematore Un Braccio al Multipower",
+    "focus": "LAT, TRAP",
+    "muscoliSecondari": "BICI, DELT",
+    "tipoEsercizio": "Compound"
+  },
+  "smith_one_arm_row_linear": {
+    "nome": "Rematore Un Braccio Lineare al Multipower",
+    "focus": "LAT, TRAP",
+    "muscoliSecondari": "BICI, DELT",
+    "tipoEsercizio": "Compound"
+  },
+  "smith_reverse_grip_bent_over_row": {
+    "nome": "Rematore Presa Supina al Multipower",
+    "focus": "LAT, TRAP",
+    "muscoliSecondari": "BICI, DELT",
+    "tipoEsercizio": "Compound"
+  },
+  "smith_shrug": {
+    "nome": "Scrollate al Multipower",
+    "focus": "TRAP",
+    "muscoliSecondari": "DELT",
+    "tipoEsercizio": "Isolation"
+  },
+  "sphinx": {
+    "nome": "Sfinge",
+    "focus": "CORE",
+    "muscoliSecondari": "LAT",
+    "tipoEsercizio": "Stretching"
+  },
+  "squared_reverse_grip_machine_lat_pulldown": {
+    "nome": "Lat Machine Presa Supina Squadrata",
+    "focus": "LAT",
+    "muscoliSecondari": "BICI, TRAP",
+    "tipoEsercizio": "Compound"
+  },
+  "stability_lever_narrow_grip_seated_row": {
+    "nome": "Rematore Seduto Presa Stretta Stabilita alla Macchina",
+    "focus": "LAT, TRAP",
+    "muscoliSecondari": "BICI, DELT, CORE",
+    "tipoEsercizio": "Compound"
+  },
+  "stability_style_band_kneeling_one_arm_pulldown": {
+    "nome": "Lat Machine Un Braccio in Ginocchio con Elastico",
+    "focus": "LAT",
+    "muscoliSecondari": "BICI, CORE",
+    "tipoEsercizio": "Compound"
+  },
+  "standing_archer": {
+    "nome": "Arciere in Piedi",
+    "focus": "LAT, TRAP",
+    "muscoliSecondari": "DELT, BICI",
+    "tipoEsercizio": "Compound"
+  },
+  "standing_lateral_stretch": {
+    "nome": "Allungamento Laterale in Piedi",
+    "focus": "LAT",
+    "muscoliSecondari": "CORE",
+    "tipoEsercizio": "Stretching"
+  },
+  "standing_pelvic_tilt": {
+    "nome": "Inclinazione Pelvica in Piedi",
+    "focus": "CORE",
+    "muscoliSecondari": "GLUT",
+    "tipoEsercizio": "Stretching"
+  },
+  "twin_handle_parallel_grip_lat_pulldown": {
+    "nome": "Lat Machine Presa Parallela Doppia",
+    "focus": "LAT",
+    "muscoliSecondari": "BICI, TRAP",
+    "tipoEsercizio": "Compound"
+  },
+  "twisted_side_to_side_chin": {
+    "nome": "Trazioni Laterali Ruotate",
+    "focus": "LAT, TRAP",
+    "muscoliSecondari": "BICI, CORE",
+    "tipoEsercizio": "Compound"
+  },
+  "two_toe_touch_male": {
+    "nome": "Tocco a Due Punte",
+    "focus": "CORE",
+    "muscoliSecondari": "FEMOR",
+    "tipoEsercizio": "Stretching"
+  },
+  "upward_facing_dog": {
+    "nome": "Cane a Testa in Su",
+    "focus": "CORE",
+    "muscoliSecondari": "LAT",
+    "tipoEsercizio": "Stretching"
+  },
+  "weighted_close_grip_chin_up_on_dip_cage": {
+    "nome": "Trazioni Supine Presa Stretta con Zavorra",
+    "focus": "LAT, TRAP",
+    "muscoliSecondari": "BICI",
+    "tipoEsercizio": "Compound"
+  },
+  "weighted_hyperextension_on_stability_ball": {
+    "nome": "Iperestensioni con Peso su Fitball",
+    "focus": "CORE, FEMOR",
+    "muscoliSecondari": "GLUT",
+    "tipoEsercizio": "Compound"
+  },
+  "weighted_one_hand_pull_up_fast": {
+    "nome": "Trazioni Un Braccio con Zavorra Veloce",
+    "focus": "LAT, TRAP",
+    "muscoliSecondari": "BICI",
+    "tipoEsercizio": "Compound"
+  },
+  "cable_seated_row_wide_grip": {
+    "nome": "Rematore Seduto Presa Larga ai Cavi",
+    "focus": "LAT, TRAP",
+    "muscoliSecondari": "BICI, DELT",
+    "tipoEsercizio": "Compound"
+  }
+}

@@ -1,6 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:wakelock_plus/wakelock_plus.dart';
+import 'package:gymbro_flutter_new/core/cache/user_cache_key_manager.dart';
 
 /// Configuration for Zen Mode
 class ZenConfig {
@@ -108,9 +109,10 @@ class ZenModeState {
 
 /// Notifier for Zen Mode state management
 class ZenModeNotifier extends Notifier<ZenModeState> {
-  static const String _zenModeKey = 'zen_mode_enabled';
-  static const String _zenConfigKey = 'zen_mode_config';
-  static const String _keepScreenOnKey = 'keep_screen_on';
+  // 🔐 User-scoped cache keys
+  String get _zenModeKey => userCacheKeys.userScopedKey('zen_mode_enabled');
+  String get _zenConfigKey => userCacheKeys.userScopedKey('zen_mode_config');
+  String get _keepScreenOnKey => userCacheKeys.userScopedKey('keep_screen_on');
 
   @override
   ZenModeState build() {

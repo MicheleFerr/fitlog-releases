@@ -379,9 +379,10 @@ class _ExerciseSyncSettingsSheetState extends ConsumerState<ExerciseSyncSettings
 
   @override
   Widget build(BuildContext context) {
+    final safeMax = ModalService.safeMaxChildSize(context, preferredMax: 0.9);
     return DraggableScrollableSheet(
       initialChildSize: 0.6,
-      maxChildSize: 0.9,
+      maxChildSize: safeMax,
       minChildSize: 0.4,
       expand: false,
       builder: (context, scrollController) {

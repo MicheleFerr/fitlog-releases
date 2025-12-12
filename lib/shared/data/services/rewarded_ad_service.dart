@@ -3,6 +3,7 @@ import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:gymbro_flutter_new/core/config/admob_config.dart';
 import 'package:gymbro_flutter_new/shared/data/services/consent_service.dart';
+import 'package:gymbro_flutter_new/core/cache/user_cache_key_manager.dart';
 
 /// Rewarded Ad Service
 ///
@@ -25,11 +26,11 @@ class RewardedAdService {
   RewardedAd? _rewardedAd;
   bool _isAdReady = false;
 
-  // SharedPreferences keys
-  static const String _premiumUnlockTimestampKey =
-      'rewarded_premium_unlock_timestamp';
-  static const String _adsRemovedTimestampKey =
-      'rewarded_ads_removed_timestamp';
+  // 🔐 User-scoped SharedPreferences keys
+  String get _premiumUnlockTimestampKey =>
+      userCacheKeys.userScopedKey('rewarded_premium_unlock_timestamp');
+  String get _adsRemovedTimestampKey =>
+      userCacheKeys.userScopedKey('rewarded_ads_removed_timestamp');
 
   // Reward duration
   static const Duration _rewardDuration = Duration(hours: 24);
@@ -41,7 +42,9 @@ class RewardedAdService {
   /// Pre-load rewarded ad
   Future<void> preloadRewardedAd() async {
     if (_isAdReady) {
-      debugPrint('✅ Rewarded ad already loaded');
+      if (kDebugMode) {
+        debugPrint('✅ Rewarded ad already loaded');
+      }
       return;
     }
 
@@ -56,7 +59,9 @@ class RewardedAdService {
     VoidCallback? onAdClosed,
   }) async {
     if (!_isAdReady || _rewardedAd == null) {
-      debugPrint('❌ Rewarded ad not ready');
+      if (kDebugMode) {
+        debugPrint('❌ Rewarded ad not ready');
+      }
       return false;
     }
 
@@ -64,10 +69,14 @@ class RewardedAdService {
 
     _rewardedAd!.fullScreenContentCallback = FullScreenContentCallback(
       onAdShowedFullScreenContent: (ad) {
-        debugPrint('📱 Rewarded ad showed full screen content');
+        if (kDebugMode) {
+          debugPrint('📱 Rewarded ad showed full screen content');
+        }
       },
       onAdDismissedFullScreenContent: (ad) {
-        debugPrint('📱 Rewarded ad dismissed');
+        if (kDebugMode) {
+          debugPrint('📱 Rewarded ad dismissed');
+        }
         ad.dispose();
         _isAdReady = false;
         _rewardedAd = null;
@@ -79,7 +88,9 @@ class RewardedAdService {
         preloadRewardedAd();
       },
       onAdFailedToShowFullScreenContent: (ad, error) {
-        debugPrint('❌ Rewarded ad failed to show: $error');
+        if (kDebugMode) {
+          debugPrint('❌ Rewarded ad failed to show: $error');
+        }
         ad.dispose();
         _isAdReady = false;
         _rewardedAd = null;
@@ -91,7 +102,9 @@ class RewardedAdService {
 
     await _rewardedAd!.show(
       onUserEarnedReward: (ad, reward) {
-        debugPrint('🎁 User earned reward: ${reward.amount} ${reward.type}');
+        if (kDebugMode) {
+          debugPrint('🎁 User earned reward: ${reward.amount} ${reward.type}');
+        }
         rewardEarned = true;
         onUserEarnedReward(reward.amount.toInt(), reward.type);
       },
@@ -121,7 +134,9 @@ class RewardedAdService {
       _premiumUnlockTimestampKey,
       DateTime.now().millisecondsSinceEpoch,
     );
-    debugPrint('🎁 Premium unlocked for 24 hours');
+    if (kDebugMode) {
+      debugPrint('🎁 Premium unlocked for 24 hours');
+    }
   }
 
   /// Remove ads for 24 hours
@@ -131,7 +146,9 @@ class RewardedAdService {
       _adsRemovedTimestampKey,
       DateTime.now().millisecondsSinceEpoch,
     );
-    debugPrint('🎁 Ads removed for 24 hours');
+    if (kDebugMode) {
+      debugPrint('🎁 Ads removed for 24 hours');
+    }
   }
 
   /// Check if premium is unlocked (via reward)
@@ -189,7 +206,9 @@ class RewardedAdService {
     final prefs = await SharedPreferences.getInstance();
     await prefs.remove(_premiumUnlockTimestampKey);
     await prefs.remove(_adsRemovedTimestampKey);
-    debugPrint('🔄 All rewards cleared');
+    if (kDebugMode) {
+      debugPrint('🔄 All rewards cleared');
+    }
   }
 
   // ============================================================================
@@ -197,14 +216,18 @@ class RewardedAdService {
   // ============================================================================
 
   Future<void> _loadAd() async {
-    debugPrint('📥 Loading rewarded ad');
+    if (kDebugMode) {
+      debugPrint('📥 Loading rewarded ad');
+    }
 
     // Check if we have consent to show ads
     final consentService = ConsentService();
     final canRequest = await consentService.canRequestAds();
 
     if (!canRequest) {
-      debugPrint('⚠️ Cannot request rewarded ads - consent not granted');
+      if (kDebugMode) {
+        debugPrint('⚠️ Cannot request rewarded ads - consent not granted');
+      }
       return;
     }
 
@@ -213,12 +236,16 @@ class RewardedAdService {
       request: const AdRequest(),
       rewardedAdLoadCallback: RewardedAdLoadCallback(
         onAdLoaded: (ad) {
-          debugPrint('✅ Rewarded ad loaded successfully');
+          if (kDebugMode) {
+            debugPrint('✅ Rewarded ad loaded successfully');
+          }
           _rewardedAd = ad;
           _isAdReady = true;
         },
         onAdFailedToLoad: (error) {
-          debugPrint('❌ Rewarded ad failed to load: $error');
+          if (kDebugMode) {
+            debugPrint('❌ Rewarded ad failed to load: $error');
+          }
           _isAdReady = false;
           _rewardedAd = null;
 

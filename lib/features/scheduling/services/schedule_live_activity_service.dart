@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart' show kDebugMode;
 import 'dart:io';
 
 import 'package:flutter/foundation.dart';
@@ -47,8 +48,10 @@ class ScheduleLiveActivityService {
   }) async {
     // Only supported on iOS 16.1+
     if (!Platform.isIOS) {
-      debugPrint(
-          '[ScheduleLiveActivity] Not on iOS, skipping Live Activity start');
+      if (kDebugMode) {
+        debugPrint(
+            '[ScheduleLiveActivity] Not on iOS, skipping Live Activity start');
+      }
       return null;
     }
 
@@ -58,12 +61,14 @@ class ScheduleLiveActivityService {
         await endScheduleLiveActivity();
       }
 
-      debugPrint('''
-📅 [ScheduleLiveActivity] Starting Live Activity:
-   - Workout: $workoutName
-   - Scheduled: $scheduledTime
-   - Reminder: $reminderTime
-''');
+      if (kDebugMode) {
+        debugPrint('''
+  📅 [ScheduleLiveActivity] Starting Live Activity:
+     - Workout: $workoutName
+     - Scheduled: $scheduledTime
+     - Reminder: $reminderTime
+  ''');
+      }
 
       final result = await _channel.invokeMethod('startScheduleLiveActivity', {
         'workoutName': workoutName,
@@ -75,17 +80,23 @@ class ScheduleLiveActivityService {
 
       if (result != null && result is String && result.isNotEmpty) {
         _currentActivityId = result;
-        debugPrint(
-            '[ScheduleLiveActivity] ✅ Live Activity started: $_currentActivityId');
+        if (kDebugMode) {
+          debugPrint(
+              '[ScheduleLiveActivity] ✅ Live Activity started: $_currentActivityId');
+        }
         return result;
       }
 
       return null;
     } on PlatformException catch (e) {
-      debugPrint('[ScheduleLiveActivity] ❌ Platform error: ${e.message}');
+      if (kDebugMode) {
+        debugPrint('[ScheduleLiveActivity] ❌ Platform error: ${e.message}');
+      }
       return null;
     } catch (e) {
-      debugPrint('[ScheduleLiveActivity] ❌ Error starting Live Activity: $e');
+      if (kDebugMode) {
+        debugPrint('[ScheduleLiveActivity] ❌ Error starting Live Activity: $e');
+      }
       return null;
     }
   }
@@ -107,13 +118,19 @@ class ScheduleLiveActivityService {
         'scheduledTimestamp': scheduledTime.millisecondsSinceEpoch,
       });
 
-      debugPrint('[ScheduleLiveActivity] ✅ Live Activity updated');
+      if (kDebugMode) {
+        debugPrint('[ScheduleLiveActivity] ✅ Live Activity updated');
+      }
       return true;
     } on PlatformException catch (e) {
-      debugPrint('[ScheduleLiveActivity] ❌ Update error: ${e.message}');
+      if (kDebugMode) {
+        debugPrint('[ScheduleLiveActivity] ❌ Update error: ${e.message}');
+      }
       return false;
     } catch (e) {
-      debugPrint('[ScheduleLiveActivity] ❌ Error updating Live Activity: $e');
+      if (kDebugMode) {
+        debugPrint('[ScheduleLiveActivity] ❌ Error updating Live Activity: $e');
+      }
       return false;
     }
   }
@@ -138,16 +155,22 @@ class ScheduleLiveActivityService {
         'dismissPolicy': dismissPolicy,
       });
 
-      debugPrint(
-          '[ScheduleLiveActivity] ✅ Live Activity ended: $_currentActivityId');
+      if (kDebugMode) {
+        debugPrint(
+            '[ScheduleLiveActivity] ✅ Live Activity ended: $_currentActivityId');
+      }
       _currentActivityId = null;
       return true;
     } on PlatformException catch (e) {
-      debugPrint('[ScheduleLiveActivity] ❌ End error: ${e.message}');
+      if (kDebugMode) {
+        debugPrint('[ScheduleLiveActivity] ❌ End error: ${e.message}');
+      }
       _currentActivityId = null;
       return false;
     } catch (e) {
-      debugPrint('[ScheduleLiveActivity] ❌ Error ending Live Activity: $e');
+      if (kDebugMode) {
+        debugPrint('[ScheduleLiveActivity] ❌ Error ending Live Activity: $e');
+      }
       _currentActivityId = null;
       return false;
     }
@@ -164,11 +187,15 @@ class ScheduleLiveActivityService {
     try {
       await _channel.invokeMethod('endAllScheduleLiveActivities');
       _currentActivityId = null;
-      debugPrint('[ScheduleLiveActivity] ✅ All Live Activities ended');
+      if (kDebugMode) {
+        debugPrint('[ScheduleLiveActivity] ✅ All Live Activities ended');
+      }
       return true;
     } catch (e) {
-      debugPrint(
-          '[ScheduleLiveActivity] ❌ Error ending all Live Activities: $e');
+      if (kDebugMode) {
+        debugPrint(
+            '[ScheduleLiveActivity] ❌ Error ending all Live Activities: $e');
+      }
       return false;
     }
   }
@@ -187,8 +214,10 @@ class ScheduleLiveActivityService {
       }
       return [];
     } catch (e) {
-      debugPrint(
-          '[ScheduleLiveActivity] ❌ Error getting active activities: $e');
+      if (kDebugMode) {
+        debugPrint(
+            '[ScheduleLiveActivity] ❌ Error getting active activities: $e');
+      }
       return [];
     }
   }

@@ -20,6 +20,9 @@ import 'package:gymbro_flutter_new/shared/presentation/services/snackbar_service
 import 'package:gymbro_flutter_new/features/auth/presentation/providers/auth_provider.dart';
 import 'package:gymbro_flutter_new/features/auth/domain/entities/user_model.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator.dart';
+import 'package:gymbro_flutter_new/features/strength_standards/presentation/providers/strength_standards_providers.dart';
+import 'package:gymbro_flutter_new/features/strength_standards/domain/entities/user_fitness_questionnaire.dart';
+import 'package:gymbro_flutter_new/features/strength_standards/domain/entities/strength_standard.dart';
 
 /// Edit profile screen for managing personal data
 class EditProfileScreen extends ConsumerStatefulWidget {
@@ -47,6 +50,46 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
     _ageController = TextEditingController();
     _heightController = TextEditingController();
     _weightController = TextEditingController();
+
+    // Load fitness profile data after first frame
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _loadFitnessProfile();
+    });
+  }
+
+  Future<void> _loadFitnessProfile() async {
+    final notifier = ref.read(userFitnessQuestionnaireProvider.notifier);
+    await notifier.loadQuestionnaire();
+
+    final questionnaire = ref.read(userFitnessQuestionnaireProvider);
+    if (questionnaire != null && !_hasChanges) {
+      setState(() {
+        _ageController.text = questionnaire.age.toString();
+        _heightController.text = questionnaire.heightCm.toInt().toString();
+        _weightController.text = questionnaire.bodyweightKg.toString();
+        _selectedGender = _biologicalSexToGenderString(questionnaire.sex);
+      });
+    }
+  }
+
+  String _biologicalSexToGenderString(BiologicalSex sex) {
+    switch (sex) {
+      case BiologicalSex.male:
+        return 'male';
+      case BiologicalSex.female:
+        return 'female';
+    }
+  }
+
+  BiologicalSex _genderStringToBiologicalSex(String gender) {
+    switch (gender) {
+      case 'male':
+        return BiologicalSex.male;
+      case 'female':
+        return BiologicalSex.female;
+      default:
+        return BiologicalSex.male; // Default fallback
+    }
   }
 
   @override
@@ -60,7 +103,7 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
 
   void _loadUserData(UserModel? user) {
     if (user != null && !_hasChanges) {
-      _displayNameController.text = user.displayName ?? '';
+      _displayNameController.text = user.displayName;
       // Additional fields would be loaded from user profile data
       // These fields can be extended based on UserModel properties
     }
@@ -87,7 +130,8 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
         });
       }
 
-      // Additional profile fields would be saved to a user profile document
+      // Save fitness profile data (age, height, weight, gender)
+      await _saveFitnessProfile();
 
       if (mounted) {
         SnackBarService.showSuccess(
@@ -112,6 +156,40 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
         });
       }
     }
+  }
+
+  Future<void> _saveFitnessProfile() async {
+    // Parse values from controllers
+    final age = int.tryParse(_ageController.text);
+    final height = double.tryParse(_heightController.text);
+    final weight = double.tryParse(_weightController.text);
+    final gender = _selectedGender;
+
+    // Validate required fields
+    if (age == null || height == null || weight == null || gender == null) {
+      return; // Skip if incomplete
+    }
+
+    final notifier = ref.read(userFitnessQuestionnaireProvider.notifier);
+    final existingQuestionnaire = ref.read(userFitnessQuestionnaireProvider);
+
+    // Create or update questionnaire
+    final questionnaire = existingQuestionnaire?.copyWith(
+      age: age,
+      heightCm: height,
+      bodyweightKg: weight,
+      sex: _genderStringToBiologicalSex(gender),
+    ) ?? UserFitnessQuestionnaire(
+      age: age,
+      heightCm: height,
+      bodyweightKg: weight,
+      sex: _genderStringToBiologicalSex(gender),
+      experienceLevel: ExperienceLevel.novice, // Default for new profiles
+    );
+
+    // Update state and save to Hive
+    notifier.updateQuestionnaire(questionnaire);
+    await notifier.saveQuestionnaire();
   }
 
   @override
@@ -185,8 +263,8 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
                     radius: 56,
                     backgroundColor: context.colors.primaryContainer,
                     child: Text(
-                      (user?.displayName?.isNotEmpty == true)
-                          ? user!.displayName![0].toUpperCase()
+                      (user != null && user.displayName.isNotEmpty)
+                          ? user.displayName[0].toUpperCase()
                           : '?',
                       style: context.textTheme.headlineLarge?.copyWith(
                         color: context.colors.onPrimaryContainer,

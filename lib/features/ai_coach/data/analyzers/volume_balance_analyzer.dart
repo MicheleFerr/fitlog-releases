@@ -261,6 +261,12 @@ class VolumeBalanceAnalyzer implements InsightAnalyzer {
         .toList();
 
     if (optimalMuscles.isEmpty) {
+      // Calculate total sets across all muscle groups
+      final totalSets = volumeByMuscle.values.fold<int>(
+        0, (sum, v) => sum + v.totalSets,
+      );
+      final muscleCount = volumeByMuscle.length;
+
       return AIInsight(
         id: 'volume_balance_neutral_${DateTime.now().millisecondsSinceEpoch}',
         type: InsightType.motivational,
@@ -269,7 +275,13 @@ class VolumeBalanceAnalyzer implements InsightAnalyzer {
         description: 'Continue tracking your volume to optimize muscle growth.',
         recommendation: 'Aim for ${thresholds.mev}-${thresholds.mav} sets per muscle group per week.',
         priority: 5,
-        dataPoints: {},
+        dataPoints: {
+          'muscleGroup': 'all muscles',
+          'currentSets': totalSets,
+          'muscleGroupCount': muscleCount,
+          'recommendedMEV': thresholds.mev,
+          'recommendedMAV': thresholds.mav,
+        },
         timestamp: DateTime.now(),
       );
     }

@@ -1,8 +1,25 @@
 import 'package:uuid/uuid.dart';
 import 'package:gymbro_flutter_new/features/exercise_database/domain/entities/exercise_counting_mode.dart';
 
+/// 🏋️ Workout Exercise Instance Entity
+///
+/// Represents an INSTANCE of an exercise being performed in a workout.
+/// Contains runtime data: sets, reps, weight, RPE, completion status.
+///
+/// ⚠️ NOT TO BE CONFUSED WITH:
+/// - `ExerciseDefinition` (lib/features/exercise_database/domain/entities/exercise.dart)
+///   which stores STATIC exercise metadata (muscles, equipment, difficulty).
+///
+/// RELATIONSHIP:
+/// ```
+/// ExerciseDefinition (catalog) → User selects → Exercise (workout instance)
+/// ```
+///
+/// Example:
+/// - ExerciseDefinition: "Panca Piana" (static metadata: focus PETT, equipment bilanciere)
+/// - Exercise: "Panca Piana" with 3 sets of 80kg×10, 85kg×8, 90kg×6 (runtime data)
+
 enum AutoAdjustmentType {
-  apre,     // APRE protocol
   rpe,      // RPE/RIR based
 }
 
@@ -106,9 +123,6 @@ class Exercise {         // Target RIR if using RIR-based
     DateTime? createdAt,
     DateTime? updatedAt,
     this.autoAdjustmentType,
-    this.useAPRE = false,
-    this.apreProtocol,
-    this.apreBaseWeight,
     this.calculated1RM,
     this.calculated3RM,
     this.calculated6RM,
@@ -126,10 +140,35 @@ class Exercise {         // Target RIR if using RIR-based
     createdAt = createdAt ?? DateTime.now(),
     updatedAt = updatedAt ?? DateTime.now();
 
+  /// Polymorphic factory that creates the appropriate Exercise subclass
+  /// based on the 'type' field in the JSON.
+  ///
+  /// This is critical for proper serialization/deserialization of workouts
+  /// containing supersets, dropsets, or rest-pause exercises.
   factory Exercise.fromJson(Map<String, dynamic> json) {
+    // Check type to create appropriate subclass
+    final typeStr = json['type'] as String?;
+
+    // Polymorphic dispatch based on exercise type
+    if (typeStr == ExerciseType.superset.name) {
+      return SupersetExercise.fromJson(json);
+    } else if (typeStr == ExerciseType.dropset.name) {
+      return DropSetExercise.fromJson(json);
+    } else if (typeStr == ExerciseType.restPause.name) {
+      return RestPauseExercise.fromJson(json);
+    }
+
+    // Default: create base Exercise
+    return Exercise._fromJsonBase(json);
+  }
+
+  /// Internal factory for base Exercise creation (used by fromJson dispatch)
+  factory Exercise._fromJsonBase(Map<String, dynamic> json) {
     return Exercise(
-      id: json['id'],
-      name: json['name'],
+      // Support both 'id' (workout format) and 'exerciseId' (template format)
+      id: json['id'] ?? json['exerciseId'],
+      // Support both 'name' (workout format) and 'exerciseName' (template format)
+      name: json['name'] ?? json['exerciseName'] ?? 'Unknown Exercise',
       type: ExerciseType.values.firstWhere(
         (e) => e.name == json['type'],
         orElse: () => ExerciseType.single, // Safe default
@@ -139,16 +178,17 @@ class Exercise {         // Target RIR if using RIR-based
         orElse: () => ExerciseCategory.other, // Safe default
       ),
       sets: (json['sets'] as List?)
-          ?.map((setJson) => ExerciseSet.fromJson(setJson))
+          ?.map((setJson) => ExerciseSet.fromJson(setJson as Map<String, dynamic>))
           .toList() ?? [],
-      notes: json['notes'],
-      restTime: json['restTime'],
-      tut: json['tut'],
+      notes: json['notes'] as String?,
+      // FIX: Firebase may return restTime as double, use num to handle both int and double
+      restTime: json['restTime'] is num ? (json['restTime'] as num).toInt() : null,
+      tut: json['tut'] as String?,
       createdAt: json['createdAt'] != null
-          ? DateTime.parse(json['createdAt'])
+          ? DateTime.parse(json['createdAt'] as String)
           : DateTime.now(),
       updatedAt: json['updatedAt'] != null
-          ? DateTime.parse(json['updatedAt'])
+          ? DateTime.parse(json['updatedAt'] as String)
           : DateTime.now(),
       autoAdjustmentType: json['autoAdjustmentType'] != null
           ? AutoAdjustmentType.values.firstWhere(
@@ -156,21 +196,18 @@ class Exercise {         // Target RIR if using RIR-based
               orElse: () => AutoAdjustmentType.rpe, // Safe default
             )
           : null,
-      useAPRE: json['useAPRE'] ?? false,
-      apreProtocol: json['apreProtocol'],
-      apreBaseWeight: json['apreBaseWeight']?.toDouble(),
       calculated1RM: json['calculated1RM']?.toDouble(),
       calculated3RM: json['calculated3RM']?.toDouble(),
       calculated6RM: json['calculated6RM']?.toDouble(),
       calculated10RM: json['calculated10RM']?.toDouble(),
       lastCalculationDate: json['lastCalculationDate'] != null
-          ? DateTime.parse(json['lastCalculationDate'])
+          ? DateTime.parse(json['lastCalculationDate'] as String)
           : null,
-      calculationMetadata: json['calculationMetadata'],
+      calculationMetadata: json['calculationMetadata'] as String?,
       targetRPEMin: json['targetRPEMin']?.toDouble(),
       targetRPEMax: json['targetRPEMax']?.toDouble(),
-      targetRIR: json['targetRIR'],
-      countingMode: ExerciseCountingMode.fromString(json['countingMode']),
+      targetRIR: json['targetRIR'] as int?,
+      countingMode: ExerciseCountingMode.fromString(json['countingMode'] as String?),
       movementType: json['movementType'] != null
           ? MovementType.values.firstWhere(
               (e) => e.name == json['movementType'],
@@ -191,14 +228,9 @@ class Exercise {         // Target RIR if using RIR-based
   final DateTime updatedAt;
 
   // Auto Adjustment fields
-  final AutoAdjustmentType? autoAdjustmentType; // Type of auto adjustment (APRE or RPE)
+  final AutoAdjustmentType? autoAdjustmentType; // Type of auto adjustment (RPE-based)
 
-  // APRE Autoregulation fields
-  final bool useAPRE;          // Whether to use APRE for this exercise
-  final int? apreProtocol;     // 3, 6, or 10 (reps)
-  final double? apreBaseWeight; // Base weight for APRE calculation
-
-  // APRE Cached Calculations (for performance)
+  // Cached RM Calculations (for performance)
   final double? calculated1RM;  // Cached 1RM calculation
   final double? calculated3RM;  // Cached 3RM calculation
   final double? calculated6RM;  // Cached 6RM calculation
@@ -217,6 +249,11 @@ class Exercise {         // Target RIR if using RIR-based
   // ✅ Smart Workout Suggestion - Movement Type for recovery calculation
   final MovementType? movementType; // null = not classified yet (backward compat)
 
+  /// Creates a copy of this exercise with the given fields replaced.
+  ///
+  /// Use [clearRestTime] = true to explicitly set restTime to null.
+  /// This is needed because `copyWith(restTime: null)` cannot distinguish
+  /// between "not provided" and "explicitly set to null".
   Exercise copyWith({
     String? name,
     ExerciseType? type,
@@ -224,12 +261,10 @@ class Exercise {         // Target RIR if using RIR-based
     List<ExerciseSet>? sets,
     String? notes,
     int? restTime,
+    bool clearRestTime = false, // ✅ FIX: Allow clearing restTime to null
     String? tut,
     DateTime? updatedAt,
     AutoAdjustmentType? autoAdjustmentType,
-    bool? useAPRE,
-    int? apreProtocol,
-    double? apreBaseWeight,
     double? calculated1RM,
     double? calculated3RM,
     double? calculated6RM,
@@ -249,14 +284,11 @@ class Exercise {         // Target RIR if using RIR-based
       category: category ?? this.category,
       sets: sets ?? this.sets,
       notes: notes ?? this.notes,
-      restTime: restTime ?? this.restTime,
+      restTime: clearRestTime ? null : (restTime ?? this.restTime), // ✅ FIX
       tut: tut ?? this.tut,
       createdAt: createdAt,
       updatedAt: updatedAt ?? DateTime.now(),
       autoAdjustmentType: autoAdjustmentType ?? this.autoAdjustmentType,
-      useAPRE: useAPRE ?? this.useAPRE,
-      apreProtocol: apreProtocol ?? this.apreProtocol,
-      apreBaseWeight: apreBaseWeight ?? this.apreBaseWeight,
       calculated1RM: calculated1RM ?? this.calculated1RM,
       calculated3RM: calculated3RM ?? this.calculated3RM,
       calculated6RM: calculated6RM ?? this.calculated6RM,
@@ -284,9 +316,6 @@ class Exercise {         // Target RIR if using RIR-based
       'createdAt': createdAt.toIso8601String(),
       'updatedAt': updatedAt.toIso8601String(),
       'autoAdjustmentType': autoAdjustmentType?.name,
-      'useAPRE': useAPRE,
-      'apreProtocol': apreProtocol,
-      'apreBaseWeight': apreBaseWeight,
       'calculated1RM': calculated1RM,
       'calculated3RM': calculated3RM,
       'calculated6RM': calculated6RM,
@@ -296,7 +325,7 @@ class Exercise {         // Target RIR if using RIR-based
       'targetRPEMin': targetRPEMin,
       'targetRPEMax': targetRPEMax,
       'targetRIR': targetRIR,
-      'countingMode': countingMode.name, // ✅ NUOVO
+      'countingMode': countingMode.name,
       'movementType': movementType?.name, // ✅ Smart Workout Suggestion
     };
   }
@@ -733,7 +762,7 @@ class SupersetExercise extends Exercise { // I set del superset
     List<SupersetSet>? supersetSets,
     super.notes,
     super.restTime,
-  }) : 
+  }) :
     exercises = exercises,
     supersetSets = supersetSets ?? [],
     super(
@@ -741,10 +770,38 @@ class SupersetExercise extends Exercise { // I set del superset
       category: exercises.isNotEmpty ? exercises.first.category : ExerciseCategory.other,
       sets: [],
     );
+
+  /// Factory to deserialize SupersetExercise from JSON
+  /// Preserves the full superset structure including exercises and supersetSets
+  factory SupersetExercise.fromJson(Map<String, dynamic> json) {
+    // Parse child exercises - these are the exercises within the superset
+    final exercisesJson = json['exercises'] as List<dynamic>? ?? [];
+    final exercises = exercisesJson
+        .map((e) => Exercise._fromJsonBase(e as Map<String, dynamic>))
+        .toList();
+
+    // Parse supersetSets - these are the rounds with exercise data
+    final supersetSetsJson = json['supersetSets'] as List<dynamic>? ?? [];
+    final supersetSets = supersetSetsJson
+        .map((s) => SupersetSet.fromJson(s as Map<String, dynamic>))
+        .toList();
+
+    return SupersetExercise(
+      id: json['id'] ?? json['exerciseId'],
+      name: json['name'] ?? json['exerciseName'] ?? 'Superset',
+      exercises: exercises,
+      supersetSets: supersetSets,
+      notes: json['notes'] as String?,
+      restTime: json['restTime'] is num ? (json['restTime'] as num).toInt() : null,
+    );
+  }
+
   final List<Exercise> exercises; // Gli esercizi del superset (senza set propri)
   final List<SupersetSet> supersetSets;
 
   /// Crea una copia del superset con modifiche
+  ///
+  /// Use [clearRestTime] = true to explicitly set restTime to null.
   @override
   SupersetExercise copyWith({
     String? id,
@@ -754,13 +811,11 @@ class SupersetExercise extends Exercise { // I set del superset
     List<ExerciseSet>? sets, // Ignored for superset
     String? notes,
     int? restTime,
+    bool clearRestTime = false, // ✅ FIX: Allow clearing restTime to null
     String? tut,
     DateTime? createdAt,
     DateTime? updatedAt,
     AutoAdjustmentType? autoAdjustmentType,
-    bool? useAPRE,
-    int? apreProtocol,
-    double? apreBaseWeight,
     double? calculated1RM,
     double? calculated3RM,
     double? calculated6RM,
@@ -770,7 +825,7 @@ class SupersetExercise extends Exercise { // I set del superset
     double? targetRPEMin,
     double? targetRPEMax,
     int? targetRIR,
-    ExerciseCountingMode? countingMode, // ✅ Added to match Exercise.copyWith
+    ExerciseCountingMode? countingMode,
     MovementType? movementType, // ✅ Smart Workout Suggestion
     List<Exercise>? exercises,
     List<SupersetSet>? supersetSets,
@@ -781,7 +836,7 @@ class SupersetExercise extends Exercise { // I set del superset
       exercises: exercises ?? this.exercises,
       supersetSets: supersetSets ?? this.supersetSets,
       notes: notes ?? this.notes,
-      restTime: restTime ?? this.restTime,
+      restTime: clearRestTime ? null : (restTime ?? this.restTime), // ✅ FIX
     );
   }
 
@@ -875,6 +930,24 @@ class SupersetExercise extends Exercise { // I set del superset
     if (supersetSets.isEmpty) return 0.0;
     return (completedRoundsCount / supersetSets.length) * 100;
   }
+
+  /// Serialize SupersetExercise to JSON, preserving all superset-specific data
+  @override
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'name': name,
+      'type': type.name,
+      'category': category.name,
+      'notes': notes,
+      'restTime': restTime,
+      'createdAt': createdAt.toIso8601String(),
+      'updatedAt': updatedAt.toIso8601String(),
+      // Superset-specific fields
+      'exercises': exercises.map((e) => e.toJson()).toList(),
+      'supersetSets': supersetSets.map((s) => s.toJson()).toList(),
+    };
+  }
 }
 
 // DropSet specific data
@@ -886,12 +959,50 @@ class DropSetExercise extends Exercise {
     required super.category,
     required List<DropSetStage> stages,
     super.notes,
-  }) : 
+    super.restTime,
+  }) :
     stages = stages,
     super(
       type: ExerciseType.dropset,
     );
+
+  /// Factory to deserialize DropSetExercise from JSON
+  factory DropSetExercise.fromJson(Map<String, dynamic> json) {
+    final stagesJson = json['stages'] as List<dynamic>? ?? [];
+    final stages = stagesJson
+        .map((s) => DropSetStage.fromJson(s as Map<String, dynamic>))
+        .toList();
+
+    return DropSetExercise(
+      id: json['id'] ?? json['exerciseId'],
+      name: json['name'] ?? json['exerciseName'] ?? 'Drop Set',
+      category: ExerciseCategory.values.firstWhere(
+        (e) => e.name == json['category'],
+        orElse: () => ExerciseCategory.other,
+      ),
+      stages: stages,
+      notes: json['notes'] as String?,
+      restTime: json['restTime'] is num ? (json['restTime'] as num).toInt() : null,
+    );
+  }
+
   final List<DropSetStage> stages;
+
+  /// Serialize DropSetExercise to JSON
+  @override
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'name': name,
+      'type': type.name,
+      'category': category.name,
+      'notes': notes,
+      'restTime': restTime,
+      'createdAt': createdAt.toIso8601String(),
+      'updatedAt': updatedAt.toIso8601String(),
+      'stages': stages.map((s) => s.toJson()).toList(),
+    };
+  }
 }
 
 class DropSetStage {
@@ -901,6 +1012,15 @@ class DropSetStage {
     required this.reps,
     this.isCompleted = false,
   });
+
+  factory DropSetStage.fromJson(Map<String, dynamic> json) {
+    return DropSetStage(
+      weight: (json['weight'] as num?)?.toDouble() ?? 0.0,
+      reps: json['reps'] as int? ?? 0,
+      isCompleted: json['isCompleted'] as bool? ?? false,
+    );
+  }
+
   final double weight;
   final int reps;
   final bool isCompleted;
@@ -916,9 +1036,17 @@ class DropSetStage {
       isCompleted: isCompleted ?? this.isCompleted,
     );
   }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'weight': weight,
+      'reps': reps,
+      'isCompleted': isCompleted,
+    };
+  }
 }
 
-// RestPause specific data  
+// RestPause specific data
 class RestPauseExercise extends Exercise {
 
   RestPauseExercise({
@@ -929,12 +1057,54 @@ class RestPauseExercise extends Exercise {
     required this.targetReps,
     required this.restPauseSets,
     super.notes,
+    super.restTime,
   }) : super(
       type: ExerciseType.restPause,
     );
+
+  /// Factory to deserialize RestPauseExercise from JSON
+  factory RestPauseExercise.fromJson(Map<String, dynamic> json) {
+    final restPauseSetsJson = json['restPauseSets'] as List<dynamic>? ?? [];
+    final restPauseSets = restPauseSetsJson
+        .map((s) => RestPauseSet.fromJson(s as Map<String, dynamic>))
+        .toList();
+
+    return RestPauseExercise(
+      id: json['id'] ?? json['exerciseId'],
+      name: json['name'] ?? json['exerciseName'] ?? 'Rest-Pause',
+      category: ExerciseCategory.values.firstWhere(
+        (e) => e.name == json['category'],
+        orElse: () => ExerciseCategory.other,
+      ),
+      weight: (json['weight'] as num?)?.toDouble() ?? 0.0,
+      targetReps: json['targetReps'] as int? ?? 0,
+      restPauseSets: restPauseSets,
+      notes: json['notes'] as String?,
+      restTime: json['restTime'] is num ? (json['restTime'] as num).toInt() : null,
+    );
+  }
+
   final double weight;
   final int targetReps;
   final List<RestPauseSet> restPauseSets;
+
+  /// Serialize RestPauseExercise to JSON
+  @override
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'name': name,
+      'type': type.name,
+      'category': category.name,
+      'notes': notes,
+      'restTime': restTime,
+      'createdAt': createdAt.toIso8601String(),
+      'updatedAt': updatedAt.toIso8601String(),
+      'weight': weight,
+      'targetReps': targetReps,
+      'restPauseSets': restPauseSets.map((s) => s.toJson()).toList(),
+    };
+  }
 }
 
 class RestPauseSet {
@@ -944,6 +1114,15 @@ class RestPauseSet {
     required this.restSeconds,
     this.isCompleted = false,
   });
+
+  factory RestPauseSet.fromJson(Map<String, dynamic> json) {
+    return RestPauseSet(
+      reps: json['reps'] as int? ?? 0,
+      restSeconds: json['restSeconds'] as int? ?? 0,
+      isCompleted: json['isCompleted'] as bool? ?? false,
+    );
+  }
+
   final int reps;
   final int restSeconds;
   final bool isCompleted;
@@ -958,5 +1137,13 @@ class RestPauseSet {
       restSeconds: restSeconds ?? this.restSeconds,
       isCompleted: isCompleted ?? this.isCompleted,
     );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'reps': reps,
+      'restSeconds': restSeconds,
+      'isCompleted': isCompleted,
+    };
   }
 }

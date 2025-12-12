@@ -8,63 +8,69 @@ import 'package:intl/intl.dart';
 
 /// Modal showing user's feedback history on AI Coach insights
 class FeedbackHistoryModal extends ConsumerWidget {
-  const FeedbackHistoryModal({super.key});
+  const FeedbackHistoryModal({
+    super.key,
+    this.scrollController,
+  });
+
+  final ScrollController? scrollController;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final l10n = AppLocalizations.of(context);
+    final l10n = context.l10n;
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
     final feedbackListAsync = ref.watch(userFeedbackListProvider);
 
-    return Container(
-      height: MediaQuery.of(context).size.height * 0.8,
+    return DecoratedBox(
       decoration: BoxDecoration(
         color: colorScheme.surface,
         borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
       ),
-      child: Column(
-        children: [
-          // Drag handle
-          Container(
-            width: 40,
-            height: 4,
-            margin: const EdgeInsets.only(top: 12),
-            decoration: BoxDecoration(
-              color: colorScheme.outline.withValues(alpha: 0.4),
-              borderRadius: BorderRadius.circular(2),
+      child: SafeArea(
+        top: false,
+        child: Column(
+          children: [
+            // Drag handle
+            Container(
+              width: 40,
+              height: 4,
+              margin: const EdgeInsets.only(top: 12),
+              decoration: BoxDecoration(
+                color: colorScheme.outline.withValues(alpha: 0.4),
+                borderRadius: BorderRadius.circular(2),
+              ),
             ),
-          ),
 
-          // Header
-          Padding(
-            padding: const EdgeInsets.all(24),
-            child: Row(
-              children: [
-                Icon(
-                  Icons.history,
-                  color: colorScheme.primary,
-                  size: 28,
-                ),
-                const SizedBox(width: 12),
-                Text(
-                  l10n.myFeedback,
-                  style: theme.textTheme.headlineSmall?.copyWith(
-                    fontWeight: FontWeight.bold,
+            // Header
+            Padding(
+              padding: const EdgeInsets.all(24),
+              child: Row(
+                children: [
+                  Icon(
+                    Icons.history,
+                    color: colorScheme.primary,
+                    size: 28,
                   ),
-                ),
-              ],
+                  const SizedBox(width: 12),
+                  Text(
+                    l10n.myFeedback,
+                    style: theme.textTheme.headlineSmall?.copyWith(
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ],
+              ),
             ),
-          ),
 
-          // Content
-          Expanded(
-            child: feedbackListAsync.when(
+            // Content
+            Expanded(
+              child: feedbackListAsync.when(
               data: (feedbackList) {
                 if (feedbackList.isEmpty) {
                   return _buildEmptyState(context, l10n, theme, colorScheme);
                 }
-                return _buildFeedbackList(context, feedbackList, l10n, theme, colorScheme);
+                return _buildFeedbackList(context, feedbackList, l10n, theme, colorScheme, scrollController);
               },
               loading: () => const Center(child: CircularProgressIndicator()),
               error: (error, _) => Center(
@@ -93,8 +99,9 @@ class FeedbackHistoryModal extends ConsumerWidget {
             ),
           ),
         ],
-      ),
-    );
+      ), // Column
+      ), // SafeArea
+    ); // DecoratedBox
   }
 
   Widget _buildEmptyState(
@@ -173,8 +180,10 @@ class FeedbackHistoryModal extends ConsumerWidget {
     AppLocalizations l10n,
     ThemeData theme,
     ColorScheme colorScheme,
+    ScrollController? scrollController,
   ) {
     return ListView.builder(
+      controller: scrollController,
       padding: const EdgeInsets.symmetric(horizontal: 24),
       itemCount: feedbackList.length,
       itemBuilder: (context, index) {

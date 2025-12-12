@@ -3,14 +3,25 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 // Import core entities
 import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise.dart';
-import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/services/snackbar_service.dart';
 
 // Import modal widgets
-import 'package:gymbro_flutter_new/features/workout/presentation/widgets/unified_set_input_modal.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/widgets/rpe_selector_bottom_sheet.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/widgets/add_exercise_modal.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/widgets/enhanced_add_exercise_modal.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/widgets/exercise_options_modal.dart';
+import 'package:gymbro_flutter_new/features/workout/presentation/widgets/weight_picker_modal.dart';
+import 'package:gymbro_flutter_new/features/workout/presentation/widgets/reps_picker_modal.dart';
+import 'package:gymbro_flutter_new/features/workout/presentation/widgets/edit_set_modal.dart';
+import 'package:gymbro_flutter_new/features/workout/presentation/widgets/edit_exercise_modal.dart';
+import 'package:gymbro_flutter_new/features/workout/presentation/widgets/create_template_modal.dart';
+import 'package:gymbro_flutter_new/features/workout/presentation/widgets/rest_time_picker_modal.dart';
+import 'package:gymbro_flutter_new/features/workout/presentation/widgets/exercise_replacement_modal.dart';
+import 'package:gymbro_flutter_new/features/workout/presentation/widgets/workout_customization_modal_v3.dart';
+import 'package:gymbro_flutter_new/features/workout/presentation/widgets/superset_round_edit_modal.dart';
+import 'package:gymbro_flutter_new/features/workout/presentation/widgets/dropset_execution_modal.dart';
+import 'package:gymbro_flutter_new/features/workout/presentation/widgets/superset_sequential_execution_sheet.dart';
+import 'package:gymbro_flutter_new/shared/presentation/services/modal_service.dart';
 
 
 /// Widget per testare tutti i modal identificati nell'analisi
@@ -53,12 +64,7 @@ class ModalTesterWidget extends ConsumerWidget {
             
             _buildModalSection(context, 'INPUT DATA MODALS', [
               _ModalTestButton(
-                'UnifiedSetInputModal',
-                () => _testUnifiedSetInputModal(context),
-                'Primary modal for weight/reps/RPE',
-              ),
-              _ModalTestButton(
-                'WeightPickerModal', 
+                'WeightPickerModal',
                 () => _testWeightPickerModal(context),
                 'Dedicated weight selection',
               ),
@@ -252,161 +258,330 @@ class ModalTesterWidget extends ConsumerWidget {
     );
   }
 
-  // Test methods per ogni modal
-  void _testUnifiedSetInputModal(BuildContext context) {
-    UnifiedSetInputModal.show(
-      context: context,
-      exerciseSet: _getMockExerciseSet(),
-      exerciseName: 'Test Exercise',
-      onSave: (set) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(context.l10n.modalTestSuccess('UnifiedSetInputModal'))),
-        );
-      },
+  /// Mock superset exercise for testing superset modals
+  SupersetExercise _getMockSupersetExercise() {
+    final exercise1 = Exercise(
+      name: 'Bench Press',
+      type: ExerciseType.single,
+      category: ExerciseCategory.chest,
+      sets: [_getMockExerciseSet()],
+    );
+    final exercise2 = Exercise(
+      name: 'Bent Over Row',
+      type: ExerciseType.single,
+      category: ExerciseCategory.back,
+      sets: [_getMockExerciseSet()],
+    );
+
+    return SupersetExercise(
+      name: 'Test Superset',
+      exercises: [exercise1, exercise2],
+      supersetSets: [
+        SupersetSet(
+          setNumber: 1,
+          exerciseData: {
+            exercise1.id: SupersetExerciseData(
+              exerciseId: exercise1.id,
+              exerciseName: exercise1.name,
+              targetWeight: 60.0,
+              targetReps: 10,
+            ),
+            exercise2.id: SupersetExerciseData(
+              exerciseId: exercise2.id,
+              exerciseName: exercise2.name,
+              targetWeight: 50.0,
+              targetReps: 12,
+            ),
+          },
+        ),
+        SupersetSet(
+          setNumber: 2,
+          exerciseData: {
+            exercise1.id: SupersetExerciseData(
+              exerciseId: exercise1.id,
+              exerciseName: exercise1.name,
+              targetWeight: 60.0,
+              targetReps: 10,
+            ),
+            exercise2.id: SupersetExerciseData(
+              exerciseId: exercise2.id,
+              exerciseName: exercise2.name,
+              targetWeight: 50.0,
+              targetReps: 12,
+            ),
+          },
+        ),
+      ],
     );
   }
-  
-  void _testWeightPickerModal(BuildContext context) {
-    _showPlaceholderMessage(context, 'WeightPickerModal - Extension method not found');
+
+  /// Mock dropset exercise for testing dropset modals
+  DropSetExercise _getMockDropsetExercise() {
+    return DropSetExercise(
+      name: 'Test Dropset - Dumbbell Curl',
+      category: ExerciseCategory.arms,
+      stages: [
+        DropSetStage(
+          weight: 15.0,
+          reps: 8,
+        ),
+        DropSetStage(
+          weight: 12.0,
+          reps: 8,
+        ),
+        DropSetStage(
+          weight: 8.0,
+          reps: 10,
+        ),
+      ],
+    );
   }
-  
-  void _testRepsPickerModal(BuildContext context) {
-    _showPlaceholderMessage(context, 'RepsPickerModal - Extension method not found');
+
+  // Test methods per ogni modal
+  void _testWeightPickerModal(BuildContext context) async {
+    final result = await WeightPickerModal.show(context, initialWeight: 20.0);
+    if (result != null && context.mounted) {
+      SnackBarService.showSuccess(context, '✅ WeightPickerModal - Selected: ${result.toStringAsFixed(1)} kg');
+    } else if (context.mounted) {
+      SnackBarService.showInfo(context, '⚪ WeightPickerModal - Cancelled');
+    }
+  }
+
+  void _testRepsPickerModal(BuildContext context) async {
+    final result = await RepsPickerModal.show(context, initialReps: 10);
+    if (result != null && context.mounted) {
+      SnackBarService.showSuccess(context, '✅ RepsPickerModal - Selected: $result reps');
+    } else if (context.mounted) {
+      SnackBarService.showInfo(context, '⚪ RepsPickerModal - Cancelled');
+    }
   }
   
   void _testRpeSelectorBottomSheet(BuildContext context) {
     showModalBottomSheet(
       context: context,
-      builder: (context) => RpeSelectorBottomSheet(
+      builder: (ctx) => RpeSelectorBottomSheet(
         set: _getMockExerciseSet(),
         targetReps: 10,
         onConfirm: (actualReps, actualWeight, rpe) {
-          Navigator.of(context).pop();
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text(context.l10n.modalTestRpeSuccess(rpe.toString()))),
-          );
+          Navigator.of(ctx).pop();
+          if (context.mounted) {
+            SnackBarService.showSuccess(
+              context,
+              '✅ RpeSelectorBottomSheet - RPE: $rpe, Reps: $actualReps, Weight: $actualWeight',
+            );
+          }
         },
       ),
     );
   }
   
   void _testAddExerciseModal(BuildContext context) {
-    showModalBottomSheet(
-      context: context,
-      isScrollControlled: true,
-      builder: (context) => const AddExerciseModal(),
-    ).then((_) {
+    // ✅ UX: Use the new static show method
+    AddExerciseModal.show(context).then((_) {
       if (context.mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(context.l10n.modalTestOpened('AddExerciseModal'))),
-        );
+        SnackBarService.showInfo(context, '✅ AddExerciseModal - Closed');
       }
     }).catchError((e) {
       if (context.mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(context.l10n.modalTestError('AddExerciseModal', e.toString()))),
-        );
+        SnackBarService.showError(context, '❌ AddExerciseModal error: $e');
       }
     });
   }
-  
+
   void _testEnhancedAddExerciseModal(BuildContext context) {
     try {
+      final safeMax = ModalService.safeMaxChildSize(context, preferredMax: 0.98);
       showModalBottomSheet(
         context: context,
         isScrollControlled: true,
-        builder: (context) => const EnhancedAddExerciseModal(),
+        backgroundColor: Colors.transparent,
+        builder: (_) => DraggableScrollableSheet(
+          initialChildSize: 0.9,
+          minChildSize: 0.9,
+          maxChildSize: safeMax,
+          expand: false,
+          snap: true,
+          builder: (context, scrollController) => EnhancedAddExerciseModal(
+            scrollController: scrollController,
+          ),
+        ),
       ).then((_) {
         if (context.mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text(context.l10n.modalTestOpened('EnhancedAddExerciseModal'))),
-          );
+          SnackBarService.showInfo(context, '✅ EnhancedAddExerciseModal - Closed');
         }
       });
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(context.l10n.modalTestError('EnhancedAddExerciseModal', e.toString()))),
-      );
+      SnackBarService.showError(context, '❌ EnhancedAddExerciseModal error: $e');
     }
   }
-  
+
   void _testExerciseOptionsModal(BuildContext context) {
     ExerciseOptionsModal.show(
       context,
       _getMockExercise(),
       onHistory: () {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(context.l10n.historyButtonTapped)),
-        );
+        SnackBarService.showInfo(context, '📊 History button tapped');
       },
       onEdit: () {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(context.l10n.editButtonTapped)),
-        );
+        SnackBarService.showInfo(context, '✏️ Edit button tapped');
       },
     );
   }
   
-  // Placeholder methods for other modals (to be implemented if they exist)
+  // ═══════════════════════════════════════════════════════════════
+  // EDIT & OPTIONS MODALS
+  // ═══════════════════════════════════════════════════════════════
+
   void _testEditExerciseModal(BuildContext context) {
-    _showPlaceholderMessage(context, 'EditExerciseModal');
+    context.showEditExerciseModal(
+      _getMockExercise(),
+      (updatedExercise) {
+        SnackBarService.showSuccess(
+          context,
+          '✅ EditExerciseModal - Updated: ${updatedExercise.name}',
+        );
+      },
+    );
   }
-  
+
   void _testEditSetModal(BuildContext context) {
-    _showPlaceholderMessage(context, 'EditSetModal');
+    context.showEditSetModal(
+      _getMockExerciseSet(),
+      (updatedSet) {
+        SnackBarService.showSuccess(
+          context,
+          '✅ EditSetModal - Updated: ${updatedSet.weight}kg × ${updatedSet.reps} reps',
+        );
+      },
+      exercise: _getMockExercise(),
+    );
   }
-  
+
+  // ═══════════════════════════════════════════════════════════════
+  // CONFIGURATION MODALS
+  // ═══════════════════════════════════════════════════════════════
+
   void _testCreateTemplateModal(BuildContext context) {
-    _showPlaceholderMessage(context, 'CreateTemplateModal');
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      builder: (context) => const CreateTemplateModal(),
+    ).then((_) {
+      if (context.mounted) {
+        SnackBarService.showInfo(context, '✅ CreateTemplateModal - Closed');
+      }
+    });
   }
-  
+
   void _testExerciseReplacementModal(BuildContext context) {
-    _showPlaceholderMessage(context, 'ExerciseReplacementModal');
+    ExerciseReplacementModal.show(
+      context,
+      _getMockExercise(),
+      (replacementExercise) {
+        SnackBarService.showSuccess(
+          context,
+          '✅ ExerciseReplacementModal - Replaced with: ${replacementExercise.name}',
+        );
+      },
+    );
   }
-  
+
   void _testExerciseReplacementDialog(BuildContext context) {
-    _showPlaceholderMessage(context, 'ExerciseReplacementDialog');
+    // This is the same as ExerciseReplacementModal
+    _testExerciseReplacementModal(context);
   }
-  
+
   void _testWorkoutCustomizationModal(BuildContext context) {
-    _showPlaceholderMessage(context, 'WorkoutCustomizationModal');
+    WorkoutCustomizationModalV3.show(context).then((_) {
+      if (context.mounted) {
+        SnackBarService.showSuccess(context, '✅ WorkoutCustomizationModalV3 - Settings saved');
+      }
+    });
   }
-  
+
   void _testRestTimePickerModal(BuildContext context) {
-    _showPlaceholderMessage(context, 'RestTimePickerModal');
-  }
-  
-  void _testSupersetQuickEditModal(BuildContext context) {
-    _showPlaceholderMessage(context, 'SupersetQuickEditModal');
-  }
-  
-  void _testSupersetRoundEditModal(BuildContext context) {
-    _showPlaceholderMessage(context, 'SupersetRoundEditModal');
-  }
-  
-  void _testSupersetExecutionSheet(BuildContext context) {
-    _showPlaceholderMessage(context, 'SupersetExecutionSheet');
-  }
-  
-  void _testSupersetExecutionSheetV2(BuildContext context) {
-    _showPlaceholderMessage(context, 'SupersetExecutionSheetV2');
-  }
-  
-  void _testDropsetExecutionSheet(BuildContext context) {
-    _showPlaceholderMessage(context, 'DropsetExecutionSheet');
-  }
-  
-  void _testRestpauseExecutionSheet(BuildContext context) {
-    _showPlaceholderMessage(context, 'RestpauseExecutionSheet');
-  }
-  
-  void _showPlaceholderMessage(BuildContext context, String modalName) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text('🚧 $modalName - Need to implement test'),
-        backgroundColor: context.colors.warning,
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      builder: (ctx) => RestTimePickerModal(
+        initialRestTime: 90,
+        onRestTimeSelected: (seconds) {
+          Navigator.of(ctx).pop();
+          if (context.mounted) {
+            if (seconds != null) {
+              SnackBarService.showSuccess(context, '✅ RestTimePickerModal - Selected: ${seconds}s');
+            } else {
+              SnackBarService.showInfo(context, '⚪ RestTimePickerModal - Default timer');
+            }
+          }
+        },
       ),
     );
+  }
+
+  // ═══════════════════════════════════════════════════════════════
+  // SUPERSET & ADVANCED EXECUTION SHEETS
+  // ═══════════════════════════════════════════════════════════════
+
+  void _testSupersetQuickEditModal(BuildContext context) {
+    // SupersetQuickEditModal doesn't exist - it's been replaced by SupersetRoundEditModal
+    SnackBarService.showWarning(context, '⚠️ SupersetQuickEditModal replaced by SupersetRoundEditModal');
+  }
+
+  void _testSupersetRoundEditModal(BuildContext context) {
+    final mockSuperset = _getMockSupersetExercise();
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      builder: (ctx) => SupersetRoundEditModal(
+        superset: mockSuperset,
+        supersetSet: mockSuperset.supersetSets.first,
+        roundNumber: 1,
+        onSetUpdate: (updatedSet) {
+          Navigator.of(ctx).pop();
+          if (context.mounted) {
+            SnackBarService.showSuccess(context, '✅ SupersetRoundEditModal - Round updated');
+          }
+        },
+      ),
+    );
+  }
+
+  void _testSupersetExecutionSheet(BuildContext context) {
+    // SupersetExecutionSheet has been replaced by SupersetSequentialExecutionSheet
+    _testSupersetExecutionSheetV2(context);
+  }
+
+  void _testSupersetExecutionSheetV2(BuildContext context) {
+    final mockSuperset = _getMockSupersetExercise();
+    SupersetSequentialExecutionSheet.show(
+      context: context,
+      superset: mockSuperset,
+      roundIndex: 0,
+      onRoundCompleted: (completedRound) {
+        SnackBarService.showSuccess(context, '✅ SupersetSequentialExecutionSheet - Round completed');
+      },
+      onAllRoundsCompleted: () {
+        SnackBarService.showSuccess(context, '🎉 All superset rounds completed!');
+      },
+    );
+  }
+
+  void _testDropsetExecutionSheet(BuildContext context) {
+    final mockDropset = _getMockDropsetExercise();
+    DropSetExecutionModal.show(
+      context: context,
+      exercise: mockDropset,
+    ).then((_) {
+      if (context.mounted) {
+        SnackBarService.showInfo(context, '✅ DropSetExecutionModal - Closed');
+      }
+    });
+  }
+
+  void _testRestpauseExecutionSheet(BuildContext context) {
+    // RestPause uses the same execution pattern as DropSet
+    SnackBarService.showWarning(context, '⚠️ RestPauseExecutionSheet - Uses DropSet pattern (not separate modal)');
   }
 }
 

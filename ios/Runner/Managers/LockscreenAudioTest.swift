@@ -42,13 +42,8 @@ final class LockscreenAudioTest {
         let session = AVAudioSession.sharedInstance()
         
         do {
-            // Configure for lockscreen
-            try session.setCategory(.playback, mode: .default, options: [
-                .mixWithOthers,
-                .duckOthers,
-                .allowBluetooth,
-                .allowBluetoothA2DP
-            ])
+            // ✅ MINIMAL configuration to avoid OSStatus -50
+            try session.setCategory(.playback, mode: .default, options: [.mixWithOthers])
             try session.setActive(true)
             
             print("✅ Audio session configured for lockscreen")

@@ -1,6 +1,11 @@
+import 'package:flutter/foundation.dart' show kDebugMode;
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
+import 'package:gymbro_flutter_new/core/providers/tier_entitlements_provider.dart';
 import 'package:gymbro_flutter_new/shared/data/services/consent_service.dart';
+import 'package:gymbro_flutter_new/features/auth/presentation/providers/consolidated_user_provider.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator.dart';
 
 /// Adaptive Banner Ad Widget
 ///
@@ -10,6 +15,7 @@ import 'package:gymbro_flutter_new/shared/data/services/consent_service.dart';
 /// - Errori
 /// - Dispose
 /// - Sizing responsive
+/// - Nasconde ads per utenti premium
 ///
 /// Usage:
 /// ```dart
@@ -17,7 +23,7 @@ import 'package:gymbro_flutter_new/shared/data/services/consent_service.dart';
 ///   adUnitId: AdMobConfig.bannerAnalytics,
 /// )
 /// ```
-class AdaptiveBannerAd extends StatefulWidget { // Altezza custom (opzionale)
+class AdaptiveBannerAd extends ConsumerStatefulWidget { // Altezza custom (opzionale)
 
   const AdaptiveBannerAd({
     super.key,
@@ -28,10 +34,10 @@ class AdaptiveBannerAd extends StatefulWidget { // Altezza custom (opzionale)
   final double? height;
 
   @override
-  State<AdaptiveBannerAd> createState() => _AdaptiveBannerAdState();
+  ConsumerState<AdaptiveBannerAd> createState() => _AdaptiveBannerAdState();
 }
 
-class _AdaptiveBannerAdState extends State<AdaptiveBannerAd> {
+class _AdaptiveBannerAdState extends ConsumerState<AdaptiveBannerAd> {
   BannerAd? _bannerAd;
   bool _isLoaded = false;
   bool _isError = false;
@@ -54,7 +60,9 @@ class _AdaptiveBannerAdState extends State<AdaptiveBannerAd> {
     final canRequest = await consentService.canRequestAds();
 
     if (!canRequest) {
-      debugPrint('⚠️ Cannot request banner ads - consent not granted');
+      if (kDebugMode) {
+        debugPrint('⚠️ Cannot request banner ads - consent not granted');
+      }
       if (mounted) {
         setState(() {
           _isError = true;
@@ -70,7 +78,9 @@ class _AdaptiveBannerAdState extends State<AdaptiveBannerAd> {
     );
 
     if (size == null) {
-      debugPrint('❌ Unable to get adaptive banner size');
+      if (kDebugMode) {
+        debugPrint('❌ Unable to get adaptive banner size');
+      }
       if (mounted) {
         setState(() {
           _isError = true;
@@ -85,7 +95,9 @@ class _AdaptiveBannerAdState extends State<AdaptiveBannerAd> {
       request: const AdRequest(),
       listener: BannerAdListener(
         onAdLoaded: (ad) {
-          debugPrint('✅ Banner ad loaded: ${widget.adUnitId}');
+          if (kDebugMode) {
+            debugPrint('✅ Banner ad loaded: ${widget.adUnitId}');
+          }
           if (mounted) {
             setState(() {
               _isLoaded = true;
@@ -94,7 +106,9 @@ class _AdaptiveBannerAdState extends State<AdaptiveBannerAd> {
           }
         },
         onAdFailedToLoad: (ad, error) {
-          debugPrint('❌ Banner ad failed to load: $error');
+          if (kDebugMode) {
+            debugPrint('❌ Banner ad failed to load: $error');
+          }
           ad.dispose();
           if (mounted) {
             setState(() {
@@ -104,10 +118,14 @@ class _AdaptiveBannerAdState extends State<AdaptiveBannerAd> {
           }
         },
         onAdOpened: (ad) {
-          debugPrint('📱 Banner ad opened');
+          if (kDebugMode) {
+            debugPrint('📱 Banner ad opened');
+          }
         },
         onAdClosed: (ad) {
-          debugPrint('📱 Banner ad closed');
+          if (kDebugMode) {
+            debugPrint('📱 Banner ad closed');
+          }
         },
       ),
     );
@@ -117,6 +135,18 @@ class _AdaptiveBannerAdState extends State<AdaptiveBannerAd> {
 
   @override
   Widget build(BuildContext context) {
+    // Hide ads for premium users (paid subscription)
+    final isPremium = ref.watch(isPremiumUserProvider);
+    if (isPremium) {
+      return const SizedBox.shrink();
+    }
+
+    // Hide ads for Platinum tier users (earned through XP)
+    final shouldShowAds = ref.watch(shouldShowAdsProvider);
+    if (!shouldShowAds) {
+      return const SizedBox.shrink();
+    }
+
     // Show error placeholder
     if (_isError) {
       return const SizedBox.shrink();
@@ -128,11 +158,7 @@ class _AdaptiveBannerAdState extends State<AdaptiveBannerAd> {
         height: widget.height ?? 50,
         color: Colors.transparent,
         child: const Center(
-          child: SizedBox(
-            width: 20,
-            height: 20,
-            child: CircularProgressIndicator(strokeWidth: 2),
-          ),
+          child: LoadingIndicator(size: 20),
         ),
       );
     }

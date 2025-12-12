@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart' show kDebugMode;
 import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/features/onboarding/domain/events/tutorial_event.dart';
@@ -93,7 +94,9 @@ class TriggerEngine {
     GlobalKey? targetKey,
   }) {
     if (_showCallback == null) {
-      debugPrint('⚠️ TriggerEngine: showCallback not set, ignoring event');
+      if (kDebugMode) {
+        debugPrint('⚠️ TriggerEngine: showCallback not set, ignoring event');
+      }
       return;
     }
 
@@ -102,31 +105,41 @@ class TriggerEngine {
 
     // Check if tutorials are globally enabled
     if (!state.tutorialsEnabled) {
-      debugPrint('📚 TriggerEngine: Tutorials disabled globally, ignoring');
+      if (kDebugMode) {
+        debugPrint('📚 TriggerEngine: Tutorials disabled globally, ignoring');
+      }
       return;
     }
 
     // Look up tutorial for this event
     final tutorial = TutorialRegistry.findTutorial(event);
     if (tutorial == null) {
-      debugPrint('📚 TriggerEngine: No tutorial for ${event.runtimeType}');
+      if (kDebugMode) {
+        debugPrint('📚 TriggerEngine: No tutorial for ${event.runtimeType}');
+      }
       return;
     }
 
     // Check if tutorial should be shown (using state already loaded above)
     if (!tutorial.shouldShow(state, event)) {
-      debugPrint('📚 TriggerEngine: Condition not met for ${tutorial.id}');
+      if (kDebugMode) {
+        debugPrint('📚 TriggerEngine: Condition not met for ${tutorial.id}');
+      }
       return;
     }
 
     // Apply anti-spam rules
     if (!_passesAntiSpamRules(tutorial)) {
-      debugPrint('📚 TriggerEngine: Anti-spam blocked ${tutorial.id}');
+      if (kDebugMode) {
+        debugPrint('📚 TriggerEngine: Anti-spam blocked ${tutorial.id}');
+      }
       return;
     }
 
     // Show the tutorial
-    debugPrint('🎯 TriggerEngine: Showing tutorial ${tutorial.id}');
+    if (kDebugMode) {
+      debugPrint('🎯 TriggerEngine: Showing tutorial ${tutorial.id}');
+    }
     _lastTutorialTime = DateTime.now();
 
     if (tutorial.type == TutorialType.proactive) {
@@ -146,10 +159,12 @@ class TriggerEngine {
     if (_lastTutorialTime != null) {
       final elapsed = DateTime.now().difference(_lastTutorialTime!);
       if (elapsed < _tutorialCooldown) {
-        debugPrint(
-          '📚 TriggerEngine: Cooldown active '
-          '(${elapsed.inSeconds}s < ${_tutorialCooldown.inSeconds}s)',
-        );
+        if (kDebugMode) {
+          debugPrint(
+            '📚 TriggerEngine: Cooldown active '
+            '(${elapsed.inSeconds}s < ${_tutorialCooldown.inSeconds}s)',
+          );
+        }
         return false;
       }
     }
@@ -157,17 +172,21 @@ class TriggerEngine {
     // Check proactive hint limit
     if (tutorial.type == TutorialType.proactive) {
       if (_proactiveHintsShown >= _maxProactivePerSession) {
-        debugPrint(
-          '📚 TriggerEngine: Max proactive hints reached '
-          '($_proactiveHintsShown >= $_maxProactivePerSession)',
-        );
+        if (kDebugMode) {
+          debugPrint(
+            '📚 TriggerEngine: Max proactive hints reached '
+            '($_proactiveHintsShown >= $_maxProactivePerSession)',
+          );
+        }
         return false;
       }
 
       // Check 24h dismiss cooldown for proactive hints
       final state = _ref.read(tutorialStateProvider);
       if (!state.canShowHint(tutorial.id)) {
-        debugPrint('📚 TriggerEngine: 24h dismiss cooldown active');
+        if (kDebugMode) {
+          debugPrint('📚 TriggerEngine: 24h dismiss cooldown active');
+        }
         return false;
       }
     }
@@ -191,7 +210,9 @@ class TriggerEngine {
   /// Call this when app is backgrounded/resumed.
   void resetSession() {
     _proactiveHintsShown = 0;
-    debugPrint('📚 TriggerEngine: Session reset');
+    if (kDebugMode) {
+      debugPrint('📚 TriggerEngine: Session reset');
+    }
   }
 
   /// Get remaining cooldown duration.
@@ -208,11 +229,17 @@ class TriggerEngine {
 
   /// Debug method to print engine state.
   void debugState() {
-    debugPrint('=== 🎯 TriggerEngine State ===');
+    if (kDebugMode) {
+      debugPrint('=== 🎯 TriggerEngine State ===');
+    }
     debugPrint('Ready: $isReady');
-    debugPrint('Last tutorial: $_lastTutorialTime');
+    if (kDebugMode) {
+      debugPrint('Last tutorial: $_lastTutorialTime');
+    }
     debugPrint('Cooldown remaining: ${remainingCooldown.inSeconds}s');
-    debugPrint('Proactive hints shown: $_proactiveHintsShown');
+    if (kDebugMode) {
+      debugPrint('Proactive hints shown: $_proactiveHintsShown');
+    }
     debugPrint('==============================');
   }
 }

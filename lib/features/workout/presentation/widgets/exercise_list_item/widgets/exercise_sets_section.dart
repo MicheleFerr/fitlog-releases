@@ -5,20 +5,16 @@
 /// - Sets progress header
 /// - List of set items with completion status
 /// - Add set button with optional collapse button
-/// - APRE metadata banner (after set 4 if enabled)
 ///
 /// Part of ExerciseListItem refactoring (split per sezione).
 library;
 
-import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise.dart';
-import 'package:gymbro_flutter_new/features/workout/domain/services/apre_auto_regulation_service.dart';
-import 'package:gymbro_flutter_new/features/workout/presentation/widgets/calculation_metadata_display.dart';
 import 'package:gymbro_flutter_new/features/exercise_database/domain/entities/exercise_counting_mode.dart';
 import 'package:gymbro_flutter_new/shared/domain/entities/app_config.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
@@ -38,7 +34,6 @@ import 'package:gymbro_flutter_new/features/workout/domain/entities/set_progress
 /// - Sets progress header (X/Y Sets)
 /// - List of set items (dismissible, editable, completable)
 /// - Add set button (with collapse button when all sets complete)
-/// - APRE metadata banner (collapsible, appears after set 4)
 class ExerciseSetsSection extends ConsumerWidget {
   const ExerciseSetsSection({
     super.key,
@@ -55,8 +50,6 @@ class ExerciseSetsSection extends ConsumerWidget {
     required this.onCollapse,
     this.onExecuteDropSet,
     this.onExecuteRestPause,
-    this.showMetadataBanner = false,
-    this.onToggleMetadataBanner,
   });
 
   final Exercise exercise;
@@ -72,8 +65,6 @@ class ExerciseSetsSection extends ConsumerWidget {
   final VoidCallback onCollapse;
   final void Function(DropSetExercise exercise)? onExecuteDropSet;
   final void Function(RestPauseExercise exercise)? onExecuteRestPause;
-  final bool showMetadataBanner;
-  final VoidCallback? onToggleMetadataBanner;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -88,15 +79,8 @@ class ExerciseSetsSection extends ConsumerWidget {
       children: [
         _buildSetsProgressHeader(context),
         const SizedBox(height: 8),
-        ...exercise.sets.asMap().entries.expand(
-          (entry) => [
-            _buildSetItem(context, ref, entry.key, entry.value),
-            // Inject metadata banner after Set 4 if APRE enabled
-            if (entry.key == 3 &&
-                exercise.useAPRE &&
-                exercise.sets.length >= 4)
-              _buildMetadataBanner(context),
-          ],
+        ...exercise.sets.asMap().entries.map(
+          (entry) => _buildSetItem(context, ref, entry.key, entry.value),
         ),
         const SizedBox(height: 8),
         _buildAddSetButton(context),
@@ -279,8 +263,12 @@ class ExerciseSetsSection extends ConsumerWidget {
       }
     }
 
+    // Use robust key that includes index as fallback in case IDs are empty
+    final exerciseId = exercise.id.isNotEmpty ? exercise.id : 'ex_$index';
+    final setId = set.id.isNotEmpty ? set.id : 'set_$index';
+
     return Dismissible(
-      key: Key('${exercise.id}_set_${set.id}'),
+      key: ValueKey('dismissible_${exerciseId}_${setId}_$index'),
       direction: DismissDirection.endToStart,
       background: Container(
         alignment: Alignment.centerRight,
@@ -704,116 +692,6 @@ class ExerciseSetsSection extends ConsumerWidget {
         ),
       ),
     );
-  }
-
-  /// Builds APRE metadata banner (collapsible)
-  Widget _buildMetadataBanner(BuildContext context) {
-    final calculations = _parseCalculationMetadata();
-
-    // Don't show banner if no calculations available
-    if (calculations == null) return const SizedBox.shrink();
-
-    return AnimatedSize(
-      duration: const Duration(milliseconds: 300),
-      curve: Curves.easeInOut,
-      child: Column(
-        children: [
-          const SizedBox(height: 12),
-          // Collapsible header
-          InkWell(
-            onTap: onToggleMetadataBanner,
-            borderRadius: BorderRadius.circular(8),
-            child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-              decoration: BoxDecoration(
-                color: context.colors.primaryContainer.withValues(alpha: 0.3),
-                borderRadius: BorderRadius.circular(8),
-                border: Border.all(
-                  color: context.colors.primary.withValues(alpha: 0.3),
-                ),
-              ),
-              child: Row(
-                children: [
-                  SemanticIcon(
-                    icon: AppIcons.expandLess,
-                    semanticLabel: context.l10n.collapse,
-                    size: AppIconSize.small,
-                    color: context.colors.primary,
-                  ),
-                  const SizedBox(width: 8),
-                  Expanded(
-                    child: Text(
-                      showMetadataBanner
-                          ? context.l10n.apreHideCalculationDetails
-                          : context.l10n.apreShowCalculationDetails,
-                      style: context.textTheme.labelMedium?.copyWith(
-                        color: context.colors.primary,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                  ),
-                  SemanticIcon(
-                    icon: AppIcons.info,
-                    semanticLabel: context.l10n.exerciseInformation,
-                    size: AppIconSize.small,
-                    color: context.colors.primary,
-                  )
-                ],
-              ),
-            ),
-          ),
-          // Expanded metadata details
-          if (showMetadataBanner) ...[
-            const SizedBox(height: 8),
-            CalculationMetadataDisplay(
-              calculations: calculations,
-              lastCalculationDate: exercise.lastCalculationDate,
-            ),
-          ],
-        ],
-      ),
-    );
-  }
-
-  /// Parses calculation metadata from JSON string
-  Map<String, dynamic>? _parseCalculationMetadata() {
-    if (exercise.calculationMetadata == null) return null;
-
-    try {
-      final decoded = jsonDecode(exercise.calculationMetadata!);
-      return {
-        'confidence': _parseConfidence(decoded['confidence']),
-        'dataPoints': decoded['dataPoints'] ?? 0,
-        'formula': decoded['formula'] ?? 'Brzycki',
-        'dataAge': Duration(days: decoded['dataAge']?['inDays'] ?? 0),
-        'standardDeviation': decoded['standardDeviation']?.toDouble() ?? 0.0,
-      };
-    } catch (e) {
-      if (kDebugMode) {
-        debugPrint('⚠️ Error parsing calculation metadata: $e');
-      }
-      return null;
-    }
-  }
-
-  /// Parses confidence string to enum
-  CalculationConfidence _parseConfidence(dynamic confidence) {
-    if (confidence == null) return CalculationConfidence.unknown;
-    if (confidence is CalculationConfidence) return confidence;
-
-    final confStr = confidence.toString().toLowerCase();
-    switch (confStr) {
-      case 'veryhigh':
-        return CalculationConfidence.veryHigh;
-      case 'high':
-        return CalculationConfidence.high;
-      case 'medium':
-        return CalculationConfidence.medium;
-      case 'low':
-        return CalculationConfidence.low;
-      default:
-        return CalculationConfidence.unknown;
-    }
   }
 
   /// Shows delete confirmation dialog

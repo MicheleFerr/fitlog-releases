@@ -69,6 +69,18 @@ class SyncStatusToast {
     );
   }
 
+  /// Mostra celebrazione completamento workout con messaggio motivazionale
+  ///
+  /// Usare quando workout è completato con successo (local + cloud).
+  /// Tipo: Success (verde) con messaggio motivazionale
+  static void showWorkoutCompletedWithMotivation(BuildContext context) {
+    SnackBarService.showSuccess(
+      context,
+      '${context.l10n.workoutSaved} 💪 ${context.l10n.consistencyIsKey}',
+      duration: const Duration(seconds: 4),
+    );
+  }
+
   /// Mostra "Sincronizzazione cloud..." (sync in corso)
   ///
   /// Usare quando il batch writer sta sincronizzando con cloud.

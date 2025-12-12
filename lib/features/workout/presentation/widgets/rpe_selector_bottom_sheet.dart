@@ -366,6 +366,40 @@ class _RpeSelectorBottomSheetState extends ConsumerState<RpeSelectorBottomSheet>
     ];
   }
 
+  /// ✅ NEW: Auto-confirm with the selected RPE value (2-tap UX)
+  void _autoConfirmWithRpe(int rpe) {
+    HapticFeedback.mediumImpact();
+
+    if (widget.isPartOfSuperset) {
+      // Save data for this exercise in superset
+      _supersetCompleteData[_currentExerciseIndex] = SupersetExerciseCompleteData(
+        actualReps: _actualReps,
+        actualWeight: _actualWeight,
+        rpe: rpe,
+      );
+
+      if (_allExercisesCompleted() && widget.onSupersetCompleteAll != null) {
+        // All exercises completed → close and callback
+        Navigator.of(context).pop();
+        widget.onSupersetCompleteAll!(_supersetCompleteData);
+      } else {
+        // Advance to next exercise automatically
+        if (_currentExerciseIndex < (widget.supersetExercises?.length ?? 0) - 1) {
+          _pageController?.animateToPage(
+            _currentExerciseIndex + 1,
+            duration: const Duration(milliseconds: 300),
+            curve: Curves.easeInOut,
+          );
+        }
+      }
+    } else {
+      // Single exercise: close and confirm
+      Navigator.of(context).pop();
+      final (actualReps, actualWeight) = _getConfirmData();
+      widget.onConfirm(actualReps, actualWeight, rpe);
+    }
+  }
+
   Widget _buildRpeScale(ThemeData theme, ColorScheme colorScheme, bool useRir) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -380,9 +414,16 @@ class _RpeSelectorBottomSheetState extends ConsumerState<RpeSelectorBottomSheet>
             padding: const EdgeInsets.symmetric(horizontal: 3),
             child: GestureDetector(
               onTap: () {
+                // ✅ NEW: Auto-confirm on tap (2-tap UX: tap set → tap RPE = done)
                 setState(() {
-                  _selectedRpe = (_selectedRpe == rpe) ? null : rpe;
+                  _selectedRpe = rpe;
                   _updateRir();
+                });
+                // Small delay for visual feedback, then auto-confirm
+                Future.delayed(const Duration(milliseconds: 150), () {
+                  if (mounted) {
+                    _autoConfirmWithRpe(rpe);
+                  }
                 });
               },
               child: AnimatedContainer(
@@ -1003,8 +1044,8 @@ class _RpeSelectorBottomSheetState extends ConsumerState<RpeSelectorBottomSheet>
     bool useRir,
   ) {
     return Container(
-      margin: const EdgeInsets.all(16),
-      padding: const EdgeInsets.all(16),
+      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
         gradient: LinearGradient(
           colors: [
@@ -1045,7 +1086,7 @@ class _RpeSelectorBottomSheetState extends ConsumerState<RpeSelectorBottomSheet>
 ),
               const SizedBox(width: 8),
               Text(
-                l10n.rpeAutoregulation,
+                useRir ? l10n.rirAutoregulation : l10n.rpeAutoregulation,
                 style: theme.textTheme.titleSmall?.copyWith(
                   fontWeight: FontWeight.bold,
                   color: colorScheme.primary,
@@ -1053,7 +1094,7 @@ class _RpeSelectorBottomSheetState extends ConsumerState<RpeSelectorBottomSheet>
               ),
             ],
           ),
-          const SizedBox(height: 12),
+          const SizedBox(height: 6),
           // Display actual effort value based on preference
           Text(
             suggestion.actualRPE != null
@@ -1085,9 +1126,9 @@ class _RpeSelectorBottomSheetState extends ConsumerState<RpeSelectorBottomSheet>
               '${l10n.targetRir}: ${suggestion.targetRIR}',
               style: theme.textTheme.bodyMedium,
             ),
-          const SizedBox(height: 8),
+          const SizedBox(height: 6),
           Container(
-            padding: const EdgeInsets.all(12),
+            padding: const EdgeInsets.all(8),
             decoration: BoxDecoration(
               color: colorScheme.surface.withValues(alpha: 0.7),
               borderRadius: BorderRadius.circular(8),
@@ -1151,7 +1192,7 @@ class _RpeSelectorBottomSheetState extends ConsumerState<RpeSelectorBottomSheet>
               ],
             ),
           ),
-          const SizedBox(height: 8),
+          const SizedBox(height: 4),
           Text(
             _getLocalizedAdjustmentReason(l10n, suggestion),
             style: theme.textTheme.bodySmall?.copyWith(
@@ -1845,21 +1886,19 @@ class _RpeSelectorBottomSheetState extends ConsumerState<RpeSelectorBottomSheet>
       ),
     );
 
-    // If part of a superset, use a PageView
+    // If part of a superset, use a PageView with explicit height
+    // ✅ FIX: IntrinsicHeight + PageView causes layout failure - PageView needs explicit constraints
     if (widget.isPartOfSuperset) {
-      return ConstrainedBox(
-        constraints: BoxConstraints(
-          maxHeight: MediaQuery.of(context).size.height * 0.80,
-        ),
-        child: IntrinsicHeight(
-          child: PageView.builder(
-            controller: _pageController,
-            itemCount: widget.supersetExercises?.length ?? 0,
-            onPageChanged: _onPageChanged,
-            itemBuilder: (context, index) {
-              return mainContent;
-            },
-          ),
+      return SizedBox(
+        // Use fixed height for superset mode (PageView can't calculate intrinsic height)
+        height: MediaQuery.of(context).size.height * 0.75,
+        child: PageView.builder(
+          controller: _pageController,
+          itemCount: widget.supersetExercises?.length ?? 0,
+          onPageChanged: _onPageChanged,
+          itemBuilder: (context, index) {
+            return mainContent;
+          },
         ),
       );
     }

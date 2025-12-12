@@ -154,10 +154,11 @@ class _ExplanationSheetState extends State<_ExplanationSheet> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     
+    final safeMax = ModalService.safeMaxChildSize(context, preferredMax: 0.9);
     return DraggableScrollableSheet(
       initialChildSize: 0.6,
       minChildSize: 0.4,
-      maxChildSize: 0.9,
+      maxChildSize: safeMax,
       builder: (context, scrollController) => DecoratedBox(
         decoration: BoxDecoration(
           color: theme.colorScheme.surface,

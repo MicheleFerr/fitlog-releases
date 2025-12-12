@@ -41,11 +41,13 @@ class WeeklyModal extends StatefulWidget {
   const WeeklyModal({
     required this.exerciseHistories,
     required this.weeklyWorkouts,
+    this.scrollController,
     super.key,
   });
 
   final List<ExerciseHistory> exerciseHistories;
   final int weeklyWorkouts;
+  final ScrollController? scrollController;
 
   @override
   State<WeeklyModal> createState() => _WeeklyModalState();
@@ -113,44 +115,41 @@ class _WeeklyModalState extends State<WeeklyModal> {
       ),
       child: SafeArea(
         top: false,
-        child: SingleChildScrollView(
+        child: ListView(
+          controller: widget.scrollController,
           padding: const EdgeInsets.all(20),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // Header
-              _buildHeader(context),
-              const SizedBox(height: 20),
+          children: [
+            // Header
+            _buildHeader(context),
+            const SizedBox(height: 20),
 
-              // Weekly workout card
-              _buildWeeklyCard(context),
-              const SizedBox(height: 24),
+            // Weekly workout card
+            _buildWeeklyCard(context),
+            const SizedBox(height: 24),
 
-              // Calendar view (7 days)
-              _buildWeeklyCalendar(context, weekDays),
-              const SizedBox(height: 24),
+            // Calendar view (7 days)
+            _buildWeeklyCalendar(context, weekDays),
+            const SizedBox(height: 24),
 
-              // Consistency progress
-              _buildConsistencyProgress(context, consistencyPercent),
-              const SizedBox(height: 24),
+            // Consistency progress
+            _buildConsistencyProgress(context, consistencyPercent),
+            const SizedBox(height: 24),
 
-              // Motivational message
-              _buildMotivationalBanner(context, motivationalMessage),
-              const SizedBox(height: 24),
+            // Motivational message
+            _buildMotivationalBanner(context, motivationalMessage),
+            const SizedBox(height: 24),
 
-              // Tips section
-              _buildTipsSection(context),
-              const SizedBox(height: 24),
+            // Tips section
+            _buildTipsSection(context),
+            const SizedBox(height: 24),
 
-              // Weekly goal setter
-              _buildWeeklyGoalSetter(context),
-              const SizedBox(height: 24),
+            // Weekly goal setter
+            _buildWeeklyGoalSetter(context),
+            const SizedBox(height: 24),
 
-              // Close button
-              _buildCloseButton(context),
-            ],
-          ),
+            // Close button
+            _buildCloseButton(context),
+          ],
         ),
       ),
     );

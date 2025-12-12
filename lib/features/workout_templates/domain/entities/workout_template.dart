@@ -57,8 +57,10 @@ abstract class CommunityWorkoutTemplate with _$CommunityWorkoutTemplate {
     required String name,
     String? description,
     required List<Exercise> exercises,
-    required TemplateCategory category,
-    required TemplateVisibility visibility,
+    // Default to 'custom' for templates created before category was added
+    @Default(TemplateCategory.custom) TemplateCategory category,
+    // Default to 'private' for templates created before visibility was added
+    @Default(TemplateVisibility.private) TemplateVisibility visibility,
     
     // Metadata
     required DateTime createdAt,

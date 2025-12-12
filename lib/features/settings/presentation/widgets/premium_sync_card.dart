@@ -12,6 +12,7 @@
 /// - Material Design 3
 library;
 
+import 'package:flutter/foundation.dart' show kDebugMode;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/core/data/providers/hive_box_manager_provider.dart';
@@ -101,7 +102,9 @@ class SyncStateNotifier extends Notifier<SyncState> {
       final dataSource = HiveWorkoutDataSource(boxManager);
       
       // PRIMA: Fix sync status per workout esistenti
-      debugPrint('🔧 Checking and fixing sync status for existing workouts...');
+      if (kDebugMode) {
+        debugPrint('🔧 Checking and fixing sync status for existing workouts...');
+      }
       await _fixSyncStatusForExistingWorkouts(userId);
       
       final unsyncedWorkouts = await dataSource.getUnsyncedWorkouts(userId);
@@ -146,7 +149,9 @@ class SyncStateNotifier extends Notifier<SyncState> {
           processed++;
         } catch (e) {
           failed++;
-          debugPrint('Failed to sync workout: $e');
+          if (kDebugMode) {
+            debugPrint('Failed to sync workout: $e');
+          }
         }
       }
 
@@ -195,7 +200,9 @@ class SyncStateNotifier extends Notifier<SyncState> {
           .where((key) => key.toString().startsWith('${userId}_'))
           .toList();
       
-      debugPrint('🔍 Found ${userKeys.length} total workout keys for user: $userId');
+      if (kDebugMode) {
+        debugPrint('🔍 Found ${userKeys.length} total workout keys for user: $userId');
+      }
       debugPrint('🔍 All box keys: ${box.keys.toList()}');
       
       int fixedCount = 0;
@@ -217,18 +224,26 @@ class SyncStateNotifier extends Notifier<SyncState> {
             await box.put(key, data);
             fixedCount++;
             
-            debugPrint('Fixed workout: $key - set syncStatus to pending');
+            if (kDebugMode) {
+              debugPrint('Fixed workout: $key - set syncStatus to pending');
+            }
           }
         }
       }
       
       if (fixedCount > 0) {
-        debugPrint('✅ Fixed $fixedCount workouts to have proper sync status');
+        if (kDebugMode) {
+          debugPrint('✅ Fixed $fixedCount workouts to have proper sync status');
+        }
       } else {
-        debugPrint('ℹ️ All workouts already have proper sync status');
+        if (kDebugMode) {
+          debugPrint('ℹ️ All workouts already have proper sync status');
+        }
       }
     } catch (e) {
-      debugPrint('⚠️ Error fixing sync status: $e');
+      if (kDebugMode) {
+        debugPrint('⚠️ Error fixing sync status: $e');
+      }
       // Non-fatal, continue with sync attempt
     }
   }
@@ -259,7 +274,9 @@ class PremiumSyncCard extends ConsumerWidget {
     
     // Debug log for admin detection
     if (isAdmin) {
-      debugPrint('🔑 Admin access detected for: $userEmail');
+      if (kDebugMode) {
+        debugPrint('🔑 Admin access detected for: $userEmail');
+      }
     }
     
     if (!canSync) {

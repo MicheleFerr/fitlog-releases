@@ -13,6 +13,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:gymbro_flutter_new/core/providers/tier_entitlements_provider.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/providers/workout_provider.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/providers/workout_template_provider.dart';
@@ -27,8 +28,10 @@ class TemplateSaveHelper {
     if (currentWorkout == null) return;
 
     try {
-      final quotaInfo = await _checkUserQuota();
-      
+      // Get tier-based template limit
+      final tierMaxTemplates = ref.read(maxTemplatesProvider);
+      final quotaInfo = await _checkUserQuota(tierMaxTemplates);
+
       if (quotaInfo.isExceeded) {
         _showQuotaExceededDialog(context, quotaInfo);
         return;
@@ -40,27 +43,25 @@ class TemplateSaveHelper {
     }
   }
 
-  static Future<_QuotaInfo> _checkUserQuota() async {
+  static Future<_QuotaInfo> _checkUserQuota(int tierMaxTemplates) async {
     final userDoc = await FirebaseFirestore.instance
         .collection('users')
         .doc(FirebaseAuth.instance.currentUser?.uid)
         .get();
-    
+
     int usedTemplates = 0;
-    int maxTemplates = 10;
-    
+
     if (userDoc.exists) {
       final data = userDoc.data()!;
       final quotaData = data['templateQuota'] as Map<String, dynamic>?;
       if (quotaData != null) {
         usedTemplates = quotaData['usedPrivateTemplates'] ?? 0;
-        maxTemplates = quotaData['maxPrivateTemplates'] ?? 10;
       }
     }
-    
+
     return _QuotaInfo(
       usedTemplates: usedTemplates,
-      maxTemplates: maxTemplates,
+      maxTemplates: tierMaxTemplates,
     );
   }
 

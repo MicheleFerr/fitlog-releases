@@ -9,7 +9,6 @@
 library;
 
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/workout.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/workout_template.dart';
@@ -25,8 +24,7 @@ import 'package:gymbro_flutter_new/shared/presentation/mixins/safe_set_state_mix
 /// Dialog options for template save
 enum TemplateSaveOption {
   updateTemplate,
-  saveAsNew,
-  keepOriginal,
+  discardChanges,
 }
 
 /// Result from the template save dialog
@@ -42,21 +40,30 @@ class TemplateSaveResult {
 
 /// Shows a dialog after workout completion to let user choose template save option
 ///
-/// Returns [TemplateSaveResult] with the user's choice, or null if dismissed
+/// Returns [TemplateSaveResult] with the user's choice
+///
+/// Close behavior: When dismissed without explicit choice, defaults to save changes
+/// to prevent accidental data loss.
 Future<TemplateSaveResult?> showTemplateSaveDialog({
   required BuildContext context,
   required Workout completedWorkout,
   required WorkoutTemplate originalTemplate,
-}) {
-  return showModalBottomSheet<TemplateSaveResult>(
+}) async {
+  final result = await showModalBottomSheet<TemplateSaveResult>(
     context: context,
     isScrollControlled: true,
+    isDismissible: true,
+    enableDrag: true,
     backgroundColor: Colors.transparent,
     builder: (context) => _TemplateSaveDialogContent(
       completedWorkout: completedWorkout,
       originalTemplate: originalTemplate,
     ),
   );
+
+  // If dismissed without choice (swipe to close), default to update template
+  // to prevent accidental data loss
+  return result ?? const TemplateSaveResult(option: TemplateSaveOption.updateTemplate);
 }
 
 class _TemplateSaveDialogContent extends ConsumerStatefulWidget {
@@ -76,31 +83,17 @@ class _TemplateSaveDialogContent extends ConsumerStatefulWidget {
 class _TemplateSaveDialogContentState
     extends ConsumerState<_TemplateSaveDialogContent>
     with SafeSetStateMixin {
-  TemplateSaveOption _selectedOption = TemplateSaveOption.keepOriginal;
-  final TextEditingController _nameController = TextEditingController();
   bool _isLoading = false;
-
-  @override
-  void initState() {
-    super.initState();
-    _nameController.text = '${widget.originalTemplate.name} (2)';
-  }
-
-  @override
-  void dispose() {
-    _nameController.dispose();
-    super.dispose();
-  }
 
   @override
   Widget build(BuildContext context) {
     final changes = _detectChanges();
 
     return Container(
-      margin: const EdgeInsets.all(AppSpacing.md),
+      padding: const EdgeInsets.all(AppSpacing.lg),
       decoration: BoxDecoration(
         color: context.colors.surface,
-        borderRadius: BorderRadius.circular(24),
+        borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
       ),
       child: Column(
         mainAxisSize: MainAxisSize.min,
@@ -109,7 +102,7 @@ class _TemplateSaveDialogContentState
           // Handle bar
           Center(
             child: Container(
-              margin: const EdgeInsets.only(top: AppSpacing.sm),
+              margin: const EdgeInsets.only(bottom: AppSpacing.md),
               width: 40,
               height: 4,
               decoration: BoxDecoration(
@@ -119,173 +112,132 @@ class _TemplateSaveDialogContentState
             ),
           ),
 
-          // Header
-          Padding(
-            padding: const EdgeInsets.all(AppSpacing.lg),
-            child: Column(
-              children: [
-                Container(
-                  padding: const EdgeInsets.all(12),
-                  decoration: BoxDecoration(
-                    color: context.colors.primary.withValues(alpha: 0.1),
-                    shape: BoxShape.circle,
-                  ),
-                  child: SemanticIcon(
-                    icon: AppIcons.save,
-                    semanticLabel: context.l10n.saveTemplate,
-                    size: AppIconSize.large,
-                    color: context.colors.primary,
-                  ),
+          // Compact header with icon
+          Row(
+            children: [
+              Container(
+                padding: const EdgeInsets.all(10),
+                decoration: BoxDecoration(
+                  color: context.colors.primary.withValues(alpha: 0.1),
+                  borderRadius: BorderRadius.circular(12),
                 ),
-                const SizedBox(height: 16),
-                Text(
-                  context.l10n.saveTemplateChanges,
-                  style: context.textTheme.titleLarge?.copyWith(
-                    fontWeight: FontWeight.bold,
-                  ),
-                  textAlign: TextAlign.center,
+                child: SemanticIcon(
+                  icon: AppIcons.save,
+                  semanticLabel: context.l10n.saveTemplate,
+                  size: AppIconSize.medium,
+                  color: context.colors.primary,
                 ),
-                const SizedBox(height: 8),
-                Text(
-                  context.l10n.workoutModifiedFromTemplate(
-                    widget.originalTemplate.name,
-                  ),
-                  style: context.textTheme.bodyMedium?.copyWith(
-                    color: context.colors.onSurfaceVariant,
-                  ),
-                  textAlign: TextAlign.center,
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      context.l10n.saveTemplateChanges,
+                      style: context.textTheme.titleMedium?.copyWith(
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    Text(
+                      widget.originalTemplate.name,
+                      style: context.textTheme.bodySmall?.copyWith(
+                        color: context.colors.onSurfaceVariant,
+                      ),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ],
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
 
-          // Changes summary
+          const SizedBox(height: AppSpacing.md),
+
+          // Compact changes summary
           if (changes.isNotEmpty) ...[
             Container(
-              margin: const EdgeInsets.symmetric(horizontal: AppSpacing.lg),
               padding: const EdgeInsets.all(12),
               decoration: BoxDecoration(
                 color: context.colors.surfaceContainerHighest,
                 borderRadius: BorderRadius.circular(12),
               ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+              child: Row(
                 children: [
-                  Text(
-                    context.l10n.changesDetected,
-                    style: context.textTheme.labelMedium?.copyWith(
-                      fontWeight: FontWeight.bold,
-                      color: context.colors.primary,
-                    ),
+                  SemanticIcon(
+                    icon: AppIcons.info,
+                    semanticLabel: context.l10n.changesDetected,
+                    size: AppIconSize.small,
+                    color: context.colors.primary,
                   ),
-                  const SizedBox(height: 8),
-                  ...changes.map(
-                    (change) => Padding(
-                      padding: const EdgeInsets.only(bottom: 4),
-                      child: Row(
-                        children: [
-                          SemanticIcon(
-                            icon: AppIcons.checkCircle,
-                            semanticLabel: change,
-                            size: AppIconSize.tiny,
-                            color: context.colors.primary,
-                          ),
-                          const SizedBox(width: 8),
-                          Expanded(
-                            child: Text(
-                              change,
-                              style: context.textTheme.bodySmall,
-                            ),
-                          ),
-                        ],
+                  const SizedBox(width: 8),
+                  Expanded(
+                    child: Text(
+                      changes.join(' • '),
+                      style: context.textTheme.bodySmall?.copyWith(
+                        color: context.colors.onSurfaceVariant,
                       ),
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
                     ),
                   ),
                 ],
               ),
             ),
-            const SizedBox(height: 16),
+            const SizedBox(height: AppSpacing.md),
           ],
 
-          // Options
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: AppSpacing.lg),
-            child: Column(
-              children: [
-                _buildOptionTile(
-                  option: TemplateSaveOption.updateTemplate,
-                  icon: AppIcons.edit,
-                  title: context.l10n.updateTemplate,
-                  subtitle: context.l10n.updateTemplateDescription,
-                ),
-                const SizedBox(height: 8),
-                _buildOptionTile(
-                  option: TemplateSaveOption.saveAsNew,
-                  icon: AppIcons.add,
-                  title: context.l10n.saveAsNewTemplate,
-                  subtitle: context.l10n.saveAsNewTemplateDescription,
-                ),
-                const SizedBox(height: 8),
-                _buildOptionTile(
-                  option: TemplateSaveOption.keepOriginal,
-                  icon: AppIcons.close,
-                  title: context.l10n.keepOriginal,
-                  subtitle: context.l10n.keepOriginalDescription,
-                ),
-              ],
+          // Two clear action buttons
+          FilledButton.icon(
+            onPressed: _isLoading ? null : () => _handleChoice(TemplateSaveOption.updateTemplate),
+            icon: _isLoading
+                ? SizedBox(
+                    height: 18,
+                    width: 18,
+                    child: CircularProgressIndicator(
+                      strokeWidth: 2,
+                      color: context.colors.onPrimary,
+                    ),
+                  )
+                : SemanticIcon(
+                    icon: AppIcons.save,
+                    semanticLabel: context.l10n.updateTemplate,
+                    size: AppIconSize.small,
+                    color: context.colors.onPrimary,
+                  ),
+            label: Text(context.l10n.updateTemplate),
+            style: FilledButton.styleFrom(
+              padding: const EdgeInsets.symmetric(vertical: 14),
             ),
           ),
 
-          // New template name field (only when saveAsNew is selected)
-          if (_selectedOption == TemplateSaveOption.saveAsNew)
-            Padding(
-              padding: const EdgeInsets.fromLTRB(AppSpacing.lg, AppSpacing.md, AppSpacing.lg, 0),
-              child: TextField(
-                controller: _nameController,
-                decoration: InputDecoration(
-                  labelText: context.l10n.templateName,
-                  hintText: context.l10n.enterTemplateName,
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  prefixIcon: SemanticIcon(
-                    icon: AppIcons.listAlt,
-                    semanticLabel: context.l10n.templateName,
-                  ),
-                ),
-                textCapitalization: TextCapitalization.sentences,
-              ),
-            ),
+          const SizedBox(height: 8),
 
-          // Actions
+          OutlinedButton.icon(
+            onPressed: _isLoading ? null : () => _handleChoice(TemplateSaveOption.discardChanges),
+            icon: SemanticIcon(
+              icon: AppIcons.close,
+              semanticLabel: context.l10n.keepOriginal,
+              size: AppIconSize.small,
+              color: context.colors.onSurfaceVariant,
+            ),
+            label: Text(context.l10n.keepOriginal),
+            style: OutlinedButton.styleFrom(
+              padding: const EdgeInsets.symmetric(vertical: 14),
+              foregroundColor: context.colors.onSurfaceVariant,
+            ),
+          ),
+
+          // Hint about swipe behavior
           Padding(
-            padding: const EdgeInsets.all(AppSpacing.lg),
-            child: Row(
-              children: [
-                Expanded(
-                  child: OutlinedButton(
-                    onPressed: _isLoading ? null : () => Navigator.pop(context),
-                    child: Text(context.l10n.cancel),
-                  ),
-                ),
-                const SizedBox(width: 12),
-                Expanded(
-                  flex: 2,
-                  child: FilledButton(
-                    onPressed: _isLoading ? null : _handleConfirm,
-                    child: _isLoading
-                        ? SizedBox(
-                            height: 20,
-                            width: 20,
-                            child: CircularProgressIndicator(
-                              strokeWidth: 2,
-                              color: context.colors.onPrimary,
-                            ),
-                          )
-                        : Text(context.l10n.confirm),
-                  ),
-                ),
-              ],
+            padding: const EdgeInsets.only(top: AppSpacing.sm),
+            child: Text(
+              context.l10n.swipeDownToSave,
+              style: context.textTheme.labelSmall?.copyWith(
+                color: context.colors.outline,
+              ),
+              textAlign: TextAlign.center,
             ),
           ),
 
@@ -296,90 +248,36 @@ class _TemplateSaveDialogContentState
     );
   }
 
-  Widget _buildOptionTile({
-    required TemplateSaveOption option,
-    required IconData icon,
-    required String title,
-    required String subtitle,
-  }) {
-    final isSelected = _selectedOption == option;
+  Future<void> _handleChoice(TemplateSaveOption option) async {
+    if (option == TemplateSaveOption.discardChanges) {
+      // Discard - just close without saving
+      Navigator.pop(
+        context,
+        const TemplateSaveResult(option: TemplateSaveOption.discardChanges),
+      );
+      return;
+    }
 
-    return Material(
-      color: Colors.transparent,
-      child: InkWell(
-        onTap: () {
-          HapticFeedback.selectionClick();
-          safeSetState(() => _selectedOption = option);
-        },
-        borderRadius: BorderRadius.circular(12),
-        child: Container(
-          padding: const EdgeInsets.all(12),
-          decoration: BoxDecoration(
-            color: isSelected
-                ? context.colors.primary.withValues(alpha: 0.1)
-                : context.colors.surfaceContainerHighest,
-            borderRadius: BorderRadius.circular(12),
-            border: Border.all(
-              color: isSelected
-                  ? context.colors.primary
-                  : context.colors.outlineVariant.withValues(alpha: 0.3),
-              width: isSelected ? 2 : 1,
-            ),
-          ),
-          child: Row(
-            children: [
-              Container(
-                padding: const EdgeInsets.all(8),
-                decoration: BoxDecoration(
-                  color: isSelected
-                      ? context.colors.primary.withValues(alpha: 0.2)
-                      : context.colors.surfaceContainerHigh,
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                child: SemanticIcon(
-                  icon: icon,
-                  semanticLabel: title,
-                  size: AppIconSize.medium,
-                  color: isSelected
-                      ? context.colors.primary
-                      : context.colors.onSurfaceVariant,
-                ),
-              ),
-              const SizedBox(width: 12),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      title,
-                      style: context.textTheme.titleSmall?.copyWith(
-                        fontWeight: FontWeight.bold,
-                        color: isSelected
-                            ? context.colors.primary
-                            : context.colors.onSurface,
-                      ),
-                    ),
-                    Text(
-                      subtitle,
-                      style: context.textTheme.bodySmall?.copyWith(
-                        color: context.colors.onSurfaceVariant,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              if (isSelected)
-                SemanticIcon(
-                  icon: AppIcons.checkCircle,
-                  semanticLabel: context.l10n.selected,
-                  size: AppIconSize.medium,
-                  color: context.colors.primary,
-                ),
-            ],
-          ),
-        ),
-      ),
-    );
+    // Save changes
+    safeSetState(() => _isLoading = true);
+
+    try {
+      await _updateTemplate();
+      if (mounted) {
+        Navigator.pop(
+          context,
+          const TemplateSaveResult(option: TemplateSaveOption.updateTemplate),
+        );
+      }
+    } catch (e) {
+      if (mounted) {
+        SnackBarService.showError(
+          context,
+          context.l10n.failedToSaveTemplate,
+        );
+        safeSetState(() => _isLoading = false);
+      }
+    }
   }
 
   List<String> _detectChanges() {
@@ -433,47 +331,6 @@ class _TemplateSaveDialogContentState
     return changes;
   }
 
-  Future<void> _handleConfirm() async {
-    safeSetState(() => _isLoading = true);
-
-    try {
-      switch (_selectedOption) {
-        case TemplateSaveOption.updateTemplate:
-          await _updateTemplate();
-          break;
-        case TemplateSaveOption.saveAsNew:
-          await _saveAsNewTemplate();
-          break;
-        case TemplateSaveOption.keepOriginal:
-          // Nothing to do - just close
-          break;
-      }
-
-      if (mounted) {
-        Navigator.pop(
-          context,
-          TemplateSaveResult(
-            option: _selectedOption,
-            newTemplateName: _selectedOption == TemplateSaveOption.saveAsNew
-                ? _nameController.text
-                : null,
-          ),
-        );
-      }
-    } catch (e) {
-      if (mounted) {
-        SnackBarService.showError(
-          context,
-          context.l10n.failedToSaveTemplate,
-        );
-      }
-    } finally {
-      if (mounted) {
-        safeSetState(() => _isLoading = false);
-      }
-    }
-  }
-
   Future<void> _updateTemplate() async {
     final updatedTemplate = widget.originalTemplate.copyWith(
       exercises: widget.completedWorkout.exercises.map((ex) {
@@ -504,27 +361,6 @@ class _TemplateSaveDialogContentState
       SnackBarService.showSuccess(
         context,
         context.l10n.templateUpdated,
-      );
-    }
-  }
-
-  Future<void> _saveAsNewTemplate() async {
-    final name = _nameController.text.trim();
-    if (name.isEmpty) {
-      SnackBarService.showError(context, context.l10n.pleaseEnterTemplateName);
-      return;
-    }
-
-    await ref.read(workoutTemplateNotifierProvider.notifier).createTemplateFromWorkout(
-      name: name,
-      description: '', // Empty description for now
-      exercises: widget.completedWorkout.exercises,
-    );
-
-    if (mounted) {
-      SnackBarService.showSuccess(
-        context,
-        context.l10n.templateCreated,
       );
     }
   }

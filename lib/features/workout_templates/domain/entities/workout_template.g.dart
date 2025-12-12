@@ -16,8 +16,12 @@ _CommunityWorkoutTemplate _$CommunityWorkoutTemplateFromJson(
   exercises: (json['exercises'] as List<dynamic>)
       .map((e) => Exercise.fromJson(e as Map<String, dynamic>))
       .toList(),
-  category: $enumDecode(_$TemplateCategoryEnumMap, json['category']),
-  visibility: $enumDecode(_$TemplateVisibilityEnumMap, json['visibility']),
+  category:
+      $enumDecodeNullable(_$TemplateCategoryEnumMap, json['category']) ??
+      TemplateCategory.custom,
+  visibility:
+      $enumDecodeNullable(_$TemplateVisibilityEnumMap, json['visibility']) ??
+      TemplateVisibility.private,
   createdAt: DateTime.parse(json['createdAt'] as String),
   updatedAt: json['updatedAt'] == null
       ? null

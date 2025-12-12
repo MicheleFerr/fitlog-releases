@@ -133,27 +133,26 @@ class FitLogApp extends ConsumerWidget {
 
     // ✅ FIX #5: If router creation fails (e.g., provider errors), show error screen
     // This prevents black screen when providers fail to initialize
+    // NOTE: _AppLifecycleObserver REMOVED - lifecycle handled by AppLifecycleManager (centralized)
     try {
-      return _AppLifecycleObserver(
-        child: MaterialApp.router(
-          title: 'FitLog Pro',
-          theme: _buildThemeWithFontSize(AppTheme.buildLightTheme(config.primaryColor), config.fontSize),
-          darkTheme: _buildThemeWithFontSize(AppTheme.buildDarkTheme(config.primaryColor), config.fontSize),
-          themeMode: themeMode,
-          locale: locale,
-          localizationsDelegates: const [
-            AppLocalizations.delegate,
-            GlobalMaterialLocalizations.delegate,
-            GlobalWidgetsLocalizations.delegate,
-            GlobalCupertinoLocalizations.delegate,
-          ],
-          supportedLocales: const [
-            Locale('en', 'US'),
-            Locale('it', 'IT'),
-          ],
-          routerConfig: router,
-          debugShowCheckedModeBanner: false,
-        ),
+      return MaterialApp.router(
+        title: 'FitLog Pro',
+        theme: _buildThemeWithFontSize(AppTheme.buildLightTheme(config.primaryColor), config.fontSize),
+        darkTheme: _buildThemeWithFontSize(AppTheme.buildDarkTheme(config.primaryColor), config.fontSize),
+        themeMode: themeMode,
+        locale: locale,
+        localizationsDelegates: const [
+          AppLocalizations.delegate,
+          GlobalMaterialLocalizations.delegate,
+          GlobalWidgetsLocalizations.delegate,
+          GlobalCupertinoLocalizations.delegate,
+        ],
+        supportedLocales: const [
+          Locale('en', 'US'),
+          Locale('it', 'IT'),
+        ],
+        routerConfig: router,
+        debugShowCheckedModeBanner: false,
       );
     } catch (e, stack) {
       // ✅ FIX #5: Graceful error handling - show error screen instead of black screen
@@ -215,11 +214,12 @@ class FitLogApp extends ConsumerWidget {
     }
   }
 
+  /// Build theme with font size scaling
   ThemeData _buildThemeWithFontSize(ThemeData baseTheme, double fontSize) {
     if (fontSize == 1.0) {
       return baseTheme;
     }
-    
+
     // Create a completely new text theme with scaled font sizes
     final originalTextTheme = baseTheme.textTheme;
     final scaledTextTheme = originalTextTheme.copyWith(
@@ -269,92 +269,23 @@ class FitLogApp extends ConsumerWidget {
         fontSize: (originalTextTheme.bodySmall?.fontSize ?? 12) * fontSize,
       ),
     );
-    
+
     return baseTheme.copyWith(textTheme: scaledTextTheme);
   }
 }
 
-/// ✅ FIX #3: Lifecycle Observer for Session Timeout Background/Foreground handling
-///
-/// Wraps the MaterialApp to observe app lifecycle state changes and notify
-/// the SessionTimeoutService to adjust timeout calculations when app goes
-/// to background/foreground, preventing premature logout when device is locked.
-class _AppLifecycleObserver extends ConsumerStatefulWidget {
-  const _AppLifecycleObserver({required this.child});
-
-  final Widget child;
-
-  @override
-  ConsumerState<_AppLifecycleObserver> createState() => _AppLifecycleObserverState();
-}
-
-class _AppLifecycleObserverState extends ConsumerState<_AppLifecycleObserver>
-    with WidgetsBindingObserver {
-
-  @override
-  void initState() {
-    super.initState();
-    WidgetsBinding.instance.addObserver(this);
-    if (kDebugMode) {
-      debugPrint('🔒 [FIX-3] AppLifecycleObserver registered');
-    }
-  }
-
-  @override
-  void dispose() {
-    WidgetsBinding.instance.removeObserver(this);
-    if (kDebugMode) {
-      debugPrint('🔒 [FIX-3] AppLifecycleObserver disposed');
-    }
-    super.dispose();
-  }
-
-  @override
-  void didChangeAppLifecycleState(AppLifecycleState state) {
-    super.didChangeAppLifecycleState(state);
-
-    try {
-      // SessionTimeoutService is monitored automatically via Timer.periodic
-      // No need to explicitly handle lifecycle changes
-
-      switch (state) {
-        case AppLifecycleState.paused:
-        case AppLifecycleState.inactive:
-          // App going to background
-          // SessionTimeoutService handles background automatically with Timer.periodic
-          if (kDebugMode) {
-            debugPrint('🌙 [FIX-3] App lifecycle: $state (session timeout continues)');
-          }
-          break;
-
-        case AppLifecycleState.resumed:
-          // App returning to foreground
-          // SessionTimeoutService is already running
-          if (kDebugMode) {
-            debugPrint('☀️ [FIX-3] App lifecycle: $state (session timeout active)');
-          }
-          break;
-
-        case AppLifecycleState.detached:
-        case AppLifecycleState.hidden:
-          // App terminating or hidden
-          if (kDebugMode) {
-            debugPrint('⚠️ [FIX-3] App lifecycle: $state (no action)');
-          }
-          break;
-      }
-    } catch (e) {
-      if (kDebugMode) {
-        debugPrint('❌ [FIX-3] Error handling app lifecycle: $e');
-      }
-    }
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return widget.child;
-  }
-}
+// NOTE: _AppLifecycleObserver REMOVED (was FIX #3)
+//
+// The class was 100% redundant - it only did logging with no actual action.
+// Its own comments stated: "SessionTimeoutService is monitored automatically via Timer.periodic
+// No need to explicitly handle lifecycle changes"
+//
+// All lifecycle handling is now centralized in AppLifecycleManager (single source of truth):
+// - Emergency workout save
+// - Template cache save
+// - Batch queue flush
+// - Workout forgotten notification
+// - Draft recovery
 
 /// Provider for initial deep link (set during cold-start from notifications)
 /// This is overridden in main.dart ProviderScope.overrides

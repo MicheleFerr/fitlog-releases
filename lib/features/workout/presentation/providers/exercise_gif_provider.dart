@@ -11,7 +11,6 @@
 library;
 
 import 'dart:convert';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/shared/presentation/providers/app_config_provider.dart';
@@ -35,33 +34,30 @@ final exercisesDatabaseProvider = FutureProvider<List<Map<String, dynamic>>>((re
         ? 'assets/data/exercises_it.json'
         : 'assets/data/exercises.json';
 
-    if (kDebugMode) {
-      debugPrint('🌍 Loading exercises database for language: $languageCode -> $fileName');
-    }
+    // Debug log removed - was causing spam during scroll
 
     final jsonString = await rootBundle.loadString(fileName);
     final List<dynamic> jsonList = json.decode(jsonString);
     return jsonList.cast<Map<String, dynamic>>();
-  } catch (e) {
-    if (kDebugMode) {
-      debugPrint('❌ Error loading exercises database: $e');
-    }
+  } catch (_) {
+    // Return empty list on error - no spam
     return [];
   }
 });
 
 /// Provider per ottenere l'URL della GIF di un esercizio specifico
+/// ✅ PERFORMANCE FIX: Added keepAlive to cache GIF URLs for entire session
+/// This prevents repeated database lookups when scrolling or rebuilding widgets
 final exerciseGifUrlProvider = Provider.family<AsyncValue<String?>, String>((ref, exerciseName) {
+  // Keep this provider alive to cache results
+  ref.keepAlive();
+
   final exercisesAsync = ref.watch(exercisesDatabaseProvider);
 
   return exercisesAsync.when(
     data: (exercises) {
       // Normalizza il nome dell'esercizio per il matching
       final normalizedName = _normalizeExerciseName(exerciseName);
-
-      if (kDebugMode) {
-        debugPrint('🔍 Searching GIF for: "$exerciseName" (normalized: "$normalizedName")');
-      }
 
       // Cerca l'esercizio nel database con matching flessibile
       try {
@@ -76,10 +72,6 @@ final exerciseGifUrlProvider = Provider.family<AsyncValue<String?>, String>((ref
 
         // Se non trova match esatto, prova match parziale
         if (exercise.isEmpty) {
-          if (kDebugMode) {
-            debugPrint('🔍 No exact match, trying partial match...');
-          }
-
           exercise = exercises.firstWhere(
             (ex) => _namesMatch(exerciseName, ex['nome'] ?? ''),
             orElse: () => <String, dynamic>{},
@@ -87,22 +79,9 @@ final exerciseGifUrlProvider = Provider.family<AsyncValue<String?>, String>((ref
         }
 
         final gifUrl = exercise['imageUrl'] as String?;
-
-        if (kDebugMode) {
-          if (gifUrl != null) {
-            debugPrint('✅ Found GIF for "$exerciseName": $gifUrl');
-          } else if (exercise.isNotEmpty) {
-            debugPrint('⚠️ Exercise found but no imageUrl for "$exerciseName"');
-          } else {
-            debugPrint('❌ Exercise not found in DB: "$exerciseName"');
-          }
-        }
-
         return AsyncValue.data(gifUrl);
       } catch (e) {
-        if (kDebugMode) {
-          debugPrint('❌ Error searching exercise: $e');
-        }
+        // Silently return null on error - no spam
         return const AsyncValue.data(null);
       }
     },

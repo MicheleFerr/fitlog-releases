@@ -14,7 +14,6 @@ import 'package:gymbro_flutter_new/core/providers/analytics_provider.dart';
 import 'package:gymbro_flutter_new/features/workout/data/providers/preset_service_provider.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/models/workout_preset.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
-import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
 
 /// Rep preset chips widget for quick selection
 ///
@@ -46,18 +45,20 @@ class RepPresetChips extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final presetService = ref.watch(presetServiceProvider);
+    // 🐛 BUG FIX: Use async provider to ensure service is initialized
+    final presetServiceAsync = ref.watch(presetServiceAsyncProvider);
     final analytics = ref.read(analyticsServiceProvider);
     final tracker = PresetSelectionTracker(analytics);
 
-    return FutureBuilder<List<RepRangePreset>>(
-      future: presetService.getRepRangePresets(),
-      builder: (context, snapshot) {
-        if (!snapshot.hasData) {
-          return const SizedBox.shrink();
-        }
+    return presetServiceAsync.when(
+      data: (presetService) => FutureBuilder<List<RepRangePreset>>(
+        future: presetService.getRepRangePresets(),
+        builder: (context, snapshot) {
+          if (!snapshot.hasData) {
+            return const SizedBox.shrink();
+          }
 
-        final presets = snapshot.data!;
+          final presets = snapshot.data!;
 
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -126,6 +127,9 @@ class RepPresetChips extends ConsumerWidget {
           ],
         );
       },
+    ),
+      loading: () => const SizedBox.shrink(),
+      error: (_, __) => const SizedBox.shrink(),
     );
   }
 
@@ -198,18 +202,20 @@ class SetCountPresetChips extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final presetService = ref.watch(presetServiceProvider);
+    // 🐛 BUG FIX: Use async provider to ensure service is initialized
+    final presetServiceAsync = ref.watch(presetServiceAsyncProvider);
     final analytics = ref.read(analyticsServiceProvider);
     final tracker = PresetSelectionTracker(analytics);
 
-    return FutureBuilder<List<SetCountPreset>>(
-      future: presetService.getSetCountPresets(),
-      builder: (context, snapshot) {
-        if (!snapshot.hasData) {
-          return const SizedBox.shrink();
-        }
+    return presetServiceAsync.when(
+      data: (presetService) => FutureBuilder<List<SetCountPreset>>(
+        future: presetService.getSetCountPresets(),
+        builder: (context, snapshot) {
+          if (!snapshot.hasData) {
+            return const SizedBox.shrink();
+          }
 
-        final presets = snapshot.data!;
+          final presets = snapshot.data!;
 
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -281,6 +287,9 @@ class SetCountPresetChips extends ConsumerWidget {
           ],
         );
       },
+    ),
+      loading: () => const SizedBox.shrink(),
+      error: (_, __) => const SizedBox.shrink(),
     );
   }
 }

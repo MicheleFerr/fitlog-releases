@@ -309,9 +309,17 @@ class VolumeDisplayWidget extends ConsumerWidget {
       context: context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
-      builder: (context) => VolumeDetailsModal(
-        currentVolume: volumeInKg,
-        dailyVolumeData: dailyData,
+      builder: (_) => DraggableScrollableSheet(
+        initialChildSize: 0.8,
+        minChildSize: 0.8,
+        maxChildSize: 1.0,
+        expand: false,
+        snap: true,
+        builder: (context, scrollController) => VolumeDetailsModal(
+          currentVolume: volumeInKg,
+          dailyVolumeData: dailyData,
+          scrollController: scrollController,
+        ),
       ),
     );
   }

@@ -77,7 +77,6 @@ class QueryExpander {
     'serie': ['sets', 'set', 'rounds'],
     'peso': ['weight', 'load', 'kg', 'carico'],
     'carico': ['weight', 'load', 'volume', 'peso', 'resistance'],
-    'volume': ['total volume', 'tonnage', 'volume totale'],
     'forza': ['strength', 'power', 'potenza'],
 
     // Time-related - English
@@ -107,6 +106,35 @@ class QueryExpander {
     'scalare': ['dropset', 'drop set', 'serie a scalare'],
     'piramidale': ['pyramid', 'pyramids', 'piramide'],
     'riscaldamento': ['warmup', 'warm-up', 'warm up', 'riscaldare'],
+    'cedimento': ['failure', 'to failure', 'muscular failure', 'esaurimento'],
+    'pompaggio': ['pump', 'pumping', 'pumped', 'pompare'],
+    'ipertrofia': ['hypertrophy', 'muscle growth', 'crescita muscolare'],
+    'definizione': ['cutting', 'cut', 'definition', 'lean'],
+    'massa': ['bulking', 'bulk', 'mass', 'muscle mass', 'massa muscolare'],
+    'cardio': ['cardiovascular', 'aerobic', 'conditioning', 'condizionamento'],
+
+    // More Italian exercise variations
+    'lento avanti': ['military press', 'ohp', 'overhead press', 'shoulder press'],
+    'tirate al mento': ['upright row', 'upright rows', 'face pull'],
+    'croci': ['fly', 'flies', 'cable fly', 'pec fly', 'chest fly'],
+    'dip': ['dips', 'parallele', 'dip parallele', 'chest dip', 'tricep dip'],
+    'parallele': ['dip', 'dips', 'parallel bars', 'dip alle parallele'],
+    'leg extension': ['quadriceps extension', 'leg ext', 'estensione gambe'],
+    'leg curl': ['hamstring curl', 'curl gambe', 'flessione gambe'],
+    'calf raise': ['polpacci', 'alzate polpacci', 'calf raises'],
+    'polpacci': ['calf', 'calves', 'calf raise', 'alzate polpacci'],
+    'lat machine': ['lat pulldown', 'pulldown', 'tirate lat', 'dorso'],
+    'pressa': ['leg press', 'pressa gambe', 'leg machine'],
+    'multipower': ['smith machine', 'smith', 'guided barbell'],
+
+    // Italian fitness colloquialisms
+    'pompare': ['pump', 'pumping', 'to pump', 'pompaggio'],
+    'bruciare': ['burn', 'burning', 'feel the burn', 'bruciore'],
+    'spaccare': ['crush', 'smash', 'kill', 'destroy', 'annihilare'],
+    'massacro': ['killer workout', 'brutal', 'intense', 'intenso'],
+    'sentire': ['feel', 'feeling', 'activation', 'connessione'],
+    'contrarre': ['contract', 'squeeze', 'contrazione', 'stringere'],
+    'allungare': ['stretch', 'stretching', 'elongate', 'stiramento'],
 
     // Common questions - English
     'progress': ['improvement', 'gains', 'progression', 'growth', 'progresso', 'miglioramento'],
@@ -155,6 +183,18 @@ class QueryExpander {
     'es': 'esercizio',
     'kg': 'chilogrammi',
     'lb': 'libbre',
+    'gvt': 'german volume training',
+    'tut': 'time under tension',
+    'hiit': 'high intensity interval training',
+    'liss': 'low intensity steady state',
+    'rom': 'range of motion',
+    'mmd': 'mind muscle connection',
+
+    // Performance metrics (IT short forms)
+    'vol': 'volume',
+    'freq': 'frequenza',
+    'int': 'intensità',
+    'prog': 'progressione',
   };
 
   /// Muscle group hierarchies
@@ -181,6 +221,19 @@ class QueryExpander {
     'perche': ['perché', 'perchè', 'why', 'how come'],
     'mostra': ['mostra', 'show', 'visualizza', 'fammi vedere'],
     'dimmi': ['dimmi', 'tell me', 'spiegami', 'explain'],
+
+    // Additional Italian question patterns
+    'quanto': ['how much', 'how many', 'quanti', 'che peso'],
+    'cosa': ['what', 'which', 'che cosa', 'che'],
+    'dove': ['where', 'in which', 'in quale'],
+    'aiuto': ['help', 'assist', 'aiutami', 'mi aiuti'],
+    'come_va': ['how is', 'how am i doing', 'come sto'],
+    'posso': ['can i', 'should i', 'may i', 'potrei'],
+    'devo': ['should i', 'must i', 'do i need to'],
+    'meglio': ['better', 'best', 'optimal', 'ottimale'],
+    'consiglio': ['advice', 'recommend', 'suggest', 'suggerisci'],
+    'storia': ['history', 'log', 'cronologia', 'storico'],
+    'analisi': ['analysis', 'analyze', 'analizza', 'valuta'],
   };
 
   /// Expand a query with related terms

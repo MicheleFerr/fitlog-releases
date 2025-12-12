@@ -1,15 +1,11 @@
-/// 🏋️‍♂️ GymBro TrackLog - Flutter Fitness App
-/// 
-/// 📁 Layer: presentation/widgets
-/// 🎯 Feature: workout
-/// 🔧 Type: widget
-/// 🌍 Localization: ✅ AppLocalizations used
-/// 🎨 Theme: ✅ ColorScheme responsive
-/// 📱 Platform: Universal - TIER 1 DESIGN PRO
-/// 
-/// Dependencies:
-/// - Riverpod: ConsumerWidget
-/// - Exercise History Provider
+/// GymBro TrackLog - Flutter Fitness App
+///
+/// Layer: presentation/widgets
+/// Feature: workout
+/// Type: widget
+///
+/// Clean exercise history bottom sheet following Material Design 3 principles.
+/// Matches the consistent design pattern used in ExerciseDetailsModal.
 library;
 
 import 'package:flutter/material.dart';
@@ -18,311 +14,65 @@ import 'package:intl/intl.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/providers/exercise_history_provider.dart';
 import 'package:gymbro_flutter_new/features/workout/data/services/exercise_history_service.dart';
-import 'package:flutter/foundation.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
 
 class ExerciseHistoryBottomSheet extends ConsumerStatefulWidget {
-
   const ExerciseHistoryBottomSheet({
     super.key,
     required this.exerciseName,
   });
+
   final String exerciseName;
 
   @override
-  ConsumerState<ExerciseHistoryBottomSheet> createState() => _ExerciseHistoryBottomSheetState();
+  ConsumerState<ExerciseHistoryBottomSheet> createState() =>
+      _ExerciseHistoryBottomSheetState();
 }
 
-class _ExerciseHistoryBottomSheetState extends ConsumerState<ExerciseHistoryBottomSheet> 
-    with TickerProviderStateMixin {
-  
-  late ScrollController _scrollController;
-  late AnimationController _headerAnimationController;
-  late AnimationController _statsAnimationController;
-  late Animation<double> _headerAnimation;
-  late Animation<double> _statsAnimation;
-  
+class _ExerciseHistoryBottomSheetState
+    extends ConsumerState<ExerciseHistoryBottomSheet> {
   final Map<DateTime, bool> _expandedDays = {};
-  
-  static const double _maxHeaderHeight = 140.0; // More compact header
-  static const double _minHeaderHeight = 70.0; // Smaller collapsed height
-  static const double _maxStatsHeight = 280.0; // Increased height to prevent cutting
-  
-  @override
-  void initState() {
-    super.initState();
-    
-    _scrollController = ScrollController();
-    _headerAnimationController = AnimationController(
-      duration: const Duration(milliseconds: 200),
-      vsync: this,
-    );
-    _statsAnimationController = AnimationController(
-      duration: const Duration(milliseconds: 300),
-      vsync: this,
-    );
-    
-    _headerAnimation = Tween<double>(
-      begin: 0.0,
-      end: 1.0,
-    ).animate(CurvedAnimation(
-      parent: _headerAnimationController,
-      curve: Curves.easeInOut,
-    ));
-    
-    _statsAnimation = Tween<double>(
-      begin: 0.0, 
-      end: 1.0,
-    ).animate(CurvedAnimation(
-      parent: _statsAnimationController,
-      curve: Curves.easeInOut,
-    ));
-    
-    _scrollController.addListener(_onScroll);
-  }
-  
-  @override
-  void dispose() {
-    _scrollController.dispose();
-    _headerAnimationController.dispose();
-    _statsAnimationController.dispose();
-    super.dispose();
-  }
-  
-  void _onScroll() {
-    const scrollThreshold = 120.0; // Lower threshold for header collapse
-    const statsScrollThreshold = 50.0; // Hide stats quickly when scrolling
-    
-    final scrollOffset = _scrollController.offset;
-    
-    // Header animation - collapse header when scrolling down
-    if (scrollOffset > scrollThreshold && _headerAnimationController.value < 1.0) {
-      _headerAnimationController.forward();
-    } else if (scrollOffset <= scrollThreshold && _headerAnimationController.value > 0.0) {
-      _headerAnimationController.reverse();
-    }
-    
-    // Stats animation - keep stats visible much longer
-    if (scrollOffset > statsScrollThreshold && _statsAnimationController.value < 1.0) {
-      _statsAnimationController.forward();
-    } else if (scrollOffset <= statsScrollThreshold && _statsAnimationController.value > 0.0) {
-      _statsAnimationController.reverse();
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
     final l10n = AppLocalizations.of(context);
-    
-    final historyAsync = ref.watch(exerciseHistoryDataGroupedProvider(widget.exerciseName));
-    final statsAsync = ref.watch(exerciseStatsFromActivitiesProvider(widget.exerciseName));
+    final historyAsync =
+        ref.watch(exerciseHistoryDataGroupedProvider(widget.exerciseName));
+    final statsAsync =
+        ref.watch(exerciseStatsFromActivitiesProvider(widget.exerciseName));
 
-    return Container(
-      height: MediaQuery.of(context).size.height * 0.88,
-      margin: const EdgeInsets.all(4),
-      decoration: BoxDecoration(
-        color: theme.colorScheme.surface,
-        borderRadius: BorderRadius.circular(20),
-        boxShadow: [
-          BoxShadow(
-            color: context.colors.onSurface.withValues(alpha: 0.06),
-            blurRadius: 40,
-            offset: const Offset(0, -12),
-            spreadRadius: 0,
-          ),
-          BoxShadow(
-            color: theme.colorScheme.primary.withValues(alpha: 0.03),
-            blurRadius: 20,
-            offset: const Offset(0, -4),
-            spreadRadius: 0,
-          ),
-        ],
-      ),
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(20),
+    return DraggableScrollableSheet(
+      initialChildSize: 0.75,
+      maxChildSize: 0.95,
+      minChildSize: 0.5,
+      builder: (context, scrollController) => DecoratedBox(
+        decoration: BoxDecoration(
+          color: context.colors.surface,
+          borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
+        ),
         child: Column(
           children: [
-            // Premium handle bar
-            Container(
-              padding: const EdgeInsets.only(top: 8, bottom: 6),
-              child: Center(
-                child: Container(
-                  width: 36,
-                  height: 4,
-                  decoration: BoxDecoration(
-                    color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.3),
-                    borderRadius: BorderRadius.circular(2),
-                  ),
-                ),
-              ),
-            ),
-            
-            // Collapsible Header
-            AnimatedBuilder(
-              animation: _headerAnimation,
-              builder: (context, child) {
-                final progress = 1.0 - _headerAnimation.value;
-                final height = _minHeaderHeight + (_maxHeaderHeight - _minHeaderHeight) * progress;
-                
-                return Container(
-                  height: height,
-                  margin: const EdgeInsets.fromLTRB(16, 4, 16, 8), // Reduced bottom margin
-                  padding: EdgeInsets.all(progress * 16 + 8), // More compact padding
-                  decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      colors: [
-                        theme.colorScheme.primaryContainer.withValues(alpha: 0.9 * progress + 0.3),
-                        theme.colorScheme.secondaryContainer.withValues(alpha: 0.7 * progress + 0.2),
-                        theme.colorScheme.tertiaryContainer.withValues(alpha: 0.5 * progress + 0.1),
-                      ],
-                      begin: Alignment.topLeft,
-                      end: Alignment.bottomRight,
-                      stops: const [0.0, 0.6, 1.0],
-                    ),
-                    borderRadius: BorderRadius.circular(20),
-                    border: Border.all(
-                      color: theme.colorScheme.outline.withValues(alpha: 0.08),
-                      width: 1,
-                    ),
-                    boxShadow: [
-                      BoxShadow(
-                        color: theme.colorScheme.primary.withValues(alpha: 0.06 * progress),
-                        blurRadius: 20 * progress,
-                        offset: const Offset(0, 4),
-                      ),
-                    ],
-                  ),
-                  child: Row(
-                    children: [
-                      // Collapsible icon
-                      Container(
-                        padding: EdgeInsets.all(8 + 4 * progress), // Smaller icon container
-                        decoration: BoxDecoration(
-                          color: theme.colorScheme.surface.withValues(alpha: 0.9),
-                          borderRadius: BorderRadius.circular(16),
-                          border: Border.all(
-                            color: theme.colorScheme.primary.withValues(alpha: 0.1),
-                            width: 1,
-                          ),
-                          boxShadow: progress > 0.5 ? [
-                            BoxShadow(
-                              color: theme.colorScheme.primary.withValues(alpha: 0.08),
-                              blurRadius: 12,
-                              offset: const Offset(0, 3),
-                            ),
-                          ] : null,
-                        ),
-                        child: Icon(
-                          AppIcons.insightsRounded,
-                          color: theme.colorScheme.primary,
-                          size: 20 + 6 * progress, // Smaller icon
-                        ),
-                      ),
-                      const SizedBox(width: 16),
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            if (progress > 0.3) ...[
-                              Text(
-                                l10n.exerciseHistory.toUpperCase(),
-                                style: theme.textTheme.labelLarge?.copyWith(
-                                  fontWeight: FontWeight.w600,
-                                  letterSpacing: 0.8,
-                                  color: theme.colorScheme.primary.withValues(alpha: progress),
-                                ),
-                                maxLines: 1,
-                                overflow: TextOverflow.fade,
-                              ),
-                              SizedBox(height: 6 * progress),
-                            ],
-                            Text(
-                              widget.exerciseName,
-                              style: theme.textTheme.headlineMedium?.copyWith(
-                                fontWeight: FontWeight.w800,
-                                letterSpacing: -0.8,
-                                color: theme.colorScheme.onSurface,
-                                height: 1.0,
-                                fontSize: (theme.textTheme.headlineMedium?.fontSize ?? 24) * (0.65 + 0.25 * progress), // Smaller text
-                              ),
-                              maxLines: progress > 0.5 ? 2 : 1,
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                          ],
-                        ),
-                      ),
-                      // Premium close button
-                      Material(
-                        color: Colors.transparent,
-                        child: InkWell(
-                          onTap: () => Navigator.pop(context),
-                          borderRadius: BorderRadius.circular(16),
-                          child: Container(
-                            padding: const EdgeInsets.all(12),
-                            decoration: BoxDecoration(
-                              color: theme.colorScheme.surface.withValues(alpha: 0.9),
-                              borderRadius: BorderRadius.circular(16),
-                              border: Border.all(
-                                color: theme.colorScheme.outline.withValues(alpha: 0.1),
-                                width: 1,
-                              ),
-                            ),
-                            child: Icon(
-                              AppIcons.closeRounded,
-                              color: theme.colorScheme.onSurfaceVariant,
-                              size: 20,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                );
-              },
-            ),
-            
-            // Collapsible Stats section
-            AnimatedBuilder(
-              animation: _statsAnimation,
-              builder: (context, child) {
-                final progress = 1.0 - _statsAnimation.value;
-                return AnimatedContainer(
-                  duration: const Duration(milliseconds: 300),
-                  height: progress > 0 ? null : 0,
-                  child: AnimatedOpacity(
-                    duration: const Duration(milliseconds: 200),
-                    opacity: progress,
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 16),
-                      child: statsAsync.when(
-                        data: (stats) => _buildPremiumStatsSection(context, theme, l10n, stats),
-                        loading: () => _buildStatsLoadingState(theme),
-                        error: (_, __) => const SizedBox(),
-                      ),
-                    ),
-                  ),
-                );
-              },
-            ),
-            
-            const SizedBox(height: 16),
-            
-            // Premium History list
+            // Handle bar
+            _buildHandleBar(context),
+
+            // Header
+            _buildHeader(context, l10n),
+
+            // Content
             Expanded(
               child: historyAsync.when(
-                data: (groupedHistory) => _buildPremiumHistoryList(
-                  context, 
-                  theme, 
-                  l10n, 
+                data: (groupedHistory) => _buildContent(
+                  context,
+                  l10n,
+                  scrollController,
                   groupedHistory,
+                  statsAsync,
                 ),
-                loading: () => _buildHistoryLoadingState(theme),
-                error: (error, _) => _buildErrorState(context, theme, l10n),
+                loading: () => _buildLoadingState(context),
+                error: (_, __) => _buildErrorState(context, l10n),
               ),
             ),
           ],
@@ -331,9 +81,133 @@ class _ExerciseHistoryBottomSheetState extends ConsumerState<ExerciseHistoryBott
     );
   }
 
-  Widget _buildPremiumStatsSection(
+  Widget _buildHandleBar(BuildContext context) {
+    return Container(
+      margin: const EdgeInsets.only(top: 12, bottom: 8),
+      width: 40,
+      height: 4,
+      decoration: BoxDecoration(
+        color: context.colors.onSurface.withValues(alpha: 0.2),
+        borderRadius: BorderRadius.circular(2),
+      ),
+    );
+  }
+
+  Widget _buildHeader(BuildContext context, AppLocalizations l10n) {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(20, 0, 20, 16),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Title row with close button
+          Row(
+            children: [
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      l10n.exerciseHistory,
+                      style: context.textTheme.labelLarge?.copyWith(
+                        color: context.colors.primary,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      widget.exerciseName,
+                      style: context.textTheme.headlineSmall?.copyWith(
+                        fontWeight: FontWeight.bold,
+                        color: context.colors.onSurface,
+                      ),
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ],
+                ),
+              ),
+              IconButton(
+                onPressed: () => Navigator.pop(context),
+                icon: Container(
+                  padding: const EdgeInsets.all(8),
+                  decoration: BoxDecoration(
+                    color: context.colors.surfaceContainerHighest,
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: Icon(
+                    AppIcons.closeRounded,
+                    color: context.colors.onSurfaceVariant,
+                    size: 20,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildContent(
     BuildContext context,
-    ThemeData theme,
+    AppLocalizations l10n,
+    ScrollController scrollController,
+    Map<DateTime, List<ExerciseHistoryData>> groupedHistory,
+    AsyncValue<
+            ({
+              double? maxWeight,
+              int totalSets,
+              double avgWeight,
+              DateTime? firstWorkout,
+              DateTime? lastWorkout,
+            })>
+        statsAsync,
+  ) {
+    if (groupedHistory.isEmpty) {
+      return _buildEmptyState(context, l10n);
+    }
+
+    final sortedDates = groupedHistory.keys.toList()
+      ..sort((a, b) => b.compareTo(a));
+
+    // Initialize expanded state
+    for (final date in sortedDates) {
+      _expandedDays.putIfAbsent(date, () => true);
+    }
+
+    return CustomScrollView(
+      controller: scrollController,
+      slivers: [
+        // Stats section
+        SliverToBoxAdapter(
+          child: statsAsync.when(
+            data: (stats) =>
+                stats.totalSets > 0 ? _buildStatsSection(context, l10n, stats) : const SizedBox.shrink(),
+            loading: () => const SizedBox.shrink(),
+            error: (_, __) => const SizedBox.shrink(),
+          ),
+        ),
+
+        // History list
+        SliverPadding(
+          padding: const EdgeInsets.fromLTRB(20, 0, 20, 40),
+          sliver: SliverList(
+            delegate: SliverChildBuilderDelegate(
+              (context, index) {
+                final date = sortedDates[index];
+                final dayHistory = groupedHistory[date]!;
+                return _buildDaySection(context, l10n, date, dayHistory);
+              },
+              childCount: sortedDates.length,
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildStatsSection(
+    BuildContext context,
     AppLocalizations l10n,
     ({
       double? maxWeight,
@@ -343,619 +217,325 @@ class _ExerciseHistoryBottomSheetState extends ConsumerState<ExerciseHistoryBott
       DateTime? lastWorkout,
     }) stats,
   ) {
-    if (stats.totalSets == 0) return const SizedBox();
-
-    final statCards = [
-      _StatCardData(
-        label: l10n.maxWeight,
-        value: stats.maxWeight != null ? '${stats.maxWeight!.toStringAsFixed(1)}kg' : '--',
-        icon: AppIcons.fitnessCenterRounded,
-        color: theme.colorScheme.primary,
-        isPrimary: true,
+    return Container(
+      margin: const EdgeInsets.fromLTRB(20, 0, 20, 20),
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: context.colors.surfaceContainerHighest.withValues(alpha: 0.3),
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(
+          color: context.colors.outline.withValues(alpha: 0.1),
+          width: 1,
+        ),
       ),
-      _StatCardData(
-        label: l10n.totalSets,
-        value: stats.totalSets.toString(),
-        icon: AppIcons.repeatRounded,
-        color: theme.colorScheme.secondary,
-        isPrimary: false,
-      ),
-      _StatCardData(
-        label: l10n.avgWeight,
-        value: stats.avgWeight > 0 ? '${stats.avgWeight.toStringAsFixed(1)}kg' : '--',
-        icon: AppIcons.trendingUpRounded,
-        color: theme.colorScheme.tertiary,
-        isPrimary: false,
-      ),
-      _StatCardData(
-        label: 'Last Workout', // Changed from firstWorkout to lastWorkout
-        value: stats.lastWorkout != null 
-          ? DateFormat('MMM d').format(stats.lastWorkout!)
-          : '--',
-        icon: AppIcons.scheduleRounded,
-        color: theme.colorScheme.outline,
-        isPrimary: false,
-      ),
-    ];
-
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        // Premium section header
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 12),
-          child: Row(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Section header
+          Row(
             children: [
               Container(
                 padding: const EdgeInsets.all(8),
                 decoration: BoxDecoration(
-                  color: theme.colorScheme.primary.withValues(alpha: 0.1),
-                  borderRadius: BorderRadius.circular(12),
+                  color: context.colors.primaryContainer,
+                  borderRadius: BorderRadius.circular(8),
                 ),
-                child: Icon(
-                  AppIcons.analyticsRounded,
-                  color: theme.colorScheme.primary,
-                  size: 18,
+                child: SemanticIcon(
+                  icon: AppIcons.analyticsRounded,
+                  semanticLabel: l10n.statistics,
+                  size: AppIconSize.small,
+                  color: context.colors.onPrimaryContainer,
                 ),
               ),
               const SizedBox(width: 12),
               Text(
-                l10n.statistics.toUpperCase(),
-                style: theme.textTheme.titleMedium?.copyWith(
-                  fontWeight: FontWeight.w700,
-                  letterSpacing: 0.6,
-                  color: theme.colorScheme.primary,
-                ),
-              ),
-              const SizedBox(width: 12),
-              Expanded(
-                child: Container(
-                  height: 1,
-                  decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      colors: [
-                        theme.colorScheme.primary.withValues(alpha: 0.3),
-                        Colors.transparent,
-                      ],
-                    ),
-                  ),
+                l10n.statistics,
+                style: context.textTheme.titleMedium?.copyWith(
+                  fontWeight: FontWeight.bold,
+                  color: context.colors.onSurface,
                 ),
               ),
             ],
           ),
-        ),
-        const SizedBox(height: 16),
-        
-        // Premium stats grid
-        GridView.builder(
-          shrinkWrap: true,
-          physics: const NeverScrollableScrollPhysics(),
-          padding: EdgeInsets.zero,
-          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 2,
-            crossAxisSpacing: 16,
-            mainAxisSpacing: 16,
-            childAspectRatio: 1.4,
+          const SizedBox(height: 16),
+
+          // Stats grid
+          Row(
+            children: [
+              Expanded(
+                child: _buildStatItem(
+                  context,
+                  label: l10n.maxWeight,
+                  value: stats.maxWeight != null
+                      ? '${stats.maxWeight!.toStringAsFixed(1)}kg'
+                      : '--',
+                  icon: AppIcons.fitnessCenterRounded,
+                  color: context.colors.primary,
+                ),
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: _buildStatItem(
+                  context,
+                  label: l10n.totalSets,
+                  value: stats.totalSets.toString(),
+                  icon: AppIcons.repeatRounded,
+                  color: context.colors.secondary,
+                ),
+              ),
+            ],
           ),
-          itemCount: statCards.length,
-          itemBuilder: (context, index) {
-            final stat = statCards[index];
-            return _buildPremiumStatCard(context, theme, stat);
-          },
-        ),
-      ],
+          const SizedBox(height: 12),
+          Row(
+            children: [
+              Expanded(
+                child: _buildStatItem(
+                  context,
+                  label: l10n.avgWeight,
+                  value: stats.avgWeight > 0
+                      ? '${stats.avgWeight.toStringAsFixed(1)}kg'
+                      : '--',
+                  icon: AppIcons.trendingUpRounded,
+                  color: context.colors.tertiary,
+                ),
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: _buildStatItem(
+                  context,
+                  label: l10n.lastWorkout,
+                  value: stats.lastWorkout != null
+                      ? DateFormat('d MMM').format(stats.lastWorkout!)
+                      : '--',
+                  icon: AppIcons.scheduleRounded,
+                  color: context.colors.onSurfaceVariant,
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
     );
   }
 
-  Widget _buildPremiumStatCard(BuildContext context, ThemeData theme, _StatCardData stat) {
+  Widget _buildStatItem(
+    BuildContext context, {
+    required String label,
+    required String value,
+    required IconData icon,
+    required Color color,
+  }) {
     return Container(
-      padding: const EdgeInsets.all(20),
+      padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        gradient: stat.isPrimary 
-          ? LinearGradient(
-              colors: [
-                stat.color.withValues(alpha: 0.15),
-                stat.color.withValues(alpha: 0.08),
-              ],
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-            )
-          : LinearGradient(
-              colors: [
-                theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.8),
-                theme.colorScheme.surfaceContainer.withValues(alpha: 0.4),
-              ],
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-            ),
-        borderRadius: BorderRadius.circular(18),
+        color: context.colors.surface,
+        borderRadius: BorderRadius.circular(12),
         border: Border.all(
-          color: stat.isPrimary 
-            ? stat.color.withValues(alpha: 0.2)
-            : theme.colorScheme.outline.withValues(alpha: 0.1),
+          color: context.colors.outline.withValues(alpha: 0.1),
           width: 1,
         ),
-        boxShadow: [
-          BoxShadow(
-            color: stat.isPrimary 
-              ? stat.color.withValues(alpha: 0.1)
-              : context.colors.onSurface.withValues(alpha: 0.02),
-            blurRadius: stat.isPrimary ? 12 : 8,
-            offset: const Offset(0, 3),
-          ),
-        ],
       ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      child: Row(
         children: [
-          // Icon with sophisticated background
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Container(
-                padding: const EdgeInsets.all(12),
-                decoration: BoxDecoration(
-                  color: stat.isPrimary
-                    ? theme.colorScheme.surface.withValues(alpha: 0.9)
-                    : stat.color.withValues(alpha: 0.15),
-                  borderRadius: BorderRadius.circular(12),
-                  boxShadow: stat.isPrimary ? [
-                    BoxShadow(
-                      color: stat.color.withValues(alpha: 0.1),
-                      blurRadius: 8,
-                      offset: const Offset(0, 2),
-                    ),
-                  ] : null,
-                ),
-                child: Icon(
-                  stat.icon,
-                  color: stat.color,
-                  size: 24,
-                ),
-              ),
-            ],
-          ),
-          
-          // Value and label with premium typography
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                stat.value,
-                style: theme.textTheme.headlineLarge?.copyWith(
-                  fontWeight: FontWeight.w900,
-                  color: theme.colorScheme.onSurface,
-                  letterSpacing: -1.0,
-                  height: 1.0,
-                ),
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-              ),
-              const SizedBox(height: 4),
-              Text(
-                stat.label,
-                style: theme.textTheme.bodyMedium?.copyWith(
-                  color: theme.colorScheme.onSurfaceVariant,
-                  fontWeight: FontWeight.w500,
-                  letterSpacing: 0.2,
-                ),
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-              ),
-            ],
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildPremiumHistoryList(
-    BuildContext context,
-    ThemeData theme,
-    AppLocalizations l10n,
-    Map<DateTime, List<ExerciseHistoryData>> groupedHistory,
-  ) {
-    if (kDebugMode) {
-      debugPrint('DEBUG ExerciseHistoryBottomSheet: Received ${groupedHistory.length} days of history');
-    }
-    for (final entry in groupedHistory.entries) {
-      if (kDebugMode) {
-        debugPrint('DEBUG ExerciseHistoryBottomSheet: Date ${entry.key} has ${entry.value.length} items');
-      }
-      for (final item in entry.value) {
-        if (kDebugMode) {
-          debugPrint('DEBUG ExerciseHistoryBottomSheet: - ${item.workoutName}: ${item.weight}kg x ${item.reps}');
-        }
-      }
-    }
-    
-    if (groupedHistory.isEmpty) {
-      if (kDebugMode) {
-        debugPrint('DEBUG ExerciseHistoryBottomSheet: No history data, showing empty state');
-      }
-      return _buildEmptyState(context, theme, l10n);
-    }
-
-    final sortedDates = groupedHistory.keys.toList()
-      ..sort((a, b) => b.compareTo(a));
-
-    // Initialize expanded state for all days
-    for (final date in sortedDates) {
-      _expandedDays.putIfAbsent(date, () => true);
-    }
-
-    return CustomScrollView(
-      controller: _scrollController,
-      slivers: [
-        // Premium section header
-        SliverToBoxAdapter(
-          child: Padding(
-            padding: const EdgeInsets.fromLTRB(20, 0, 20, 20),
-            child: Row(
+          Icon(icon, size: 20, color: color),
+          const SizedBox(width: 10),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Container(
-                  padding: const EdgeInsets.all(8),
-                  decoration: BoxDecoration(
-                    color: theme.colorScheme.secondary.withValues(alpha: 0.1),
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  child: Icon(
-                    AppIcons.historyRounded,
-                    color: theme.colorScheme.secondary,
-                    size: 18,
-                  ),
-                ),
-                const SizedBox(width: 12),
                 Text(
-                  'WORKOUT HISTORY',
-                  style: theme.textTheme.titleMedium?.copyWith(
-                    fontWeight: FontWeight.w700,
-                    letterSpacing: 0.6,
-                    color: theme.colorScheme.secondary,
+                  value,
+                  style: context.textTheme.titleMedium?.copyWith(
+                    fontWeight: FontWeight.bold,
+                    color: context.colors.onSurface,
                   ),
                 ),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: Container(
-                    height: 1,
-                    decoration: BoxDecoration(
-                      gradient: LinearGradient(
-                        colors: [
-                          theme.colorScheme.secondary.withValues(alpha: 0.3),
-                          Colors.transparent,
-                        ],
-                      ),
-                    ),
+                Text(
+                  label,
+                  style: context.textTheme.bodySmall?.copyWith(
+                    color: context.colors.onSurfaceVariant,
                   ),
                 ),
               ],
             ),
           ),
-        ),
-        
-        // History items
-        SliverList(
-          delegate: SliverChildBuilderDelegate(
-            (context, index) {
-              final date = sortedDates[index];
-              final dayHistory = groupedHistory[date]!;
-              final isExpanded = _expandedDays[date] ?? false;
-              
-              return Padding(
-                padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    // Expandable date header
-                    Material(
-                      color: Colors.transparent,
-                      child: InkWell(
-                        onTap: () {
-                          setState(() {
-                            _expandedDays[date] = !isExpanded;
-                          });
-                        },
-                        borderRadius: BorderRadius.circular(16),
-                        child: Container(
-                          margin: const EdgeInsets.only(bottom: 12),
-                          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-                          decoration: BoxDecoration(
-                            gradient: LinearGradient(
-                              colors: [
-                                theme.colorScheme.primaryContainer.withValues(alpha: 0.4),
-                                theme.colorScheme.secondaryContainer.withValues(alpha: 0.2),
-                              ],
-                            ),
-                            borderRadius: BorderRadius.circular(16),
-                            border: Border.all(
-                              color: theme.colorScheme.outline.withValues(alpha: 0.1),
-                            ),
-                          ),
-                          child: Row(
-                            children: [
-                              Icon(
-                                _getDateIcon(date),
-                                color: theme.colorScheme.primary,
-                                size: 20,
-                              ),
-                              const SizedBox(width: 12),
-                              Expanded(
-                                child: Text(
-                                  _formatPremiumDate(date, l10n),
-                                  style: theme.textTheme.titleMedium?.copyWith(
-                                    fontWeight: FontWeight.w700,
-                                    color: theme.colorScheme.primary,
-                                    letterSpacing: -0.2,
-                                  ),
-                                ),
-                              ),
-                              Container(
-                                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                                decoration: BoxDecoration(
-                                  color: theme.colorScheme.primary.withValues(alpha: 0.1),
-                                  borderRadius: BorderRadius.circular(12),
-                                ),
-                                child: Text(
-                                  '${dayHistory.length}',
-                                  style: theme.textTheme.labelSmall?.copyWith(
-                                    color: theme.colorScheme.primary,
-                                    fontWeight: FontWeight.w600,
-                                  ),
-                                ),
-                              ),
-                              const SizedBox(width: 8),
-                              AnimatedRotation(
-                                turns: isExpanded ? 0.5 : 0.0,
-                                duration: const Duration(milliseconds: 200),
-                                child: Icon(
-                                  AppIcons.keyboardArrowDownRounded,
-                                  color: theme.colorScheme.primary,
-                                  size: 24,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
-                    
-                    // Expandable sets for this date
-                    if (isExpanded)
-                      Column(
-                        children: dayHistory.map((historyData) => _buildPremiumHistoryItem(
-                          context, 
-                          theme, 
-                          l10n, 
-                          historyData,
-                        )).toList(),
-                      ),
-                  ],
-                ),
-              );
-            },
-            childCount: sortedDates.length,
-          ),
-        ),
-        
-        // Bottom padding
-        const SliverToBoxAdapter(
-          child: SizedBox(height: 40),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildPremiumHistoryItem(
-    BuildContext context,
-    ThemeData theme,
-    AppLocalizations l10n,
-    ExerciseHistoryData historyData,
-  ) {
-    return Material(
-      color: Colors.transparent,
-      child: InkWell(
-        onLongPress: () => _showEditHistoryDialog(context, theme, l10n, historyData),
-        borderRadius: BorderRadius.circular(12),
-        child: Container(
-          margin: const EdgeInsets.only(bottom: 8),
-          padding: const EdgeInsets.all(16), // More compact padding
-          decoration: BoxDecoration(
-            color: theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.6),
-            borderRadius: BorderRadius.circular(12),
-            border: Border.all(
-              color: theme.colorScheme.outline.withValues(alpha: 0.06),
-              width: 1,
-            ),
-            boxShadow: [
-              BoxShadow(
-                color: context.colors.onSurface.withValues(alpha: 0.01),
-                blurRadius: 4,
-                offset: const Offset(0, 1),
-              ),
-            ],
-          ),
-          child: Row(
-            children: [
-              // Compact weight and reps section
-              Expanded(
-                child: Row(
-                  children: [
-                    if (historyData.weight != null) ...[ 
-                      Container(
-                        padding: const EdgeInsets.all(6), // More compact
-                        decoration: BoxDecoration(
-                          color: theme.colorScheme.primary.withValues(alpha: 0.1),
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                        child: SemanticIcon(
-  icon: AppIcons.fitnessCenterRounded,
-  semanticLabel: 'Fitness center rounded',
-  size: AppIconSize.tiny,
-  color: theme.colorScheme.primary,
-),
-                      ),
-                      const SizedBox(width: 8),
-                      Text(
-                        '${historyData.weight!.toStringAsFixed(historyData.weight! % 1 == 0 ? 0 : 1)}kg',
-                        style: theme.textTheme.titleMedium?.copyWith( // Smaller text
-                          fontWeight: FontWeight.w700,
-                          color: theme.colorScheme.primary,
-                          letterSpacing: -0.3,
-                        ),
-                      ),
-                      const SizedBox(width: 16),
-                    ],
-                    if (historyData.reps != null) ...[ 
-                      Container(
-                        padding: const EdgeInsets.all(6),
-                        decoration: BoxDecoration(
-                          color: theme.colorScheme.secondary.withValues(alpha: 0.1),
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                        child: SemanticIcon(
-  icon: AppIcons.repeatRounded,
-  semanticLabel: 'Repeat rounded',
-  size: AppIconSize.tiny,
-  color: theme.colorScheme.secondary,
-),
-                      ),
-                      const SizedBox(width: 8),
-                      Text(
-                        '${historyData.reps}',
-                        style: theme.textTheme.titleMedium?.copyWith(
-                          fontWeight: FontWeight.w700,
-                          color: theme.colorScheme.secondary,
-                          letterSpacing: -0.3,
-                        ),
-                      ),
-                      const SizedBox(width: 4),
-                      Text(
-                        l10n.reps.toLowerCase(),
-                        style: theme.textTheme.bodySmall?.copyWith( // Smaller label
-                          color: theme.colorScheme.onSurfaceVariant,
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
-                    ],
-                  ],
-                ),
-              ),
-            ],
-          ),
-        ),
+        ],
       ),
     );
   }
 
-  void _showEditHistoryDialog(
-    BuildContext context, 
-    ThemeData theme, 
-    AppLocalizations l10n, 
-    ExerciseHistoryData historyData,
+  Widget _buildDaySection(
+    BuildContext context,
+    AppLocalizations l10n,
+    DateTime date,
+    List<ExerciseHistoryData> dayHistory,
   ) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-          backgroundColor: theme.colorScheme.surface,
-          title: Row(
-            children: [
-              Icon(
-                AppIcons.editRounded,
-                color: theme.colorScheme.primary,
-                size: 24,
+    final isExpanded = _expandedDays[date] ?? false;
+
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 12),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Date header
+          InkWell(
+            onTap: () {
+              setState(() {
+                _expandedDays[date] = !isExpanded;
+              });
+            },
+            borderRadius: BorderRadius.circular(12),
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+              decoration: BoxDecoration(
+                color: context.colors.primaryContainer.withValues(alpha: 0.3),
+                borderRadius: BorderRadius.circular(12),
               ),
-              const SizedBox(width: 12),
-              Text(
-                'Edit Set',
-                style: theme.textTheme.titleLarge?.copyWith(
-                  fontWeight: FontWeight.w700,
-                  color: theme.colorScheme.primary,
-                ),
-              ),
-            ],
-          ),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Container(
-                padding: const EdgeInsets.all(16),
-                decoration: BoxDecoration(
-                  color: theme.colorScheme.primaryContainer.withValues(alpha: 0.3),
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            'Weight: ${historyData.weight?.toStringAsFixed(1) ?? '--'}kg',
-                            style: theme.textTheme.titleMedium?.copyWith(
-                              fontWeight: FontWeight.w600,
-                              color: theme.colorScheme.primary,
-                            ),
-                          ),
-                          const SizedBox(height: 4),
-                          Text(
-                            'Reps: ${historyData.reps ?? '--'}',
-                            style: theme.textTheme.titleMedium?.copyWith(
-                              fontWeight: FontWeight.w600,
-                              color: theme.colorScheme.secondary,
-                            ),
-                          ),
-                          const SizedBox(height: 4),
-                          Text(
-                            'Workout: ${historyData.workoutName}',
-                            style: theme.textTheme.bodyMedium?.copyWith(
-                              color: theme.colorScheme.onSurfaceVariant,
-                            ),
-                          ),
-                        ],
+              child: Row(
+                children: [
+                  Icon(
+                    _getDateIcon(date),
+                    color: context.colors.primary,
+                    size: 18,
+                  ),
+                  const SizedBox(width: 10),
+                  Expanded(
+                    child: Text(
+                      _formatDate(date, l10n),
+                      style: context.textTheme.titleSmall?.copyWith(
+                        fontWeight: FontWeight.w600,
+                        color: context.colors.primary,
                       ),
                     ),
-                  ],
-                ),
-              ),
-            ],
-          ),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.of(context).pop(),
-              child: Text(
-                'Cancel',
-                style: TextStyle(color: theme.colorScheme.onSurfaceVariant),
+                  ),
+                  Container(
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                    decoration: BoxDecoration(
+                      color: context.colors.primary.withValues(alpha: 0.1),
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: Text(
+                      '${dayHistory.length}',
+                      style: context.textTheme.labelSmall?.copyWith(
+                        color: context.colors.primary,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 8),
+                  AnimatedRotation(
+                    turns: isExpanded ? 0.5 : 0.0,
+                    duration: const Duration(milliseconds: 300),
+                    curve: Curves.easeOutCubic,
+                    child: Icon(
+                      AppIcons.keyboardArrowDownRounded,
+                      color: context.colors.primary,
+                      size: 20,
+                    ),
+                  ),
+                ],
               ),
             ),
-            FilledButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-                // TODO: Implement edit functionality
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    content: const Text('Edit functionality coming soon!'),
-                    backgroundColor: theme.colorScheme.primary,
-                  ),
-                );
-              },
-              style: FilledButton.styleFrom(
-                backgroundColor: theme.colorScheme.primary,
+          ),
+
+          // Animated expand/collapse for sets list
+          AnimatedCrossFade(
+            firstChild: const SizedBox.shrink(),
+            secondChild: Padding(
+              padding: const EdgeInsets.only(top: 8),
+              child: Column(
+                children: dayHistory
+                    .asMap()
+                    .entries
+                    .map((entry) => TweenAnimationBuilder<double>(
+                          key: ValueKey('${date.toIso8601String()}_${entry.key}'),
+                          tween: Tween(begin: 0.0, end: 1.0),
+                          duration: Duration(milliseconds: 150 + (entry.key * 50)),
+                          curve: Curves.easeOutCubic,
+                          builder: (context, value, child) => Transform.translate(
+                            offset: Offset(0, 10 * (1 - value)),
+                            child: Opacity(
+                              opacity: value,
+                              child: child,
+                            ),
+                          ),
+                          child: _buildHistoryItem(context, l10n, entry.value),
+                        ))
+                    .toList(),
               ),
-              child: Text(
-                'Edit',
-                style: TextStyle(color: theme.colorScheme.onPrimary),
+            ),
+            crossFadeState: isExpanded
+                ? CrossFadeState.showSecond
+                : CrossFadeState.showFirst,
+            duration: const Duration(milliseconds: 300),
+            sizeCurve: Curves.easeOutCubic,
+            firstCurve: Curves.easeOut,
+            secondCurve: Curves.easeOutCubic,
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildHistoryItem(
+    BuildContext context,
+    AppLocalizations l10n,
+    ExerciseHistoryData data,
+  ) {
+    return Container(
+      margin: const EdgeInsets.only(bottom: 6),
+      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+      decoration: BoxDecoration(
+        color: context.colors.surfaceContainerHighest.withValues(alpha: 0.4),
+        borderRadius: BorderRadius.circular(10),
+      ),
+      child: Row(
+        children: [
+          if (data.weight != null) ...[
+            Icon(
+              AppIcons.fitnessCenterRounded,
+              size: 16,
+              color: context.colors.primary,
+            ),
+            const SizedBox(width: 6),
+            Text(
+              '${data.weight!.toStringAsFixed(data.weight! % 1 == 0 ? 0 : 1)}kg',
+              style: context.textTheme.titleSmall?.copyWith(
+                fontWeight: FontWeight.w600,
+                color: context.colors.primary,
+              ),
+            ),
+            const SizedBox(width: 16),
+          ],
+          if (data.reps != null) ...[
+            Icon(
+              AppIcons.repeatRounded,
+              size: 16,
+              color: context.colors.secondary,
+            ),
+            const SizedBox(width: 6),
+            Text(
+              '${data.reps}',
+              style: context.textTheme.titleSmall?.copyWith(
+                fontWeight: FontWeight.w600,
+                color: context.colors.secondary,
+              ),
+            ),
+            const SizedBox(width: 4),
+            Text(
+              l10n.reps.toLowerCase(),
+              style: context.textTheme.bodySmall?.copyWith(
+                color: context.colors.onSurfaceVariant,
               ),
             ),
           ],
-        );
-      },
+        ],
+      ),
     );
   }
 
-  Widget _buildEmptyState(BuildContext context, ThemeData theme, AppLocalizations l10n) {
+  Widget _buildEmptyState(BuildContext context, AppLocalizations l10n) {
     return Center(
       child: Padding(
         padding: const EdgeInsets.all(40),
@@ -963,38 +543,31 @@ class _ExerciseHistoryBottomSheetState extends ConsumerState<ExerciseHistoryBott
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Container(
-              padding: const EdgeInsets.all(32),
+              padding: const EdgeInsets.all(24),
               decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  colors: [
-                    theme.colorScheme.primaryContainer.withValues(alpha: 0.3),
-                    theme.colorScheme.secondaryContainer.withValues(alpha: 0.2),
-                  ],
-                ),
+                color: context.colors.primaryContainer.withValues(alpha: 0.3),
                 shape: BoxShape.circle,
               ),
               child: SemanticIcon(
-  icon: AppIcons.historyRounded,
-  semanticLabel: 'History rounded',
-  size: AppIconSize.medium,
-  color: theme.colorScheme.primary.withValues(alpha: 0.7,
-),
+                icon: AppIcons.historyRounded,
+                semanticLabel: l10n.noHistoryFound,
+                size: AppIconSize.large,
+                color: context.colors.primary.withValues(alpha: 0.6),
               ),
             ),
-            const SizedBox(height: 24),
+            const SizedBox(height: 20),
             Text(
               l10n.noHistoryFound,
-              style: theme.textTheme.headlineSmall?.copyWith(
-                fontWeight: FontWeight.w700,
-                color: theme.colorScheme.onSurface,
+              style: context.textTheme.titleLarge?.copyWith(
+                fontWeight: FontWeight.w600,
+                color: context.colors.onSurface,
               ),
             ),
-            const SizedBox(height: 12),
+            const SizedBox(height: 8),
             Text(
               l10n.completeWorkoutsToSeeHistory,
-              style: theme.textTheme.bodyLarge?.copyWith(
-                color: theme.colorScheme.onSurfaceVariant,
-                fontWeight: FontWeight.w500,
+              style: context.textTheme.bodyMedium?.copyWith(
+                color: context.colors.onSurfaceVariant,
               ),
               textAlign: TextAlign.center,
             ),
@@ -1004,135 +577,29 @@ class _ExerciseHistoryBottomSheetState extends ConsumerState<ExerciseHistoryBott
     );
   }
 
-  Widget _buildStatsLoadingState(ThemeData theme) {
-    return GridView.builder(
-      shrinkWrap: true,
-      physics: const NeverScrollableScrollPhysics(),
-      padding: EdgeInsets.zero,
-      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 2,
-        crossAxisSpacing: 16,
-        mainAxisSpacing: 16,
-        childAspectRatio: 1.4,
-      ),
-      itemCount: 4,
-      itemBuilder: (context, index) {
-        return Container(
-          padding: const EdgeInsets.all(20),
-          decoration: BoxDecoration(
-            color: theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
-            borderRadius: BorderRadius.circular(18),
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Container(
-                width: 40,
-                height: 40,
-                decoration: BoxDecoration(
-                  color: theme.colorScheme.primary.withValues(alpha: 0.1),
-                  borderRadius: BorderRadius.circular(12),
-                ),
-              ),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Container(
-                    width: 60,
-                    height: 24,
-                    decoration: BoxDecoration(
-                      color: theme.colorScheme.primary.withValues(alpha: 0.1),
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                  ),
-                  const SizedBox(height: 4),
-                  Container(
-                    width: 80,
-                    height: 16,
-                    decoration: BoxDecoration(
-                      color: theme.colorScheme.primary.withValues(alpha: 0.05),
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                  ),
-                ],
-              ),
-            ],
-          ),
-        );
-      },
+  Widget _buildLoadingState(BuildContext context) {
+    return const Center(
+      child: CircularProgressIndicator(),
     );
   }
 
-  Widget _buildHistoryLoadingState(ThemeData theme) {
-    return ListView.builder(
-      padding: const EdgeInsets.all(16),
-      itemCount: 3,
-      itemBuilder: (context, index) {
-        return Container(
-          margin: const EdgeInsets.only(bottom: 16),
-          padding: const EdgeInsets.all(20),
-          decoration: BoxDecoration(
-            color: theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
-            borderRadius: BorderRadius.circular(16),
-          ),
-          child: Column(
-            children: [
-              Container(
-                width: double.infinity,
-                height: 20,
-                decoration: BoxDecoration(
-                  color: theme.colorScheme.primary.withValues(alpha: 0.1),
-                  borderRadius: BorderRadius.circular(12),
-                ),
-              ),
-              const SizedBox(height: 12),
-              Row(
-                children: [
-                  Container(
-                    width: 100,
-                    height: 16,
-                    decoration: BoxDecoration(
-                      color: theme.colorScheme.primary.withValues(alpha: 0.05),
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                  ),
-                  const Spacer(),
-                  Container(
-                    width: 80,
-                    height: 16,
-                    decoration: BoxDecoration(
-                      color: theme.colorScheme.primary.withValues(alpha: 0.05),
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                  ),
-                ],
-              ),
-            ],
-          ),
-        );
-      },
-    );
-  }
-
-  Widget _buildErrorState(BuildContext context, ThemeData theme, AppLocalizations l10n) {
+  Widget _buildErrorState(BuildContext context, AppLocalizations l10n) {
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           SemanticIcon(
-  icon: AppIcons.errorOutlineRounded,
-  semanticLabel: 'Error outline rounded',
-  size: AppIconSize.medium,
-  color: theme.colorScheme.error.withValues(alpha: 0.7,
-),
+            icon: AppIcons.errorOutlineRounded,
+            semanticLabel: l10n.errorLoadingHistory,
+            size: AppIconSize.large,
+            color: context.colors.error.withValues(alpha: 0.6),
           ),
           const SizedBox(height: 16),
           Text(
             l10n.errorLoadingHistory,
-            style: theme.textTheme.titleLarge?.copyWith(
+            style: context.textTheme.titleMedium?.copyWith(
               fontWeight: FontWeight.w600,
-              color: theme.colorScheme.error,
+              color: context.colors.error,
             ),
           ),
         ],
@@ -1140,7 +607,7 @@ class _ExerciseHistoryBottomSheetState extends ConsumerState<ExerciseHistoryBott
     );
   }
 
-  String _formatPremiumDate(DateTime date, AppLocalizations l10n) {
+  String _formatDate(DateTime date, AppLocalizations l10n) {
     final now = DateTime.now();
     final today = DateTime(now.year, now.month, now.day);
     final yesterday = today.subtract(const Duration(days: 1));
@@ -1153,7 +620,7 @@ class _ExerciseHistoryBottomSheetState extends ConsumerState<ExerciseHistoryBott
     } else if (now.difference(dateOnly).inDays < 7) {
       return DateFormat('EEEE').format(date);
     } else {
-      return DateFormat('MMM d, yyyy').format(date);
+      return DateFormat('d MMMM yyyy').format(date);
     }
   }
 
@@ -1173,20 +640,4 @@ class _ExerciseHistoryBottomSheetState extends ConsumerState<ExerciseHistoryBott
       return AppIcons.calendarMonthRounded;
     }
   }
-}
-
-class _StatCardData {
-
-  _StatCardData({
-    required this.label,
-    required this.value,
-    required this.icon,
-    required this.color,
-    required this.isPrimary,
-  });
-  final String label;
-  final String value;
-  final IconData icon;
-  final Color color;
-  final bool isPrimary;
 }

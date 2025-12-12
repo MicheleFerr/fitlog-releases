@@ -11,6 +11,7 @@ import 'package:gymbro_flutter_new/shared/domain/validation/template_validator.d
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
+import 'package:gymbro_flutter_new/features/auth/presentation/providers/consolidated_user_provider.dart';
 
 /// Template type for quick selection (replaces 15 confusing tags)
 enum TemplateType {
@@ -19,7 +20,7 @@ enum TemplateType {
   fullBody;
 
   String getDisplayName(BuildContext context) {
-    final l10n = AppLocalizations.of(context);
+    final l10n = context.l10n;
     switch (this) {
       case TemplateType.upper:
         return l10n.templateTypeUpper;
@@ -139,7 +140,7 @@ class _CreateTemplateModalState extends ConsumerState<CreateTemplateModal> {
   Widget build(BuildContext context) {
     final currentWorkout = ref.watch(currentWorkoutProvider);
     final hasActiveWorkout = currentWorkout != null && currentWorkout.exercises.isNotEmpty;
-    final l10n = AppLocalizations.of(context);
+    final l10n = context.l10n;
 
     return Container(
       height: MediaQuery.of(context).size.height * 0.7, // Ridotto da 0.85
@@ -542,6 +543,9 @@ class _CreateTemplateModalState extends ConsumerState<CreateTemplateModal> {
       // Convert selected type to tag for backward compatibility
       final tags = _selectedType != null ? [_selectedType!.tag] : <String>[];
 
+      // Get current user ID for Firestore security rules
+      final userId = ref.read(currentUserIdProvider);
+
       final newTemplate = WorkoutTemplate(
         id: templateId,
         name: templateName,
@@ -553,6 +557,7 @@ class _CreateTemplateModalState extends ConsumerState<CreateTemplateModal> {
         tags: tags,
         imageUrl: null,
         usageCount: 0,
+        userId: userId, // ✅ Required for Firestore security rules
       );
 
       await ref.read(workoutTemplateNotifierProvider.notifier).saveTemplate(newTemplate);

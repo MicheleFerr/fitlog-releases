@@ -7,6 +7,7 @@
 /// Servizio per sincronizzazione automatica e gestione aggiornamenti esercizi
 library;
 
+import 'package:flutter/foundation.dart' show kDebugMode;
 import 'dart:async';
 import 'package:flutter/foundation.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
@@ -60,13 +61,17 @@ class ExerciseSyncService {
       _setupConnectivityListener();
 
       _isInitialized = true;
-      debugPrint('✅ ExerciseSyncService initialized');
+      if (kDebugMode) {
+        debugPrint('✅ ExerciseSyncService initialized');
+      }
 
       // Sincronizzazione iniziale se necessario
       await _performInitialSyncIfNeeded();
 
     } catch (e) {
-      debugPrint('❌ Failed to initialize ExerciseSyncService: $e');
+      if (kDebugMode) {
+        debugPrint('❌ Failed to initialize ExerciseSyncService: $e');
+      }
       rethrow;
     }
   }
@@ -90,7 +95,9 @@ class ExerciseSyncService {
     // connectivity_plus 7.x returns List<ConnectivityResult>
     if (connectivityResults.contains(ConnectivityResult.none) ||
         connectivityResults.isEmpty) {
-      debugPrint('📵 No internet connection, skipping sync');
+      if (kDebugMode) {
+        debugPrint('📵 No internet connection, skipping sync');
+      }
       return;
     }
 
@@ -108,7 +115,9 @@ class ExerciseSyncService {
       await _stopAutoSync();
     }
 
-    debugPrint('⚙️ Auto-sync ${enabled ? "enabled" : "disabled"}');
+    if (kDebugMode) {
+      debugPrint('⚙️ Auto-sync ${enabled ? "enabled" : "disabled"}');
+    }
   }
 
   /// Controlla se auto-sync è abilitato
@@ -128,7 +137,9 @@ class ExerciseSyncService {
       await _startAutoSync();
     }
 
-    debugPrint('⏱️ Sync frequency set to ${frequency.inHours} hours');
+    if (kDebugMode) {
+      debugPrint('⏱️ Sync frequency set to ${frequency.inHours} hours');
+    }
   }
 
   /// Ottiene frequenza di sincronizzazione
@@ -176,13 +187,17 @@ class ExerciseSyncService {
         isManual: isManual,
       ));
 
-      debugPrint('🔄 Starting exercise sync${isManual ? " (manual)" : ""}...');
+      if (kDebugMode) {
+        debugPrint('🔄 Starting exercise sync${isManual ? " (manual)" : ""}...');
+      }
 
       // 1. Controlla aggiornamenti disponibili
       final versionCheck = await _versionService.checkForUpdates();
 
       if (!versionCheck.hasUpdates && !isManual) {
-        debugPrint('✅ No updates available');
+        if (kDebugMode) {
+          debugPrint('✅ No updates available');
+        }
 
         await _updateLastSyncTime();
         _retryCount = 0;
@@ -206,7 +221,9 @@ class ExerciseSyncService {
       }
 
       // 2. Esegue aggiornamento
-      debugPrint('📥 Applying updates...');
+      if (kDebugMode) {
+        debugPrint('📥 Applying updates...');
+      }
       final updateSuccess = await _repository.checkAndApplyUpdates();
 
       if (!updateSuccess) {
@@ -235,11 +252,15 @@ class ExerciseSyncService {
         result: result,
       ));
 
-      debugPrint('✅ Sync completed successfully in ${DateTime.now().difference(startTime).inSeconds}s');
+      if (kDebugMode) {
+        debugPrint('✅ Sync completed successfully in ${DateTime.now().difference(startTime).inSeconds}s');
+      }
       return result;
 
     } catch (e) {
-      debugPrint('❌ Sync failed: $e');
+      if (kDebugMode) {
+        debugPrint('❌ Sync failed: $e');
+      }
 
       final result = SyncResult(
         success: false,
@@ -272,14 +293,20 @@ class ExerciseSyncService {
     try {
       final lastSync = await getLastSyncTime();
       if (lastSync == null) {
-        debugPrint('🚀 Performing initial sync...');
+        if (kDebugMode) {
+          debugPrint('🚀 Performing initial sync...');
+        }
         await _performSync();
       } else if (await needsSync()) {
-        debugPrint('⏰ Scheduled sync needed');
+        if (kDebugMode) {
+          debugPrint('⏰ Scheduled sync needed');
+        }
         await _performSync();
       }
     } catch (e) {
-      debugPrint('❌ Initial sync failed: $e');
+      if (kDebugMode) {
+        debugPrint('❌ Initial sync failed: $e');
+      }
     }
   }
 
@@ -295,7 +322,9 @@ class ExerciseSyncService {
       }
     });
 
-    debugPrint('🔄 Auto-sync started (every ${frequency.inHours}h)');
+    if (kDebugMode) {
+      debugPrint('🔄 Auto-sync started (every ${frequency.inHours}h)');
+    }
   }
 
   /// Ferma sincronizzazione automatica
@@ -304,20 +333,26 @@ class ExerciseSyncService {
     _syncTimer = null;
     _retryTimer?.cancel();
     _retryTimer = null;
-    debugPrint('⏹️ Auto-sync stopped');
+    if (kDebugMode) {
+      debugPrint('⏹️ Auto-sync stopped');
+    }
   }
 
   /// Programma retry dopo errore
   void _scheduleRetry() {
     if (_retryCount >= _maxRetries) {
-      debugPrint('❌ Max retries reached, giving up');
+      if (kDebugMode) {
+        debugPrint('❌ Max retries reached, giving up');
+      }
       return;
     }
 
     _retryCount++;
     final delay = Duration(milliseconds: _retryDelay.inMilliseconds * _retryCount);
 
-    debugPrint('🔄 Scheduling retry #$_retryCount in ${delay.inMinutes}m');
+    if (kDebugMode) {
+      debugPrint('🔄 Scheduling retry #$_retryCount in ${delay.inMinutes}m');
+    }
 
     _retryTimer = Timer(delay, () async {
       await syncIfConnected();
@@ -330,7 +365,9 @@ class ExerciseSyncService {
     _connectivitySubscription =
         Connectivity().onConnectivityChanged.listen((results) {
       if (!results.contains(ConnectivityResult.none) && results.isNotEmpty) {
-        debugPrint('📶 Connection restored, checking for sync');
+        if (kDebugMode) {
+          debugPrint('📶 Connection restored, checking for sync');
+        }
         Timer(const Duration(seconds: 2), () => syncIfConnected());
       }
     });
@@ -348,7 +385,9 @@ class ExerciseSyncService {
     await _connectivitySubscription?.cancel();
     await _syncEventController.close();
     _isInitialized = false;
-    debugPrint('🗑️ ExerciseSyncService disposed');
+    if (kDebugMode) {
+      debugPrint('🗑️ ExerciseSyncService disposed');
+    }
   }
 }
 

@@ -9,13 +9,16 @@ import 'package:gymbro_flutter_new/features/exercise_database/data/repositories/
 import 'package:gymbro_flutter_new/features/analytics/presentation/widgets/hero_stat_card.dart';
 import 'package:gymbro_flutter_new/features/analytics/presentation/widgets/weekly_dashboard_widget.dart';
 import 'package:gymbro_flutter_new/features/analytics/presentation/providers/analytics_provider.dart';
+import 'package:gymbro_flutter_new/features/auth/presentation/providers/consolidated_user_provider.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
 import 'package:flutter/foundation.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/premium_feature_card.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/services/modal_service.dart';
 
 /// Provider for weekly workout goal (default: 5 workouts per week)
 final weeklyWorkoutGoalProvider = StateProvider<int>((ref) => 5);
@@ -156,6 +159,7 @@ class _AnalyticsOverviewTabState extends ConsumerState<AnalyticsOverviewTab> {
     // Compute stats locally from filtered workouts
     final stats = _computePeriodStats(filteredWorkouts);
     final weeklyGoal = ref.watch(weeklyWorkoutGoalProvider);
+    final isPremium = ref.watch(isPremiumUserProvider);
 
     return RefreshIndicator(
       onRefresh: () async {
@@ -216,7 +220,7 @@ class _AnalyticsOverviewTabState extends ConsumerState<AnalyticsOverviewTab> {
                           const SizedBox(height: 16),
                           WeeklyDashboardWidget(
                             activities: _convertWorkoutsToActivities(widget.workouts),
-                            isPremium: true, // Show full dashboard
+                            isPremium: isPremium, // Dynamic from user profile
                             onDataSync: (data) {
                               HapticFeedback.mediumImpact();
                             },
@@ -252,6 +256,11 @@ class _AnalyticsOverviewTabState extends ConsumerState<AnalyticsOverviewTab> {
             sliver: SliverList(
               delegate: SliverChildListDelegate([
                 const SizedBox(height: 20),
+
+                // Pro Insights Section - Premium Analytics with blur/lock
+                _buildProInsightsSection(context, isPremium, l10n, theme),
+                const SizedBox(height: 20),
+
                 // Recent Workouts Section
                 _buildRecentWorkouts(context, filteredWorkouts),
                 const SizedBox(height: 20),
@@ -323,7 +332,263 @@ class _AnalyticsOverviewTabState extends ConsumerState<AnalyticsOverviewTab> {
       ),
     );
   }
-  
+
+  /// Builds the Pro Insights section with premium analytics cards
+  /// Shows blur/lock overlay for FREE users, full content for PREMIUM users
+  Widget _buildProInsightsSection(
+    BuildContext context,
+    bool isPremium,
+    AppLocalizations l10n,
+    ThemeData theme,
+  ) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        // Section Header with PRO badge
+        PremiumSectionHeader(
+          title: l10n.proInsights,
+          subtitle: l10n.advancedAnalytics,
+          isPremium: isPremium,
+          onSeeAllTap: isPremium ? () {
+            HapticFeedback.lightImpact();
+            // Navigate to full analytics dashboard when available
+          } : null,
+        ),
+
+        // Premium Cards Grid
+        Column(
+          children: [
+            // Card 1: Rep Range Analysis
+            PremiumFeatureCard(
+              title: l10n.repRangeAnalysis,
+              description: l10n.repRangeDesc,
+              icon: AppIcons.barChart,
+              isUnlocked: isPremium,
+              height: 200,
+              onUpgradeTap: () {
+                HapticFeedback.heavyImpact();
+                _navigateToUpgrade(context);
+              },
+              child: _buildRepRangePreview(context, theme),
+            ),
+            const SizedBox(height: 12),
+
+            // Card 2: Volume Progression
+            PremiumFeatureCard(
+              title: l10n.volumeProgression,
+              description: l10n.volumeProgressionDesc,
+              icon: AppIcons.trendUp,
+              isUnlocked: isPremium,
+              height: 180,
+              onUpgradeTap: () {
+                HapticFeedback.heavyImpact();
+                _navigateToUpgrade(context);
+              },
+              child: _buildVolumeProgressionPreview(context, theme),
+            ),
+            const SizedBox(height: 12),
+
+            // Card 3: Muscle Distribution
+            PremiumFeatureCard(
+              title: l10n.muscleDistribution,
+              description: l10n.muscleDistributionDesc,
+              icon: AppIcons.accessibility,
+              isUnlocked: isPremium,
+              height: 180,
+              onUpgradeTap: () {
+                HapticFeedback.heavyImpact();
+                _navigateToUpgrade(context);
+              },
+              child: _buildMuscleDistributionPreview(context, theme),
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+
+  /// Preview content for Rep Range Analysis (visible when locked with blur)
+  Widget _buildRepRangePreview(BuildContext context, ThemeData theme) {
+    return Padding(
+      padding: const EdgeInsets.all(16),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        children: [
+          _buildRepZoneBar(
+            context,
+            'Strength',
+            '1-5',
+            0.3,
+            theme.colorScheme.error,
+          ),
+          _buildRepZoneBar(
+            context,
+            'Hypertrophy',
+            '8-12',
+            0.5,
+            theme.colorScheme.primary,
+          ),
+          _buildRepZoneBar(
+            context,
+            'Endurance',
+            '15+',
+            0.2,
+            theme.colorScheme.tertiary,
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildRepZoneBar(
+    BuildContext context,
+    String label,
+    String reps,
+    double percentage,
+    Color color,
+  ) {
+    final theme = Theme.of(context);
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Text(
+          '${(percentage * 100).round()}%',
+          style: theme.textTheme.titleMedium?.copyWith(
+            fontWeight: FontWeight.bold,
+            color: color,
+          ),
+        ),
+        const SizedBox(height: 8),
+        Container(
+          width: 48,
+          height: 60,
+          decoration: BoxDecoration(
+            color: color.withValues(alpha: 0.2),
+            borderRadius: BorderRadius.circular(8),
+          ),
+          child: Align(
+            alignment: Alignment.bottomCenter,
+            child: Container(
+              width: 48,
+              height: 60 * percentage,
+              decoration: BoxDecoration(
+                color: color,
+                borderRadius: BorderRadius.circular(8),
+              ),
+            ),
+          ),
+        ),
+        const SizedBox(height: 8),
+        Text(
+          label,
+          style: theme.textTheme.labelSmall?.copyWith(
+            fontWeight: FontWeight.w500,
+          ),
+        ),
+        Text(
+          reps,
+          style: theme.textTheme.labelSmall?.copyWith(
+            color: theme.colorScheme.onSurfaceVariant,
+          ),
+        ),
+      ],
+    );
+  }
+
+  /// Preview content for Volume Progression
+  Widget _buildVolumeProgressionPreview(BuildContext context, ThemeData theme) {
+    return Padding(
+      padding: const EdgeInsets.all(16),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Simple line chart representation
+          Expanded(
+            child: CustomPaint(
+              size: const Size(double.infinity, 80),
+              painter: _SimpleLineChartPainter(
+                color: theme.colorScheme.primary,
+                backgroundColor: theme.colorScheme.surfaceContainerHighest,
+              ),
+            ),
+          ),
+          const SizedBox(height: 8),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                'Week 1',
+                style: theme.textTheme.labelSmall?.copyWith(
+                  color: theme.colorScheme.onSurfaceVariant,
+                ),
+              ),
+              Text(
+                'Week 4',
+                style: theme.textTheme.labelSmall?.copyWith(
+                  color: theme.colorScheme.onSurfaceVariant,
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  /// Preview content for Muscle Distribution
+  Widget _buildMuscleDistributionPreview(BuildContext context, ThemeData theme) {
+    return Padding(
+      padding: const EdgeInsets.all(16),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        children: [
+          _buildMuscleChip('Chest', 0.25, theme),
+          _buildMuscleChip('Back', 0.30, theme),
+          _buildMuscleChip('Legs', 0.20, theme),
+          _buildMuscleChip('Arms', 0.15, theme),
+          _buildMuscleChip('Core', 0.10, theme),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildMuscleChip(String label, double percentage, ThemeData theme) {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Container(
+          width: 44,
+          height: 44,
+          decoration: BoxDecoration(
+            color: theme.colorScheme.primary.withValues(alpha: percentage + 0.2),
+            shape: BoxShape.circle,
+          ),
+          child: Center(
+            child: Text(
+              '${(percentage * 100).round()}%',
+              style: theme.textTheme.labelSmall?.copyWith(
+                fontWeight: FontWeight.bold,
+                color: theme.colorScheme.onPrimary,
+              ),
+            ),
+          ),
+        ),
+        const SizedBox(height: 4),
+        Text(
+          label,
+          style: theme.textTheme.labelSmall?.copyWith(
+            fontSize: 10,
+          ),
+        ),
+      ],
+    );
+  }
+
+  void _navigateToUpgrade(BuildContext context) {
+    // Navigate to premium upgrade screen
+    Navigator.pushNamed(context, '/premium');
+  }
+
   Widget _buildRecentWorkouts(BuildContext context, List<Workout> workouts) {
     final theme = Theme.of(context);
     final l10n = AppLocalizations.of(context);
@@ -467,13 +732,14 @@ class _AnalyticsOverviewTabState extends ConsumerState<AnalyticsOverviewTab> {
     final theme = Theme.of(context);
     final l10n = AppLocalizations.of(context);
 
+    final safeMax = ModalService.safeMaxChildSize(context, preferredMax: 0.95);
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
       builder: (context) => DraggableScrollableSheet(
         initialChildSize: 0.7,
-        maxChildSize: 0.95,
+        maxChildSize: safeMax,
         minChildSize: 0.4,
         expand: false,
         builder: (context, scrollController) => Container(
@@ -1301,10 +1567,11 @@ class _AllActivitiesModalState extends State<_AllActivitiesModal> {
     final theme = Theme.of(context);
     final l10n = AppLocalizations.of(context);
 
+    final safeMax = ModalService.safeMaxChildSize(context, preferredMax: 0.95);
     return DraggableScrollableSheet(
-      initialChildSize: 0.9,
+      initialChildSize: safeMax.clamp(0.0, 0.9),
       minChildSize: 0.5,
-      maxChildSize: 0.95,
+      maxChildSize: safeMax,
       expand: false,
       builder: (context, scrollController) {
         return DecoratedBox(
@@ -2053,5 +2320,100 @@ class _MinimalStatsBarDelegate extends SliverPersistentHeaderDelegate {
     return stats != oldDelegate.stats ||
         workouts != oldDelegate.workouts ||
         weeklyGoal != oldDelegate.weeklyGoal;
+  }
+}
+
+/// Simple line chart painter for volume progression preview
+/// Shows an upward-trending line to visualize progress concept
+class _SimpleLineChartPainter extends CustomPainter {
+  _SimpleLineChartPainter({
+    required this.color,
+    required this.backgroundColor,
+  });
+
+  final Color color;
+  final Color backgroundColor;
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final paint = Paint()
+      ..color = color
+      ..strokeWidth = 2.5
+      ..style = PaintingStyle.stroke
+      ..strokeCap = StrokeCap.round;
+
+    final gridPaint = Paint()
+      ..color = backgroundColor
+      ..strokeWidth = 1;
+
+    // Draw subtle horizontal grid lines
+    for (var i = 0; i < 4; i++) {
+      final y = size.height * (i / 3);
+      canvas.drawLine(
+        Offset(0, y),
+        Offset(size.width, y),
+        gridPaint,
+      );
+    }
+
+    // Create upward-trending sample data points
+    final points = <Offset>[
+      Offset(0, size.height * 0.7),
+      Offset(size.width * 0.15, size.height * 0.65),
+      Offset(size.width * 0.3, size.height * 0.55),
+      Offset(size.width * 0.45, size.height * 0.5),
+      Offset(size.width * 0.6, size.height * 0.4),
+      Offset(size.width * 0.75, size.height * 0.35),
+      Offset(size.width * 0.9, size.height * 0.25),
+      Offset(size.width, size.height * 0.2),
+    ];
+
+    // Draw the line path
+    final path = Path();
+    path.moveTo(points.first.dx, points.first.dy);
+
+    for (var i = 1; i < points.length; i++) {
+      // Use quadratic bezier for smooth curves
+      final prev = points[i - 1];
+      final curr = points[i];
+      final controlX = (prev.dx + curr.dx) / 2;
+      path.quadraticBezierTo(controlX, prev.dy, controlX, curr.dy);
+      path.lineTo(curr.dx, curr.dy);
+    }
+
+    canvas.drawPath(path, paint);
+
+    // Draw gradient fill under the line
+    final fillPaint = Paint()
+      ..shader = LinearGradient(
+        begin: Alignment.topCenter,
+        end: Alignment.bottomCenter,
+        colors: [
+          color.withValues(alpha: 0.3),
+          color.withValues(alpha: 0.0),
+        ],
+      ).createShader(Rect.fromLTWH(0, 0, size.width, size.height));
+
+    final fillPath = Path.from(path);
+    fillPath.lineTo(size.width, size.height);
+    fillPath.lineTo(0, size.height);
+    fillPath.close();
+
+    canvas.drawPath(fillPath, fillPaint);
+
+    // Draw data points
+    final dotPaint = Paint()
+      ..color = color
+      ..style = PaintingStyle.fill;
+
+    for (final point in points) {
+      canvas.drawCircle(point, 3, dotPaint);
+    }
+  }
+
+  @override
+  bool shouldRepaint(_SimpleLineChartPainter oldDelegate) {
+    return color != oldDelegate.color ||
+        backgroundColor != oldDelegate.backgroundColor;
   }
 }

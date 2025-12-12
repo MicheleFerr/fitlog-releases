@@ -41,19 +41,25 @@ class _LegalDocumentScreenState extends ConsumerState<LegalDocumentScreen> {
   
   Future<void> _loadDocument() async {
     try {
-      final String fileName = widget.documentType == 'privacy' 
+      final String fileName = widget.documentType == 'privacy'
           ? 'assets/legal/privacy_policy.md'
           : 'assets/legal/terms_of_service.md';
-      
+
       // Load from assets
       final String content = await rootBundle.loadString(fileName);
-      
+
+      // 🔧 MEMORY LEAK FIX: Check mounted before setState after async operation
+      if (!mounted) return;
+
       setState(() {
         _documentContent = content;
         _isLoading = false;
       });
     } catch (e) {
       // Fallback to formatted content if asset loading fails
+      // 🔧 MEMORY LEAK FIX: Check mounted before setState after async operation
+      if (!mounted) return;
+
       setState(() {
         _documentContent = _getFormattedContent();
         _isLoading = false;

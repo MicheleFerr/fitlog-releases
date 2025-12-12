@@ -13,6 +13,10 @@ class WeightPickerModal {
   }) {
     return showModalBottomSheet<double>(
       context: context,
+      isScrollControlled: true,
+      isDismissible: true,
+      enableDrag: true,
+      backgroundColor: Colors.transparent,
       builder: (context) => _WeightPicker(
         initialWeight: initialWeight,
       ),
@@ -55,8 +59,6 @@ class _WeightPickerState extends ConsumerState<_WeightPicker> {
 
   @override
   Widget build(BuildContext context) {
-    final theme = context.theme;
-    final l10n = context.l10n;
     final unit = ref.watch(measurementUnitProvider);
 
     // This is needed to update the picker when the unit changes
@@ -65,21 +67,21 @@ class _WeightPickerState extends ConsumerState<_WeightPicker> {
 
     return StatefulBuilder(
       builder: (context, setModalState) => Container(
-        height: 380,
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
-          color: theme.colorScheme.surface,
-          borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
+          color: context.colors.surface,
+          borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
         ),
         child: Column(
+          mainAxisSize: MainAxisSize.min,
           children: [
             // Handle bar
             Container(
               width: 40,
               height: 4,
-              margin: const EdgeInsets.only(bottom: 16),
+              margin: const EdgeInsets.only(bottom: 12),
               decoration: BoxDecoration(
-                color: theme.colorScheme.outline.withValues(alpha: 0.3),
+                color: context.colors.onSurfaceVariant.withValues(alpha: 0.4),
                 borderRadius: BorderRadius.circular(2),
               ),
             ),
@@ -88,16 +90,16 @@ class _WeightPickerState extends ConsumerState<_WeightPicker> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  l10n.weight,
-                  style: theme.textTheme.titleMedium?.copyWith(
+                  context.l10n.weight,
+                  style: context.textTheme.titleMedium?.copyWith(
                     fontWeight: FontWeight.bold,
                   ),
                 ),
                 Text(
                   '${WeightHelper.formatPickerWeight(currentWeightInDisplayUnit, unit)} $unit',
-                  style: theme.textTheme.titleMedium?.copyWith(
+                  style: context.textTheme.titleMedium?.copyWith(
                     fontWeight: FontWeight.bold,
-                    color: theme.colorScheme.primary,
+                    color: context.colors.primary,
                   ),
                 ),
               ],
@@ -136,8 +138,8 @@ class _WeightPickerState extends ConsumerState<_WeightPicker> {
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
                       color: jump > 0
-                          ? theme.colorScheme.primary
-                          : theme.colorScheme.error,
+                          ? context.colors.primary
+                          : context.colors.error,
                     ),
                   ),
                 );
@@ -145,8 +147,10 @@ class _WeightPickerState extends ConsumerState<_WeightPicker> {
             ),
 
             const SizedBox(height: 16),
-            // Picker
-            Expanded(
+
+            // Picker - fixed height container
+            SizedBox(
+              height: 150,
               child: ListWheelScrollView.useDelegate(
                 controller: controller,
                 itemExtent: 50,
@@ -164,12 +168,12 @@ class _WeightPickerState extends ConsumerState<_WeightPicker> {
                     return Center(
                       child: Text(
                         displayText,
-                        style: theme.textTheme.headlineSmall?.copyWith(
+                        style: context.textTheme.headlineSmall?.copyWith(
                           fontWeight:
                               isSelected ? FontWeight.bold : FontWeight.normal,
                           color: isSelected
-                              ? theme.colorScheme.primary
-                              : theme.colorScheme.onSurface,
+                              ? context.colors.primary
+                              : context.colors.onSurface,
                         ),
                       ),
                     );
@@ -182,7 +186,9 @@ class _WeightPickerState extends ConsumerState<_WeightPicker> {
                 },
               ),
             ),
+
             const SizedBox(height: 16),
+
             // Confirm button
             SizedBox(
               width: double.infinity,
@@ -192,9 +198,15 @@ class _WeightPickerState extends ConsumerState<_WeightPicker> {
                   Navigator.of(context).pop(weightInKg);
                   HapticFeedback.mediumImpact();
                 },
-                child: Text(l10n.confirm),
+                style: FilledButton.styleFrom(
+                  padding: const EdgeInsets.symmetric(vertical: 12),
+                ),
+                child: Text(context.l10n.confirm),
               ),
             ),
+
+            // Bottom safe area
+            SizedBox(height: MediaQuery.of(context).padding.bottom),
           ],
         ),
       ),

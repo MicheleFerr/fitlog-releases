@@ -18,8 +18,6 @@ import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dar
 import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
 import 'package:gymbro_flutter_new/features/onboarding/presentation/providers/tutorial_state_notifier.dart';
 import 'package:gymbro_flutter_new/features/onboarding/domain/registry/tutorial_registry.dart';
-import 'package:gymbro_flutter_new/features/journey_themes/presentation/widgets/journey_theme_selector_modal.dart';
-import 'package:gymbro_flutter_new/features/journey_themes/presentation/providers/journey_theme_provider.dart';
 import 'package:gymbro_flutter_new/features/auth/presentation/providers/admin_provider.dart';
 import 'package:gymbro_flutter_new/features/auth/domain/entities/user_profile.dart';
 
@@ -82,8 +80,8 @@ class SettingsScreen extends ConsumerWidget {
             _buildWorkoutEssentialsSection(context, ref, config),
             const SizedBox(height: 24),
 
-            // AI Coach & Recovery
-            _buildAICoachSection(context),
+            // Data & Backup
+            _buildDataBackupSection(context),
             const SizedBox(height: 24),
 
             // Health Sync (Apple Health / Health Connect)
@@ -411,11 +409,6 @@ class SettingsScreen extends ConsumerWidget {
 
             const Divider(),
 
-            // Journey Themes (gamification visual themes)
-            _buildJourneyThemesTile(context, ref),
-
-            const Divider(),
-
             // Font Size (with live preview text)
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -527,7 +520,7 @@ class SettingsScreen extends ConsumerWidget {
     );
   }
 
-  Widget _buildAICoachSection(BuildContext context) {
+  Widget _buildDataBackupSection(BuildContext context) {
     return Card(
       child: Padding(
         padding: const EdgeInsets.all(16),
@@ -538,14 +531,14 @@ class SettingsScreen extends ConsumerWidget {
             Row(
               children: [
                 SemanticIcon(
-                  icon: AppIcons.insights,
-                  semanticLabel: 'AI Coach',
+                  icon: AppIcons.storage,
+                  semanticLabel: context.l10n.dataBackup,
                   size: AppIconSize.medium,
                   color: context.colors.primary,
                 ),
                 const SizedBox(width: 8),
                 Text(
-                  context.l10n.aiCoach,
+                  context.l10n.dataBackup,
                   style: context.textTheme.titleMedium?.copyWith(
                     fontWeight: FontWeight.bold,
                   ),
@@ -554,16 +547,16 @@ class SettingsScreen extends ConsumerWidget {
             ),
             const SizedBox(height: 16),
 
-            // AI Coach Entry Point
+            // Import Data from other apps
             _buildSettingTile(
               context,
-              title: context.l10n.aiCoachRecoveryInsights,
-              subtitle: context.l10n.aiCoachRecoveryInsightsDesc,
+              title: context.l10n.importData,
+              subtitle: context.l10n.importFromOtherApp,
               leading: const SemanticIcon(
-                icon: AppIcons.analytics,
-                semanticLabel: 'Analytics',
+                icon: AppIcons.download,
+                semanticLabel: 'Import',
               ),
-              onTap: () => context.pushNamed('ai-coach'),
+              onTap: () => context.pushNamed('import-data'),
             ),
           ],
         ),
@@ -778,6 +771,22 @@ class SettingsScreen extends ConsumerWidget {
               ),
               onTap: () => _showResetTutorialsDialog(context, ref),
             ),
+
+            const Divider(),
+
+            // Help Center
+            _buildSettingTile(
+              context,
+              title: context.l10n.helpCenter,
+              subtitle: context.l10n.helpCenterDescription,
+              leading: SemanticIcon(
+                icon: AppIcons.help,
+                semanticLabel: context.l10n.helpCenter,
+                size: AppIconSize.medium,
+                color: context.colors.primary,
+              ),
+              onTap: () => context.pushNamed('ai-coach'),
+            ),
           ],
         ),
       ),
@@ -862,45 +871,6 @@ class SettingsScreen extends ConsumerWidget {
       subtitle: Text(subtitle),
       value: value,
       onChanged: onChanged,
-      contentPadding: EdgeInsets.zero,
-    );
-  }
-
-  Widget _buildJourneyThemesTile(BuildContext context, WidgetRef ref) {
-    final themeState = ref.watch(journeyThemeProvider);
-    final theme = themeState.effectiveTheme;
-
-    return ListTile(
-      title: Text(context.l10n.journeyThemes),
-      subtitle: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Text(theme.emoji, style: context.textTheme.bodyMedium),
-          const SizedBox(width: 8),
-          Text(theme.displayName),
-        ],
-      ),
-      leading: Container(
-        width: 40,
-        height: 40,
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            colors: [
-              theme.primaryColor.withValues(alpha: 0.3),
-              theme.secondaryColor.withValues(alpha: 0.2),
-            ],
-          ),
-          borderRadius: BorderRadius.circular(12),
-        ),
-        child: Center(
-          child: Text(theme.emoji, style: context.textTheme.titleLarge),
-        ),
-      ),
-      trailing: const SemanticIcon(
-        icon: AppIcons.chevronRight,
-        semanticLabel: 'Chevron right',
-      ),
-      onTap: () => JourneyThemeSelectorModal.show(context),
       contentPadding: EdgeInsets.zero,
     );
   }

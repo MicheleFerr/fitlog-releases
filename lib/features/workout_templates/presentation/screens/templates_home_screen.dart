@@ -33,6 +33,10 @@ import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart'
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_spacing.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
+import 'package:gymbro_flutter_new/features/workout/presentation/screens/edit_template_screen.dart';
+import 'package:gymbro_flutter_new/features/workout/presentation/providers/workout_provider.dart';
+import 'package:gymbro_flutter_new/features/workout_templates/presentation/widgets/template_share_sheet.dart';
+import 'package:gymbro_flutter_new/features/auth/presentation/providers/consolidated_user_provider.dart';
 
 class TemplatesHomeScreen extends ConsumerStatefulWidget {
   const TemplatesHomeScreen({super.key});
@@ -42,9 +46,14 @@ class TemplatesHomeScreen extends ConsumerStatefulWidget {
 }
 
 class _TemplatesHomeScreenState extends ConsumerState<TemplatesHomeScreen>
-    with SingleTickerProviderStateMixin {
+    with TickerProviderStateMixin {
   late TabController _tabController;
   bool _isGridView = true;
+
+  // Auto-minimize animation state
+  bool _isMetricsMinimized = false;
+  late AnimationController _minimizeController;
+  late Animation<double> _minimizeAnimation;
 
   @override
   void initState() {
@@ -55,11 +64,30 @@ class _TemplatesHomeScreenState extends ConsumerState<TemplatesHomeScreen>
         setState(() {});
       }
     });
+
+    // Setup auto-minimize animation
+    _minimizeController = AnimationController(
+      duration: const Duration(milliseconds: 800),
+      vsync: this,
+    );
+    _minimizeAnimation = CurvedAnimation(
+      parent: _minimizeController,
+      curve: Curves.easeInOutCubic,
+    );
+
+    // Auto-minimize after 3 seconds
+    Future.delayed(const Duration(seconds: 3), () {
+      if (mounted && !_isMetricsMinimized) {
+        _minimizeController.forward();
+        setState(() => _isMetricsMinimized = true);
+      }
+    });
   }
 
   @override
   void dispose() {
     _tabController.dispose();
+    _minimizeController.dispose();
     super.dispose();
   }
 
@@ -74,22 +102,153 @@ class _TemplatesHomeScreenState extends ConsumerState<TemplatesHomeScreen>
         children: [
           CustomScrollView(
             slivers: [
-              // Collapsible header with metrics - slides up when scrolling
-              SliverPersistentHeader(
-                pinned: false,
-                floating: true,
-                delegate: _CollapsibleTemplateHeaderDelegate(
-                  myTemplatesCount: myTemplatesAsync.when(
-                    data: (templates) => templates.length,
-                    loading: () => 0,
-                    error: (_, __) => 0,
+              // Static header (back button, title, subtitle)
+              SliverToBoxAdapter(
+                child: SafeArea(
+                  bottom: false,
+                  child: Padding(
+                    padding: const EdgeInsets.fromLTRB(
+                      AppSpacing.sm,
+                      AppSpacing.sm,
+                      AppSpacing.sm,
+                      0,
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        // Top row with actions
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            IconButton(
+                              icon: SemanticIcon(
+                                icon: AppIcons.arrowBack,
+                                semanticLabel: l10n.back,
+                                size: AppIconSize.medium,
+                                color: context.colors.onSurfaceVariant,
+                              ),
+                              onPressed: () => Navigator.of(context).maybePop(),
+                            ),
+                            if (_tabController.index == 0)
+                              IconButton(
+                                icon: SemanticIcon(
+                                  icon: _isGridView ? AppIcons.viewList : AppIcons.gridView,
+                                  semanticLabel: _isGridView ? l10n.listView : l10n.gridView,
+                                  size: AppIconSize.medium,
+                                  color: context.colors.onSurfaceVariant,
+                                ),
+                                onPressed: () {
+                                  HapticFeedback.lightImpact();
+                                  setState(() => _isGridView = !_isGridView);
+                                },
+                              )
+                            else
+                              const SizedBox(width: 48),
+                          ],
+                        ),
+
+                        // Title and subtitle
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: AppSpacing.sm),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                l10n.workoutTemplates,
+                                style: context.textTheme.headlineMedium?.copyWith(
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              const SizedBox(height: AppSpacing.xs),
+                              Text(
+                                l10n.workoutRoutines,
+                                style: context.textTheme.bodyMedium?.copyWith(
+                                  color: context.colors.onSurfaceVariant,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
-                  publicTemplatesCount: templateState.publicTemplates.length,
-                  avgRating: 4.8,
-                  onViewModeToggle: _tabController.index == 0
-                      ? () => setState(() => _isGridView = !_isGridView)
-                      : null,
-                  isGridView: _isGridView,
+                ),
+              ),
+
+              // Animated metrics row - minimizes after 3 seconds
+              SliverToBoxAdapter(
+                child: AnimatedBuilder(
+                  animation: _minimizeAnimation,
+                  builder: (context, child) {
+                    final progress = _minimizeAnimation.value;
+                    // Height goes from 90 (expanded) to 50 (minimized)
+                    final height = 90.0 - (40.0 * progress);
+                    // Labels fade out
+                    final labelOpacity = 1.0 - progress;
+
+                    return GestureDetector(
+                      onTap: () {
+                        // Toggle minimize on tap
+                        if (_isMetricsMinimized) {
+                          _minimizeController.reverse();
+                        } else {
+                          _minimizeController.forward();
+                        }
+                        setState(() => _isMetricsMinimized = !_isMetricsMinimized);
+                      },
+                      child: Padding(
+                        padding: const EdgeInsets.fromLTRB(
+                          AppSpacing.md,
+                          AppSpacing.md,
+                          AppSpacing.md,
+                          AppSpacing.sm,
+                        ),
+                        child: SizedBox(
+                          height: height,
+                          child: Row(
+                            children: [
+                              Expanded(
+                                child: _buildAnimatedMetricCard(
+                                  context,
+                                  icon: AppIcons.folderOutlined,
+                                  value: myTemplatesAsync.when(
+                                    data: (t) => '${t.length}',
+                                    loading: () => '0',
+                                    error: (_, __) => '0',
+                                  ),
+                                  label: l10n.myTemplates,
+                                  color: context.colors.primary,
+                                  labelOpacity: labelOpacity,
+                                ),
+                              ),
+                              const SizedBox(width: AppSpacing.sm),
+                              Expanded(
+                                child: _buildAnimatedMetricCard(
+                                  context,
+                                  icon: AppIcons.public,
+                                  value: '${templateState.publicTemplates.length}',
+                                  label: l10n.discover,
+                                  color: context.colors.secondary,
+                                  labelOpacity: labelOpacity,
+                                ),
+                              ),
+                              const SizedBox(width: AppSpacing.sm),
+                              Expanded(
+                                child: _buildAnimatedMetricCard(
+                                  context,
+                                  icon: AppIcons.star,
+                                  value: '4.8',
+                                  label: l10n.avgRating,
+                                  color: context.colors.tertiary,
+                                  labelOpacity: labelOpacity,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    );
+                  },
                 ),
               ),
 
@@ -140,6 +299,66 @@ class _TemplatesHomeScreenState extends ConsumerState<TemplatesHomeScreen>
               backgroundColor: context.colors.primary,
               foregroundColor: context.colors.onPrimary,
             ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildAnimatedMetricCard(
+    BuildContext context, {
+    required IconData icon,
+    required String value,
+    required String label,
+    required Color color,
+    required double labelOpacity,
+  }) {
+    return Container(
+      padding: const EdgeInsets.symmetric(
+        vertical: AppSpacing.sm,
+        horizontal: AppSpacing.xs,
+      ),
+      decoration: BoxDecoration(
+        color: color.withValues(alpha: 0.1),
+        borderRadius: BorderRadius.circular(AppSpacing.sm),
+      ),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              SemanticIcon(
+                icon: icon,
+                semanticLabel: label,
+                size: AppIconSize.small,
+                color: color,
+              ),
+              const SizedBox(width: AppSpacing.xs),
+              Text(
+                value,
+                style: context.textTheme.titleMedium?.copyWith(
+                  fontWeight: FontWeight.bold,
+                  color: color,
+                ),
+              ),
+            ],
+          ),
+          if (labelOpacity > 0.01) ...[
+            const SizedBox(height: AppSpacing.xs),
+            Opacity(
+              opacity: labelOpacity,
+              child: Text(
+                label,
+                style: context.textTheme.labelSmall?.copyWith(
+                  color: context.colors.onSurfaceVariant,
+                ),
+                textAlign: TextAlign.center,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+              ),
+            ),
+          ],
         ],
       ),
     );
@@ -209,8 +428,10 @@ class _TemplatesHomeScreenState extends ConsumerState<TemplatesHomeScreen>
             final template = templates[index];
             return _WorkoutTemplateCard(
               template: template,
-              onTap: () => _openWorkoutTemplate(context, template),
-              onEdit: () => _editWorkoutTemplate(context, template),
+              onTap: () => _editWorkoutTemplate(context, template), // Tap → Edit
+              onStartWorkout: () => _openWorkoutTemplate(context, template), // Menu → Start workout
+              onDuplicate: () => _duplicateTemplate(context, template),
+              onShare: () => _shareTemplate(context, template),
               onDelete: () => _deleteWorkoutTemplate(context, template),
             );
           },
@@ -231,6 +452,7 @@ class _TemplatesHomeScreenState extends ConsumerState<TemplatesHomeScreen>
             return Card(
               margin: const EdgeInsets.only(bottom: AppSpacing.sm),
               child: ListTile(
+                onTap: () => _editWorkoutTemplate(context, template), // Tap → Edit
                 leading: CircleAvatar(
                   backgroundColor: context.colors.primaryContainer,
                   child: SemanticIcon(
@@ -253,24 +475,108 @@ class _TemplatesHomeScreenState extends ConsumerState<TemplatesHomeScreen>
                 ),
                 trailing: PopupMenuButton<String>(
                   onSelected: (value) {
-                    if (value == 'edit') _editWorkoutTemplate(context, template);
+                    if (value == 'start') _openWorkoutTemplate(context, template);
+                    if (value == 'duplicate') _duplicateTemplate(context, template);
+                    if (value == 'share') _shareTemplate(context, template);
                     if (value == 'delete') _deleteWorkoutTemplate(context, template);
                   },
                   itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
+                    // Start Workout option (primary action in menu)
                     PopupMenuItem<String>(
-                      value: 'edit',
+                      value: 'start',
                       child: Row(
                         children: [
                           SemanticIcon(
-                            icon: AppIcons.edit,
-                            semanticLabel: l10n.edit,
+                            icon: AppIcons.play,
+                            semanticLabel: l10n.startWorkout,
                             size: AppIconSize.small,
+                            color: context.colors.primary,
                           ),
                           const SizedBox(width: AppSpacing.sm),
-                          Text(l10n.edit),
+                          Text(
+                            l10n.startWorkout,
+                            style: context.textTheme.bodyMedium?.copyWith(
+                              color: context.colors.primary,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
                         ],
                       ),
                     ),
+                    const PopupMenuDivider(),
+                    // Duplicate option
+                    PopupMenuItem<String>(
+                      value: 'duplicate',
+                      child: Row(
+                        children: [
+                          SemanticIcon(
+                            icon: AppIcons.copy,
+                            semanticLabel: l10n.duplicate,
+                            size: AppIconSize.small,
+                            color: context.colors.onSurface,
+                          ),
+                          const SizedBox(width: AppSpacing.sm),
+                          Text(l10n.duplicate, style: context.textTheme.bodyMedium),
+                        ],
+                      ),
+                    ),
+                    // Share option
+                    PopupMenuItem<String>(
+                      value: 'share',
+                      child: Row(
+                        children: [
+                          SemanticIcon(
+                            icon: AppIcons.share,
+                            semanticLabel: l10n.share,
+                            size: AppIconSize.small,
+                            color: context.colors.onSurface,
+                          ),
+                          const SizedBox(width: AppSpacing.sm),
+                          Text(l10n.share, style: context.textTheme.bodyMedium),
+                        ],
+                      ),
+                    ),
+                    // Make Public option (future feature - disabled)
+                    PopupMenuItem<String>(
+                      value: 'make_public',
+                      enabled: false,
+                      child: Row(
+                        children: [
+                          SemanticIcon(
+                            icon: AppIcons.public,
+                            semanticLabel: l10n.makePublic,
+                            size: AppIconSize.small,
+                            color: context.colors.onSurfaceVariant.withValues(alpha: 0.5),
+                          ),
+                          const SizedBox(width: AppSpacing.sm),
+                          Text(
+                            l10n.makePublic,
+                            style: context.textTheme.bodyMedium?.copyWith(
+                              color: context.colors.onSurfaceVariant.withValues(alpha: 0.5),
+                            ),
+                          ),
+                          const SizedBox(width: AppSpacing.sm),
+                          Container(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: AppSpacing.xs,
+                              vertical: 2,
+                            ),
+                            decoration: BoxDecoration(
+                              color: context.colors.surfaceContainerHighest,
+                              borderRadius: BorderRadius.circular(4),
+                            ),
+                            child: Text(
+                              'Soon',
+                              style: context.textTheme.labelSmall?.copyWith(
+                                color: context.colors.onSurfaceVariant,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    const PopupMenuDivider(),
+                    // Delete option
                     PopupMenuItem<String>(
                       value: 'delete',
                       child: Row(
@@ -288,7 +594,6 @@ class _TemplatesHomeScreenState extends ConsumerState<TemplatesHomeScreen>
                     ),
                   ],
                 ),
-                onTap: () => _openWorkoutTemplate(context, template),
               ),
             );
           },
@@ -298,12 +603,41 @@ class _TemplatesHomeScreenState extends ConsumerState<TemplatesHomeScreen>
     );
   }
 
-  void _openWorkoutTemplate(BuildContext context, workout_template.WorkoutTemplate template) {
-    context.push('/templates/${template.id}');
+  void _openWorkoutTemplate(BuildContext context, workout_template.WorkoutTemplate template) async {
+    try {
+      // Increment usage count
+      await ref.read(workoutTemplateNotifierProvider.notifier).incrementUsage(template.id);
+
+      // Create and start workout from template
+      final workoutNotifier = ref.read(currentWorkoutProvider.notifier);
+      workoutNotifier.createWorkout(template.name);
+      workoutNotifier.startWorkout();
+
+      // Add exercises from template
+      final exercises = template.toWorkoutExercises();
+      for (final exercise in exercises) {
+        workoutNotifier.addExercise(exercise);
+      }
+
+      if (context.mounted) {
+        final l10n = AppLocalizations.of(context);
+        SnackBarService.showSuccess(context, l10n.workoutStartedFromTemplate(template.name));
+        // Navigate to workout tab (separate branch in StatefulShellRoute)
+        context.go('/workout');
+      }
+    } catch (e) {
+      if (context.mounted) {
+        SnackBarService.showError(context, 'Error starting workout: $e');
+      }
+    }
   }
 
   void _editWorkoutTemplate(BuildContext context, workout_template.WorkoutTemplate template) {
-    context.push('/templates/${template.id}/edit');
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) => EditTemplateScreen(template: template),
+      ),
+    );
   }
 
   Future<void> _deleteWorkoutTemplate(BuildContext context, workout_template.WorkoutTemplate template) async {
@@ -341,6 +675,24 @@ class _TemplatesHomeScreenState extends ConsumerState<TemplatesHomeScreen>
         }
       }
     }
+  }
+
+  Future<void> _duplicateTemplate(BuildContext context, workout_template.WorkoutTemplate template) async {
+    final l10n = AppLocalizations.of(context);
+    try {
+      await ref.read(workoutTemplateNotifierProvider.notifier).duplicateTemplate(template);
+      if (context.mounted) {
+        SnackBarService.showSuccess(context, l10n.templateDuplicated(template.name));
+      }
+    } catch (e) {
+      if (context.mounted) {
+        SnackBarService.showError(context, 'Error: $e');
+      }
+    }
+  }
+
+  void _shareTemplate(BuildContext context, workout_template.WorkoutTemplate template) {
+    showTemplateShareSheet(context: context, template: template);
   }
 
   Widget _buildDiscoverTab(BuildContext context) {
@@ -532,7 +884,22 @@ class _TemplatesHomeScreenState extends ConsumerState<TemplatesHomeScreen>
               subtitle: Text(l10n.buildFromScratch),
               onTap: () {
                 Navigator.pop(context);
-                context.push('/templates/create');
+                // Create a new empty template and navigate to edit screen
+                final userId = ref.read(currentUserIdProvider);
+                final newTemplate = workout_template.WorkoutTemplate(
+                  name: l10n.newTemplate,
+                  description: '',
+                  exercises: [],
+                  estimatedDuration: 45,
+                  tags: [],
+                  isCustom: true,
+                  userId: userId, // ✅ Required for Firestore security rules
+                );
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => EditTemplateScreen(template: newTemplate),
+                  ),
+                );
               },
             ),
             SizedBox(height: MediaQuery.of(context).padding.bottom + AppSpacing.md),
@@ -571,231 +938,6 @@ class _TemplatesHomeScreenState extends ConsumerState<TemplatesHomeScreen>
       context: context,
       builder: (context) => const TemplateFiltersSheet(),
     );
-  }
-}
-
-// ============================================================================
-// COLLAPSIBLE HEADER DELEGATE - Slides up when scrolling (like Stats)
-// ============================================================================
-
-class _CollapsibleTemplateHeaderDelegate extends SliverPersistentHeaderDelegate {
-  _CollapsibleTemplateHeaderDelegate({
-    required this.myTemplatesCount,
-    required this.publicTemplatesCount,
-    required this.avgRating,
-    this.onViewModeToggle,
-    this.isGridView = true,
-  });
-
-  final int myTemplatesCount;
-  final int publicTemplatesCount;
-  final double avgRating;
-  final VoidCallback? onViewModeToggle;
-  final bool isGridView;
-
-  // Header expanded height (SafeArea + header + metrics + padding)
-  static const double _expandedHeight = 220.0;
-  // Collapsed height (0 = fully hidden)
-  static const double _collapsedHeight = 0.0;
-
-  @override
-  double get minExtent => _collapsedHeight;
-
-  @override
-  double get maxExtent => _expandedHeight;
-
-  @override
-  Widget build(BuildContext context, double shrinkOffset, bool overlapsContent) {
-    final l10n = AppLocalizations.of(context);
-
-    // Calculate collapse progress (0 = expanded, 1 = collapsed)
-    final progress = (shrinkOffset / maxExtent).clamp(0.0, 1.0);
-    final opacity = 1.0 - progress;
-
-    // Don't render if fully collapsed
-    if (opacity <= 0.01) return const SizedBox.shrink();
-
-    return Opacity(
-      opacity: opacity,
-      child: Container(
-        decoration: BoxDecoration(
-          color: context.colors.surface,
-          boxShadow: shrinkOffset > 0
-              ? [
-                  BoxShadow(
-                    color: context.colors.onSurface.withValues(alpha: 0.05),
-                    blurRadius: 4,
-                    offset: const Offset(0, 2),
-                  ),
-                ]
-              : null,
-        ),
-        child: SafeArea(
-          bottom: false,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // Top row with actions
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: AppSpacing.sm),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    // Back button
-                    IconButton(
-                      icon: SemanticIcon(
-                        icon: AppIcons.arrowBack,
-                        semanticLabel: l10n.back,
-                        size: AppIconSize.medium,
-                        color: context.colors.onSurfaceVariant,
-                      ),
-                      onPressed: () => Navigator.of(context).maybePop(),
-                    ),
-                    // View toggle (only on My Templates)
-                    if (onViewModeToggle != null)
-                      IconButton(
-                        icon: SemanticIcon(
-                          icon: isGridView ? AppIcons.viewList : AppIcons.gridView,
-                          semanticLabel: isGridView ? l10n.listView : l10n.gridView,
-                          size: AppIconSize.medium,
-                          color: context.colors.onSurfaceVariant,
-                        ),
-                        onPressed: () {
-                          HapticFeedback.lightImpact();
-                          onViewModeToggle!();
-                        },
-                      )
-                    else
-                      const SizedBox(width: 48), // Placeholder for alignment
-                  ],
-                ),
-              ),
-
-              // Title and subtitle
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: AppSpacing.md),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      l10n.workoutTemplates,
-                      style: context.textTheme.headlineMedium?.copyWith(
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    const SizedBox(height: AppSpacing.xs),
-                    Text(
-                      l10n.workoutRoutines,
-                      style: context.textTheme.bodyMedium?.copyWith(
-                        color: context.colors.onSurfaceVariant,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-
-              const SizedBox(height: AppSpacing.md),
-
-              // Metrics row
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: AppSpacing.md),
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: _buildMetricCard(
-                        context,
-                        icon: AppIcons.folderOutlined,
-                        value: '$myTemplatesCount',
-                        label: l10n.myTemplates,
-                        color: context.colors.primary,
-                      ),
-                    ),
-                    const SizedBox(width: AppSpacing.sm),
-                    Expanded(
-                      child: _buildMetricCard(
-                        context,
-                        icon: AppIcons.public,
-                        value: '$publicTemplatesCount',
-                        label: l10n.discover,
-                        color: context.colors.secondary,
-                      ),
-                    ),
-                    const SizedBox(width: AppSpacing.sm),
-                    Expanded(
-                      child: _buildMetricCard(
-                        context,
-                        icon: AppIcons.star,
-                        value: avgRating.toStringAsFixed(1),
-                        label: l10n.avgRating,
-                        color: context.colors.tertiary,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-
-              const SizedBox(height: AppSpacing.sm),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildMetricCard(
-    BuildContext context, {
-    required IconData icon,
-    required String value,
-    required String label,
-    required Color color,
-  }) {
-    return Container(
-      padding: const EdgeInsets.symmetric(
-        vertical: AppSpacing.sm,
-        horizontal: AppSpacing.xs,
-      ),
-      decoration: BoxDecoration(
-        color: color.withValues(alpha: 0.1),
-        borderRadius: BorderRadius.circular(12),
-      ),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          SemanticIcon(
-            icon: icon,
-            semanticLabel: label,
-            size: AppIconSize.small,
-            color: color,
-          ),
-          const SizedBox(height: AppSpacing.xs),
-          Text(
-            value,
-            style: context.textTheme.titleMedium?.copyWith(
-              fontWeight: FontWeight.bold,
-              color: color,
-            ),
-          ),
-          Text(
-            label,
-            style: context.textTheme.labelSmall?.copyWith(
-              color: context.colors.onSurfaceVariant,
-            ),
-            textAlign: TextAlign.center,
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
-          ),
-        ],
-      ),
-    );
-  }
-
-  @override
-  bool shouldRebuild(_CollapsibleTemplateHeaderDelegate oldDelegate) {
-    return myTemplatesCount != oldDelegate.myTemplatesCount ||
-           publicTemplatesCount != oldDelegate.publicTemplatesCount ||
-           avgRating != oldDelegate.avgRating ||
-           onViewModeToggle != oldDelegate.onViewModeToggle ||
-           isGridView != oldDelegate.isGridView;
   }
 }
 
@@ -1051,13 +1193,17 @@ class _WorkoutTemplateCard extends ConsumerWidget {
   const _WorkoutTemplateCard({
     required this.template,
     required this.onTap,
-    required this.onEdit,
+    required this.onStartWorkout,
+    required this.onDuplicate,
+    required this.onShare,
     required this.onDelete,
   });
 
   final workout_template.WorkoutTemplate template;
-  final VoidCallback onTap;
-  final VoidCallback onEdit;
+  final VoidCallback onTap; // Now goes to Edit
+  final VoidCallback onStartWorkout; // Starts workout
+  final VoidCallback onDuplicate; // Duplicates template
+  final VoidCallback onShare; // Shares template
   final VoidCallback onDelete;
 
   @override
@@ -1070,7 +1216,7 @@ class _WorkoutTemplateCard extends ConsumerWidget {
       child: Container(
         decoration: BoxDecoration(
           color: context.colors.surface,
-          borderRadius: BorderRadius.circular(16),
+          borderRadius: BorderRadius.circular(AppSpacing.md),
           boxShadow: [
             BoxShadow(
               color: context.colors.shadow.withValues(alpha: 0.1),
@@ -1094,7 +1240,7 @@ class _WorkoutTemplateCard extends ConsumerWidget {
                     padding: const EdgeInsets.all(AppSpacing.sm),
                     decoration: BoxDecoration(
                       color: context.colors.primaryContainer,
-                      borderRadius: BorderRadius.circular(8),
+                      borderRadius: BorderRadius.circular(AppSpacing.sm),
                     ),
                     child: SemanticIcon(
                       icon: AppIcons.workout,
@@ -1111,24 +1257,108 @@ class _WorkoutTemplateCard extends ConsumerWidget {
                       size: AppIconSize.small,
                     ),
                     onSelected: (value) {
-                      if (value == 'edit') onEdit();
+                      if (value == 'start') onStartWorkout();
+                      if (value == 'duplicate') onDuplicate();
+                      if (value == 'share') onShare();
                       if (value == 'delete') onDelete();
                     },
                     itemBuilder: (context) => [
+                      // Start Workout option (primary action in menu)
                       PopupMenuItem(
-                        value: 'edit',
+                        value: 'start',
                         child: Row(
                           children: [
                             SemanticIcon(
-                              icon: AppIcons.edit,
-                              semanticLabel: l10n.edit,
+                              icon: AppIcons.play,
+                              semanticLabel: l10n.startWorkout,
                               size: AppIconSize.small,
+                              color: context.colors.primary,
                             ),
                             const SizedBox(width: AppSpacing.sm),
-                            Text(l10n.edit),
+                            Text(
+                              l10n.startWorkout,
+                              style: context.textTheme.bodyMedium?.copyWith(
+                                color: context.colors.primary,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
                           ],
                         ),
                       ),
+                      const PopupMenuDivider(),
+                      // Duplicate option
+                      PopupMenuItem(
+                        value: 'duplicate',
+                        child: Row(
+                          children: [
+                            SemanticIcon(
+                              icon: AppIcons.copy,
+                              semanticLabel: l10n.duplicate,
+                              size: AppIconSize.small,
+                              color: context.colors.onSurface,
+                            ),
+                            const SizedBox(width: AppSpacing.sm),
+                            Text(l10n.duplicate, style: context.textTheme.bodyMedium),
+                          ],
+                        ),
+                      ),
+                      // Share option
+                      PopupMenuItem(
+                        value: 'share',
+                        child: Row(
+                          children: [
+                            SemanticIcon(
+                              icon: AppIcons.share,
+                              semanticLabel: l10n.share,
+                              size: AppIconSize.small,
+                              color: context.colors.onSurface,
+                            ),
+                            const SizedBox(width: AppSpacing.sm),
+                            Text(l10n.share, style: context.textTheme.bodyMedium),
+                          ],
+                        ),
+                      ),
+                      // Make Public option (future feature - disabled)
+                      PopupMenuItem(
+                        value: 'make_public',
+                        enabled: false, // Disabled for now
+                        child: Row(
+                          children: [
+                            SemanticIcon(
+                              icon: AppIcons.public,
+                              semanticLabel: l10n.makePublic,
+                              size: AppIconSize.small,
+                              color: context.colors.onSurfaceVariant.withValues(alpha: 0.5),
+                            ),
+                            const SizedBox(width: AppSpacing.sm),
+                            Text(
+                              l10n.makePublic,
+                              style: context.textTheme.bodyMedium?.copyWith(
+                                color: context.colors.onSurfaceVariant.withValues(alpha: 0.5),
+                              ),
+                            ),
+                            const Spacer(),
+                            Container(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: AppSpacing.xs,
+                                vertical: 2,
+                              ),
+                              decoration: BoxDecoration(
+                                color: context.colors.surfaceContainerHighest,
+                                borderRadius: BorderRadius.circular(4),
+                              ),
+                              child: Text(
+                                'Soon',
+                                style: context.textTheme.labelSmall?.copyWith(
+                                  color: context.colors.onSurfaceVariant,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      const PopupMenuDivider(),
+                      // Delete option
                       PopupMenuItem(
                         value: 'delete',
                         child: Row(

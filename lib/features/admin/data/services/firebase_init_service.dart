@@ -11,6 +11,7 @@ import 'dart:convert';
 import 'dart:developer';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/foundation.dart' show kDebugMode;
 import 'package:flutter/services.dart';
 import 'package:gymbro_flutter_new/features/admin/domain/entities/firebase_init_result.dart';
 import 'package:gymbro_flutter_new/features/exercise_database/domain/entities/exercise.dart';
@@ -28,7 +29,9 @@ class FirebaseInitService {
     String? specificVersion,
   }) async {
     try {
-      debugPrint('🔥 Starting Firebase initialization...');
+      if (kDebugMode) {
+        debugPrint('🔥 Starting Firebase initialization...');
+      }
       final startTime = DateTime.now();
 
       // 1. Carica esercizi dal JSON locale
@@ -40,7 +43,9 @@ class FirebaseInitService {
         );
       }
 
-      debugPrint('📚 Loaded ${exercises.length} exercises from assets');
+      if (kDebugMode) {
+        debugPrint('📚 Loaded ${exercises.length} exercises from assets');
+      }
 
       // 2. Controlla se la collection esiste già
       final existingCount = await _getExercisesCount();
@@ -61,7 +66,9 @@ class FirebaseInitService {
       await _createSearchMetadata(exercises);
 
       final duration = DateTime.now().difference(startTime);
-      debugPrint('✅ Firebase initialization completed in ${duration.inSeconds}s');
+      if (kDebugMode) {
+        debugPrint('✅ Firebase initialization completed in ${duration.inSeconds}s');
+      }
 
       return FirebaseInitResult.success(
         exerciseCount: exercises.length,
@@ -71,7 +78,9 @@ class FirebaseInitService {
       );
 
     } catch (e, stackTrace) {
-      debugPrint('❌ Firebase initialization failed: $e');
+      if (kDebugMode) {
+        debugPrint('❌ Firebase initialization failed: $e');
+      }
       log('Firebase init error', error: e, stackTrace: stackTrace);
 
       return FirebaseInitResult.failure(
@@ -87,7 +96,9 @@ class FirebaseInitService {
     String? newVersion,
   }) async {
     try {
-      debugPrint('🔄 Updating specific exercises: ${exerciseIds.join(", ")}');
+      if (kDebugMode) {
+        debugPrint('🔄 Updating specific exercises: ${exerciseIds.join(", ")}');
+      }
       final startTime = DateTime.now();
 
       // Carica tutti gli esercizi dal JSON
@@ -120,7 +131,9 @@ class FirebaseInitService {
       }
 
       final duration = DateTime.now().difference(startTime);
-      debugPrint('✅ Updated ${exercisesToUpdate.length} exercises');
+      if (kDebugMode) {
+        debugPrint('✅ Updated ${exercisesToUpdate.length} exercises');
+      }
 
       return FirebaseInitResult.success(
         exerciseCount: exercisesToUpdate.length,
@@ -130,7 +143,9 @@ class FirebaseInitService {
       );
 
     } catch (e) {
-      debugPrint('❌ Exercise update failed: $e');
+      if (kDebugMode) {
+        debugPrint('❌ Exercise update failed: $e');
+      }
       return FirebaseInitResult.failure(
         'Update failed: $e',
         Duration.zero,
@@ -141,24 +156,32 @@ class FirebaseInitService {
   /// Risolve i dati mancanti identificando e reinserendo gli esercizi mancanti
   Future<FirebaseInitResult> fixMissingData() async {
     try {
-      debugPrint('🔧 Fixing missing data...');
+      if (kDebugMode) {
+        debugPrint('🔧 Fixing missing data...');
+      }
       final startTime = DateTime.now();
 
       // 1. Carica esercizi dal JSON
       final allExercises = await _loadExercisesFromAssets();
-      debugPrint('📚 Loaded ${allExercises.length} exercises from JSON');
+      if (kDebugMode) {
+        debugPrint('📚 Loaded ${allExercises.length} exercises from JSON');
+      }
 
       // 2. Ottieni tutti gli ID esistenti nel database
       final existingDocs = await _firestore.collection('exercises').get();
       final existingIds = existingDocs.docs.map((doc) => doc.id).toSet();
-      debugPrint('💾 Found ${existingIds.length} exercises in database');
+      if (kDebugMode) {
+        debugPrint('💾 Found ${existingIds.length} exercises in database');
+      }
 
       // 3. Trova esercizi mancanti
       final missingExercises = allExercises
           .where((exercise) => !existingIds.contains(exercise.id))
           .toList();
 
-      debugPrint('🔍 Found ${missingExercises.length} missing exercises');
+      if (kDebugMode) {
+        debugPrint('🔍 Found ${missingExercises.length} missing exercises');
+      }
 
       if (missingExercises.isEmpty) {
         return FirebaseInitResult.success(
@@ -177,7 +200,9 @@ class FirebaseInitService {
       await _setVersionMetadata('1.0.1-fixed', allExercises.length);
 
       final summary = 'Fixed ${missingExercises.length} missing exercises';
-      debugPrint('✅ Missing data fix completed');
+      if (kDebugMode) {
+        debugPrint('✅ Missing data fix completed');
+      }
 
       return FirebaseInitResult.success(
         message: summary,
@@ -191,7 +216,9 @@ class FirebaseInitService {
         },
       );
     } catch (e) {
-      debugPrint('❌ Fix missing data failed: $e');
+      if (kDebugMode) {
+        debugPrint('❌ Fix missing data failed: $e');
+      }
       return FirebaseInitResult.failure(
         'Fix failed: $e',
         Duration.zero,
@@ -202,7 +229,9 @@ class FirebaseInitService {
   /// Verifica integrità dei dati
   Future<FirebaseInitResult> verifyDataIntegrity() async {
     try {
-      debugPrint('🔍 Verifying data integrity...');
+      if (kDebugMode) {
+        debugPrint('🔍 Verifying data integrity...');
+      }
       final startTime = DateTime.now();
 
       // 1. Controlla metadata versione
@@ -248,7 +277,9 @@ class FirebaseInitService {
       }
 
       final duration = DateTime.now().difference(startTime);
-      debugPrint('✅ Data integrity verified');
+      if (kDebugMode) {
+        debugPrint('✅ Data integrity verified');
+      }
 
       return FirebaseInitResult.success(
         exerciseCount: actualCount,
@@ -258,7 +289,9 @@ class FirebaseInitService {
       );
 
     } catch (e) {
-      debugPrint('❌ Integrity verification failed: $e');
+      if (kDebugMode) {
+        debugPrint('❌ Integrity verification failed: $e');
+      }
       return FirebaseInitResult.failure(
         'Verification failed: $e',
         Duration.zero,
@@ -276,7 +309,9 @@ class FirebaseInitService {
           .map((json) => Exercise.fromJson(json as Map<String, dynamic>))
           .toList();
     } catch (e) {
-      debugPrint('❌ Failed to load exercises from assets: $e');
+      if (kDebugMode) {
+        debugPrint('❌ Failed to load exercises from assets: $e');
+      }
       rethrow;
     }
   }
@@ -313,7 +348,9 @@ class FirebaseInitService {
       await batch.commit();
       batchCount++;
 
-      debugPrint('📦 Batch $batchCount completed: ${endIndex - i} exercises');
+      if (kDebugMode) {
+        debugPrint('📦 Batch $batchCount completed: ${endIndex - i} exercises');
+      }
     }
 
     return BatchWriteResult(batchCount: batchCount);
@@ -357,7 +394,9 @@ class FirebaseInitService {
 
   /// Cancella completamente la collection exercises
   Future<void> _clearExercisesCollection() async {
-    debugPrint('🗑️ Clearing existing exercises collection...');
+    if (kDebugMode) {
+      debugPrint('🗑️ Clearing existing exercises collection...');
+    }
 
     const batchSize = 500;
     final Query query = _firestore.collection('exercises').limit(batchSize);
@@ -375,7 +414,9 @@ class FirebaseInitService {
       snapshot = await query.get();
     }
 
-    debugPrint('✅ Exercises collection cleared');
+    if (kDebugMode) {
+      debugPrint('✅ Exercises collection cleared');
+    }
   }
 
   /// Imposta metadata della versione
@@ -388,7 +429,9 @@ class FirebaseInitService {
       'format': 'hybrid_v1',
     });
 
-    debugPrint('📋 Version metadata set: v$version ($exerciseCount exercises)');
+    if (kDebugMode) {
+      debugPrint('📋 Version metadata set: v$version ($exerciseCount exercises)');
+    }
   }
 
   /// Aggiorna metadata della versione
@@ -402,7 +445,9 @@ class FirebaseInitService {
       },
     });
 
-    debugPrint('📋 Version metadata updated: v$version ($updatedCount exercises updated)');
+    if (kDebugMode) {
+      debugPrint('📋 Version metadata updated: v$version ($updatedCount exercises updated)');
+    }
   }
 
   /// Crea metadata per ricerca ottimizzata
@@ -433,7 +478,9 @@ class FirebaseInitService {
       'lastIndexed': FieldValue.serverTimestamp(),
     });
 
-    debugPrint('🔍 Search metadata created');
+    if (kDebugMode) {
+      debugPrint('🔍 Search metadata created');
+    }
   }
 
   /// Verifica se i dati dell'esercizio sono validi

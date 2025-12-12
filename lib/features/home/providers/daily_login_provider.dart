@@ -1,7 +1,10 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:gymbro_flutter_new/shared/providers/shared_preferences_provider.dart';
 import 'package:gymbro_flutter_new/features/home/domain/models/level_system.dart';
+import 'package:gymbro_flutter_new/core/cache/user_cache_key_manager.dart';
+import 'package:gymbro_flutter_new/features/home/providers/user_xp_provider.dart';
 
 class DailyLoginState {
   
@@ -41,10 +44,11 @@ class DailyLoginNotifier extends Notifier<DailyLoginState> {
     return DailyLoginState();
   }
   
-  static const String _lastLoginKey = 'last_login_date';
-  static const String _consecutiveDaysKey = 'consecutive_login_days';
-  static const String _totalXpKey = 'total_login_xp';
-  static const String _lastBonusDateKey = 'last_bonus_claim_date';
+  // 🔐 User-scoped cache keys for login streak data
+  String get _lastLoginKey => userCacheKeys.userScopedKey('last_login_date');
+  String get _consecutiveDaysKey => userCacheKeys.userScopedKey('consecutive_login_days');
+  String get _totalXpKey => userCacheKeys.userScopedKey('total_login_xp');
+  String get _lastBonusDateKey => userCacheKeys.userScopedKey('last_bonus_claim_date');
   
   void _loadState() {
     final lastLoginStr = _prefs.getString(_lastLoginKey);
@@ -117,10 +121,14 @@ class DailyLoginNotifier extends Notifier<DailyLoginState> {
       
       await _prefs.setInt(_totalXpKey, newTotalXp);
       await _prefs.setString(_lastBonusDateKey, DateTime.now().toIso8601String());
-      
-      // TODO: Qui andrebbe aggiornato anche il provider degli XP totali dell'utente
-      // ref.read(userXpProvider.notifier).addXp(bonusXp);
-      
+
+      // ✅ FIX: Aggiungi XP al provider centrale
+      await ref.read(userXPProvider.notifier).addDailyLoginXP(bonusXp);
+
+      if (kDebugMode) {
+        debugPrint('🎁 [DailyLogin] Bonus claimed: +$bonusXp XP (streak: ${state.consecutiveDays} days)');
+      }
+
       return true;
     }
     

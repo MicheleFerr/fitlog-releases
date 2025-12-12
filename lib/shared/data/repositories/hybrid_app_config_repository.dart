@@ -70,7 +70,9 @@ class HybridAppConfigRepository extends BaseHybridRepository<UserAppConfig> {
       await save(userConfig);
     }
 
-    debugPrint('✅ App config saved: local + ${canSyncToCloud ? "cloud sync queued" : "no sync (free user)"}');
+    if (kDebugMode) {
+      debugPrint('✅ App config saved: local + ${canSyncToCloud ? "cloud sync queued" : "no sync (free user)"}');
+    }
   }
 
   /// Get user configuration

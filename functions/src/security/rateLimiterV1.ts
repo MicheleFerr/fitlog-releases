@@ -8,9 +8,9 @@
  * import { withRateLimit, RATE_LIMITS } from './security/rateLimiterV1';
  *
  * export const myFunction = withRateLimit(
- *   functions.https.onCall(async (data, context) => {
- *     // Your function logic here
- *   }),
+ *   async (data, context) => {
+ *     // Your function logic here (NOT wrapped in functions.https.onCall)
+ *   },
  *   {
  *     ...RATE_LIMITS.STRICT,
  *     identifier: 'myFunction',
@@ -66,27 +66,35 @@ export const RATE_LIMITS = {
 } as const;
 
 /**
+ * Type for onCall handler function
+ */
+type OnCallHandler<T = any, R = any> = (
+  data: T,
+  context: functions.https.CallableContext
+) => Promise<R> | R;
+
+/**
  * Wrap a Firebase Functions v1 onCall handler with rate limiting
  *
- * @param handler Original onCall handler (as callback)
+ * @param handler The handler function (NOT wrapped in functions.https.onCall)
  * @param config Rate limit configuration
  * @returns Wrapped CloudFunction
  *
  * @example
  * ```typescript
  * export const setAdminRole = withRateLimit(
- *   functions.https.onCall(async (data, context) => {
- *     // ... your logic
- *   }),
+ *   async (data, context) => {
+ *     // ... your logic (NOT wrapped in functions.https.onCall)
+ *   },
  *   { ...RATE_LIMITS.STRICT, identifier: 'setAdminRole' }
  * );
  * ```
  */
-export function withRateLimit(
-  handler: any, // CloudFunction<any, any> from firebase-functions
+export function withRateLimit<T = any, R = any>(
+  handler: OnCallHandler<T, R>,
   config: RateLimitConfig
-) {
-  return functions.https.onCall(async (data, context) => {
+): functions.HttpsFunction {
+  return functions.https.onCall(async (data: T, context) => {
     // Apply rate limiting BEFORE calling original handler
     await rateLimiter(data, context, config);
 

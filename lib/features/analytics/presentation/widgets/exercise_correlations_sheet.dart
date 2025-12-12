@@ -35,6 +35,7 @@ import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator.dart';
+import 'package:gymbro_flutter_new/shared/presentation/services/modal_service.dart';
 
 /// Bottom sheet displaying correlation analytics for an exercise
 class ExerciseCorrelationsSheet extends ConsumerStatefulWidget {
@@ -79,12 +80,13 @@ class _ExerciseCorrelationsSheetState
   Widget build(BuildContext context) {
     final analyticsAsync = ref.watch(exerciseAnalyticsProvider(widget.exerciseId));
 
+    final safeMax = ModalService.safeMaxChildSize(context, preferredMax: 0.95);
     return DraggableScrollableSheet(
       initialChildSize: 0.5, // 50% height
       minChildSize: 0.3,
-      maxChildSize: 0.95, // 95% max (Critical Fix #3)
+      maxChildSize: safeMax, // Safe max (avoids notch)
       snap: true,
-      snapSizes: const [0.5, 0.95],
+      snapSizes: [0.5, safeMax],
       builder: (context, scrollController) {
         return Container(
           decoration: BoxDecoration(

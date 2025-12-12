@@ -104,16 +104,19 @@ final templateLimitInfoProvider = FutureProvider<TemplateLimitInfo>((ref) async 
 // TEMPLATE OPERATIONS PROVIDER
 // =========================================================================
 
-/// State notifier for template operations
-class AdvancedExerciseTemplateNotifier extends StateNotifier<AsyncValue<void>> {
-  AdvancedExerciseTemplateNotifier(this._ref) : super(const AsyncValue.data(null));
-
-  final Ref _ref;
-
+/// Notifier for template operations
+///
+/// Migrated from StateNotifier to Notifier (Riverpod 2.0+ pattern)
+class AdvancedExerciseTemplateNotifier extends Notifier<AsyncValue<void>> {
   HiveAdvancedExerciseTemplateRepository get _repository =>
-      _ref.read(advancedExerciseTemplateRepositoryProvider);
+      ref.read(advancedExerciseTemplateRepositoryProvider);
 
-  String? get _userId => _ref.read(currentUserProvider).valueOrNull?.uid;
+  String? get _userId => ref.read(currentUserProvider).valueOrNull?.uid;
+
+  @override
+  AsyncValue<void> build() {
+    return const AsyncValue.data(null);
+  }
 
   /// Create a new template from a superset
   Future<AdvancedExerciseTemplate?> createFromSuperset({
@@ -129,7 +132,7 @@ class AdvancedExerciseTemplateNotifier extends StateNotifier<AsyncValue<void>> {
     }
 
     // Check freemium limit
-    final canCreate = await _ref.read(canCreateTemplateProvider.future);
+    final canCreate = await ref.read(canCreateTemplateProvider.future);
     if (!canCreate) {
       state = AsyncValue.error('Template limit reached', StackTrace.current);
       return null;
@@ -152,7 +155,7 @@ class AdvancedExerciseTemplateNotifier extends StateNotifier<AsyncValue<void>> {
       final created = await _repository.createTemplate(template);
 
       // Refresh template list
-      _ref.invalidate(advancedExerciseTemplatesProvider);
+      ref.invalidate(advancedExerciseTemplatesProvider);
 
       state = const AsyncValue.data(null);
 
@@ -181,7 +184,7 @@ class AdvancedExerciseTemplateNotifier extends StateNotifier<AsyncValue<void>> {
     }
 
     // Check freemium limit
-    final canCreate = await _ref.read(canCreateTemplateProvider.future);
+    final canCreate = await ref.read(canCreateTemplateProvider.future);
     if (!canCreate) {
       state = AsyncValue.error('Template limit reached', StackTrace.current);
       return null;
@@ -204,7 +207,7 @@ class AdvancedExerciseTemplateNotifier extends StateNotifier<AsyncValue<void>> {
       final created = await _repository.createTemplate(template);
 
       // Refresh template list
-      _ref.invalidate(advancedExerciseTemplatesProvider);
+      ref.invalidate(advancedExerciseTemplatesProvider);
 
       state = const AsyncValue.data(null);
 
@@ -229,7 +232,7 @@ class AdvancedExerciseTemplateNotifier extends StateNotifier<AsyncValue<void>> {
     }
 
     // Check freemium limit
-    final canCreate = await _ref.read(canCreateTemplateProvider.future);
+    final canCreate = await ref.read(canCreateTemplateProvider.future);
     if (!canCreate) {
       state = AsyncValue.error('Template limit reached', StackTrace.current);
       return null;
@@ -252,7 +255,7 @@ class AdvancedExerciseTemplateNotifier extends StateNotifier<AsyncValue<void>> {
       final created = await _repository.createTemplate(template);
 
       // Refresh template list
-      _ref.invalidate(advancedExerciseTemplatesProvider);
+      ref.invalidate(advancedExerciseTemplatesProvider);
 
       state = const AsyncValue.data(null);
 
@@ -272,7 +275,7 @@ class AdvancedExerciseTemplateNotifier extends StateNotifier<AsyncValue<void>> {
       await _repository.deleteTemplate(id);
 
       // Refresh template list
-      _ref.invalidate(advancedExerciseTemplatesProvider);
+      ref.invalidate(advancedExerciseTemplatesProvider);
 
       state = const AsyncValue.data(null);
       return true;
@@ -289,7 +292,7 @@ class AdvancedExerciseTemplateNotifier extends StateNotifier<AsyncValue<void>> {
       await _repository.toggleFavorite(id);
 
       // Refresh template list
-      _ref.invalidate(advancedExerciseTemplatesProvider);
+      ref.invalidate(advancedExerciseTemplatesProvider);
     } catch (e) {
       if (kDebugMode) {
         debugPrint('Error toggling favorite: $e');
@@ -304,7 +307,7 @@ class AdvancedExerciseTemplateNotifier extends StateNotifier<AsyncValue<void>> {
       await _repository.incrementUsageCount(id);
 
       // Refresh template list
-      _ref.invalidate(advancedExerciseTemplatesProvider);
+      ref.invalidate(advancedExerciseTemplatesProvider);
     } catch (e) {
       if (kDebugMode) {
         debugPrint('Error recording usage: $e');
@@ -323,7 +326,7 @@ class AdvancedExerciseTemplateNotifier extends StateNotifier<AsyncValue<void>> {
       final updated = await _repository.updateTemplate(template);
 
       // Refresh template list
-      _ref.invalidate(advancedExerciseTemplatesProvider);
+      ref.invalidate(advancedExerciseTemplatesProvider);
 
       state = const AsyncValue.data(null);
       return updated;
@@ -335,9 +338,11 @@ class AdvancedExerciseTemplateNotifier extends StateNotifier<AsyncValue<void>> {
 }
 
 /// Provider for template operations
+///
+/// Migrated to NotifierProvider (Riverpod 2.0+ pattern)
 final advancedExerciseTemplateNotifierProvider =
-    StateNotifierProvider<AdvancedExerciseTemplateNotifier, AsyncValue<void>>(
-  (ref) => AdvancedExerciseTemplateNotifier(ref),
+    NotifierProvider<AdvancedExerciseTemplateNotifier, AsyncValue<void>>(
+  AdvancedExerciseTemplateNotifier.new,
 );
 
 // =========================================================================

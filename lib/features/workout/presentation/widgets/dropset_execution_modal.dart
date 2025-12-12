@@ -24,8 +24,10 @@ class DropSetExecutionModal extends ConsumerStatefulWidget {
   const DropSetExecutionModal({
     super.key,
     required this.exercise,
+    this.scrollController,
   });
   final DropSetExercise exercise;
+  final ScrollController? scrollController;
 
   @override
   ConsumerState<DropSetExecutionModal> createState() => _DropSetExecutionModalState();
@@ -39,7 +41,17 @@ class DropSetExecutionModal extends ConsumerStatefulWidget {
       context: context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
-      builder: (_) => DropSetExecutionModal(exercise: exercise),
+      builder: (_) => DraggableScrollableSheet(
+        initialChildSize: 0.85,
+        minChildSize: 0.85,
+        maxChildSize: 1.0,
+        expand: false,
+        snap: true,
+        builder: (context, scrollController) => DropSetExecutionModal(
+          exercise: exercise,
+          scrollController: scrollController,
+        ),
+      ),
     );
   }
 }
@@ -208,14 +220,15 @@ class _DropSetExecutionModalState extends ConsumerState<DropSetExecutionModal>
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: MediaQuery.of(context).size.height * 0.85,
+    return DecoratedBox(
       decoration: BoxDecoration(
         color: context.colors.surface,
         borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
       ),
-      child: Column(
-        children: [
+      child: SafeArea(
+        top: false,
+        child: Column(
+          children: [
           // Handle bar
           Container(
             margin: const EdgeInsets.only(top: 12),
@@ -243,7 +256,8 @@ class _DropSetExecutionModalState extends ConsumerState<DropSetExecutionModal>
 
           // Action buttons
           _buildActionButtons(),
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -410,6 +424,7 @@ class _DropSetExecutionModalState extends ConsumerState<DropSetExecutionModal>
 
   Widget _buildStagesList() {
     return ListView.builder(
+      controller: widget.scrollController,
       padding: const EdgeInsets.symmetric(horizontal: 20),
       itemCount: _stages.length,
       itemBuilder: (context, index) {

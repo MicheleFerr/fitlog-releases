@@ -27,6 +27,7 @@ library;
 import 'dart:io' show Platform;
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/services.dart';
 import 'package:health/health.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_colors.dart';
@@ -50,12 +51,16 @@ class _HealthKitDebugScreenState extends State<HealthKitDebugScreen> {
     'request_authorization': null,
     'permission_status_after': null,
     'data_fetch_test': null,
+    'weight_read_test': null,
+    'weight_write_test': null,
+    'workout_write_test': null,
   };
 
   /// Test logs for detailed debugging
   final List<String> _logs = [];
 
   bool _isRunning = false;
+  bool _isConfigured = false;
 
   /// Supported HealthKit data types (same as production)
   static const List<HealthDataType> _supportedTypes = [
@@ -64,6 +69,7 @@ class _HealthKitDebugScreenState extends State<HealthKitDebugScreen> {
     HealthDataType.WORKOUT,
     HealthDataType.ACTIVE_ENERGY_BURNED,
     HealthDataType.EXERCISE_TIME,
+    HealthDataType.WEIGHT, // Added for body weight sync
   ];
 
   @override
@@ -117,6 +123,18 @@ class _HealthKitDebugScreenState extends State<HealthKitDebugScreen> {
 
     // Test 6: Data Fetch Test
     await _test6DataFetchTest();
+    await Future.delayed(const Duration(milliseconds: 500));
+
+    // Test 7: Weight Read Test
+    await _test7WeightReadTest();
+    await Future.delayed(const Duration(milliseconds: 500));
+
+    // Test 8: Weight Write Test (writes test data to HealthKit!)
+    await _test8WeightWriteTest();
+    await Future.delayed(const Duration(milliseconds: 500));
+
+    // Test 9: Workout Write Test (writes test workout to HealthKit!)
+    await _test9WorkoutWriteTest();
 
     _addLog('════════════════════════════════════════');
     _addLog('✅ All Tests Complete');
@@ -236,14 +254,16 @@ class _HealthKitDebugScreenState extends State<HealthKitDebugScreen> {
       _addLog('📞 Calling requestAuthorization()...');
 
       // This should trigger the native iOS permission dialog
+      // Permissions list must match _supportedTypes length (6 types)
       final granted = await _health.requestAuthorization(
         _supportedTypes,
         permissions: [
-          HealthDataAccess.READ,
-          HealthDataAccess.READ,
-          HealthDataAccess.READ,
-          HealthDataAccess.READ,
-          HealthDataAccess.READ,
+          HealthDataAccess.READ, // STEPS
+          HealthDataAccess.READ, // HEART_RATE
+          HealthDataAccess.READ, // WORKOUT
+          HealthDataAccess.READ, // ACTIVE_ENERGY_BURNED
+          HealthDataAccess.READ, // EXERCISE_TIME
+          HealthDataAccess.READ, // WEIGHT
         ],
       );
 
@@ -325,9 +345,13 @@ class _HealthKitDebugScreenState extends State<HealthKitDebugScreen> {
       });
 
       if (dataPoints.isNotEmpty) {
+        // health package v13+ returns NumericHealthValue, not raw num
         final totalSteps = dataPoints.fold<num>(
           0,
-          (sum, point) => sum + (point.value as num),
+          (sum, point) {
+            final numericValue = point.value as NumericHealthValue;
+            return sum + numericValue.numericValue;
+          },
         );
 
         _addLog('✅ PASS: Data fetched successfully');
@@ -351,6 +375,223 @@ class _HealthKitDebugScreenState extends State<HealthKitDebugScreen> {
     }
   }
 
+  /// Test 7: Read weight data from HealthKit
+  Future<void> _test7WeightReadTest() async {
+    _addLog('');
+    _addLog('[TEST 7] Weight Read Test');
+    _addLog('─────────────────────────────────────────');
+
+    try {
+      final now = DateTime.now();
+      final thirtyDaysAgo = now.subtract(const Duration(days: 30));
+
+      _addLog('📊 Fetching weight data (last 30 days)...');
+
+      final dataPoints = await _health.getHealthDataFromTypes(
+        types: [HealthDataType.WEIGHT],
+        startTime: thirtyDaysAgo,
+        endTime: now,
+      );
+
+      setState(() {
+        _testResults['weight_read_test'] = true;
+      });
+
+      if (dataPoints.isNotEmpty) {
+        // Get most recent weight
+        final sortedPoints = dataPoints.toList()
+          ..sort((a, b) => b.dateFrom.compareTo(a.dateFrom));
+        final latestWeight = sortedPoints.first;
+        // health package v13+ returns NumericHealthValue, not raw num
+        final numericValue = latestWeight.value as NumericHealthValue;
+        final weightKg = numericValue.numericValue.toDouble();
+
+        _addLog('✅ PASS: Weight data fetched successfully');
+        _addLog('   Latest weight: ${weightKg.toStringAsFixed(1)} kg');
+        _addLog('   Date: ${latestWeight.dateFrom.toString().substring(0, 10)}');
+        _addLog('   Total records: ${dataPoints.length}');
+      } else {
+        _addLog('⚠️ PASS (No Data): No weight recorded');
+        _addLog('   Open Health app and add weight manually');
+        _addLog('   or use a connected scale');
+      }
+    } catch (e) {
+      setState(() {
+        _testResults['weight_read_test'] = false;
+      });
+      _addLog('❌ FAIL: Weight read failed');
+      _addLog('   Error: $e');
+      _addLog('   Possible causes:');
+      _addLog('   1. WEIGHT permission denied');
+      _addLog('   2. Health app not configured');
+    }
+  }
+
+  /// Test 8: Write test weight to HealthKit
+  Future<void> _test8WeightWriteTest() async {
+    _addLog('');
+    _addLog('[TEST 8] Weight Write Test');
+    _addLog('─────────────────────────────────────────');
+    _addLog('⚠️ WARNING: This will write test data to HealthKit!');
+
+    try {
+      // Configure health for write access if not done
+      if (!_isConfigured) {
+        _addLog('📝 Configuring health for write access...');
+        await _health.configure();
+        _isConfigured = true;
+      }
+
+      // Request write permission for weight
+      _addLog('📝 Requesting WEIGHT write permission...');
+      final granted = await _health.requestAuthorization(
+        [HealthDataType.WEIGHT],
+        permissions: [HealthDataAccess.READ_WRITE],
+      );
+
+      if (!granted) {
+        setState(() {
+          _testResults['weight_write_test'] = false;
+        });
+        _addLog('❌ FAIL: Write permission not granted');
+        _addLog('   Go to Settings > Health > GymBro');
+        _addLog('   Enable "Body Measurements" write access');
+        return;
+      }
+
+      // Write test weight (70.5 kg as test value)
+      final now = DateTime.now();
+      const testWeight = 70.5; // Test value in kg
+
+      _addLog('📤 Writing test weight: ${testWeight}kg...');
+
+      final success = await _health.writeHealthData(
+        value: testWeight,
+        type: HealthDataType.WEIGHT,
+        startTime: now,
+        endTime: now,
+        unit: HealthDataUnit.KILOGRAM,
+      );
+
+      setState(() {
+        _testResults['weight_write_test'] = success;
+      });
+
+      if (success) {
+        _addLog('✅ PASS: Weight written successfully');
+        _addLog('   Value: ${testWeight}kg');
+        _addLog('   Check Health app to verify');
+      } else {
+        _addLog('❌ FAIL: Weight write returned false');
+        _addLog('   Check Health app permissions');
+      }
+    } catch (e) {
+      setState(() {
+        _testResults['weight_write_test'] = false;
+      });
+      _addLog('❌ FAIL: Weight write failed');
+      _addLog('   Error: $e');
+      _addLog('   Possible causes:');
+      _addLog('   1. Write permission not enabled');
+      _addLog('   2. HealthKit write not configured');
+    }
+  }
+
+  /// Test 9: Write test workout to HealthKit
+  Future<void> _test9WorkoutWriteTest() async {
+    _addLog('');
+    _addLog('[TEST 9] Workout Write Test');
+    _addLog('─────────────────────────────────────────');
+    _addLog('⚠️ WARNING: This will write a test workout to HealthKit!');
+
+    try {
+      // Configure health for write access if not done
+      if (!_isConfigured) {
+        _addLog('📝 Configuring health for write access...');
+        await _health.configure();
+        _isConfigured = true;
+      }
+
+      // Request write permission for workout
+      _addLog('📝 Requesting WORKOUT write permission...');
+      final granted = await _health.requestAuthorization(
+        [HealthDataType.WORKOUT],
+        permissions: [HealthDataAccess.READ_WRITE],
+      );
+
+      if (!granted) {
+        setState(() {
+          _testResults['workout_write_test'] = false;
+        });
+        _addLog('❌ FAIL: Write permission not granted');
+        _addLog('   Go to Settings > Health > GymBro');
+        _addLog('   Enable "Workouts" write access');
+        return;
+      }
+
+      // Write test workout (10 minute strength training)
+      final now = DateTime.now();
+      final startTime = now.subtract(const Duration(minutes: 10));
+      const testCalories = 50; // Test value
+
+      _addLog('📤 Writing test workout...');
+      _addLog('   Type: Traditional Strength Training');
+      _addLog('   Duration: 10 minutes');
+      _addLog('   Calories: ${testCalories}kcal');
+
+      final success = await _health.writeWorkoutData(
+        activityType: HealthWorkoutActivityType.TRADITIONAL_STRENGTH_TRAINING,
+        start: startTime,
+        end: now,
+        totalEnergyBurned: testCalories,
+        totalEnergyBurnedUnit: HealthDataUnit.KILOCALORIE,
+      );
+
+      setState(() {
+        _testResults['workout_write_test'] = success;
+      });
+
+      if (success) {
+        _addLog('✅ PASS: Workout written successfully');
+        _addLog('   Check Fitness app to verify');
+        _addLog('   Should appear as "Strength Training"');
+      } else {
+        _addLog('❌ FAIL: Workout write returned false');
+        _addLog('   Check Health app permissions');
+      }
+    } catch (e) {
+      setState(() {
+        _testResults['workout_write_test'] = false;
+      });
+      _addLog('❌ FAIL: Workout write failed');
+      _addLog('   Error: $e');
+      _addLog('   Possible causes:');
+      _addLog('   1. Write permission not enabled');
+      _addLog('   2. HealthKit write not configured');
+      _addLog('   3. Invalid workout parameters');
+    }
+  }
+
+  /// Copy all logs to clipboard
+  Future<void> _copyLogsToClipboard() async {
+    if (_logs.isEmpty) {
+      return;
+    }
+
+    final logsText = _logs.join('\n');
+    await Clipboard.setData(ClipboardData(text: logsText));
+
+    if (mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Logs copied to clipboard (${_logs.length} lines)'),
+          duration: const Duration(seconds: 2),
+          behavior: SnackBarBehavior.floating,
+        ),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -358,6 +599,37 @@ class _HealthKitDebugScreenState extends State<HealthKitDebugScreen> {
         title: const Text('HealthKit Debug'),
         backgroundColor: context.colors.primary,
         foregroundColor: context.colors.onPrimary,
+        actions: [
+          // Copy logs button
+          IconButton(
+            onPressed: _logs.isEmpty ? null : _copyLogsToClipboard,
+            icon: Icon(
+              Icons.copy,
+              color: _logs.isEmpty
+                  ? context.colors.onPrimary.withValues(alpha: 0.5)
+                  : context.colors.onPrimary,
+            ),
+            tooltip: 'Copy logs to clipboard',
+          ),
+          // Clear logs button
+          IconButton(
+            onPressed: _logs.isEmpty
+                ? null
+                : () {
+                    setState(() {
+                      _logs.clear();
+                      _testResults.updateAll((key, value) => null);
+                    });
+                  },
+            icon: Icon(
+              Icons.delete_outline,
+              color: _logs.isEmpty
+                  ? context.colors.onPrimary.withValues(alpha: 0.5)
+                  : context.colors.onPrimary,
+            ),
+            tooltip: 'Clear logs',
+          ),
+        ],
       ),
       body: Column(
         children: [

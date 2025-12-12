@@ -1,8 +1,14 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/features/body_measurements/domain/entities/measurement.dart';
 import 'package:gymbro_flutter_new/features/body_measurements/domain/entities/metric_type.dart';
 import 'package:gymbro_flutter_new/features/body_measurements/data/repositories/measurement_repository_provider.dart';
+import 'package:gymbro_flutter_new/features/body_measurements/data/repositories/consent_repository_provider.dart';
+import 'package:gymbro_flutter_new/features/body_measurements/domain/repositories/measurement_repository.dart';
+import 'package:gymbro_flutter_new/features/body_measurements/presentation/providers/health_kit_service_provider.dart';
+import 'package:gymbro_flutter_new/features/body_measurements/presentation/screens/measurement_charts_screen.dart';
 import 'package:gymbro_flutter_new/features/body_measurements/presentation/screens/measurement_input_screen.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator.dart';
@@ -46,12 +52,102 @@ class MeasurementListScreen extends ConsumerStatefulWidget {
 class _MeasurementListScreenState extends ConsumerState<MeasurementListScreen> {
   List<Measurement> _measurements = [];
   bool _isLoading = true;
+  bool _isImporting = false;
   MetricType? _selectedFilter;
 
   @override
   void initState() {
     super.initState();
     _loadMeasurements();
+  }
+
+  /// Import measurements from HealthKit (iOS only)
+  Future<void> _importFromHealthKit() async {
+    if (!Platform.isIOS) {
+      SnackBarService.showInfo(
+        context,
+        context.l10n.bodyMeasurementsHealthKitIOSOnly,
+      );
+      return;
+    }
+
+    setState(() {
+      _isImporting = true;
+    });
+
+    try {
+      final healthKitService = ref.read(healthKitServiceProvider);
+      final consentRepo = ref.read(consentRepositoryProvider);
+
+      // Get consented metrics
+      final consentResult = await consentRepo.getConsentedMetrics(widget.userId);
+      final consentedMetrics = consentResult.getOrElse((_) => <MetricType>[]);
+
+      if (consentedMetrics.isEmpty) {
+        if (!mounted) return;
+        SnackBarService.showError(
+          context,
+          context.l10n.bodyMeasurementsNoConsentedMetrics,
+        );
+        setState(() {
+          _isImporting = false;
+        });
+        return;
+      }
+
+      // Request HealthKit permissions
+      final permissionResult = await healthKitService.requestPermissions(consentedMetrics);
+
+      final permissionsGranted = permissionResult.fold(
+        (failure) {
+          if (!mounted) return false;
+          SnackBarService.showError(context, failure.message);
+          return false;
+        },
+        (granted) => granted,
+      );
+
+      if (!permissionsGranted) {
+        if (!mounted) return;
+        SnackBarService.showInfo(
+          context,
+          context.l10n.bodyMeasurementsHealthKitPermissionDenied,
+        );
+        setState(() {
+          _isImporting = false;
+        });
+        return;
+      }
+
+      // Sync from HealthKit
+      final syncResult = await healthKitService.syncMeasurements(
+        userId: widget.userId,
+        consentedMetrics: consentedMetrics,
+        direction: SyncDirection.read,
+        startDate: DateTime.now().subtract(const Duration(days: 90)),
+      );
+
+      syncResult.fold(
+        (failure) {
+          if (!mounted) return;
+          SnackBarService.showError(context, failure.message);
+        },
+        (result) {
+          if (!mounted) return;
+          SnackBarService.showSuccess(
+            context,
+            context.l10n.bodyMeasurementsImportSuccess(result.readCount),
+          );
+          _loadMeasurements();
+        },
+      );
+    } finally {
+      if (mounted) {
+        setState(() {
+          _isImporting = false;
+        });
+      }
+    }
   }
 
   /// Load measurements from repository
@@ -241,6 +337,35 @@ class _MeasurementListScreenState extends ConsumerState<MeasurementListScreen> {
       appBar: AppBar(
         title: Text(context.l10n.bodyMeasurementsListTitle),
         actions: [
+          // Charts button
+          IconButton(
+            icon: const Icon(Icons.show_chart),
+            tooltip: context.l10n.bodyMeasurementsChartsTitle,
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (_) => MeasurementChartsScreen(userId: widget.userId),
+                ),
+              );
+            },
+          ),
+          // Import from HealthKit button (iOS only)
+          if (Platform.isIOS)
+            _isImporting
+                ? const Padding(
+                    padding: EdgeInsets.all(16),
+                    child: SizedBox(
+                      width: 20,
+                      height: 20,
+                      child: CircularProgressIndicator(strokeWidth: 2),
+                    ),
+                  )
+                : IconButton(
+                    icon: const Icon(Icons.download),
+                    tooltip: context.l10n.bodyMeasurementsImportFromHealth,
+                    onPressed: _importFromHealthKit,
+                  ),
           // Filter dropdown
           PopupMenuButton<MetricType?>(
             icon: const Icon(Icons.filter_list),

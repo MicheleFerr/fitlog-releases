@@ -46,6 +46,9 @@ class HiveBoxNames {
   /// Workout template cache
   static const String templateCache = 'template_cache';
 
+  /// Workout previous data cache (last workout sets/reps for suggestions)
+  static const String workoutPreviousDataCache = 'workout_previous_data_cache';
+
   // ═══════════════════════════════════════════════════════════
   // 📋 WORKOUT TEMPLATES FEATURE
   // ═══════════════════════════════════════════════════════════
@@ -74,6 +77,13 @@ class HiveBoxNames {
 
   /// Exercise version service cache
   static const String exerciseVersionCache = 'exercise_version_cache';
+
+  // ═══════════════════════════════════════════════════════════
+  // 📈 STRESS INDEX FEATURE
+  // ═══════════════════════════════════════════════════════════
+
+  /// Stress index results data
+  static const String stressIndexData = 'stress_index_data';
 
   // ═══════════════════════════════════════════════════════════
   // 📊 ANALYTICS FEATURE
@@ -216,6 +226,7 @@ class HiveBoxNames {
         workoutSyncQueue,
         workoutMetrics,
         templateCache,
+        workoutPreviousDataCache,
         // Templates
         templates,
         templateSyncQueue,
@@ -225,6 +236,8 @@ class HiveBoxNames {
         exercisesSyncQueue,
         exerciseUsage,
         exerciseVersionCache,
+        // Stress Index
+        stressIndexData,
         // Analytics
         skipAnalytics,
         questionnaireAnalytics,

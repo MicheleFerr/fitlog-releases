@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
+import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/workout_template.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/providers/workout_provider.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/providers/workout_template_provider.dart';
@@ -15,7 +16,7 @@ import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dar
 /// Provider for template quota (used/max templates)
 final templateQuotaProvider = FutureProvider.autoDispose<({int used, int max})>((ref) async {
   final userId = FirebaseAuth.instance.currentUser?.uid;
-  if (userId == null) return (used: 0, max: 5);
+  if (userId == null) return (used: 0, max: 4);
 
   try {
     final userDoc = await FirebaseFirestore.instance
@@ -23,15 +24,15 @@ final templateQuotaProvider = FutureProvider.autoDispose<({int used, int max})>(
         .doc(userId)
         .get();
 
-    if (!userDoc.exists) return (used: 0, max: 5);
+    if (!userDoc.exists) return (used: 0, max: 4);
 
     final data = userDoc.data()!;
     final quotaData = data['templateQuota'] as Map<String, dynamic>?;
 
-    if (quotaData == null) return (used: 0, max: 5);
+    if (quotaData == null) return (used: 0, max: 4);
 
     final used = quotaData['usedPrivateTemplates'] as int? ?? 0;
-    final max = quotaData['maxPrivateTemplates'] as int? ?? 5;
+    final max = quotaData['maxPrivateTemplates'] as int? ?? 4;
 
     return (used: used, max: max);
   } catch (e) {
@@ -40,30 +41,38 @@ final templateQuotaProvider = FutureProvider.autoDispose<({int used, int max})>(
   }
 });
 
-/// Debug logger for template carousel widget (TEMPORARY FOR DEBUGGING)
-class _CarouselLogger {
-  static const bool _enableDebugLogs = true; // TEMPORARY: Remove after fixing
+/// Helper class for responsive carousel dimensions
+class _CarouselDimensions {
+  const _CarouselDimensions({
+    required this.cardWidth,
+    required this.cardHeight,
+    required this.padding,
+    required this.iconSize,
+    required this.iconContainerSize,
+  });
 
-  static void log(String message) {
-    if (_enableDebugLogs) {
-      final timestamp = DateTime.now().toIso8601String();
-      debugPrint('🎠 CAROUSEL [$timestamp] $message');
-    }
+  /// Creates responsive dimensions based on text scale factor
+  factory _CarouselDimensions.fromContext(BuildContext context) {
+    final textScaler = MediaQuery.textScalerOf(context);
+    final scaleFactor = textScaler.scale(1.0);
+
+    // Clamp scale factor to reasonable bounds (1.0 - 1.5x)
+    final clampedScale = scaleFactor.clamp(1.0, 1.5);
+
+    return _CarouselDimensions(
+      cardWidth: 280 * clampedScale,
+      cardHeight: 180 * clampedScale,
+      padding: 20 * clampedScale,
+      iconSize: 20 * clampedScale,
+      iconContainerSize: 40 * clampedScale,
+    );
   }
 
-  static void error(String message, [Object? error]) {
-    if (_enableDebugLogs) {
-      final timestamp = DateTime.now().toIso8601String();
-      debugPrint('❌ CAROUSEL_ERROR [$timestamp] $message${error != null ? ' - $error' : ''}');
-    }
-  }
-
-  static void step(String step, String message) {
-    if (_enableDebugLogs) {
-      final timestamp = DateTime.now().toIso8601String();
-      debugPrint('📍 CAROUSEL_STEP [$timestamp] $step: $message');
-    }
-  }
+  final double cardWidth;
+  final double cardHeight;
+  final double padding;
+  final double iconSize;
+  final double iconContainerSize;
 }
 
 class TemplateCarousel extends ConsumerWidget {
@@ -71,19 +80,16 @@ class TemplateCarousel extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    _CarouselLogger.log('🚀 TemplateCarousel.build() called');
-
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
     final l10n = AppLocalizations.of(context);
 
-    _CarouselLogger.log('Context and theme obtained');
+    // Get responsive dimensions based on text scale
+    final dimensions = _CarouselDimensions.fromContext(context);
 
-    // LEGACY SYSTEM: Usa il repository legacy per templates utente
-    _CarouselLogger.step('PROVIDER', 'Watching customWorkoutTemplatesProvider...');
-    final userTemplatesAsync = ref.watch(customWorkoutTemplatesProvider);
+    // Use ALL templates (predefined + custom) instead of just custom
+    final allTemplatesAsync = ref.watch(allWorkoutTemplatesProvider);
     final quotaAsync = ref.watch(templateQuotaProvider);
-    _CarouselLogger.step('PROVIDER', 'Provider state: ${userTemplatesAsync.runtimeType}');
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -157,44 +163,44 @@ class TemplateCarousel extends ConsumerWidget {
         ),
         
         const SizedBox(height: 12),
-        
-        // Carousel Content
+
+        // Carousel Content - height scales with text size
         SizedBox(
-          height: 180,
-          child: userTemplatesAsync.when(
-            loading: () => _buildLoadingCarousel(colorScheme),
-            error: (error, stackTrace) => _buildErrorState(theme, colorScheme, l10n, ref),
-            data: (templates) => _buildTemplatesCarousel(context, ref, templates, theme, colorScheme, l10n),
+          height: dimensions.cardHeight,
+          child: allTemplatesAsync.when(
+            loading: () => _buildLoadingCarousel(context, dimensions),
+            error: (error, stackTrace) => _buildErrorState(context, l10n, ref),
+            data: (templates) => _buildTemplatesCarousel(context, ref, templates, l10n, dimensions),
           ),
         ),
       ],
     );
   }
   
-  Widget _buildLoadingCarousel(ColorScheme colorScheme) {
+  Widget _buildLoadingCarousel(BuildContext context, _CarouselDimensions dimensions) {
     return ListView.builder(
       scrollDirection: Axis.horizontal,
       itemCount: 3,
       padding: const EdgeInsets.symmetric(horizontal: 16.0),
       itemBuilder: (context, index) => Container(
-        width: 280,
+        width: dimensions.cardWidth,
         margin: const EdgeInsets.only(right: 12),
         decoration: BoxDecoration(
-          color: colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
+          color: context.colors.surfaceContainerHighest,
           borderRadius: BorderRadius.circular(16),
         ),
       ),
     );
   }
 
-  Widget _buildErrorState(ThemeData theme, ColorScheme colorScheme, AppLocalizations l10n, WidgetRef ref) {
+  Widget _buildErrorState(BuildContext context, AppLocalizations l10n, WidgetRef ref) {
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 16.0),
       decoration: BoxDecoration(
-        color: colorScheme.errorContainer.withValues(alpha: 0.1),
+        color: context.colors.errorContainer.withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(16),
         border: Border.all(
-          color: colorScheme.error.withValues(alpha: 0.2),
+          color: context.colors.error.withValues(alpha: 0.2),
         ),
       ),
       child: Center(
@@ -203,25 +209,20 @@ class TemplateCarousel extends ConsumerWidget {
           children: [
             Icon(
               AppIcons.error,
-              color: colorScheme.error,
+              color: context.colors.error,
               size: 32,
             ),
             const SizedBox(height: 8),
             Text(
               l10n.errorLoadingTemplates,
-              style: theme.textTheme.bodyMedium?.copyWith(
-                color: colorScheme.error,
+              style: context.textTheme.bodyMedium?.copyWith(
+                color: context.colors.error,
                 fontWeight: FontWeight.w600,
               ),
             ),
             const SizedBox(height: 4),
             TextButton(
-              onPressed: () {
-                _CarouselLogger.log('🔄 Retry button pressed - invalidating customWorkoutTemplatesProvider');
-                // Invalidate the provider to reload templates
-                ref.invalidate(customWorkoutTemplatesProvider);
-                _CarouselLogger.log('✅ Provider invalidated');
-              },
+              onPressed: () => ref.invalidate(allWorkoutTemplatesProvider),
               child: Text(l10n.retry),
             ),
           ],
@@ -234,12 +235,11 @@ class TemplateCarousel extends ConsumerWidget {
     BuildContext context,
     WidgetRef ref,
     List<WorkoutTemplate> templates,
-    ThemeData theme,
-    ColorScheme colorScheme,
     AppLocalizations l10n,
+    _CarouselDimensions dimensions,
   ) {
     if (templates.isEmpty) {
-      return _buildEmptyState(context, theme, colorScheme, l10n);
+      return _buildEmptyState(context, l10n);
     }
 
     return ListView.builder(
@@ -248,19 +248,19 @@ class TemplateCarousel extends ConsumerWidget {
       padding: const EdgeInsets.symmetric(horizontal: 16.0),
       itemBuilder: (context, index) {
         final template = templates[index];
-        return _buildTemplateCard(context, ref, template, theme, colorScheme, l10n);
+        return _buildTemplateCard(context, ref, template, l10n, dimensions);
       },
     );
   }
 
-  Widget _buildEmptyState(BuildContext context, ThemeData theme, ColorScheme colorScheme, AppLocalizations l10n) {
+  Widget _buildEmptyState(BuildContext context, AppLocalizations l10n) {
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 16.0),
       decoration: BoxDecoration(
-        color: colorScheme.primaryContainer.withValues(alpha: 0.1),
+        color: context.colors.surfaceContainerLow,
         borderRadius: BorderRadius.circular(16),
         border: Border.all(
-          color: colorScheme.primary.withValues(alpha: 0.2),
+          color: context.colors.outlineVariant.withValues(alpha: 0.5),
         ),
       ),
       child: Center(
@@ -269,22 +269,22 @@ class TemplateCarousel extends ConsumerWidget {
           children: [
             Icon(
               AppIcons.workout,
-              color: colorScheme.primary,
+              color: context.colors.primary,
               size: 48,
             ),
             const SizedBox(height: 12),
             Text(
               l10n.noTemplatesYet,
-              style: theme.textTheme.titleMedium?.copyWith(
-                color: colorScheme.primary,
+              style: context.textTheme.titleMedium?.copyWith(
+                color: context.colors.onSurface,
                 fontWeight: FontWeight.bold,
               ),
             ),
             const SizedBox(height: 4),
             Text(
               l10n.createFirstTemplate,
-              style: theme.textTheme.bodyMedium?.copyWith(
-                color: colorScheme.onSurface.withValues(alpha: 0.7),
+              style: context.textTheme.bodyMedium?.copyWith(
+                color: context.colors.onSurfaceVariant,
               ),
               textAlign: TextAlign.center,
             ),
@@ -299,55 +299,50 @@ class TemplateCarousel extends ConsumerWidget {
     );
   }
 
+  /// Clean, minimal template card - no gradients, solid colors
   Widget _buildTemplateCard(
     BuildContext context,
     WidgetRef ref,
     WorkoutTemplate template,
-    ThemeData theme,
-    ColorScheme colorScheme,
     AppLocalizations l10n,
+    _CarouselDimensions dimensions,
   ) {
     return Container(
-      width: 280,
+      width: dimensions.cardWidth,
       margin: const EdgeInsets.only(right: 12),
       child: Material(
-        color: Colors.transparent,
+        color: context.colors.surfaceContainerLow,
+        borderRadius: BorderRadius.circular(16),
         child: InkWell(
           onTap: () => _onTemplateSelected(context, ref, template),
           borderRadius: BorderRadius.circular(16),
-          child: DecoratedBox(
+          child: Container(
             decoration: BoxDecoration(
-              gradient: LinearGradient(
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-                colors: [
-                  colorScheme.primaryContainer.withValues(alpha: 0.8),
-                  colorScheme.secondaryContainer.withValues(alpha: 0.6),
-                ],
-              ),
               borderRadius: BorderRadius.circular(16),
               border: Border.all(
-                color: colorScheme.outline.withValues(alpha: 0.2),
+                color: context.colors.outlineVariant.withValues(alpha: 0.5),
               ),
             ),
-            child: Padding(
-              padding: const EdgeInsets.all(20),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
+            padding: EdgeInsets.all(dimensions.padding),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // Header row with icon and title
+                Expanded(
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Container(
-                        width: 40,
-                        height: 40,
+                        width: dimensions.iconContainerSize,
+                        height: dimensions.iconContainerSize,
                         decoration: BoxDecoration(
-                          color: colorScheme.primary.withValues(alpha: 0.1),
+                          color: context.colors.primaryContainer,
                           borderRadius: BorderRadius.circular(12),
                         ),
                         child: Icon(
                           AppIcons.workout,
-                          color: colorScheme.primary,
-                          size: 20,
+                          color: context.colors.onPrimaryContainer,
+                          size: dimensions.iconSize,
                         ),
                       ),
                       const SizedBox(width: 12),
@@ -355,22 +350,26 @@ class TemplateCarousel extends ConsumerWidget {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text(
-                              template.name,
-                              style: theme.textTheme.titleMedium?.copyWith(
-                                fontWeight: FontWeight.bold,
-                                color: colorScheme.onSurface,
+                            Flexible(
+                              child: Text(
+                                template.name,
+                                style: context.textTheme.titleMedium?.copyWith(
+                                  fontWeight: FontWeight.bold,
+                                  color: context.colors.onSurface,
+                                ),
+                                maxLines: 2,
+                                overflow: TextOverflow.ellipsis,
                               ),
-                              maxLines: 2,
-                              overflow: TextOverflow.ellipsis,
                             ),
                             if (template.difficulty != null) ...[
                               const SizedBox(height: 2),
                               Text(
                                 template.difficulty!,
-                                style: theme.textTheme.labelSmall?.copyWith(
-                                  color: colorScheme.onSurface.withValues(alpha: 0.7),
+                                style: context.textTheme.labelSmall?.copyWith(
+                                  color: context.colors.onSurfaceVariant,
                                 ),
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
                               ),
                             ],
                           ],
@@ -378,42 +377,44 @@ class TemplateCarousel extends ConsumerWidget {
                       ),
                     ],
                   ),
-                  const Spacer(),
-                  Row(
-                    children: [
-                      SemanticIcon(
-  icon: AppIcons.schedule,
-  semanticLabel: 'Schedule',
-  size: AppIconSize.tiny,
-  color: colorScheme.onSurface.withValues(alpha: 0.7,
-),
-                      ),
-                      const SizedBox(width: 4),
-                      Text(
+                ),
+                // Bottom row with duration and exercise count
+                Row(
+                  children: [
+                    SemanticIcon(
+                      icon: AppIcons.schedule,
+                      semanticLabel: 'Schedule',
+                      size: dimensions.iconSize,
+                      color: context.colors.onSurfaceVariant,
+                    ),
+                    const SizedBox(width: 4),
+                    Flexible(
+                      child: Text(
                         '~${_estimateTemplateDuration(template)} ${l10n.minutes}',
-                        style: theme.textTheme.labelSmall?.copyWith(
-                          color: colorScheme.onSurface.withValues(alpha: 0.7),
+                        style: context.textTheme.labelSmall?.copyWith(
+                          color: context.colors.onSurfaceVariant,
                         ),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
                       ),
-                      const Spacer(),
-                      SemanticIcon(
-  icon: AppIcons.workout,
-  semanticLabel: 'Workout',
-  size: AppIconSize.tiny,
-  color: colorScheme.onSurface.withValues(alpha: 0.7,
-),
+                    ),
+                    const SizedBox(width: 16),
+                    SemanticIcon(
+                      icon: AppIcons.workout,
+                      semanticLabel: 'Workout',
+                      size: dimensions.iconSize,
+                      color: context.colors.onSurfaceVariant,
+                    ),
+                    const SizedBox(width: 4),
+                    Text(
+                      '${template.exercises.length}',
+                      style: context.textTheme.labelSmall?.copyWith(
+                        color: context.colors.onSurfaceVariant,
                       ),
-                      const SizedBox(width: 4),
-                      Text(
-                        '${template.exercises.length}',
-                        style: theme.textTheme.labelSmall?.copyWith(
-                          color: colorScheme.onSurface.withValues(alpha: 0.7),
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
+                    ),
+                  ],
+                ),
+              ],
             ),
           ),
         ),

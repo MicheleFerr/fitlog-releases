@@ -42,6 +42,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
+import 'package:gymbro_flutter_new/core/cache/user_cache_key_manager.dart';
 
 /// View modes for streak visualization
 enum StreakViewMode {
@@ -68,10 +69,12 @@ extension StreakViewModeExtension on StreakViewMode {
 class StreakModal extends StatefulWidget {
   const StreakModal({
     required this.exerciseHistories,
+    this.scrollController,
     super.key,
   });
 
   final List<ExerciseHistory> exerciseHistories;
+  final ScrollController? scrollController;
 
   @override
   State<StreakModal> createState() => _StreakModalState();
@@ -84,9 +87,9 @@ class _StreakModalState extends State<StreakModal> {
   // Global key for capturing calendar screenshot
   final GlobalKey _calendarKey = GlobalKey();
 
-  // Preferences keys
-  static const String _defaultViewKey = 'streak_default_view';
-  static const String _calendarColorKey = 'streak_calendar_color';
+  // 🔐 User-scoped preferences keys
+  String get _defaultViewKey => userCacheKeys.userScopedKey('streak_default_view');
+  String get _calendarColorKey => userCacheKeys.userScopedKey('streak_calendar_color');
 
   // Available calendar colors
   static const List<Color> _availableColors = [
@@ -233,50 +236,39 @@ class _StreakModalState extends State<StreakModal> {
     final daysSinceLastWorkout = _calculateDaysSinceLastWorkout();
     final workoutDates = _getAllWorkoutDates();
 
-    return SizedBox(
-      height: MediaQuery.of(context).size.height * 0.85, // Limit to 85% screen height
-      child: DecoratedBox(
-        decoration: BoxDecoration(
-          color: context.colors.surface,
-          borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
-        ),
-        child: SafeArea(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              // Header with dropdown and close button
-              _buildHeader(context),
+    return DecoratedBox(
+      decoration: BoxDecoration(
+        color: context.colors.surface,
+        borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      child: SafeArea(
+        top: false,
+        child: ListView(
+          controller: widget.scrollController,
+          padding: const EdgeInsets.all(20),
+          children: [
+            // Header with dropdown and close button
+            _buildHeader(context),
+            const SizedBox(height: 20),
 
-              Flexible(
-                child: SingleChildScrollView(
-                  padding: const EdgeInsets.all(20),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      // Stats header (weeks in a row, days since last workout)
-                      _buildStatsHeader(context, weekStreak, daysSinceLastWorkout),
-                      const SizedBox(height: 24),
+            // Stats header (weeks in a row, days since last workout)
+            _buildStatsHeader(context, weekStreak, daysSinceLastWorkout),
+            const SizedBox(height: 24),
 
-                      // Calendar view based on mode (wrapped in RepaintBoundary for screenshots)
-                      RepaintBoundary(
-                        key: _calendarKey,
-                        child: Container(
-                          color: context.colors.surface,  // Background for screenshot
-                          padding: const EdgeInsets.all(16),
-                          child: _buildCalendarView(context, workoutDates),
-                        ),
-                      ),
-                      const SizedBox(height: 24),
-
-                      // Close button
-                      _buildCloseButton(context),
-                    ],
-                  ),
-                ),
+            // Calendar view based on mode (wrapped in RepaintBoundary for screenshots)
+            RepaintBoundary(
+              key: _calendarKey,
+              child: Container(
+                color: context.colors.surface,  // Background for screenshot
+                padding: const EdgeInsets.all(16),
+                child: _buildCalendarView(context, workoutDates),
               ),
-            ],
-          ),
+            ),
+            const SizedBox(height: 24),
+
+            // Close button
+            _buildCloseButton(context),
+          ],
         ),
       ),
     );

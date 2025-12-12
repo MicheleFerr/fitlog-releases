@@ -185,7 +185,6 @@ class ContributionSubmissionNotifier extends Notifier<AsyncValue<void>> {
       await repository.voteOnContribution(contributionId, userAsync.uid, isUpvote);
     } catch (error) {
       // Handle error silently or show snackbar
-      // print('Error voting: $error');
     }
   }
   
@@ -205,7 +204,6 @@ class ContributionSubmissionNotifier extends Notifier<AsyncValue<void>> {
       final repository = _ref.read(communityRepositoryProvider);
       await repository.commentOnContribution(contributionId, comment);
     } catch (error) {
-      // print('Error commenting: $error');
     }
   }
 }

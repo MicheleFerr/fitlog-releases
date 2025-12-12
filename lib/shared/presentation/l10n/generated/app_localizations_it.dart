@@ -21,6 +21,58 @@ class AppLocalizationsIt extends AppLocalizations {
   String get welcome => 'Pronto per allenarti?';
 
   @override
+  String get motivationalQuote0 => 'Ogni ripetizione conta.';
+
+  @override
+  String get motivationalQuote1 => 'Più forte di ieri.';
+
+  @override
+  String get motivationalQuote2 => 'Il tuo unico limite sei tu.';
+
+  @override
+  String get motivationalQuote3 => 'Fallo accadere.';
+
+  @override
+  String get motivationalQuote4 => 'Allenati da bestia o resti uguale.';
+
+  @override
+  String get motivationalQuote5 => 'Progresso, non perfezione.';
+
+  @override
+  String get motivationalQuote6 => 'Il ferro non mente mai.';
+
+  @override
+  String get motivationalQuote7 => 'Guadagnati il tuo corpo.';
+
+  @override
+  String get motivationalQuote8 => 'Niente scuse, solo risultati.';
+
+  @override
+  String get motivationalQuote9 => 'Sii la tua competizione.';
+
+  @override
+  String get motivationalQuote10 => 'Disciplina uguale libertà.';
+
+  @override
+  String get motivationalQuote11 => 'Supera i tuoi limiti.';
+
+  @override
+  String get motivationalQuote12 =>
+      'I campioni si allenano, i perdenti si lamentano.';
+
+  @override
+  String get motivationalQuote13 => 'Suda ora, brilla dopo.';
+
+  @override
+  String get greetingMorning => 'Buongiorno';
+
+  @override
+  String get greetingAfternoon => 'Buon pomeriggio';
+
+  @override
+  String get greetingEvening => 'Buonasera';
+
+  @override
   String get welcomeDescription =>
       'Traccia allenamenti, cronometra i riposi e sincronizza con Apple Health.';
 
@@ -692,7 +744,7 @@ class AppLocalizationsIt extends AppLocalizations {
   String get importSuccessful => 'Importazione completata con successo!';
 
   @override
-  String get importing => 'Importazione...';
+  String get importing => 'Importazione allenamenti...';
 
   @override
   String get importCompleted => 'Importazione Completata';
@@ -1068,7 +1120,7 @@ class AppLocalizationsIt extends AppLocalizations {
   String get workoutStatusPaused => 'In Pausa';
 
   @override
-  String get exercises => 'esercizi';
+  String get exercises => 'Esercizi';
 
   @override
   String get progress => 'Progressi';
@@ -1470,7 +1522,7 @@ class AppLocalizationsIt extends AppLocalizations {
   String get restTimeSuggestion => 'Suggerimento Recupero';
 
   @override
-  String get reset => 'Resetta';
+  String get reset => 'Reset';
 
   @override
   String get settingsResetSuccess =>
@@ -1748,7 +1800,7 @@ class AppLocalizationsIt extends AppLocalizations {
   String get days => 'giorni';
 
   @override
-  String get errorLoadingData => 'Errore caricamento dati';
+  String get errorLoadingData => 'Errore nel caricamento dati';
 
   @override
   String get exportData => 'Esporta Dati';
@@ -2156,6 +2208,40 @@ class AppLocalizationsIt extends AppLocalizations {
   String get streak => 'Serie';
 
   @override
+  String get thisYear => 'quest\'anno';
+
+  @override
+  String get keepItUp => 'Continua così!';
+
+  @override
+  String get startToday => 'Inizia oggi!';
+
+  @override
+  String workoutDaysPerWeek(double days) {
+    final intl.NumberFormat daysNumberFormat = intl.NumberFormat.decimalPattern(
+      localeName,
+    );
+    final String daysString = daysNumberFormat.format(days);
+
+    return '$daysString/sett.';
+  }
+
+  @override
+  String metricWorkoutsExplanation(int count) {
+    return 'Hai completato $count allenamenti quest\'anno. Ogni allenamento registrato conta per questo totale. Continua ad allenarti per raggiungere i tuoi obiettivi!';
+  }
+
+  @override
+  String metricConsistencyExplanation(int percent, int days) {
+    return 'La tua costanza è del $percent% basata sulla frequenza settimanale di allenamento. Ti alleni in media $days giorni a settimana. L\'obiettivo è 4 sessioni/settimana (100%).';
+  }
+
+  @override
+  String metricStreakExplanation(int days) {
+    return 'La tua serie attuale è di $days giorni consecutivi di allenamento. Una serie conta i giorni in cui hai completato almeno un allenamento. Mantieni lo slancio!';
+  }
+
+  @override
   String get achievements => 'Obiettivi';
 
   @override
@@ -2230,7 +2316,7 @@ class AppLocalizationsIt extends AppLocalizations {
   }
 
   @override
-  String get comingSoon => 'Prossimamente';
+  String get comingSoon => 'In Arrivo';
 
   @override
   String warmupSetsAdded(String count) {
@@ -2263,6 +2349,14 @@ class AppLocalizationsIt extends AppLocalizations {
   @override
   String get addWarmupSetsSubtitle =>
       'Genera set di riscaldamento in base al peso di lavoro';
+
+  @override
+  String get editWarmupSets => 'Modifica Set Riscaldamento';
+
+  @override
+  String warmupSetsUpdated(String count) {
+    return '$count set di riscaldamento aggiornati';
+  }
 
   @override
   String get addWorkingSetFirst => 'Aggiungi prima un set di lavoro';
@@ -2768,9 +2862,6 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get noRecord => 'Nessun record';
-
-  @override
-  String get startToday => 'Inizia oggi!';
 
   @override
   String get great => 'Grande!';
@@ -3444,7 +3535,7 @@ class AppLocalizationsIt extends AppLocalizations {
       'Inizia un allenamento per vedere le tue analisi';
 
   @override
-  String get recentWorkouts => 'Workout Recenti';
+  String get recentWorkouts => 'Allenamenti Recenti';
 
   @override
   String get highPriority => 'Alta Priorità';
@@ -4105,6 +4196,9 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get createSuperset => 'Crea Superset';
+
+  @override
+  String get supersetCreated => 'Superset creato';
 
   @override
   String get round => 'Round';
@@ -6097,9 +6191,6 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get allTime => 'Tutto il Tempo';
-
-  @override
-  String get keepItUp => 'Continua così!';
 
   @override
   String get viewStats => 'Vedi Statistiche';
@@ -11066,7 +11157,7 @@ class AppLocalizationsIt extends AppLocalizations {
   String get gridView => 'Vista Griglia';
 
   @override
-  String get parsing => 'Analisi in corso...';
+  String get parsing => 'Analisi dati...';
 
   @override
   String get matchingExercises => 'Abbinamento esercizi...';
@@ -11078,7 +11169,7 @@ class AppLocalizationsIt extends AppLocalizations {
   String get finalizing => 'Finalizzazione...';
 
   @override
-  String get importFailed => '❌ Importazione fallita';
+  String get importFailed => 'Importazione Fallita';
 
   @override
   String get noDescription => 'Nessuna descrizione';
@@ -13924,7 +14015,8 @@ class AppLocalizationsIt extends AppLocalizations {
   String get templateLimitSuggestion => 'Modello limit suggestion';
 
   @override
-  String get templateSyncDescription => 'Modello sync descrizione';
+  String get templateSyncDescription =>
+      'Il template verrà salvato su Firebase e sarà disponibile su tutti i tuoi dispositivi';
 
   @override
   String get thisMonth => 'This month';
@@ -17803,6 +17895,9 @@ class AppLocalizationsIt extends AppLocalizations {
       'Sei sicuro di voler eliminare tutta la cronologia delle conversazioni?';
 
   @override
+  String get noMessagesToExport => 'Nessun messaggio da esportare';
+
+  @override
   String get aiCoachRespondingHint => 'L\'AI sta rispondendo...';
 
   @override
@@ -18653,8 +18748,9 @@ class AppLocalizationsIt extends AppLocalizations {
   String get importSuccessTitle => 'Importazione Riuscita';
 
   @override
-  String get importSuccessMessage =>
-      'Tutti gli esercizi sono stati importati su Firebase. Ora puoi usarli nell\'app!';
+  String importSuccessMessage(int count) {
+    return 'Importati con successo $count allenamenti nel tuo storico.';
+  }
 
   @override
   String get importFailedTitle => 'Importazione Fallita';
@@ -20406,6 +20502,26 @@ class AppLocalizationsIt extends AppLocalizations {
   String get bodyMeasurementsGrantConsent => 'Abilita Misurazioni Corporee';
 
   @override
+  String get bodyMeasurementsHealthKitIOSOnly =>
+      'L\'importazione da HealthKit è disponibile solo su iOS';
+
+  @override
+  String get bodyMeasurementsNoConsentedMetrics =>
+      'Nessuna metrica autorizzata. Concedi prima il consenso.';
+
+  @override
+  String get bodyMeasurementsHealthKitPermissionDenied =>
+      'Permesso HealthKit negato. Consenti l\'accesso nelle Impostazioni.';
+
+  @override
+  String bodyMeasurementsImportSuccess(int count) {
+    return 'Importate con successo $count misurazioni';
+  }
+
+  @override
+  String get bodyMeasurementsImportFromHealth => 'Importa da Salute';
+
+  @override
   String get weeks => 'settimane';
 
   @override
@@ -21381,15 +21497,6 @@ class AppLocalizationsIt extends AppLocalizations {
   String get trendDeclining => 'In Declino';
 
   @override
-  String get greetingMorning => 'Buongiorno';
-
-  @override
-  String get greetingAfternoon => 'Buon pomeriggio';
-
-  @override
-  String get greetingEvening => 'Buonasera';
-
-  @override
   String get greetingNight => 'Buonanotte';
 
   @override
@@ -22043,4 +22150,847 @@ class AppLocalizationsIt extends AppLocalizations {
   @override
   String get noAlternativesHint =>
       'Prova a cercare esercizi simili nel database';
+
+  @override
+  String get helpCenter => 'Centro Assistenza';
+
+  @override
+  String get helpCenterWelcome => 'Come possiamo aiutarti?';
+
+  @override
+  String get helpCenterDescription =>
+      'Trova risposte alle domande più frequenti sull\'uso dell\'app';
+
+  @override
+  String get helpCategoryGettingStarted => 'Per Iniziare';
+
+  @override
+  String get helpCategoryGettingStartedDesc => 'Primi passi e basi dell\'app';
+
+  @override
+  String get helpCategoryWorkouts => 'Allenamenti e Template';
+
+  @override
+  String get helpCategoryWorkoutsDesc => 'Crea, salva e gestisci allenamenti';
+
+  @override
+  String get helpCategoryExerciseTracking => 'Tracciamento Esercizi';
+
+  @override
+  String get helpCategoryExerciseTrackingDesc =>
+      'Registra serie, ripetizioni e pesi';
+
+  @override
+  String get helpCategoryAdvancedTechniques => 'Tecniche Avanzate';
+
+  @override
+  String get helpCategoryAdvancedTechniquesDesc => 'Superset, drop set e altro';
+
+  @override
+  String get helpCategoryTimer => 'Timer di Riposo';
+
+  @override
+  String get helpCategoryTimerDesc => 'Timer, notifiche e Live Activities';
+
+  @override
+  String get helpCategoryAnalytics => 'Progressi e Analisi';
+
+  @override
+  String get helpCategoryAnalyticsDesc => 'Grafici, PR e statistiche';
+
+  @override
+  String get helpCategoryPremium => 'Premium';
+
+  @override
+  String get helpCategoryPremiumDesc => 'Abbonamento e funzionalità';
+
+  @override
+  String get helpCategoryAccount => 'Account e Sincronizzazione';
+
+  @override
+  String get helpCategoryAccountDesc => 'Login, backup e cloud sync';
+
+  @override
+  String get helpCategoryProfile => 'Profilo e Obiettivi';
+
+  @override
+  String get helpCategoryProfileDesc => 'Obiettivi, streak e achievements';
+
+  @override
+  String get helpCategorySettings => 'Impostazioni';
+
+  @override
+  String get helpCategorySettingsDesc => 'Personalizza la tua esperienza';
+
+  @override
+  String get helpCategoryHealthSync => 'Sincronizzazione Salute';
+
+  @override
+  String get helpCategoryHealthSyncDesc => 'Apple Health e Health Connect';
+
+  @override
+  String get helpCategoryTroubleshooting => 'Risoluzione Problemi';
+
+  @override
+  String get helpCategoryTroubleshootingDesc => 'Problemi e soluzioni';
+
+  @override
+  String get faqWhatIsAppQuestion => 'Cos\'è questa app?';
+
+  @override
+  String get faqWhatIsAppAnswer =>
+      'Questa è un\'app completa per il tracciamento degli allenamenti, progettata per aiutarti a registrare le tue sessioni in palestra, monitorare i progressi nel tempo e raggiungere i tuoi obiettivi fitness. Include un database di oltre 800 esercizi, template personalizzabili, analisi dettagliate e funzioni intelligenti come il timer di riposo automatico.';
+
+  @override
+  String get faqFirstWorkoutQuestion => 'Come inizio il mio primo allenamento?';
+
+  @override
+  String get faqFirstWorkoutAnswer =>
+      'Dalla schermata home, tocca \'Inizio Rapido\' per iniziare un allenamento vuoto, oppure seleziona uno dei tuoi template salvati. Una volta in allenamento, tocca il pulsante + per aggiungere esercizi dal nostro database. Registra le tue serie inserendo peso e ripetizioni, poi scorri a destra per completare ogni serie.';
+
+  @override
+  String get faqQuickStartQuestion =>
+      'Qual è la differenza tra Inizio Rapido e template?';
+
+  @override
+  String get faqQuickStartAnswer =>
+      'Inizio Rapido crea un allenamento vuoto dove aggiungi esercizi man mano - ottimo per sessioni flessibili o spontanee. I template sono schede pre-salvate con esercizi già definiti - perfetti per programmi costanti. Puoi salvare qualsiasi allenamento completato come nuovo template.';
+
+  @override
+  String get faqNavigationQuestion => 'Come navigo nell\'app?';
+
+  @override
+  String get faqNavigationAnswer =>
+      'La barra in basso ha 4 sezioni principali: Home (dashboard e inizio rapido), Allenamento (sessione attiva), Cronologia (allenamenti passati) e Profilo (impostazioni e statistiche). Durante un allenamento, scorri a sinistra/destra per muoverti tra gli esercizi, o usa la mini-barra in basso per navigare rapidamente.';
+
+  @override
+  String get faqTemplatesIntroQuestion => 'Come funzionano i template?';
+
+  @override
+  String get faqTemplatesIntroAnswer =>
+      'I template salvano la struttura del tuo allenamento inclusi esercizi, serie, ripetizioni e tempi di riposo. Inizia un allenamento basato su template toccandolo nella home. L\'app ricorda i tuoi ultimi pesi e suggerisce sovraccarico progressivo. Modifica i template in qualsiasi momento dalla schermata Template.';
+
+  @override
+  String get faqCreateWorkoutQuestion =>
+      'Come creo un allenamento personalizzato?';
+
+  @override
+  String get faqCreateWorkoutAnswer =>
+      'Inizia un allenamento con Inizio Rapido e aggiungi gli esercizi desiderati. Quando hai finito, tocca \'Completa\' e scegli \'Salva come Template\'. Dai un nome al template e apparirà nella tua home. In alternativa, vai in Template > Crea Nuovo per costruire un template da zero.';
+
+  @override
+  String get faqTemplatesQuestion => 'Come gestisco i miei template?';
+
+  @override
+  String get faqTemplatesAnswer =>
+      'Vai nella schermata Template (accessibile dalla Home). Qui puoi vedere tutti i template, modificare l\'ordine degli esercizi, cambiare serie/ripetizioni, rinominare template o eliminarli. Tieni premuto un template per azioni rapide. I template si sincronizzano su tutti i dispositivi quando sei connesso.';
+
+  @override
+  String get faqSaveTemplateQuestion =>
+      'Posso salvare un allenamento come template?';
+
+  @override
+  String get faqSaveTemplateAnswer =>
+      'Sì! Dopo aver completato qualsiasi allenamento, vedrai l\'opzione \'Salva come Template\'. Il template conserverà gli esercizi, l\'ordine e le serie/ripetizioni target. I tuoi pesi registrati diventano il punto di partenza per le sessioni future.';
+
+  @override
+  String get faqEditWorkoutQuestion =>
+      'Posso modificare un allenamento mentre è in corso?';
+
+  @override
+  String get faqEditWorkoutAnswer =>
+      'Assolutamente! Durante un allenamento puoi: aggiungere o rimuovere esercizi, riordinare gli esercizi trascinandoli, cambiare serie/ripetizioni, modificare i valori registrati, aggiungere note e persino creare superset. Tieni premuto un esercizio per vedere tutte le opzioni.';
+
+  @override
+  String get faqDraftRecoveryQuestion =>
+      'Cosa succede se chiudo accidentalmente l\'app?';
+
+  @override
+  String get faqDraftRecoveryAnswer =>
+      'Non preoccuparti! L\'app salva automaticamente i progressi dell\'allenamento ogni pochi secondi. Se chiudi l\'app o crasha, ti verrà chiesto di riprendere l\'allenamento quando torni. I tuoi dati non vengono mai persi.';
+
+  @override
+  String get faqCompleteWorkoutQuestion => 'Come finisco un allenamento?';
+
+  @override
+  String get faqCompleteWorkoutAnswer =>
+      'Tocca il pulsante \'Completa Allenamento\' (icona con spunta) in alto a destra. Vedrai un riepilogo della sessione con durata, volume e eventuali PR raggiunti. Scegli se salvare come template o solo salvare l\'allenamento. Appariranno congratulazioni per ogni nuovo record!';
+
+  @override
+  String get faqAddExerciseQuestion =>
+      'Come aggiungo esercizi al mio allenamento?';
+
+  @override
+  String get faqAddExerciseAnswer =>
+      'Tocca il pulsante + durante un allenamento per aprire la ricerca esercizi. Sfoglia per gruppo muscolare usando i filtri, o cerca per nome. Il database include oltre 800 esercizi con descrizioni e GIF. Non trovi quello che cerchi? Crea un esercizio personalizzato con il tuo nome e muscoli target.';
+
+  @override
+  String get faqSetsRepsQuestion => 'Come registro serie e ripetizioni?';
+
+  @override
+  String get faqSetsRepsAnswer =>
+      'Tocca qualsiasi riga di serie per aprire il modale di input. Inserisci peso e ripetizioni usando il selettore o la tastiera. Scorri la riga a destra per segnarla completa (diventa verde). I valori dell\'allenamento precedente sono mostrati come riferimento - toccali per auto-compilare!';
+
+  @override
+  String get faqRpeRirQuestion => 'Cosa sono RPE e RIR?';
+
+  @override
+  String get faqRpeRirAnswer =>
+      'RPE (Sforzo Percepito) misura lo sforzo su una scala 1-10 dove 10 è sforzo massimo. RIR (Ripetizioni di Riserva) conta quante altre ripetizioni potresti fare. Esempio: RPE 8 = RIR 2 (potresti fare altre 2 ripetizioni). Tracciali per ottimizzare l\'intensità dell\'allenamento.';
+
+  @override
+  String get faqCountingModesQuestion =>
+      'Quali modalità di conteggio sono disponibili?';
+
+  @override
+  String get faqCountingModesAnswer =>
+      'L\'app supporta: Ripetizioni (conteggio standard), Tempo (secondi per plank/isometriche), Distanza (metri per trasporti/corsa) e Calorie. Cambia la modalità per ogni esercizio toccando l\'icona impostazioni. Ogni modalità ha campi di input appropriati.';
+
+  @override
+  String get faqWarmupSetsQuestion =>
+      'Come registro le serie di riscaldamento?';
+
+  @override
+  String get faqWarmupSetsAnswer =>
+      'Tocca il numero della serie per alternare tra serie di lavoro e riscaldamento. Le serie di riscaldamento appaiono con badge \'W\' e stile più chiaro. Sono escluse dai calcoli di volume e tracciamento PR ma comunque registrate nella cronologia come riferimento.';
+
+  @override
+  String get faqExerciseNotesQuestion => 'Posso aggiungere note agli esercizi?';
+
+  @override
+  String get faqExerciseNotesAnswer =>
+      'Sì! Tocca l\'icona note su qualsiasi esercizio per aggiungere appunti personali. Ottimo per registrare cue di forma, impostazioni attrezzature o modifiche. Le note si sincronizzano su tutti i dispositivi e appaiono quando rifai l\'esercizio.';
+
+  @override
+  String get faqSupersetsQuestion => 'Cosa sono i superset e come li uso?';
+
+  @override
+  String get faqSupersetsAnswer =>
+      'I superset sono 2+ esercizi eseguiti consecutivamente senza riposo - eccellenti per efficienza temporale e pump muscolare. Tieni premuto un esercizio, seleziona \'Crea Superset\', poi aggiungi l\'esercizio abbinato. L\'app ti guida attraverso serie alternate con riposo appropriato tra i round.';
+
+  @override
+  String get faqDropsetsQuestion => 'Come funzionano i drop set?';
+
+  @override
+  String get faqDropsetsAnswer =>
+      'I drop set prevedono la riduzione del peso dopo il cedimento e continuare immediatamente. Attiva la modalità drop set su qualsiasi esercizio, poi registra ogni drop all\'interno della serie. L\'app calcola il volume totale inclusi tutti i drop. Ottimo per massimizzare l\'affaticamento muscolare!';
+
+  @override
+  String get faqRestPauseQuestion => 'Cos\'è l\'allenamento rest-pause?';
+
+  @override
+  String get faqRestPauseAnswer =>
+      'Il rest-pause usa brevi pause di 10-15 secondi all\'interno di una serie per estenderla. Fai ripetizioni quasi al cedimento, riposa 10-15 secondi, poi continua. L\'app traccia le tue mini-serie e ripetizioni totali, utile per superare i normali punti di cedimento.';
+
+  @override
+  String get faqAutoWarmupQuestion =>
+      'L\'app suggerisce serie di riscaldamento?';
+
+  @override
+  String get faqAutoWarmupAnswer =>
+      'Sì! La funzione auto-warmup suggerisce serie di riscaldamento progressive basate sul tuo peso di lavoro. Per esempio, se fai squat a 100kg, potrebbe suggerire: solo bilanciere → 40kg → 60kg → 80kg. Personalizza la progressione percentuale nelle Impostazioni.';
+
+  @override
+  String get faqAutoRegulationQuestion => 'Cos\'è l\'auto-regolazione?';
+
+  @override
+  String get faqAutoRegulationAnswer =>
+      'L\'auto-regolazione adatta l\'allenamento in base alla performance giornaliera. Se stai facendo più ripetizioni del previsto, l\'app suggerisce di aumentare il peso. Stai faticando? Potrebbe raccomandare di ridurre. Questo assicura un sovraccarico progressivo ottimale adattato alla tua prontezza quotidiana.';
+
+  @override
+  String get faqTimerQuestion => 'Come funziona il timer di riposo?';
+
+  @override
+  String get faqTimerAnswer =>
+      'Il timer di riposo parte automaticamente dopo aver completato una serie. Conta alla rovescia il tempo di riposo scelto e ti notifica quando sei pronto. Il timer continua in background e si mostra sulla schermata di blocco (iOS). Personalizza i tempi di riposo predefiniti per esercizio o globalmente.';
+
+  @override
+  String get faqTimerBackgroundQuestion =>
+      'Il timer funziona quando l\'app è chiusa?';
+
+  @override
+  String get faqTimerBackgroundAnswer =>
+      'Sì! Il timer continua a contare anche quando cambi app o blocchi il telefono. Su iOS, si mostra come Live Activity sulla schermata di blocco. Riceverai una notifica quando il riposo è completo così non perdi mai la prossima serie.';
+
+  @override
+  String get faqLiveActivitiesQuestion => 'Cosa sono le Live Activities?';
+
+  @override
+  String get faqLiveActivitiesAnswer =>
+      'Le Live Activities (iOS 16+) mostrano il timer sulla schermata di blocco e nella Dynamic Island. Vedi il tempo di riposo rimanente a colpo d\'occhio senza sbloccare il telefono. L\'attività si aggiorna in tempo reale e mostra info sulla serie/esercizio corrente. Attiva in Impostazioni > Timer.';
+
+  @override
+  String get faqTimerSoundsQuestion =>
+      'Posso personalizzare i suoni del timer?';
+
+  @override
+  String get faqTimerSoundsAnswer =>
+      'Sì! Vai in Impostazioni > Timer > Suono. Scegli tra diversi suoni di avviso o seleziona \'Solo Vibrazione\' per sessioni silenziose in palestra. Puoi anche attivare o disattivare i beep del conto alla rovescia negli ultimi secondi.';
+
+  @override
+  String get faqDefaultRestQuestion =>
+      'Come imposto i tempi di riposo predefiniti?';
+
+  @override
+  String get faqDefaultRestAnswer =>
+      'Vai in Impostazioni > Timer > Tempo Riposo Predefinito. Imposta un default globale (es. 90 secondi). Puoi anche impostare il tempo di riposo per esercizio - tocca l\'icona orologio su qualsiasi esercizio per personalizzare. I tempi specifici per esercizio sovrascrivono il default globale.';
+
+  @override
+  String get faqTrackProgressQuestion => 'Come monitoro i miei progressi?';
+
+  @override
+  String get faqTrackProgressAnswer =>
+      'La tab Analisi mostra il tuo percorso fitness attraverso grafici interattivi. Traccia la progressione di forza per esercizio, tendenze di volume settimanale, frequenza allenamenti e bilanciamento gruppi muscolari. Filtra per periodo (settimana/mese/anno) per identificare trend.';
+
+  @override
+  String get faqPersonalRecordsQuestion => 'Cosa sono i Record Personali (PR)?';
+
+  @override
+  String get faqPersonalRecordsAnswer =>
+      'I PR sono le tue migliori performance di sempre per ogni esercizio. L\'app traccia diversi tipi di PR: 1RM (singolo più pesante), 5RM, 10RM, max ripetizioni a un peso, e altro. Vedrai animazioni celebrative quando batti un PR - continua a spingere!';
+
+  @override
+  String get faqVolumeQuestion => 'Cos\'è il volume di allenamento?';
+
+  @override
+  String get faqVolumeAnswer =>
+      'Volume = Serie × Ripetizioni × Peso - una metrica chiave per la crescita muscolare. L\'app traccia il volume giornaliero e settimanale per gruppo muscolare. Indicatori colorati mostrano se sei nel range ottimale. Troppo poco volume = crescita limitata; troppo = rischio sovrallenamento.';
+
+  @override
+  String get faqMuscleBalanceQuestion =>
+      'Cos\'è l\'analisi del bilanciamento muscolare?';
+
+  @override
+  String get faqMuscleBalanceAnswer =>
+      'La funzione bilanciamento muscolare confronta il volume tra gruppi muscolari per identificare squilibri. Evidenzia se alleni spinta vs trazione, anteriore vs posteriore, o superiore vs inferiore in modo sproporzionato. Allenamento bilanciato riduce il rischio infortuni e migliora l\'estetica.';
+
+  @override
+  String get faqChartsQuestion => 'Quali grafici sono disponibili?';
+
+  @override
+  String get faqChartsAnswer =>
+      'L\'Analisi include: progressione forza (peso nel tempo per esercizio), tendenze volume (tonnellaggio settimanale), grafico frequenza (allenamenti per settimana), heatmap muscolare (quali muscoli allenati di più) e timeline PR. Tocca qualsiasi grafico per approfondire i dettagli.';
+
+  @override
+  String get faqHistoryQuestion => 'Dove vedo gli allenamenti passati?';
+
+  @override
+  String get faqHistoryAnswer =>
+      'La tab Cronologia mostra tutti gli allenamenti completati in ordine cronologico. Filtra per range di date, template o cerca per nome esercizio. Tocca qualsiasi allenamento per vedere tutti i dettagli incluse ogni serie, tempi di riposo e note. Puoi anche ripetere un allenamento passato come template.';
+
+  @override
+  String get faqPremiumBenefitsQuestion => 'Cosa include Premium?';
+
+  @override
+  String get faqPremiumBenefitsAnswer =>
+      'Premium sblocca: cronologia allenamenti illimitata (gratis: 30 giorni), analisi avanzate (bilanciamento muscolare, tendenze), sincronizzazione cloud su tutti i dispositivi, libreria esercizi personalizzata, supporto prioritario e rimuove tutte le pubblicità. I tuoi dati di allenamento sono tuoi - mai persi o limitati.';
+
+  @override
+  String get faqPremiumPricingQuestion => 'Quanto costa Premium?';
+
+  @override
+  String get faqPremiumPricingAnswer =>
+      'Premium è disponibile come abbonamento mensile o annuale tramite App Store/Google Play. L\'annuale risparmia significativamente rispetto al mensile. I prezzi possono variare per regione. Controlla la schermata Premium per i prezzi attuali e eventuali offerte speciali.';
+
+  @override
+  String get faqRestorePurchaseQuestion => 'Come ripristino il mio acquisto?';
+
+  @override
+  String get faqRestorePurchaseAnswer =>
+      'Vai in Profilo > Premium > Ripristina Acquisto. Accedi con lo stesso Apple ID/account Google usato per l\'acquisto originale. L\'app verificherà lo stato dell\'abbonamento e sbloccherà le funzioni Premium. Funziona anche quando cambi dispositivo.';
+
+  @override
+  String get faqCancelSubscriptionQuestion => 'Come annullo l\'abbonamento?';
+
+  @override
+  String get faqCancelSubscriptionAnswer =>
+      'Gli abbonamenti sono gestiti tramite Apple/Google, non dall\'app. Su iOS: Impostazioni > Apple ID > Abbonamenti. Su Android: Play Store > Abbonamenti. Manterrai l\'accesso Premium fino alla fine del periodo corrente. I tuoi dati rimangono accessibili anche dopo.';
+
+  @override
+  String get faqFreeVsPremiumQuestion =>
+      'Cosa posso fare con la versione gratuita?';
+
+  @override
+  String get faqFreeVsPremiumAnswer =>
+      'La versione gratuita include: tracciamento allenamenti completo, database esercizi, timer riposo, cronologia 30 giorni, analisi base e template. Premium aggiunge: cronologia illimitata, analisi avanzate, sincronizzazione cloud e rimuove le pubblicità. Le funzionalità core funzionano perfettamente gratis!';
+
+  @override
+  String get faqSignInMethodsQuestion => 'Come accedo?';
+
+  @override
+  String get faqSignInMethodsAnswer =>
+      'L\'app supporta: Accedi con Apple (consigliato per iOS - veloce e privato), Accedi con Google ed email/password. Accedere abilita sincronizzazione cloud e backup. Puoi usare l\'app senza accedere, ma i dati saranno salvati solo localmente.';
+
+  @override
+  String get faqCloudSyncQuestion => 'Come funziona la sincronizzazione cloud?';
+
+  @override
+  String get faqCloudSyncAnswer =>
+      'Quando sei connesso (Premium), i tuoi allenamenti, template e impostazioni si sincronizzano automaticamente nel cloud. Le modifiche appaiono su tutti i tuoi dispositivi in pochi secondi. L\'indicatore di sync mostra lo stato: spunta verde = sincronizzato, rotazione = sincronizzazione, avviso = modalità offline.';
+
+  @override
+  String get faqBackupQuestion => 'I miei dati sono salvati?';
+
+  @override
+  String get faqBackupAnswer =>
+      'Sì! Con Premium, i dati si sincronizzano nel cloud automaticamente. Anche senza Premium, gli allenamenti sono salvati localmente sul dispositivo e possono essere esportati manualmente. Vai in Impostazioni > Esporta Dati per un file di backup completo che puoi salvare ovunque.';
+
+  @override
+  String get faqSwitchDeviceQuestion =>
+      'Come trasferisco i dati su un nuovo dispositivo?';
+
+  @override
+  String get faqSwitchDeviceAnswer =>
+      'Se hai Premium: accedi semplicemente sul nuovo dispositivo e i dati si sincronizzano automaticamente. Senza Premium: esporta i dati sul vecchio dispositivo (Impostazioni > Esporta), trasferisci il file e importa sul nuovo dispositivo. Tutta la cronologia e i template si trasferiscono.';
+
+  @override
+  String get faqDeleteAccountQuestion => 'Come elimino il mio account?';
+
+  @override
+  String get faqDeleteAccountAnswer =>
+      'Vai in Profilo > Impostazioni > Account > Elimina Account. Questo rimuove permanentemente tutti i dati cloud associati al tuo account. I dati locali sul dispositivo rimangono a meno che non disinstalli l\'app. Questa azione non può essere annullata - esporta prima i tuoi dati.';
+
+  @override
+  String get faqSetGoalsQuestion => 'Come imposto obiettivi fitness?';
+
+  @override
+  String get faqSetGoalsAnswer =>
+      'Vai in Profilo > Obiettivi. Imposta target per: allenamenti a settimana, obiettivi di sollevamento specifici (es. panca 100kg), misure corporee e altro. L\'app traccia i progressi verso ogni obiettivo e festeggia quando li raggiungi. Gli obiettivi aiutano a mantenere la motivazione!';
+
+  @override
+  String get faqStreaksQuestion => 'Come funzionano le streak di allenamento?';
+
+  @override
+  String get faqStreaksAnswer =>
+      'Le streak contano le settimane consecutive in cui hai raggiunto il tuo obiettivo di allenamento. Salta una settimana e si resetta - ma non preoccuparti, la tua streak più lunga è sempre salvata! Le streak incoraggiano la costanza, che è la chiave per risultati a lungo termine. Vedi le tue streak nella schermata Profilo.';
+
+  @override
+  String get faqBodyMeasurementsQuestion =>
+      'Posso tracciare le misure corporee?';
+
+  @override
+  String get faqBodyMeasurementsAnswer =>
+      'Sì! Vai in Profilo > Misure. Traccia peso, % grasso corporeo e circonferenze (petto, braccia, vita, ecc.). Registra regolarmente per vedere le tendenze nel tempo. Queste misure complementano i dati di allenamento per mostrare progressi completi.';
+
+  @override
+  String get faqXpLevelsQuestion => 'Cos\'è il sistema XP/Livelli?';
+
+  @override
+  String get faqXpLevelsAnswer =>
+      'Guadagni XP (punti esperienza) per ogni allenamento, PR e obiettivo completato. Gli XP riempiono la barra del livello - sali di livello per ottenere achievement! Il sistema gamifica il tuo percorso fitness. Livelli più alti sbloccano badge e mostrano la tua dedizione. Controlla i tuoi XP nella schermata Profilo.';
+
+  @override
+  String get faqAchievementsQuestion => 'Quali achievement posso ottenere?';
+
+  @override
+  String get faqAchievementsAnswer =>
+      'Gli achievement premiano i traguardi: primo allenamento, 10/50/100 allenamenti completati, streak di PR, streak di costanza e altro. Ogni achievement concede XP e un badge. Vedi la tua collezione in Profilo > Achievement. Riesci a raccoglierli tutti?';
+
+  @override
+  String get faqUnitsQuestion => 'Come cambio le unità di peso?';
+
+  @override
+  String get faqUnitsAnswer =>
+      'Vai in Profilo > Impostazioni > Unità. Scegli kg (metrico) o lb (imperiale). Tutti i pesi nell\'app si convertono automaticamente. I tuoi dati sono salvati internamente in metrico quindi il cambio è fluido e reversibile in qualsiasi momento.';
+
+  @override
+  String get faqLanguageQuestion => 'Posso cambiare la lingua dell\'app?';
+
+  @override
+  String get faqLanguageAnswer =>
+      'L\'app segue l\'impostazione lingua del dispositivo. Attualmente supportate: Italiano e Inglese. Per cambiare: vai nelle Impostazioni del dispositivo > Lingua. L\'app si riavvierà nella nuova lingua. Altre lingue in arrivo in base alla domanda degli utenti!';
+
+  @override
+  String get faqThemeQuestion => 'Posso cambiare il tema dell\'app?';
+
+  @override
+  String get faqThemeAnswer =>
+      'Sì! Vai in Profilo > Impostazioni > Aspetto. Scegli: Chiaro, Scuro o Sistema (segue l\'impostazione del dispositivo). L\'app supporta anche colori dinamici sui dispositivi compatibili. La modalità scura è ottima per le sessioni in palestra al mattino presto!';
+
+  @override
+  String get faqZenModeQuestion => 'Cos\'è la Modalità Zen?';
+
+  @override
+  String get faqZenModeAnswer =>
+      'La Modalità Zen semplifica l\'interfaccia allenamento per un training senza distrazioni. Nasconde informazioni secondarie, ingrandisce gli input principali e si concentra sulla serie corrente. Ottima quando vuoi tempo minimo sullo schermo. Attivala in Impostazioni o durante un allenamento.';
+
+  @override
+  String get faqNotificationsQuestion => 'Come gestisco le notifiche?';
+
+  @override
+  String get faqNotificationsAnswer =>
+      'Vai in Impostazioni > Notifiche. Controlla: avvisi timer riposo, promemoria allenamento, celebrazioni PR, riepiloghi settimanali e altro. Imposta orari promemoria per i tuoi giorni e orari di allenamento preferiti. Tutte le notifiche possono essere attivate o disattivate individualmente.';
+
+  @override
+  String get faqAppleHealthQuestion => 'Come sincronizzo con Apple Health?';
+
+  @override
+  String get faqAppleHealthAnswer =>
+      'Vai in Impostazioni > Sincronizzazione Salute > Apple Health. Concedi i permessi per i dati che vuoi condividere. L\'app può scrivere allenamenti e leggere misurazioni peso. Le tue sessioni in palestra appariranno nell\'app Salute insieme a tutti gli altri dati fitness.';
+
+  @override
+  String get faqHealthConnectQuestion => 'Come sincronizzo con Health Connect?';
+
+  @override
+  String get faqHealthConnectAnswer =>
+      'Su Android, vai in Impostazioni > Sincronizzazione Salute > Health Connect. Concedi i permessi necessari. L\'app scrive i dati allenamento su Health Connect, che possono essere condivisi con altre app fitness. Assicurati che Health Connect sia installato dal Play Store.';
+
+  @override
+  String get faqHealthPermissionsQuestion =>
+      'Quali permessi salute sono necessari?';
+
+  @override
+  String get faqHealthPermissionsAnswer =>
+      'L\'app richiede: Scrivi Allenamenti (per registrare le sessioni), Leggi Peso (per aggiornare automaticamente il peso corporeo). Tutti i permessi sono opzionali e possono essere cambiati in qualsiasi momento nelle impostazioni privacy del dispositivo. Non accediamo mai a dati di cui non abbiamo bisogno.';
+
+  @override
+  String get faqWeightSyncQuestion =>
+      'Il mio peso corporeo si sincronizza automaticamente?';
+
+  @override
+  String get faqWeightSyncAnswer =>
+      'Se concedi il permesso, l\'app può leggere il tuo ultimo peso da Apple Health o Health Connect. Questo mantiene accurate le metriche calcolate (come volume per kg) senza inserimento manuale. Gli aggiornamenti peso appaiono in pochi secondi dalla registrazione.';
+
+  @override
+  String get faqDataLostQuestion =>
+      'Ho perso i miei dati allenamento - cosa faccio?';
+
+  @override
+  String get faqDataLostAnswer =>
+      'Prima, controlla se sei connesso (la schermata Profilo mostra l\'account). Prova Ripristina Acquisto per verificare lo stato Premium. Se sei connesso, prova a uscire e rientrare per forzare una risincronizzazione. Per problemi con dati locali, controlla se hai un backup esportato. Contatta il supporto se i problemi persistono.';
+
+  @override
+  String get faqTimerNotWorkingQuestion =>
+      'Il timer non funziona in background - perché?';
+
+  @override
+  String get faqTimerNotWorkingAnswer =>
+      'Controlla: 1) Le notifiche sono abilitate per l\'app (Impostazioni dispositivo), 2) Risparmio Energetico è disattivato, 3) Aggiornamento App in Background è abilitato. Su iOS, assicurati che le Live Activities siano abilitate. Se i problemi persistono, prova a reinstallare l\'app. Il timer necessita di questi permessi per funzionare in background.';
+
+  @override
+  String get faqSyncIssuesQuestion =>
+      'I miei dati non si sincronizzano tra i dispositivi';
+
+  @override
+  String get faqSyncIssuesAnswer =>
+      'Verifica: 1) Sei connesso con lo stesso account su entrambi i dispositivi, 2) Hai un abbonamento Premium attivo, 3) Entrambi i dispositivi hanno connessione internet. Prova a tirare giù sulla schermata principale per forzare la sincronizzazione. Lo stato sync appare in cima alla schermata home.';
+
+  @override
+  String get faqAppCrashQuestion => 'L\'app continua a crashare - aiuto!';
+
+  @override
+  String get faqAppCrashAnswer =>
+      'Prova questi passaggi: 1) Chiudi forzatamente e riapri l\'app, 2) Riavvia il dispositivo, 3) Controlla aggiornamenti app, 4) Reinstalla l\'app (i dati si sincronizzano dal cloud se sei connesso). Se i crash continuano, contatta il supporto con il modello dispositivo e versione iOS/Android.';
+
+  @override
+  String get faqContactSupportQuestion => 'Come contatto il supporto?';
+
+  @override
+  String get faqContactSupportAnswer =>
+      'Vai in Profilo > Centro Assistenza > Contattaci, oppure scrivi direttamente a support@gymbro.app. Includi il modello dispositivo, versione app (mostrata nelle Impostazioni) e una descrizione del problema. Gli screenshot aiutano! Rispondiamo tipicamente entro 24 ore.';
+
+  @override
+  String get configureSuperset => 'Configura Superset';
+
+  @override
+  String get copiedToAllRounds => 'Copiato a tutti i round';
+
+  @override
+  String get copyR1ToAll => 'R1 → Tutti';
+
+  @override
+  String get restAfterRound => 'Riposo dopo round';
+
+  @override
+  String get applyToAllRounds => 'Tutti i round';
+
+  @override
+  String get inWorkout => 'In Scheda';
+
+  @override
+  String get fromDatabase => 'Dal DB';
+
+  @override
+  String get noOtherExercisesInWorkout =>
+      'Nessun altro esercizio in questo workout';
+
+  @override
+  String get useSearchTabToAddExercises =>
+      'Usa la ricerca per aggiungere esercizi dal database';
+
+  @override
+  String get configured => 'Configurato';
+
+  @override
+  String get configureRounds => 'Configura Round';
+
+  @override
+  String get editConfiguration => 'Modifica Configurazione';
+
+  @override
+  String get rounds => 'round';
+
+  @override
+  String get copyFromPrevious => 'Copia da Precedente';
+
+  @override
+  String get removeRound => 'Rimuovi Round';
+
+  @override
+  String get tapToConfigure => 'Tocca per configurare';
+
+  @override
+  String get unsavedChangesWillBeLost =>
+      'Le modifiche non salvate andranno perse';
+
+  @override
+  String get appliedToAllRounds => 'Applicato a tutti i round';
+
+  @override
+  String get copyRoundToAll => 'Copia round in tutti';
+
+  @override
+  String get showLess => 'Meno';
+
+  @override
+  String get showMore => 'Altro';
+
+  @override
+  String get confirmDeleteSupersetMessage =>
+      'Sei sicuro di voler eliminare questo superset?';
+
+  @override
+  String get editSuperset => 'Modifica Superset';
+
+  @override
+  String nRoundsNExercises(int rounds, int exercises) {
+    return '$rounds round • $exercises esercizi';
+  }
+
+  @override
+  String setsProgress(int completed, int total) {
+    return 'Serie ($completed/$total)';
+  }
+
+  @override
+  String setNumberLabel(int number) {
+    return 'Serie $number';
+  }
+
+  @override
+  String nOfMCompleted(int completed, int total) {
+    return '$completed/$total completati';
+  }
+
+  @override
+  String get executeAllSequentially =>
+      'Esegui tutti gli esercizi in sequenza senza riposo';
+
+  @override
+  String get exerciseDataNotFound => 'Dati esercizio non trovati';
+
+  @override
+  String supersetRestLabel(String name) {
+    return '$name - Riposo';
+  }
+
+  @override
+  String get dataBackup => 'Dati & Backup';
+
+  @override
+  String get importData => 'Importa Dati';
+
+  @override
+  String get importFromOtherApp => 'Importa da altra app';
+
+  @override
+  String get importDescription =>
+      'Trasferisci lo storico allenamenti da Strong, Hevy o altre app fitness.';
+
+  @override
+  String get selectSourceApp => 'Seleziona app sorgente';
+
+  @override
+  String get selectCsvFile => 'Seleziona File CSV';
+
+  @override
+  String get howToExport => 'Come esportare';
+
+  @override
+  String get exportStep1 => 'Apri l\'altra app e vai nelle Impostazioni';
+
+  @override
+  String get exportStep2 => 'Trova \'Esporta Dati\' o \'Esporta Allenamenti\'';
+
+  @override
+  String get exportStep3 => 'Salva il file CSV e selezionalo qui';
+
+  @override
+  String get mapExercises => 'Associa Esercizi';
+
+  @override
+  String get readyToImport => 'Pronto per importare';
+
+  @override
+  String get autoMapped => 'Auto-associati';
+
+  @override
+  String get unmapped => 'Da associare';
+
+  @override
+  String get warnings => 'Avvisi';
+
+  @override
+  String andMoreWarnings(int count) {
+    return '...e altri $count avvisi';
+  }
+
+  @override
+  String andMoreWorkouts(int count) {
+    return '...e altri $count allenamenti';
+  }
+
+  @override
+  String get rows => 'Righe';
+
+  @override
+  String autoMappedExercises(int count) {
+    return '$count esercizi auto-associati';
+  }
+
+  @override
+  String get autoMappedDescription =>
+      'Questi esercizi sono stati abbinati automaticamente al tuo database.';
+
+  @override
+  String needsMappingExercises(int count) {
+    return '$count esercizi da associare';
+  }
+
+  @override
+  String get needsMappingDescription =>
+      'Seleziona l\'esercizio corretto dai suggerimenti o cerca manualmente.';
+
+  @override
+  String get allExercisesMapped => 'Tutti gli esercizi associati con successo!';
+
+  @override
+  String occurrences(int count) {
+    return '$count occorrenze';
+  }
+
+  @override
+  String get noSuggestionsFound =>
+      'Nessun suggerimento trovato. Usa la ricerca per trovare l\'esercizio.';
+
+  @override
+  String get searchExercise => 'Cerca esercizio';
+
+  @override
+  String get skipThisExercise => 'Salta questo esercizio';
+
+  @override
+  String get willImportWithOriginalName =>
+      'Verrà importato con il nome originale';
+
+  @override
+  String get importComplete => 'Importazione Completata!';
+
+  @override
+  String get importFailedMessage =>
+      'Si è verificato un errore durante l\'importazione. Riprova.';
+
+  @override
+  String get workoutsImported => 'Allenamenti importati';
+
+  @override
+  String get exercisesImported => 'Esercizi importati';
+
+  @override
+  String get setsImported => 'Serie importate';
+
+  @override
+  String get workoutsSkipped => 'Allenamenti saltati';
+
+  @override
+  String get importErrors => 'Errori';
+
+  @override
+  String andMoreErrors(int count) {
+    return '...e altri $count errori';
+  }
+
+  @override
+  String get couldNotReadFile => 'Impossibile leggere il file selezionato';
+
+  @override
+  String get importError => 'Errore Importazione';
+
+  @override
+  String get recoveryInsight => 'Insight Recupero';
+
+  @override
+  String get sleepRecoveryAnalysis => 'Analisi Sonno & Recupero';
+
+  @override
+  String get sleepDetails => 'Dettagli Sonno';
+
+  @override
+  String get sleepWorkoutCorrelation => 'Correlazione Sonno-Allenamento';
+
+  @override
+  String get readinessLevel => 'Livello di Prontezza';
+
+  @override
+  String get weeklyOverview => 'Panoramica Settimanale';
+
+  @override
+  String get recommendedSleep => '7h raccomandate';
+
+  @override
+  String get todaysRecommendation => 'Raccomandazione di Oggi';
+
+  @override
+  String get consecutiveBadNights => 'notti consecutive sotto le 6h';
+
+  @override
+  String get correlationInsufficientData =>
+      'Continua ad allenarti per vedere la correlazione sonno-performance. Servono più dati.';
+
+  @override
+  String get goodSleepEffect => 'Con >7h di sonno';
+
+  @override
+  String get poorSleepEffect => 'Con <6h di sonno';
+
+  @override
+  String get sleepCorrelationProDescription =>
+      'Scopri come il sonno influisce direttamente sul volume e sulle performance dei tuoi allenamenti con analisi dettagliate.';
+
+  @override
+  String get recoveryOptimalDescription => 'Prontezza massima - dai tutto!';
+
+  @override
+  String get recoveryGoodDescription => 'Pronto per un buon allenamento';
+
+  @override
+  String get recoveryModerateDescription =>
+      'Considera un\'intensità più leggera oggi';
+
+  @override
+  String get recoveryLowDescription => 'Il tuo corpo ha bisogno di più riposo';
+
+  @override
+  String get recoveryCriticalDescription =>
+      'Giornata di riposo fortemente consigliata';
+
+  @override
+  String get connectAppleHealth =>
+      'Connetti Apple Health per insight personalizzati';
+
+  @override
+  String get lastNight => 'Ieri Notte';
+
+  @override
+  String get streakDays => 'Serie';
 }

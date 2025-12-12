@@ -16,7 +16,6 @@ class CommunityInitializer {
       
       // Se non ci sono documenti, crea un documento di placeholder
       if (contributionsSnapshot.docs.isEmpty) {
-        // print('📝 Initializing community_contributions collection...');
         
         // Crea un documento di esempio/placeholder
         await _firestore.collection('community_contributions').doc('placeholder').set({
@@ -38,7 +37,6 @@ class CommunityInitializer {
           'updatedAt': FieldValue.serverTimestamp(),
         });
         
-        // print('✅ community_contributions collection initialized');
       }
       
       // Verifica se la collezione user_contribution_stats esiste
@@ -48,7 +46,6 @@ class CommunityInitializer {
           .get();
       
       if (statsSnapshot.docs.isEmpty) {
-        // print('📝 Initializing user_contribution_stats collection...');
         
         // Crea un documento di esempio
         await _firestore.collection('user_contribution_stats').doc('placeholder').set({
@@ -65,11 +62,9 @@ class CommunityInitializer {
           'lastActivity': FieldValue.serverTimestamp(),
         });
         
-        // print('✅ user_contribution_stats collection initialized');
       }
       
     } catch (e) {
-      // print('⚠️ Error initializing collections: $e');
       // Non bloccare l'app se l'inizializzazione fallisce
     }
   }

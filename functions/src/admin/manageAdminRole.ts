@@ -104,7 +104,7 @@ function isEmailWhitelisted(email: string | undefined): boolean {
  */
 // 🔐 SECURITY: Rate limited (5 requests per minute)
 export const setAdminRole = withRateLimit(
-  functions.https.onCall(async (data, context) => {
+  async (data: any, context: functions.https.CallableContext) => {
   // ========================================
   // 1. Authentication Check
   // ========================================
@@ -231,7 +231,7 @@ export const setAdminRole = withRateLimit(
       'Failed to set admin custom claims. Check server logs.'
     );
   }
-}),
+},
   { ...RATE_LIMITS.STRICT, identifier: 'setAdminRole' }
 );
 
@@ -255,7 +255,7 @@ export const setAdminRole = withRateLimit(
  */
 // 🔐 SECURITY: Rate limited (5 requests per minute)
 export const revokeAdminRole = withRateLimit(
-  functions.https.onCall(async (data, context) => {
+  async (data: any, context: functions.https.CallableContext) => {
   // ========================================
   // 1. Authentication Check
   // ========================================
@@ -353,7 +353,7 @@ export const revokeAdminRole = withRateLimit(
       'Failed to revoke admin custom claims. Check server logs.'
     );
   }
-}),
+},
   { ...RATE_LIMITS.STRICT, identifier: 'revokeAdminRole' }
 );
 

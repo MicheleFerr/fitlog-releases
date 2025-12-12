@@ -235,15 +235,19 @@ class QuickStartList extends ConsumerWidget {
   void _startWorkoutFromTemplate(BuildContext context, WidgetRef ref, wt.WorkoutTemplate template) async {
     try {
       await ref.read(workoutTemplateNotifierProvider.notifier).incrementUsage(template.id);
-      
+
       final workoutNotifier = ref.read(currentWorkoutProvider.notifier);
       workoutNotifier.createWorkout(template.name);
-      workoutNotifier.startWorkout();
-      
+
+      // ⚠️ BUG FIX: Add exercises BEFORE starting workout
+      // so Watch notification has exercise data
       final exercises = template.toWorkoutExercises();
       for (final exercise in exercises) {
         workoutNotifier.addExercise(exercise);
       }
+
+      // Now start workout (with exercises loaded)
+      workoutNotifier.startWorkout();
       
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(

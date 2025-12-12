@@ -7,6 +7,7 @@
 /// Provider per gestire i contributi della community per admin
 library;
 
+import 'package:flutter/foundation.dart' show kDebugMode;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
@@ -31,17 +32,23 @@ class CommunityCorrectionsNotifier extends AsyncNotifier<List<CommunityContribut
   /// Carica tutti i contributi della community
   Future<List<CommunityContribution>> _loadCorrections() async {
     try {
-      debugPrint('🔍 Loading community contributions...');
+      if (kDebugMode) {
+        debugPrint('🔍 Loading community contributions...');
+      }
 
       final querySnapshot = await _firestore
           .collection('community_contributions')
           .limit(50)
           .get();
 
-      debugPrint('📊 Found ${querySnapshot.docs.length} contributions in Firestore');
+      if (kDebugMode) {
+        debugPrint('📊 Found ${querySnapshot.docs.length} contributions in Firestore');
+      }
 
       final contributions = querySnapshot.docs.map((doc) {
-        debugPrint('📝 Processing contribution: ${doc.id} - ${doc.data()}');
+        if (kDebugMode) {
+          debugPrint('📝 Processing contribution: ${doc.id} - ${doc.data()}');
+        }
         final data = doc.data();
         data['id'] = doc.id;
 
@@ -80,7 +87,9 @@ class CommunityCorrectionsNotifier extends AsyncNotifier<List<CommunityContribut
 
       // TEMPORARY: Add test data if no contributions exist
       if (contributions.isEmpty) {
-        debugPrint('🧪 No contributions found, adding test data');
+        if (kDebugMode) {
+          debugPrint('🧪 No contributions found, adding test data');
+        }
         final testContribution = CommunityContribution(
           id: 'test-123',
           exerciseId: 'bench-press',
@@ -101,10 +110,14 @@ class CommunityCorrectionsNotifier extends AsyncNotifier<List<CommunityContribut
         contributions.add(testContribution);
       }
 
-      debugPrint('✅ Successfully loaded ${contributions.length} contributions');
+      if (kDebugMode) {
+        debugPrint('✅ Successfully loaded ${contributions.length} contributions');
+      }
       return contributions;
     } catch (e, stackTrace) {
-      debugPrint('❌ Error loading community contributions: $e');
+      if (kDebugMode) {
+        debugPrint('❌ Error loading community contributions: $e');
+      }
       debugPrint('🔍 Stack trace: $stackTrace');
       rethrow;
     }
@@ -139,9 +152,13 @@ class CommunityCorrectionsNotifier extends AsyncNotifier<List<CommunityContribut
       final contributions = await _loadCorrections();
       state = AsyncValue.data(contributions);
 
-      debugPrint('✅ Correction approved: $correctionId');
+      if (kDebugMode) {
+        debugPrint('✅ Correction approved: $correctionId');
+      }
     } catch (e) {
-      debugPrint('❌ Error approving correction: $e');
+      if (kDebugMode) {
+        debugPrint('❌ Error approving correction: $e');
+      }
       rethrow;
     }
   }
@@ -169,9 +186,13 @@ class CommunityCorrectionsNotifier extends AsyncNotifier<List<CommunityContribut
       final contributions = await _loadCorrections();
       state = AsyncValue.data(contributions);
 
-      debugPrint('✅ Correction rejected: $correctionId');
+      if (kDebugMode) {
+        debugPrint('✅ Correction rejected: $correctionId');
+      }
     } catch (e) {
-      debugPrint('❌ Error rejecting correction: $e');
+      if (kDebugMode) {
+        debugPrint('❌ Error rejecting correction: $e');
+      }
       rethrow;
     }
   }

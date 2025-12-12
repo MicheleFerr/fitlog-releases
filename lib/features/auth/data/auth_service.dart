@@ -248,7 +248,7 @@ class AuthService with RateLimiterMixin {
         'isGuest': false,
         'accountTier': 'free', // Default tier
         'templateQuota': {
-          'maxPrivateTemplates': 10,
+          'maxPrivateTemplates': 4,
           'maxPublicTemplates': 2,
           'usedPrivateTemplates': 0,
           'usedPublicTemplates': 0,
@@ -266,7 +266,6 @@ class AuthService with RateLimiterMixin {
       }, SetOptions(merge: true));
     } catch (e) {
       // Don't throw - user creation is more important than document creation
-      // print('Warning: Failed to create user document: $e');
     }
   }
 

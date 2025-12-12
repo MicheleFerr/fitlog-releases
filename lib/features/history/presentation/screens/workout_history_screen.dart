@@ -26,7 +26,10 @@ import 'package:table_calendar/table_calendar.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/features/history/presentation/widgets/workout_detail_modal.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/material_scroll_list.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
+import 'package:gymbro_flutter_new/features/workout/presentation/widgets/workout_time_edit_sheet.dart';
+import 'package:gymbro_flutter_new/features/auth/presentation/providers/consolidated_user_provider.dart';
 
 /// Date range filter options
 enum DateRangeOption {
@@ -337,8 +340,7 @@ class _WorkoutHistoryScreenState extends ConsumerState<WorkoutHistoryScreen>
                             : RefreshIndicator(
                                 onRefresh: _onRefresh,
                                 color: colorScheme.primary,
-                                child: ListView.builder(
-                                  key: const PageStorageKey('workout_history_list'),
+                                child: MaterialScrollList(
                                   padding: const EdgeInsets.symmetric(horizontal: 16),
                                   itemCount: filteredByDateRange.length,
                                   itemBuilder: (context, index) {
@@ -761,8 +763,7 @@ class _WorkoutHistoryScreenState extends ConsumerState<WorkoutHistoryScreen>
         Expanded(
           child: selectedDayWorkouts.isEmpty
               ? _buildNoWorkoutsForDay(context, selectedDay, colorScheme, theme, l10n)
-              : ListView.builder(
-                  key: const PageStorageKey('calendar_day_workouts'),
+              : MaterialScrollList(
                   padding: const EdgeInsets.symmetric(horizontal: 16),
                   itemCount: selectedDayWorkouts.length,
                   itemBuilder: (context, index) {
@@ -1355,164 +1356,223 @@ class _WorkoutHistoryScreenState extends ConsumerState<WorkoutHistoryScreen>
   ) {
     final emoji = _getWorkoutEmoji(workout.name);
     final intensity = _getIntensityBadge(workout);
+    final canEdit = _canEditWorkout(workout);
 
-    return TweenAnimationBuilder<double>(
-      duration: Duration(milliseconds: 200 + (index * 50).clamp(0, 200)),
-      tween: Tween(begin: 0.0, end: 1.0),
-      builder: (context, value, child) {
-        return Transform.translate(
-          offset: Offset(0, 20 * (1 - value)),
-          child: Opacity(
-            opacity: value,
-            child: GestureDetector(
-              onTap: () {
-                HapticFeedback.lightImpact();
-                _showWorkoutDetail(context, workout, l10n);
-              },
-              child: Container(
-                margin: const EdgeInsets.only(bottom: 12),
-                decoration: BoxDecoration(
-                  color: colorScheme.surfaceContainerHighest,
-                  borderRadius: BorderRadius.circular(16),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withValues(alpha: 0.05),
-                      blurRadius: 8,
-                      offset: const Offset(0, 2),
+    // 🐛 BUG FIX: Removed TweenAnimationBuilder that was causing flash on scroll rebuild
+    return GestureDetector(
+      onTap: () {
+        HapticFeedback.lightImpact();
+        _showWorkoutDetail(context, workout, l10n);
+      },
+      child: Container(
+        margin: const EdgeInsets.only(bottom: 12),
+        decoration: BoxDecoration(
+          color: colorScheme.surfaceContainerHighest,
+          borderRadius: BorderRadius.circular(16),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withValues(alpha: 0.05),
+              blurRadius: 8,
+              offset: const Offset(0, 2),
+            ),
+          ],
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Header row: Emoji + Name + Duration + Menu
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Workout emoji
+                  Text(
+                    emoji,
+                    style: theme.textTheme.titleLarge,
+                  ),
+                  const SizedBox(width: 12),
+
+                  // Name and date
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          workout.name,
+                          style: theme.textTheme.titleMedium?.copyWith(
+                            fontWeight: FontWeight.bold,
+                          ),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                        const SizedBox(height: 2),
+                        Text(
+                          '${_getTimeOfDayEmoji(workout.completedAt)} ${_formatDate(workout.completedAt, l10n)}',
+                          style: theme.textTheme.bodySmall?.copyWith(
+                            color: colorScheme.onSurfaceVariant,
+                          ),
+                        ),
+                      ],
                     ),
-                  ],
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      // Header row: Emoji + Name + Duration + Menu
-                      Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          // Workout emoji
-                          Text(
-                            emoji,
-                            style: theme.textTheme.titleLarge,
-                          ),
-                          const SizedBox(width: 12),
+                  ),
 
-                          // Name and date
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  workout.name,
-                                  style: theme.textTheme.titleMedium?.copyWith(
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                  maxLines: 1,
-                                  overflow: TextOverflow.ellipsis,
+                  // Duration (tappable to edit)
+                  Semantics(
+                    label: canEdit
+                        ? l10n.minWorkout(workout.duration.inMinutes)
+                        : '${l10n.minWorkout(workout.duration.inMinutes)} - ${l10n.premiumFeature}',
+                    button: true,
+                    child: GestureDetector(
+                      onTap: () => _editWorkoutDuration(context, workout, l10n),
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                        decoration: BoxDecoration(
+                          color: canEdit
+                              ? colorScheme.primaryContainer.withValues(alpha: 0.3)
+                              : colorScheme.surfaceContainerHighest,
+                          borderRadius: BorderRadius.circular(8),
+                          border: canEdit
+                              ? null
+                              : Border.all(
+                                  color: colorScheme.outline.withValues(alpha: 0.3),
                                 ),
-                                const SizedBox(height: 2),
-                                Text(
-                                  '${_getTimeOfDayEmoji(workout.completedAt)} ${_formatDate(workout.completedAt, l10n)}',
-                                  style: theme.textTheme.bodySmall?.copyWith(
-                                    color: colorScheme.onSurfaceVariant,
-                                  ),
-                                ),
-                              ],
+                        ),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Icon(
+                              AppIcons.timer,
+                              size: AppIconSize.tiny,
+                              color: canEdit
+                                  ? colorScheme.primary
+                                  : colorScheme.outline,
                             ),
-                          ),
-
-                          // Duration
-                          Text(
-                            l10n.minWorkout(workout.duration.inMinutes),
-                            style: theme.textTheme.titleMedium?.copyWith(
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-
-                          // Menu
-                          PopupMenuButton<String>(
-                            icon: Icon(
-                              AppIcons.moreVert,
-                              color: colorScheme.onSurfaceVariant,
-                              size: AppIconSize.small,
-                            ),
-                            padding: EdgeInsets.zero,
-                            onSelected: (action) {
-                              switch (action) {
-                                case 'edit':
-                                  _editWorkout(context, workout, l10n);
-                                  break;
-                                case 'delete':
-                                  _deleteWorkout(context, workout, l10n);
-                                  break;
-                              }
-                            },
-                            itemBuilder: (context) => [
-                              PopupMenuItem(
-                                value: 'edit',
-                                child: Row(
-                                  children: [
-                                    SemanticIcon(
-                                      icon: AppIcons.edit,
-                                      semanticLabel: l10n.editWorkout,
-                                      size: AppIconSize.small,
-                                      color: colorScheme.primary,
-                                    ),
-                                    const SizedBox(width: 12),
-                                    Text(l10n.editWorkout),
-                                  ],
-                                ),
+                            const SizedBox(width: 4),
+                            Text(
+                              l10n.minWorkout(workout.duration.inMinutes),
+                              style: theme.textTheme.titleMedium?.copyWith(
+                                fontWeight: FontWeight.bold,
+                                color: canEdit
+                                    ? colorScheme.primary
+                                    : colorScheme.outline,
                               ),
-                              PopupMenuItem(
-                                value: 'delete',
-                                child: Row(
-                                  children: [
-                                    SemanticIcon(
-                                      icon: AppIcons.delete,
-                                      semanticLabel: l10n.deleteWorkout,
-                                      size: AppIconSize.small,
-                                      color: colorScheme.error,
-                                    ),
-                                    const SizedBox(width: 12),
-                                    Text(l10n.deleteWorkout),
-                                  ],
-                                ),
+                            ),
+                            // Show lock badge for non-editable workouts
+                            if (!canEdit) ...[
+                              const SizedBox(width: 4),
+                              Icon(
+                                AppIcons.lock,
+                                size: AppIconSize.tiny - 2,
+                                color: colorScheme.outline,
                               ),
                             ],
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
-                      const SizedBox(height: 12),
+                    ),
+                  ),
 
-                      // Exercise chips row
-                      _buildExerciseChips(workout, colorScheme, theme, l10n),
-                      const SizedBox(height: 12),
-
-                      // Progress bar + intensity badge
-                      Row(
-                        children: [
-                          Expanded(
-                            child: _IntensityBar(
-                              intensity: _calculateIntensity(workout),
-                              colorScheme: colorScheme,
+                  // Menu
+                  PopupMenuButton<String>(
+                    icon: Icon(
+                      AppIcons.moreVert,
+                      color: colorScheme.onSurfaceVariant,
+                      size: AppIconSize.small,
+                    ),
+                    padding: EdgeInsets.zero,
+                    onSelected: (action) {
+                      switch (action) {
+                        case 'edit':
+                          _editWorkout(context, workout, l10n);
+                          break;
+                        case 'delete':
+                          _deleteWorkout(context, workout, l10n);
+                          break;
+                      }
+                    },
+                    itemBuilder: (context) => [
+                      PopupMenuItem(
+                        value: 'edit',
+                        child: Row(
+                          children: [
+                            SemanticIcon(
+                              icon: canEdit ? AppIcons.edit : AppIcons.lock,
+                              semanticLabel: canEdit
+                                  ? l10n.editWorkout
+                                  : l10n.editWorkoutLocked,
+                              size: AppIconSize.small,
+                              color: canEdit
+                                  ? colorScheme.primary
+                                  : colorScheme.outline,
                             ),
-                          ),
-                          const SizedBox(width: 8),
-                          Text(
-                            intensity,
-                            style: theme.textTheme.bodyMedium,
-                          ),
-                        ],
+                            const SizedBox(width: 12),
+                            Expanded(
+                              child: Text(
+                                l10n.editWorkout,
+                                style: TextStyle(
+                                  color: canEdit
+                                      ? null
+                                      : colorScheme.outline,
+                                ),
+                              ),
+                            ),
+                            if (!canEdit) ...[
+                              const SizedBox(width: 4),
+                              Icon(
+                                AppIcons.premium,
+                                size: AppIconSize.tiny,
+                                color: colorScheme.tertiary,
+                              ),
+                            ],
+                          ],
+                        ),
+                      ),
+                      PopupMenuItem(
+                        value: 'delete',
+                        child: Row(
+                          children: [
+                            SemanticIcon(
+                              icon: AppIcons.delete,
+                              semanticLabel: l10n.deleteWorkout,
+                              size: AppIconSize.small,
+                              color: colorScheme.error,
+                            ),
+                            const SizedBox(width: 12),
+                            Text(l10n.deleteWorkout),
+                          ],
+                        ),
                       ),
                     ],
                   ),
-                ),
+                ],
               ),
-            ),
+              const SizedBox(height: 12),
+
+              // Exercise chips row
+              _buildExerciseChips(workout, colorScheme, theme, l10n),
+              const SizedBox(height: 12),
+
+              // Progress bar + intensity badge
+              Row(
+                children: [
+                  Expanded(
+                    child: _IntensityBar(
+                      intensity: _calculateIntensity(workout),
+                      colorScheme: colorScheme,
+                    ),
+                  ),
+                  const SizedBox(width: 8),
+                  Text(
+                    intensity,
+                    style: theme.textTheme.bodyMedium,
+                  ),
+                ],
+              ),
+            ],
           ),
-        );
-      },
+        ),
+      ),
     );
   }
 
@@ -1658,12 +1718,131 @@ class _WorkoutHistoryScreenState extends ConsumerState<WorkoutHistoryScreen>
       context: context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
-      builder: (context) => WorkoutDetailModal(workout: workout),
+      builder: (_) => DraggableScrollableSheet(
+        initialChildSize: 0.8,
+        minChildSize: 0.8,
+        maxChildSize: 1.0,
+        expand: false,
+        snap: true,
+        builder: (context, scrollController) => WorkoutDetailModal(
+          workout: workout,
+          scrollController: scrollController,
+        ),
+      ),
+    );
+  }
+
+  /// Check if user can edit the given workout
+  /// Premium users can edit all workouts
+  /// Free users can only edit the most recent workout
+  bool _canEditWorkout(WorkoutHistoryDetail workout) {
+    // Check if user is premium
+    final isPremium = ref.read(isPremiumUserProvider);
+    if (isPremium) return true;
+
+    // Free user: check if this is the latest workout
+    final workoutsAsync = ref.read(workoutHistoryProvider);
+    return workoutsAsync.whenOrNull(
+      data: (workouts) {
+        if (workouts.isEmpty) return true;
+        // Find the workout with most recent completedAt
+        final latestWorkout = workouts.reduce((a, b) =>
+          a.completedAt.isAfter(b.completedAt) ? a : b,
+        );
+        return workout.id == latestWorkout.id;
+      },
+    ) ?? false;
+  }
+
+  /// Show dialog when user tries to edit a locked workout
+  void _showEditLockedDialog(BuildContext context, AppLocalizations l10n) {
+    // Distinct haptic feedback for locked feature
+    HapticFeedback.heavyImpact();
+
+    final colorScheme = Theme.of(context).colorScheme;
+
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        icon: Icon(
+          AppIcons.lock,
+          color: colorScheme.tertiary,
+          size: AppIconSize.xlarge,
+        ),
+        title: Text(l10n.premiumFeature),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(l10n.onlyLatestWorkoutEditable),
+            const SizedBox(height: 12),
+            // Premium benefit highlight
+            Container(
+              padding: const EdgeInsets.all(12),
+              decoration: BoxDecoration(
+                color: colorScheme.tertiaryContainer.withValues(alpha: 0.3),
+                borderRadius: BorderRadius.circular(12),
+                border: Border.all(
+                  color: colorScheme.tertiary.withValues(alpha: 0.3),
+                ),
+              ),
+              child: Row(
+                children: [
+                  Icon(
+                    AppIcons.premium,
+                    color: colorScheme.tertiary,
+                    size: AppIconSize.medium,
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: Text(
+                      l10n.upgradeToEditAll,
+                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                        color: colorScheme.onSurface,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: Text(l10n.cancel),
+          ),
+          ElevatedButton.icon(
+            onPressed: () {
+              Navigator.pop(context);
+              // TODO: Navigate to premium/subscription screen when ready
+              // For now, show a snackbar indicating feature coming soon
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text(l10n.premiumComingSoon),
+                  backgroundColor: colorScheme.tertiary,
+                ),
+              );
+            },
+            icon: const Icon(AppIcons.premium, size: AppIconSize.small),
+            label: Text(l10n.upgradeToPremium),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: colorScheme.tertiary,
+              foregroundColor: colorScheme.onTertiary,
+            ),
+          ),
+        ],
+      ),
     );
   }
 
   void _editWorkout(BuildContext context, WorkoutHistoryDetail workout, AppLocalizations l10n) {
     HapticFeedback.lightImpact();
+
+    // Check if user can edit this workout
+    if (!_canEditWorkout(workout)) {
+      _showEditLockedDialog(context, l10n);
+      return;
+    }
 
     showModalBottomSheet(
       context: context,
@@ -1673,6 +1852,64 @@ class _WorkoutHistoryScreenState extends ConsumerState<WorkoutHistoryScreen>
         historyWorkout: workout,
       ),
     );
+  }
+
+  /// Edit workout duration using the time edit sheet
+  Future<void> _editWorkoutDuration(
+    BuildContext context,
+    WorkoutHistoryDetail workout,
+    AppLocalizations l10n,
+  ) async {
+    unawaited(HapticFeedback.lightImpact());
+
+    // Check if user can edit this workout
+    if (!_canEditWorkout(workout)) {
+      _showEditLockedDialog(context, l10n);
+      return;
+    }
+
+    // Convert to Workout entity for the sheet
+    final workoutEntity = workout.toWorkout();
+
+    // Show the time edit sheet (without suspicious warning for manual edit)
+    final newDuration = await WorkoutTimeEditSheet.show(
+      context: context,
+      workout: workoutEntity,
+      showSuspiciousWarning: false, // User is manually editing, no warning needed
+    );
+
+    // If user selected a new duration, update the workout
+    if (newDuration != null && context.mounted) {
+      final updatedWorkout = workout.copyWith(duration: newDuration);
+
+      final result = await ref.read(workoutHistoryOperationsProvider)
+          .updateWorkout(updatedWorkout);
+
+      result.fold(
+        (failure) {
+          if (context.mounted) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text('Error: ${failure.message}'),
+                backgroundColor: Theme.of(context).colorScheme.error,
+              ),
+            );
+          }
+        },
+        (_) {
+          if (context.mounted) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text(l10n.workoutUpdatedSuccessfully),
+                backgroundColor: Theme.of(context).colorScheme.primary,
+              ),
+            );
+          }
+          // Refresh the history list
+          ref.invalidate(workoutHistoryProvider);
+        },
+      );
+    }
   }
 
   void _deleteWorkout(BuildContext context, WorkoutHistoryDetail workout, AppLocalizations l10n) {

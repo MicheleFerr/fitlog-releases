@@ -153,7 +153,6 @@ class RoutinePredictionEngine {
     //   );
     // } catch (e) {
     //   if (kDebugMode) {
-    //     debugPrint('❌ [ROUTINE_PREDICTION] Error: $e');
     //   }
     //   return null; // Fallback to frequency-based
     // }

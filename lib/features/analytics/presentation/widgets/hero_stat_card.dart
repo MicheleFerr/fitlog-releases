@@ -26,9 +26,12 @@ class HeroStatCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final colors = gradientColors.isNotEmpty 
+    final colors = gradientColors.isNotEmpty
         ? gradientColors
-        : [theme.colorScheme.primary, theme.colorScheme.secondary];
+        : [
+            theme.colorScheme.primary,
+            theme.colorScheme.secondary,
+          ];
     
     return Material(
       color: Colors.transparent,

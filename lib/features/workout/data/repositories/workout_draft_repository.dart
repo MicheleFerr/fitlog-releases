@@ -3,6 +3,7 @@ import 'package:gymbro_flutter_new/features/workout/domain/entities/workout.dart
 import 'package:gymbro_flutter_new/features/workout/domain/entities/workout_draft.dart';
 import 'package:flutter/foundation.dart';
 import 'package:gymbro_flutter_new/core/data/hive_box_manager_enhanced.dart';
+import 'package:gymbro_flutter_new/core/cache/user_cache_key_manager.dart';
 
 /// Repository for managing workout drafts in local storage
 class WorkoutDraftRepository {
@@ -10,26 +11,69 @@ class WorkoutDraftRepository {
       : _boxManager = boxManager ?? HiveBoxManagerEnhanced();
 
   static const String _boxName = 'workout_drafts';
-  static const String _currentDraftKey = 'current_draft';
-  static const String _recoveredDraftsKey = 'recovered_drafts';
+  // 🔐 User-scoped cache keys
+  String get _currentDraftKey => userCacheKeys.userScopedKey('current_draft');
+  String get _recoveredDraftsKey => userCacheKeys.userScopedKey('recovered_drafts');
 
   final HiveBoxManagerEnhanced _boxManager;
   Box<WorkoutDraft>? _draftBox;
   Box? _recoveredBox;
 
-  /// Initialize the draft storage
+  /// Flag to track if init failed (prevents repeated failing attempts)
+  bool _initFailed = false;
+
+  /// Initialize the draft storage with corruption recovery
   Future<void> init() async {
-    if (!Hive.isBoxOpen(_boxName)) {
-      _draftBox = await _boxManager.openBox<WorkoutDraft>(_boxName);
-    } else {
-      _draftBox = Hive.box<WorkoutDraft>(_boxName);
+    // Skip if init already failed to prevent repeated errors
+    if (_initFailed) {
+      if (kDebugMode) {
+        debugPrint('⚠️ [WorkoutDraftRepository] Skipping init - previous attempt failed');
+      }
+      return;
     }
 
-    // Initialize recovered drafts box
-    if (!Hive.isBoxOpen('recovered_drafts')) {
-      _recoveredBox = await _boxManager.openBox('recovered_drafts');
-    } else {
-      _recoveredBox = Hive.box('recovered_drafts');
+    try {
+      if (!Hive.isBoxOpen(_boxName)) {
+        _draftBox = await _boxManager.openBox<WorkoutDraft>(_boxName);
+      } else {
+        _draftBox = Hive.box<WorkoutDraft>(_boxName);
+      }
+
+      // Initialize recovered drafts box
+      if (!Hive.isBoxOpen('recovered_drafts')) {
+        _recoveredBox = await _boxManager.openBox('recovered_drafts');
+      } else {
+        _recoveredBox = Hive.box('recovered_drafts');
+      }
+
+      if (kDebugMode) {
+        debugPrint('✅ [WorkoutDraftRepository] Initialized successfully');
+      }
+    } on BoxCorruptedException catch (e) {
+      // HiveBoxManagerEnhanced already deleted corrupted box, box is recreated empty
+      if (kDebugMode) {
+        debugPrint('⚠️ [WorkoutDraftRepository] Box was corrupted and recovered: $e');
+      }
+      // Try again - box should be recreated
+      try {
+        _draftBox = await _boxManager.openBox<WorkoutDraft>(_boxName);
+        _recoveredBox = await _boxManager.openBox('recovered_drafts');
+      } catch (retryError) {
+        _initFailed = true;
+        if (kDebugMode) {
+          debugPrint('❌ [WorkoutDraftRepository] Init failed after corruption recovery: $retryError');
+        }
+      }
+    } on BoxOpenException catch (e) {
+      _initFailed = true;
+      if (kDebugMode) {
+        debugPrint('❌ [WorkoutDraftRepository] Failed to open box: $e');
+      }
+    } catch (e) {
+      _initFailed = true;
+      if (kDebugMode) {
+        debugPrint('❌ [WorkoutDraftRepository] Unexpected init error: $e');
+      }
     }
   }
 
@@ -52,13 +96,45 @@ class WorkoutDraftRepository {
   }
 
   /// Get current draft if exists
+  ///
+  /// Handles potential data corruption/incompatibility by:
+  /// 1. Catching type casting errors (format changed between app versions)
+  /// 2. Deleting corrupted data if unreadable
+  /// 3. Returning null safely instead of crashing
   Future<WorkoutDraft?> getCurrentDraft() async {
     try {
       await init();
-      return _draftBox?.get(_currentDraftKey);
+      if (_draftBox == null || _initFailed) return null;
+
+      final draft = _draftBox?.get(_currentDraftKey);
+
+      // Validate draft is usable (catches partial corruption)
+      if (draft != null) {
+        try {
+          // Test that draft can be converted to workout
+          draft.toWorkout();
+          return draft;
+        } catch (conversionError) {
+          // Draft data is corrupted or incompatible with current code
+          if (kDebugMode) {
+            debugPrint('⚠️ [WorkoutDraftRepository] Draft conversion failed, clearing corrupt data: $conversionError');
+          }
+          await clearCurrentDraft();
+          return null;
+        }
+      }
+      return null;
+    } on TypeError catch (e) {
+      // Type mismatch - data format changed between app versions
+      if (kDebugMode) {
+        debugPrint('⚠️ [WorkoutDraftRepository] Type error reading draft (format changed?): $e');
+      }
+      // Clear corrupted/incompatible data
+      await clearCurrentDraft();
+      return null;
     } catch (e) {
       if (kDebugMode) {
-        debugPrint('❌ Failed to get workout draft: $e');
+        debugPrint('❌ [WorkoutDraftRepository] Failed to get workout draft: $e');
       }
       return null;
     }

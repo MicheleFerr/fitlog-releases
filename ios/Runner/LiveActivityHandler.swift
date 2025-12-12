@@ -3,6 +3,25 @@ import ActivityKit
 import Flutter
 
 
+// MARK: - Timer Notification Localization
+/// Simple localization helper for timer notification strings
+/// Supports IT and EN (default)
+struct TimerNotificationStrings {
+    static var timerComplete: String {
+        if Locale.current.language.languageCode?.identifier == "it" {
+            return "⏰ Timer Completato!"
+        }
+        return "⏰ Timer Complete"
+    }
+
+    static var restTimerFinished: String {
+        if Locale.current.language.languageCode?.identifier == "it" {
+            return "Il tuo timer è terminato"
+        }
+        return "Your timer has finished"
+    }
+}
+
 @available(iOS 16.1, *)
 class LiveActivityHandler: NSObject {
     static let shared = LiveActivityHandler()
@@ -542,33 +561,53 @@ class LiveActivityHandler: NSObject {
                     Logger.shared.debug( "🔄 Cancelled previous notification: \(existingId)", category: .general)
                 }
 
-                // CRITICAL FIX: Also reschedule audio through BackgroundAudioManager when resuming
-                if justResumed {
+                // CRITICAL FIX: Schedule audio through BackgroundAudioManager on FIRST START AND resume
+                // This starts the silent loop which keeps the app alive in background
+                // Without silent loop, iOS suspends the app and only notification plays (which respects mute!)
+                // With silent loop, AVAudioPlayer plays which BYPASSES mute switch!
+                if needsNewNotification {
                     BackgroundAudioManager.shared.scheduleTimerAudio(
                         duration: TimeInterval(remainingSeconds),
                         soundName: soundName,
-                        skipNotification: true  // Skip notification as we schedule it below
+                        skipNotification: true  // Skip notification here - we schedule it directly below with proper tracking
                     )
                     Logger.shared.debug("""
-                        🎵 [AUDIO-SESSION] Rescheduled BackgroundAudioManager after resume:
+                        🎵 [MUTE-BYPASS] BackgroundAudioManager started for mute switch bypass:
+                        - Reason: \(justResumed ? "Timer resumed" : "First start")
                         - Remaining: \(remainingSeconds)s
                         - Sound: \(soundName)
+                        - Silent loop: Will keep app alive in background
+                        - AVAudioPlayer: Will play sound (bypasses mute switch!)
+                        - Notification: Scheduled separately below (for visual + backup)
                         """, category: .audioSession)
                 }
 
-                // CRITICAL FIX: Skip iOS native notification - Flutter handles completion notifications
-                // This prevents duplicate notifications and ensures proper localization
+                // FIX: Schedule iOS native notification for LOCKSCREEN AUDIO
+                // Flutter can't send notifications when app is suspended - iOS notification is REQUIRED!
                 Logger.shared.debug("""
-                    ⏭️ [NOTIFICATION-FIX] SKIPPING iOS native completion notification:
-                    - Would have scheduled: "Timer Complete - Your rest timer has finished!"
-                    - Flutter handles completion notifications with proper localization
-                    - Prevents duplicate notifications at timer completion
+                    🔔 [NOTIFICATION-FIX] Scheduling iOS native completion notification:
+                    - This is REQUIRED for lockscreen audio when app is suspended
+                    - Flutter cannot send notifications from background
+                    - iOS notification sound plays even when device is locked
                     """, category: .general)
-                self.scheduledNotificationId = nil
+
+                // Schedule the notification with the timer sound
+                // ✅ DOUBLE SOUND FIX: Silent loop (BackgroundAudioManager) handles audio via AVAudioPlayer
+                // so notification should be silent to avoid double sound
+                let notificationId = DirectNotificationManager.shared.scheduleTimerNotification(
+                    after: TimeInterval(remainingSeconds),
+                    soundName: soundName,
+                    title: TimerNotificationStrings.timerComplete,
+                    body: TimerNotificationStrings.restTimerFinished,
+                    silentLoopHandlesAudio: true  // Silent loop started above handles audio
+                )
+                self.scheduledNotificationId = notificationId
+
                 Logger.shared.debug("""
-                    ✅ [TIMER-DEBUG] Notification handling complete:
-                    - iOS native notification: SKIPPED (Flutter handles)
+                    ✅ [TIMER-DEBUG] Notification scheduled for lockscreen audio:
+                    - Notification ID: \(notificationId)
                     - Timer duration: \(remainingSeconds)s
+                    - Sound: \(soundName)
                     - Completion expected at: \(Date().addingTimeInterval(TimeInterval(remainingSeconds)))
                     """, category: .general)
             } else {

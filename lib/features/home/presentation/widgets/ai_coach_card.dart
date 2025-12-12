@@ -6,7 +6,6 @@ import 'package:gymbro_flutter_new/shared/presentation/services/snackbar_service
 import 'package:gymbro_flutter_new/shared/presentation/services/modal_service.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator.dart';
 import 'package:gymbro_flutter_new/features/progress/presentation/providers/progress_provider.dart';
-import 'package:gymbro_flutter_new/features/progress/domain/entities/progress_data.dart';
 import 'package:gymbro_flutter_new/features/home/presentation/providers/ai_coach_provider.dart';
 import 'package:gymbro_flutter_new/features/home/presentation/providers/insight_feedback_provider.dart';
 import 'package:gymbro_flutter_new/features/home/presentation/widgets/exercise_replacement_dialog.dart';
@@ -16,10 +15,10 @@ import 'package:gymbro_flutter_new/features/home/domain/services/ai_coach_servic
 import 'package:gymbro_flutter_new/features/workout_templates/data/repositories/template_repository.dart';
 import 'package:gymbro_flutter_new/features/exercise_database/domain/entities/exercise.dart' as exercise_db;
 import 'package:gymbro_flutter_new/shared/data/services/interstitial_ad_service.dart';
+import 'package:gymbro_flutter_new/features/auth/presentation/providers/consolidated_user_provider.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_spacing.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
-import 'package:gymbro_flutter_new/features/ai_coach/presentation/widgets/chat_modal_content.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
 
@@ -76,7 +75,7 @@ class _AICoachCardState extends ConsumerState<AICoachCard>
   @override
   Widget build(BuildContext context) {
     // Fetch data with select to avoid unnecessary rebuilds
-    final quickStatsAsync = ref.watch(quickStatsProvider);
+    final workoutsCountAsync = ref.watch(completedWorkoutsCountProvider);
     final streakAsync = ref.watch(currentStreakProvider);
     final frequencyAsync = ref.watch(weeklyFrequencyProvider);
     final primaryAdviceAsync = ref.watch(primaryAIAdviceProvider);
@@ -88,10 +87,9 @@ class _AICoachCardState extends ConsumerState<AICoachCard>
           opacity: _fadeAnimation.value,
           child: _MinimalAICoachCard(
             primaryAdviceAsync: primaryAdviceAsync,
-            quickStatsAsync: quickStatsAsync,
+            workoutsCountAsync: workoutsCountAsync,
             frequencyAsync: frequencyAsync,
             streakAsync: streakAsync,
-            onChatTap: () => _openChatbot(context),
             onDetailsTap: () => _showInsightsModal(context, ref),
           ),
         );
@@ -99,23 +97,16 @@ class _AICoachCardState extends ConsumerState<AICoachCard>
     );
   }
 
-  /// Open AI Coach chatbot modal
-  Future<void> _openChatbot(BuildContext context) async {
-    HapticFeedback.lightImpact();
-
-    await ModalService.showBottomSheet(
-      context,
-      child: const ChatModalContent(),
-    );
-  }
-
   /// Show AI Insights modal (Level 1: compact insights list)
   Future<void> _showInsightsModal(BuildContext context, WidgetRef ref) async {
     HapticFeedback.lightImpact();
 
-    // Show Ad (disabled in debug by service)
-    final adService = InterstitialAdService();
-    await adService.showAdIfReady();
+    // Show Ad only for non-premium users
+    final isPremium = ref.read(isPremiumUserProvider);
+    if (!isPremium) {
+      final adService = InterstitialAdService();
+      await adService.showAdIfReady();
+    }
 
     if (!context.mounted) return;
 
@@ -133,18 +124,16 @@ class _AICoachCardState extends ConsumerState<AICoachCard>
 class _MinimalAICoachCard extends StatelessWidget {
   const _MinimalAICoachCard({
     required this.primaryAdviceAsync,
-    required this.quickStatsAsync,
+    required this.workoutsCountAsync,
     required this.frequencyAsync,
     required this.streakAsync,
-    required this.onChatTap,
     required this.onDetailsTap,
   });
 
   final AsyncValue<String> primaryAdviceAsync;
-  final AsyncValue<QuickStats?> quickStatsAsync;
+  final AsyncValue<int> workoutsCountAsync;
   final AsyncValue<double> frequencyAsync;
   final AsyncValue<int> streakAsync;
-  final VoidCallback onChatTap;
   final VoidCallback onDetailsTap;
 
   int _calculateConsistency(double weeklyFrequency) {
@@ -158,36 +147,47 @@ class _MinimalAICoachCard extends StatelessWidget {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
 
-    return DecoratedBox(
+    // Use theme colors
+    final primaryColor = colorScheme.primary;
+
+    return Container(
       decoration: BoxDecoration(
+        // ✨ Material 3 2025: Solid filled surface (no gradient)
+        color: colorScheme.surfaceContainerLow,
         borderRadius: BorderRadius.circular(24),
-        gradient: RadialGradient(
-          center: const Alignment(-0.3, -0.4),
-          radius: 1.5,
-          colors: [
-            colorScheme.primaryContainer.withValues(alpha: 1.0),
-            colorScheme.secondaryContainer.withValues(alpha: 0.9),
-            colorScheme.tertiaryContainer.withValues(alpha: 0.8),
-          ],
-          stops: const [0.0, 0.6, 1.0],
+        // ✨ Material 3 2025: Defined border for consistency
+        border: Border.all(
+          color: primaryColor.withValues(alpha: 0.15),
+          width: 1.5,
         ),
+        // ✨ Material 3 2025: Elevated shadow for depth
         boxShadow: [
           BoxShadow(
-            color: colorScheme.primary.withValues(alpha: 0.1),
-            blurRadius: 20,
-            offset: const Offset(0, 8),
-            spreadRadius: 2,
+            color: colorScheme.shadow.withValues(alpha: 0.08),
+            blurRadius: 16,
+            offset: const Offset(0, 4),
+            spreadRadius: 0,
+          ),
+          BoxShadow(
+            color: colorScheme.shadow.withValues(alpha: 0.04),
+            blurRadius: 8,
+            offset: const Offset(0, 2),
+            spreadRadius: 0,
           ),
         ],
       ),
       child: ClipRRect(
         borderRadius: BorderRadius.circular(24),
         child: DecoratedBox(
+          // ✨ iOS Liquid Glass 2025: Subtle glass-like translucency
           decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(24),
-            border: Border.all(
-              color: context.colors.surface.withValues(alpha: 0.2),
-              width: 1,
+            gradient: LinearGradient(
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+              colors: [
+                colorScheme.surface.withValues(alpha: 0.05),
+                colorScheme.surface.withValues(alpha: 0.0),
+              ],
             ),
           ),
           child: Padding(
@@ -203,18 +203,15 @@ class _MinimalAICoachCard extends StatelessWidget {
                       width: 40,
                       height: 40,
                       decoration: BoxDecoration(
-                        gradient: RadialGradient(
-                          colors: [
-                            colorScheme.primary.withValues(alpha: 0.8),
-                            colorScheme.secondary.withValues(alpha: 0.6),
-                          ],
-                        ),
+                        // ✨ Material 3 2025: Solid color container
+                        color: primaryColor,
                         borderRadius: BorderRadius.circular(20),
+                        // ✨ Material 3 2025: Subtle elevation
                         boxShadow: [
                           BoxShadow(
-                            color: colorScheme.primary.withValues(alpha: 0.2),
-                            blurRadius: 6,
-                            spreadRadius: 1,
+                            color: primaryColor.withValues(alpha: 0.2),
+                            blurRadius: 8,
+                            offset: const Offset(0, 2),
                           ),
                         ],
                       ),
@@ -292,78 +289,87 @@ class _MinimalAICoachCard extends StatelessWidget {
                 ),
                 const SizedBox(height: 16),
 
-                // 3 Mini Metrics (compact)
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    _MiniMetric(
-                      icon: AppIcons.trendUp,
-                      value: quickStatsAsync.asData?.value?.formattedVolumeIncrease ?? '--',
-                      label: l10n.volume,
-                      color: colorScheme.primary,
-                    ),
-                    _MiniMetric(
-                      icon: AppIcons.trackChanges,
-                      value: frequencyAsync.asData != null
-                          ? '${_calculateConsistency(frequencyAsync.asData!.value)}%'
-                          : '--',
-                      label: l10n.consistency,
-                      color: colorScheme.secondary,
-                    ),
-                    _MiniMetric(
-                      icon: AppIcons.streak,
-                      value: '${streakAsync.asData?.value ?? 0}d',
-                      label: l10n.streak,
-                      color: colorScheme.tertiary,
-                    ),
-                  ],
+                // 3 Explanatory Metrics (tap for details)
+                Builder(
+                  builder: (context) {
+                    final workoutsCount = workoutsCountAsync.asData?.value ?? 0;
+                    final weeklyFrequency = frequencyAsync.asData?.value ?? 0.0;
+                    final consistency = _calculateConsistency(weeklyFrequency);
+                    final streak = streakAsync.asData?.value ?? 0;
+
+                    // Calculate workout days this week (frequency is average per week)
+                    final workoutDaysThisWeek = (weeklyFrequency * 4.3 / 4).round().clamp(0, 7);
+
+                    return Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        // Workouts metric
+                        Expanded(
+                          child: _ExplanatoryMetric(
+                            icon: AppIcons.workout,
+                            value: '$workoutsCount',
+                            label: l10n.workouts,
+                            color: colorScheme.primary,
+                            subValue: l10n.thisYear,
+                            progress: (workoutsCount / 100).clamp(0.0, 1.0), // Target: 100 workouts/year
+                            explanation: l10n.metricWorkoutsExplanation(workoutsCount),
+                          ),
+                        ),
+                        const SizedBox(width: 8),
+                        // Consistency metric
+                        Expanded(
+                          child: _ExplanatoryMetric(
+                            icon: AppIcons.trackChanges,
+                            value: '$consistency%',
+                            label: l10n.consistency,
+                            color: colorScheme.secondary,
+                            subValue: l10n.workoutDaysPerWeek(workoutDaysThisWeek.toDouble()),
+                            progress: consistency / 100.0,
+                            explanation: l10n.metricConsistencyExplanation(
+                              consistency,
+                              workoutDaysThisWeek,
+                            ),
+                          ),
+                        ),
+                        const SizedBox(width: 8),
+                        // Streak metric
+                        Expanded(
+                          child: _ExplanatoryMetric(
+                            icon: AppIcons.streak,
+                            value: '${streak}d',
+                            label: l10n.streak,
+                            color: colorScheme.tertiary,
+                            subValue: streak > 0 ? l10n.keepItUp : l10n.startToday,
+                            progress: (streak / 7).clamp(0.0, 1.0), // Target: 7-day streak
+                            explanation: l10n.metricStreakExplanation(streak),
+                          ),
+                        ),
+                      ],
+                    );
+                  },
                 ),
                 const SizedBox(height: 16),
 
-                // Two Buttons: Chat (primary) + Details (secondary)
-                Row(
-                  children: [
-                    // Primary: Chat button (prominent)
-                    Expanded(
-                      flex: 2,
-                      child: FilledButton.icon(
-                        onPressed: onChatTap,
-                        icon: const SemanticIcon(
-  icon: AppIcons.chat,
-  semanticLabel: 'Chat',
-  size: AppIconSize.small,
-),
-                        label: Text(l10n.aiCoach),
-                        style: FilledButton.styleFrom(
-                          backgroundColor: colorScheme.primary,
-                          foregroundColor: colorScheme.onPrimary,
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 16,
-                            vertical: 12,
-                          ),
-                        ),
+                // Single Button: View Details
+                SizedBox(
+                  width: double.infinity,
+                  child: FilledButton.icon(
+                    onPressed: onDetailsTap,
+                    icon: const SemanticIcon(
+                      icon: AppIcons.analytics,
+                      semanticLabel: 'Details',
+                      size: AppIconSize.small,
+                    ),
+                    label: Text(l10n.viewDetails),
+                    style: FilledButton.styleFrom(
+                      backgroundColor: colorScheme.primary,
+                      foregroundColor: colorScheme.onPrimary,
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 16,
+                        vertical: 12,
                       ),
                     ),
-                    const SizedBox(width: 12),
-                    // Secondary: Details button
-                    Expanded(
-                      child: OutlinedButton(
-                        onPressed: onDetailsTap,
-                        style: OutlinedButton.styleFrom(
-                          foregroundColor: colorScheme.primary,
-                          side: BorderSide(color: colorScheme.primary),
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 12,
-                            vertical: 12,
-                          ),
-                        ),
-                        child: Text(
-                          l10n.details,
-                          style: context.textTheme.labelSmall,
-                        ),
-                      ),
-                    ),
-                  ],
+                  ),
                 ),
               ],
             ),
@@ -374,45 +380,235 @@ class _MinimalAICoachCard extends StatelessWidget {
   }
 }
 
-/// Mini metric widget (compact)
-class _MiniMetric extends StatelessWidget {
-  const _MiniMetric({
+/// Explanatory metric widget with tap-to-explain tooltip
+/// Following UX best practices: "Data presented with context"
+class _ExplanatoryMetric extends StatelessWidget {
+  const _ExplanatoryMetric({
     required this.icon,
     required this.value,
     required this.label,
     required this.color,
+    required this.explanation,
+    this.subValue,
+    this.progress,
   });
 
   final IconData icon;
   final String value;
   final String label;
   final Color color;
+  final String explanation;
+  final String? subValue; // e.g., "3/4 giorni"
+  final double? progress; // 0.0 - 1.0 for mini progress bar
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
+    final l10n = context.l10n;
 
-    return Column(
-      children: [
-        Icon(icon, size: 20, color: color),
-        const SizedBox(height: 4),
-        Text(
-          value,
-          style: theme.textTheme.titleMedium?.copyWith(
-            fontWeight: FontWeight.bold,
-            color: colorScheme.onSurface,
-            fontSize: 16,
-          ),
+    return GestureDetector(
+      onTap: () => _showExplanationTooltip(context, l10n),
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
+        decoration: BoxDecoration(
+          color: color.withValues(alpha: 0.08),
+          borderRadius: BorderRadius.circular(12),
         ),
-        Text(
-          label,
-          style: theme.textTheme.bodySmall?.copyWith(
-            fontSize: 10,
-            color: colorScheme.onSurface.withValues(alpha: 0.6),
-          ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            // Icon with info indicator
+            Stack(
+              clipBehavior: Clip.none,
+              children: [
+                Icon(icon, size: 20, color: color),
+                Positioned(
+                  right: -6,
+                  top: -4,
+                  child: Container(
+                    width: 12,
+                    height: 12,
+                    decoration: BoxDecoration(
+                      color: colorScheme.surfaceContainerHighest,
+                      shape: BoxShape.circle,
+                      border: Border.all(color: color.withValues(alpha: 0.5), width: 1),
+                    ),
+                    child: Icon(
+                      AppIcons.info,
+                      size: 8,
+                      color: color,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 4),
+            // Main value
+            Text(
+              value,
+              style: theme.textTheme.titleMedium?.copyWith(
+                fontWeight: FontWeight.bold,
+                color: colorScheme.onSurface,
+                fontSize: 16,
+              ),
+            ),
+            // Sub value (contextual info)
+            if (subValue != null) ...[
+              Text(
+                subValue!,
+                style: theme.textTheme.bodySmall?.copyWith(
+                  fontSize: 9,
+                  color: color,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+            ],
+            // Mini progress bar
+            if (progress != null) ...[
+              const SizedBox(height: 4),
+              SizedBox(
+                width: 50,
+                height: 3,
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(2),
+                  child: LinearProgressIndicator(
+                    value: progress!.clamp(0.0, 1.0),
+                    backgroundColor: colorScheme.surfaceContainerHighest,
+                    valueColor: AlwaysStoppedAnimation(color),
+                  ),
+                ),
+              ),
+            ],
+            const SizedBox(height: 2),
+            // Label
+            Text(
+              label,
+              style: theme.textTheme.bodySmall?.copyWith(
+                fontSize: 10,
+                color: colorScheme.onSurface.withValues(alpha: 0.6),
+              ),
+            ),
+          ],
         ),
-      ],
+      ),
+    );
+  }
+
+  void _showExplanationTooltip(BuildContext context, dynamic l10n) {
+    HapticFeedback.lightImpact();
+
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: Colors.transparent,
+      builder: (context) => Container(
+        margin: const EdgeInsets.all(16),
+        padding: const EdgeInsets.all(20),
+        decoration: BoxDecoration(
+          color: colorScheme.surface,
+          borderRadius: BorderRadius.circular(20),
+          boxShadow: [
+            BoxShadow(
+              color: colorScheme.shadow.withValues(alpha: 0.15),
+              blurRadius: 20,
+              offset: const Offset(0, -4),
+            ),
+          ],
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            // Header
+            Row(
+              children: [
+                Container(
+                  padding: const EdgeInsets.all(10),
+                  decoration: BoxDecoration(
+                    color: color.withValues(alpha: 0.15),
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: Icon(icon, color: color, size: 24),
+                ),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        label,
+                        style: theme.textTheme.titleMedium?.copyWith(
+                          fontWeight: FontWeight.bold,
+                          color: colorScheme.onSurface,
+                        ),
+                      ),
+                      Text(
+                        value,
+                        style: theme.textTheme.headlineSmall?.copyWith(
+                          fontWeight: FontWeight.bold,
+                          color: color,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 16),
+            // Progress visualization (if available)
+            if (progress != null) ...[
+              ClipRRect(
+                borderRadius: BorderRadius.circular(4),
+                child: LinearProgressIndicator(
+                  value: progress!.clamp(0.0, 1.0),
+                  backgroundColor: colorScheme.surfaceContainerHighest,
+                  valueColor: AlwaysStoppedAnimation(color),
+                  minHeight: 8,
+                ),
+              ),
+              const SizedBox(height: 16),
+            ],
+            // Explanation text
+            Container(
+              width: double.infinity,
+              padding: const EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                color: color.withValues(alpha: 0.08),
+                borderRadius: BorderRadius.circular(12),
+                border: Border.all(color: color.withValues(alpha: 0.2)),
+              ),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Icon(
+                    AppIcons.tip,
+                    color: color,
+                    size: 18,
+                  ),
+                  const SizedBox(width: 10),
+                  Expanded(
+                    child: Text(
+                      explanation,
+                      style: theme.textTheme.bodyMedium?.copyWith(
+                        color: colorScheme.onSurface.withValues(alpha: 0.9),
+                        height: 1.4,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(height: 12),
+            // Close button
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: Text(l10n.close),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }
@@ -459,29 +655,24 @@ class _AIInsightsModalState extends ConsumerState<AIInsightsModal> {
                   ),
                 ),
               ),
-              // Chat button
-              IconButton(
-                onPressed: () async {
-                  HapticFeedback.lightImpact();
-                  Navigator.of(context).pop();
-                  await ModalService.showBottomSheet(
-                    context,
-                    child: const ChatModalContent(),
-                  );
-                },
-                icon: Icon(
-                  AppIcons.chat,
-                  color: colorScheme.primary,
-                ),
-                tooltip: l10n.aiCoach,
-              ),
               // Feedback history button
               IconButton(
                 onPressed: () async {
                   HapticFeedback.lightImpact();
-                  await ModalService.showBottomSheet(
-                    context,
-                    child: const FeedbackHistoryModal(),
+                  await showModalBottomSheet(
+                    context: context,
+                    isScrollControlled: true,
+                    backgroundColor: Colors.transparent,
+                    builder: (_) => DraggableScrollableSheet(
+                      initialChildSize: 0.8,
+                      minChildSize: 0.8,
+                      maxChildSize: 1.0,
+                      expand: false,
+                      snap: true,
+                      builder: (context, scrollController) => FeedbackHistoryModal(
+                        scrollController: scrollController,
+                      ),
+                    ),
                   );
                 },
                 icon: Icon(
@@ -517,11 +708,10 @@ class _AIInsightsModalState extends ConsumerState<AIInsightsModal> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           SemanticIcon(
-  icon: AppIcons.analytics,
-  semanticLabel: 'Analytics',
-  size: AppIconSize.medium,
-  color: colorScheme.primary.withValues(alpha: 0.8,
-),
+            icon: AppIcons.analytics,
+            semanticLabel: 'Analytics',
+            size: AppIconSize.medium,
+            color: colorScheme.primary.withValues(alpha: 0.8),
           ),
           const SizedBox(height: 16),
           Text(
@@ -532,24 +722,13 @@ class _AIInsightsModalState extends ConsumerState<AIInsightsModal> {
             ),
             textAlign: TextAlign.center,
           ),
-          const SizedBox(height: 24),
-          FilledButton.icon(
-            onPressed: () async {
-              HapticFeedback.lightImpact();
-              Navigator.of(context).pop();
-              await ModalService.showBottomSheet(
-                context,
-                child: const ChatModalContent(),
-              );
-            },
-            icon: const SemanticIcon(
-  icon: AppIcons.chat,
-  semanticLabel: 'Chat',
-),
-            label: Text(l10n.aiCoach),
-            style: FilledButton.styleFrom(
-              padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
+          const SizedBox(height: 8),
+          Text(
+            l10n.aiCoachFirstWorkout,
+            style: theme.textTheme.bodyMedium?.copyWith(
+              color: colorScheme.onSurface.withValues(alpha: 0.7),
             ),
+            textAlign: TextAlign.center,
           ),
         ],
       ),

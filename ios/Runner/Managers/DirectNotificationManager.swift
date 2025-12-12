@@ -14,6 +14,12 @@ final class DirectNotificationManager: NSObject {
     private var scheduledNotifications: [String: (timestamp: Date, soundName: String)] = [:]
     private var deliveredNotifications: [String: Date] = [:]
 
+    // RACE CONDITION FIX: Flag to prevent scheduling when skip is in progress
+    // This prevents the race condition where notification scheduling completes AFTER
+    // the skip/cancel command is received from Apple Watch
+    private var isSkipInProgress: Bool = false
+    private var skipTimestamp: Date?
+
     private override init() {
         super.init()
         setupNotificationDelegate()
@@ -48,9 +54,16 @@ final class DirectNotificationManager: NSObject {
             content.body = body
             content.categoryIdentifier = categoryIdentifier
             
-            // Use custom sound file
+            // CRITICAL ALERT: Bypass mute switch AND DnD
             let soundFileName = soundName.hasSuffix(".caf") ? soundName : "\(soundName).caf"
-            content.sound = UNNotificationSound(named: UNNotificationSoundName(rawValue: soundFileName))
+            if #available(iOS 12.0, *) {
+                content.sound = UNNotificationSound.criticalSoundNamed(
+                    UNNotificationSoundName(rawValue: soundFileName),
+                    withAudioVolume: 1.0
+                )
+            } else {
+                content.sound = UNNotificationSound(named: UNNotificationSoundName(rawValue: soundFileName))
+            }
             
             // For immediate notifications on iOS 15+
             if #available(iOS 15.0, *) {
@@ -91,38 +104,42 @@ final class DirectNotificationManager: NSObject {
     
     /// Schedula una notifica timer con ID specifico per evitare duplicati
     /// APPLE WATCH FIX: isForWatchDisplay permette di separare notifiche Watch da timer completion
+    /// DOUBLE SOUND FIX: silentLoopHandlesAudio = true quando silent loop gestisce l'audio (mute bypass)
     func scheduleTimerNotificationWithId(
         identifier: String,
         after seconds: TimeInterval,
         soundName: String = "sound",
         title: String = "⏰ Timer Complete",
         body: String = "Your rest timer has finished!",
-        isForWatchDisplay: Bool = false
+        isForWatchDisplay: Bool = false,
+        silentLoopHandlesAudio: Bool = false
     ) {
         // Cancel any existing notification with same ID first
         cancelNotification(identifier: identifier)
-        
+
         let center = UNUserNotificationCenter.current()
-        
+
         // Verbose logging removed for production
-        
-        scheduleNotificationInternal(identifier: identifier, seconds: seconds, soundName: soundName, title: title, body: body, isForWatchDisplay: false)
+
+        scheduleNotificationInternal(identifier: identifier, seconds: seconds, soundName: soundName, title: title, body: body, isForWatchDisplay: isForWatchDisplay, silentLoopHandlesAudio: silentLoopHandlesAudio)
     }
-    
+
     /// Schedula una notifica timer con suono custom GARANTITO
+    /// DOUBLE SOUND FIX: silentLoopHandlesAudio = true quando silent loop gestisce l'audio (mute bypass)
     func scheduleTimerNotification(
         after seconds: TimeInterval,
         soundName: String = "sound",
         title: String = "⏰ Timer Complete",
-        body: String = "Your rest timer has finished!"
+        body: String = "Your rest timer has finished!",
+        silentLoopHandlesAudio: Bool = false
     ) -> String {
-        
+
         let center = UNUserNotificationCenter.current()
         let identifier = UUID().uuidString
-        
+
         // Verbose logging removed for production
-        
-        scheduleNotificationInternal(identifier: identifier, seconds: seconds, soundName: soundName, title: title, body: body, isForWatchDisplay: false)
+
+        scheduleNotificationInternal(identifier: identifier, seconds: seconds, soundName: soundName, title: title, body: body, isForWatchDisplay: false, silentLoopHandlesAudio: silentLoopHandlesAudio)
 
         return identifier
     }
@@ -130,53 +147,65 @@ final class DirectNotificationManager: NSObject {
     
     /// Internal method to schedule notification
     /// APPLE WATCH FIX: isForWatchDisplay controlla se la notifica deve avere suono
+    /// DOUBLE SOUND FIX: silentLoopHandlesAudio = true significa che AVAudioPlayer gestisce l'audio
     private func scheduleNotificationInternal(
         identifier: String,
         seconds: TimeInterval,
         soundName: String,
         title: String,
         body: String,
-        isForWatchDisplay: Bool = false
+        isForWatchDisplay: Bool = false,
+        silentLoopHandlesAudio: Bool = false
     ) {
+        // RACE CONDITION FIX: Check if skip is in progress BEFORE scheduling
+        // This prevents notifications from being scheduled right after a skip command
+        let skipInProgress = trackingQueue.sync { isSkipInProgress }
+        if skipInProgress {
+            print("⛔ [RACE-FIX] Skip in progress - BLOCKING notification schedule")
+            print("   - Would have scheduled: \(identifier)")
+            print("   - Duration: \(seconds)s")
+            print("   - This prevents the race condition where notification fires after skip")
+            return
+        }
+
         let center = UNUserNotificationCenter.current()
-        
+
         // Crea il contenuto della notifica
         let content = UNMutableNotificationContent()
         content.title = title
         content.body = body
         content.categoryIdentifier = "TIMER_COMPLETE"
-        
-        // APPLE WATCH FIX: Conditional sound based on purpose
+
+        // DOUBLE SOUND FIX: Determine if notification should have sound
+        let shouldHaveSound = !isForWatchDisplay && !silentLoopHandlesAudio
+
+        // APPLE WATCH FIX / SILENT LOOP FIX: Conditional sound based on purpose
         if isForWatchDisplay {
             // For Watch display: NO SOUND to prevent premature audio trigger
             content.sound = .none
-            // Muted for Watch display notification
             print("   - This notification is for Watch UI only")
             print("   - Timer completion sound will be handled separately by app")
-        } else {
-            // For timer completion: FULL SOUND for lockscreen audio
-            // Build the sound filename with .caf extension
-            let soundFileName = soundName.hasSuffix(".caf") ? soundName : "\(soundName).caf"
-
-            print("🔊 [TIMER-COMPLETION] Configuring custom notification sound for lockscreen")
-            print("   - Requested sound: \(soundName)")
-            print("   - Using file: \(soundFileName)")
-            print("   - iOS will handle playback when device is locked")
-
-            // Use custom sound file - iOS handles the playback
-            // IMPORTANT: The sound file must be in the app bundle (verified above)
-            content.sound = UNNotificationSound(named: UNNotificationSoundName(rawValue: soundFileName))
+        } else if silentLoopHandlesAudio {
+            // DOUBLE SOUND FIX: Silent loop is active, AVAudioPlayer handles audio
+            content.sound = .none
+            print("🔇 [SILENT-NOTIFICATION] Silent loop handles audio - notification is visual only")
+            print("   - AVAudioPlayer will play sound (bypasses mute)")
+            print("   - Notification shows but doesn't play sound")
         }
+        // NOTE: Timer completion sound (Critical Alert) is configured below
 
-        if !isForWatchDisplay {
+        if shouldHaveSound {
             print("📢 Custom sound configured for timer completion")
             print("⏰ Notification will fire in \(seconds) seconds")
             print("🔒 iOS notification system will play the sound even when locked")
+        } else if !isForWatchDisplay && silentLoopHandlesAudio {
+            print("🔇 Silent notification scheduled - AVAudioPlayer handles audio")
+            print("⏰ Notification will fire in \(seconds) seconds (visual only)")
         } else {
             print("📱 Watch display notification configured (silent)")
             print("⏰ Will show timer info on Watch in \(seconds) seconds")
         }
-        
+
         // iOS 15+ features for lockscreen visibility
         if #available(iOS 15.0, *) {
             if isForWatchDisplay {
@@ -185,43 +214,67 @@ final class DirectNotificationManager: NSObject {
                 content.relevanceScore = 0.7
                 print("📱 [WATCH] Using active interruption level for Watch display")
             } else {
-                // Timer completion: highest priority for lockscreen sound
+                // Timer completion: highest priority for lockscreen visibility
+                // NOTE: timeSensitive bypasses DnD/Focus modes for VISUAL notification
+                // However, notification sound STILL respects mute switch!
+                // The actual audio bypass is handled by AVAudioPlayer in BackgroundAudioManager
                 content.interruptionLevel = .timeSensitive
                 content.relevanceScore = 1.0
-                print("📱 [LOCKSCREEN] Using timeSensitive interruption level for guaranteed sound")
-                print("   - This bypasses Focus modes and ensures sound plays")
-                print("   - Sound will play even if device is in Do Not Disturb")
+                print("📱 [LOCKSCREEN] Using timeSensitive for DnD bypass (visual only)")
+                print("   - Notification will SHOW even in DnD/Focus mode")
+                if silentLoopHandlesAudio {
+                    print("   - Sound: NONE (silent loop handles audio)")
+                } else {
+                    print("   - Notification SOUND respects mute switch")
+                    print("   - Mute bypass handled by AVAudioPlayer (BackgroundAudioManager)")
+                }
             }
         }
-        
-        // ENHANCED: Multiple sound strategies for maximum reliability
-        if !isForWatchDisplay {
+
+        // CRITICAL ALERTS: Bypass mute switch AND Do Not Disturb
+        // Requires com.apple.developer.usernotifications.critical-alerts entitlement
+        // DOUBLE SOUND FIX: Skip sound if silent loop is handling audio
+        if shouldHaveSound {
             let criticalSoundFileName = soundName.hasSuffix(".caf") ? soundName : "\(soundName).caf"
 
-            // Strategy 1: Try custom sound with maximum volume
-            content.sound = UNNotificationSound(named: UNNotificationSoundName(rawValue: criticalSoundFileName))
-            print("🔊 [AUDIO-STRATEGY-1] Using custom sound: \(criticalSoundFileName)")
-
-            // Strategy 2: Backup sound verification
-            if !verifyAudioFile(soundName) {
-                print("⚠️ [AUDIO-FALLBACK] Custom sound failed verification - using system default")
-                content.sound = UNNotificationSound.default
+            // CRITICAL ALERT: This bypasses BOTH mute switch AND DnD!
+            // User volume controls are still respected via withAudioVolume parameter
+            if #available(iOS 12.0, *) {
+                if verifyAudioFile(soundName) {
+                    content.sound = UNNotificationSound.criticalSoundNamed(
+                        UNNotificationSoundName(rawValue: criticalSoundFileName),
+                        withAudioVolume: 1.0  // Full volume (0.0 - 1.0)
+                    )
+                    print("🔊 [CRITICAL-ALERT] Using critical sound: \(criticalSoundFileName)")
+                    print("   - Bypasses mute switch: ✅")
+                    print("   - Bypasses Do Not Disturb: ✅")
+                    print("   - Volume: 100%")
+                } else {
+                    // Fallback to default critical sound if custom file not found
+                    content.sound = UNNotificationSound.defaultCritical
+                    print("⚠️ [CRITICAL-ALERT] Custom sound not found, using defaultCritical")
+                }
+            } else {
+                // iOS 11 fallback - no critical alerts available
+                content.sound = UNNotificationSound(named: UNNotificationSoundName(rawValue: criticalSoundFileName))
+                print("⚠️ [FALLBACK] iOS 11 - critical alerts not available, using standard sound")
             }
 
-            // Strategy 3: Add user info for audio session preparation
+            // Add user info for tracking
             content.userInfo = [
                 "gymbro_timer_sound": soundName,
-                "requires_audio_session": true,
-                "audio_priority": "high",
+                "is_critical_alert": true,
                 "scheduled_at": Date().timeIntervalSince1970
             ]
-            print("📝 [AUDIO-METADATA] Added audio session requirements to notification")
-        }
-        
-        // LOCKSCREEN FIX: Ensure notification is delivered even when device is locked
-        if #available(iOS 12.0, *) {
-            // Critical alert would bypass Do Not Disturb but requires special entitlement
-            // content.sound = UNNotificationSound.defaultCritical // Requires entitlement
+            print("📝 [CRITICAL-ALERT] Timer notification configured with critical sound")
+        } else {
+            // No sound but still add user info for tracking
+            content.userInfo = [
+                "gymbro_timer_sound": soundName,
+                "is_critical_alert": false,
+                "silent_loop_handles_audio": silentLoopHandlesAudio,
+                "scheduled_at": Date().timeIntervalSince1970
+            ]
         }
         
         // Aggiungi badge e thread ID
@@ -334,18 +387,117 @@ final class DirectNotificationManager: NSObject {
         }
     }
     
-    /// Cancella una notifica specifica
+    /// Cancella una notifica specifica (pending)
     func cancelNotification(identifier: String) {
         UNUserNotificationCenter.current().removePendingNotificationRequests(
             withIdentifiers: [identifier]
         )
-        print("🗑️ Cancelled notification: \(identifier)")
+        print("🗑️ Cancelled pending notification: \(identifier)")
     }
-    
-    /// Cancella tutte le notifiche timer
+
+    /// Cancella tutte le notifiche timer (pending)
+    /// RACE CONDITION FIX: Also sets isSkipInProgress flag to prevent new notifications
+    /// from being scheduled during the skip operation
     func cancelAllTimerNotifications() {
+        // RACE CONDITION FIX: Set flag BEFORE cancelling to block any pending schedules
+        trackingQueue.sync {
+            isSkipInProgress = true
+            skipTimestamp = Date()
+        }
+        print("🗑️ [SKIP] Set isSkipInProgress = true to block new notifications")
+
         UNUserNotificationCenter.current().removeAllPendingNotificationRequests()
         print("🗑️ Cancelled all pending notifications")
+
+        // RACE CONDITION FIX: Keep the flag active for a short time to catch
+        // any async scheduling that was already in flight
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) { [weak self] in
+            self?.trackingQueue.sync {
+                // Only reset if this is the same skip operation (check timestamp)
+                if let skipTime = self?.skipTimestamp,
+                   Date().timeIntervalSince(skipTime) >= 0.5 {
+                    self?.isSkipInProgress = false
+                    print("🔓 [SKIP] Reset isSkipInProgress after 0.5s grace period")
+                }
+            }
+        }
+    }
+
+    /// Reset the skip flag - call this when starting a NEW legitimate timer
+    /// This allows notifications to be scheduled again after a skip
+    func resetSkipFlag() {
+        trackingQueue.sync {
+            isSkipInProgress = false
+            skipTimestamp = nil
+        }
+        print("🔓 [TIMER] Reset isSkipInProgress - new timer can schedule notifications")
+    }
+
+    /// Auto-dismiss: Rimuove una notifica già consegnata dopo un certo delay
+    /// - Parameters:
+    ///   - identifier: ID della notifica da rimuovere
+    ///   - afterSeconds: Secondi di attesa prima della rimozione (default 60)
+    func scheduleNotificationRemoval(identifier: String, afterSeconds: TimeInterval = 60) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + afterSeconds) {
+            UNUserNotificationCenter.current().removeDeliveredNotifications(
+                withIdentifiers: [identifier]
+            )
+            print("🧹 Auto-dismissed notification after \(Int(afterSeconds))s: \(identifier)")
+        }
+    }
+
+    /// Rimuove tutte le notifiche timer già consegnate
+    func removeAllDeliveredTimerNotifications() {
+        UNUserNotificationCenter.current().getDeliveredNotifications { notifications in
+            let timerNotificationIds = notifications
+                .filter { $0.request.content.categoryIdentifier == "TIMER_COMPLETE" }
+                .map { $0.request.identifier }
+
+            if !timerNotificationIds.isEmpty {
+                UNUserNotificationCenter.current().removeDeliveredNotifications(
+                    withIdentifiers: timerNotificationIds
+                )
+                print("🧹 Removed \(timerNotificationIds.count) delivered timer notifications")
+            }
+        }
+    }
+
+    /// AUTO-DISMISS: Rimuove notifiche timer più vecchie di X secondi
+    /// Chiamato quando l'app torna in foreground per pulire notifiche vecchie
+    /// - Parameter olderThanSeconds: Rimuove notifiche più vecchie di questo (default 60s)
+    func cleanupOldTimerNotifications(olderThanSeconds: TimeInterval = 60) {
+        let cutoffDate = Date().addingTimeInterval(-olderThanSeconds)
+
+        UNUserNotificationCenter.current().getDeliveredNotifications { [weak self] notifications in
+            var toRemove: [String] = []
+
+            for notification in notifications {
+                let content = notification.request.content
+
+                // Only process timer notifications
+                guard content.categoryIdentifier == "TIMER_COMPLETE" else { continue }
+
+                // Check if notification was scheduled more than X seconds ago
+                if let scheduledAt = content.userInfo["scheduled_at"] as? TimeInterval {
+                    let scheduledDate = Date(timeIntervalSince1970: scheduledAt)
+                    if scheduledDate < cutoffDate {
+                        toRemove.append(notification.request.identifier)
+                    }
+                } else {
+                    // No timestamp - check delivery date
+                    if notification.date < cutoffDate {
+                        toRemove.append(notification.request.identifier)
+                    }
+                }
+            }
+
+            if !toRemove.isEmpty {
+                UNUserNotificationCenter.current().removeDeliveredNotifications(
+                    withIdentifiers: toRemove
+                )
+                print("🧹 [AUTO-DISMISS] Cleaned up \(toRemove.count) old timer notifications (> \(Int(olderThanSeconds))s)")
+            }
+        }
     }
     
     /// Verifica che il file audio esista
@@ -527,27 +679,32 @@ final class DirectNotificationManager: NSObject {
         }
     }
     
-    /// Test notification immediato per debug
+    /// Test notification immediato per debug - usa Critical Alert
     func sendTestNotification() {
-        print("🧪 [TEST] Sending immediate test notification")
-        
+        print("🧪 [TEST] Sending immediate Critical Alert test notification")
+
         let content = UNMutableNotificationContent()
-        content.title = "🧪 Test Notification"
-        content.body = "Testing timer sound - you should hear audio now"
+        content.title = "🧪 Critical Alert Test"
+        content.body = "If you hear this with mute ON, Critical Alerts work!"
         content.categoryIdentifier = "TIMER_TEST"
-        
-        // Use custom sound
-        content.sound = UNNotificationSound(named: UNNotificationSoundName("sound.caf"))
-        
+
+        // CRITICAL ALERT: Bypasses mute switch AND DnD
+        if #available(iOS 12.0, *) {
+            content.sound = UNNotificationSound.criticalSoundNamed(
+                UNNotificationSoundName("sound.caf"),
+                withAudioVolume: 1.0
+            )
+            print("   - Using Critical Alert sound")
+            print("   - Bypasses mute: ✅")
+            print("   - Bypasses DnD: ✅")
+        } else {
+            content.sound = UNNotificationSound(named: UNNotificationSoundName("sound.caf"))
+        }
+
         // iOS 15+ settings
         if #available(iOS 15.0, *) {
-            content.interruptionLevel = .timeSensitive
+            content.interruptionLevel = .critical
             content.relevanceScore = 1.0
-        }
-        
-        // Critical alert for testing (if available)
-        if #available(iOS 12.0, *) {
-            content.sound = UNNotificationSound.criticalSoundNamed(UNNotificationSoundName("sound.caf"), withAudioVolume: 1.0)
         }
         
         let request = UNNotificationRequest(
@@ -652,9 +809,17 @@ extension DirectNotificationManager: UNUserNotificationCenterDelegate {
         }
 
         // Show notification even when app is in foreground for timer completion
-        if identifier.contains("timer") || identifier.contains("gymbro") {
+        let isTimerNotification = notification.request.content.categoryIdentifier == "TIMER_COMPLETE"
+            || identifier.contains("timer")
+            || identifier.contains("gymbro")
+
+        if isTimerNotification {
             completionHandler([.alert, .sound, .badge])
             print("   📱 Showing timer notification in foreground with sound")
+
+            // AUTO-DISMISS: Remove notification after 60 seconds
+            scheduleNotificationRemoval(identifier: identifier, afterSeconds: 60)
+            print("   ⏱️ Auto-dismiss scheduled in 60 seconds")
         } else {
             completionHandler([.alert, .sound])
         }
@@ -696,33 +861,20 @@ extension DirectNotificationManager: UNUserNotificationCenterDelegate {
     // MARK: - Audio Session Helper
 
     /// Prepare audio session specifically for notification sound playback
+    /// CENTRALIZED: Uses AudioSessionManager to prevent race conditions
     private func prepareAudioSessionForNotification(soundName: String) {
         print("🔊 [AUDIO-PREPARE] Preparing audio session for notification sound: \(soundName)")
 
-        do {
-            // Use AudioSessionManager for consistent configuration
-            AudioSessionManager.shared.reactivate()
-            print("   ✅ Audio session reactivated via AudioSessionManager")
+        // CENTRALIZED: Use AudioSessionManager for ALL audio session configuration
+        // This prevents OSStatus -50 errors from conflicting configurations
+        AudioSessionManager.shared.reactivate()
+        print("   ✅ Audio session configured via AudioSessionManager")
 
-            // Additional backup: Direct audio session preparation
-            let session = AVAudioSession.sharedInstance()
-            try session.setCategory(.playback, mode: .default, options: [
-                .duckOthers,
-                .allowBluetooth,
-                .allowBluetoothA2DP
-            ])
-            try session.setActive(true, options: [])
-            print("   ✅ Audio session configured for notification playback")
-
-            // Verify the sound file is accessible
-            if verifyAudioFile(soundName) {
-                print("   ✅ Sound file verified: \(soundName).caf")
-            } else {
-                print("   ⚠️ Sound file verification failed, notification will use default sound")
-            }
-
-        } catch {
-            print("   ❌ Failed to prepare audio session: \(error)")
+        // Verify the sound file is accessible
+        if verifyAudioFile(soundName) {
+            print("   ✅ Sound file verified: \(soundName).caf")
+        } else {
+            print("   ⚠️ Sound file verification failed, notification will use default sound")
         }
     }
 }

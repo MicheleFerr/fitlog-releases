@@ -9,6 +9,7 @@ library;
 
 import 'dart:async';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/foundation.dart' show kDebugMode;
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:gymbro_flutter_new/shared/domain/converters/exercise_converter.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise.dart' as WorkoutExercise;
@@ -46,11 +47,15 @@ class ExerciseMigrationService {
     final startTime = DateTime.now();
 
     try {
-      debugPrint('🚀 Starting exercise migration...');
+      if (kDebugMode) {
+        debugPrint('🚀 Starting exercise migration...');
+      }
 
       // 1. Verifica se migrazione è già stata fatta
       if (!forceReset && await _isMigrationCompleted()) {
-        debugPrint('✅ Migration already completed, skipping');
+        if (kDebugMode) {
+          debugPrint('✅ Migration already completed, skipping');
+        }
         return MigrationResult(
           success: true,
           message: 'Migration already completed',
@@ -63,7 +68,9 @@ class ExerciseMigrationService {
 
       // 3. Carica esercizi da JSON
       final jsonExercises = await _loadExercisesFromJson();
-      debugPrint('📄 Loaded ${jsonExercises.length} exercises from JSON');
+      if (kDebugMode) {
+        debugPrint('📄 Loaded ${jsonExercises.length} exercises from JSON');
+      }
 
       // 4. Setup Firebase collections (se necessario)
       await _setupFirebaseCollections(jsonExercises);
@@ -78,7 +85,9 @@ class ExerciseMigrationService {
       await _markMigrationCompleted();
 
       final duration = DateTime.now().difference(startTime);
-      debugPrint('✅ Migration completed successfully in ${duration.inSeconds}s');
+      if (kDebugMode) {
+        debugPrint('✅ Migration completed successfully in ${duration.inSeconds}s');
+      }
 
       return MigrationResult(
         success: true,
@@ -88,7 +97,9 @@ class ExerciseMigrationService {
       );
 
     } catch (e) {
-      debugPrint('❌ Migration failed: $e');
+      if (kDebugMode) {
+        debugPrint('❌ Migration failed: $e');
+      }
       return MigrationResult(
         success: false,
         message: 'Migration failed: $e',
@@ -100,7 +111,9 @@ class ExerciseMigrationService {
   /// Testa il sistema ibrido confrontando con JSON
   Future<TestResult> testHybridSystem() async {
     try {
-      debugPrint('🧪 Testing hybrid system...');
+      if (kDebugMode) {
+        debugPrint('🧪 Testing hybrid system...');
+      }
 
       // 1. Carica esercizi da entrambi i sistemi
       final jsonExercises = await _jsonRepository.getAllExercises();
@@ -149,7 +162,9 @@ class ExerciseMigrationService {
       final filterTest = await _testFilterFunctionality();
       if (!filterTest.success) return filterTest;
 
-      debugPrint('✅ Hybrid system test passed');
+      if (kDebugMode) {
+        debugPrint('✅ Hybrid system test passed');
+      }
       return TestResult(
         success: true,
         message: 'All tests passed successfully',
@@ -157,7 +172,9 @@ class ExerciseMigrationService {
       );
 
     } catch (e) {
-      debugPrint('❌ Hybrid system test failed: $e');
+      if (kDebugMode) {
+        debugPrint('❌ Hybrid system test failed: $e');
+      }
       return TestResult(
         success: false,
         message: 'Test failed: $e',
@@ -168,7 +185,9 @@ class ExerciseMigrationService {
   /// Test di performance tra JSON e sistema ibrido
   Future<PerformanceTestResult> performanceTest() async {
     try {
-      debugPrint('⚡ Running performance tests...');
+      if (kDebugMode) {
+        debugPrint('⚡ Running performance tests...');
+      }
 
       // Test caricamento JSON
       final jsonStartTime = DateTime.now();
@@ -190,11 +209,17 @@ class ExerciseMigrationService {
       final hybridSearchResults = await _hybridRepository.searchExercises('squat');
       final hybridSearchTime = DateTime.now().difference(hybridSearchStart);
 
-      debugPrint('📊 Performance Results:');
+      if (kDebugMode) {
+        debugPrint('📊 Performance Results:');
+      }
       debugPrint('   JSON Load: ${jsonLoadTime.inMilliseconds}ms');
-      debugPrint('   Hybrid Load: ${hybridLoadTime.inMilliseconds}ms');
+      if (kDebugMode) {
+        debugPrint('   Hybrid Load: ${hybridLoadTime.inMilliseconds}ms');
+      }
       debugPrint('   JSON Search: ${jsonSearchTime.inMilliseconds}ms');
-      debugPrint('   Hybrid Search: ${hybridSearchTime.inMilliseconds}ms');
+      if (kDebugMode) {
+        debugPrint('   Hybrid Search: ${hybridSearchTime.inMilliseconds}ms');
+      }
 
       return PerformanceTestResult(
         jsonLoadTime: jsonLoadTime,
@@ -208,7 +233,9 @@ class ExerciseMigrationService {
       );
 
     } catch (e) {
-      debugPrint('❌ Performance test failed: $e');
+      if (kDebugMode) {
+        debugPrint('❌ Performance test failed: $e');
+      }
       rethrow;
     }
   }
@@ -234,7 +261,9 @@ class ExerciseMigrationService {
           .get();
 
       if (!metadataDoc.exists) {
-        debugPrint('📝 Creating Firebase metadata...');
+        if (kDebugMode) {
+          debugPrint('📝 Creating Firebase metadata...');
+        }
 
         final versionInfo = ExerciseVersionInfo(
           version: '1.0.0',
@@ -256,14 +285,20 @@ class ExerciseMigrationService {
           .get();
 
       if (exercisesQuery.docs.isEmpty) {
-        debugPrint('📤 Uploading exercises to Firebase...');
+        if (kDebugMode) {
+          debugPrint('📤 Uploading exercises to Firebase...');
+        }
         await _uploadExercisesToFirebase(exercises);
       } else {
-        debugPrint('✅ Exercises already exist in Firebase');
+        if (kDebugMode) {
+          debugPrint('✅ Exercises already exist in Firebase');
+        }
       }
 
     } catch (e) {
-      debugPrint('⚠️ Firebase setup skipped (may be offline): $e');
+      if (kDebugMode) {
+        debugPrint('⚠️ Firebase setup skipped (may be offline): $e');
+      }
     }
   }
 
@@ -285,7 +320,9 @@ class ExerciseMigrationService {
 
       await batch.commit();
       uploaded += (end - i);
-      debugPrint('📤 Uploaded $uploaded/${exercises.length} exercises');
+      if (kDebugMode) {
+        debugPrint('📤 Uploaded $uploaded/${exercises.length} exercises');
+      }
 
       // Pausa tra batch per evitare rate limiting
       await Future.delayed(const Duration(milliseconds: 100));
@@ -353,8 +390,12 @@ class ExerciseMigrationService {
 
   /// Popola cache locale
   Future<void> _populateLocalCache(List<Exercise> exercises) async {
-    debugPrint('💾 Populating local cache...');
-    await _cacheManager.cacheExercises(exercises, '1.0.0');
+    if (kDebugMode) {
+      debugPrint('💾 Populating local cache...');
+    }
+    // Use hybrid repository's locale for cache consistency
+    final locale = _hybridRepository.locale.languageCode;
+    await _cacheManager.cacheExercises(exercises, '1.0.0', locale: locale);
     await _versionService.setLocalVersion('1.0.0');
   }
 
@@ -366,7 +407,9 @@ class ExerciseMigrationService {
       throw Exception('Cache verification failed: expected $expectedCount, found ${cachedExercises.length}');
     }
 
-    debugPrint('✅ Migration verification passed');
+    if (kDebugMode) {
+      debugPrint('✅ Migration verification passed');
+    }
   }
 
   /// Test funzionalità di ricerca

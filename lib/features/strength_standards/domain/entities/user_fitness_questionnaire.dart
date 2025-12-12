@@ -23,6 +23,9 @@ abstract class UserFitnessQuestionnaire with _$UserFitnessQuestionnaire {
     /// User's age
     required int age,
 
+    /// User's height in cm
+    required double heightCm,
+
     /// User's biological sex (affects strength standards)
     required BiologicalSex sex,
 
@@ -150,6 +153,7 @@ extension UserFitnessQuestionnaireExtension on UserFitnessQuestionnaire {
   bool get isValid {
     if (bodyweightKg < 40 || bodyweightKg > 200) return false;
     if (age < 13 || age > 100) return false;
+    if (heightCm < 100 || heightCm > 250) return false;
     return true;
   }
 

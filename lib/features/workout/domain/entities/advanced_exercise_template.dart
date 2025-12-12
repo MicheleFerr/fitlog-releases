@@ -211,8 +211,8 @@ sealed class AdvancedExerciseConfig with _$AdvancedExerciseConfig {
       _$AdvancedExerciseConfigFromJson(json);
 }
 
-/// Free tier limit for templates
-const int kFreeTemplateLimit = 3;
+/// Free tier limit for templates (aligned with workout templates)
+const int kFreeTemplateLimit = 4;
 
 /// Check if user can create more templates
 bool canCreateTemplate(int currentCount, bool isPremium) {

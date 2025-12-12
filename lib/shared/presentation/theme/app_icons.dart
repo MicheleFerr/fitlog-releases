@@ -383,6 +383,12 @@ class AppIcons {
   /// 🔗 Link
   static const IconData link = Icons.link;
 
+  /// 🔗⛔ Link off (disconnected)
+  static const IconData linkOff = Icons.link_off;
+
+  /// ⌚ Apple Watch
+  static const IconData watch = Icons.watch;
+
   /// 🏠 Home
   static const IconData home = Icons.home;
 
@@ -632,6 +638,7 @@ class AppIcons {
   static const IconData replay = Icons.replay;
   static const IconData skipNextRounded = Icons.skip_next_rounded;
   static const IconData volumeUp = Icons.volume_up;
+  static const IconData volumeOff = Icons.volume_off;
 
   // MISC (151 icons)
   static const IconData acUnit = Icons.ac_unit;
@@ -773,6 +780,7 @@ class AppIcons {
   static const IconData viewAgenda = Icons.view_agenda;
   static const IconData viewList = Icons.view_list;
   static const IconData viewCompact = Icons.view_compact;
+  static const IconData viewComfy = Icons.view_comfy;
   static const IconData viewDetailed = Icons.view_agenda;
   static const IconData expand = Icons.unfold_more;
   static const IconData export = Icons.upload_file;
@@ -780,6 +788,9 @@ class AppIcons {
   static const IconData wavingHand = Icons.waving_hand;
   static const IconData wbSunny = Icons.wb_sunny;
   static const IconData wbSunnyOutlined = Icons.wb_sunny_outlined;
+  static const IconData wbTwilight = Icons.wb_twilight;
+  static const IconData nightsStay = Icons.nights_stay;
+  static const IconData alarmOn = Icons.alarm_on;
   static const IconData whatshot = Icons.whatshot;
   static const IconData widgets = Icons.widgets;
   static const IconData work = Icons.work;

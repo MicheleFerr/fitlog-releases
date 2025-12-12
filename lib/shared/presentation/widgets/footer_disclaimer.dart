@@ -23,12 +23,11 @@ class FooterDisclaimer extends StatelessWidget {
   const FooterDisclaimer({super.key});
 
   void _showFullDisclaimer(BuildContext context) {
-    showDialog(
+    LegalDisclaimerModal.show(
       context: context,
-      barrierDismissible: true,
-      builder: (_) => LegalDisclaimerModal(
-        onAccept: () => Navigator.pop(context),
-      ),
+      onAccept: () {
+        // Just close - user acknowledged the disclaimer
+      },
     );
   }
 

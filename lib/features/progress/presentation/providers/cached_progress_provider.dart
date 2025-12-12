@@ -13,10 +13,18 @@ import 'dart:convert';
 import 'dart:async';
 import 'package:gymbro_flutter_new/features/auth/presentation/providers/auth_provider.dart';
 import 'package:gymbro_flutter_new/shared/providers/shared_preferences_provider.dart';
+import 'package:gymbro_flutter_new/shared/data/mixins/firestore_cache_first_mixin.dart';
+import 'package:gymbro_flutter_new/core/cache/user_cache_key_manager.dart';
+
+/// Helper class for cache-first Firestore operations
+class _CacheHelper with FirestoreCacheFirstMixin {}
+
+final _cache = _CacheHelper();
 
 /// Debug logging utility with detailed tracking
 class _CacheLogger {
-  static const bool _enableDebugLogs = kDebugMode; // Solo in debug mode, non in production
+  static const bool _enableDebugLogs =
+      kDebugMode; // Solo in debug mode, non in production
 
   static void log(String message) {
     if (_enableDebugLogs) {
@@ -28,7 +36,9 @@ class _CacheLogger {
   static void error(String message, [Object? error]) {
     if (_enableDebugLogs) {
       final timestamp = DateTime.now().toIso8601String();
-      debugPrint('❌ ERROR [$timestamp] CachedProgress: $message${error != null ? ' - $error' : ''}');
+      debugPrint(
+        '❌ ERROR [$timestamp] CachedProgress: $message${error != null ? ' - $error' : ''}',
+      );
     }
   }
 
@@ -62,7 +72,8 @@ class _CacheLogger {
 }
 
 /// Cached dashboard stats entity
-class CachedDashboardStats { // Per validità cache
+class CachedDashboardStats {
+  // Per validità cache
 
   const CachedDashboardStats({
     required this.totalWorkouts,
@@ -87,7 +98,9 @@ class CachedDashboardStats { // Per validità cache
       maxPR: (json['maxPR'] ?? 0.0).toDouble(),
       prExercise: json['prExercise'] ?? 'N/A',
       workoutDates: Map<String, bool>.from(json['workoutDates'] ?? {}),
-      lastCalculated: DateTime.parse(json['lastCalculated'] ?? DateTime.now().toIso8601String()),
+      lastCalculated: DateTime.parse(
+        json['lastCalculated'] ?? DateTime.now().toIso8601String(),
+      ),
     );
   }
 
@@ -105,13 +118,13 @@ class CachedDashboardStats { // Per validità cache
       lastCalculated: DateTime.now(),
     );
   }
-  final int totalWorkouts;        // Workout reali (non esercizi)
-  final int totalExercises;       // Esercizi totali
-  final int currentStreak;        // Streak giorni consecutivi
-  final double weeklyFrequency;   // Frequenza settimanale
-  final double totalVolume;       // Volume totale
-  final double maxPR;            // PR massimo
-  final String prExercise;       // Esercizio del PR
+  final int totalWorkouts; // Workout reali (non esercizi)
+  final int totalExercises; // Esercizi totali
+  final int currentStreak; // Streak giorni consecutivi
+  final double weeklyFrequency; // Frequenza settimanale
+  final double totalVolume; // Volume totale
+  final double maxPR; // PR massimo
+  final String prExercise; // Esercizio del PR
   final Map<String, bool> workoutDates; // Date workout per streak
   final DateTime lastCalculated;
 
@@ -228,13 +241,16 @@ class CachedDashboardStats { // Per validità cache
   /// Convert string key to date
   DateTime _keyToDate(String key) {
     final parts = key.split('-');
-    return DateTime(int.parse(parts[0]), int.parse(parts[1]), int.parse(parts[2]));
+    return DateTime(
+      int.parse(parts[0]),
+      int.parse(parts[1]),
+      int.parse(parts[2]),
+    );
   }
 }
 
 /// Dashboard stats entity (from existing code)
 class DashboardStats {
-
   const DashboardStats({
     required this.currentStreak,
     required this.totalWorkouts,
@@ -266,13 +282,19 @@ class DashboardStats {
 }
 
 /// Cache repository for progress stats
+///
+/// 🔐 USER ISOLATION: Cache key is now user-scoped to prevent data leakage
+/// when switching between accounts. Uses UserCacheKeyManager.
 class ProgressCacheRepository {
-
   ProgressCacheRepository(this._prefs) {
     _initCompleter = Completer<void>();
     _initialize();
   }
-  static const String _cacheKey = 'cached_dashboard_stats';
+
+  // 🔐 User-scoped cache key via UserCacheKeyManager
+  // Pattern: 'cached_dashboard_stats_{userId}' instead of global 'cached_dashboard_stats'
+  String get _cacheKey => userCacheKeys.userScopedKey('cached_dashboard_stats');
+
   final SharedPreferences _prefs;
 
   // Mutex for thread-safe SharedPreferences access
@@ -310,14 +332,20 @@ class ProgressCacheRepository {
       _initRetryCount = 0;
       _initCompleter?.complete();
 
-      _CacheLogger.step('REPO_INIT', '✅ ProgressCacheRepository initialized successfully');
+      _CacheLogger.step(
+        'REPO_INIT',
+        '✅ ProgressCacheRepository initialized successfully',
+      );
     } catch (e, stackTrace) {
       _CacheLogger.error('Failed to initialize ProgressCacheRepository', e);
       _CacheLogger.error('Stack trace: $stackTrace');
 
       if (_initRetryCount < _maxInitRetries) {
         _initRetryCount++;
-        _CacheLogger.step('REPO_INIT', 'Retrying initialization (attempt $_initRetryCount/$_maxInitRetries)');
+        _CacheLogger.step(
+          'REPO_INIT',
+          'Retrying initialization (attempt $_initRetryCount/$_maxInitRetries)',
+        );
         await Future.delayed(Duration(seconds: _initRetryCount));
         await _initialize();
       } else {
@@ -330,14 +358,18 @@ class ProgressCacheRepository {
   Future<void> _ensureInitialized() async {
     if (_isInitialized) return;
     if (_initRetryCount >= _maxInitRetries) {
-      throw Exception('ProgressCacheRepository initialization failed after $_maxInitRetries attempts');
+      throw Exception(
+        'ProgressCacheRepository initialization failed after $_maxInitRetries attempts',
+      );
     }
     if (_initCompleter != null) {
       try {
         await _initCompleter!.future.timeout(
           const Duration(seconds: 10),
           onTimeout: () {
-            _CacheLogger.error('ProgressCacheRepository initialization timeout');
+            _CacheLogger.error(
+              'ProgressCacheRepository initialization timeout',
+            );
             throw TimeoutException('Repository initialization timeout');
           },
         );
@@ -360,7 +392,9 @@ class ProgressCacheRepository {
     _CacheLogger.step('CACHE_SAVE', 'Starting cache save operation');
     return _withLock('save', () async {
       try {
-        _CacheLogger.cache('Converting stats to JSON: ${stats.totalWorkouts} workouts');
+        _CacheLogger.cache(
+          'Converting stats to JSON: ${stats.totalWorkouts} workouts',
+        );
         final json = jsonEncode(stats.toJson());
         _CacheLogger.cache('JSON size: ${json.length} chars');
 
@@ -393,19 +427,25 @@ class ProgressCacheRepository {
           return null;
         }
 
-        _CacheLogger.cache('Found cached data, length: ${jsonString.length} chars');
+        _CacheLogger.cache(
+          'Found cached data, length: ${jsonString.length} chars',
+        );
         final json = jsonDecode(jsonString) as Map<String, dynamic>;
         _CacheLogger.cache('Successfully parsed JSON data');
 
         final stats = CachedDashboardStats.fromJson(json);
-        _CacheLogger.cache('Created stats object: ${stats.totalWorkouts} workouts, lastCalculated: ${stats.lastCalculated}');
+        _CacheLogger.cache(
+          'Created stats object: ${stats.totalWorkouts} workouts, lastCalculated: ${stats.lastCalculated}',
+        );
 
         if (stats.isValid) {
           _CacheLogger.cache('✅ Cache is valid, using cached stats');
           return stats;
         } else {
           final age = DateTime.now().difference(stats.lastCalculated);
-          _CacheLogger.cache('❌ Cache expired - Age: ${age.inDays} days, ${age.inHours} hours');
+          _CacheLogger.cache(
+            '❌ Cache expired - Age: ${age.inDays} days, ${age.inHours} hours',
+          );
           return null;
         }
       } catch (e, stack) {
@@ -430,7 +470,9 @@ class ProgressCacheRepository {
       try {
         // Prevent recursive auto-validation
         if (_isCalculating) {
-          _CacheLogger.log('Already calculating stats, skipping increment for $dateKey');
+          _CacheLogger.log(
+            'Already calculating stats, skipping increment for $dateKey',
+          );
           return;
         }
 
@@ -438,21 +480,30 @@ class ProgressCacheRepository {
         if (current != null) {
           // Check if this is a duplicate (same day workout)
           if (current.workoutDates.containsKey(dateKey)) {
-            _CacheLogger.log('Same day workout detected for $dateKey - not incrementing');
+            _CacheLogger.log(
+              'Same day workout detected for $dateKey - not incrementing',
+            );
             return; // Don't increment, same day
           }
 
           final updated = current.addWorkout(dateKey);
           await saveStats(updated);
-          _CacheLogger.log('Incremented workout count: ${updated.totalWorkouts}');
+          _CacheLogger.log(
+            'Incremented workout count: ${updated.totalWorkouts}',
+          );
 
           // Auto-validation with cooldown to prevent recursion
-          if (updated.totalWorkouts % 10 == 0 && _autoValidationCooldown == null) {
-            _CacheLogger.log('Triggering auto-validation at ${updated.totalWorkouts} workouts');
+          if (updated.totalWorkouts % 10 == 0 &&
+              _autoValidationCooldown == null) {
+            _CacheLogger.log(
+              'Triggering auto-validation at ${updated.totalWorkouts} workouts',
+            );
             _scheduleAutoValidation();
           }
         } else {
-          _CacheLogger.log('No cache found for increment - scheduling recalculation');
+          _CacheLogger.log(
+            'No cache found for increment - scheduling recalculation',
+          );
           _scheduleDebouncedInvalidation();
         }
       } catch (e) {
@@ -524,20 +575,26 @@ class ProgressCacheRepository {
   void _scheduleDebouncedInvalidation() {
     const key = 'invalidation';
     _debouncedInvalidations[key]?.cancel();
-    _debouncedInvalidations[key] = Timer(const Duration(milliseconds: 500), () async {
-      try {
-        await clearCache();
-        _debouncedInvalidations.remove(key);
-      } catch (e) {
-        _CacheLogger.error('Debounced invalidation failed', e);
-        _debouncedInvalidations.remove(key);
-      }
-    });
+    _debouncedInvalidations[key] = Timer(
+      const Duration(milliseconds: 500),
+      () async {
+        try {
+          await clearCache();
+          _debouncedInvalidations.remove(key);
+        } catch (e) {
+          _CacheLogger.error('Debounced invalidation failed', e);
+          _debouncedInvalidations.remove(key);
+        }
+      },
+    );
   }
 
   /// Dispose method to clean up timers and resources
   void dispose() {
-    _CacheLogger.step('REPO_DISPOSE', '🧹 Starting disposal of ProgressCacheRepository');
+    _CacheLogger.step(
+      'REPO_DISPOSE',
+      '🧹 Starting disposal of ProgressCacheRepository',
+    );
     _isDisposed = true;
 
     try {
@@ -561,7 +618,10 @@ class ProgressCacheRepository {
       // Null out completer
       _initCompleter = null;
 
-      _CacheLogger.step('REPO_DISPOSE', '✅ ProgressCacheRepository disposed successfully');
+      _CacheLogger.step(
+        'REPO_DISPOSE',
+        '✅ ProgressCacheRepository disposed successfully',
+      );
     } catch (e, stackTrace) {
       _CacheLogger.error('Error during disposal', e);
       _CacheLogger.error('Stack trace: $stackTrace');
@@ -570,31 +630,46 @@ class ProgressCacheRepository {
 }
 
 /// Provider for cache repository with debug logging
-final progressCacheRepositoryProvider = Provider<ProgressCacheRepository>((ref) {
+final progressCacheRepositoryProvider = Provider<ProgressCacheRepository>((
+  ref,
+) {
   _CacheLogger.step('PROVIDER_INIT', 'Initializing ProgressCacheRepository...');
 
   final prefs = ref.watch(sharedPreferencesProvider);
   _CacheLogger.step('PROVIDER_INIT', 'SharedPreferences obtained');
-  _CacheLogger.step('PROVIDER_INIT', 'SharedPreferences type: ${prefs.runtimeType}');
+  _CacheLogger.step(
+    'PROVIDER_INIT',
+    'SharedPreferences type: ${prefs.runtimeType}',
+  );
 
   // Test SharedPreferences accessibility
   try {
     const testKey = 'debug_test_key';
-    final testValue = 'debug_test_value_${DateTime.now().millisecondsSinceEpoch}';
+    final testValue =
+        'debug_test_value_${DateTime.now().millisecondsSinceEpoch}';
     prefs.setString(testKey, testValue);
     final readBack = prefs.getString(testKey);
-    _CacheLogger.step('PROVIDER_INIT', 'SharedPreferences test: write/read ${readBack == testValue ? 'SUCCESS' : 'FAILED'}');
+    _CacheLogger.step(
+      'PROVIDER_INIT',
+      'SharedPreferences test: write/read ${readBack == testValue ? 'SUCCESS' : 'FAILED'}',
+    );
     prefs.remove(testKey); // Cleanup
   } catch (e) {
     _CacheLogger.error('SharedPreferences test failed', e);
   }
 
   final repository = ProgressCacheRepository(prefs);
-  _CacheLogger.step('PROVIDER_INIT', 'ProgressCacheRepository created successfully');
+  _CacheLogger.step(
+    'PROVIDER_INIT',
+    'ProgressCacheRepository created successfully',
+  );
 
   // Clean up timers when provider is disposed
   ref.onDispose(() {
-    _CacheLogger.step('PROVIDER_DISPOSE', 'Disposing ProgressCacheRepository...');
+    _CacheLogger.step(
+      'PROVIDER_DISPOSE',
+      'Disposing ProgressCacheRepository...',
+    );
     repository.dispose();
   });
 
@@ -607,35 +682,47 @@ class WorkoutStatsCalculator {
 
   /// Calculate stats from Firebase with detailed debug logging
   Future<CachedDashboardStats> calculateFromFirebase(String userId) async {
-    _CacheLogger.step('FIREBASE_CALC', 'Starting Firebase calculation for userId: $userId');
+    _CacheLogger.step(
+      'FIREBASE_CALC',
+      'Starting Firebase calculation for userId: $userId',
+    );
 
     try {
       // Performance optimization: Only load last 90 days
       final ninetyDaysAgo = DateTime.now().subtract(const Duration(days: 90));
-      _CacheLogger.firebase('Query range: ${ninetyDaysAgo.toIso8601String()} to ${DateTime.now().toIso8601String()}');
+      _CacheLogger.firebase(
+        'Query range: ${ninetyDaysAgo.toIso8601String()} to ${DateTime.now().toIso8601String()}',
+      );
 
       _CacheLogger.firebase('Building Firestore query...');
       final query = _firestore
           .collection('workouts')
           .where('userId', isEqualTo: userId)
-          .where('completedAt', isGreaterThan: Timestamp.fromDate(ninetyDaysAgo))
+          .where(
+            'completedAt',
+            isGreaterThan: Timestamp.fromDate(ninetyDaysAgo),
+          )
           .orderBy('completedAt', descending: true)
           .limit(500); // Max 500 workouts
 
       _CacheLogger.firebase('Executing Firebase query...');
       final startTime = DateTime.now();
-      final querySnapshot = await query.get().timeout(
-        const Duration(seconds: 30),
-        onTimeout: () {
-          _CacheLogger.error('Firebase query timeout after 30s');
-          throw TimeoutException('Firebase query timeout after 30 seconds');
-        },
-      );
+      final querySnapshot = await _cache
+          .queryCacheFirst(query)
+          .timeout(
+            const Duration(seconds: 30),
+            onTimeout: () {
+              _CacheLogger.error('Firebase query timeout after 30s');
+              throw TimeoutException('Firebase query timeout after 30 seconds');
+            },
+          );
       final endTime = DateTime.now();
       final duration = endTime.difference(startTime);
 
       final docs = querySnapshot.docs;
-      _CacheLogger.firebase('✅ Query completed in ${duration.inMilliseconds}ms');
+      _CacheLogger.firebase(
+        '✅ Query completed in ${duration.inMilliseconds}ms',
+      );
       _CacheLogger.firebase('Found ${docs.length} documents');
 
       if (docs.isEmpty) {
@@ -663,7 +750,8 @@ class WorkoutStatsCalculator {
         if (timestamp != null) {
           validDocs++;
           final date = timestamp.toDate();
-          final dateKey = '${date.year}-${date.month.toString().padLeft(2, '0')}-${date.day.toString().padLeft(2, '0')}';
+          final dateKey =
+              '${date.year}-${date.month.toString().padLeft(2, '0')}-${date.day.toString().padLeft(2, '0')}';
           workoutDates[dateKey] = true;
 
           // Process exercises in this workout
@@ -678,7 +766,8 @@ class WorkoutStatsCalculator {
               for (final set in sets) {
                 totalSets++;
                 if (set is Map<String, dynamic>) {
-                  final isCompleted = set['completed'] == true || set['done'] == true;
+                  final isCompleted =
+                      set['completed'] == true || set['done'] == true;
                   if (isCompleted) {
                     completedSets++;
                     final weightValue = set['weight'];
@@ -704,20 +793,40 @@ class WorkoutStatsCalculator {
           }
         } else {
           invalidDocs++;
-          _CacheLogger.firebase('Invalid document found (no completedAt): ${doc.id}');
+          _CacheLogger.firebase(
+            'Invalid document found (no completedAt): ${doc.id}',
+          );
         }
       }
 
       final totalWorkouts = workoutDates.length;
 
-      _CacheLogger.step('AGGREGATION_RESULT', 'Valid docs: $validDocs, Invalid docs: $invalidDocs');
+      _CacheLogger.step(
+        'AGGREGATION_RESULT',
+        'Valid docs: $validDocs, Invalid docs: $invalidDocs',
+      );
       _CacheLogger.step('AGGREGATION_RESULT', 'Total workouts: $totalWorkouts');
-      _CacheLogger.step('AGGREGATION_RESULT', 'Total exercises: $totalExercises');
-      _CacheLogger.step('AGGREGATION_RESULT', 'Sample workout dates: ${workoutDates.keys.take(5).toList()}');
+      _CacheLogger.step(
+        'AGGREGATION_RESULT',
+        'Total exercises: $totalExercises',
+      );
+      _CacheLogger.step(
+        'AGGREGATION_RESULT',
+        'Sample workout dates: ${workoutDates.keys.take(5).toList()}',
+      );
 
-      _CacheLogger.step('STATS_CALC', 'Completed sets: $completedSets/$totalSets');
-      _CacheLogger.step('STATS_CALC', 'Total volume: ${totalVolume.toStringAsFixed(1)} kg');
-      _CacheLogger.step('STATS_CALC', 'Max PR: ${maxPR.toStringAsFixed(1)} kg ($prExercise)');
+      _CacheLogger.step(
+        'STATS_CALC',
+        'Completed sets: $completedSets/$totalSets',
+      );
+      _CacheLogger.step(
+        'STATS_CALC',
+        'Total volume: ${totalVolume.toStringAsFixed(1)} kg',
+      );
+      _CacheLogger.step(
+        'STATS_CALC',
+        'Max PR: ${maxPR.toStringAsFixed(1)} kg ($prExercise)',
+      );
 
       // Calculate streak
       _CacheLogger.step('STREAK_CALC', 'Calculating current streak...');
@@ -727,7 +836,10 @@ class WorkoutStatsCalculator {
       // Calculate weekly frequency
       _CacheLogger.step('FREQ_CALC', 'Calculating weekly frequency...');
       final weeklyFrequency = _calculateWeeklyFrequency(workoutDates);
-      _CacheLogger.step('FREQ_CALC', 'Weekly frequency: ${weeklyFrequency.toStringAsFixed(1)} workouts/week');
+      _CacheLogger.step(
+        'FREQ_CALC',
+        'Weekly frequency: ${weeklyFrequency.toStringAsFixed(1)} workouts/week',
+      );
 
       final result = CachedDashboardStats(
         totalWorkouts: totalWorkouts,
@@ -742,10 +854,15 @@ class WorkoutStatsCalculator {
       );
 
       _CacheLogger.step('FINAL_RESULT', '✅ Calculation complete!');
-      _CacheLogger.step('FINAL_RESULT', 'Workouts: $totalWorkouts, Exercises: $totalExercises');
-      _CacheLogger.step('FINAL_RESULT', 'Streak: $currentStreak, Frequency: ${weeklyFrequency.toStringAsFixed(1)}');
+      _CacheLogger.step(
+        'FINAL_RESULT',
+        'Workouts: $totalWorkouts, Exercises: $totalExercises',
+      );
+      _CacheLogger.step(
+        'FINAL_RESULT',
+        'Streak: $currentStreak, Frequency: ${weeklyFrequency.toStringAsFixed(1)}',
+      );
       return result;
-
     } catch (e) {
       _CacheLogger.error('Error calculating stats from Firebase: $e', e);
       rethrow;
@@ -761,7 +878,8 @@ class WorkoutStatsCalculator {
 
     for (int i = 0; i < 7; i++) {
       final checkDate = today.subtract(Duration(days: i));
-      final dayKey = '${checkDate.year}-${checkDate.month.toString().padLeft(2, '0')}-${checkDate.day.toString().padLeft(2, '0')}';
+      final dayKey =
+          '${checkDate.year}-${checkDate.month.toString().padLeft(2, '0')}-${checkDate.day.toString().padLeft(2, '0')}';
 
       if (workoutDates.containsKey(dayKey)) {
         streak++;
@@ -785,7 +903,11 @@ class WorkoutStatsCalculator {
 
     for (final dateKey in workoutDates.keys) {
       final parts = dateKey.split('-');
-      final date = DateTime(int.parse(parts[0]), int.parse(parts[1]), int.parse(parts[2]));
+      final date = DateTime(
+        int.parse(parts[0]),
+        int.parse(parts[1]),
+        int.parse(parts[2]),
+      );
 
       if (date.isAfter(thirtyDaysAgo)) {
         workoutsInLast30Days++;
@@ -812,7 +934,10 @@ class _CacheStateManager {
   ) async {
     // If already calculating for this user, wait for it
     if (_activeCalculations.containsKey(userEmail)) {
-      _CacheLogger.step('CONCURRENT_CALC', '⏳ Calculation already in progress for $userEmail, waiting...');
+      _CacheLogger.step(
+        'CONCURRENT_CALC',
+        '⏳ Calculation already in progress for $userEmail, waiting...',
+      );
       return _activeCalculations[userEmail]!.future;
     }
 
@@ -823,7 +948,10 @@ class _CacheStateManager {
 
     try {
       final result = await calculation();
-      _CacheLogger.step('CALC_SUCCESS', '✅ Calculation completed successfully for $userEmail');
+      _CacheLogger.step(
+        'CALC_SUCCESS',
+        '✅ Calculation completed successfully for $userEmail',
+      );
       completer.complete(result);
       return result;
     } catch (e, stack) {
@@ -833,7 +961,10 @@ class _CacheStateManager {
       rethrow;
     } finally {
       _activeCalculations.remove(userEmail);
-      _CacheLogger.step('CALC_CLEANUP', '🧹 Removed calculation for $userEmail from active list');
+      _CacheLogger.step(
+        'CALC_CLEANUP',
+        '🧹 Removed calculation for $userEmail from active list',
+      );
     }
   }
 }
@@ -841,7 +972,9 @@ class _CacheStateManager {
 /// MAIN CACHED PROGRESS PROVIDER with race condition protection and detailed debug
 /// 🔧 MEMORY FIX: Added autoDispose to prevent memory leaks
 /// Automatically disposes provider instances when widget is disposed
-final cachedProgressProvider = FutureProvider.autoDispose<DashboardStats>((ref) async {
+final cachedProgressProvider = FutureProvider.autoDispose<DashboardStats>((
+  ref,
+) async {
   _CacheLogger.step('PROVIDER_START', '🚀 Starting cached progress provider');
 
   final authService = ref.watch(authServiceProvider);
@@ -870,7 +1003,10 @@ final cachedProgressProvider = FutureProvider.autoDispose<DashboardStats>((ref) 
   final calculator = ref.watch(workoutStatsCalculatorProvider);
   _CacheLogger.step('PROVIDERS', 'Stats calculator obtained');
 
-  _CacheLogger.step('CALCULATION_START', 'Starting calculation workflow for: $userEmail');
+  _CacheLogger.step(
+    'CALCULATION_START',
+    'Starting calculation workflow for: $userEmail',
+  );
 
   return _CacheStateManager.withSingleCalculation(userEmail, () async {
     try {
@@ -884,19 +1020,33 @@ final cachedProgressProvider = FutureProvider.autoDispose<DashboardStats>((ref) 
       final cached = await cacheRepo.loadStats();
 
       if (cached != null && cached.isValid) {
-        _CacheLogger.step('CACHE_HIT', '✅ Using valid cached stats: ${cached.totalWorkouts} workouts');
+        _CacheLogger.step(
+          'CACHE_HIT',
+          '✅ Using valid cached stats: ${cached.totalWorkouts} workouts',
+        );
         cacheRepo._isCalculating = false;
         final result = cached.toDashboardStats();
-        _CacheLogger.step('PROVIDER_SUCCESS', '🎉 Provider completed successfully (from cache)');
+        _CacheLogger.step(
+          'PROVIDER_SUCCESS',
+          '🎉 Provider completed successfully (from cache)',
+        );
         return result;
       }
 
-      _CacheLogger.step('CACHE_MISS', '❌ Cache miss or expired, calculating from Firebase...');
+      _CacheLogger.step(
+        'CACHE_MISS',
+        '❌ Cache miss or expired, calculating from Firebase...',
+      );
 
       // 2. Calculate from Firebase (first time or cache expired)
       _CacheLogger.step('FIREBASE_START', 'Starting Firebase calculation...');
-      final freshStats = await calculator.calculateFromFirebase(currentUser.uid);
-      _CacheLogger.step('FIREBASE_COMPLETE', '✅ Firebase calculation completed');
+      final freshStats = await calculator.calculateFromFirebase(
+        currentUser.uid,
+      );
+      _CacheLogger.step(
+        'FIREBASE_COMPLETE',
+        '✅ Firebase calculation completed',
+      );
 
       // 3. Save to cache for next time
       _CacheLogger.step('CACHE_SAVE_START', 'Saving fresh stats to cache...');
@@ -904,14 +1054,22 @@ final cachedProgressProvider = FutureProvider.autoDispose<DashboardStats>((ref) 
       _CacheLogger.step('CACHE_SAVE_COMPLETE', '✅ Stats saved to cache');
 
       final result = freshStats.toDashboardStats();
-      _CacheLogger.step('PROVIDER_SUCCESS', '🎉 Provider completed successfully (from Firebase)');
-      _CacheLogger.step('PROVIDER_SUCCESS', 'Final result: ${result.totalWorkouts} workouts, ${result.currentStreak} streak');
+      _CacheLogger.step(
+        'PROVIDER_SUCCESS',
+        '🎉 Provider completed successfully (from Firebase)',
+      );
+      _CacheLogger.step(
+        'PROVIDER_SUCCESS',
+        'Final result: ${result.totalWorkouts} workouts, ${result.currentStreak} streak',
+      );
       return result;
-
     } catch (e, stack) {
       _CacheLogger.error('💥 Critical error in cached progress provider', e);
       _CacheLogger.error('Full stack trace: $stack');
-      _CacheLogger.step('PROVIDER_ERROR', 'Rethrowing error to be handled by UI');
+      _CacheLogger.step(
+        'PROVIDER_ERROR',
+        'Rethrowing error to be handled by UI',
+      );
       rethrow;
     } finally {
       // Always reset calculating state

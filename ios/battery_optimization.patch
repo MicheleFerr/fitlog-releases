@@ -1,0 +1,206 @@
+--- ContentView.swift.original
++++ ContentView.swift.optimized
+@@ -5,6 +5,7 @@
+ //  Watch Companion - Shows workout support when iPhone workout is active
++//  Battery Optimized: Reduces updates/animations when screen is dimmed or app inactive
+ //
+
+@@ -110,6 +111,8 @@ struct WorkoutCompanionView: View {
+     @EnvironmentObject var connectivity: ConnectivityManager
+     @EnvironmentObject var workoutManager: WorkoutManager
+     @State private var selectedTab = 0  // 0 = Exercise, 1 = Timer, 2 = Stats
++    @Environment(\.isLuminanceReduced) var isLuminanceReduced  // Battery optimization
++    @State private var isAppActive = true  // Track app lifecycle
+
+     var body: some View {
+@@ -141,6 +144,21 @@ struct WorkoutCompanionView: View {
+                     connectivity.shouldShowTimer = false
+                 }
+             }
++
++            // Listen for app lifecycle notifications (battery optimization)
++            NotificationCenter.default.addObserver(
++                forName: WKApplication.didBecomeActiveNotification,
++                object: nil,
++                queue: .main
++            ) { _ in
++                isAppActive = true
++            }
++
++            NotificationCenter.default.addObserver(
++                forName: WKApplication.willResignActiveNotification,
++                object: nil,
++                queue: .main
++            ) { _ in
++                isAppActive = false
++            }
+         }
+         .onDisappear {
+             Task {
+                 try? await workoutManager.endWorkout()
+             }
++            // Remove lifecycle observers
++            NotificationCenter.default.removeObserver(self, name: WKApplication.didBecomeActiveNotification, object: nil)
++            NotificationCenter.default.removeObserver(self, name: WKApplication.willResignActiveNotification, object: nil)
+         }
+-        // Auto-navigate to timer tab when timer starts
++        // Auto-navigate to timer tab when timer starts (disable animation when screen dimmed)
+         .onChange(of: connectivity.shouldShowTimer) { _, shouldShow in
+             if shouldShow && selectedTab != 1 {
+-                withAnimation {
++                if isLuminanceReduced || !isAppActive {
++                    // No animation when screen is dimmed or app inactive (battery savings)
++                    selectedTab = 1
++                } else {
++                    withAnimation {
++                        selectedTab = 1
++                    }
+-                    selectedTab = 1
+                 }
+@@ -168,7 +186,12 @@ struct WorkoutCompanionView: View {
+         // Also monitor restTimeRemaining directly for more reliable navigation
+         .onChange(of: connectivity.restTimeRemaining) { oldValue, newValue in
+             if oldValue == 0 && newValue > 0 && selectedTab != 1 {
+-                withAnimation {
++                if isLuminanceReduced || !isAppActive {
++                    selectedTab = 1
++                } else {
++                    withAnimation {
++                        selectedTab = 1
++                    }
+-                    selectedTab = 1
+                 }
+@@ -176,7 +199,12 @@ struct WorkoutCompanionView: View {
+-        // Auto-navigate to exercise tab when timer ends
++        // Auto-navigate to exercise tab when timer ends (disable animation when screen dimmed)
+         .onChange(of: connectivity.shouldNavigateToExercise) { _, shouldNavigate in
+             if shouldNavigate && selectedTab != 0 {
+-                withAnimation {
++                if isLuminanceReduced || !isAppActive {
++                    selectedTab = 0
++                } else {
++                    withAnimation {
++                        selectedTab = 0
++                    }
+-                    selectedTab = 0
+                 }
+@@ -193,6 +221,7 @@ struct ExerciseControlView: View {
+     @EnvironmentObject var workoutManager: WorkoutManager
+     @State private var showingEffortPicker = false
+     @State private var showingConfirmation = false
++    @Environment(\.isLuminanceReduced) var isLuminanceReduced  // Battery optimization
+
+@@ -211,7 +240,13 @@ struct ExerciseControlView: View {
+                         .foregroundColor(.red)
+                         .accessibilityHidden(true)
+-                    Text("\(Int(workoutManager.heartRate))")
++                    if isLuminanceReduced {
++                        // Update every 5 BPM when dimmed to save battery
++                        Text("\(Int(workoutManager.heartRate / 5) * 5)")
++                            .font(.system(size: 13, weight: .semibold))
++                            .monospacedDigit()
++                    } else {
++                        Text("\(Int(workoutManager.heartRate))")
++                            .font(.system(size: 13, weight: .semibold))
++                            .monospacedDigit()
++                    }
+-                        .font(.system(size: 13, weight: .semibold))
+-                        .monospacedDigit()
+                 }
+@@ -370,7 +405,7 @@ struct EffortPickerView: View {
+-            // Large value display
++            // Large value display (no animation for battery savings)
+             Text("\(selectedValue)")
+                 .font(.system(size: 48, weight: .bold, design: .rounded))
+                 .foregroundColor(colorForValue(selectedValue))
+-                .animation(.easeOut(duration: 0.15), value: selectedValue)
+                 .accessibilityLabel("\(selectedValue)")
+
+@@ -418,11 +453,11 @@ struct EffortPickerView: View {
+                         .frame(height: 6)
+
+-                    // Position indicator
++                    // Position indicator (no animation)
+                     Circle()
+                         .fill(colorForValue(selectedValue))
+                         .frame(width: 14, height: 14)
+                         .shadow(color: colorForValue(selectedValue).opacity(0.5), radius: 4)
+                         .position(x: indicatorX, y: 3)
+-                        .animation(.spring(response: 0.25, dampingFraction: 0.7), value: selectedIndex)
+                 }
+@@ -650,7 +685,7 @@ struct EffortCircleButton: View {
+         .buttonStyle(.plain)
+         .scaleEffect(isSelected ? 1.1 : 1.0)
+-        .animation(.spring(response: 0.2, dampingFraction: 0.7), value: isSelected)
+     }
+ }
+
+@@ -658,6 +693,7 @@ struct EffortCircleButton: View {
+
+ struct RestTimerView: View {
+     @EnvironmentObject var connectivity: ConnectivityManager
++    @Environment(\.isLuminanceReduced) var isLuminanceReduced  // Battery optimization
+
+@@ -703,10 +739,21 @@ struct RestTimerView: View {
+                     .tracking(1.5)
+             }
+
+-            // Time display (no animation = battery savings)
+-            Text(formatTime(connectivity.restTimeRemaining))
+-                .font(.system(size: 52, weight: .bold))
+-                .monospacedDigit()
+-                .foregroundColor(timerTextColor)
++            // Time display - reduce updates when screen dimmed (battery optimization)
++            if isLuminanceReduced {
++                // When wrist down, update less frequently (only on significant changes)
++                Text(formatTime(connectivity.restTimeRemaining))
++                    .font(.system(size: 52, weight: .bold))
++                    .monospacedDigit()
++                    .foregroundColor(timerTextColor)
++                    .id(connectivity.restTimeRemaining / 10)  // Update every 10 seconds when dimmed
++            } else {
++                // Normal frequency when wrist up
++                Text(formatTime(connectivity.restTimeRemaining))
++                    .font(.system(size: 52, weight: .bold))
++                    .monospacedDigit()
++                    .foregroundColor(timerTextColor)
++            }
+
+@@ -1056,6 +1103,7 @@ struct StatsView: View {
+     @EnvironmentObject var workoutManager: WorkoutManager
+     @State private var showingEndOptions = false
++    @Environment(\.isLuminanceReduced) var isLuminanceReduced  // Battery optimization
+
+@@ -1070,7 +1118,7 @@ struct StatsView: View {
+     var body: some View {
+         VStack(spacing: 10) {
+-            // Heart Rate - Main focus (SF Pro, not rounded, for consistency)
++            // Heart Rate - Main focus (battery optimized)
+             VStack(spacing: 2) {
+                 HStack(spacing: 6) {
+@@ -1078,9 +1126,17 @@ struct StatsView: View {
+                         .font(.system(size: 16))
+                         .foregroundColor(.red)
+
+-                    Text("\(Int(workoutManager.heartRate))")
+-                        .font(.system(size: 32, weight: .bold))
+-                        .monospacedDigit()
++                    if isLuminanceReduced {
++                        // Update every 5 BPM when dimmed to save battery
++                        Text("\(Int(workoutManager.heartRate / 5) * 5)")
++                            .font(.system(size: 32, weight: .bold))
++                            .monospacedDigit()
++                    } else {
++                        // Normal real-time updates when active
++                        Text("\(Int(workoutManager.heartRate))")
++                            .font(.system(size: 32, weight: .bold))
++                            .monospacedDigit()
++                    }
+                 }
+
+@@ -1090,7 +1146,7 @@ struct StatsView: View {
+             }
+
+-            // Heart rate zone badge
++            // Heart rate zone badge (keep visible even when dimmed)
+             Text(workoutManager.currentHeartRateZone.rawValue)

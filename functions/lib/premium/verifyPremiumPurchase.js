@@ -26,22 +26,36 @@ var __importStar = (this && this.__importStar) || function (mod) {
     __setModuleDefault(result, mod);
     return result;
 };
-var _a;
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.checkExpiredSubscriptions = exports.verifyPremiumPurchase = void 0;
 const functions = __importStar(require("firebase-functions"));
 const admin = __importStar(require("firebase-admin"));
 const appleReceiptVerify = __importStar(require("node-apple-receipt-verify"));
 const googleapis_1 = require("googleapis");
-// Initialize Apple receipt verification
-appleReceiptVerify.config({
-    secret: ((_a = functions.config().apple) === null || _a === void 0 ? void 0 : _a.shared_secret) || '',
-    environment: ['production', 'sandbox'],
-    excludeOldTransactions: true,
-    extended: true,
-});
-// Initialize Google Play API
-const androidPublisher = googleapis_1.google.androidpublisher('v3');
+// Lazy initialization flag for Apple receipt verification
+let appleReceiptConfigured = false;
+/**
+ * Initialize Apple receipt verification lazily
+ * This avoids validation errors when the module loads without config
+ */
+function ensureAppleReceiptConfigured() {
+    var _a;
+    if (appleReceiptConfigured)
+        return;
+    const secret = (_a = functions.config().apple) === null || _a === void 0 ? void 0 : _a.shared_secret;
+    if (!secret) {
+        console.warn('Apple shared_secret not configured. iOS purchase verification will fail.');
+        return;
+    }
+    appleReceiptVerify.config({
+        secret,
+        environment: ['production', 'sandbox'],
+        excludeOldTransactions: true,
+        extended: true,
+    });
+    appleReceiptConfigured = true;
+}
+// Google Play API will be initialized per-request with auth
 /**
  * Verify premium purchase from iOS or Android
  */
@@ -129,6 +143,8 @@ exports.verifyPremiumPurchase = functions.https.onCall(async (data, context) => 
  */
 async function verifyApplePurchase(receiptData, productId) {
     try {
+        // Ensure Apple receipt verification is configured
+        ensureAppleReceiptConfigured();
         // Verify receipt with Apple
         const products = await appleReceiptVerify.validate({
             receipt: receiptData,
@@ -173,13 +189,17 @@ async function verifyGooglePurchase(purchaseToken, productId) {
             keyFile: 'path/to/service-account-key.json',
             scopes: ['https://www.googleapis.com/auth/androidpublisher'],
         });
+        // Create authenticated androidpublisher client
         const authClient = await auth.getClient();
-        androidPublisher.context._options.auth = authClient;
+        const authenticatedPublisher = googleapis_1.google.androidpublisher({
+            version: 'v3',
+            auth: authClient,
+        });
         const packageName = ((_a = functions.config().android) === null || _a === void 0 ? void 0 : _a.package_name) || 'com.gymbro.app';
         const isLifetime = productId.includes('lifetime');
         if (isLifetime) {
             // Verify one-time product purchase
-            const response = await androidPublisher.purchases.products.get({
+            const response = await authenticatedPublisher.purchases.products.get({
                 packageName,
                 productId,
                 token: purchaseToken,
@@ -198,7 +218,7 @@ async function verifyGooglePurchase(purchaseToken, productId) {
         }
         else {
             // Verify subscription
-            const response = await androidPublisher.purchases.subscriptions.get({
+            const response = await authenticatedPublisher.purchases.subscriptions.get({
                 packageName,
                 subscriptionId: productId,
                 token: purchaseToken,

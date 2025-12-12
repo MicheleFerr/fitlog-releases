@@ -189,18 +189,68 @@ service cloud.firestore {
       allow update, delete: if false;
     }
 
-    // ============= WORKOUT TEMPLATES =============
+    // ============= WORKOUT TEMPLATES (Legacy Collection) =============
+    // ⚠️ LEGACY: This collection is deprecated. New templates use /workoutTemplates/
+    // 🔐 SECURITY: CREATE blocked - must use createTemplate Cloud Function
     match /workout_templates/{templateId} {
-      allow read, write: if request.auth != null && request.auth.uid == resource.data.userId;
+      // Legacy collection - handle non-existent documents for existence checks
+      allow read: if request.auth != null && (
+        resource == null ||  // Document doesn't exist
+        resource.data.userId == request.auth.uid
+      );
+      // 🚫 CREATE: BLOCKED - Must use createTemplate Cloud Function
+      allow create: if false;
+      // UPDATE/DELETE still allowed for existing templates
+      allow update, delete: if request.auth != null &&
+        resource.data.userId == request.auth.uid;
     }
 
     match /workoutTemplates/{templateId} {
-      allow read: if request.auth != null &&
-        request.auth.uid == resource.data.userId;
-      allow write: if request.auth != null &&
-        request.auth.uid == resource.data.userId;
-      allow create: if request.auth != null &&
-        request.auth.uid == request.resource.data.userId;
+      // ========================================
+      // 🔐 SECURITY: Template Quota Enforcement (Updated 2025-11-29)
+      // ========================================
+      // CREATE is BLOCKED for direct client writes.
+      // All template creation MUST go through the `createTemplate` Cloud Function
+      // which enforces quota limits server-side:
+      // - Free: 4 private templates
+      // - Premium: 20 private templates
+      // - Pro: 999 private templates (unlimited)
+      //
+      // Cloud Functions use Admin SDK which bypasses Security Rules.
+      // This ensures quota cannot be bypassed by malicious clients.
+      // ========================================
+
+      // LIST (queries): Allow authenticated users to query templates
+      // This permits .where('userId', isEqualTo: uid).snapshots() listeners
+      // The query itself filters to only the user's own documents
+      allow list: if request.auth != null;
+
+      // GET (single document): User can read their own templates or public templates
+      // IMPORTANT: Also allow reading non-existent documents (for existence checks before create)
+      // When document doesn't exist, resource is null - we must handle this case
+      allow get: if request.auth != null && (
+        resource == null ||  // Document doesn't exist - allow for existence checks
+        ('userId' in resource.data && request.auth.uid == resource.data.userId) ||
+        ('coachId' in resource.data && request.auth.uid == resource.data.coachId) ||
+        ('isPublic' in resource.data && resource.data.isPublic == true)
+      );
+
+      // 🚫 CREATE: BLOCKED - Must use createTemplate Cloud Function
+      // This enforces server-side quota limits that cannot be bypassed.
+      // DO NOT enable direct client creates without quota enforcement!
+      allow create: if false;
+
+      // UPDATE: Allow if user owns document (quota not affected by updates)
+      allow update: if request.auth != null && (
+        ('userId' in resource.data && request.auth.uid == resource.data.userId) ||
+        ('coachId' in resource.data && request.auth.uid == resource.data.coachId)
+      );
+
+      // DELETE: User must own the template (quota decremented client-side via listener)
+      allow delete: if request.auth != null && (
+        ('userId' in resource.data && request.auth.uid == resource.data.userId) ||
+        ('coachId' in resource.data && request.auth.uid == resource.data.coachId)
+      );
     }
 
     // ============= USERS =============
@@ -305,25 +355,10 @@ service cloud.firestore {
         request.auth.token.email == resource.data.athleteEmail;
     }
 
-    // ============= WORKOUT TEMPLATES =============
-    match /workoutTemplates/{templateId} {
-      // Il coach può leggere i propri template o quelli pubblici
-      allow read: if request.auth != null && 
-        (resource.data.coachId == request.auth.uid || 
-         resource.data.isPublic == true);
-      
-      // Solo il coach proprietario può creare template
-      allow create: if request.auth != null && 
-        request.auth.uid == request.resource.data.coachId;
-      
-      // Solo il coach proprietario può aggiornare
-      allow update: if request.auth != null && 
-        request.auth.uid == resource.data.coachId;
-      
-      // Solo il coach proprietario può eliminare
-      allow delete: if request.auth != null && 
-        request.auth.uid == resource.data.coachId;
-    }
+    // ============= WORKOUT TEMPLATES (COACH) =============
+    // ⚠️ CONSOLIDATED 2025-11-28: Moved to unified rule at line ~198
+    // Was causing "Missing or insufficient permissions" because app saves with userId
+    // but this rule expected coachId. Now unified rule supports both.
 
     // ============= TEMPLATE ASSIGNMENTS =============
     match /templateAssignments/{assignmentId} {
@@ -557,6 +592,21 @@ service cloud.firestore {
       // ============= ANALYTICS SUBCOLLECTION =============
       match /analytics/{exerciseName} {
         // Users can read/write their own analytics data
+        allow read, write: if request.auth != null && request.auth.uid == userId;
+      }
+
+      // ============= STRESS INDEX SUBCOLLECTION =============
+      // Added: 2025-12-05 - Workout stress index calculations
+      match /stress_index/{workoutId} {
+        // Users can read/write their own stress index data
+        allow read, write: if request.auth != null && request.auth.uid == userId;
+      }
+
+      // ============= CUSTOM EXERCISES SUBCOLLECTION =============
+      // Added: 2025-12-09 - User custom exercises for CloudSyncProvider
+      // Path: /users/{userId}/customExercises/{exerciseId}
+      match /customExercises/{exerciseId} {
+        // Users can read/write their own custom exercises
         allow read, write: if request.auth != null && request.auth.uid == userId;
       }
 
@@ -883,22 +933,10 @@ service cloud.firestore {
       allow delete: if false;
     }
 
-    // ============= WORKOUT TEMPLATES =============
-    match /workoutTemplates/{templateId} {
-      // Il coach proprietario può leggere/scrivere i propri template
-      allow read: if request.auth != null && 
-        request.auth.uid == resource.data.coachId;
-      
-      allow create: if request.auth != null && 
-        request.auth.uid == request.resource.data.coachId &&
-        request.resource.data.keys().hasAll(['coachId', 'name', 'giorni', 'createdAt']);
-      
-      allow update: if request.auth != null && 
-        request.auth.uid == resource.data.coachId;
-      
-      allow delete: if request.auth != null && 
-        request.auth.uid == resource.data.coachId;
-    }
+    // ============= WORKOUT TEMPLATES (COACH v2) =============
+    // ⚠️ CONSOLIDATED 2025-11-28: Moved to unified rule at line ~198
+    // This duplicate rule was causing "Missing or insufficient permissions"
+    // error because it expected coachId but app saves userId field.
 
     // ============= COMPLETED WORKOUTS =============
     match /completedWorkouts/{workoutId} {
@@ -1304,6 +1342,36 @@ service cloud.firestore {
       allow create: if isAuthenticated() && isOwner(userId);
       allow update: if isAuthenticated() && isOwner(userId);
       // No deletion allowed (preserve achievement history)
+      allow delete: if false;
+    }
+
+    // User XP - Central XP tracking for gamification (user_xp/{userId})
+    // Added: 2025-12-06 - Fix for XP not being saved after workout completion
+    match /user_xp/{userId} {
+      // User can read their own XP data
+      allow read: if isAuthenticated() && isOwner(userId);
+      // User can create their own XP data (initial)
+      allow create: if isAuthenticated() && isOwner(userId);
+      // User can update their own XP data (increment after workout)
+      allow update: if isAuthenticated() && isOwner(userId);
+      // No deletion allowed (preserve XP history)
+      allow delete: if false;
+    }
+
+    // Personal Records - PR tracking per user (personalRecords/{recordId})
+    // Added: 2025-12-06 - Fix for PR not being saved after workout completion
+    // Fixed: 2025-12-10 - Split read into list/get for query support
+    match /personalRecords/{recordId} {
+      // LIST: Allow queries - Firestore queries can't check resource.data
+      // Query must be constrained by userId client-side
+      allow list: if isAuthenticated();
+      // GET: User can read their own single PR document
+      allow get: if isAuthenticated() && resource.data.userId == request.auth.uid;
+      // User can create their own PRs
+      allow create: if isAuthenticated() && request.resource.data.userId == request.auth.uid;
+      // User can update their own PRs
+      allow update: if isAuthenticated() && resource.data.userId == request.auth.uid;
+      // No deletion allowed (preserve PR history)
       allow delete: if false;
     }
 

@@ -15,7 +15,9 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$CommunityWorkoutTemplate {
 
- String get id; String get userId; String get name; String? get description; List<Exercise> get exercises; TemplateCategory get category; TemplateVisibility get visibility;// Metadata
+ String get id; String get userId; String get name; String? get description; List<Exercise> get exercises;// Default to 'custom' for templates created before category was added
+ TemplateCategory get category;// Default to 'private' for templates created before visibility was added
+ TemplateVisibility get visibility;// Metadata
  DateTime get createdAt; DateTime? get updatedAt;// Stats pubbliche
  int get downloadCount; int get likeCount; int get reviewCount; double get averageRating;// Info autore
  String? get authorName; String? get authorPhotoUrl;// Tags per ricerca
@@ -237,7 +239,7 @@ return $default(_that.id,_that.userId,_that.name,_that.description,_that.exercis
 @JsonSerializable()
 
 class _CommunityWorkoutTemplate implements CommunityWorkoutTemplate {
-  const _CommunityWorkoutTemplate({required this.id, required this.userId, required this.name, this.description, required final  List<Exercise> exercises, required this.category, required this.visibility, required this.createdAt, this.updatedAt, this.downloadCount = 0, this.likeCount = 0, this.reviewCount = 0, this.averageRating = 0.0, this.authorName, this.authorPhotoUrl, final  List<String> tags = const [], this.estimatedDurationMinutes, this.difficultyLevel, final  List<String> requiredEquipment = const [], final  List<String> targetMuscles = const []}): _exercises = exercises,_tags = tags,_requiredEquipment = requiredEquipment,_targetMuscles = targetMuscles;
+  const _CommunityWorkoutTemplate({required this.id, required this.userId, required this.name, this.description, required final  List<Exercise> exercises, this.category = TemplateCategory.custom, this.visibility = TemplateVisibility.private, required this.createdAt, this.updatedAt, this.downloadCount = 0, this.likeCount = 0, this.reviewCount = 0, this.averageRating = 0.0, this.authorName, this.authorPhotoUrl, final  List<String> tags = const [], this.estimatedDurationMinutes, this.difficultyLevel, final  List<String> requiredEquipment = const [], final  List<String> targetMuscles = const []}): _exercises = exercises,_tags = tags,_requiredEquipment = requiredEquipment,_targetMuscles = targetMuscles;
   factory _CommunityWorkoutTemplate.fromJson(Map<String, dynamic> json) => _$CommunityWorkoutTemplateFromJson(json);
 
 @override final  String id;
@@ -251,8 +253,10 @@ class _CommunityWorkoutTemplate implements CommunityWorkoutTemplate {
   return EqualUnmodifiableListView(_exercises);
 }
 
-@override final  TemplateCategory category;
-@override final  TemplateVisibility visibility;
+// Default to 'custom' for templates created before category was added
+@override@JsonKey() final  TemplateCategory category;
+// Default to 'private' for templates created before visibility was added
+@override@JsonKey() final  TemplateVisibility visibility;
 // Metadata
 @override final  DateTime createdAt;
 @override final  DateTime? updatedAt;

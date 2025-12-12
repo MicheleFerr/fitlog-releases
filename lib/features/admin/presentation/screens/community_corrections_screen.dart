@@ -7,6 +7,7 @@
 /// Schermata per la review dei contributi inviati dalla community
 library;
 
+import 'package:flutter/foundation.dart' show kDebugMode;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
@@ -45,15 +46,21 @@ class CommunityCorrectionsScreen extends ConsumerWidget {
       ),
       body: corrections.when(
         data: (correctionsList) {
-          debugPrint('🎬 Admin screen received ${correctionsList.length} contributions');
+          if (kDebugMode) {
+            debugPrint('🎬 Admin screen received ${correctionsList.length} contributions');
+          }
           return _buildCorrectionsList(context, l10n, correctionsList, ref);
         },
         loading: () {
-          debugPrint('⏳ Admin screen in loading state');
+          if (kDebugMode) {
+            debugPrint('⏳ Admin screen in loading state');
+          }
           return _buildLoadingState(context, l10n);
         },
         error: (error, _) {
-          debugPrint('❌ Admin screen error: $error');
+          if (kDebugMode) {
+            debugPrint('❌ Admin screen error: $error');
+          }
           return _buildErrorState(context, l10n, error.toString());
         },
       ),
@@ -66,10 +73,14 @@ class CommunityCorrectionsScreen extends ConsumerWidget {
     List<CommunityContribution> corrections,
     WidgetRef ref,
   ) {
-    debugPrint('🎯 Building corrections list with ${corrections.length} contributions');
+    if (kDebugMode) {
+      debugPrint('🎯 Building corrections list with ${corrections.length} contributions');
+    }
 
     if (corrections.isEmpty) {
-      debugPrint('📭 No contributions found, showing empty state');
+      if (kDebugMode) {
+        debugPrint('📭 No contributions found, showing empty state');
+      }
       return _buildEmptyState(context, l10n);
     }
 
@@ -77,9 +88,13 @@ class CommunityCorrectionsScreen extends ConsumerWidget {
     final pendingCorrections = corrections.where((c) => c.status == ContributionStatus.pending).toList();
     final reviewedCorrections = corrections.where((c) => c.status != ContributionStatus.pending).toList();
 
-    debugPrint('📋 Pending: ${pendingCorrections.length}, Reviewed: ${reviewedCorrections.length}');
+    if (kDebugMode) {
+      debugPrint('📋 Pending: ${pendingCorrections.length}, Reviewed: ${reviewedCorrections.length}');
+    }
     for (var contrib in corrections) {
-      debugPrint('📄 Contribution: ${contrib.id} - ${contrib.type.name} - ${contrib.status.name} - ${contrib.title}');
+      if (kDebugMode) {
+        debugPrint('📄 Contribution: ${contrib.id} - ${contrib.type.name} - ${contrib.status.name} - ${contrib.title}');
+      }
     }
 
     return RefreshIndicator(

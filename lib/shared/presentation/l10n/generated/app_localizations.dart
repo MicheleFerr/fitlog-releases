@@ -122,6 +122,108 @@ abstract class AppLocalizations {
   /// **'Ready to train?'**
   String get welcome;
 
+  /// No description provided for @motivationalQuote0.
+  ///
+  /// In en, this message translates to:
+  /// **'Every rep counts.'**
+  String get motivationalQuote0;
+
+  /// No description provided for @motivationalQuote1.
+  ///
+  /// In en, this message translates to:
+  /// **'Stronger than yesterday.'**
+  String get motivationalQuote1;
+
+  /// No description provided for @motivationalQuote2.
+  ///
+  /// In en, this message translates to:
+  /// **'Your only limit is you.'**
+  String get motivationalQuote2;
+
+  /// No description provided for @motivationalQuote3.
+  ///
+  /// In en, this message translates to:
+  /// **'Make it happen.'**
+  String get motivationalQuote3;
+
+  /// No description provided for @motivationalQuote4.
+  ///
+  /// In en, this message translates to:
+  /// **'Train insane or remain the same.'**
+  String get motivationalQuote4;
+
+  /// No description provided for @motivationalQuote5.
+  ///
+  /// In en, this message translates to:
+  /// **'Progress, not perfection.'**
+  String get motivationalQuote5;
+
+  /// No description provided for @motivationalQuote6.
+  ///
+  /// In en, this message translates to:
+  /// **'The iron never lies.'**
+  String get motivationalQuote6;
+
+  /// No description provided for @motivationalQuote7.
+  ///
+  /// In en, this message translates to:
+  /// **'Earn your body.'**
+  String get motivationalQuote7;
+
+  /// No description provided for @motivationalQuote8.
+  ///
+  /// In en, this message translates to:
+  /// **'No excuses, just results.'**
+  String get motivationalQuote8;
+
+  /// No description provided for @motivationalQuote9.
+  ///
+  /// In en, this message translates to:
+  /// **'Be your own competition.'**
+  String get motivationalQuote9;
+
+  /// No description provided for @motivationalQuote10.
+  ///
+  /// In en, this message translates to:
+  /// **'Discipline equals freedom.'**
+  String get motivationalQuote10;
+
+  /// No description provided for @motivationalQuote11.
+  ///
+  /// In en, this message translates to:
+  /// **'Push your limits.'**
+  String get motivationalQuote11;
+
+  /// No description provided for @motivationalQuote12.
+  ///
+  /// In en, this message translates to:
+  /// **'Champions train, losers complain.'**
+  String get motivationalQuote12;
+
+  /// No description provided for @motivationalQuote13.
+  ///
+  /// In en, this message translates to:
+  /// **'Sweat now, shine later.'**
+  String get motivationalQuote13;
+
+  /// Morning greeting (5:00-11:59)
+  ///
+  /// In en, this message translates to:
+  /// **'Good morning'**
+  String get greetingMorning;
+
+  /// Afternoon greeting (12:00-17:59)
+  ///
+  /// In en, this message translates to:
+  /// **'Good afternoon'**
+  String get greetingAfternoon;
+
+  /// Evening greeting (18:00-21:59)
+  ///
+  /// In en, this message translates to:
+  /// **'Good evening'**
+  String get greetingEvening;
+
   /// Welcome description on login screen
   ///
   /// In en, this message translates to:
@@ -1343,7 +1445,7 @@ abstract class AppLocalizations {
   /// Status text during import process
   ///
   /// In en, this message translates to:
-  /// **'Importing...'**
+  /// **'Importing workouts...'**
   String get importing;
 
   /// Import completed title
@@ -2027,7 +2129,7 @@ abstract class AppLocalizations {
   /// Plural form of exercises
   ///
   /// In en, this message translates to:
-  /// **'exercises'**
+  /// **'Exercises'**
   String get exercises;
 
   /// Progress tab label
@@ -3295,7 +3397,7 @@ abstract class AppLocalizations {
   /// **'days'**
   String get days;
 
-  /// Error loading data message
+  /// Generic error message for loading data
   ///
   /// In en, this message translates to:
   /// **'Error loading data'**
@@ -3367,10 +3469,10 @@ abstract class AppLocalizations {
   /// **'Volume decreased by {amount}kg from last week'**
   String volumeDecreased(String amount);
 
-  /// Workouts stat label
+  /// Plural label for workouts count
   ///
   /// In en, this message translates to:
-  /// **'Workouts'**
+  /// **'workouts'**
   String get workouts;
 
   /// Best workout day insight
@@ -4063,6 +4165,48 @@ abstract class AppLocalizations {
   /// **'Streak'**
   String get streak;
 
+  /// Label indicating 'this year' time period
+  ///
+  /// In en, this message translates to:
+  /// **'this year'**
+  String get thisYear;
+
+  /// Encouragement message for active streak
+  ///
+  /// In en, this message translates to:
+  /// **'Keep it up!'**
+  String get keepItUp;
+
+  /// Start today encouragement
+  ///
+  /// In en, this message translates to:
+  /// **'Start today!'**
+  String get startToday;
+
+  /// Shows average workout days per week
+  ///
+  /// In en, this message translates to:
+  /// **'{days}/wk avg'**
+  String workoutDaysPerWeek(double days);
+
+  /// Detailed explanation of workouts metric
+  ///
+  /// In en, this message translates to:
+  /// **'You\'ve completed {count} workouts this year. Each workout logged counts towards this total. Keep training to reach your goals!'**
+  String metricWorkoutsExplanation(int count);
+
+  /// Detailed explanation of consistency metric
+  ///
+  /// In en, this message translates to:
+  /// **'Your consistency is {percent}% based on your weekly training frequency. You average {days} workout days per week. The goal is 4 sessions/week (100%).'**
+  String metricConsistencyExplanation(int percent, int days);
+
+  /// Detailed explanation of streak metric
+  ///
+  /// In en, this message translates to:
+  /// **'Your current streak is {days} consecutive days of training. A streak counts days where you completed at least one workout. Keep the momentum going!'**
+  String metricStreakExplanation(int days);
+
   /// Achievements label
   ///
   /// In en, this message translates to:
@@ -4258,6 +4402,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Generate warmup sets based on working weight'**
   String get addWarmupSetsSubtitle;
+
+  /// Option to edit existing warmup sets
+  ///
+  /// In en, this message translates to:
+  /// **'Edit Warmup Sets'**
+  String get editWarmupSets;
+
+  /// Message when warmup sets are updated
+  ///
+  /// In en, this message translates to:
+  /// **'{count} warmup sets updated'**
+  String warmupSetsUpdated(String count);
 
   /// Error when trying to add warmup sets without working sets
   ///
@@ -5140,12 +5296,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'No record'**
   String get noRecord;
-
-  /// Start today encouragement
-  ///
-  /// In en, this message translates to:
-  /// **'Start today!'**
-  String get startToday;
 
   /// Great exclamation
   ///
@@ -7540,6 +7690,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Create Superset'**
   String get createSuperset;
+
+  /// Success message when superset is created
+  ///
+  /// In en, this message translates to:
+  /// **'Superset created'**
+  String get supersetCreated;
 
   /// Round label
   ///
@@ -11014,12 +11170,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'All Time'**
   String get allTime;
-
-  /// Encouragement message for active streak
-  ///
-  /// In en, this message translates to:
-  /// **'Keep it up!'**
-  String get keepItUp;
 
   /// Button to view detailed statistics
   ///
@@ -19467,7 +19617,7 @@ abstract class AppLocalizations {
   /// Import phase: parsing JSON
   ///
   /// In en, this message translates to:
-  /// **'Parsing...'**
+  /// **'Parsing data...'**
   String get parsing;
 
   /// Import phase: matching exercises with database
@@ -19491,7 +19641,7 @@ abstract class AppLocalizations {
   /// Error status message when import fails
   ///
   /// In en, this message translates to:
-  /// **'❌ Import failed'**
+  /// **'Import Failed'**
   String get importFailed;
 
   /// Placeholder for missing description
@@ -24498,10 +24648,10 @@ abstract class AppLocalizations {
   /// **'Template limit suggestion'**
   String get templateLimitSuggestion;
 
-  /// Auto-generated for templateSyncDescription
+  /// Explanation that template will sync across devices
   ///
   /// In en, this message translates to:
-  /// **'Template sync description'**
+  /// **'The template will be saved to Firebase and available on all your devices'**
   String get templateSyncDescription;
 
   /// Auto-generated for thisMonth
@@ -24783,7 +24933,7 @@ abstract class AppLocalizations {
   /// Try again button
   ///
   /// In en, this message translates to:
-  /// **'Try again'**
+  /// **'Try Again'**
   String get tryAgain;
 
   /// Additional records count
@@ -31620,6 +31770,12 @@ abstract class AppLocalizations {
   /// **'Are you sure you want to delete all conversation history?'**
   String get clearHistoryConfirm;
 
+  /// Message shown when trying to export an empty chat
+  ///
+  /// In en, this message translates to:
+  /// **'No messages to export'**
+  String get noMessagesToExport;
+
   /// Input hint when AI is streaming response
   ///
   /// In en, this message translates to:
@@ -33174,11 +33330,11 @@ abstract class AppLocalizations {
   /// **'Import Successful'**
   String get importSuccessTitle;
 
-  /// Success dialog message after import
+  /// No description provided for @importSuccessMessage.
   ///
   /// In en, this message translates to:
-  /// **'All exercises have been imported to Firebase. You can now use them in the app!'**
-  String get importSuccessMessage;
+  /// **'Successfully imported {count} workouts to your history.'**
+  String importSuccessMessage(int count);
 
   /// Dialog title when import fails
   ///
@@ -36192,6 +36348,36 @@ abstract class AppLocalizations {
   /// **'Enable Body Measurements'**
   String get bodyMeasurementsGrantConsent;
 
+  /// Message when trying to import from HealthKit on non-iOS
+  ///
+  /// In en, this message translates to:
+  /// **'HealthKit import is only available on iOS'**
+  String get bodyMeasurementsHealthKitIOSOnly;
+
+  /// Error when trying to import without consent
+  ///
+  /// In en, this message translates to:
+  /// **'No consented metrics. Please grant consent first.'**
+  String get bodyMeasurementsNoConsentedMetrics;
+
+  /// Error when HealthKit permissions are denied
+  ///
+  /// In en, this message translates to:
+  /// **'HealthKit permission denied. Please allow access in Settings.'**
+  String get bodyMeasurementsHealthKitPermissionDenied;
+
+  /// Success message after import
+  ///
+  /// In en, this message translates to:
+  /// **'Successfully imported {count} measurements'**
+  String bodyMeasurementsImportSuccess(int count);
+
+  /// Tooltip for import from HealthKit button
+  ///
+  /// In en, this message translates to:
+  /// **'Import from Health'**
+  String get bodyMeasurementsImportFromHealth;
+
   /// Unit for weeks
   ///
   /// In en, this message translates to:
@@ -37854,24 +38040,6 @@ abstract class AppLocalizations {
   /// **'Declining'**
   String get trendDeclining;
 
-  /// Morning greeting (5:00-11:59)
-  ///
-  /// In en, this message translates to:
-  /// **'Good morning'**
-  String get greetingMorning;
-
-  /// Afternoon greeting (12:00-17:59)
-  ///
-  /// In en, this message translates to:
-  /// **'Good afternoon'**
-  String get greetingAfternoon;
-
-  /// Evening greeting (18:00-21:59)
-  ///
-  /// In en, this message translates to:
-  /// **'Good evening'**
-  String get greetingEvening;
-
   /// Night greeting (22:00-4:59)
   ///
   /// In en, this message translates to:
@@ -39086,6 +39254,1446 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Try searching for similar exercises in the database'**
   String get noAlternativesHint;
+
+  /// Help center title
+  ///
+  /// In en, this message translates to:
+  /// **'Help Center'**
+  String get helpCenter;
+
+  /// Help center welcome message
+  ///
+  /// In en, this message translates to:
+  /// **'How can we help?'**
+  String get helpCenterWelcome;
+
+  /// Help center description
+  ///
+  /// In en, this message translates to:
+  /// **'Find answers to common questions about using the app'**
+  String get helpCenterDescription;
+
+  /// No description provided for @helpCategoryGettingStarted.
+  ///
+  /// In en, this message translates to:
+  /// **'Getting Started'**
+  String get helpCategoryGettingStarted;
+
+  /// No description provided for @helpCategoryGettingStartedDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'First steps and app basics'**
+  String get helpCategoryGettingStartedDesc;
+
+  /// No description provided for @helpCategoryWorkouts.
+  ///
+  /// In en, this message translates to:
+  /// **'Workouts & Templates'**
+  String get helpCategoryWorkouts;
+
+  /// No description provided for @helpCategoryWorkoutsDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Create, save, and manage workouts'**
+  String get helpCategoryWorkoutsDesc;
+
+  /// No description provided for @helpCategoryExerciseTracking.
+  ///
+  /// In en, this message translates to:
+  /// **'Exercise Tracking'**
+  String get helpCategoryExerciseTracking;
+
+  /// No description provided for @helpCategoryExerciseTrackingDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Log sets, reps, and weights'**
+  String get helpCategoryExerciseTrackingDesc;
+
+  /// No description provided for @helpCategoryAdvancedTechniques.
+  ///
+  /// In en, this message translates to:
+  /// **'Advanced Techniques'**
+  String get helpCategoryAdvancedTechniques;
+
+  /// No description provided for @helpCategoryAdvancedTechniquesDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Supersets, drop sets, and more'**
+  String get helpCategoryAdvancedTechniquesDesc;
+
+  /// No description provided for @helpCategoryTimer.
+  ///
+  /// In en, this message translates to:
+  /// **'Rest Timer'**
+  String get helpCategoryTimer;
+
+  /// No description provided for @helpCategoryTimerDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Timer, notifications, and Live Activities'**
+  String get helpCategoryTimerDesc;
+
+  /// No description provided for @helpCategoryAnalytics.
+  ///
+  /// In en, this message translates to:
+  /// **'Progress & Analytics'**
+  String get helpCategoryAnalytics;
+
+  /// No description provided for @helpCategoryAnalyticsDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Charts, PRs, and statistics'**
+  String get helpCategoryAnalyticsDesc;
+
+  /// No description provided for @helpCategoryPremium.
+  ///
+  /// In en, this message translates to:
+  /// **'Premium'**
+  String get helpCategoryPremium;
+
+  /// No description provided for @helpCategoryPremiumDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Subscription and features'**
+  String get helpCategoryPremiumDesc;
+
+  /// No description provided for @helpCategoryAccount.
+  ///
+  /// In en, this message translates to:
+  /// **'Account & Sync'**
+  String get helpCategoryAccount;
+
+  /// No description provided for @helpCategoryAccountDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Login, backup, and cloud sync'**
+  String get helpCategoryAccountDesc;
+
+  /// No description provided for @helpCategoryProfile.
+  ///
+  /// In en, this message translates to:
+  /// **'Profile & Goals'**
+  String get helpCategoryProfile;
+
+  /// No description provided for @helpCategoryProfileDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Goals, streaks, and achievements'**
+  String get helpCategoryProfileDesc;
+
+  /// No description provided for @helpCategorySettings.
+  ///
+  /// In en, this message translates to:
+  /// **'Settings'**
+  String get helpCategorySettings;
+
+  /// No description provided for @helpCategorySettingsDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Customize your experience'**
+  String get helpCategorySettingsDesc;
+
+  /// No description provided for @helpCategoryHealthSync.
+  ///
+  /// In en, this message translates to:
+  /// **'Health Sync'**
+  String get helpCategoryHealthSync;
+
+  /// No description provided for @helpCategoryHealthSyncDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Apple Health and Health Connect'**
+  String get helpCategoryHealthSyncDesc;
+
+  /// No description provided for @helpCategoryTroubleshooting.
+  ///
+  /// In en, this message translates to:
+  /// **'Troubleshooting'**
+  String get helpCategoryTroubleshooting;
+
+  /// No description provided for @helpCategoryTroubleshootingDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Problems and solutions'**
+  String get helpCategoryTroubleshootingDesc;
+
+  /// No description provided for @faqWhatIsAppQuestion.
+  ///
+  /// In en, this message translates to:
+  /// **'What is this app?'**
+  String get faqWhatIsAppQuestion;
+
+  /// No description provided for @faqWhatIsAppAnswer.
+  ///
+  /// In en, this message translates to:
+  /// **'This is a complete workout tracking app designed to help you log your gym sessions, track progress over time, and achieve your fitness goals. It features a database of 800+ exercises, customizable templates, detailed analytics, and smart features like automatic rest timers.'**
+  String get faqWhatIsAppAnswer;
+
+  /// No description provided for @faqFirstWorkoutQuestion.
+  ///
+  /// In en, this message translates to:
+  /// **'How do I start my first workout?'**
+  String get faqFirstWorkoutQuestion;
+
+  /// No description provided for @faqFirstWorkoutAnswer.
+  ///
+  /// In en, this message translates to:
+  /// **'From the home screen, tap \'Quick Start\' to begin an empty workout, or select one of your saved templates. Once in a workout, tap the + button to add exercises from our database. Log your sets by entering weight and reps, then swipe right to complete each set.'**
+  String get faqFirstWorkoutAnswer;
+
+  /// No description provided for @faqQuickStartQuestion.
+  ///
+  /// In en, this message translates to:
+  /// **'What\'s the difference between Quick Start and templates?'**
+  String get faqQuickStartQuestion;
+
+  /// No description provided for @faqQuickStartAnswer.
+  ///
+  /// In en, this message translates to:
+  /// **'Quick Start creates an empty workout where you add exercises as you go - great for flexible or spontaneous sessions. Templates are pre-saved routines with exercises already defined - perfect for consistent programs. You can save any completed workout as a new template.'**
+  String get faqQuickStartAnswer;
+
+  /// No description provided for @faqNavigationQuestion.
+  ///
+  /// In en, this message translates to:
+  /// **'How do I navigate the app?'**
+  String get faqNavigationQuestion;
+
+  /// No description provided for @faqNavigationAnswer.
+  ///
+  /// In en, this message translates to:
+  /// **'The bottom bar has 4 main sections: Home (dashboard and quick start), Workout (active session), History (past workouts), and Profile (settings and stats). During a workout, swipe left/right to move between exercises, or use the mini-bar at the bottom for quick navigation.'**
+  String get faqNavigationAnswer;
+
+  /// No description provided for @faqTemplatesIntroQuestion.
+  ///
+  /// In en, this message translates to:
+  /// **'How do templates work?'**
+  String get faqTemplatesIntroQuestion;
+
+  /// No description provided for @faqTemplatesIntroAnswer.
+  ///
+  /// In en, this message translates to:
+  /// **'Templates save your workout structure including exercises, sets, reps, and rest times. Start a template-based workout by tapping it on the home screen. The app remembers your last weights and suggests progressive overload. Edit templates anytime from the Templates screen.'**
+  String get faqTemplatesIntroAnswer;
+
+  /// No description provided for @faqCreateWorkoutQuestion.
+  ///
+  /// In en, this message translates to:
+  /// **'How do I create a custom workout?'**
+  String get faqCreateWorkoutQuestion;
+
+  /// No description provided for @faqCreateWorkoutAnswer.
+  ///
+  /// In en, this message translates to:
+  /// **'Start a Quick Start workout and add your desired exercises. When finished, tap \'Complete\' and choose \'Save as Template\'. Name your template and it will appear on your home screen. Alternatively, go to Templates > Create New to build a template from scratch.'**
+  String get faqCreateWorkoutAnswer;
+
+  /// No description provided for @faqTemplatesQuestion.
+  ///
+  /// In en, this message translates to:
+  /// **'How do I manage my templates?'**
+  String get faqTemplatesQuestion;
+
+  /// No description provided for @faqTemplatesAnswer.
+  ///
+  /// In en, this message translates to:
+  /// **'Go to the Templates screen (accessible from Home). Here you can view all templates, edit exercise order, modify sets/reps, rename templates, or delete them. Long-press a template for quick actions. Templates sync across devices when logged in.'**
+  String get faqTemplatesAnswer;
+
+  /// No description provided for @faqSaveTemplateQuestion.
+  ///
+  /// In en, this message translates to:
+  /// **'Can I save a workout as a template?'**
+  String get faqSaveTemplateQuestion;
+
+  /// No description provided for @faqSaveTemplateAnswer.
+  ///
+  /// In en, this message translates to:
+  /// **'Yes! After completing any workout, you\'ll see the option to \'Save as Template\'. The template will preserve the exercises, order, and target sets/reps. Your logged weights become the starting point for future sessions.'**
+  String get faqSaveTemplateAnswer;
+
+  /// No description provided for @faqEditWorkoutQuestion.
+  ///
+  /// In en, this message translates to:
+  /// **'Can I edit a workout while it\'s in progress?'**
+  String get faqEditWorkoutQuestion;
+
+  /// No description provided for @faqEditWorkoutAnswer.
+  ///
+  /// In en, this message translates to:
+  /// **'Absolutely! During a workout you can: add or remove exercises, reorder exercises by dragging, change sets/reps, edit logged values, add notes, and even create supersets. Long-press an exercise to see all options.'**
+  String get faqEditWorkoutAnswer;
+
+  /// No description provided for @faqDraftRecoveryQuestion.
+  ///
+  /// In en, this message translates to:
+  /// **'What happens if I accidentally close the app?'**
+  String get faqDraftRecoveryQuestion;
+
+  /// No description provided for @faqDraftRecoveryAnswer.
+  ///
+  /// In en, this message translates to:
+  /// **'Don\'t worry! The app automatically saves your workout progress every few seconds. If you close the app or it crashes, you\'ll be prompted to resume your workout when you return. Your data is never lost.'**
+  String get faqDraftRecoveryAnswer;
+
+  /// No description provided for @faqCompleteWorkoutQuestion.
+  ///
+  /// In en, this message translates to:
+  /// **'How do I finish a workout?'**
+  String get faqCompleteWorkoutQuestion;
+
+  /// No description provided for @faqCompleteWorkoutAnswer.
+  ///
+  /// In en, this message translates to:
+  /// **'Tap the \'Complete Workout\' button (checkmark icon) in the top right. You\'ll see a summary of your session including duration, volume, and any PRs achieved. Choose to save as template or just save the workout. Congratulations will appear for any new records!'**
+  String get faqCompleteWorkoutAnswer;
+
+  /// No description provided for @faqAddExerciseQuestion.
+  ///
+  /// In en, this message translates to:
+  /// **'How do I add exercises to my workout?'**
+  String get faqAddExerciseQuestion;
+
+  /// No description provided for @faqAddExerciseAnswer.
+  ///
+  /// In en, this message translates to:
+  /// **'Tap the + button during a workout to open the exercise search. Browse by muscle group using the filter buttons, or search by name. The database includes 800+ exercises with descriptions and GIFs. Can\'t find one? Create a custom exercise with your own name and target muscles.'**
+  String get faqAddExerciseAnswer;
+
+  /// No description provided for @faqSetsRepsQuestion.
+  ///
+  /// In en, this message translates to:
+  /// **'How do I log sets and reps?'**
+  String get faqSetsRepsQuestion;
+
+  /// No description provided for @faqSetsRepsAnswer.
+  ///
+  /// In en, this message translates to:
+  /// **'Tap any set row to open the input modal. Enter your weight and reps using the picker or keyboard. Swipe the row to the right to mark it complete (turns green). Previous workout values are shown for reference - tap them to auto-fill!'**
+  String get faqSetsRepsAnswer;
+
+  /// No description provided for @faqRpeRirQuestion.
+  ///
+  /// In en, this message translates to:
+  /// **'What are RPE and RIR?'**
+  String get faqRpeRirQuestion;
+
+  /// No description provided for @faqRpeRirAnswer.
+  ///
+  /// In en, this message translates to:
+  /// **'RPE (Rate of Perceived Exertion) measures effort on a 1-10 scale where 10 is max effort. RIR (Reps in Reserve) counts how many more reps you could do. Example: RPE 8 = RIR 2 (could do 2 more reps). Track these to optimize your training intensity.'**
+  String get faqRpeRirAnswer;
+
+  /// No description provided for @faqCountingModesQuestion.
+  ///
+  /// In en, this message translates to:
+  /// **'What counting modes are available?'**
+  String get faqCountingModesQuestion;
+
+  /// No description provided for @faqCountingModesAnswer.
+  ///
+  /// In en, this message translates to:
+  /// **'The app supports: Reps (standard count), Time (seconds for planks/holds), Distance (meters for carries/runs), and Calories. Change the mode per exercise by tapping the settings icon. Each mode has appropriate input fields.'**
+  String get faqCountingModesAnswer;
+
+  /// No description provided for @faqWarmupSetsQuestion.
+  ///
+  /// In en, this message translates to:
+  /// **'How do I log warmup sets?'**
+  String get faqWarmupSetsQuestion;
+
+  /// No description provided for @faqWarmupSetsAnswer.
+  ///
+  /// In en, this message translates to:
+  /// **'Tap the set number to toggle between working set and warmup. Warmup sets appear with a \'W\' badge and lighter styling. They\'re excluded from volume calculations and PR tracking but still recorded in your history for reference.'**
+  String get faqWarmupSetsAnswer;
+
+  /// No description provided for @faqExerciseNotesQuestion.
+  ///
+  /// In en, this message translates to:
+  /// **'Can I add notes to exercises?'**
+  String get faqExerciseNotesQuestion;
+
+  /// No description provided for @faqExerciseNotesAnswer.
+  ///
+  /// In en, this message translates to:
+  /// **'Yes! Tap the notes icon on any exercise to add personal notes. Great for recording form cues, equipment settings, or modifications. Notes sync across devices and appear when you do the exercise again.'**
+  String get faqExerciseNotesAnswer;
+
+  /// No description provided for @faqSupersetsQuestion.
+  ///
+  /// In en, this message translates to:
+  /// **'What are supersets and how do I use them?'**
+  String get faqSupersetsQuestion;
+
+  /// No description provided for @faqSupersetsAnswer.
+  ///
+  /// In en, this message translates to:
+  /// **'Supersets are 2+ exercises performed back-to-back without rest - excellent for time efficiency and muscle pump. Long-press an exercise, select \'Create Superset\', then add the paired exercise. The app guides you through alternating sets with appropriate rest between rounds.'**
+  String get faqSupersetsAnswer;
+
+  /// No description provided for @faqDropsetsQuestion.
+  ///
+  /// In en, this message translates to:
+  /// **'How do drop sets work?'**
+  String get faqDropsetsQuestion;
+
+  /// No description provided for @faqDropsetsAnswer.
+  ///
+  /// In en, this message translates to:
+  /// **'Drop sets involve reducing weight after reaching failure and continuing immediately. Enable drop set mode on any exercise, then log each drop within the set. The app calculates total volume including all drops. Great for maximizing muscle fatigue!'**
+  String get faqDropsetsAnswer;
+
+  /// No description provided for @faqRestPauseQuestion.
+  ///
+  /// In en, this message translates to:
+  /// **'What is rest-pause training?'**
+  String get faqRestPauseQuestion;
+
+  /// No description provided for @faqRestPauseAnswer.
+  ///
+  /// In en, this message translates to:
+  /// **'Rest-pause uses brief 10-15 second pauses within a set to extend it. Do reps to near-failure, rest 10-15 seconds, then continue. The app tracks your mini-sets and total reps, useful for pushing past normal failure points.'**
+  String get faqRestPauseAnswer;
+
+  /// No description provided for @faqAutoWarmupQuestion.
+  ///
+  /// In en, this message translates to:
+  /// **'Does the app suggest warmup sets?'**
+  String get faqAutoWarmupQuestion;
+
+  /// No description provided for @faqAutoWarmupAnswer.
+  ///
+  /// In en, this message translates to:
+  /// **'Yes! The auto-warmup feature suggests progressive warmup sets based on your working weight. For example, if squatting 100kg, it might suggest: bar only → 40kg → 60kg → 80kg. Customize the percentage progression in Settings.'**
+  String get faqAutoWarmupAnswer;
+
+  /// No description provided for @faqAutoRegulationQuestion.
+  ///
+  /// In en, this message translates to:
+  /// **'What is auto-regulation?'**
+  String get faqAutoRegulationQuestion;
+
+  /// No description provided for @faqAutoRegulationAnswer.
+  ///
+  /// In en, this message translates to:
+  /// **'Auto-regulation adjusts your training based on daily performance. If you\'re hitting more reps than expected, the app suggests increasing weight. Struggling? It might recommend reducing. This ensures optimal progressive overload adapted to your daily readiness.'**
+  String get faqAutoRegulationAnswer;
+
+  /// No description provided for @faqTimerQuestion.
+  ///
+  /// In en, this message translates to:
+  /// **'How does the rest timer work?'**
+  String get faqTimerQuestion;
+
+  /// No description provided for @faqTimerAnswer.
+  ///
+  /// In en, this message translates to:
+  /// **'The rest timer starts automatically after completing a set. It counts down your chosen rest time and notifies you when ready. The timer continues in background and shows on your lock screen (iOS). Customize default rest times per exercise or globally.'**
+  String get faqTimerAnswer;
+
+  /// No description provided for @faqTimerBackgroundQuestion.
+  ///
+  /// In en, this message translates to:
+  /// **'Does the timer work when the app is closed?'**
+  String get faqTimerBackgroundQuestion;
+
+  /// No description provided for @faqTimerBackgroundAnswer.
+  ///
+  /// In en, this message translates to:
+  /// **'Yes! The timer continues counting even when you switch apps or lock your phone. On iOS, it shows as a Live Activity on your lock screen. You\'ll receive a notification when rest is complete so you never miss your next set.'**
+  String get faqTimerBackgroundAnswer;
+
+  /// No description provided for @faqLiveActivitiesQuestion.
+  ///
+  /// In en, this message translates to:
+  /// **'What are Live Activities?'**
+  String get faqLiveActivitiesQuestion;
+
+  /// No description provided for @faqLiveActivitiesAnswer.
+  ///
+  /// In en, this message translates to:
+  /// **'Live Activities (iOS 16+) show your timer on the lock screen and Dynamic Island. See remaining rest time at a glance without unlocking your phone. The activity updates in real-time and shows current set/exercise info. Enable in Settings > Timer.'**
+  String get faqLiveActivitiesAnswer;
+
+  /// No description provided for @faqTimerSoundsQuestion.
+  ///
+  /// In en, this message translates to:
+  /// **'Can I customize timer sounds?'**
+  String get faqTimerSoundsQuestion;
+
+  /// No description provided for @faqTimerSoundsAnswer.
+  ///
+  /// In en, this message translates to:
+  /// **'Yes! Go to Settings > Timer > Sound. Choose from several alert sounds or select \'Vibrate Only\' for silent gym sessions. You can also enable or disable the countdown beeps in the final seconds.'**
+  String get faqTimerSoundsAnswer;
+
+  /// No description provided for @faqDefaultRestQuestion.
+  ///
+  /// In en, this message translates to:
+  /// **'How do I set default rest times?'**
+  String get faqDefaultRestQuestion;
+
+  /// No description provided for @faqDefaultRestAnswer.
+  ///
+  /// In en, this message translates to:
+  /// **'Go to Settings > Timer > Default Rest Time. Set a global default (e.g., 90 seconds). You can also set rest time per exercise - tap the clock icon on any exercise to customize. Exercise-specific times override the global default.'**
+  String get faqDefaultRestAnswer;
+
+  /// No description provided for @faqTrackProgressQuestion.
+  ///
+  /// In en, this message translates to:
+  /// **'How do I track my progress?'**
+  String get faqTrackProgressQuestion;
+
+  /// No description provided for @faqTrackProgressAnswer.
+  ///
+  /// In en, this message translates to:
+  /// **'The Analytics tab shows your fitness journey through interactive charts. Track strength progression per exercise, weekly volume trends, workout frequency, and muscle group balance. Filter by time period (week/month/year) to spot trends.'**
+  String get faqTrackProgressAnswer;
+
+  /// No description provided for @faqPersonalRecordsQuestion.
+  ///
+  /// In en, this message translates to:
+  /// **'What are Personal Records (PRs)?'**
+  String get faqPersonalRecordsQuestion;
+
+  /// No description provided for @faqPersonalRecordsAnswer.
+  ///
+  /// In en, this message translates to:
+  /// **'PRs are your best-ever performances for each exercise. The app tracks multiple PR types: 1RM (heaviest single), 5RM, 10RM, max reps at a weight, and more. You\'ll see celebratory animations when you beat a PR - keep pushing!'**
+  String get faqPersonalRecordsAnswer;
+
+  /// No description provided for @faqVolumeQuestion.
+  ///
+  /// In en, this message translates to:
+  /// **'What is training volume?'**
+  String get faqVolumeQuestion;
+
+  /// No description provided for @faqVolumeAnswer.
+  ///
+  /// In en, this message translates to:
+  /// **'Volume = Sets × Reps × Weight - a key metric for muscle growth. The app tracks daily and weekly volume per muscle group. Colored indicators show if you\'re in optimal range. Too little volume = limited growth; too much = overtraining risk.'**
+  String get faqVolumeAnswer;
+
+  /// No description provided for @faqMuscleBalanceQuestion.
+  ///
+  /// In en, this message translates to:
+  /// **'What is muscle balance analysis?'**
+  String get faqMuscleBalanceQuestion;
+
+  /// No description provided for @faqMuscleBalanceAnswer.
+  ///
+  /// In en, this message translates to:
+  /// **'The muscle balance feature compares volume across muscle groups to identify imbalances. It highlights if you\'re training push vs pull, front vs back, or upper vs lower disproportionately. Balanced training reduces injury risk and improves aesthetics.'**
+  String get faqMuscleBalanceAnswer;
+
+  /// No description provided for @faqChartsQuestion.
+  ///
+  /// In en, this message translates to:
+  /// **'What charts are available?'**
+  String get faqChartsQuestion;
+
+  /// No description provided for @faqChartsAnswer.
+  ///
+  /// In en, this message translates to:
+  /// **'Analytics includes: strength progression (weight over time per exercise), volume trends (weekly tonnage), frequency chart (workouts per week), muscle heatmap (which muscles trained most), and PR timeline. Tap any chart to drill into details.'**
+  String get faqChartsAnswer;
+
+  /// No description provided for @faqHistoryQuestion.
+  ///
+  /// In en, this message translates to:
+  /// **'Where can I see past workouts?'**
+  String get faqHistoryQuestion;
+
+  /// No description provided for @faqHistoryAnswer.
+  ///
+  /// In en, this message translates to:
+  /// **'The History tab shows all completed workouts in chronological order. Filter by date range, template, or search by exercise name. Tap any workout to see full details including every set, rest times, and notes. You can also repeat a past workout as a template.'**
+  String get faqHistoryAnswer;
+
+  /// No description provided for @faqPremiumBenefitsQuestion.
+  ///
+  /// In en, this message translates to:
+  /// **'What does Premium include?'**
+  String get faqPremiumBenefitsQuestion;
+
+  /// No description provided for @faqPremiumBenefitsAnswer.
+  ///
+  /// In en, this message translates to:
+  /// **'Premium unlocks: unlimited workout history (free: 30 days), advanced analytics (muscle balance, trends), cloud sync across devices, custom exercise library, priority support, and removes all ads. Your training data is yours - never lost or limited.'**
+  String get faqPremiumBenefitsAnswer;
+
+  /// No description provided for @faqPremiumPricingQuestion.
+  ///
+  /// In en, this message translates to:
+  /// **'How much does Premium cost?'**
+  String get faqPremiumPricingQuestion;
+
+  /// No description provided for @faqPremiumPricingAnswer.
+  ///
+  /// In en, this message translates to:
+  /// **'Premium is available as monthly or annual subscription through the App Store/Google Play. Annual saves significantly compared to monthly. Prices may vary by region. Check the Premium screen for current pricing and any special offers.'**
+  String get faqPremiumPricingAnswer;
+
+  /// No description provided for @faqRestorePurchaseQuestion.
+  ///
+  /// In en, this message translates to:
+  /// **'How do I restore my purchase?'**
+  String get faqRestorePurchaseQuestion;
+
+  /// No description provided for @faqRestorePurchaseAnswer.
+  ///
+  /// In en, this message translates to:
+  /// **'Go to Profile > Premium > Restore Purchase. Sign in with the same Apple ID/Google account used for the original purchase. The app will verify your subscription status and unlock Premium features. This also works when switching devices.'**
+  String get faqRestorePurchaseAnswer;
+
+  /// No description provided for @faqCancelSubscriptionQuestion.
+  ///
+  /// In en, this message translates to:
+  /// **'How do I cancel my subscription?'**
+  String get faqCancelSubscriptionQuestion;
+
+  /// No description provided for @faqCancelSubscriptionAnswer.
+  ///
+  /// In en, this message translates to:
+  /// **'Subscriptions are managed through Apple/Google, not the app. On iOS: Settings > Apple ID > Subscriptions. On Android: Play Store > Subscriptions. You\'ll keep Premium access until the current period ends. Your data remains accessible even after.'**
+  String get faqCancelSubscriptionAnswer;
+
+  /// No description provided for @faqFreeVsPremiumQuestion.
+  ///
+  /// In en, this message translates to:
+  /// **'What can I do with the free version?'**
+  String get faqFreeVsPremiumQuestion;
+
+  /// No description provided for @faqFreeVsPremiumAnswer.
+  ///
+  /// In en, this message translates to:
+  /// **'The free version includes: full workout tracking, exercise database, rest timer, 30-day history, basic analytics, and templates. Premium adds: unlimited history, advanced analytics, cloud sync, and removes ads. Core training functionality works perfectly free!'**
+  String get faqFreeVsPremiumAnswer;
+
+  /// No description provided for @faqSignInMethodsQuestion.
+  ///
+  /// In en, this message translates to:
+  /// **'How do I sign in?'**
+  String get faqSignInMethodsQuestion;
+
+  /// No description provided for @faqSignInMethodsAnswer.
+  ///
+  /// In en, this message translates to:
+  /// **'The app supports: Apple Sign-In (recommended for iOS - fast and private), Google Sign-In, and email/password. Signing in enables cloud sync and backup. You can use the app without signing in, but data will only be stored locally.'**
+  String get faqSignInMethodsAnswer;
+
+  /// No description provided for @faqCloudSyncQuestion.
+  ///
+  /// In en, this message translates to:
+  /// **'How does cloud sync work?'**
+  String get faqCloudSyncQuestion;
+
+  /// No description provided for @faqCloudSyncAnswer.
+  ///
+  /// In en, this message translates to:
+  /// **'When signed in (Premium), your workouts, templates, and settings sync automatically to the cloud. Changes appear on all your devices within seconds. The sync indicator shows status: green checkmark = synced, spinning = syncing, warning = offline mode.'**
+  String get faqCloudSyncAnswer;
+
+  /// No description provided for @faqBackupQuestion.
+  ///
+  /// In en, this message translates to:
+  /// **'Is my data backed up?'**
+  String get faqBackupQuestion;
+
+  /// No description provided for @faqBackupAnswer.
+  ///
+  /// In en, this message translates to:
+  /// **'Yes! With Premium, data syncs to the cloud automatically. Even without Premium, workouts are stored locally on your device and can be exported manually. Go to Settings > Export Data for a complete backup file you can save anywhere.'**
+  String get faqBackupAnswer;
+
+  /// No description provided for @faqSwitchDeviceQuestion.
+  ///
+  /// In en, this message translates to:
+  /// **'How do I transfer data to a new device?'**
+  String get faqSwitchDeviceQuestion;
+
+  /// No description provided for @faqSwitchDeviceAnswer.
+  ///
+  /// In en, this message translates to:
+  /// **'If you have Premium: just sign in on the new device and your data syncs automatically. Without Premium: export your data on the old device (Settings > Export), transfer the file, and import on the new device. All history and templates transfer.'**
+  String get faqSwitchDeviceAnswer;
+
+  /// No description provided for @faqDeleteAccountQuestion.
+  ///
+  /// In en, this message translates to:
+  /// **'How do I delete my account?'**
+  String get faqDeleteAccountQuestion;
+
+  /// No description provided for @faqDeleteAccountAnswer.
+  ///
+  /// In en, this message translates to:
+  /// **'Go to Profile > Settings > Account > Delete Account. This permanently removes all cloud data associated with your account. Local data on your device remains unless you uninstall the app. This action cannot be undone - please export your data first.'**
+  String get faqDeleteAccountAnswer;
+
+  /// No description provided for @faqSetGoalsQuestion.
+  ///
+  /// In en, this message translates to:
+  /// **'How do I set fitness goals?'**
+  String get faqSetGoalsQuestion;
+
+  /// No description provided for @faqSetGoalsAnswer.
+  ///
+  /// In en, this message translates to:
+  /// **'Go to Profile > Goals. Set targets for: workouts per week, specific lift goals (e.g., bench 100kg), body measurements, and more. The app tracks progress toward each goal and celebrates when you achieve them. Goals help maintain motivation!'**
+  String get faqSetGoalsAnswer;
+
+  /// No description provided for @faqStreaksQuestion.
+  ///
+  /// In en, this message translates to:
+  /// **'How do workout streaks work?'**
+  String get faqStreaksQuestion;
+
+  /// No description provided for @faqStreaksAnswer.
+  ///
+  /// In en, this message translates to:
+  /// **'Streaks count consecutive weeks where you met your workout goal. Miss a week and it resets - but don\'t worry, your longest streak is always saved! Streaks encourage consistency, which is key to long-term results. View your streaks on the Profile screen.'**
+  String get faqStreaksAnswer;
+
+  /// No description provided for @faqBodyMeasurementsQuestion.
+  ///
+  /// In en, this message translates to:
+  /// **'Can I track body measurements?'**
+  String get faqBodyMeasurementsQuestion;
+
+  /// No description provided for @faqBodyMeasurementsAnswer.
+  ///
+  /// In en, this message translates to:
+  /// **'Yes! Go to Profile > Measurements. Track weight, body fat %, and circumferences (chest, arms, waist, etc.). Log regularly to see trends over time. These measurements complement your training data to show complete progress.'**
+  String get faqBodyMeasurementsAnswer;
+
+  /// No description provided for @faqXpLevelsQuestion.
+  ///
+  /// In en, this message translates to:
+  /// **'What is the XP/Level system?'**
+  String get faqXpLevelsQuestion;
+
+  /// No description provided for @faqXpLevelsAnswer.
+  ///
+  /// In en, this message translates to:
+  /// **'Earn XP (experience points) for every workout, PR, and completed goal. XP fills your level bar - level up for achievements! The system gamifies your fitness journey. Higher levels unlock badges and show your dedication. Check your XP on the Profile screen.'**
+  String get faqXpLevelsAnswer;
+
+  /// No description provided for @faqAchievementsQuestion.
+  ///
+  /// In en, this message translates to:
+  /// **'What achievements can I earn?'**
+  String get faqAchievementsQuestion;
+
+  /// No description provided for @faqAchievementsAnswer.
+  ///
+  /// In en, this message translates to:
+  /// **'Achievements reward milestones: first workout, 10/50/100 workouts completed, PR streaks, consistency streaks, and more. Each achievement grants XP and a badge. View your collection in Profile > Achievements. Can you collect them all?'**
+  String get faqAchievementsAnswer;
+
+  /// No description provided for @faqUnitsQuestion.
+  ///
+  /// In en, this message translates to:
+  /// **'How do I change weight units?'**
+  String get faqUnitsQuestion;
+
+  /// No description provided for @faqUnitsAnswer.
+  ///
+  /// In en, this message translates to:
+  /// **'Go to Profile > Settings > Units. Choose kg (metric) or lb (imperial). All weights throughout the app convert automatically. Your data is stored in metric internally so switching is seamless and reversible anytime.'**
+  String get faqUnitsAnswer;
+
+  /// No description provided for @faqLanguageQuestion.
+  ///
+  /// In en, this message translates to:
+  /// **'Can I change the app language?'**
+  String get faqLanguageQuestion;
+
+  /// No description provided for @faqLanguageAnswer.
+  ///
+  /// In en, this message translates to:
+  /// **'The app follows your device\'s language setting. Currently supported: English and Italian. To change: go to your device Settings > Language. The app will restart in the new language. More languages coming based on user demand!'**
+  String get faqLanguageAnswer;
+
+  /// No description provided for @faqThemeQuestion.
+  ///
+  /// In en, this message translates to:
+  /// **'Can I change the app theme?'**
+  String get faqThemeQuestion;
+
+  /// No description provided for @faqThemeAnswer.
+  ///
+  /// In en, this message translates to:
+  /// **'Yes! Go to Profile > Settings > Appearance. Choose: Light, Dark, or System (follows your device setting). The app also supports dynamic colors on compatible devices. Dark mode is great for early morning gym sessions!'**
+  String get faqThemeAnswer;
+
+  /// No description provided for @faqZenModeQuestion.
+  ///
+  /// In en, this message translates to:
+  /// **'What is Zen Mode?'**
+  String get faqZenModeQuestion;
+
+  /// No description provided for @faqZenModeAnswer.
+  ///
+  /// In en, this message translates to:
+  /// **'Zen Mode simplifies the workout interface for distraction-free training. It hides secondary information, enlarges key inputs, and focuses on the current set. Great for when you want minimal screen time. Toggle in Settings or during a workout.'**
+  String get faqZenModeAnswer;
+
+  /// No description provided for @faqNotificationsQuestion.
+  ///
+  /// In en, this message translates to:
+  /// **'How do I manage notifications?'**
+  String get faqNotificationsQuestion;
+
+  /// No description provided for @faqNotificationsAnswer.
+  ///
+  /// In en, this message translates to:
+  /// **'Go to Settings > Notifications. Control: rest timer alerts, workout reminders, PR celebrations, weekly summaries, and more. Set reminder schedules for your preferred workout days and times. All notifications can be individually enabled or disabled.'**
+  String get faqNotificationsAnswer;
+
+  /// No description provided for @faqAppleHealthQuestion.
+  ///
+  /// In en, this message translates to:
+  /// **'How do I sync with Apple Health?'**
+  String get faqAppleHealthQuestion;
+
+  /// No description provided for @faqAppleHealthAnswer.
+  ///
+  /// In en, this message translates to:
+  /// **'Go to Settings > Health Sync > Apple Health. Grant permissions for the data you want to share. The app can write workouts and read weight measurements. Your gym sessions will appear in the Health app alongside all your other fitness data.'**
+  String get faqAppleHealthAnswer;
+
+  /// No description provided for @faqHealthConnectQuestion.
+  ///
+  /// In en, this message translates to:
+  /// **'How do I sync with Health Connect?'**
+  String get faqHealthConnectQuestion;
+
+  /// No description provided for @faqHealthConnectAnswer.
+  ///
+  /// In en, this message translates to:
+  /// **'On Android, go to Settings > Health Sync > Health Connect. Grant the necessary permissions. The app writes workout data to Health Connect, which can be shared with other fitness apps. Make sure Health Connect is installed from the Play Store.'**
+  String get faqHealthConnectAnswer;
+
+  /// No description provided for @faqHealthPermissionsQuestion.
+  ///
+  /// In en, this message translates to:
+  /// **'What health permissions are needed?'**
+  String get faqHealthPermissionsQuestion;
+
+  /// No description provided for @faqHealthPermissionsAnswer.
+  ///
+  /// In en, this message translates to:
+  /// **'The app requests: Write Workouts (to log your sessions), Read Weight (to auto-update your body weight). All permissions are optional and can be changed anytime in your device\'s privacy settings. We never access data we don\'t need.'**
+  String get faqHealthPermissionsAnswer;
+
+  /// No description provided for @faqWeightSyncQuestion.
+  ///
+  /// In en, this message translates to:
+  /// **'Does my body weight sync automatically?'**
+  String get faqWeightSyncQuestion;
+
+  /// No description provided for @faqWeightSyncAnswer.
+  ///
+  /// In en, this message translates to:
+  /// **'If you grant permission, the app can read your latest weight from Apple Health or Health Connect. This keeps your calculated metrics (like volume per kg) accurate without manual entry. Weight updates appear within seconds of being recorded.'**
+  String get faqWeightSyncAnswer;
+
+  /// No description provided for @faqDataLostQuestion.
+  ///
+  /// In en, this message translates to:
+  /// **'I lost my workout data - what do I do?'**
+  String get faqDataLostQuestion;
+
+  /// No description provided for @faqDataLostAnswer.
+  ///
+  /// In en, this message translates to:
+  /// **'First, check if you\'re signed in (Profile screen shows account). Try Restore Purchase to verify Premium status. If signed in, try logging out and back in to force a resync. For local data issues, check if you have an export backup. Contact support if problems persist.'**
+  String get faqDataLostAnswer;
+
+  /// No description provided for @faqTimerNotWorkingQuestion.
+  ///
+  /// In en, this message translates to:
+  /// **'The timer isn\'t working in background - why?'**
+  String get faqTimerNotWorkingQuestion;
+
+  /// No description provided for @faqTimerNotWorkingAnswer.
+  ///
+  /// In en, this message translates to:
+  /// **'Check: 1) Notifications are enabled for the app (device Settings), 2) Low Power Mode is off, 3) Background App Refresh is enabled. On iOS, ensure Live Activities are enabled. If issues persist, try reinstalling the app. The timer needs these permissions to work background.'**
+  String get faqTimerNotWorkingAnswer;
+
+  /// No description provided for @faqSyncIssuesQuestion.
+  ///
+  /// In en, this message translates to:
+  /// **'My data isn\'t syncing between devices'**
+  String get faqSyncIssuesQuestion;
+
+  /// No description provided for @faqSyncIssuesAnswer.
+  ///
+  /// In en, this message translates to:
+  /// **'Verify: 1) You\'re signed in with the same account on both devices, 2) You have an active Premium subscription, 3) Both devices have internet connection. Try pulling down on the main screen to force sync. Sync status appears at the top of the home screen.'**
+  String get faqSyncIssuesAnswer;
+
+  /// No description provided for @faqAppCrashQuestion.
+  ///
+  /// In en, this message translates to:
+  /// **'The app keeps crashing - help!'**
+  String get faqAppCrashQuestion;
+
+  /// No description provided for @faqAppCrashAnswer.
+  ///
+  /// In en, this message translates to:
+  /// **'Try these steps: 1) Force close and reopen the app, 2) Restart your device, 3) Check for app updates, 4) Reinstall the app (data syncs from cloud if signed in). If crashes continue, please contact support with your device model and iOS/Android version.'**
+  String get faqAppCrashAnswer;
+
+  /// No description provided for @faqContactSupportQuestion.
+  ///
+  /// In en, this message translates to:
+  /// **'How do I contact support?'**
+  String get faqContactSupportQuestion;
+
+  /// No description provided for @faqContactSupportAnswer.
+  ///
+  /// In en, this message translates to:
+  /// **'Go to Profile > Help Center > Contact Us, or email directly at support@gymbro.app. Include your device model, app version (shown in Settings), and a description of the issue. Screenshots help! We typically respond within 24 hours.'**
+  String get faqContactSupportAnswer;
+
+  /// Title for superset configuration sheet
+  ///
+  /// In en, this message translates to:
+  /// **'Configure Superset'**
+  String get configureSuperset;
+
+  /// Confirmation message when R1 is copied to all rounds
+  ///
+  /// In en, this message translates to:
+  /// **'Copied to all rounds'**
+  String get copiedToAllRounds;
+
+  /// Button to copy round 1 configuration to all rounds
+  ///
+  /// In en, this message translates to:
+  /// **'R1 → All'**
+  String get copyR1ToAll;
+
+  /// Label for rest time between superset rounds
+  ///
+  /// In en, this message translates to:
+  /// **'Rest after round'**
+  String get restAfterRound;
+
+  /// Button to apply changes to all rounds
+  ///
+  /// In en, this message translates to:
+  /// **'All rounds'**
+  String get applyToAllRounds;
+
+  /// Tab label for exercises currently in workout
+  ///
+  /// In en, this message translates to:
+  /// **'In Workout'**
+  String get inWorkout;
+
+  /// Tab label for searching exercises from database
+  ///
+  /// In en, this message translates to:
+  /// **'From DB'**
+  String get fromDatabase;
+
+  /// Message when workout has only one exercise
+  ///
+  /// In en, this message translates to:
+  /// **'No other exercises in this workout'**
+  String get noOtherExercisesInWorkout;
+
+  /// Hint to use database search
+  ///
+  /// In en, this message translates to:
+  /// **'Use the search tab to add exercises from the database'**
+  String get useSearchTabToAddExercises;
+
+  /// Label showing something is configured
+  ///
+  /// In en, this message translates to:
+  /// **'Configured'**
+  String get configured;
+
+  /// Button to configure superset rounds
+  ///
+  /// In en, this message translates to:
+  /// **'Configure Rounds'**
+  String get configureRounds;
+
+  /// Button to edit existing configuration
+  ///
+  /// In en, this message translates to:
+  /// **'Edit Configuration'**
+  String get editConfiguration;
+
+  /// Plural form of round
+  ///
+  /// In en, this message translates to:
+  /// **'rounds'**
+  String get rounds;
+
+  /// Button to copy values from previous round
+  ///
+  /// In en, this message translates to:
+  /// **'Copy from Previous'**
+  String get copyFromPrevious;
+
+  /// Button tooltip to remove a round from superset
+  ///
+  /// In en, this message translates to:
+  /// **'Remove Round'**
+  String get removeRound;
+
+  /// Hint text for unconfigured exercise in superset
+  ///
+  /// In en, this message translates to:
+  /// **'Tap to configure'**
+  String get tapToConfigure;
+
+  /// Warning message when discarding changes
+  ///
+  /// In en, this message translates to:
+  /// **'Your unsaved changes will be lost'**
+  String get unsavedChangesWillBeLost;
+
+  /// Confirmation message when exercise config is applied to all rounds
+  ///
+  /// In en, this message translates to:
+  /// **'Applied to all rounds'**
+  String get appliedToAllRounds;
+
+  /// Button to copy current round configuration to all other rounds
+  ///
+  /// In en, this message translates to:
+  /// **'Copy round to all'**
+  String get copyRoundToAll;
+
+  /// Button to collapse expanded content
+  ///
+  /// In en, this message translates to:
+  /// **'Less'**
+  String get showLess;
+
+  /// Button to expand collapsed content
+  ///
+  /// In en, this message translates to:
+  /// **'More'**
+  String get showMore;
+
+  /// Confirmation message when deleting a superset
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to delete this superset?'**
+  String get confirmDeleteSupersetMessage;
+
+  /// Option to edit a superset
+  ///
+  /// In en, this message translates to:
+  /// **'Edit Superset'**
+  String get editSuperset;
+
+  /// Summary of superset configuration
+  ///
+  /// In en, this message translates to:
+  /// **'{rounds} rounds • {exercises} exercises'**
+  String nRoundsNExercises(int rounds, int exercises);
+
+  /// Progress indicator for sets completion
+  ///
+  /// In en, this message translates to:
+  /// **'Sets ({completed}/{total})'**
+  String setsProgress(int completed, int total);
+
+  /// Label for a set number
+  ///
+  /// In en, this message translates to:
+  /// **'Set {number}'**
+  String setNumberLabel(int number);
+
+  /// Completion status text
+  ///
+  /// In en, this message translates to:
+  /// **'{completed}/{total} completed'**
+  String nOfMCompleted(int completed, int total);
+
+  /// Instruction for superset execution
+  ///
+  /// In en, this message translates to:
+  /// **'Execute all exercises in sequence without rest'**
+  String get executeAllSequentially;
+
+  /// Error when exercise data is missing
+  ///
+  /// In en, this message translates to:
+  /// **'Exercise data not found'**
+  String get exerciseDataNotFound;
+
+  /// Label for superset rest timer
+  ///
+  /// In en, this message translates to:
+  /// **'{name} - Rest'**
+  String supersetRestLabel(String name);
+
+  /// No description provided for @dataBackup.
+  ///
+  /// In en, this message translates to:
+  /// **'Data & Backup'**
+  String get dataBackup;
+
+  /// No description provided for @importData.
+  ///
+  /// In en, this message translates to:
+  /// **'Import Data'**
+  String get importData;
+
+  /// No description provided for @importFromOtherApp.
+  ///
+  /// In en, this message translates to:
+  /// **'Import from another app'**
+  String get importFromOtherApp;
+
+  /// No description provided for @importDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Transfer your workout history from Strong, Hevy, or other fitness apps.'**
+  String get importDescription;
+
+  /// No description provided for @selectSourceApp.
+  ///
+  /// In en, this message translates to:
+  /// **'Select source app'**
+  String get selectSourceApp;
+
+  /// No description provided for @selectCsvFile.
+  ///
+  /// In en, this message translates to:
+  /// **'Select CSV File'**
+  String get selectCsvFile;
+
+  /// No description provided for @howToExport.
+  ///
+  /// In en, this message translates to:
+  /// **'How to export'**
+  String get howToExport;
+
+  /// No description provided for @exportStep1.
+  ///
+  /// In en, this message translates to:
+  /// **'Open the other app and go to Settings'**
+  String get exportStep1;
+
+  /// No description provided for @exportStep2.
+  ///
+  /// In en, this message translates to:
+  /// **'Find \'Export Data\' or \'Export Workouts\''**
+  String get exportStep2;
+
+  /// No description provided for @exportStep3.
+  ///
+  /// In en, this message translates to:
+  /// **'Save the CSV file and select it here'**
+  String get exportStep3;
+
+  /// No description provided for @mapExercises.
+  ///
+  /// In en, this message translates to:
+  /// **'Map Exercises'**
+  String get mapExercises;
+
+  /// No description provided for @readyToImport.
+  ///
+  /// In en, this message translates to:
+  /// **'Ready to import'**
+  String get readyToImport;
+
+  /// No description provided for @autoMapped.
+  ///
+  /// In en, this message translates to:
+  /// **'Auto-mapped'**
+  String get autoMapped;
+
+  /// No description provided for @unmapped.
+  ///
+  /// In en, this message translates to:
+  /// **'Need mapping'**
+  String get unmapped;
+
+  /// No description provided for @warnings.
+  ///
+  /// In en, this message translates to:
+  /// **'Warnings'**
+  String get warnings;
+
+  /// No description provided for @andMoreWarnings.
+  ///
+  /// In en, this message translates to:
+  /// **'...and {count} more warnings'**
+  String andMoreWarnings(int count);
+
+  /// No description provided for @andMoreWorkouts.
+  ///
+  /// In en, this message translates to:
+  /// **'...and {count} more workouts'**
+  String andMoreWorkouts(int count);
+
+  /// No description provided for @rows.
+  ///
+  /// In en, this message translates to:
+  /// **'Rows'**
+  String get rows;
+
+  /// No description provided for @autoMappedExercises.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} exercises auto-mapped'**
+  String autoMappedExercises(int count);
+
+  /// No description provided for @autoMappedDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'These exercises were automatically matched to your database.'**
+  String get autoMappedDescription;
+
+  /// No description provided for @needsMappingExercises.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} exercises need mapping'**
+  String needsMappingExercises(int count);
+
+  /// No description provided for @needsMappingDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Select the correct exercise from suggestions or search manually.'**
+  String get needsMappingDescription;
+
+  /// No description provided for @allExercisesMapped.
+  ///
+  /// In en, this message translates to:
+  /// **'All exercises mapped successfully!'**
+  String get allExercisesMapped;
+
+  /// No description provided for @occurrences.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} occurrences'**
+  String occurrences(int count);
+
+  /// No description provided for @noSuggestionsFound.
+  ///
+  /// In en, this message translates to:
+  /// **'No suggestions found. Use search to find the exercise.'**
+  String get noSuggestionsFound;
+
+  /// No description provided for @searchExercise.
+  ///
+  /// In en, this message translates to:
+  /// **'Search exercise'**
+  String get searchExercise;
+
+  /// No description provided for @skipThisExercise.
+  ///
+  /// In en, this message translates to:
+  /// **'Skip this exercise'**
+  String get skipThisExercise;
+
+  /// No description provided for @willImportWithOriginalName.
+  ///
+  /// In en, this message translates to:
+  /// **'Will be imported with the original name'**
+  String get willImportWithOriginalName;
+
+  /// No description provided for @importComplete.
+  ///
+  /// In en, this message translates to:
+  /// **'Import Complete!'**
+  String get importComplete;
+
+  /// No description provided for @importFailedMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'There was an error importing your data. Please try again.'**
+  String get importFailedMessage;
+
+  /// No description provided for @workoutsImported.
+  ///
+  /// In en, this message translates to:
+  /// **'Workouts imported'**
+  String get workoutsImported;
+
+  /// No description provided for @exercisesImported.
+  ///
+  /// In en, this message translates to:
+  /// **'Exercises imported'**
+  String get exercisesImported;
+
+  /// No description provided for @setsImported.
+  ///
+  /// In en, this message translates to:
+  /// **'Sets imported'**
+  String get setsImported;
+
+  /// No description provided for @workoutsSkipped.
+  ///
+  /// In en, this message translates to:
+  /// **'Workouts skipped'**
+  String get workoutsSkipped;
+
+  /// No description provided for @importErrors.
+  ///
+  /// In en, this message translates to:
+  /// **'Errors'**
+  String get importErrors;
+
+  /// No description provided for @andMoreErrors.
+  ///
+  /// In en, this message translates to:
+  /// **'...and {count} more errors'**
+  String andMoreErrors(int count);
+
+  /// No description provided for @couldNotReadFile.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not read the selected file'**
+  String get couldNotReadFile;
+
+  /// No description provided for @importError.
+  ///
+  /// In en, this message translates to:
+  /// **'Import Error'**
+  String get importError;
+
+  /// Title for recovery insight feature
+  ///
+  /// In en, this message translates to:
+  /// **'Recovery Insight'**
+  String get recoveryInsight;
+
+  /// Subtitle for recovery insight sheet
+  ///
+  /// In en, this message translates to:
+  /// **'Sleep & Recovery Analysis'**
+  String get sleepRecoveryAnalysis;
+
+  /// Section title for sleep details
+  ///
+  /// In en, this message translates to:
+  /// **'Sleep Details'**
+  String get sleepDetails;
+
+  /// Section title for correlation data
+  ///
+  /// In en, this message translates to:
+  /// **'Sleep-Workout Correlation'**
+  String get sleepWorkoutCorrelation;
+
+  /// Label for readiness level indicator
+  ///
+  /// In en, this message translates to:
+  /// **'Readiness Level'**
+  String get readinessLevel;
+
+  /// Title for weekly sleep chart
+  ///
+  /// In en, this message translates to:
+  /// **'Weekly Overview'**
+  String get weeklyOverview;
+
+  /// Legend for recommended sleep line
+  ///
+  /// In en, this message translates to:
+  /// **'7h recommended'**
+  String get recommendedSleep;
+
+  /// Title for recommendation section
+  ///
+  /// In en, this message translates to:
+  /// **'Today\'s Recommendation'**
+  String get todaysRecommendation;
+
+  /// Warning about bad sleep streak
+  ///
+  /// In en, this message translates to:
+  /// **'consecutive nights below 6h'**
+  String get consecutiveBadNights;
+
+  /// Message when correlation data is insufficient
+  ///
+  /// In en, this message translates to:
+  /// **'Continue training to see your sleep-performance correlation. We need more workout data.'**
+  String get correlationInsufficientData;
+
+  /// Label for good sleep volume effect
+  ///
+  /// In en, this message translates to:
+  /// **'With >7h sleep'**
+  String get goodSleepEffect;
+
+  /// Label for poor sleep volume effect
+  ///
+  /// In en, this message translates to:
+  /// **'With <6h sleep'**
+  String get poorSleepEffect;
+
+  /// Description of pro sleep correlation feature
+  ///
+  /// In en, this message translates to:
+  /// **'See how your sleep directly impacts your training volume and performance with detailed correlation analysis.'**
+  String get sleepCorrelationProDescription;
+
+  /// Description for optimal recovery category
+  ///
+  /// In en, this message translates to:
+  /// **'Peak readiness - go all out!'**
+  String get recoveryOptimalDescription;
+
+  /// Description for good recovery category
+  ///
+  /// In en, this message translates to:
+  /// **'Ready for a solid workout'**
+  String get recoveryGoodDescription;
+
+  /// Description for moderate recovery category
+  ///
+  /// In en, this message translates to:
+  /// **'Consider lighter intensity today'**
+  String get recoveryModerateDescription;
+
+  /// Description for low recovery category
+  ///
+  /// In en, this message translates to:
+  /// **'Your body needs more rest'**
+  String get recoveryLowDescription;
+
+  /// Description for critical recovery category
+  ///
+  /// In en, this message translates to:
+  /// **'Rest day strongly recommended'**
+  String get recoveryCriticalDescription;
+
+  /// Prompt to connect Apple Health
+  ///
+  /// In en, this message translates to:
+  /// **'Connect Apple Health for personalized insights'**
+  String get connectAppleHealth;
+
+  /// Label for last night's sleep
+  ///
+  /// In en, this message translates to:
+  /// **'Last Night'**
+  String get lastNight;
+
+  /// Label for sleep streak days
+  ///
+  /// In en, this message translates to:
+  /// **'Streak'**
+  String get streakDays;
 }
 
 class _AppLocalizationsDelegate

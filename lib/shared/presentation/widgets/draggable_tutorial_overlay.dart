@@ -102,87 +102,90 @@ class _DraggableTutorialOverlayState extends State<DraggableTutorialOverlay>
       children: [
         widget.child,
         
+        // 🔧 PERFORMANCE FIX: Use FadeTransition (GPU-accelerated) instead of Opacity
         if (_showTutorial)
-          AnimatedBuilder(
-            animation: _animationController,
-            builder: (context, child) {
-              return Positioned(
-                bottom: 100,
-                left: 0,
-                right: 0,
-                child: Opacity(
-                  opacity: _fadeAnimation.value,
-                  child: Transform.translate(
+          Positioned(
+            bottom: 100,
+            left: 0,
+            right: 0,
+            child: FadeTransition(
+              opacity: _fadeAnimation,
+              child: AnimatedBuilder(
+                animation: _slideAnimation,
+                builder: (context, child) {
+                  return Transform.translate(
                     offset: Offset(0, _slideAnimation.value),
-                    child: GestureDetector(
-                      onTap: _dismissTutorial,
-                      child: Container(
-                        margin: const EdgeInsets.symmetric(horizontal: 32),
-                        padding: const EdgeInsets.all(16),
-                        decoration: BoxDecoration(
-                          color: colorScheme.primaryContainer,
-                          borderRadius: BorderRadius.circular(16),
-                          boxShadow: [
-                            BoxShadow(
-                              color: context.colors.onSurface.withValues(alpha: 0.2),
-                              blurRadius: 10,
-                              offset: const Offset(0, 4),
-                            ),
-                          ],
+                    child: child,
+                  );
+                },
+                // 🔧 PERFORMANCE FIX: Use child parameter to avoid rebuilding static content
+                child: GestureDetector(
+                  onTap: _dismissTutorial,
+                  child: Container(
+                    margin: const EdgeInsets.symmetric(horizontal: 32),
+                    padding: const EdgeInsets.all(16),
+                    decoration: BoxDecoration(
+                      color: colorScheme.primaryContainer,
+                      borderRadius: BorderRadius.circular(16),
+                      boxShadow: [
+                        BoxShadow(
+                          color: context.colors.onSurface.withValues(alpha: 0.2),
+                          blurRadius: 10,
+                          offset: const Offset(0, 4),
                         ),
-                        child: Row(
-                          children: [
-                            Container(
-                              padding: const EdgeInsets.all(8),
-                              decoration: BoxDecoration(
-                                color: colorScheme.primary.withValues(alpha: 0.2),
-                                shape: BoxShape.circle,
-                              ),
-                              child: Icon(
-                                Icons.swipe,
-                                color: colorScheme.primary,
-                                size: 24,
-                              ),
-                            ),
-                            const SizedBox(width: 12),
-                            Expanded(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  Text(
-                                    'Drag to Move',
-                                    style: theme.textTheme.titleSmall?.copyWith(
-                                      fontWeight: FontWeight.bold,
-                                      color: colorScheme.onPrimaryContainer,
-                                    ),
-                                  ),
-                                  const SizedBox(height: 2),
-                                  Text(
-                                    'Swipe the button left or right to change its position',
-                                    style: theme.textTheme.bodySmall?.copyWith(
-                                      color: colorScheme.onPrimaryContainer.withValues(alpha: 0.8),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                            IconButton(
-                              onPressed: _dismissTutorial,
-                              icon: Icon(
-                                Icons.close,
-                                size: 18,
-                                color: colorScheme.onPrimaryContainer.withValues(alpha: 0.6),
-                              ),
-                            ),
-                          ],
+                      ],
+                    ),
+                    child: Row(
+                      children: [
+                        Container(
+                          padding: const EdgeInsets.all(8),
+                          decoration: BoxDecoration(
+                            color: colorScheme.primary.withValues(alpha: 0.2),
+                            shape: BoxShape.circle,
+                          ),
+                          child: Icon(
+                            Icons.swipe,
+                            color: colorScheme.primary,
+                            size: 24,
+                          ),
                         ),
-                      ),
+                        const SizedBox(width: 12),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Text(
+                                'Drag to Move',
+                                style: theme.textTheme.titleSmall?.copyWith(
+                                  fontWeight: FontWeight.bold,
+                                  color: colorScheme.onPrimaryContainer,
+                                ),
+                              ),
+                              const SizedBox(height: 2),
+                              Text(
+                                'Swipe the button left or right to change its position',
+                                style: theme.textTheme.bodySmall?.copyWith(
+                                  color: colorScheme.onPrimaryContainer.withValues(alpha: 0.8),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        IconButton(
+                          onPressed: _dismissTutorial,
+                          icon: Icon(
+                            Icons.close,
+                            size: 18,
+                            color: colorScheme.onPrimaryContainer.withValues(alpha: 0.6),
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                 ),
-              );
-            },
+              ),
+            ),
           ),
       ],
     );

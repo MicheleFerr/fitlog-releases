@@ -18,6 +18,7 @@ class ExerciseOptionsModal extends StatelessWidget {
     this.onDuplicate,
     this.onDelete,
     this.onChangeCountingMode,
+    this.onAddWarmupSets,
     this.imageUrl,
     this.languageCode = 'en',
   });
@@ -27,6 +28,7 @@ class ExerciseOptionsModal extends StatelessWidget {
   final VoidCallback? onDuplicate;
   final VoidCallback? onDelete;
   final VoidCallback? onChangeCountingMode;
+  final VoidCallback? onAddWarmupSets;
   final String? imageUrl;
   final String languageCode;
 
@@ -215,6 +217,19 @@ class ExerciseOptionsModal extends StatelessWidget {
                       }
                     },
                   ),
+
+                  // Aggiungi Set Riscaldamento
+                  if (onAddWarmupSets != null) ...[
+                    ListTile(
+                      leading: Icon(AppIcons.addCircleOutline, color: context.colors.warning),
+                      title: Text(context.l10n.addWarmupSets),
+                      subtitle: Text(context.l10n.addWarmupSetsSubtitle),
+                      onTap: () {
+                        Navigator.pop(context);
+                        onAddWarmupSets!();
+                      },
+                    ),
+                  ],
 
                   // Prevenzione infortuni
                   ListTile(
@@ -746,6 +761,7 @@ class ExerciseOptionsModal extends StatelessWidget {
     VoidCallback? onDuplicate,
     VoidCallback? onDelete,
     VoidCallback? onChangeCountingMode,
+    VoidCallback? onAddWarmupSets,
     String? imageUrl,
     String languageCode = 'en',
   }) {
@@ -761,6 +777,7 @@ class ExerciseOptionsModal extends StatelessWidget {
         onDuplicate: onDuplicate,
         onDelete: onDelete,
         onChangeCountingMode: onChangeCountingMode,
+        onAddWarmupSets: onAddWarmupSets,
         imageUrl: imageUrl,
         languageCode: languageCode,
       ),

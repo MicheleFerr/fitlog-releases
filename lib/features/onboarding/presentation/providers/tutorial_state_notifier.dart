@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart' show kDebugMode;
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hive_ce_flutter/hive_flutter.dart';
@@ -58,17 +59,23 @@ class TutorialStateNotifier extends Notifier<TutorialState> {
       final savedState = _box!.get(_stateKey);
       if (savedState != null) {
         state = savedState;
-        debugPrint(
-          '📚 Tutorial state loaded: ${savedState.seenTutorialsList.length} seen, '
-          '${savedState.totalWorkouts} workouts',
-        );
+        if (kDebugMode) {
+          debugPrint(
+            '📚 Tutorial state loaded: ${savedState.seenTutorialsList.length} seen, '
+            '${savedState.totalWorkouts} workouts',
+          );
+        }
       } else {
-        debugPrint('📚 No saved tutorial state, using initial state');
+        if (kDebugMode) {
+          debugPrint('📚 No saved tutorial state, using initial state');
+        }
         // Check for legacy migration
         await _migrateFromLegacyOnboarding();
       }
     } catch (e, stackTrace) {
-      debugPrint('❌ Tutorial state initialization failed: $e');
+      if (kDebugMode) {
+        debugPrint('❌ Tutorial state initialization failed: $e');
+      }
       debugPrint('📍 Stack trace: $stackTrace');
       // Continue with default state on error
       state = TutorialState.initial();
@@ -80,7 +87,9 @@ class TutorialStateNotifier extends Notifier<TutorialState> {
     try {
       const legacyBoxName = 'onboarding_state';
       if (!Hive.isBoxOpen(legacyBoxName)) {
-        debugPrint('📚 No legacy onboarding box found, skipping migration');
+        if (kDebugMode) {
+          debugPrint('📚 No legacy onboarding box found, skipping migration');
+        }
         return;
       }
 
@@ -88,7 +97,9 @@ class TutorialStateNotifier extends Notifier<TutorialState> {
       final legacyState = legacyBox.get('state');
 
       if (legacyState == null) {
-        debugPrint('📚 No legacy onboarding state found');
+        if (kDebugMode) {
+          debugPrint('📚 No legacy onboarding state found');
+        }
         return;
       }
 
@@ -123,11 +134,15 @@ class TutorialStateNotifier extends Notifier<TutorialState> {
       );
 
       await _saveState();
-      debugPrint(
-        '✅ Migrated from legacy onboarding: ${seenTutorials.length} tutorials marked as seen',
-      );
+      if (kDebugMode) {
+        debugPrint(
+          '✅ Migrated from legacy onboarding: ${seenTutorials.length} tutorials marked as seen',
+        );
+      }
     } catch (e, stackTrace) {
-      debugPrint('⚠️ Legacy migration failed: $e');
+      if (kDebugMode) {
+        debugPrint('⚠️ Legacy migration failed: $e');
+      }
       debugPrint('📍 Stack trace: $stackTrace');
       // Continue with default state if migration fails
     }
@@ -147,7 +162,9 @@ class TutorialStateNotifier extends Notifier<TutorialState> {
   /// Save state to Hive with retry logic.
   Future<void> _saveState() async {
     if (_box == null || !_box!.isOpen) {
-      debugPrint('⚠️ Tutorial box not open, skipping save');
+      if (kDebugMode) {
+        debugPrint('⚠️ Tutorial box not open, skipping save');
+      }
       return;
     }
 
@@ -158,13 +175,17 @@ class TutorialStateNotifier extends Notifier<TutorialState> {
         return; // Success
       } catch (e) {
         retries--;
-        debugPrint('❌ Error saving tutorial state (${3 - retries}/3): $e');
+        if (kDebugMode) {
+          debugPrint('❌ Error saving tutorial state (${3 - retries}/3): $e');
+        }
         if (retries > 0) {
           await Future.delayed(Duration(milliseconds: 100 * (3 - retries)));
         }
       }
     }
-    debugPrint('❌ Failed to save tutorial state after 3 attempts');
+    if (kDebugMode) {
+      debugPrint('❌ Failed to save tutorial state after 3 attempts');
+    }
   }
 
   // ============ PUBLIC METHODS ============
@@ -178,7 +199,9 @@ class TutorialStateNotifier extends Notifier<TutorialState> {
       seenTutorialsList: [...state.seenTutorialsList, tutorialId],
     );
     await _saveState();
-    debugPrint('👁️ Tutorial seen: $tutorialId');
+    if (kDebugMode) {
+      debugPrint('👁️ Tutorial seen: $tutorialId');
+    }
   }
 
   /// Dismiss a proactive hint.
@@ -199,7 +222,9 @@ class TutorialStateNotifier extends Notifier<TutorialState> {
       lastDismissTimeList: newTimeList,
     );
     await _saveState();
-    debugPrint('🚫 Hint dismissed: $hintId (24h cooldown started)');
+    if (kDebugMode) {
+      debugPrint('🚫 Hint dismissed: $hintId (24h cooldown started)');
+    }
   }
 
   /// Increment workout count.
@@ -210,7 +235,9 @@ class TutorialStateNotifier extends Notifier<TutorialState> {
       firstWorkoutDate: state.firstWorkoutDate ?? DateTime.now(),
     );
     await _saveState();
-    debugPrint('💪 Workout completed! Total: ${state.totalWorkouts}');
+    if (kDebugMode) {
+      debugPrint('💪 Workout completed! Total: ${state.totalWorkouts}');
+    }
   }
 
   /// Reset all seen tutorials (preserves tutorialsEnabled setting).
@@ -222,14 +249,18 @@ class TutorialStateNotifier extends Notifier<TutorialState> {
       lastDismissTimeList: const [],
     );
     await _saveState();
-    debugPrint('🔄 All tutorials reset - user can see them again');
+    if (kDebugMode) {
+      debugPrint('🔄 All tutorials reset - user can see them again');
+    }
   }
 
   /// Reset all tutorial state including settings (for testing/debugging).
   Future<void> resetTutorialState() async {
     state = TutorialState.initial();
     await _saveState();
-    debugPrint('🔄 Tutorial state fully reset');
+    if (kDebugMode) {
+      debugPrint('🔄 Tutorial state fully reset');
+    }
   }
 
   /// Toggle tutorials enabled/disabled.
@@ -239,18 +270,28 @@ class TutorialStateNotifier extends Notifier<TutorialState> {
 
     state = state.copyWith(tutorialsEnabled: enabled);
     await _saveState();
-    debugPrint('🔔 Tutorials ${enabled ? 'enabled' : 'disabled'}');
+    if (kDebugMode) {
+      debugPrint('🔔 Tutorials ${enabled ? 'enabled' : 'disabled'}');
+    }
   }
 
   /// Debug method to print current state.
   void debugTutorialState() {
-    debugPrint('=== 📚 Tutorial State Debug ===');
+    if (kDebugMode) {
+      debugPrint('=== 📚 Tutorial State Debug ===');
+    }
     debugPrint('Seen tutorials: ${state.seenTutorialsList}');
-    debugPrint('Dismissed hints: ${state.dismissedHintsList}');
+    if (kDebugMode) {
+      debugPrint('Dismissed hints: ${state.dismissedHintsList}');
+    }
     debugPrint('Total workouts: ${state.totalWorkouts}');
-    debugPrint('First workout: ${state.firstWorkoutDate}');
+    if (kDebugMode) {
+      debugPrint('First workout: ${state.firstWorkoutDate}');
+    }
     debugPrint('Is new user: ${state.isNewUser}');
-    debugPrint('==============================');
+    if (kDebugMode) {
+      debugPrint('==============================');
+    }
   }
 }
 

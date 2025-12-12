@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fl_chart/fl_chart.dart';
+import 'package:gymbro_flutter_new/core/domain/entities/user_tier.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
 import 'package:gymbro_flutter_new/features/analytics/presentation/providers/analytics_provider.dart';
 import 'package:gymbro_flutter_new/features/home/domain/models/home_widget_config.dart';
@@ -9,7 +10,8 @@ import 'package:gymbro_flutter_new/features/home/domain/models/level_system.dart
 import 'package:gymbro_flutter_new/features/home/providers/progress_widget_preferences_provider.dart';
 import 'package:gymbro_flutter_new/features/home/providers/volume_settings_provider.dart';
 import 'package:gymbro_flutter_new/features/home/presentation/widgets/volume_display_widget.dart';
-import 'package:gymbro_flutter_new/features/home/presentation/widgets/level_info_modal.dart';
+import 'package:gymbro_flutter_new/features/profile/presentation/widgets/level_info_modal.dart';
+import 'package:gymbro_flutter_new/features/profile/presentation/widgets/compact_profile_header.dart';
 import 'package:gymbro_flutter_new/features/home/presentation/widgets/weekly_distribution_modal.dart';
 import 'package:gymbro_flutter_new/features/home/presentation/widgets/volume_details_modal.dart';
 import 'package:intl/intl.dart';
@@ -98,10 +100,13 @@ class _EnhancedProgressStatsWidgetState extends ConsumerState<EnhancedProgressSt
   Widget _buildMinimalView(BuildContext context) {
     final theme = Theme.of(context);
     final l10n = AppLocalizations.of(context);
-    
+    // Use theme colors
+    final primaryColor = theme.colorScheme.primary;
+    final secondaryColor = theme.colorScheme.secondary;
+
     // TODO: Replace with actual user XP from provider
-    final levelInfo = LevelSystem.getLevelInfo(2450); 
-    
+    final levelInfo = LevelSystem.getLevelInfo(2450);
+
     return Card(
       elevation: 0,
       shape: RoundedRectangleBorder(
@@ -120,14 +125,14 @@ class _EnhancedProgressStatsWidgetState extends ConsumerState<EnhancedProgressSt
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
             colors: [
-              theme.colorScheme.primary.withValues(alpha: 0.05),
-              theme.colorScheme.secondary.withValues(alpha: 0.02),
+              primaryColor.withValues(alpha: 0.05),
+              secondaryColor.withValues(alpha: 0.02),
             ],
           ),
         ),
         child: Row(
           children: [
-            // Level Badge
+            // Level Badge - 🎨 JOURNEY THEME
             Container(
               width: 56,
               height: 56,
@@ -137,13 +142,13 @@ class _EnhancedProgressStatsWidgetState extends ConsumerState<EnhancedProgressSt
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
                   colors: [
-                    theme.colorScheme.primary,
-                    theme.colorScheme.secondary,
+                    primaryColor,
+                    secondaryColor,
                   ],
                 ),
                 boxShadow: [
                   BoxShadow(
-                    color: theme.colorScheme.primary.withValues(alpha: 0.3),
+                    color: primaryColor.withValues(alpha: 0.3),
                     blurRadius: 8,
                     offset: const Offset(0, 2),
                   ),
@@ -223,10 +228,13 @@ class _EnhancedProgressStatsWidgetState extends ConsumerState<EnhancedProgressSt
     final analyticsState = ref.watch(analyticsProvider);
     final frequencyStats = ref.read(analyticsProvider.notifier).getFrequencyStats();
     final preferences = ref.watch(progressWidgetPreferencesProvider);
-    
+    // Use theme colors
+    final primaryColor = theme.colorScheme.primary;
+    final secondaryColor = theme.colorScheme.secondary;
+
     // TODO: Replace with actual user XP
     final levelInfo = LevelSystem.getLevelInfo(2450);
-    
+
     return Card(
       elevation: 0,
       shape: RoundedRectangleBorder(
@@ -244,8 +252,8 @@ class _EnhancedProgressStatsWidgetState extends ConsumerState<EnhancedProgressSt
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
             colors: [
-              theme.colorScheme.primary.withValues(alpha: 0.05),
-              theme.colorScheme.secondary.withValues(alpha: 0.02),
+              primaryColor.withValues(alpha: 0.05),
+              secondaryColor.withValues(alpha: 0.02),
             ],
           ),
         ),
@@ -306,10 +314,13 @@ class _EnhancedProgressStatsWidgetState extends ConsumerState<EnhancedProgressSt
     final frequencyStats = ref.read(analyticsProvider.notifier).getFrequencyStats();
     final volumeData = ref.watch(volumeChartDataProvider);
     final preferences = ref.watch(progressWidgetPreferencesProvider);
-    
+    // Use theme colors
+    final primaryColor = theme.colorScheme.primary;
+    final secondaryColor = theme.colorScheme.secondary;
+
     // TODO: Replace with actual user XP
     final levelInfo = LevelSystem.getLevelInfo(2450);
-    
+
     return Card(
       elevation: 0,
       shape: RoundedRectangleBorder(
@@ -327,8 +338,8 @@ class _EnhancedProgressStatsWidgetState extends ConsumerState<EnhancedProgressSt
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
             colors: [
-              theme.colorScheme.primary.withValues(alpha: 0.03),
-              theme.colorScheme.secondary.withValues(alpha: 0.01),
+              primaryColor.withValues(alpha: 0.03),
+              secondaryColor.withValues(alpha: 0.01),
             ],
           ),
         ),
@@ -404,7 +415,10 @@ class _EnhancedProgressStatsWidgetState extends ConsumerState<EnhancedProgressSt
   
   Widget _buildLevelBadge(BuildContext context, LevelInfo levelInfo) {
     final theme = Theme.of(context);
-    
+    // Use theme colors for level badge
+    final primaryColor = theme.colorScheme.primary;
+    final secondaryColor = theme.colorScheme.secondary;
+
     return InkWell(
       onTap: () => _showLevelBadgeInfo(context),
       borderRadius: BorderRadius.circular(30),
@@ -417,13 +431,13 @@ class _EnhancedProgressStatsWidgetState extends ConsumerState<EnhancedProgressSt
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
           colors: [
-            theme.colorScheme.primary,
-            theme.colorScheme.secondary,
+            primaryColor,
+            secondaryColor,
           ],
         ),
         boxShadow: [
           BoxShadow(
-            color: theme.colorScheme.primary.withValues(alpha: 0.3),
+            color: primaryColor.withValues(alpha: 0.3),
             blurRadius: 12,
             offset: const Offset(0, 4),
           ),
@@ -688,11 +702,14 @@ class _EnhancedProgressStatsWidgetState extends ConsumerState<EnhancedProgressSt
   
   Widget _buildChart(BuildContext context, Map<DateTime, double> volumeData) {
     final theme = Theme.of(context);
+    // Use theme colors for chart
+    final primaryColor = theme.colorScheme.primary;
+    final secondaryColor = theme.colorScheme.secondary;
     final now = DateTime.now();
-    final last7Days = List.generate(7, (i) => 
+    final last7Days = List.generate(7, (i) =>
       DateTime(now.year, now.month, now.day - (6 - i))
     );
-    
+
     final spots = last7Days.asMap().entries.map((entry) {
       final index = entry.key.toDouble();
       final date = entry.value;
@@ -700,9 +717,9 @@ class _EnhancedProgressStatsWidgetState extends ConsumerState<EnhancedProgressSt
       final volume = volumeData[dateKey] ?? 0;
       return FlSpot(index, volume);
     }).toList();
-    
+
     final maxVolume = spots.map((s) => s.y).fold(0.0, (a, b) => a > b ? a : b);
-    
+
     return LineChart(
       LineChartData(
         gridData: FlGridData(
@@ -752,8 +769,8 @@ class _EnhancedProgressStatsWidgetState extends ConsumerState<EnhancedProgressSt
             isCurved: true,
             gradient: LinearGradient(
               colors: [
-                theme.colorScheme.primary,
-                theme.colorScheme.secondary,
+                primaryColor,
+                secondaryColor,
               ],
             ),
             barWidth: 3,
@@ -765,8 +782,8 @@ class _EnhancedProgressStatsWidgetState extends ConsumerState<EnhancedProgressSt
                   radius: spot.y > 0 ? 4 : 2,
                   color: context.colors.surface,
                   strokeWidth: 2,
-                  strokeColor: spot.y > 0 
-                    ? theme.colorScheme.primary 
+                  strokeColor: spot.y > 0
+                    ? primaryColor
                     : theme.colorScheme.outline.withValues(alpha: 0.3),
                 );
               },
@@ -775,8 +792,8 @@ class _EnhancedProgressStatsWidgetState extends ConsumerState<EnhancedProgressSt
               show: true,
               gradient: LinearGradient(
                 colors: [
-                  theme.colorScheme.primary.withValues(alpha: 0.2),
-                  theme.colorScheme.primary.withValues(alpha: 0.0),
+                  primaryColor.withValues(alpha: 0.2),
+                  primaryColor.withValues(alpha: 0.0),
                 ],
                 begin: Alignment.topCenter,
                 end: Alignment.bottomCenter,
@@ -791,9 +808,12 @@ class _EnhancedProgressStatsWidgetState extends ConsumerState<EnhancedProgressSt
   Widget _buildWeekdayDistribution(BuildContext context, Map<int, int> distribution) {
     final theme = Theme.of(context);
     final l10n = AppLocalizations.of(context);
+    // Use theme colors
+    final primaryColor = theme.colorScheme.primary;
+    final secondaryColor = theme.colorScheme.secondary;
     final days = ['Lun', 'Mar', 'Mer', 'Gio', 'Ven', 'Sab', 'Dom'];
     final maxCount = distribution.values.fold(0, (a, b) => a > b ? a : b);
-    
+
     return InkWell(
       onTap: () => _showWeeklyDistributionInfo(context),
       borderRadius: BorderRadius.circular(16),
@@ -822,7 +842,7 @@ class _EnhancedProgressStatsWidgetState extends ConsumerState<EnhancedProgressSt
               final dayIndex = index + 1;
               final count = distribution[dayIndex == 7 ? 7 : dayIndex] ?? 0;
               final height = maxCount > 0 ? (count / maxCount) * 60 : 0;
-              
+
               return Column(
                 children: [
                   Container(
@@ -835,8 +855,8 @@ class _EnhancedProgressStatsWidgetState extends ConsumerState<EnhancedProgressSt
                       decoration: BoxDecoration(
                         gradient: LinearGradient(
                           colors: [
-                            theme.colorScheme.primary,
-                            theme.colorScheme.secondary,
+                            primaryColor,
+                            secondaryColor,
                           ],
                           begin: Alignment.bottomCenter,
                           end: Alignment.topCenter,
@@ -861,7 +881,7 @@ class _EnhancedProgressStatsWidgetState extends ConsumerState<EnhancedProgressSt
                     style: TextStyle(
                       fontSize: 10,
                       fontWeight: FontWeight.bold,
-                      color: theme.colorScheme.primary,
+                      color: primaryColor,
                     ),
                   ),
                 ],
@@ -1068,9 +1088,8 @@ class _EnhancedProgressStatsWidgetState extends ConsumerState<EnhancedProgressSt
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
       builder: (context) => LevelInfoModal(
-        currentLevel: levelInfo.level,
-        currentXp: levelInfo.currentXp,
-        xpForNextLevel: levelInfo.xpForNextLevel,
+        currentXP: levelInfo.currentXp,
+        currentTier: UserTier.fromXP(levelInfo.currentXp),
       ),
     );
   }
@@ -1103,8 +1122,16 @@ class _EnhancedProgressStatsWidgetState extends ConsumerState<EnhancedProgressSt
       context: context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
-      builder: (context) => WeeklyDistributionModal(
-        weeklyData: weeklyData,
+      builder: (_) => DraggableScrollableSheet(
+        initialChildSize: 0.8,
+        minChildSize: 0.8,
+        maxChildSize: 1.0,
+        expand: false,
+        snap: true,
+        builder: (context, scrollController) => WeeklyDistributionModal(
+          weeklyData: weeklyData,
+          scrollController: scrollController,
+        ),
       ),
     );
   }
@@ -1149,9 +1176,17 @@ class _EnhancedProgressStatsWidgetState extends ConsumerState<EnhancedProgressSt
       context: context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
-      builder: (context) => VolumeDetailsModal(
-        currentVolume: totalVolume,
-        dailyVolumeData: dailyData,
+      builder: (_) => DraggableScrollableSheet(
+        initialChildSize: 0.8,
+        minChildSize: 0.8,
+        maxChildSize: 1.0,
+        expand: false,
+        snap: true,
+        builder: (context, scrollController) => VolumeDetailsModal(
+          currentVolume: totalVolume,
+          dailyVolumeData: dailyData,
+          scrollController: scrollController,
+        ),
       ),
     );
   }

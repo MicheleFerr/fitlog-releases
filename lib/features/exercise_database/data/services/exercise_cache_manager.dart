@@ -51,11 +51,12 @@ class ExerciseCacheManager {
   }
 
   /// Salva esercizi nella cache
-  Future<void> cacheExercises(List<Exercise> exercises, String version) async {
+  /// [locale] is the language code (e.g., 'it', 'en') of the cached exercises
+  Future<void> cacheExercises(List<Exercise> exercises, String version, {required String locale}) async {
     await _ensureInitialized();
 
     try {
-      debugPrint('💾 Caching ${exercises.length} exercises (v$version)...');
+      debugPrint('💾 Caching ${exercises.length} exercises (v$version, locale: $locale)...');
 
       // Inizia una transazione
       final batch = <String, Map<String, dynamic>>{};
@@ -68,10 +69,10 @@ class ExerciseCacheManager {
       // Salva tutti gli esercizi in una volta
       await _exercisesBox.putAll(batch);
 
-      // Aggiorna metadata
-      await _updateCacheMetadata(version, exercises.length);
+      // Aggiorna metadata con locale
+      await _updateCacheMetadata(version, exercises.length, locale: locale);
 
-      debugPrint('✅ Successfully cached ${exercises.length} exercises');
+      debugPrint('✅ Successfully cached ${exercises.length} exercises (locale: $locale)');
 
     } catch (e) {
       debugPrint('❌ Failed to cache exercises: $e');
@@ -80,13 +81,24 @@ class ExerciseCacheManager {
   }
 
   /// Carica tutti gli esercizi dalla cache
-  Future<List<Exercise>> getCachedExercises() async {
+  /// If [forLocale] is provided, returns empty list if cached locale doesn't match
+  Future<List<Exercise>> getCachedExercises({String? forLocale}) async {
     await _ensureInitialized();
 
     try {
       if (_exercisesBox.isEmpty) {
         debugPrint('📂 No exercises in cache');
         return [];
+      }
+
+      // Check locale match if specified
+      if (forLocale != null) {
+        final metadata = await getCacheMetadata();
+        if (metadata != null && metadata.locale != forLocale) {
+          // Locale mismatch - clear cache and reload with correct locale
+          await clearCache();
+          return [];
+        }
       }
 
       final exercises = <Exercise>[];
@@ -175,12 +187,13 @@ class ExerciseCacheManager {
   }
 
   /// Aggiorna metadata della cache
-  Future<void> _updateCacheMetadata(String version, int exerciseCount) async {
+  Future<void> _updateCacheMetadata(String version, int exerciseCount, {required String locale}) async {
     final metadata = CacheMetadata(
       version: version,
       exerciseCount: exerciseCount,
       lastUpdated: DateTime.now(),
       cacheSize: await _calculateCacheSize(),
+      locale: locale,
     );
 
     await _metadataBox.put('metadata', metadata.toMap());
@@ -377,6 +390,7 @@ class CacheMetadata {
     required this.exerciseCount,
     required this.lastUpdated,
     required this.cacheSize,
+    required this.locale,
   });
 
   factory CacheMetadata.fromMap(Map<String, dynamic> map) {
@@ -385,12 +399,14 @@ class CacheMetadata {
       exerciseCount: map['exercise_count'] as int,
       lastUpdated: DateTime.parse(map['last_updated'] as String),
       cacheSize: map['cache_size'] as int,
+      locale: map['locale'] as String? ?? 'en', // Default to 'en' for old caches
     );
   }
   final String version;
   final int exerciseCount;
   final DateTime lastUpdated;
   final int cacheSize;
+  final String locale; // Language code: 'it', 'en', etc.
 
   Map<String, dynamic> toMap() {
     return {
@@ -398,6 +414,7 @@ class CacheMetadata {
       'exercise_count': exerciseCount,
       'last_updated': lastUpdated.toIso8601String(),
       'cache_size': cacheSize,
+      'locale': locale,
     };
   }
 }

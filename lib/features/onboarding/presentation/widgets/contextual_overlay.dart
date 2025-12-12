@@ -85,6 +85,20 @@ class _ContextualOverlayState extends State<ContextualOverlay>
           targetSize.height + (widget.spotlightPadding * 2),
         );
       });
+    } else {
+      // Fallback: if target not found, use centered rect for message-only display
+      debugPrint('⚠️ [ContextualOverlay] Target not found, using fallback');
+      if (mounted) {
+        final size = MediaQuery.of(context).size;
+        setState(() {
+          // Create a small rect at center to show message without spotlight
+          _targetRect = Rect.fromCenter(
+            center: Offset(size.width / 2, size.height / 2),
+            width: 1,
+            height: 1,
+          );
+        });
+      }
     }
   }
 
@@ -123,7 +137,7 @@ class _ContextualOverlayState extends State<ContextualOverlay>
               child: CustomPaint(
                 painter: _SpotlightPainter(
                   spotlightRect: _targetRect!,
-                  backgroundColor: context.colors.onSurface.withValues(alpha: 0.7),
+                  backgroundColor: context.colors.onSurface.withValues(alpha: 0.4),
                 ),
               ),
             ),

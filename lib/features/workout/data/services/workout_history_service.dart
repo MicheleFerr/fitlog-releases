@@ -13,10 +13,11 @@ library;
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:gymbro_flutter_new/features/history/domain/entities/workout_history_detail.dart';
-import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise_activity.dart';
-import 'package:gymbro_flutter_new/features/workout/data/services/exercise_history_service.dart';
 import 'package:flutter/foundation.dart';
+import 'package:gymbro_flutter_new/features/history/domain/entities/workout_history_detail.dart';
+import 'package:gymbro_flutter_new/features/workout/data/services/exercise_history_service.dart';
+import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise.dart';
+import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise_activity.dart';
 
 class WorkoutHistoryService {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
@@ -160,6 +161,7 @@ class WorkoutHistoryService {
                 history.add(ExerciseHistoryData(
                   weight: set.weight > 0 ? set.weight : null,
                   reps: set.reps > 0 ? set.reps : null,
+                  rpe: set.rpe,  // ✅ FIX: Include RPE from set
                   date: workoutData.completedAt,
                   workoutName: workoutData.name,
                 ));
@@ -361,6 +363,7 @@ class WorkoutHistoryService {
       sets: sets,
       createdAt: workout.completedAt,
       lastModified: workout.updatedAt,
+      category: ExerciseCategory.other, // Default for legacy data conversion
     );
   }
 }

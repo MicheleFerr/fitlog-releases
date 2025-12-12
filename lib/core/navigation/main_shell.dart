@@ -93,45 +93,32 @@ class _MainShellState extends ConsumerState<MainShell> {
         currentIndex != 1 &&
         _hasVisitedWorkoutScreen;
 
-    // TODO: Re-enable auto-pause feature
-    // _handleAutoPause(currentIndex, workout);
-
-    // Determine if we should render the mini-bar (for animation purposes)
-    final shouldRenderMiniBar = workout != null &&
-        (workout.status == WorkoutStatus.inProgress ||
-            workout.status == WorkoutStatus.paused);
-
     return Scaffold(
       // ✨ Material 3 2025: Subtle background veil instead of pure white
       backgroundColor: context.colors.surfaceContainer,
-      body: widget.navigationShell,
-      bottomNavigationBar: Column(
-        mainAxisSize: MainAxisSize.min,
+      body: Stack(
         children: [
-          // Mini-bar with slide up/down animation
-          // Background matches scaffold to avoid color bleed from nav bar
-          ColoredBox(
-            color: context.colors.surfaceContainer,
-            child: ClipRect(
-              child: AnimatedSize(
-                duration: const Duration(milliseconds: 300),
-                curve: Curves.easeOutCubic,
-                child: shouldRenderMiniBar && showMiniBar
-                    ? WorkoutMiniBar(
-                        workout: workout,
-                        onDiscard: () => _showDiscardConfirmation(context),
-                        onSave: () => _showSaveConfirmation(context),
-                      )
-                    : const SizedBox.shrink(),
+          // Main content
+          widget.navigationShell,
+
+          // Floating mini-bar positioned just above nav bar
+          if (showMiniBar)
+            Positioned(
+              left: 0,
+              right: 0,
+              bottom: 4, // Body ends at top of nav bar, so 4px gap is enough
+              child: WorkoutMiniBar(
+                workout: workout!, // Safe: showMiniBar checks workout != null
+                onDiscard: () => _showDiscardConfirmation(context),
+                onSave: () => _showSaveConfirmation(context),
               ),
             ),
-          ),
-          _BottomNavigationBar(
-            currentIndex: currentIndex,
-            onDestinationSelected: (index) =>
-                _onDestinationSelected(context, index),
-          ),
         ],
+      ),
+      bottomNavigationBar: _BottomNavigationBar(
+        currentIndex: currentIndex,
+        onDestinationSelected: (index) =>
+            _onDestinationSelected(context, index),
       ),
     );
   }
@@ -256,7 +243,7 @@ class _BottomNavigationBar extends StatelessWidget {
               fontSize: 11,
               fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
               color: isSelected
-                  ? (context.journeyTheme?.primaryColor ?? context.colors.primary)
+                  ? context.colors.primary
                   : context.colors.onSurfaceVariant,
             );
           }),
@@ -267,8 +254,8 @@ class _BottomNavigationBar extends StatelessWidget {
         onDestinationSelected: onDestinationSelected,
         // Material 3 styling - iOS standard 64px height
         elevation: 0,
-        // ✨ Material 3 2025: Slightly elevated surface for depth
-        backgroundColor: context.colors.surfaceContainerLow,
+        // Same color as scaffold for seamless transition
+        backgroundColor: context.colors.surfaceContainer,
         indicatorColor: Colors.transparent, // No indicator background
         surfaceTintColor: Colors.transparent,
         height: 64,
@@ -285,7 +272,7 @@ class _BottomNavigationBar extends StatelessWidget {
             selectedIcon: Icon(
               AppIcons.homeOutlined,
               size: AppIconSize.medium,
-              color: context.journeyTheme?.primaryColor ?? context.colors.primary,
+              color: context.colors.primary,
             ),
             label: context.l10n.home,
             tooltip: context.l10n.home,
@@ -300,7 +287,7 @@ class _BottomNavigationBar extends StatelessWidget {
             selectedIcon: Icon(
               AppIcons.workoutOutlined,
               size: AppIconSize.medium,
-              color: context.journeyTheme?.primaryColor ?? context.colors.primary,
+              color: context.colors.primary,
             ),
             label: context.l10n.workout,
             tooltip: context.l10n.workout,
@@ -315,7 +302,7 @@ class _BottomNavigationBar extends StatelessWidget {
             selectedIcon: Icon(
               AppIcons.profileOutlined,
               size: AppIconSize.medium,
-              color: context.journeyTheme?.primaryColor ?? context.colors.primary,
+              color: context.colors.primary,
             ),
             label: context.l10n.profile,
             tooltip: context.l10n.profile,

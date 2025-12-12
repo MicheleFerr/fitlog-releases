@@ -41,7 +41,28 @@ import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
 
 class ModalService {
+  /// Calcola la dimensione massima sicura per DraggableScrollableSheet
+  /// che evita notch/Dynamic Island.
+  ///
+  /// Uso:
+  /// ```dart
+  /// DraggableScrollableSheet(
+  ///   maxChildSize: ModalService.safeMaxChildSize(context),
+  ///   // ...
+  /// )
+  /// ```
+  static double safeMaxChildSize(BuildContext context, {double preferredMax = 0.95}) {
+    final screenHeight = MediaQuery.of(context).size.height;
+    final topPadding = MediaQuery.of(context).viewPadding.top;
+    // Lascia almeno topPadding + 8px di clearance dal notch
+    final maxSize = (screenHeight - topPadding - 8) / screenHeight;
+    return maxSize.clamp(0.80, preferredMax);
+  }
+
   /// Mostra bottom sheet standard (altezza ~50-90% schermo)
+  ///
+  /// ✅ Protetto automaticamente dal notch/Dynamic Island:
+  /// L'altezza massima viene limitata per non andare sotto la safe area.
   static Future<T?> showBottomSheet<T>(
     BuildContext context, {
     required Widget child,
@@ -50,6 +71,15 @@ class ModalService {
     double? height,
     Color? backgroundColor,
   }) {
+    // ✅ FIX: Calcola altezza massima sicura (evita notch/Dynamic Island)
+    final screenHeight = context.screenHeight;
+    final topPadding = context.mediaQuery.viewPadding.top;
+    final maxSafeHeight = screenHeight - topPadding - 8; // 8px clearance
+
+    // Se viene passata un'altezza, limitala al massimo sicuro
+    final requestedHeight = height ?? screenHeight * 0.8;
+    final safeHeight = requestedHeight.clamp(0.0, maxSafeHeight);
+
     return showModalBottomSheet<T>(
       context: context,
       isDismissible: isDismissible,
@@ -60,7 +90,7 @@ class ModalService {
         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
       ),
       builder: (_) => Container(
-        height: height ?? context.screenHeight * 0.8,
+        height: safeHeight,
         padding: EdgeInsets.only(
           bottom: context.mediaQuery.viewInsets.bottom,
         ),
@@ -136,12 +166,12 @@ class ModalService {
   }) async {
     final result = await showDialog<bool>(
       context: context,
-      builder: (_) => AlertDialog(
+      builder: (dialogContext) => AlertDialog(
         title: Text(title),
         content: Text(message),
         actions: [
           TextButton(
-            onPressed: () => Navigator.of(context).pop(false),
+            onPressed: () => Navigator.of(dialogContext).pop(false),
             child: Text(
               cancelText ?? context.l10n.cancel,
               style: context.textTheme.labelLarge?.copyWith(
@@ -150,7 +180,7 @@ class ModalService {
             ),
           ),
           FilledButton(
-            onPressed: () => Navigator.of(context).pop(true),
+            onPressed: () => Navigator.of(dialogContext).pop(true),
             style: isDangerous
                 ? FilledButton.styleFrom(
                     backgroundColor: context.colors.error,
@@ -176,13 +206,13 @@ class ModalService {
   }) {
     return showDialog(
       context: context,
-      builder: (_) => AlertDialog(
+      builder: (dialogContext) => AlertDialog(
         icon: icon != null ? Icon(icon, size: 48, color: context.colors.primary) : null,
         title: Text(title),
         content: Text(message),
         actions: [
           FilledButton(
-            onPressed: () => Navigator.of(context).pop(),
+            onPressed: () => Navigator.of(dialogContext).pop(),
             child: Text(buttonText ?? 'OK'),
           ),
         ],
@@ -216,7 +246,7 @@ class ModalService {
   }) {
     return showDialog<T>(
       context: context,
-      builder: (_) => AlertDialog(
+      builder: (dialogContext) => AlertDialog(
         title: Text(title),
         contentPadding: const EdgeInsets.symmetric(vertical: 8),
         content: SizedBox(
@@ -224,24 +254,24 @@ class ModalService {
           child: ListView.builder(
             shrinkWrap: true,
             itemCount: items.length,
-            itemBuilder: (context, index) {
+            itemBuilder: (listContext, index) {
               final item = items[index];
               if (itemBuilder != null) {
                 return InkWell(
-                  onTap: () => Navigator.of(context).pop(item),
+                  onTap: () => Navigator.of(dialogContext).pop(item),
                   child: itemBuilder(item),
                 );
               }
               return ListTile(
                 title: Text(itemLabel(item)),
-                onTap: () => Navigator.of(context).pop(item),
+                onTap: () => Navigator.of(dialogContext).pop(item),
               );
             },
           ),
         ),
         actions: [
           TextButton(
-            onPressed: () => Navigator.of(context).pop(),
+            onPressed: () => Navigator.of(dialogContext).pop(),
             child: Text(context.l10n.cancel),
           ),
         ],
@@ -282,7 +312,7 @@ class ModalService {
     return showDialog(
       context: context,
       barrierDismissible: barrierDismissible,
-      builder: (_) => AlertDialog(
+      builder: (dialogContext) => AlertDialog(
         icon: icon != null
             ? Icon(icon, size: AppIconSize.xxlarge, color: context.colors.error)
             : null,
@@ -291,7 +321,7 @@ class ModalService {
         actions: [
           // Cancel button (sempre presente)
           TextButton(
-            onPressed: () => Navigator.of(context).pop(),
+            onPressed: () => Navigator.of(dialogContext).pop(),
             child: Text(
               context.l10n.cancel,
               style: context.textTheme.labelLarge?.copyWith(
@@ -304,7 +334,7 @@ class ModalService {
             if (action.isPrimary) {
               return FilledButton(
                 onPressed: () {
-                  Navigator.of(context).pop();
+                  Navigator.of(dialogContext).pop();
                   action.onPressed();
                 },
                 style: action.isDangerous
@@ -318,7 +348,7 @@ class ModalService {
             } else {
               return TextButton(
                 onPressed: () {
-                  Navigator.of(context).pop();
+                  Navigator.of(dialogContext).pop();
                   action.onPressed();
                 },
                 child: Text(

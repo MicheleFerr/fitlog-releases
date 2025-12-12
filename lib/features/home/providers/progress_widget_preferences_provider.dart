@@ -1,6 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:gymbro_flutter_new/shared/providers/shared_preferences_provider.dart';
+import 'package:gymbro_flutter_new/core/cache/user_cache_key_manager.dart';
 
 enum ProgressWidgetLayout {
   full,      // Vista completa con grafici
@@ -45,8 +46,9 @@ class ProgressWidgetPreferencesNotifier extends Notifier<ProgressWidgetPreferenc
     _loadPreferences();
     return ProgressWidgetPreferences();
   }
-  static const String _layoutKey = 'progress_widget_layout';
-  static const String _metricsKey = 'progress_widget_metrics';
+  // 🔐 User-scoped cache keys
+  String get _layoutKey => userCacheKeys.userScopedKey('progress_widget_layout');
+  String get _metricsKey => userCacheKeys.userScopedKey('progress_widget_metrics');
   
   void _loadPreferences() {
     final layoutIndex = _prefs.getInt(_layoutKey) ?? 0;

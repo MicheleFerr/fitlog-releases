@@ -16,10 +16,11 @@ class WidgetCustomizationMenu extends ConsumerWidget {
     final theme = Theme.of(context);
     final hiddenWidgets = ref.watch(homeCustomizationProvider.notifier).hiddenWidgets;
     
+    final safeMax = ModalService.safeMaxChildSize(context, preferredMax: 0.9);
     return DraggableScrollableSheet(
       initialChildSize: 0.6,
       minChildSize: 0.4,
-      maxChildSize: 0.9,
+      maxChildSize: safeMax,
       builder: (context, scrollController) => DecoratedBox(
         decoration: BoxDecoration(
           color: theme.colorScheme.surface,

@@ -144,6 +144,40 @@ abstract class IHealthRemoteDatasource {
   /// // Now visible in Apple Health or Health Connect
   /// ```
   Future<void> writeBodyWeight(BodyMeasurement measurement);
+
+  // ============================================================
+  // WORKOUT WRITE
+  // ============================================================
+
+  /// Writes a completed workout to health platform.
+  ///
+  /// iOS: Creates HKWorkout with activity type TRADITIONAL_STRENGTH_TRAINING.
+  /// Android: Creates ExerciseSessionRecord in Health Connect.
+  ///
+  /// This enables workouts to appear in Apple Fitness and count toward
+  /// Activity rings (Exercise ring).
+  ///
+  /// **Parameters**:
+  /// - [startTime]: When the workout started
+  /// - [endTime]: When the workout ended
+  /// - [totalCalories]: Optional calories burned during workout
+  /// - [workoutName]: Optional name for logging purposes
+  ///
+  /// Example:
+  /// ```dart
+  /// await datasource.writeWorkout(
+  ///   startTime: workout.startTime,
+  ///   endTime: workout.endTime,
+  ///   totalCalories: 300,
+  /// );
+  /// // Now visible in Apple Fitness and counts toward Exercise ring
+  /// ```
+  Future<bool> writeWorkout({
+    required DateTime startTime,
+    required DateTime endTime,
+    int? totalCalories,
+    String? workoutName,
+  });
 }
 
 /// Implementation of [IHealthRemoteDatasource] using the `health` package.
@@ -160,19 +194,27 @@ class HealthRemoteDatasourceImpl implements IHealthRemoteDatasource {
   /// This enables the health package to communicate with the native platform.
   Future<void> _ensureConfigured() async {
     if (_isConfigured) {
-      debugPrint('🏥 [HealthKit] Already configured');
+      if (kDebugMode) {
+        debugPrint('🏥 [HealthKit] Already configured');
+      }
       return;
     }
 
-    debugPrint('🏥 [HealthKit] Configuring health package...');
+    if (kDebugMode) {
+      debugPrint('🏥 [HealthKit] Configuring health package...');
+    }
     try {
       // Configure health package for HealthKit (iOS) / Health Connect (Android)
       // useHealthConnectIfAvailable: true enables Health Connect on Android 14+
       await _health.configure();
       _isConfigured = true;
-      debugPrint('🏥 [HealthKit] ✅ Configuration successful');
+      if (kDebugMode) {
+        debugPrint('🏥 [HealthKit] ✅ Configuration successful');
+      }
     } catch (e, stack) {
-      debugPrint('🏥 [HealthKit] ❌ Configuration failed: $e');
+      if (kDebugMode) {
+        debugPrint('🏥 [HealthKit] ❌ Configuration failed: $e');
+      }
       debugPrint('🏥 [HealthKit] Stack: $stack');
       rethrow;
     }
@@ -208,7 +250,9 @@ class HealthRemoteDatasourceImpl implements IHealthRemoteDatasource {
   Future<HealthPermissionStatus> requestPermissions({
     required List<HealthDataType> dataTypes,
   }) async {
-    debugPrint('🏥 [HealthKit] requestPermissions called for: $dataTypes');
+    if (kDebugMode) {
+      debugPrint('🏥 [HealthKit] requestPermissions called for: $dataTypes');
+    }
 
     // Ensure health package is configured before requesting permissions
     await _ensureConfigured();
@@ -218,31 +262,41 @@ class HealthRemoteDatasourceImpl implements IHealthRemoteDatasource {
         .map((dt) => _mapToHealthPackageType(dt))
         .toList();
 
-    debugPrint('🏥 [HealthKit] Mapped to health package types: $healthTypes');
+    if (kDebugMode) {
+      debugPrint('🏥 [HealthKit] Mapped to health package types: $healthTypes');
+    }
 
-    // Request read permissions only (MVP - no write to health platform yet)
-    // Workout: Read-only (import from HealthKit/Health Connect)
+    // Bidirectional sync: Request read + write permissions
+    // Workout: Read + Write (export to Apple Fitness / Activity rings)
     // Body weight: Read + Write (bidirectional sync)
     final permissions = dataTypes.map((dt) {
-      if (dt == HealthDataType.bodyWeight) {
+      if (dt == HealthDataType.bodyWeight || dt == HealthDataType.workout) {
         return health_pkg.HealthDataAccess.READ_WRITE; // Bidirectional sync
       }
-      return health_pkg.HealthDataAccess.READ; // Read-only for workouts
+      return health_pkg.HealthDataAccess.READ; // Read-only for other types
     }).toList();
 
-    debugPrint('🏥 [HealthKit] Requesting permissions: $permissions');
+    if (kDebugMode) {
+      debugPrint('🏥 [HealthKit] Requesting permissions: $permissions');
+    }
     debugPrint('🏥 [HealthKit] Platform: ${Platform.isIOS ? "iOS" : "Android"}');
 
     // Request permissions via health package
     try {
-      debugPrint('🏥 [HealthKit] Calling _health.requestAuthorization...');
+      if (kDebugMode) {
+        debugPrint('🏥 [HealthKit] Calling _health.requestAuthorization...');
+      }
       final result = await _health.requestAuthorization(
         healthTypes,
         permissions: permissions,
       );
-      debugPrint('🏥 [HealthKit] requestAuthorization returned: $result');
+      if (kDebugMode) {
+        debugPrint('🏥 [HealthKit] requestAuthorization returned: $result');
+      }
     } catch (e, stack) {
-      debugPrint('🏥 [HealthKit] ❌ requestAuthorization failed: $e');
+      if (kDebugMode) {
+        debugPrint('🏥 [HealthKit] ❌ requestAuthorization failed: $e');
+      }
       debugPrint('🏥 [HealthKit] Stack: $stack');
       rethrow;
     }
@@ -257,7 +311,9 @@ class HealthRemoteDatasourceImpl implements IHealthRemoteDatasource {
         permissions: [health_pkg.HealthDataAccess.READ],
       );
 
-      debugPrint('🏥 [HealthKit] hasPermissions for $dataType: $hasPermission');
+      if (kDebugMode) {
+        debugPrint('🏥 [HealthKit] hasPermissions for $dataType: $hasPermission');
+      }
 
       if (hasPermission == true) {
         permissionStates[dataType] = PermissionState.authorized;
@@ -269,7 +325,9 @@ class HealthRemoteDatasourceImpl implements IHealthRemoteDatasource {
         // After successful requestAuthorization, we assume authorized on iOS.
         // The only reliable way to check is to try reading data.
         if (Platform.isIOS) {
-          debugPrint('🏥 [HealthKit] iOS: hasPermissions=null, assuming authorized after request');
+          if (kDebugMode) {
+            debugPrint('🏥 [HealthKit] iOS: hasPermissions=null, assuming authorized after request');
+          }
           permissionStates[dataType] = PermissionState.authorized;
         } else {
           permissionStates[dataType] = PermissionState.notDetermined;
@@ -290,14 +348,18 @@ class HealthRemoteDatasourceImpl implements IHealthRemoteDatasource {
 
   @override
   Future<HealthPermissionStatus> checkPermissionStatus() async {
-    debugPrint('🏥 [HealthKit] checkPermissionStatus called');
+    if (kDebugMode) {
+      debugPrint('🏥 [HealthKit] checkPermissionStatus called');
+    }
 
     // Ensure health package is configured before checking permissions
     await _ensureConfigured();
 
     // Check all possible data types (7 total)
     const allTypes = HealthDataType.values;
-    debugPrint('🏥 [HealthKit] Checking permissions for: $allTypes');
+    if (kDebugMode) {
+      debugPrint('🏥 [HealthKit] Checking permissions for: $allTypes');
+    }
 
     final permissionStates = <HealthDataType, PermissionState>{};
 
@@ -308,7 +370,9 @@ class HealthRemoteDatasourceImpl implements IHealthRemoteDatasource {
         permissions: [health_pkg.HealthDataAccess.READ],
       );
 
-      debugPrint('🏥 [HealthKit] checkPermissionStatus for $dataType: $hasPermission');
+      if (kDebugMode) {
+        debugPrint('🏥 [HealthKit] checkPermissionStatus for $dataType: $hasPermission');
+      }
 
       if (hasPermission == true) {
         permissionStates[dataType] = PermissionState.authorized;
@@ -321,7 +385,9 @@ class HealthRemoteDatasourceImpl implements IHealthRemoteDatasource {
         // if permissions were granted. This matches iOS privacy design where
         // the only reliable way to check is to try reading data.
         if (Platform.isIOS) {
-          debugPrint('🏥 [HealthKit] iOS: hasPermissions=null for $dataType, assuming authorized');
+          if (kDebugMode) {
+            debugPrint('🏥 [HealthKit] iOS: hasPermissions=null for $dataType, assuming authorized');
+          }
           permissionStates[dataType] = PermissionState.authorized;
         } else {
           permissionStates[dataType] = PermissionState.notDetermined;
@@ -462,6 +528,58 @@ class HealthRemoteDatasourceImpl implements IHealthRemoteDatasource {
 
     if (!success) {
       throw Exception('Failed to write body weight to health platform');
+    }
+  }
+
+  // ============================================================
+  // WORKOUT WRITE IMPLEMENTATION
+  // ============================================================
+
+  @override
+  Future<bool> writeWorkout({
+    required DateTime startTime,
+    required DateTime endTime,
+    int? totalCalories,
+    String? workoutName,
+  }) async {
+    if (kDebugMode) {
+      debugPrint('🏥 [HealthKit] writeWorkout called');
+      debugPrint('🏥 [HealthKit] Start: $startTime, End: $endTime');
+      debugPrint('🏥 [HealthKit] Calories: $totalCalories, Name: $workoutName');
+    }
+
+    // Ensure health package is configured before writing data
+    await _ensureConfigured();
+
+    try {
+      // Write workout to HealthKit/Health Connect
+      // Using TRADITIONAL_STRENGTH_TRAINING as the workout type
+      // This is the appropriate type for weight training/bodybuilding
+      final success = await _health.writeWorkoutData(
+        activityType: health_pkg.HealthWorkoutActivityType.TRADITIONAL_STRENGTH_TRAINING,
+        start: startTime,
+        end: endTime,
+        totalEnergyBurned: totalCalories,
+        totalEnergyBurnedUnit: health_pkg.HealthDataUnit.KILOCALORIE,
+      );
+
+      if (kDebugMode) {
+        if (success) {
+          debugPrint('🏥 [HealthKit] ✅ Workout written successfully');
+          debugPrint('🏥 [HealthKit] Workout should now appear in Apple Fitness');
+          debugPrint('🏥 [HealthKit] Exercise ring should update with workout duration');
+        } else {
+          debugPrint('🏥 [HealthKit] ❌ Failed to write workout');
+        }
+      }
+
+      return success;
+    } catch (e, stack) {
+      if (kDebugMode) {
+        debugPrint('🏥 [HealthKit] ❌ Error writing workout: $e');
+        debugPrint('🏥 [HealthKit] Stack: $stack');
+      }
+      return false;
     }
   }
 }

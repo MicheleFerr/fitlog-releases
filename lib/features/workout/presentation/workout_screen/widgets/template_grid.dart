@@ -5,6 +5,7 @@ import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_spacing.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/material_scroll_list.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
 
 /// Template grid widget that displays templates in a vertical list
@@ -100,10 +101,11 @@ class TemplateGrid extends StatelessWidget {
       );
     }
 
-    // Use vertical ListView with SwipeableTemplateCard (iOS-style swipe actions)
-    return ListView.builder(
+    // Use MaterialScrollList for material-like physics with SwipeableTemplateCard
+    return MaterialScrollList(
       itemCount: templates.length,
       itemExtent: 216, // 200px card + 16px margin (8px top + 8px bottom)
+      padding: EdgeInsets.zero,
       itemBuilder: (context, index) {
         final template = templates[index];
         return SwipeableTemplateCard(

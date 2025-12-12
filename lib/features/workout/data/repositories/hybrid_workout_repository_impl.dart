@@ -1,12 +1,12 @@
 /// 🏋️‍♂️ GymBro TrackLog - Flutter Fitness App
-/// 
+///
 /// 📁 Layer: data/repositories
 /// 🎯 Feature: workout
 /// 🔧 Type: repository_implementation
 /// 🌍 Localization: N/A
 /// 🎨 Theme: N/A
 /// 📱 Platform: Universal
-/// 
+///
 /// Dependencies:
 /// - Hive (local storage)
 /// - Firebase Firestore (cloud storage for premium)
@@ -33,6 +33,7 @@ import 'package:flutter/foundation.dart';
 import 'package:gymbro_flutter_new/features/analytics/domain/repositories/analytics_repository.dart';
 import 'package:gymbro_flutter_new/features/analytics/domain/entities/exercise_session.dart';
 import 'package:gymbro_flutter_new/features/analytics/domain/entities/analytics_set.dart';
+import 'package:gymbro_flutter_new/shared/data/mixins/firestore_cache_first_mixin.dart';
 
 // Import unawaited for fire-and-forget futures
 // ignore: unused_import
@@ -40,8 +41,9 @@ import 'package:gymbro_flutter_new/features/analytics/domain/entities/analytics_
 /// Hybrid implementation of WorkoutRepository
 /// - Free users: Local storage only (Hive)
 /// - Premium users: Local storage + Cloud sync (Firebase)
-class HybridWorkoutRepositoryImpl implements WorkoutRepository {
-  
+class HybridWorkoutRepositoryImpl
+    with FirestoreCacheFirstMixin
+    implements WorkoutRepository {
   HybridWorkoutRepositoryImpl({
     required HiveWorkoutDataSource localDataSource,
     required FirebaseWorkoutDataSource remoteDataSource,
@@ -69,7 +71,7 @@ class HybridWorkoutRepositoryImpl implements WorkoutRepository {
   // 🔒 RACE CONDITION PROTECTION: Mutex for write operations
   // Prevents concurrent save/update/delete operations that could corrupt data
   final _workoutWriteMutex = MutexWrapper(name: 'WorkoutWrite');
-  
+
   /// Initialize listener for user profile changes
   void _initUserProfileListener() {
     // MEMORY LEAK FIX: Assign subscription to variable for proper cleanup
@@ -83,16 +85,15 @@ class HybridWorkoutRepositoryImpl implements WorkoutRepository {
       }
     });
   }
-  
+
   /// Load user profile from Firestore
   Future<void> _loadUserProfile(String userId) async {
     try {
-      final doc = await FirebaseFirestore.instance
-          .collection('users')
-          .doc(userId)
-          .get();
-      
-      if (doc.exists) {
+      final docRef = FirebaseFirestore.instance.collection('users').doc(userId);
+
+      final doc = await getCacheFirst(docRef);
+
+      if (doc != null && doc.exists) {
         _cachedUserProfile = UserProfile.fromFirestore(doc);
       }
     } catch (e) {
@@ -103,13 +104,13 @@ class HybridWorkoutRepositoryImpl implements WorkoutRepository {
       _cachedUserProfile = null;
     }
   }
-  
+
   /// Check if current user is premium
   bool get isPremiumUser {
     return _cachedUserProfile?.accountTier == AccountTier.premium ||
-           _cachedUserProfile?.accountTier == AccountTier.pro;
+        _cachedUserProfile?.accountTier == AccountTier.pro;
   }
-  
+
   /// Check if current user is admin (always has cloud access)
   ///
   /// 🔐 SECURITY: Uses Firebase Custom Claims (server-validated)
@@ -118,16 +119,16 @@ class HybridWorkoutRepositoryImpl implements WorkoutRepository {
   Future<bool> get isAdminUser async {
     return await AdminRoleHelper.isCurrentUserAdmin();
   }
-  
+
   /// Check if we have internet connection
   /// Uses Firestore network state instead of querying a protected document
   Future<bool> get hasConnection async {
     try {
       // Use Firestore's built-in network connectivity check
       // This doesn't require any permission and is more reliable
-      await FirebaseFirestore.instance
-          .waitForPendingWrites()
-          .timeout(const Duration(seconds: 3));
+      await FirebaseFirestore.instance.waitForPendingWrites().timeout(
+        const Duration(seconds: 3),
+      );
       return true;
     } catch (_) {
       return false;
@@ -161,7 +162,6 @@ class HybridWorkoutRepositoryImpl implements WorkoutRepository {
         }
 
         return right(localResult);
-
       } catch (e) {
         return left(UnexpectedFailure('Failed to save workout: $e'));
       }
@@ -180,10 +180,7 @@ class HybridWorkoutRepositoryImpl implements WorkoutRepository {
         final workoutModel = WorkoutModel.fromDomain(workout);
 
         // Update locally first
-        await _localDataSource.updateWorkout(
-          workoutModel,
-          currentUser.uid,
-        );
+        await _localDataSource.updateWorkout(workoutModel, currentUser.uid);
 
         // Update analytics if workout is completed
         if (workout.isCompleted && _analyticsRepository != null) {
@@ -200,7 +197,6 @@ class HybridWorkoutRepositoryImpl implements WorkoutRepository {
         }
 
         return right(null);
-
       } catch (e) {
         return left(UnexpectedFailure('Failed to update workout: $e'));
       }
@@ -214,13 +210,13 @@ class HybridWorkoutRepositoryImpl implements WorkoutRepository {
       if (currentUser == null) {
         return left(const AuthenticationFailure('User not authenticated'));
       }
-      
+
       // Try local first (fastest)
       final localWorkout = await _localDataSource.getWorkout(
         workoutId,
         currentUser.uid,
       );
-      
+
       if (localWorkout != null) {
         return right(localWorkout.toDomain());
       }
@@ -231,16 +227,15 @@ class HybridWorkoutRepositoryImpl implements WorkoutRepository {
           workoutId,
           currentUser.uid,
         );
-        
+
         if (remoteWorkout != null) {
           // Cache it locally for next time
           await _localDataSource.saveWorkout(remoteWorkout, currentUser.uid);
           return right(remoteWorkout.toDomain());
         }
       }
-      
+
       return left(const WorkoutNotFoundFailure('Workout not found'));
-      
     } catch (e) {
       return left(UnexpectedFailure('Failed to get workout: $e'));
     }
@@ -268,7 +263,7 @@ class HybridWorkoutRepositoryImpl implements WorkoutRepository {
             startDate: startDate,
             endDate: endDate,
           );
-          
+
           // Also get local workouts
           final localWorkouts = await _localDataSource.getWorkouts(
             currentUser.uid,
@@ -276,13 +271,13 @@ class HybridWorkoutRepositoryImpl implements WorkoutRepository {
             startDate: startDate,
             endDate: endDate,
           );
-          
+
           // Merge and deduplicate (cloud data takes precedence)
           final mergedWorkouts = _mergeWorkouts(localWorkouts, remoteWorkouts);
-          
+
           // Update local cache with cloud data
           await _updateLocalCache(remoteWorkouts, currentUser.uid);
-          
+
           return right(mergedWorkouts.map((m) => m.toDomain()).toList());
         } catch (e) {
           if (kDebugMode) {
@@ -298,7 +293,7 @@ class HybridWorkoutRepositoryImpl implements WorkoutRepository {
           return right(localWorkouts.map((m) => m.toDomain()).toList());
         }
       }
-      
+
       // Get local workouts first for non-admin users
       final localWorkouts = await _localDataSource.getWorkouts(
         currentUser.uid,
@@ -306,7 +301,7 @@ class HybridWorkoutRepositoryImpl implements WorkoutRepository {
         startDate: startDate,
         endDate: endDate,
       );
-      
+
       // If premium, merge with cloud data
       if (isPremiumUser && await hasConnection) {
         try {
@@ -316,13 +311,13 @@ class HybridWorkoutRepositoryImpl implements WorkoutRepository {
             startDate: startDate,
             endDate: endDate,
           );
-          
+
           // Merge and deduplicate
           final mergedWorkouts = _mergeWorkouts(localWorkouts, remoteWorkouts);
-          
+
           // Update local cache with any new remote workouts
           await _updateLocalCache(mergedWorkouts, currentUser.uid);
-          
+
           return right(mergedWorkouts.map((m) => m.toDomain()).toList());
         } catch (e) {
           // If cloud sync fails, still return local data
@@ -331,9 +326,8 @@ class HybridWorkoutRepositoryImpl implements WorkoutRepository {
           }
         }
       }
-      
+
       return right(localWorkouts.map((m) => m.toDomain()).toList());
-      
     } catch (e) {
       return left(UnexpectedFailure('Failed to get workouts: $e'));
     }
@@ -360,7 +354,6 @@ class HybridWorkoutRepositoryImpl implements WorkoutRepository {
         }
 
         return right(null);
-
       } catch (e) {
         return left(UnexpectedFailure('Failed to delete workout: $e'));
       }
@@ -406,16 +399,15 @@ class HybridWorkoutRepositoryImpl implements WorkoutRepository {
       if (currentUser == null) {
         return left(const AuthenticationFailure('User not authenticated'));
       }
-      
+
       // Get stats from local data (always available)
       final stats = await _localDataSource.getWorkoutStats(
         currentUser.uid,
         startDate: startDate,
         endDate: endDate,
       );
-      
+
       return right(stats);
-      
     } catch (e) {
       return left(UnexpectedFailure('Failed to get workout stats: $e'));
     }
@@ -425,15 +417,18 @@ class HybridWorkoutRepositoryImpl implements WorkoutRepository {
   Stream<Either<Failure, Workout?>> watchActiveWorkout() {
     final currentUser = _auth.currentUser;
     if (currentUser == null) {
-      return Stream.value(left(const AuthenticationFailure('User not authenticated')));
+      return Stream.value(
+        left(const AuthenticationFailure('User not authenticated')),
+      );
     }
-    
+
     // For now, poll local storage
     // In future, can implement proper stream with Hive listeners
-    return Stream.periodic(const Duration(seconds: 1))
-        .asyncMap((_) async {
+    return Stream.periodic(const Duration(seconds: 1)).asyncMap((_) async {
       try {
-        final workout = await _localDataSource.getActiveWorkout(currentUser.uid);
+        final workout = await _localDataSource.getActiveWorkout(
+          currentUser.uid,
+        );
         return right(workout?.toDomain());
       } catch (e) {
         return left(UnexpectedFailure('Failed to watch active workout: $e'));
@@ -451,15 +446,14 @@ class HybridWorkoutRepositoryImpl implements WorkoutRepository {
       if (currentUser == null) {
         return left(const AuthenticationFailure('User not authenticated'));
       }
-      
+
       final history = await _localDataSource.getWorkoutHistory(
         currentUser.uid,
         page: page,
         limit: limit,
       );
-      
+
       return right(history);
-      
     } catch (e) {
       return left(UnexpectedFailure('Failed to get workout history: $e'));
     }
@@ -479,7 +473,10 @@ class HybridWorkoutRepositoryImpl implements WorkoutRepository {
         }
 
         // Get workout from local storage
-        final workout = await _localDataSource.getWorkout(workoutId, currentUser.uid);
+        final workout = await _localDataSource.getWorkout(
+          workoutId,
+          currentUser.uid,
+        );
         if (workout == null) {
           return left(const WorkoutNotFoundFailure('Workout not found'));
         }
@@ -515,7 +512,6 @@ class HybridWorkoutRepositoryImpl implements WorkoutRepository {
         }
 
         return right(null);
-
       } catch (e) {
         return left(UnexpectedFailure('Failed to update exercise set: $e'));
       }
@@ -535,7 +531,10 @@ class HybridWorkoutRepositoryImpl implements WorkoutRepository {
         }
 
         // Get workout from local storage
-        final workout = await _localDataSource.getWorkout(workoutId, currentUser.uid);
+        final workout = await _localDataSource.getWorkout(
+          workoutId,
+          currentUser.uid,
+        );
         if (workout == null) {
           return left(const WorkoutNotFoundFailure('Workout not found'));
         }
@@ -558,7 +557,6 @@ class HybridWorkoutRepositoryImpl implements WorkoutRepository {
         }
 
         return right(null);
-
       } catch (e) {
         return left(UnexpectedFailure('Failed to add exercise to workout: $e'));
       }
@@ -578,7 +576,10 @@ class HybridWorkoutRepositoryImpl implements WorkoutRepository {
         }
 
         // Get workout from local storage
-        final workout = await _localDataSource.getWorkout(workoutId, currentUser.uid);
+        final workout = await _localDataSource.getWorkout(
+          workoutId,
+          currentUser.uid,
+        );
         if (workout == null) {
           return left(const WorkoutNotFoundFailure('Workout not found'));
         }
@@ -602,9 +603,10 @@ class HybridWorkoutRepositoryImpl implements WorkoutRepository {
         }
 
         return right(null);
-
       } catch (e) {
-        return left(UnexpectedFailure('Failed to remove exercise from workout: $e'));
+        return left(
+          UnexpectedFailure('Failed to remove exercise from workout: $e'),
+        );
       }
     });
   }
@@ -615,12 +617,12 @@ class HybridWorkoutRepositoryImpl implements WorkoutRepository {
     List<WorkoutModel> remoteWorkouts,
   ) {
     final merged = <String, WorkoutModel>{};
-    
+
     // Add all local workouts
     for (final workout in localWorkouts) {
       merged[workout.id] = workout;
     }
-    
+
     // Merge remote workouts (remote wins in case of conflict for now)
     for (final workout in remoteWorkouts) {
       final localVersion = merged[workout.id];
@@ -635,17 +637,38 @@ class HybridWorkoutRepositoryImpl implements WorkoutRepository {
         }
       }
     }
-    
+
     return merged.values.toList();
   }
 
-  /// Update local cache with new workouts
+  /// ⚡ OPTIMIZED: Update local cache with new workouts
+  /// Only saves if workout is new or has been updated (checks updatedAt timestamp)
   Future<void> _updateLocalCache(
     List<WorkoutModel> workouts,
     String userId,
   ) async {
     for (final workout in workouts) {
-      await _localDataSource.saveWorkout(workout, userId);
+      // ✅ CHECK: Only save if workout is new or updated
+      final existingWorkout = await _localDataSource.getWorkout(workout.id, userId);
+
+      if (existingWorkout == null) {
+        // New workout - save it
+        await _localDataSource.saveWorkout(workout, userId);
+        if (kDebugMode) {
+          debugPrint('💾 [CACHE-NEW] Saved new workout to Hive: ${workout.id}');
+        }
+      } else if (workout.updatedAt.isAfter(existingWorkout.updatedAt)) {
+        // Updated workout - save it
+        await _localDataSource.saveWorkout(workout, userId);
+        if (kDebugMode) {
+          debugPrint('🔄 [CACHE-UPDATE] Updated workout in Hive: ${workout.id}');
+        }
+      } else {
+        // Workout already exists and is up-to-date - skip save
+        if (kDebugMode) {
+          debugPrint('⏩ [CACHE-SKIP] Workout already up-to-date in Hive: ${workout.id}');
+        }
+      }
     }
   }
 
@@ -786,11 +809,15 @@ class HybridWorkoutRepositoryImpl implements WorkoutRepository {
     if (_isDisposed) return null;
 
     try {
-      final workoutModel = await _localDataSource.getLastCompletedWorkout(userId);
+      final workoutModel = await _localDataSource.getLastCompletedWorkout(
+        userId,
+      );
       return workoutModel?.toDomain(); // Convert WorkoutModel to Workout
     } catch (e) {
       if (kDebugMode) {
-        debugPrint('❌ [HybridWorkoutRepository] getLastCompletedWorkout error: $e');
+        debugPrint(
+          '❌ [HybridWorkoutRepository] getLastCompletedWorkout error: $e',
+        );
       }
       return null; // Graceful fallback
     }
@@ -814,12 +841,14 @@ class HybridWorkoutRepositoryImpl implements WorkoutRepository {
       for (final exercise in workout.exercises) {
         // Filter completed sets with valid data
         final completedSets = exercise.sets
-            .where((set) =>
-                set.isCompleted &&
-                set.weight != null &&
-                set.weight! > 0 &&
-                (set.actualReps ?? set.reps) != null &&
-                (set.actualReps ?? set.reps)! > 0)
+            .where(
+              (set) =>
+                  set.isCompleted &&
+                  set.weight != null &&
+                  set.weight! > 0 &&
+                  (set.actualReps ?? set.reps) != null &&
+                  (set.actualReps ?? set.reps)! > 0,
+            )
             .toList();
 
         // Skip exercises with no valid sets
@@ -854,12 +883,16 @@ class HybridWorkoutRepositoryImpl implements WorkoutRepository {
       }
 
       if (kDebugMode) {
-        debugPrint('✅ [HybridWorkoutRepository] Analytics updated for ${workout.exercises.length} exercises');
+        debugPrint(
+          '✅ [HybridWorkoutRepository] Analytics updated for ${workout.exercises.length} exercises',
+        );
       }
     } catch (e) {
       // Log error but don't fail workout save
       if (kDebugMode) {
-        debugPrint('⚠️ [HybridWorkoutRepository] Failed to update analytics: $e');
+        debugPrint(
+          '⚠️ [HybridWorkoutRepository] Failed to update analytics: $e',
+        );
       }
     }
   }
@@ -900,8 +933,14 @@ class HybridWorkoutRepositoryImpl implements WorkoutRepository {
       final userId = currentUser.uid;
 
       if (kDebugMode) {
-        debugPrint('📖 [HybridRepo] getWorkoutsPaginated - pageSize: $pageSize');
-        debugPrint('📖 [HybridRepo] Cursor: ${startAfter?.id ?? "null (first page)"}');
+        debugPrint(
+          '📖 [HybridRepo] getWorkoutsPaginated - pageSize: $pageSize',
+        );
+      }
+      if (kDebugMode) {
+        debugPrint(
+          '📖 [HybridRepo] Cursor: ${startAfter?.id ?? "null (first page)"}',
+        );
       }
 
       // For admin users, prioritize cloud data for consistency
@@ -970,14 +1009,18 @@ class HybridWorkoutRepositoryImpl implements WorkoutRepository {
       // Cache fetched workouts locally (background, non-blocking)
       _cacheWorkoutsInBackground(result.items, userId);
 
-      return right(PaginatedResult<Workout>(
-        items: workouts,
-        hasMore: result.hasMore,
-        lastDocument: result.lastDocument,
-      ));
+      return right(
+        PaginatedResult<Workout>(
+          items: workouts,
+          hasMore: result.hasMore,
+          lastDocument: result.lastDocument,
+        ),
+      );
     } catch (e) {
       if (kDebugMode) {
-        debugPrint('⚠️ [HybridRepo] Cloud pagination failed, falling back to local: $e');
+        debugPrint(
+          '⚠️ [HybridRepo] Cloud pagination failed, falling back to local: $e',
+        );
       }
       // Fallback to local on cloud failure
       return await _getPaginatedFromLocal(
@@ -1029,11 +1072,13 @@ class HybridWorkoutRepositoryImpl implements WorkoutRepository {
     // Convert WorkoutModel to Workout domain entities
     final workouts = result.items.map((model) => model.toDomain()).toList();
 
-    return right(PaginatedResult<Workout>(
-      items: workouts,
-      hasMore: result.hasMore,
-      lastDocument: null, // Local doesn't use DocumentSnapshot cursor
-    ));
+    return right(
+      PaginatedResult<Workout>(
+        items: workouts,
+        hasMore: result.hasMore,
+        lastDocument: null, // Local doesn't use DocumentSnapshot cursor
+      ),
+    );
   }
 
   /// Get paginated workouts merged from local + cloud (premium users)
@@ -1080,11 +1125,13 @@ class HybridWorkoutRepositoryImpl implements WorkoutRepository {
       // Cache cloud workouts locally
       _cacheWorkoutsInBackground(cloudResult.items, userId);
 
-      return right(PaginatedResult<Workout>(
-        items: workouts,
-        hasMore: cloudResult.hasMore || localResult.hasMore,
-        lastDocument: cloudResult.lastDocument,
-      ));
+      return right(
+        PaginatedResult<Workout>(
+          items: workouts,
+          hasMore: cloudResult.hasMore || localResult.hasMore,
+          lastDocument: cloudResult.lastDocument,
+        ),
+      );
     } catch (e) {
       if (kDebugMode) {
         debugPrint('⚠️ [HybridRepo] Merged pagination failed: $e');
@@ -1109,7 +1156,9 @@ class HybridWorkoutRepositoryImpl implements WorkoutRepository {
           await _localDataSource.saveWorkout(workout, userId);
         }
         if (kDebugMode) {
-          debugPrint('✅ [HybridRepo] Cached ${workouts.length} workouts locally');
+          debugPrint(
+            '✅ [HybridRepo] Cached ${workouts.length} workouts locally',
+          );
         }
       } catch (e) {
         if (kDebugMode) {

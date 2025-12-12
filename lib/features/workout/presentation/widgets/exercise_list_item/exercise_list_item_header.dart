@@ -18,13 +18,17 @@ import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dar
 /// Displays:
 /// - Exercise type icon (GIF for single exercises, icons for superset/dropset/restpause)
 /// - Exercise name (tappable for navigation to details)
-/// - Badge row with configurable chips (APRE, Timer, Countdown, TUT, Quick Info, Warmup, Prevention)
+/// - Badge row with configurable chips (Timer, Countdown, TUT, Quick Info, Warmup, Prevention)
 /// - Insight chip showing last workout performance
 /// - Popup menu with exercise actions
 ///
 /// Extracted from exercise_list_item.dart for Single Responsibility Principle.
 /// Part of the ExerciseListItem decomposition to reduce file size from ~5600 to ~1500 lines.
-class ExerciseListItemHeader extends ConsumerWidget {
+/// ✅ PERFORMANCE FIX: Changed from ConsumerWidget to StatelessWidget
+/// The GIF provider watch is now isolated in _ExerciseGifIcon widget.
+/// This prevents rebuild of the ENTIRE header (including insight chip)
+/// when only the GIF loading state changes.
+class ExerciseListItemHeader extends StatelessWidget {
   const ExerciseListItemHeader({
     super.key,
     required this.exercise,
@@ -46,8 +50,12 @@ class ExerciseListItemHeader extends ConsumerWidget {
     required this.onDuplicateExercise,
     required this.onShowDeleteConfirmation,
     required this.onShowCommunityAdvice,
+    required this.onShowCountingModePicker,
+    required this.onAddWarmupSets,
+    this.onCreateSuperset,
     this.hasWarmupData,
     this.hasInjuryPreventionData,
+    this.tutorialMenuKey,
   });
 
   final Exercise exercise;
@@ -71,16 +79,29 @@ class ExerciseListItemHeader extends ConsumerWidget {
   final VoidCallback onDuplicateExercise;
   final VoidCallback onShowDeleteConfirmation;
   final VoidCallback onShowCommunityAdvice;
+  final VoidCallback onShowCountingModePicker;
+  final VoidCallback onAddWarmupSets;
+  final VoidCallback? onCreateSuperset;
 
   // Optional validation functions
   final bool Function(Map<String, dynamic>)? hasWarmupData;
   final bool Function(Map<String, dynamic>)? hasInjuryPreventionData;
 
+  /// Optional key for tutorial overlay on the popup menu (⋮)
+  final GlobalKey? tutorialMenuKey;
+
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
+    // ✅ PERFORMANCE: Removed debug print that was causing log spam during scroll
+    // The header no longer rebuilds when GIF provider changes state
+
     return Row(
       children: [
-        _buildExerciseTypeIcon(context, ref),
+        // ✅ PERFORMANCE: GIF icon is now isolated in its own ConsumerWidget
+        // This prevents rebuild of the entire header when GIF loads
+        _ExerciseGifIcon(
+          exercise: exercise,
+        ),
         const SizedBox(width: 12),
         Expanded(
           child: Column(
@@ -90,9 +111,10 @@ class ExerciseListItemHeader extends ConsumerWidget {
               _buildExerciseNameRow(context),
               // Spacing between name and badges
               const SizedBox(height: 6),
-              // Badge row (APRE, Timer, Countdown) - Horizontally scrollable
+              // Badge row (Timer, Countdown) - Horizontally scrollable
               _buildBadgeRow(context),
               // Insight chip - conditional on showExerciseInsights
+              // ✅ FIX: This section no longer re-renders when GIF provider changes
               if (lastActivity != null &&
                   (config.showExerciseInsights ?? isProMode)) ...[
                 const SizedBox(height: 4),
@@ -106,98 +128,8 @@ class ExerciseListItemHeader extends ConsumerWidget {
     );
   }
 
-  Widget _buildExerciseTypeIcon(BuildContext context, WidgetRef ref) {
-    final colorScheme = context.colors;
-
-    // For single type exercises, use animated GIF
-    if (exercise.type == ExerciseType.single) {
-      final gifUrlAsync = ref.watch(
-        exerciseGifUrlProvider(exercise.name),
-      );
-
-      return gifUrlAsync.when(
-        // RepaintBoundary isolates GIF animation from parent repaints
-        data: (gifUrl) => RepaintBoundary(
-          child: ExerciseGifWidget(
-            gifUrl: gifUrl,
-            exerciseName: exercise.name,
-            backgroundColor: colorScheme.primary.withValues(alpha: 0.1),
-            iconColor: colorScheme.primary,
-          ),
-        ),
-        loading: () => Container(
-          width: 56,
-          height: 56,
-          decoration: BoxDecoration(
-            color: colorScheme.primary.withValues(alpha: 0.1),
-            shape: BoxShape.circle,
-          ),
-          child: Center(
-            child: SizedBox(
-              width: 20,
-              height: 20,
-              child: CircularProgressIndicator(
-                strokeWidth: 2,
-                valueColor: AlwaysStoppedAnimation<Color>(colorScheme.primary),
-              ),
-            ),
-          ),
-        ),
-        error: (_, __) => Container(
-          width: 40,
-          height: 40,
-          decoration: BoxDecoration(
-            color: colorScheme.primary.withValues(alpha: 0.1),
-            shape: BoxShape.circle,
-          ),
-          child: SemanticIcon(
-            icon: AppIcons.workout,
-            semanticLabel: 'Workout',
-            color: colorScheme.primary,
-            size: AppIconSize.small,
-          ),
-        ),
-      );
-    }
-
-    // For other exercise types, use traditional icons
-    IconData icon;
-    Color color;
-
-    switch (exercise.type) {
-      case ExerciseType.superset:
-        icon = AppIcons.repeat;
-        color = colorScheme.secondary;
-        break;
-      case ExerciseType.dropset:
-        icon = AppIcons.trendDown;
-        color = colorScheme.tertiary;
-        break;
-      case ExerciseType.restPause:
-        icon = AppIcons.pauseCircle;
-        color = colorScheme.error;
-        break;
-      case ExerciseType.single:
-        icon = AppIcons.workout;
-        color = colorScheme.primary;
-        break;
-    }
-
-    return Container(
-      width: 40,
-      height: 40,
-      decoration: BoxDecoration(
-        color: color.withValues(alpha: 0.1),
-        shape: BoxShape.circle,
-      ),
-      child: SemanticIcon(
-        icon: icon,
-        semanticLabel: 'Exercise type',
-        color: color,
-        size: AppIconSize.small,
-      ),
-    );
-  }
+  // NOTE: _buildExerciseTypeIcon was removed and replaced with _ExerciseGifIcon widget
+  // This isolates the ref.watch for GIF provider, preventing header rebuilds
 
   Widget _buildExerciseNameRow(BuildContext context) {
     return InkWell(
@@ -238,12 +170,6 @@ class ExerciseListItemHeader extends ConsumerWidget {
       scrollDirection: Axis.horizontal,
       child: Row(
         children: [
-          // APRE badge indicator (tappable)
-          if (exercise.autoAdjustmentType == AutoAdjustmentType.apre &&
-              (config.enableApre ?? false)) ...[
-            _buildApreBadge(context),
-            const SizedBox(width: 8),
-          ],
           // Rest timer indicator (tappable) - conditional on showCustomTimers
           if (config.showCustomTimers ?? isProMode) ...[
             _buildTimerBadge(context),
@@ -307,43 +233,6 @@ class ExerciseListItemHeader extends ConsumerWidget {
             ),
           ],
         ],
-      ),
-    );
-  }
-
-  Widget _buildApreBadge(BuildContext context) {
-    return InkWell(
-      onTap: onShowAutoAdjustmentModal,
-      borderRadius: BorderRadius.circular(8),
-      child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-        decoration: BoxDecoration(
-          color: context.colors.primary.withValues(alpha: 0.15),
-          borderRadius: BorderRadius.circular(8),
-          border: Border.all(
-            color: context.colors.primary.withValues(alpha: 0.4),
-            width: 1,
-          ),
-        ),
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            SemanticIcon(
-              icon: AppIcons.autoAwesome,
-              semanticLabel: 'AI suggestion',
-              size: AppIconSize.tiny,
-              color: context.colors.primary,
-            ),
-            const SizedBox(width: 4),
-            Text(
-              'APRE ${exercise.apreProtocol ?? 6}',
-              style: context.textTheme.labelSmall?.copyWith(
-                fontWeight: FontWeight.w600,
-                color: context.colors.primary,
-              ),
-            ),
-          ],
-        ),
       ),
     );
   }
@@ -522,6 +411,8 @@ class ExerciseListItemHeader extends ConsumerWidget {
   }
 
   Widget _buildInsightChip(BuildContext context) {
+    // ✅ PERFORMANCE: Removed debug print that was causing log spam during scroll
+
     if (lastActivity == null || lastActivity!.sets.isEmpty) {
       return const SizedBox.shrink();
     }
@@ -544,11 +435,13 @@ class ExerciseListItemHeader extends ConsumerWidget {
     if (maxWeight == 0) return const SizedBox.shrink();
 
     final daysAgo = DateTime.now().difference(lastActivity!.createdAt).inDays;
-    final String timeAgo = daysAgo == 0
-        ? 'Oggi'
-        : daysAgo == 1
-            ? 'Ieri'
-            : '$daysAgo giorni fa';
+    // Compact time format: "oggi", "1g", "4g"
+    final String timeAgo = daysAgo == 0 ? 'oggi' : '${daysAgo}g';
+
+    // Compact weight format: remove decimal if .0
+    final weightStr = maxWeight == maxWeight.truncate()
+        ? maxWeight.truncate().toString()
+        : maxWeight.toStringAsFixed(1);
 
     return Material(
       color: Colors.transparent,
@@ -570,25 +463,17 @@ class ExerciseListItemHeader extends ConsumerWidget {
           child: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
-              TweenAnimationBuilder<double>(
-                duration: const Duration(milliseconds: 600),
-                tween: Tween(begin: 0, end: 1),
-                curve: Curves.elasticOut,
-                builder: (context, value, child) {
-                  return Transform.scale(
-                    scale: 0.8 + (0.2 * value),
-                    child: SemanticIcon(
-                      icon: AppIcons.insights,
-                      semanticLabel: 'Insights',
-                      size: AppIconSize.tiny,
-                      color: context.colors.primary,
-                    ),
-                  );
-                },
+              // Static icon - no animation to prevent flickering on scroll
+              SemanticIcon(
+                icon: AppIcons.insights,
+                semanticLabel: 'Insights',
+                size: AppIconSize.tiny,
+                color: context.colors.primary,
               ),
               const SizedBox(width: 4),
+              // Compact format: "25kg×10 (4g)" instead of "Ultimo: 25.0kg x 10 (4 giorni fa)"
               Text(
-                'Ultimo: ${maxWeight.toStringAsFixed(1)}kg x $maxReps ($timeAgo)',
+                '${weightStr}kg×$maxReps ($timeAgo)',
                 style: context.textTheme.labelSmall?.copyWith(
                   color: context.colors.primary,
                   fontWeight: FontWeight.w600,
@@ -614,6 +499,7 @@ class ExerciseListItemHeader extends ConsumerWidget {
     final showInsights = config.showExerciseInsights ?? isProMode;
 
     return PopupMenuButton<String>(
+      key: tutorialMenuKey,
       onSelected: (value) {
         switch (value) {
           case 'auto_adjustment':
@@ -636,6 +522,15 @@ class ExerciseListItemHeader extends ConsumerWidget {
             break;
           case 'community_advice':
             onShowCommunityAdvice();
+            break;
+          case 'change_counting_mode':
+            onShowCountingModePicker();
+            break;
+          case 'add_warmup_sets':
+            onAddWarmupSets();
+            break;
+          case 'create_superset':
+            onCreateSuperset?.call();
             break;
         }
       },
@@ -676,9 +571,7 @@ class ExerciseListItemHeader extends ConsumerWidget {
                       borderRadius: BorderRadius.circular(8),
                     ),
                     child: Text(
-                      exercise.autoAdjustmentType == AutoAdjustmentType.apre
-                          ? 'APRE'
-                          : 'RPE',
+                      'RPE',
                       style: context.textTheme.labelSmall?.copyWith(
                         color: context.colors.onPrimaryContainer,
                         fontWeight: FontWeight.bold,
@@ -689,6 +582,15 @@ class ExerciseListItemHeader extends ConsumerWidget {
               ],
             ),
           ),
+
+          // Add/Edit Warmup Sets - always shown for single exercises
+          // Shows "Edit" if warmup sets already exist, "Add" otherwise
+          if (exercise.type == ExerciseType.single) ...[
+            PopupMenuItem(
+              value: 'add_warmup_sets',
+              child: _WarmupSetsMenuItem(exercise: exercise),
+            ),
+          ],
           const PopupMenuDivider(),
 
           // Delete - always shown
@@ -754,6 +656,64 @@ class ExerciseListItemHeader extends ConsumerWidget {
                   ),
                   const SizedBox(width: 8),
                   Text(context.l10n.duplicate),
+                ],
+              ),
+            ),
+            // Create superset - only for single exercises
+            if (exercise.type == ExerciseType.single &&
+                onCreateSuperset != null)
+              PopupMenuItem(
+                value: 'create_superset',
+                child: Row(
+                  children: [
+                    SemanticIcon(
+                      icon: AppIcons.link,
+                      semanticLabel: context.l10n.createSuperset,
+                      size: AppIconSize.small,
+                      color: context.colors.secondary,
+                    ),
+                    const SizedBox(width: 8),
+                    Text(
+                      context.l10n.createSuperset,
+                      style: context.textTheme.bodyMedium?.copyWith(
+                        color: context.colors.secondary,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            // Change counting mode - always in advanced menu
+            PopupMenuItem(
+              value: 'change_counting_mode',
+              child: Row(
+                children: [
+                  const SemanticIcon(
+                    icon: AppIcons.swapHoriz,
+                    semanticLabel: 'Change counting format',
+                    size: AppIconSize.small,
+                  ),
+                  const SizedBox(width: 8),
+                  Expanded(
+                    child: Text(context.l10n.exerciseOptionsChangeCountingFormat),
+                  ),
+                  const SizedBox(width: 8),
+                  Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 6,
+                      vertical: 2,
+                    ),
+                    decoration: BoxDecoration(
+                      color: context.colors.secondaryContainer,
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: Text(
+                      exercise.countingMode.name.toUpperCase(),
+                      style: context.textTheme.labelSmall?.copyWith(
+                        color: context.colors.onSecondaryContainer,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
                 ],
               ),
             ),
@@ -833,5 +793,130 @@ class ExerciseListItemHeader extends ConsumerWidget {
     if (tut == 'ISO') return 'ISO';
     if (tut == 'EXP') return 'ESP';
     return tut; // Show as-is for tempo like "3-1-2-0"
+  }
+}
+
+/// Private widget for warmup sets menu item
+/// Shows different icon and label based on whether warmup sets exist
+class _WarmupSetsMenuItem extends StatelessWidget {
+  const _WarmupSetsMenuItem({required this.exercise});
+
+  final Exercise exercise;
+
+  @override
+  Widget build(BuildContext context) {
+    final hasExistingWarmup = exercise.sets.any((s) => s.isWarmup);
+
+    return Row(
+      children: [
+        SemanticIcon(
+          icon: hasExistingWarmup ? AppIcons.edit : AppIcons.streak,
+          semanticLabel: hasExistingWarmup
+              ? context.l10n.editWarmupSets
+              : context.l10n.addWarmupSets,
+          size: AppIconSize.small,
+          color: context.colors.warning,
+        ),
+        const SizedBox(width: 8),
+        Text(
+          hasExistingWarmup
+              ? context.l10n.editWarmupSets
+              : context.l10n.addWarmupSets,
+          style: context.textTheme.bodyMedium?.copyWith(
+            color: context.colors.warning,
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+/// ✅ PERFORMANCE FIX: Isolated GIF icon widget
+///
+/// This widget is a ConsumerWidget that watches the GIF provider.
+/// By isolating the ref.watch here, we prevent rebuild of the entire
+/// ExerciseListItemHeader when the GIF loads or changes state.
+///
+/// Before: GIF loading → entire header rebuild → insight chip flickers
+/// After: GIF loading → only this widget rebuilds → no flicker
+class _ExerciseGifIcon extends ConsumerWidget {
+  const _ExerciseGifIcon({
+    required this.exercise,
+  });
+
+  final Exercise exercise;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final colorScheme = context.colors;
+
+    // For single type exercises, use animated GIF
+    if (exercise.type == ExerciseType.single) {
+      final gifUrlAsync = ref.watch(
+        exerciseGifUrlProvider(exercise.name),
+      );
+
+      return gifUrlAsync.when(
+        // RepaintBoundary isolates GIF animation from parent repaints
+        data: (gifUrl) => RepaintBoundary(
+          child: ExerciseGifWidget(
+            gifUrl: gifUrl,
+            exerciseName: exercise.name,
+            backgroundColor: colorScheme.primary.withValues(alpha: 0.1),
+            iconColor: colorScheme.primary,
+          ),
+        ),
+        loading: () => Container(
+          width: 56,
+          height: 56,
+          decoration: BoxDecoration(
+            color: colorScheme.primary.withValues(alpha: 0.1),
+            shape: BoxShape.circle,
+          ),
+          child: Center(
+            child: SizedBox(
+              width: 20,
+              height: 20,
+              child: CircularProgressIndicator(
+                strokeWidth: 2,
+                valueColor: AlwaysStoppedAnimation<Color>(colorScheme.primary),
+              ),
+            ),
+          ),
+        ),
+        error: (_, __) => _buildStaticIcon(
+          context,
+          AppIcons.workout,
+          colorScheme.primary,
+        ),
+      );
+    }
+
+    // For other exercise types, use traditional icons
+    final (icon, color) = switch (exercise.type) {
+      ExerciseType.superset => (AppIcons.repeat, colorScheme.secondary),
+      ExerciseType.dropset => (AppIcons.trendDown, colorScheme.tertiary),
+      ExerciseType.restPause => (AppIcons.pauseCircle, colorScheme.error),
+      ExerciseType.single => (AppIcons.workout, colorScheme.primary),
+    };
+
+    return _buildStaticIcon(context, icon, color);
+  }
+
+  Widget _buildStaticIcon(BuildContext context, IconData icon, Color color) {
+    return Container(
+      width: 40,
+      height: 40,
+      decoration: BoxDecoration(
+        color: color.withValues(alpha: 0.1),
+        shape: BoxShape.circle,
+      ),
+      child: SemanticIcon(
+        icon: icon,
+        semanticLabel: exercise.type.name,
+        color: color,
+        size: AppIconSize.small,
+      ),
+    );
   }
 }

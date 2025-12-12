@@ -64,6 +64,7 @@ class _ProfileHubContent extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
+      backgroundColor: Theme.of(context).colorScheme.surfaceContainer,
       body: CustomScrollView(
         slivers: [
           // Compact header with tier progress
@@ -357,7 +358,17 @@ class _RecentWorkoutsSection extends ConsumerWidget {
                     context: context,
                     isScrollControlled: true,
                     backgroundColor: Colors.transparent,
-                    builder: (context) => WorkoutDetailModal(workout: workout),
+                    builder: (_) => DraggableScrollableSheet(
+                      initialChildSize: 0.8,
+                      minChildSize: 0.8,
+                      maxChildSize: 1.0,
+                      expand: false,
+                      snap: true,
+                      builder: (context, scrollController) => WorkoutDetailModal(
+                        workout: workout,
+                        scrollController: scrollController,
+                      ),
+                    ),
                   );
                 },
                 maxItems: 3,
@@ -366,16 +377,42 @@ class _RecentWorkoutsSection extends ConsumerWidget {
             loading: () => Container(
               height: 120,
               decoration: BoxDecoration(
-                color: context.colors.surfaceContainerHighest,
+                // ✨ Material 3 2025: Elevated surface with defined border
+                color: context.colors.surfaceContainerLow,
                 borderRadius: BorderRadius.circular(16),
+                border: Border.all(
+                  color: context.colors.outlineVariant.withValues(alpha: 0.5),
+                  width: 1,
+                ),
+                // ✨ Material 3 2025: Subtle shadow for depth
+                boxShadow: [
+                  BoxShadow(
+                    color: context.colors.shadow.withValues(alpha: 0.05),
+                    blurRadius: 8,
+                    offset: const Offset(0, 2),
+                  ),
+                ],
               ),
               child: const Center(child: LoadingIndicator()),
             ),
             error: (_, __) => Container(
               height: 120,
               decoration: BoxDecoration(
-                color: context.colors.surfaceContainerHighest,
+                // ✨ Material 3 2025: Elevated surface with defined border
+                color: context.colors.surfaceContainerLow,
                 borderRadius: BorderRadius.circular(16),
+                border: Border.all(
+                  color: context.colors.outlineVariant.withValues(alpha: 0.5),
+                  width: 1,
+                ),
+                // ✨ Material 3 2025: Subtle shadow for depth
+                boxShadow: [
+                  BoxShadow(
+                    color: context.colors.shadow.withValues(alpha: 0.05),
+                    blurRadius: 8,
+                    offset: const Offset(0, 2),
+                  ),
+                ],
               ),
               child: Center(
                 child: Text(
@@ -400,8 +437,21 @@ class _EmptyWorkoutsCard extends StatelessWidget {
     return Container(
       height: 120,
       decoration: BoxDecoration(
-        color: context.colors.surfaceContainerHighest,
+        // ✨ Material 3 2025: Elevated surface with defined border
+        color: context.colors.surfaceContainerLow,
         borderRadius: BorderRadius.circular(16),
+        border: Border.all(
+          color: context.colors.outlineVariant.withValues(alpha: 0.5),
+          width: 1,
+        ),
+        // ✨ Material 3 2025: Subtle shadow for depth
+        boxShadow: [
+          BoxShadow(
+            color: context.colors.shadow.withValues(alpha: 0.05),
+            blurRadius: 8,
+            offset: const Offset(0, 2),
+          ),
+        ],
       ),
       child: Center(
         child: Column(

@@ -134,17 +134,21 @@ class ChatBotDatasource {
       ...analyzerData,
     };
 
-    // 5. Generate response from templates
+    // 5. Detect user's preferred tone from message style
+    final detectedTone = _detectToneFromMessage(prompt);
+
+    // 6. Generate response from templates with detected tone
     var fullResponse = responseRepository.getResponse(
       intent: intent,
       context: responseContext,
       locale: locale,
+      tone: detectedTone,
     );
 
-    // 5.1. Apply tone adaptation (Phase 3.2)
-    fullResponse = _applyToneAdaptation(fullResponse, intent);
+    // 6.1. Apply experience-level tone adaptation (Phase 3.2)
+    fullResponse = _applyToneAdaptation(fullResponse, intent, locale);
 
-    // 5.2. Stream response token-by-token (typewriter effect)
+    // 7. Stream response token-by-token (typewriter effect)
     final messageId = _uuid.v4();
     final buffer = StringBuffer();
 
@@ -173,7 +177,7 @@ class ChatBotDatasource {
       }
     }
 
-    // 6. Generate follow-up chips for branching conversations
+    // 8. Generate follow-up chips for branching conversations
     List<FollowUpChip> followUpChips;
 
     if (intent == UserIntent.prQuery) {
@@ -213,7 +217,7 @@ class ChatBotDatasource {
       );
     }
 
-    // 6.5. Generate chart metadata for visual responses (Phase 2.2)
+    // 9. Generate chart metadata for visual responses (Phase 2.2)
     Map<String, dynamic>? metadata;
 
     if (intent == UserIntent.progression || intent == UserIntent.volume) {
@@ -222,7 +226,7 @@ class ChatBotDatasource {
       metadata = await _generateChartMetadata(intent, analyzerData, <Workout>[]);
     }
 
-    // 6.6. Track message sent analytics (Phase 2.4)
+    // 10. Track message sent analytics (Phase 2.4)
     await aiCoachAnalytics.trackMessageSent(
       userId: userId,
       intent: intent.toString(),
@@ -230,13 +234,13 @@ class ChatBotDatasource {
       conversationDepth: 0, // TODO: Track depth in Task 5
     );
 
-    // 6.6. Generate reasoning for transparency (Phase 3.3)
+    // 11. Generate reasoning for transparency (Phase 3.3)
     final reasoning = _generateReasoning(
       intent: intent,
       analyzerData: analyzerData,
     );
 
-    // 6.7. Generate multi-modal metadata (Phase 3.4)
+    // 12. Generate multi-modal metadata (Phase 3.4)
     final multiModalMetadata = _generateMultiModalMetadata(
       intent: intent,
       analyzerData: analyzerData,
@@ -249,7 +253,7 @@ class ChatBotDatasource {
       if (multiModalMetadata != null) ...multiModalMetadata, // Multi-modal data
     };
 
-    // 7. Emit final message (isStreaming=false) with follow-up chips, chart, and reasoning
+    // 13. Emit final message (isStreaming=false) with follow-up chips, chart, and reasoning
     yield AIMessage(
       id: messageId,
       content: fullResponse,
@@ -301,7 +305,7 @@ class ChatBotDatasource {
       case UserIntent.progression:
         return _getProgressionData(workouts, userContext, locale);
       case UserIntent.volume:
-        return _getVolumeData(workouts, userContext);
+        return _getVolumeData(workouts, userContext, locale);
       case UserIntent.recovery:
         return _getRecoveryData(workouts, userContext);
       case UserIntent.balance:
@@ -328,7 +332,7 @@ class ChatBotDatasource {
     UserContext context,
     String locale,
   ) async {
-    // Localize "30 days" based on locale
+    // Localize period based on locale
     final period = locale == 'it' ? '30 giorni' : '30 days';
 
     try {
@@ -337,29 +341,86 @@ class ChatBotDatasource {
       final insight = await analyzer.analyze(workouts, context);
 
       if (insight != null) {
+        // Extract metric from analyzer insight dataPoints
+        final weightChange = insight.dataPoints?['weightChange'];
+        final metric = weightChange != null && weightChange.toString().isNotEmpty
+            ? weightChange.toString()
+            : _calculateRealProgression(workouts);
+
         return {
           'period': period,
-          'metric': insight.dataPoints?['weightChange'] ?? '+0%',
+          'metric': metric,
           'trend': insight.severity == InsightSeverity.high ? '📈 positive' : '📊 stable',
-          'recommendation': insight.recommendation,
+          'recommendation': _localizeRecommendation(insight.recommendation, locale),
         };
       }
     } catch (e) {
-      // Analyzer not registered or error
+      // Analyzer not registered or error - calculate from workouts directly
     }
 
-    // Fallback to mock data
+    // Calculate real progression from workout data when analyzer returns null
+    final metric = _calculateRealProgression(workouts);
+    final recommendation = locale == 'it'
+        ? 'Continua con il sovraccarico progressivo!'
+        : 'Keep up the progressive overload!';
+
     return {
       'period': period,
-      'metric': '+12%',
-      'trend': '📈 positive',
-      'recommendation': 'Keep up the progressive overload!',
+      'metric': metric,
+      'trend': metric.startsWith('+') ? '📈 positive' : '📊 stable',
+      'recommendation': recommendation,
     };
+  }
+
+  /// Calculate real progression from workout data
+  String _calculateRealProgression(List<Workout> workouts) {
+    if (workouts.length < 2) return '+0%';
+
+    // Get workouts from last 30 days
+    final now = DateTime.now();
+    final thirtyDaysAgo = now.subtract(const Duration(days: 30));
+    final recentWorkouts = workouts
+        .where((w) => w.createdAt.isAfter(thirtyDaysAgo))
+        .toList()
+      ..sort((a, b) => a.createdAt.compareTo(b.createdAt));
+
+    if (recentWorkouts.length < 2) return '+0%';
+
+    // Calculate total volume (weight × reps) for first and last workouts
+    double firstVolume = 0;
+    double lastVolume = 0;
+
+    for (final exercise in recentWorkouts.first.exercises) {
+      for (final set in exercise.sets) {
+        if (set.isCompleted) {
+          final weight = double.tryParse(set.weight?.toString() ?? '0') ?? 0;
+          final reps = set.reps ?? 0;
+          firstVolume += weight * reps;
+        }
+      }
+    }
+
+    for (final exercise in recentWorkouts.last.exercises) {
+      for (final set in exercise.sets) {
+        if (set.isCompleted) {
+          final weight = double.tryParse(set.weight?.toString() ?? '0') ?? 0;
+          final reps = set.reps ?? 0;
+          lastVolume += weight * reps;
+        }
+      }
+    }
+
+    if (firstVolume == 0) return '+0%';
+
+    final change = ((lastVolume - firstVolume) / firstVolume) * 100;
+    final sign = change >= 0 ? '+' : '';
+    return '$sign${change.toStringAsFixed(1)}%';
   }
 
   Future<Map<String, String>> _getVolumeData(
     List<Workout> workouts,
     UserContext context,
+    String locale,
   ) async {
     try {
       // Call VolumeBalanceAnalyzer (uses InsightType.muscleGroupBalance)
@@ -368,8 +429,14 @@ class ChatBotDatasource {
 
       if (insight != null) {
         // Extract data from analyzer insight
-        final muscleGroup = insight.dataPoints?['muscleGroup']?.toString() ?? 'all muscles';
-        final currentSets = insight.dataPoints?['currentSets']?.toString() ?? '0';
+        final muscleGroup = insight.dataPoints?['muscleGroup']?.toString() ??
+            (locale == 'it' ? 'tutti i muscoli' : 'all muscles');
+
+        // Get real sets from analyzer - now properly populated
+        final setsValue = insight.dataPoints?['currentSets'];
+        final currentSets = (setsValue != null && setsValue.toString() != '0')
+            ? setsValue.toString()
+            : _calculateRealWeeklySets(workouts).toString();
 
         // Determine assessment emoji based on severity
         final assessment = switch (insight.severity) {
@@ -383,20 +450,80 @@ class ChatBotDatasource {
           'volume': '$currentSets sets/week ($muscleGroup)',
           'assessment': assessment,
           'sets_per_week': currentSets,
-          'recommendation': insight.recommendation,
+          'recommendation': _localizeRecommendation(insight.recommendation, locale),
         };
       }
     } catch (e) {
-      // Analyzer not registered or error - fall through to mock data
+      // Analyzer not registered or error - calculate from workouts directly
     }
 
-    // Fallback to mock data if no real data available
+    // Calculate real data when analyzer returns null
+    final realSets = _calculateRealWeeklySets(workouts);
+    final recommendation = locale == 'it'
+        ? 'Punta a 10-18 serie per gruppo muscolare a settimana.'
+        : 'Aim for 10-18 sets per muscle group per week.';
+
     return {
-      'volume': '18 sets/muscle/week',
+      'volume': '$realSets sets/week',
       'assessment': '✅ Optimal',
-      'sets_per_week': '90',
-      'recommendation': "You're in the sweet spot for hypertrophy.",
+      'sets_per_week': realSets.toString(),
+      'recommendation': recommendation,
     };
+  }
+
+  /// Calculate real weekly sets from workout data
+  int _calculateRealWeeklySets(List<Workout> workouts) {
+    final now = DateTime.now();
+    final weekAgo = now.subtract(const Duration(days: 7));
+    final weeklyWorkouts = workouts.where((w) => w.createdAt.isAfter(weekAgo));
+
+    int totalSets = 0;
+    for (final workout in weeklyWorkouts) {
+      for (final exercise in workout.exercises) {
+        totalSets += exercise.sets.where((s) => s.isCompleted).length;
+      }
+    }
+    return totalSets;
+  }
+
+  /// Localize analyzer recommendation based on locale
+  String _localizeRecommendation(String recommendation, String locale) {
+    if (locale != 'it') return recommendation;
+
+    // Common recommendation translations
+    const translations = {
+      // Volume recommendations
+      'Aim for': 'Punta a',
+      'sets per muscle group per week': 'serie per gruppo muscolare a settimana',
+      'Maintain this volume': 'Mantieni questo volume',
+      'Consider tracking other muscle groups': 'Considera di tracciare altri gruppi muscolari',
+      'to ensure balanced development': 'per assicurare uno sviluppo bilanciato',
+
+      // Progression recommendations
+      'Try increasing volume': 'Prova ad aumentare il volume',
+      'varying rep ranges': 'variando i range di ripetizioni',
+      'for strength': 'per la forza',
+      'for hypertrophy': 'per l\'ipertrofia',
+      'or using advanced techniques': 'o usando tecniche avanzate',
+      'drop sets': 'drop set',
+      'rest-pause': 'rest-pause',
+      'Keep up the progressive overload': 'Continua con il sovraccarico progressivo',
+
+      // Recovery recommendations
+      'Well recovered': 'Ben recuperato',
+      'Needs rest': 'Serve riposo',
+
+      // General
+      'sets/week': 'serie/settimana',
+      'per week': 'a settimana',
+    };
+
+    var localized = recommendation;
+    translations.forEach((en, it) {
+      localized = localized.replaceAll(en, it);
+    });
+
+    return localized;
   }
 
   Future<Map<String, String>> _getRecoveryData(
@@ -883,16 +1010,24 @@ class ChatBotDatasource {
   /// - Intermediate: Balanced tone
   /// - Advanced: Concise, technical language
   ///
+  /// **Parameters**:
+  /// - `baseResponse`: The response to adapt
+  /// - `intent`: User's detected intent
+  /// - `locale`: Language code for localized phrases
+  ///
   /// **Examples**:
-  /// - Beginner + Strength intent → "Great job! Focus on compound movements..."
-  /// - Advanced + Strength intent → "Prioritize compound movements..."
-  String _applyToneAdaptation(String baseResponse, UserIntent intent) {
+  /// - Beginner + IT → "Ottimo inizio! Focus su..."
+  /// - Beginner + EN → "Great start! Focus on..."
+  String _applyToneAdaptation(String baseResponse, UserIntent intent, String locale) {
     toneAdapter.logToneAdaptation(toneProfile, intent.toString());
 
-    // Apply encouraging phrases for beginners
+    // Apply encouraging phrases for beginners (locale-aware)
     if (toneProfile.isEncouraging &&
         toneProfile.experienceLevel == ExperienceLevel.beginner) {
-      final encouragingPhrases = toneAdapter.getEncouragingPhrases(toneProfile);
+      final encouragingPhrases = toneAdapter.getEncouragingPhrases(
+        toneProfile,
+        locale: locale,
+      );
 
       // Add random encouraging phrase at start (33% chance)
       if (encouragingPhrases.isNotEmpty &&
@@ -1214,5 +1349,73 @@ class ChatBotDatasource {
       case fitness.TrainingGoal.endurance:
         return TrainingGoal.endurance;
     }
+  }
+
+  // ========================================================================
+  // Tone Detection (Formal vs Casual)
+  // ========================================================================
+
+  /// Detect user's preferred tone from their message style
+  ///
+  /// **Casual indicators** (Italian):
+  /// - "ehi", "we", "uè", "bella", "bro", "fra"
+  /// - Informal greetings: "ciao!", "yo!", "wee!"
+  /// - Slang: "spaccare", "pompare", "devastato", "cotto"
+  /// - Exclamation marks, emojis
+  ///
+  /// **Casual indicators** (English):
+  /// - "hey", "yo", "dude", "bro", "man"
+  /// - Slang: "crushing it", "killing it", "beast mode"
+  ///
+  /// **Default**: Formal tone if no casual indicators detected
+  ResponseTone _detectToneFromMessage(String message) {
+    final normalized = message.toLowerCase().trim();
+
+    // Casual Italian indicators
+    final casualItalian = [
+      // Informal greetings
+      'ehi', 'we', 'uè', 'bella', 'wee', 'yo',
+      // Gym bro terms
+      'bro', 'fra', 'zio', 'fratello',
+      // Casual slang
+      'spaccare', 'spaccando', 'pompare', 'pompando',
+      'devastato', 'cotto', 'morto', 'a pezzi',
+      'che bomba', 'bestia', 'macchina', 'animale',
+      // Casual phrases
+      'dammi la carica', 'caricami', 'motivami',
+      'sto spaccando', 'sto volando',
+      // Exclamations with !
+      'ciao!', 'hey!', 'yo!',
+    ];
+
+    // Casual English indicators
+    final casualEnglish = [
+      // Informal greetings
+      'hey', 'yo', 'dude', 'bro', 'man',
+      // Gym bro terms
+      'crushing it', 'killing it', 'beast mode',
+      'gains', 'swole', 'shredded', 'jacked',
+      // Casual phrases
+      'let\'s go', 'let\'s gooo', 'pumped',
+      'hyped', 'stoked', 'fired up',
+    ];
+
+    // Check for casual indicators
+    final allCasualIndicators = [...casualItalian, ...casualEnglish];
+
+    for (final indicator in allCasualIndicators) {
+      if (normalized.contains(indicator)) {
+        return ResponseTone.casual;
+      }
+    }
+
+    // Check for multiple exclamation marks or emojis (casual style)
+    if (RegExp(r'!{2,}').hasMatch(normalized) ||
+        RegExp(r'[\u{1F600}-\u{1F64F}]', unicode: true).hasMatch(message)) {
+      return ResponseTone.casual;
+    }
+
+    // Default to formal
+    return ResponseTone.formal;
   }
 }

@@ -15,12 +15,45 @@ import 'package:flutter/foundation.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 class AddExerciseModal extends ConsumerStatefulWidget {
-  
+
   const AddExerciseModal({
     super.key,
     this.onExerciseAdded,
   });
   final Function(Exercise)? onExerciseAdded;
+
+  /// ✅ UX: Show modal with proper sizing (80% initial, expandable to ~95%)
+  /// This is the recommended way to show the AddExerciseModal
+  static Future<void> show(
+    BuildContext context, {
+    Function(Exercise)? onExerciseAdded,
+  }) {
+    // ✅ FIX: Calculate safe max size to avoid notch/Dynamic Island
+    final screenHeight = MediaQuery.of(context).size.height;
+    final topPadding = MediaQuery.of(context).viewPadding.top;
+    // Leave at least topPadding + 8px clearance from notch
+    final maxSize = (screenHeight - topPadding - 8) / screenHeight;
+    final safeMaxSize = maxSize.clamp(0.85, 0.96);
+
+    return showModalBottomSheet<void>(
+      context: context,
+      isScrollControlled: true,
+      isDismissible: true,
+      enableDrag: true,
+      backgroundColor: Colors.transparent,
+      builder: (context) => DraggableScrollableSheet(
+        initialChildSize: 0.80,        // 80% initial
+        minChildSize: 0.50,            // Min 50%
+        maxChildSize: safeMaxSize,     // Max safe (avoids notch)
+        expand: false,
+        snap: true,
+        snapSizes: [0.80, safeMaxSize], // Snap to 80% or max safe
+        builder: (context, scrollController) => AddExerciseModal(
+          onExerciseAdded: onExerciseAdded,
+        ),
+      ),
+    );
+  }
 
   @override
   ConsumerState<AddExerciseModal> createState() => _AddExerciseModalState();
@@ -33,10 +66,9 @@ class _AddExerciseModalState extends ConsumerState<AddExerciseModal> with Ticker
   final _notesController = TextEditingController();
   final _searchController = TextEditingController();
 
-  // APRE configuration state
-  bool _useAPRE = false;
-  int _apreProtocol = 6; // Default to APRE 6
-  final _apreBaseWeightController = TextEditingController();
+  // ✅ UX Enhancement: Toggle compaction states
+  bool _isMainToggleCompacted = false;
+  bool _isAdvancedToggleCompacted = false;
 
   // DropSet state
   final List<DropSetStageData> _dropsetStages = [
@@ -61,16 +93,37 @@ class _AddExerciseModalState extends ConsumerState<AddExerciseModal> with Ticker
     _tabController = TabController(length: 2, vsync: this); // Simplified to 2 tabs
     _advancedTabController = TabController(length: 3, vsync: this); // 3 advanced tabs
 
+    // ✅ UX: Auto-compact main toggle after 600ms
+    Future.delayed(const Duration(milliseconds: 600), () {
+      if (mounted && !_isMainToggleCompacted) {
+        setState(() => _isMainToggleCompacted = true);
+      }
+    });
+
     // Add listeners to update UI when tab changes
     _tabController.addListener(() {
       if (_tabController.indexIsChanging) {
         setState(() {}); // Rebuild to show/hide Add button
+
+        // ✅ UX: Compact main toggle when switching to Advanced
+        if (_tabController.index == 1 && !_isMainToggleCompacted) {
+          setState(() => _isMainToggleCompacted = true);
+        }
       }
     });
 
     _advancedTabController.addListener(() {
       if (_advancedTabController.indexIsChanging) {
         setState(() {}); // Rebuild to show/hide Add button for advanced tabs
+
+        // ✅ UX: Compact advanced toggle when navigating within tabs
+        if (!_isAdvancedToggleCompacted) {
+          Future.delayed(const Duration(milliseconds: 400), () {
+            if (mounted) {
+              setState(() => _isAdvancedToggleCompacted = true);
+            }
+          });
+        }
       }
     });
   }
@@ -82,7 +135,6 @@ class _AddExerciseModalState extends ConsumerState<AddExerciseModal> with Ticker
     _nameController.dispose();
     _notesController.dispose();
     _searchController.dispose();
-    _apreBaseWeightController.dispose();
 
     // Dispose DropSet controllers
     for (var stage in _dropsetStages) {
@@ -102,76 +154,47 @@ class _AddExerciseModalState extends ConsumerState<AddExerciseModal> with Ticker
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: context.screenHeight * 0.9,
       decoration: BoxDecoration(
         color: context.colors.surface,
         borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
       ),
       child: Column(
         children: [
-          // Handle bar
-          Container(
-            margin: const EdgeInsets.only(top: 8),
-            width: 40,
-            height: 4,
-            decoration: BoxDecoration(
-              color: context.colors.surfaceContainerHighest.withValues(alpha: 0.3),
-              borderRadius: BorderRadius.circular(2),
-            ),
-          ),
-          
-          // Header
-          Padding(
-            padding: const EdgeInsets.all(16),
-            child: Row(
-              children: [
-                IconButton(
-                  onPressed: () => Navigator.pop(context),
-                  icon: Icon(AppIcons.close),
-                ),
-                const SizedBox(width: 8),
-                Text(
-                  context.l10n.addExerciseTitle,
-                  style: context.textTheme.headlineSmall?.copyWith(
-                    fontWeight: FontWeight.bold,
+          // ✅ UX: Drag handle for dismissal (replaces X button)
+          GestureDetector(
+            onTap: () => Navigator.pop(context),
+            behavior: HitTestBehavior.opaque,
+            child: Container(
+              width: double.infinity,
+              padding: const EdgeInsets.symmetric(vertical: 12),
+              child: Center(
+                child: Container(
+                  width: 40,
+                  height: 4,
+                  decoration: BoxDecoration(
+                    color: context.colors.outline.withValues(alpha: 0.4),
+                    borderRadius: BorderRadius.circular(2),
                   ),
                 ),
-                const Spacer(),
-                // Show Add button for Single tab and Advanced tabs (except Superset)
-                if (_shouldShowAddButton())
-                  FilledButton(
-                    onPressed: _canAddAdvancedExercise() ? _addAdvancedExercise : null,
-                    child: Text(context.l10n.addButton),
-                  ),
-              ],
-            ),
-          ),
-          
-          // Exercise Type Tabs
-          Container(
-            margin: const EdgeInsets.symmetric(horizontal: 16),
-            decoration: BoxDecoration(
-              color: context.colors.surfaceContainerHighest,
-              borderRadius: BorderRadius.circular(12),
-            ),
-            child: TabBar(
-              controller: _tabController,
-              indicator: BoxDecoration(
-                color: context.colors.primary,
-                borderRadius: BorderRadius.circular(8),
               ),
-              indicatorSize: TabBarIndicatorSize.tab,
-              dividerColor: Colors.transparent,
-              labelColor: context.colors.onPrimary,
-              unselectedLabelColor: context.colors.onSurfaceVariant,
-              labelStyle: const TextStyle(fontWeight: FontWeight.w600, fontSize: 12),
-              tabs: [
-                Tab(text: context.l10n.tabSingle),
-                Tab(text: context.l10n.tabAdvanced),
-              ],
             ),
           ),
-          
+
+          // ✅ UX: Simplified header - title only (removed X and Aggiungi)
+          Padding(
+            padding: const EdgeInsets.only(left: 16, right: 16, bottom: 12),
+            child: Text(
+              context.l10n.addExerciseTitle,
+              style: context.textTheme.titleLarge?.copyWith(
+                fontWeight: FontWeight.bold,
+              ),
+              textAlign: TextAlign.center,
+            ),
+          ),
+
+          // ✅ UX: Compactable Exercise Type Toggle (Singolo / Avanzati)
+          _buildCompactableMainToggle(),
+
           // Content
           Expanded(
             child: TabBarView(
@@ -182,6 +205,43 @@ class _AddExerciseModalState extends ConsumerState<AddExerciseModal> with Ticker
               ],
             ),
           ),
+        ],
+      ),
+    );
+  }
+
+  /// ✅ UX: Main toggle (Singolo / Avanzati) with smooth compaction animation
+  Widget _buildCompactableMainToggle() {
+    return AnimatedContainer(
+      duration: const Duration(milliseconds: 400),
+      curve: Curves.easeInOut,
+      margin: EdgeInsets.symmetric(
+        horizontal: _isMainToggleCompacted ? 32 : 16,
+        vertical: _isMainToggleCompacted ? 4 : 8,
+      ),
+      height: _isMainToggleCompacted ? 36 : 48,
+      decoration: BoxDecoration(
+        color: context.colors.surfaceContainerHighest,
+        borderRadius: BorderRadius.circular(_isMainToggleCompacted ? 18 : 12),
+      ),
+      child: TabBar(
+        controller: _tabController,
+        indicator: BoxDecoration(
+          color: context.colors.primary,
+          borderRadius: BorderRadius.circular(_isMainToggleCompacted ? 16 : 8),
+        ),
+        indicatorSize: TabBarIndicatorSize.tab,
+        dividerColor: Colors.transparent,
+        labelColor: context.colors.onPrimary,
+        unselectedLabelColor: context.colors.onSurfaceVariant,
+        labelStyle: TextStyle(
+          fontWeight: FontWeight.w600,
+          fontSize: _isMainToggleCompacted ? 11 : 12,
+        ),
+        labelPadding: EdgeInsets.zero,
+        tabs: [
+          Tab(text: context.l10n.tabSingle),
+          Tab(text: context.l10n.tabAdvanced),
         ],
       ),
     );
@@ -203,32 +263,9 @@ class _AddExerciseModalState extends ConsumerState<AddExerciseModal> with Ticker
   Widget _buildAdvancedTab() {
     return Column(
       children: [
-        const SizedBox(height: 16),
-        // Sub-tabs for advanced exercises
-        Container(
-          margin: const EdgeInsets.symmetric(horizontal: 16),
-          decoration: BoxDecoration(
-            color: context.colors.surfaceContainerHighest,
-            borderRadius: BorderRadius.circular(12),
-          ),
-          child: TabBar(
-            controller: _advancedTabController,
-            indicator: BoxDecoration(
-              color: context.colors.secondary,
-              borderRadius: BorderRadius.circular(8),
-            ),
-            indicatorSize: TabBarIndicatorSize.tab,
-            dividerColor: Colors.transparent,
-            labelColor: context.colors.onSecondary,
-            unselectedLabelColor: context.colors.onSurfaceVariant,
-            labelStyle: const TextStyle(fontWeight: FontWeight.w600, fontSize: 12),
-            tabs: [
-              Tab(text: context.l10n.tabSuperset),
-              Tab(text: context.l10n.tabDropSet),
-              Tab(text: context.l10n.tabRestPause),
-            ],
-          ),
-        ),
+        const SizedBox(height: 8),
+        // ✅ UX: Compactable sub-tabs for advanced exercises
+        _buildCompactableAdvancedToggle(),
         Expanded(
           child: TabBarView(
             controller: _advancedTabController,
@@ -243,6 +280,44 @@ class _AddExerciseModalState extends ConsumerState<AddExerciseModal> with Ticker
     );
   }
 
+  /// ✅ UX: Advanced toggle (Superset / DropSet / RestPause) with smooth compaction
+  Widget _buildCompactableAdvancedToggle() {
+    return AnimatedContainer(
+      duration: const Duration(milliseconds: 400),
+      curve: Curves.easeInOut,
+      margin: EdgeInsets.symmetric(
+        horizontal: _isAdvancedToggleCompacted ? 24 : 16,
+        vertical: _isAdvancedToggleCompacted ? 4 : 8,
+      ),
+      height: _isAdvancedToggleCompacted ? 32 : 44,
+      decoration: BoxDecoration(
+        color: context.colors.surfaceContainerHighest,
+        borderRadius: BorderRadius.circular(_isAdvancedToggleCompacted ? 16 : 12),
+      ),
+      child: TabBar(
+        controller: _advancedTabController,
+        indicator: BoxDecoration(
+          color: context.colors.secondary,
+          borderRadius: BorderRadius.circular(_isAdvancedToggleCompacted ? 14 : 8),
+        ),
+        indicatorSize: TabBarIndicatorSize.tab,
+        dividerColor: Colors.transparent,
+        labelColor: context.colors.onSecondary,
+        unselectedLabelColor: context.colors.onSurfaceVariant,
+        labelStyle: TextStyle(
+          fontWeight: FontWeight.w600,
+          fontSize: _isAdvancedToggleCompacted ? 10 : 11,
+        ),
+        labelPadding: EdgeInsets.zero,
+        tabs: [
+          Tab(text: context.l10n.tabSuperset),
+          Tab(text: context.l10n.tabDropSet),
+          Tab(text: context.l10n.tabRestPause),
+        ],
+      ),
+    );
+  }
+
   Widget _buildSupersetTab() {
     return SupersetBuilderWidget(
       onSupersetCreated: _createSupersetFromConfiguration,
@@ -252,17 +327,17 @@ class _AddExerciseModalState extends ConsumerState<AddExerciseModal> with Ticker
   void _createSupersetFromConfiguration(SupersetConfiguration config) {
     // Convert SupersetConfiguration to SupersetExercise
     final supersetExercise = SupersetConverter.configurationToSupersetExercise(config);
-    
+
     // Add the superset to the workout
     if (widget.onExerciseAdded != null) {
       widget.onExerciseAdded!(supersetExercise);
     } else {
       ref.read(currentWorkoutProvider.notifier).addExercise(supersetExercise);
     }
-    
+
     // Close the modal
     Navigator.of(context).pop();
-    
+
     // Show success message
     SnackBarService.showSuccess(
       context,
@@ -652,10 +727,6 @@ class _AddExerciseModalState extends ConsumerState<AddExerciseModal> with Ticker
                     _buildSetsSection(ref),
                     const SizedBox(height: 16),
 
-                    // APRE Configuration Section
-                    _buildAPRESection(),
-                    const SizedBox(height: 16),
-
                     // Notes
                     TextField(
                       controller: _notesController,
@@ -674,175 +745,6 @@ class _AddExerciseModalState extends ConsumerState<AddExerciseModal> with Ticker
         ),
       ],
     );
-  }
-
-  Widget _buildAPRESection() {
-    final l10n = context.l10n;
-
-    return Card(
-      color: _useAPRE
-        ? context.colors.primaryContainer.withValues(alpha: 0.1)
-        : context.colors.surfaceContainerHighest,
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // APRE Toggle
-            Row(
-              children: [
-                Icon(
-                  AppIcons.trendUp,
-                  color: context.colors.primary,
-                ),
-                const SizedBox(width: 8),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        l10n.apreAutoregulation,
-                        style: context.textTheme.titleMedium?.copyWith(
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      Text(
-                        l10n.apreAutoregulationDescription,
-                        style: context.textTheme.bodySmall?.copyWith(
-                          color: context.colors.onSurfaceVariant,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                Switch(
-                  value: _useAPRE,
-                  onChanged: (value) {
-                    setState(() {
-                      _useAPRE = value;
-                      if (!value) {
-                        _apreBaseWeightController.clear();
-                      }
-                    });
-                  },
-                ),
-              ],
-            ),
-
-            // APRE Configuration (shown when enabled)
-            if (_useAPRE) ...[
-              const SizedBox(height: 16),
-              const Divider(),
-              const SizedBox(height: 16),
-
-              // Protocol Selection
-              Text(
-                l10n.apreProtocolSelect,
-                style: context.textTheme.titleSmall?.copyWith(
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-              const SizedBox(height: 8),
-              SegmentedButton<int>(
-                segments: const [
-                  ButtonSegment<int>(
-                    value: 3,
-                    label: Text('APRE 3'),
-                    icon: Icon(AppIcons.looks3),
-                  ),
-                  ButtonSegment<int>(
-                    value: 6,
-                    label: Text('APRE 6'),
-                    icon: Icon(AppIcons.looks6),
-                  ),
-                  ButtonSegment<int>(
-                    value: 10,
-                    label: Text('APRE 10'),
-                    icon: Icon(AppIcons.looks),
-                  ),
-                ],
-                selected: {_apreProtocol},
-                onSelectionChanged: (Set<int> newSelection) {
-                  setState(() {
-                    _apreProtocol = newSelection.first;
-                  });
-                },
-              ),
-              const SizedBox(height: 12),
-
-              // Protocol Description
-              Container(
-                padding: const EdgeInsets.all(12),
-                decoration: BoxDecoration(
-                  color: context.colors.tertiaryContainer.withValues(alpha: 0.3),
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                child: Row(
-                  children: [
-                    Icon(
-                      AppIcons.info,
-                      size: 16,
-                      color: context.colors.onTertiaryContainer,
-                    ),
-                    const SizedBox(width: 8),
-                    Expanded(
-                      child: Text(
-                        _getProtocolDescription(),
-                        style: context.textTheme.bodySmall?.copyWith(
-                          color: context.colors.onTertiaryContainer,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              const SizedBox(height: 16),
-
-              // Base Weight Input
-              TextField(
-                controller: _apreBaseWeightController,
-                decoration: InputDecoration(
-                  labelText: l10n.apreBaseWeight,
-                  hintText: l10n.apreBaseWeightHint,
-                  prefixIcon: Icon(AppIcons.workout),
-                  suffixText: 'kg',
-                  helperText: _getBaseWeightHelper(),
-                ),
-                keyboardType: const TextInputType.numberWithOptions(decimal: true),
-              ),
-            ],
-          ],
-        ),
-      ),
-    );
-  }
-
-  String _getProtocolDescription() {
-    final l10n = context.l10n;
-    switch (_apreProtocol) {
-      case 3:
-        return l10n.apreProtocol3Description;
-      case 6:
-        return l10n.apreProtocol6Description;
-      case 10:
-        return l10n.apreProtocol10Description;
-      default:
-        return '';
-    }
-  }
-
-  String _getBaseWeightHelper() {
-    final l10n = context.l10n;
-    switch (_apreProtocol) {
-      case 3:
-        return l10n.apreProtocol3Helper;
-      case 6:
-        return l10n.apreProtocol6Helper;
-      case 10:
-        return l10n.apreProtocol10Helper;
-      default:
-        return '';
-    }
   }
 
   Widget _buildCategorySelector() {
@@ -1192,20 +1094,12 @@ class _AddExerciseModalState extends ConsumerState<AddExerciseModal> with Ticker
     final selectedCategory = ref.read(selectedExerciseCategoryProvider);
     final sets = ref.read(exerciseSetsProvider);
 
-    // Parse APRE base weight
-    final apreBaseWeight = _useAPRE
-        ? double.tryParse(_apreBaseWeightController.text.trim())
-        : null;
-
     final exercise = Exercise(
       name: _nameController.text.trim(),
       type: ExerciseType.single, // Always single for the first tab
       category: selectedCategory,
       notes: _notesController.text.trim().isEmpty ? null : _notesController.text.trim(),
       sets: sets,
-      useAPRE: _useAPRE,
-      apreProtocol: _useAPRE ? _apreProtocol : null,
-      apreBaseWeight: apreBaseWeight,
     );
 
     // Se c'è un callback, lo usa invece di aggiungere al workout corrente

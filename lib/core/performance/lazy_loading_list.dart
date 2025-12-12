@@ -50,6 +50,9 @@ class _LazyLoadingListState<T> extends State<LazyLoadingList<T>> {
 
   @override
   void dispose() {
+    // Always remove listener to prevent memory leaks
+    _scrollController.removeListener(_onScroll);
+    // Only dispose if we own the controller
     if (widget.controller == null) {
       _scrollController.dispose();
     }
@@ -205,6 +208,9 @@ class _LazyLoadingGridState<T> extends State<LazyLoadingGrid<T>> {
 
   @override
   void dispose() {
+    // Always remove listener to prevent memory leaks
+    _scrollController.removeListener(_onScroll);
+    // Only dispose if we own the controller
     if (widget.controller == null) {
       _scrollController.dispose();
     }

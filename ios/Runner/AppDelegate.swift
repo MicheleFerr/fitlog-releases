@@ -122,6 +122,9 @@ import FirebaseCore
             // Legacy: Reactivate audio session for timer sounds
             legacyReactivateAudioSession()
         }
+
+        // AUTO-DISMISS: Clean up timer notifications older than 60 seconds
+        DirectNotificationManager.shared.cleanupOldTimerNotifications(olderThanSeconds: 60)
     }
     
     // MARK: - Notification Categories Setup
@@ -280,6 +283,14 @@ import FirebaseCore
         // Setup notification delegate
         NotificationDelegate.shared.setupWithMessenger(messenger)
 
+        // Setup HealthKit Activity channel for Activity Rings with real goals
+        if #available(iOS 9.3, *) {
+            HealthKitActivityManager.shared.setupChannel(with: messenger)
+        }
+
+        // Setup WatchConnectivity for Apple Watch companion app
+        WatchConnectivityManager.shared.setupChannel(with: messenger)
+
         Logger.shared.log(.info, "✅ Flutter integration setup completed", category: .general)
     }
 
@@ -417,15 +428,10 @@ import FirebaseCore
     // MARK: - Legacy Implementations (for gradual migration)
     
     private func legacySetupAudioSession() {
-        // Modern audio session setup
+        // ✅ MINIMAL audio session - only .mixWithOthers to avoid OSStatus -50
         do {
             let audioSession = AVAudioSession.sharedInstance()
-            try audioSession.setCategory(.playback, mode: .default, options: [
-                .mixWithOthers,
-                .duckOthers,
-                .allowBluetooth,
-                .allowBluetoothA2DP
-            ])
+            try audioSession.setCategory(.playback, mode: .default, options: [.mixWithOthers])
             try audioSession.setActive(true)
             Logger.shared.log(.info, "Audio session configured", category: .audioSession)
         } catch {
@@ -434,15 +440,10 @@ import FirebaseCore
     }
 
     private func legacyConfigureBackgroundAudio() {
-        // Modern background audio configuration
+        // ✅ MINIMAL audio session - only .mixWithOthers
         do {
             let audioSession = AVAudioSession.sharedInstance()
-            try audioSession.setCategory(.playback, mode: .default, options: [
-                .mixWithOthers,
-                .duckOthers,
-                .allowBluetooth,
-                .allowBluetoothA2DP
-            ])
+            try audioSession.setCategory(.playback, mode: .default, options: [.mixWithOthers])
             try audioSession.setActive(true)
             Logger.shared.log(.info, "Background audio configured", category: .audioSession)
         } catch {
@@ -451,15 +452,10 @@ import FirebaseCore
     }
 
     private func legacyConfigureForegroundAudio() {
-        // Modern foreground audio configuration
+        // ✅ MINIMAL audio session - only .mixWithOthers
         do {
             let audioSession = AVAudioSession.sharedInstance()
-            try audioSession.setCategory(.playback, mode: .default, options: [
-                .mixWithOthers,
-                .duckOthers,
-                .allowBluetooth,
-                .allowBluetoothA2DP
-            ])
+            try audioSession.setCategory(.playback, mode: .default, options: [.mixWithOthers])
             try audioSession.setActive(true)
             Logger.shared.log(.info, "Foreground audio configured", category: .audioSession)
         } catch {
@@ -468,23 +464,12 @@ import FirebaseCore
     }
 
     private func legacyReactivateAudioSession() {
-        // Reactivate audio session for timer sounds when app becomes active
-        // This is simpler than the new AudioSessionManager to avoid OSStatus -50 errors
+        // ✅ MINIMAL audio session - only .mixWithOthers
         do {
             let audioSession = AVAudioSession.sharedInstance()
-
-            // Simply reconfigure - don't deactivate first to avoid errors
-            try audioSession.setCategory(.playback, mode: .default, options: [
-                .mixWithOthers,      // Mix with other audio apps
-                .duckOthers,         // Duck other audio when timer sounds
-                .allowBluetooth,
-                .allowBluetoothA2DP
-            ])
-
-            // Ensure session is active for timer sounds
+            try audioSession.setCategory(.playback, mode: .default, options: [.mixWithOthers])
             try audioSession.setActive(true)
-
-            Logger.shared.log(.info, "Legacy audio session reactivated for timer", category: .audioSession)
+            Logger.shared.log(.info, "Legacy audio session reactivated", category: .audioSession)
         } catch {
             Logger.shared.log(.error, "Legacy audio reactivation failed: \(error)", category: .audioSession)
         }

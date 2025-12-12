@@ -48,3 +48,14 @@ export {
 // ========================================
 // Export rate limit cleanup (runs daily to remove expired entries)
 export { cleanupExpiredRateLimits } from './security/rateLimiter';
+
+// ========================================
+// 📝 TEMPLATE QUOTA MANAGEMENT (Server-Side Enforcement)
+// ========================================
+// Export template creation with quota enforcement
+// SECURITY: This is the ONLY secure way to enforce template limits
+// Client-side validation is NOT sufficient for security
+export {
+  createTemplate,
+  getTemplateQuota,
+} from './templates/createTemplate';

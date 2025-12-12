@@ -20,17 +20,276 @@ import 'package:gymbro_flutter_new/features/ai_coach/data/utils/document_data_ex
 import 'package:intl/intl.dart';
 
 /// Generates enhanced responses using search results
+///
+/// **Localization Support**:
+/// - All responses are localized (IT/EN)
+/// - Uses professional fitness terminology
+/// - Provides educational context for technical terms
 class EnhancedResponseGenerator {
-  final DateFormat _dateFormat = DateFormat('MMMM d');
-  final DateFormat _dayFormat = DateFormat('EEEE');
+  /// Current locale for response generation
+  String _locale = 'en';
+
+  /// Set locale for responses ('en' or 'it')
+  void setLocale(String locale) {
+    _locale = locale == 'it' ? 'it' : 'en';
+  }
+
+  DateFormat get _dateFormat => DateFormat('d MMMM', _locale);
+  DateFormat get _dayFormat => DateFormat('EEEE', _locale);
   final NumberFormat _numberFormat = NumberFormat.decimalPattern();
+
+  /// Localized strings
+  String _l(String key) => _localizedStrings[_locale]?[key] ?? _localizedStrings['en']![key] ?? key;
+
+  static const Map<String, Map<String, String>> _localizedStrings = {
+    'en': {
+      // PR Response
+      'pr_title': '💪 Your personal record for **{exercise}** is **{weight}kg**!',
+      'pr_achieved_on': 'You achieved this on {date} ({day}).',
+      'pr_recent': 'Recent performances:',
+      'pr_not_found': 'I couldn\'t find a personal record for {exercise} in your history.',
+      'pr_not_found_explanation': 'This could mean you haven\'t tracked this exercise yet, or you haven\'t marked any sets as PRs.',
+      'pr_tip': '💡 **Tip**: When you hit a new personal best, tap the PR badge on that set!',
+      // Progression
+      'progression_title': '📈 **Progression Analysis**',
+      'progression_starting': 'Starting',
+      'progression_current': 'Current',
+      'progression_improvement': 'Improvement',
+      'progression_consistency': 'Consistency',
+      'progression_insights': '**Key Insights:**',
+      'progression_excellent': '✅ Excellent progress on compound movements',
+      'progression_plateau': '⚠️ Some exercises showing plateau - consider variation',
+      'progression_analyzing': 'Let me analyze your progression...',
+      // Exercise
+      'exercise_analysis': '📊 **{exercise} Analysis**',
+      'exercise_summary': '**Performance Summary:**',
+      'exercise_best': 'Best',
+      'exercise_average': 'Average',
+      'exercise_volume': 'Total Volume',
+      'exercise_frequency': 'Frequency',
+      'exercise_recent': '**Recent Sessions:**',
+      'exercise_not_tracked': 'You haven\'t tracked {exercise} yet.',
+      'exercise_start_logging': 'Start logging this exercise to build your performance history!',
+      // Recovery
+      'recovery_title': '🔄 **Recovery Analysis**',
+      'recovery_pattern': '**Training Pattern:**',
+      'recovery_sessions_week': 'Sessions per week',
+      'recovery_avg_rest': 'Average rest days',
+      'recovery_most_trained': 'Most trained',
+      'recovery_least_trained': 'Least trained',
+      'recovery_recommendations': '**Recommendations:**',
+      'recovery_high_frequency': '⚠️ High training frequency detected - ensure adequate rest',
+      'recovery_imbalance': '⚠️ Consider balancing muscle group distribution',
+      'recovery_optimal': '✅ Optimal recovery: 48-72 hours between same muscle groups',
+      // Volume
+      'volume_title': '📊 **Volume Analysis**',
+      'volume_period': '**{period} Volume:**',
+      'volume_overall': '**Overall Volume:**',
+      'volume_total': 'Total',
+      'volume_average_session': 'Average per session',
+      'volume_peak': 'Peak session',
+      'volume_trend': 'Trend',
+      'volume_distribution': '**Distribution by Muscle Group:**',
+      // Form
+      'form_title': '🎯 **Form Guide: {exercise}**',
+      'form_key_points': '**Key Points:**',
+      'form_your_notes': '**Your Notes:**',
+      'form_specify': 'Please specify an exercise for form guidance.',
+      'form_example': 'Example: "How is my squat form?" or "Bench press technique"',
+      // History
+      'history_period': '📅 **{period} Workout History**',
+      'history_recent': '📅 **Recent Workout History**',
+      'history_none': 'No workouts found for this period.',
+      // Greeting
+      'greeting_hello': '👋 Hello! Ready to train?',
+      'greeting_today': 'Great workout today! 💪',
+      'greeting_yesterday': 'You trained yesterday - nice consistency!',
+      'greeting_days_ago': 'Last workout was {days} days ago.',
+      'greeting_ask': 'What would you like to know about your training?',
+      'greeting_options': 'You can ask about:',
+      'greeting_pr': '• Personal records ("What\'s my squat PR?")',
+      'greeting_progress': '• Progress tracking ("Show my bench progress")',
+      'greeting_volume': '• Volume analysis ("Total volume this week")',
+      'greeting_recovery': '• Recovery insights ("Am I training too much?")',
+      // Generic
+      'generic_based_on': 'Based on your workout history:',
+      'generic_showing_from': '📅 Showing data from: {period}',
+      'generic_focused_on': '🎯 Focused on: {exercises}',
+      // No results
+      'no_results': 'I couldn\'t find specific data for your query.',
+      'no_results_pr': 'To track personal records:',
+      'no_results_pr_tip1': '• Tap the PR badge when you hit a new max',
+      'no_results_pr_tip2': '• I\'ll remember and celebrate your achievements!',
+      'no_results_exercise': 'Start logging this exercise to build your history!',
+      'no_results_exercise_tip1': '• Add it to your next workout',
+      'no_results_exercise_tip2': '• Track sets, reps, and weight',
+      'no_results_try': 'Try:',
+      'no_results_tip1': '• Being more specific ("squat PR" instead of "max")',
+      'no_results_tip2': '• Adding time context ("this week", "yesterday")',
+      'no_results_tip3': '• Checking if you\'ve logged this data',
+      // Encouragement
+      'encourage_pr_100': '🔥 Incredible strength! You\'re in the 100kg+ club!',
+      'encourage_pr_60': '💪 Solid PR! Keep pushing for new heights!',
+      'encourage_pr_default': '👏 Great progress! Every PR is a step forward!',
+      'encourage_generic': 'Keep up the great work!',
+      // Form cues
+      'form_controlled': 'Focus on controlled movement',
+      'form_breathing': 'Maintain proper breathing',
+      // Squat form cues
+      'form_squat_1': 'Keep chest up and core tight',
+      'form_squat_2': 'Knees track over toes',
+      'form_squat_3': 'Hip crease below parallel',
+      'form_squat_4': 'Drive through heels',
+      // Bench form cues
+      'form_bench_1': 'Maintain arch in lower back',
+      'form_bench_2': 'Shoulder blades pulled back',
+      'form_bench_3': 'Lower to chest with control',
+      'form_bench_4': 'Press up and slightly back',
+      // Deadlift form cues
+      'form_deadlift_1': 'Neutral spine throughout',
+      'form_deadlift_2': 'Shoulders over or slightly ahead of bar',
+      'form_deadlift_3': 'Push floor away to start',
+      'form_deadlift_4': 'Lock out hips and knees together',
+      // Press form cues
+      'form_press_1': 'Tight core, squeeze glutes',
+      'form_press_2': 'Bar path goes back slightly',
+      'form_press_3': 'Full lockout at the top',
+      'form_press_4': 'Keep elbows slightly forward',
+      // Row form cues
+      'form_row_1': 'Pull elbows back, not just hands',
+      'form_row_2': 'Squeeze shoulder blades at top',
+      'form_row_3': 'Controlled negative phase',
+      'form_row_4': 'Avoid momentum and swinging',
+    },
+    'it': {
+      // PR Response
+      'pr_title': '💪 Il tuo record personale per **{exercise}** è **{weight}kg**!',
+      'pr_achieved_on': 'L\'hai raggiunto il {date} ({day}).',
+      'pr_recent': 'Performance recenti:',
+      'pr_not_found': 'Non ho trovato un record personale per {exercise} nella tua cronologia.',
+      'pr_not_found_explanation': 'Potrebbe significare che non hai ancora tracciato questo esercizio, o non hai contrassegnato nessun set come PR.',
+      'pr_tip': '💡 **Consiglio**: Quando raggiungi un nuovo massimale, tocca il badge PR su quella serie!',
+      // Progression
+      'progression_title': '📈 **Analisi Progressione**',
+      'progression_starting': 'Inizio',
+      'progression_current': 'Attuale',
+      'progression_improvement': 'Miglioramento',
+      'progression_consistency': 'Costanza',
+      'progression_insights': '**Osservazioni Chiave:**',
+      'progression_excellent': '✅ Ottimi progressi sui movimenti composti',
+      'progression_plateau': '⚠️ Alcuni esercizi mostrano stallo - considera delle variazioni',
+      'progression_analyzing': 'Analizzo la tua progressione...',
+      // Exercise
+      'exercise_analysis': '📊 **Analisi {exercise}**',
+      'exercise_summary': '**Riepilogo Performance:**',
+      'exercise_best': 'Migliore',
+      'exercise_average': 'Media',
+      'exercise_volume': 'Volume Totale',
+      'exercise_frequency': 'Frequenza',
+      'exercise_recent': '**Sessioni Recenti:**',
+      'exercise_not_tracked': 'Non hai ancora tracciato {exercise}.',
+      'exercise_start_logging': 'Inizia a registrare questo esercizio per costruire la tua cronologia!',
+      // Recovery
+      'recovery_title': '🔄 **Analisi Recupero**',
+      'recovery_pattern': '**Pattern di Allenamento:**',
+      'recovery_sessions_week': 'Sessioni a settimana',
+      'recovery_avg_rest': 'Giorni di riposo medi',
+      'recovery_most_trained': 'Più allenato',
+      'recovery_least_trained': 'Meno allenato',
+      'recovery_recommendations': '**Raccomandazioni:**',
+      'recovery_high_frequency': '⚠️ Alta frequenza di allenamento rilevata - assicurati di riposare adeguatamente',
+      'recovery_imbalance': '⚠️ Considera di bilanciare la distribuzione dei gruppi muscolari',
+      'recovery_optimal': '✅ Recupero ottimale: 48-72 ore tra gli stessi gruppi muscolari',
+      // Volume
+      'volume_title': '📊 **Analisi Volume**',
+      'volume_period': '**Volume {period}:**',
+      'volume_overall': '**Volume Complessivo:**',
+      'volume_total': 'Totale',
+      'volume_average_session': 'Media per sessione',
+      'volume_peak': 'Sessione picco',
+      'volume_trend': 'Tendenza',
+      'volume_distribution': '**Distribuzione per Gruppo Muscolare:**',
+      // Form
+      'form_title': '🎯 **Guida Tecnica: {exercise}**',
+      'form_key_points': '**Punti Chiave:**',
+      'form_your_notes': '**Le tue Note:**',
+      'form_specify': 'Specifica un esercizio per la guida tecnica.',
+      'form_example': 'Esempio: "Come è la mia tecnica di squat?" o "Tecnica panca"',
+      // History
+      'history_period': '📅 **Cronologia Allenamenti {period}**',
+      'history_recent': '📅 **Cronologia Allenamenti Recenti**',
+      'history_none': 'Nessun allenamento trovato per questo periodo.',
+      // Greeting
+      'greeting_hello': '👋 Ciao! Pronto ad allenarti?',
+      'greeting_today': 'Ottimo allenamento oggi! 💪',
+      'greeting_yesterday': 'Ti sei allenato ieri - bella costanza!',
+      'greeting_days_ago': 'Ultimo allenamento {days} giorni fa.',
+      'greeting_ask': 'Cosa vuoi sapere sul tuo allenamento?',
+      'greeting_options': 'Puoi chiedere:',
+      'greeting_pr': '• Record personali ("Qual è il mio PR di squat?")',
+      'greeting_progress': '• Tracciamento progressi ("Mostrami i progressi di panca")',
+      'greeting_volume': '• Analisi volume ("Volume totale questa settimana")',
+      'greeting_recovery': '• Insights recupero ("Mi sto allenando troppo?")',
+      // Generic
+      'generic_based_on': 'In base alla tua cronologia allenamenti:',
+      'generic_showing_from': '📅 Dati da: {period}',
+      'generic_focused_on': '🎯 Focus su: {exercises}',
+      // No results
+      'no_results': 'Non ho trovato dati specifici per la tua richiesta.',
+      'no_results_pr': 'Per tracciare i record personali:',
+      'no_results_pr_tip1': '• Tocca il badge PR quando raggiungi un nuovo massimale',
+      'no_results_pr_tip2': '• Ricorderò e celebrerò i tuoi successi!',
+      'no_results_exercise': 'Inizia a registrare questo esercizio per costruire la tua cronologia!',
+      'no_results_exercise_tip1': '• Aggiungilo al prossimo allenamento',
+      'no_results_exercise_tip2': '• Traccia serie, ripetizioni e peso',
+      'no_results_try': 'Prova:',
+      'no_results_tip1': '• Sii più specifico ("PR squat" invece di "massimale")',
+      'no_results_tip2': '• Aggiungi contesto temporale ("questa settimana", "ieri")',
+      'no_results_tip3': '• Verifica di aver registrato questi dati',
+      // Encouragement
+      'encourage_pr_100': '🔥 Forza incredibile! Sei nel club dei 100kg+!',
+      'encourage_pr_60': '💪 PR solido! Continua a puntare in alto!',
+      'encourage_pr_default': '👏 Ottimi progressi! Ogni PR è un passo avanti!',
+      'encourage_generic': 'Continua così!',
+      // Form cues
+      'form_controlled': 'Concentrati su movimenti controllati',
+      'form_breathing': 'Mantieni una respirazione corretta',
+      // Squat form cues
+      'form_squat_1': 'Petto alto e core contratto',
+      'form_squat_2': 'Ginocchia seguono la direzione dei piedi',
+      'form_squat_3': 'Anca sotto il parallelo',
+      'form_squat_4': 'Spingi attraverso i talloni',
+      // Bench form cues
+      'form_bench_1': 'Mantieni l\'arco lombare',
+      'form_bench_2': 'Scapole addotte e depresse',
+      'form_bench_3': 'Scendi al petto con controllo',
+      'form_bench_4': 'Spingi su e leggermente indietro',
+      // Deadlift form cues
+      'form_deadlift_1': 'Colonna neutra per tutto il movimento',
+      'form_deadlift_2': 'Spalle sopra o leggermente avanti alla barra',
+      'form_deadlift_3': 'Spingi il pavimento via per iniziare',
+      'form_deadlift_4': 'Blocca anche e ginocchia insieme',
+      // Press form cues
+      'form_press_1': 'Core teso, glutei contratti',
+      'form_press_2': 'La traiettoria va leggermente indietro',
+      'form_press_3': 'Blocco completo in alto',
+      'form_press_4': 'Gomiti leggermente avanti',
+      // Row form cues
+      'form_row_1': 'Tira i gomiti indietro, non solo le mani',
+      'form_row_2': 'Stringi le scapole in alto',
+      'form_row_3': 'Fase eccentrica controllata',
+      'form_row_4': 'Evita slancio e oscillazioni',
+    },
+  };
 
   /// Generate response based on search results and query analysis
   String generateResponse({
     required ExpandedQuery query,
     required List<SearchResult> searchResults,
     required UserIntent intent,
+    String locale = 'en',
   }) {
+    _locale = locale == 'it' ? 'it' : 'en';
     // No results found
     if (searchResults.isEmpty) {
       return _generateNoResultsResponse(query, intent);
@@ -106,18 +365,22 @@ class EnhancedResponseGenerator {
       final date = topPR.document.timestamp;
 
       if (exerciseName != null && weight != null) {
-        buffer.writeln('💪 Your personal record for **$exerciseName** is **${weight}kg**!');
+        buffer.writeln(_l('pr_title')
+            .replaceAll('{exercise}', exerciseName)
+            .replaceAll('{weight}', weight.toString()));
 
         if (date != null) {
           buffer.writeln();
-          buffer.writeln('You achieved this on ${_dateFormat.format(date)} (${_dayFormat.format(date)}).');
+          buffer.writeln(_l('pr_achieved_on')
+              .replaceAll('{date}', _dateFormat.format(date))
+              .replaceAll('{day}', _dayFormat.format(date)));
         }
 
         // Add context from other results
         final recentPerformances = _findRecentPerformances(exerciseName, results);
         if (recentPerformances.isNotEmpty) {
           buffer.writeln();
-          buffer.writeln('Recent performances:');
+          buffer.writeln(_l('pr_recent'));
           for (final perf in recentPerformances.take(3)) {
             buffer.writeln(perf);
           }
@@ -134,11 +397,11 @@ class EnhancedResponseGenerator {
       // No PR found for query
       if (query.exerciseContext?.exercises.isNotEmpty ?? false) {
         final exercise = query.exerciseContext!.exercises.first;
-        buffer.writeln('I could not find a personal record for $exercise in your history.');
+        buffer.writeln(_l('pr_not_found').replaceAll('{exercise}', exercise));
         buffer.writeln();
-        buffer.writeln('This could mean you have not tracked this exercise yet, or you have not marked any sets as PRs.');
+        buffer.writeln(_l('pr_not_found_explanation'));
         buffer.writeln();
-        buffer.writeln('💡 **Tip**: When you hit a new personal best, tap the PR badge on that set!');
+        buffer.writeln(_l('pr_tip'));
       } else {
         buffer.writeln(_generateNoResultsResponse(query, UserIntent.prQuery));
       }
@@ -155,7 +418,7 @@ class EnhancedResponseGenerator {
     final progressData = _analyzeProgression(results);
 
     if (progressData.isNotEmpty) {
-      buffer.writeln('📈 **Progression Analysis**');
+      buffer.writeln(_l('progression_title'));
       buffer.writeln();
 
       // Show exercise-specific progression
@@ -164,22 +427,22 @@ class EnhancedResponseGenerator {
         final data = entry.value;
 
         buffer.writeln('**$exercise**:');
-        buffer.writeln('• Starting: ${data['start']}kg → Current: ${data['current']}kg');
-        buffer.writeln('• Improvement: ${data['improvement']}%');
-        buffer.writeln('• Consistency: ${data['frequency']}');
+        buffer.writeln('• ${_l('progression_starting')}: ${data['start']}kg → ${_l('progression_current')}: ${data['current']}kg');
+        buffer.writeln('• ${_l('progression_improvement')}: ${data['improvement']}%');
+        buffer.writeln('• ${_l('progression_consistency')}: ${data['frequency']}');
         buffer.writeln();
       }
 
       // Overall insights
-      buffer.writeln('**Key Insights:**');
+      buffer.writeln(_l('progression_insights'));
       if (progressData.values.any((d) => d['improvement'] > 10)) {
-        buffer.writeln('✅ Excellent progress on compound movements');
+        buffer.writeln(_l('progression_excellent'));
       }
       if (progressData.values.any((d) => d['improvement'] < 5)) {
-        buffer.writeln('⚠️ Some exercises showing plateau - consider variation');
+        buffer.writeln(_l('progression_plateau'));
       }
     } else {
-      buffer.writeln('Let me analyze your progression...');
+      buffer.writeln(_l('progression_analyzing'));
       buffer.writeln();
       buffer.writeln(_extractRelevantContent(results.first.document.content, 'progress'));
     }
@@ -194,7 +457,7 @@ class EnhancedResponseGenerator {
     final exerciseName = query.exerciseContext?.exercises.firstOrNull;
 
     if (exerciseName != null) {
-      buffer.writeln('📊 **$exerciseName Analysis**');
+      buffer.writeln(_l('exercise_analysis').replaceAll('{exercise}', exerciseName));
       buffer.writeln();
 
       // Find exercise-specific results
@@ -205,18 +468,18 @@ class EnhancedResponseGenerator {
         // Extract key metrics
         final metrics = _extractExerciseMetrics(exerciseResults.toList());
 
-        buffer.writeln('**Performance Summary:**');
+        buffer.writeln(_l('exercise_summary'));
         if (metrics['maxWeight'] != null) {
-          buffer.writeln('• Best: ${metrics['maxWeight']}kg');
+          buffer.writeln('• ${_l('exercise_best')}: ${metrics['maxWeight']}kg');
         }
         if (metrics['avgWeight'] != null) {
-          buffer.writeln('• Average: ${metrics['avgWeight']}kg');
+          buffer.writeln('• ${_l('exercise_average')}: ${metrics['avgWeight']}kg');
         }
         if (metrics['totalVolume'] != null) {
-          buffer.writeln('• Total Volume: ${_numberFormat.format(metrics['totalVolume'])}kg');
+          buffer.writeln('• ${_l('exercise_volume')}: ${_numberFormat.format(metrics['totalVolume'])}kg');
         }
         if (metrics['frequency'] != null) {
-          buffer.writeln('• Frequency: ${metrics['frequency']}');
+          buffer.writeln('• ${_l('exercise_frequency')}: ${metrics['frequency']}');
         }
 
         buffer.writeln();
@@ -224,15 +487,15 @@ class EnhancedResponseGenerator {
         // Recent sessions
         final recentSessions = _extractRecentSessions(exerciseName, results);
         if (recentSessions.isNotEmpty) {
-          buffer.writeln('**Recent Sessions:**');
+          buffer.writeln(_l('exercise_recent'));
           for (final session in recentSessions.take(3)) {
             buffer.writeln(session);
           }
         }
       } else {
-        buffer.writeln('You have not tracked $exerciseName yet.');
+        buffer.writeln(_l('exercise_not_tracked').replaceAll('{exercise}', exerciseName));
         buffer.writeln();
-        buffer.writeln('Start logging this exercise to build your performance history!');
+        buffer.writeln(_l('exercise_start_logging'));
       }
     } else {
       // General exercise response
@@ -246,29 +509,33 @@ class EnhancedResponseGenerator {
   String _generateRecoveryResponse(ExpandedQuery query, List<SearchResult> results) {
     final buffer = StringBuffer();
 
-    buffer.writeln('🔄 **Recovery Analysis**');
+    buffer.writeln(_l('recovery_title'));
     buffer.writeln();
 
     // Analyze training frequency from results
     final frequencyData = _analyzeTrainingFrequency(results);
 
     if (frequencyData.isNotEmpty) {
-      buffer.writeln('**Training Pattern:**');
-      buffer.writeln('• Sessions per week: ${frequencyData['sessionsPerWeek']}');
-      buffer.writeln('• Average rest days: ${frequencyData['avgRestDays']}');
-      buffer.writeln('• Most trained: ${frequencyData['mostTrained']}');
-      buffer.writeln('• Least trained: ${frequencyData['leastTrained']}');
+      buffer.writeln(_l('recovery_pattern'));
+      buffer.writeln('• ${_l('recovery_sessions_week')}: ${frequencyData['sessionsPerWeek']}');
+      buffer.writeln('• ${_l('recovery_avg_rest')}: ${frequencyData['avgRestDays']}');
+      if (frequencyData['mostTrained'] != null) {
+        buffer.writeln('• ${_l('recovery_most_trained')}: ${frequencyData['mostTrained']}');
+      }
+      if (frequencyData['leastTrained'] != null) {
+        buffer.writeln('• ${_l('recovery_least_trained')}: ${frequencyData['leastTrained']}');
+      }
       buffer.writeln();
 
       // Recovery recommendations
-      buffer.writeln('**Recommendations:**');
+      buffer.writeln(_l('recovery_recommendations'));
       if (frequencyData['sessionsPerWeek'] > 5) {
-        buffer.writeln('⚠️ High training frequency detected - ensure adequate rest');
+        buffer.writeln(_l('recovery_high_frequency'));
       }
       if (frequencyData['muscleImbalance'] == true) {
-        buffer.writeln('⚠️ Consider balancing muscle group distribution');
+        buffer.writeln(_l('recovery_imbalance'));
       }
-      buffer.writeln('✅ Optimal recovery: 48-72 hours between same muscle groups');
+      buffer.writeln(_l('recovery_optimal'));
     } else {
       buffer.writeln(_extractRelevantContent(results.first.document.content, 'recovery'));
     }
@@ -280,7 +547,7 @@ class EnhancedResponseGenerator {
   String _generateVolumeResponse(ExpandedQuery query, List<SearchResult> results) {
     final buffer = StringBuffer();
 
-    buffer.writeln('📊 **Volume Analysis**');
+    buffer.writeln(_l('volume_title'));
     buffer.writeln();
 
     // Extract volume data from results
@@ -288,24 +555,24 @@ class EnhancedResponseGenerator {
 
     if (volumeData.isNotEmpty) {
       if (query.temporalContext != null) {
-        buffer.writeln('**${query.temporalContext!.label.toUpperCase()} Volume:**');
+        buffer.writeln(_l('volume_period').replaceAll('{period}', query.temporalContext!.label.toUpperCase()));
       } else {
-        buffer.writeln('**Overall Volume:**');
+        buffer.writeln(_l('volume_overall'));
       }
 
-      buffer.writeln('• Total: ${_numberFormat.format(volumeData['total'])}kg');
-      buffer.writeln('• Average per session: ${_numberFormat.format(volumeData['average'])}kg');
-      buffer.writeln('• Peak session: ${_numberFormat.format(volumeData['peak'])}kg');
+      buffer.writeln('• ${_l('volume_total')}: ${_numberFormat.format(volumeData['total'])}kg');
+      buffer.writeln('• ${_l('volume_average_session')}: ${_numberFormat.format(volumeData['average'])}kg');
+      buffer.writeln('• ${_l('volume_peak')}: ${_numberFormat.format(volumeData['peak'])}kg');
 
       if (volumeData['trend'] != null) {
-        buffer.writeln('• Trend: ${volumeData['trend']}');
+        buffer.writeln('• ${_l('volume_trend')}: ${volumeData['trend']}');
       }
 
       buffer.writeln();
 
       // Volume distribution
       if (volumeData['distribution'] != null) {
-        buffer.writeln('**Distribution by Muscle Group:**');
+        buffer.writeln(_l('volume_distribution'));
         final distribution = volumeData['distribution'] as Map<String, double>;
         for (final entry in distribution.entries) {
           buffer.writeln('• ${entry.key}: ${_numberFormat.format(entry.value)}kg');
@@ -325,13 +592,13 @@ class EnhancedResponseGenerator {
     final exercise = query.exerciseContext?.exercises.firstOrNull;
 
     if (exercise != null) {
-      buffer.writeln('🎯 **Form Guide: ${exercise.toUpperCase()}**');
+      buffer.writeln(_l('form_title').replaceAll('{exercise}', exercise.toUpperCase()));
       buffer.writeln();
 
       // Provide form cues based on exercise
       final formCues = _getFormCues(exercise);
 
-      buffer.writeln('**Key Points:**');
+      buffer.writeln(_l('form_key_points'));
       for (final cue in formCues) {
         buffer.writeln('• $cue');
       }
@@ -341,15 +608,15 @@ class EnhancedResponseGenerator {
       // Add performance context from search
       final performanceNotes = _extractNotes(exercise, results);
       if (performanceNotes.isNotEmpty) {
-        buffer.writeln('**Your Notes:**');
+        buffer.writeln(_l('form_your_notes'));
         for (final note in performanceNotes.take(3)) {
           buffer.writeln('• $note');
         }
       }
     } else {
-      buffer.writeln('Please specify an exercise for form guidance.');
+      buffer.writeln(_l('form_specify'));
       buffer.writeln();
-      buffer.writeln('Example: "How is my squat form?" or "Bench press technique"');
+      buffer.writeln(_l('form_example'));
     }
 
     return buffer.toString();
@@ -360,9 +627,9 @@ class EnhancedResponseGenerator {
     final buffer = StringBuffer();
 
     if (query.temporalContext != null) {
-      buffer.writeln('📅 **${query.temporalContext!.label.toUpperCase()} Workout History**');
+      buffer.writeln(_l('history_period').replaceAll('{period}', query.temporalContext!.label.toUpperCase()));
     } else {
-      buffer.writeln('📅 **Recent Workout History**');
+      buffer.writeln(_l('history_recent'));
     }
     buffer.writeln();
 
@@ -374,7 +641,7 @@ class EnhancedResponseGenerator {
         buffer.writeln(summary);
       }
     } else {
-      buffer.writeln('No workouts found for this period.');
+      buffer.writeln(_l('history_none'));
     }
 
     return buffer.toString();
@@ -384,7 +651,7 @@ class EnhancedResponseGenerator {
   String _generateGreetingWithContext(List<SearchResult> results) {
     final buffer = StringBuffer();
 
-    buffer.writeln('👋 Hello! Ready to train?');
+    buffer.writeln(_l('greeting_hello'));
     buffer.writeln();
 
     // Add recent workout context
@@ -394,13 +661,13 @@ class EnhancedResponseGenerator {
       buffer.writeln();
     }
 
-    buffer.writeln('What would you like to know about your training?');
+    buffer.writeln(_l('greeting_ask'));
     buffer.writeln();
-    buffer.writeln('You can ask about:');
-    buffer.writeln('• Personal records ("What is my squat PR?")');
-    buffer.writeln('• Progress tracking ("Show my bench progress")');
-    buffer.writeln('• Volume analysis ("Total volume this week")');
-    buffer.writeln('• Recovery insights ("Am I training too much?")');
+    buffer.writeln(_l('greeting_options'));
+    buffer.writeln(_l('greeting_pr'));
+    buffer.writeln(_l('greeting_progress'));
+    buffer.writeln(_l('greeting_volume'));
+    buffer.writeln(_l('greeting_recovery'));
 
     return buffer.toString();
   }
@@ -412,7 +679,7 @@ class EnhancedResponseGenerator {
     // Use top search results to construct response
     final topResults = results.take(3);
 
-    buffer.writeln('Based on your workout history:');
+    buffer.writeln(_l('generic_based_on'));
     buffer.writeln();
 
     for (final result in topResults) {
@@ -425,12 +692,12 @@ class EnhancedResponseGenerator {
     // Add query-specific context
     if (query.isTemporalQuery) {
       buffer.writeln();
-      buffer.writeln('📅 Showing data from: ${query.temporalContext!.label}');
+      buffer.writeln(_l('generic_showing_from').replaceAll('{period}', query.temporalContext!.label));
     }
 
     if (query.isExerciseSpecific) {
       buffer.writeln();
-      buffer.writeln('🎯 Focused on: ${query.exerciseContext!.exercises.join(', ')}');
+      buffer.writeln(_l('generic_focused_on').replaceAll('{exercises}', query.exerciseContext!.exercises.join(', ')));
     }
 
     return buffer.toString();
@@ -440,28 +707,28 @@ class EnhancedResponseGenerator {
   String _generateNoResultsResponse(ExpandedQuery query, UserIntent intent) {
     final buffer = StringBuffer();
 
-    buffer.writeln("I couldn't find specific data for your query.");
+    buffer.writeln(_l('no_results'));
     buffer.writeln();
 
     // Provide intent-specific guidance
     switch (intent) {
       case UserIntent.prQuery:
-        buffer.writeln('To track personal records:');
-        buffer.writeln('• Tap the PR badge when you hit a new max');
-        buffer.writeln('• I will remember and celebrate your achievements!');
+        buffer.writeln(_l('no_results_pr'));
+        buffer.writeln(_l('no_results_pr_tip1'));
+        buffer.writeln(_l('no_results_pr_tip2'));
         break;
 
       case UserIntent.plan:
-        buffer.writeln('Start logging this exercise to build your history!');
-        buffer.writeln('• Add it to your next workout');
-        buffer.writeln('• Track sets, reps, and weight');
+        buffer.writeln(_l('no_results_exercise'));
+        buffer.writeln(_l('no_results_exercise_tip1'));
+        buffer.writeln(_l('no_results_exercise_tip2'));
         break;
 
       default:
-        buffer.writeln('Try:');
-        buffer.writeln('• Being more specific ("squat PR" instead of "max")');
-        buffer.writeln('• Adding time context ("this week", "yesterday")');
-        buffer.writeln('• Checking if you have logged this data');
+        buffer.writeln(_l('no_results_try'));
+        buffer.writeln(_l('no_results_tip1'));
+        buffer.writeln(_l('no_results_tip2'));
+        buffer.writeln(_l('no_results_tip3'));
     }
 
     return buffer.toString();
@@ -876,32 +1143,79 @@ class EnhancedResponseGenerator {
   }
 
   List<String> _getFormCues(String exercise) {
-    final cues = <String, List<String>>{
-      'squat': [
-        'Keep chest up and core tight',
-        'Knees track over toes',
-        'Hip crease below parallel',
-        'Drive through heels',
-      ],
-      'bench': [
-        'Maintain arch in lower back',
-        'Shoulder blades pulled back',
-        'Lower to chest with control',
-        'Press up and slightly back',
-      ],
-      'deadlift': [
-        'Neutral spine throughout',
-        'Shoulders over or slightly ahead of bar',
-        'Push floor away to start',
-        'Lock out hips and knees together',
-      ],
-    };
+    final lowerExercise = exercise.toLowerCase();
 
-    return cues[exercise] ?? ['Focus on controlled movement', 'Maintain proper breathing'];
+    // Squat variations
+    if (lowerExercise.contains('squat') || lowerExercise.contains('accosciata')) {
+      return [
+        _l('form_squat_1'),
+        _l('form_squat_2'),
+        _l('form_squat_3'),
+        _l('form_squat_4'),
+      ];
+    }
+
+    // Bench press variations
+    if (lowerExercise.contains('bench') || lowerExercise.contains('panca') || lowerExercise.contains('distensioni')) {
+      return [
+        _l('form_bench_1'),
+        _l('form_bench_2'),
+        _l('form_bench_3'),
+        _l('form_bench_4'),
+      ];
+    }
+
+    // Deadlift variations
+    if (lowerExercise.contains('deadlift') || lowerExercise.contains('stacco')) {
+      return [
+        _l('form_deadlift_1'),
+        _l('form_deadlift_2'),
+        _l('form_deadlift_3'),
+        _l('form_deadlift_4'),
+      ];
+    }
+
+    // Overhead press variations
+    if (lowerExercise.contains('press') || lowerExercise.contains('military') ||
+        lowerExercise.contains('spinte') || lowerExercise.contains('lento')) {
+      return [
+        _l('form_press_1'),
+        _l('form_press_2'),
+        _l('form_press_3'),
+        _l('form_press_4'),
+      ];
+    }
+
+    // Row variations
+    if (lowerExercise.contains('row') || lowerExercise.contains('rematore') || lowerExercise.contains('tirate')) {
+      return [
+        _l('form_row_1'),
+        _l('form_row_2'),
+        _l('form_row_3'),
+        _l('form_row_4'),
+      ];
+    }
+
+    // Default cues
+    return [_l('form_controlled'), _l('form_breathing')];
   }
 
   List<String> _extractNotes(String exercise, List<SearchResult> results) {
-    return ['Felt strong today', 'Good form on heavy sets'];
+    // Extract notes from workout document content if available
+    // BM25Document doesn't have metadata, so we parse from content instead
+    final notes = <String>[];
+
+    for (final result in results) {
+      final content = result.document.content;
+      // Look for notes pattern in content: "Note: ..." or "Notes: ..."
+      final noteMatch = RegExp(r'[Nn]ote[s]?:\s*([^\n]+)').firstMatch(content);
+      if (noteMatch != null && noteMatch.group(1)?.isNotEmpty == true) {
+        notes.add(noteMatch.group(1)!.trim());
+      }
+    }
+
+    // If no notes found, return empty (don't show placeholder text)
+    return notes;
   }
 
   List<String> _extractWorkoutSummaries(List<SearchResult> results) {
@@ -930,11 +1244,11 @@ class EnhancedResponseGenerator {
         final daysAgo = DateTime.now().difference(date).inDays;
 
         if (daysAgo == 0) {
-          return 'Great workout today! 💪';
+          return _l('greeting_today');
         } else if (daysAgo == 1) {
-          return 'You trained yesterday - nice consistency!';
+          return _l('greeting_yesterday');
         } else if (daysAgo < 7) {
-          return 'Last workout was $daysAgo days ago.';
+          return _l('greeting_days_ago').replaceAll('{days}', daysAgo.toString());
         }
       }
     }
@@ -955,14 +1269,14 @@ class EnhancedResponseGenerator {
   String _generateEncouragement(String type, double value) {
     if (type == 'pr') {
       if (value > 100) {
-        return "🔥 Incredible strength! You're in the 100kg+ club!";
+        return _l('encourage_pr_100');
       } else if (value > 60) {
-        return '💪 Solid PR! Keep pushing for new heights!';
+        return _l('encourage_pr_60');
       } else {
-        return '👏 Great progress! Every PR is a step forward!';
+        return _l('encourage_pr_default');
       }
     }
-    return 'Keep up the great work!';
+    return _l('encourage_generic');
   }
 
   /// Check if sets have similar reps (within 2 reps)

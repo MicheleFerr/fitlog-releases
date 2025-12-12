@@ -21,6 +21,57 @@ class AppLocalizationsEn extends AppLocalizations {
   String get welcome => 'Ready to train?';
 
   @override
+  String get motivationalQuote0 => 'Every rep counts.';
+
+  @override
+  String get motivationalQuote1 => 'Stronger than yesterday.';
+
+  @override
+  String get motivationalQuote2 => 'Your only limit is you.';
+
+  @override
+  String get motivationalQuote3 => 'Make it happen.';
+
+  @override
+  String get motivationalQuote4 => 'Train insane or remain the same.';
+
+  @override
+  String get motivationalQuote5 => 'Progress, not perfection.';
+
+  @override
+  String get motivationalQuote6 => 'The iron never lies.';
+
+  @override
+  String get motivationalQuote7 => 'Earn your body.';
+
+  @override
+  String get motivationalQuote8 => 'No excuses, just results.';
+
+  @override
+  String get motivationalQuote9 => 'Be your own competition.';
+
+  @override
+  String get motivationalQuote10 => 'Discipline equals freedom.';
+
+  @override
+  String get motivationalQuote11 => 'Push your limits.';
+
+  @override
+  String get motivationalQuote12 => 'Champions train, losers complain.';
+
+  @override
+  String get motivationalQuote13 => 'Sweat now, shine later.';
+
+  @override
+  String get greetingMorning => 'Good morning';
+
+  @override
+  String get greetingAfternoon => 'Good afternoon';
+
+  @override
+  String get greetingEvening => 'Good evening';
+
+  @override
   String get welcomeDescription =>
       'Track workouts, time your rest periods, and sync with Apple Health.';
 
@@ -690,7 +741,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get importSuccessful => 'Import completed successfully!';
 
   @override
-  String get importing => 'Importing...';
+  String get importing => 'Importing workouts...';
 
   @override
   String get importCompleted => 'Import Completed';
@@ -1065,7 +1116,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get workoutStatusPaused => 'Paused';
 
   @override
-  String get exercises => 'exercises';
+  String get exercises => 'Exercises';
 
   @override
   String get progress => 'Progress';
@@ -1772,7 +1823,7 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String get workouts => 'Workouts';
+  String get workouts => 'workouts';
 
   @override
   String bestWorkoutDay(String day) {
@@ -2139,6 +2190,40 @@ class AppLocalizationsEn extends AppLocalizations {
   String get streak => 'Streak';
 
   @override
+  String get thisYear => 'this year';
+
+  @override
+  String get keepItUp => 'Keep it up!';
+
+  @override
+  String get startToday => 'Start today!';
+
+  @override
+  String workoutDaysPerWeek(double days) {
+    final intl.NumberFormat daysNumberFormat = intl.NumberFormat.decimalPattern(
+      localeName,
+    );
+    final String daysString = daysNumberFormat.format(days);
+
+    return '$daysString/wk avg';
+  }
+
+  @override
+  String metricWorkoutsExplanation(int count) {
+    return 'You\'ve completed $count workouts this year. Each workout logged counts towards this total. Keep training to reach your goals!';
+  }
+
+  @override
+  String metricConsistencyExplanation(int percent, int days) {
+    return 'Your consistency is $percent% based on your weekly training frequency. You average $days workout days per week. The goal is 4 sessions/week (100%).';
+  }
+
+  @override
+  String metricStreakExplanation(int days) {
+    return 'Your current streak is $days consecutive days of training. A streak counts days where you completed at least one workout. Keep the momentum going!';
+  }
+
+  @override
   String get achievements => 'Achievements';
 
   @override
@@ -2246,6 +2331,14 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get addWarmupSetsSubtitle =>
       'Generate warmup sets based on working weight';
+
+  @override
+  String get editWarmupSets => 'Edit Warmup Sets';
+
+  @override
+  String warmupSetsUpdated(String count) {
+    return '$count warmup sets updated';
+  }
 
   @override
   String get addWorkingSetFirst => 'Add a working set first';
@@ -2751,9 +2844,6 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get noRecord => 'No record';
-
-  @override
-  String get startToday => 'Start today!';
 
   @override
   String get great => 'Great!';
@@ -4078,6 +4168,9 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get createSuperset => 'Create Superset';
+
+  @override
+  String get supersetCreated => 'Superset created';
 
   @override
   String get round => 'Round';
@@ -6048,9 +6141,6 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get allTime => 'All Time';
-
-  @override
-  String get keepItUp => 'Keep it up!';
 
   @override
   String get viewStats => 'View Stats';
@@ -10948,7 +11038,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get gridView => 'Grid View';
 
   @override
-  String get parsing => 'Parsing...';
+  String get parsing => 'Parsing data...';
 
   @override
   String get matchingExercises => 'Matching exercises...';
@@ -10960,7 +11050,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get finalizing => 'Finalizing...';
 
   @override
-  String get importFailed => '❌ Import failed';
+  String get importFailed => 'Import Failed';
 
   @override
   String get noDescription => 'No description';
@@ -13780,7 +13870,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get templateLimitSuggestion => 'Template limit suggestion';
 
   @override
-  String get templateSyncDescription => 'Template sync description';
+  String get templateSyncDescription =>
+      'The template will be saved to Firebase and available on all your devices';
 
   @override
   String get thisMonth => 'This month';
@@ -13921,7 +14012,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get workoutDuration => 'Workout duration';
 
   @override
-  String get tryAgain => 'Try again';
+  String get tryAgain => 'Try Again';
 
   @override
   String andMoreRecords(int count) {
@@ -17634,6 +17725,9 @@ class AppLocalizationsEn extends AppLocalizations {
       'Are you sure you want to delete all conversation history?';
 
   @override
+  String get noMessagesToExport => 'No messages to export';
+
+  @override
   String get aiCoachRespondingHint => 'AI is responding...';
 
   @override
@@ -18478,8 +18572,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get importSuccessTitle => 'Import Successful';
 
   @override
-  String get importSuccessMessage =>
-      'All exercises have been imported to Firebase. You can now use them in the app!';
+  String importSuccessMessage(int count) {
+    return 'Successfully imported $count workouts to your history.';
+  }
 
   @override
   String get importFailedTitle => 'Import Failed';
@@ -20212,6 +20307,26 @@ class AppLocalizationsEn extends AppLocalizations {
   String get bodyMeasurementsGrantConsent => 'Enable Body Measurements';
 
   @override
+  String get bodyMeasurementsHealthKitIOSOnly =>
+      'HealthKit import is only available on iOS';
+
+  @override
+  String get bodyMeasurementsNoConsentedMetrics =>
+      'No consented metrics. Please grant consent first.';
+
+  @override
+  String get bodyMeasurementsHealthKitPermissionDenied =>
+      'HealthKit permission denied. Please allow access in Settings.';
+
+  @override
+  String bodyMeasurementsImportSuccess(int count) {
+    return 'Successfully imported $count measurements';
+  }
+
+  @override
+  String get bodyMeasurementsImportFromHealth => 'Import from Health';
+
+  @override
   String get weeks => 'weeks';
 
   @override
@@ -21184,15 +21299,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get trendDeclining => 'Declining';
 
   @override
-  String get greetingMorning => 'Good morning';
-
-  @override
-  String get greetingAfternoon => 'Good afternoon';
-
-  @override
-  String get greetingEvening => 'Good evening';
-
-  @override
   String get greetingNight => 'Good night';
 
   @override
@@ -21841,4 +21947,832 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get noAlternativesHint =>
       'Try searching for similar exercises in the database';
+
+  @override
+  String get helpCenter => 'Help Center';
+
+  @override
+  String get helpCenterWelcome => 'How can we help?';
+
+  @override
+  String get helpCenterDescription =>
+      'Find answers to common questions about using the app';
+
+  @override
+  String get helpCategoryGettingStarted => 'Getting Started';
+
+  @override
+  String get helpCategoryGettingStartedDesc => 'First steps and app basics';
+
+  @override
+  String get helpCategoryWorkouts => 'Workouts & Templates';
+
+  @override
+  String get helpCategoryWorkoutsDesc => 'Create, save, and manage workouts';
+
+  @override
+  String get helpCategoryExerciseTracking => 'Exercise Tracking';
+
+  @override
+  String get helpCategoryExerciseTrackingDesc => 'Log sets, reps, and weights';
+
+  @override
+  String get helpCategoryAdvancedTechniques => 'Advanced Techniques';
+
+  @override
+  String get helpCategoryAdvancedTechniquesDesc =>
+      'Supersets, drop sets, and more';
+
+  @override
+  String get helpCategoryTimer => 'Rest Timer';
+
+  @override
+  String get helpCategoryTimerDesc =>
+      'Timer, notifications, and Live Activities';
+
+  @override
+  String get helpCategoryAnalytics => 'Progress & Analytics';
+
+  @override
+  String get helpCategoryAnalyticsDesc => 'Charts, PRs, and statistics';
+
+  @override
+  String get helpCategoryPremium => 'Premium';
+
+  @override
+  String get helpCategoryPremiumDesc => 'Subscription and features';
+
+  @override
+  String get helpCategoryAccount => 'Account & Sync';
+
+  @override
+  String get helpCategoryAccountDesc => 'Login, backup, and cloud sync';
+
+  @override
+  String get helpCategoryProfile => 'Profile & Goals';
+
+  @override
+  String get helpCategoryProfileDesc => 'Goals, streaks, and achievements';
+
+  @override
+  String get helpCategorySettings => 'Settings';
+
+  @override
+  String get helpCategorySettingsDesc => 'Customize your experience';
+
+  @override
+  String get helpCategoryHealthSync => 'Health Sync';
+
+  @override
+  String get helpCategoryHealthSyncDesc => 'Apple Health and Health Connect';
+
+  @override
+  String get helpCategoryTroubleshooting => 'Troubleshooting';
+
+  @override
+  String get helpCategoryTroubleshootingDesc => 'Problems and solutions';
+
+  @override
+  String get faqWhatIsAppQuestion => 'What is this app?';
+
+  @override
+  String get faqWhatIsAppAnswer =>
+      'This is a complete workout tracking app designed to help you log your gym sessions, track progress over time, and achieve your fitness goals. It features a database of 800+ exercises, customizable templates, detailed analytics, and smart features like automatic rest timers.';
+
+  @override
+  String get faqFirstWorkoutQuestion => 'How do I start my first workout?';
+
+  @override
+  String get faqFirstWorkoutAnswer =>
+      'From the home screen, tap \'Quick Start\' to begin an empty workout, or select one of your saved templates. Once in a workout, tap the + button to add exercises from our database. Log your sets by entering weight and reps, then swipe right to complete each set.';
+
+  @override
+  String get faqQuickStartQuestion =>
+      'What\'s the difference between Quick Start and templates?';
+
+  @override
+  String get faqQuickStartAnswer =>
+      'Quick Start creates an empty workout where you add exercises as you go - great for flexible or spontaneous sessions. Templates are pre-saved routines with exercises already defined - perfect for consistent programs. You can save any completed workout as a new template.';
+
+  @override
+  String get faqNavigationQuestion => 'How do I navigate the app?';
+
+  @override
+  String get faqNavigationAnswer =>
+      'The bottom bar has 4 main sections: Home (dashboard and quick start), Workout (active session), History (past workouts), and Profile (settings and stats). During a workout, swipe left/right to move between exercises, or use the mini-bar at the bottom for quick navigation.';
+
+  @override
+  String get faqTemplatesIntroQuestion => 'How do templates work?';
+
+  @override
+  String get faqTemplatesIntroAnswer =>
+      'Templates save your workout structure including exercises, sets, reps, and rest times. Start a template-based workout by tapping it on the home screen. The app remembers your last weights and suggests progressive overload. Edit templates anytime from the Templates screen.';
+
+  @override
+  String get faqCreateWorkoutQuestion => 'How do I create a custom workout?';
+
+  @override
+  String get faqCreateWorkoutAnswer =>
+      'Start a Quick Start workout and add your desired exercises. When finished, tap \'Complete\' and choose \'Save as Template\'. Name your template and it will appear on your home screen. Alternatively, go to Templates > Create New to build a template from scratch.';
+
+  @override
+  String get faqTemplatesQuestion => 'How do I manage my templates?';
+
+  @override
+  String get faqTemplatesAnswer =>
+      'Go to the Templates screen (accessible from Home). Here you can view all templates, edit exercise order, modify sets/reps, rename templates, or delete them. Long-press a template for quick actions. Templates sync across devices when logged in.';
+
+  @override
+  String get faqSaveTemplateQuestion => 'Can I save a workout as a template?';
+
+  @override
+  String get faqSaveTemplateAnswer =>
+      'Yes! After completing any workout, you\'ll see the option to \'Save as Template\'. The template will preserve the exercises, order, and target sets/reps. Your logged weights become the starting point for future sessions.';
+
+  @override
+  String get faqEditWorkoutQuestion =>
+      'Can I edit a workout while it\'s in progress?';
+
+  @override
+  String get faqEditWorkoutAnswer =>
+      'Absolutely! During a workout you can: add or remove exercises, reorder exercises by dragging, change sets/reps, edit logged values, add notes, and even create supersets. Long-press an exercise to see all options.';
+
+  @override
+  String get faqDraftRecoveryQuestion =>
+      'What happens if I accidentally close the app?';
+
+  @override
+  String get faqDraftRecoveryAnswer =>
+      'Don\'t worry! The app automatically saves your workout progress every few seconds. If you close the app or it crashes, you\'ll be prompted to resume your workout when you return. Your data is never lost.';
+
+  @override
+  String get faqCompleteWorkoutQuestion => 'How do I finish a workout?';
+
+  @override
+  String get faqCompleteWorkoutAnswer =>
+      'Tap the \'Complete Workout\' button (checkmark icon) in the top right. You\'ll see a summary of your session including duration, volume, and any PRs achieved. Choose to save as template or just save the workout. Congratulations will appear for any new records!';
+
+  @override
+  String get faqAddExerciseQuestion => 'How do I add exercises to my workout?';
+
+  @override
+  String get faqAddExerciseAnswer =>
+      'Tap the + button during a workout to open the exercise search. Browse by muscle group using the filter buttons, or search by name. The database includes 800+ exercises with descriptions and GIFs. Can\'t find one? Create a custom exercise with your own name and target muscles.';
+
+  @override
+  String get faqSetsRepsQuestion => 'How do I log sets and reps?';
+
+  @override
+  String get faqSetsRepsAnswer =>
+      'Tap any set row to open the input modal. Enter your weight and reps using the picker or keyboard. Swipe the row to the right to mark it complete (turns green). Previous workout values are shown for reference - tap them to auto-fill!';
+
+  @override
+  String get faqRpeRirQuestion => 'What are RPE and RIR?';
+
+  @override
+  String get faqRpeRirAnswer =>
+      'RPE (Rate of Perceived Exertion) measures effort on a 1-10 scale where 10 is max effort. RIR (Reps in Reserve) counts how many more reps you could do. Example: RPE 8 = RIR 2 (could do 2 more reps). Track these to optimize your training intensity.';
+
+  @override
+  String get faqCountingModesQuestion => 'What counting modes are available?';
+
+  @override
+  String get faqCountingModesAnswer =>
+      'The app supports: Reps (standard count), Time (seconds for planks/holds), Distance (meters for carries/runs), and Calories. Change the mode per exercise by tapping the settings icon. Each mode has appropriate input fields.';
+
+  @override
+  String get faqWarmupSetsQuestion => 'How do I log warmup sets?';
+
+  @override
+  String get faqWarmupSetsAnswer =>
+      'Tap the set number to toggle between working set and warmup. Warmup sets appear with a \'W\' badge and lighter styling. They\'re excluded from volume calculations and PR tracking but still recorded in your history for reference.';
+
+  @override
+  String get faqExerciseNotesQuestion => 'Can I add notes to exercises?';
+
+  @override
+  String get faqExerciseNotesAnswer =>
+      'Yes! Tap the notes icon on any exercise to add personal notes. Great for recording form cues, equipment settings, or modifications. Notes sync across devices and appear when you do the exercise again.';
+
+  @override
+  String get faqSupersetsQuestion =>
+      'What are supersets and how do I use them?';
+
+  @override
+  String get faqSupersetsAnswer =>
+      'Supersets are 2+ exercises performed back-to-back without rest - excellent for time efficiency and muscle pump. Long-press an exercise, select \'Create Superset\', then add the paired exercise. The app guides you through alternating sets with appropriate rest between rounds.';
+
+  @override
+  String get faqDropsetsQuestion => 'How do drop sets work?';
+
+  @override
+  String get faqDropsetsAnswer =>
+      'Drop sets involve reducing weight after reaching failure and continuing immediately. Enable drop set mode on any exercise, then log each drop within the set. The app calculates total volume including all drops. Great for maximizing muscle fatigue!';
+
+  @override
+  String get faqRestPauseQuestion => 'What is rest-pause training?';
+
+  @override
+  String get faqRestPauseAnswer =>
+      'Rest-pause uses brief 10-15 second pauses within a set to extend it. Do reps to near-failure, rest 10-15 seconds, then continue. The app tracks your mini-sets and total reps, useful for pushing past normal failure points.';
+
+  @override
+  String get faqAutoWarmupQuestion => 'Does the app suggest warmup sets?';
+
+  @override
+  String get faqAutoWarmupAnswer =>
+      'Yes! The auto-warmup feature suggests progressive warmup sets based on your working weight. For example, if squatting 100kg, it might suggest: bar only → 40kg → 60kg → 80kg. Customize the percentage progression in Settings.';
+
+  @override
+  String get faqAutoRegulationQuestion => 'What is auto-regulation?';
+
+  @override
+  String get faqAutoRegulationAnswer =>
+      'Auto-regulation adjusts your training based on daily performance. If you\'re hitting more reps than expected, the app suggests increasing weight. Struggling? It might recommend reducing. This ensures optimal progressive overload adapted to your daily readiness.';
+
+  @override
+  String get faqTimerQuestion => 'How does the rest timer work?';
+
+  @override
+  String get faqTimerAnswer =>
+      'The rest timer starts automatically after completing a set. It counts down your chosen rest time and notifies you when ready. The timer continues in background and shows on your lock screen (iOS). Customize default rest times per exercise or globally.';
+
+  @override
+  String get faqTimerBackgroundQuestion =>
+      'Does the timer work when the app is closed?';
+
+  @override
+  String get faqTimerBackgroundAnswer =>
+      'Yes! The timer continues counting even when you switch apps or lock your phone. On iOS, it shows as a Live Activity on your lock screen. You\'ll receive a notification when rest is complete so you never miss your next set.';
+
+  @override
+  String get faqLiveActivitiesQuestion => 'What are Live Activities?';
+
+  @override
+  String get faqLiveActivitiesAnswer =>
+      'Live Activities (iOS 16+) show your timer on the lock screen and Dynamic Island. See remaining rest time at a glance without unlocking your phone. The activity updates in real-time and shows current set/exercise info. Enable in Settings > Timer.';
+
+  @override
+  String get faqTimerSoundsQuestion => 'Can I customize timer sounds?';
+
+  @override
+  String get faqTimerSoundsAnswer =>
+      'Yes! Go to Settings > Timer > Sound. Choose from several alert sounds or select \'Vibrate Only\' for silent gym sessions. You can also enable or disable the countdown beeps in the final seconds.';
+
+  @override
+  String get faqDefaultRestQuestion => 'How do I set default rest times?';
+
+  @override
+  String get faqDefaultRestAnswer =>
+      'Go to Settings > Timer > Default Rest Time. Set a global default (e.g., 90 seconds). You can also set rest time per exercise - tap the clock icon on any exercise to customize. Exercise-specific times override the global default.';
+
+  @override
+  String get faqTrackProgressQuestion => 'How do I track my progress?';
+
+  @override
+  String get faqTrackProgressAnswer =>
+      'The Analytics tab shows your fitness journey through interactive charts. Track strength progression per exercise, weekly volume trends, workout frequency, and muscle group balance. Filter by time period (week/month/year) to spot trends.';
+
+  @override
+  String get faqPersonalRecordsQuestion => 'What are Personal Records (PRs)?';
+
+  @override
+  String get faqPersonalRecordsAnswer =>
+      'PRs are your best-ever performances for each exercise. The app tracks multiple PR types: 1RM (heaviest single), 5RM, 10RM, max reps at a weight, and more. You\'ll see celebratory animations when you beat a PR - keep pushing!';
+
+  @override
+  String get faqVolumeQuestion => 'What is training volume?';
+
+  @override
+  String get faqVolumeAnswer =>
+      'Volume = Sets × Reps × Weight - a key metric for muscle growth. The app tracks daily and weekly volume per muscle group. Colored indicators show if you\'re in optimal range. Too little volume = limited growth; too much = overtraining risk.';
+
+  @override
+  String get faqMuscleBalanceQuestion => 'What is muscle balance analysis?';
+
+  @override
+  String get faqMuscleBalanceAnswer =>
+      'The muscle balance feature compares volume across muscle groups to identify imbalances. It highlights if you\'re training push vs pull, front vs back, or upper vs lower disproportionately. Balanced training reduces injury risk and improves aesthetics.';
+
+  @override
+  String get faqChartsQuestion => 'What charts are available?';
+
+  @override
+  String get faqChartsAnswer =>
+      'Analytics includes: strength progression (weight over time per exercise), volume trends (weekly tonnage), frequency chart (workouts per week), muscle heatmap (which muscles trained most), and PR timeline. Tap any chart to drill into details.';
+
+  @override
+  String get faqHistoryQuestion => 'Where can I see past workouts?';
+
+  @override
+  String get faqHistoryAnswer =>
+      'The History tab shows all completed workouts in chronological order. Filter by date range, template, or search by exercise name. Tap any workout to see full details including every set, rest times, and notes. You can also repeat a past workout as a template.';
+
+  @override
+  String get faqPremiumBenefitsQuestion => 'What does Premium include?';
+
+  @override
+  String get faqPremiumBenefitsAnswer =>
+      'Premium unlocks: unlimited workout history (free: 30 days), advanced analytics (muscle balance, trends), cloud sync across devices, custom exercise library, priority support, and removes all ads. Your training data is yours - never lost or limited.';
+
+  @override
+  String get faqPremiumPricingQuestion => 'How much does Premium cost?';
+
+  @override
+  String get faqPremiumPricingAnswer =>
+      'Premium is available as monthly or annual subscription through the App Store/Google Play. Annual saves significantly compared to monthly. Prices may vary by region. Check the Premium screen for current pricing and any special offers.';
+
+  @override
+  String get faqRestorePurchaseQuestion => 'How do I restore my purchase?';
+
+  @override
+  String get faqRestorePurchaseAnswer =>
+      'Go to Profile > Premium > Restore Purchase. Sign in with the same Apple ID/Google account used for the original purchase. The app will verify your subscription status and unlock Premium features. This also works when switching devices.';
+
+  @override
+  String get faqCancelSubscriptionQuestion =>
+      'How do I cancel my subscription?';
+
+  @override
+  String get faqCancelSubscriptionAnswer =>
+      'Subscriptions are managed through Apple/Google, not the app. On iOS: Settings > Apple ID > Subscriptions. On Android: Play Store > Subscriptions. You\'ll keep Premium access until the current period ends. Your data remains accessible even after.';
+
+  @override
+  String get faqFreeVsPremiumQuestion => 'What can I do with the free version?';
+
+  @override
+  String get faqFreeVsPremiumAnswer =>
+      'The free version includes: full workout tracking, exercise database, rest timer, 30-day history, basic analytics, and templates. Premium adds: unlimited history, advanced analytics, cloud sync, and removes ads. Core training functionality works perfectly free!';
+
+  @override
+  String get faqSignInMethodsQuestion => 'How do I sign in?';
+
+  @override
+  String get faqSignInMethodsAnswer =>
+      'The app supports: Apple Sign-In (recommended for iOS - fast and private), Google Sign-In, and email/password. Signing in enables cloud sync and backup. You can use the app without signing in, but data will only be stored locally.';
+
+  @override
+  String get faqCloudSyncQuestion => 'How does cloud sync work?';
+
+  @override
+  String get faqCloudSyncAnswer =>
+      'When signed in (Premium), your workouts, templates, and settings sync automatically to the cloud. Changes appear on all your devices within seconds. The sync indicator shows status: green checkmark = synced, spinning = syncing, warning = offline mode.';
+
+  @override
+  String get faqBackupQuestion => 'Is my data backed up?';
+
+  @override
+  String get faqBackupAnswer =>
+      'Yes! With Premium, data syncs to the cloud automatically. Even without Premium, workouts are stored locally on your device and can be exported manually. Go to Settings > Export Data for a complete backup file you can save anywhere.';
+
+  @override
+  String get faqSwitchDeviceQuestion =>
+      'How do I transfer data to a new device?';
+
+  @override
+  String get faqSwitchDeviceAnswer =>
+      'If you have Premium: just sign in on the new device and your data syncs automatically. Without Premium: export your data on the old device (Settings > Export), transfer the file, and import on the new device. All history and templates transfer.';
+
+  @override
+  String get faqDeleteAccountQuestion => 'How do I delete my account?';
+
+  @override
+  String get faqDeleteAccountAnswer =>
+      'Go to Profile > Settings > Account > Delete Account. This permanently removes all cloud data associated with your account. Local data on your device remains unless you uninstall the app. This action cannot be undone - please export your data first.';
+
+  @override
+  String get faqSetGoalsQuestion => 'How do I set fitness goals?';
+
+  @override
+  String get faqSetGoalsAnswer =>
+      'Go to Profile > Goals. Set targets for: workouts per week, specific lift goals (e.g., bench 100kg), body measurements, and more. The app tracks progress toward each goal and celebrates when you achieve them. Goals help maintain motivation!';
+
+  @override
+  String get faqStreaksQuestion => 'How do workout streaks work?';
+
+  @override
+  String get faqStreaksAnswer =>
+      'Streaks count consecutive weeks where you met your workout goal. Miss a week and it resets - but don\'t worry, your longest streak is always saved! Streaks encourage consistency, which is key to long-term results. View your streaks on the Profile screen.';
+
+  @override
+  String get faqBodyMeasurementsQuestion => 'Can I track body measurements?';
+
+  @override
+  String get faqBodyMeasurementsAnswer =>
+      'Yes! Go to Profile > Measurements. Track weight, body fat %, and circumferences (chest, arms, waist, etc.). Log regularly to see trends over time. These measurements complement your training data to show complete progress.';
+
+  @override
+  String get faqXpLevelsQuestion => 'What is the XP/Level system?';
+
+  @override
+  String get faqXpLevelsAnswer =>
+      'Earn XP (experience points) for every workout, PR, and completed goal. XP fills your level bar - level up for achievements! The system gamifies your fitness journey. Higher levels unlock badges and show your dedication. Check your XP on the Profile screen.';
+
+  @override
+  String get faqAchievementsQuestion => 'What achievements can I earn?';
+
+  @override
+  String get faqAchievementsAnswer =>
+      'Achievements reward milestones: first workout, 10/50/100 workouts completed, PR streaks, consistency streaks, and more. Each achievement grants XP and a badge. View your collection in Profile > Achievements. Can you collect them all?';
+
+  @override
+  String get faqUnitsQuestion => 'How do I change weight units?';
+
+  @override
+  String get faqUnitsAnswer =>
+      'Go to Profile > Settings > Units. Choose kg (metric) or lb (imperial). All weights throughout the app convert automatically. Your data is stored in metric internally so switching is seamless and reversible anytime.';
+
+  @override
+  String get faqLanguageQuestion => 'Can I change the app language?';
+
+  @override
+  String get faqLanguageAnswer =>
+      'The app follows your device\'s language setting. Currently supported: English and Italian. To change: go to your device Settings > Language. The app will restart in the new language. More languages coming based on user demand!';
+
+  @override
+  String get faqThemeQuestion => 'Can I change the app theme?';
+
+  @override
+  String get faqThemeAnswer =>
+      'Yes! Go to Profile > Settings > Appearance. Choose: Light, Dark, or System (follows your device setting). The app also supports dynamic colors on compatible devices. Dark mode is great for early morning gym sessions!';
+
+  @override
+  String get faqZenModeQuestion => 'What is Zen Mode?';
+
+  @override
+  String get faqZenModeAnswer =>
+      'Zen Mode simplifies the workout interface for distraction-free training. It hides secondary information, enlarges key inputs, and focuses on the current set. Great for when you want minimal screen time. Toggle in Settings or during a workout.';
+
+  @override
+  String get faqNotificationsQuestion => 'How do I manage notifications?';
+
+  @override
+  String get faqNotificationsAnswer =>
+      'Go to Settings > Notifications. Control: rest timer alerts, workout reminders, PR celebrations, weekly summaries, and more. Set reminder schedules for your preferred workout days and times. All notifications can be individually enabled or disabled.';
+
+  @override
+  String get faqAppleHealthQuestion => 'How do I sync with Apple Health?';
+
+  @override
+  String get faqAppleHealthAnswer =>
+      'Go to Settings > Health Sync > Apple Health. Grant permissions for the data you want to share. The app can write workouts and read weight measurements. Your gym sessions will appear in the Health app alongside all your other fitness data.';
+
+  @override
+  String get faqHealthConnectQuestion => 'How do I sync with Health Connect?';
+
+  @override
+  String get faqHealthConnectAnswer =>
+      'On Android, go to Settings > Health Sync > Health Connect. Grant the necessary permissions. The app writes workout data to Health Connect, which can be shared with other fitness apps. Make sure Health Connect is installed from the Play Store.';
+
+  @override
+  String get faqHealthPermissionsQuestion =>
+      'What health permissions are needed?';
+
+  @override
+  String get faqHealthPermissionsAnswer =>
+      'The app requests: Write Workouts (to log your sessions), Read Weight (to auto-update your body weight). All permissions are optional and can be changed anytime in your device\'s privacy settings. We never access data we don\'t need.';
+
+  @override
+  String get faqWeightSyncQuestion => 'Does my body weight sync automatically?';
+
+  @override
+  String get faqWeightSyncAnswer =>
+      'If you grant permission, the app can read your latest weight from Apple Health or Health Connect. This keeps your calculated metrics (like volume per kg) accurate without manual entry. Weight updates appear within seconds of being recorded.';
+
+  @override
+  String get faqDataLostQuestion => 'I lost my workout data - what do I do?';
+
+  @override
+  String get faqDataLostAnswer =>
+      'First, check if you\'re signed in (Profile screen shows account). Try Restore Purchase to verify Premium status. If signed in, try logging out and back in to force a resync. For local data issues, check if you have an export backup. Contact support if problems persist.';
+
+  @override
+  String get faqTimerNotWorkingQuestion =>
+      'The timer isn\'t working in background - why?';
+
+  @override
+  String get faqTimerNotWorkingAnswer =>
+      'Check: 1) Notifications are enabled for the app (device Settings), 2) Low Power Mode is off, 3) Background App Refresh is enabled. On iOS, ensure Live Activities are enabled. If issues persist, try reinstalling the app. The timer needs these permissions to work background.';
+
+  @override
+  String get faqSyncIssuesQuestion => 'My data isn\'t syncing between devices';
+
+  @override
+  String get faqSyncIssuesAnswer =>
+      'Verify: 1) You\'re signed in with the same account on both devices, 2) You have an active Premium subscription, 3) Both devices have internet connection. Try pulling down on the main screen to force sync. Sync status appears at the top of the home screen.';
+
+  @override
+  String get faqAppCrashQuestion => 'The app keeps crashing - help!';
+
+  @override
+  String get faqAppCrashAnswer =>
+      'Try these steps: 1) Force close and reopen the app, 2) Restart your device, 3) Check for app updates, 4) Reinstall the app (data syncs from cloud if signed in). If crashes continue, please contact support with your device model and iOS/Android version.';
+
+  @override
+  String get faqContactSupportQuestion => 'How do I contact support?';
+
+  @override
+  String get faqContactSupportAnswer =>
+      'Go to Profile > Help Center > Contact Us, or email directly at support@gymbro.app. Include your device model, app version (shown in Settings), and a description of the issue. Screenshots help! We typically respond within 24 hours.';
+
+  @override
+  String get configureSuperset => 'Configure Superset';
+
+  @override
+  String get copiedToAllRounds => 'Copied to all rounds';
+
+  @override
+  String get copyR1ToAll => 'R1 → All';
+
+  @override
+  String get restAfterRound => 'Rest after round';
+
+  @override
+  String get applyToAllRounds => 'All rounds';
+
+  @override
+  String get inWorkout => 'In Workout';
+
+  @override
+  String get fromDatabase => 'From DB';
+
+  @override
+  String get noOtherExercisesInWorkout => 'No other exercises in this workout';
+
+  @override
+  String get useSearchTabToAddExercises =>
+      'Use the search tab to add exercises from the database';
+
+  @override
+  String get configured => 'Configured';
+
+  @override
+  String get configureRounds => 'Configure Rounds';
+
+  @override
+  String get editConfiguration => 'Edit Configuration';
+
+  @override
+  String get rounds => 'rounds';
+
+  @override
+  String get copyFromPrevious => 'Copy from Previous';
+
+  @override
+  String get removeRound => 'Remove Round';
+
+  @override
+  String get tapToConfigure => 'Tap to configure';
+
+  @override
+  String get unsavedChangesWillBeLost => 'Your unsaved changes will be lost';
+
+  @override
+  String get appliedToAllRounds => 'Applied to all rounds';
+
+  @override
+  String get copyRoundToAll => 'Copy round to all';
+
+  @override
+  String get showLess => 'Less';
+
+  @override
+  String get showMore => 'More';
+
+  @override
+  String get confirmDeleteSupersetMessage =>
+      'Are you sure you want to delete this superset?';
+
+  @override
+  String get editSuperset => 'Edit Superset';
+
+  @override
+  String nRoundsNExercises(int rounds, int exercises) {
+    return '$rounds rounds • $exercises exercises';
+  }
+
+  @override
+  String setsProgress(int completed, int total) {
+    return 'Sets ($completed/$total)';
+  }
+
+  @override
+  String setNumberLabel(int number) {
+    return 'Set $number';
+  }
+
+  @override
+  String nOfMCompleted(int completed, int total) {
+    return '$completed/$total completed';
+  }
+
+  @override
+  String get executeAllSequentially =>
+      'Execute all exercises in sequence without rest';
+
+  @override
+  String get exerciseDataNotFound => 'Exercise data not found';
+
+  @override
+  String supersetRestLabel(String name) {
+    return '$name - Rest';
+  }
+
+  @override
+  String get dataBackup => 'Data & Backup';
+
+  @override
+  String get importData => 'Import Data';
+
+  @override
+  String get importFromOtherApp => 'Import from another app';
+
+  @override
+  String get importDescription =>
+      'Transfer your workout history from Strong, Hevy, or other fitness apps.';
+
+  @override
+  String get selectSourceApp => 'Select source app';
+
+  @override
+  String get selectCsvFile => 'Select CSV File';
+
+  @override
+  String get howToExport => 'How to export';
+
+  @override
+  String get exportStep1 => 'Open the other app and go to Settings';
+
+  @override
+  String get exportStep2 => 'Find \'Export Data\' or \'Export Workouts\'';
+
+  @override
+  String get exportStep3 => 'Save the CSV file and select it here';
+
+  @override
+  String get mapExercises => 'Map Exercises';
+
+  @override
+  String get readyToImport => 'Ready to import';
+
+  @override
+  String get autoMapped => 'Auto-mapped';
+
+  @override
+  String get unmapped => 'Need mapping';
+
+  @override
+  String get warnings => 'Warnings';
+
+  @override
+  String andMoreWarnings(int count) {
+    return '...and $count more warnings';
+  }
+
+  @override
+  String andMoreWorkouts(int count) {
+    return '...and $count more workouts';
+  }
+
+  @override
+  String get rows => 'Rows';
+
+  @override
+  String autoMappedExercises(int count) {
+    return '$count exercises auto-mapped';
+  }
+
+  @override
+  String get autoMappedDescription =>
+      'These exercises were automatically matched to your database.';
+
+  @override
+  String needsMappingExercises(int count) {
+    return '$count exercises need mapping';
+  }
+
+  @override
+  String get needsMappingDescription =>
+      'Select the correct exercise from suggestions or search manually.';
+
+  @override
+  String get allExercisesMapped => 'All exercises mapped successfully!';
+
+  @override
+  String occurrences(int count) {
+    return '$count occurrences';
+  }
+
+  @override
+  String get noSuggestionsFound =>
+      'No suggestions found. Use search to find the exercise.';
+
+  @override
+  String get searchExercise => 'Search exercise';
+
+  @override
+  String get skipThisExercise => 'Skip this exercise';
+
+  @override
+  String get willImportWithOriginalName =>
+      'Will be imported with the original name';
+
+  @override
+  String get importComplete => 'Import Complete!';
+
+  @override
+  String get importFailedMessage =>
+      'There was an error importing your data. Please try again.';
+
+  @override
+  String get workoutsImported => 'Workouts imported';
+
+  @override
+  String get exercisesImported => 'Exercises imported';
+
+  @override
+  String get setsImported => 'Sets imported';
+
+  @override
+  String get workoutsSkipped => 'Workouts skipped';
+
+  @override
+  String get importErrors => 'Errors';
+
+  @override
+  String andMoreErrors(int count) {
+    return '...and $count more errors';
+  }
+
+  @override
+  String get couldNotReadFile => 'Could not read the selected file';
+
+  @override
+  String get importError => 'Import Error';
+
+  @override
+  String get recoveryInsight => 'Recovery Insight';
+
+  @override
+  String get sleepRecoveryAnalysis => 'Sleep & Recovery Analysis';
+
+  @override
+  String get sleepDetails => 'Sleep Details';
+
+  @override
+  String get sleepWorkoutCorrelation => 'Sleep-Workout Correlation';
+
+  @override
+  String get readinessLevel => 'Readiness Level';
+
+  @override
+  String get weeklyOverview => 'Weekly Overview';
+
+  @override
+  String get recommendedSleep => '7h recommended';
+
+  @override
+  String get todaysRecommendation => 'Today\'s Recommendation';
+
+  @override
+  String get consecutiveBadNights => 'consecutive nights below 6h';
+
+  @override
+  String get correlationInsufficientData =>
+      'Continue training to see your sleep-performance correlation. We need more workout data.';
+
+  @override
+  String get goodSleepEffect => 'With >7h sleep';
+
+  @override
+  String get poorSleepEffect => 'With <6h sleep';
+
+  @override
+  String get sleepCorrelationProDescription =>
+      'See how your sleep directly impacts your training volume and performance with detailed correlation analysis.';
+
+  @override
+  String get recoveryOptimalDescription => 'Peak readiness - go all out!';
+
+  @override
+  String get recoveryGoodDescription => 'Ready for a solid workout';
+
+  @override
+  String get recoveryModerateDescription => 'Consider lighter intensity today';
+
+  @override
+  String get recoveryLowDescription => 'Your body needs more rest';
+
+  @override
+  String get recoveryCriticalDescription => 'Rest day strongly recommended';
+
+  @override
+  String get connectAppleHealth =>
+      'Connect Apple Health for personalized insights';
+
+  @override
+  String get lastNight => 'Last Night';
+
+  @override
+  String get streakDays => 'Streak';
 }

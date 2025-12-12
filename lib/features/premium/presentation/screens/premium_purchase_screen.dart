@@ -818,7 +818,6 @@ class _PremiumPurchaseScreenState extends ConsumerState<PremiumPurchaseScreen>
   }
 }
 
-// Premium upgrade provider reference
-final premiumUpgradeProvider = StateNotifierProvider<PremiumUpgradeNotifier, PremiumUpgradeState>((ref) {
-  return PremiumUpgradeNotifier(ref);
-});
+// NOTE: premiumUpgradeProvider is now defined in premium_upgrade_provider.dart
+// using the new NotifierProvider pattern (Riverpod 2.0+)
+// This duplicate declaration was removed to follow single source of truth.

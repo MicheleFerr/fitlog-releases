@@ -4,12 +4,16 @@
 /// 🎯 Feature: workout
 /// 🔧 Type: provider (state management)
 /// 🌍 Localization: N/A (provider logic)
+///
+/// 🔐 USER ISOLATION: Cache keys are user-scoped to prevent data leakage
+/// when switching between accounts.
 library;
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/experience_level.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/workout_context.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:gymbro_flutter_new/core/cache/user_cache_key_manager.dart';
 
 /// Provider for workout context (null = not gathered yet)
 final workoutContextProvider =
@@ -34,14 +38,21 @@ class WorkoutContextNotifier extends Notifier<WorkoutContext?> {
     try {
       final prefs = await SharedPreferences.getInstance();
 
+      // 🔐 User-scoped cache keys
+      final timeKey = userCacheKeys.userScopedKey('context_time');
+      final levelKey = userCacheKeys.userScopedKey('context_level');
+      final genderKey = userCacheKeys.userScopedKey('context_gender');
+      final timestampKey = userCacheKeys.userScopedKey('context_timestamp');
+      final completionKey = userCacheKeys.userScopedKey('context_completion_time_ms');
+
       // Check if there's a saved context
-      final timeAvailable = prefs.getInt('context_time');
+      final timeAvailable = prefs.getInt(timeKey);
       if (timeAvailable == null) return;
 
-      final experienceLevelStr = prefs.getString('context_level');
-      final gender = prefs.getString('context_gender');
-      final timestampStr = prefs.getString('context_timestamp');
-      final completionTimeMs = prefs.getInt('context_completion_time_ms');
+      final experienceLevelStr = prefs.getString(levelKey);
+      final gender = prefs.getString(genderKey);
+      final timestampStr = prefs.getString(timestampKey);
+      final completionTimeMs = prefs.getInt(completionKey);
 
       state = WorkoutContext(
         timeAvailable: timeAvailable,
@@ -65,14 +76,19 @@ class WorkoutContextNotifier extends Notifier<WorkoutContext?> {
     try {
       final prefs = await SharedPreferences.getInstance();
 
-      await prefs.setInt('context_time', context.timeAvailable);
-      await prefs.setString(
-          'context_level', context.experienceLevel?.name ?? '');
-      await prefs.setString('context_gender', context.gender ?? '');
-      await prefs.setString('context_timestamp', context.timestamp.toIso8601String());
+      // 🔐 User-scoped cache keys
+      final timeKey = userCacheKeys.userScopedKey('context_time');
+      final levelKey = userCacheKeys.userScopedKey('context_level');
+      final genderKey = userCacheKeys.userScopedKey('context_gender');
+      final timestampKey = userCacheKeys.userScopedKey('context_timestamp');
+      final completionKey = userCacheKeys.userScopedKey('context_completion_time_ms');
+
+      await prefs.setInt(timeKey, context.timeAvailable);
+      await prefs.setString(levelKey, context.experienceLevel?.name ?? '');
+      await prefs.setString(genderKey, context.gender ?? '');
+      await prefs.setString(timestampKey, context.timestamp.toIso8601String());
       if (context.completionTimeMs != null) {
-        await prefs.setInt(
-            'context_completion_time_ms', context.completionTimeMs!);
+        await prefs.setInt(completionKey, context.completionTimeMs!);
       }
     } catch (e) {
       // If save fails, continue (non-critical)
@@ -84,11 +100,18 @@ class WorkoutContextNotifier extends Notifier<WorkoutContext?> {
     try {
       final prefs = await SharedPreferences.getInstance();
 
-      await prefs.remove('context_time');
-      await prefs.remove('context_level');
-      await prefs.remove('context_gender');
-      await prefs.remove('context_timestamp');
-      await prefs.remove('context_completion_time_ms');
+      // 🔐 User-scoped cache keys
+      final timeKey = userCacheKeys.userScopedKey('context_time');
+      final levelKey = userCacheKeys.userScopedKey('context_level');
+      final genderKey = userCacheKeys.userScopedKey('context_gender');
+      final timestampKey = userCacheKeys.userScopedKey('context_timestamp');
+      final completionKey = userCacheKeys.userScopedKey('context_completion_time_ms');
+
+      await prefs.remove(timeKey);
+      await prefs.remove(levelKey);
+      await prefs.remove(genderKey);
+      await prefs.remove(timestampKey);
+      await prefs.remove(completionKey);
     } catch (e) {
       // If clear fails, continue (non-critical)
     }
@@ -116,7 +139,9 @@ class WorkoutContextNotifier extends Notifier<WorkoutContext?> {
   Future<bool> hasSavedContext() async {
     try {
       final prefs = await SharedPreferences.getInstance();
-      return prefs.containsKey('context_time');
+      // 🔐 User-scoped cache key
+      final timeKey = userCacheKeys.userScopedKey('context_time');
+      return prefs.containsKey(timeKey);
     } catch (e) {
       return false;
     }

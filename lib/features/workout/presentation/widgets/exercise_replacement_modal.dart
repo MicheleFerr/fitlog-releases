@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart' show kDebugMode;
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -16,14 +17,16 @@ import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dar
 import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator.dart';
 
 class ExerciseReplacementModal extends ConsumerStatefulWidget {
-  
+
   const ExerciseReplacementModal({
     super.key,
     required this.currentExercise,
     required this.onReplace,
+    this.scrollController,
   });
   final Exercise currentExercise;
   final Function(Exercise) onReplace;
+  final ScrollController? scrollController;
   
   static Future<void> show(
     BuildContext context,
@@ -34,9 +37,17 @@ class ExerciseReplacementModal extends ConsumerStatefulWidget {
       context: context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
-      builder: (context) => ExerciseReplacementModal(
-        currentExercise: currentExercise,
-        onReplace: onReplace,
+      builder: (_) => DraggableScrollableSheet(
+        initialChildSize: 0.85,
+        minChildSize: 0.85,
+        maxChildSize: 1.0,
+        expand: false,
+        snap: true,
+        builder: (context, scrollController) => ExerciseReplacementModal(
+          currentExercise: currentExercise,
+          onReplace: onReplace,
+          scrollController: scrollController,
+        ),
       ),
     );
   }
@@ -64,7 +75,9 @@ class _ExerciseReplacementModalState extends ConsumerState<ExerciseReplacementMo
   /// Utile quando il database JSON viene aggiornato o per testing
   static void clearEnrichedCache() {
     _enrichedExercisesCache.clear();
-    debugPrint('🗑️ [ExerciseReplacement] Cache cleared');
+    if (kDebugMode) {
+      debugPrint('🗑️ [ExerciseReplacement] Cache cleared');
+    }
   }
 
   @override
@@ -93,7 +106,9 @@ class _ExerciseReplacementModalState extends ConsumerState<ExerciseReplacementMo
         _enrichCurrentExerciseFromDB();
       }
     } catch (e) {
-      debugPrint('Error loading database exercises: $e');
+      if (kDebugMode) {
+        debugPrint('Error loading database exercises: $e');
+      }
     }
   }
 
@@ -108,7 +123,9 @@ class _ExerciseReplacementModalState extends ConsumerState<ExerciseReplacementMo
       setState(() {
         _enrichedCurrentExercise = _enrichedExercisesCache[exerciseNameLower];
       });
-      debugPrint('⚡ [ExerciseReplacement] Loaded "${widget.currentExercise.name}" from cache (category: ${_enrichedCurrentExercise?.category.name})');
+      if (kDebugMode) {
+        debugPrint('⚡ [ExerciseReplacement] Loaded "${widget.currentExercise.name}" from cache (category: ${_enrichedCurrentExercise?.category.name})');
+      }
       return;
     }
 
@@ -143,14 +160,18 @@ class _ExerciseReplacementModalState extends ConsumerState<ExerciseReplacementMo
         // ✅ STEP 3: Salva in cache per riutilizzo futuro
         _enrichedExercisesCache[exerciseNameLower] = enrichedExercise;
 
-        debugPrint('✅ [ExerciseReplacement] Enriched "${widget.currentExercise.name}" with category: ${enrichedCategory.name} (cached)');
+        if (kDebugMode) {
+          debugPrint('✅ [ExerciseReplacement] Enriched "${widget.currentExercise.name}" with category: ${enrichedCategory.name} (cached)');
+        }
         debugPrint('📊 [ExerciseReplacement] Cache size: ${_enrichedExercisesCache.length} exercises');
       } else {
         // Categoria già corretta → usa esercizio originale
         _enrichedCurrentExercise = widget.currentExercise;
       }
     } catch (e) {
-      debugPrint('⚠️ [ExerciseReplacement] Could not enrich exercise "${widget.currentExercise.name}": $e');
+      if (kDebugMode) {
+        debugPrint('⚠️ [ExerciseReplacement] Could not enrich exercise "${widget.currentExercise.name}": $e');
+      }
       // Fallback: usa currentExercise originale
       _enrichedCurrentExercise = widget.currentExercise;
     }
@@ -203,7 +224,7 @@ class _ExerciseReplacementModalState extends ConsumerState<ExerciseReplacementMo
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final l10n = AppLocalizations.of(context);
+    final l10n = context.l10n;
     final exercisesAsync = ref.watch(exerciseJsonProvider);
 
     // Get exercises from provider
@@ -319,15 +340,17 @@ class _ExerciseReplacementModalState extends ConsumerState<ExerciseReplacementMo
       }
       return true;
     }).toList();
-    
-    return Container(
-      height: MediaQuery.of(context).size.height * 0.85,
+
+
+    return DecoratedBox(
       decoration: BoxDecoration(
         color: theme.colorScheme.surface,
         borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
       ),
-      child: Column(
-        children: [
+      child: SafeArea(
+        top: false,
+        child: Column(
+          children: [
           // Handle bar
           Container(
             margin: const EdgeInsets.only(top: 12),
@@ -554,6 +577,7 @@ class _ExerciseReplacementModalState extends ConsumerState<ExerciseReplacementMo
                     ),
                   )
                 : ListView.builder(
+                    controller: widget.scrollController,
                     padding: const EdgeInsets.symmetric(vertical: 8),
                     itemCount: filteredSuggestions.length,
                     itemBuilder: (context, index) {
@@ -563,14 +587,15 @@ class _ExerciseReplacementModalState extends ConsumerState<ExerciseReplacementMo
                   ),
             ),
           ),
-        ],
+          ],
+        ),
       ),
     );
   }
   
   Widget _buildExerciseTile(BuildContext context, ExerciseSuggestion suggestion) {
     final theme = Theme.of(context);
-    final l10n = AppLocalizations.of(context);
+    final l10n = context.l10n;
     
     // Calculate color based on compatibility
     Color compatibilityColor;
@@ -679,7 +704,7 @@ class _ExerciseReplacementModalState extends ConsumerState<ExerciseReplacementMo
   
   void _confirmReplacement(BuildContext context, Exercise newExercise) {
     final theme = Theme.of(context);
-    final l10n = AppLocalizations.of(context);
+    final l10n = context.l10n;
     
     HapticFeedback.lightImpact();
     
@@ -826,7 +851,7 @@ class _ExerciseReplacementModalState extends ConsumerState<ExerciseReplacementMo
   }
   
   String _getCompatibilityReason(double score, Exercise exercise, Exercise currentExercise) {
-    final l10n = AppLocalizations.of(context);
+    final l10n = context.l10n;
 
     if (exercise.name == currentExercise.name) {
       return l10n.currentExercise;

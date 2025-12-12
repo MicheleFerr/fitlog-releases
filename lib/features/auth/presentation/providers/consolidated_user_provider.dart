@@ -139,58 +139,58 @@ final userProfileProvider = StreamProvider<UserProfile?>((ref) async* {
       cache.clearAll();
       yield null;
     } else {
-      // Check cache first
+      // Check cache first and yield immediately for fast UI
       final cachedProfile = cache.get(firebaseUser.uid);
       if (cachedProfile != null) {
-        // Return cached profile immediately
         yield cachedProfile;
-        // Continue listening for updates in background
-        continue;
+        // DON'T continue - fall through to start Firestore listener
       }
 
       try {
-        // Fetch from Firestore
-        final snapshot = await firestore
-            .collection('users')
-            .doc(firebaseUser.uid)
-            .get();
+        // Fetch current state from Firestore (skip if we already have cache)
+        if (cachedProfile == null) {
+          final snapshot = await firestore
+              .collection('users')
+              .doc(firebaseUser.uid)
+              .get();
 
-        if (!snapshot.exists) {
-          // Create basic profile from Firebase user
-          final data = {
-            'uid': firebaseUser.uid,
-            'email': firebaseUser.email ?? '',
-            'displayName': firebaseUser.displayName ?? 'GymBro User',
-            'photoURL': firebaseUser.photoURL,
-            'accountTier': 'free',
-            'templateQuota': {
-              'maxPrivateTemplates': 10,
-              'maxPublicTemplates': 2,
-              'usedPrivateTemplates': 0,
-              'usedPublicTemplates': 0,
-            },
-            'createdAt': DateTime.now().toIso8601String(),
-            'lastLoginAt': DateTime.now().toIso8601String(),
-            'preferences': {},
-            'stats': {},
-            'isGuest': firebaseUser.isAnonymous,
-          };
+          if (!snapshot.exists) {
+            // Create basic profile from Firebase user
+            final data = {
+              'uid': firebaseUser.uid,
+              'email': firebaseUser.email ?? '',
+              'displayName': firebaseUser.displayName ?? 'GymBro User',
+              'photoURL': firebaseUser.photoURL,
+              'accountTier': 'free',
+              'templateQuota': {
+                'maxPrivateTemplates': 4,
+                'maxPublicTemplates': 2,
+                'usedPrivateTemplates': 0,
+                'usedPublicTemplates': 0,
+              },
+              'createdAt': DateTime.now().toIso8601String(),
+              'lastLoginAt': DateTime.now().toIso8601String(),
+              'preferences': {},
+              'stats': {},
+              'isGuest': firebaseUser.isAnonymous,
+            };
 
-          // Save to Firestore
-          await snapshot.reference.set(data);
+            // Save to Firestore
+            await snapshot.reference.set(data);
 
-          // Create profile and cache it
-          final profile = UserProfile.fromJson(data);
-          cache.set(firebaseUser.uid, profile);
-          yield profile;
-        } else {
-          // Use existing profile
-          final profile = UserProfile.fromFirestore(snapshot);
-          cache.set(firebaseUser.uid, profile);
-          yield profile;
+            // Create profile and cache it
+            final profile = UserProfile.fromJson(data);
+            cache.set(firebaseUser.uid, profile);
+            yield profile;
+          } else {
+            // Use existing profile
+            final profile = UserProfile.fromFirestore(snapshot);
+            cache.set(firebaseUser.uid, profile);
+            yield profile;
+          }
         }
 
-        // Listen for real-time updates
+        // ALWAYS listen for real-time updates (even if we started from cache)
         await for (final updateSnapshot in firestore
             .collection('users')
             .doc(firebaseUser.uid)
@@ -316,8 +316,16 @@ class UserProfileNotifier extends Notifier<AsyncValue<UserProfile?>> {
 
   /// Upgrade user tier
   Future<void> upgradeTier(AccountTier newTier) async {
-    final currentProfile = state.valueOrNull;
-    if (currentProfile == null) return;
+    // FIX: If local state is loading/null, read from stream provider which has data
+    var currentProfile = state.valueOrNull;
+    if (currentProfile == null) {
+      // Fallback: read from userProfileProvider (the stream that has data)
+      currentProfile = ref.read(userProfileProvider).valueOrNull;
+    }
+
+    if (currentProfile == null) {
+      return;
+    }
 
     final newQuota = TemplateQuota.forTier(
       newTier,
@@ -336,7 +344,12 @@ class UserProfileNotifier extends Notifier<AsyncValue<UserProfile?>> {
         'templateQuota': newQuota.toJson(),
       });
 
+      // Update local state immediately
       state = AsyncValue.data(updatedProfile);
+
+      // Update cache with new profile (so userProfileProvider has fresh data)
+      final cache = ref.read(userProfileCacheProvider);
+      cache.set(currentProfile.uid, updatedProfile);
     } catch (e) {
       state = AsyncValue.error(e, StackTrace.current);
     }

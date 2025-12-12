@@ -16,6 +16,7 @@ library;
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/foundation.dart' show kDebugMode;
 import 'package:gymbro_flutter_new/core/auth/admin_role_helper.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise_activity.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/workout.dart';
@@ -71,7 +72,9 @@ class HybridExerciseActivityRepository {
         }
       }
     } catch (e) {
-      debugPrint('Failed to load user profile: $e');
+      if (kDebugMode) {
+        debugPrint('Failed to load user profile: $e');
+      }
     }
   }
   
@@ -93,7 +96,9 @@ class HybridExerciseActivityRepository {
         throw Exception('User not authenticated');
       }
       
-      debugPrint('📊 Loading activities from ${startDate.toIso8601String()} to ${endDate.toIso8601String()}');
+      if (kDebugMode) {
+        debugPrint('📊 Loading activities from ${startDate.toIso8601String()} to ${endDate.toIso8601String()}');
+      }
       
       // Always load from local first (fast!)
       final workouts = await _localDataSource.getWorkouts(
@@ -122,11 +127,15 @@ class HybridExerciseActivityRepository {
         }
       }
       
-      debugPrint('📊 Found ${activities.length} activities in date range');
+      if (kDebugMode) {
+        debugPrint('📊 Found ${activities.length} activities in date range');
+      }
       
       return activities;
     } catch (e) {
-      debugPrint('❌ Error loading activities in date range: $e');
+      if (kDebugMode) {
+        debugPrint('❌ Error loading activities in date range: $e');
+      }
       return [];
     }
   }
@@ -156,7 +165,9 @@ class HybridExerciseActivityRepository {
         userEmail,
       );
       
-      debugPrint('✅ Workout saved locally: ${localIds.length} activities');
+      if (kDebugMode) {
+        debugPrint('✅ Workout saved locally: ${localIds.length} activities');
+      }
       
       // 2. NON sincronizzare automaticamente con Firebase
       // Solo se esplicitamente richiesto E se premium
@@ -165,15 +176,21 @@ class HybridExerciseActivityRepository {
           workout: workout,
           userEmail: userEmail,
         );
-        debugPrint('☁️ Premium user - background sync initiated');
+        if (kDebugMode) {
+          debugPrint('☁️ Premium user - background sync initiated');
+        }
       } else {
-        debugPrint('ℹ️ Local-only storage (sync disabled or free user)');
+        if (kDebugMode) {
+          debugPrint('ℹ️ Local-only storage (sync disabled or free user)');
+        }
       }
       
       return localIds;
       
     } catch (e, stackTrace) {
-      debugPrint('❌ Error saving workout: $e');
+      if (kDebugMode) {
+        debugPrint('❌ Error saving workout: $e');
+      }
       debugPrint('$stackTrace');
       rethrow;
     }
@@ -186,7 +203,9 @@ class HybridExerciseActivityRepository {
   }) {
     Future(() async {
       try {
-        debugPrint('☁️ Starting background sync to Firebase...');
+        if (kDebugMode) {
+          debugPrint('☁️ Starting background sync to Firebase...');
+        }
         
         // Normalizza email
         final normalizedEmail = userEmail.toLowerCase().trim();
@@ -210,10 +229,14 @@ class HybridExerciseActivityRepository {
           }
         }
         
-        debugPrint('✅ Background sync completed successfully');
+        if (kDebugMode) {
+          debugPrint('✅ Background sync completed successfully');
+        }
         
       } catch (e) {
-        debugPrint('⚠️ Background sync failed (will retry later): $e');
+        if (kDebugMode) {
+          debugPrint('⚠️ Background sync failed (will retry later): $e');
+        }
         // Non blocca l'app - verrà riprovato al prossimo sync
       }
     });
@@ -236,7 +259,6 @@ class HybridExerciseActivityRepository {
     try {
       // 1. Ottieni sempre da locale prima (veloce!)
       // Per ora usiamo i workout locali come proxy per activities
-      // debugPrint('📊 Analytics: Getting activities for user: $userEmail (uid: $userId)');
       
       final localWorkouts = await _localDataSource.getWorkouts(
         userId,
@@ -245,15 +267,12 @@ class HybridExerciseActivityRepository {
         endDate: endDate,
       );
       
-      // debugPrint('📊 Analytics: Found ${localWorkouts.length} local workouts');
       
       // Converti workout in activities
       final localActivities = <ExerciseActivity>[];
       for (final workout in localWorkouts) {
-        // debugPrint('  - Processing workout: ${workout.name} with ${workout.exercises.length} exercises');
         for (final exercise in workout.exercises) {
           final completedSets = exercise.sets.where((s) => s.isCompleted).length;
-          // debugPrint('    - Exercise: ${exercise.name} has $completedSets completed sets');
           
           if (exercise.sets.any((s) => s.isCompleted)) {
             localActivities.add(
@@ -269,7 +288,6 @@ class HybridExerciseActivityRepository {
         }
       }
       
-      // debugPrint('📊 Analytics: Converted to ${localActivities.length} activities');
       
       // 2. Se premium e online, merge con cloud
       if (_isPremiumUser) {
@@ -286,7 +304,9 @@ class HybridExerciseActivityRepository {
           return merged;
           
         } catch (e) {
-          debugPrint('Cloud fetch failed, using local only: $e');
+          if (kDebugMode) {
+            debugPrint('Cloud fetch failed, using local only: $e');
+          }
           // Fallback to local if cloud fails
         }
       }
@@ -294,7 +314,9 @@ class HybridExerciseActivityRepository {
       return localActivities;
       
     } catch (e, stackTrace) {
-      debugPrint('Error getting activities: $e');
+      if (kDebugMode) {
+        debugPrint('Error getting activities: $e');
+      }
       debugPrint('$stackTrace');
       return [];
     }
@@ -311,7 +333,9 @@ class HybridExerciseActivityRepository {
     DateTime? startDate,
     DateTime? endDate,
   }) async {
-    debugPrint('⚠️ DEPRECATED: HybridExerciseActivityRepository._getCloudActivities() is deprecated');
+    if (kDebugMode) {
+      debugPrint('⚠️ DEPRECATED: HybridExerciseActivityRepository._getCloudActivities() is deprecated');
+    }
 
     Query query = _firestore
         .collection(_collectionName)
@@ -462,11 +486,15 @@ class HybridExerciseActivityRepository {
     }
     
     try {
-      debugPrint('🔄 Starting retroactive sync for premium user...');
+      if (kDebugMode) {
+        debugPrint('🔄 Starting retroactive sync for premium user...');
+      }
       
       // Ottieni tutti i workout non sincronizzati
       final unsyncedWorkouts = await _localDataSource.getUnsyncedWorkouts(userId);
-      debugPrint('Found ${unsyncedWorkouts.length} unsynced workouts');
+      if (kDebugMode) {
+        debugPrint('Found ${unsyncedWorkouts.length} unsynced workouts');
+      }
       
       int syncedCount = 0;
       int failedCount = 0;
@@ -494,14 +522,20 @@ class HybridExerciseActivityRepository {
             } catch (e) {
               failedCount++;
               errors.add('Failed to sync workout ${workoutModel.id}: $e');
-              debugPrint('❌ Failed to sync workout: $e');
+              if (kDebugMode) {
+                debugPrint('❌ Failed to sync workout: $e');
+              }
             }
           }
           
-          debugPrint('✅ Synced batch ${i ~/ batchSize + 1}: $syncedCount/$unsyncedWorkouts.length');
+          if (kDebugMode) {
+            debugPrint('✅ Synced batch ${i ~/ batchSize + 1}: $syncedCount/$unsyncedWorkouts.length');
+          }
           
         } catch (e) {
-          debugPrint('❌ Batch sync failed: $e');
+          if (kDebugMode) {
+            debugPrint('❌ Batch sync failed: $e');
+          }
           errors.addAll(batch.map((w) => 'Batch sync failed for ${w.id}'));
           failedCount += batch.length;
         }
@@ -516,7 +550,9 @@ class HybridExerciseActivityRepository {
       );
       
     } catch (e) {
-      debugPrint('❌ Sync all failed: $e');
+      if (kDebugMode) {
+        debugPrint('❌ Sync all failed: $e');
+      }
       return SyncResult(
         success: false,
         message: 'Sync failed: $e',

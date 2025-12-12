@@ -18,6 +18,7 @@ import 'package:gymbro_flutter_new/features/onboarding/presentation/providers/on
 import 'package:gymbro_flutter_new/features/analytics/domain/entities/pr_celebration.dart';
 import 'package:gymbro_flutter_new/features/analytics/presentation/providers/achievement_provider.dart';
 import 'package:gymbro_flutter_new/shared/data/services/interstitial_ad_service.dart';
+import 'package:gymbro_flutter_new/features/auth/presentation/providers/consolidated_user_provider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 part 'workout_screen_controller.freezed.dart';
@@ -164,6 +165,29 @@ class WorkoutScreenController extends Notifier<WorkoutScreenState> {
       }
 
       // Re-read workout after potential duration update
+      final workoutForCelebration = ref.read(currentWorkoutProvider);
+      if (workoutForCelebration == null || !context.mounted) return;
+
+      // 🎉 Show celebration overlay FIRST - let user review before saving
+      final celebrationResult = await showWorkoutCompletionCelebration(
+        context,
+        workoutForCelebration,
+      );
+
+      // If user cancelled, return to workout screen to modify
+      if (celebrationResult == CelebrationResult.cancelled) {
+        if (kDebugMode) {
+          debugPrint('↩️ [WorkoutScreenController] User cancelled - returning to workout screen');
+        }
+        return; // Don't save, user can modify the workout
+      }
+
+      // User confirmed - now check template and save
+      if (kDebugMode) {
+        debugPrint('✅ [WorkoutScreenController] User confirmed - proceeding with save');
+      }
+
+      // Re-read workout after potential modifications
       final updatedWorkout = ref.read(currentWorkoutProvider);
 
       // Check if workout was started from a template
@@ -194,59 +218,50 @@ class WorkoutScreenController extends Notifier<WorkoutScreenState> {
         }
       }
 
-      // Complete workout (saves to database)
+      // Complete workout (saves to database) - NOW after user confirmed
       if (context.mounted) {
         ref.read(currentWorkoutProvider.notifier).completeWorkout(context);
-      }
-
-      // Show celebration overlay with confetti 🎉
-      final completedWorkout = ref.read(currentWorkoutProvider);
-      if (completedWorkout != null && context.mounted) {
-        showWorkoutCompletionCelebration(context, completedWorkout);
       }
 
       // Haptic feedback
       unawaited(HapticFeedback.mediumImpact());
 
-      // Schedule cleanup and navigation after delay (allows undo)
-      Future.delayed(const Duration(seconds: 5), () async {
-        // Check if workout is still completed (not undone)
-        final currentWorkout = ref.read(currentWorkoutProvider);
-        if (currentWorkout != null && currentWorkout.isCompleted) {
-          // Check for newly detected PRs and show celebration
-          final newPRs = ref.read(newlyDetectedPRsProvider);
-          if (newPRs.isNotEmpty && context.mounted) {
-            unawaited(_showPRCelebration(context, newPRs.first));
+      // Check for newly detected PRs and show celebration
+      final newPRs = ref.read(newlyDetectedPRsProvider);
+      if (newPRs.isNotEmpty && context.mounted) {
+        unawaited(_showPRCelebration(context, newPRs.first));
+        ref.read(newlyDetectedPRsProvider.notifier).state = [];
+      }
 
-            // Clear PRs from state
-            ref.read(newlyDetectedPRsProvider.notifier).state = [];
-          }
+      // Show interstitial ad after workout completion (only for non-premium users)
+      final isPremium = ref.read(isPremiumUserProvider);
+      if (!isPremium && context.mounted) {
+        await Future.delayed(const Duration(milliseconds: 500));
 
-          // Show interstitial ad after workout completion
-          await Future.delayed(const Duration(milliseconds: 500));
-
-          unawaited(_interstitialAdService.showAdIfReady(
-            onAdClosed: () {
-              // Clear workout and navigate after ad
-              ref.read(currentWorkoutProvider.notifier).clearWorkout();
-              if (context.mounted) {
-                context.goNamed('home');
-              }
-            },
-          ));
-
-          // Fallback navigation if ad doesn't show
-          Future.delayed(const Duration(seconds: 2), () {
+        unawaited(_interstitialAdService.showAdIfReady(
+          onAdClosed: () {
+            ref.read(currentWorkoutProvider.notifier).clearWorkout();
             if (context.mounted) {
-              final stillCompleted = ref.read(currentWorkoutProvider);
-              if (stillCompleted != null && stillCompleted.isCompleted) {
-                ref.read(currentWorkoutProvider.notifier).clearWorkout();
-                context.goNamed('home');
-              }
+              context.goNamed('home');
             }
-          });
-        }
-      });
+          },
+        ));
+
+        // Fallback navigation if ad doesn't show
+        Future.delayed(const Duration(seconds: 2), () {
+          if (context.mounted) {
+            final stillCompleted = ref.read(currentWorkoutProvider);
+            if (stillCompleted != null && stillCompleted.isCompleted) {
+              ref.read(currentWorkoutProvider.notifier).clearWorkout();
+              context.goNamed('home');
+            }
+          }
+        });
+      } else if (context.mounted) {
+        // Premium user - navigate directly
+        ref.read(currentWorkoutProvider.notifier).clearWorkout();
+        context.goNamed('home');
+      }
 
       if (kDebugMode) {
         debugPrint('✅ [WorkoutScreenController] Workout ended successfully');

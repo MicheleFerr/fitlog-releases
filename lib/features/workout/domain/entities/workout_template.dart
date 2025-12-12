@@ -212,11 +212,17 @@ class ExerciseTemplate { // For superset, dropset, etc.
   }) : sets = sets ?? const [];
 
   factory ExerciseTemplate.fromJson(Map<String, dynamic> json) {
-    
-    // Validate required fields
-    if (json['exerciseId'] == null || json['exerciseId'].toString().isEmpty) {
+    // FIX: Support both old format ('id', 'name') and new format ('exerciseId', 'exerciseName')
+    // for backward compatibility with templates saved via Cloud Function
+    final exerciseId = json['exerciseId']?.toString() ?? json['id']?.toString() ?? '';
+    final exerciseName = json['exerciseName']?.toString() ?? json['name']?.toString() ?? '';
+
+    // Validate required fields (after fallback)
+    if (exerciseId.isEmpty) {
+      // Silent - will use empty string
     }
-    if (json['exerciseName'] == null || json['exerciseName'].toString().isEmpty) {
+    if (exerciseName.isEmpty) {
+      // Silent - will use empty string
     }
     
     // Parse category with better error handling
@@ -250,7 +256,44 @@ class ExerciseTemplate { // For superset, dropset, etc.
         sets = [];
       }
     }
-    
+
+    // ✅ FIX: For supersets, also check supersetSets to determine round count
+    // If sets is empty but supersetSets exists, create sets from supersetSets
+    if (sets.isEmpty && type == ExerciseType.superset && json['supersetSets'] != null) {
+      try {
+        final supersetSetsJson = json['supersetSets'] as List;
+        sets = supersetSetsJson.asMap().entries.map((entry) {
+          final index = entry.key;
+          final roundJson = entry.value as Map<String, dynamic>;
+
+          // Try to extract target values from exerciseData if available
+          double? targetWeight;
+          int? targetReps;
+
+          if (roundJson['exerciseData'] != null) {
+            final exerciseDataMap = roundJson['exerciseData'] as Map;
+            if (exerciseDataMap.isNotEmpty) {
+              final firstExerciseData = exerciseDataMap.values.first;
+              if (firstExerciseData is Map) {
+                targetWeight = (firstExerciseData['targetWeight'] as num?)?.toDouble();
+                targetReps = firstExerciseData['targetReps'] as int?;
+              }
+            }
+          }
+
+          return SetTemplate(
+            setNumber: roundJson['setNumber'] as int? ?? index + 1,
+            targetWeight: targetWeight,
+            targetReps: targetReps,
+          );
+        }).toList();
+      } catch (e) {
+        if (kDebugMode) {
+          debugPrint('Error parsing supersetSets: $e');
+        }
+      }
+    }
+
     // Parse sub-exercises for superset/dropset
     List<ExerciseTemplate>? subExercises;
     if (json['exercises'] != null && json['exercises'] is List) {
@@ -267,18 +310,128 @@ class ExerciseTemplate { // For superset, dropset, etc.
     }
     
     final exerciseTemplate = ExerciseTemplate(
-      exerciseId: json['exerciseId']?.toString() ?? '',
-      exerciseName: json['exerciseName']?.toString() ?? '',
+      exerciseId: exerciseId,
+      exerciseName: exerciseName,
       category: category,
       type: type,
       sets: sets,
       notes: json['notes']?.toString(),
-      restTime: json['restTime'] is int ? json['restTime'] : null,
+      // FIX: Firebase may return restTime as double, use num to handle both int and double
+      restTime: json['restTime'] is num ? (json['restTime'] as num).toInt() : null,
       subExercises: subExercises,
     );
     
     return exerciseTemplate;
   }
+
+  /// ✅ FIX: Factory method to create ExerciseTemplate from Exercise
+  /// Properly handles SupersetExercise by extracting supersetSets and child exercises
+  factory ExerciseTemplate.fromExercise(Exercise exercise) {
+    // Handle SupersetExercise specially
+    if (exercise is SupersetExercise) {
+      // Create sets from supersetSets (one per round)
+      final sets = exercise.supersetSets.asMap().entries.map((entry) {
+        final index = entry.key;
+        final supersetSet = entry.value;
+
+        // Get target values from first exercise in round
+        double? targetWeight;
+        int? targetReps;
+        if (supersetSet.exerciseData.isNotEmpty) {
+          final firstData = supersetSet.exerciseData.values.first;
+          targetWeight = firstData.targetWeight;
+          targetReps = firstData.targetReps;
+        }
+
+        return SetTemplate(
+          setNumber: index + 1,
+          targetWeight: targetWeight,
+          targetReps: targetReps,
+        );
+      }).toList();
+
+      // Create subExercises from the child exercises
+      final subExercises = exercise.exercises.map((childExercise) {
+        return ExerciseTemplate.fromExercise(childExercise);
+      }).toList();
+
+      return ExerciseTemplate(
+        exerciseId: exercise.id,
+        exerciseName: exercise.name,
+        category: exercise.category,
+        type: exercise.type,
+        sets: sets,
+        notes: exercise.notes,
+        restTime: exercise.restTime,
+        subExercises: subExercises,
+      );
+    }
+
+    // Handle DropSetExercise
+    if (exercise is DropSetExercise) {
+      final sets = exercise.stages.asMap().entries.map((entry) {
+        final index = entry.key;
+        final stage = entry.value;
+        return SetTemplate(
+          setNumber: index + 1,
+          targetWeight: stage.weight,
+          targetReps: stage.reps,
+        );
+      }).toList();
+
+      return ExerciseTemplate(
+        exerciseId: exercise.id,
+        exerciseName: exercise.name,
+        category: exercise.category,
+        type: exercise.type,
+        sets: sets,
+        notes: exercise.notes,
+        restTime: exercise.restTime,
+      );
+    }
+
+    // Handle RestPauseExercise
+    if (exercise is RestPauseExercise) {
+      final sets = exercise.restPauseSets.asMap().entries.map((entry) {
+        final index = entry.key;
+        final rpSet = entry.value;
+        return SetTemplate(
+          setNumber: index + 1,
+          targetReps: rpSet.reps,
+        );
+      }).toList();
+
+      return ExerciseTemplate(
+        exerciseId: exercise.id,
+        exerciseName: exercise.name,
+        category: exercise.category,
+        type: exercise.type,
+        sets: sets,
+        notes: exercise.notes,
+        restTime: exercise.restTime,
+      );
+    }
+
+    // Standard exercise - use the regular sets
+    return ExerciseTemplate(
+      exerciseId: exercise.id,
+      exerciseName: exercise.name,
+      category: exercise.category,
+      type: exercise.type,
+      sets: exercise.sets.map((set) {
+        return SetTemplate(
+          setNumber: set.setNumber,
+          targetWeight: set.weight,
+          targetReps: set.reps,
+          targetRpe: set.rpe,
+          notes: set.notes,
+        );
+      }).toList(),
+      notes: exercise.notes,
+      restTime: exercise.restTime,
+    );
+  }
+
   final String exerciseId; // ID dell'esercizio nel database
   final String exerciseName;
   final ExerciseCategory category;
@@ -406,11 +559,24 @@ class SetTemplate {
 
   factory SetTemplate.fromJson(Map<String, dynamic> json) {
     // Enhanced validation for SetTemplate deserialization
+    // FIX: Support both old format ('weight', 'reps', 'rpe') and new format ('targetWeight', 'targetReps', 'targetRpe')
+    // for backward compatibility with templates saved via Cloud Function
     final setNumber = json['setNumber'] is int ? json['setNumber'] : (json['setNumber'] is String ? int.tryParse(json['setNumber']) ?? 1 : 1);
-    final targetWeight = json['targetWeight'] != null ? (json['targetWeight'] is num ? json['targetWeight'].toDouble() : double.tryParse(json['targetWeight'].toString())) : null;
-    final targetReps = json['targetReps'] is int ? json['targetReps'] : (json['targetReps'] is String ? int.tryParse(json['targetReps']) : null);
-    final targetRpe = json['targetRpe'] is int ? json['targetRpe'] : (json['targetRpe'] is String ? int.tryParse(json['targetRpe']) : null);
-    
+
+    // Fallback: targetWeight ?? weight
+    final weightRaw = json['targetWeight'] ?? json['weight'];
+    final targetWeight = weightRaw != null
+        ? (weightRaw is num ? weightRaw.toDouble() : double.tryParse(weightRaw.toString()))
+        : null;
+
+    // Fallback: targetReps ?? reps
+    final repsRaw = json['targetReps'] ?? json['reps'];
+    final targetReps = repsRaw is int ? repsRaw : (repsRaw is String ? int.tryParse(repsRaw) : null);
+
+    // Fallback: targetRpe ?? rpe
+    final rpeRaw = json['targetRpe'] ?? json['rpe'];
+    final targetRpe = rpeRaw is int ? rpeRaw : (rpeRaw is String ? int.tryParse(rpeRaw) : null);
+
     return SetTemplate(
       setNumber: setNumber,
       targetWeight: targetWeight,

@@ -4,6 +4,23 @@
   "home": "Home",
   "profile": "Profilo",
   "welcome": "Pronto per allenarti?",
+  "motivationalQuote0": "Ogni ripetizione conta.",
+  "motivationalQuote1": "Più forte di ieri.",
+  "motivationalQuote2": "Il tuo unico limite sei tu.",
+  "motivationalQuote3": "Fallo accadere.",
+  "motivationalQuote4": "Allenati da bestia o resti uguale.",
+  "motivationalQuote5": "Progresso, non perfezione.",
+  "motivationalQuote6": "Il ferro non mente mai.",
+  "motivationalQuote7": "Guadagnati il tuo corpo.",
+  "motivationalQuote8": "Niente scuse, solo risultati.",
+  "motivationalQuote9": "Sii la tua competizione.",
+  "motivationalQuote10": "Disciplina uguale libertà.",
+  "motivationalQuote11": "Supera i tuoi limiti.",
+  "motivationalQuote12": "I campioni si allenano, i perdenti si lamentano.",
+  "motivationalQuote13": "Suda ora, brilla dopo.",
+  "greetingMorning": "Buongiorno",
+  "greetingAfternoon": "Buon pomeriggio",
+  "greetingEvening": "Buonasera",
   "welcomeDescription": "Traccia allenamenti, cronometra i riposi e sincronizza con Apple Health.",
   "onboardingWelcomeTitle": "Benvenuto nel Tuo Hub di Allenamento",
   "onboardingWelcomeDescription": "Traccia i tuoi progressi, raggiungi i tuoi obiettivi con il tracker di allenamenti più completo",
@@ -792,6 +809,13 @@
   "legendaryVolume": "VOLUME LEGGENDARIO!",
   "quickStats": "I tuoi progressi",
   "streak": "Serie",
+  "thisYear": "quest'anno",
+  "keepItUp": "Continua così!",
+  "startToday": "Inizia oggi!",
+  "workoutDaysPerWeek": "{days}/sett.",
+  "metricWorkoutsExplanation": "Hai completato {count} allenamenti quest'anno. Ogni allenamento registrato conta per questo totale. Continua ad allenarti per raggiungere i tuoi obiettivi!",
+  "metricConsistencyExplanation": "La tua costanza è del {percent}% basata sulla frequenza settimanale di allenamento. Ti alleni in media {days} giorni a settimana. L'obiettivo è 4 sessioni/settimana (100%).",
+  "metricStreakExplanation": "La tua serie attuale è di {days} giorni consecutivi di allenamento. Una serie conta i giorni in cui hai completato almeno un allenamento. Mantieni lo slancio!",
   "achievements": "Obiettivi",
   "exerciseInfo": "Info",
   "warmup": "Riscaldamento",
@@ -824,6 +848,8 @@
   "setMarkedAsWorking": "Set segnato come lavoro",
   "addWarmupSets": "Aggiungi Set Riscaldamento",
   "addWarmupSetsSubtitle": "Genera set di riscaldamento in base al peso di lavoro",
+  "editWarmupSets": "Modifica Set Riscaldamento",
+  "warmupSetsUpdated": "{count} set di riscaldamento aggiornati",
   "addWorkingSetFirst": "Aggiungi prima un set di lavoro",
   "setTargetWeightFirst": "Imposta prima un peso target",
   "primaryMuscles": "Muscoli Primari",
@@ -1361,6 +1387,7 @@
   "addRound": "Aggiungi Round",
   "roundsConfiguration": "Configurazione Round",
   "createSuperset": "Crea Superset",
+  "supersetCreated": "Superset creato",
   "round": "Round",
   "allExercisesWillBePerformed": "Tutti i {count} esercizi verranno eseguiti in questo round",
   "optional": "Opzionale",
@@ -6072,7 +6099,7 @@
   "tapToViewMore": "Tap a visualizza più",
   "tellUsAboutYourself": "Tell us about yourself",
   "templateLimitSuggestion": "Modello limit suggestion",
-  "templateSyncDescription": "Modello sync descrizione",
+  "templateSyncDescription": "Il template verrà salvato su Firebase e sarà disponibile su tutti i tuoi dispositivi",
   "thisMonth": "This month",
   "older": "Precedenti",
   "timeRange": "Time range",
@@ -10441,6 +10468,10 @@
   "@clearHistoryConfirm": {
     "description": "Contenuto dialogo conferma cancellazione cronologia"
   },
+  "noMessagesToExport": "Nessun messaggio da esportare",
+  "@noMessagesToExport": {
+    "description": "Messaggio mostrato quando si prova ad esportare una chat vuota"
+  },
   "aiCoachRespondingHint": "L'AI sta rispondendo...",
   "@aiCoachRespondingHint": {
     "description": "Suggerimento input quando AI sta scrivendo"
@@ -14189,6 +14220,31 @@
   "@bodyMeasurementsGrantConsent": {
     "description": "Pulsante per concedere consenso alle misurazioni corporee"
   },
+  "bodyMeasurementsHealthKitIOSOnly": "L'importazione da HealthKit è disponibile solo su iOS",
+  "@bodyMeasurementsHealthKitIOSOnly": {
+    "description": "Messaggio quando si prova a importare da HealthKit su non-iOS"
+  },
+  "bodyMeasurementsNoConsentedMetrics": "Nessuna metrica autorizzata. Concedi prima il consenso.",
+  "@bodyMeasurementsNoConsentedMetrics": {
+    "description": "Errore quando si prova a importare senza consenso"
+  },
+  "bodyMeasurementsHealthKitPermissionDenied": "Permesso HealthKit negato. Consenti l'accesso nelle Impostazioni.",
+  "@bodyMeasurementsHealthKitPermissionDenied": {
+    "description": "Errore quando i permessi HealthKit sono negati"
+  },
+  "bodyMeasurementsImportSuccess": "Importate con successo {count} misurazioni",
+  "@bodyMeasurementsImportSuccess": {
+    "description": "Messaggio di successo dopo l'importazione",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "bodyMeasurementsImportFromHealth": "Importa da Salute",
+  "@bodyMeasurementsImportFromHealth": {
+    "description": "Tooltip per pulsante importa da HealthKit"
+  },
   "weeks": "settimane",
   "@weeks": {
     "description": "Unità per settimane"
@@ -15974,5 +16030,329 @@
   "noAlternativesFound": "Nessun esercizio alternativo trovato",
   "@noAlternativesFound": { "description": "Empty state when no alternative exercises are available" },
   "noAlternativesHint": "Prova a cercare esercizi simili nel database",
-  "@noAlternativesHint": { "description": "Hint text for empty alternatives state" }
+  "@noAlternativesHint": { "description": "Hint text for empty alternatives state" },
+
+  "helpCenter": "Centro Assistenza",
+  "@helpCenter": { "description": "Help center title" },
+  "helpCenterWelcome": "Come possiamo aiutarti?",
+  "@helpCenterWelcome": { "description": "Help center welcome message" },
+  "helpCenterDescription": "Trova risposte alle domande più frequenti sull'uso dell'app",
+  "@helpCenterDescription": { "description": "Help center description" },
+
+  "helpCategoryGettingStarted": "Per Iniziare",
+  "helpCategoryGettingStartedDesc": "Primi passi e basi dell'app",
+  "helpCategoryWorkouts": "Allenamenti e Template",
+  "helpCategoryWorkoutsDesc": "Crea, salva e gestisci allenamenti",
+  "helpCategoryExerciseTracking": "Tracciamento Esercizi",
+  "helpCategoryExerciseTrackingDesc": "Registra serie, ripetizioni e pesi",
+  "helpCategoryAdvancedTechniques": "Tecniche Avanzate",
+  "helpCategoryAdvancedTechniquesDesc": "Superset, drop set e altro",
+  "helpCategoryTimer": "Timer di Riposo",
+  "helpCategoryTimerDesc": "Timer, notifiche e Live Activities",
+  "helpCategoryAnalytics": "Progressi e Analisi",
+  "helpCategoryAnalyticsDesc": "Grafici, PR e statistiche",
+  "helpCategoryPremium": "Premium",
+  "helpCategoryPremiumDesc": "Abbonamento e funzionalità",
+  "helpCategoryAccount": "Account e Sincronizzazione",
+  "helpCategoryAccountDesc": "Login, backup e cloud sync",
+  "helpCategoryProfile": "Profilo e Obiettivi",
+  "helpCategoryProfileDesc": "Obiettivi, streak e achievements",
+  "helpCategorySettings": "Impostazioni",
+  "helpCategorySettingsDesc": "Personalizza la tua esperienza",
+  "helpCategoryHealthSync": "Sincronizzazione Salute",
+  "helpCategoryHealthSyncDesc": "Apple Health e Health Connect",
+  "helpCategoryTroubleshooting": "Risoluzione Problemi",
+  "helpCategoryTroubleshootingDesc": "Problemi e soluzioni",
+
+  "faqWhatIsAppQuestion": "Cos'è questa app?",
+  "faqWhatIsAppAnswer": "Questa è un'app completa per il tracciamento degli allenamenti, progettata per aiutarti a registrare le tue sessioni in palestra, monitorare i progressi nel tempo e raggiungere i tuoi obiettivi fitness. Include un database di oltre 800 esercizi, template personalizzabili, analisi dettagliate e funzioni intelligenti come il timer di riposo automatico.",
+
+  "faqFirstWorkoutQuestion": "Come inizio il mio primo allenamento?",
+  "faqFirstWorkoutAnswer": "Dalla schermata home, tocca 'Inizio Rapido' per iniziare un allenamento vuoto, oppure seleziona uno dei tuoi template salvati. Una volta in allenamento, tocca il pulsante + per aggiungere esercizi dal nostro database. Registra le tue serie inserendo peso e ripetizioni, poi scorri a destra per completare ogni serie.",
+
+  "faqQuickStartQuestion": "Qual è la differenza tra Inizio Rapido e template?",
+  "faqQuickStartAnswer": "Inizio Rapido crea un allenamento vuoto dove aggiungi esercizi man mano - ottimo per sessioni flessibili o spontanee. I template sono schede pre-salvate con esercizi già definiti - perfetti per programmi costanti. Puoi salvare qualsiasi allenamento completato come nuovo template.",
+
+  "faqNavigationQuestion": "Come navigo nell'app?",
+  "faqNavigationAnswer": "La barra in basso ha 4 sezioni principali: Home (dashboard e inizio rapido), Allenamento (sessione attiva), Cronologia (allenamenti passati) e Profilo (impostazioni e statistiche). Durante un allenamento, scorri a sinistra/destra per muoverti tra gli esercizi, o usa la mini-barra in basso per navigare rapidamente.",
+
+  "faqTemplatesIntroQuestion": "Come funzionano i template?",
+  "faqTemplatesIntroAnswer": "I template salvano la struttura del tuo allenamento inclusi esercizi, serie, ripetizioni e tempi di riposo. Inizia un allenamento basato su template toccandolo nella home. L'app ricorda i tuoi ultimi pesi e suggerisce sovraccarico progressivo. Modifica i template in qualsiasi momento dalla schermata Template.",
+
+  "faqCreateWorkoutQuestion": "Come creo un allenamento personalizzato?",
+  "faqCreateWorkoutAnswer": "Inizia un allenamento con Inizio Rapido e aggiungi gli esercizi desiderati. Quando hai finito, tocca 'Completa' e scegli 'Salva come Template'. Dai un nome al template e apparirà nella tua home. In alternativa, vai in Template > Crea Nuovo per costruire un template da zero.",
+
+  "faqTemplatesQuestion": "Come gestisco i miei template?",
+  "faqTemplatesAnswer": "Vai nella schermata Template (accessibile dalla Home). Qui puoi vedere tutti i template, modificare l'ordine degli esercizi, cambiare serie/ripetizioni, rinominare template o eliminarli. Tieni premuto un template per azioni rapide. I template si sincronizzano su tutti i dispositivi quando sei connesso.",
+
+  "faqSaveTemplateQuestion": "Posso salvare un allenamento come template?",
+  "faqSaveTemplateAnswer": "Sì! Dopo aver completato qualsiasi allenamento, vedrai l'opzione 'Salva come Template'. Il template conserverà gli esercizi, l'ordine e le serie/ripetizioni target. I tuoi pesi registrati diventano il punto di partenza per le sessioni future.",
+
+  "faqEditWorkoutQuestion": "Posso modificare un allenamento mentre è in corso?",
+  "faqEditWorkoutAnswer": "Assolutamente! Durante un allenamento puoi: aggiungere o rimuovere esercizi, riordinare gli esercizi trascinandoli, cambiare serie/ripetizioni, modificare i valori registrati, aggiungere note e persino creare superset. Tieni premuto un esercizio per vedere tutte le opzioni.",
+
+  "faqDraftRecoveryQuestion": "Cosa succede se chiudo accidentalmente l'app?",
+  "faqDraftRecoveryAnswer": "Non preoccuparti! L'app salva automaticamente i progressi dell'allenamento ogni pochi secondi. Se chiudi l'app o crasha, ti verrà chiesto di riprendere l'allenamento quando torni. I tuoi dati non vengono mai persi.",
+
+  "faqCompleteWorkoutQuestion": "Come finisco un allenamento?",
+  "faqCompleteWorkoutAnswer": "Tocca il pulsante 'Completa Allenamento' (icona con spunta) in alto a destra. Vedrai un riepilogo della sessione con durata, volume e eventuali PR raggiunti. Scegli se salvare come template o solo salvare l'allenamento. Appariranno congratulazioni per ogni nuovo record!",
+
+  "faqAddExerciseQuestion": "Come aggiungo esercizi al mio allenamento?",
+  "faqAddExerciseAnswer": "Tocca il pulsante + durante un allenamento per aprire la ricerca esercizi. Sfoglia per gruppo muscolare usando i filtri, o cerca per nome. Il database include oltre 800 esercizi con descrizioni e GIF. Non trovi quello che cerchi? Crea un esercizio personalizzato con il tuo nome e muscoli target.",
+
+  "faqSetsRepsQuestion": "Come registro serie e ripetizioni?",
+  "faqSetsRepsAnswer": "Tocca qualsiasi riga di serie per aprire il modale di input. Inserisci peso e ripetizioni usando il selettore o la tastiera. Scorri la riga a destra per segnarla completa (diventa verde). I valori dell'allenamento precedente sono mostrati come riferimento - toccali per auto-compilare!",
+
+  "faqRpeRirQuestion": "Cosa sono RPE e RIR?",
+  "faqRpeRirAnswer": "RPE (Sforzo Percepito) misura lo sforzo su una scala 1-10 dove 10 è sforzo massimo. RIR (Ripetizioni di Riserva) conta quante altre ripetizioni potresti fare. Esempio: RPE 8 = RIR 2 (potresti fare altre 2 ripetizioni). Tracciali per ottimizzare l'intensità dell'allenamento.",
+
+  "faqCountingModesQuestion": "Quali modalità di conteggio sono disponibili?",
+  "faqCountingModesAnswer": "L'app supporta: Ripetizioni (conteggio standard), Tempo (secondi per plank/isometriche), Distanza (metri per trasporti/corsa) e Calorie. Cambia la modalità per ogni esercizio toccando l'icona impostazioni. Ogni modalità ha campi di input appropriati.",
+
+  "faqWarmupSetsQuestion": "Come registro le serie di riscaldamento?",
+  "faqWarmupSetsAnswer": "Tocca il numero della serie per alternare tra serie di lavoro e riscaldamento. Le serie di riscaldamento appaiono con badge 'W' e stile più chiaro. Sono escluse dai calcoli di volume e tracciamento PR ma comunque registrate nella cronologia come riferimento.",
+
+  "faqExerciseNotesQuestion": "Posso aggiungere note agli esercizi?",
+  "faqExerciseNotesAnswer": "Sì! Tocca l'icona note su qualsiasi esercizio per aggiungere appunti personali. Ottimo per registrare cue di forma, impostazioni attrezzature o modifiche. Le note si sincronizzano su tutti i dispositivi e appaiono quando rifai l'esercizio.",
+
+  "faqSupersetsQuestion": "Cosa sono i superset e come li uso?",
+  "faqSupersetsAnswer": "I superset sono 2+ esercizi eseguiti consecutivamente senza riposo - eccellenti per efficienza temporale e pump muscolare. Tieni premuto un esercizio, seleziona 'Crea Superset', poi aggiungi l'esercizio abbinato. L'app ti guida attraverso serie alternate con riposo appropriato tra i round.",
+
+  "faqDropsetsQuestion": "Come funzionano i drop set?",
+  "faqDropsetsAnswer": "I drop set prevedono la riduzione del peso dopo il cedimento e continuare immediatamente. Attiva la modalità drop set su qualsiasi esercizio, poi registra ogni drop all'interno della serie. L'app calcola il volume totale inclusi tutti i drop. Ottimo per massimizzare l'affaticamento muscolare!",
+
+  "faqRestPauseQuestion": "Cos'è l'allenamento rest-pause?",
+  "faqRestPauseAnswer": "Il rest-pause usa brevi pause di 10-15 secondi all'interno di una serie per estenderla. Fai ripetizioni quasi al cedimento, riposa 10-15 secondi, poi continua. L'app traccia le tue mini-serie e ripetizioni totali, utile per superare i normali punti di cedimento.",
+
+  "faqAutoWarmupQuestion": "L'app suggerisce serie di riscaldamento?",
+  "faqAutoWarmupAnswer": "Sì! La funzione auto-warmup suggerisce serie di riscaldamento progressive basate sul tuo peso di lavoro. Per esempio, se fai squat a 100kg, potrebbe suggerire: solo bilanciere → 40kg → 60kg → 80kg. Personalizza la progressione percentuale nelle Impostazioni.",
+
+  "faqAutoRegulationQuestion": "Cos'è l'auto-regolazione?",
+  "faqAutoRegulationAnswer": "L'auto-regolazione adatta l'allenamento in base alla performance giornaliera. Se stai facendo più ripetizioni del previsto, l'app suggerisce di aumentare il peso. Stai faticando? Potrebbe raccomandare di ridurre. Questo assicura un sovraccarico progressivo ottimale adattato alla tua prontezza quotidiana.",
+
+  "faqTimerQuestion": "Come funziona il timer di riposo?",
+  "faqTimerAnswer": "Il timer di riposo parte automaticamente dopo aver completato una serie. Conta alla rovescia il tempo di riposo scelto e ti notifica quando sei pronto. Il timer continua in background e si mostra sulla schermata di blocco (iOS). Personalizza i tempi di riposo predefiniti per esercizio o globalmente.",
+
+  "faqTimerBackgroundQuestion": "Il timer funziona quando l'app è chiusa?",
+  "faqTimerBackgroundAnswer": "Sì! Il timer continua a contare anche quando cambi app o blocchi il telefono. Su iOS, si mostra come Live Activity sulla schermata di blocco. Riceverai una notifica quando il riposo è completo così non perdi mai la prossima serie.",
+
+  "faqLiveActivitiesQuestion": "Cosa sono le Live Activities?",
+  "faqLiveActivitiesAnswer": "Le Live Activities (iOS 16+) mostrano il timer sulla schermata di blocco e nella Dynamic Island. Vedi il tempo di riposo rimanente a colpo d'occhio senza sbloccare il telefono. L'attività si aggiorna in tempo reale e mostra info sulla serie/esercizio corrente. Attiva in Impostazioni > Timer.",
+
+  "faqTimerSoundsQuestion": "Posso personalizzare i suoni del timer?",
+  "faqTimerSoundsAnswer": "Sì! Vai in Impostazioni > Timer > Suono. Scegli tra diversi suoni di avviso o seleziona 'Solo Vibrazione' per sessioni silenziose in palestra. Puoi anche attivare o disattivare i beep del conto alla rovescia negli ultimi secondi.",
+
+  "faqDefaultRestQuestion": "Come imposto i tempi di riposo predefiniti?",
+  "faqDefaultRestAnswer": "Vai in Impostazioni > Timer > Tempo Riposo Predefinito. Imposta un default globale (es. 90 secondi). Puoi anche impostare il tempo di riposo per esercizio - tocca l'icona orologio su qualsiasi esercizio per personalizzare. I tempi specifici per esercizio sovrascrivono il default globale.",
+
+  "faqTrackProgressQuestion": "Come monitoro i miei progressi?",
+  "faqTrackProgressAnswer": "La tab Analisi mostra il tuo percorso fitness attraverso grafici interattivi. Traccia la progressione di forza per esercizio, tendenze di volume settimanale, frequenza allenamenti e bilanciamento gruppi muscolari. Filtra per periodo (settimana/mese/anno) per identificare trend.",
+
+  "faqPersonalRecordsQuestion": "Cosa sono i Record Personali (PR)?",
+  "faqPersonalRecordsAnswer": "I PR sono le tue migliori performance di sempre per ogni esercizio. L'app traccia diversi tipi di PR: 1RM (singolo più pesante), 5RM, 10RM, max ripetizioni a un peso, e altro. Vedrai animazioni celebrative quando batti un PR - continua a spingere!",
+
+  "faqVolumeQuestion": "Cos'è il volume di allenamento?",
+  "faqVolumeAnswer": "Volume = Serie × Ripetizioni × Peso - una metrica chiave per la crescita muscolare. L'app traccia il volume giornaliero e settimanale per gruppo muscolare. Indicatori colorati mostrano se sei nel range ottimale. Troppo poco volume = crescita limitata; troppo = rischio sovrallenamento.",
+
+  "faqMuscleBalanceQuestion": "Cos'è l'analisi del bilanciamento muscolare?",
+  "faqMuscleBalanceAnswer": "La funzione bilanciamento muscolare confronta il volume tra gruppi muscolari per identificare squilibri. Evidenzia se alleni spinta vs trazione, anteriore vs posteriore, o superiore vs inferiore in modo sproporzionato. Allenamento bilanciato riduce il rischio infortuni e migliora l'estetica.",
+
+  "faqChartsQuestion": "Quali grafici sono disponibili?",
+  "faqChartsAnswer": "L'Analisi include: progressione forza (peso nel tempo per esercizio), tendenze volume (tonnellaggio settimanale), grafico frequenza (allenamenti per settimana), heatmap muscolare (quali muscoli allenati di più) e timeline PR. Tocca qualsiasi grafico per approfondire i dettagli.",
+
+  "faqHistoryQuestion": "Dove vedo gli allenamenti passati?",
+  "faqHistoryAnswer": "La tab Cronologia mostra tutti gli allenamenti completati in ordine cronologico. Filtra per range di date, template o cerca per nome esercizio. Tocca qualsiasi allenamento per vedere tutti i dettagli incluse ogni serie, tempi di riposo e note. Puoi anche ripetere un allenamento passato come template.",
+
+  "faqPremiumBenefitsQuestion": "Cosa include Premium?",
+  "faqPremiumBenefitsAnswer": "Premium sblocca: cronologia allenamenti illimitata (gratis: 30 giorni), analisi avanzate (bilanciamento muscolare, tendenze), sincronizzazione cloud su tutti i dispositivi, libreria esercizi personalizzata, supporto prioritario e rimuove tutte le pubblicità. I tuoi dati di allenamento sono tuoi - mai persi o limitati.",
+
+  "faqPremiumPricingQuestion": "Quanto costa Premium?",
+  "faqPremiumPricingAnswer": "Premium è disponibile come abbonamento mensile o annuale tramite App Store/Google Play. L'annuale risparmia significativamente rispetto al mensile. I prezzi possono variare per regione. Controlla la schermata Premium per i prezzi attuali e eventuali offerte speciali.",
+
+  "faqRestorePurchaseQuestion": "Come ripristino il mio acquisto?",
+  "faqRestorePurchaseAnswer": "Vai in Profilo > Premium > Ripristina Acquisto. Accedi con lo stesso Apple ID/account Google usato per l'acquisto originale. L'app verificherà lo stato dell'abbonamento e sbloccherà le funzioni Premium. Funziona anche quando cambi dispositivo.",
+
+  "faqCancelSubscriptionQuestion": "Come annullo l'abbonamento?",
+  "faqCancelSubscriptionAnswer": "Gli abbonamenti sono gestiti tramite Apple/Google, non dall'app. Su iOS: Impostazioni > Apple ID > Abbonamenti. Su Android: Play Store > Abbonamenti. Manterrai l'accesso Premium fino alla fine del periodo corrente. I tuoi dati rimangono accessibili anche dopo.",
+
+  "faqFreeVsPremiumQuestion": "Cosa posso fare con la versione gratuita?",
+  "faqFreeVsPremiumAnswer": "La versione gratuita include: tracciamento allenamenti completo, database esercizi, timer riposo, cronologia 30 giorni, analisi base e template. Premium aggiunge: cronologia illimitata, analisi avanzate, sincronizzazione cloud e rimuove le pubblicità. Le funzionalità core funzionano perfettamente gratis!",
+
+  "faqSignInMethodsQuestion": "Come accedo?",
+  "faqSignInMethodsAnswer": "L'app supporta: Accedi con Apple (consigliato per iOS - veloce e privato), Accedi con Google ed email/password. Accedere abilita sincronizzazione cloud e backup. Puoi usare l'app senza accedere, ma i dati saranno salvati solo localmente.",
+
+  "faqCloudSyncQuestion": "Come funziona la sincronizzazione cloud?",
+  "faqCloudSyncAnswer": "Quando sei connesso (Premium), i tuoi allenamenti, template e impostazioni si sincronizzano automaticamente nel cloud. Le modifiche appaiono su tutti i tuoi dispositivi in pochi secondi. L'indicatore di sync mostra lo stato: spunta verde = sincronizzato, rotazione = sincronizzazione, avviso = modalità offline.",
+
+  "faqBackupQuestion": "I miei dati sono salvati?",
+  "faqBackupAnswer": "Sì! Con Premium, i dati si sincronizzano nel cloud automaticamente. Anche senza Premium, gli allenamenti sono salvati localmente sul dispositivo e possono essere esportati manualmente. Vai in Impostazioni > Esporta Dati per un file di backup completo che puoi salvare ovunque.",
+
+  "faqSwitchDeviceQuestion": "Come trasferisco i dati su un nuovo dispositivo?",
+  "faqSwitchDeviceAnswer": "Se hai Premium: accedi semplicemente sul nuovo dispositivo e i dati si sincronizzano automaticamente. Senza Premium: esporta i dati sul vecchio dispositivo (Impostazioni > Esporta), trasferisci il file e importa sul nuovo dispositivo. Tutta la cronologia e i template si trasferiscono.",
+
+  "faqDeleteAccountQuestion": "Come elimino il mio account?",
+  "faqDeleteAccountAnswer": "Vai in Profilo > Impostazioni > Account > Elimina Account. Questo rimuove permanentemente tutti i dati cloud associati al tuo account. I dati locali sul dispositivo rimangono a meno che non disinstalli l'app. Questa azione non può essere annullata - esporta prima i tuoi dati.",
+
+  "faqSetGoalsQuestion": "Come imposto obiettivi fitness?",
+  "faqSetGoalsAnswer": "Vai in Profilo > Obiettivi. Imposta target per: allenamenti a settimana, obiettivi di sollevamento specifici (es. panca 100kg), misure corporee e altro. L'app traccia i progressi verso ogni obiettivo e festeggia quando li raggiungi. Gli obiettivi aiutano a mantenere la motivazione!",
+
+  "faqStreaksQuestion": "Come funzionano le streak di allenamento?",
+  "faqStreaksAnswer": "Le streak contano le settimane consecutive in cui hai raggiunto il tuo obiettivo di allenamento. Salta una settimana e si resetta - ma non preoccuparti, la tua streak più lunga è sempre salvata! Le streak incoraggiano la costanza, che è la chiave per risultati a lungo termine. Vedi le tue streak nella schermata Profilo.",
+
+  "faqBodyMeasurementsQuestion": "Posso tracciare le misure corporee?",
+  "faqBodyMeasurementsAnswer": "Sì! Vai in Profilo > Misure. Traccia peso, % grasso corporeo e circonferenze (petto, braccia, vita, ecc.). Registra regolarmente per vedere le tendenze nel tempo. Queste misure complementano i dati di allenamento per mostrare progressi completi.",
+
+  "faqXpLevelsQuestion": "Cos'è il sistema XP/Livelli?",
+  "faqXpLevelsAnswer": "Guadagni XP (punti esperienza) per ogni allenamento, PR e obiettivo completato. Gli XP riempiono la barra del livello - sali di livello per ottenere achievement! Il sistema gamifica il tuo percorso fitness. Livelli più alti sbloccano badge e mostrano la tua dedizione. Controlla i tuoi XP nella schermata Profilo.",
+
+  "faqAchievementsQuestion": "Quali achievement posso ottenere?",
+  "faqAchievementsAnswer": "Gli achievement premiano i traguardi: primo allenamento, 10/50/100 allenamenti completati, streak di PR, streak di costanza e altro. Ogni achievement concede XP e un badge. Vedi la tua collezione in Profilo > Achievement. Riesci a raccoglierli tutti?",
+
+  "faqUnitsQuestion": "Come cambio le unità di peso?",
+  "faqUnitsAnswer": "Vai in Profilo > Impostazioni > Unità. Scegli kg (metrico) o lb (imperiale). Tutti i pesi nell'app si convertono automaticamente. I tuoi dati sono salvati internamente in metrico quindi il cambio è fluido e reversibile in qualsiasi momento.",
+
+  "faqLanguageQuestion": "Posso cambiare la lingua dell'app?",
+  "faqLanguageAnswer": "L'app segue l'impostazione lingua del dispositivo. Attualmente supportate: Italiano e Inglese. Per cambiare: vai nelle Impostazioni del dispositivo > Lingua. L'app si riavvierà nella nuova lingua. Altre lingue in arrivo in base alla domanda degli utenti!",
+
+  "faqThemeQuestion": "Posso cambiare il tema dell'app?",
+  "faqThemeAnswer": "Sì! Vai in Profilo > Impostazioni > Aspetto. Scegli: Chiaro, Scuro o Sistema (segue l'impostazione del dispositivo). L'app supporta anche colori dinamici sui dispositivi compatibili. La modalità scura è ottima per le sessioni in palestra al mattino presto!",
+
+  "faqZenModeQuestion": "Cos'è la Modalità Zen?",
+  "faqZenModeAnswer": "La Modalità Zen semplifica l'interfaccia allenamento per un training senza distrazioni. Nasconde informazioni secondarie, ingrandisce gli input principali e si concentra sulla serie corrente. Ottima quando vuoi tempo minimo sullo schermo. Attivala in Impostazioni o durante un allenamento.",
+
+  "faqNotificationsQuestion": "Come gestisco le notifiche?",
+  "faqNotificationsAnswer": "Vai in Impostazioni > Notifiche. Controlla: avvisi timer riposo, promemoria allenamento, celebrazioni PR, riepiloghi settimanali e altro. Imposta orari promemoria per i tuoi giorni e orari di allenamento preferiti. Tutte le notifiche possono essere attivate o disattivate individualmente.",
+
+  "faqAppleHealthQuestion": "Come sincronizzo con Apple Health?",
+  "faqAppleHealthAnswer": "Vai in Impostazioni > Sincronizzazione Salute > Apple Health. Concedi i permessi per i dati che vuoi condividere. L'app può scrivere allenamenti e leggere misurazioni peso. Le tue sessioni in palestra appariranno nell'app Salute insieme a tutti gli altri dati fitness.",
+
+  "faqHealthConnectQuestion": "Come sincronizzo con Health Connect?",
+  "faqHealthConnectAnswer": "Su Android, vai in Impostazioni > Sincronizzazione Salute > Health Connect. Concedi i permessi necessari. L'app scrive i dati allenamento su Health Connect, che possono essere condivisi con altre app fitness. Assicurati che Health Connect sia installato dal Play Store.",
+
+  "faqHealthPermissionsQuestion": "Quali permessi salute sono necessari?",
+  "faqHealthPermissionsAnswer": "L'app richiede: Scrivi Allenamenti (per registrare le sessioni), Leggi Peso (per aggiornare automaticamente il peso corporeo). Tutti i permessi sono opzionali e possono essere cambiati in qualsiasi momento nelle impostazioni privacy del dispositivo. Non accediamo mai a dati di cui non abbiamo bisogno.",
+
+  "faqWeightSyncQuestion": "Il mio peso corporeo si sincronizza automaticamente?",
+  "faqWeightSyncAnswer": "Se concedi il permesso, l'app può leggere il tuo ultimo peso da Apple Health o Health Connect. Questo mantiene accurate le metriche calcolate (come volume per kg) senza inserimento manuale. Gli aggiornamenti peso appaiono in pochi secondi dalla registrazione.",
+
+  "faqDataLostQuestion": "Ho perso i miei dati allenamento - cosa faccio?",
+  "faqDataLostAnswer": "Prima, controlla se sei connesso (la schermata Profilo mostra l'account). Prova Ripristina Acquisto per verificare lo stato Premium. Se sei connesso, prova a uscire e rientrare per forzare una risincronizzazione. Per problemi con dati locali, controlla se hai un backup esportato. Contatta il supporto se i problemi persistono.",
+
+  "faqTimerNotWorkingQuestion": "Il timer non funziona in background - perché?",
+  "faqTimerNotWorkingAnswer": "Controlla: 1) Le notifiche sono abilitate per l'app (Impostazioni dispositivo), 2) Risparmio Energetico è disattivato, 3) Aggiornamento App in Background è abilitato. Su iOS, assicurati che le Live Activities siano abilitate. Se i problemi persistono, prova a reinstallare l'app. Il timer necessita di questi permessi per funzionare in background.",
+
+  "faqSyncIssuesQuestion": "I miei dati non si sincronizzano tra i dispositivi",
+  "faqSyncIssuesAnswer": "Verifica: 1) Sei connesso con lo stesso account su entrambi i dispositivi, 2) Hai un abbonamento Premium attivo, 3) Entrambi i dispositivi hanno connessione internet. Prova a tirare giù sulla schermata principale per forzare la sincronizzazione. Lo stato sync appare in cima alla schermata home.",
+
+  "faqAppCrashQuestion": "L'app continua a crashare - aiuto!",
+  "faqAppCrashAnswer": "Prova questi passaggi: 1) Chiudi forzatamente e riapri l'app, 2) Riavvia il dispositivo, 3) Controlla aggiornamenti app, 4) Reinstalla l'app (i dati si sincronizzano dal cloud se sei connesso). Se i crash continuano, contatta il supporto con il modello dispositivo e versione iOS/Android.",
+
+  "faqContactSupportQuestion": "Come contatto il supporto?",
+  "faqContactSupportAnswer": "Vai in Profilo > Centro Assistenza > Contattaci, oppure scrivi direttamente a support@gymbro.app. Includi il modello dispositivo, versione app (mostrata nelle Impostazioni) e una descrizione del problema. Gli screenshot aiutano! Rispondiamo tipicamente entro 24 ore.",
+
+  "configureSuperset": "Configura Superset",
+  "copiedToAllRounds": "Copiato a tutti i round",
+  "copyR1ToAll": "R1 → Tutti",
+  "restAfterRound": "Riposo dopo round",
+  "applyToAllRounds": "Tutti i round",
+  "inWorkout": "In Scheda",
+  "fromDatabase": "Dal DB",
+  "noOtherExercisesInWorkout": "Nessun altro esercizio in questo workout",
+  "useSearchTabToAddExercises": "Usa la ricerca per aggiungere esercizi dal database",
+  "configured": "Configurato",
+  "configureRounds": "Configura Round",
+  "editConfiguration": "Modifica Configurazione",
+  "rounds": "round",
+  "copyFromPrevious": "Copia da Precedente",
+  "removeRound": "Rimuovi Round",
+  "tapToConfigure": "Tocca per configurare",
+  "unsavedChangesWillBeLost": "Le modifiche non salvate andranno perse",
+  "appliedToAllRounds": "Applicato a tutti i round",
+  "copyRoundToAll": "Copia round in tutti",
+  "showLess": "Meno",
+  "showMore": "Altro",
+  "confirmDeleteSupersetMessage": "Sei sicuro di voler eliminare questo superset?",
+  "editSuperset": "Modifica Superset",
+  "nRoundsNExercises": "{rounds} round • {exercises} esercizi",
+  "setsProgress": "Serie ({completed}/{total})",
+  "setNumberLabel": "Serie {number}",
+  "nOfMCompleted": "{completed}/{total} completati",
+  "executeAllSequentially": "Esegui tutti gli esercizi in sequenza senza riposo",
+  "exerciseDataNotFound": "Dati esercizio non trovati",
+  "supersetRestLabel": "{name} - Riposo",
+
+  "dataBackup": "Dati & Backup",
+  "importData": "Importa Dati",
+  "importFromOtherApp": "Importa da altra app",
+  "importDescription": "Trasferisci lo storico allenamenti da Strong, Hevy o altre app fitness.",
+  "selectSourceApp": "Seleziona app sorgente",
+  "selectCsvFile": "Seleziona File CSV",
+  "howToExport": "Come esportare",
+  "exportStep1": "Apri l'altra app e vai nelle Impostazioni",
+  "exportStep2": "Trova 'Esporta Dati' o 'Esporta Allenamenti'",
+  "exportStep3": "Salva il file CSV e selezionalo qui",
+  "comingSoon": "In Arrivo",
+  "parsing": "Analisi dati...",
+  "importing": "Importazione allenamenti...",
+  "preview": "Anteprima",
+  "mapExercises": "Associa Esercizi",
+  "confirm": "Conferma",
+  "readyToImport": "Pronto per importare",
+  "workouts": "Allenamenti",
+  "exercises": "Esercizi",
+  "autoMapped": "Auto-associati",
+  "unmapped": "Da associare",
+  "warnings": "Avvisi",
+  "andMoreWarnings": "...e altri {count} avvisi",
+  "recentWorkouts": "Allenamenti Recenti",
+  "andMoreWorkouts": "...e altri {count} allenamenti",
+  "rows": "Righe",
+  "autoMappedExercises": "{count} esercizi auto-associati",
+  "autoMappedDescription": "Questi esercizi sono stati abbinati automaticamente al tuo database.",
+  "needsMappingExercises": "{count} esercizi da associare",
+  "needsMappingDescription": "Seleziona l'esercizio corretto dai suggerimenti o cerca manualmente.",
+  "allExercisesMapped": "Tutti gli esercizi associati con successo!",
+  "occurrences": "{count} occorrenze",
+  "noSuggestionsFound": "Nessun suggerimento trovato. Usa la ricerca per trovare l'esercizio.",
+  "searchExercise": "Cerca esercizio",
+  "skipThisExercise": "Salta questo esercizio",
+  "willImportWithOriginalName": "Verrà importato con il nome originale",
+  "importComplete": "Importazione Completata!",
+  "importFailed": "Importazione Fallita",
+  "importSuccessMessage": "Importati con successo {count} allenamenti nel tuo storico.",
+  "importFailedMessage": "Si è verificato un errore durante l'importazione. Riprova.",
+  "workoutsImported": "Allenamenti importati",
+  "exercisesImported": "Esercizi importati",
+  "setsImported": "Serie importate",
+  "workoutsSkipped": "Allenamenti saltati",
+  "importErrors": "Errori",
+  "andMoreErrors": "...e altri {count} errori",
+  "done": "Fatto",
+  "couldNotReadFile": "Impossibile leggere il file selezionato",
+  "importError": "Errore Importazione",
+  "tryAgain": "Riprova",
+  "reset": "Reset",
+
+  "recoveryInsight": "Insight Recupero",
+  "sleepRecoveryAnalysis": "Analisi Sonno & Recupero",
+  "sleepDetails": "Dettagli Sonno",
+  "sleepWorkoutCorrelation": "Correlazione Sonno-Allenamento",
+  "readinessLevel": "Livello di Prontezza",
+  "weeklyOverview": "Panoramica Settimanale",
+  "recommendedSleep": "7h raccomandate",
+  "todaysRecommendation": "Raccomandazione di Oggi",
+  "consecutiveBadNights": "notti consecutive sotto le 6h",
+  "correlationInsufficientData": "Continua ad allenarti per vedere la correlazione sonno-performance. Servono più dati.",
+  "goodSleepEffect": "Con >7h di sonno",
+  "poorSleepEffect": "Con <6h di sonno",
+  "sleepCorrelationProDescription": "Scopri come il sonno influisce direttamente sul volume e sulle performance dei tuoi allenamenti con analisi dettagliate.",
+  "recoveryOptimalDescription": "Prontezza massima - dai tutto!",
+  "recoveryGoodDescription": "Pronto per un buon allenamento",
+  "recoveryModerateDescription": "Considera un'intensità più leggera oggi",
+  "recoveryLowDescription": "Il tuo corpo ha bisogno di più riposo",
+  "recoveryCriticalDescription": "Giornata di riposo fortemente consigliata",
+  "connectAppleHealth": "Connetti Apple Health per insight personalizzati",
+  "lastNight": "Ieri Notte",
+  "streakDays": "Serie",
+  "errorLoadingData": "Errore nel caricamento dati"
 }

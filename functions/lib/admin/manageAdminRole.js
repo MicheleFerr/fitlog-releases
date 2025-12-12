@@ -126,7 +126,7 @@ function isEmailWhitelisted(email) {
  * ```
  */
 // 🔐 SECURITY: Rate limited (5 requests per minute)
-exports.setAdminRole = (0, rateLimiterV1_1.withRateLimit)(functions.https.onCall(async (data, context) => {
+exports.setAdminRole = (0, rateLimiterV1_1.withRateLimit)(async (data, context) => {
     var _a;
     // ========================================
     // 1. Authentication Check
@@ -223,7 +223,7 @@ exports.setAdminRole = (0, rateLimiterV1_1.withRateLimit)(functions.https.onCall
         });
         throw new functions.https.HttpsError('internal', 'Failed to set admin custom claims. Check server logs.');
     }
-}), Object.assign(Object.assign({}, rateLimiterV1_1.RATE_LIMITS.STRICT), { identifier: 'setAdminRole' }));
+}, Object.assign(Object.assign({}, rateLimiterV1_1.RATE_LIMITS.STRICT), { identifier: 'setAdminRole' }));
 /**
  * 🔐 Cloud Function: Revoke Admin Role (Callable)
  *
@@ -243,7 +243,7 @@ exports.setAdminRole = (0, rateLimiterV1_1.withRateLimit)(functions.https.onCall
  * ```
  */
 // 🔐 SECURITY: Rate limited (5 requests per minute)
-exports.revokeAdminRole = (0, rateLimiterV1_1.withRateLimit)(functions.https.onCall(async (data, context) => {
+exports.revokeAdminRole = (0, rateLimiterV1_1.withRateLimit)(async (data, context) => {
     // ========================================
     // 1. Authentication Check
     // ========================================
@@ -313,7 +313,7 @@ exports.revokeAdminRole = (0, rateLimiterV1_1.withRateLimit)(functions.https.onC
         console.error('Error revoking admin custom claims:', error);
         throw new functions.https.HttpsError('internal', 'Failed to revoke admin custom claims. Check server logs.');
     }
-}), Object.assign(Object.assign({}, rateLimiterV1_1.RATE_LIMITS.STRICT), { identifier: 'revokeAdminRole' }));
+}, Object.assign(Object.assign({}, rateLimiterV1_1.RATE_LIMITS.STRICT), { identifier: 'revokeAdminRole' }));
 /**
  * 🔧 Cloud Function: Set Initial Admin (HTTP Trigger - Manual)
  *

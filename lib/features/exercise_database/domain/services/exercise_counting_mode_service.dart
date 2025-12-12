@@ -12,8 +12,7 @@ import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise.dar
 
 class ExerciseCountingModeService {
   static ExerciseCountingMode getModeFromWorkoutExercise(Exercise exercise) {
-    // ✅ FIX: Read counting mode from exercise instead of always returning weighted
-    // Previous stub always returned weighted, causing UI to never update when changing mode
+    // Read counting mode from exercise property
     return exercise.countingMode;
   }
 }

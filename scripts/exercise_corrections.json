@@ -1,0 +1,530 @@
+{
+  "all_fours_squad_stretch": {
+    "nome": "Allungamento in Quadrupedia",
+    "focus": "QUAD",
+    "muscoliSecondari": "FEMOR, GLUT",
+    "tipoEsercizio": "Stretching"
+  },
+  "all_fours_squad_stretch_elevated_variation": {
+    "nome": "Allungamento Quadrupedia - Elevato",
+    "focus": "QUAD",
+    "muscoliSecondari": "FEMOR, GLUT",
+    "tipoEsercizio": "Stretching"
+  },
+  "alternating_bear_crawl": {
+    "nome": "Bear Crawl",
+    "focus": "CORE, DELT",
+    "muscoliSecondari": "QUAD, GLUT",
+    "tipoEsercizio": "Compound"
+  },
+  "assisted_prone_lying_quads_stretch": {
+    "nome": "Allungamento Quadricipiti",
+    "focus": "QUAD",
+    "muscoliSecondari": "FEMOR",
+    "tipoEsercizio": "Stretching"
+  },
+  "astride_jumps_male": {
+    "nome": "Jumping Jack",
+    "focus": "QUAD, GLUT",
+    "muscoliSecondari": "POLP, CORE",
+    "tipoEsercizio": "Compound"
+  },
+  "back_and_forth_step": {
+    "nome": "Step Avanti e Indietro",
+    "focus": "QUAD, GLUT",
+    "muscoliSecondari": "FEMOR, POLP",
+    "tipoEsercizio": "Compound"
+  },
+  "backward_jump": {
+    "nome": "Salto all'Indietro",
+    "focus": "QUAD, GLUT",
+    "muscoliSecondari": "FEMOR, POLP",
+    "tipoEsercizio": "Compound"
+  },
+  "balance_board": {
+    "nome": "Balance Board",
+    "focus": "CORE",
+    "muscoliSecondari": "QUAD, POLP",
+    "tipoEsercizio": "Compound"
+  },
+  "band_one_arm_single_leg_split_squat": {
+    "nome": "Split Squat Monobraccio con Elastico",
+    "focus": "QUAD, GLUT",
+    "muscoliSecondari": "FEMOR",
+    "tipoEsercizio": "Compound"
+  },
+  "band_shrug": {
+    "nome": "Scrollate con Elastico",
+    "focus": "TRAP",
+    "muscoliSecondari": "DELT",
+    "tipoEsercizio": "Isolation"
+  },
+  "band_single_leg_split_squat": {
+    "nome": "Split Squat a Una Gamba con Elastico",
+    "focus": "QUAD, GLUT",
+    "muscoliSecondari": "FEMOR",
+    "tipoEsercizio": "Compound"
+  },
+  "barbell_bench_front_squat": {
+    "nome": "Box Front Squat con Bilanciere",
+    "focus": "QUAD, GLUT",
+    "muscoliSecondari": "FEMOR, CORE",
+    "tipoEsercizio": "Compound"
+  },
+  "barbell_bench_squat": {
+    "nome": "Box Squat con Bilanciere",
+    "focus": "QUAD, GLUT",
+    "muscoliSecondari": "FEMOR, CORE",
+    "tipoEsercizio": "Compound"
+  },
+  "barbell_clean_and_press": {
+    "nome": "Clean and Press",
+    "focus": "QUAD, GLUT, DELT",
+    "muscoliSecondari": "TRAP, CORE, FEMOR",
+    "tipoEsercizio": "Compound"
+  },
+  "barbell_one_leg_squat": {
+    "nome": "Pistol Squat con Bilanciere",
+    "focus": "QUAD, GLUT",
+    "muscoliSecondari": "FEMOR, CORE",
+    "tipoEsercizio": "Compound"
+  },
+  "barbell_overhead_squat": {
+    "nome": "Overhead Squat",
+    "focus": "QUAD, GLUT",
+    "muscoliSecondari": "CORE, DELT, FEMOR",
+    "tipoEsercizio": "Compound"
+  },
+  "barbell_side_split_squat": {
+    "nome": "Lateral Squat con Bilanciere",
+    "focus": "QUAD, GLUT, ADD",
+    "muscoliSecondari": "FEMOR",
+    "tipoEsercizio": "Compound"
+  },
+  "barbell_side_split_squat_v_2": {
+    "nome": "Lateral Squat V.2 con Bilanciere",
+    "focus": "QUAD, GLUT, ADD",
+    "muscoliSecondari": "FEMOR",
+    "tipoEsercizio": "Compound"
+  },
+  "barbell_single_leg_split_squat": {
+    "nome": "Split Squat con Bilanciere",
+    "focus": "QUAD, GLUT",
+    "muscoliSecondari": "FEMOR",
+    "tipoEsercizio": "Compound"
+  },
+  "barbell_split_squat_v_2": {
+    "nome": "Split Squat V.2 con Bilanciere",
+    "focus": "QUAD, GLUT",
+    "muscoliSecondari": "FEMOR",
+    "tipoEsercizio": "Compound"
+  },
+  "barbell_squat_jump_step_rear_lunge": {
+    "nome": "Jump Squat + Affondo Posteriore",
+    "focus": "QUAD, GLUT",
+    "muscoliSecondari": "FEMOR, POLP",
+    "tipoEsercizio": "Compound"
+  },
+  "barbell_squat_on_knees": {
+    "nome": "Squat in Ginocchio con Bilanciere",
+    "focus": "GLUT, QUAD",
+    "muscoliSecondari": "FEMOR",
+    "tipoEsercizio": "Compound"
+  },
+  "barbell_squat_on_knees_with_pure": {
+    "nome": "Squat in Ginocchio Intenso con Bilanciere",
+    "focus": "GLUT, QUAD",
+    "muscoliSecondari": "FEMOR",
+    "tipoEsercizio": "Compound"
+  },
+  "barbell_wide_squat": {
+    "nome": "Sumo Squat con Bilanciere",
+    "focus": "QUAD, GLUT, ADD",
+    "muscoliSecondari": "FEMOR",
+    "tipoEsercizio": "Compound"
+  },
+  "bear_crawl": {
+    "nome": "Bear Crawl",
+    "focus": "CORE, DELT",
+    "muscoliSecondari": "QUAD, GLUT",
+    "tipoEsercizio": "Compound"
+  },
+  "burpee": {
+    "nome": "Burpee",
+    "focus": "PETT, QUAD",
+    "muscoliSecondari": "DELT, FEMOR, POLP, CORE",
+    "tipoEsercizio": "Compound"
+  },
+  "chair_leg_extended_stretch": {
+    "nome": "Allungamento Gambe su Sedia",
+    "focus": "FEMOR",
+    "muscoliSecondari": "POLP",
+    "tipoEsercizio": "Stretching"
+  },
+  "chair_leg_extended_stretch_with_modified": {
+    "nome": "Allungamento Gamba Estesa su Sedia con Modifica",
+    "focus": "FEMOR",
+    "muscoliSecondari": "POLP",
+    "tipoEsercizio": "Stretching"
+  },
+  "cycle_cross_trainer": {
+    "nome": "Ellittica",
+    "focus": "QUAD, GLUT",
+    "muscoliSecondari": "FEMOR, POLP",
+    "tipoEsercizio": "Cardio"
+  },
+  "dumbbell_burpee": {
+    "nome": "Burpee con Manubri",
+    "focus": "PETT, QUAD",
+    "muscoliSecondari": "CORE, DELT, FEMOR, POLP",
+    "tipoEsercizio": "Compound"
+  },
+  "dumbbell_goblet_squat": {
+    "nome": "Goblet Squat",
+    "focus": "QUAD, GLUT",
+    "muscoliSecondari": "FEMOR, CORE",
+    "tipoEsercizio": "Compound"
+  },
+  "dumbbell_single_leg_split_squat": {
+    "nome": "Split Squat con Manubri",
+    "focus": "QUAD, GLUT",
+    "muscoliSecondari": "FEMOR",
+    "tipoEsercizio": "Compound"
+  },
+  "dumbbell_step_up_lunge": {
+    "nome": "Step-up con Affondo",
+    "focus": "QUAD, GLUT",
+    "muscoliSecondari": "FEMOR, POLP",
+    "tipoEsercizio": "Compound"
+  },
+  "dumbbell_step_up_split_squat": {
+    "nome": "Step-up Split Squat con Manubri",
+    "focus": "QUAD, GLUT",
+    "muscoliSecondari": "FEMOR",
+    "tipoEsercizio": "Compound"
+  },
+  "dumbbell_supported_squat": {
+    "nome": "Squat Assistito con Manubri",
+    "focus": "QUAD, GLUT",
+    "muscoliSecondari": "FEMOR",
+    "tipoEsercizio": "Compound"
+  },
+  "farmers_walk": {
+    "nome": "Farmers Walk",
+    "focus": "TRAP, CORE",
+    "muscoliSecondari": "AVA, POLP",
+    "tipoEsercizio": "Compound"
+  },
+  "fluid_dumbbell_step_up_lunge": {
+    "nome": "Step-up Fluido con Affondo",
+    "focus": "QUAD, GLUT",
+    "muscoliSecondari": "FEMOR, POLP",
+    "tipoEsercizio": "Compound"
+  },
+  "forward_jump": {
+    "nome": "Broad Jump",
+    "focus": "QUAD, GLUT",
+    "muscoliSecondari": "FEMOR, POLP",
+    "tipoEsercizio": "Compound"
+  },
+  "half_knee_bends_male": {
+    "nome": "Mezzo Squat",
+    "focus": "QUAD",
+    "muscoliSecondari": "GLUT, FEMOR",
+    "tipoEsercizio": "Compound"
+  },
+  "half_knee_bends_male_with_blunt": {
+    "nome": "Mezzo Squat con Peso",
+    "focus": "QUAD",
+    "muscoliSecondari": "GLUT, FEMOR",
+    "tipoEsercizio": "Compound"
+  },
+  "high_knee_against_wall": {
+    "nome": "High Knees al Muro",
+    "focus": "QUAD, CORE",
+    "muscoliSecondari": "FEMOR, GLUT, POLP",
+    "tipoEsercizio": "Compound"
+  },
+  "intermediate_hip_flexor_and_quad_stretch": {
+    "nome": "Allungamento Flessori Anca e Quadricipiti",
+    "focus": "QUAD",
+    "muscoliSecondari": "FEMOR",
+    "tipoEsercizio": "Stretching"
+  },
+  "jack_burpee": {
+    "nome": "Jack Burpee",
+    "focus": "PETT, QUAD",
+    "muscoliSecondari": "CORE, DELT, FEMOR, POLP",
+    "tipoEsercizio": "Compound"
+  },
+  "jack_jump_male": {
+    "nome": "Jumping Jack",
+    "focus": "QUAD, GLUT",
+    "muscoliSecondari": "POLP, CORE",
+    "tipoEsercizio": "Compound"
+  },
+  "jump_rope": {
+    "nome": "Salto Della Corda",
+    "focus": "POLP, QUAD",
+    "muscoliSecondari": "FEMOR, GLUT, CORE",
+    "tipoEsercizio": "Cardio"
+  },
+  "lever_alternate_leg_press": {
+    "nome": "Leg Press Alternata",
+    "focus": "QUAD, GLUT",
+    "muscoliSecondari": "FEMOR",
+    "tipoEsercizio": "Compound"
+  },
+  "lever_leg_extension": {
+    "nome": "Leg Extension",
+    "focus": "QUAD",
+    "muscoliSecondari": null,
+    "tipoEsercizio": "Isolation"
+  },
+  "lying_side_quads_stretch": {
+    "nome": "Allungamento Quadricipiti Laterale",
+    "focus": "QUAD",
+    "muscoliSecondari": "FEMOR",
+    "tipoEsercizio": "Stretching"
+  },
+  "mountain_climber": {
+    "nome": "Mountain Climber",
+    "focus": "CORE, QUAD",
+    "muscoliSecondari": "DELT, PETT",
+    "tipoEsercizio": "Compound"
+  },
+  "neck_side_stretch": {
+    "nome": "Allungamento Laterale Collo",
+    "focus": "TRAP",
+    "muscoliSecondari": null,
+    "tipoEsercizio": "Stretching"
+  },
+  "pulse_style_walk_elliptical_cross_trainer": {
+    "nome": "Ellittica Pulse",
+    "focus": "QUAD, GLUT",
+    "muscoliSecondari": "FEMOR, POLP",
+    "tipoEsercizio": "Cardio"
+  },
+  "push_to_run": {
+    "nome": "Push to Run",
+    "focus": "QUAD, GLUT",
+    "muscoliSecondari": "FEMOR, POLP",
+    "tipoEsercizio": "Compound"
+  },
+  "quads": {
+    "nome": "Stretching Quadricipiti",
+    "focus": "QUAD",
+    "muscoliSecondari": "FEMOR",
+    "tipoEsercizio": "Stretching"
+  },
+  "quads_complex": {
+    "nome": "Stretching Quadricipiti Avanzato",
+    "focus": "QUAD",
+    "muscoliSecondari": "FEMOR, GLUT",
+    "tipoEsercizio": "Stretching"
+  },
+  "quick_feet_v_2": {
+    "nome": "Quick Feet",
+    "focus": "QUAD, POLP",
+    "muscoliSecondari": "FEMOR",
+    "tipoEsercizio": "Compound"
+  },
+  "quick_feet_v_2_with_bent": {
+    "nome": "Quick Feet con Squat",
+    "focus": "QUAD, POLP",
+    "muscoliSecondari": "FEMOR, GLUT",
+    "tipoEsercizio": "Compound"
+  },
+  "resistance_band_leg_extension": {
+    "nome": "Leg Extension con Elastico",
+    "focus": "QUAD",
+    "muscoliSecondari": null,
+    "tipoEsercizio": "Isolation"
+  },
+  "resistance_band_leg_extension_declined": {
+    "nome": "Leg Extension Declinata con Elastico",
+    "focus": "QUAD",
+    "muscoliSecondari": null,
+    "tipoEsercizio": "Isolation"
+  },
+  "run": {
+    "nome": "Corsa",
+    "focus": "QUAD, POLP",
+    "muscoliSecondari": "FEMOR, GLUT",
+    "tipoEsercizio": "Cardio"
+  },
+  "run_equipment": {
+    "nome": "Corsa su Tapis Roulant",
+    "focus": "QUAD, POLP",
+    "muscoliSecondari": "FEMOR, GLUT",
+    "tipoEsercizio": "Cardio"
+  },
+  "scissor_jumps_male": {
+    "nome": "Scissor Jumps",
+    "focus": "QUAD, GLUT",
+    "muscoliSecondari": "FEMOR, POLP",
+    "tipoEsercizio": "Compound"
+  },
+  "semi_squat_jump_male": {
+    "nome": "Half Squat Jump",
+    "focus": "QUAD, GLUT",
+    "muscoliSecondari": "FEMOR, POLP",
+    "tipoEsercizio": "Compound"
+  },
+  "short_stride_run": {
+    "nome": "Corsa a Passi Corti",
+    "focus": "QUAD, POLP",
+    "muscoliSecondari": "FEMOR",
+    "tipoEsercizio": "Cardio"
+  },
+  "side_push_neck_stretch": {
+    "nome": "Allungamento Laterale Collo con Pressione",
+    "focus": "TRAP",
+    "muscoliSecondari": null,
+    "tipoEsercizio": "Stretching"
+  },
+  "sissy_squat": {
+    "nome": "Sissy Squat",
+    "focus": "QUAD",
+    "muscoliSecondari": "CORE",
+    "tipoEsercizio": "Isolation"
+  },
+  "sissy_squat_isolation": {
+    "nome": "Sissy Squat",
+    "focus": "QUAD",
+    "muscoliSecondari": "CORE",
+    "tipoEsercizio": "Isolation"
+  },
+  "skater_hops": {
+    "nome": "Skater Hops",
+    "focus": "QUAD, GLUT",
+    "muscoliSecondari": "FEMOR, POLP",
+    "tipoEsercizio": "Compound"
+  },
+  "ski_step": {
+    "nome": "Ski Step",
+    "focus": "QUAD, GLUT",
+    "muscoliSecondari": "FEMOR, POLP",
+    "tipoEsercizio": "Compound"
+  },
+  "smith_chair_squat": {
+    "nome": "Box Squat al Smith",
+    "focus": "QUAD, GLUT",
+    "muscoliSecondari": "FEMOR, POLP",
+    "tipoEsercizio": "Compound"
+  },
+  "smith_single_leg_split_squat": {
+    "nome": "Split Squat al Smith",
+    "focus": "QUAD, GLUT",
+    "muscoliSecondari": "FEMOR",
+    "tipoEsercizio": "Compound"
+  },
+  "snatch_pull": {
+    "nome": "Snatch Pull",
+    "focus": "GLUT, FEMOR, TRAP",
+    "muscoliSecondari": "POLP, LAT",
+    "tipoEsercizio": "Compound"
+  },
+  "split_squats": {
+    "nome": "Split Squat",
+    "focus": "QUAD, GLUT",
+    "muscoliSecondari": "FEMOR, POLP",
+    "tipoEsercizio": "Compound"
+  },
+  "squat_jerk": {
+    "nome": "Squat Jerk",
+    "focus": "QUAD, GLUT, DELT",
+    "muscoliSecondari": "CORE, FEMOR",
+    "tipoEsercizio": "Compound"
+  },
+  "squat_on_bosu_ball": {
+    "nome": "Squat su Bosu Ball",
+    "focus": "QUAD, GLUT, CORE",
+    "muscoliSecondari": "FEMOR, POLP",
+    "tipoEsercizio": "Compound"
+  },
+  "squat_to_overhead_reach": {
+    "nome": "Squat to Overhead Reach",
+    "focus": "QUAD, GLUT",
+    "muscoliSecondari": "CORE, DELT",
+    "tipoEsercizio": "Compound"
+  },
+  "squat_to_overhead_reach_with_twist": {
+    "nome": "Squat to Overhead Reach con Rotazione",
+    "focus": "QUAD, GLUT, CORE",
+    "muscoliSecondari": "DELT, FEMOR",
+    "tipoEsercizio": "Compound"
+  },
+  "star_jump_male": {
+    "nome": "Star Jump",
+    "focus": "QUAD, GLUT",
+    "muscoliSecondari": "FEMOR, POLP",
+    "tipoEsercizio": "Compound"
+  },
+  "stationary_bike_run": {
+    "nome": "Corsa su Cyclette",
+    "focus": "QUAD, POLP",
+    "muscoliSecondari": "FEMOR, GLUT",
+    "tipoEsercizio": "Cardio"
+  },
+  "stationary_bike_walk": {
+    "nome": "Camminata su Cyclette",
+    "focus": "QUAD",
+    "muscoliSecondari": "FEMOR, GLUT, POLP",
+    "tipoEsercizio": "Cardio"
+  },
+  "suspended_split_squat": {
+    "nome": "TRX Split Squat",
+    "focus": "QUAD, GLUT",
+    "muscoliSecondari": "FEMOR, CORE",
+    "tipoEsercizio": "Compound"
+  },
+  "swing_360": {
+    "nome": "Swing 360",
+    "focus": "CORE, DELT",
+    "muscoliSecondari": "GLUT",
+    "tipoEsercizio": "Compound"
+  },
+  "walk_elliptical_cross_trainer": {
+    "nome": "Camminata su Ellittica",
+    "focus": "QUAD, GLUT",
+    "muscoliSecondari": "FEMOR, POLP",
+    "tipoEsercizio": "Cardio"
+  },
+  "walk_elliptical_cross_trainer_expanded_variation": {
+    "nome": "Camminata su Ellittica - Avanzata",
+    "focus": "QUAD, GLUT",
+    "muscoliSecondari": "FEMOR, POLP",
+    "tipoEsercizio": "Cardio"
+  },
+  "walking_high_knees_lunge": {
+    "nome": "Affondi con Ginocchia Alte",
+    "focus": "QUAD, GLUT",
+    "muscoliSecondari": "FEMOR, POLP, CORE",
+    "tipoEsercizio": "Compound"
+  },
+  "walking_on_incline_treadmill": {
+    "nome": "Camminata in Pendenza su Tapis Roulant",
+    "focus": "QUAD, GLUT",
+    "muscoliSecondari": "FEMOR, POLP",
+    "tipoEsercizio": "Cardio"
+  },
+  "walking_on_stepmill": {
+    "nome": "Camminata su Stepmill",
+    "focus": "QUAD, GLUT",
+    "muscoliSecondari": "FEMOR, POLP",
+    "tipoEsercizio": "Cardio"
+  },
+  "weighted_sissy_squat": {
+    "nome": "Sissy Squat con Peso",
+    "focus": "QUAD",
+    "muscoliSecondari": "CORE",
+    "tipoEsercizio": "Isolation"
+  },
+  "wheel_run": {
+    "nome": "Ab Wheel Run",
+    "focus": "CORE",
+    "muscoliSecondari": "DELT, FEMOR",
+    "tipoEsercizio": "Compound"
+  }
+}

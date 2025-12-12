@@ -554,7 +554,9 @@ class _WorkoutTemplatesScreenState extends ConsumerState<WorkoutTemplatesScreen>
         await ref.read(workoutRepositoryProvider).updateWorkout(workoutWithTemplateId);
       }
 
-      workoutNotifier.startWorkout();
+      // ⚠️ BUG FIX: Get exercises BEFORE weight recovery dialog
+      // so they can be used for weight application
+      var exercises = template.toWorkoutExercises();
 
       // 🎯 WEIGHT RECOVERY: Recupera workout precedente e chiedi se applicare i pesi
       WeightRecoveryOption? selectedOption;
@@ -570,6 +572,28 @@ class _WorkoutTemplatesScreenState extends ConsumerState<WorkoutTemplatesScreen>
             recoveryData.daysSinceLastSession,
           );
         }
+
+        // 📊 APPLY WEIGHTS: Se l'utente ha scelto un'opzione, applica i pesi
+        if (selectedOption != null &&
+            selectedOption != WeightRecoveryOption.none &&
+            currentWorkout != null &&
+            recoveryData.hasData &&
+            recoveryData.previousWorkout != null) {
+          final multiplier = _getWeightMultiplier(selectedOption);
+
+          // Crea un workout temporaneo con gli esercizi
+          final tempWorkout = currentWorkout.copyWith(exercises: exercises);
+
+          // Applica i pesi usando il servizio
+          final workoutWithWeights = WeightRecoveryService.applyPreviousWeights(
+            currentWorkout: tempWorkout,
+            previousWorkout: recoveryData.previousWorkout!,
+            multiplier: multiplier,
+          );
+
+          // Aggiorna gli esercizi con i pesi applicati
+          exercises = workoutWithWeights.exercises;
+        }
       } catch (e) {
         if (kDebugMode) {
           debugPrint('⚠️ Errore nel recupero workout precedente: $e');
@@ -577,43 +601,14 @@ class _WorkoutTemplatesScreenState extends ConsumerState<WorkoutTemplatesScreen>
         // Continua comunque senza recupero pesi
       }
 
-      // Aggiungi esercizi dal template
-      var exercises = template.toWorkoutExercises();
-
-      // 📊 APPLY WEIGHTS: Se l'utente ha scelto un'opzione, applica i pesi
-      if (selectedOption != null &&
-          selectedOption != WeightRecoveryOption.none &&
-          currentWorkout != null) {
-        try {
-          final recoveryData = await ref.read(weightRecoveryDataProvider(template.id).future);
-          if (recoveryData.hasData && recoveryData.previousWorkout != null) {
-            final multiplier = _getWeightMultiplier(selectedOption);
-
-            // Crea un workout temporaneo con gli esercizi
-            final tempWorkout = currentWorkout.copyWith(exercises: exercises);
-
-            // Applica i pesi usando il servizio
-            final workoutWithWeights = WeightRecoveryService.applyPreviousWeights(
-              currentWorkout: tempWorkout,
-              previousWorkout: recoveryData.previousWorkout!,
-              multiplier: multiplier,
-            );
-
-            // Aggiorna gli esercizi con i pesi applicati
-            exercises = workoutWithWeights.exercises;
-          }
-        } catch (e) {
-          if (kDebugMode) {
-            debugPrint('⚠️ Errore nell\'applicazione pesi: $e');
-          }
-          // Continua con esercizi originali
-        }
-      }
-
-      // Aggiungi gli esercizi (con o senza pesi applicati)
+      // ⚠️ BUG FIX: Add exercises BEFORE startWorkout
+      // so Watch notification has exercise data
       for (final exercise in exercises) {
         workoutNotifier.addExercise(exercise);
       }
+
+      // Now start workout (with exercises already loaded)
+      workoutNotifier.startWorkout();
 
       // 🔧 FIX: Naviga PRIMA alla schermata workout
       // Così l'utente vede subito il risultato

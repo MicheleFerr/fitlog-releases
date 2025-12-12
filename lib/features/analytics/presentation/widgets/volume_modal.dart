@@ -40,11 +40,13 @@ class VolumeModal extends StatefulWidget {
   const VolumeModal({
     required this.exerciseHistories,
     required this.volumeProgression,
+    this.scrollController,
     super.key,
   });
 
   final List<ExerciseHistory> exerciseHistories;
   final double volumeProgression;
+  final ScrollController? scrollController;
 
   @override
   State<VolumeModal> createState() => _VolumeModalState();
@@ -114,36 +116,33 @@ class _VolumeModalState extends State<VolumeModal> {
       ),
       child: SafeArea(
         top: false,
-        child: SingleChildScrollView(
+        child: ListView(
+          controller: widget.scrollController,
           padding: const EdgeInsets.all(20),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // Header
-              _buildHeader(context),
-              const SizedBox(height: 20),
+          children: [
+            // Header
+            _buildHeader(context),
+            const SizedBox(height: 20),
 
-              // Volume progression card
-              _buildVolumeCard(context),
-              const SizedBox(height: 24),
+            // Volume progression card
+            _buildVolumeCard(context),
+            const SizedBox(height: 24),
 
-              // Explanation
-              _buildExplanation(context),
-              const SizedBox(height: 24),
+            // Explanation
+            _buildExplanation(context),
+            const SizedBox(height: 24),
 
-              // Weekly comparison chart
-              _buildWeeklyChart(context, weeklyData),
-              const SizedBox(height: 24),
+            // Weekly comparison chart
+            _buildWeeklyChart(context, weeklyData),
+            const SizedBox(height: 24),
 
-              // Insight message
-              _buildInsightBanner(context, insightMessage),
-              const SizedBox(height: 24),
+            // Insight message
+            _buildInsightBanner(context, insightMessage),
+            const SizedBox(height: 24),
 
-              // Close button
-              _buildCloseButton(context),
-            ],
-          ),
+            // Close button
+            _buildCloseButton(context),
+          ],
         ),
       ),
     );

@@ -14,50 +14,11 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
+import 'package:gymbro_flutter_new/core/domain/entities/user_tier.dart';
 import 'package:gymbro_flutter_new/features/home/providers/achievement_xp_provider.dart';
+import 'package:gymbro_flutter_new/features/home/providers/user_xp_provider.dart';
 import 'package:gymbro_flutter_new/features/streak/presentation/providers/streak_provider.dart';
-
-/// User tier based on XP
-enum UserTier {
-  starter(0, 'Starter', Color(0xFF9E9E9E)), // Grey
-  bronze(100, 'Bronze', Color(0xFFCD7F32)),
-  silver(500, 'Silver', Color(0xFFC0C0C0)),
-  gold(1500, 'Gold', Color(0xFFFFD700)),
-  platinum(5000, 'Platinum', Color(0xFFE5E4E2));
-
-  const UserTier(this.minXP, this.displayName, this.color);
-
-  final int minXP;
-  final String displayName;
-  final Color color;
-
-  /// Get tier for given XP amount
-  static UserTier fromXP(int xp) {
-    if (xp >= platinum.minXP) return platinum;
-    if (xp >= gold.minXP) return gold;
-    if (xp >= silver.minXP) return silver;
-    if (xp >= bronze.minXP) return bronze;
-    return starter;
-  }
-
-  /// Get next tier (or null if max)
-  UserTier? get next {
-    final index = UserTier.values.indexOf(this);
-    if (index >= UserTier.values.length - 1) return null;
-    return UserTier.values[index + 1];
-  }
-
-  /// Calculate progress to next tier (0.0 to 1.0)
-  double progressToNext(int currentXP) {
-    final nextTier = next;
-    if (nextTier == null) return 1.0; // Max tier reached
-
-    final xpInCurrentTier = currentXP - minXP;
-    final xpNeededForNext = nextTier.minXP - minXP;
-
-    return (xpInCurrentTier / xpNeededForNext).clamp(0.0, 1.0);
-  }
-}
+import 'package:gymbro_flutter_new/features/profile/presentation/widgets/level_info_modal.dart';
 
 /// Compact profile header with horizontal layout
 ///
@@ -80,19 +41,21 @@ class CompactProfileHeader extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    // 🎮 FIX: Use central XP provider for accurate total XP
+    final userXPState = ref.watch(userXPProvider);
     final achievementDataAsync = ref.watch(achievementXPProvider);
     final streakAsync = ref.watch(currentStreakProvider);
 
-    // Get XP and tier info
-    final totalXP = achievementDataAsync.valueOrNull?.totalXP ?? 0;
-    final currentTier = UserTier.fromXP(totalXP);
+    // Get XP and tier info from central provider
+    final totalXP = userXPState.totalXP;
+    final currentTier = userXPState.currentTier;
     final nextTier = currentTier.next;
     final tierProgress = currentTier.progressToNext(totalXP);
 
     // Get streak
     final streak = streakAsync.valueOrNull?.currentStreak ?? 0;
 
-    // Get total workouts
+    // Get total workouts from achievement provider (for workout count only)
     final totalWorkouts =
         achievementDataAsync.valueOrNull?.allAchievements
             .where((a) => a.isUnlocked && a.type == AchievementType.workout)
@@ -200,7 +163,7 @@ class CompactProfileHeader extends ConsumerWidget {
                       ),
                       const SizedBox(height: 8),
 
-                      // Tier progress bar
+                      // Tier progress bar with info button
                       if (nextTier != null) ...[
                         Row(
                           children: [
@@ -228,6 +191,25 @@ class CompactProfileHeader extends ConsumerWidget {
                                 color: context.colors.onSurfaceVariant,
                               ),
                             ),
+                            // Info button to show level info modal
+                            GestureDetector(
+                              onTap: () {
+                                HapticFeedback.lightImpact();
+                                LevelInfoModal.show(
+                                  context: context,
+                                  currentXP: totalXP,
+                                  currentTier: currentTier,
+                                );
+                              },
+                              child: Padding(
+                                padding: const EdgeInsets.only(left: 4),
+                                child: Icon(
+                                  AppIcons.info,
+                                  size: AppIconSize.small,
+                                  color: context.colors.onSurfaceVariant,
+                                ),
+                              ),
+                            ),
                           ],
                         ),
                       ] else ...[
@@ -245,6 +227,25 @@ class CompactProfileHeader extends ConsumerWidget {
                               style: context.textTheme.labelSmall?.copyWith(
                                 color: currentTier.color,
                                 fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            // Info button for max tier
+                            GestureDetector(
+                              onTap: () {
+                                HapticFeedback.lightImpact();
+                                LevelInfoModal.show(
+                                  context: context,
+                                  currentXP: totalXP,
+                                  currentTier: currentTier,
+                                );
+                              },
+                              child: Padding(
+                                padding: const EdgeInsets.only(left: 4),
+                                child: Icon(
+                                  AppIcons.info,
+                                  size: AppIconSize.small,
+                                  color: context.colors.onSurfaceVariant,
+                                ),
                               ),
                             ),
                           ],
@@ -278,8 +279,8 @@ class _TierAvatar extends StatelessWidget {
     final gradientColors = _getGradientColors(tier);
 
     return Container(
-      width: 60, // 56 + 4 for border
-      height: 60,
+      width: 64,
+      height: 64,
       decoration: BoxDecoration(
         shape: BoxShape.circle,
         gradient: LinearGradient(
@@ -287,19 +288,37 @@ class _TierAvatar extends StatelessWidget {
           end: Alignment.bottomRight,
           colors: gradientColors,
         ),
+        // ✨ Material 3 2025: Subtle shadow for depth
+        boxShadow: [
+          BoxShadow(
+            color: tier.color.withValues(alpha: 0.2),
+            blurRadius: 12,
+            offset: const Offset(0, 4),
+          ),
+        ],
       ),
-      padding: const EdgeInsets.all(4), // Border width (min allowed spacing)
+      padding: const EdgeInsets.all(3), // Thinner, more defined border
       child: Container(
         decoration: BoxDecoration(
           shape: BoxShape.circle,
-          color: context.colors.primaryContainer,
+          // ✨ Material 3 2025: Solid elevated surface
+          color: context.colors.surfaceContainerHigh,
+          // ✨ Inner shadow for depth
+          boxShadow: [
+            BoxShadow(
+              color: context.colors.shadow.withValues(alpha: 0.1),
+              blurRadius: 4,
+              offset: const Offset(0, 1),
+            ),
+          ],
         ),
         child: Center(
           child: Text(
             initial,
             style: context.textTheme.headlineSmall?.copyWith(
-              color: context.colors.onPrimaryContainer,
+              color: tier.color,
               fontWeight: FontWeight.bold,
+              fontSize: 24,
             ),
           ),
         ),

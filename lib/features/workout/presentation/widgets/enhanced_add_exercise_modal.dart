@@ -9,15 +9,18 @@ import 'package:gymbro_flutter_new/features/workout/presentation/widgets/exercis
 import 'package:gymbro_flutter_new/features/workout/presentation/widgets/exercise_onboarding_overlay.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
+import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 
 /// 🚀 TIER-1: Enhanced Add Exercise Modal with database selection
 class EnhancedAddExerciseModal extends ConsumerStatefulWidget {
-  
+
   const EnhancedAddExerciseModal({
     super.key,
     this.onExerciseAdded,
+    this.scrollController,
   });
   final Function(Exercise)? onExerciseAdded;
+  final ScrollController? scrollController;
 
   @override
   ConsumerState<EnhancedAddExerciseModal> createState() => _EnhancedAddExerciseModalState();
@@ -335,7 +338,7 @@ class _EnhancedAddExerciseModalState extends ConsumerState<EnhancedAddExerciseMo
             if (mounted) {
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
-                  content: Text(AppLocalizations.of(context).previousWeightsLoaded),
+                  content: Text(context.l10n.previousWeightsLoaded),
                   backgroundColor: Theme.of(context).colorScheme.tertiary,
                   duration: const Duration(seconds: 2),
                 ),
@@ -354,18 +357,19 @@ class _EnhancedAddExerciseModalState extends ConsumerState<EnhancedAddExerciseMo
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final l10n = AppLocalizations.of(context);
+    final l10n = context.l10n;
 
     return Stack(
       children: [
-        Container(
-      height: MediaQuery.of(context).size.height * 0.9,
-      decoration: BoxDecoration(
-        color: theme.colorScheme.surface,
-        borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
-      ),
-      child: Column(
-        children: [
+        DecoratedBox(
+          decoration: BoxDecoration(
+            color: theme.colorScheme.surface,
+            borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
+          ),
+          child: SafeArea(
+            top: false,
+            child: Column(
+              children: [
           // Handle bar
           Container(
             margin: const EdgeInsets.only(top: 8),
@@ -442,8 +446,9 @@ class _EnhancedAddExerciseModalState extends ConsumerState<EnhancedAddExerciseMo
               ],
             ),
           ),
-        ],
-      ),
+              ],
+            ),
+          ),
         ),
 
         // Onboarding overlay (steps 0-1 only visible in this modal)
@@ -462,7 +467,7 @@ class _EnhancedAddExerciseModalState extends ConsumerState<EnhancedAddExerciseMo
 
   Widget _buildSingleTab() {
     final theme = Theme.of(context);
-    final l10n = AppLocalizations.of(context);
+    final l10n = context.l10n;
     
     return SingleChildScrollView(
       padding: const EdgeInsets.all(16),
@@ -576,7 +581,7 @@ class _EnhancedAddExerciseModalState extends ConsumerState<EnhancedAddExerciseMo
 
   Widget _buildSupersetTab() {
     final theme = Theme.of(context);
-    final l10n = AppLocalizations.of(context);
+    final l10n = context.l10n;
     
     return SingleChildScrollView(
       padding: const EdgeInsets.all(16),
@@ -702,7 +707,7 @@ class _EnhancedAddExerciseModalState extends ConsumerState<EnhancedAddExerciseMo
 
   Widget _buildDropsetTab() {
     final theme = Theme.of(context);
-    final l10n = AppLocalizations.of(context);
+    final l10n = context.l10n;
     
     return SingleChildScrollView(
       padding: const EdgeInsets.all(16),
@@ -854,7 +859,7 @@ class _EnhancedAddExerciseModalState extends ConsumerState<EnhancedAddExerciseMo
 
   Widget _buildRestPauseTab() {
     final theme = Theme.of(context);
-    final l10n = AppLocalizations.of(context);
+    final l10n = context.l10n;
     
     return SingleChildScrollView(
       padding: const EdgeInsets.all(16),

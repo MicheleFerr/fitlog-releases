@@ -1,12 +1,20 @@
+import 'package:flutter/foundation.dart' show kDebugMode;
 import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/workout_template.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise.dart';
+import 'package:gymbro_flutter_new/core/cache/user_cache_key_manager.dart';
 
+/// Local template repository with SharedPreferences storage
+///
+/// 🔐 USER ISOLATION: Cache keys are now user-scoped to prevent data leakage
+/// when switching between accounts. Uses UserCacheKeyManager.
 class WorkoutTemplateRepository {
-  static const String _templatesKey = 'workout_templates';
-  static const String _predefinedTemplatesKey = 'predefined_templates_v1';
+  // 🔐 User-scoped cache keys via UserCacheKeyManager
+  // Pattern: 'workout_templates_{userId}' instead of global 'workout_templates'
+  String get _templatesKey => userCacheKeys.localTemplatesCacheKey;
+  String get _predefinedTemplatesKey => userCacheKeys.predefinedTemplatesKey;
 
   /// Ottiene tutti i template (predefiniti + personalizzati)
   Future<List<WorkoutTemplate>> getAllTemplates() async {
@@ -45,7 +53,6 @@ class WorkoutTemplateRepository {
       
       return customTemplates;
     } catch (e) {
-      // print('Errore nel caricamento template personalizzati: $e');
       return [];
     }
   }
@@ -72,14 +79,15 @@ class WorkoutTemplateRepository {
           .where((template) => !template.isCustom)
           .toList();
     } catch (e) {
-      // print('Errore nel caricamento template predefiniti: $e');
       return [];
     }
   }
 
   /// Salva un template personalizzato
   Future<void> saveTemplate(WorkoutTemplate template) async {
-    debugPrint('💾 LOCAL: Salvando template "${template.name}" con ${template.exercises.length} esercizi');
+    if (kDebugMode) {
+      debugPrint('💾 LOCAL: Salvando template "${template.name}" con ${template.exercises.length} esercizi');
+    }
 
     try {
       // Work with custom templates only
@@ -92,13 +100,17 @@ class WorkoutTemplateRepository {
       final customTemplate = template.copyWith(isCustom: true);
       customTemplates.add(customTemplate);
 
-      debugPrint('💾 LOCAL: Template aggiunto, totale custom templates: ${customTemplates.length}');
+      if (kDebugMode) {
+        debugPrint('💾 LOCAL: Template aggiunto, totale custom templates: ${customTemplates.length}');
+      }
       debugPrint('💾 LOCAL: Template appena aggiunto ha ${customTemplate.exercises.length} esercizi');
 
       // Save only custom templates
       await _saveCustomTemplates(customTemplates);
     } catch (e) {
-      debugPrint('❌ LOCAL: Errore nel salvataggio template: $e');
+      if (kDebugMode) {
+        debugPrint('❌ LOCAL: Errore nel salvataggio template: $e');
+      }
       throw Exception('Impossibile salvare il template: $e');
     }
   }
@@ -124,9 +136,13 @@ class WorkoutTemplateRepository {
       // Save only the custom templates (not predefined ones)
       await _saveCustomTemplates(customTemplates);
 
-      debugPrint('✅ LOCAL REPO: Template $templateId deleted successfully');
+      if (kDebugMode) {
+        debugPrint('✅ LOCAL REPO: Template $templateId deleted successfully');
+      }
     } catch (e) {
-      debugPrint('❌ LOCAL REPO: Error deleting template $templateId: $e');
+      if (kDebugMode) {
+        debugPrint('❌ LOCAL REPO: Error deleting template $templateId: $e');
+      }
       throw Exception('Impossibile eliminare il template: $e');
     }
   }
@@ -142,14 +158,20 @@ class WorkoutTemplateRepository {
         // It's a custom template, update and save
         customTemplates[customIndex] = customTemplates[customIndex].incrementUsage();
         await _saveCustomTemplates(customTemplates);
-        debugPrint('✅ LOCAL REPO: Incremented usage for custom template $templateId');
+        if (kDebugMode) {
+          debugPrint('✅ LOCAL REPO: Incremented usage for custom template $templateId');
+        }
       } else {
         // It might be a predefined template - we don't persist usage for those
         // Or we could track usage separately for predefined templates
-        debugPrint('ℹ️ LOCAL REPO: Template $templateId is not a custom template, usage not tracked');
+        if (kDebugMode) {
+          debugPrint('ℹ️ LOCAL REPO: Template $templateId is not a custom template, usage not tracked');
+        }
       }
     } catch (e) {
-      debugPrint('⚠️ LOCAL REPO: Error updating template usage: $e');
+      if (kDebugMode) {
+        debugPrint('⚠️ LOCAL REPO: Error updating template usage: $e');
+      }
     }
   }
 
@@ -373,7 +395,6 @@ class WorkoutTemplateRepository {
       );
       await prefs.setString(_templatesKey, templatesJson);
     } catch (e) {
-      // print('Errore nel salvataggio template: $e');
       throw Exception('Impossibile salvare i template');
     }
   }
@@ -388,9 +409,13 @@ class WorkoutTemplateRepository {
         customOnly.map((template) => template.toJson()).toList(),
       );
       await prefs.setString(_templatesKey, templatesJson);
-      debugPrint('✅ LOCAL REPO: Saved ${customOnly.length} custom templates');
+      if (kDebugMode) {
+        debugPrint('✅ LOCAL REPO: Saved ${customOnly.length} custom templates');
+      }
     } catch (e) {
-      debugPrint('❌ LOCAL REPO: Error saving custom templates: $e');
+      if (kDebugMode) {
+        debugPrint('❌ LOCAL REPO: Error saving custom templates: $e');
+      }
       throw Exception('Impossibile salvare i template personalizzati');
     }
   }

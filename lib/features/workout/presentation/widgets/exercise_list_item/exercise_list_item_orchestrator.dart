@@ -37,6 +37,9 @@ import 'package:gymbro_flutter_new/features/exercise_database/domain/entities/ex
     as db;
 import 'package:gymbro_flutter_new/features/exercise_database/domain/entities/warmup_suggestion.dart';
 import 'package:gymbro_flutter_new/features/exercise_database/presentation/widgets/exercise_details_modal.dart';
+import 'package:gymbro_flutter_new/features/workout/domain/services/warmup_calculator_service.dart';
+import 'package:gymbro_flutter_new/features/workout/presentation/widgets/warmup_customization_modal.dart';
+import 'package:gymbro_flutter_new/features/workout/presentation/widgets/superset_link_modal.dart';
 
 /// Orchestrator widget that coordinates ExerciseListItemHeader and ExerciseListItemSets
 ///
@@ -63,6 +66,8 @@ class ExerciseListItem extends ConsumerStatefulWidget {
     this.onSetToggleComplete,
     this.onExerciseUpdate,
     this.isReorderMode = false,
+    this.tutorialFirstSetKey,
+    this.tutorialExerciseMenuKey,
   });
 
   final Exercise exercise;
@@ -74,6 +79,12 @@ class ExerciseListItem extends ConsumerStatefulWidget {
   final Function(ExerciseSet)? onSetToggleComplete;
   final Function(Exercise)? onExerciseUpdate;
   final bool isReorderMode;
+
+  /// Optional key for tutorial overlay on first set row
+  final GlobalKey? tutorialFirstSetKey;
+
+  /// Optional key for tutorial overlay on exercise menu (⋮)
+  final GlobalKey? tutorialExerciseMenuKey;
 
   @override
   ConsumerState<ExerciseListItem> createState() => _ExerciseListItemState();
@@ -92,24 +103,21 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem>
 
   bool get isProMode => ref.read(appConfigProvider).isProMode ?? false;
 
-  // Expansion state - watch individual properties
-  bool get _isExpanded => ref.watch(
-    exerciseExpansionProvider(
-      widget.exercise.id,
-    ).select((state) => state.isExpanded),
-  );
+  // ✅ PERFORMANCE FIX: Expansion state getters use ref.read for non-reactive access
+  // These are used in callbacks (didUpdateWidget, _autoCollapseIfCompleted) where
+  // we need current value but don't want to trigger rebuilds.
+  // Reactive watching is done ONLY in build() method with local variables.
+  bool get _isExpandedRead => ref.read(
+    exerciseExpansionProvider(widget.exercise.id),
+  ).isExpanded;
 
-  bool get _hasAutoCollapsed => ref.watch(
-    exerciseExpansionProvider(
-      widget.exercise.id,
-    ).select((state) => state.hasAutoCollapsed),
-  );
+  bool get _hasAutoCollapsedRead => ref.read(
+    exerciseExpansionProvider(widget.exercise.id),
+  ).hasAutoCollapsed;
 
-  bool get _userManuallyExpanded => ref.watch(
-    exerciseExpansionProvider(
-      widget.exercise.id,
-    ).select((state) => state.userManuallyExpanded),
-  );
+  bool get _userManuallyExpandedRead => ref.read(
+    exerciseExpansionProvider(widget.exercise.id),
+  ).userManuallyExpanded;
 
   ExerciseExpansionNotifier get _expansionNotifier =>
       ref.read(exerciseExpansionProvider(widget.exercise.id).notifier);
@@ -120,10 +128,6 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem>
 
   AutoCollapseNotifier get _autoCollapseNotifier =>
       ref.read(exerciseAutoCollapseProvider(widget.exercise.id).notifier);
-
-  // Smart suggestions - watch list to get actual suggestions
-  List<SmartSuggestion> get _suggestions =>
-      ref.watch(exerciseSuggestionsProvider(widget.exercise.id));
 
   ExerciseSuggestionsNotifier get _suggestionsNotifier =>
       ref.read(exerciseSuggestionsProvider(widget.exercise.id).notifier);
@@ -179,9 +183,9 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem>
       // Trigger auto-collapse if exercise just became complete
       if (!wasCompleted &&
           isNowCompleted &&
-          _isExpanded &&
-          !_hasAutoCollapsed &&
-          !_userManuallyExpanded) {
+          _isExpandedRead &&
+          !_hasAutoCollapsedRead &&
+          !_userManuallyExpandedRead) {
         if (kDebugMode) {
           debugPrint(
             'AUTO-COLLAPSE TRIGGERED via didUpdateWidget for ${widget.exercise.name}',
@@ -207,9 +211,9 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem>
   void _autoCollapseIfCompleted() {
     try {
       if (_areAllSetsCompleted() &&
-          _isExpanded &&
-          !_hasAutoCollapsed &&
-          !_userManuallyExpanded) {
+          _isExpandedRead &&
+          !_hasAutoCollapsedRead &&
+          !_userManuallyExpandedRead) {
         if (kDebugMode) {
           debugPrint('AUTO-COLLAPSE TRIGGERED for ${widget.exercise.name}');
         }
@@ -426,11 +430,12 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem>
           if (widget.onExerciseUpdate != null) {
             final updatedExercise = widget.exercise.copyWith(
               restTime: newRestTime,
+              clearRestTime: newRestTime == null, // ✅ FIX: Allow clearing restTime to null
               updatedAt: DateTime.now(),
             );
             widget.onExerciseUpdate!(updatedExercise);
           }
-          Navigator.of(context).pop();
+          // Note: Modal now closes itself after confirm
         },
         source: 'exercise_list_item_header',
         exerciseId: widget.exercise.id,
@@ -501,20 +506,38 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem>
     final exerciseIndex =
         workout?.exercises.indexWhere((e) => e.id == widget.exercise.id) ?? -1;
 
+    // ✅ BUG FIX: Capture the provider notifier BEFORE showing modal
+    // This prevents "Cannot use ref after widget disposed" error when
+    // callback is invoked after user scrolls away from this exercise
+    final workoutNotifier = ref.read(currentWorkoutProvider.notifier);
+    final exerciseName = widget.exercise.name; // Capture for debug logging
+
     ExerciseDetailsModal.show(
       context,
       exerciseDefinition,
       currentExerciseIndex: exerciseIndex >= 0 ? exerciseIndex : null,
       onWarmupExerciseAdded: exerciseIndex >= 0
           ? (suggestion, beforeIndex) {
-              _addWarmupExercise(suggestion, beforeIndex);
+              // Use captured notifier instead of ref.read()
+              _addWarmupExerciseWithNotifier(
+                suggestion,
+                beforeIndex,
+                workoutNotifier,
+                exerciseName,
+              );
             }
           : null,
     );
   }
 
   /// Add a warmup exercise before the current exercise
-  void _addWarmupExercise(WarmupSuggestion suggestion, int beforeIndex) {
+  /// Uses pre-captured notifier to avoid "ref after disposed" error
+  void _addWarmupExerciseWithNotifier(
+    WarmupSuggestion suggestion,
+    int beforeIndex,
+    CurrentWorkoutNotifier workoutNotifier,
+    String originalExerciseName,
+  ) {
     // Create Exercise from suggestion
     final exercise = Exercise(
       name: suggestion.exerciseName,
@@ -531,15 +554,12 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem>
       ),
     );
 
-    // Insert before current exercise
-    ref.read(currentWorkoutProvider.notifier).insertExerciseAt(
-          beforeIndex,
-          exercise,
-        );
+    // Insert before current exercise using captured notifier
+    workoutNotifier.insertExerciseAt(beforeIndex, exercise);
 
     if (kDebugMode) {
       debugPrint(
-        '🔥 [Warmup] Added ${suggestion.exerciseName} before ${widget.exercise.name}',
+        '🔥 [Warmup] Added ${suggestion.exerciseName} before $originalExerciseName',
       );
     }
   }
@@ -915,6 +935,37 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem>
     );
   }
 
+  /// Opens SupersetLinkModal to create a superset starting from this exercise
+  void _handleCreateSuperset() async {
+    // Get workout exercises (excluding current exercise)
+    final workout = ref.read(currentWorkoutProvider);
+    if (workout == null) return;
+
+    // Show modal
+    final result = await SupersetLinkModal.show(
+      context: context,
+      currentExercise: widget.exercise,
+      workoutExercises: workout.exercises,
+    );
+
+    if (result != null && mounted) {
+      // TODO: Create superset from configuration result
+      // For now, log the selection
+      if (kDebugMode) {
+        debugPrint('🔗 [Superset] Created with ${result.exercises.length} exercises');
+        for (final ex in result.exercises) {
+          debugPrint('   - ${ex.nome}');
+        }
+      }
+
+      HapticFeedback.mediumImpact();
+      SnackBarService.showSuccess(
+        context,
+        context.l10n.supersetCreated,
+      );
+    }
+  }
+
   /// BUG FIX: Show counting mode picker to change exercise counting mode
   /// This was missing from the new orchestrator implementation
   Future<void> _handleShowCountingModePicker() async {
@@ -952,12 +1003,36 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem>
     }
   }
 
-  /// Add warmup sets to the exercise
-  /// Generates 3 warmup sets at 40%, 60%, 80% of target weight
+  /// Add or edit warmup sets for the exercise
+  ///
+  /// If warmup sets already exist: opens modal to EDIT them (not add more)
+  /// If no warmup sets: generates defaults based on target weight, opens modal to configure
   void _handleAddWarmupSets() {
-    // Find the first non-warmup set to get target weight
+    // Check for existing warmup sets
+    final existingWarmupSets = widget.exercise.sets.where((s) => s.isWarmup).toList();
     final workingSets = widget.exercise.sets.where((s) => !s.isWarmup).toList();
 
+    // If editing existing warmup sets
+    if (existingWarmupSets.isNotEmpty) {
+      // Convert ExerciseSet to WarmupSet for the modal
+      final warmupSetsForModal = existingWarmupSets.map((s) {
+        // Calculate percentage if we have working sets
+        final targetWeight = workingSets.isNotEmpty ? workingSets.first.weight ?? 0.0 : 0.0;
+        final percentage = targetWeight > 0
+            ? ((s.weight ?? 0) / targetWeight * 100).round()
+            : 0;
+        return WarmupSet(
+          weight: s.weight ?? 0.0,
+          reps: s.reps ?? 10,
+          percentage: percentage,
+        );
+      }).toList();
+
+      _showWarmupModal(warmupSetsForModal, isEditing: true);
+      return;
+    }
+
+    // No existing warmup sets - generate new ones
     if (workingSets.isEmpty) {
       SnackBarService.showError(
         context,
@@ -976,31 +1051,86 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem>
       return;
     }
 
-    // Generate warmup sets: 40%, 60%, 80% of target weight
-    final warmupPercentages = [0.4, 0.6, 0.8];
-    final warmupReps = [12, 8, 5]; // Decreasing reps as weight increases
+    // Generate warmup sets using WarmupCalculatorService
+    final warmupCalculator = WarmupCalculatorService();
+    final isBarbell = warmupCalculator.isLikelyBarbellExercise(widget.exercise.name);
+    final generatedSets = warmupCalculator.calculateWarmupSets(
+      targetWeight,
+      isBarbell: isBarbell,
+    );
 
-    final warmupSets = <ExerciseSet>[];
-    for (var i = 0; i < warmupPercentages.length; i++) {
-      final warmupWeight = (targetWeight * warmupPercentages[i]).roundToDouble();
-      warmupSets.add(ExerciseSet(
-        setNumber: i + 1,
-        weight: warmupWeight,
-        reps: warmupReps[i],
-        isWarmup: true,
-        isCompleted: false,
-      ));
+    _showWarmupModal(generatedSets, isEditing: false);
+  }
+
+  /// Shows the warmup customization modal and handles the result
+  void _showWarmupModal(List<WarmupSet> initialSets, {required bool isEditing}) {
+    HapticFeedback.lightImpact();
+
+    WarmupCustomizationModal.show(
+      context: context,
+      initialSets: initialSets,
+      onConfirm: (updatedSets) {
+        _applyWarmupSets(updatedSets, isEditing: isEditing);
+      },
+    );
+  }
+
+  /// Applies the warmup sets from the modal to the exercise
+  void _applyWarmupSets(List<WarmupSet> warmupSets, {required bool isEditing}) {
+    if (warmupSets.isEmpty) {
+      // User deleted all warmup sets
+      if (isEditing) {
+        // Remove all warmup sets from exercise
+        final workingSets = widget.exercise.sets.where((s) => !s.isWarmup).toList();
+        final renumberedSets = workingSets.asMap().map((index, set) {
+          return MapEntry(index, set.copyWith(setNumber: index + 1));
+        }).values.toList();
+
+        final updatedExercise = widget.exercise.copyWith(
+          sets: renumberedSets,
+          updatedAt: DateTime.now(),
+        );
+
+        ref
+            .read(currentWorkoutProvider.notifier)
+            .updateExercise(widget.exercise.id, updatedExercise);
+
+        HapticFeedback.mediumImpact();
+        SnackBarService.showSuccess(
+          context,
+          context.l10n.warmupSetsUpdated('0'),
+        );
+      }
+      return;
     }
 
-    // Combine warmup sets with existing sets, renumbering
-    final existingSets = widget.exercise.sets;
-    final allSets = [...warmupSets];
+    // Convert WarmupSet to ExerciseSet
+    final newWarmupExerciseSets = warmupSets.asMap().map((index, warmup) {
+      return MapEntry(
+        index,
+        ExerciseSet(
+          setNumber: index + 1,
+          weight: warmup.weight,
+          reps: warmup.reps,
+          isWarmup: true,
+          isCompleted: false,
+        ),
+      );
+    }).values.toList();
 
-    for (var i = 0; i < existingSets.length; i++) {
-      allSets.add(existingSets[i].copyWith(
-        setNumber: warmupSets.length + i + 1,
-      ));
-    }
+    // Get working sets (non-warmup)
+    final workingSets = widget.exercise.sets.where((s) => !s.isWarmup).toList();
+
+    // Renumber working sets to come after warmup sets
+    final renumberedWorkingSets = workingSets.asMap().map((index, set) {
+      return MapEntry(
+        index,
+        set.copyWith(setNumber: newWarmupExerciseSets.length + index + 1),
+      );
+    }).values.toList();
+
+    // Combine: warmup sets first, then working sets
+    final allSets = [...newWarmupExerciseSets, ...renumberedWorkingSets];
 
     // Update exercise
     final updatedExercise = widget.exercise.copyWith(
@@ -1014,13 +1144,21 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem>
 
     // Show feedback
     HapticFeedback.mediumImpact();
-    SnackBarService.showSuccess(
-      context,
-      context.l10n.warmupSetsAdded(warmupSets.length.toString()),
-    );
+    if (isEditing) {
+      SnackBarService.showSuccess(
+        context,
+        context.l10n.warmupSetsUpdated(warmupSets.length.toString()),
+      );
+    } else {
+      SnackBarService.showSuccess(
+        context,
+        context.l10n.warmupSetsAdded(warmupSets.length.toString()),
+      );
+    }
 
     if (kDebugMode) {
-      debugPrint('🔥 [Warmup] Added ${warmupSets.length} warmup sets for ${widget.exercise.name}');
+      final action = isEditing ? 'Updated' : 'Added';
+      debugPrint('🔥 [Warmup] $action ${warmupSets.length} warmup sets for ${widget.exercise.name}');
     }
   }
 
@@ -1102,7 +1240,21 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem>
     // ✅ Required when using AutomaticKeepAliveClientMixin
     super.build(context);
 
-    final config = ref.watch(appConfigProvider);
+    // ✅ PERFORMANCE FIX: Use ref.read instead of ref.watch for config
+    // AppConfig rarely changes during a workout session, and watching it
+    // causes unnecessary rebuilds of ALL exercise cards when ANY config property changes.
+    // This was the root cause of the insight chip flickering during scroll.
+    // If config changes mid-session (rare), user can scroll to refresh the card.
+    final config = ref.read(appConfigProvider);
+
+    // ✅ PERFORMANCE FIX: Watch ONLY the specific properties needed for rendering
+    // Previously, getters with ref.watch were causing rebuild chains when accessed.
+    // Now we watch once in build() and use the local variables.
+    final isExpanded = ref.watch(
+      exerciseExpansionProvider(widget.exercise.id)
+          .select((state) => state.isExpanded),
+    );
+    final suggestions = ref.watch(exerciseSuggestionsProvider(widget.exercise.id));
 
     // Listen for auto-collapse completion
     ref.listen(
@@ -1123,23 +1275,36 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem>
       },
     );
 
-    // Reorder mode - show simplified card
+    // Reorder mode - show simplified card (matching normal card styling)
     if (widget.isReorderMode) {
-      return Card(
-        margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-        child: Padding(
-          padding: const EdgeInsets.all(16),
-          child: Row(
-            children: [
-              Icon(AppIcons.dragHandle, color: context.colors.onSurfaceVariant),
-              const SizedBox(width: 12),
-              Expanded(
-                child: Text(
-                  widget.exercise.name,
-                  style: context.textTheme.bodyLarge,
+      return Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 6),
+        child: Container(
+          decoration: BoxDecoration(
+            color: context.colors.surfaceContainer,
+            borderRadius: BorderRadius.circular(16),
+            border: Border.all(
+              color: context.colors.outlineVariant.withValues(alpha: 0.3),
+              width: 1,
+            ),
+          ),
+          child: Padding(
+            padding: const EdgeInsets.all(16),
+            child: Row(
+              children: [
+                Icon(
+                  AppIcons.dragHandle,
+                  color: context.colors.onSurfaceVariant,
                 ),
-              ),
-            ],
+                const SizedBox(width: 12),
+                Expanded(
+                  child: Text(
+                    widget.exercise.name,
+                    style: context.textTheme.bodyLarge,
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       );
@@ -1147,11 +1312,9 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem>
 
     // BUG FIX #4: Wrap card in GestureDetector to allow expanding collapsed exercises
     // When exercise is collapsed, tapping anywhere on the card expands it
-    // Journey theme gradient for exercise cards
-    final journeyTheme = context.journeyThemeOrDefault;
 
     return GestureDetector(
-      onTap: !_isExpanded
+      onTap: !isExpanded
           ? () {
               _expansionNotifier.expand();
               HapticFeedback.lightImpact();
@@ -1162,33 +1325,32 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem>
               }
             }
           : null,
+      // ✅ DESIGN: Full-width cards with no horizontal margin (like superset cards)
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+        padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 6),
         child: Container(
           decoration: BoxDecoration(
-            // Base card color from theme
-            color: context.colors.surfaceContainerHighest,
-            borderRadius: BorderRadius.circular(12),
-            // Subtle gradient overlay from journey theme
-            gradient: journeyTheme.cardGradient,
+            // ✅ DESIGN: Lighter background color for cleaner look
+            color: context.colors.surfaceContainer,
+            // ✅ DESIGN: Slightly softer corners
+            borderRadius: BorderRadius.circular(16),
+            // ✅ DESIGN: Subtle border instead of heavy shadow
+            border: Border.all(
+              color: context.colors.outlineVariant.withValues(alpha: 0.3),
+              width: 1,
+            ),
             boxShadow: [
+              // ✅ DESIGN: Lighter, more subtle shadow
               BoxShadow(
-                color: Colors.black.withValues(alpha: 0.05),
-                blurRadius: 8,
-                offset: const Offset(0, 2),
+                color: Colors.black.withValues(alpha: 0.03),
+                blurRadius: 4,
+                offset: const Offset(0, 1),
               ),
-              // Optional glow from journey theme if unlocked
-              if (journeyTheme.isGlowEnabled)
-                BoxShadow(
-                  color: journeyTheme.glowColor.withValues(alpha: 0.1),
-                  blurRadius: 12,
-                  spreadRadius: 0,
-                ),
             ],
           ),
           child: Material(
             color: Colors.transparent,
-            borderRadius: BorderRadius.circular(12),
+            borderRadius: BorderRadius.circular(16),
             clipBehavior: Clip.antiAlias,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -1219,8 +1381,10 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem>
                     onShowCommunityAdvice: _handleShowCommunityAdvice,
                     onShowCountingModePicker: _handleShowCountingModePicker,
                     onAddWarmupSets: _handleAddWarmupSets,
+                    onCreateSuperset: _handleCreateSuperset,
                     hasWarmupData: _hasWarmupData,
                     hasInjuryPreventionData: _hasInjuryPreventionData,
+                    tutorialMenuKey: widget.tutorialExerciseMenuKey,
                   ),
                 ),
 
@@ -1264,7 +1428,7 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem>
                 Builder(
                   builder: (context) {
                     // Filter out weight jump suggestions (handled by indicator above)
-                    final filteredSuggestions = _suggestions
+                    final filteredSuggestions = suggestions
                         .where((s) => !s.id.contains('weight_jump'))
                         .toList();
 
@@ -1301,7 +1465,7 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem>
                 ),
 
                 // Sets section (expanded only)
-                if (_isExpanded)
+                if (isExpanded)
                   Padding(
                     padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
                     child: ExerciseListItemSets(
@@ -1317,6 +1481,7 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem>
                       onExecuteDropSet: _handleExecuteDropSet,
                       onExecuteRestPause: _handleExecuteRestPause,
                       onCollapseExercise: _handleCollapseExercise,
+                      tutorialFirstSetKey: widget.tutorialFirstSetKey,
                     ),
                   ),
 
@@ -1328,7 +1493,7 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem>
                 // 🐛 BUG FIX #5: Added InkWell to make hint tappable
                 // The outer GestureDetector doesn't receive taps because Material widget
                 // and header's interactive widgets (InkWell, PopupMenuButton) consume them.
-                if (!_isExpanded)
+                if (!isExpanded)
                   Padding(
                     padding: const EdgeInsets.only(bottom: 12),
                     child: Center(

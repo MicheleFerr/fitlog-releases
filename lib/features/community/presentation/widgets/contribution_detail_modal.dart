@@ -18,6 +18,8 @@ import 'package:gymbro_flutter_new/features/community/presentation/widgets/votin
 import 'package:gymbro_flutter_new/shared/presentation/services/snackbar_service.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/services/modal_service.dart';
 
 /// Modal per visualizzare dettagli completi di un contributo
 class ContributionDetailModal extends ConsumerStatefulWidget {
@@ -47,13 +49,14 @@ class _ContributionDetailModalState extends ConsumerState<ContributionDetailModa
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final l10n = AppLocalizations.of(context);
+    final l10n = context.l10n;
     final isAdminAsync = ref.watch(isAdminProvider);
 
+    final safeMax = ModalService.safeMaxChildSize(context, preferredMax: 0.95);
     return DraggableScrollableSheet(
-      initialChildSize: 0.9,
+      initialChildSize: safeMax.clamp(0.0, 0.9),
       minChildSize: 0.5,
-      maxChildSize: 0.95,
+      maxChildSize: safeMax,
       builder: (context, scrollController) {
         return Container(
           decoration: BoxDecoration(

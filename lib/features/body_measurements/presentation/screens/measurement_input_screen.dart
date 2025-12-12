@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/features/body_measurements/domain/entities/measurement.dart';
 import 'package:gymbro_flutter_new/features/body_measurements/domain/entities/metric_type.dart';
+import 'package:gymbro_flutter_new/features/body_measurements/domain/repositories/consent_repository.dart';
 import 'package:gymbro_flutter_new/features/body_measurements/domain/validators/measurement_validator.dart';
 import 'package:gymbro_flutter_new/features/body_measurements/data/repositories/measurement_repository_provider.dart';
 import 'package:gymbro_flutter_new/features/body_measurements/data/repositories/consent_repository_provider.dart';
@@ -76,19 +77,83 @@ class _MeasurementInputScreenState
     final consentRepo = ref.read(consentRepositoryProvider);
     final result = await consentRepo.getConsentedMetrics(widget.userId);
 
-    result.fold(
+    await result.fold(
+      (failure) async {
+        if (!mounted) return;
+
+        // If no consent exists, create it automatically
+        if (failure is ConsentNotFoundFailure) {
+          await _createDefaultConsent();
+          return;
+        }
+
+        SnackBarService.showError(
+          context,
+          'Failed to load consented metrics: $failure',
+        );
+      },
+      (metrics) async {
+        if (!mounted) return;
+        setState(() {
+          _consentedMetrics = metrics;
+          // Initialize controllers for all consented metrics
+          for (final metric in metrics) {
+            _controllers[metric] = TextEditingController();
+          }
+        });
+      },
+    );
+  }
+
+  /// Create default consent for first-time users
+  Future<void> _createDefaultConsent() async {
+    final consentRepo = ref.read(consentRepositoryProvider);
+
+    // Create initial consent
+    var result = await consentRepo.createInitialConsent(
+      userId: widget.userId,
+      ipAddress: '0.0.0.***', // Privacy: masked IP
+    );
+
+    // If consent already exists, proceed to grant
+    if (result.isLeft()) {
+      result = await consentRepo.grantConsent(
+        userId: widget.userId,
+        group: MetricGroup.essential,
+        ipAddress: '0.0.0.***',
+      );
+    } else {
+      // Initial consent created, grant essential
+      await consentRepo.grantConsent(
+        userId: widget.userId,
+        group: MetricGroup.essential,
+        ipAddress: '0.0.0.***',
+      );
+    }
+
+    // Grant measurements consent
+    await consentRepo.grantConsent(
+      userId: widget.userId,
+      group: MetricGroup.measurements,
+      ipAddress: '0.0.0.***',
+    );
+
+    // Retry loading consented metrics
+    if (!mounted) return;
+    final retryResult = await consentRepo.getConsentedMetrics(widget.userId);
+
+    retryResult.fold(
       (failure) {
         if (!mounted) return;
         SnackBarService.showError(
           context,
-          'Failed to load consented metrics: $failure',
+          'Failed to initialize consent: $failure',
         );
       },
       (metrics) {
         if (!mounted) return;
         setState(() {
           _consentedMetrics = metrics;
-          // Initialize controllers for all consented metrics
           for (final metric in metrics) {
             _controllers[metric] = TextEditingController();
           }

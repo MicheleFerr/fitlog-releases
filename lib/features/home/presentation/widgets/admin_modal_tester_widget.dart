@@ -1,20 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/features/auth/presentation/providers/admin_provider.dart';
-import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
 import 'package:gymbro_flutter_new/shared/presentation/services/snackbar_service.dart';
 
 // Import core entities
 import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise.dart';
 
 // Import modal widgets
-import 'package:gymbro_flutter_new/features/workout/presentation/widgets/unified_set_input_modal.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/widgets/rpe_selector_bottom_sheet.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/widgets/add_exercise_modal.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/widgets/enhanced_add_exercise_modal.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/widgets/exercise_options_modal.dart';
+import 'package:gymbro_flutter_new/features/workout/presentation/widgets/weight_picker_modal.dart';
+import 'package:gymbro_flutter_new/features/workout/presentation/widgets/reps_picker_modal.dart';
+import 'package:gymbro_flutter_new/features/workout/presentation/widgets/edit_set_modal.dart';
+import 'package:gymbro_flutter_new/features/workout/presentation/widgets/edit_exercise_modal.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
+import 'package:gymbro_flutter_new/shared/presentation/services/modal_service.dart';
 
 /// Admin-only modal tester widget with collapsible sections
 class AdminModalTesterWidget extends ConsumerWidget {
@@ -22,7 +25,6 @@ class AdminModalTesterWidget extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final l10n = AppLocalizations.of(context);
     final isAdmin = ref.watch(showDebugSectionsProvider);
 
     // Don't show if not admin
@@ -114,11 +116,6 @@ class AdminModalTesterWidget extends ConsumerWidget {
                 sectionId: 'input_data',
                 title: 'INPUT DATA MODALS',
                 children: [
-                  _ModalTestButton(
-                    'UnifiedSetInputModal',
-                    () => _testUnifiedSetInputModal(context),
-                    'Primary modal for weight/reps/RPE',
-                  ),
                   _ModalTestButton(
                     'WeightPickerModal',
                     () => _testWeightPickerModal(context),
@@ -228,23 +225,22 @@ class AdminModalTesterWidget extends ConsumerWidget {
   }
 
   // Test methods
-  void _testUnifiedSetInputModal(BuildContext context) {
-    UnifiedSetInputModal.show(
-      context: context,
-      exerciseSet: _getMockExerciseSet(),
-      exerciseName: 'Test Exercise',
-      onSave: (set) {
-        SnackBarService.showSuccess(context, '✅ UnifiedSetInputModal - WORKING');
-      },
-    );
+  void _testWeightPickerModal(BuildContext context) async {
+    final result = await WeightPickerModal.show(context, initialWeight: 20.0);
+    if (result != null && context.mounted) {
+      SnackBarService.showSuccess(context, '✅ WeightPickerModal - Selected: ${result.toStringAsFixed(1)} kg');
+    } else if (context.mounted) {
+      SnackBarService.showInfo(context, '⚪ WeightPickerModal - Cancelled');
+    }
   }
 
-  void _testWeightPickerModal(BuildContext context) {
-    _showPlaceholderMessage(context, 'WeightPickerModal - Need implementation');
-  }
-
-  void _testRepsPickerModal(BuildContext context) {
-    _showPlaceholderMessage(context, 'RepsPickerModal - Need implementation');
+  void _testRepsPickerModal(BuildContext context) async {
+    final result = await RepsPickerModal.show(context, initialReps: 10);
+    if (result != null && context.mounted) {
+      SnackBarService.showSuccess(context, '✅ RepsPickerModal - Selected: $result reps');
+    } else if (context.mounted) {
+      SnackBarService.showInfo(context, '⚪ RepsPickerModal - Cancelled');
+    }
   }
 
   void _testRpeSelectorBottomSheet(BuildContext context) {
@@ -262,18 +258,26 @@ class AdminModalTesterWidget extends ConsumerWidget {
   }
 
   void _testAddExerciseModal(BuildContext context) {
-    showModalBottomSheet(
-      context: context,
-      isScrollControlled: true,
-      builder: (context) => const AddExerciseModal(),
-    );
+    // ✅ UX: Use the new static show method
+    AddExerciseModal.show(context);
   }
 
   void _testEnhancedAddExerciseModal(BuildContext context) {
+    final safeMax = ModalService.safeMaxChildSize(context, preferredMax: 0.98);
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
-      builder: (context) => const EnhancedAddExerciseModal(),
+      backgroundColor: Colors.transparent,
+      builder: (_) => DraggableScrollableSheet(
+        initialChildSize: 0.9,
+        minChildSize: 0.9,
+        maxChildSize: safeMax,
+        expand: false,
+        snap: true,
+        builder: (context, scrollController) => EnhancedAddExerciseModal(
+          scrollController: scrollController,
+        ),
+      ),
     );
   }
 
@@ -291,15 +295,22 @@ class AdminModalTesterWidget extends ConsumerWidget {
   }
 
   void _testEditExerciseModal(BuildContext context) {
-    _showPlaceholderMessage(context, 'EditExerciseModal');
+    context.showEditExerciseModal(
+      _getMockExercise(),
+      (updatedExercise) {
+        SnackBarService.showSuccess(context, '✅ EditExerciseModal - Saved: ${updatedExercise.name}');
+      },
+    );
   }
 
   void _testEditSetModal(BuildContext context) {
-    _showPlaceholderMessage(context, 'EditSetModal');
-  }
-
-  void _showPlaceholderMessage(BuildContext context, String modalName) {
-    SnackBarService.showWarning(context, '🚧 $modalName - Need to implement');
+    context.showEditSetModal(
+      _getMockExerciseSet(),
+      (updatedSet) {
+        SnackBarService.showSuccess(context, '✅ EditSetModal - Saved: ${updatedSet.weight}kg x ${updatedSet.reps}');
+      },
+      exercise: _getMockExercise(),
+    );
   }
 }
 

@@ -70,6 +70,7 @@ class _FitnessQuestionnaireScreenState
 
   // Step 1: Demographics
   double? _bodyweightKg;
+  double? _heightCm;
   int? _age;
   BiologicalSex _sex = BiologicalSex.male;
 
@@ -212,6 +213,7 @@ class _FitnessQuestionnaireScreenState
     // Create fitness questionnaire
     final questionnaire = UserFitnessQuestionnaire(
       bodyweightKg: _bodyweightKg!,
+      heightCm: _heightCm ?? 170.0, // Default to 170cm if not provided
       age: _age!,
       sex: _sex,
       experienceLevel: _experienceLevel,

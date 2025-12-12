@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
+import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 
 /// Modal per modificare un singolo round di superset
 /// Permette di inserire peso, ripetizioni e RPE per ogni esercizio del round
@@ -94,7 +95,7 @@ class _SupersetRoundEditModalState extends ConsumerState<SupersetRoundEditModal>
 
   @override
   Widget build(BuildContext context) {
-    final l10n = AppLocalizations.of(context);
+    final l10n = context.l10n;
     
     return DecoratedBox(
       decoration: BoxDecoration(
@@ -392,7 +393,7 @@ class _SupersetRoundEditModalState extends ConsumerState<SupersetRoundEditModal>
     // Show success feedback
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: Text(AppLocalizations.of(context).setUpdated),
+        content: Text(context.l10n.setUpdated),
         duration: const Duration(seconds: 2),
       ),
     );

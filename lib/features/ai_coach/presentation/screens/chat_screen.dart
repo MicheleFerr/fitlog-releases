@@ -27,6 +27,8 @@ library;
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:intl/intl.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:gymbro_flutter_new/features/ai_coach/domain/entities/ai_message.dart';
 import 'package:gymbro_flutter_new/features/ai_coach/presentation/providers/chat_providers.dart';
 import 'package:gymbro_flutter_new/features/ai_coach/presentation/widgets/message_bubble.dart';
@@ -185,6 +187,15 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
                 ref.read(chatNotifierProvider(userId).notifier).navigateToParent();
               },
             ),
+          // Export chat button
+          IconButton(
+            icon: const SemanticIcon(
+              icon: AppIcons.share,
+              semanticLabel: 'Export chat',
+              size: AppIconSize.medium,
+            ),
+            onPressed: () => _exportChat(context, chatState.messages),
+          ),
           // Clear history button
           IconButton(
             icon: SemanticIcon(
@@ -388,6 +399,43 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
 
     // Send the full question as a message
     await _sendMessage(context, userId, fullQuestion);
+  }
+
+  /// Export chat conversation as text
+  Future<void> _exportChat(BuildContext context, List<AIMessage> messages) async {
+    if (messages.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(context.l10n.noMessagesToExport)),
+      );
+      return;
+    }
+
+    // Format messages for export
+    final buffer = StringBuffer();
+    final dateFormat = DateFormat('dd/MM/yyyy HH:mm');
+
+    buffer.writeln('═══════════════════════════════════════');
+    buffer.writeln('   🤖 AI Coach - Conversation Export');
+    buffer.writeln('   ${dateFormat.format(DateTime.now())}');
+    buffer.writeln('═══════════════════════════════════════');
+    buffer.writeln();
+
+    for (final message in messages) {
+      final timestamp = dateFormat.format(message.timestamp);
+      final roleLabel = message.role == MessageRole.user ? '👤 Tu' : '🤖 AI Coach';
+
+      buffer.writeln('[$timestamp] $roleLabel:');
+      buffer.writeln(message.content);
+      buffer.writeln();
+    }
+
+    buffer.writeln('───────────────────────────────────────');
+    buffer.writeln('Exported from FitLog Pro - AI Coach');
+
+    // Share the conversation
+    await SharePlus.instance.share(
+      ShareParams(text: buffer.toString()),
+    );
   }
 
   /// Show clear history confirmation dialog

@@ -26,9 +26,12 @@ import 'package:gymbro_flutter_new/features/workout/domain/entities/last_workout
 import 'package:gymbro_flutter_new/features/workout/domain/entities/set_progress_data.dart';
 
 // Service provider (uses Hive local storage for exercise history)
+// ✅ PERFORMANCE FIX: Disabled verbose logging to prevent log spam on repeated queries
+// Set enableDebugLogging: false to reduce console output during normal operation
+// Enable only when debugging specific history issues
 final exerciseHistoryServiceProvider = Provider<ExerciseHistoryService>((ref) {
   final boxManager = ref.watch(hiveBoxManagerProvider);
-  return ExerciseHistoryService(boxManager: boxManager, enableDebugLogging: true);
+  return ExerciseHistoryService(boxManager: boxManager, enableDebugLogging: false);
 });
 
 // NOTE: exerciseActivityRepositoryProvider is defined in workout_provider.dart (canonical location)
@@ -44,7 +47,11 @@ final workoutHistoryServiceProvider = Provider<WorkoutHistoryService>((ref) {
 // Recent weights provider
 /// 🔧 MEMORY FIX: Added autoDispose to prevent memory leaks
 /// Automatically disposes provider instances when widget is disposed
+/// ✅ PERFORMANCE FIX: Added keepAlive to cache during session
 final recentWeightsProvider = FutureProvider.autoDispose.family<List<double>, String>((ref, exerciseName) async {
+  // ✅ CRITICAL FIX: Keep provider alive during session to prevent repeated queries
+  ref.keepAlive();
+
   try {
     // Input validation
     if (exerciseName.trim().isEmpty) {
@@ -93,7 +100,15 @@ final recentWeightsProvider = FutureProvider.autoDispose.family<List<double>, St
 // Recent weights with details provider (weight, reps, date)
 // SYNC FIX: Added autoDispose to ensure fresh data when analytics refresh
 // Updated to filter by last 3 days and show 6-8 weights
+// ✅ PERFORMANCE FIX: Added keepAlive to prevent repeated queries on widget rebuilds
+// The autoDispose is kept for memory cleanup on logout, but keepAlive prevents
+// disposal during normal widget rebuilds (scroll, expansion, etc.)
 final recentWeightsWithDetailsProvider = FutureProvider.family.autoDispose<List<ExerciseHistoryData>, String>((ref, exerciseName) async {
+  // ✅ CRITICAL FIX: Keep provider alive during session to prevent repeated queries
+  // Without this, every widget rebuild causes provider to re-execute from scratch
+  // The provider will still be disposed on logout/app termination
+  ref.keepAlive();
+
   final service = ref.read(exerciseHistoryServiceProvider);
   
   // Try to get user ID directly from Firebase Auth first
@@ -226,7 +241,11 @@ final recentWeightsWithDetailsProvider = FutureProvider.family.autoDispose<List<
 // Last exercise data provider
 /// 🔧 MEMORY FIX: Added autoDispose to prevent memory leaks
 /// Automatically disposes provider instances when widget is disposed
+/// ✅ PERFORMANCE FIX: Added keepAlive to cache during session
 final lastExerciseDataProvider = FutureProvider.autoDispose.family<({double? weight, DateTime? date}), String>((ref, exerciseName) async {
+  // ✅ CRITICAL FIX: Keep provider alive during session
+  ref.keepAlive();
+
   try {
     // Input validation
     if (exerciseName.trim().isEmpty) {
@@ -570,6 +589,7 @@ final exerciseHistoryDataGroupedProvider = FutureProvider.autoDispose.family<Map
             historyDataList.add(ExerciseHistoryData(
               weight: weight,
               reps: reps,
+              rpe: setData.rpe,  // ✅ FIX: Include RPE from set
               date: activity.createdAt,
               workoutName: activity.schedaName, // Use schedaName as workoutName
             ));

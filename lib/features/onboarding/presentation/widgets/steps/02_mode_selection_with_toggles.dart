@@ -76,7 +76,6 @@ class _ModeSelectionWithTogglesStepState extends ConsumerState<ModeSelectionWith
       autoRestTimer: true,
       setDurationTracking: isProMode,
       plateCalculator: isProMode,
-      warmupSuggestions: isProMode,
       autoCollapseCompleted: !isProMode,
     );
 

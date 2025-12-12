@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
+import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 
 class AnalyticsOverviewCard extends StatelessWidget {
 
@@ -11,8 +12,18 @@ class AnalyticsOverviewCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      elevation: 2,
+    return DecoratedBox(
+      decoration: BoxDecoration(
+        color: context.colors.surfaceContainerHighest,
+        borderRadius: BorderRadius.circular(12),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.1),
+            blurRadius: 4,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
       child: Padding(
         padding: const EdgeInsets.all(16),
         child: Column(
@@ -22,7 +33,7 @@ class AnalyticsOverviewCard extends StatelessWidget {
               children: [
                 Icon(
                   AppIcons.dashboard,
-                  color: Theme.of(context).colorScheme.primary,
+                  color: context.colors.primary,
                 ),
                 const SizedBox(width: 8),
                 Text(
@@ -34,7 +45,7 @@ class AnalyticsOverviewCard extends StatelessWidget {
               ],
             ),
             const SizedBox(height: 16),
-            
+
             // Stats Grid
             Row(
               children: [

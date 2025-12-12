@@ -1,4 +1,5 @@
 import 'package:flutter/foundation.dart';
+import 'package:flutter/foundation.dart' show kDebugMode;
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:gymbro_flutter_new/core/config/admob_config.dart';
@@ -43,7 +44,9 @@ class InterstitialAdService {
   /// Pre-load ad for workout complete screen
   Future<void> preloadWorkoutCompleteAd() async {
     if (_isAdReady) {
-      debugPrint('✅ Interstitial ad already loaded');
+      if (kDebugMode) {
+        debugPrint('✅ Interstitial ad already loaded');
+      }
       return;
     }
 
@@ -53,7 +56,9 @@ class InterstitialAdService {
   /// Pre-load ad for navigation
   Future<void> preloadNavigationAd() async {
     if (_isAdReady) {
-      debugPrint('✅ Interstitial ad already loaded');
+      if (kDebugMode) {
+        debugPrint('✅ Interstitial ad already loaded');
+      }
       return;
     }
 
@@ -68,22 +73,30 @@ class InterstitialAdService {
   }) async {
     // Check if enough time has passed since last ad
     if (!await _canShowAd()) {
-      debugPrint('⏳ Interstitial ad in cooldown period');
+      if (kDebugMode) {
+        debugPrint('⏳ Interstitial ad in cooldown period');
+      }
       return false;
     }
 
     if (!_isAdReady || _interstitialAd == null) {
-      debugPrint('❌ Interstitial ad not ready');
+      if (kDebugMode) {
+        debugPrint('❌ Interstitial ad not ready');
+      }
       return false;
     }
 
     // Set full screen content callback
     _interstitialAd!.fullScreenContentCallback = FullScreenContentCallback(
       onAdShowedFullScreenContent: (ad) {
-        debugPrint('📱 Interstitial ad showed full screen content');
+        if (kDebugMode) {
+          debugPrint('📱 Interstitial ad showed full screen content');
+        }
       },
       onAdDismissedFullScreenContent: (ad) {
-        debugPrint('📱 Interstitial ad dismissed');
+        if (kDebugMode) {
+          debugPrint('📱 Interstitial ad dismissed');
+        }
         ad.dispose();
         _isAdReady = false;
         _interstitialAd = null;
@@ -98,7 +111,9 @@ class InterstitialAdService {
         preloadWorkoutCompleteAd();
       },
       onAdFailedToShowFullScreenContent: (ad, error) {
-        debugPrint('❌ Interstitial ad failed to show: $error');
+        if (kDebugMode) {
+          debugPrint('❌ Interstitial ad failed to show: $error');
+        }
         ad.dispose();
         _isAdReady = false;
         _interstitialAd = null;
@@ -127,14 +142,18 @@ class InterstitialAdService {
   // ============================================================================
 
   Future<void> _loadAd(String adUnitId) async {
-    debugPrint('📥 Loading interstitial ad: $adUnitId');
+    if (kDebugMode) {
+      debugPrint('📥 Loading interstitial ad: $adUnitId');
+    }
 
     // Check if we have consent to show ads
     final consentService = ConsentService();
     final canRequest = await consentService.canRequestAds();
 
     if (!canRequest) {
-      debugPrint('⚠️ Cannot request ads - consent not granted');
+      if (kDebugMode) {
+        debugPrint('⚠️ Cannot request ads - consent not granted');
+      }
       return;
     }
 
@@ -143,12 +162,16 @@ class InterstitialAdService {
       request: const AdRequest(),
       adLoadCallback: InterstitialAdLoadCallback(
         onAdLoaded: (ad) {
-          debugPrint('✅ Interstitial ad loaded successfully');
+          if (kDebugMode) {
+            debugPrint('✅ Interstitial ad loaded successfully');
+          }
           _interstitialAd = ad;
           _isAdReady = true;
         },
         onAdFailedToLoad: (error) {
-          debugPrint('❌ Interstitial ad failed to load: $error');
+          if (kDebugMode) {
+            debugPrint('❌ Interstitial ad failed to load: $error');
+          }
           _isAdReady = false;
           _interstitialAd = null;
 
@@ -190,6 +213,8 @@ class InterstitialAdService {
     final prefs = await SharedPreferences.getInstance();
     await prefs.remove(_lastAdTimestampKey);
     _lastAdShownTime = null;
-    debugPrint('🔄 Interstitial ad cooldown reset');
+    if (kDebugMode) {
+      debugPrint('🔄 Interstitial ad cooldown reset');
+    }
   }
 }

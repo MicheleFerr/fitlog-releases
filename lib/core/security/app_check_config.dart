@@ -88,14 +88,19 @@ class AppCheckConfig {
         }
 
         await FirebaseAppCheck.instance.activate(
-          // iOS: Use Apple's App Attest API (iOS 14+, more secure than DeviceCheck)
-          // ✅ SECURITY: Verifies app is running on genuine Apple device with hardware attestation
-          // Falls back to DeviceCheck on iOS 11-13
-          appleProvider: AppleProvider.appAttestWithDeviceCheckFallback,
+          // iOS: Use debug provider in development, App Attest in release
+          // ✅ SECURITY: App Attest verifies app is running on genuine Apple device
+          // ⚠️ DEBUG: Debug provider allows testing without device attestation
+          providerApple: kDebugMode
+              ? const AppleDebugProvider()
+              : const AppleAppAttestWithDeviceCheckFallbackProvider(),
 
-          // Android: Use Google Play Integrity API
-          // ✅ SECURITY: Verifies app is from Google Play and not tampered
-          androidProvider: AndroidProvider.playIntegrity,
+          // Android: Use debug provider in development, Play Integrity in release
+          // ✅ SECURITY: Play Integrity verifies app is from Google Play
+          // ⚠️ DEBUG: Debug provider allows testing on emulators/unsigned builds
+          providerAndroid: kDebugMode
+              ? const AndroidDebugProvider()
+              : const AndroidPlayIntegrityProvider(),
 
           // Web: Use reCAPTCHA v3 (for web deployment)
           // ⚠️ TODO: Replace with your actual reCAPTCHA site key from Firebase Console

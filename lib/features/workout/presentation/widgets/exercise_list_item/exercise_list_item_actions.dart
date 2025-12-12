@@ -51,6 +51,7 @@ class ExerciseListItemActions extends StatelessWidget {
     required this.onDelete,
     this.onInsight,
     this.onCommunityAdvice,
+    this.onCreateSuperset,
   });
 
   final Exercise exercise;
@@ -62,6 +63,7 @@ class ExerciseListItemActions extends StatelessWidget {
   final VoidCallback onDelete;
   final VoidCallback? onInsight;
   final VoidCallback? onCommunityAdvice;
+  final VoidCallback? onCreateSuperset;
 
   @override
   Widget build(BuildContext context) {
@@ -96,6 +98,9 @@ class ExerciseListItemActions extends StatelessWidget {
       case 'community_advice':
         onCommunityAdvice?.call();
         break;
+      case 'create_superset':
+        onCreateSuperset?.call();
+        break;
     }
   }
 
@@ -114,6 +119,7 @@ class ExerciseListItemActions extends StatelessWidget {
         _buildEditItem(context),
         _buildChangeExerciseItem(context),
         _buildDuplicateItem(context),
+        if (onCreateSuperset != null) _buildCreateSupersetItem(context),
       ],
 
       // Insights - conditional
@@ -166,7 +172,7 @@ class ExerciseListItemActions extends StatelessWidget {
         borderRadius: BorderRadius.circular(8),
       ),
       child: Text(
-        exercise.autoAdjustmentType == AutoAdjustmentType.apre ? 'APRE' : 'RPE',
+        'RPE',
         style: context.textTheme.labelSmall?.copyWith(
           color: context.colors.onPrimaryContainer,
           fontWeight: FontWeight.bold,
@@ -244,6 +250,23 @@ class ExerciseListItemActions extends StatelessWidget {
           ),
           const SizedBox(width: 8),
           Text(context.l10n.exerciseListDuplicate),
+        ],
+      ),
+    );
+  }
+
+  PopupMenuItem<String> _buildCreateSupersetItem(BuildContext context) {
+    return PopupMenuItem(
+      value: 'create_superset',
+      child: Row(
+        children: [
+          SemanticIcon(
+            icon: AppIcons.link,
+            semanticLabel: context.l10n.createSuperset,
+            size: AppIconSize.small,
+          ),
+          const SizedBox(width: 8),
+          Text(context.l10n.createSuperset),
         ],
       ),
     );

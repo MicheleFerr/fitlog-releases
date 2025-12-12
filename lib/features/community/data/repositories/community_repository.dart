@@ -6,7 +6,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:gymbro_flutter_new/features/community/domain/entities/community_contribution.dart';
 import 'package:gymbro_flutter_new/features/community/domain/entities/contribution_filters.dart';
 import 'package:gymbro_flutter_new/features/auth/presentation/providers/auth_provider.dart';
-import 'package:flutter/foundation.dart';
 
 final communityRepositoryProvider = Provider<CommunityRepository>((ref) {
   return FirestoreCommunityRepository(ref);
@@ -82,40 +81,15 @@ class FirestoreCommunityRepository implements CommunityRepository {
     ContributionStatus? status,
     String? userId,
   }) {
-    if (kDebugMode) {
-      debugPrint('🔍 [CommunityRepo] Getting contributions - exerciseId: $exerciseId, status: $status, userId: $userId');
-    }
-
     // Per userId, facciamo una query semplice senza orderBy per evitare indici
     if (userId != null) {
-      if (kDebugMode) {
-        debugPrint('📋 [CommunityRepo] Querying contributions for userId: $userId');
-      }
       return _firestore
           .collection(_contributionsCollection)
           .where('userId', isEqualTo: userId)
           .limit(50)
           .snapshots()
-          .map((snapshot) {
-            if (kDebugMode) {
-              debugPrint('📊 [CommunityRepo] Found ${snapshot.docs.length} contributions for user $userId');
-            }
-            final contributions = _mapSnapshotToContributions(snapshot);
-            if (kDebugMode) {
-              debugPrint('✅ [CommunityRepo] Mapped ${contributions.length} contributions successfully');
-            }
-            for (var contrib in contributions) {
-              if (kDebugMode) {
-                debugPrint('   - ${contrib.title} (${contrib.status.name})');
-              }
-            }
-            return contributions;
-          })
-          .handleError((error) {
-            if (kDebugMode) {
-              debugPrint('❌ [CommunityRepo] Error fetching user contributions: $error');
-            }
-          }, test: (error) => true)
+          .map((snapshot) => _mapSnapshotToContributions(snapshot))
+          .handleError((error) {}, test: (error) => true)
           .startWith(<CommunityContribution>[]);
     }
     
@@ -138,7 +112,6 @@ class FirestoreCommunityRepository implements CommunityRepository {
         .snapshots()
         .map(_mapSnapshotToContributions)
         .handleError((error) {
-          // print('Error fetching contributions: $error');
         }, test: (error) => true)
         .startWith(<CommunityContribution>[]);
   }
@@ -153,7 +126,6 @@ class FirestoreCommunityRepository implements CommunityRepository {
         .snapshots()
         .map(_mapSnapshotToContributions)
         .handleError((error) {
-          // print('Error fetching trending contributions: $error');
         }, test: (error) => true)
         .startWith(<CommunityContribution>[]); // Inizia con lista vuota
   }
@@ -176,7 +148,6 @@ class FirestoreCommunityRepository implements CommunityRepository {
           ).take(10).toList();
         })
         .handleError((error) {
-          // print('Error fetching contributions for review: $error');
         }, test: (error) => true)
         .startWith(<CommunityContribution>[]); // Inizia con lista vuota
   }
@@ -213,14 +184,12 @@ class FirestoreCommunityRepository implements CommunityRepository {
             try {
               return UserContributionStats.fromJson(snapshot.data()!);
             } catch (e) {
-              // print('Error parsing user stats: $e');
               return defaultStats;
             }
           }
           return defaultStats;
         })
         .handleError((error) {
-          // print('Error fetching user stats: $error');
         }, test: (error) => true) // Gestisce tutti gli errori
         .startWith(defaultStats); // Inizia con default stats
   }
@@ -229,10 +198,6 @@ class FirestoreCommunityRepository implements CommunityRepository {
   Future<void> submitContribution(CommunityContribution contribution) async {
     final userAsync = await _ref.read(currentUserProvider.future);
     if (userAsync == null) throw Exception('User not authenticated');
-
-    if (kDebugMode) {
-      debugPrint('📝 [CommunityRepo] Submitting contribution for user ${userAsync.uid}');
-    }
 
     final docRef = _firestore.collection(_contributionsCollection).doc();
 
@@ -252,31 +217,13 @@ class FirestoreCommunityRepository implements CommunityRepository {
     data['type'] = contribution.type.name;
     data['status'] = status.name;
 
-    if (kDebugMode) {
-      debugPrint('💾 [CommunityRepo] Saving contribution with ID: ${docRef.id}');
-    }
-    if (kDebugMode) {
-      debugPrint('📋 [CommunityRepo] Data: ${data['exerciseName']} - ${data['type']} - ${data['title']}');
-    }
-    if (kDebugMode) {
-      debugPrint('✅ [CommunityRepo] Status: ${status.name}');
-    }
-
     await docRef.set(data);
 
     // 🚀 CACHE INVALIDATION: Clear search cache after new contribution
     await _clearSearchCache();
 
-    if (kDebugMode) {
-      debugPrint('✅ [CommunityRepo] Contribution saved to Firestore successfully');
-    }
-
     // Update user stats per submission
     await _updateUserStats(userAsync.uid, 'submit');
-
-    if (kDebugMode) {
-      debugPrint('🏆 [CommunityRepo] User stats updated (+10 XP)');
-    }
   }
   
   @override
@@ -558,7 +505,6 @@ class FirestoreCommunityRepository implements CommunityRepository {
         break;
     }
     
-    // print('🏆 Adding $pointsToAdd XP to user $userId for action: $action');
     
     // Aggiorna stats con XP e livello
     final currentStats = await statsRef.get();
@@ -575,7 +521,6 @@ class FirestoreCommunityRepository implements CommunityRepository {
       'approvedContributions': action == 'approved' ? FieldValue.increment(1) : null,
     }, SetOptions(merge: true));
     
-    // print('✅ User stats updated: +$pointsToAdd XP, Level: $newLevel');
   }
 
   @override

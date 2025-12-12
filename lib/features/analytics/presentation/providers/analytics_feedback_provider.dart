@@ -22,6 +22,7 @@ import 'package:gymbro_flutter_new/features/analytics/domain/entities/analytics_
 import 'package:gymbro_flutter_new/features/auth/presentation/providers/auth_provider.dart';
 import 'package:gymbro_flutter_new/features/analytics/presentation/providers/analytics_provider.dart';
 import 'package:gymbro_flutter_new/features/feedback/presentation/providers/unified_feedback_provider.dart';
+import 'package:gymbro_flutter_new/core/cache/user_cache_key_manager.dart';
 
 // ========================================
 // REPOSITORY PROVIDER
@@ -43,23 +44,27 @@ final analyticsFeedbackRepositoryProvider =
 ///
 /// Salva timestamp in SharedPreferences quando utente apre Analytics per prima volta.
 /// Ritorna timestamp in millisecondi (null se prima volta).
+/// 🔐 User-scoped cache key
 final firstAnalyticsVisitProvider = FutureProvider.autoDispose<int?>((ref) async {
   final prefs = await SharedPreferences.getInstance();
-  return prefs.getInt('first_analytics_visit');
+  final key = userCacheKeys.userScopedKey('first_analytics_visit');
+  return prefs.getInt(key);
 });
 
 /// Provider per salvare prima visita Analytics
 ///
 /// Chiamato automaticamente quando utente apre schermata Analytics.
+/// 🔐 User-scoped cache key
 final saveFirstAnalyticsVisitProvider =
     FutureProvider.autoDispose<void>((ref) async {
   final prefs = await SharedPreferences.getInstance();
-  final firstVisit = prefs.getInt('first_analytics_visit');
+  final key = userCacheKeys.userScopedKey('first_analytics_visit');
+  final firstVisit = prefs.getInt(key);
 
   if (firstVisit == null) {
     // Prima visita! Salva timestamp
     await prefs.setInt(
-      'first_analytics_visit',
+      key,
       DateTime.now().millisecondsSinceEpoch,
     );
   }

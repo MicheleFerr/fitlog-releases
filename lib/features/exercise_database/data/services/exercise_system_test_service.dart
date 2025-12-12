@@ -7,6 +7,7 @@
 /// Servizio per testare l'intero sistema di aggiornamento esercizi
 library;
 
+import 'package:flutter/foundation.dart' show kDebugMode;
 import 'dart:async';
 import 'package:flutter/foundation.dart';
 import 'package:gymbro_flutter_new/features/exercise_database/data/repositories/hybrid_exercise_repository.dart';
@@ -43,7 +44,9 @@ class ExerciseSystemTestService {
     final startTime = DateTime.now();
     final testResults = <String, TestStepResult>{};
 
-    debugPrint('🧪 Starting full system test...');
+    if (kDebugMode) {
+      debugPrint('🧪 Starting full system test...');
+    }
 
     try {
       // 1. Test inizializzazione servizi
@@ -73,9 +76,11 @@ class ExerciseSystemTestService {
       final duration = DateTime.now().difference(startTime);
       final allPassed = testResults.values.every((result) => result.success);
 
-      debugPrint(allPassed
-        ? '✅ All tests passed in ${duration.inSeconds}s'
-        : '❌ Some tests failed in ${duration.inSeconds}s');
+      if (kDebugMode) {
+        debugPrint(allPassed
+          ? '✅ All tests passed in ${duration.inSeconds}s'
+          : '❌ Some tests failed in ${duration.inSeconds}s');
+      }
 
       return SystemTestReport(
         success: allPassed,
@@ -85,7 +90,9 @@ class ExerciseSystemTestService {
       );
 
     } catch (e) {
-      debugPrint('❌ System test failed: $e');
+      if (kDebugMode) {
+        debugPrint('❌ System test failed: $e');
+      }
       return SystemTestReport(
         success: false,
         duration: DateTime.now().difference(startTime),
@@ -99,7 +106,9 @@ class ExerciseSystemTestService {
   /// Test inizializzazione servizi
   Future<TestStepResult> _testInitialization() async {
     try {
-      debugPrint('🔧 Testing service initialization...');
+      if (kDebugMode) {
+        debugPrint('🔧 Testing service initialization...');
+      }
 
       await _versionService.initialize();
       await _cacheManager.initialize();
@@ -123,7 +132,9 @@ class ExerciseSystemTestService {
   /// Test migrazione
   Future<TestStepResult> _testMigration() async {
     try {
-      debugPrint('📦 Testing migration...');
+      if (kDebugMode) {
+        debugPrint('📦 Testing migration...');
+      }
 
       final startTime = DateTime.now();
       final migrationResult = await _migrationService.performMigration(forceReset: true);
@@ -169,7 +180,9 @@ class ExerciseSystemTestService {
   /// Test repository ibrido
   Future<TestStepResult> _testHybridRepository() async {
     try {
-      debugPrint('🔄 Testing hybrid repository...');
+      if (kDebugMode) {
+        debugPrint('🔄 Testing hybrid repository...');
+      }
 
       final startTime = DateTime.now();
 
@@ -237,7 +250,9 @@ class ExerciseSystemTestService {
   /// Test sincronizzazione
   Future<TestStepResult> _testSynchronization() async {
     try {
-      debugPrint('🔄 Testing synchronization...');
+      if (kDebugMode) {
+        debugPrint('🔄 Testing synchronization...');
+      }
 
       final startTime = DateTime.now();
 
@@ -290,7 +305,9 @@ class ExerciseSystemTestService {
   /// Test versioning
   Future<TestStepResult> _testVersioning() async {
     try {
-      debugPrint('📋 Testing versioning...');
+      if (kDebugMode) {
+        debugPrint('📋 Testing versioning...');
+      }
 
       final startTime = DateTime.now();
 
@@ -348,7 +365,9 @@ class ExerciseSystemTestService {
   /// Test gestione cache
   Future<TestStepResult> _testCacheManagement() async {
     try {
-      debugPrint('💾 Testing cache management...');
+      if (kDebugMode) {
+        debugPrint('💾 Testing cache management...');
+      }
 
       final startTime = DateTime.now();
 
@@ -401,7 +420,9 @@ class ExerciseSystemTestService {
   /// Test performance
   Future<TestStepResult> _testPerformance() async {
     try {
-      debugPrint('⚡ Testing performance...');
+      if (kDebugMode) {
+        debugPrint('⚡ Testing performance...');
+      }
 
       final performanceResult = await _migrationService.performanceTest();
 
@@ -435,7 +456,9 @@ class ExerciseSystemTestService {
   /// Test gestione errori
   Future<TestStepResult> _testErrorHandling() async {
     try {
-      debugPrint('⚠️ Testing error handling...');
+      if (kDebugMode) {
+        debugPrint('⚠️ Testing error handling...');
+      }
 
       final startTime = DateTime.now();
 

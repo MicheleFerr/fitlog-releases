@@ -25,6 +25,14 @@ import 'dart:math';
 import 'package:gymbro_flutter_new/features/ai_coach/data/datasources/intent_detector.dart';
 import 'package:gymbro_flutter_new/features/ai_coach/domain/entities/ai_message.dart';
 
+/// Response tone for personality variations
+enum ResponseTone {
+  /// Professional, informative tone
+  formal,
+  /// Friendly, gym-buddy tone with slang
+  casual,
+}
+
 /// Response template with variables
 class ResponseTemplate {
 
@@ -65,15 +73,17 @@ class ResponseRepository {
   /// - `intent`: Detected user intent
   /// - `context`: Variables for personalization (username, metrics, etc.)
   /// - `locale`: Language code ('en' or 'it')
+  /// - `tone`: Response personality (formal/casual)
   ///
   /// **Returns**: Formatted response string
   String getResponse({
     required UserIntent intent,
     Map<String, String> context = const {},
     String locale = 'en',
+    ResponseTone tone = ResponseTone.formal,
   }) {
-    // Get template variants for intent
-    final templates = _getTemplatesForIntent(intent, locale);
+    // Get template variants for intent (with tone consideration)
+    final templates = _getTemplatesForIntent(intent, locale, tone: tone);
 
     if (templates.isEmpty) {
       return _getFallbackResponse(locale);
@@ -318,24 +328,28 @@ class ResponseRepository {
   }
 
   /// Get all template variants for an intent
-  List<ResponseTemplate> _getTemplatesForIntent(UserIntent intent, String locale) {
+  List<ResponseTemplate> _getTemplatesForIntent(
+    UserIntent intent,
+    String locale, {
+    ResponseTone tone = ResponseTone.formal,
+  }) {
     switch (intent) {
       case UserIntent.greeting:
-        return _getGreetingTemplates(locale);
+        return _getGreetingTemplates(locale, tone: tone);
       case UserIntent.progression:
-        return _getProgressionTemplates(locale);
+        return _getProgressionTemplates(locale, tone: tone);
       case UserIntent.volume:
-        return _getVolumeTemplates(locale);
+        return _getVolumeTemplates(locale, tone: tone);
       case UserIntent.recovery:
-        return _getRecoveryTemplates(locale);
+        return _getRecoveryTemplates(locale, tone: tone);
       case UserIntent.balance:
-        return _getBalanceTemplates(locale);
+        return _getBalanceTemplates(locale, tone: tone);
       case UserIntent.form:
-        return _getFormTemplates(locale);
+        return _getFormTemplates(locale, tone: tone);
       case UserIntent.motivation:
-        return _getMotivationTemplates(locale);
+        return _getMotivationTemplates(locale, tone: tone);
       case UserIntent.plan:
-        return _getPlanTemplates(locale);
+        return _getPlanTemplates(locale, tone: tone);
       case UserIntent.prQuery:
         return _getPRQueryTemplates(locale);
       case UserIntent.help:
@@ -349,12 +363,28 @@ class ResponseRepository {
   // Template Variants (EN)
   // ========================================================================
 
-  List<ResponseTemplate> _getGreetingTemplates(String locale) {
+  List<ResponseTemplate> _getGreetingTemplates(String locale, {ResponseTone tone = ResponseTone.formal}) {
     if (locale == 'it') {
+      if (tone == ResponseTone.casual) {
+        return [
+          const ResponseTemplate(text: "Uè {username}! Che si spacca oggi? 💪🔥"),
+          const ResponseTemplate(text: 'Bella {username}! Pronti a vedere i numeri?'),
+          const ResponseTemplate(text: 'We! Come butta? Parliamo di ferro?'),
+          const ResponseTemplate(text: 'Ehi bro! Pronto a pompare? Cosa ti serve?'),
+        ];
+      }
       return [
         const ResponseTemplate(text: "Ciao {username}! Come va l'allenamento oggi? 💪"),
         const ResponseTemplate(text: 'Hey {username}! Pronto per analizzare i tuoi progressi?'),
         const ResponseTemplate(text: 'Ciao! Cosa vuoi sapere sui tuoi allenamenti?'),
+      ];
+    }
+    // English
+    if (tone == ResponseTone.casual) {
+      return [
+        const ResponseTemplate(text: "Yo {username}! Ready to crush it? 💪🔥"),
+        const ResponseTemplate(text: "What's up {username}! Let's check those gains!"),
+        const ResponseTemplate(text: 'Hey bro! What do you wanna know about your lifts?'),
       ];
     }
     return [
@@ -364,8 +394,24 @@ class ResponseRepository {
     ];
   }
 
-  List<ResponseTemplate> _getProgressionTemplates(String locale) {
+  List<ResponseTemplate> _getProgressionTemplates(String locale, {ResponseTone tone = ResponseTone.formal}) {
     if (locale == 'it') {
+      if (tone == ResponseTone.casual) {
+        return [
+          const ResponseTemplate(
+            text: 'Bro, stai spaccando! 🔥 {metric} in {period}! {recommendation}',
+            requiredVariables: ['metric', 'period', 'recommendation'],
+          ),
+          const ResponseTemplate(
+            text: 'Uè {username}, guarda che numeri! {metric} negli ultimi {period}. Stai pompando bene! {recommendation}',
+            requiredVariables: ['username', 'metric', 'period', 'recommendation'],
+          ),
+          const ResponseTemplate(
+            text: 'Che bestia! Il trend è {trend}. {metric} in {period}. Continua così! 💪',
+            requiredVariables: ['trend', 'metric', 'period'],
+          ),
+        ];
+      }
       return [
         const ResponseTemplate(
           text: 'Ottimo lavoro {username}! Negli ultimi {period} hai migliorato di {metric}. {recommendation}',
@@ -374,6 +420,19 @@ class ResponseRepository {
         const ResponseTemplate(
           text: 'La tua progressione è {trend}. {metric} negli ultimi {period}. {recommendation}',
           requiredVariables: ['trend', 'metric', 'period', 'recommendation'],
+        ),
+      ];
+    }
+    // English
+    if (tone == ResponseTone.casual) {
+      return [
+        const ResponseTemplate(
+          text: "You're killing it! 🔥 {metric} in {period}! {recommendation}",
+          requiredVariables: ['metric', 'period', 'recommendation'],
+        ),
+        const ResponseTemplate(
+          text: 'Bro {username}, check these gains! {metric} over {period}. Beast mode! {recommendation}',
+          requiredVariables: ['username', 'metric', 'period', 'recommendation'],
         ),
       ];
     }
@@ -389,8 +448,24 @@ class ResponseRepository {
     ];
   }
 
-  List<ResponseTemplate> _getVolumeTemplates(String locale) {
+  List<ResponseTemplate> _getVolumeTemplates(String locale, {ResponseTone tone = ResponseTone.formal}) {
     if (locale == 'it') {
+      if (tone == ResponseTone.casual) {
+        return [
+          const ResponseTemplate(
+            text: 'Uè, stai buttando giù {volume} a settimana! {recommendation}',
+            requiredVariables: ['volume', 'recommendation'],
+          ),
+          const ResponseTemplate(
+            text: '{assessment} Fai {sets_per_week} serie a settimana... mica male! {recommendation}',
+            requiredVariables: ['assessment', 'sets_per_week', 'recommendation'],
+          ),
+          const ResponseTemplate(
+            text: 'Bro, il tonnellaggio è {volume}. {recommendation} Spacca! 💪',
+            requiredVariables: ['volume', 'recommendation'],
+          ),
+        ];
+      }
       return [
         const ResponseTemplate(
           text: 'Il tuo volume settimanale è {volume}. {recommendation}',
@@ -398,6 +473,19 @@ class ResponseRepository {
         ),
         const ResponseTemplate(
           text: '{assessment} Stai facendo {sets_per_week} serie/settimana. {recommendation}',
+          requiredVariables: ['assessment', 'sets_per_week', 'recommendation'],
+        ),
+      ];
+    }
+    // English
+    if (tone == ResponseTone.casual) {
+      return [
+        const ResponseTemplate(
+          text: "Bro, you're moving {volume} a week! {recommendation}",
+          requiredVariables: ['volume', 'recommendation'],
+        ),
+        const ResponseTemplate(
+          text: '{assessment} {sets_per_week} sets/week... solid! {recommendation}',
           requiredVariables: ['assessment', 'sets_per_week', 'recommendation'],
         ),
       ];
@@ -414,36 +502,107 @@ class ResponseRepository {
     ];
   }
 
-  List<ResponseTemplate> _getRecoveryTemplates(String locale) {
+  List<ResponseTemplate> _getRecoveryTemplates(String locale, {ResponseTone tone = ResponseTone.formal}) {
     if (locale == 'it') {
+      if (tone == ResponseTone.casual) {
+        return [
+          const ResponseTemplate(
+            text: 'Recupero a {score}/100. {recommendation}\n\n'
+                'In pratica:\n'
+                '• 80+ = sei una bestia, vai pesante!\n'
+                '• 60-79 = ok ma non strafare\n'
+                '• <60 = bro, riposa o vai easy',
+            requiredVariables: ['score', 'recommendation'],
+          ),
+          const ResponseTemplate(
+            text: '{status_emoji} Sei {status}. Ultimo allenamento {hours_ago}h fa.\n\n'
+                '{recommendation}\n\n'
+                'Dritte RPE:\n'
+                '• 6-7 = ne avevi altre 3-4\n'
+                '• 8-9 = ne avevi altre 1-2\n'
+                '• 10 = tutto fuori, zero in serbatoio!',
+            requiredVariables: ['status_emoji', 'status', 'hours_ago', 'recommendation'],
+          ),
+        ];
+      }
       return [
         const ResponseTemplate(
-          text: 'Il tuo punteggio di recupero è {score}/100. {recommendation}',
+          text: 'Il tuo punteggio di recupero è {score}/100. {recommendation}\n\n'
+              '---\n'
+              '📚 **Come interpretare il punteggio:**\n'
+              '• **80-100**: Recuperato - pronto per allenamento intenso\n'
+              '• **60-79**: Parziale - ok per allenamento moderato\n'
+              '• **<60**: Affaticato - considera riposo o lavoro leggero',
           requiredVariables: ['score', 'recommendation'],
         ),
         const ResponseTemplate(
-          text: '{status_emoji} Recupero: {status}. Ultima sessione: {hours_ago} ore fa. {recommendation}',
+          text: '{status_emoji} Recupero: {status}. Ultima sessione: {hours_ago} ore fa. {recommendation}\n\n'
+              '💡 **Consiglio**: Usa l\'**RPE** (Rate of Perceived Exertion) per regolare l\'intensità:\n'
+              '• RPE 6-7 = potresti fare 3-4 reps in più\n'
+              '• RPE 8-9 = potresti fare 1-2 reps in più\n'
+              '• RPE 10 = massimale, nessuna rep in più',
           requiredVariables: ['status_emoji', 'status', 'hours_ago', 'recommendation'],
+        ),
+      ];
+    }
+    // English
+    if (tone == ResponseTone.casual) {
+      return [
+        const ResponseTemplate(
+          text: 'Recovery at {score}/100. {recommendation}\n\n'
+              'Real talk:\n'
+              '• 80+ = you\'re a beast, go heavy!\n'
+              '• 60-79 = ok but don\'t overdo it\n'
+              '• <60 = bro, rest or go light',
+          requiredVariables: ['score', 'recommendation'],
         ),
       ];
     }
     return [
       const ResponseTemplate(
-        text: 'Your recovery score is {score}/100. {recommendation}',
+        text: 'Your recovery score is {score}/100. {recommendation}\n\n'
+            '---\n'
+            '📚 **How to interpret your score:**\n'
+            '• **80-100**: Recovered - ready for intense training\n'
+            '• **60-79**: Partial - ok for moderate training\n'
+            '• **<60**: Fatigued - consider rest or light work',
         requiredVariables: ['score', 'recommendation'],
       ),
       const ResponseTemplate(
-        text: '{status_emoji} Recovery: {status}. Last session: {hours_ago}h ago. {recommendation}',
+        text: '{status_emoji} Recovery: {status}. Last session: {hours_ago}h ago. {recommendation}\n\n'
+            '💡 **Tip**: Use **RPE** (Rate of Perceived Exertion) to regulate intensity:\n'
+            '• RPE 6-7 = could do 3-4 more reps\n'
+            '• RPE 8-9 = could do 1-2 more reps\n'
+            '• RPE 10 = max effort, no reps left',
         requiredVariables: ['status_emoji', 'status', 'hours_ago', 'recommendation'],
       ),
     ];
   }
 
-  List<ResponseTemplate> _getBalanceTemplates(String locale) {
+  List<ResponseTemplate> _getBalanceTemplates(String locale, {ResponseTone tone = ResponseTone.formal}) {
     if (locale == 'it') {
+      if (tone == ResponseTone.casual) {
+        return [
+          const ResponseTemplate(
+            text: 'Bilanciamento al {balance_score}%! {lagging_groups}\n\n'
+                '{recommendation} Non fare il bro che allena solo petto e bicipiti! 😄',
+            requiredVariables: ['balance_score', 'lagging_groups', 'recommendation'],
+          ),
+        ];
+      }
       return [
         const ResponseTemplate(
           text: 'Equilibrio gruppi muscolari: {balance_score}%. {lagging_groups} {recommendation}',
+          requiredVariables: ['balance_score', 'lagging_groups', 'recommendation'],
+        ),
+      ];
+    }
+    // English
+    if (tone == ResponseTone.casual) {
+      return [
+        const ResponseTemplate(
+          text: 'Balance at {balance_score}%! {lagging_groups}\n\n'
+              "{recommendation} Don't be that bro who only trains chest and bis! 😄",
           requiredVariables: ['balance_score', 'lagging_groups', 'recommendation'],
         ),
       ];
@@ -456,8 +615,20 @@ class ResponseRepository {
     ];
   }
 
-  List<ResponseTemplate> _getFormTemplates(String locale) {
+  List<ResponseTemplate> _getFormTemplates(String locale, {ResponseTone tone = ResponseTone.formal}) {
     if (locale == 'it') {
+      if (tone == ResponseTone.casual) {
+        return [
+          const ResponseTemplate(
+            text: 'Ok, per {exercise} ricordati: {form_cue}. {safety_tip}\n\nSenti il muscolo che lavora, non fare il macho col peso! 😉',
+            requiredVariables: ['exercise', 'form_cue', 'safety_tip'],
+          ),
+          const ResponseTemplate(
+            text: 'Dritte importanti: {form_cue}\n\nMeglio meno peso e tecnica perfetta che tanto peso e infortuni! 💪',
+            requiredVariables: ['form_cue'],
+          ),
+        ];
+      }
       return [
         const ResponseTemplate(
           text: 'Per {exercise}: {form_cue}. {safety_tip}',
@@ -466,6 +637,15 @@ class ResponseRepository {
         const ResponseTemplate(
           text: 'La tecnica è fondamentale! Concentrati su: {form_cue}',
           requiredVariables: ['form_cue'],
+        ),
+      ];
+    }
+    // English
+    if (tone == ResponseTone.casual) {
+      return [
+        const ResponseTemplate(
+          text: "For {exercise}, remember: {form_cue}. {safety_tip}\n\nFeel the muscle, don't ego lift! 😉",
+          requiredVariables: ['exercise', 'form_cue', 'safety_tip'],
         ),
       ];
     }
@@ -481,12 +661,28 @@ class ResponseRepository {
     ];
   }
 
-  List<ResponseTemplate> _getMotivationTemplates(String locale) {
+  List<ResponseTemplate> _getMotivationTemplates(String locale, {ResponseTone tone = ResponseTone.formal}) {
     if (locale == 'it') {
+      if (tone == ResponseTone.casual) {
+        return [
+          const ResponseTemplate(text: 'Ehi bro, non mollare adesso! 🔥 Ogni rep che fai ti avvicina alla versione migliore di te. {achievement}'),
+          const ResponseTemplate(text: "Ricordati perché hai iniziato a pompare! {recent_progress}\n\nOgni bestia è partita da zero. Continua a macinare! 💪"),
+          const ResponseTemplate(text: "Plateau? Tranquillo, è solo il corpo che si sta adattando per spaccare ancora di più! {strategy}\n\nI guerrieri non mollano mai! 🦁"),
+          const ResponseTemplate(text: 'Dai cazzo, ce la fai! 💥 {achievement}\n\nLa fatica è temporanea, i risultati restano per sempre!'),
+        ];
+      }
       return [
         const ResponseTemplate(text: '💪 Non mollare! Ogni ripetizione conta. {achievement}'),
         const ResponseTemplate(text: 'Ricorda perché hai iniziato. {recent_progress}'),
         const ResponseTemplate(text: 'I plateau sono temporanei. {strategy}'),
+      ];
+    }
+    // English
+    if (tone == ResponseTone.casual) {
+      return [
+        const ResponseTemplate(text: "Bro, don't you dare quit now! 🔥 Every rep brings you closer to your best self. {achievement}"),
+        const ResponseTemplate(text: 'Remember why you started grinding! {recent_progress}\n\nEvery beast started at zero. Keep crushing it! 💪'),
+        const ResponseTemplate(text: "Plateau? Chill, it's your body gearing up for bigger gains! {strategy}\n\nWarriors never quit! 🦁"),
       ];
     }
     return [
@@ -496,11 +692,32 @@ class ResponseRepository {
     ];
   }
 
-  List<ResponseTemplate> _getPlanTemplates(String locale) {
+  List<ResponseTemplate> _getPlanTemplates(String locale, {ResponseTone tone = ResponseTone.formal}) {
     if (locale == 'it') {
+      if (tone == ResponseTone.casual) {
+        return [
+          const ResponseTemplate(
+            text: 'Ok bro, guardando i tuoi numeri: {current_split}\n\n{recommendation}\n\nSpacca tutto! 💪🔥',
+            requiredVariables: ['current_split', 'recommendation'],
+          ),
+          const ResponseTemplate(
+            text: 'Dalla tua scheda vedo: {current_split}\n\n{recommendation}\n\nSe segui questa strada diventi una bestia! 🦍',
+            requiredVariables: ['current_split', 'recommendation'],
+          ),
+        ];
+      }
       return [
         const ResponseTemplate(
           text: 'Basandomi sui tuoi dati: {current_split}. {recommendation}',
+          requiredVariables: ['current_split', 'recommendation'],
+        ),
+      ];
+    }
+    // English
+    if (tone == ResponseTone.casual) {
+      return [
+        const ResponseTemplate(
+          text: 'Alright bro, looking at your numbers: {current_split}\n\n{recommendation}\n\nGo crush it! 💪🔥',
           requiredVariables: ['current_split', 'recommendation'],
         ),
       ];
@@ -533,7 +750,11 @@ class ResponseRepository {
               '💪 **1RM stimato**: {pr_1rm} kg\n'
               '🎯 **Miglior set**: {pr_weight} kg × {pr_reps} ripetizioni\n'
               '📅 **Data**: {pr_date}\n\n'
-              '📊 *1RM calcolato con formula Epley: (peso × reps / 37.5) + peso*\n\n'
+              '---\n'
+              '📚 **Cosa significa?**\n'
+              '• **1RM** = One Rep Max, il peso massimo che puoi sollevare per una singola ripetizione\n'
+              '• Calcolato con la **formula di Epley**: peso × (1 + reps/30)\n'
+              '• Utile per programmare l\'intensità: 80% 1RM = peso per 8-10 reps\n\n'
               'Continua così! 💯',
           requiredVariables: ['exercise_name', 'pr_1rm', 'pr_weight', 'pr_reps', 'pr_date'],
         ),
@@ -565,7 +786,11 @@ class ResponseRepository {
             '💪 **Estimated 1RM**: {pr_1rm} kg\n'
             '🎯 **Best set**: {pr_weight} kg × {pr_reps} reps\n'
             '📅 **Date**: {pr_date}\n\n'
-            '📊 *1RM calculated with Epley formula: (weight × reps / 37.5) + weight*\n\n'
+            '---\n'
+            '📚 **What does this mean?**\n'
+            '• **1RM** = One Rep Max, the maximum weight you can lift for a single rep\n'
+            '• Calculated using **Epley formula**: weight × (1 + reps/30)\n'
+            '• Useful for programming: 80% 1RM = weight for 8-10 reps\n\n'
             'Keep it up! 💯',
         requiredVariables: ['exercise_name', 'pr_1rm', 'pr_weight', 'pr_reps', 'pr_date'],
       ),
@@ -1200,4 +1425,70 @@ class ResponseRepository {
       ),
     ];
   }
+
+  // ========================================================================
+  // Technical Terminology Glossary
+  // ========================================================================
+
+  /// Get explanation for a technical fitness term
+  ///
+  /// **Parameters**:
+  /// - `term`: The term to explain (e.g., '1rm', 'rpe', 'volume')
+  /// - `locale`: Language code ('en' or 'it')
+  ///
+  /// **Returns**: Explanation string or null if term not found
+  String? getTermExplanation(String term, String locale) {
+    final glossary = locale == 'it' ? _glossaryIT : _glossaryEN;
+    return glossary[term.toLowerCase()];
+  }
+
+  /// Italian terminology glossary
+  static const Map<String, String> _glossaryIT = {
+    '1rm': '**1RM (One Rep Max)**: Il peso massimo che puoi sollevare per una singola ripetizione. '
+        'Usato per calcolare le percentuali di carico nell\'allenamento.',
+    'rpe': '**RPE (Rate of Perceived Exertion)**: Scala 1-10 che misura quanto ti senti affaticato. '
+        'RPE 10 = massimale, RPE 7 = potresti fare 3 reps in più.',
+    'rir': '**RIR (Reps In Reserve)**: Quante ripetizioni potresti ancora fare. '
+        'RIR 2 = potresti fare 2 reps in più prima del cedimento.',
+    'epley': '**Formula di Epley**: Calcola il 1RM stimato: peso × (1 + reps/30). '
+        'Esempio: 80kg × 10 reps = 80 × 1.33 = 107kg 1RM stimato.',
+    'volume': '**Volume**: Peso totale sollevato (peso × serie × ripetizioni). '
+        'Indicatore chiave per la crescita muscolare.',
+    'intensità': '**Intensità**: Percentuale del 1RM usata. 70-85% = range ipertrofia.',
+    'deload': '**Deload**: Settimana con volume/intensità ridotti per favorire il recupero.',
+    'amrap': '**AMRAP (As Many Reps As Possible)**: Serie dove fai più ripetizioni possibili.',
+    'drop set': '**Drop Set**: Dopo il cedimento, riduci il peso e continui senza pausa.',
+    'superset': '**Superset**: Due esercizi eseguiti consecutivamente senza pausa.',
+    'progressive overload': '**Sovraccarico Progressivo**: Aumentare gradualmente peso, reps o serie nel tempo.',
+    'compound': '**Esercizio Compound**: Movimento che coinvolge più articolazioni (squat, panca, stacco).',
+    'isolation': '**Esercizio di Isolamento**: Movimento che coinvolge una sola articolazione (curl, extension).',
+    'doms': '**DOMS (Delayed Onset Muscle Soreness)**: Indolenzimento muscolare che compare 24-72h dopo l\'allenamento.',
+    'tut': '**TUT (Time Under Tension)**: Tempo totale sotto tensione durante una serie.',
+    'mmd': '**Mind-Muscle Connection**: Concentrazione mentale sul muscolo target durante l\'esercizio.',
+  };
+
+  /// English terminology glossary
+  static const Map<String, String> _glossaryEN = {
+    '1rm': '**1RM (One Rep Max)**: The maximum weight you can lift for a single rep. '
+        'Used to calculate training percentages.',
+    'rpe': '**RPE (Rate of Perceived Exertion)**: 1-10 scale measuring how hard you feel. '
+        'RPE 10 = max effort, RPE 7 = could do 3 more reps.',
+    'rir': '**RIR (Reps In Reserve)**: How many reps you could still do. '
+        'RIR 2 = you could do 2 more reps before failure.',
+    'epley': '**Epley Formula**: Estimates 1RM: weight × (1 + reps/30). '
+        'Example: 80kg × 10 reps = 80 × 1.33 = 107kg estimated 1RM.',
+    'volume': '**Volume**: Total weight lifted (weight × sets × reps). '
+        'Key indicator for muscle growth.',
+    'intensity': '**Intensity**: Percentage of 1RM used. 70-85% = hypertrophy range.',
+    'deload': '**Deload**: Week with reduced volume/intensity to promote recovery.',
+    'amrap': '**AMRAP (As Many Reps As Possible)**: Set where you do maximum reps.',
+    'drop set': '**Drop Set**: After failure, reduce weight and continue without rest.',
+    'superset': '**Superset**: Two exercises performed consecutively without rest.',
+    'progressive overload': '**Progressive Overload**: Gradually increasing weight, reps, or sets over time.',
+    'compound': '**Compound Exercise**: Multi-joint movement (squat, bench, deadlift).',
+    'isolation': '**Isolation Exercise**: Single-joint movement (curl, extension).',
+    'doms': '**DOMS (Delayed Onset Muscle Soreness)**: Muscle soreness appearing 24-72h after training.',
+    'tut': '**TUT (Time Under Tension)**: Total time under tension during a set.',
+    'mmd': '**Mind-Muscle Connection**: Mental focus on target muscle during exercise.',
+  };
 }

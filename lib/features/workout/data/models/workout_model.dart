@@ -292,7 +292,8 @@ class ExerciseModel {
       type: type,
       category: category,
       sets: sets,
-      restTime: data['restTimeSeconds'] as int?,
+      // Support both field names: 'restTime' (templates) and 'restTimeSeconds' (legacy)
+      restTime: (data['restTime'] as int?) ?? (data['restTimeSeconds'] as int?),
       tut: data['tut'] as String?,
       notes: notes,
       isCompleted: data['isCompleted'] as bool? ?? false,

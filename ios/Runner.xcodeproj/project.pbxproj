@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 54;
+	objectVersion = 70;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -14,6 +14,7 @@
 		97C146FC1CF9000F007C117D /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 97C146FA1CF9000F007C117D /* Main.storyboard */; };
 		97C146FE1CF9000F007C117D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 97C146FD1CF9000F007C117D /* Assets.xcassets */; };
 		97C147011CF9000F007C117D /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 97C146FF1CF9000F007C117D /* LaunchScreen.storyboard */; };
+		99B2A35353F7A84D78C9DA49 /* HealthKitActivityManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1760C539CEEFC322D2A4427D /* HealthKitActivityManager.swift */; };
 		C328CC496915E48D88CF4884 /* Pods_RunnerTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A112024F9856EE8DC47538C8 /* Pods_RunnerTests.framework */; };
 		D10AC5C72E4B9CAF009D8E78 /* timer_complete.caf in Resources */ = {isa = PBXBuildFile; fileRef = D10AC5C62E4B9CAF009D8E78 /* timer_complete.caf */; };
 		D10AC5CD2E4BA027009D8E78 /* BackgroundAudioManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = D10AC5CC2E4BA027009D8E78 /* BackgroundAudioManager.swift */; };
@@ -22,7 +23,8 @@
 		D10AC7722E4CD2BD009D8E78 /* BatteryOptimizationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = D10AC7712E4CD2BD009D8E78 /* BatteryOptimizationManager.swift */; };
 		D10AC7742E4CD2C1009D8E78 /* Logger.swift in Sources */ = {isa = PBXBuildFile; fileRef = D10AC7732E4CD2C1009D8E78 /* Logger.swift */; };
 		D10AC7762E4CD2CA009D8E78 /* NotificationPermissionHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = D10AC7752E4CD2CA009D8E78 /* NotificationPermissionHelper.swift */; };
-		D10AC7782E4CD2D3009D8E78 /* SilentAudioLoopManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = D10AC7772E4CD2D3009D8E78 /* SilentAudioLoopManager.swift */; };
+		D1534A582EE719EA00C4E3C9 /* FitLogWatch Watch App.app in Embed Watch Content */ = {isa = PBXBuildFile; fileRef = D1534A4E2EE719E900C4E3C9 /* FitLogWatch Watch App.app */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		D1534AAA2EE7224A00C4E3C9 /* WatchConnectivityManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1534AA92EE7224A00C4E3C9 /* WatchConnectivityManager.swift */; };
 		D15AD7F22E4B91C90029B4D4 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D15AD7EF2E4B91C90029B4D4 /* AppDelegate.swift */; };
 		D15AD7FB2E4B91F00029B4D4 /* ErrorRecoveryManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = D15AD7F72E4B91F00029B4D4 /* ErrorRecoveryManager.swift */; };
 		D15AD7FC2E4B91F00029B4D4 /* PermissionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = D15AD7F92E4B91F00029B4D4 /* PermissionManager.swift */; };
@@ -45,7 +47,7 @@
 		D1AF57CC2E3B1101005C381A /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D1AF57CB2E3B1101005C381A /* SwiftUI.framework */; };
 		D1AF57DD2E3B1102005C381A /* GymBroTimerWidgetExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = D1AF57C82E3B1101005C381A /* GymBroTimerWidgetExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		D1AF6C112E3B135A0024614B /* LiveActivityHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1AF6C102E3B135A0024614B /* LiveActivityHandler.swift */; };
-		D1AUDIO01 /* timer_complete.wav in Resources */ = {isa = PBXBuildFile; fileRef = D1AUDIOFILE01 /* timer_complete.wav */; };
+		D1AUDIO01 /* Runner/timer_complete.wav in Resources */ = {isa = PBXBuildFile; fileRef = D1AUDIOFILE01 /* Runner/timer_complete.wav */; };
 		D1F5514A2E4CE7B900DA47B4 /* LightWeight.wav in Resources */ = {isa = PBXBuildFile; fileRef = D1F551472E4CE7B900DA47B4 /* LightWeight.wav */; };
 		D1F5514B2E4CE7B900DA47B4 /* YehBuddie.wav in Resources */ = {isa = PBXBuildFile; fileRef = D1F551492E4CE7B900DA47B4 /* YehBuddie.wav */; };
 		D1F5514C2E4CE7B900DA47B4 /* LightWeight.caf in Resources */ = {isa = PBXBuildFile; fileRef = D1F551462E4CE7B900DA47B4 /* LightWeight.caf */; };
@@ -59,6 +61,13 @@
 			proxyType = 1;
 			remoteGlobalIDString = 97C146ED1CF9000F007C117D;
 			remoteInfo = Runner;
+		};
+		D1534A562EE719EA00C4E3C9 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 97C146E61CF9000F007C117D /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = D1534A4D2EE719E900C4E3C9;
+			remoteInfo = "FitLogWatch Watch App";
 		};
 		D1AF57DB2E3B1102005C381A /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -80,6 +89,17 @@
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		D1534A592EE719EA00C4E3C9 /* Embed Watch Content */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "$(CONTENTS_FOLDER_PATH)/Watch";
+			dstSubfolderSpec = 16;
+			files = (
+				D1534A582EE719EA00C4E3C9 /* FitLogWatch Watch App.app in Embed Watch Content */,
+			);
+			name = "Embed Watch Content";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		D1AF57DE2E3B1102005C381A /* Embed Foundation Extensions */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
@@ -97,6 +117,7 @@
 		0B52304E61203F658EC1B877 /* Pods-Runner.profile.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Runner.profile.xcconfig"; path = "Target Support Files/Pods-Runner/Pods-Runner.profile.xcconfig"; sourceTree = "<group>"; };
 		1498D2321E8E86230040F4C2 /* GeneratedPluginRegistrant.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GeneratedPluginRegistrant.h; sourceTree = "<group>"; };
 		1498D2331E8E89220040F4C2 /* GeneratedPluginRegistrant.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GeneratedPluginRegistrant.m; sourceTree = "<group>"; };
+		1760C539CEEFC322D2A4427D /* HealthKitActivityManager.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = HealthKitActivityManager.swift; sourceTree = "<group>"; };
 		20E3F22DAFC45283D2A63558 /* Pods-RunnerTests.profile.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RunnerTests.profile.xcconfig"; path = "Target Support Files/Pods-RunnerTests/Pods-RunnerTests.profile.xcconfig"; sourceTree = "<group>"; };
 		331C807B294A618700263BE5 /* RunnerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RunnerTests.swift; sourceTree = "<group>"; };
 		331C8081294A63A400263BE5 /* RunnerTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = RunnerTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -124,7 +145,8 @@
 		D10AC7712E4CD2BD009D8E78 /* BatteryOptimizationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BatteryOptimizationManager.swift; sourceTree = "<group>"; };
 		D10AC7732E4CD2C1009D8E78 /* Logger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Logger.swift; sourceTree = "<group>"; };
 		D10AC7752E4CD2CA009D8E78 /* NotificationPermissionHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationPermissionHelper.swift; sourceTree = "<group>"; };
-		D10AC7772E4CD2D3009D8E78 /* SilentAudioLoopManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SilentAudioLoopManager.swift; sourceTree = "<group>"; };
+		D1534A4E2EE719E900C4E3C9 /* FitLogWatch Watch App.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "FitLogWatch Watch App.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		D1534AA92EE7224A00C4E3C9 /* WatchConnectivityManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchConnectivityManager.swift; sourceTree = "<group>"; };
 		D15AD7EF2E4B91C90029B4D4 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		D15AD7F32E4B91F00029B4D4 /* FeatureFlags.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeatureFlags.swift; sourceTree = "<group>"; };
 		D15AD7F52E4B91F00029B4D4 /* AudioSessionManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioSessionManager.swift; sourceTree = "<group>"; };
@@ -149,13 +171,13 @@
 		D1AF57C92E3B1101005C381A /* WidgetKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WidgetKit.framework; path = System/Library/Frameworks/WidgetKit.framework; sourceTree = SDKROOT; };
 		D1AF57CB2E3B1101005C381A /* SwiftUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftUI.framework; path = System/Library/Frameworks/SwiftUI.framework; sourceTree = SDKROOT; };
 		D1AF6C102E3B135A0024614B /* LiveActivityHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiveActivityHandler.swift; sourceTree = "<group>"; };
-		D1AUDIOFILE01 /* timer_complete.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = Runner/timer_complete.wav; sourceTree = "<group>"; };
-		D1AUDIOFILE02 /* LightWeight.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = Runner/LightWeight.wav; sourceTree = "<group>"; };
-		D1AUDIOFILE03 /* YehBuddie.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = Runner/YehBuddie.wav; sourceTree = "<group>"; };
-		D1AUDIOFILE04 /* timer_complete.caf */ = {isa = PBXFileReference; lastKnownFileType = file; path = Runner/timer_complete.caf; sourceTree = "<group>"; };
-		D1AUDIOFILE05 /* LightWeight.caf */ = {isa = PBXFileReference; lastKnownFileType = file; path = Runner/LightWeight.caf; sourceTree = "<group>"; };
-		D1AUDIOFILE06 /* YehBuddie.caf */ = {isa = PBXFileReference; lastKnownFileType = file; path = Runner/YehBuddie.caf; sourceTree = "<group>"; };
-		D1AUDIOFILE07 /* silent_loop.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = Runner/silent_loop.wav; sourceTree = "<group>"; };
+		D1AUDIOFILE01 /* Runner/timer_complete.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = Runner/timer_complete.wav; sourceTree = "<group>"; };
+		D1AUDIOFILE02 /* Runner/LightWeight.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = Runner/LightWeight.wav; sourceTree = "<group>"; };
+		D1AUDIOFILE03 /* Runner/YehBuddie.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = Runner/YehBuddie.wav; sourceTree = "<group>"; };
+		D1AUDIOFILE04 /* Runner/timer_complete.caf */ = {isa = PBXFileReference; lastKnownFileType = file; path = Runner/timer_complete.caf; sourceTree = "<group>"; };
+		D1AUDIOFILE05 /* Runner/LightWeight.caf */ = {isa = PBXFileReference; lastKnownFileType = file; path = Runner/LightWeight.caf; sourceTree = "<group>"; };
+		D1AUDIOFILE06 /* Runner/YehBuddie.caf */ = {isa = PBXFileReference; lastKnownFileType = file; path = Runner/YehBuddie.caf; sourceTree = "<group>"; };
+		D1AUDIOFILE07 /* Runner/silent_loop.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = Runner/silent_loop.wav; sourceTree = "<group>"; };
 		D1F551462E4CE7B900DA47B4 /* LightWeight.caf */ = {isa = PBXFileReference; lastKnownFileType = file; path = LightWeight.caf; sourceTree = "<group>"; };
 		D1F551472E4CE7B900DA47B4 /* LightWeight.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = LightWeight.wav; sourceTree = "<group>"; };
 		D1F551482E4CE7B900DA47B4 /* YehBuddie.caf */ = {isa = PBXFileReference; lastKnownFileType = file; path = YehBuddie.caf; sourceTree = "<group>"; };
@@ -163,18 +185,18 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
-		D1AF57E22E3B1102005C381A /* Exceptions for "GymBroTimerWidget" folder in "GymBroTimerWidgetExtension" target */ = {
+		D1AF57E22E3B1102005C381A /* PBXFileSystemSynchronizedBuildFileExceptionSet */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				Info.plist,
 			);
 			target = D1AF57C72E3B1101005C381A /* GymBroTimerWidgetExtension */;
 		};
-		D1AF6C132E3B13EC0024614B /* Exceptions for "GymBroTimerWidget" folder in "Runner" target */ = {
+		D1AF6C132E3B13EC0024614B /* PBXFileSystemSynchronizedBuildFileExceptionSet */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
-				GymBroTimerAttributes.swift,
 				GymBroScheduleAttributes.swift,
+				GymBroTimerAttributes.swift,
 				WidgetLocalization.swift,
 			);
 			target = 97C146ED1CF9000F007C117D /* Runner */;
@@ -182,19 +204,8 @@
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
-		D1AF57CD2E3B1101005C381A /* GymBroTimerWidget */ = {
-			isa = PBXFileSystemSynchronizedRootGroup;
-			exceptions = (
-				D1AF6C132E3B13EC0024614B /* Exceptions for "GymBroTimerWidget" folder in "Runner" target */,
-				D1AF57E22E3B1102005C381A /* Exceptions for "GymBroTimerWidget" folder in "GymBroTimerWidgetExtension" target */,
-			);
-			explicitFileTypes = {
-			};
-			explicitFolders = (
-			);
-			path = GymBroTimerWidget;
-			sourceTree = "<group>";
-		};
+		D1534A4F2EE719E900C4E3C9 /* FitLogWatch Watch App */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = "FitLogWatch Watch App"; sourceTree = "<group>"; };
+		D1AF57CD2E3B1101005C381A /* GymBroTimerWidget */ = {isa = PBXFileSystemSynchronizedRootGroup; exceptions = (D1AF6C132E3B13EC0024614B /* PBXFileSystemSynchronizedBuildFileExceptionSet */, D1AF57E22E3B1102005C381A /* PBXFileSystemSynchronizedBuildFileExceptionSet */, ); explicitFileTypes = {}; explicitFolders = (); path = GymBroTimerWidget; sourceTree = "<group>"; };
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -206,6 +217,13 @@
 				D17D7A472E772F5E00480A54 /* AppTrackingTransparency.framework in Frameworks */,
 				D17D7A452E772F5400480A54 /* AdSupport.framework in Frameworks */,
 				2B11011EECEB02790544FAE7 /* Pods_Runner.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D1534A4B2EE719E900C4E3C9 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -269,6 +287,7 @@
 				9740EEB11CF90186004384FC /* Flutter */,
 				97C146F01CF9000F007C117D /* Runner */,
 				D1AF57CD2E3B1101005C381A /* GymBroTimerWidget */,
+				D1534A4F2EE719E900C4E3C9 /* FitLogWatch Watch App */,
 				97C146EF1CF9000F007C117D /* Products */,
 				331C8082294A63A400263BE5 /* RunnerTests */,
 				E95D65AAD487DC6F65112E11 /* Pods */,
@@ -283,6 +302,7 @@
 				97C146EE1CF9000F007C117D /* Runner.app */,
 				331C8081294A63A400263BE5 /* RunnerTests.xctest */,
 				D1AF57C82E3B1101005C381A /* GymBroTimerWidgetExtension.appex */,
+				D1534A4E2EE719E900C4E3C9 /* FitLogWatch Watch App.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -318,13 +338,13 @@
 		D15AD7D72E4B91280029B4D4 /* Recovered References */ = {
 			isa = PBXGroup;
 			children = (
-				D1AUDIOFILE01 /* timer_complete.wav */,
-				D1AUDIOFILE02 /* LightWeight.wav */,
-				D1AUDIOFILE03 /* YehBuddie.wav */,
-				D1AUDIOFILE04 /* timer_complete.caf */,
-				D1AUDIOFILE05 /* LightWeight.caf */,
-				D1AUDIOFILE06 /* YehBuddie.caf */,
-				D1AUDIOFILE07 /* silent_loop.wav */,
+				D1AUDIOFILE01 /* Runner/timer_complete.wav */,
+				D1AUDIOFILE02 /* Runner/LightWeight.wav */,
+				D1AUDIOFILE03 /* Runner/YehBuddie.wav */,
+				D1AUDIOFILE04 /* Runner/timer_complete.caf */,
+				D1AUDIOFILE05 /* Runner/LightWeight.caf */,
+				D1AUDIOFILE06 /* Runner/YehBuddie.caf */,
+				D1AUDIOFILE07 /* Runner/silent_loop.wav */,
 			);
 			name = "Recovered References";
 			sourceTree = "<group>";
@@ -341,6 +361,7 @@
 			isa = PBXGroup;
 			children = (
 				D1A4A9092E6F89790037BF3A /* NotificationDelegate.swift */,
+				D1534AA92EE7224A00C4E3C9 /* WatchConnectivityManager.swift */,
 				D1A4A9072E6F84D90037BF3A /* DirectNotificationManager.swift */,
 				D197C9E22E6A060C008F69EC /* UnifiedTimerCoordinator.swift */,
 				D15AD7F52E4B91F00029B4D4 /* AudioSessionManager.swift */,
@@ -349,7 +370,6 @@
 				D15AD7F72E4B91F00029B4D4 /* ErrorRecoveryManager.swift */,
 				D10AC7752E4CD2CA009D8E78 /* NotificationPermissionHelper.swift */,
 				D10AC7732E4CD2C1009D8E78 /* Logger.swift */,
-				D10AC7772E4CD2D3009D8E78 /* SilentAudioLoopManager.swift */,
 				D10AC5CC2E4BA027009D8E78 /* BackgroundAudioManager.swift */,
 				D10AC76F2E4CD2A1009D8E78 /* TimerSoundFix.swift */,
 				D15AD7F92E4B91F00029B4D4 /* PermissionManager.swift */,
@@ -357,6 +377,7 @@
 				D17D7A6A2E77760100480A54 /* AdSupportManager.swift */,
 				D17D7A6B2E77760100480A54 /* KeyboardManager.swift */,
 				D17D7A6C2E77760100480A54 /* NetworkConfiguration.swift */,
+				1760C539CEEFC322D2A4427D /* HealthKitActivityManager.swift */,
 			);
 			path = Managers;
 			sourceTree = "<group>";
@@ -407,6 +428,7 @@
 				97C146EC1CF9000F007C117D /* Resources */,
 				9705A1C41CF9048500538489 /* Embed Frameworks */,
 				D1AF57DE2E3B1102005C381A /* Embed Foundation Extensions */,
+				D1534A592EE719EA00C4E3C9 /* Embed Watch Content */,
 				3B06AD1E1E4923F5004D2608 /* Thin Binary */,
 				BFD4742B0D9A8EDC6C02B797 /* [CP] Embed Pods Frameworks */,
 				0251B29D8D29214E0299D0B3 /* [CP] Copy Pods Resources */,
@@ -415,10 +437,31 @@
 			);
 			dependencies = (
 				D1AF57DC2E3B1102005C381A /* PBXTargetDependency */,
+				D1534A572EE719EA00C4E3C9 /* PBXTargetDependency */,
 			);
 			name = Runner;
 			productName = Runner;
 			productReference = 97C146EE1CF9000F007C117D /* Runner.app */;
+			productType = "com.apple.product-type.application";
+		};
+		D1534A4D2EE719E900C4E3C9 /* FitLogWatch Watch App */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = D1534A5D2EE719EA00C4E3C9 /* Build configuration list for PBXNativeTarget "FitLogWatch Watch App" */;
+			buildPhases = (
+				D1534A4A2EE719E900C4E3C9 /* Sources */,
+				D1534A4B2EE719E900C4E3C9 /* Frameworks */,
+				D1534A4C2EE719E900C4E3C9 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				D1534A4F2EE719E900C4E3C9 /* FitLogWatch Watch App */,
+			);
+			name = "FitLogWatch Watch App";
+			productName = "FitLogWatch Watch App";
+			productReference = D1534A4E2EE719E900C4E3C9 /* FitLogWatch Watch App.app */;
 			productType = "com.apple.product-type.application";
 		};
 		D1AF57C72E3B1101005C381A /* GymBroTimerWidgetExtension */ = {
@@ -448,7 +491,7 @@
 			isa = PBXProject;
 			attributes = {
 				BuildIndependentTargetsInParallel = YES;
-				LastSwiftUpdateCheck = 1640;
+				LastSwiftUpdateCheck = 2610;
 				LastUpgradeCheck = 1510;
 				ORGANIZATIONNAME = "";
 				TargetAttributes = {
@@ -459,6 +502,9 @@
 					97C146ED1CF9000F007C117D = {
 						CreatedOnToolsVersion = 7.3.1;
 						LastSwiftMigration = 1100;
+					};
+					D1534A4D2EE719E900C4E3C9 = {
+						CreatedOnToolsVersion = 26.1.1;
 					};
 					D1AF57C72E3B1101005C381A = {
 						CreatedOnToolsVersion = 16.4;
@@ -482,6 +528,7 @@
 				97C146ED1CF9000F007C117D /* Runner */,
 				331C8080294A63A400263BE5 /* RunnerTests */,
 				D1AF57C72E3B1101005C381A /* GymBroTimerWidgetExtension */,
+				D1534A4D2EE719E900C4E3C9 /* FitLogWatch Watch App */,
 			);
 		};
 /* End PBXProject section */
@@ -503,7 +550,7 @@
 				3B3967161E833CAA004F5970 /* AppFrameworkInfo.plist in Resources */,
 				97C146FE1CF9000F007C117D /* Assets.xcassets in Resources */,
 				97C146FC1CF9000F007C117D /* Main.storyboard in Resources */,
-				D1AUDIO01 /* timer_complete.wav in Resources */,
+				D1AUDIO01 /* Runner/timer_complete.wav in Resources */,
 				D1F5514A2E4CE7B900DA47B4 /* LightWeight.wav in Resources */,
 				D1A4AB2C2E72B65D0037BF3A /* sound.caf in Resources */,
 				D1F5514B2E4CE7B900DA47B4 /* YehBuddie.wav in Resources */,
@@ -511,6 +558,13 @@
 				D1F5514D2E4CE7B900DA47B4 /* YehBuddie.caf in Resources */,
 				D10AC5C72E4B9CAF009D8E78 /* timer_complete.caf in Resources */,
 				D10AC7342E4CD104009D8E78 /* silent_loop.wav in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D1534A4C2EE719E900C4E3C9 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -532,9 +586,13 @@
 			inputFileListPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-Runner/Pods-Runner-resources-${CONFIGURATION}-input-files.xcfilelist",
 			);
+			inputPaths = (
+			);
 			name = "[CP] Copy Pods Resources";
 			outputFileListPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-Runner/Pods-Runner-resources-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -624,9 +682,13 @@
 			inputFileListPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-Runner/Pods-Runner-frameworks-${CONFIGURATION}-input-files.xcfilelist",
 			);
+			inputPaths = (
+			);
 			name = "[CP] Embed Pods Frameworks";
 			outputFileListPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-Runner/Pods-Runner-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -664,11 +726,19 @@
 				D15AD7FD2E4B91F00029B4D4 /* BackgroundTaskManager.swift in Sources */,
 				D10AC5CD2E4BA027009D8E78 /* BackgroundAudioManager.swift in Sources */,
 				D15AD7FE2E4B91F00029B4D4 /* AudioSessionManager.swift in Sources */,
+				D1534AAA2EE7224A00C4E3C9 /* WatchConnectivityManager.swift in Sources */,
 				D197C9E32E6A060C008F69EC /* UnifiedTimerCoordinator.swift in Sources */,
 				D15AD7FF2E4B91F00029B4D4 /* FeatureFlags.swift in Sources */,
 				D10AC7762E4CD2CA009D8E78 /* NotificationPermissionHelper.swift in Sources */,
 				D10AC7722E4CD2BD009D8E78 /* BatteryOptimizationManager.swift in Sources */,
-				D10AC7782E4CD2D3009D8E78 /* SilentAudioLoopManager.swift in Sources */,
+				99B2A35353F7A84D78C9DA49 /* HealthKitActivityManager.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D1534A4A2EE719E900C4E3C9 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -686,6 +756,11 @@
 			isa = PBXTargetDependency;
 			target = 97C146ED1CF9000F007C117D /* Runner */;
 			targetProxy = 331C8085294A63A400263BE5 /* PBXContainerItemProxy */;
+		};
+		D1534A572EE719EA00C4E3C9 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = D1534A4D2EE719E900C4E3C9 /* FitLogWatch Watch App */;
+			targetProxy = D1534A562EE719EA00C4E3C9 /* PBXContainerItemProxy */;
 		};
 		D1AF57DC2E3B1102005C381A /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
@@ -1009,6 +1084,159 @@
 			};
 			name = Release;
 		};
+		D1534A5A2EE719EA00C4E3C9 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CODE_SIGN_ENTITLEMENTS = "FitLogWatch Watch App/FitLogWatch Watch App.entitlements";
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 8ZJRC9EE4Y;
+				ENABLE_PREVIEWS = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "FitLogWatch-Watch-App-Info.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = FitLogWatch;
+				INFOPLIST_KEY_NSHealthShareUsageDescription = "FitLog needs to read your health data to display heart rate and calories during workouts.";
+				INFOPLIST_KEY_NSHealthUpdateUsageDescription = "FitLog needs to save your workout data to Apple Health to track your fitness progress.";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
+				INFOPLIST_KEY_WKCompanionAppBundleIdentifier = com.michele.gymbro.flutter;
+				INFOPLIST_KEY_WKWatchOnly = NO;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MARKETING_VERSION = 1.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = com.michele.gymbro.flutter.watchkitapp;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = watchos;
+				SKIP_INSTALL = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SUPPORTED_PLATFORMS = "watchos watchsimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 4;
+				WATCHOS_DEPLOYMENT_TARGET = 11.0;
+			};
+			name = Debug;
+		};
+		D1534A5B2EE719EA00C4E3C9 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CODE_SIGN_ENTITLEMENTS = "FitLogWatch Watch App/FitLogWatch Watch App.entitlements";
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 8ZJRC9EE4Y;
+				ENABLE_PREVIEWS = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "FitLogWatch-Watch-App-Info.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = FitLogWatch;
+				INFOPLIST_KEY_NSHealthShareUsageDescription = "FitLog needs to read your health data to display heart rate and calories during workouts.";
+				INFOPLIST_KEY_NSHealthUpdateUsageDescription = "FitLog needs to save your workout data to Apple Health to track your fitness progress.";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
+				INFOPLIST_KEY_WKCompanionAppBundleIdentifier = com.michele.gymbro.flutter;
+				INFOPLIST_KEY_WKWatchOnly = NO;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MARKETING_VERSION = 1.0;
+				MTL_FAST_MATH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = com.michele.gymbro.flutter.watchkitapp;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = watchos;
+				SKIP_INSTALL = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SUPPORTED_PLATFORMS = "watchos watchsimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 4;
+				WATCHOS_DEPLOYMENT_TARGET = 11.0;
+			};
+			name = Release;
+		};
+		D1534A5C2EE719EA00C4E3C9 /* Profile */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CODE_SIGN_ENTITLEMENTS = "FitLogWatch Watch App/FitLogWatch Watch App.entitlements";
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 8ZJRC9EE4Y;
+				ENABLE_PREVIEWS = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "FitLogWatch-Watch-App-Info.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = FitLogWatch;
+				INFOPLIST_KEY_NSHealthShareUsageDescription = "FitLog needs to read your health data to display heart rate and calories during workouts.";
+				INFOPLIST_KEY_NSHealthUpdateUsageDescription = "FitLog needs to save your workout data to Apple Health to track your fitness progress.";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
+				INFOPLIST_KEY_WKCompanionAppBundleIdentifier = com.michele.gymbro.flutter;
+				INFOPLIST_KEY_WKWatchOnly = NO;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MARKETING_VERSION = 1.0;
+				MTL_FAST_MATH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = com.michele.gymbro.flutter.watchkitapp;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = watchos;
+				SKIP_INSTALL = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SUPPORTED_PLATFORMS = "watchos watchsimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 4;
+				WATCHOS_DEPLOYMENT_TARGET = 11.0;
+			};
+			name = Profile;
+		};
 		D1AF57DF2E3B1102005C381A /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -1158,6 +1386,16 @@
 				97C147061CF9000F007C117D /* Debug */,
 				97C147071CF9000F007C117D /* Release */,
 				249021D4217E4FDB00AE95B9 /* Profile */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		D1534A5D2EE719EA00C4E3C9 /* Build configuration list for PBXNativeTarget "FitLogWatch Watch App" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				D1534A5A2EE719EA00C4E3C9 /* Debug */,
+				D1534A5B2EE719EA00C4E3C9 /* Release */,
+				D1534A5C2EE719EA00C4E3C9 /* Profile */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

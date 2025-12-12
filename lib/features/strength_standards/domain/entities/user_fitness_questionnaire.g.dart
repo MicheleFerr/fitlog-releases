@@ -11,6 +11,7 @@ _UserFitnessQuestionnaire _$UserFitnessQuestionnaireFromJson(
 ) => _UserFitnessQuestionnaire(
   bodyweightKg: (json['bodyweightKg'] as num).toDouble(),
   age: (json['age'] as num).toInt(),
+  heightCm: (json['heightCm'] as num).toDouble(),
   sex: $enumDecode(_$BiologicalSexEnumMap, json['sex']),
   experienceLevel: $enumDecode(
     _$ExperienceLevelEnumMap,
@@ -49,6 +50,7 @@ Map<String, dynamic> _$UserFitnessQuestionnaireToJson(
 ) => <String, dynamic>{
   'bodyweightKg': instance.bodyweightKg,
   'age': instance.age,
+  'heightCm': instance.heightCm,
   'sex': _$BiologicalSexEnumMap[instance.sex]!,
   'experienceLevel': _$ExperienceLevelEnumMap[instance.experienceLevel]!,
   'monthsOfTraining': instance.monthsOfTraining,

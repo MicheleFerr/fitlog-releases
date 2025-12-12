@@ -84,6 +84,10 @@ import 'package:gymbro_flutter_new/features/analytics/presentation/providers/ach
 import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise_activity.dart';
 // 🎮 Gamification: XP awarding on workout completion
 import 'package:gymbro_flutter_new/features/home/providers/user_xp_provider.dart';
+// ⌚ Apple Watch Connectivity for workout companion updates
+import 'package:gymbro_flutter_new/features/health_sync/presentation/providers/watch_connectivity_provider.dart';
+// 🍎 HealthKit Integration for Apple Fitness / Activity rings sync
+import 'package:gymbro_flutter_new/features/health_sync/presentation/providers/health_permission_provider.dart';
 
 // Hive datasource provider
 final hiveWorkoutDataSourceProvider = Provider<HiveWorkoutDataSource>((ref) {
@@ -313,6 +317,117 @@ class CurrentWorkoutNotifier extends Notifier<Workout?> {
 
       // Attiva wakelock se abilitato nelle impostazioni
       ref.read(screenWakelockProvider.notifier).startWakelock();
+
+      // ⌚ Notify Apple Watch about workout start
+      _notifyWatchWorkoutStarted();
+    }
+  }
+
+  /// ⌚ Notify Apple Watch that workout has started
+  void _notifyWatchWorkoutStarted() {
+    print('⌚ [FLUTTER DEBUG] _notifyWatchWorkoutStarted called');
+
+    if (state == null) {
+      print('⌚ [FLUTTER DEBUG] ❌ state is null, returning');
+      return;
+    }
+
+    final workout = state!;
+    final firstExercise = workout.exercises.isNotEmpty ? workout.exercises.first : null;
+
+    print('⌚ [FLUTTER DEBUG] Workout: ${workout.name}');
+    print('⌚ [FLUTTER DEBUG] First exercise: ${firstExercise?.name ?? "none"}');
+    print('⌚ [FLUTTER DEBUG] Exercise count: ${workout.exercises.length}');
+
+    // ⌚ Setup callbacks for Watch → iPhone communication
+    final watchNotifier = ref.read(watchConnectivityProvider.notifier);
+    watchNotifier.onSetCompletedFromWatch = completeCurrentSetFromWatch;
+    watchNotifier.onSkipRestFromWatch = _skipRestFromWatch;
+    watchNotifier.onHealthMetricsFromWatch = _handleHealthMetricsFromWatch;
+    watchNotifier.onEndWorkoutFromWatch = _endWorkoutFromWatch;
+    print('⌚ [FLUTTER DEBUG] ✅ Watch callbacks registered');
+
+    // Get RPE tracking settings from app config
+    final appConfig = ref.read(appConfigProvider);
+    final rpeTrackingEnabled = appConfig.rpeTracking ?? false;
+    final effortScale = appConfig.effortScale;
+    // Get locale for Watch UI strings
+    final locale = ref.read(localeProvider).languageCode;
+    print('⌚ [FLUTTER DEBUG] RPE Settings: enabled=$rpeTrackingEnabled, scale=$effortScale, locale=$locale');
+
+    if (firstExercise != null) {
+      print('⌚ [FLUTTER DEBUG] Calling notifyWorkoutStarted with:');
+      print('   - exerciseName: ${firstExercise.name}');
+      print('   - currentSet: 1');
+      print('   - totalSets: ${firstExercise.sets.length}');
+      print('   - targetWeight: ${firstExercise.sets.isNotEmpty ? firstExercise.sets.first.weight : null}');
+      print('   - targetReps: ${firstExercise.sets.isNotEmpty ? firstExercise.sets.first.reps : null}');
+      print('   - rpeTrackingEnabled: $rpeTrackingEnabled');
+      print('   - effortScale: $effortScale');
+      print('   - locale: $locale');
+      watchNotifier.notifyWorkoutStarted(
+        exerciseName: firstExercise.name,
+        currentSet: 1,
+        totalSets: firstExercise.sets.length,
+        targetWeight: firstExercise.sets.isNotEmpty ? firstExercise.sets.first.weight : null,
+        targetReps: firstExercise.sets.isNotEmpty ? firstExercise.sets.first.reps : null,
+        setsCompleted: 0,
+        rpeTrackingEnabled: rpeTrackingEnabled,
+        effortScale: effortScale,
+        locale: locale,
+      );
+      print('⌚ [FLUTTER DEBUG] ✅ notifyWorkoutStarted called successfully');
+    } else {
+      print('⌚ [FLUTTER DEBUG] No first exercise, using workout name');
+      watchNotifier.notifyWorkoutStarted(
+        exerciseName: workout.name,
+        currentSet: 1,
+        totalSets: 1,
+        setsCompleted: 0,
+        rpeTrackingEnabled: rpeTrackingEnabled,
+        effortScale: effortScale,
+        locale: locale,
+      );
+    }
+  }
+
+  /// ⌚ Notify Apple Watch about workout update (exercise/set change)
+  void _notifyWatchWorkoutUpdate() {
+    if (state == null) return;
+
+    final workout = state!;
+    // Find current exercise (first exercise with incomplete sets)
+    final currentExercise = workout.exercises.cast<Exercise?>().firstWhere(
+      (e) => e != null && e.sets.any((s) => !s.isCompleted),
+      orElse: () => null,
+    );
+    final completedSets = workout.exercises.fold<int>(
+      0,
+      (total, e) => total + e.sets.where((s) => s.isCompleted).length,
+    );
+
+    // Get RPE tracking settings from app config
+    final appConfig = ref.read(appConfigProvider);
+    final rpeTrackingEnabled = appConfig.rpeTracking ?? false;
+    final effortScale = appConfig.effortScale;
+    // Get locale for Watch UI strings
+    final locale = ref.read(localeProvider).languageCode;
+
+    if (currentExercise != null) {
+      final currentSetIndex = currentExercise.sets.indexWhere((s) => !s.isCompleted);
+      final currentSet = currentSetIndex >= 0 ? currentExercise.sets[currentSetIndex] : null;
+
+      ref.read(watchConnectivityProvider.notifier).sendWorkoutUpdate(
+        exerciseName: currentExercise.name,
+        currentSet: currentSetIndex >= 0 ? currentSetIndex + 1 : currentExercise.sets.length,
+        totalSets: currentExercise.sets.length,
+        targetWeight: currentSet?.weight,
+        targetReps: currentSet?.reps,
+        setsCompleted: completedSets,
+        rpeTrackingEnabled: rpeTrackingEnabled,
+        effortScale: effortScale,
+        locale: locale,
+      );
     }
   }
 
@@ -421,6 +536,9 @@ class CurrentWorkoutNotifier extends Notifier<Workout?> {
 
       // Haptic feedback for workout completion
       HapticFeedbackService.workoutCompletion(ref);
+
+      // ⌚ Notify Apple Watch that workout ended
+      ref.read(watchConnectivityProvider.notifier).notifyWorkoutEnded();
 
       // 💾 Clear cache after workout completion (start fresh next time)
       if (_currentTemplateId != null) {
@@ -544,6 +662,25 @@ class CurrentWorkoutNotifier extends Notifier<Workout?> {
             debugLog(LogCategory.workout, '✅ [WorkoutProvider] Workout saved to Hive local storage');
           }
 
+          // 📜 HISTORY: Salva anche nel box workout_history_enhanced per la cronologia
+          // FIX: La cronologia legge da questo box, non da 'workouts'
+          // Senza questo, il workout non appare nella history finché Firebase non sincronizza
+          try {
+            final boxManager = ref.read(hiveBoxManagerProvider);
+            final historyBox = await boxManager.openBox('workout_history_enhanced');
+            final historyKey = 'workout_${workoutHistoryDetail.id}';
+            await historyBox.put(historyKey, workoutHistoryDetail.toMap());
+
+            if (kDebugMode) {
+              debugLog(LogCategory.workout, '✅ [WorkoutProvider] Workout saved to history box (key: $historyKey)');
+            }
+          } catch (historyBoxError) {
+            // Non-critical: la cronologia verrà popolata dal sync Firebase
+            if (kDebugMode) {
+              debugLog(LogCategory.workout, '⚠️ [WorkoutProvider] Failed to save to history box: $historyBoxError');
+            }
+          }
+
           // 📊 ANALYTICS: Update analytics collection for each exercise
           // Uses WorkoutToAnalyticsConverter utility to centralize conversion logic
           // This populates users/{userId}/analytics/{exerciseName} for efficient querying
@@ -607,6 +744,33 @@ class CurrentWorkoutNotifier extends Notifier<Workout?> {
           // 📢 UI Feedback: Show "Workout saved locally" toast
           if (context != null) {
             SyncStatusToast.showWorkoutSavedLocally(context);
+          }
+
+          // 🍎 HEALTHKIT: Export workout to Apple Fitness / Activity rings
+          // This enables the workout to count toward the Exercise ring
+          if (Platform.isIOS && workout.startTime != null && workout.endTime != null) {
+            try {
+              final healthRemote = ref.read(healthRemoteDatasourceProvider);
+              final success = await healthRemote.writeWorkout(
+                startTime: workout.startTime!,
+                endTime: workout.endTime!,
+                workoutName: workout.name,
+              );
+
+              if (kDebugMode) {
+                if (success) {
+                  debugLog(LogCategory.workout, '🍎 [WorkoutProvider] ✅ Workout exported to Apple Fitness');
+                  debugLog(LogCategory.workout, '🍎 [WorkoutProvider] Exercise ring should update with workout duration');
+                } else {
+                  debugLog(LogCategory.workout, '🍎 [WorkoutProvider] ⚠️ Failed to export workout to Apple Fitness');
+                }
+              }
+            } catch (healthKitError) {
+              // Non-critical: HealthKit export failure shouldn't affect workout save
+              if (kDebugMode) {
+                debugLog(LogCategory.workout, '🍎 [WorkoutProvider] ⚠️ HealthKit export error: $healthKitError');
+              }
+            }
           }
 
           // 🏆 PR CELEBRATION: Check for new personal records after successful save
@@ -1457,6 +1621,128 @@ class CurrentWorkoutNotifier extends Notifier<Workout?> {
     }
   }
 
+  /// ⌚ Complete current set when triggered from Apple Watch
+  /// - effort: Optional effort value (RPE 6-10 or RIR 0-4)
+  /// - effortScale: "rpe" or "rir" to indicate how to interpret the effort value
+  void completeCurrentSetFromWatch({int? effort, String? effortScale}) {
+    print('⌚ [FLUTTER] completeCurrentSetFromWatch called');
+    if (effort != null) {
+      print('⌚ [FLUTTER] Effort from Watch: $effort (${effortScale ?? "rpe"})');
+    }
+
+    if (state == null) {
+      print('⌚ [FLUTTER] ❌ No active workout');
+      return;
+    }
+
+    final workout = state!;
+
+    // Find current exercise (first with incomplete sets)
+    final currentExercise = workout.exercises.cast<Exercise?>().firstWhere(
+      (e) => e != null && e.sets.any((s) => !s.isCompleted),
+      orElse: () => null,
+    );
+
+    if (currentExercise == null) {
+      print('⌚ [FLUTTER] ❌ No exercise with incomplete sets');
+      return;
+    }
+
+    // Find first incomplete set
+    final currentSet = currentExercise.sets.cast<ExerciseSet?>().firstWhere(
+      (s) => s != null && !s.isCompleted,
+      orElse: () => null,
+    );
+
+    if (currentSet == null) {
+      print('⌚ [FLUTTER] ❌ No incomplete set found');
+      return;
+    }
+
+    print('⌚ [FLUTTER] ✅ Completing set ${currentSet.setNumber} of ${currentExercise.name}');
+
+    // Convert RIR to RPE if needed (RIR 0-4 → RPE 10-6)
+    int? rpeValue = effort;
+    if (effort != null && effortScale == 'rir') {
+      // RIR 0 = failure = RPE 10
+      // RIR 1 = RPE 9
+      // RIR 2 = RPE 8
+      // RIR 3 = RPE 7
+      // RIR 4+ = RPE 6
+      rpeValue = (10 - effort).clamp(6, 10);
+      print('⌚ [FLUTTER] Converted RIR $effort to RPE $rpeValue');
+    }
+
+    // If we have an effort value, update the set with RPE before completing
+    if (rpeValue != null) {
+      // Update set with RPE value
+      final updatedSet = currentSet.copyWith(rpe: rpeValue);
+      final setIndex = currentExercise.sets.indexWhere((s) => s.id == currentSet.id);
+      if (setIndex >= 0) {
+        final updatedSets = List<ExerciseSet>.from(currentExercise.sets);
+        updatedSets[setIndex] = updatedSet;
+        final updatedExercise = currentExercise.copyWith(sets: updatedSets);
+        final exerciseIndex = workout.exercises.indexWhere((e) => e.id == currentExercise.id);
+        if (exerciseIndex >= 0) {
+          final updatedExercises = List<Exercise>.from(workout.exercises);
+          updatedExercises[exerciseIndex] = updatedExercise;
+          state = workout.copyWith(exercises: updatedExercises);
+          print('⌚ [FLUTTER] ✅ Updated set with RPE $rpeValue');
+        }
+      }
+    }
+
+    // Use existing completeSet method
+    completeSet(currentExercise.id, currentSet.id);
+
+    // Update Watch with new state
+    _notifyWatchWorkoutUpdate();
+  }
+
+  /// ⌚ Skip rest timer when triggered from Apple Watch
+  void _skipRestFromWatch() {
+    print('⌚ [FLUTTER] ⏭️ Skipping rest timer from Watch');
+
+    // Skip the timer using the unified timer provider
+    ref.read(unifiedTimerProvider.notifier).skipTimer();
+
+    if (kDebugMode) {
+      debugPrint('⌚ [FLUTTER] ✅ Rest timer skipped via Watch');
+    }
+  }
+
+  /// ⌚ Handle health metrics from Apple Watch (HR, calories)
+  void _handleHealthMetricsFromWatch(double heartRate, double calories, double elapsedTime) {
+    print('⌚ [FLUTTER] Health metrics from Watch: HR=${heartRate.toInt()}, Cal=${calories.toInt()}, Time=${elapsedTime.toInt()}s');
+    // TODO: Store/display these metrics in the workout UI
+    // For now, we just log them - can be integrated into WorkoutHeader or a dedicated widget
+  }
+
+  /// ⌚ End workout when triggered from Apple Watch
+  /// [save] - if true, save the workout; if false, discard it
+  void _endWorkoutFromWatch({bool save = true}) {
+    print('⌚ [FLUTTER] 🏁 Ending workout from Watch (save: $save)');
+
+    if (state == null) {
+      print('⌚ [FLUTTER] ⚠️ No active workout to end');
+      return;
+    }
+
+    if (save) {
+      // Complete the workout (saves and clears state)
+      completeWorkout();
+      if (kDebugMode) {
+        debugPrint('⌚ [FLUTTER] ✅ Workout saved via Watch');
+      }
+    } else {
+      // Discard the workout without saving
+      clearWorkout();
+      if (kDebugMode) {
+        debugPrint('⌚ [FLUTTER] 🗑️ Workout discarded via Watch');
+      }
+    }
+  }
+
   void completeSet(String exerciseId, String setId) {
     if (state == null) return;
 
@@ -1534,6 +1820,9 @@ class CurrentWorkoutNotifier extends Notifier<Workout?> {
           rpe: completedSet!.rpe,
         );
       }
+
+      // ⌚ Notify Apple Watch about set completion
+      _notifyWatchWorkoutUpdate();
 
       // ✅ BUG #2 FIX: Auto-start rest timer after completing a set
       if (targetExercise != null && completedSetNumber > 0) {

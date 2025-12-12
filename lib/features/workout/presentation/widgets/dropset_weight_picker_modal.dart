@@ -52,9 +52,9 @@ class DropSetWeightPickerModal extends StatefulWidget {
     return showModalBottomSheet<double>(
       context: context,
       isScrollControlled: true,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-      ),
+      isDismissible: true,
+      enableDrag: true,
+      backgroundColor: Colors.transparent,
       builder: (context) => DropSetWeightPickerModal(
         stageIndex: stageIndex,
         previousStageWeight: previousStageWeight,
@@ -160,18 +160,18 @@ class _DropSetWeightPickerModalState extends State<DropSetWeightPickerModal> {
       ),
       decoration: BoxDecoration(
         color: context.colors.surface,
-        borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
+        borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
       ),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
           // Handle bar
           Container(
-            margin: const EdgeInsets.only(top: 8),
+            margin: const EdgeInsets.only(top: 12, bottom: 4),
             width: 40,
             height: 4,
             decoration: BoxDecoration(
-              color: context.colors.surfaceVariant.withValues(alpha: 0.3),
+              color: context.colors.onSurfaceVariant.withValues(alpha: 0.4),
               borderRadius: BorderRadius.circular(2),
             ),
           ),

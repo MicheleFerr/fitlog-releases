@@ -72,7 +72,6 @@ class TimerSoundSelector extends ConsumerWidget {
       await rootBundle.load('assets/$path');
       return true;
     } catch (e) {
-      // print('❌ Asset non trovato: assets/$path');
       return false;
     }
   }
@@ -84,7 +83,6 @@ class TimerSoundSelector extends ConsumerWidget {
       await _previewPlayer?.dispose();
       
       final audioPath = 'sounds/${sound.fileName}.wav';
-      // print('🎵 Tentativo riproduzione: $audioPath');
       
       // Verifica se il file esiste
       final exists = await _checkAssetExists(audioPath);
@@ -111,7 +109,6 @@ class TimerSoundSelector extends ConsumerWidget {
       
     } catch (e) {
       // Debug: mostra errore dettagliato
-      // print('❌ Errore audio: $e');
       
       // Handle error con dettagli specifici
       if (context.mounted) {

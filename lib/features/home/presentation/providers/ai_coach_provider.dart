@@ -37,9 +37,9 @@ final aiCoachInsightsProvider = FutureProvider.autoDispose<List<AIInsight>>((ref
       (workouts) => workouts.where((w) => w.status == WorkoutStatus.completed).toList(),
     );
 
-    // Get exercise database
+    // Get exercise database (case-insensitive lookup)
     final exerciseDatabase = await ref.watch(allExercisesProvider.future);
-    final exerciseMap = {for (var e in exerciseDatabase) e.nome: e};
+    final exerciseMap = {for (var e in exerciseDatabase) e.nome.toLowerCase(): e};
 
     // Get progress stats
     final progressData = await ref.watch(progressDataProvider.future);

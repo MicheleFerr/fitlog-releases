@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -344,6 +345,11 @@ class _ExerciseCustomizationScreenState extends ConsumerState<ExerciseCustomizat
 
   // ✅ NUOVO: Change Counting Mode Handler
   void _changeCountingMode(int exerciseIndex, ExerciseCountingMode newMode) {
+    if (kDebugMode) {
+      debugPrint('🔍 [CustomizationScreen] _changeCountingMode: exerciseIndex=$exerciseIndex, newMode=$newMode');
+      debugPrint('🔍 [CustomizationScreen] Before: ${_customizations[exerciseIndex].countingMode}');
+    }
+
     setState(() {
       // Update counting mode
       _customizations[exerciseIndex] = _customizations[exerciseIndex].copyWith(
@@ -389,6 +395,10 @@ class _ExerciseCustomizationScreenState extends ConsumerState<ExerciseCustomizat
         sets: newSets,
       );
     });
+
+    if (kDebugMode) {
+      debugPrint('🔍 [CustomizationScreen] After setState: ${_customizations[exerciseIndex].countingMode}');
+    }
   }
 
   Widget _buildSetRow(int exerciseIndex, int setIndex, SetCustomization setCustomization) {
@@ -539,12 +549,22 @@ class _ExerciseCustomizationScreenState extends ConsumerState<ExerciseCustomizat
 
   void _addAllToWorkout() {
     for (final customization in _customizations) {
+      if (kDebugMode) {
+        debugPrint('🔍 [CustomizationScreen] _addAllToWorkout: exercise=${customization.exercise.nome}, countingMode=${customization.countingMode}');
+      }
+
       final workoutExercise = _convertToWorkoutExercise(customization);
-      
+
+      if (kDebugMode) {
+        debugPrint('🔍 [CustomizationScreen] After conversion: name=${workoutExercise.name}, countingMode=${workoutExercise.countingMode}');
+      }
+
       // 🔥 FIX: Use callback if available, otherwise fallback to provider
       if (widget.onExerciseAdded != null) {
+        if (kDebugMode) debugPrint('🔍 [CustomizationScreen] Using CALLBACK onExerciseAdded');
         widget.onExerciseAdded!(workoutExercise);
       } else {
+        if (kDebugMode) debugPrint('🔍 [CustomizationScreen] Using PROVIDER addExercise');
         ref.read(currentWorkoutProvider.notifier).addExercise(workoutExercise);
       }
     }
@@ -585,10 +605,14 @@ class _ExerciseCustomizationScreenState extends ConsumerState<ExerciseCustomizat
     );
 
     // ✅ NUOVO: Override notes AND counting mode
-    return exercise.copyWith(
+    final result = exercise.copyWith(
       notes: customization.notes, // Note utente separate - non usare noteTecniche
       countingMode: customization.countingMode, // ✅ NUOVO: Include counting mode
     );
+    if (kDebugMode) {
+      debugPrint('🔍 [CustomizationScreen] _convertToWorkoutExercise FINAL: countingMode=${result.countingMode}');
+    }
+    return result;
   }
 
   WorkoutExercise.ExerciseCategory _mapFocusToCategory(List<String> focus) {

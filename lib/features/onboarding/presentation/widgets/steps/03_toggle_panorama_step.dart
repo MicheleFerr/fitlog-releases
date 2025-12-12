@@ -129,21 +129,6 @@ class _TogglePanoramaStepState extends ConsumerState<TogglePanoramaStep>
         ),
       ],
     ),
-    ToggleCategory(
-      title: l10n.onboardingToggleSupportTitle,
-      description: l10n.onboardingToggleSupportDescription,
-      icon: AppIcons.supportAgent,
-      color: context.colors.warning,
-      toggles: [
-        ToggleInfo(
-          name: 'Warmup Suggestions',
-          description: 'Suggerimenti per il riscaldamento prima degli esercizi',
-          configKey: 'warmupSuggestions',
-          isPro: true,
-          example: '🔥 "Inizia con 50% del peso per 8-10 ripetizioni"',
-        ),
-      ],
-    ),
   ];
 
   @override
@@ -589,7 +574,6 @@ class _TogglePanoramaStepState extends ConsumerState<TogglePanoramaStep>
       case 'rpeTracking': return config.rpeTracking ?? false;
       case 'autoRestTimer': return config.autoRestTimer ?? true;
       case 'setDurationTracking': return config.setDurationTracking ?? false;
-      case 'warmupSuggestions': return config.warmupSuggestions ?? false;
       case 'autoCollapseCompleted': return config.autoCollapseCompleted ?? false;
       case 'showTutInfo': return config.showTutInfo ?? false;
       case 'showExerciseNotes': return config.showExerciseNotes ?? true;

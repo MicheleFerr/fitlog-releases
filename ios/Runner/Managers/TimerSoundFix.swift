@@ -4,17 +4,121 @@ import UserNotifications
 import AudioToolbox
 
 /// Simplified timer sound manager that guarantees audio playback
-/// Uses system sounds as primary strategy with notification fallback
+/// Uses AVAudioPlayer as primary strategy to bypass mute switch
+/// AudioServicesPlaySystemSound respects mute switch and won't play in silent mode!
 final class TimerSoundFix {
-    
+
     static let shared = TimerSoundFix()
-    
-    // Pre-loaded custom sound IDs for background playback
+
+    // Pre-loaded custom sound IDs for background playback (fallback only)
     private var preloadedSounds: [String: SystemSoundID] = [:]
-    
+
+    // CRITICAL FIX: Keep AVAudioPlayer as instance property to prevent deallocation
+    // Local variables get deallocated immediately, stopping playback!
+    private var activePlayer: AVAudioPlayer?
+    private var backupPlayer: AVAudioPlayer?
+
+    // PRE-LOADED AVAudioPlayer - ready to play immediately
+    // This is the most reliable approach for background audio
+    private var preloadedAVPlayer: AVAudioPlayer?
+    private var preloadedSoundURL: URL?
+
     private init() {
         setupAudioSession()
         preloadCustomSounds()
+        preloadAVAudioPlayer()
+    }
+
+    // MARK: - Preload AVAudioPlayer
+
+    /// Preload an AVAudioPlayer so it's ready to play immediately
+    /// This avoids any initialization delay when the timer completes
+    private func preloadAVAudioPlayer() {
+        Logger.shared.log(.info, "🎵 Preloading AVAudioPlayer for instant playback...", category: .audioSession)
+
+        // Try to find and preload the default sound
+        let soundsToTry = ["sound", "timer_complete", "LightWeight", "YehBuddie"]
+
+        for soundName in soundsToTry {
+            if let url = Bundle.main.url(forResource: soundName, withExtension: "caf") {
+                do {
+                    preloadedAVPlayer = try AVAudioPlayer(contentsOf: url)
+                    preloadedAVPlayer?.volume = 1.0
+                    preloadedAVPlayer?.prepareToPlay()
+                    preloadedSoundURL = url
+
+                    Logger.shared.log(.info, """
+                        ✅ Preloaded AVAudioPlayer ready:
+                        - Sound: \(soundName).caf
+                        - Duration: \(preloadedAVPlayer?.duration ?? 0)s
+                        - Prepared: true
+                        """, category: .audioSession)
+                    return
+                } catch {
+                    Logger.shared.log(.warning, "⚠️ Failed to preload \(soundName).caf: \(error)", category: .audioSession)
+                }
+            }
+        }
+
+        Logger.shared.log(.error, "❌ Could not preload any AVAudioPlayer", category: .audioSession)
+    }
+
+    /// Play using the preloaded player (fastest possible)
+    private func playPreloadedAVPlayer() -> Bool {
+        guard let player = preloadedAVPlayer else {
+            Logger.shared.log(.warning, "⚠️ No preloaded AVAudioPlayer available - will try to create one", category: .audioSession)
+            // Try to preload now
+            preloadAVAudioPlayer()
+            guard let newPlayer = preloadedAVPlayer else {
+                Logger.shared.log(.error, "❌ Failed to create preloaded AVAudioPlayer on demand", category: .audioSession)
+                return false
+            }
+            return playPreloadedAVPlayer() // Retry with new player
+        }
+
+        Logger.shared.log(.info, """
+            🚀 Playing via PRELOADED AVAudioPlayer...
+            - Player duration: \(player.duration)s
+            - Player currentTime: \(player.currentTime)
+            - Player volume: \(player.volume)
+            """, category: .audioSession)
+
+        // Reset to beginning if already played
+        player.currentTime = 0
+        player.volume = 1.0
+
+        // Prepare again just to be safe
+        player.prepareToPlay()
+
+        let result = player.play()
+        Logger.shared.log(.info, "▶️ Preloaded player play() result: \(result)", category: .audioSession)
+
+        if result {
+            Logger.shared.log(.info, "✅ Preloaded AVAudioPlayer started successfully!", category: .audioSession)
+
+            // Reload the player for next time (async, don't block)
+            DispatchQueue.global(qos: .utility).asyncAfter(deadline: .now() + 1.0) { [weak self] in
+                self?.reloadPreloadedPlayer()
+            }
+        } else {
+            Logger.shared.log(.warning, "⚠️ Preloaded player failed - will fall back to other strategies", category: .audioSession)
+        }
+
+        return result
+    }
+
+    /// Reload the preloaded player after it was used
+    private func reloadPreloadedPlayer() {
+        guard let url = preloadedSoundURL else { return }
+
+        do {
+            preloadedAVPlayer = try AVAudioPlayer(contentsOf: url)
+            preloadedAVPlayer?.volume = 1.0
+            preloadedAVPlayer?.prepareToPlay()
+            Logger.shared.log(.debug, "🔄 Reloaded preloaded AVAudioPlayer", category: .audioSession)
+        } catch {
+            Logger.shared.log(.error, "❌ Failed to reload preloaded AVAudioPlayer: \(error)", category: .audioSession)
+        }
     }
 
     // CRITICAL FIX: Call this from AppDelegate to ensure early preloading
@@ -31,6 +135,8 @@ final class TimerSoundFix {
     // MARK: - Main API
     
     /// Play timer completion sound with multiple fallback strategies
+    /// CRITICAL: Uses AVAudioPlayer with .playback category to bypass mute switch!
+    /// AudioServicesPlaySystemSound respects mute switch and won't play in silent mode.
     func playTimerCompletionSound(preferredSound: String? = nil) {
         let appState = UIApplication.shared.applicationState
         Logger.shared.log(.info, """
@@ -40,65 +146,286 @@ final class TimerSoundFix {
             - Time: \(Date())
             - Available Preloaded: \(preloadedSounds.keys.joined(separator: ", "))
             """, category: .audioSession)
-        
-        // Setup audio session for silent mode override
+
+        // CRITICAL FIX: Setup audio session with .mixWithOthers for consistency
+        // This must be done BEFORE creating AVAudioPlayer
+        // NOTE: Do NOT deactivate session first - that causes error 561015905 in background!
         do {
             let session = AVAudioSession.sharedInstance()
-            try session.setCategory(.playback)
-            try session.setActive(true)
-            Logger.shared.log(.info, "✅ Audio session set to playback mode", category: .audioSession)
+            // Use .mixWithOthers to match AudioSessionManager configuration
+            try session.setCategory(.playback, mode: .default, options: [.mixWithOthers])
+            // Use try? to avoid throwing if already active
+            try? session.setActive(true)
+            Logger.shared.log(.info, "✅ Audio session configured for mute switch bypass", category: .audioSession)
         } catch {
-            Logger.shared.log(.error, "Failed to setup audio session: \(error)", category: .audioSession)
+            // Don't fail - the session might already be active from silent loop
+            Logger.shared.log(.warning, "⚠️ Audio session category set failed (might be OK if already active): \(error)", category: .audioSession)
         }
-        
-        // CRITICAL FIX: Try custom sound FIRST if available
-        if let preferred = preferredSound, !preferred.isEmpty && preferred != "default" {
-            Logger.shared.log(.info, "🎵 [TIMER-DEBUG] Attempting to play custom sound: \(preferred)", category: .audioSession)
-            // Try to play custom sound immediately
-            if playCustomSoundIfAvailable(preferredSound: preferred) {
-                Logger.shared.log(.info, "✅ [TIMER-DEBUG] Custom sound played successfully: \(preferred)", category: .audioSession)
-                // Still add haptic for feedback
-                playHapticFeedback()
-                return
-            } else {
-                Logger.shared.log(.warning, "⚠️ [TIMER-DEBUG] Custom sound failed, will use fallback", category: .audioSession)
+
+        // STRATEGY 0: FASTEST - Use preloaded AVAudioPlayer
+        // This is already initialized and prepared, so it should play instantly
+        if playPreloadedAVPlayer() {
+            Logger.shared.log(.info, "✅ [FASTEST] Sound played via PRELOADED AVAudioPlayer", category: .audioSession)
+            playHapticFeedback()
+            return
+        }
+
+        // STRATEGY 1: AVAudioPlayer (bypasses mute switch!)
+        // This is the ONLY reliable way to play sound in silent mode
+        let soundToPlay = preferredSound ?? "sound"
+        if playWithAVAudioPlayer(soundName: soundToPlay) {
+            Logger.shared.log(.info, "✅ [MUTE-BYPASS] Sound played via AVAudioPlayer: \(soundToPlay)", category: .audioSession)
+            playHapticFeedback()
+            return
+        }
+
+        // STRATEGY 2: Try default sound if custom failed
+        if soundToPlay != "sound" && playWithAVAudioPlayer(soundName: "sound") {
+            Logger.shared.log(.info, "✅ [MUTE-BYPASS] Fallback sound played via AVAudioPlayer", category: .audioSession)
+            playHapticFeedback()
+            return
+        }
+
+        // STRATEGY 3: Try preloaded SystemSoundID (works better for short sounds)
+        Logger.shared.log(.warning, "⚠️ AVAudioPlayer failed - trying preloaded SystemSoundID", category: .audioSession)
+        if let soundID = preloadedSounds[soundToPlay] {
+            Logger.shared.log(.info, "🔊 Playing via preloaded SystemSoundID: \(soundID)", category: .audioSession)
+            AudioServicesPlaySystemSoundWithCompletion(soundID) {
+                Logger.shared.log(.info, "✅ SystemSoundID completed", category: .audioSession)
             }
+            AudioServicesPlayAlertSound(soundID)
+            playHapticFeedback()
+            return
         }
-        
-        // Fallback: Play system sounds for reliability
+
+        // STRATEGY 4: Try default preloaded sound
+        if let defaultSoundID = preloadedSounds["sound"] {
+            Logger.shared.log(.info, "🔊 Playing default preloaded sound", category: .audioSession)
+            AudioServicesPlaySystemSoundWithCompletion(defaultSoundID) {
+                Logger.shared.log(.info, "✅ Default sound completed", category: .audioSession)
+            }
+            AudioServicesPlayAlertSound(defaultSoundID)
+            playHapticFeedback()
+            return
+        }
+
+        // STRATEGY 5: System sounds as absolute last resort
+        Logger.shared.log(.warning, "⚠️ All strategies failed - using system alert sounds", category: .audioSession)
         playSystemSound()
-        
-        // Haptic feedback
         playHapticFeedback()
-        
-        // CRITICAL FIX: Skip notification scheduling - Flutter handles all notifications
-        // This was causing duplicate notifications with hardcoded English text
+
         Logger.shared.log(.info, """
             ⏭️ [NOTIFICATION-FIX] SKIPPING notification from TimerSoundFix:
-            - Would have shown: "Timer Complete! Your rest timer has finished."
-            - Flutter now handles all completion notifications with proper localization
-            - Audio was already played via system sound above
+            - Flutter handles all completion notifications with proper localization
             """, category: .audioSession)
+    }
+
+    // MARK: - AVAudioPlayer Strategy (Bypasses Mute Switch!)
+
+    /// Play sound using AVAudioPlayer - this IGNORES the mute switch!
+    /// AudioServicesPlaySystemSound respects mute switch, AVAudioPlayer with .playback does not.
+    private func playWithAVAudioPlayer(soundName: String) -> Bool {
+        Logger.shared.log(.info, "🔊 [MUTE-BYPASS] Attempting AVAudioPlayer for: \(soundName)", category: .audioSession)
+
+        // Check audio route first
+        let session = AVAudioSession.sharedInstance()
+        let currentRoute = session.currentRoute
+        Logger.shared.log(.info, """
+            🎧 Audio Route Status:
+            - Outputs: \(currentRoute.outputs.map { "\($0.portType.rawValue) - \($0.portName)" }.joined(separator: ", "))
+            - Output volume: \(session.outputVolume)
+            - Other audio playing: \(session.isOtherAudioPlaying)
+            """, category: .audioSession)
+
+        // Try multiple extensions
+        let extensions = ["caf", "wav", "mp3", "m4a"]
+        var fileFound = false
+        var lastError: String?
+
+        for ext in extensions {
+            if let url = Bundle.main.url(forResource: soundName, withExtension: ext) {
+                fileFound = true
+                Logger.shared.log(.info, "📁 Found file: \(soundName).\(ext) at \(url.path)", category: .audioSession)
+
+                // Verify file exists and has content
+                do {
+                    let attributes = try FileManager.default.attributesOfItem(atPath: url.path)
+                    let fileSize = attributes[.size] as? Int64 ?? 0
+                    Logger.shared.log(.info, "📁 File size: \(fileSize) bytes", category: .audioSession)
+
+                    if fileSize == 0 {
+                        Logger.shared.log(.error, "❌ File is empty!", category: .audioSession)
+                        continue
+                    }
+                } catch {
+                    Logger.shared.log(.error, "❌ Cannot read file attributes: \(error)", category: .audioSession)
+                }
+
+                // ATTEMPT 1: Create and play directly
+                do {
+                    // CRITICAL: Store as instance property to prevent deallocation!
+                    activePlayer = try AVAudioPlayer(contentsOf: url)
+
+                    // Debug: log player info
+                    if let player = activePlayer {
+                        Logger.shared.log(.info, """
+                            🎵 AVAudioPlayer created:
+                            - Duration: \(player.duration)s
+                            - Format: \(player.format)
+                            - Channels: \(player.numberOfChannels)
+                            """, category: .audioSession)
+                    }
+
+                    activePlayer?.volume = 1.0
+                    let prepared = activePlayer?.prepareToPlay() ?? false
+                    Logger.shared.log(.info, "🔧 prepareToPlay() result: \(prepared)", category: .audioSession)
+
+                    // Small delay to let audio system stabilize
+                    Thread.sleep(forTimeInterval: 0.05)
+
+                    let playResult = activePlayer?.play() ?? false
+                    Logger.shared.log(.info, "▶️ play() result: \(playResult)", category: .audioSession)
+
+                    if playResult {
+                        Logger.shared.log(.info, "✅ [MUTE-BYPASS] AVAudioPlayer started: \(soundName).\(ext)", category: .audioSession)
+                        playBackupSound(excluding: soundName)
+                        return true
+                    } else {
+                        lastError = "play() returned false on first attempt"
+                        Logger.shared.log(.warning, "⚠️ play() returned false, attempting retry strategies...", category: .audioSession)
+                    }
+                } catch {
+                    lastError = "Player creation failed: \(error.localizedDescription)"
+                    Logger.shared.log(.error, "❌ AVAudioPlayer creation failed: \(error)", category: .audioSession)
+                    continue
+                }
+
+                // ATTEMPT 2: DON'T deactivate! Just ensure category is set and retry
+                // Deactivating while in background causes error 561015905
+                Logger.shared.log(.info, "🔄 RETRY 1: Ensuring audio session category (NO deactivation)...", category: .audioSession)
+                do {
+                    // Just set category without deactivating - this is safe
+                    try session.setCategory(.playback, mode: .default, options: [.mixWithOthers])
+                    // Try to activate (will succeed if already active)
+                    try? session.setActive(true)
+                    Thread.sleep(forTimeInterval: 0.05)
+
+                    // Re-prepare the player
+                    activePlayer?.prepareToPlay()
+                    Thread.sleep(forTimeInterval: 0.05)
+
+                    let retryResult = activePlayer?.play() ?? false
+                    Logger.shared.log(.info, "▶️ RETRY 1 play() result: \(retryResult)", category: .audioSession)
+
+                    if retryResult {
+                        Logger.shared.log(.info, "✅ RETRY 1 SUCCESS: play() worked!", category: .audioSession)
+                        return true
+                    }
+                } catch {
+                    Logger.shared.log(.error, "❌ RETRY 1 failed: \(error)", category: .audioSession)
+                }
+
+                // ATTEMPT 3: Create a completely new player
+                Logger.shared.log(.info, "🔄 RETRY 2: Creating fresh AVAudioPlayer...", category: .audioSession)
+                do {
+                    // Release old player
+                    activePlayer?.stop()
+                    activePlayer = nil
+
+                    Thread.sleep(forTimeInterval: 0.1)
+
+                    // Create fresh player
+                    activePlayer = try AVAudioPlayer(contentsOf: url)
+                    activePlayer?.volume = 1.0
+                    activePlayer?.numberOfLoops = 0
+                    _ = activePlayer?.prepareToPlay()
+
+                    Thread.sleep(forTimeInterval: 0.05)
+
+                    let freshResult = activePlayer?.play() ?? false
+                    Logger.shared.log(.info, "▶️ RETRY 2 play() result: \(freshResult)", category: .audioSession)
+
+                    if freshResult {
+                        Logger.shared.log(.info, "✅ RETRY 2 SUCCESS: Fresh player worked!", category: .audioSession)
+                        return true
+                    }
+                } catch {
+                    Logger.shared.log(.error, "❌ RETRY 2 Fresh player creation failed: \(error)", category: .audioSession)
+                }
+
+                // Log comprehensive failure info
+                Logger.shared.log(.error, """
+                    ❌ ALL AVAudioPlayer attempts FAILED for \(soundName).\(ext)
+                    - Session category: \(session.category.rawValue)
+                    - Session mode: \(session.mode.rawValue)
+                    - Category options: \(session.categoryOptions.rawValue)
+                    - Output volume: \(session.outputVolume)
+                    - Outputs available: \(currentRoute.outputs.count)
+                    - Last error: \(lastError ?? "unknown")
+                    """, category: .audioSession)
+
+                // Don't try other extensions if we found the file but couldn't play it
+                // The issue is likely audio session, not file format
+                break
+            } else {
+                Logger.shared.log(.debug, "📁 File not found: \(soundName).\(ext)", category: .audioSession)
+            }
+        }
+
+        if fileFound {
+            Logger.shared.log(.warning, "⚠️ File found but could not play: \(soundName)", category: .audioSession)
+        } else {
+            Logger.shared.log(.warning, "⚠️ No file found for: \(soundName)", category: .audioSession)
+        }
+        return false
+    }
+
+    /// Play a backup sound for extra reliability
+    private func playBackupSound(excluding: String) {
+        let backupSounds = ["sound", "timer_complete"]
+        guard let backupName = backupSounds.first(where: { $0 != excluding }) else { return }
+
+        for ext in ["caf", "wav"] {
+            if let url = Bundle.main.url(forResource: backupName, withExtension: ext) {
+                do {
+                    backupPlayer = try AVAudioPlayer(contentsOf: url)
+                    backupPlayer?.volume = 0.8
+                    backupPlayer?.prepareToPlay()
+
+                    // Play with slight delay for layered effect
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) { [weak self] in
+                        self?.backupPlayer?.play()
+                    }
+
+                    Logger.shared.log(.debug, "🔊 Backup sound queued: \(backupName).\(ext)", category: .audioSession)
+                    return
+                } catch {
+                    // Ignore backup failures
+                }
+            }
+        }
     }
     
     // MARK: - Audio Session Setup
-    
+
     private func setupAudioSession() {
         do {
             let session = AVAudioSession.sharedInstance()
-            
-            // Use ONLY .playback to override silent mode - NO other options that cause error -50
-            try session.setCategory(.playback)
-            
+
+            // CRITICAL FIX: Use .mixWithOthers to match AudioSessionManager
+            // This prevents conflicts between different audio managers
+            // .playback category with .mixWithOthers IGNORES the mute switch!
+            try session.setCategory(.playback, mode: .default, options: [.mixWithOthers])
+
             // Activate the session
             try session.setActive(true)
-            
-            // Set preferred settings for low latency
-            try session.setPreferredSampleRate(44100)
-            try session.setPreferredIOBufferDuration(0.005)
-            
-            Logger.shared.log(.info, "✅ Audio session configured for guaranteed playback", category: .audioSession)
-            
+
+            // Optional: Set preferred settings (use try? to avoid failures)
+            try? session.setPreferredSampleRate(44100)
+            try? session.setPreferredIOBufferDuration(0.005)
+
+            Logger.shared.log(.info, "✅ Audio session configured with .mixWithOthers for mute bypass", category: .audioSession)
+
         } catch {
             Logger.shared.log(.error, "Failed to setup audio session: \(error)", category: .audioSession)
         }
@@ -156,6 +483,19 @@ final class TimerSoundFix {
     // CRITICAL FIX: Verify preloaded sounds are still valid
     func verifyPreloadedSounds() {
         Logger.shared.log(.info, "🔍 Verifying preloaded sounds integrity...", category: .audioSession)
+
+        // Verify preloaded AVAudioPlayer
+        if let player = preloadedAVPlayer {
+            Logger.shared.log(.info, """
+                ✅ Preloaded AVAudioPlayer verified:
+                - Duration: \(player.duration)s
+                - Prepared: calling prepareToPlay()
+                """, category: .audioSession)
+            player.prepareToPlay()
+        } else {
+            Logger.shared.log(.warning, "⚠️ Preloaded AVAudioPlayer is nil - reloading...", category: .audioSession)
+            preloadAVAudioPlayer()
+        }
 
         var invalidSounds: [String] = []
 
@@ -341,18 +681,20 @@ final class TimerSoundFix {
     
     private func playSound(at url: URL) -> Bool {
         do {
-            let player = try AVAudioPlayer(contentsOf: url)
-            player.volume = 1.0
-            player.prepareToPlay()
-            
-            if player.play() {
+            // CRITICAL FIX: Store as instance property to prevent deallocation!
+            // Local variables get deallocated immediately, stopping playback.
+            activePlayer = try AVAudioPlayer(contentsOf: url)
+            activePlayer?.volume = 1.0
+            activePlayer?.prepareToPlay()
+
+            if activePlayer?.play() == true {
                 Logger.shared.log(.info, "✅ Custom sound played: \(url.lastPathComponent)", category: .audioSession)
                 return true
             } else {
                 Logger.shared.log(.error, "❌ Custom sound failed to play", category: .audioSession)
                 return false
             }
-            
+
         } catch {
             Logger.shared.log(.error, "Failed to play custom sound: \(error)", category: .audioSession)
             return false
@@ -363,8 +705,8 @@ final class TimerSoundFix {
     
     private func scheduleImmediateNotificationWithSound(soundName: String? = nil) {
         let content = UNMutableNotificationContent()
-        content.title = "⏰ Timer Complete!"
-        content.body = "Your rest timer has finished."
+        content.title = TimerNotificationStrings.timerComplete
+        content.body = TimerNotificationStrings.restTimerFinished
         
         // Use custom sound if available, otherwise default
         if let sound = soundName, sound != "sound" {

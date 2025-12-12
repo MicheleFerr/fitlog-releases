@@ -68,13 +68,15 @@ class HomeCustomizationNotifier extends Notifier<List<HomeWidgetConfig>> {
     // Add any new default widgets that aren't in user config
     for (final defaultWidget in defaults) {
       if (!userConfigs.any((w) => w.id == defaultWidget.id)) {
-        // New widget - preserve default visibility (not always hidden)
-        merged.add(defaultWidget.copyWith(
-          order: merged.length,
-          // Use defaultWidget.isVisible instead of always hiding
-        ));
+        // New widget - insert at its default order position
+        // This ensures new widgets appear in a logical place, not at the end
+        final insertIndex = defaultWidget.order.clamp(0, merged.length);
+        merged.insert(insertIndex, defaultWidget);
       }
     }
+
+    // Re-sort by order to maintain consistency
+    merged.sort((a, b) => a.order.compareTo(b.order));
 
     return merged;
   }

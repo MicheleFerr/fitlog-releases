@@ -40,14 +40,14 @@ class TemplateQuota {
     switch (tier) {
       case AccountTier.free:
         return TemplateQuota(
-          maxPrivateTemplates: 10,
+          maxPrivateTemplates: 4,
           maxPublicTemplates: 2,
           usedPrivateTemplates: usedPrivate,
           usedPublicTemplates: usedPublic,
         );
       case AccountTier.premium:
         return TemplateQuota(
-          maxPrivateTemplates: 50,
+          maxPrivateTemplates: 20,
           maxPublicTemplates: 10,
           usedPrivateTemplates: usedPrivate,
           usedPublicTemplates: usedPublic,
@@ -55,7 +55,7 @@ class TemplateQuota {
       case AccountTier.pro:
         return TemplateQuota(
           maxPrivateTemplates: 999, // Virtually unlimited
-          maxPublicTemplates: 999,
+          maxPublicTemplates: 50,
           usedPrivateTemplates: usedPrivate,
           usedPublicTemplates: usedPublic,
         );
@@ -64,7 +64,7 @@ class TemplateQuota {
   
   factory TemplateQuota.fromJson(Map<String, dynamic> json) {
     return TemplateQuota(
-      maxPrivateTemplates: json['maxPrivateTemplates'] ?? 10,
+      maxPrivateTemplates: json['maxPrivateTemplates'] ?? 4,
       maxPublicTemplates: json['maxPublicTemplates'] ?? 2,
       usedPrivateTemplates: json['usedPrivateTemplates'] ?? 0,
       usedPublicTemplates: json['usedPublicTemplates'] ?? 0,

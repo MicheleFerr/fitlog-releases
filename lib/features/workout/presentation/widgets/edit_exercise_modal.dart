@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart' show kDebugMode;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise.dart';
@@ -25,14 +26,9 @@ class _EditExerciseModalState extends ConsumerState<EditExerciseModal> {
   late TextEditingController _nameController;
   late TextEditingController _notesController;
   late TextEditingController _restTimeController;
-  late TextEditingController _apreBaseWeightController;
 
   bool _useCustomRestTime = false;
   int? _selectedRestTime;
-
-  // APRE configuration
-  bool _useAPRE = false;
-  int _apreProtocol = 6; // Default to APRE 6
 
   // Predefined rest time options in seconds
   static const List<int> _predefinedRestTimes = [30, 60, 90, 120, 180, 240, 300];
@@ -40,10 +36,14 @@ class _EditExerciseModalState extends ConsumerState<EditExerciseModal> {
   @override
   void initState() {
     super.initState();
-    debugPrint('📝 EditExerciseModal.initState() - Starting initialization');
+    if (kDebugMode) {
+      debugPrint('📝 EditExerciseModal.initState() - Starting initialization');
+    }
     
     try {
-      debugPrint('📝 Exercise: ${widget.exercise.name}');
+      if (kDebugMode) {
+        debugPrint('📝 Exercise: ${widget.exercise.name}');
+      }
       debugPrint('📝 Rest time: ${widget.exercise.restTime}');
       
       _nameController = TextEditingController(text: widget.exercise.name);
@@ -56,18 +56,17 @@ class _EditExerciseModalState extends ConsumerState<EditExerciseModal> {
         text: _useCustomRestTime ? _selectedRestTime?.toString() ?? '' : ''
       );
 
-      // Initialize APRE configuration
-      _useAPRE = widget.exercise.useAPRE ?? false;
-      _apreProtocol = widget.exercise.apreProtocol ?? 6;
-      _apreBaseWeightController = TextEditingController(
-        text: widget.exercise.apreBaseWeight?.toString() ?? ''
-      );
-      
-      debugPrint('📝 Controllers initialized successfully');
+      if (kDebugMode) {
+        debugPrint('📝 Controllers initialized successfully');
+      }
       debugPrint('📝 Use custom rest time: $_useCustomRestTime');
-      debugPrint('📝 Selected rest time: $_selectedRestTime');
+      if (kDebugMode) {
+        debugPrint('📝 Selected rest time: $_selectedRestTime');
+      }
     } catch (e, stack) {
-      debugPrint('❌ Error in initState: $e');
+      if (kDebugMode) {
+        debugPrint('❌ Error in initState: $e');
+      }
       debugPrint('Stack: $stack');
       rethrow;
     }
@@ -78,7 +77,6 @@ class _EditExerciseModalState extends ConsumerState<EditExerciseModal> {
     _nameController.dispose();
     _notesController.dispose();
     _restTimeController.dispose();
-    _apreBaseWeightController.dispose();
     super.dispose();
   }
 
@@ -87,12 +85,14 @@ class _EditExerciseModalState extends ConsumerState<EditExerciseModal> {
     // Rimuovi il log qui per evitare spam
     
     try {
-      final l10n = AppLocalizations.of(context);
+      final l10n = context.l10n;
       
       // NON wrappare con ErrorBoundary qui - causa loop infiniti
       return GestureDetector(
           onTap: () {
-            debugPrint('📝 GestureDetector tapped - unfocusing keyboard');
+            if (kDebugMode) {
+              debugPrint('📝 GestureDetector tapped - unfocusing keyboard');
+            }
             FocusScope.of(context).unfocus();
           },
           child: Container(
@@ -337,10 +337,6 @@ class _EditExerciseModalState extends ConsumerState<EditExerciseModal> {
             ),
             const SizedBox(height: 20),
 
-            // APRE Configuration Section
-            _buildAPRESection(l10n),
-            const SizedBox(height: 20),
-
             // Action buttons
             Row(
               children: [
@@ -367,7 +363,9 @@ class _EditExerciseModalState extends ConsumerState<EditExerciseModal> {
       ),
     );
     } catch (e, stack) {
-      debugPrint('❌ Error in build method: $e');
+      if (kDebugMode) {
+        debugPrint('❌ Error in build method: $e');
+      }
       debugPrint('Stack: $stack');
       
       // Ritorna un widget di errore invece di crashare
@@ -393,199 +391,23 @@ class _EditExerciseModalState extends ConsumerState<EditExerciseModal> {
     }
   }
 
-  Widget _buildAPRESection(AppLocalizations l10n) {
-    return Card(
-      color: _useAPRE
-        ? Theme.of(context).colorScheme.primaryContainer.withValues(alpha: 0.1)
-        : Theme.of(context).colorScheme.surfaceContainerHighest,
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // APRE Toggle
-            Row(
-              children: [
-                Icon(
-                  AppIcons.trendUp,
-                  color: Theme.of(context).colorScheme.primary,
-                ),
-                const SizedBox(width: 8),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        l10n.apreAutoregulation,
-                        style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      Text(
-                        l10n.apreAutoregulationDescription,
-                        style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                          color: Theme.of(context).colorScheme.onSurfaceVariant,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                Switch(
-                  value: _useAPRE,
-                  onChanged: (value) {
-                    setState(() {
-                      _useAPRE = value;
-                      if (!value) {
-                        _apreBaseWeightController.clear();
-                      }
-                    });
-                  },
-                ),
-              ],
-            ),
-
-            // APRE Configuration (shown when enabled)
-            if (_useAPRE) ...[
-              const SizedBox(height: 16),
-              const Divider(),
-              const SizedBox(height: 16),
-
-              // Protocol Selection
-              Text(
-                l10n.apreProtocolSelect,
-                style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-              const SizedBox(height: 8),
-              SegmentedButton<int>(
-                segments: const [
-                  ButtonSegment<int>(
-                    value: 3,
-                    label: Text('APRE 3'),
-                    icon: SemanticIcon(
-  icon: AppIcons.looks3,
-  semanticLabel: 'Looks3',
-),
-                  ),
-                  ButtonSegment<int>(
-                    value: 6,
-                    label: Text('APRE 6'),
-                    icon: SemanticIcon(
-  icon: AppIcons.looks6,
-  semanticLabel: 'Looks6',
-),
-                  ),
-                  ButtonSegment<int>(
-                    value: 10,
-                    label: Text('APRE 10'),
-                    icon: SemanticIcon(
-  icon: AppIcons.looks,
-  semanticLabel: 'Looks',
-),
-                  ),
-                ],
-                selected: {_apreProtocol},
-                onSelectionChanged: (Set<int> newSelection) {
-                  setState(() {
-                    _apreProtocol = newSelection.first;
-                  });
-                },
-              ),
-              const SizedBox(height: 12),
-
-              // Protocol Description
-              Container(
-                padding: const EdgeInsets.all(12),
-                decoration: BoxDecoration(
-                  color: Theme.of(context).colorScheme.tertiaryContainer.withValues(alpha: 0.3),
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                child: Row(
-                  children: [
-                    SemanticIcon(
-  icon: AppIcons.info,
-  semanticLabel: 'Information',
-  size: AppIconSize.tiny,
-  color: Theme.of(context,
-).colorScheme.onTertiaryContainer,
-                    ),
-                    const SizedBox(width: 8),
-                    Expanded(
-                      child: Text(
-                        _getProtocolDescription(l10n),
-                        style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                          color: Theme.of(context).colorScheme.onTertiaryContainer,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              const SizedBox(height: 16),
-
-              // Base Weight Input
-              TextField(
-                controller: _apreBaseWeightController,
-                decoration: InputDecoration(
-                  labelText: l10n.apreBaseWeight,
-                  hintText: l10n.apreBaseWeightHint,
-                  prefixIcon: const SemanticIcon(
-  icon: AppIcons.workout,
-  semanticLabel: 'Workout',
-),
-                  suffixText: 'kg',
-                  helperText: _getBaseWeightHelper(l10n),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                ),
-                keyboardType: const TextInputType.numberWithOptions(decimal: true),
-              ),
-            ],
-          ],
-        ),
-      ),
-    );
-  }
-
-  String _getProtocolDescription(AppLocalizations l10n) {
-    switch (_apreProtocol) {
-      case 3:
-        return l10n.apreProtocol3Description;
-      case 6:
-        return l10n.apreProtocol6Description;
-      case 10:
-        return l10n.apreProtocol10Description;
-      default:
-        return '';
-    }
-  }
-
-  String _getBaseWeightHelper(AppLocalizations l10n) {
-    switch (_apreProtocol) {
-      case 3:
-        return l10n.apreProtocol3Helper;
-      case 6:
-        return l10n.apreProtocol6Helper;
-      case 10:
-        return l10n.apreProtocol10Helper;
-      default:
-        return '';
-    }
-  }
-
   void _saveExercise() {
-    debugPrint('🔵 _saveExercise called');
+    if (kDebugMode) {
+      debugPrint('🔵 _saveExercise called');
+    }
     
     // Wrap everything in a try-catch to prevent any crash
     try {
       // Get localization before any async operations
-      final l10n = AppLocalizations.of(context);
-      debugPrint('🔵 Got localization');
+      final l10n = context.l10n;
+      if (kDebugMode) {
+        debugPrint('🔵 Got localization');
+      }
       
       final name = _nameController.text.trim();
-      debugPrint('🔵 Exercise name: $name');
+      if (kDebugMode) {
+        debugPrint('🔵 Exercise name: $name');
+      }
       
       if (name.isEmpty) {
         if (mounted) {
@@ -600,22 +422,32 @@ class _EditExerciseModalState extends ConsumerState<EditExerciseModal> {
       }
 
       final notes = _notesController.text.trim();
-      debugPrint('🔵 Notes: $notes');
+      if (kDebugMode) {
+        debugPrint('🔵 Notes: $notes');
+      }
       int? restTime;
 
-      debugPrint('🔵 Use custom rest time: $_useCustomRestTime');
+      if (kDebugMode) {
+        debugPrint('🔵 Use custom rest time: $_useCustomRestTime');
+      }
       debugPrint('🔵 Rest time controller text: ${_restTimeController.text}');
       
       if (_useCustomRestTime) {
         // Validate custom rest time
         final customTime = int.tryParse(_restTimeController.text);
-        debugPrint('🔵 Parsed custom time: $customTime');
+        if (kDebugMode) {
+          debugPrint('🔵 Parsed custom time: $customTime');
+        }
         
         if (customTime != null && customTime > 0 && customTime <= 3600) {
           restTime = customTime;
-          debugPrint('🔵 Valid custom time set: $restTime');
+          if (kDebugMode) {
+            debugPrint('🔵 Valid custom time set: $restTime');
+          }
         } else if (_restTimeController.text.isNotEmpty) {
-          debugPrint('🔵 Invalid custom time entered');
+          if (kDebugMode) {
+            debugPrint('🔵 Invalid custom time entered');
+          }
           // Invalid custom time entered
           if (mounted) {
             ScaffoldMessenger.of(context).showSnackBar(
@@ -631,41 +463,27 @@ class _EditExerciseModalState extends ConsumerState<EditExerciseModal> {
         restTime = _selectedRestTime;
       }
 
-      // Parse APRE base weight
-      double? apreBaseWeight;
-      if (_useAPRE && _apreBaseWeightController.text.isNotEmpty) {
-        apreBaseWeight = double.tryParse(_apreBaseWeightController.text.trim());
-        if (apreBaseWeight == null || apreBaseWeight <= 0) {
-          debugPrint('🔵 Invalid APRE base weight');
-          if (mounted) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text(l10n.invalidApreBaseWeight),
-                backgroundColor: Theme.of(context).colorScheme.error,
-              ),
-            );
-          }
-          return;
-        }
+      if (kDebugMode) {
+        debugPrint('🔵 Creating updated exercise...');
       }
-
-      debugPrint('🔵 Creating updated exercise...');
       final updatedExercise = widget.exercise.copyWith(
         name: name,
         notes: notes.isEmpty ? null : notes,
         restTime: restTime,
-        useAPRE: _useAPRE,
-        apreProtocol: _useAPRE ? _apreProtocol : null,
-        apreBaseWeight: _useAPRE ? apreBaseWeight : null,
       );
-      debugPrint('🔵 Updated exercise created with restTime: ${updatedExercise.restTime}');
-      debugPrint('🔵 APRE enabled: ${updatedExercise.useAPRE}, Protocol: ${updatedExercise.apreProtocol}, Base weight: ${updatedExercise.apreBaseWeight}');
+      if (kDebugMode) {
+        debugPrint('🔵 Updated exercise created with restTime: ${updatedExercise.restTime}');
+      }
 
       // Call the onSave callback directly
-      debugPrint('🔵 Calling onSave callback...');
+      if (kDebugMode) {
+        debugPrint('🔵 Calling onSave callback...');
+      }
       try {
         widget.onSave(updatedExercise);
-        debugPrint('🔵 onSave callback completed');
+        if (kDebugMode) {
+          debugPrint('🔵 onSave callback completed');
+        }
         
         // Show success message
         if (mounted) {
@@ -684,10 +502,14 @@ class _EditExerciseModalState extends ConsumerState<EditExerciseModal> {
           );
         }
       } catch (e) {
-        debugPrint('❌ Error in onSave callback: $e');
+        if (kDebugMode) {
+          debugPrint('❌ Error in onSave callback: $e');
+        }
       }
         } catch (e, stackTrace) {
-      debugPrint('❌ Error saving exercise: $e');
+      if (kDebugMode) {
+        debugPrint('❌ Error saving exercise: $e');
+      }
       debugPrint('Stack trace: $stackTrace');
       
       // Show error message to user
@@ -718,7 +540,9 @@ extension EditExerciseModalExtension on BuildContext {
   ) async {
     // Validate inputs
     if (exercise == null) {
-      debugPrint('Error: Cannot show EditExerciseModal with null exercise');
+      if (kDebugMode) {
+        debugPrint('Error: Cannot show EditExerciseModal with null exercise');
+      }
       ScaffoldMessenger.of(this).showSnackBar(
         SnackBar(
           content: const Text('Error: Unable to edit this exercise'),
@@ -729,20 +553,28 @@ extension EditExerciseModalExtension on BuildContext {
     }
     
     if (onSave == null) {
-      debugPrint('Error: Cannot show EditExerciseModal with null onSave callback');
+      if (kDebugMode) {
+        debugPrint('Error: Cannot show EditExerciseModal with null onSave callback');
+      }
       return;
     }
     
     try {
-      debugPrint('📝 showEditExerciseModal - Starting');
+      if (kDebugMode) {
+        debugPrint('📝 showEditExerciseModal - Starting');
+      }
       debugPrint('📝 Exercise to edit: ${exercise.name}');
-      debugPrint('📝 Current context: $this');
+      if (kDebugMode) {
+        debugPrint('📝 Current context: $this');
+      }
       
       // Dismiss any open keyboard before showing modal
       FocusScope.of(this).unfocus();
       await Future.delayed(const Duration(milliseconds: 100)); // Piccolo delay per permettere alla tastiera di chiudersi
       
-      debugPrint('📝 Showing modal bottom sheet...');
+      if (kDebugMode) {
+        debugPrint('📝 Showing modal bottom sheet...');
+      }
       
       await showModalBottomSheet(
         context: this,
@@ -754,7 +586,9 @@ extension EditExerciseModalExtension on BuildContext {
           borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
         ),
         builder: (modalContext) {
-          debugPrint('📝 Modal builder called');
+          if (kDebugMode) {
+            debugPrint('📝 Modal builder called');
+          }
           
           // Wrap in a safe widget per catturare errori
           return SafeArea(
@@ -771,9 +605,13 @@ extension EditExerciseModalExtension on BuildContext {
         },
       );
       
-      debugPrint('📝 Modal closed successfully');
+      if (kDebugMode) {
+        debugPrint('📝 Modal closed successfully');
+      }
     } catch (e, stackTrace) {
-      debugPrint('Error showing EditExerciseModal: $e');
+      if (kDebugMode) {
+        debugPrint('Error showing EditExerciseModal: $e');
+      }
       debugPrint('Stack trace: $stackTrace');
       
       // Show error message to user

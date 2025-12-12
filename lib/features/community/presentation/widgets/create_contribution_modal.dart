@@ -16,6 +16,7 @@ import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
+import 'package:gymbro_flutter_new/shared/presentation/services/modal_service.dart';
 
 /// Modal per creare un nuovo contributo community
 class CreateContributionModal extends ConsumerStatefulWidget {
@@ -68,10 +69,11 @@ class _CreateContributionModalState extends ConsumerState<CreateContributionModa
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
+    final safeMax = ModalService.safeMaxChildSize(context, preferredMax: 0.95);
     return DraggableScrollableSheet(
-      initialChildSize: 0.9,
+      initialChildSize: safeMax.clamp(0.0, 0.9),
       minChildSize: 0.5,
-      maxChildSize: 0.95,
+      maxChildSize: safeMax,
       builder: (context, scrollController) {
         return DecoratedBox(
           decoration: BoxDecoration(

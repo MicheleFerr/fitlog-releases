@@ -105,11 +105,17 @@ class _ModernWorkoutCardState extends State<ModernWorkoutCard>
       child: Container(
         margin: const EdgeInsets.only(bottom: 12),
         decoration: BoxDecoration(
-          color: context.colors.surfaceContainerHighest,
+          // ✨ Material 3 2025: Elevated surface with defined border
+          color: context.colors.surfaceContainerLow,
           borderRadius: BorderRadius.circular(16),
+          border: Border.all(
+            color: context.colors.outlineVariant.withValues(alpha: 0.5),
+            width: 1,
+          ),
+          // ✨ Material 3 2025: Subtle shadow for depth
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withValues(alpha: 0.05),
+              color: context.colors.shadow.withValues(alpha: 0.05),
               blurRadius: 8,
               offset: const Offset(0, 2),
             ),

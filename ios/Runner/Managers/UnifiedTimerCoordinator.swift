@@ -26,6 +26,9 @@ final class UnifiedTimerCoordinator {
     // Audio session keep-alive
     private var audioSessionActive = false
     private var silentAudioPlayer: AVAudioPlayer?
+
+    // ✅ FIX #3: Background task tracking for emergency saves
+    private var activeBackgroundTasks: [String: UIBackgroundTaskIdentifier] = [:]
     
     // MARK: - Initialization
     private init() {
@@ -137,6 +140,13 @@ final class UnifiedTimerCoordinator {
             case "printPerformanceMetrics":
                 self.handlePrintPerformanceMetrics(result: result)
 
+            // ✅ FIX #3: Background task management for emergency saves
+            case "beginBackgroundTask":
+                self.handleBeginBackgroundTask(call.arguments, result: result)
+
+            case "endBackgroundTask":
+                self.handleEndBackgroundTask(call.arguments, result: result)
+
             default:
                 result(FlutterMethodNotImplemented)
             }
@@ -152,13 +162,18 @@ final class UnifiedTimerCoordinator {
             result(FlutterError(code: "INVALID_ARGS", message: "Missing duration or exercise", details: nil))
             return
         }
-        
+
         // Clear any pending completions
         pendingCompletions.removeAll()
-        
+
+        // ✅ RACE CONDITION FIX: Reset skip flag when a NEW timer starts
+        // This allows notifications to be scheduled for this new timer
+        // (Previous skip should not block new timer's notifications)
+        DirectNotificationManager.shared.resetSkipFlag()
+
         // CRITICAL: Activate audio session to prevent app suspension
         activateAudioSessionForTimer()
-        
+
         // Direct timer implementation - no need for separate manager
         result(true)
     }
@@ -183,6 +198,10 @@ final class UnifiedTimerCoordinator {
         backgroundAudio.cancelScheduledAudio()
         pendingCompletions.removeAll()
 
+        // ✅ CRITICAL FIX: Cancel all pending timer notifications
+        // This prevents notifications from firing after timer is stopped/skipped
+        DirectNotificationManager.shared.cancelAllTimerNotifications()
+
         // Deactivate audio session when timer stops
         deactivateAudioSession()
 
@@ -194,6 +213,12 @@ final class UnifiedTimerCoordinator {
         // CRITICAL FIX: Cancel only the background audio without stopping the timer
         // This is used when the timer is skipped to prevent audio from playing
         backgroundAudio.cancelScheduledAudio()
+
+        // ✅ CRITICAL FIX: Also cancel pending notifications when timer is skipped
+        // This prevents the race condition where notification scheduling completes
+        // after the skip command is received
+        DirectNotificationManager.shared.cancelAllTimerNotifications()
+        print("⏭️ [SKIP] Cancelled background audio AND pending notifications")
 
         // Background audio cancelled (skip)
         result(true)
@@ -207,11 +232,19 @@ final class UnifiedTimerCoordinator {
             result(FlutterError(code: "INVALID_ARGS", message: "Missing duration", details: nil))
             return
         }
-        
+
         let soundName = args["soundName"] as? String ?? "sound"
         let hasLiveActivity = args["hasLiveActivity"] as? Bool ?? false
         let completionId = UUID().uuidString
-        let appState = UIApplication.shared.applicationState
+
+        // ✅ RACE CONDITION FIX: Reset skip flag when scheduling a new completion
+        // This ensures a previous skip doesn't block this new timer's notification
+        DirectNotificationManager.shared.resetSkipFlag()
+
+        // ✅ FIX: Get app state on main thread to avoid Main Thread Checker warning
+        let appState = DispatchQueue.main.sync {
+            return UIApplication.shared.applicationState
+        }
         
         // Track scheduling details
         
@@ -251,7 +284,10 @@ final class UnifiedTimerCoordinator {
     }
     
     private func handlePlayCompletionSound(_ arguments: Any?, result: @escaping FlutterResult) {
-        let appState = UIApplication.shared.applicationState
+        // ✅ FIX: Get app state on main thread to avoid Main Thread Checker warning
+        let appState = DispatchQueue.main.sync {
+            return UIApplication.shared.applicationState
+        }
         let soundName = (arguments as? [String: Any])?["soundName"] as? String ?? "sound"
 
         // ✅ FIX #1: Check if BackgroundAudioManager is already handling this
@@ -397,11 +433,14 @@ final class UnifiedTimerCoordinator {
         }
 
         // Use DirectNotificationManager for actual notification scheduling
+        // ✅ DOUBLE SOUND FIX: When in background, silent loop handles audio via AVAudioPlayer
+        // so notification should be silent to avoid double sound
         let notificationId = DirectNotificationManager.shared.scheduleTimerNotification(
             after: 0.1, // Immediate notification
             soundName: sound,
             title: title,
-            body: body
+            body: body,
+            silentLoopHandlesAudio: isBackground  // Background = silent loop playing sound
         )
 
         // Notification sent through iOS notification system
@@ -507,10 +546,10 @@ final class UnifiedTimerCoordinator {
     /// Activate audio session to prevent app suspension
     private func activateAudioSessionForTimer() {
         do {
-            // Configure audio session for background playback
+            // ✅ MINIMAL config to avoid OSStatus -50
             try AVAudioSession.sharedInstance().setCategory(.playback,
                                                            mode: .default,
-                                                           options: [.mixWithOthers, .allowBluetooth])
+                                                           options: [.mixWithOthers])
             try AVAudioSession.sharedInstance().setActive(true)
             
             audioSessionActive = true
@@ -568,13 +607,13 @@ final class UnifiedTimerCoordinator {
         // Stop silent audio
         silentAudioPlayer?.stop()
         silentAudioPlayer = nil
-        
+
         // Only deactivate if we activated it
         if audioSessionActive {
             do {
                 try AVAudioSession.sharedInstance().setActive(false, options: .notifyOthersOnDeactivation)
                 audioSessionActive = false
-                
+
                 Logger.shared.log(.info, """
                     🔕 [AUDIO-SESSION] Deactivated:
                     - Timer completed/stopped
@@ -583,6 +622,89 @@ final class UnifiedTimerCoordinator {
             } catch {
                 Logger.shared.log(.error, "❌ [AUDIO-SESSION] Failed to deactivate: \(error)", category: .audioSession)
             }
+        }
+    }
+
+    // MARK: - ✅ FIX #3: Background Task Management
+
+    /// Begin a background task to extend time for emergency operations
+    /// iOS gives apps ~5 seconds by default, background task extends this to ~30 seconds
+    private func handleBeginBackgroundTask(_ arguments: Any?, result: @escaping FlutterResult) {
+        let taskName = (arguments as? [String: Any])?["name"] as? String ?? "default_task"
+        let taskId = UUID().uuidString
+
+        DispatchQueue.main.async { [weak self] in
+            guard let self = self else {
+                result(FlutterError(code: "DISPOSED", message: "Coordinator disposed", details: nil))
+                return
+            }
+
+            let identifier = UIApplication.shared.beginBackgroundTask(withName: taskName) { [weak self] in
+                // Expiration handler - iOS is about to kill us
+                Logger.shared.log(.warning, """
+                    ⚠️ [BACKGROUND-TASK] Task expiring: \(taskName)
+                    - iOS is about to terminate the task
+                    - Ending task gracefully
+                    """, category: .backgroundTask)
+
+                self?.endBackgroundTask(taskId: taskId)
+            }
+
+            if identifier == .invalid {
+                Logger.shared.log(.error, """
+                    ❌ [BACKGROUND-TASK] Failed to begin task: \(taskName)
+                    - iOS rejected the background task request
+                    - This may happen if battery is critically low
+                    """, category: .backgroundTask)
+                result(FlutterError(code: "TASK_FAILED", message: "Could not begin background task", details: nil))
+                return
+            }
+
+            // Store the task
+            self.activeBackgroundTasks[taskId] = identifier
+
+            Logger.shared.log(.info, """
+                ✅ [BACKGROUND-TASK] Started: \(taskName)
+                - Task ID: \(taskId)
+                - iOS identifier: \(identifier.rawValue)
+                - Extended time granted (~30 seconds)
+                """, category: .backgroundTask)
+
+            result(taskId)
+        }
+    }
+
+    /// End a background task
+    private func handleEndBackgroundTask(_ arguments: Any?, result: @escaping FlutterResult) {
+        guard let args = arguments as? [String: Any],
+              let taskId = args["taskId"] as? String else {
+            result(FlutterError(code: "INVALID_ARGS", message: "Missing taskId", details: nil))
+            return
+        }
+
+        endBackgroundTask(taskId: taskId)
+        result(true)
+    }
+
+    /// Internal method to end a background task
+    private func endBackgroundTask(taskId: String) {
+        DispatchQueue.main.async { [weak self] in
+            guard let self = self,
+                  let identifier = self.activeBackgroundTasks.removeValue(forKey: taskId) else {
+                Logger.shared.log(.warning, """
+                    ⚠️ [BACKGROUND-TASK] Task not found: \(taskId)
+                    - May have already expired or been ended
+                    """, category: .backgroundTask)
+                return
+            }
+
+            UIApplication.shared.endBackgroundTask(identifier)
+
+            Logger.shared.log(.info, """
+                ✅ [BACKGROUND-TASK] Ended: \(taskId)
+                - iOS identifier: \(identifier.rawValue)
+                - Task completed successfully
+                """, category: .backgroundTask)
         }
     }
 }

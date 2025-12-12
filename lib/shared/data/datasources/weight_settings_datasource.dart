@@ -4,6 +4,7 @@ import 'package:gymbro_flutter_new/shared/data/models/weight_settings_model.dart
 import 'package:gymbro_flutter_new/shared/domain/entities/weight_settings.dart';
 import 'package:gymbro_flutter_new/core/data/hive_box_manager_enhanced.dart';
 import 'package:gymbro_flutter_new/core/data/hive_box_names.dart';
+import 'package:gymbro_flutter_new/core/cache/user_cache_key_manager.dart';
 
 /// Local DataSource for WeightSettings (Hive)
 ///
@@ -16,7 +17,8 @@ class WeightSettingsDataSource {
   /// Constructor with dependency injection
   WeightSettingsDataSource(this._boxManager);
   final HiveBoxManagerEnhanced _boxManager;
-  static const String _settingsKey = 'user_weight_settings';
+  // 🔐 User-scoped cache key
+  String get _settingsKey => userCacheKeys.userScopedKey('user_weight_settings');
 
   /// Get settings box via HiveBoxManagerEnhanced (already cached)
   Future<Box<WeightSettingsModel>> _getSettingsBox() async {

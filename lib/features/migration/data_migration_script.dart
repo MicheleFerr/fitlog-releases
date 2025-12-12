@@ -213,10 +213,6 @@ class WorkoutMigrationService {
           final workoutDetail = _convertGroupToWorkoutDetail(group);
 
           // Debug: verifica userId
-          // debugPrint('🔍 Debug migrazione:');
-          // debugPrint('  - User UID: ${_auth.currentUser?.uid}');
-          // debugPrint('  - Workout userId: ${workoutDetail.userId}');
-          // debugPrint('  - Workout ID: ${group.generatedId}');
 
           await _firestore
               .collection(_targetCollection)

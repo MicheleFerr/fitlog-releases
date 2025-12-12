@@ -29,8 +29,10 @@ class TemplateRepository {
   final FirebaseAuth _auth;
   
   // Collections
-  CollectionReference get _templatesCollection => 
-      _firestore.collection('workout_templates');
+  // FIXED: Use same collection as FirebaseWorkoutTemplateRepository ('workoutTemplates')
+  // to ensure Single Source of Truth for templates
+  CollectionReference get _templatesCollection =>
+      _firestore.collection('workoutTemplates');
   
   CollectionReference get _reviewsCollection => 
       _firestore.collection('template_reviews');

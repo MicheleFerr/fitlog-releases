@@ -205,8 +205,10 @@ class SnackBarService {
           : null,
     );
 
-    // Mostra snackbar
-    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+    // Mostra snackbar (clearSnackBars evita accumulo in coda)
+    ScaffoldMessenger.of(context)
+      ..clearSnackBars()
+      ..showSnackBar(snackBar);
   }
 
   /// Determina colori in base al tipo

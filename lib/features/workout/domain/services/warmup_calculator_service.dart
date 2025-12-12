@@ -1,5 +1,3 @@
-import 'package:gymbro_flutter_new/features/workout/presentation/widgets/warmup_suggestion_card.dart';
-
 /// Science-based warmup calculator service.
 ///
 /// This service implements warmup protocols based on exercise science research
@@ -356,4 +354,17 @@ class WarmupCalculatorService {
 
     return plateCounts;
   }
+}
+
+/// Represents a warmup set with weight, reps, and percentage of working weight
+class WarmupSet {
+  const WarmupSet({
+    required this.weight,
+    required this.reps,
+    required this.percentage,
+  });
+
+  final double weight;
+  final int reps;
+  final int percentage;
 }

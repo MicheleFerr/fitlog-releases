@@ -19,10 +19,14 @@ import 'package:gymbro_flutter_new/features/home/presentation/widgets/streak_tra
 import 'package:gymbro_flutter_new/features/home/presentation/widgets/recent_workouts_widget.dart';
 import 'package:gymbro_flutter_new/features/home/presentation/widgets/weekly_goals_widget.dart';
 import 'package:gymbro_flutter_new/shared/data/services/interstitial_ad_service.dart';
+import 'package:gymbro_flutter_new/features/auth/presentation/providers/consolidated_user_provider.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator.dart';
+import 'package:gymbro_flutter_new/features/stress_index/presentation/widgets/stress_index_card.dart';
+import 'package:gymbro_flutter_new/features/home/presentation/widgets/activity_rings_widget.dart';
+import 'package:gymbro_flutter_new/features/recovery_insight/presentation/widgets/recovery_insight_card.dart';
 
 /// Factory class to build home widgets based on configuration
 class HomeWidgetFactory {
@@ -113,6 +117,18 @@ class HomeWidgetFactory {
       case HomeWidgetType.templateQuickAccess:
         // TODO: Implementare TemplateQuickAccessWidget
         widget = _buildPlaceholderWidget(context, ref, config);
+        break;
+
+      case HomeWidgetType.stressIndex:
+        widget = const StressIndexCard();
+        break;
+
+      case HomeWidgetType.activityRings:
+        widget = const ActivityRingsWidget();
+        break;
+
+      case HomeWidgetType.recoveryInsight:
+        widget = const RecoveryInsightCard();
         break;
 
       default:
@@ -2120,9 +2136,12 @@ class _AICoachDialog extends ConsumerWidget {
                     onPressed: () async {
                       Navigator.of(context).pop();
 
-                      // 📱 Mostra Interstitial Ad prima di Analytics
-                      final adService = InterstitialAdService();
-                      await adService.showAdIfReady();
+                      // 📱 Mostra Interstitial Ad prima di Analytics (solo per non-premium)
+                      final isPremium = dialogRef.read(isPremiumUserProvider);
+                      if (!isPremium) {
+                        final adService = InterstitialAdService();
+                        await adService.showAdIfReady();
+                      }
 
                       if (!context.mounted) return;
 

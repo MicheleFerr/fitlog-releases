@@ -1,0 +1,296 @@
+{
+  "balance_cable_incline_fly": {
+    "nome": "Croci Inclinate ai Cavi",
+    "focus": "PETT",
+    "muscoliSecondari": "DELT",
+    "tipoEsercizio": "Compound"
+  },
+  "cable_bench_press": {
+    "nome": "Distensione su Panca ai Cavi",
+    "focus": "PETT",
+    "muscoliSecondari": "DELT",
+    "tipoEsercizio": "Compound"
+  },
+  "cable_cross_over_variation": {
+    "nome": "Cross-over Variazione ai Cavi",
+    "focus": "PETT",
+    "muscoliSecondari": "DELT",
+    "tipoEsercizio": "Compound"
+  },
+  "cable_decline_fly": {
+    "nome": "Aperture Declinate ai Cavi",
+    "focus": "PETT",
+    "muscoliSecondari": "DELT",
+    "tipoEsercizio": "Compound"
+  },
+  "cable_decline_one_arm_press": {
+    "nome": "Un Braccio Distensione Declinata ai Cavi",
+    "focus": "PETT",
+    "muscoliSecondari": "DELT",
+    "tipoEsercizio": "Compound"
+  },
+  "cable_decline_press": {
+    "nome": "Distensione Declinata ai Cavi",
+    "focus": "PETT",
+    "muscoliSecondari": "DELT",
+    "tipoEsercizio": "Compound"
+  },
+  "cable_incline_bench_press": {
+    "nome": "Distensione Inclinata ai Cavi",
+    "focus": "PETT",
+    "muscoliSecondari": "TRIC, DELT",
+    "tipoEsercizio": "Compound"
+  },
+  "cable_incline_fly": {
+    "nome": "Aperture Inclinate ai Cavi",
+    "focus": "PETT",
+    "muscoliSecondari": "DELT",
+    "tipoEsercizio": "Compound"
+  },
+  "cable_incline_fly_on_stability_ball": {
+    "nome": "Aperture Inclinate su Fitball ai Cavi",
+    "focus": "PETT",
+    "muscoliSecondari": "DELT",
+    "tipoEsercizio": "Compound"
+  },
+  "cable_low_fly": {
+    "nome": "Croci Basse ai Cavi",
+    "focus": "PETT",
+    "muscoliSecondari": "DELT",
+    "tipoEsercizio": "Compound"
+  },
+  "cable_lying_fly": {
+    "nome": "Aperture Sdraiate ai Cavi",
+    "focus": "PETT",
+    "muscoliSecondari": "DELT",
+    "tipoEsercizio": "Compound"
+  },
+  "cable_middle_fly": {
+    "nome": "Croci Centrali ai Cavi",
+    "focus": "PETT",
+    "muscoliSecondari": "DELT",
+    "tipoEsercizio": "Compound"
+  },
+  "cable_one_arm_decline_chest_fly": {
+    "nome": "Un Braccio Apertura Declinata per Petto ai Cavi",
+    "focus": "PETT",
+    "muscoliSecondari": "DELT",
+    "tipoEsercizio": "Compound"
+  },
+  "cable_one_arm_fly_on_exercise_ball": {
+    "nome": "Croci Un Braccio su Fitball ai Cavi",
+    "focus": "PETT",
+    "muscoliSecondari": "DELT",
+    "tipoEsercizio": "Compound"
+  },
+  "cable_one_arm_incline_fly_on_exercise_ball": {
+    "nome": "Croci Inclinato Un Braccio su Fitball ai Cavi",
+    "focus": "PETT",
+    "muscoliSecondari": "DELT",
+    "tipoEsercizio": "Compound"
+  },
+  "cable_one_arm_incline_press": {
+    "nome": "Un Braccio Distensione Inclinata ai Cavi",
+    "focus": "PETT",
+    "muscoliSecondari": "TRIC, DELT",
+    "tipoEsercizio": "Compound"
+  },
+  "cable_one_arm_incline_press_on_exercise_ball": {
+    "nome": "Distensione Inclinata Un Braccio su Fitball ai Cavi",
+    "focus": "PETT",
+    "muscoliSecondari": "DELT",
+    "tipoEsercizio": "Compound"
+  },
+  "cable_one_arm_incline_press_with_rigid": {
+    "nome": "Spinta Inclinato Un Braccio Rigid ai Cavi",
+    "focus": "PETT",
+    "muscoliSecondari": "TRIC, DELT",
+    "tipoEsercizio": "Compound"
+  },
+  "cable_one_arm_lateral_bent_over": {
+    "nome": "Un Braccio Sollevamento Laterale Piegato ai Cavi",
+    "focus": "PETT",
+    "muscoliSecondari": "TRIC, DELT",
+    "tipoEsercizio": "Compound"
+  },
+  "cable_one_arm_press_on_exercise_ball": {
+    "nome": "Un Braccio Distensione su Fitball ai Cavi",
+    "focus": "PETT",
+    "muscoliSecondari": "DELT",
+    "tipoEsercizio": "Compound"
+  },
+  "cable_press_on_exercise_ball": {
+    "nome": "Distensione su Fitball ai Cavi",
+    "focus": "PETT",
+    "muscoliSecondari": "DELT",
+    "tipoEsercizio": "Compound"
+  },
+  "cable_seated_chest_press": {
+    "nome": "Distensione Petto Seduta ai Cavi",
+    "focus": "PETT",
+    "muscoliSecondari": "DELT",
+    "tipoEsercizio": "Compound"
+  },
+  "cable_standing_fly": {
+    "nome": "In Piedi Aperture ai Cavi",
+    "focus": "PETT",
+    "muscoliSecondari": "DELT",
+    "tipoEsercizio": "Compound"
+  },
+  "cable_standing_up_straight_crossovers": {
+    "nome": "Croci in Piedi Dritte ai Cavi",
+    "focus": "PETT",
+    "muscoliSecondari": "DELT",
+    "tipoEsercizio": "Compound"
+  },
+  "cable_upper_chest_crossovers": {
+    "nome": "Croci Petto Alto ai Cavi",
+    "focus": "PETT",
+    "muscoliSecondari": "DELT",
+    "tipoEsercizio": "Compound"
+  },
+  "chest_dip_on_dip_pull_up_cage": {
+    "nome": "Dip Petto su Dip-Trazioni Gabbia",
+    "focus": "PETT",
+    "muscoliSecondari": "DELT",
+    "tipoEsercizio": "Compound"
+  },
+  "deep_smith_machine_reverse_decline_close_grip_bench_press": {
+    "nome": "Distensioni Declinate Presa Stretta Deep alla Macchina",
+    "focus": "PETT",
+    "muscoliSecondari": "DELT",
+    "tipoEsercizio": "Compound"
+  },
+  "dumbbell_around_pullover": {
+    "nome": "Pullover Circolare con Manubri",
+    "focus": "PETT",
+    "muscoliSecondari": "LAT, TRIC",
+    "tipoEsercizio": "Compound"
+  },
+  "dumbbell_decline_one_arm_fly": {
+    "nome": "Un Braccio Aperture Declinate con Manubri",
+    "focus": "PETT",
+    "muscoliSecondari": "DELT",
+    "tipoEsercizio": "Compound"
+  },
+  "dumbbell_incline_one_arm_fly": {
+    "nome": "Un Braccio Aperture Inclinate con Manubri",
+    "focus": "PETT",
+    "muscoliSecondari": "DELT",
+    "tipoEsercizio": "Compound"
+  },
+  "dumbbell_incline_one_arm_press": {
+    "nome": "Un Braccio Distensione Inclinata con Manubri",
+    "focus": "PETT",
+    "muscoliSecondari": "DELT",
+    "tipoEsercizio": "Compound"
+  },
+  "dumbbell_lying_one_arm_press": {
+    "nome": "Un Braccio Distensione Sdraiata con Manubri",
+    "focus": "PETT",
+    "muscoliSecondari": "DELT",
+    "tipoEsercizio": "Compound"
+  },
+  "dumbbell_lying_one_arm_press_v_2": {
+    "nome": "Un Braccio Distensione Supina V. 2 con Manubri",
+    "focus": "PETT",
+    "muscoliSecondari": "DELT",
+    "tipoEsercizio": "Compound"
+  },
+  "dumbbell_lying_pullover_on_exercise_ball": {
+    "nome": "Sdraiato Pullover su Fitball con Manubri",
+    "focus": "PETT",
+    "muscoliSecondari": "DELT, LAT, TRAP",
+    "tipoEsercizio": "Compound"
+  },
+  "dumbbell_one_arm_bench_fly": {
+    "nome": "Un Braccio Aperture su Panca con Manubri",
+    "focus": "PETT",
+    "muscoliSecondari": "DELT",
+    "tipoEsercizio": "Compound"
+  },
+  "dumbbell_pullover": {
+    "nome": "Pullover con Manubri",
+    "focus": "PETT",
+    "muscoliSecondari": "LAT, TRIC",
+    "tipoEsercizio": "Compound"
+  },
+  "dumbbell_pullover_hip_extension_on_exercise_ball": {
+    "nome": "Pullover ed Estensione Anca su Fitball",
+    "focus": "PETT",
+    "muscoliSecondari": "CORE, DELT",
+    "tipoEsercizio": "Compound"
+  },
+  "dumbbell_pullover_on_exercise_ball": {
+    "nome": "Pullover su Fitball con Manubri",
+    "focus": "PETT",
+    "muscoliSecondari": "LAT, TRIC",
+    "tipoEsercizio": "Compound"
+  },
+  "dumbbell_straight_arm_pullover": {
+    "nome": "Pullover Braccia Dritte con Manubri",
+    "focus": "PETT",
+    "muscoliSecondari": "LAT, TRIC",
+    "tipoEsercizio": "Compound"
+  },
+  "floor_fly_with_barbell": {
+    "nome": "Croci a Terracon Bilanciere",
+    "focus": "PETT",
+    "muscoliSecondari": "DELT",
+    "tipoEsercizio": "Compound"
+  },
+  "hyght_dumbbell_fly": {
+    "nome": "Aperture High con Manubri",
+    "focus": "PETT",
+    "muscoliSecondari": "DELT",
+    "tipoEsercizio": "Compound"
+  },
+  "kettlebell_one_arm_floor_press": {
+    "nome": "Un Braccio Distensione a Terra con Kettlebell",
+    "focus": "PETT",
+    "muscoliSecondari": "DELT",
+    "tipoEsercizio": "Compound"
+  },
+  "kneeling_push_up_male": {
+    "nome": "Piegamento in Ginocchio",
+    "focus": "PETT",
+    "muscoliSecondari": "DELT",
+    "tipoEsercizio": "Compound"
+  },
+  "push_up_bosu_ball": {
+    "nome": "Piegamenti (bosu Fitball)",
+    "focus": "PETT",
+    "muscoliSecondari": "CORE, DELT",
+    "tipoEsercizio": "Compound"
+  },
+  "push_up_wall": {
+    "nome": "Piegamenti (Parete)",
+    "focus": "PETT",
+    "muscoliSecondari": "TRIC, DELT",
+    "tipoEsercizio": "Compound"
+  },
+  "push_up_wall_with_static": {
+    "nome": "Piegamenti (Parete) con Statico",
+    "focus": "PETT",
+    "muscoliSecondari": "TRIC, DELT",
+    "tipoEsercizio": "Compound"
+  },
+  "rough_cable_decline_fly": {
+    "nome": "Aperture Declinate Intense ai Cavi",
+    "focus": "PETT",
+    "muscoliSecondari": "DELT",
+    "tipoEsercizio": "Compound"
+  },
+  "cable_crossover_high_to_low": {
+    "nome": "Croci ai Cavi da Alto a Basso",
+    "focus": "PETT",
+    "muscoliSecondari": "DELT",
+    "tipoEsercizio": "Isolation"
+  },
+  "cable_crossover_low_to_high": {
+    "nome": "Croci ai Cavi da Basso Ad Alto",
+    "focus": "PETT",
+    "muscoliSecondari": "DELT",
+    "tipoEsercizio": "Isolation"
+  }
+}

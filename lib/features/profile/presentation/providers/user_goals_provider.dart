@@ -11,6 +11,7 @@ library;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:gymbro_flutter_new/features/history/presentation/providers/workout_history_provider.dart';
+import 'package:gymbro_flutter_new/core/cache/user_cache_key_manager.dart';
 
 /// User fitness goals configuration
 class UserGoals {
@@ -98,9 +99,10 @@ final userGoalsProvider =
 
 /// Notifier for managing user fitness goals
 class UserGoalsNotifier extends AsyncNotifier<UserGoals> {
-  static const String _keyWorkoutsPerWeek = 'user_goals_workouts_per_week';
-  static const String _keyWeeklyVolumeTarget = 'user_goals_weekly_volume_target';
-  static const String _keyStreakWeeksGoal = 'user_goals_streak_weeks_goal';
+  // 🔐 User-scoped cache keys
+  String get _keyWorkoutsPerWeek => userCacheKeys.userScopedKey('user_goals_workouts_per_week');
+  String get _keyWeeklyVolumeTarget => userCacheKeys.userScopedKey('user_goals_weekly_volume_target');
+  String get _keyStreakWeeksGoal => userCacheKeys.userScopedKey('user_goals_streak_weeks_goal');
 
   @override
   Future<UserGoals> build() async {

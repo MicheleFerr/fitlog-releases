@@ -27,7 +27,7 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.cleanupExpiredRateLimits = exports.rejectContribution = exports.approveContribution = exports.checkExpiredSubscriptions = exports.verifyPremiumPurchase = exports.checkAdminStatus = exports.setInitialAdmin = exports.revokeAdminRole = exports.setAdminRole = void 0;
+exports.getTemplateQuota = exports.createTemplate = exports.cleanupExpiredRateLimits = exports.rejectContribution = exports.approveContribution = exports.checkExpiredSubscriptions = exports.verifyPremiumPurchase = exports.checkAdminStatus = exports.setInitialAdmin = exports.revokeAdminRole = exports.setAdminRole = void 0;
 const admin = __importStar(require("firebase-admin"));
 // Initialize Firebase Admin
 admin.initializeApp();
@@ -64,4 +64,13 @@ Object.defineProperty(exports, "rejectContribution", { enumerable: true, get: fu
 // Export rate limit cleanup (runs daily to remove expired entries)
 var rateLimiter_1 = require("./security/rateLimiter");
 Object.defineProperty(exports, "cleanupExpiredRateLimits", { enumerable: true, get: function () { return rateLimiter_1.cleanupExpiredRateLimits; } });
+// ========================================
+// 📝 TEMPLATE QUOTA MANAGEMENT (Server-Side Enforcement)
+// ========================================
+// Export template creation with quota enforcement
+// SECURITY: This is the ONLY secure way to enforce template limits
+// Client-side validation is NOT sufficient for security
+var createTemplate_1 = require("./templates/createTemplate");
+Object.defineProperty(exports, "createTemplate", { enumerable: true, get: function () { return createTemplate_1.createTemplate; } });
+Object.defineProperty(exports, "getTemplateQuota", { enumerable: true, get: function () { return createTemplate_1.getTemplateQuota; } });
 //# sourceMappingURL=index.js.map

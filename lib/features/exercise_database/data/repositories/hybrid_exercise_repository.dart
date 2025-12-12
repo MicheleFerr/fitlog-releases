@@ -11,6 +11,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:ui';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/foundation.dart' show kDebugMode;
 import 'package:flutter/services.dart';
 import 'package:gymbro_flutter_new/core/data/repositories/optimized_base_hybrid_repository.dart';
 import 'package:gymbro_flutter_new/features/exercise_database/domain/entities/exercise.dart';
@@ -58,21 +59,29 @@ class HybridExerciseRepository extends OptimizedBaseHybridRepository<Exercise> {
       // Avvia sincronizzazione periodica
       _startPeriodicSync();
 
-      debugPrint('✅ HybridExerciseRepository initialized');
+      if (kDebugMode) {
+        debugPrint('✅ HybridExerciseRepository initialized');
+      }
     } catch (e) {
-      debugPrint('❌ Failed to initialize HybridExerciseRepository: $e');
+      if (kDebugMode) {
+        debugPrint('❌ Failed to initialize HybridExerciseRepository: $e');
+      }
     }
   }
 
   /// Ottiene tutti gli esercizi (priorità: Cache → Firebase → JSON asset)
   Future<List<Exercise>> getAllExercises() async {
+    final currentLocale = locale.languageCode;
+
     try {
       _syncStatusController.add(SyncStatus.loading);
 
-      // 1. Prova cache locale prima
-      final cachedExercises = await _cacheManager.getCachedExercises();
+      // 1. Prova cache locale prima (con controllo locale)
+      final cachedExercises = await _cacheManager.getCachedExercises(forLocale: currentLocale);
       if (cachedExercises.isNotEmpty) {
-        debugPrint('📱 Loaded ${cachedExercises.length} exercises from cache');
+        if (kDebugMode) {
+          debugPrint('📱 Loaded ${cachedExercises.length} exercises from cache (locale: $currentLocale)');
+        }
         _syncStatusController.add(SyncStatus.success);
 
         // Avvia sync in background se necessario
@@ -84,12 +93,14 @@ class HybridExerciseRepository extends OptimizedBaseHybridRepository<Exercise> {
       // 2. Se cache vuota, prova Firebase
       final firebaseExercises = await _getExercisesFromFirebase();
       if (firebaseExercises.isNotEmpty) {
-        debugPrint('☁️ Loaded ${firebaseExercises.length} exercises from Firebase');
+        if (kDebugMode) {
+          debugPrint('☁️ Loaded ${firebaseExercises.length} exercises from Firebase');
+        }
 
-        // Cache per usi futuri
+        // Cache per usi futuri con locale
         final versionInfo = await _versionService.getRemoteVersion();
         if (versionInfo != null) {
-          await _cacheManager.cacheExercises(firebaseExercises, versionInfo.version);
+          await _cacheManager.cacheExercises(firebaseExercises, versionInfo.version, locale: currentLocale);
           await _versionService.setLocalVersion(versionInfo.version);
         }
 
@@ -97,13 +108,15 @@ class HybridExerciseRepository extends OptimizedBaseHybridRepository<Exercise> {
         return firebaseExercises;
       }
 
-      // 3. Fallback: carica da JSON asset
-      debugPrint('📄 Falling back to JSON asset...');
+      // 3. Fallback: carica da JSON asset (già localizzato)
+      if (kDebugMode) {
+        debugPrint('📄 Falling back to JSON asset (locale: $currentLocale)...');
+      }
       final assetExercises = await _getExercisesFromAsset();
 
       if (assetExercises.isNotEmpty) {
-        // Cache anche il JSON asset per performance future
-        await _cacheManager.cacheExercises(assetExercises, '1.0.0-asset');
+        // Cache il JSON asset con la locale corretta
+        await _cacheManager.cacheExercises(assetExercises, '1.0.0-asset', locale: currentLocale);
         await _versionService.setLocalVersion('1.0.0-asset');
       }
 
@@ -111,7 +124,9 @@ class HybridExerciseRepository extends OptimizedBaseHybridRepository<Exercise> {
       return assetExercises;
 
     } catch (e) {
-      debugPrint('❌ Failed to get exercises: $e');
+      if (kDebugMode) {
+        debugPrint('❌ Failed to get exercises: $e');
+      }
       _syncStatusController.add(SyncStatus.error);
       rethrow;
     }
@@ -140,7 +155,9 @@ class HybridExerciseRepository extends OptimizedBaseHybridRepository<Exercise> {
       }).toList();
 
     } catch (e) {
-      debugPrint('❌ Failed to search exercises: $e');
+      if (kDebugMode) {
+        debugPrint('❌ Failed to search exercises: $e');
+      }
       return [];
     }
   }
@@ -161,7 +178,9 @@ class HybridExerciseRepository extends OptimizedBaseHybridRepository<Exercise> {
       }).toList();
 
     } catch (e) {
-      debugPrint('❌ Failed to get exercises by focus: $e');
+      if (kDebugMode) {
+        debugPrint('❌ Failed to get exercises by focus: $e');
+      }
       return [];
     }
   }
@@ -184,16 +203,22 @@ class HybridExerciseRepository extends OptimizedBaseHybridRepository<Exercise> {
       }
 
     } catch (e) {
-      debugPrint('❌ Failed to get exercise by ID: $e');
+      if (kDebugMode) {
+        debugPrint('❌ Failed to get exercise by ID: $e');
+      }
       return null;
     }
   }
 
   /// Forza sincronizzazione manuale
   Future<bool> forceSyncFromFirebase() async {
+    final currentLocale = locale.languageCode;
+
     try {
       _syncStatusController.add(SyncStatus.syncing);
-      debugPrint('🔄 Forcing sync from Firebase...');
+      if (kDebugMode) {
+        debugPrint('🔄 Forcing sync from Firebase (locale: $currentLocale)...');
+      }
 
       final firebaseExercises = await _getExercisesFromFirebase();
       if (firebaseExercises.isEmpty) {
@@ -201,19 +226,23 @@ class HybridExerciseRepository extends OptimizedBaseHybridRepository<Exercise> {
         return false;
       }
 
-      // Aggiorna cache
+      // Aggiorna cache con locale
       final versionInfo = await _versionService.getRemoteVersion();
       if (versionInfo != null) {
-        await _cacheManager.cacheExercises(firebaseExercises, versionInfo.version);
+        await _cacheManager.cacheExercises(firebaseExercises, versionInfo.version, locale: currentLocale);
         await _versionService.markUpdateCompleted(versionInfo.version, firebaseExercises.length);
       }
 
       _syncStatusController.add(SyncStatus.success);
-      debugPrint('✅ Force sync completed: ${firebaseExercises.length} exercises');
+      if (kDebugMode) {
+        debugPrint('✅ Force sync completed: ${firebaseExercises.length} exercises (locale: $currentLocale)');
+      }
       return true;
 
     } catch (e) {
-      debugPrint('❌ Force sync failed: $e');
+      if (kDebugMode) {
+        debugPrint('❌ Force sync failed: $e');
+      }
       _syncStatusController.add(SyncStatus.error);
       return false;
     }
@@ -225,16 +254,22 @@ class HybridExerciseRepository extends OptimizedBaseHybridRepository<Exercise> {
       final versionCheck = await _versionService.checkForUpdates();
 
       if (!versionCheck.hasUpdates) {
-        debugPrint('✅ No updates available');
+        if (kDebugMode) {
+          debugPrint('✅ No updates available');
+        }
         return false;
       }
 
-      debugPrint('🆕 Updates available: ${versionCheck.localVersion} → ${versionCheck.remoteVersion?.version}');
+      if (kDebugMode) {
+        debugPrint('🆕 Updates available: ${versionCheck.localVersion} → ${versionCheck.remoteVersion?.version}');
+      }
 
       return await forceSyncFromFirebase();
 
     } catch (e) {
-      debugPrint('❌ Failed to check/apply updates: $e');
+      if (kDebugMode) {
+        debugPrint('❌ Failed to check/apply updates: $e');
+      }
       return false;
     }
   }
@@ -264,14 +299,18 @@ class HybridExerciseRepository extends OptimizedBaseHybridRepository<Exercise> {
           final exercise = ExerciseModel.fromJson(localFormat).toEntity();
           exercises.add(exercise);
         } catch (e) {
-          debugPrint('⚠️ Failed to parse exercise ${doc.id}: $e');
+          if (kDebugMode) {
+            debugPrint('⚠️ Failed to parse exercise ${doc.id}: $e');
+          }
         }
       }
 
       return exercises;
 
     } catch (e) {
-      debugPrint('❌ Failed to get exercises from Firebase: $e');
+      if (kDebugMode) {
+        debugPrint('❌ Failed to get exercises from Firebase: $e');
+      }
       return [];
     }
   }
@@ -292,7 +331,9 @@ class HybridExerciseRepository extends OptimizedBaseHybridRepository<Exercise> {
           .toList();
 
     } catch (e) {
-      debugPrint('❌ Failed to load exercises from asset: $e');
+      if (kDebugMode) {
+        debugPrint('❌ Failed to load exercises from asset: $e');
+      }
       return [];
     }
   }
@@ -358,10 +399,14 @@ class HybridExerciseRepository extends OptimizedBaseHybridRepository<Exercise> {
     try {
       final hasUpdates = await checkAndApplyUpdates();
       if (hasUpdates) {
-        debugPrint('🔄 Background sync completed with updates');
+        if (kDebugMode) {
+          debugPrint('🔄 Background sync completed with updates');
+        }
       }
     } catch (e) {
-      debugPrint('❌ Background sync failed: $e');
+      if (kDebugMode) {
+        debugPrint('❌ Background sync failed: $e');
+      }
     }
   }
 
@@ -375,7 +420,9 @@ class HybridExerciseRepository extends OptimizedBaseHybridRepository<Exercise> {
   /// Pulisce cache locale
   Future<void> clearCache() async {
     await _cacheManager.clearCache();
-    debugPrint('🧹 Exercise cache cleared');
+    if (kDebugMode) {
+      debugPrint('🧹 Exercise cache cleared');
+    }
   }
 
   /// Ottiene statistiche cache

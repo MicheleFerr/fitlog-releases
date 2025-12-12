@@ -125,6 +125,12 @@ class HomeWidgetType {
   static const String weeklyGoalsNew = 'weekly_goals_new';
   static const String exerciseStats = 'exercise_stats';
   static const String templateQuickAccess = 'template_quick_access';
+  // Stress Index
+  static const String stressIndex = 'stress_index';
+  // HealthKit Activity Rings
+  static const String activityRings = 'activity_rings';
+  // Recovery Insight
+  static const String recoveryInsight = 'recovery_insight';
 }
 
 /// Default widget configurations
@@ -271,6 +277,39 @@ class DefaultHomeWidgets {
       icon: AppIcons.workout,
       order: 13,
       isVisible: false,
+      size: WidgetSize.medium,
+    ),
+    // Stress Index
+    HomeWidgetConfig(
+      id: 'stress_index',
+      type: HomeWidgetType.stressIndex,
+      title: 'Stress Allenamento',
+      icon: AppIcons.bolt,
+      order: 14,
+      isVisible: true,
+      allowResize: false,
+      size: WidgetSize.medium,
+    ),
+    // HealthKit Activity Rings - Posizionato in alto per visibilità
+    HomeWidgetConfig(
+      id: 'activity_rings',
+      type: HomeWidgetType.activityRings,
+      title: 'Activity Rings',
+      icon: AppIcons.favorite,
+      order: 2, // Dopo stats_card, prima di ai_coach
+      isVisible: true,
+      allowResize: false,
+      size: WidgetSize.medium,
+    ),
+    // Recovery Insight - Sleep-based recovery analysis
+    HomeWidgetConfig(
+      id: 'recovery_insight',
+      type: HomeWidgetType.recoveryInsight,
+      title: 'Insight Recupero',
+      icon: AppIcons.bedtime,
+      order: 3, // Dopo activity_rings
+      isVisible: true,
+      allowResize: false,
       size: WidgetSize.medium,
     ),
   ];

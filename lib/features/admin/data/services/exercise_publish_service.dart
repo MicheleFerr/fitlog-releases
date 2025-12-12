@@ -7,6 +7,7 @@
 /// Service per pubblicazione nuove versioni del database esercizi su Firestore
 library;
 
+import 'package:flutter/foundation.dart' show kDebugMode;
 import 'dart:convert';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
@@ -30,19 +31,25 @@ class ExercisePublishService {
     required bool isRequired,
   }) async {
     try {
-      debugPrint('📤 Publishing new exercise database version: $version');
+      if (kDebugMode) {
+        debugPrint('📤 Publishing new exercise database version: $version');
+      }
 
       // 1. Carica esercizi da entrambi i file asset (EN + IT)
       final exercisesEn = await _loadExercisesFromAsset('assets/data/exercises.json');
       final exercisesIt = await _loadExercisesFromAsset('assets/data/exercises_it.json');
-      debugPrint('📋 Loaded ${exercisesEn.length} EN exercises, ${exercisesIt.length} IT exercises');
+      if (kDebugMode) {
+        debugPrint('📋 Loaded ${exercisesEn.length} EN exercises, ${exercisesIt.length} IT exercises');
+      }
 
       // 2. Upload esercizi in batch paralleli per ENTRAMBE le lingue
       await Future.wait([
         _uploadExercisesToFirestore(exercisesEn, _exercisesEnCollection),
         _uploadExercisesToFirestore(exercisesIt, _exercisesItCollection),
       ]);
-      debugPrint('✅ Uploaded exercises to Firestore (EN + IT collections)');
+      if (kDebugMode) {
+        debugPrint('✅ Uploaded exercises to Firestore (EN + IT collections)');
+      }
 
       // 3. Aggiorna metadata versione (shared per entrambe le lingue)
       await _updateVersionMetadata(
@@ -52,11 +59,17 @@ class ExercisePublishService {
         changelogEntries: changelogEntries,
         isRequired: isRequired,
       );
-      debugPrint('✅ Updated version metadata');
+      if (kDebugMode) {
+        debugPrint('✅ Updated version metadata');
+      }
 
-      debugPrint('🎉 Successfully published version $version (EN: ${exercisesEn.length}, IT: ${exercisesIt.length})');
+      if (kDebugMode) {
+        debugPrint('🎉 Successfully published version $version (EN: ${exercisesEn.length}, IT: ${exercisesIt.length})');
+      }
     } catch (e) {
-      debugPrint('❌ Failed to publish version: $e');
+      if (kDebugMode) {
+        debugPrint('❌ Failed to publish version: $e');
+      }
       rethrow;
     }
   }
@@ -71,7 +84,9 @@ class ExercisePublishService {
 
       return jsonList.cast<Map<String, dynamic>>();
     } catch (e) {
-      debugPrint('❌ Failed to load exercises from asset ($assetPath): $e');
+      if (kDebugMode) {
+        debugPrint('❌ Failed to load exercises from asset ($assetPath): $e');
+      }
       rethrow;
     }
   }
@@ -104,16 +119,22 @@ class ExercisePublishService {
         batches.add(batch);
       }
 
-      debugPrint('📦 Created ${batches.length} batches for ${exercises.length} exercises ($collectionName)');
+      if (kDebugMode) {
+        debugPrint('📦 Created ${batches.length} batches for ${exercises.length} exercises ($collectionName)');
+      }
 
       // Commit tutti i batch IN PARALLELO (13x più veloce che sequenziale)
       await Future.wait(
         batches.map((batch) => batch.commit()),
       );
 
-      debugPrint('✅ Committed ${batches.length} batches to $collectionName');
+      if (kDebugMode) {
+        debugPrint('✅ Committed ${batches.length} batches to $collectionName');
+      }
     } catch (e) {
-      debugPrint('❌ Failed to upload exercises to $collectionName: $e');
+      if (kDebugMode) {
+        debugPrint('❌ Failed to upload exercises to $collectionName: $e');
+      }
       rethrow;
     }
   }
@@ -167,9 +188,13 @@ class ExercisePublishService {
         SetOptions(merge: true),
       );
 
-      debugPrint('✅ Version metadata updated to $version (EN: $totalExercisesEn, IT: $totalExercisesIt)');
+      if (kDebugMode) {
+        debugPrint('✅ Version metadata updated to $version (EN: $totalExercisesEn, IT: $totalExercisesIt)');
+      }
     } catch (e) {
-      debugPrint('❌ Failed to update version metadata: $e');
+      if (kDebugMode) {
+        debugPrint('❌ Failed to update version metadata: $e');
+      }
       rethrow;
     }
   }
@@ -187,7 +212,9 @@ class ExercisePublishService {
 
       return doc.data()?['current_version'] as String? ?? '1.0.0';
     } catch (e) {
-      debugPrint('❌ Failed to get current version: $e');
+      if (kDebugMode) {
+        debugPrint('❌ Failed to get current version: $e');
+      }
       return '1.0.0'; // Fallback sicuro
     }
   }
@@ -204,7 +231,9 @@ class ExercisePublishService {
 
       return doc.data();
     } catch (e) {
-      debugPrint('❌ Failed to get version metadata: $e');
+      if (kDebugMode) {
+        debugPrint('❌ Failed to get version metadata: $e');
+      }
       return null;
     }
   }
@@ -241,7 +270,9 @@ class ExercisePublishService {
 
       return parts.join('.');
     } catch (e) {
-      debugPrint('❌ Failed to increment version: $e');
+      if (kDebugMode) {
+        debugPrint('❌ Failed to increment version: $e');
+      }
       return '1.0.0'; // Fallback
     }
   }

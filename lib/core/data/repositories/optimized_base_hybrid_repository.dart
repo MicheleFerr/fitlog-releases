@@ -32,10 +32,10 @@ import 'package:hive_ce_flutter/hive_flutter.dart';
 import 'package:flutter/foundation.dart';
 import 'package:gymbro_flutter_new/features/auth/domain/entities/user_profile.dart';
 import 'package:gymbro_flutter_new/core/data/hive_box_manager_enhanced.dart';
+import 'package:gymbro_flutter_new/shared/data/mixins/firestore_cache_first_mixin.dart';
 
 /// Optimized Base repository with smart premium detection
-abstract class OptimizedBaseHybridRepository<T> {
-
+abstract class OptimizedBaseHybridRepository<T> with FirestoreCacheFirstMixin {
   OptimizedBaseHybridRepository({
     required this.featureName,
     required this.collectionName,
@@ -53,23 +53,26 @@ abstract class OptimizedBaseHybridRepository<T> {
   final HiveBoxManagerEnhanced _boxManager;
   late Box<Map> _localBox;
   late Box<Map> _syncQueueBox;
-  
+
   // Feature configuration
   final String featureName;
   final String collectionName;
   final bool requiresPremiumForCloud;
-  
+
   // OPTIMIZED: Cache user profile locally with expiry
   UserProfile? _cachedUserProfile;
   DateTime? _profileCacheTime;
-  static const Duration _cacheValidity = Duration(hours: 24); // Cache for 24 hours!
-  
+  static const Duration _cacheValidity = Duration(
+    hours: 24,
+  ); // Cache for 24 hours!
+
   // OPTIMIZED: Listen to auth state changes instead of polling
   StreamSubscription? _authStateSubscription;
   StreamSubscription? _profileChangeSubscription;
-  
+
   // Sync configuration
-  final StreamController<SyncEvent> _syncEventController = StreamController.broadcast();
+  final StreamController<SyncEvent> _syncEventController =
+      StreamController.broadcast();
   Stream<SyncEvent> get syncEvents => _syncEventController.stream;
 
   /// Protected getter for Firestore instance
@@ -85,19 +88,23 @@ abstract class OptimizedBaseHybridRepository<T> {
     // Initialize Hive boxes
     _localBox = await _boxManager.openBox<Map>('${featureName}_data');
     _syncQueueBox = await _boxManager.openBox<Map>('${featureName}_sync_queue');
-    
+
     // OPTIMIZED: Load cached profile first
     await _loadCachedProfile();
-    
+
     // OPTIMIZED: Listen to auth changes instead of polling
     _setupAuthListener();
-    
+
     // OPTIMIZED: Setup Firestore listener for profile changes
     _setupProfileListener();
-    
-    debugPrint('✅ OptimizedBaseHybridRepository initialized for: $featureName');
+
+    if (kDebugMode) {
+      debugPrint(
+        '✅ OptimizedBaseHybridRepository initialized for: $featureName',
+      );
+    }
   }
-  
+
   /// OPTIMIZED: Load profile from local cache first
   Future<void> _loadCachedProfile() async {
     try {
@@ -115,21 +122,28 @@ abstract class OptimizedBaseHybridRepository<T> {
           final profileData = _deepCastMap(cachedData['profile']);
           _cachedUserProfile = UserProfile.fromJson(profileData);
           _profileCacheTime = cacheTime;
-          debugPrint('📱 Using cached profile (saved ${now.difference(cacheTime).inHours}h ago)');
+          if (kDebugMode) {
+            debugPrint(
+              '📱 Using cached profile (saved ${now.difference(cacheTime).inHours}h ago)',
+            );
+          }
           return;
         }
       }
 
       // Cache expired or doesn't exist, load from Firestore
       await _refreshProfileFromFirestore();
-
     } catch (e) {
-      debugPrint('⚠️ Failed to load cached profile: $e');
+      if (kDebugMode) {
+        debugPrint('⚠️ Failed to load cached profile: $e');
+      }
       // Clear corrupted cache and retry from Firestore
       try {
         final cacheBox = await _boxManager.openBox<Map>('user_profile_cache');
         await cacheBox.delete('profile');
-        debugPrint('🗑️ Cleared corrupted cache');
+        if (kDebugMode) {
+          debugPrint('🗑️ Cleared corrupted cache');
+        }
       } catch (_) {}
       await _refreshProfileFromFirestore();
     }
@@ -159,44 +173,54 @@ abstract class OptimizedBaseHybridRepository<T> {
     }
     return value;
   }
-  
+
   /// OPTIMIZED: Only refresh from Firestore when necessary
   Future<void> _refreshProfileFromFirestore() async {
     try {
       final user = _auth.currentUser;
       if (user == null) return;
-      
+
       // Check if we really need to refresh
       if (_profileCacheTime != null) {
-        final timeSinceLastRefresh = DateTime.now().difference(_profileCacheTime!);
+        final timeSinceLastRefresh = DateTime.now().difference(
+          _profileCacheTime!,
+        );
         if (timeSinceLastRefresh < const Duration(minutes: 30)) {
-          debugPrint('⏭️ Skipping profile refresh (last refresh ${timeSinceLastRefresh.inMinutes} min ago)');
+          if (kDebugMode) {
+            debugPrint(
+              '⏭️ Skipping profile refresh (last refresh ${timeSinceLastRefresh.inMinutes} min ago)',
+            );
+          }
           return;
         }
       }
-      
-      debugPrint('🔄 Refreshing profile from Firestore...');
-      
-      final doc = await _firestore
-          .collection('users')
-          .doc(user.uid)
-          .get();
-      
-      if (doc.exists) {
+
+      if (kDebugMode) {
+        debugPrint('🔄 Refreshing profile from Firestore...');
+      }
+
+      final docRef = _firestore.collection('users').doc(user.uid);
+      final doc = await getCacheFirst(docRef);
+
+      if (doc != null && doc.exists) {
         _cachedUserProfile = UserProfile.fromFirestore(doc);
         _profileCacheTime = DateTime.now();
-        
+
         // Save to local cache
         await _saveProfileToCache();
-        
-        debugPrint('✅ Profile refreshed and cached');
+
+        if (kDebugMode) {
+          debugPrint('✅ Profile refreshed and cached');
+        }
       }
     } catch (e) {
-      debugPrint('⚠️ Failed to refresh profile from Firestore: $e');
+      if (kDebugMode) {
+        debugPrint('⚠️ Failed to refresh profile from Firestore: $e');
+      }
       // Continue with cached profile if available
     }
   }
-  
+
   /// OPTIMIZED: Save profile to local cache
   Future<void> _saveProfileToCache() async {
     if (_cachedUserProfile == null) return;
@@ -214,16 +238,20 @@ abstract class OptimizedBaseHybridRepository<T> {
         'cacheTime': DateTime.now().toIso8601String(),
       });
     } catch (e) {
-      debugPrint('⚠️ Failed to cache profile: $e');
+      if (kDebugMode) {
+        debugPrint('⚠️ Failed to cache profile: $e');
+      }
     }
   }
-  
+
   /// OPTIMIZED: Listen to auth state changes
   void _setupAuthListener() {
     _authStateSubscription = _auth.authStateChanges().listen((user) async {
       if (user != null) {
         // User logged in or changed
-        debugPrint('🔑 Auth state changed, refreshing profile...');
+        if (kDebugMode) {
+          debugPrint('🔑 Auth state changed, refreshing profile...');
+        }
         await _refreshProfileFromFirestore();
       } else {
         // User logged out
@@ -232,19 +260,21 @@ abstract class OptimizedBaseHybridRepository<T> {
       }
     });
   }
-  
+
   /// OPTIMIZED: Real-time listener for profile changes (only for premium path)
   void _setupProfileListener() {
     final user = _auth.currentUser;
     if (user == null) return;
-    
+
     // IMPORTANT: Only setup listener if user might be premium
     // This reduces listeners for free users
     if (_cachedUserProfile?.accountTier == AccountTier.free) {
-      debugPrint('💡 Skipping profile listener for free user');
+      if (kDebugMode) {
+        debugPrint('💡 Skipping profile listener for free user');
+      }
       return;
     }
-    
+
     _profileChangeSubscription = _firestore
         .collection('users')
         .doc(user.uid)
@@ -252,14 +282,18 @@ abstract class OptimizedBaseHybridRepository<T> {
         .listen((snapshot) {
           if (snapshot.exists) {
             final newProfile = UserProfile.fromFirestore(snapshot);
-            
+
             // Only update if tier changed
             if (newProfile.accountTier != _cachedUserProfile?.accountTier) {
-              debugPrint('🔄 Account tier changed: ${_cachedUserProfile?.accountTier} → ${newProfile.accountTier}');
+              if (kDebugMode) {
+                debugPrint(
+                  '🔄 Account tier changed: ${_cachedUserProfile?.accountTier} → ${newProfile.accountTier}',
+                );
+              }
               _cachedUserProfile = newProfile;
               _profileCacheTime = DateTime.now();
               _saveProfileToCache();
-              
+
               // Trigger sync if upgraded to premium
               if (isPremiumUser) {
                 _scheduleBackgroundSync();
@@ -268,107 +302,119 @@ abstract class OptimizedBaseHybridRepository<T> {
           }
         });
   }
-  
+
   /// Check if user is premium (uses cached data)
   bool get isPremiumUser {
     // Use cached profile, no Firebase query!
     return _cachedUserProfile?.accountTier == AccountTier.premium ||
-           _cachedUserProfile?.accountTier == AccountTier.pro;
+        _cachedUserProfile?.accountTier == AccountTier.pro;
   }
-  
+
   /// Check if user can sync to cloud
   bool get canSyncToCloud {
     if (!requiresPremiumForCloud) return true;
     return isPremiumUser;
   }
-  
+
   /// Get current user ID
   String? get currentUserId => _auth.currentUser?.uid;
-  
+
   /// OPTIMIZED: Force refresh only when explicitly needed
   Future<void> forceProfileRefresh() async {
-    debugPrint('🔄 Force refreshing profile...');
+    if (kDebugMode) {
+      debugPrint('🔄 Force refreshing profile...');
+    }
     await _refreshProfileFromFirestore();
   }
-  
+
   /// OPTIMIZED: Check premium status with minimal queries
   Future<bool> verifyPremiumStatus() async {
     // First check cache
     if (_cachedUserProfile != null && _profileCacheTime != null) {
       final cacheAge = DateTime.now().difference(_profileCacheTime!);
-      
+
       // If cache is recent (< 1 hour), trust it
       if (cacheAge < const Duration(hours: 1)) {
-        debugPrint('✅ Using cached premium status (${cacheAge.inMinutes} min old)');
+        if (kDebugMode) {
+          debugPrint(
+            '✅ Using cached premium status (${cacheAge.inMinutes} min old)',
+          );
+        }
         return isPremiumUser;
       }
     }
-    
+
     // Cache is old, refresh
     await _refreshProfileFromFirestore();
     return isPremiumUser;
   }
-  
+
   // ============================================================
   // REST OF THE IMPLEMENTATION (same as before)
   // ============================================================
-  
+
   /// Convert entity to JSON for storage
   Map<String, dynamic> toJson(T entity);
-  
+
   /// Convert JSON to entity
   T fromJson(Map<String, dynamic> json);
-  
+
   /// Get unique ID for entity
   String getId(T entity);
-  
+
   /// Validate entity before saving
   bool validate(T entity);
-  
+
   /// Save entity (ALWAYS local, cloud if premium)
   Future<String> save(T entity) async {
     final userId = currentUserId;
     if (userId == null) throw Exception('User not authenticated');
-    
+
     if (!validate(entity)) {
       throw Exception('Entity validation failed');
     }
-    
+
     final id = getId(entity);
     final key = _getLocalKey(id, userId);
     final json = toJson(entity);
-    
+
     // Add metadata
     json['_localLastModified'] = DateTime.now().toIso8601String();
     json['_userId'] = userId;
     json['_syncStatus'] = 'pending';
-    
+
     // 1. ALWAYS save locally first
     await _localBox.put(key, json);
     _logOperation('SAVE_LOCAL', id, true);
-    
+
     // 2. Queue for cloud sync if allowed (uses cached premium status)
     if (canSyncToCloud) {
       await _queueForSync(id, 'create', userId);
       _scheduleBackgroundSync();
     }
-    
-    _syncEventController.add(SyncEvent(
-      type: SyncEventType.saved,
-      entityId: id,
-      isLocal: true,
-      willSync: canSyncToCloud,
-    ));
-    
+
+    _syncEventController.add(
+      SyncEvent(
+        type: SyncEventType.saved,
+        entityId: id,
+        isLocal: true,
+        willSync: canSyncToCloud,
+      ),
+    );
+
     return id;
   }
-  
+
   // ... (rest of the methods remain the same)
-  
+
   /// Queue entity for sync
-  Future<void> _queueForSync(String entityId, String operation, String userId) async {
+  Future<void> _queueForSync(
+    String entityId,
+    String operation,
+    String userId,
+  ) async {
     final queueId = '${entityId}_${DateTime.now().millisecondsSinceEpoch}';
-    
+
     await _syncQueueBox.put(queueId, {
       'entityId': entityId,
       'operation': operation,
@@ -378,28 +424,34 @@ abstract class OptimizedBaseHybridRepository<T> {
       'status': 'pending',
     });
   }
-  
+
   /// Schedule background sync
   void _scheduleBackgroundSync() {
     // This will be handled by PremiumSyncManager
-    _syncEventController.add(SyncEvent(
-      type: SyncEventType.syncRequested,
-      entityId: null,
-      isLocal: false,
-      willSync: true,
-    ));
+    _syncEventController.add(
+      SyncEvent(
+        type: SyncEventType.syncRequested,
+        entityId: null,
+        isLocal: false,
+        willSync: true,
+      ),
+    );
   }
-  
+
   /// Get local storage key
   String _getLocalKey(String entityId, String userId) {
     return '${userId}_$entityId';
   }
-  
+
   /// Log operation for debugging
   void _logOperation(String operation, String entityId, bool success) {
-    debugPrint('📊 [$featureName] $operation: $entityId - ${success ? '✅' : '❌'}');
+    if (kDebugMode) {
+      debugPrint(
+        '📊 [$featureName] $operation: $entityId - ${success ? '✅' : '❌'}',
+      );
+    }
   }
-  
+
   /// Dispose resources
   void dispose() {
     _authStateSubscription?.cancel();
@@ -413,7 +465,7 @@ extension UserProfileJson on UserProfile {
   Map<String, dynamic> toJson() {
     return toFirestore();
   }
-  
+
   static UserProfile fromJson(Map<String, dynamic> json) {
     // Helper to parse DateTime from various formats (Timestamp or String)
     DateTime parseDateTime(dynamic value, DateTime fallback) {
@@ -445,7 +497,6 @@ extension UserProfileJson on UserProfile {
 
 /// Sync event for monitoring
 class SyncEvent {
-  
   SyncEvent({
     required this.type,
     required this.entityId,
@@ -475,7 +526,7 @@ class SyncResult {
   int syncedItems = 0;
   int failedItems = 0;
   List<String> errors = [];
-  
+
   void merge(SyncResult other) {
     success = success && other.success;
     syncedItems += other.syncedItems;

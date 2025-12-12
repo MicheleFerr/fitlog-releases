@@ -17,9 +17,6 @@ import 'package:gymbro_flutter_new/shared/presentation/services/snackbar_service
 /// - RPE Tracking (master)
 ///   - Auto Adjust Weight from RPE (dependent)
 ///   - Auto Adjust Rest from RPE (dependent)
-/// - APRE Auto-Regulation (master)
-///   - Default APRE Protocol (dependent)
-///   - Auto Adjust Rest Time (dependent)
 ///
 /// **Example**:
 /// ```dart

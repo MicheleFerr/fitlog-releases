@@ -18,6 +18,11 @@
     "migrationWizardSummaryRemoved",
     "migrationWizardWillUpdate",
     "migrationWizardApplying",
-    "migrationWizardUpdated"
+    "migrationWizardUpdated",
+    "fullyRecovered",
+    "almostReady",
+    "recovering",
+    "fatiguedMuscle",
+    "exhaustedMuscle"
   ]
 }

@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/widgets/tut_selector.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/widgets/tut_info_dialog.dart';
+import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 /// Info bar minimalista e professionale per mostrare categoria, tipo e TUT
@@ -75,7 +76,6 @@ class _ExerciseInfoBarState extends State<ExerciseInfoBar>
   
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
     final tut = widget.exerciseData?['tempoEsecuzione'];
     final hasValidTut = tut != null && tut != '' && tut != 'N/A';
 
@@ -111,19 +111,19 @@ class _ExerciseInfoBarState extends State<ExerciseInfoBar>
                   padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                   decoration: BoxDecoration(
                     color: _isPressed || _showTutSelector
-                      ? theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.5)
-                      : theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
-                    borderRadius: BorderRadius.circular(8),
+                      ? context.colors.surfaceContainerHighest.withValues(alpha: 0.4)
+                      : context.colors.surfaceContainerHighest.withValues(alpha: 0.2),
+                    borderRadius: BorderRadius.circular(12),
                     border: _isPressed || _showTutSelector
                       ? Border.all(
-                          color: theme.colorScheme.primary.withValues(alpha: 0.3),
+                          color: context.colors.primary.withValues(alpha: 0.4),
                           width: 1,
                         )
                       : null,
                   ),
                   child: _isDataLoaded
-                    ? _buildContent(theme, tut, hasValidTut)
-                    : _buildShimmer(theme),
+                    ? _buildContent(context, tut, hasValidTut)
+                    : _buildShimmer(context),
                 ),
               );
             },
@@ -147,7 +147,7 @@ class _ExerciseInfoBarState extends State<ExerciseInfoBar>
     );
   }
   
-  Widget _buildContent(ThemeData theme, String? tut, bool hasValidTut) {
+  Widget _buildContent(BuildContext context, String? tut, bool hasValidTut) {
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
@@ -160,16 +160,16 @@ class _ExerciseInfoBarState extends State<ExerciseInfoBar>
             opacity: _isDataLoaded ? 1.0 : 0.0,
             duration: const Duration(milliseconds: 300),
             child: _buildInfoItem(
+              context: context,
               icon: _getCategoryIcon(widget.exercise.category),
-              text: _getCategoryDisplayName(widget.exercise.category),
-              color: theme.colorScheme.onSurfaceVariant,
-              theme: theme,
+              text: _getCategoryDisplayName(context, widget.exercise.category),
+              color: context.colors.onSurfaceVariant,
             ),
           ),
         ),
-        
-        _buildSeparator(theme),
-        
+
+        _buildSeparator(context),
+
         // Tipo
         AnimatedSlide(
           offset: _isDataLoaded ? Offset.zero : const Offset(-0.2, 0),
@@ -179,17 +179,17 @@ class _ExerciseInfoBarState extends State<ExerciseInfoBar>
             opacity: _isDataLoaded ? 1.0 : 0.0,
             duration: const Duration(milliseconds: 400),
             child: _buildInfoItem(
+              context: context,
               icon: _getTypeIcon(widget.exercise.type),
-              text: _getTypeDisplayName(widget.exercise.type),
-              color: _getTypeColor(widget.exercise.type, theme),
-              theme: theme,
+              text: _getTypeDisplayName(context, widget.exercise.type),
+              color: _getTypeColor(widget.exercise.type, context),
             ),
           ),
         ),
-        
+
         // TUT solo se disponibile e valido
         if (hasValidTut) ...[
-          _buildSeparator(theme),
+          _buildSeparator(context),
           Expanded(
             child: AnimatedSlide(
               offset: _isDataLoaded ? Offset.zero : const Offset(-0.2, 0),
@@ -203,17 +203,17 @@ class _ExerciseInfoBarState extends State<ExerciseInfoBar>
                   children: [
                     Flexible(
                       child: _buildInfoItem(
+                        context: context,
                         icon: AppIcons.timer,
                         text: _formatTut(tut!),
-                        color: theme.colorScheme.primary,
-                        theme: theme,
+                        color: context.colors.primary,
                         isHighlighted: true,
                       ),
                     ),
                     const SizedBox(width: 6),
                     AnimatedBuilder(
                       animation: _rotateAnimation,
-                      builder: (context, child) {
+                      builder: (ctx, child) {
                         return Transform.rotate(
                           angle: _rotateAnimation.value * 3.14159,
                           child: Icon(
@@ -224,8 +224,8 @@ class _ExerciseInfoBarState extends State<ExerciseInfoBar>
                                   : AppIcons.info),
                             size: 14,
                             color: _isPressed || _showTutSelector
-                              ? theme.colorScheme.primary
-                              : theme.colorScheme.primary.withValues(alpha: 0.5),
+                              ? context.colors.primary
+                              : context.colors.primary.withValues(alpha: 0.5),
                           ),
                         );
                       },
@@ -240,20 +240,20 @@ class _ExerciseInfoBarState extends State<ExerciseInfoBar>
     );
   }
   
-  Widget _buildShimmer(ThemeData theme) {
+  Widget _buildShimmer(BuildContext context) {
     return TweenAnimationBuilder<double>(
       tween: Tween(begin: 0.3, end: 0.6),
       duration: const Duration(milliseconds: 1000),
       curve: Curves.easeInOut,
-      builder: (context, value, child) {
+      builder: (ctx, value, child) {
         return Row(
           children: [
             Container(
               width: 60,
               height: 12,
               decoration: BoxDecoration(
-                color: theme.colorScheme.onSurface.withValues(alpha: value * 0.3),
-                borderRadius: BorderRadius.circular(4),
+                color: context.colors.onSurface.withValues(alpha: value * 0.3),
+                borderRadius: BorderRadius.circular(6),
               ),
             ),
             const SizedBox(width: 8),
@@ -261,8 +261,8 @@ class _ExerciseInfoBarState extends State<ExerciseInfoBar>
               width: 40,
               height: 12,
               decoration: BoxDecoration(
-                color: theme.colorScheme.onSurface.withValues(alpha: value * 0.3),
-                borderRadius: BorderRadius.circular(4),
+                color: context.colors.onSurface.withValues(alpha: value * 0.3),
+                borderRadius: BorderRadius.circular(6),
               ),
             ),
             const SizedBox(width: 8),
@@ -270,8 +270,8 @@ class _ExerciseInfoBarState extends State<ExerciseInfoBar>
               width: 50,
               height: 12,
               decoration: BoxDecoration(
-                color: theme.colorScheme.onSurface.withValues(alpha: value * 0.3),
-                borderRadius: BorderRadius.circular(4),
+                color: context.colors.onSurface.withValues(alpha: value * 0.3),
+                borderRadius: BorderRadius.circular(6),
               ),
             ),
           ],
@@ -287,10 +287,10 @@ class _ExerciseInfoBarState extends State<ExerciseInfoBar>
   }
   
   Widget _buildInfoItem({
+    required BuildContext context,
     required IconData? icon,
     required String text,
     required Color color,
-    required ThemeData theme,
     bool isHighlighted = false,
   }) {
     return Row(
@@ -307,7 +307,7 @@ class _ExerciseInfoBarState extends State<ExerciseInfoBar>
         Flexible(
           child: Text(
             text,
-            style: theme.textTheme.bodySmall?.copyWith(
+            style: context.textTheme.bodySmall?.copyWith(
               color: color,
               fontWeight: isHighlighted ? FontWeight.w600 : FontWeight.w500,
               fontSize: 12,
@@ -319,14 +319,14 @@ class _ExerciseInfoBarState extends State<ExerciseInfoBar>
       ],
     );
   }
-  
-  Widget _buildSeparator(ThemeData theme) {
+
+  Widget _buildSeparator(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 8),
       child: Text(
         '•',
         style: TextStyle(
-          color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.3),
+          color: context.colors.onSurfaceVariant.withValues(alpha: 0.3),
           fontSize: 10,
         ),
       ),
@@ -340,37 +340,37 @@ class _ExerciseInfoBarState extends State<ExerciseInfoBar>
     return tut;
   }
   
-  String _getCategoryDisplayName(ExerciseCategory category) {
+  String _getCategoryDisplayName(BuildContext context, ExerciseCategory category) {
     switch (category) {
       case ExerciseCategory.chest:
-        return 'Chest';
+        return context.l10n.exerciseCategoryChest;
       case ExerciseCategory.shoulders:
-        return 'Shoulders';
+        return context.l10n.exerciseCategoryShoulders;
       case ExerciseCategory.back:
-        return 'Back';
+        return context.l10n.exerciseCategoryBack;
       case ExerciseCategory.arms:
-        return 'Arms';
+        return context.l10n.exerciseCategoryArms;
       case ExerciseCategory.legs:
-        return 'Legs';
+        return context.l10n.exerciseCategoryLegs;
       case ExerciseCategory.abs:
-        return 'Core';
+        return context.l10n.exerciseCategoryAbs;
       case ExerciseCategory.cardio:
-        return 'Cardio';
+        return context.l10n.exerciseCategoryCardio;
       case ExerciseCategory.other:
-        return 'Other';
+        return context.l10n.exerciseCategoryOther;
     }
   }
-  
-  String _getTypeDisplayName(ExerciseType type) {
+
+  String _getTypeDisplayName(BuildContext context, ExerciseType type) {
     switch (type) {
       case ExerciseType.single:
-        return 'S';  // Single Set
+        return context.l10n.exerciseTypeSingle;
       case ExerciseType.superset:
-        return 'SS';  // SuperSet
+        return context.l10n.exerciseTypeSuperset;
       case ExerciseType.dropset:
-        return 'DS';  // DropSet
+        return context.l10n.exerciseTypeDropset;
       case ExerciseType.restPause:
-        return 'RP';  // Rest-Pause
+        return context.l10n.exerciseTypeRestPause;
     }
   }
   
@@ -408,16 +408,16 @@ class _ExerciseInfoBarState extends State<ExerciseInfoBar>
     }
   }
   
-  Color _getTypeColor(ExerciseType type, ThemeData theme) {
+  Color _getTypeColor(ExerciseType type, BuildContext context) {
     switch (type) {
       case ExerciseType.single:
-        return theme.colorScheme.onSurfaceVariant;
+        return context.colors.onSurfaceVariant;
       case ExerciseType.superset:
-        return theme.colorScheme.secondary;
+        return context.colors.secondary;
       case ExerciseType.dropset:
-        return theme.colorScheme.tertiary;
+        return context.colors.tertiary;
       case ExerciseType.restPause:
-        return theme.colorScheme.error;
+        return context.colors.error;
     }
   }
 

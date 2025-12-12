@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>NSAppTransportSecurity</key>
+	<dict/>
+	<key>NSHealthShareUsageDescription</key>
+	<string>FitLog needs access to your health data to display heart rate and calories during workouts.</string>
+	<key>NSHealthUpdateUsageDescription</key>
+	<string>FitLog saves workout data to Health to track your strength training sessions.</string>
+</dict>
+</plist>
