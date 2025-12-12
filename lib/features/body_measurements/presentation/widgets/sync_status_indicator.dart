@@ -1,3 +1,4 @@
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'dart:io';
 
 import 'package:flutter/foundation.dart';
@@ -184,10 +185,10 @@ class _SyncStatusIndicatorState extends ConsumerState<SyncStatusIndicator> {
               children: [
                 Icon(
                   Platform.isIOS
-                      ? Icons.apple
+                      ? AppIcons.apple
                       : Platform.isAndroid
-                          ? Icons.android
-                          : Icons.health_and_safety,
+                          ? AppIcons.android
+                          : AppIcons.healthAndSafety,
                   color: context.colors.primary,
                   size: 28,
                 ),
@@ -231,7 +232,7 @@ class _SyncStatusIndicatorState extends ConsumerState<SyncStatusIndicator> {
                             ),
                           ),
                         )
-                      : const Icon(Icons.sync),
+                      : const Icon(AppIcons.sync),
                   label: Text(context.l10n.bodyMeasurementsSyncNow),
                 ),
 
@@ -247,7 +248,7 @@ class _SyncStatusIndicatorState extends ConsumerState<SyncStatusIndicator> {
                         ),
                       );
                     },
-                    icon: const Icon(Icons.bug_report),
+                    icon: const Icon(AppIcons.bugReport),
                     label: const Text('Debug'),
                   ),
                 ],
@@ -262,7 +263,7 @@ class _SyncStatusIndicatorState extends ConsumerState<SyncStatusIndicator> {
             Row(
               children: [
                 Icon(
-                  Icons.access_time,
+                  AppIcons.clock,
                   size: 20,
                   color: context.colors.onSurfaceVariant,
                 ),
@@ -283,7 +284,7 @@ class _SyncStatusIndicatorState extends ConsumerState<SyncStatusIndicator> {
                 children: [
                   Expanded(
                     child: _buildSyncCount(
-                      icon: Icons.download,
+                      icon: AppIcons.download,
                       label: context.l10n
                           .bodyMeasurementsSyncMeasurementsRead(
                         _lastSyncResult!.readCount,
@@ -294,7 +295,7 @@ class _SyncStatusIndicatorState extends ConsumerState<SyncStatusIndicator> {
                   const SizedBox(width: 12),
                   Expanded(
                     child: _buildSyncCount(
-                      icon: Icons.upload,
+                      icon: AppIcons.upload,
                       label: context.l10n
                           .bodyMeasurementsSyncMeasurementsWritten(
                         _lastSyncResult!.writeCount,

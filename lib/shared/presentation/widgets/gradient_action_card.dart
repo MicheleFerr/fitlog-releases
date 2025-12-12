@@ -1,3 +1,4 @@
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:gymbro_flutter_new/shared/presentation/constants/app_animations.dart';
@@ -19,8 +20,8 @@ import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_
 /// Usage:
 /// ```dart
 /// GradientActionCard(
-///   outlinedIcon: AppIcons.analytics,
-///   filledIcon: AppIcons.analyticsRounded,
+///   outlinedIcon: AppAppIcons.analytics,
+///   filledIcon: AppAppIcons.analyticsRounded,
 ///   title: context.l10n.analytics,
 ///   gradient: RadialGradient(...),
 ///   accentColor: theme.colorScheme.primary,

@@ -1,3 +1,4 @@
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise.dart';
@@ -70,7 +71,7 @@ class _ScrollableExerciseChipsState extends State<ScrollableExerciseChips> {
             label: tut == 'ISO' ? 'ISOMETRICO' : 
                    tut == 'EXP' ? 'ESPLOSIVO' : 
                    tut.toString(), // Mostra solo i numeri, più pulito
-            icon: Icons.info_outline, // Icona info più chiara per il tap
+            icon: AppIcons.infoOutline, // Icona info più chiara per il tap
             backgroundColor: context.colors.tertiary.withValues(alpha: 0.15), // Più visibile
             textColor: context.colors.tertiary,
             subtitle: 'TUT', // Indica che è TUT nel subtitle
@@ -86,7 +87,7 @@ class _ScrollableExerciseChipsState extends State<ScrollableExerciseChips> {
         chipItems.add(
           _ChipItem(
             label: 'REP: $rangeRipetizioni',
-            icon: Icons.repeat,
+            icon: AppIcons.repeat,
             backgroundColor: context.colors.secondary.withValues(alpha: 0.1),
             textColor: context.colors.secondary,
           ),
@@ -162,7 +163,7 @@ class _ScrollableExerciseChipsState extends State<ScrollableExerciseChips> {
                 left: 0,
                 child: IconButton(
                   icon: Icon(
-                    Icons.chevron_left,
+                    AppIcons.chevronLeft,
                     size: 16,
                     color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.5),
                   ),
@@ -181,7 +182,7 @@ class _ScrollableExerciseChipsState extends State<ScrollableExerciseChips> {
                 right: 0,
                 child: IconButton(
                   icon: Icon(
-                    Icons.chevron_right,
+                    AppIcons.chevronRight,
                     size: 16,
                     color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.5),
                   ),
@@ -281,21 +282,21 @@ class _ScrollableExerciseChipsState extends State<ScrollableExerciseChips> {
   IconData _getCategoryIcon(ExerciseCategory category) {
     switch (category) {
       case ExerciseCategory.chest:
-        return Icons.fitness_center;
+        return AppIcons.workout;
       case ExerciseCategory.shoulders:
-        return Icons.accessibility_new;
+        return AppIcons.accessibility;
       case ExerciseCategory.back:
-        return Icons.sports_gymnastics;
+        return AppIcons.gymnastics;
       case ExerciseCategory.arms:
-        return Icons.sports_mma;
+        return AppIcons.sportsMma;
       case ExerciseCategory.legs:
-        return Icons.directions_run;
+        return AppIcons.cardio;
       case ExerciseCategory.abs:
-        return Icons.self_improvement;
+        return AppIcons.flexibility;
       case ExerciseCategory.cardio:
-        return Icons.directions_run;
+        return AppIcons.cardio;
       case ExerciseCategory.other:
-        return Icons.fitness_center;
+        return AppIcons.workout;
     }
   }
   
@@ -304,11 +305,11 @@ class _ScrollableExerciseChipsState extends State<ScrollableExerciseChips> {
       case ExerciseType.single:
         return null; // No icon for single
       case ExerciseType.superset:
-        return Icons.double_arrow;
+        return AppIcons.doubleArrow;
       case ExerciseType.dropset:
-        return Icons.trending_down;
+        return AppIcons.trendDown;
       case ExerciseType.restPause:
-        return Icons.pause_circle_outline;
+        return AppIcons.pauseCircleOutline;
     }
   }
   

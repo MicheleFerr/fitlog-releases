@@ -1029,6 +1029,37 @@ class AppIcons {
 
   /// 📅 Calendar today (base variant)
   static const IconData calendarToday = Icons.calendar_today;
+
+  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  // 🆕 ADDITIONAL MAPPINGS (for design system compliance)
+  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  /// 🤖 Android
+  static const IconData android = Icons.android;
+
+  /// ➡️ Arrow forward
+  static const IconData arrowForward = Icons.arrow_forward;
+
+  /// 📏 Height
+  static const IconData height = Icons.height;
+
+  /// 🌙 Nightlight
+  static const IconData nightlight = Icons.nightlight;
+
+  /// ▶️ Play rounded
+  static const IconData playRounded = Icons.play_arrow_rounded;
+
+  /// 🌡️ Thermostat
+  static const IconData thermostat = Icons.thermostat;
+
+  /// ⏱️ Timer outlined
+  static const IconData timerOutlined = Icons.timer_outlined;
+
+  /// ⚠️ Warning outlined
+  static const IconData warningOutlined = Icons.warning_outlined;
+
+  /// 💧 Water drop
+  static const IconData waterDrop = Icons.water_drop;
 }
 
 /// 📦 Icon Groups - For when you need multiple related icons

@@ -1,3 +1,4 @@
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
@@ -34,7 +35,7 @@ class FitnessProfileDebugScreen extends ConsumerWidget {
                   Row(
                     children: [
                       Icon(
-                        questionnaire != null ? Icons.check_circle : Icons.warning,
+                        questionnaire != null ? AppIcons.complete : AppIcons.warning,
                         color: questionnaire != null ? context.iconSuccess : context.iconWarning,
                       ),
                       const SizedBox(width: 8),
@@ -93,7 +94,7 @@ class FitnessProfileDebugScreen extends ConsumerWidget {
                   Row(
                     children: [
                       Icon(
-                        medicalClearance != null ? Icons.check_circle : Icons.warning,
+                        medicalClearance != null ? AppIcons.complete : AppIcons.warning,
                         color: medicalClearance != null ? context.iconSuccess : context.iconWarning,
                       ),
                       const SizedBox(width: 8),
@@ -130,7 +131,7 @@ class FitnessProfileDebugScreen extends ConsumerWidget {
                   Row(
                     children: [
                       Icon(
-                        suggestionsEnabled ? Icons.check_circle : Icons.error,
+                        suggestionsEnabled ? AppIcons.complete : AppIcons.error,
                         color: suggestionsEnabled ? context.iconSuccess : context.iconError,
                       ),
                       const SizedBox(width: 8),
@@ -236,7 +237,7 @@ class FitnessProfileDebugScreen extends ConsumerWidget {
                         await ref.read(userFitnessQuestionnaireProvider.notifier).loadQuestionnaire();
                         await ref.read(medicalClearanceQuestionnaireProvider.notifier).loadClearance();
                       },
-                      icon: const Icon(Icons.refresh),
+                      icon: const Icon(AppIcons.refresh),
                       label: const Text('Reload Profile from Storage'),
                     ),
                   ),
@@ -249,7 +250,7 @@ class FitnessProfileDebugScreen extends ConsumerWidget {
                         ref.invalidate(medicalClearanceQuestionnaireProvider);
                         ref.invalidate(exerciseMappingsProvider);
                       },
-                      icon: const Icon(Icons.clear),
+                      icon: const Icon(AppIcons.clear),
                       label: const Text('Invalidate All Providers'),
                     ),
                   ),

@@ -1,3 +1,4 @@
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -339,7 +340,7 @@ class _MeasurementListScreenState extends ConsumerState<MeasurementListScreen> {
         actions: [
           // Charts button
           IconButton(
-            icon: const Icon(Icons.show_chart),
+            icon: const Icon(AppIcons.lineChart),
             tooltip: context.l10n.bodyMeasurementsChartsTitle,
             onPressed: () {
               Navigator.push(
@@ -362,13 +363,13 @@ class _MeasurementListScreenState extends ConsumerState<MeasurementListScreen> {
                     ),
                   )
                 : IconButton(
-                    icon: const Icon(Icons.download),
+                    icon: const Icon(AppIcons.download),
                     tooltip: context.l10n.bodyMeasurementsImportFromHealth,
                     onPressed: _importFromHealthKit,
                   ),
           // Filter dropdown
           PopupMenuButton<MetricType?>(
-            icon: const Icon(Icons.filter_list),
+            icon: const Icon(AppIcons.filterListOutlined),
             tooltip: context.l10n.bodyMeasurementsListFilterByMetric,
             onSelected: _onFilterChanged,
             itemBuilder: (context) {
@@ -380,7 +381,7 @@ class _MeasurementListScreenState extends ConsumerState<MeasurementListScreen> {
                     children: [
                       if (_selectedFilter == null)
                         Icon(
-                          Icons.check,
+                          AppIcons.check,
                           color: context.colors.primary,
                           size: 20,
                         ),
@@ -398,7 +399,7 @@ class _MeasurementListScreenState extends ConsumerState<MeasurementListScreen> {
                       children: [
                         if (_selectedFilter == metric)
                           Icon(
-                            Icons.check,
+                            AppIcons.check,
                             color: context.colors.primary,
                             size: 20,
                           ),
@@ -437,7 +438,7 @@ class _MeasurementListScreenState extends ConsumerState<MeasurementListScreen> {
             await _loadMeasurements();
           }
         },
-        child: const Icon(Icons.add),
+        child: const Icon(AppIcons.add),
       ),
     );
   }
@@ -451,7 +452,7 @@ class _MeasurementListScreenState extends ConsumerState<MeasurementListScreen> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Icon(
-              Icons.straighten,
+              AppIcons.straighten,
               size: 80,
               color: context.colors.onSurfaceVariant,
             ),
@@ -478,7 +479,7 @@ class _MeasurementListScreenState extends ConsumerState<MeasurementListScreen> {
                   await _loadMeasurements();
                 }
               },
-              icon: const Icon(Icons.add),
+              icon: const Icon(AppIcons.add),
               label: Text(context.l10n.bodyMeasurementsInputTitle),
             ),
           ],
@@ -583,7 +584,7 @@ class _MeasurementListScreenState extends ConsumerState<MeasurementListScreen> {
 
                       // Actions menu
                       PopupMenuButton<String>(
-                        icon: const Icon(Icons.more_vert),
+                        icon: const Icon(AppIcons.moreVert),
                         onSelected: (action) {
                           if (action == 'edit') {
                             _onEdit(measurement);
@@ -596,7 +597,7 @@ class _MeasurementListScreenState extends ConsumerState<MeasurementListScreen> {
                             value: 'edit',
                             child: Row(
                               children: [
-                                const Icon(Icons.edit, size: 20),
+                                const Icon(AppIcons.edit, size: 20),
                                 const SizedBox(width: 8),
                                 Text(context.l10n.bodyMeasurementsListEdit),
                               ],
@@ -607,7 +608,7 @@ class _MeasurementListScreenState extends ConsumerState<MeasurementListScreen> {
                             child: Row(
                               children: [
                                 Icon(
-                                  Icons.delete,
+                                  AppIcons.delete,
                                   size: 20,
                                   color: context.colors.error,
                                 ),
@@ -640,17 +641,17 @@ class _MeasurementListScreenState extends ConsumerState<MeasurementListScreen> {
   IconData _getMetricIcon(MetricType metric) {
     switch (metric) {
       case MetricType.weight:
-        return Icons.monitor_weight;
+        return AppIcons.weight;
       case MetricType.height:
-        return Icons.height;
+        return AppIcons.height;
       case MetricType.bodyFatPercentage:
-        return Icons.percent;
+        return AppIcons.percent;
       case MetricType.leanMass:
-        return Icons.fitness_center;
+        return AppIcons.workout;
       case MetricType.bmi:
-        return Icons.calculate;
+        return AppIcons.calculate;
       case MetricType.bmr:
-        return Icons.local_fire_department;
+        return AppIcons.streak;
       case MetricType.neckCircumference:
       case MetricType.shoulderCircumference:
       case MetricType.chestCircumference:
@@ -665,13 +666,13 @@ class _MeasurementListScreenState extends ConsumerState<MeasurementListScreen> {
       case MetricType.thighRightCircumference:
       case MetricType.calfLeftCircumference:
       case MetricType.calfRightCircumference:
-        return Icons.straighten;
+        return AppIcons.straighten;
       case MetricType.bodyTemperature:
-        return Icons.thermostat;
+        return AppIcons.thermostat;
       case MetricType.waterMass:
-        return Icons.water_drop;
+        return AppIcons.waterDrop;
       case MetricType.boneMass:
-        return Icons.accessibility;
+        return AppIcons.accessibility;
     }
   }
 }

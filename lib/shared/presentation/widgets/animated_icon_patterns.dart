@@ -1,3 +1,4 @@
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
@@ -187,7 +188,7 @@ class AnimatedIconPatterns {
   ///
   /// ```dart
   /// AnimatedIconPatterns.shaking(
-  ///   icon: AppIcons.error,
+  ///   icon: AppAppIcons.error,
   ///   trigger: hasError,
   /// )
   /// ```

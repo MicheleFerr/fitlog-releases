@@ -1,3 +1,4 @@
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -101,7 +102,7 @@ class _RestTimePickerModalState extends ConsumerState<RestTimePickerModal> {
           // Title
           Row(
             children: [
-              const Icon(Icons.timer, size: 24),
+              const Icon(AppIcons.timer, size: 24),
               const SizedBox(width: 8),
               Text(
                 context.l10n.restTime,
@@ -294,7 +295,7 @@ class _RestTimePickerModalState extends ConsumerState<RestTimePickerModal> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Icon(
-                    Icons.timer,
+                    AppIcons.timer,
                     size: 18,
                     color: context.colors.primary,
                   ),

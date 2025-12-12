@@ -17,6 +17,7 @@
 /// - Step 6: Review & Submit
 library;
 
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/features/strength_standards/domain/entities/medical_clearance_questionnaire.dart';
@@ -262,7 +263,7 @@ class _FitnessQuestionnaireScreenState
         title: Text(context.l10n.fitnessQuestionnaireTitle),
         backgroundColor: context.colors.surface,
         leading: IconButton(
-          icon: const Icon(Icons.close),
+          icon: const Icon(AppIcons.close),
           onPressed: () => Navigator.of(context).pop(),
         ),
       ),
@@ -474,7 +475,7 @@ class _FitnessQuestionnaireScreenState
                   padding: const EdgeInsets.all(16),
                   child: Row(
                     children: [
-                      Icon(Icons.warning, color: context.colors.error),
+                      Icon(AppIcons.warning, color: context.colors.error),
                       const SizedBox(width: 12),
                       Expanded(
                         child: Text(
@@ -493,7 +494,7 @@ class _FitnessQuestionnaireScreenState
                   padding: const EdgeInsets.all(16),
                   child: Row(
                     children: [
-                      Icon(Icons.info, color: context.colors.secondary),
+                      Icon(AppIcons.info, color: context.colors.secondary),
                       const SizedBox(width: 12),
                       Expanded(
                         child: Text(
@@ -512,7 +513,7 @@ class _FitnessQuestionnaireScreenState
                   padding: const EdgeInsets.all(16),
                   child: Row(
                     children: [
-                      Icon(Icons.check_circle, color: context.colors.primary),
+                      Icon(AppIcons.complete, color: context.colors.primary),
                       const SizedBox(width: 12),
                       Expanded(
                         child: Text(
@@ -613,12 +614,12 @@ class _FitnessQuestionnaireScreenState
                 ButtonSegment(
                   value: BiologicalSex.male,
                   label: Text(context.l10n.fitnessQuestionnaireSexMale),
-                  icon: const Icon(Icons.male),
+                  icon: const Icon(AppIcons.male),
                 ),
                 ButtonSegment(
                   value: BiologicalSex.female,
                   label: Text(context.l10n.fitnessQuestionnaireSexFemale),
-                  icon: const Icon(Icons.female),
+                  icon: const Icon(AppIcons.female),
                 ),
               ],
               selected: {_sex},

@@ -1,3 +1,4 @@
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:gymbro_flutter_new/features/analytics/domain/services/pr_tracker.dart';
 import 'package:gymbro_flutter_new/shared/domain/entities/pr_type.dart';
@@ -37,7 +38,7 @@ class PRTimelineWidget extends StatelessWidget {
             Row(
               children: [
                 Icon(
-                  Icons.emoji_events,
+                  AppIcons.achievement,
                   color: context.colors.warning,
                   size: 24,
                 ),
@@ -168,7 +169,7 @@ class PRTimelineWidget extends StatelessWidget {
               if (pr.isSignificant) ...[
                 const SizedBox(width: 4),
                 Icon(
-                  Icons.trending_up,
+                  AppIcons.trendUp,
                   size: 12,
                   color: context.colors.success,
                 ),
@@ -196,7 +197,7 @@ class PRTimelineWidget extends StatelessWidget {
           child: Column(
             children: [
               Icon(
-                Icons.emoji_events,
+                AppIcons.achievement,
                 size: 48,
                 color: context.colors.surfaceVariant.withValues(alpha: 0.5),
               ),
@@ -217,17 +218,17 @@ class PRTimelineWidget extends StatelessWidget {
   IconData _getIconForPRType(PRType type) {
     switch (type) {
       case PRType.weight:
-        return Icons.fitness_center;
+        return AppIcons.workout;
       case PRType.reps:
-        return Icons.repeat;
+        return AppIcons.repeat;
       case PRType.volume:
-        return Icons.bar_chart;
+        return AppIcons.barChart;
       case PRType.oneRM:
-        return Icons.looks_one;
+        return AppIcons.looksOne;
       case PRType.totalSets:
-        return Icons.format_list_numbered;
+        return AppIcons.formatListNumbered;
       case PRType.duration:
-        return Icons.timer;
+        return AppIcons.timer;
     }
   }
   

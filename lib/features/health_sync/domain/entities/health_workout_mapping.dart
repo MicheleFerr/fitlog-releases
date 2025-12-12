@@ -1,3 +1,4 @@
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 /// Enum representing FitLog workout categories (bodybuilding-focused).
 ///
 /// Simplified to 3 categories based on app scope:

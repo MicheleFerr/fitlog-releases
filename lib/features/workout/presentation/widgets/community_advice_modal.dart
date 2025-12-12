@@ -8,6 +8,7 @@
 /// 📱 Platform: Universal
 library;
 
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise.dart';
@@ -69,7 +70,7 @@ class _CommunityAdviceModalState extends ConsumerState<CommunityAdviceModal> {
               child: Row(
                 children: [
                   Icon(
-                    Icons.lightbulb_outline,
+                    AppIcons.tip,
                     color: theme.colorScheme.primary,
                   ),
                   const SizedBox(width: 12),
@@ -132,7 +133,7 @@ class _CommunityAdviceModalState extends ConsumerState<CommunityAdviceModal> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Icon(
-                        Icons.error_outline,
+                        AppIcons.errorOutline,
                         size: 48,
                         color: theme.colorScheme.error,
                       ),
@@ -160,7 +161,7 @@ class _CommunityAdviceModalState extends ConsumerState<CommunityAdviceModal> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Icon(
-              Icons.lightbulb_outline,
+              AppIcons.tip,
               size: 64,
               color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.5),
             ),
@@ -234,7 +235,7 @@ class _CommunityAdviceModalState extends ConsumerState<CommunityAdviceModal> {
                   child: Row(
                     children: [
                       Icon(
-                        Icons.person_outline,
+                        AppIcons.personOutline,
                         size: 16,
                         color: theme.colorScheme.onSurfaceVariant,
                       ),
@@ -266,7 +267,7 @@ class _CommunityAdviceModalState extends ConsumerState<CommunityAdviceModal> {
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         Icon(
-                          Icons.thumb_up_outlined,
+                          AppIcons.thumbUpOutlined,
                           size: 16,
                           color: theme.colorScheme.primary,
                         ),
@@ -305,37 +306,37 @@ class _CommunityAdviceModalState extends ConsumerState<CommunityAdviceModal> {
     switch (type) {
       case ContributionType.tip:
         return Icon(
-          Icons.lightbulb,
+          AppIcons.lightbulb,
           size: 20,
           color: context.colors.warning,
         );
       case ContributionType.warning:
         return Icon(
-          Icons.warning,
+          AppIcons.warning,
           size: 20,
           color: context.colors.secondary,
         );
       case ContributionType.correction:
         return Icon(
-          Icons.edit,
+          AppIcons.edit,
           size: 20,
           color: theme.colorScheme.primary,
         );
       case ContributionType.variant:
         return Icon(
-          Icons.alt_route,
+          AppIcons.altRoute,
           size: 20,
           color: context.colors.tertiary,
         );
       case ContributionType.translation:
         return Icon(
-          Icons.translate,
+          AppIcons.translate,
           size: 20,
           color: context.colors.primary,
         );
       case ContributionType.technique:
         return Icon(
-          Icons.fitness_center,
+          AppIcons.workout,
           size: 20,
           color: context.colors.success,
         );

@@ -13,6 +13,7 @@
 /// - Hive: None
 library;
 
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
@@ -60,7 +61,7 @@ class TemplateQuotaIndicator extends StatelessWidget {
           Row(
             children: [
               Icon(
-                Icons.inventory_2,
+                AppIcons.inventory2,
                 size: 20,
                 color: colorScheme.primary,
               ),
@@ -99,7 +100,7 @@ class TemplateQuotaIndicator extends StatelessWidget {
             label: 'Private Templates',
             used: usedPrivate,
             max: maxPrivate,
-            icon: Icons.lock,
+            icon: AppIcons.lock,
             color: colorScheme.primary,
           ),
           
@@ -111,7 +112,7 @@ class TemplateQuotaIndicator extends StatelessWidget {
             label: 'Public Templates',
             used: usedPublic,
             max: maxPublic,
-            icon: Icons.public,
+            icon: AppIcons.public,
             color: colorScheme.secondary,
           ),
           
@@ -128,7 +129,7 @@ class TemplateQuotaIndicator extends StatelessWidget {
               child: Row(
                 children: [
                   Icon(
-                    Icons.star,
+                    AppIcons.star,
                     color: colorScheme.tertiary,
                     size: 20,
                   ),

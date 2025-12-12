@@ -7,6 +7,7 @@
 /// Widget per le azioni rapide dell'admin dashboard
 library;
 
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
@@ -35,7 +36,7 @@ class AdminQuickActions extends ConsumerWidget {
             Row(
               children: [
                 Icon(
-                  Icons.flash_on,
+                  AppIcons.flashOn,
                   color: Theme.of(context).colorScheme.primary,
                 ),
                 const SizedBox(width: 8),
@@ -60,7 +61,7 @@ class AdminQuickActions extends ConsumerWidget {
               children: [
                 // Gestione database esercizi
                 _QuickActionCard(
-                  icon: Icons.storage,
+                  icon: AppIcons.storage,
                   title: l10n.databaseManager,
                   subtitle: l10n.manageExercisesDescription,
                   color: Theme.of(context).colorScheme.primary,
@@ -69,7 +70,7 @@ class AdminQuickActions extends ConsumerWidget {
 
                 // Exercise Feedback (NUOVO)
                 _QuickActionCardWithBadge(
-                  icon: Icons.flag_circle,
+                  icon: AppIcons.flagCircle,
                   title: 'Exercise Feedback',
                   subtitle: 'Segnalazioni e bug utenti',
                   color: context.colors.tertiary,
@@ -79,7 +80,7 @@ class AdminQuickActions extends ConsumerWidget {
 
                 // Review contributi community
                 _QuickActionCard(
-                  icon: Icons.rate_review,
+                  icon: AppIcons.rateReview,
                   title: l10n.communityContributions,
                   subtitle: l10n.reviewContributionsDescription,
                   color: context.colors.secondary,
@@ -88,7 +89,7 @@ class AdminQuickActions extends ConsumerWidget {
 
                 // Richieste esercizi mancanti
                 _QuickActionCard(
-                  icon: Icons.fitness_center,
+                  icon: AppIcons.workout,
                   title: 'Esercizi Mancanti',
                   subtitle: 'Gestisci richieste esercizi',
                   color: context.colors.warning,
@@ -97,7 +98,7 @@ class AdminQuickActions extends ConsumerWidget {
 
                 // Fix dati mancanti
                 _QuickActionCard(
-                  icon: Icons.build_circle,
+                  icon: AppIcons.buildCircle,
                   title: l10n.fixMissingData,
                   subtitle: l10n.fixMissingDataDescription,
                   color: context.colors.primary,
@@ -106,7 +107,7 @@ class AdminQuickActions extends ConsumerWidget {
 
                 // Statistiche utenti
                 _QuickActionCard(
-                  icon: Icons.analytics,
+                  icon: AppIcons.analytics,
                   title: l10n.userAnalytics,
                   subtitle: l10n.userAnalyticsDescription,
                   color: context.colors.success,
@@ -115,7 +116,7 @@ class AdminQuickActions extends ConsumerWidget {
 
                 // Backup database
                 _QuickActionCard(
-                  icon: Icons.backup,
+                  icon: AppIcons.backup,
                   title: l10n.databaseBackup,
                   subtitle: l10n.databaseBackupDescription,
                   color: context.colors.tertiary,
@@ -124,7 +125,7 @@ class AdminQuickActions extends ConsumerWidget {
 
                 // Notifiche push
                 _QuickActionCard(
-                  icon: Icons.notifications,
+                  icon: AppIcons.notifications,
                   title: l10n.pushNotifications,
                   subtitle: l10n.pushNotificationsDescription,
                   color: context.colors.error,
@@ -219,7 +220,7 @@ class AdminQuickActions extends ConsumerWidget {
         title: Row(
           children: [
             Icon(
-              Icons.build_circle,
+              AppIcons.buildCircle,
               color: Theme.of(context).colorScheme.primary,
             ),
             const SizedBox(width: 8),
@@ -252,7 +253,7 @@ class AdminQuickActions extends ConsumerWidget {
         title: Row(
           children: [
             Icon(
-              Icons.construction,
+              AppIcons.construction,
               color: Theme.of(context).colorScheme.primary,
             ),
             const SizedBox(width: 8),

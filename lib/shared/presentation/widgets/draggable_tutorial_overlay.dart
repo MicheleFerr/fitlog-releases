@@ -3,6 +3,7 @@
 /// Tutorial overlay per spiegare il drag del FAB
 library;
 
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
@@ -144,7 +145,7 @@ class _DraggableTutorialOverlayState extends State<DraggableTutorialOverlay>
                             shape: BoxShape.circle,
                           ),
                           child: Icon(
-                            Icons.swipe,
+                            AppIcons.swipe,
                             color: colorScheme.primary,
                             size: 24,
                           ),
@@ -175,7 +176,7 @@ class _DraggableTutorialOverlayState extends State<DraggableTutorialOverlay>
                         IconButton(
                           onPressed: _dismissTutorial,
                           icon: Icon(
-                            Icons.close,
+                            AppIcons.close,
                             size: 18,
                             color: colorScheme.onPrimaryContainer.withValues(alpha: 0.6),
                           ),

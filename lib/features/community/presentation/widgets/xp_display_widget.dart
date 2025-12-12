@@ -1,3 +1,4 @@
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -121,7 +122,7 @@ class _XPDisplayWidgetState extends ConsumerState<XPDisplayWidget>
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               Icon(
-                                Icons.star,
+                                AppIcons.star,
                                 color: theme.colorScheme.onPrimary,
                                 size: 28,
                               ),
@@ -148,7 +149,7 @@ class _XPDisplayWidgetState extends ConsumerState<XPDisplayWidget>
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Icon(
-                      Icons.bolt,
+                      AppIcons.bolt,
                       color: theme.colorScheme.primary,
                       size: 24,
                     ),
@@ -213,19 +214,19 @@ class _XPDisplayWidgetState extends ConsumerState<XPDisplayWidget>
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
                       _StatItem(
-                        icon: Icons.edit,
+                        icon: AppIcons.edit,
                         label: 'Contributi',
                         value: stats.totalContributions.toString(),
                         color: theme.colorScheme.primary,
                       ),
                       _StatItem(
-                        icon: Icons.check_circle,
+                        icon: AppIcons.complete,
                         label: 'Approvati',
                         value: stats.approvedContributions.toString(),
                         color: theme.colorScheme.success,
                       ),
                       _StatItem(
-                        icon: Icons.thumb_up,
+                        icon: AppIcons.thumbUp,
                         label: 'Voti',
                         value: stats.totalVotes.toString(),
                         color: theme.colorScheme.warning,
@@ -268,7 +269,7 @@ class _XPDisplayWidgetState extends ConsumerState<XPDisplayWidget>
                   child: Row(
                     children: [
                       Icon(
-                        Icons.info_outline,
+                        AppIcons.infoOutline,
                         size: 20,
                         color: theme.colorScheme.primary,
                       ),
@@ -376,27 +377,27 @@ class _BadgeChip extends StatelessWidget {
     
     switch (badge) {
       case 'first_contribution':
-        icon = Icons.celebration;
+        icon = AppIcons.celebration;
         color = theme.colorScheme.tertiary;
         label = 'Prima Contribuzione';
         break;
       case 'verified_contributor':
-        icon = Icons.verified;
+        icon = AppIcons.verified;
         color = theme.colorScheme.primary;
         label = 'Contributore Verificato';
         break;
       case 'top_contributor':
-        icon = Icons.military_tech;
+        icon = AppIcons.expert;
         color = theme.colorScheme.warning;
         label = 'Top Contributor';
         break;
       case 'expert':
-        icon = Icons.school;
+        icon = AppIcons.education;
         color = theme.colorScheme.success;
         label = 'Esperto';
         break;
       default:
-        icon = Icons.badge;
+        icon = AppIcons.badge;
         color = theme.colorScheme.primary;
         label = badge;
     }

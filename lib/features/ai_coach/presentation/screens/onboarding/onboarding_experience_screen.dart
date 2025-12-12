@@ -94,7 +94,7 @@ class _OnboardingExperienceScreenState
                   children: [
                     _buildLevelCard(
                       level: ExperienceLevel.beginner,
-                      icon: AppIcons.school,
+                      icon: AppIcons.education,
                       title: context.l10n.beginnerLevel,
                       description: context.l10n.beginnerLevelDescription,
                     ),

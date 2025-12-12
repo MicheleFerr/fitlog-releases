@@ -7,6 +7,7 @@
 /// Rep preset chips for quick set/rep configuration
 library;
 
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/core/analytics/trackers/preset_selection_tracker.dart';
@@ -66,7 +67,7 @@ class RepPresetChips extends ConsumerWidget {
             Row(
               children: [
                 Icon(
-                  Icons.speed,
+                  AppIcons.speed,
                   size: 18,
                   color: context.colors.primary,
                 ),
@@ -223,7 +224,7 @@ class SetCountPresetChips extends ConsumerWidget {
             Row(
               children: [
                 Icon(
-                  Icons.repeat,
+                  AppIcons.repeat,
                   size: 18,
                   color: context.colors.primary,
                 ),

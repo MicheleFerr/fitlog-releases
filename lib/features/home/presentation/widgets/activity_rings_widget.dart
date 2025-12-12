@@ -12,6 +12,7 @@
 /// - Stand (Blue): Stand hours
 library;
 
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -78,7 +79,7 @@ class _ActivityRingsWidgetState extends ConsumerState<ActivityRingsWidget> {
               Row(
                 children: [
                   Icon(
-                    Icons.favorite,
+                    AppIcons.favorite,
                     color: context.colors.error,
                     size: 20,
                   ),
@@ -225,7 +226,7 @@ class _ActivityRingsWidgetState extends ConsumerState<ActivityRingsWidget> {
           mainAxisSize: MainAxisSize.min,
           children: [
             Icon(
-              Icons.error_outline,
+              AppIcons.errorOutline,
               color: context.colors.error,
               size: 32,
             ),

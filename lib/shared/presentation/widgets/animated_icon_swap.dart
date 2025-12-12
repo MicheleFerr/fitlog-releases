@@ -1,3 +1,4 @@
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:gymbro_flutter_new/shared/presentation/constants/app_animations.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
@@ -11,8 +12,8 @@ import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extens
 /// Usage:
 /// ```dart
 /// AnimatedIconSwap(
-///   outlinedIcon: AppIcons.analyticsOutlined,
-///   filledIcon: AppIcons.analytics,
+///   outlinedIcon: AppAppIcons.analyticsOutlined,
+///   filledIcon: AppAppIcons.analytics,
 ///   isPressed: _isPressed,
 ///   color: context.colors.tertiary,
 ///   size: 28,

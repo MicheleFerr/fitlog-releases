@@ -130,7 +130,7 @@ class _AutoAdjustmentModalState extends ConsumerState<AutoAdjustmentModal> {
                   style: context.textTheme.bodySmall,
                 ),
                 secondary: Icon(
-                  AppIcons.psychology,
+                  AppIcons.ai,
                   color: _isEnabled
                       ? context.colors.secondary
                       : context.colors.onSurfaceVariant,

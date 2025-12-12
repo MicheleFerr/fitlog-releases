@@ -7,6 +7,7 @@
 /// Widget per mostrare le attività recenti dell'admin
 library;
 
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -99,7 +100,7 @@ class AdminRecentActivity extends ConsumerWidget {
             Row(
               children: [
                 Icon(
-                  Icons.history,
+                  AppIcons.history,
                   color: Theme.of(context).colorScheme.primary,
                 ),
                 const SizedBox(width: 8),
@@ -112,7 +113,7 @@ class AdminRecentActivity extends ConsumerWidget {
                 const Spacer(),
                 TextButton.icon(
                   onPressed: () => ref.refresh(recentActivityProvider),
-                  icon: const Icon(Icons.refresh, size: 16),
+                  icon: const Icon(AppIcons.refresh, size: 16),
                   label: Text(l10n.refresh),
                 ),
               ],
@@ -179,7 +180,7 @@ class AdminRecentActivity extends ConsumerWidget {
       child: Row(
         children: [
           Icon(
-            Icons.error,
+            AppIcons.error,
             color: Theme.of(context).colorScheme.error,
           ),
           const SizedBox(width: 8),
@@ -214,7 +215,7 @@ class AdminRecentActivity extends ConsumerWidget {
       child: Column(
         children: [
           Icon(
-            Icons.inbox,
+            AppIcons.inbox,
             size: 48,
             color: Theme.of(context).colorScheme.onSurfaceVariant,
           ),
@@ -353,10 +354,10 @@ class _ActivityItem extends StatelessWidget {
 
   IconData _getStatusIcon(String status) {
     return switch (status) {
-      'pending' => Icons.pending,
-      'approved' => Icons.check_circle,
-      'rejected' => Icons.cancel,
-      _ => Icons.info,
+      'pending' => AppIcons.pending,
+      'approved' => AppIcons.complete,
+      'rejected' => AppIcons.cancel,
+      _ => AppIcons.info,
     };
   }
 

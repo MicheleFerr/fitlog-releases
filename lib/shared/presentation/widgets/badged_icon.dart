@@ -1,3 +1,4 @@
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
@@ -16,7 +17,7 @@ import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dar
 /// ```dart
 /// // Notification with count
 /// BadgedIcon(
-///   icon: AppIcons.notifications,
+///   icon: AppAppIcons.notifications,
 ///   badge: '3',
 ///   badgeColor: context.colors.error,
 /// )
@@ -233,7 +234,7 @@ class BadgedIcon extends StatelessWidget {
 ///
 /// Usage:
 /// ```dart
-/// AppIcons.notifications.withBadge(
+/// AppAppIcons.notifications.withBadge(
 ///   count: 5,
 ///   context: context,
 /// )

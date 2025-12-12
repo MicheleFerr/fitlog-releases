@@ -12,6 +12,7 @@
 /// - Material Design 3
 library;
 
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/providers/workout_repository_provider.dart';
@@ -34,7 +35,7 @@ class SyncStatusCard extends ConsumerWidget {
       return Card(
         child: ListTile(
           leading: Icon(
-            Icons.cloud_off,
+            AppIcons.cloudOff,
             color: theme.colorScheme.onSurfaceVariant,
           ),
           title: Text(l10n.localStorageOnly),
@@ -58,7 +59,7 @@ class SyncStatusCard extends ConsumerWidget {
             Row(
               children: [
                 Icon(
-                  Icons.cloud_sync,
+                  AppIcons.cloudSync,
                   color: theme.colorScheme.primary,
                 ),
                 const SizedBox(width: 8),
@@ -75,7 +76,7 @@ class SyncStatusCard extends ConsumerWidget {
                   )
                 else
                   IconButton(
-                    icon: const Icon(Icons.refresh),
+                    icon: const Icon(AppIcons.refresh),
                     onPressed: () {
                       ref.read(syncStatusProvider.notifier).syncNow();
                     },
@@ -100,8 +101,8 @@ class SyncStatusCard extends ConsumerWidget {
                     children: [
                       Icon(
                         syncStatus.lastSyncResult!.success
-                            ? Icons.check_circle
-                            : Icons.error,
+                            ? AppIcons.complete
+                            : AppIcons.error,
                         size: 16,
                         color: syncStatus.lastSyncResult!.success
                             ? context.colors.success
@@ -139,20 +140,20 @@ class SyncStatusCard extends ConsumerWidget {
                   children: [
                     _buildSyncStat(
                       context,
-                      Icons.upload,
+                      AppIcons.upload,
                       l10n.uploaded,
                       syncStatus.lastSyncResult!.syncedItems,
                     ),
                     _buildSyncStat(
                       context,
-                      Icons.download,
+                      AppIcons.download,
                       l10n.downloaded,
                       syncStatus.lastSyncResult!.pulledItems,
                     ),
                     if (syncStatus.lastSyncResult!.failedItems > 0)
                       _buildSyncStat(
                         context,
-                        Icons.error_outline,
+                        AppIcons.errorOutline,
                         l10n.failed,
                         syncStatus.lastSyncResult!.failedItems,
                         isError: true,
@@ -188,7 +189,7 @@ class SyncStatusCard extends ConsumerWidget {
                         }
                       }
                     },
-                    icon: const Icon(Icons.file_download),
+                    icon: const Icon(AppIcons.fileDownload),
                     label: Text(l10n.export),
                   ),
                 ),
@@ -198,7 +199,7 @@ class SyncStatusCard extends ConsumerWidget {
                     onPressed: () {
                       // TODO: Import data from file
                     },
-                    icon: const Icon(Icons.file_upload),
+                    icon: const Icon(AppIcons.fileUpload),
                     label: Text(l10n.import),
                   ),
                 ),

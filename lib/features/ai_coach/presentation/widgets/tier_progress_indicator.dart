@@ -301,7 +301,7 @@ class TierProgressIndicator extends StatelessWidget {
       case RecoveryTier.intermediate:
         return AppIcons.insights;
       case RecoveryTier.advanced:
-        return AppIcons.psychology;
+        return AppIcons.ai;
     }
   }
 
@@ -493,7 +493,7 @@ class CompactTierProgress extends StatelessWidget {
       case RecoveryTier.intermediate:
         return AppIcons.insights;
       case RecoveryTier.advanced:
-        return AppIcons.psychology;
+        return AppIcons.ai;
     }
   }
 }

@@ -1,3 +1,4 @@
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/features/analytics/presentation/providers/analytics_provider.dart';
@@ -61,7 +62,7 @@ class StreakTrackerWidget extends ConsumerWidget {
               right: -20,
               bottom: -20,
               child: Icon(
-                Icons.local_fire_department,
+                AppIcons.streak,
                 size: 120,
                 color: context.colors.warning.withValues(alpha: 0.1),
               ),
@@ -80,7 +81,7 @@ class StreakTrackerWidget extends ConsumerWidget {
                       borderRadius: BorderRadius.circular(12),
                     ),
                     child: Icon(
-                      Icons.local_fire_department,
+                      AppIcons.streak,
                       color: context.colors.surface,
                       size: 20,
                     ),
@@ -194,7 +195,7 @@ class StreakTrackerWidget extends ConsumerWidget {
                       ],
                     ),
                     child: Icon(
-                      Icons.local_fire_department,
+                      AppIcons.streak,
                       color: context.colors.surface,
                       size: 24,
                     ),
@@ -284,7 +285,7 @@ class StreakTrackerWidget extends ConsumerWidget {
                       ],
                     ),
                     child: Icon(
-                      Icons.local_fire_department,
+                      AppIcons.streak,
                       color: context.colors.surface,
                       size: 28,
                     ),
@@ -320,7 +321,7 @@ class StreakTrackerWidget extends ConsumerWidget {
                       context,
                       label: 'Streak Attuale',
                       value: '$streak',
-                      icon: Icons.local_fire_department,
+                      icon: AppIcons.streak,
                       color: context.colors.warning,
                     ),
                   ),
@@ -330,7 +331,7 @@ class StreakTrackerWidget extends ConsumerWidget {
                       context,
                       label: 'Allenamenti Totali',
                       value: '$activitiesCount',
-                      icon: Icons.fitness_center,
+                      icon: AppIcons.workout,
                       color: context.colors.primary,
                     ),
                   ),
@@ -340,7 +341,7 @@ class StreakTrackerWidget extends ConsumerWidget {
                       context,
                       label: 'Questo Mese',
                       value: '${frequencyStats['daysInLast30'] ?? 0}',
-                      icon: Icons.calendar_today,
+                      icon: AppIcons.calendar,
                       color: context.colors.success,
                     ),
                   ),
@@ -414,7 +415,7 @@ class StreakTrackerWidget extends ConsumerWidget {
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               Icon(
-                                Icons.check,
+                                AppIcons.check,
                                 color: context.colors.surface,
                                 size: 16,
                               ),
@@ -667,7 +668,7 @@ class StreakTrackerWidget extends ConsumerWidget {
               Row(
                 children: [
                   Icon(
-                    Icons.calendar_today,
+                    AppIcons.calendar,
                     color: theme.colorScheme.primary,
                   ),
                   const SizedBox(width: 12),
@@ -713,7 +714,7 @@ class StreakTrackerWidget extends ConsumerWidget {
                                 shape: BoxShape.circle,
                               ),
                               child: Icon(
-                                Icons.fitness_center,
+                                AppIcons.workout,
                                 size: 16,
                                 color: theme.colorScheme.primary,
                               ),

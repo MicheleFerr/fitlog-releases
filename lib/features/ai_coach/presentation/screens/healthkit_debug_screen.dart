@@ -24,6 +24,7 @@
 /// - Share logs with developer if issues found
 library;
 
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'dart:io' show Platform;
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
@@ -604,7 +605,7 @@ class _HealthKitDebugScreenState extends State<HealthKitDebugScreen> {
           IconButton(
             onPressed: _logs.isEmpty ? null : _copyLogsToClipboard,
             icon: Icon(
-              Icons.copy,
+              AppIcons.copy,
               color: _logs.isEmpty
                   ? context.colors.onPrimary.withValues(alpha: 0.5)
                   : context.colors.onPrimary,
@@ -622,7 +623,7 @@ class _HealthKitDebugScreenState extends State<HealthKitDebugScreen> {
                     });
                   },
             icon: Icon(
-              Icons.delete_outline,
+              AppIcons.deleteOutline,
               color: _logs.isEmpty
                   ? context.colors.onPrimary.withValues(alpha: 0.5)
                   : context.colors.onPrimary,

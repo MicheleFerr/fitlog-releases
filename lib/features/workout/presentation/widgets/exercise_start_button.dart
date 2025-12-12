@@ -13,6 +13,7 @@
 /// - Hive: None
 library;
 
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -170,7 +171,7 @@ class _ExerciseStartButtonState extends ConsumerState<ExerciseStartButton> {
                 ),
                 child: Center(
                   child: Icon(
-                    Icons.play_arrow,
+                    AppIcons.play,
                     size: 14,
                     color: colorScheme.primary,
                   ),

@@ -7,6 +7,7 @@
 /// Modal per visualizzare dettagli completi di un contributo community
 library;
 
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
@@ -91,7 +92,7 @@ class _ContributionDetailModalState extends ConsumerState<ContributionDetailModa
                     ),
                     IconButton(
                       onPressed: () => Navigator.pop(context),
-                      icon: const Icon(Icons.close),
+                      icon: const Icon(AppIcons.close),
                     ),
                   ],
                 ),
@@ -159,7 +160,7 @@ class _ContributionDetailModalState extends ConsumerState<ContributionDetailModa
           Row(
             children: [
               Icon(
-                Icons.admin_panel_settings,
+                AppIcons.admin,
                 color: theme.colorScheme.error,
                 size: 20,
               ),
@@ -179,7 +180,7 @@ class _ContributionDetailModalState extends ConsumerState<ContributionDetailModa
               Expanded(
                 child: FilledButton.icon(
                   onPressed: () => _handleApprove(),
-                  icon: const Icon(Icons.check_circle),
+                  icon: const Icon(AppIcons.complete),
                   label: const Text('Approva'),
                   style: FilledButton.styleFrom(
                     backgroundColor: Theme.of(context).colorScheme.success,
@@ -190,7 +191,7 @@ class _ContributionDetailModalState extends ConsumerState<ContributionDetailModa
               Expanded(
                 child: FilledButton.tonalIcon(
                   onPressed: () => _handleReject(),
-                  icon: const Icon(Icons.cancel),
+                  icon: const Icon(AppIcons.cancel),
                   label: const Text('Rifiuta'),
                   style: FilledButton.styleFrom(
                     backgroundColor: Theme.of(context).colorScheme.error.withValues(alpha: 0.2),
@@ -214,7 +215,7 @@ class _ContributionDetailModalState extends ConsumerState<ContributionDetailModa
           Row(
             children: [
               Icon(
-                Icons.comment_outlined,
+                AppIcons.commentOutlined,
                 size: 20,
                 color: theme.colorScheme.primary,
               ),
@@ -236,7 +237,7 @@ class _ContributionDetailModalState extends ConsumerState<ContributionDetailModa
                 child: Column(
                   children: [
                     Icon(
-                      Icons.comments_disabled_outlined,
+                      AppIcons.commentsDisabledOutlined,
                       size: 48,
                       color: theme.colorScheme.outline.withValues(alpha: 0.5),
                     ),
@@ -370,7 +371,7 @@ class _ContributionDetailModalState extends ConsumerState<ContributionDetailModa
                     height: 20,
                     child: LoadingIndicator(size: 20),
                   )
-                : const Icon(Icons.send),
+                : const Icon(AppIcons.send),
           ),
         ],
       ),
@@ -382,7 +383,7 @@ class _ContributionDetailModalState extends ConsumerState<ContributionDetailModa
       margin: const EdgeInsets.all(16),
       child: OutlinedButton.icon(
         onPressed: () => _showReportDialog(),
-        icon: const Icon(Icons.flag_outlined),
+        icon: const Icon(AppIcons.flagOutlined),
         label: const Text('Segnala contributo'),
         style: OutlinedButton.styleFrom(
           foregroundColor: theme.colorScheme.error,

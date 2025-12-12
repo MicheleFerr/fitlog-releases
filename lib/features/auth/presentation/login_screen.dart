@@ -1,3 +1,4 @@
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -72,7 +73,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                   shape: BoxShape.circle,
                 ),
                 child: Icon(
-                  Icons.fitness_center,
+                  AppIcons.workout,
                   size: 60,
                   color: context.colors.primary,
                 ),
@@ -105,7 +106,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                   child: Column(
                     children: [
                       Icon(
-                        Icons.waving_hand,
+                        AppIcons.wavingHand,
                         size: 32,
                         color: context.colors.primary,
                       ),
@@ -142,7 +143,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                         decoration: InputDecoration(
                           labelText: context.l10n.emailLabel,
                           hintText: context.l10n.emailHint,
-                          prefixIcon: const Icon(Icons.email),
+                          prefixIcon: const Icon(AppIcons.email),
                         ),
                         keyboardType: TextInputType.emailAddress,
                         textInputAction: TextInputAction.next,
@@ -164,9 +165,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                         decoration: InputDecoration(
                           labelText: context.l10n.passwordLabel,
                           hintText: context.l10n.passwordHint,
-                          prefixIcon: const Icon(Icons.lock),
+                          prefixIcon: const Icon(AppIcons.lock),
                           suffixIcon: IconButton(
-                            icon: Icon(_obscurePassword ? Icons.visibility : Icons.visibility_off),
+                            icon: Icon(_obscurePassword ? AppIcons.visibility : AppIcons.visibilityOff),
                             onPressed: () => setState(() => _obscurePassword = !_obscurePassword),
                           ),
                         ),
@@ -207,7 +208,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                       // Back to options
                       TextButton.icon(
                         onPressed: () => setState(() => _showLoginForm = false),
-                        icon: const Icon(Icons.arrow_back),
+                        icon: const Icon(AppIcons.arrowBack),
                         label: Text(context.l10n.backToOptions),
                       ),
                     ],
@@ -225,7 +226,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                             width: 20,
                             child: CircularProgressIndicator(strokeWidth: 2),
                           )
-                        : const Icon(Icons.g_mobiledata, size: 24),
+                        : const Icon(AppIcons.gMobiledata, size: 24),
                     label: Text(context.l10n.signInWithGoogle),
                   ),
                 ),
@@ -248,7 +249,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                               width: 20,
                               child: CircularProgressIndicator(strokeWidth: 2),
                             )
-                          : const Icon(Icons.apple),
+                          : const Icon(AppIcons.apple),
                       label: Text(context.l10n.signInWithApple),
                     ),
                   ),
@@ -260,7 +261,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                   width: double.infinity,
                   child: OutlinedButton.icon(
                     onPressed: () => setState(() => _showLoginForm = true),
-                    icon: const Icon(Icons.email),
+                    icon: const Icon(AppIcons.email),
                     label: Text(context.l10n.signInWithEmail),
                   ),
                 ),
@@ -272,7 +273,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                   width: double.infinity,
                   child: OutlinedButton.icon(
                     onPressed: () => context.pushNamed('register'),
-                    icon: const Icon(Icons.person_add),
+                    icon: const Icon(AppIcons.personAdd),
                     label: Text(context.l10n.signUpButton),
                     style: OutlinedButton.styleFrom(
                       foregroundColor: context.colors.primary,
@@ -289,17 +290,17 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
                   _FeatureIcon(
-                    icon: Icons.timer,
+                    icon: AppIcons.timer,
                     label: context.l10n.featureSmartTimer,
                     color: context.colors.primary,
                   ),
                   _FeatureIcon(
-                    icon: Icons.phone_iphone,
+                    icon: AppIcons.phoneIphone,
                     label: context.l10n.featureLiveActivities,
                     color: context.colors.secondary,
                   ),
                   _FeatureIcon(
-                    icon: Icons.favorite,
+                    icon: AppIcons.favorite,
                     label: context.l10n.featureAppleHealth,
                     color: context.colors.tertiary,
                   ),

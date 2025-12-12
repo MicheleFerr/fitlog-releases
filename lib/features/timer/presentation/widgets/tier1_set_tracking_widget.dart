@@ -1,3 +1,4 @@
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fl_chart/fl_chart.dart';
@@ -92,7 +93,7 @@ class Tier1SetTrackingWidget extends ConsumerWidget {
         child: Column(
           children: [
             Icon(
-              Icons.timer,
+              AppIcons.timer,
               size: 48,
               color: theme.colorScheme.primary,
             ),
@@ -182,7 +183,7 @@ class Tier1SetTrackingWidget extends ConsumerWidget {
             theme,
             l10n.velocity,
             '${metrics.currentVelocityMps.toStringAsFixed(2)} m/s',
-            Icons.speed,
+            AppIcons.speed,
             _getVelocityColor(metrics.currentVelocityMps, theme),
           ),
         ),
@@ -193,7 +194,7 @@ class Tier1SetTrackingWidget extends ConsumerWidget {
             theme,
             l10n.average,
             '${metrics.averageVelocityMps.toStringAsFixed(2)} m/s',
-            Icons.trending_up,
+            AppIcons.trendUp,
             theme.colorScheme.primary,
           ),
         ),
@@ -204,7 +205,7 @@ class Tier1SetTrackingWidget extends ConsumerWidget {
             theme,
             l10n.drop,
             '${metrics.velocityDropPercent.toStringAsFixed(1)}%',
-            Icons.trending_down,
+            AppIcons.trendDown,
             _getDropColor(metrics.velocityDropPercent, theme),
           ),
         ),
@@ -397,7 +398,7 @@ class Tier1SetTrackingWidget extends ConsumerWidget {
           Expanded(
             child: FilledButton.icon(
               onPressed: () => _completeSet(ref),
-              icon: const Icon(Icons.stop),
+              icon: const Icon(AppIcons.stop),
               label: Text(l10n.stopSet),
               style: FilledButton.styleFrom(
                 backgroundColor: theme.colorScheme.error,
@@ -408,7 +409,7 @@ class Tier1SetTrackingWidget extends ConsumerWidget {
           Expanded(
             child: OutlinedButton.icon(
               onPressed: () => _registerRep(ref),
-              icon: const Icon(Icons.add),
+              icon: const Icon(AppIcons.add),
               label: Text(l10n.addRep),
             ),
           ),
@@ -416,7 +417,7 @@ class Tier1SetTrackingWidget extends ConsumerWidget {
           Expanded(
             child: FilledButton.icon(
               onPressed: () => _completeSet(ref),
-              icon: const Icon(Icons.check),
+              icon: const Icon(AppIcons.check),
               label: Text(l10n.completeSet),
             ),
           ),
@@ -534,9 +535,9 @@ class Tier1SetTrackingWidget extends ConsumerWidget {
   IconData _getSeverityIcon(_CoachingSeverity severity) {
     switch (severity) {
       case _CoachingSeverity.info:
-        return Icons.info_outline;
+        return AppIcons.infoOutline;
       case _CoachingSeverity.warning:
-        return Icons.warning_outlined;
+        return AppIcons.warningOutlined;
     }
   }
 

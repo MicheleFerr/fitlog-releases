@@ -1,3 +1,4 @@
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:gymbro_flutter_new/features/analytics/domain/models/progressive_overload_data.dart';
@@ -325,28 +326,28 @@ class _WeeklyDashboardWidgetState extends State<WeeklyDashboardWidget>
         _buildStatCard(
           'Total Volume',
           '${(_currentWeekData!.totalVolume / 1000).toStringAsFixed(1)}k kg',
-          Icons.fitness_center,
+          AppIcons.workout,
           theme.colorScheme.primary,
           theme,
         ),
         _buildStatCard(
           'Effective Volume',
           '${(_currentWeekData!.effectiveVolume / 1000).toStringAsFixed(1)}k kg',
-          Icons.check_circle,
+          AppIcons.complete,
           context.colors.success,
           theme,
         ),
         _buildStatCard(
           'Avg Intensity',
           '${_currentWeekData!.avgIntensity.toStringAsFixed(1)}/10',
-          Icons.local_fire_department,
+          AppIcons.streak,
           context.colors.secondary,
           theme,
         ),
         _buildStatCard(
           'Exercises',
           '${_currentWeekData!.e1RMProgression.length}',
-          Icons.format_list_numbered,
+          AppIcons.formatListNumbered,
           theme.colorScheme.secondary,
           theme,
         ),
@@ -486,7 +487,7 @@ class _WeeklyDashboardWidgetState extends State<WeeklyDashboardWidget>
           Row(
             children: [
               Icon(
-                Icons.emoji_events,
+                AppIcons.achievement,
                 color: theme.colorScheme.tertiary,
               ),
               const SizedBox(width: 8),
@@ -526,7 +527,7 @@ class _WeeklyDashboardWidgetState extends State<WeeklyDashboardWidget>
           const SizedBox(height: 8),
           Row(
             children: [
-              Icon(Icons.fitness_center, size: 16, color: theme.colorScheme.onSurfaceVariant),
+              Icon(AppIcons.workout, size: 16, color: theme.colorScheme.onSurfaceVariant),
               const SizedBox(width: 4),
               Text(
                 '${bestSet.weight.toStringAsFixed(1)} kg × ${bestSet.reps} reps',
@@ -537,7 +538,7 @@ class _WeeklyDashboardWidgetState extends State<WeeklyDashboardWidget>
           const SizedBox(height: 4),
           Row(
             children: [
-              Icon(Icons.rocket_launch, size: 16, color: theme.colorScheme.onSurfaceVariant),
+              Icon(AppIcons.rocket, size: 16, color: theme.colorScheme.onSurfaceVariant),
               const SizedBox(width: 4),
               Text(
                 'e1RM: ${bestSet.e1RM.toStringAsFixed(1)} kg',
@@ -568,7 +569,7 @@ class _WeeklyDashboardWidgetState extends State<WeeklyDashboardWidget>
             );
           }
         },
-        icon: const Icon(Icons.cloud_upload),
+        icon: const Icon(AppIcons.cloudUpload),
         label: const Text('Sync to Cloud'),
         style: OutlinedButton.styleFrom(
           foregroundColor: theme.colorScheme.primary,
@@ -588,7 +589,7 @@ class _WeeklyDashboardWidgetState extends State<WeeklyDashboardWidget>
         mainAxisSize: MainAxisSize.min,
         children: [
           Icon(
-            Icons.fitness_center,
+            AppIcons.workout,
             size: 64,
             color: theme.colorScheme.onSurfaceVariant,
           ),

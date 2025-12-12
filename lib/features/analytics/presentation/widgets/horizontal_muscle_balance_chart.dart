@@ -1,3 +1,4 @@
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:gymbro_flutter_new/features/analytics/presentation/widgets/tier1_muscle_balance_chart.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
@@ -182,10 +183,10 @@ class HorizontalMuscleBalanceChart extends StatelessWidget {
                       const SizedBox(width: 8),
                       Icon(
                         isBalanced
-                          ? Icons.check_circle
+                          ? AppIcons.complete
                           : isUnderworked
-                            ? Icons.arrow_upward
-                            : Icons.arrow_downward,
+                            ? AppIcons.arrowUpward
+                            : AppIcons.arrowDownward,
                         size: 16,
                         color: isBalanced
                           ? context.colors.success
@@ -289,7 +290,7 @@ class HorizontalMuscleBalanceChart extends StatelessWidget {
       child: Row(
         children: [
           Icon(
-            Icons.lightbulb_outline,
+            AppIcons.tip,
             size: 20,
             color: theme.colorScheme.primary,
           ),

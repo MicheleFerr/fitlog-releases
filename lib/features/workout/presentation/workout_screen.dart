@@ -319,7 +319,7 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen> {
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       const Icon(
-                        Icons.favorite,
+                        AppIcons.favorite,
                         size: 14,
                         color: Colors.red,
                       ),

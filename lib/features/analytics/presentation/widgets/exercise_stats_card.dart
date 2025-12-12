@@ -1,3 +1,4 @@
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/workout.dart';
 import 'package:collection/collection.dart';
@@ -30,7 +31,7 @@ class ExerciseStatsCard extends StatelessWidget {
                 Row(
                   children: [
                     Icon(
-                      Icons.leaderboard,
+                      AppIcons.leaderboard,
                       color: Theme.of(context).colorScheme.tertiary,
                     ),
                     const SizedBox(width: 8),
@@ -81,7 +82,7 @@ class ExerciseStatsCard extends StatelessWidget {
           // Exercise image or icon
           const CircleAvatar(
             radius: 20,
-            child: Icon(Icons.fitness_center, size: 20),
+            child: Icon(AppIcons.workout, size: 20),
           ),
           const SizedBox(width: 12),
           
@@ -201,7 +202,7 @@ class ExerciseStatsCard extends StatelessWidget {
                         child: Row(
                           children: [
                             const CircleAvatar(
-                              child: Icon(Icons.fitness_center),
+                              child: Icon(AppIcons.workout),
                             ),
                             const SizedBox(width: 12),
                             Expanded(

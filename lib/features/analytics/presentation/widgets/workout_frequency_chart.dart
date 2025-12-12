@@ -1,3 +1,4 @@
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/workout.dart';
@@ -27,7 +28,7 @@ class WorkoutFrequencyChart extends StatelessWidget {
             Row(
               children: [
                 Icon(
-                  Icons.show_chart,
+                  AppIcons.lineChart,
                   color: Theme.of(context).colorScheme.primary,
                 ),
                 const SizedBox(width: 8),

@@ -1,3 +1,4 @@
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
@@ -58,7 +59,7 @@ class SmartTemplatesGrid extends ConsumerWidget {
         onChanged: (value) => ref.read(templateSearchProvider.notifier).state = value,
         decoration: InputDecoration(
           hintText: 'Search templates...',
-          prefixIcon: const Icon(Icons.search),
+          prefixIcon: const Icon(AppIcons.search),
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(12),
           ),
@@ -144,7 +145,7 @@ class SmartTemplatesGrid extends ConsumerWidget {
             ),
             const SizedBox(width: 4),
             Icon(
-              Icons.arrow_drop_down,
+              AppIcons.arrowDropDown,
               size: 16,
               color: Theme.of(context).colorScheme.onSecondaryContainer,
             ),
@@ -160,7 +161,7 @@ class SmartTemplatesGrid extends ConsumerWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Icon(
-            Icons.search_off,
+            AppIcons.searchOff,
             size: 64,
             color: Theme.of(context).colorScheme.outline,
           ),
@@ -343,7 +344,7 @@ class SmartTemplateCard extends ConsumerWidget {
                     Row(
                       children: [
                         Icon(
-                          Icons.fitness_center,
+                          AppIcons.workout,
                           size: 16,
                           color: Theme.of(context).colorScheme.primary,
                         ),
@@ -356,7 +357,7 @@ class SmartTemplateCard extends ConsumerWidget {
                         Row(
                           children: [
                             Icon(
-                              Icons.star,
+                              AppIcons.star,
                               size: 16,
                               color: context.colors.warning,
                             ),

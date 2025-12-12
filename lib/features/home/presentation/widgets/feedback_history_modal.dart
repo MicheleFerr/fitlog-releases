@@ -1,3 +1,4 @@
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
@@ -48,7 +49,7 @@ class FeedbackHistoryModal extends ConsumerWidget {
               child: Row(
                 children: [
                   Icon(
-                    Icons.history,
+                    AppIcons.history,
                     color: colorScheme.primary,
                     size: 28,
                   ),
@@ -80,7 +81,7 @@ class FeedbackHistoryModal extends ConsumerWidget {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Icon(
-                        Icons.error_outline,
+                        AppIcons.errorOutline,
                         size: 64,
                         color: colorScheme.error.withValues(alpha: 0.6),
                       ),
@@ -116,7 +117,7 @@ class FeedbackHistoryModal extends ConsumerWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Icon(
-            Icons.feedback_outlined,
+            AppIcons.feedbackOutlined,
             size: 80,
             color: colorScheme.outline.withValues(alpha: 0.6),
           ),
@@ -149,7 +150,7 @@ class FeedbackHistoryModal extends ConsumerWidget {
                   borderRadius: BorderRadius.circular(16),
                 ),
                 child: Icon(
-                  Icons.thumb_up_outlined,
+                  AppIcons.thumbUpOutlined,
                   color: context.colors.success,
                   size: 32,
                 ),
@@ -162,7 +163,7 @@ class FeedbackHistoryModal extends ConsumerWidget {
                   borderRadius: BorderRadius.circular(16),
                 ),
                 child: Icon(
-                  Icons.thumb_down_outlined,
+                  AppIcons.thumbDownOutlined,
                   color: context.colors.error,
                   size: 32,
                 ),
@@ -242,7 +243,7 @@ class FeedbackHistoryModal extends ConsumerWidget {
                   borderRadius: BorderRadius.circular(20),
                 ),
                 child: Icon(
-                  isHelpful ? Icons.thumb_up : Icons.thumb_down,
+                  isHelpful ? AppIcons.thumbUp : AppIcons.thumbDown,
                   color: cardColor,
                   size: 20,
                 ),
@@ -284,7 +285,7 @@ class FeedbackHistoryModal extends ConsumerWidget {
               mainAxisSize: MainAxisSize.min,
               children: [
                 Icon(
-                  Icons.psychology,
+                  AppIcons.ai,
                   size: 14,
                   color: colorScheme.primary,
                 ),

@@ -184,7 +184,7 @@ class _SupersetExercisesTooltipState extends ConsumerState<SupersetExercisesTool
           child: Row(
             children: [
               Icon(
-                AppIcons.school,
+                AppIcons.education,
                 size: 18,
                 color: Theme.of(context).colorScheme.tertiary,
               ),

@@ -1,3 +1,4 @@
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -370,7 +371,7 @@ class _Tier1MinimalTimerOverlayState extends ConsumerState<Tier1MinimalTimerOver
           // Center icon
           Center(
             child: Icon(
-              Icons.timer_outlined,
+              AppIcons.timerOutlined,
               color: onPrimaryColor,
               size: 14,
             ),
@@ -385,7 +386,7 @@ class _Tier1MinimalTimerOverlayState extends ConsumerState<Tier1MinimalTimerOver
       mainAxisSize: MainAxisSize.min,
       children: [
         _buildControlButton(
-          icon: timerState.isPaused ? Icons.play_arrow_rounded : Icons.pause_rounded,
+          icon: timerState.isPaused ? AppIcons.playRounded : AppIcons.pauseRounded,
           onPressed: () => _handlePauseResume(timerState),
           semanticLabel: timerState.isPaused 
             ? AppLocalizations.of(context).resume 
@@ -393,7 +394,7 @@ class _Tier1MinimalTimerOverlayState extends ConsumerState<Tier1MinimalTimerOver
         ),
         const SizedBox(width: 6),
         _buildControlButton(
-          icon: Icons.skip_next_rounded,
+          icon: AppIcons.skipNextRounded,
           onPressed: _handleSkip,
           semanticLabel: 'Skip',
         ),

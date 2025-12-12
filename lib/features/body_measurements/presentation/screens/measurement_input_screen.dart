@@ -1,3 +1,4 @@
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/features/body_measurements/domain/entities/measurement.dart';
@@ -370,7 +371,7 @@ class _MeasurementInputScreenState
           // Auto-save draft button
           if (_isDraft)
             Icon(
-              Icons.cloud_done,
+              AppIcons.cloudDone,
               color: context.colors.success,
             ),
           const SizedBox(width: 16),

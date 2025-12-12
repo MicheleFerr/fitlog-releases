@@ -156,7 +156,7 @@ class _TemplatesHomeScreenState extends ConsumerState<TemplatesHomeScreen>
               // Show view toggle button only on "My Templates" tab
               if (_tabController.index == 0)
                 IconButton(
-                  icon: Icon(_isGridView ? Icons.view_list : AppIcons.gridView),
+                  icon: Icon(_isGridView ? AppIcons.viewList : AppIcons.gridView),
                   tooltip: _isGridView ? l10n.listView : l10n.gridView,
                   onPressed: () {
                     setState(() {

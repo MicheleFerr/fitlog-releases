@@ -1,3 +1,4 @@
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
@@ -36,7 +37,7 @@ class ExerciseReviewScreen extends ConsumerWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Icon(
-            Icons.error_outline,
+            AppIcons.errorOutline,
             size: 64,
             color: context.colors.error,
           ),
@@ -68,7 +69,7 @@ class ExerciseReviewScreen extends ConsumerWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Icon(
-            Icons.assignment_outlined,
+            AppIcons.assignmentOutlined,
             size: 64,
             color: context.colors.onSurfaceVariant,
           ),
@@ -189,7 +190,7 @@ class ExerciseReviewScreen extends ConsumerWidget {
           children: [
             _buildStatCard(
               context,
-              icon: Icons.schedule_outlined,
+              icon: AppIcons.scheduleOutlined,
               label: 'Esercizi Obsoleti',
               value: staleCount.toString(),
               color: context.colors.warning,
@@ -197,7 +198,7 @@ class ExerciseReviewScreen extends ConsumerWidget {
             ),
             _buildStatCard(
               context,
-              icon: Icons.flag_outlined,
+              icon: AppIcons.flagOutlined,
               label: 'Esercizi Flaggati',
               value: flaggedCount.toString(),
               color: context.colors.warning,
@@ -205,7 +206,7 @@ class ExerciseReviewScreen extends ConsumerWidget {
             ),
             _buildStatCard(
               context,
-              icon: Icons.comment_outlined,
+              icon: AppIcons.commentOutlined,
               label: 'Feedback Totali',
               value: totalFeedback.toString(),
               color: context.colors.primary,
@@ -213,7 +214,7 @@ class ExerciseReviewScreen extends ConsumerWidget {
             ),
             _buildStatCard(
               context,
-              icon: Icons.error_outline,
+              icon: AppIcons.errorOutline,
               label: 'Problemi Critici',
               value: criticalCount.toString(),
               color: context.colors.error,
@@ -349,7 +350,7 @@ class ExerciseReviewScreen extends ConsumerWidget {
               ),
             ),
             Icon(
-              Icons.schedule_outlined,
+              AppIcons.scheduleOutlined,
               color: context.colors.warning,
               size: 20,
             ),
@@ -372,7 +373,7 @@ class ExerciseReviewScreen extends ConsumerWidget {
                 exerciseName: exercise['nome'] as String? ?? 'Unknown',
                 subtitle:
                     'Modificato ${exercise['lastModifiedDaysAgo'] ?? 0} giorni fa',
-                icon: Icons.schedule,
+                icon: AppIcons.schedule,
                 color: context.colors.warning,
               );
             },
@@ -404,7 +405,7 @@ class ExerciseReviewScreen extends ConsumerWidget {
               ),
             ),
             Icon(
-              Icons.flag_outlined,
+              AppIcons.flagOutlined,
               color: context.colors.warning,
               size: 20,
             ),
@@ -430,7 +431,7 @@ class ExerciseReviewScreen extends ConsumerWidget {
                 exerciseName: exercise['nome'] as String? ?? 'Unknown',
                 subtitle:
                     '$feedbackCount feedback${criticalCount > 0 ? ' ($criticalCount critici)' : ''}',
-                icon: Icons.flag,
+                icon: AppIcons.flag,
                 color: criticalCount > 0 ? context.colors.error : context.colors.warning,
               );
             },
@@ -453,7 +454,7 @@ class ExerciseReviewScreen extends ConsumerWidget {
       title: Text(exerciseName),
       subtitle: Text(subtitle),
       trailing: Icon(
-        Icons.chevron_right,
+        AppIcons.chevronRight,
         color: context.colors.onSurfaceVariant,
       ),
     );

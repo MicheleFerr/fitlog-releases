@@ -1,3 +1,4 @@
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise_activity.dart';
@@ -194,7 +195,7 @@ class EnhancedProgressIndicator extends StatelessWidget {
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: Icon(
-                  Icons.fitness_center,
+                  AppIcons.workout,
                   color: colorScheme.onPrimaryContainer,
                   size: 20,
                 ),
@@ -258,7 +259,7 @@ class EnhancedProgressIndicator extends StatelessWidget {
                     context,
                     'Sets',
                     '${progressData.completedSets}',
-                    Icons.format_list_numbered,
+                    AppIcons.formatListNumbered,
                     colorScheme.secondary,
                   ),
                 ),
@@ -268,7 +269,7 @@ class EnhancedProgressIndicator extends StatelessWidget {
                     context,
                     'Volume',
                     '${progressData.currentVolume.toStringAsFixed(0)}kg',
-                    Icons.bar_chart,
+                    AppIcons.barChart,
                     colorScheme.tertiary,
                   ),
                 ),
@@ -296,7 +297,7 @@ class EnhancedProgressIndicator extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           Icon(
-            isImproving ? Icons.trending_up : Icons.trending_flat,
+            isImproving ? AppIcons.trendUp : AppIcons.trendFlat,
             color: isImproving ? context.colors.success : context.colors.secondary,
             size: 16,
           ),
@@ -482,7 +483,7 @@ class GoalProgressWidget extends StatelessWidget {
                       borderRadius: BorderRadius.circular(20),
                     ),
                     child: Icon(
-                      Icons.check_circle,
+                      AppIcons.complete,
                       color: context.colors.success,
                       size: 20,
                     ),
@@ -545,7 +546,7 @@ class WeeklyProgressSummary extends StatelessWidget {
             Row(
               children: [
                 Icon(
-                  Icons.date_range,
+                  AppIcons.dateRange,
                   color: colorScheme.primary,
                   size: 24,
                 ),
@@ -567,7 +568,7 @@ class WeeklyProgressSummary extends StatelessWidget {
                     currentValue: weeklyData.workoutsCompleted.toDouble(),
                     targetValue: 4.0,
                     unit: 'workouts',
-                    icon: Icons.fitness_center,
+                    icon: AppIcons.workout,
                     color: colorScheme.primary,
                   ),
                 ),
@@ -578,7 +579,7 @@ class WeeklyProgressSummary extends StatelessWidget {
                     currentValue: weeklyData.totalVolume,
                     targetValue: 10000.0,
                     unit: 'kg',
-                    icon: Icons.bar_chart,
+                    icon: AppIcons.barChart,
                     color: colorScheme.secondary,
                   ),
                 ),

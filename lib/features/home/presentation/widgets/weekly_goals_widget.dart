@@ -1,3 +1,4 @@
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -78,7 +79,7 @@ class WeeklyGoalsWidget extends ConsumerWidget {
                           borderRadius: BorderRadius.circular(12),
                         ),
                         child: Icon(
-                          Icons.flag,
+                          AppIcons.flag,
                           color: theme.colorScheme.primary,
                           size: 20,
                         ),
@@ -195,7 +196,7 @@ class WeeklyGoalsWidget extends ConsumerWidget {
                           borderRadius: BorderRadius.circular(12),
                         ),
                         child: Icon(
-                          Icons.flag,
+                          AppIcons.flag,
                           color: theme.colorScheme.onPrimary,
                           size: 24,
                         ),
@@ -266,7 +267,7 @@ class WeeklyGoalsWidget extends ConsumerWidget {
                             child: Center(
                               child: hasWorkout
                                   ? Icon(
-                                      Icons.check,
+                                      AppIcons.check,
                                       color: theme.colorScheme.onPrimary,
                                       size: 18,
                                     )
@@ -395,7 +396,7 @@ class WeeklyGoalsWidget extends ConsumerWidget {
                       ],
                     ),
                     child: Icon(
-                      Icons.track_changes,
+                      AppIcons.trackChanges,
                       color: theme.colorScheme.onPrimary,
                       size: 28,
                     ),
@@ -439,7 +440,7 @@ class WeeklyGoalsWidget extends ConsumerWidget {
                           Expanded(
                             child: _buildGoalCard(
                               context,
-                              icon: Icons.fitness_center,
+                              icon: AppIcons.workout,
                               label: 'Completati',
                               value: '$count',
                               color: context.colors.primary,
@@ -449,7 +450,7 @@ class WeeklyGoalsWidget extends ConsumerWidget {
                           Expanded(
                             child: _buildGoalCard(
                               context,
-                              icon: Icons.flag,
+                              icon: AppIcons.flag,
                               label: 'Obiettivo',
                               value: '$goal',
                               color: context.colors.success,
@@ -459,7 +460,7 @@ class WeeklyGoalsWidget extends ConsumerWidget {
                           Expanded(
                             child: _buildGoalCard(
                               context,
-                              icon: Icons.calendar_today,
+                              icon: AppIcons.calendar,
                               label: 'Giorni rimasti',
                               value: '${7 - DateTime.now().weekday}',
                               color: context.colors.warning,
@@ -485,7 +486,7 @@ class WeeklyGoalsWidget extends ConsumerWidget {
                               Row(
                                 children: [
                                   Icon(
-                                    Icons.lightbulb_outline,
+                                    AppIcons.tip,
                                     color: theme.colorScheme.primary,
                                     size: 20,
                                   ),
@@ -525,7 +526,7 @@ class WeeklyGoalsWidget extends ConsumerWidget {
                           child: Row(
                             children: [
                               Icon(
-                                Icons.emoji_events,
+                                AppIcons.achievement,
                                 color: context.colors.success,
                                 size: 32,
                               ),

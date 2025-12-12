@@ -5,6 +5,7 @@
 /// **Delete**: After getting token and registering it in Firebase Console
 ///
 library;
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -57,7 +58,7 @@ void main() async {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Icon(Icons.security, size: 100, color: Colors.green),
+              Icon(AppIcons.security, size: 100, color: Colors.green),
               SizedBox(height: 20),
               Text(
                 'Check Console for Debug Token',

@@ -1,3 +1,4 @@
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -92,7 +93,7 @@ class RecentWorkoutsWidget extends ConsumerWidget {
                             borderRadius: BorderRadius.circular(12),
                           ),
                           child: Icon(
-                            Icons.history,
+                            AppIcons.history,
                             color: theme.colorScheme.tertiary,
                             size: 20,
                           ),
@@ -119,7 +120,7 @@ class RecentWorkoutsWidget extends ConsumerWidget {
                     Row(
                       children: [
                         Icon(
-                          Icons.calendar_today,
+                          AppIcons.calendar,
                           size: 14,
                           color: theme.colorScheme.onSurface.withValues(alpha: 0.5),
                         ),
@@ -133,7 +134,7 @@ class RecentWorkoutsWidget extends ConsumerWidget {
                         const SizedBox(width: 12),
                         if (data['exercises'] != null) ...[
                           Icon(
-                            Icons.fitness_center,
+                            AppIcons.workout,
                             size: 14,
                             color: theme.colorScheme.onSurface.withValues(alpha: 0.5),
                           ),
@@ -206,7 +207,7 @@ class RecentWorkoutsWidget extends ConsumerWidget {
                       borderRadius: BorderRadius.circular(12),
                     ),
                     child: Icon(
-                      Icons.history,
+                      AppIcons.history,
                       color: theme.colorScheme.surface,
                       size: 24,
                     ),
@@ -234,7 +235,7 @@ class RecentWorkoutsWidget extends ConsumerWidget {
                   IconButton(
                     onPressed: () => context.push('/history'),
                     icon: Icon(
-                      Icons.arrow_forward,
+                      AppIcons.arrowForward,
                       color: theme.colorScheme.tertiary,
                     ),
                   ),
@@ -329,7 +330,7 @@ class RecentWorkoutsWidget extends ConsumerWidget {
                       ],
                     ),
                     child: Icon(
-                      Icons.history,
+                      AppIcons.history,
                       color: theme.colorScheme.surface,
                       size: 28,
                     ),
@@ -356,7 +357,7 @@ class RecentWorkoutsWidget extends ConsumerWidget {
                   ),
                   FilledButton.icon(
                     onPressed: () => context.push('/history'),
-                    icon: const Icon(Icons.open_in_new, size: 18),
+                    icon: const Icon(AppIcons.openInNew, size: 18),
                     label: Text(AppLocalizations.of(context).seeAll),
                   ),
                 ],
@@ -478,7 +479,7 @@ class RecentWorkoutsWidget extends ConsumerWidget {
             ),
             child: Center(
               child: Icon(
-                Icons.fitness_center,
+                AppIcons.workout,
                 color: theme.colorScheme.primary,
                 size: compact ? 20 : 24,
               ),
@@ -502,21 +503,21 @@ class RecentWorkoutsWidget extends ConsumerWidget {
                   Row(
                     children: [
                       _buildWorkoutStat(
-                        icon: Icons.repeat,
+                        icon: AppIcons.repeat,
                         value: '$totalSets',
                         label: 'serie',
                         theme: theme,
                       ),
                       const SizedBox(width: 16),
                       _buildWorkoutStat(
-                        icon: Icons.fitness_center,
+                        icon: AppIcons.workout,
                         value: '${totalVolume.toStringAsFixed(0)} kg',
                         label: 'volume',
                         theme: theme,
                       ),
                       const SizedBox(width: 16),
                       _buildWorkoutStat(
-                        icon: Icons.access_time,
+                        icon: AppIcons.clock,
                         value: _formatTime(date),
                         label: '',
                         theme: theme,
@@ -529,7 +530,7 @@ class RecentWorkoutsWidget extends ConsumerWidget {
           ),
           if (compact)
             Icon(
-              Icons.chevron_right,
+              AppIcons.chevronRight,
               color: theme.colorScheme.onSurface.withValues(alpha: 0.3),
             ),
         ],
@@ -578,7 +579,7 @@ class RecentWorkoutsWidget extends ConsumerWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Icon(
-            Icons.fitness_center,
+            AppIcons.workout,
             size: 48,
             color: theme.colorScheme.onSurface.withValues(alpha: 0.2),
           ),

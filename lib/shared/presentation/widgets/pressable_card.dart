@@ -1,3 +1,4 @@
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:gymbro_flutter_new/shared/presentation/constants/app_animations.dart';
@@ -23,7 +24,7 @@ import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extens
 ///   child: Column(
 ///     children: [
 ///       SemanticIcon(
-///         icon: AppIcons.analytics,
+///         icon: AppAppIcons.analytics,
 ///         semanticLabel: 'Analytics',
 ///       ),
 ///       Text('Analytics'),

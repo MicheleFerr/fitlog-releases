@@ -75,7 +75,7 @@ class PatchConflictAnalysisParams {
 ///   currentExercise: exercise,
 /// ));
 /// if (hasConflict) {
-///   SemanticIcon(icon: AppIcons.warning, color: context.colors.warning, semanticLabel: 'Conflict')
+///   SemanticIcon(icon: AppAppIcons.warning, color: context.colors.warning, semanticLabel: 'Conflict')
 /// }
 /// ```
 final quickConflictCheckProvider =

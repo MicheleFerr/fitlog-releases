@@ -10,6 +10,7 @@
 /// Admin widget for displaying AI Coach Insights feedback from all users
 library;
 
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator.dart';
@@ -39,7 +40,7 @@ class AdminAIInsightsFeedbackWidget extends ConsumerWidget {
             Row(
               children: [
                 Icon(
-                  Icons.psychology,
+                  AppIcons.ai,
                   color: colorScheme.primary,
                   size: 28,
                 ),
@@ -122,28 +123,28 @@ class AdminAIInsightsFeedbackWidget extends ConsumerWidget {
             children: [
               _buildStatColumn(
                 context,
-                icon: Icons.feedback,
+                icon: AppIcons.feedback,
                 label: 'Totale',
                 value: totalFeedback.toString(),
                 color: colorScheme.primary,
               ),
               _buildStatColumn(
                 context,
-                icon: Icons.thumb_up,
+                icon: AppIcons.thumbUp,
                 label: 'Utile',
                 value: totalHelpful.toString(),
                 color: context.colors.success,
               ),
               _buildStatColumn(
                 context,
-                icon: Icons.thumb_down,
+                icon: AppIcons.thumbDown,
                 label: 'Non Utile',
                 value: totalNotHelpful.toString(),
                 color: context.colors.error,
               ),
               _buildStatColumn(
                 context,
-                icon: Icons.people,
+                icon: AppIcons.people,
                 label: 'Utenti',
                 value: uniqueUsers.toString(),
                 color: colorScheme.secondary,
@@ -234,7 +235,7 @@ class AdminAIInsightsFeedbackWidget extends ConsumerWidget {
         child: Column(
           children: [
             Icon(
-              Icons.feedback_outlined,
+              AppIcons.feedbackOutlined,
               size: 64,
               color: colorScheme.onSurface.withValues(alpha: 0.3),
             ),
@@ -291,7 +292,7 @@ class AdminAIInsightsFeedbackWidget extends ConsumerWidget {
               borderRadius: BorderRadius.circular(8),
             ),
             child: Icon(
-              feedback.isHelpful ? Icons.thumb_up : Icons.thumb_down,
+              feedback.isHelpful ? AppIcons.thumbUp : AppIcons.thumbDown,
               color: feedback.isHelpful ? context.colors.success : context.colors.error,
               size: 20,
             ),

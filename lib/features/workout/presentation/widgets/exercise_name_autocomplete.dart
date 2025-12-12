@@ -7,6 +7,7 @@
 /// Exercise name autocomplete with ML-enhanced fuzzy search
 library;
 
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
@@ -253,7 +254,7 @@ class _ExerciseNameAutocompleteState
                           if (fuzzyResult.wasAutoCorrected) ...[
                             const SizedBox(width: 4),
                             Icon(
-                              Icons.auto_fix_high,
+                              AppIcons.autoFixHigh,
                               size: 14,
                               color: context.colors.secondary,
                             ),
@@ -289,10 +290,10 @@ class _ExerciseNameAutocompleteState
                           child: CircularProgressIndicator(strokeWidth: 2),
                         ),
                       )
-                    : const Icon(Icons.fitness_center),
+                    : const Icon(AppIcons.workout),
                 suffixIcon: widget.controller.text.isNotEmpty
                     ? IconButton(
-                        icon: const Icon(Icons.clear, size: 20),
+                        icon: const Icon(AppIcons.clear, size: 20),
                         onPressed: () {
                           widget.controller.clear();
                           setState(() {
@@ -316,7 +317,7 @@ class _ExerciseNameAutocompleteState
                         ),
                       )
                     : widget.decoration?.prefixIcon ??
-                        const Icon(Icons.fitness_center),
+                        const Icon(AppIcons.workout),
               ),
           textCapitalization: TextCapitalization.words,
           onChanged: (value) {

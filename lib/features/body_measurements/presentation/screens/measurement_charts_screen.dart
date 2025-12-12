@@ -1,3 +1,4 @@
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -200,7 +201,7 @@ class _MeasurementChartsScreenState
         actions: [
           // Metric selector dropdown
           PopupMenuButton<MetricType?>(
-            icon: const Icon(Icons.straighten),
+            icon: const Icon(AppIcons.straighten),
             tooltip: context.l10n.bodyMeasurementsListFilterByMetric,
             onSelected: _onMetricChanged,
             itemBuilder: (context) {
@@ -211,7 +212,7 @@ class _MeasurementChartsScreenState
                     children: [
                       if (_selectedMetric == metric)
                         Icon(
-                          Icons.check,
+                          AppIcons.check,
                           color: context.colors.primary,
                           size: 20,
                         ),
@@ -278,7 +279,7 @@ class _MeasurementChartsScreenState
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Icon(
-              Icons.straighten,
+              AppIcons.straighten,
               size: 80,
               color: context.colors.onSurfaceVariant,
             ),
@@ -305,7 +306,7 @@ class _MeasurementChartsScreenState
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Icon(
-              Icons.show_chart,
+              AppIcons.lineChart,
               size: 80,
               color: context.colors.onSurfaceVariant,
             ),

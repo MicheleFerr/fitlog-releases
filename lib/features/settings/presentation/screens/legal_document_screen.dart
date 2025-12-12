@@ -10,6 +10,7 @@
 /// Legal document viewer for Privacy Policy and Terms of Service
 library;
 
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -265,12 +266,12 @@ Version 1.0.0 | EU Compliant
         backgroundColor: colorScheme.surface,
         elevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios_new),
+          icon: const Icon(AppIcons.arrowBackIosNew),
           onPressed: () => Navigator.of(context).pop(),
         ),
         actions: [
           IconButton(
-            icon: const Icon(Icons.share),
+            icon: const Icon(AppIcons.share),
             onPressed: () => _shareDocument(),
           ),
         ],

@@ -1,3 +1,4 @@
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/features/timer/presentation/providers/timer_providers.dart';
@@ -77,7 +78,7 @@ class RPETestScreen extends ConsumerWidget {
             // Test button
             ElevatedButton.icon(
               onPressed: () => _testRPESystem(context, ref),
-              icon: const Icon(Icons.play_arrow),
+              icon: const Icon(AppIcons.play),
               label: const Text('🧪 Testa Sistema RPE'),
               style: ElevatedButton.styleFrom(
                 padding: const EdgeInsets.all(16),

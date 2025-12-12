@@ -13,6 +13,7 @@
 /// - Comprehensive coverage of ALL app features
 library;
 
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:gymbro_flutter_new/features/help_center/data/faq_data.dart';
@@ -153,7 +154,7 @@ class _CategoryTile extends StatelessWidget {
           overflow: TextOverflow.ellipsis,
         ),
         trailing: Icon(
-          Icons.chevron_right,
+          AppIcons.chevronRight,
           color: context.colors.onSurfaceVariant,
         ),
       ),

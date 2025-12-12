@@ -1,3 +1,4 @@
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -41,7 +42,7 @@ class ModalTesterWidget extends ConsumerWidget {
           children: [
             Row(
               children: [
-                Icon(Icons.bug_report, 
+                Icon(AppIcons.bugReport, 
                   color: Theme.of(context).colorScheme.primary),
                 const SizedBox(width: 8),
                 Text(

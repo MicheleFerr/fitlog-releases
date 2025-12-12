@@ -1,3 +1,4 @@
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fl_chart/fl_chart.dart';
@@ -388,20 +389,20 @@ class _InteractiveWeightChartState extends ConsumerState<InteractiveWeightChart>
           _buildStatItem(
             label: 'Data',
             value: DateFormat('d MMM yyyy').format(data.date),
-            icon: Icons.calendar_today,
+            icon: AppIcons.calendar,
             theme: theme,
           ),
           _buildStatItem(
             label: 'Peso',
             value: '${data.weight.toStringAsFixed(1)} kg',
-            icon: Icons.monitor_weight,
+            icon: AppIcons.weight,
             theme: theme,
           ),
           _buildStatItem(
             label: 'Variazione',
             value: '${change >= 0 ? '+' : ''}${change.toStringAsFixed(1)} kg',
             subtitle: '${changePercent >= 0 ? '+' : ''}${changePercent.toStringAsFixed(1)}%',
-            icon: change >= 0 ? Icons.trending_up : Icons.trending_down,
+            icon: change >= 0 ? AppIcons.trendUp : AppIcons.trendDown,
             color: change >= 0 ? context.colors.error : context.colors.success,
             theme: theme,
           ),
@@ -511,7 +512,7 @@ class _InteractiveWeightChartState extends ConsumerState<InteractiveWeightChart>
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Icon(
-            Icons.show_chart,
+            AppIcons.lineChart,
             size: 64,
             color: theme.colorScheme.onSurface.withValues(alpha: 0.3),
           ),
