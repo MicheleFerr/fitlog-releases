@@ -12,6 +12,7 @@ import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
+import 'package:gymbro_flutter_new/features/workout/presentation/widgets/exercise_list_item/utils/exercise_notes_handler.dart';
 
 /// Header component for ExerciseListItem
 ///
@@ -52,6 +53,7 @@ class ExerciseListItemHeader extends StatelessWidget {
     required this.onShowCommunityAdvice,
     required this.onShowCountingModePicker,
     required this.onAddWarmupSets,
+    required this.onEditNotes,
     this.onCreateSuperset,
     this.hasWarmupData,
     this.hasInjuryPreventionData,
@@ -81,6 +83,7 @@ class ExerciseListItemHeader extends StatelessWidget {
   final VoidCallback onShowCommunityAdvice;
   final VoidCallback onShowCountingModePicker;
   final VoidCallback onAddWarmupSets;
+  final VoidCallback onEditNotes;
   final VoidCallback? onCreateSuperset;
 
   // Optional validation functions
@@ -119,6 +122,12 @@ class ExerciseListItemHeader extends StatelessWidget {
                   (config.showExerciseInsights ?? isProMode)) ...[
                 const SizedBox(height: 4),
                 _buildInsightChip(context),
+              ],
+              // Notes preview - conditional on showExerciseNotes
+              if ((config.showExerciseNotes ?? false) &&
+                  (exercise.notes?.isNotEmpty ?? false)) ...[
+                const SizedBox(height: 4),
+                _buildNotesPreview(context),
               ],
             ],
           ),
@@ -181,8 +190,8 @@ class ExerciseListItemHeader extends StatelessWidget {
             _buildCountdownBadge(context),
             const SizedBox(width: 8),
           ],
-          // TUT chip - conditional on showTutInfo
-          if (config.showTutInfo ?? isProMode) ...[
+          // TUT chip - conditional on setDurationTracking ("Durata esecuzione")
+          if (config.setDurationTracking ?? false) ...[
             _buildTutChip(context),
             const SizedBox(width: 8),
           ],
@@ -346,14 +355,15 @@ class ExerciseListItemHeader extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
         decoration: BoxDecoration(
+          // ✅ Unified design: secondary color scheme for TUT chips
           color: isDefault
               ? context.colors.surfaceContainerHighest.withValues(alpha: 0.3)
-              : context.colors.primaryContainer.withValues(alpha: 0.4),
+              : context.colors.secondary.withValues(alpha: 0.15),
           borderRadius: BorderRadius.circular(8),
           border: Border.all(
             color: isDefault
                 ? context.colors.outline.withValues(alpha: 0.3)
-                : context.colors.primary.withValues(alpha: 0.4),
+                : context.colors.secondary.withValues(alpha: 0.4),
             width: 1,
           ),
         ),
@@ -361,12 +371,12 @@ class ExerciseListItemHeader extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             SemanticIcon(
-              icon: AppIcons.speed,
-              semanticLabel: 'Speed',
+              icon: AppIcons.timer, // ✅ Unified: timer icon for TUT
+              semanticLabel: 'TUT',
               size: AppIconSize.tiny,
               color: isDefault
                   ? context.colors.onSurfaceVariant
-                  : context.colors.primary,
+                  : context.colors.secondary,
             ),
             const SizedBox(width: 4),
             Text(
@@ -375,7 +385,7 @@ class ExerciseListItemHeader extends StatelessWidget {
                 fontWeight: FontWeight.w600,
                 color: isDefault
                     ? context.colors.onSurfaceVariant
-                    : context.colors.primary,
+                    : context.colors.secondary,
               ),
             ),
           ],
@@ -485,6 +495,68 @@ class ExerciseListItemHeader extends StatelessWidget {
                 semanticLabel: 'View history',
                 size: AppIconSize.tiny,
                 color: context.colors.primary.withValues(alpha: 0.7),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  /// Builds a compact notes preview chip
+  /// Tappable to edit notes via the notes dialog
+  Widget _buildNotesPreview(BuildContext context) {
+    final notesPreview = ExerciseNotesHandler.formatNotesPreview(
+      exercise.notes,
+      maxLength: 40,
+    );
+
+    if (notesPreview.isEmpty) return const SizedBox.shrink();
+
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        onTap: () {
+          HapticFeedback.lightImpact();
+          onEditNotes();
+        },
+        borderRadius: BorderRadius.circular(12),
+        child: Ink(
+          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+          decoration: BoxDecoration(
+            color: context.colors.tertiaryContainer.withValues(alpha: 0.3),
+            borderRadius: BorderRadius.circular(12),
+            border: Border.all(
+              color: context.colors.tertiary.withValues(alpha: 0.2),
+            ),
+          ),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              SemanticIcon(
+                icon: AppIcons.noteAlt,
+                semanticLabel: context.l10n.notes,
+                size: AppIconSize.tiny,
+                color: context.colors.tertiary,
+              ),
+              const SizedBox(width: 4),
+              Flexible(
+                child: Text(
+                  notesPreview,
+                  style: context.textTheme.labelSmall?.copyWith(
+                    color: context.colors.tertiary,
+                    fontWeight: FontWeight.w500,
+                  ),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ),
+              const SizedBox(width: 4),
+              SemanticIcon(
+                icon: AppIcons.edit,
+                semanticLabel: context.l10n.edit,
+                size: AppIconSize.tiny,
+                color: context.colors.tertiary.withValues(alpha: 0.7),
               ),
             ],
           ),

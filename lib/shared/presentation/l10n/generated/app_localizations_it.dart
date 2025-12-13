@@ -584,8 +584,7 @@ class AppLocalizationsIt extends AppLocalizations {
   String get autoSync => 'Sincronizzazione Automatica';
 
   @override
-  String get autoSyncDescription =>
-      'Sincronizza automaticamente gli esercizi in background';
+  String get autoSyncDescription => 'Sincronizza automaticamente ogni 24 ore';
 
   @override
   String get syncFrequency => 'Frequenza Sincronizzazione';
@@ -9072,6 +9071,12 @@ class AppLocalizationsIt extends AppLocalizations {
   String get notesSavedMessage => 'Note salvate';
 
   @override
+  String get notesSaved => 'Note salvate';
+
+  @override
+  String get notesDeleted => 'Note eliminate';
+
+  @override
   String exerciseCompletedTapToExpand(String exerciseName) {
     return '$exerciseName completato! Tocca per espandere';
   }
@@ -17383,7 +17388,7 @@ class AppLocalizationsIt extends AppLocalizations {
   String get dataRetentionPeriod => 'Periodo di Conservazione Dati';
 
   @override
-  String get lastSynced => 'Ultima Sincronizzazione';
+  String get lastSynced => 'Ultima sincronizzazione';
 
   @override
   String get neverSynced => 'Mai sincronizzato';
@@ -23005,4 +23010,55 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get streakDays => 'Serie';
+
+  @override
+  String get clearSyncCache => 'Cancella Cache di Sincronizzazione';
+
+  @override
+  String get clearSyncCacheTitle => 'Cancellare Cache di Sincronizzazione?';
+
+  @override
+  String get clearSyncCacheMessage =>
+      'Questo cancellerà tutti i dati sincronizzati e la cronologia di sincronizzazione dalla memoria locale. I dati in Apple Health / Health Connect non saranno interessati.';
+
+  @override
+  String get backgroundSyncEnabled => 'Sincronizzazione in background attivata';
+
+  @override
+  String get backgroundSyncDisabled =>
+      'Sincronizzazione in background disattivata';
+
+  @override
+  String get backgroundSyncToggleError =>
+      'Impossibile attivare/disattivare la sincronizzazione in background';
+
+  @override
+  String get cacheCleared => 'Cache cancellata con successo';
+
+  @override
+  String get cacheClearError => 'Impossibile cancellare la cache';
+
+  @override
+  String get grantPermissionsPrompt =>
+      'Concedi i permessi sopra per abilitare la sincronizzazione';
+
+  @override
+  String get autoSyncDaily => 'Sincronizzazione Automatica (Giornaliera)';
+
+  @override
+  String get nextSync => 'Prossima sincronizzazione';
+
+  @override
+  String get healthSyncHelpTitle => 'Aiuto Sincronizzazione Salute';
+
+  @override
+  String get healthSyncHelpContent =>
+      'Integrazione Apple Health & Health Connect\n\nFunzionalità:\n• Importa allenamenti da Apple Health / Health Connect\n• Sincronizza dati peso corporeo (bidirezionale)\n• Sincronizzazione automatica giornaliera in background\n• Sincronizzazione manuale in qualsiasi momento\n\nPermessi:\n• Allenamento: Importa sessioni di allenamento\n• Peso Corporeo: Sincronizza dati peso\n\nSincronizzazione in Background:\n• Auto-sincronizza ogni 24 ore\n• Riprova in caso di errore (max 3 tentativi)\n• Può essere disabilitata se necessario';
+
+  @override
+  String get runDiagnosticTests => 'Esegui Test Diagnostici';
+
+  @override
+  String get healthSyncLoadError =>
+      'Impossibile caricare impostazioni sincronizzazione salute';
 }

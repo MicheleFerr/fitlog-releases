@@ -581,8 +581,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get autoSync => 'Auto Sync';
 
   @override
-  String get autoSyncDescription =>
-      'Automatically sync exercises in background';
+  String get autoSyncDescription => 'Sync automatically every 24 hours';
 
   @override
   String get syncFrequency => 'Sync Frequency';
@@ -8990,6 +8989,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get notesSavedMessage => 'Notes saved';
 
   @override
+  String get notesSaved => 'Notes saved';
+
+  @override
+  String get notesDeleted => 'Notes deleted';
+
+  @override
   String exerciseCompletedTapToExpand(String exerciseName) {
     return '$exerciseName completed! Tap to expand';
   }
@@ -17216,7 +17221,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get dataRetentionPeriod => 'Data Retention Period';
 
   @override
-  String get lastSynced => 'Last Synced';
+  String get lastSynced => 'Last synced';
 
   @override
   String get neverSynced => 'Never synced';
@@ -22787,4 +22792,51 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get streakDays => 'Streak';
+
+  @override
+  String get clearSyncCache => 'Clear Sync Cache';
+
+  @override
+  String get clearSyncCacheTitle => 'Clear Sync Cache?';
+
+  @override
+  String get clearSyncCacheMessage =>
+      'This will clear all synced data and sync history from local storage. Data in Apple Health / Health Connect will not be affected.';
+
+  @override
+  String get backgroundSyncEnabled => 'Background sync enabled';
+
+  @override
+  String get backgroundSyncDisabled => 'Background sync disabled';
+
+  @override
+  String get backgroundSyncToggleError => 'Failed to toggle background sync';
+
+  @override
+  String get cacheCleared => 'Cache cleared successfully';
+
+  @override
+  String get cacheClearError => 'Failed to clear cache';
+
+  @override
+  String get grantPermissionsPrompt => 'Grant permissions above to enable sync';
+
+  @override
+  String get autoSyncDaily => 'Auto Sync (Daily)';
+
+  @override
+  String get nextSync => 'Next sync';
+
+  @override
+  String get healthSyncHelpTitle => 'Health Sync Help';
+
+  @override
+  String get healthSyncHelpContent =>
+      'Apple Health & Health Connect Integration\n\nFeatures:\n• Import workouts from Apple Health / Health Connect\n• Sync body weight data (bidirectional)\n• Automatic daily background sync\n• Manual sync anytime\n\nPermissions:\n• Workout: Import workout sessions\n• Body Weight: Sync weight data\n\nBackground Sync:\n• Auto-syncs every 24 hours\n• Retry on failure (3 attempts max)\n• Can be disabled if needed';
+
+  @override
+  String get runDiagnosticTests => 'Run Diagnostic Tests';
+
+  @override
+  String get healthSyncLoadError => 'Failed to load health sync settings';
 }

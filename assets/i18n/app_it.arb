@@ -3279,6 +3279,8 @@
   "exerciseNameCannotBeEmpty": "{exerciseName} non può essere vuoto",
   "invalidRestTimeError": "Inserisci un tempo di riposo valido (1-3600 secondi)",
   "notesSavedMessage": "Note salvate",
+  "notesSaved": "Note salvate",
+  "notesDeleted": "Note eliminate",
   "exerciseCompletedTapToExpand": "{exerciseName} completato! Tocca per espandere",
   "expandLabel": "Espandi",
   "settingsNotLoggedIn": "Non loggato",
@@ -16357,4 +16359,77 @@
   "lastNight": "Ieri Notte",
   "streakDays": "Serie",
   "errorLoadingData": "Errore nel caricamento dati"
+,
+  "clearSyncCache": "Cancella Cache di Sincronizzazione",
+  "@clearSyncCache": {
+    "description": "Etichetta pulsante per cancellare cache sincronizzazione salute"
+  },
+  "clearSyncCacheTitle": "Cancellare Cache di Sincronizzazione?",
+  "@clearSyncCacheTitle": {
+    "description": "Titolo dialogo per confermare cancellazione cache sincronizzazione"
+  },
+  "clearSyncCacheMessage": "Questo cancellerà tutti i dati sincronizzati e la cronologia di sincronizzazione dalla memoria locale. I dati in Apple Health / Health Connect non saranno interessati.",
+  "@clearSyncCacheMessage": {
+    "description": "Messaggio dialogo che spiega cosa fa la cancellazione cache sincronizzazione"
+  },
+  "backgroundSyncEnabled": "Sincronizzazione in background attivata",
+  "@backgroundSyncEnabled": {
+    "description": "Messaggio di successo quando sincronizzazione in background è attivata"
+  },
+  "backgroundSyncDisabled": "Sincronizzazione in background disattivata",
+  "@backgroundSyncDisabled": {
+    "description": "Messaggio di successo quando sincronizzazione in background è disattivata"
+  },
+  "backgroundSyncToggleError": "Impossibile attivare/disattivare la sincronizzazione in background",
+  "@backgroundSyncToggleError": {
+    "description": "Messaggio di errore quando il toggle sincronizzazione in background fallisce"
+  },
+  "cacheCleared": "Cache cancellata con successo",
+  "@cacheCleared": {
+    "description": "Messaggio di successo quando la cache è cancellata"
+  },
+  "cacheClearError": "Impossibile cancellare la cache",
+  "@cacheClearError": {
+    "description": "Messaggio di errore quando la cancellazione cache fallisce"
+  },
+  "grantPermissionsPrompt": "Concedi i permessi sopra per abilitare la sincronizzazione",
+  "@grantPermissionsPrompt": {
+    "description": "Messaggio che chiede all'utente di concedere permessi"
+  },
+  "autoSyncDaily": "Sincronizzazione Automatica (Giornaliera)",
+  "@autoSyncDaily": {
+    "description": "Etichetta per il toggle sincronizzazione automatica giornaliera"
+  },
+  "autoSyncDescription": "Sincronizza automaticamente ogni 24 ore",
+  "@autoSyncDescription": {
+    "description": "Descrizione della funzione sincronizzazione automatica"
+  },
+  "lastSynced": "Ultima sincronizzazione",
+  "@lastSynced": {
+    "description": "Etichetta per timestamp ultima sincronizzazione"
+  },
+  "nextSync": "Prossima sincronizzazione",
+  "@nextSync": {
+    "description": "Etichetta per timestamp prossima sincronizzazione programmata"
+  },
+  "healthSyncHelpTitle": "Aiuto Sincronizzazione Salute",
+  "@healthSyncHelpTitle": {
+    "description": "Titolo per dialogo aiuto sincronizzazione salute"
+  },
+  "healthSyncHelpContent": "Integrazione Apple Health & Health Connect\n\nFunzionalità:\n• Importa allenamenti da Apple Health / Health Connect\n• Sincronizza dati peso corporeo (bidirezionale)\n• Sincronizzazione automatica giornaliera in background\n• Sincronizzazione manuale in qualsiasi momento\n\nPermessi:\n• Allenamento: Importa sessioni di allenamento\n• Peso Corporeo: Sincronizza dati peso\n\nSincronizzazione in Background:\n• Auto-sincronizza ogni 24 ore\n• Riprova in caso di errore (max 3 tentativi)\n• Può essere disabilitata se necessario",
+  "@healthSyncHelpContent": {
+    "description": "Contenuto dialogo aiuto che spiega funzionalità sincronizzazione salute"
+  },
+  "gotIt": "Ho capito",
+  "@gotIt": {
+    "description": "Pulsante conferma nei dialoghi"
+  },
+  "runDiagnosticTests": "Esegui Test Diagnostici",
+  "@runDiagnosticTests": {
+    "description": "Etichetta pulsante per eseguire test diagnostici"
+  },
+  "healthSyncLoadError": "Impossibile caricare impostazioni sincronizzazione salute",
+  "@healthSyncLoadError": {
+    "description": "Messaggio di errore quando il caricamento impostazioni sincronizzazione salute fallisce"
+  }
 }

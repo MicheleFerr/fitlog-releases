@@ -10674,6 +10674,14 @@
   "@notesSavedMessage": {
     "description": "Notes saved success message"
   },
+  "notesSaved": "Notes saved",
+  "@notesSaved": {
+    "description": "Short notes saved confirmation"
+  },
+  "notesDeleted": "Notes deleted",
+  "@notesDeleted": {
+    "description": "Notes deleted confirmation"
+  },
   "exerciseCompletedTapToExpand": "{exerciseName} completed! Tap to expand",
   "@exerciseCompletedTapToExpand": {
     "description": "Exercise completed with expand action",
@@ -27846,5 +27854,78 @@
   "errorLoadingData": "Error loading data",
   "@errorLoadingData": {
     "description": "Generic error message for loading data"
+  }
+,
+  "clearSyncCache": "Clear Sync Cache",
+  "@clearSyncCache": {
+    "description": "Button label to clear health sync cache"
+  },
+  "clearSyncCacheTitle": "Clear Sync Cache?",
+  "@clearSyncCacheTitle": {
+    "description": "Dialog title for confirming sync cache clearing"
+  },
+  "clearSyncCacheMessage": "This will clear all synced data and sync history from local storage. Data in Apple Health / Health Connect will not be affected.",
+  "@clearSyncCacheMessage": {
+    "description": "Dialog message explaining what clearing sync cache does"
+  },
+  "backgroundSyncEnabled": "Background sync enabled",
+  "@backgroundSyncEnabled": {
+    "description": "Success message when background sync is enabled"
+  },
+  "backgroundSyncDisabled": "Background sync disabled",
+  "@backgroundSyncDisabled": {
+    "description": "Success message when background sync is disabled"
+  },
+  "backgroundSyncToggleError": "Failed to toggle background sync",
+  "@backgroundSyncToggleError": {
+    "description": "Error message when background sync toggle fails"
+  },
+  "cacheCleared": "Cache cleared successfully",
+  "@cacheCleared": {
+    "description": "Success message when cache is cleared"
+  },
+  "cacheClearError": "Failed to clear cache",
+  "@cacheClearError": {
+    "description": "Error message when cache clearing fails"
+  },
+  "grantPermissionsPrompt": "Grant permissions above to enable sync",
+  "@grantPermissionsPrompt": {
+    "description": "Message prompting user to grant permissions"
+  },
+  "autoSyncDaily": "Auto Sync (Daily)",
+  "@autoSyncDaily": {
+    "description": "Label for daily auto sync toggle"
+  },
+  "autoSyncDescription": "Sync automatically every 24 hours",
+  "@autoSyncDescription": {
+    "description": "Description of auto sync feature"
+  },
+  "lastSynced": "Last synced",
+  "@lastSynced": {
+    "description": "Label for last sync timestamp"
+  },
+  "nextSync": "Next sync",
+  "@nextSync": {
+    "description": "Label for next scheduled sync timestamp"
+  },
+  "healthSyncHelpTitle": "Health Sync Help",
+  "@healthSyncHelpTitle": {
+    "description": "Title for health sync help dialog"
+  },
+  "healthSyncHelpContent": "Apple Health & Health Connect Integration\n\nFeatures:\n• Import workouts from Apple Health / Health Connect\n• Sync body weight data (bidirectional)\n• Automatic daily background sync\n• Manual sync anytime\n\nPermissions:\n• Workout: Import workout sessions\n• Body Weight: Sync weight data\n\nBackground Sync:\n• Auto-syncs every 24 hours\n• Retry on failure (3 attempts max)\n• Can be disabled if needed",
+  "@healthSyncHelpContent": {
+    "description": "Help dialog content explaining health sync features"
+  },
+  "gotIt": "Got it",
+  "@gotIt": {
+    "description": "Acknowledgment button in dialogs"
+  },
+  "runDiagnosticTests": "Run Diagnostic Tests",
+  "@runDiagnosticTests": {
+    "description": "Button label for running diagnostic tests"
+  },
+  "healthSyncLoadError": "Failed to load health sync settings",
+  "@healthSyncLoadError": {
+    "description": "Error message when health sync settings fail to load"
   }
 }

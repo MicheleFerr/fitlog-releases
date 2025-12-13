@@ -1136,10 +1136,10 @@ abstract class AppLocalizations {
   /// **'Auto Sync'**
   String get autoSync;
 
-  /// Auto sync description
+  /// Description of auto sync feature
   ///
   /// In en, this message translates to:
-  /// **'Automatically sync exercises in background'**
+  /// **'Sync automatically every 24 hours'**
   String get autoSyncDescription;
 
   /// Sync frequency setting label
@@ -1958,7 +1958,7 @@ abstract class AppLocalizations {
   /// **'Return to FitLog Pro and use \'Import Template\''**
   String get step4ReturnToApp;
 
-  /// Acknowledgment button in info dialogs
+  /// Acknowledgment button in dialogs
   ///
   /// In en, this message translates to:
   /// **'Got it'**
@@ -16051,6 +16051,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Notes saved'**
   String get notesSavedMessage;
+
+  /// Short notes saved confirmation
+  ///
+  /// In en, this message translates to:
+  /// **'Notes saved'**
+  String get notesSaved;
+
+  /// Notes deleted confirmation
+  ///
+  /// In en, this message translates to:
+  /// **'Notes deleted'**
+  String get notesDeleted;
 
   /// Exercise completed with expand action
   ///
@@ -30801,7 +30813,7 @@ abstract class AppLocalizations {
   /// Label for last sync timestamp
   ///
   /// In en, this message translates to:
-  /// **'Last Synced'**
+  /// **'Last synced'**
   String get lastSynced;
 
   /// Status when settings have never been synced
@@ -40712,6 +40724,96 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Streak'**
   String get streakDays;
+
+  /// Button label to clear health sync cache
+  ///
+  /// In en, this message translates to:
+  /// **'Clear Sync Cache'**
+  String get clearSyncCache;
+
+  /// Dialog title for confirming sync cache clearing
+  ///
+  /// In en, this message translates to:
+  /// **'Clear Sync Cache?'**
+  String get clearSyncCacheTitle;
+
+  /// Dialog message explaining what clearing sync cache does
+  ///
+  /// In en, this message translates to:
+  /// **'This will clear all synced data and sync history from local storage. Data in Apple Health / Health Connect will not be affected.'**
+  String get clearSyncCacheMessage;
+
+  /// Success message when background sync is enabled
+  ///
+  /// In en, this message translates to:
+  /// **'Background sync enabled'**
+  String get backgroundSyncEnabled;
+
+  /// Success message when background sync is disabled
+  ///
+  /// In en, this message translates to:
+  /// **'Background sync disabled'**
+  String get backgroundSyncDisabled;
+
+  /// Error message when background sync toggle fails
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to toggle background sync'**
+  String get backgroundSyncToggleError;
+
+  /// Success message when cache is cleared
+  ///
+  /// In en, this message translates to:
+  /// **'Cache cleared successfully'**
+  String get cacheCleared;
+
+  /// Error message when cache clearing fails
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to clear cache'**
+  String get cacheClearError;
+
+  /// Message prompting user to grant permissions
+  ///
+  /// In en, this message translates to:
+  /// **'Grant permissions above to enable sync'**
+  String get grantPermissionsPrompt;
+
+  /// Label for daily auto sync toggle
+  ///
+  /// In en, this message translates to:
+  /// **'Auto Sync (Daily)'**
+  String get autoSyncDaily;
+
+  /// Label for next scheduled sync timestamp
+  ///
+  /// In en, this message translates to:
+  /// **'Next sync'**
+  String get nextSync;
+
+  /// Title for health sync help dialog
+  ///
+  /// In en, this message translates to:
+  /// **'Health Sync Help'**
+  String get healthSyncHelpTitle;
+
+  /// Help dialog content explaining health sync features
+  ///
+  /// In en, this message translates to:
+  /// **'Apple Health & Health Connect Integration\n\nFeatures:\n• Import workouts from Apple Health / Health Connect\n• Sync body weight data (bidirectional)\n• Automatic daily background sync\n• Manual sync anytime\n\nPermissions:\n• Workout: Import workout sessions\n• Body Weight: Sync weight data\n\nBackground Sync:\n• Auto-syncs every 24 hours\n• Retry on failure (3 attempts max)\n• Can be disabled if needed'**
+  String get healthSyncHelpContent;
+
+  /// Button label for running diagnostic tests
+  ///
+  /// In en, this message translates to:
+  /// **'Run Diagnostic Tests'**
+  String get runDiagnosticTests;
+
+  /// Error message when health sync settings fail to load
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to load health sync settings'**
+  String get healthSyncLoadError;
 }
 
 class _AppLocalizationsDelegate

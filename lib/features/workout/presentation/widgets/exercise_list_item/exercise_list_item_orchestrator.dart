@@ -40,6 +40,7 @@ import 'package:gymbro_flutter_new/features/exercise_database/presentation/widge
 import 'package:gymbro_flutter_new/features/workout/domain/services/warmup_calculator_service.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/widgets/warmup_customization_modal.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/widgets/superset_link_modal.dart';
+import 'package:gymbro_flutter_new/features/workout/presentation/widgets/exercise_list_item/utils/exercise_notes_handler.dart';
 
 /// Orchestrator widget that coordinates ExerciseListItemHeader and ExerciseListItemSets
 ///
@@ -923,6 +924,31 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem>
     widget.onDelete();
   }
 
+  Future<void> _handleEditNotes() async {
+    final newNotes = await ExerciseNotesHandler.showNotesDialog(
+      context,
+      widget.exercise.notes,
+    );
+
+    if (newNotes != null && widget.onExerciseUpdate != null) {
+      final updatedExercise = widget.exercise.copyWith(
+        notes: newNotes.isEmpty ? null : newNotes,
+        updatedAt: DateTime.now(),
+      );
+      widget.onExerciseUpdate!(updatedExercise);
+
+      if (mounted) {
+        HapticFeedback.lightImpact();
+        SnackBarService.showSuccess(
+          context,
+          newNotes.isEmpty
+              ? context.l10n.notesDeleted
+              : context.l10n.notesSaved,
+        );
+      }
+    }
+  }
+
   void _handleShowCommunityAdvice() {
     showModalBottomSheet(
       context: context,
@@ -1279,7 +1305,7 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem>
     if (widget.isReorderMode) {
       return Padding(
         padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 6),
-        child: Container(
+        child: DecoratedBox(
           decoration: BoxDecoration(
             color: context.colors.surfaceContainer,
             borderRadius: BorderRadius.circular(16),
@@ -1328,7 +1354,7 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem>
       // ✅ DESIGN: Full-width cards with no horizontal margin (like superset cards)
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 6),
-        child: Container(
+        child: DecoratedBox(
           decoration: BoxDecoration(
             // ✅ DESIGN: Lighter background color for cleaner look
             color: context.colors.surfaceContainer,
@@ -1381,6 +1407,7 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem>
                     onShowCommunityAdvice: _handleShowCommunityAdvice,
                     onShowCountingModePicker: _handleShowCountingModePicker,
                     onAddWarmupSets: _handleAddWarmupSets,
+                    onEditNotes: _handleEditNotes,
                     onCreateSuperset: _handleCreateSuperset,
                     hasWarmupData: _hasWarmupData,
                     hasInjuryPreventionData: _hasInjuryPreventionData,
