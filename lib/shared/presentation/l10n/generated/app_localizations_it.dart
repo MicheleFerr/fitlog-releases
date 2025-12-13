@@ -6165,6 +6165,9 @@ class AppLocalizationsIt extends AppLocalizations {
   String get signInToViewAnalytics => 'Accedi per visualizzare le statistiche';
 
   @override
+  String get tapForDetailedAnalysis => 'Tocca per analisi dettagliata';
+
+  @override
   String get startYourFirstWorkout => 'Inizia il Tuo Primo Allenamento';
 
   @override

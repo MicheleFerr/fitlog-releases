@@ -7895,6 +7895,10 @@
   "@signInToViewAnalytics": {
     "description": "Message shown when user is not authenticated"
   },
+  "tapForDetailedAnalysis": "Tap for detailed analysis",
+  "@tapForDetailedAnalysis": {
+    "description": "CTA text for body heatmap interaction"
+  },
   "startYourFirstWorkout": "Start Your First Workout",
   "@startYourFirstWorkout": {
     "description": "Empty state title for no workouts"

@@ -11123,6 +11123,12 @@ abstract class AppLocalizations {
   /// **'Sign in to view analytics'**
   String get signInToViewAnalytics;
 
+  /// CTA text for body heatmap interaction
+  ///
+  /// In en, this message translates to:
+  /// **'Tap for detailed analysis'**
+  String get tapForDetailedAnalysis;
+
   /// Empty state title for no workouts
   ///
   /// In en, this message translates to:
