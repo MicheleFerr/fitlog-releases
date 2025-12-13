@@ -6263,10 +6263,10 @@ abstract class AppLocalizations {
   /// **'Avg Volume Per Workout'**
   String get avgVolumePerWorkout;
 
-  /// Average label
+  /// Short label for average value
   ///
   /// In en, this message translates to:
-  /// **'Average'**
+  /// **'avg'**
   String get average;
 
   /// Personal record label
@@ -40803,6 +40803,12 @@ abstract class AppLocalizations {
   /// **'7h recommended'**
   String get recommendedSleep;
 
+  /// Label for weekly sleep trend sparkline
+  ///
+  /// In en, this message translates to:
+  /// **'Weekly trend'**
+  String get weeklyTrend;
+
   /// Title for recommendation section
   ///
   /// In en, this message translates to:
@@ -41353,6 +41359,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Excessive'**
   String get sleepQualityExcessive;
+
+  /// Last set information with weight and reps
+  ///
+  /// In en, this message translates to:
+  /// **'Last: {weight}{unit} x {reps}'**
+  String lastSetInfo(String weight, String unit, int reps);
+
+  /// Indicator showing no change in weight compared to previous week
+  ///
+  /// In en, this message translates to:
+  /// **'Same weight'**
+  String get sameWeightDelta;
 }
 
 class _AppLocalizationsDelegate

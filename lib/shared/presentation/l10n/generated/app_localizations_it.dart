@@ -3401,7 +3401,7 @@ class AppLocalizationsIt extends AppLocalizations {
   String get avgVolumePerWorkout => 'Volume Medio Per Allenamento';
 
   @override
-  String get average => 'Media';
+  String get average => 'media';
 
   @override
   String get record => 'Record';
@@ -23053,6 +23053,9 @@ class AppLocalizationsIt extends AppLocalizations {
   String get recommendedSleep => '7h raccomandate';
 
   @override
+  String get weeklyTrend => 'Trend settimanale';
+
+  @override
   String get todaysRecommendation => 'Raccomandazione di Oggi';
 
   @override
@@ -23367,4 +23370,12 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get sleepQualityExcessive => 'Eccessivo';
+
+  @override
+  String lastSetInfo(String weight, String unit, int reps) {
+    return 'Ultimo: $weight$unit x $reps';
+  }
+
+  @override
+  String get sameWeightDelta => 'Stesso peso';
 }

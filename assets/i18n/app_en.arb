@@ -27903,6 +27903,14 @@
   "@recommendedSleep": {
     "description": "Legend for recommended sleep line"
   },
+  "weeklyTrend": "Weekly trend",
+  "@weeklyTrend": {
+    "description": "Label for weekly sleep trend sparkline"
+  },
+  "average": "avg",
+  "@average": {
+    "description": "Short label for average value"
+  },
   "todaysRecommendation": "Today's Recommendation",
   "@todaysRecommendation": {
     "description": "Title for recommendation section"
@@ -28326,5 +28334,24 @@
   "sleepQualityExcessive": "Excessive",
   "@sleepQualityExcessive": {
     "description": "Sleep quality: Excessive (>9h)"
+  },
+  "lastSetInfo": "Last: {weight}{unit} x {reps}",
+  "@lastSetInfo": {
+    "description": "Last set information with weight and reps",
+    "placeholders": {
+      "weight": {
+        "type": "String"
+      },
+      "unit": {
+        "type": "String"
+      },
+      "reps": {
+        "type": "int"
+      }
+    }
+  },
+  "sameWeightDelta": "Same weight",
+  "@sameWeightDelta": {
+    "description": "Indicator showing no change in weight compared to previous week"
   }
 }

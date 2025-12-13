@@ -190,7 +190,7 @@ class _ExerciseCard extends StatelessWidget {
 
               // Session count and last set
               Text(
-                '${exercise.sessionCount} sessioni • Ultimo: ${_formatWeight(exercise.lastWeight)}${exercise.measurementUnit} x ${exercise.lastReps}',
+                '${context.l10n.sessionsCount(exercise.sessionCount)} • ${context.l10n.lastSetInfo(_formatWeight(exercise.lastWeight), exercise.measurementUnit, exercise.lastReps)}',
                 style: context.textTheme.bodySmall?.copyWith(
                   color: context.colors.onSurfaceVariant,
                 ),
@@ -229,15 +229,15 @@ class _WeightDeltaIndicator extends StatelessWidget {
     if (weightDelta > 0) {
       icon = AppIcons.trendUp;
       color = context.colors.success;
-      text = '+${weightDelta.toStringAsFixed(1)}$measurementUnit vs settimana scorsa';
+      text = '+${weightDelta.toStringAsFixed(1)}$measurementUnit ${context.l10n.vsLastWeek}';
     } else if (weightDelta < 0) {
       icon = AppIcons.trendDown;
       color = context.colors.error;
-      text = '${weightDelta.toStringAsFixed(1)}$measurementUnit vs settimana scorsa';
+      text = '${weightDelta.toStringAsFixed(1)}$measurementUnit ${context.l10n.vsLastWeek}';
     } else {
       icon = AppIcons.trendFlat;
       color = context.colors.onSurfaceVariant;
-      text = 'stesso peso';
+      text = context.l10n.sameWeightDelta;
     }
 
     return Row(

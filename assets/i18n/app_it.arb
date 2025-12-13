@@ -16402,6 +16402,8 @@
   "consecutivePenaltyDescription": "Penalità per notti consecutive cattive",
   "weeklyOverview": "Panoramica Settimanale",
   "recommendedSleep": "7h raccomandate",
+  "weeklyTrend": "Trend settimanale",
+  "average": "media",
   "todaysRecommendation": "Raccomandazione di Oggi",
   "consecutiveBadNights": "notti consecutive sotto le 6h",
   "correlationInsufficientData": "Continua ad allenarti per vedere la correlazione sonno-performance. Servono più dati.",
@@ -16652,5 +16654,24 @@
   "sleepQualityExcessive": "Eccessivo",
   "@sleepQualityExcessive": {
     "description": "Qualità sonno: Eccessivo (>9h)"
+  },
+  "lastSetInfo": "Ultimo: {weight}{unit} x {reps}",
+  "@lastSetInfo": {
+    "description": "Informazioni ultima serie con peso e ripetizioni",
+    "placeholders": {
+      "weight": {
+        "type": "String"
+      },
+      "unit": {
+        "type": "String"
+      },
+      "reps": {
+        "type": "int"
+      }
+    }
+  },
+  "sameWeightDelta": "Stesso peso",
+  "@sameWeightDelta": {
+    "description": "Indicatore che mostra nessuna variazione di peso rispetto alla settimana precedente"
   }
 }
