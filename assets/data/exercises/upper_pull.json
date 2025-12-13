@@ -1488,7 +1488,7 @@
   {
     "id": "dumbbell_over_bench_neutral_wrist_curl",
     "nome": "Curl Polso Neutro su Panca con Manubri",
-    "focus": "BICI",
+    "focus": "AVA",
     "imageUrl": "https://static.exercisedb.dev/media/BKa8dmT.gif",
     "muscoliSecondari": "AVA",
     "difficolta": "Intermedio",
@@ -2142,7 +2142,7 @@
   {
     "id": "dumbbell_seated_neutral_wrist_curl",
     "nome": "Curl Seduto Polso Neutro con Manubri",
-    "focus": "BICI",
+    "focus": "AVA",
     "imageUrl": "https://static.exercisedb.dev/media/uJmK7Z1.gif",
     "muscoliSecondari": "AVA",
     "difficolta": "Intermedio",
@@ -2589,7 +2589,7 @@
   {
     "id": "dumbbell_over_bench_one_arm_neutral_wrist_curl",
     "nome": "Curl Un Braccio Polso Neutro su Panca con Manubri",
-    "focus": "BICI",
+    "focus": "AVA",
     "imageUrl": "https://static.exercisedb.dev/media/IvV6C9M.gif",
     "muscoliSecondari": "AVA",
     "difficolta": "Intermedio",

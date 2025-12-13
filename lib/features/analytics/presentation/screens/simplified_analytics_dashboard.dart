@@ -120,12 +120,11 @@ class SimplifiedAnalyticsDashboard extends ConsumerWidget {
   }
 
   Widget _buildContent(BuildContext context, WidgetRef ref) {
-    final workoutsAsync = ref.watch(historicalWorkoutsProvider);
+    final weeklyDataAsync = ref.watch(weeklyAnalyticsProvider);
     final isPremium = ref.watch(isPremiumUserProvider);
     final colors = context.colors;
-    final l10n = context.l10n;
 
-    return workoutsAsync.when(
+    return weeklyDataAsync.when(
       loading: () => const Center(child: LoadingIndicator()),
       error: (error, _) => Center(
         child: Column(
@@ -148,116 +147,11 @@ class SimplifiedAnalyticsDashboard extends ConsumerWidget {
           ],
         ),
       ),
-      data: (workouts) {
-        // Calculate data from workouts
-        final now = DateTime.now();
-        final startOfWeek = now.subtract(Duration(days: now.weekday - 1));
-        final thisWeekWorkouts = workouts
-            .where((w) => w.startTime != null && w.startTime!.isAfter(startOfWeek))
-            .toList();
-        final lastWeekWorkouts = workouts
-            .where((w) =>
-                w.startTime != null &&
-                w.startTime!
-                    .isAfter(startOfWeek.subtract(const Duration(days: 7))) &&
-                w.startTime!.isBefore(startOfWeek))
-            .toList();
-
-        // Calculate volume
-        double weeklyVolume = 0;
-        for (final workout in thisWeekWorkouts) {
-          for (final ex in workout.exercises) {
-            for (final set in ex.sets) {
-              if (set.isCompleted) {
-                weeklyVolume += (set.weight ?? 0) * (set.reps ?? 0);
-              }
-            }
-          }
-        }
-
-        // Calculate muscle heat data (simplified - using exercise categories)
-        final categoryVolumes = <String, double>{};
-        double maxVolume = 0;
-        for (final workout in thisWeekWorkouts) {
-          for (final ex in workout.exercises) {
-            final volume = ex.sets
-                .where((s) => s.isCompleted)
-                .fold<double>(
-                    0, (sum, s) => sum + (s.weight ?? 0) * (s.reps ?? 0));
-            final categoryKey = ex.category.name;
-            categoryVolumes[categoryKey] = (categoryVolumes[categoryKey] ?? 0) + volume;
-            if (categoryVolumes[categoryKey]! > maxVolume) {
-              maxVolume = categoryVolumes[categoryKey]!;
-            }
-          }
-        }
-
-        // Normalize category volumes to 0-100 percentages
-        final muscleVolumePercentages = <String, double>{};
-        if (maxVolume > 0) {
-          for (final entry in categoryVolumes.entries) {
-            muscleVolumePercentages[entry.key] =
-                (entry.value / maxVolume * 100).clamp(0.0, 100.0);
-          }
-        }
-
-        // Build top exercises
-        final exerciseCounts = <String, int>{};
-        final exerciseLastSets = <String, (double, int)>{};
-        final exerciseWeightDeltas = <String, double>{};
-
-        for (final workout in thisWeekWorkouts) {
-          for (final ex in workout.exercises) {
-            exerciseCounts[ex.name] = (exerciseCounts[ex.name] ?? 0) + 1;
-            final lastSet = ex.sets.lastWhere(
-              (s) => s.isCompleted,
-              orElse: () => ex.sets.first,
-            );
-            exerciseLastSets[ex.name] =
-                (lastSet.weight ?? 0, lastSet.reps ?? 0);
-            // TODO: Calculate weight delta from previous week
-            exerciseWeightDeltas[ex.name] = 0;
-          }
-        }
-
-        final topExercises = exerciseCounts.entries
-            .map((e) => TopExerciseData(
-                  name: e.key,
-                  sessionCount: e.value,
-                  lastWeight: exerciseLastSets[e.key]!.$1,
-                  lastReps: exerciseLastSets[e.key]!.$2,
-                  weightDelta: exerciseWeightDeltas[e.key]!,
-                  measurementUnit: 'kg',
-                ))
-            .toList()
-          ..sort((a, b) => b.sessionCount.compareTo(a.sessionCount));
-
-        // Build recent workouts
-        final recentWorkouts = thisWeekWorkouts.take(5).map((w) {
-          double vol = 0;
-          final categories = <String>{};
-          for (final ex in w.exercises) {
-            categories.add(ex.category.name);
-            for (final set in ex.sets) {
-              if (set.isCompleted) {
-                vol += (set.weight ?? 0) * (set.reps ?? 0);
-              }
-            }
-          }
-          return RecentWorkoutData(
-            id: w.id,
-            name: w.name,
-            date: w.startTime ?? DateTime.now(),
-            durationMinutes: w.duration?.inMinutes ?? 0,
-            exerciseCount: w.exercises.length,
-            totalVolume: vol,
-            muscleGroups: categories.toList(),
-          );
-        }).toList();
+      data: (weeklyData) {
 
         return RefreshIndicator(
           onRefresh: () async {
-            ref.invalidate(historicalWorkoutsProvider);
+            ref.invalidate(weeklyAnalyticsProvider);
           },
           child: SingleChildScrollView(
             physics: const AlwaysScrollableScrollPhysics(),
@@ -269,9 +163,9 @@ class SimplifiedAnalyticsDashboard extends ConsumerWidget {
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 16),
                   child: HeroStatSection(
-                    workoutCount: thisWeekWorkouts.length,
-                    previousWeekCount: lastWeekWorkouts.length,
-                    weeklyGoal: 5, // TODO: from settings
+                    workoutCount: weeklyData.weeklyWorkoutCount,
+                    previousWeekCount: weeklyData.previousWeekWorkoutCount,
+                    weeklyGoal: weeklyData.weeklyGoal,
                   ),
                 ),
                 const SizedBox(height: 16),
@@ -280,10 +174,10 @@ class SimplifiedAnalyticsDashboard extends ConsumerWidget {
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 16),
                   child: StatsBarWidget(
-                    totalVolume: weeklyVolume,
-                    streakDays: 0, // TODO: from streak provider
-                    prCount: 0, // TODO: from PR provider
-                    measurementUnit: 'kg',
+                    totalVolume: weeklyData.weeklyVolume,
+                    streakDays: weeklyData.currentStreak,
+                    prCount: weeklyData.weeklyPRCount,
+                    measurementUnit: weeklyData.measurementUnit,
                   ),
                 ),
                 const SizedBox(height: 16),
@@ -293,16 +187,16 @@ class SimplifiedAnalyticsDashboard extends ConsumerWidget {
                   padding: const EdgeInsets.symmetric(horizontal: 16),
                   child: _buildBodyHeatmapSection(
                     context,
-                    muscleVolumePercentages,
+                    weeklyData.muscleVolumePercentages,
                     isPremium,
                   ),
                 ),
                 const SizedBox(height: 24),
 
                 // Section 3: Top Exercises
-                if (topExercises.isNotEmpty)
+                if (weeklyData.topExercises.isNotEmpty)
                   TopExercisesSection(
-                    exercises: topExercises.take(4).toList(),
+                    exercises: weeklyData.topExercises.take(4).toList(),
                     onExerciseTap: (name) {
                       context.pushNamed(
                         AppRoutes.exerciseProgressName,
@@ -317,7 +211,8 @@ class SimplifiedAnalyticsDashboard extends ConsumerWidget {
 
                 // Section 4: Recent Activity
                 RecentActivitySection(
-                  workouts: recentWorkouts,
+                  workouts: weeklyData.recentWorkouts,
+                  measurementUnit: weeklyData.measurementUnit,
                   onWorkoutTap: (id) {
                     // TODO: Open workout detail modal
                   },

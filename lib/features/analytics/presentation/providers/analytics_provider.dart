@@ -15,6 +15,9 @@ import 'package:gymbro_flutter_new/features/analytics/data/repositories/workout_
 
 import 'package:flutter/foundation.dart';
 
+// Export weekly analytics provider
+export 'weekly_analytics_provider.dart';
+
 // =============================================================================
 // SYNC STATE MANAGEMENT
 // =============================================================================

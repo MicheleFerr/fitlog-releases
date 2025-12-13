@@ -2071,7 +2071,7 @@
   {
     "id": "ez_barbell_close_grip_preacher_curl_precision_variation",
     "nome": "Curl Presa Stretta Preacher Ez Variante Precision",
-    "focus": "TRIC",
+    "focus": "BICI",
     "imageUrl": "https://static.exercisedb.dev/media/M8IolhQ.gif",
     "difficolta": "Intermedio",
     "tipoEsercizio": "Isolamento",
@@ -2093,7 +2093,7 @@
   {
     "id": "ez_barbell_close_grip_preacher_curl",
     "nome": "Curl Presa Stretta Preacher con Bilanciere EZ",
-    "focus": "TRIC",
+    "focus": "BICI",
     "imageUrl": "https://static.exercisedb.dev/media/hacCyUv.gif",
     "difficolta": "Intermedio",
     "tipoEsercizio": "Isolamento",
@@ -5360,7 +5360,7 @@
   {
     "id": "cable_standing_pulldown_with_rope",
     "nome": "In Piedi Lat Machine (Corda) ai Cavi",
-    "focus": "TRIC",
+    "focus": "LAT",
     "imageUrl": "https://static.exercisedb.dev/media/CvPn9WV.gif",
     "muscoliSecondari": "DELT",
     "difficolta": "Intermedio",
