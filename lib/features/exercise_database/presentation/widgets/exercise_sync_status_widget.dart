@@ -12,11 +12,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
-import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/services/modal_service.dart';
 import 'package:gymbro_flutter_new/shared/domain/entities/sync_status.dart';
 import 'package:gymbro_flutter_new/features/exercise_database/presentation/providers/hybrid_exercise_provider.dart';
-import 'package:gymbro_flutter_new/features/exercise_database/data/services/exercise_sync_service.dart';
 import 'package:gymbro_flutter_new/features/exercise_database/data/services/exercise_version_service.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator.dart';
 
 class ExerciseSyncStatusWidget extends ConsumerWidget {
   const ExerciseSyncStatusWidget({super.key});
@@ -115,18 +115,14 @@ class ExerciseSyncStatusWidget extends ConsumerWidget {
         const SizedBox(width: 8),
         Text(
           text,
-          style: TextStyle(color: color, fontWeight: FontWeight.w500),
+          style: context.textTheme.bodyMedium?.copyWith(
+            color: color,
+            fontWeight: FontWeight.w500,
+          ),
         ),
         if (status == SyncStatus.syncing || status == SyncStatus.loading) ...[
           const SizedBox(width: 8),
-          SizedBox(
-            width: 16,
-            height: 16,
-            child: CircularProgressIndicator(
-              strokeWidth: 2,
-              valueColor: AlwaysStoppedAnimation<Color>(color),
-            ),
-          ),
+          LoadingIndicator(size: 16, color: color),
         ],
       ],
     );
@@ -135,11 +131,7 @@ class ExerciseSyncStatusWidget extends ConsumerWidget {
   Widget _buildLoadingIndicator(BuildContext context) {
     return Row(
       children: [
-        const SizedBox(
-          width: 20,
-          height: 20,
-          child: CircularProgressIndicator(strokeWidth: 2),
-        ),
+        const LoadingIndicator(size: 20),
         const SizedBox(width: 8),
         Text(AppLocalizations.of(context).checkingStatus),
       ],
@@ -158,8 +150,8 @@ class ExerciseSyncStatusWidget extends ConsumerWidget {
         Expanded(
           child: Text(
             '${AppLocalizations.of(context).statusError}: $error',
-            style: TextStyle(
-              color: Theme.of(context).colorScheme.error,
+            style: context.textTheme.bodyMedium?.copyWith(
+              color: context.colors.error,
             ),
           ),
         ),
@@ -204,7 +196,9 @@ class ExerciseSyncStatusWidget extends ConsumerWidget {
               Text(AppLocalizations.of(context).localVersion),
               Text(
                 versionCheck.localVersion,
-                style: const TextStyle(fontWeight: FontWeight.w500),
+                style: context.textTheme.bodyMedium?.copyWith(
+                  fontWeight: FontWeight.w500,
+                ),
               ),
             ],
           ),
@@ -217,7 +211,9 @@ class ExerciseSyncStatusWidget extends ConsumerWidget {
                 Text(AppLocalizations.of(context).remoteVersion),
                 Text(
                   versionCheck.remoteVersion!.version,
-                  style: const TextStyle(fontWeight: FontWeight.w500),
+                  style: context.textTheme.bodyMedium?.copyWith(
+                    fontWeight: FontWeight.w500,
+                  ),
                 ),
               ],
             ),
@@ -229,7 +225,7 @@ class ExerciseSyncStatusWidget extends ConsumerWidget {
               padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
               decoration: BoxDecoration(
                 color: context.colors.warning.withValues(alpha: 0.1),
-                borderRadius: BorderRadius.circular(4),
+                borderRadius: BorderRadius.circular(8),
               ),
               child: Row(
                 mainAxisSize: MainAxisSize.min,
@@ -242,10 +238,9 @@ class ExerciseSyncStatusWidget extends ConsumerWidget {
                   const SizedBox(width: 4),
                   Text(
                     AppLocalizations.of(context).updateAvailable,
-                    style: TextStyle(
+                    style: context.textTheme.labelMedium?.copyWith(
                       color: context.colors.warning,
                       fontWeight: FontWeight.w500,
-                      fontSize: 12,
                     ),
                   ),
                 ],
@@ -266,11 +261,7 @@ class ExerciseSyncStatusWidget extends ConsumerWidget {
       ),
       child: Row(
         children: [
-          const SizedBox(
-            width: 16,
-            height: 16,
-            child: CircularProgressIndicator(strokeWidth: 2),
-          ),
+          const LoadingIndicator(size: 16),
           const SizedBox(width: 8),
           Text(AppLocalizations.of(context).checkingVersion),
         ],
@@ -296,9 +287,8 @@ class ExerciseSyncStatusWidget extends ConsumerWidget {
           Expanded(
             child: Text(
               '${AppLocalizations.of(context).versionCheckError}: $error',
-              style: TextStyle(
-                color: Theme.of(context).colorScheme.error,
-                fontSize: 12,
+              style: context.textTheme.labelMedium?.copyWith(
+                color: context.colors.error,
               ),
             ),
           ),
@@ -452,8 +442,8 @@ class _ExerciseSyncSettingsSheetState extends ConsumerState<ExerciseSyncSettings
                       ),
                       label: Text(
                         AppLocalizations.of(context).clearCache,
-                        style: TextStyle(
-                          color: Theme.of(context).colorScheme.error,
+                        style: context.textTheme.labelLarge?.copyWith(
+                          color: context.colors.error,
                         ),
                       ),
                     ),
@@ -524,7 +514,7 @@ class _ExerciseSyncSettingsSheetState extends ConsumerState<ExerciseSyncSettings
           ),
         );
       },
-      loading: () => const Center(child: CircularProgressIndicator()),
+      loading: () => const Center(child: LoadingIndicator()),
       error: (_, __) => const SizedBox.shrink(),
     );
   }

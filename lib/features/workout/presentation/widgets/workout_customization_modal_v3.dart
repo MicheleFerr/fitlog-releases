@@ -13,6 +13,7 @@ import 'package:gymbro_flutter_new/features/workout/presentation/providers/set_d
 import 'package:gymbro_flutter_new/shared/presentation/providers/app_config_provider.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
+import 'package:gymbro_flutter_new/shared/presentation/services/snackbar_service.dart';
 
 /// Font size options for the selector
 enum _FontSize {
@@ -63,6 +64,21 @@ class _WorkoutCustomizationModalV3State
   late bool _plateCalculator;
   late double _fontSize;
 
+  // ✅ Initial values for change tracking (feedback on close)
+  late bool _initialAutoRestTimer;
+  late bool _initialAutoCollapseCompleted;
+  late bool _initialSoundEnabled;
+  late bool _initialShowCustomTimers;
+  late bool _initialRpeTracking;
+  late bool _initialAutoAdjustWeightFromRpe;
+  late bool _initialAutoAdjustRestFromRpe;
+  late bool _initialSetDurationTracking;
+  late bool _initialShowExerciseNotes;
+  late bool _initialShowExerciseInsights;
+  late bool _initialShowQuickIcons;
+  late bool _initialPlateCalculator;
+  late double _initialFontSize;
+
   @override
   void initState() {
     super.initState();
@@ -88,17 +104,69 @@ class _WorkoutCustomizationModalV3State
         (config.showPreventionIcon ?? false);
     _plateCalculator = config.plateCalculator ?? true;
     _fontSize = config.fontSize;
+
+    // ✅ Store initial values for change tracking
+    _initialAutoRestTimer = _autoRestTimer;
+    _initialAutoCollapseCompleted = _autoCollapseCompleted;
+    _initialSoundEnabled = _soundEnabled;
+    _initialShowCustomTimers = _showCustomTimers;
+    _initialRpeTracking = _rpeTracking;
+    _initialAutoAdjustWeightFromRpe = _autoAdjustWeightFromRpe;
+    _initialAutoAdjustRestFromRpe = _autoAdjustRestFromRpe;
+    _initialSetDurationTracking = _setDurationTracking;
+    _initialShowExerciseNotes = _showExerciseNotes;
+    _initialShowExerciseInsights = _showExerciseInsights;
+    _initialShowQuickIcons = _showQuickIcons;
+    _initialPlateCalculator = _plateCalculator;
+    _initialFontSize = _fontSize;
+  }
+
+  /// ✅ Calculate number of changes made in this session
+  int _countChanges() {
+    int changes = 0;
+    if (_autoRestTimer != _initialAutoRestTimer) changes++;
+    if (_autoCollapseCompleted != _initialAutoCollapseCompleted) changes++;
+    if (_soundEnabled != _initialSoundEnabled) changes++;
+    if (_showCustomTimers != _initialShowCustomTimers) changes++;
+    if (_rpeTracking != _initialRpeTracking) changes++;
+    if (_autoAdjustWeightFromRpe != _initialAutoAdjustWeightFromRpe) changes++;
+    if (_autoAdjustRestFromRpe != _initialAutoAdjustRestFromRpe) changes++;
+    if (_setDurationTracking != _initialSetDurationTracking) changes++;
+    if (_showExerciseNotes != _initialShowExerciseNotes) changes++;
+    if (_showExerciseInsights != _initialShowExerciseInsights) changes++;
+    if (_showQuickIcons != _initialShowQuickIcons) changes++;
+    if (_plateCalculator != _initialPlateCalculator) changes++;
+    if (_fontSize != _initialFontSize) changes++;
+    return changes;
+  }
+
+  /// ✅ Handle modal close - show feedback toast
+  void _handleClose(BuildContext context) {
+    final changes = _countChanges();
+    if (changes > 0) {
+      // Show toast with number of changes
+      final message = changes == 1
+          ? context.l10n.settingsChangedSingular
+          : context.l10n.settingsChangedPlural(changes);
+      SnackBarService.showInfo(context, message);
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
-    return DraggableScrollableSheet(
-      initialChildSize: 0.65,
-      minChildSize: 0.4,
-      maxChildSize: 0.9,
-      builder: (context, scrollController) => Container(
+    return PopScope(
+      onPopInvokedWithResult: (didPop, result) {
+        if (didPop) {
+          _handleClose(context);
+        }
+      },
+      child: DraggableScrollableSheet(
+        initialChildSize: 0.65,
+        minChildSize: 0.4,
+        maxChildSize: 0.9,
+        builder: (context, scrollController) => DecoratedBox(
         decoration: BoxDecoration(
           color: theme.colorScheme.surface,
           borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
@@ -385,7 +453,8 @@ class _WorkoutCustomizationModalV3State
           ],
         ),
       ),
-    );
+    ),
+  );
   }
 
   // === BUILDERS ===
@@ -399,7 +468,7 @@ class _WorkoutCustomizationModalV3State
   }) {
     final theme = Theme.of(context);
 
-    return Container(
+    return DecoratedBox(
       decoration: BoxDecoration(
         color: theme.colorScheme.surfaceContainerLow,
         borderRadius: BorderRadius.circular(16),
@@ -419,7 +488,7 @@ class _WorkoutCustomizationModalV3State
                   padding: const EdgeInsets.all(8),
                   decoration: BoxDecoration(
                     color: color.withValues(alpha: 0.1),
-                    borderRadius: BorderRadius.circular(10),
+                    borderRadius: BorderRadius.circular(12),
                   ),
                   child: Icon(icon, color: color, size: 20),
                 ),
@@ -454,7 +523,7 @@ class _WorkoutCustomizationModalV3State
   }) {
     final theme = Theme.of(context);
 
-    return Container(
+    return DecoratedBox(
       decoration: BoxDecoration(
         color: theme.colorScheme.surfaceContainerLow,
         borderRadius: BorderRadius.circular(16),
@@ -472,7 +541,7 @@ class _WorkoutCustomizationModalV3State
             padding: const EdgeInsets.all(8),
             decoration: BoxDecoration(
               color: color.withValues(alpha: 0.1),
-              borderRadius: BorderRadius.circular(10),
+              borderRadius: BorderRadius.circular(12),
             ),
             child: Icon(icon, color: color, size: 20),
           ),

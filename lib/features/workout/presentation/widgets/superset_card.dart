@@ -10,6 +10,7 @@ import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
+import 'package:gymbro_flutter_new/features/workout/presentation/widgets/tut_info_dialog.dart';
 
 /// Tier-1 SupersetCard che mostra tutti gli esercizi del superset in una singola card
 class SupersetCard extends ConsumerStatefulWidget {
@@ -125,7 +126,7 @@ class _SupersetCardState extends ConsumerState<SupersetCard> {
       child: GestureDetector(
         onTap: widget.isReorderMode ? null : widget.onTap,
         onLongPress: widget.isReorderMode ? null : () => _showSupersetOptions(context),
-        child: Container(
+        child: DecoratedBox(
           decoration: BoxDecoration(
             color: context.colors.surfaceContainer,
             borderRadius: BorderRadius.circular(16),
@@ -188,9 +189,8 @@ class _SupersetCardState extends ConsumerState<SupersetCard> {
             const SizedBox(height: 2),
             Text(
               label,
-              style: TextStyle(
+              style: context.textTheme.labelSmall?.copyWith(
                 color: context.colors.surface,
-                fontSize: 10,
                 fontWeight: FontWeight.w500,
               ),
               textAlign: TextAlign.center,
@@ -434,7 +434,9 @@ class _SupersetCardState extends ConsumerState<SupersetCard> {
               leading: Icon(AppIcons.delete, color: context.colors.error),
               title: Text(
                 context.l10n.deleteSuperset,
-                style: TextStyle(color: context.colors.error),
+                style: context.textTheme.bodyLarge?.copyWith(
+                  color: context.colors.error,
+                ),
               ),
               onTap: () {
                 Navigator.pop(context);
@@ -567,7 +569,7 @@ class _SupersetCardState extends ConsumerState<SupersetCard> {
                   },
                   borderRadius: BorderRadius.circular(8),
                   child: Padding(
-                    padding: const EdgeInsets.all(6),
+                    padding: const EdgeInsets.all(8),
                     child: SemanticIcon(
                       icon: AppIcons.edit,
                       semanticLabel: l10n.edit,
@@ -597,6 +599,10 @@ class _SupersetCardState extends ConsumerState<SupersetCard> {
     final weight = exerciseData?.actualWeight ?? exerciseData?.targetWeight ?? 0.0;
     final reps = exerciseData?.actualReps ?? exerciseData?.targetReps ?? 0;
 
+    // ✅ TUT visibility controlled by setDurationTracking toggle
+    final config = ref.watch(appConfigProvider);
+    final showTut = exercise.tut != null && (config.setDurationTracking ?? false);
+
     // Truncate exercise name if too long
     final maxNameLength = displayMode == SetDisplayMode.compact ? 12 : 16;
     final displayName = exercise.name.length > maxNameLength
@@ -613,13 +619,12 @@ class _SupersetCardState extends ConsumerState<SupersetCard> {
             color: isCompleted
                 ? context.colors.tertiary.withValues(alpha: 0.2)
                 : context.colors.primary.withValues(alpha: 0.1),
-            borderRadius: BorderRadius.circular(4),
+            borderRadius: BorderRadius.circular(8),
           ),
           child: Center(
             child: Text(
               String.fromCharCode(65 + index), // A, B, C...
-              style: TextStyle(
-                fontSize: 10,
+              style: context.textTheme.labelSmall?.copyWith(
                 fontWeight: FontWeight.bold,
                 color: isCompleted
                     ? context.colors.tertiary
@@ -645,6 +650,47 @@ class _SupersetCardState extends ConsumerState<SupersetCard> {
           ),
         ),
 
+        // ✅ TUT chip (if enabled and available) - Unified design with tap action
+        if (showTut) ...[
+          const SizedBox(width: 4),
+          GestureDetector(
+            onTap: () => showTutInfoBottomSheet(context, exercise.tut!),
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+              decoration: BoxDecoration(
+                color: context.colors.secondary.withValues(alpha: 0.15),
+                borderRadius: BorderRadius.circular(8),
+                border: Border.all(
+                  color: context.colors.secondary.withValues(alpha: 0.4),
+                  width: 1,
+                ),
+              ),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  SemanticIcon(
+                    icon: AppIcons.timer,
+                    semanticLabel: 'TUT',
+                    size: 12, // Compact size for superset row
+                    color: context.colors.secondary,
+                  ),
+                  const SizedBox(width: 3),
+                  Text(
+                    exercise.tut!,
+                    style: context.textTheme.labelSmall?.copyWith(
+                      fontSize: 10, // Slightly smaller for superset row
+                      fontWeight: FontWeight.w600,
+                      color: context.colors.secondary,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
+
+        const SizedBox(width: 4),
+
         // Weight × Reps
         Text(
           '${weight.toStringAsFixed(1)} × $reps',
@@ -661,12 +707,11 @@ class _SupersetCardState extends ConsumerState<SupersetCard> {
             padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 1),
             decoration: BoxDecoration(
               color: _getRPEColor(exerciseData!.rpe!).withValues(alpha: 0.15),
-              borderRadius: BorderRadius.circular(4),
+              borderRadius: BorderRadius.circular(8),
             ),
             child: Text(
               '${exerciseData.rpe}',
-              style: TextStyle(
-                fontSize: 9,
+              style: context.textTheme.labelSmall?.copyWith(
                 fontWeight: FontWeight.bold,
                 color: _getRPEColor(exerciseData.rpe!),
               ),

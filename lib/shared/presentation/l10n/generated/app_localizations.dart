@@ -1556,6 +1556,18 @@ abstract class AppLocalizations {
   /// **'Close'**
   String get close;
 
+  /// Message when exactly one setting was changed
+  ///
+  /// In en, this message translates to:
+  /// **'1 setting changed'**
+  String get settingsChangedSingular;
+
+  /// Message when multiple settings were changed
+  ///
+  /// In en, this message translates to:
+  /// **'{count} settings changed'**
+  String settingsChangedPlural(int count);
+
   /// Fullscreen button tooltip
   ///
   /// In en, this message translates to:
@@ -33273,7 +33285,7 @@ abstract class AppLocalizations {
   /// Description text explaining import functionality
   ///
   /// In en, this message translates to:
-  /// **'This will import all exercises from assets/data/exercises.json to Firebase Firestore.'**
+  /// **'This will import all exercises from the exercise database to Firebase Firestore.'**
   String get importExercisesDescription;
 
   /// Status message while testing exercise conversion
@@ -33330,11 +33342,11 @@ abstract class AppLocalizations {
   /// **'Import Successful'**
   String get importSuccessTitle;
 
-  /// No description provided for @importSuccessMessage.
+  /// Success dialog message after exercise import
   ///
   /// In en, this message translates to:
-  /// **'Successfully imported {count} workouts to your history.'**
-  String importSuccessMessage(int count);
+  /// **'All exercises have been imported to Firebase. You can now use them in the app!'**
+  String get importExercisesSuccessMessage;
 
   /// Dialog title when import fails
   ///
@@ -40514,6 +40526,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Import Complete!'**
   String get importComplete;
+
+  /// No description provided for @importSuccessMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Successfully imported {count} workouts to your history.'**
+  String importSuccessMessage(int count);
 
   /// No description provided for @importFailedMessage.
   ///

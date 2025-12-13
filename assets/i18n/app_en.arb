@@ -966,6 +966,19 @@
   "@close": {
     "description": "Close button"
   },
+  "settingsChangedSingular": "1 setting changed",
+  "@settingsChangedSingular": {
+    "description": "Message when exactly one setting was changed"
+  },
+  "settingsChangedPlural": "{count} settings changed",
+  "@settingsChangedPlural": {
+    "description": "Message when multiple settings were changed",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
   "fullscreen": "Fullscreen",
   "@fullscreen": {
     "description": "Fullscreen button tooltip"
@@ -22561,7 +22574,7 @@
   "@importAllExercises": {
     "description": "Button label to import all exercises from JSON"
   },
-  "importExercisesDescription": "This will import all exercises from assets/data/exercises.json to Firebase Firestore.",
+  "importExercisesDescription": "This will import all exercises from the exercise database to Firebase Firestore.",
   "@importExercisesDescription": {
     "description": "Description text explaining import functionality"
   },
@@ -22601,9 +22614,9 @@
   "@importSuccessTitle": {
     "description": "Dialog title for successful import"
   },
-  "importSuccessMessage": "All exercises have been imported to Firebase. You can now use them in the app!",
-  "@importSuccessMessage": {
-    "description": "Success dialog message after import"
+  "importExercisesSuccessMessage": "All exercises have been imported to Firebase. You can now use them in the app!",
+  "@importExercisesSuccessMessage": {
+    "description": "Success dialog message after exercise import"
   },
   "importFailedTitle": "Import Failed",
   "@importFailedTitle": {

@@ -187,7 +187,7 @@ class _ExerciseDetailsModalState extends State<ExerciseDetailsModal> {
             height: 36,
             decoration: BoxDecoration(
               color: context.colors.primary.withValues(alpha: 0.1),
-              borderRadius: BorderRadius.circular(10),
+              borderRadius: BorderRadius.circular(12),
             ),
             child: Icon(
               icon,
@@ -375,25 +375,6 @@ class _ExerciseDetailsModalState extends State<ExerciseDetailsModal> {
             const SizedBox(height: 12),
           ],
 
-          if (widget.exercise.warmupSets != null) ...[
-            _buildWarmupPhase(
-              context,
-              icon: '🏋️',
-              title: context.l10n.warmupSetsLabel,
-              content: widget.exercise.warmupSets!,
-              isMonospace: true,
-            ),
-            const SizedBox(height: 12),
-          ],
-
-          if (widget.exercise.tempoWarmup != null) ...[
-            _buildWarmupPhase(
-              context,
-              icon: '⏱️',
-              title: context.l10n.warmupTimeLabel,
-              content: widget.exercise.tempoWarmup!,
-            ),
-          ],
         ],
       ),
     );
@@ -508,9 +489,7 @@ class _ExerciseDetailsModalState extends State<ExerciseDetailsModal> {
 
   bool _hasWarmupProtocol() {
     return widget.exercise.mobilitaPre != null ||
-        widget.exercise.attivazionePre != null ||
-        widget.exercise.warmupSets != null ||
-        widget.exercise.tempoWarmup != null;
+        widget.exercise.attivazionePre != null;
   }
 
   void _handleAddWarmupExercise(WarmupSuggestion suggestion) {

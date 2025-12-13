@@ -15,9 +15,9 @@ library;
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
 import 'package:gymbro_flutter_new/features/analytics/presentation/providers/workout_analytics_provider.dart';
-// TODO: Removed dead pr_celebration_widget.dart - use pr_celebration_overlay.dart if needed
 import 'package:gymbro_flutter_new/features/analytics/presentation/widgets/workout_comparison_widget.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
@@ -293,12 +293,8 @@ class WorkoutAnalyticsBar extends ConsumerWidget {
           ],
         ),
 
-        // PR celebrations if any
-        // TODO: PRCelebrationWidget removed - use PRCelebrationOverlay instead
-        if (hasNewPRs) ...[
-          const SizedBox(height: 12),
-          // const PRCelebrationWidget(), // Removed during analytics cleanup
-        ],
+        // PR celebrations are handled via PRCelebrationOverlay elsewhere
+        // No widget needed here
 
         // Workout comparison if available
         const SizedBox(height: 12),
@@ -321,17 +317,15 @@ class WorkoutAnalyticsBar extends ConsumerWidget {
         const SizedBox(height: 2),
         Text(
           value,
-          style: TextStyle(
+          style: context.textTheme.labelMedium?.copyWith(
             fontWeight: FontWeight.bold,
-            fontSize: 12,
             color: color,
           ),
         ),
         Text(
           label,
-          style: TextStyle(
-            fontSize: 10,
-            color: Theme.of(context).colorScheme.onSurfaceVariant,
+          style: context.textTheme.labelSmall?.copyWith(
+            color: context.colors.onSurfaceVariant,
           ),
         ),
       ],

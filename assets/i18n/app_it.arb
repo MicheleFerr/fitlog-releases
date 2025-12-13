@@ -373,6 +373,8 @@
   "exportLimits": "Limiti Esportazione",
   "yourCurrentLimits": "I tuoi attuali limiti di esportazione:",
   "close": "Chiudi",
+  "settingsChangedSingular": "1 impostazione modificata",
+  "settingsChangedPlural": "{count} impostazioni modificate",
   "fullscreen": "Schermo Intero",
   "limitReached": "Limite Raggiunto",
   "upgradeToExportMore": "Aggiorna a premium per esportare più schede con dati analitici.",
@@ -11647,7 +11649,7 @@
   "@importAllExercises": {
     "description": "Button label to import all exercises from JSON"
   },
-  "importExercisesDescription": "Questo importerà tutti gli esercizi da assets/data/exercises.json a Firebase Firestore.",
+  "importExercisesDescription": "Questo importerà tutti gli esercizi dal database esercizi a Firebase Firestore.",
   "@importExercisesDescription": {
     "description": "Description text explaining import functionality"
   },
@@ -11687,9 +11689,9 @@
   "@importSuccessTitle": {
     "description": "Dialog title for successful import"
   },
-  "importSuccessMessage": "Tutti gli esercizi sono stati importati su Firebase. Ora puoi usarli nell'app!",
-  "@importSuccessMessage": {
-    "description": "Success dialog message after import"
+  "importExercisesSuccessMessage": "Tutti gli esercizi sono stati importati su Firebase. Ora puoi usarli nell'app!",
+  "@importExercisesSuccessMessage": {
+    "description": "Success dialog message after exercise import"
   },
   "@importFailed": {
     "description": "Error status message when import fails"

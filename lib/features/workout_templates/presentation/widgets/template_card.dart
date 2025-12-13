@@ -23,12 +23,12 @@ import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_locali
 import 'package:gymbro_flutter_new/features/workout_templates/domain/entities/workout_template.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
 
-/// @deprecated Use [CommunityTemplateCard] instead to avoid naming conflicts
-/// with workout internal TemplateCard widget.
-@Deprecated('Use CommunityTemplateCard instead - avoids naming conflict with workout TemplateCard')
-typedef TemplateCard = CommunityTemplateCard;
-
+/// Card widget for displaying community/public workout templates.
+///
+/// This widget is designed for shareable templates in the community feature.
+/// For internal workout templates, use the TemplateCard from the workout feature.
 class CommunityTemplateCard extends StatelessWidget {
 
   const CommunityTemplateCard({
@@ -83,7 +83,7 @@ class CommunityTemplateCard extends StatelessWidget {
                   Icon(
                     _getCategoryIcon(template.category),
                     color: context.colors.surface,
-                    size: 20,
+                    size: AppIconSize.small,
                   ),
                   const SizedBox(width: 8),
                   Expanded(
@@ -160,6 +160,7 @@ class CommunityTemplateCard extends StatelessWidget {
                     Row(
                       children: [
                         _buildStat(
+                          context,
                           AppIcons.workout,
                           '${template.exercises.length}',
                           colorScheme,
@@ -167,6 +168,7 @@ class CommunityTemplateCard extends StatelessWidget {
                         const SizedBox(width: 12),
                         if (template.estimatedDurationMinutes != null)
                           _buildStat(
+                            context,
                             AppIcons.timer,
                             '${template.estimatedDurationMinutes}m',
                             colorScheme,
@@ -174,6 +176,7 @@ class CommunityTemplateCard extends StatelessWidget {
                         if (template.visibility == TemplateVisibility.public) ...[
                           const SizedBox(width: 12),
                           _buildStat(
+                            context,
                             AppIcons.star,
                             template.averageRating.toStringAsFixed(1),
                             colorScheme,
@@ -204,7 +207,7 @@ class CommunityTemplateCard extends StatelessWidget {
                         HapticFeedback.lightImpact();
                         onEdit!();
                       },
-                      icon: Icon(AppIcons.edit, size: 18),
+                      icon: Icon(AppIcons.edit, size: AppIconSize.small),
                       tooltip: 'Edit',
                     ),
                   if (onShare != null)
@@ -213,7 +216,7 @@ class CommunityTemplateCard extends StatelessWidget {
                         HapticFeedback.lightImpact();
                         onShare!();
                       },
-                      icon: Icon(AppIcons.share, size: 18),
+                      icon: Icon(AppIcons.share, size: AppIconSize.small),
                       tooltip: 'Share',
                     ),
                   if (onDelete != null)
@@ -224,7 +227,7 @@ class CommunityTemplateCard extends StatelessWidget {
                       },
                       icon: Icon(
                         AppIcons.delete,
-                        size: 18,
+                        size: AppIconSize.small,
                         color: colorScheme.error,
                       ),
                       tooltip: 'Delete',
@@ -238,7 +241,7 @@ class CommunityTemplateCard extends StatelessWidget {
     );
   }
   
-  Widget _buildStat(IconData icon, String value, ColorScheme colorScheme) {
+  Widget _buildStat(BuildContext context, IconData icon, String value, ColorScheme colorScheme) {
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
@@ -250,8 +253,7 @@ class CommunityTemplateCard extends StatelessWidget {
         const SizedBox(width: 2),
         Text(
           value,
-          style: TextStyle(
-            fontSize: 11,
+          style: context.textTheme.labelSmall?.copyWith(
             color: colorScheme.onSurfaceVariant,
             fontWeight: FontWeight.w500,
           ),

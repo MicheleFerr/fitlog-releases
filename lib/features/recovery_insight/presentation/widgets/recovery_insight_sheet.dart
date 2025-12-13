@@ -53,7 +53,7 @@ class _RecoveryInsightSheetState extends ConsumerState<RecoveryInsightSheet> {
   Widget build(BuildContext context) {
     final insightAsync = ref.watch(recoveryInsightProvider);
     final sleepRecordsAsync = ref.watch(sleepRecordsProvider);
-    final isPro = ref.watch(isPremiumProvider);
+    final isPro = ref.watch(isPremiumUserProvider);
     final l10n = context.l10n;
 
     final safeMax = ModalService.safeMaxChildSize(context, preferredMax: 0.95);
@@ -64,7 +64,7 @@ class _RecoveryInsightSheetState extends ConsumerState<RecoveryInsightSheet> {
       snap: true,
       snapSizes: [0.6, safeMax],
       builder: (context, scrollController) {
-        return Container(
+        return DecoratedBox(
           decoration: BoxDecoration(
             color: context.colors.surface,
             borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
@@ -286,7 +286,7 @@ class _RecoveryInsightSheetState extends ConsumerState<RecoveryInsightSheet> {
                   children: [
                     Text(
                       insight.category.emoji,
-                      style: const TextStyle(fontSize: 24),
+                      style: context.textTheme.headlineSmall,
                     ),
                     const SizedBox(width: 8),
                     Text(
@@ -348,7 +348,7 @@ class _RecoveryInsightSheetState extends ConsumerState<RecoveryInsightSheet> {
                       Container(
                         height: 12,
                         decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(6),
+                          borderRadius: BorderRadius.circular(8),
                           color: isFilled
                               ? dotColor
                               : context.colors.surfaceContainerHighest,
@@ -509,7 +509,7 @@ class _RecoveryInsightSheetState extends ConsumerState<RecoveryInsightSheet> {
                           height: hasRecord ? 80 * heightPercent : 0,
                           decoration: BoxDecoration(
                             color: barColor,
-                            borderRadius: BorderRadius.circular(6),
+                            borderRadius: BorderRadius.circular(8),
                           ),
                         ),
                         const SizedBox(height: 4),
@@ -668,10 +668,10 @@ class _RecoveryInsightSheetState extends ConsumerState<RecoveryInsightSheet> {
     return Row(
       children: [
         Container(
-          padding: const EdgeInsets.all(10),
+          padding: const EdgeInsets.all(12),
           decoration: BoxDecoration(
             color: color.withValues(alpha: 0.1),
-            borderRadius: BorderRadius.circular(10),
+            borderRadius: BorderRadius.circular(12),
           ),
           child: Icon(icon, color: color, size: AppIconSize.small),
         ),
@@ -728,11 +728,11 @@ class _RecoveryInsightSheetState extends ConsumerState<RecoveryInsightSheet> {
           Icon(
             AppIcons.star,
             color: context.colors.primary,
-            size: AppIconSize.extraLarge,
+            size: AppIconSize.xlarge,
           ),
           const SizedBox(height: 12),
           Text(
-            l10n.proFeature,
+            l10n.premiumFeature,
             style: context.textTheme.titleMedium?.copyWith(
               fontWeight: FontWeight.bold,
               color: context.colors.primary,

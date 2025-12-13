@@ -129,8 +129,7 @@ class _ExerciseQuickEditCardState extends ConsumerState<ExerciseQuickEditCard> {
                           const SizedBox(width: 4),
                           Text(
                             'NO PESI',
-                            style: TextStyle(
-                              fontSize: 10,
+                            style: context.textTheme.labelSmall?.copyWith(
                               fontWeight: FontWeight.bold,
                               color: context.colors.onSecondary,
                             ),
@@ -181,8 +180,7 @@ class _ExerciseQuickEditCardState extends ConsumerState<ExerciseQuickEditCard> {
                       const SizedBox(width: 4),
                       Text(
                         _isExpanded ? 'Meno dettagli' : 'Più dettagli',
-                        style: TextStyle(
-                          fontSize: 12,
+                        style: context.textTheme.labelMedium?.copyWith(
                           color: context.colors.onSurfaceVariant,
                         ),
                       ),
@@ -268,17 +266,7 @@ class _ExerciseQuickEditCardState extends ConsumerState<ExerciseQuickEditCard> {
           width: 100,
         ),
 
-        // Dropdown TUT (Time Under Tension)
-        if (widget.exercise.tempoEsecuzione != null)
-          _QuickDropdown(
-            icon: AppIcons.timer,
-            value: widget.exercise.tempoEsecuzione ?? '',
-            items: values.tutOptions,
-            onChanged: (value) => _updateField('tempoEsecuzione', value),
-            tooltip: l10n.tempoEsecuzione,
-            width: 120,
-            color: context.colors.tertiary,
-          ),
+        // TUT (Time Under Tension) - rimosso dal JSON
       ],
     );
   }
@@ -339,15 +327,7 @@ class _ExerciseQuickEditCardState extends ConsumerState<ExerciseQuickEditCard> {
           const SizedBox(height: 8),
         ],
 
-        // Tempo note se presente
-        if (widget.exercise.tempoNote != null) ...[
-          _buildExpandedField(
-            context,
-            'Nota TUT',
-            widget.exercise.tempoNote!,
-            AppIcons.schedule,
-          ),
-        ],
+        // Tempo note - rimosso dal JSON
       ],
     );
   }
@@ -358,8 +338,7 @@ class _ExerciseQuickEditCardState extends ConsumerState<ExerciseQuickEditCard> {
       children: [
         Text(
           label,
-          style: TextStyle(
-            fontSize: 12,
+          style: context.textTheme.labelMedium?.copyWith(
             fontWeight: FontWeight.bold,
             color: context.colors.onSurfaceVariant,
           ),
@@ -371,7 +350,7 @@ class _ExerciseQuickEditCardState extends ConsumerState<ExerciseQuickEditCard> {
             Chip(
               label: Text(
                 muscle,
-                style: const TextStyle(fontSize: 10),
+                style: context.textTheme.labelSmall,
               ),
               backgroundColor: color.withValues(alpha: 0.1),
               side: BorderSide(color: color.withValues(alpha: 0.3)),
@@ -410,8 +389,7 @@ class _ExerciseQuickEditCardState extends ConsumerState<ExerciseQuickEditCard> {
               children: [
                 Text(
                   label,
-                  style: TextStyle(
-                    fontSize: 11,
+                  style: context.textTheme.labelSmall?.copyWith(
                     fontWeight: FontWeight.bold,
                     color: context.colors.onSurfaceVariant,
                   ),
@@ -419,8 +397,7 @@ class _ExerciseQuickEditCardState extends ConsumerState<ExerciseQuickEditCard> {
                 const SizedBox(height: 2),
                 Text(
                   value,
-                  style: TextStyle(
-                    fontSize: 12,
+                  style: context.textTheme.labelMedium?.copyWith(
                     color: context.colors.onSurface,
                   ),
                 ),
@@ -447,7 +424,7 @@ class _ExerciseQuickEditCardState extends ConsumerState<ExerciseQuickEditCard> {
         child: Row(
           children: [
             ClipRRect(
-              borderRadius: BorderRadius.circular(6),
+              borderRadius: BorderRadius.circular(8),
               child: Image.network(
                 widget.exercise.imageUrl!,
                 width: 40,
@@ -472,8 +449,7 @@ class _ExerciseQuickEditCardState extends ConsumerState<ExerciseQuickEditCard> {
                 children: [
                   Text(
                     'Immagine esercizio',
-                    style: TextStyle(
-                      fontSize: 11,
+                    style: context.textTheme.labelSmall?.copyWith(
                       fontWeight: FontWeight.bold,
                       color: context.colors.onSurfaceVariant,
                     ),
@@ -481,8 +457,7 @@ class _ExerciseQuickEditCardState extends ConsumerState<ExerciseQuickEditCard> {
                   const SizedBox(height: 2),
                   Text(
                     'Tieni premuto per anteprima',
-                    style: TextStyle(
-                      fontSize: 10,
+                    style: context.textTheme.labelSmall?.copyWith(
                       color: context.colors.onSurfaceVariant.withValues(alpha: 0.7),
                     ),
                   ),
@@ -581,7 +556,7 @@ class _ExerciseQuickEditCardState extends ConsumerState<ExerciseQuickEditCard> {
                       const SizedBox(height: 8),
                       Text(
                         'Errore caricamento immagine',
-                        style: TextStyle(
+                        style: context.textTheme.bodySmall?.copyWith(
                           color: context.colors.onSurfaceVariant,
                         ),
                       ),
@@ -691,8 +666,7 @@ class _QuickDropdown extends StatelessWidget {
                     Flexible(
                       child: Text(
                         item,
-                        style: TextStyle(
-                          fontSize: 12,
+                        style: context.textTheme.labelMedium?.copyWith(
                           color: color,
                         ),
                         overflow: TextOverflow.ellipsis,

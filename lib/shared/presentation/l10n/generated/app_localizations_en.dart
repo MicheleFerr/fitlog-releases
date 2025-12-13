@@ -808,6 +808,14 @@ class AppLocalizationsEn extends AppLocalizations {
   String get close => 'Close';
 
   @override
+  String get settingsChangedSingular => '1 setting changed';
+
+  @override
+  String settingsChangedPlural(int count) {
+    return '$count settings changed';
+  }
+
+  @override
   String get fullscreen => 'Fullscreen';
 
   @override
@@ -18539,7 +18547,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get importExercisesDescription =>
-      'This will import all exercises from assets/data/exercises.json to Firebase Firestore.';
+      'This will import all exercises from the exercise database to Firebase Firestore.';
 
   @override
   String get testingExercise => '🧪 Testing single exercise conversion...';
@@ -18572,9 +18580,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get importSuccessTitle => 'Import Successful';
 
   @override
-  String importSuccessMessage(int count) {
-    return 'Successfully imported $count workouts to your history.';
-  }
+  String get importExercisesSuccessMessage =>
+      'All exercises have been imported to Firebase. You can now use them in the app!';
 
   @override
   String get importFailedTitle => 'Import Failed';
@@ -22679,6 +22686,11 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get importComplete => 'Import Complete!';
+
+  @override
+  String importSuccessMessage(int count) {
+    return 'Successfully imported $count workouts to your history.';
+  }
 
   @override
   String get importFailedMessage =>
