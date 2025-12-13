@@ -7244,26 +7244,6 @@
     "countingMode": "weighted"
   },
   {
-    "id": "band_straight_leg_deadlift",
-    "nome": "Stacco Gambe Tese con Elastico",
-    "focus": "GLUT,FEMOR",
-    "imageUrl": "https://static.exercisedb.dev/media/KUaoUV8.gif",
-    "muscoliSecondari": "LAT,TRAP",
-    "difficolta": "Intermedio",
-    "tipoEsercizio": "Compound",
-    "attrezzatura": "Elastici",
-    "patternMovimento": "Hinge Pattern",
-    "rangeRipetizioni": "8-15",
-    "noteTecniche": "Passo 1: Stai in piedi con i piedi alla larghezza delle spalle e posiziona l'elastico sotto i piedi. | Passo 2: Tieni l'elastico con entrambe le mani, palmi rivolti verso il corpo, e mantieni le braccia dritte. | Passo 3: Attiva il core e mantieni una leggera piegatura delle ginocchia. | Passo 4: Inclinati lentamente in avanti dai fianchi, mantenendo la schiena dritta e il petto sollevato. | Passo 5: Abbassa l'elastico verso il suolo mantenendo le gambe dritte. | Passo 6: Fermati un momento in basso, poi contrai glutei e ischiocrurali per tornare alla posizione di partenza. | Passo 7: Ripeti per il numero desiderato di ripetizioni.",
-    "mobilitaPre": "Cerchi con le braccia 2x15, aperture con elastico 2x20, rotazioni toraciche 2x10",
-    "attivazionePre": "Lat pulldown con elastico 2x15, scapular pull-up 2x8, face pull 2x15",
-    "aliases": [
-      "sgtce",
-      "stacco gambe tese"
-    ],
-    "countingMode": "weighted"
-  },
-  {
     "id": "upper_back_stretch",
     "nome": "Stretching Parte Alta Schiena",
     "focus": "LAT,TRAP",

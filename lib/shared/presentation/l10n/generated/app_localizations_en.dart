@@ -4658,6 +4658,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get viewAll => 'View All';
 
   @override
+  String get viewFullHistory => 'View Full History';
+
+  @override
   String get adminInfo => 'Admin Information';
 
   @override

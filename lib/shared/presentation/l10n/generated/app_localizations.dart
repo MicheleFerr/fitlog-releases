@@ -8615,6 +8615,12 @@ abstract class AppLocalizations {
   /// **'View All'**
   String get viewAll;
 
+  /// Button text to view complete workout history
+  ///
+  /// In en, this message translates to:
+  /// **'View Full History'**
+  String get viewFullHistory;
+
   /// Admin info section title
   ///
   /// In en, this message translates to:

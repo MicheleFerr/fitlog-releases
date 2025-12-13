@@ -6132,6 +6132,10 @@
   "@viewAll": {
     "description": "View all button text"
   },
+  "viewFullHistory": "View Full History",
+  "@viewFullHistory": {
+    "description": "Button text to view complete workout history"
+  },
   "adminInfo": "Admin Information",
   "@adminInfo": {
     "description": "Admin info section title"

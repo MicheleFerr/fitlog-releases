@@ -4594,9 +4594,9 @@
   {
     "id": "standing_hamstring_and_calf_stretch_with_strap",
     "nome": "Standing Hamstring and Calf Stretch with Strap",
-    "focus": "FEMOR",
+    "focus": "FEMOR,POLP",
     "imageUrl": "https://static.exercisedb.dev/media/xTjr103.gif",
-    "muscoliSecondari": "POLP",
+    "muscoliSecondari": null,
     "difficolta": "Intermedio",
     "tipoEsercizio": "Compound",
     "attrezzatura": "Corde",
@@ -4918,5 +4918,43 @@
       "wgs"
     ],
     "countingMode": "reps"
+  },
+  {
+    "id": "band_straight_leg_deadlift",
+    "nome": "Band Straight Leg Deadlift",
+    "focus": "GLUT,FEMOR",
+    "imageUrl": "https://static.exercisedb.dev/media/KUaoUV8.gif",
+    "muscoliSecondari": "LAT,TRAP",
+    "difficolta": "Intermedio",
+    "tipoEsercizio": "Compound",
+    "attrezzatura": "Elastici",
+    "patternMovimento": "Hinge Pattern",
+    "rangeRipetizioni": "8-15",
+    "noteTecniche": "Step:1 Stand with your feet shoulder-width apart and place the band around your feet. | Step:2 Hold the band with both hands, palms facing your body, and keep your arms straight. | Step:3 Engage your core and maintain a slight bend in your knees. | Step:4 Slowly hinge forward at your hips, keeping your back straight and chest lifted. | Step:5 Lower the band towards the ground while keeping your legs straight. | Step:6 Pause for a moment at the bottom, then squeeze your glutes and hamstrings to return to the starting position. | Step:7 Repeat for the desired number of repetitions.",
+    "mobilitaPre": "Arm circles 2x15, band pull-aparts 2x20, thoracic rotations 2x10",
+    "attivazionePre": "Band pull-downs 2x15, scapular pull-ups 2x8, face pulls 2x15",
+    "aliases": [
+      "bsld"
+    ],
+    "countingMode": "weighted"
+  },
+  {
+    "id": "fast_band_straight_leg_deadlift",
+    "nome": "Fast Band Straight Leg Deadlift",
+    "focus": "GLUT,FEMOR",
+    "imageUrl": "https://static.exercisedb.dev/media/lRcrlH8.gif",
+    "muscoliSecondari": "LAT,TRAP",
+    "difficolta": "Intermedio",
+    "tipoEsercizio": "Compound",
+    "attrezzatura": "Elastici",
+    "patternMovimento": "Hinge Pattern",
+    "rangeRipetizioni": "8-15",
+    "noteTecniche": "Step:1 Stand with your feet shoulder-width apart and place the band around your feet. | Step:2 Hold the band with both hands, palms facing your body, and keep your arms straight. | Step:3 Engage your core and maintain a slight bend in your knees. | Step:4 Slowly hinge forward at your hips, keeping your back straight and chest lifted. | Step:5 Lower the band towards the ground while keeping your legs straight. | Step:6 Pause for a moment at the bottom, then squeeze your glutes and hamstrings to return to the starting position. | Step:7 Repeat for the desired number of repetitions. Perform with fast intensity.",
+    "mobilitaPre": "Arm circles 2x15, band pull-aparts 2x20, thoracic rotations 2x10",
+    "attivazionePre": "Band pull-downs 2x15, scapular pull-ups 2x8, face pulls 2x15",
+    "aliases": [
+      "fbsld"
+    ],
+    "countingMode": "weighted"
   }
 ]

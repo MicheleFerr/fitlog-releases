@@ -1751,9 +1751,9 @@
   {
     "id": "exercise_ball_one_legged_diagonal_kick_hamstring_curl",
     "nome": "Curl Femorali Diagonale Gamba su Fitball",
-    "focus": "GLUT",
+    "focus": "FEMOR",
     "imageUrl": "https://static.exercisedb.dev/media/GOJKFfO.gif",
-    "muscoliSecondari": "FEMOR,POLP",
+    "muscoliSecondari": "GLUT",
     "difficolta": "Intermedio",
     "tipoEsercizio": "Compound",
     "attrezzatura": "Palla Medica",
@@ -2419,9 +2419,9 @@
   {
     "id": "standing_hamstring_and_calf_stretch_with_strap",
     "nome": "In Piedi Allungamento Femorali e Polpacci",
-    "focus": "FEMOR",
+    "focus": "FEMOR,POLP",
     "imageUrl": "https://static.exercisedb.dev/media/xTjr103.gif",
-    "muscoliSecondari": "POLP",
+    "muscoliSecondari": null,
     "difficolta": "Intermedio",
     "tipoEsercizio": "Compound",
     "attrezzatura": "Corde",
@@ -7178,6 +7178,26 @@
     "aliases": [
       "ubgapaocm",
       "un braccio girata al petto a o"
+    ],
+    "countingMode": "weighted"
+  },
+  {
+    "id": "band_straight_leg_deadlift",
+    "nome": "Stacco Gambe Tese con Elastico",
+    "focus": "GLUT,FEMOR",
+    "imageUrl": "https://static.exercisedb.dev/media/KUaoUV8.gif",
+    "muscoliSecondari": "LAT,TRAP",
+    "difficolta": "Intermedio",
+    "tipoEsercizio": "Compound",
+    "attrezzatura": "Elastici",
+    "patternMovimento": "Hinge Pattern",
+    "rangeRipetizioni": "8-15",
+    "noteTecniche": "Passo 1: Stai in piedi con i piedi alla larghezza delle spalle e posiziona l'elastico sotto i piedi. | Passo 2: Tieni l'elastico con entrambe le mani, palmi rivolti verso il corpo, e mantieni le braccia dritte. | Passo 3: Attiva il core e mantieni una leggera piegatura delle ginocchia. | Passo 4: Inclinati lentamente in avanti dai fianchi, mantenendo la schiena dritta e il petto sollevato. | Passo 5: Abbassa l'elastico verso il suolo mantenendo le gambe dritte. | Passo 6: Fermati un momento in basso, poi contrai glutei e ischiocrurali per tornare alla posizione di partenza. | Passo 7: Ripeti per il numero desiderato di ripetizioni.",
+    "mobilitaPre": "Cerchi con le braccia 2x15, aperture con elastico 2x20, rotazioni toraciche 2x10",
+    "attivazionePre": "Lat pulldown con elastico 2x15, scapular pull-up 2x8, face pull 2x15",
+    "aliases": [
+      "sgtce",
+      "stacco gambe tese"
     ],
     "countingMode": "weighted"
   }

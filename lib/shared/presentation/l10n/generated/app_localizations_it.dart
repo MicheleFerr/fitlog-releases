@@ -4694,6 +4694,9 @@ class AppLocalizationsIt extends AppLocalizations {
   String get viewAll => 'Vedi Tutti';
 
   @override
+  String get viewFullHistory => 'Vedi Cronologia Completa';
+
+  @override
   String get adminInfo => 'Informazioni Admin';
 
   @override

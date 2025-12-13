@@ -1667,6 +1667,7 @@
   "minutesAgo": "{minutes}m fa",
   "justNow": "ora",
   "viewAll": "Vedi Tutti",
+  "viewFullHistory": "Vedi Cronologia Completa",
   "adminInfo": "Informazioni Admin",
   "welcomeAdmin": "Benvenuto, Admin!",
   "adminDashboardDescription": "Gestisci il sistema FitLog Pro e controlla i contributi della community",
