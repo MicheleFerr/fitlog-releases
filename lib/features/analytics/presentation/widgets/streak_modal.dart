@@ -34,6 +34,7 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:gymbro_flutter_new/features/analytics/domain/entities/exercise_history.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/services/snackbar_service.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
@@ -41,7 +42,6 @@ import 'package:intl/intl.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
 import 'package:gymbro_flutter_new/core/cache/user_cache_key_manager.dart';
 
 /// View modes for streak visualization
@@ -1000,12 +1000,7 @@ class _StreakModalState extends State<StreakModal> {
     } catch (e) {
       // Show error snackbar if sharing fails
       if (context.mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('${context.l10n.error}: $e'),
-            backgroundColor: context.colors.error,
-          ),
-        );
+        SnackBarService.showError(context, '${context.l10n.error}: $e');
       }
     }
   }
@@ -1083,7 +1078,7 @@ class _StreakModalState extends State<StreakModal> {
                   _saveCalendarColor(color);
                   Navigator.pop(dialogContext);
                 },
-                child: Container(
+                child: DecoratedBox(
                   decoration: BoxDecoration(
                     color: color,
                     shape: BoxShape.circle,

@@ -17,6 +17,8 @@ import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
 import 'package:gymbro_flutter_new/shared/presentation/services/modal_service.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator.dart';
+import 'package:gymbro_flutter_new/shared/presentation/services/snackbar_service.dart';
 
 /// Modal per creare un nuovo contributo community
 class CreateContributionModal extends ConsumerStatefulWidget {
@@ -280,7 +282,7 @@ class _CreateContributionModalState extends ConsumerState<CreateContributionModa
                             ? const SizedBox(
                                 width: 20,
                                 height: 20,
-                                child: CircularProgressIndicator(strokeWidth: 2),
+                                child: LoadingIndicator(),
                               )
                             : const SemanticIcon(
   icon: AppIcons.send,
@@ -485,12 +487,7 @@ class _CreateContributionModalState extends ConsumerState<CreateContributionModa
     }
 
     if (_selectedExerciseId == null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(context.l10n.selectExerciseWarning),
-          behavior: SnackBarBehavior.floating,
-        ),
-      );
+      SnackBarService.showError(context, context.l10n.selectExerciseWarning);
       return;
     }
 
@@ -515,22 +512,11 @@ class _CreateContributionModalState extends ConsumerState<CreateContributionModa
 
       Navigator.pop(context);
 
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(context.l10n.contributionSubmittedSuccess),
-          backgroundColor: context.colors.success,
-          duration: const Duration(seconds: 3),
-        ),
-      );
+      SnackBarService.showSuccess(context, context.l10n.contributionSubmittedSuccess);
     } catch (e) {
       if (!mounted) return;
 
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(context.l10n.errorWithMessage(e.toString())),
-          backgroundColor: Theme.of(context).colorScheme.error,
-        ),
-      );
+      SnackBarService.showError(context, context.l10n.errorWithMessage(e.toString()));
     } finally {
       if (mounted) {
         setState(() => _isSubmitting = false);

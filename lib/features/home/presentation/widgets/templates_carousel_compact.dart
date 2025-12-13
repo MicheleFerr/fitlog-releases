@@ -194,7 +194,7 @@ class _TemplateCard extends ConsumerWidget {
 
     return SizedBox(
       width: 150,
-      child: Container(
+      child: DecoratedBox(
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(16),
           gradient: LinearGradient(

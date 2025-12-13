@@ -5,7 +5,6 @@ import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_locali
 import 'package:gymbro_flutter_new/features/smart_training/domain/entities/smart_workout_template.dart';
 import 'package:gymbro_flutter_new/features/smart_training/presentation/providers/smart_training_providers.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
-import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
 
 /// Grid widget that displays smart workout templates
 class SmartTemplatesGrid extends ConsumerWidget {
@@ -390,14 +389,14 @@ class SmartTemplateCard extends ConsumerWidget {
         actions: [
           TextButton(
             onPressed: () => Navigator.of(context).pop(),
-            child: const Text('Cancel'),
+            child: Text(AppLocalizations.of(context).cancel),
           ),
           ElevatedButton(
             onPressed: () {
               Navigator.of(context).pop();
               // TODO: Start workout from template
             },
-            child: const Text('Start Workout'),
+            child: Text(AppLocalizations.of(context).startWorkout),
           ),
         ],
       ),

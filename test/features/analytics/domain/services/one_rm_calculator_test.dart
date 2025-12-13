@@ -343,14 +343,43 @@ void main() {
   });
 
   group('isRealisticLift - Sanity Check', () {
-    test('should validate realistic lifts', () {
-      // TODO: BUG IN PRODUCTION CODE - isRealisticLift returns false even for realistic lifts
-      // Investigation needed: why does 60kg x 5 reps with 100kg 1RM return false?
-      // For now, test the reject path which works correctly
+    test('should validate realistic lifts across all rep ranges', () {
+      // FIXED: Previously failed due to overlapping condition logic
+      // Now using proper if-else ranges
+      const oneRM = 100.0;
 
-      // Placeholder - test disabled due to production bug
-      expect(true, true);
-    }, skip: 'BUG: isRealisticLift has logic error - needs production code fix');
+      // 1 rep: up to 105% allowed (adrenaline variance)
+      expect(OneRMCalculator.isRealisticLift(100, 1, oneRM), true);
+      expect(OneRMCalculator.isRealisticLift(105, 1, oneRM), true);
+
+      // 2-3 reps: up to 93% allowed
+      expect(OneRMCalculator.isRealisticLift(90, 3, oneRM), true);
+      expect(OneRMCalculator.isRealisticLift(93, 3, oneRM), true);
+
+      // 4-5 reps: up to 87% allowed
+      expect(OneRMCalculator.isRealisticLift(85, 5, oneRM), true);
+      expect(OneRMCalculator.isRealisticLift(87, 5, oneRM), true);
+
+      // 6-8 reps: up to 80% allowed
+      expect(OneRMCalculator.isRealisticLift(75, 8, oneRM), true);
+      expect(OneRMCalculator.isRealisticLift(80, 8, oneRM), true);
+
+      // 9-12 reps: up to 70% allowed
+      expect(OneRMCalculator.isRealisticLift(65, 12, oneRM), true);
+      expect(OneRMCalculator.isRealisticLift(70, 12, oneRM), true);
+
+      // 13-15 reps: up to 65% allowed
+      expect(OneRMCalculator.isRealisticLift(60, 15, oneRM), true);
+      expect(OneRMCalculator.isRealisticLift(65, 15, oneRM), true);
+
+      // 16-20 reps: up to 60% allowed
+      expect(OneRMCalculator.isRealisticLift(55, 20, oneRM), true);
+      expect(OneRMCalculator.isRealisticLift(60, 20, oneRM), true);
+
+      // 🐛 BUG FIXED: 60kg × 5 reps with 100kg 1RM (60%) now correctly returns TRUE
+      // Previous overlapping conditions caused false negatives
+      expect(OneRMCalculator.isRealisticLift(60, 5, oneRM), true);
+    });
 
     test('should reject unrealistic heavy lifts', () {
       // ESEMPIO PRATICO: 1RM stimato 100kg
@@ -390,9 +419,37 @@ void main() {
       expect(OneRMCalculator.isRealisticLift(0, 5, 100), false);
       expect(OneRMCalculator.isRealisticLift(80, 0, 100), false);
       expect(OneRMCalculator.isRealisticLift(80, 5, 0), false);
-      
+
       // 🐛 BUG PREVENTED: Input zero bypasserebbero validation e
       // corromperebbero database con garbage data.
+    });
+
+    test('should reject lifts above 20 reps', () {
+      // ESEMPIO PRATICO: Above 20 reps, percentages become unreliable
+      const oneRM = 100.0;
+
+      expect(OneRMCalculator.isRealisticLift(50, 21, oneRM), false);
+      expect(OneRMCalculator.isRealisticLift(40, 30, oneRM), false);
+
+      // 🐛 BUG PREVENTED: High-rep sets (21+) have too much variance to validate
+      // accurately - reject to maintain data integrity
+    });
+
+    test('should validate boundary conditions correctly', () {
+      // ESEMPIO PRATICO: Test exact boundary values
+      const oneRM = 100.0;
+
+      // Just at the limit - should pass
+      expect(OneRMCalculator.isRealisticLift(87, 5, oneRM), true);
+      expect(OneRMCalculator.isRealisticLift(80, 8, oneRM), true);
+      expect(OneRMCalculator.isRealisticLift(70, 12, oneRM), true);
+
+      // Just over the limit - should fail
+      expect(OneRMCalculator.isRealisticLift(87.1, 5, oneRM), false);
+      expect(OneRMCalculator.isRealisticLift(80.1, 8, oneRM), false);
+      expect(OneRMCalculator.isRealisticLift(70.1, 12, oneRM), false);
+
+      // 🐛 BUG PREVENTED: Boundary testing ensures no off-by-one errors
     });
   });
 

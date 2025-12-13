@@ -6,6 +6,7 @@ import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
+import 'package:gymbro_flutter_new/shared/presentation/services/snackbar_service.dart';
 
 /// Simple premium screen that works without crashes
 class SimplePremiumScreen extends ConsumerWidget {
@@ -311,12 +312,7 @@ class SimplePremiumScreen extends ConsumerWidget {
     return InkWell(
       onTap: () {
         HapticFeedback.lightImpact();
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(context.l10n.planWillBeAvailableSoon(title)),
-            backgroundColor: theme.colorScheme.primary,
-          ),
-        );
+        SnackBarService.showInfo(context, context.l10n.planWillBeAvailableSoon(title));
       },
       borderRadius: BorderRadius.circular(16),
       child: Container(

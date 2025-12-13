@@ -14,6 +14,7 @@ import 'package:gymbro_flutter_new/features/exercise_database/domain/entities/ex
 import 'package:gymbro_flutter_new/features/admin/presentation/providers/database_manager_provider.dart';
 import 'package:gymbro_flutter_new/features/admin/data/services/database_manager_service.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/services/snackbar_service.dart';
 
 class ExerciseQuickEditCard extends ConsumerStatefulWidget {
 
@@ -490,13 +491,7 @@ class _ExerciseQuickEditCardState extends ConsumerState<ExerciseQuickEditCard> {
       // Mostra feedback se è stato cambiato a corpo libero
       if (field == 'attrezzatura' && value == 'Corpo Libero') {
         if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text('✓ Pesi disabilitati per ${widget.exercise.nome}'),
-              backgroundColor: context.colors.secondary,
-              duration: const Duration(seconds: 2),
-            ),
-          );
+          SnackBarService.showSuccess(context, '✓ Pesi disabilitati per ${widget.exercise.nome}');
         }
       }
     } finally {
@@ -576,8 +571,9 @@ class _ExerciseQuickEditCardState extends ConsumerState<ExerciseQuickEditCard> {
                     onPressed: () {
                       Navigator.of(context).pop();
                       // TODO: Implementa cambio immagine
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text('Cambio immagine - Coming soon')),
+                      SnackBarService.showInfo(
+                        context,
+                        l10n.changeImageComingSoon,
                       );
                     },
                     icon: const Icon(AppIcons.edit),

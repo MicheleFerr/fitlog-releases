@@ -58,7 +58,7 @@ class ProgressionSuggestionBanner extends StatelessWidget {
                 ),
                 if (onDismiss != null)
                   IconButton(
-                    icon: Icon(AppIcons.close, size: AppIconSize.small),
+                    icon: const Icon(AppIcons.close, size: AppIconSize.small),
                     onPressed: onDismiss,
                     padding: EdgeInsets.zero,
                     constraints: const BoxConstraints(),

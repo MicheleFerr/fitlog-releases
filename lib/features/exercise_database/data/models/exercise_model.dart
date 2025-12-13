@@ -16,12 +16,6 @@ class ExerciseModel {
     this.noteTecniche,
     this.mobilitaPre,
     this.attivazionePre,
-    this.warmupSets,
-    this.tempoWarmup,
-    this.drillTecnico,
-    this.prevenzioneInfortuni,
-    this.cooldownConsigliato,
-    this.spiegazioneTermini,
   });
 
   factory ExerciseModel.fromJson(Map<String, dynamic> json) {
@@ -39,12 +33,6 @@ class ExerciseModel {
       noteTecniche: json['noteTecniche']?.isEmpty == true ? null : json['noteTecniche'],
       mobilitaPre: json['mobilitaPre']?.isEmpty == true ? null : json['mobilitaPre'],
       attivazionePre: json['attivazionePre']?.isEmpty == true ? null : json['attivazionePre'],
-      warmupSets: json['warmupSets']?.isEmpty == true ? null : json['warmupSets'],
-      tempoWarmup: json['tempoWarmup']?.isEmpty == true ? null : json['tempoWarmup'],
-      drillTecnico: json['drillTecnico']?.isEmpty == true ? null : json['drillTecnico'],
-      prevenzioneInfortuni: json['prevenzioneInfortuni']?.isEmpty == true ? null : json['prevenzioneInfortuni'],
-      cooldownConsigliato: json['cooldownConsigliato']?.isEmpty == true ? null : json['cooldownConsigliato'],
-      spiegazioneTermini: json['spiegazioneTermini']?.isEmpty == true ? null : json['spiegazioneTermini'],
     );
   }
 
@@ -63,12 +51,6 @@ class ExerciseModel {
       noteTecniche: exercise.noteTecniche,
       mobilitaPre: exercise.mobilitaPre,
       attivazionePre: exercise.attivazionePre,
-      warmupSets: exercise.warmupSets,
-      tempoWarmup: exercise.tempoWarmup,
-      drillTecnico: exercise.drillTecnico,
-      prevenzioneInfortuni: exercise.prevenzioneInfortuni,
-      cooldownConsigliato: exercise.cooldownConsigliato,
-      spiegazioneTermini: exercise.spiegazioneTermini,
     );
   }
   final String id;
@@ -84,12 +66,6 @@ class ExerciseModel {
   final String? noteTecniche;
   final String? mobilitaPre;
   final String? attivazionePre;
-  final String? warmupSets;
-  final String? tempoWarmup;
-  final String? drillTecnico;
-  final String? prevenzioneInfortuni;
-  final String? cooldownConsigliato;
-  final String? spiegazioneTermini;
 
   Exercise toEntity() {
     return Exercise(
@@ -106,12 +82,6 @@ class ExerciseModel {
       noteTecniche: noteTecniche,
       mobilitaPre: mobilitaPre,
       attivazionePre: attivazionePre,
-      warmupSets: warmupSets,
-      tempoWarmup: tempoWarmup,
-      drillTecnico: drillTecnico,
-      prevenzioneInfortuni: prevenzioneInfortuni,
-      cooldownConsigliato: cooldownConsigliato,
-      spiegazioneTermini: spiegazioneTermini,
     );
   }
 
@@ -130,12 +100,6 @@ class ExerciseModel {
       'noteTecniche': noteTecniche,
       'mobilitaPre': mobilitaPre,
       'attivazionePre': attivazionePre,
-      'warmupSets': warmupSets,
-      'tempoWarmup': tempoWarmup,
-      'drillTecnico': drillTecnico,
-      'prevenzioneInfortuni': prevenzioneInfortuni,
-      'cooldownConsigliato': cooldownConsigliato,
-      'spiegazioneTermini': spiegazioneTermini,
     };
   }
 }

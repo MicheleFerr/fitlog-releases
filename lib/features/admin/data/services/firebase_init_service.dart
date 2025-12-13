@@ -7,14 +7,12 @@
 /// Servizio per inizializzare Firebase con i dati degli esercizi
 library;
 
-import 'dart:convert';
 import 'dart:developer';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter/foundation.dart' show kDebugMode;
-import 'package:flutter/services.dart';
 import 'package:gymbro_flutter_new/features/admin/domain/entities/firebase_init_result.dart';
 import 'package:gymbro_flutter_new/features/exercise_database/domain/entities/exercise.dart';
+import 'package:gymbro_flutter_new/features/exercise_database/data/utils/exercise_json_loader.dart';
 
 class FirebaseInitService {
 
@@ -299,11 +297,11 @@ class FirebaseInitService {
     }
   }
 
-  /// Carica esercizi dal file JSON assets
-  Future<List<Exercise>> _loadExercisesFromAssets() async {
+  /// Carica esercizi dal file JSON assets usando ExerciseJsonLoader
+  /// (supporta nuova struttura folder-based)
+  Future<List<Exercise>> _loadExercisesFromAssets({String languageCode = 'it'}) async {
     try {
-      final jsonString = await rootBundle.loadString('assets/data/exercises.json');
-      final List<dynamic> jsonData = json.decode(jsonString);
+      final jsonData = await ExerciseJsonLoader.loadExercises(languageCode);
 
       return jsonData
           .map((json) => Exercise.fromJson(json as Map<String, dynamic>))

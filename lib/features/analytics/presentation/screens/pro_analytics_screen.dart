@@ -45,7 +45,7 @@ class ProAnalyticsScreen extends ConsumerWidget {
       // Custom app bar with gradient
       appBar: AppBar(
         leading: IconButton(
-          icon: Icon(AppIcons.arrowBack, size: AppIconSize.medium),
+          icon: const Icon(AppIcons.arrowBack, size: AppIconSize.medium),
           onPressed: () => context.pop(),
         ),
         title: Row(

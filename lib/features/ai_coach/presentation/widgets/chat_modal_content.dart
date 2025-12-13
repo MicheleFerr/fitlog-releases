@@ -29,6 +29,7 @@ import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
+import 'package:gymbro_flutter_new/shared/presentation/services/snackbar_service.dart';
 
 /// Chat Modal Content - Modal version of AI Coach chat
 ///
@@ -316,9 +317,7 @@ class _ChatModalContentState extends ConsumerState<ChatModalContent> {
   /// Export chat conversation as text
   Future<void> _exportChat(BuildContext context, List<AIMessage> messages) async {
     if (messages.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(context.l10n.noMessagesToExport)),
-      );
+      SnackBarService.showInfo(context, context.l10n.noMessagesToExport);
       return;
     }
 

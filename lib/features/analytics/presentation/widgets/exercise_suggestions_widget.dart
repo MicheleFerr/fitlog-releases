@@ -374,7 +374,7 @@ class _ExerciseSuggestionTile extends StatelessWidget {
           // Add to template button
           IconButton(
             onPressed: () => _openTemplateSelector(context),
-            icon: Icon(
+            icon: const Icon(
               AppIcons.add,
               size: AppIconSize.medium,
             ),

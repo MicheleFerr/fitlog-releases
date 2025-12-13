@@ -10,7 +10,6 @@ library;
 import 'dart:convert';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter/foundation.dart' show kDebugMode;
 import 'package:gymbro_flutter_new/features/exercise_database/domain/entities/exercise.dart';
 
 /// Enum per tipologia attrezzatura con flag peso richiesto

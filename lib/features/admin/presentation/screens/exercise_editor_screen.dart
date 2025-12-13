@@ -17,6 +17,7 @@ import 'package:gymbro_flutter_new/features/workout/presentation/widgets/tut_sel
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator.dart';
+import 'package:gymbro_flutter_new/shared/presentation/services/snackbar_service.dart';
 
 class ExerciseEditorScreen extends ConsumerStatefulWidget { // null = new exercise
 
@@ -75,7 +76,8 @@ class _ExerciseEditorScreenState extends ConsumerState<ExerciseEditorScreen> {
     _descriptionController.text = exercise.noteTecniche ?? '';
     _imageUrlController.text = exercise.imageUrl ?? '';
     _techNoteController.text = exercise.noteTecniche ?? '';
-    _tempoNoteController.text = exercise.tempoNote ?? '';
+    // Note: tempoNote field not in ExerciseDefinition entity - using tempoEsecuzione for TUT
+    _tempoNoteController.text = exercise.tempoEsecuzione ?? '';
     _selectedDifficulty = exercise.difficolta;
     _selectedEquipment = exercise.attrezzatura;
     _selectedExerciseType = exercise.tipoEsercizio;
@@ -412,9 +414,7 @@ class _ExerciseEditorScreenState extends ConsumerState<ExerciseEditorScreen> {
             ? _imageUrlController.text.trim() : null,
         noteTecniche: _techNoteController.text.trim().isNotEmpty
             ? _techNoteController.text.trim() : null,
-        tempoEsecuzione: _selectedTUT,
-        tempoNote: _tempoNoteController.text.trim().isNotEmpty
-            ? _tempoNoteController.text.trim() : null,
+        tempoEsecuzione: _selectedTUT ?? (_tempoNoteController.text.trim().isNotEmpty ? _tempoNoteController.text.trim() : null),
       );
 
       DatabaseOperationResult result;
@@ -428,30 +428,15 @@ class _ExerciseEditorScreenState extends ConsumerState<ExerciseEditorScreen> {
 
       if (mounted) {
         if (result.success) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(result.message),
-              backgroundColor: Theme.of(context).colorScheme.primary,
-            ),
-          );
+          SnackBarService.showSuccess(context, result.message);
           Navigator.of(context).pop(true); // Return true to indicate success
         } else {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(result.message),
-              backgroundColor: Theme.of(context).colorScheme.error,
-            ),
-          );
+          SnackBarService.showError(context, result.message);
         }
       }
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(context.l10n.error),
-            backgroundColor: Theme.of(context).colorScheme.error,
-          ),
-        );
+        SnackBarService.showError(context, context.l10n.error);
       }
     } finally {
       if (mounted) {

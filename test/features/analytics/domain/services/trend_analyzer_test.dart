@@ -1,6 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:gymbro_flutter_new/features/analytics/domain/services/trend_analyzer.dart';
 import 'package:gymbro_flutter_new/features/analytics/domain/services/one_rm_calculator.dart';
+import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise_activity.dart';
 
 void main() {
@@ -1527,6 +1528,7 @@ ExerciseActivity _createActivity(
   DateTime date,
   double volume, {
   String exerciseId = 'test123',
+  ExerciseCategory category = ExerciseCategory.chest,
 }) {
   final weightPerSet = volume / 3; // 3 sets
   return ExerciseActivity(
@@ -1535,6 +1537,7 @@ ExerciseActivity _createActivity(
     exerciseId: exerciseId,
     exerciseName: 'Test Exercise',
     schedaName: 'Test Workout',
+    category: category,
     createdAt: date,
     lastModified: date,
     sets: [
@@ -1581,14 +1584,16 @@ ExerciseActivity _createActivityWithSets(
   DateTime date,
   String exerciseId,
   String exerciseName,
-  List<ExerciseActivitySet> sets,
-) {
+  List<ExerciseActivitySet> sets, {
+  ExerciseCategory category = ExerciseCategory.chest,
+}) {
   return ExerciseActivity(
     id: 'activity_${date.millisecondsSinceEpoch}_$exerciseId',
     email: 'test@example.com',
     exerciseId: exerciseId,
     exerciseName: exerciseName,
     schedaName: 'Test Workout',
+    category: category,
     createdAt: date,
     lastModified: date,
     sets: sets,

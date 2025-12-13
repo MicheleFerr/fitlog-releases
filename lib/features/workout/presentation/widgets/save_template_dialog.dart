@@ -16,6 +16,7 @@ import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
 import 'package:gymbro_flutter_new/shared/presentation/services/snackbar_service.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator.dart';
 
 /// Shows the save template dialog
 Future<AdvancedExerciseTemplate?> showSaveTemplateDialog({
@@ -201,13 +202,10 @@ class _SaveTemplateDialogState extends ConsumerState<SaveTemplateDialog> {
                             ? null
                             : () => _saveTemplate(context),
                         icon: _isSaving
-                            ? SizedBox(
+                            ? const SizedBox(
                                 width: 16,
                                 height: 16,
-                                child: CircularProgressIndicator(
-                                  strokeWidth: 2,
-                                  color: context.colors.onPrimary,
-                                ),
+                                child: LoadingIndicator(),
                               )
                             : const Icon(AppIcons.save, size: AppIconSize.small),
                         label: Text(context.l10n.saveTemplate),
@@ -217,7 +215,7 @@ class _SaveTemplateDialogState extends ConsumerState<SaveTemplateDialog> {
                         child: SizedBox(
                           width: 16,
                           height: 16,
-                          child: CircularProgressIndicator(strokeWidth: 2),
+                          child: LoadingIndicator(),
                         ),
                       ),
                       error: (_, __) => FilledButton.icon(

@@ -29,6 +29,8 @@ import 'package:gymbro_flutter_new/features/workout_templates/presentation/provi
 // import 'package:gymbro_flutter_new/features/workout_templates/presentation/widgets/premium_export_features_widget.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator.dart';
+import 'package:gymbro_flutter_new/shared/presentation/services/snackbar_service.dart';
 
 /// Screen for exporting workout templates
 class TemplateExportScreen extends ConsumerStatefulWidget {
@@ -110,7 +112,7 @@ class _TemplateExportScreenState extends ConsumerState<TemplateExportScreen> {
           foregroundColor: theme.colorScheme.onSurface,
         ),
         body: const Center(
-          child: CircularProgressIndicator(),
+          child: LoadingIndicator(),
         ),
       ),
       error: (error, stack) => Scaffold(
@@ -314,9 +316,7 @@ class _TemplateExportScreenState extends ConsumerState<TemplateExportScreen> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          CircularProgressIndicator(
-            valueColor: AlwaysStoppedAnimation<Color>(theme.colorScheme.primary),
-          ),
+          LoadingIndicator(),
           const SizedBox(height: 24),
           Text(
             l10n.exportingTemplates,
@@ -415,11 +415,9 @@ class _TemplateExportScreenState extends ConsumerState<TemplateExportScreen> {
       // Check if user exists
       if (user == null) {
         if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: const Text('Error loading profile'), // TODO: Add l10n.errorLoadingProfile
-              backgroundColor: Theme.of(context).colorScheme.error,
-            ),
+          SnackBarService.showError(
+            context,
+            'Error loading profile', // TODO: Add l10n.errorLoadingProfile
           );
         }
         return;
@@ -452,21 +450,17 @@ class _TemplateExportScreenState extends ConsumerState<TemplateExportScreen> {
       }
       
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(AppLocalizations.of(context).exportSuccessful),
-            backgroundColor: Theme.of(context).colorScheme.primary,
-          ),
+        SnackBarService.showSuccess(
+          context,
+          AppLocalizations.of(context).exportSuccessful,
         );
       }
       
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(AppLocalizations.of(context).exportFailed),
-            backgroundColor: Theme.of(context).colorScheme.error,
-          ),
+        SnackBarService.showError(
+          context,
+          AppLocalizations.of(context).exportFailed,
         );
       }
     } finally {

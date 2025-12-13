@@ -26,6 +26,7 @@ import 'package:gymbro_flutter_new/features/analytics/presentation/widgets/tier1
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator.dart';
 
 /// Volume Progression Tab
 ///
@@ -1111,13 +1112,10 @@ class _LandscapeVolumeChartState extends State<_LandscapeVolumeChart> {
           // Share button
           IconButton(
             icon: _isSharing
-                ? SizedBox(
+                ? const SizedBox(
                     width: 20,
                     height: 20,
-                    child: CircularProgressIndicator(
-                      strokeWidth: 2,
-                      color: colorScheme.onSurface,
-                    ),
+                    child: LoadingIndicator(),
                   )
                 : const Icon(AppIcons.share),
             onPressed: _isSharing ? null : _shareChart,

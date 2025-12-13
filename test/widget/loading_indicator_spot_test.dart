@@ -99,17 +99,17 @@ void main() {
 
     testWidgets('overlay variant renders with background', (tester) async {
       await tester.pumpWidget(
-        MaterialApp(
+        const MaterialApp(
           home: Scaffold(
             body: Stack(
               children: [
                 ColoredBox(
                   color: Colors.blue,
-                  child: const SizedBox.expand(
+                  child: SizedBox.expand(
                     child: Center(child: Text('Background')),
                   ),
                 ),
-                const LoadingIndicator.overlay(),
+                LoadingIndicator.overlay(),
               ],
             ),
           ),

@@ -10,6 +10,8 @@ import 'package:gymbro_flutter_new/features/workout/presentation/providers/worko
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator.dart';
+import 'package:gymbro_flutter_new/shared/presentation/services/snackbar_service.dart';
 
 class CustomizableWorkoutCard extends ConsumerStatefulWidget {
   const CustomizableWorkoutCard({super.key});
@@ -99,17 +101,13 @@ class _CustomizableWorkoutCardState extends ConsumerState<CustomizableWorkoutCar
 
   void _savePreferredTemplate(WorkoutTemplate? template) {
     ref.read(appConfigProvider.notifier).setPreferredTemplateId(template?.id);
-    
+
     // Mostra feedback
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(
-          template != null
-              ? AppLocalizations.of(context).preferredTemplateSet
-              : AppLocalizations.of(context).preferredTemplateRemoved,
-        ),
-        backgroundColor: Theme.of(context).colorScheme.primary,
-      ),
+    SnackBarService.showSuccess(
+      context,
+      template != null
+          ? AppLocalizations.of(context).preferredTemplateSet
+          : AppLocalizations.of(context).preferredTemplateRemoved,
     );
   }
 
@@ -383,7 +381,7 @@ class _CustomizationMenu extends ConsumerWidget {
                 },
               ),
               loading: () => const Center(
-                child: CircularProgressIndicator(),
+                child: LoadingIndicator(),
               ),
               error: (error, _) => Center(
                 child: Text(AppLocalizations.of(context).errorLoadingTemplates),

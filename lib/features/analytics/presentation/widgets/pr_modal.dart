@@ -32,6 +32,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:gymbro_flutter_new/features/analytics/domain/entities/exercise_history.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/services/snackbar_service.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
@@ -154,12 +155,7 @@ class PRModal extends StatelessWidget {
               HapticFeedback.mediumImpact();
               Navigator.pop(dialogContext);
               Navigator.pop(context); // Close modal
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text(context.l10n.prResetComingSoon),
-                  backgroundColor: context.colors.warning,
-                ),
-              );
+              SnackBarService.showInfo(context, context.l10n.prResetComingSoon);
             },
             style: FilledButton.styleFrom(
               backgroundColor: context.colors.error,

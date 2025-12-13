@@ -41,6 +41,7 @@ import 'package:gymbro_flutter_new/features/workout/domain/services/warmup_calcu
 import 'package:gymbro_flutter_new/features/workout/presentation/widgets/warmup_customization_modal.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/widgets/superset_link_modal.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/widgets/exercise_list_item/utils/exercise_notes_handler.dart';
+import 'package:gymbro_flutter_new/features/workout/presentation/providers/user_exercise_preferences_provider.dart';
 
 /// Orchestrator widget that coordinates ExerciseListItemHeader and ExerciseListItemSets
 ///
@@ -894,8 +895,10 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem>
       context: context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
-      builder: (context) =>
-          ExerciseHistoryBottomSheet(exerciseName: widget.exercise.name),
+      builder: (context) => ExerciseHistoryBottomSheet(
+        exerciseName: widget.exercise.name,
+        exerciseId: widget.exercise.id,
+      ),
     );
   }
 
@@ -925,25 +928,53 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem>
   }
 
   Future<void> _handleEditNotes() async {
-    final newNotes = await ExerciseNotesHandler.showNotesDialog(
-      context,
-      widget.exercise.notes,
+    // Get current Form Cues from repository
+    final prefsRepository = ref.read(userExercisePreferencesRepositoryProvider);
+    final currentFormCues = await prefsRepository.getFormCues(
+      widget.exercise.id,
+      widget.exercise.name,
     );
 
-    if (newNotes != null && widget.onExerciseUpdate != null) {
-      final updatedExercise = widget.exercise.copyWith(
-        notes: newNotes.isEmpty ? null : newNotes,
-        updatedAt: DateTime.now(),
-      );
-      widget.onExerciseUpdate!(updatedExercise);
+    if (!mounted) return;
 
+    // Show the two-section notes dialog
+    final result = await ExerciseNotesHandler.showNotesDialog(
+      context,
+      exerciseId: widget.exercise.id,
+      exerciseName: widget.exercise.name,
+      currentSessionNotes: widget.exercise.notes,
+      currentFormCues: currentFormCues,
+    );
+
+    if (result != null && mounted) {
+      // Save Form Cues if changed
+      if (result.formCues != currentFormCues) {
+        await prefsRepository.saveFormCues(
+          widget.exercise.id,
+          widget.exercise.name,
+          result.formCues,
+        );
+        // Invalidate the provider to refresh UI
+        ref.invalidate(formCuesProvider((
+          exerciseId: widget.exercise.id,
+          exerciseName: widget.exercise.name,
+        )));
+      }
+
+      // Save Session Notes if changed
+      if (result.sessionNotes != widget.exercise.notes && widget.onExerciseUpdate != null) {
+        final updatedExercise = widget.exercise.copyWith(
+          notes: result.sessionNotes?.isEmpty == true ? null : result.sessionNotes,
+          updatedAt: DateTime.now(),
+        );
+        widget.onExerciseUpdate!(updatedExercise);
+      }
+
+      await HapticFeedback.lightImpact();
       if (mounted) {
-        HapticFeedback.lightImpact();
         SnackBarService.showSuccess(
           context,
-          newNotes.isEmpty
-              ? context.l10n.notesDeleted
-              : context.l10n.notesSaved,
+          context.l10n.notesSaved,
         );
       }
     }
@@ -1282,6 +1313,15 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem>
     );
     final suggestions = ref.watch(exerciseSuggestionsProvider(widget.exercise.id));
 
+    // Watch Form Cues for this exercise (persistent technique reminders)
+    final formCuesAsync = ref.watch(
+      formCuesProvider((
+        exerciseId: widget.exercise.id,
+        exerciseName: widget.exercise.name,
+      )),
+    );
+    final formCues = formCuesAsync.valueOrNull;
+
     // Listen for auto-collapse completion
     ref.listen(
       exerciseAutoCollapseProvider(widget.exercise.id)
@@ -1390,6 +1430,7 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem>
                     isProMode: isProMode,
                     autoCollapseState: _autoCollapseState,
                     lastActivity: _lastActivity,
+                    formCues: formCues,
                     onCancelAutoCollapse: _handleCancelAutoCollapse,
                     onShowAutoAdjustmentModal: _handleShowAutoAdjustmentModal,
                     onShowQuickTimerSettings: _handleShowQuickTimerSettings,

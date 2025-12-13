@@ -12,8 +12,7 @@
 /// - Flutter: asset loading
 library;
 
-import 'dart:convert';
-import 'package:flutter/services.dart';
+import 'package:gymbro_flutter_new/features/exercise_database/data/utils/exercise_json_loader.dart';
 
 class LocalExercise {
   
@@ -73,13 +72,8 @@ class ExerciseMatchingService {
     if (_exercises != null && _cachedLanguageCode == languageCode) return;
 
     try {
-      // Determina il file corretto in base alla lingua
-      final String fileName = languageCode == 'it'
-          ? 'assets/data/exercises_it.json'
-          : 'assets/data/exercises.json';
-
-      final String jsonString = await rootBundle.loadString(fileName);
-      final List<dynamic> jsonList = json.decode(jsonString);
+      // Usa nuova struttura a cartelle con fallback
+      final jsonList = await ExerciseJsonLoader.loadExercises(languageCode);
 
       _exercises = jsonList
           .map((json) => LocalExercise.fromJson(json))

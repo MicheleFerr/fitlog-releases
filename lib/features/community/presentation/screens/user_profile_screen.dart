@@ -17,6 +17,8 @@ import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator.dart';
+import 'package:gymbro_flutter_new/shared/presentation/services/snackbar_service.dart';
 
 /// Schermata profilo utente community
 class UserProfileScreen extends ConsumerStatefulWidget { // Null = current user
@@ -89,7 +91,7 @@ class _UserProfileScreenState extends ConsumerState<UserProfileScreen>
           contributionsAsync.when(
             data: (contributions) => _buildContributionsList(contributions),
             loading: () => const SliverFillRemaining(
-              child: Center(child: CircularProgressIndicator()),
+              child: Center(child: LoadingIndicator()),
             ),
             error: (e, _) => SliverFillRemaining(
               child: Center(
@@ -320,7 +322,7 @@ class _UserProfileScreenState extends ConsumerState<UserProfileScreen>
         ),
       ),
       child: Center(
-        child: CircularProgressIndicator(color: context.colors.surface),
+        child: LoadingIndicator(),
       ),
     );
   }
@@ -431,22 +433,11 @@ class _UserProfileScreenState extends ConsumerState<UserProfileScreen>
 
       if (!mounted) return;
 
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(isUpvote ? '👍 Voto positivo!' : '👎 Voto negativo'),
-          duration: const Duration(seconds: 1),
-          behavior: SnackBarBehavior.floating,
-        ),
-      );
+      SnackBarService.showSuccess(context, isUpvote ? 'Voto positivo!' : 'Voto negativo');
     } catch (e) {
       if (!mounted) return;
 
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('❌ Errore: $e'),
-          backgroundColor: Theme.of(context).colorScheme.error,
-        ),
-      );
+      SnackBarService.showError(context, 'Errore: $e');
     }
   }
 

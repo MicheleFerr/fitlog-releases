@@ -15,14 +15,17 @@ import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dar
 import 'package:gymbro_flutter_new/features/analytics/presentation/widgets/exercise_correlations_sheet.dart';
 import 'package:gymbro_flutter_new/features/analytics/presentation/widgets/training_pattern_card.dart';
 import 'package:gymbro_flutter_new/features/analytics/presentation/providers/training_pattern_provider.dart';
+import 'package:gymbro_flutter_new/features/workout/presentation/providers/user_exercise_preferences_provider.dart';
 
 class ExerciseDetailScreen extends ConsumerStatefulWidget {
   const ExerciseDetailScreen({
     super.key,
     required this.exerciseName,
+    this.exerciseId,
   });
 
   final String exerciseName;
+  final String? exerciseId;
 
   @override
   ConsumerState<ExerciseDetailScreen> createState() => _ExerciseDetailScreenState();
@@ -128,10 +131,69 @@ class _ExerciseDetailScreenState extends ConsumerState<ExerciseDetailScreen> {
     );
   }
 
+  /// Build Form Cues section widget
+  Widget _buildFormCuesSection(BuildContext context, String formCues) {
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: context.colors.primaryContainer.withValues(alpha: 0.3),
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(
+          color: context.colors.primary.withValues(alpha: 0.3),
+          width: 1.5,
+        ),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Container(
+                padding: const EdgeInsets.all(8),
+                decoration: BoxDecoration(
+                  color: context.colors.primaryContainer,
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: Icon(
+                  AppIcons.editNoteRounded,
+                  color: context.colors.onPrimaryContainer,
+                  size: 18,
+                ),
+              ),
+              const SizedBox(width: 12),
+              Text(
+                context.l10n.formCues,
+                style: context.textTheme.titleMedium?.copyWith(
+                  fontWeight: FontWeight.bold,
+                  color: context.colors.onSurface,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 12),
+          Text(
+            formCues,
+            style: context.textTheme.bodyMedium?.copyWith(
+              color: context.colors.onSurface,
+              height: 1.5,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     // Get userId for Firebase analytics fallback and landscape screen navigation
     final userId = ref.watch(currentUserIdProvider);
+
+    // Watch Form Cues
+    final formCuesAsync = ref.watch(formCuesProvider((
+      exerciseId: widget.exerciseId,
+      exerciseName: widget.exerciseName,
+    )));
 
     // Try workout-based metrics first
     var metrics = ref.watch(exerciseMetricsProvider(widget.exerciseName));
@@ -235,6 +297,17 @@ class _ExerciseDetailScreenState extends ConsumerState<ExerciseDetailScreen> {
                   const SizedBox(height: 12),
                 ],
               ),
+            ),
+          ),
+
+          // Form Cues Section
+          SliverToBoxAdapter(
+            child: formCuesAsync.when(
+              data: (formCues) => formCues != null && formCues.isNotEmpty
+                  ? _buildFormCuesSection(context, formCues)
+                  : const SizedBox.shrink(),
+              loading: () => const SizedBox.shrink(),
+              error: (_, __) => const SizedBox.shrink(),
             ),
           ),
 

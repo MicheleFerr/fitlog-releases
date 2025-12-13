@@ -62,13 +62,13 @@ class _StreakCalendarScreenState extends ConsumerState<StreakCalendarScreen> {
       appBar: AppBar(
         title: Text(context.l10n.calendar),
         leading: IconButton(
-          icon: Icon(AppIcons.arrowBackIos, size: AppIconSize.medium),
+          icon: const Icon(AppIcons.arrowBackIos, size: AppIconSize.medium),
           onPressed: () => context.pop(),
         ),
         actions: [
           // View mode dropdown
           PopupMenuButton<_StreakViewMode>(
-            icon: Icon(AppIcons.viewList, size: AppIconSize.medium),
+            icon: const Icon(AppIcons.viewList, size: AppIconSize.medium),
             tooltip: context.l10n.viewMode,
             onSelected: (mode) {
               HapticFeedback.selectionClick();
@@ -84,7 +84,7 @@ class _StreakCalendarScreenState extends ConsumerState<StreakCalendarScreen> {
                     if (mode == _viewMode)
                       Icon(AppIcons.check, size: AppIconSize.small, color: context.colors.primary)
                     else
-                      SizedBox(width: AppIconSize.small),
+                      const SizedBox(width: AppIconSize.small),
                     const SizedBox(width: 8),
                     Text(mode.getLabel(context)),
                   ],
@@ -249,7 +249,7 @@ class _StreakCalendarScreenState extends ConsumerState<StreakCalendarScreen> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             IconButton(
-              icon: Icon(AppIcons.arrowBackIos, size: AppIconSize.small),
+              icon: const Icon(AppIcons.arrowBackIos, size: AppIconSize.small),
               onPressed: () {
                 HapticFeedback.selectionClick();
                 setState(() {
@@ -264,7 +264,7 @@ class _StreakCalendarScreenState extends ConsumerState<StreakCalendarScreen> {
               ),
             ),
             IconButton(
-              icon: Icon(AppIcons.arrowForwardIos, size: AppIconSize.small),
+              icon: const Icon(AppIcons.arrowForwardIos, size: AppIconSize.small),
               onPressed: _selectedMonth.month == now.month && _selectedMonth.year == now.year
                   ? null
                   : () {
@@ -323,7 +323,7 @@ class _StreakCalendarScreenState extends ConsumerState<StreakCalendarScreen> {
               onTap: hasWorkout || !isFuture
                   ? () => _showDayDetails(context, date, workouts)
                   : null,
-              child: Container(
+              child: DecoratedBox(
                 decoration: BoxDecoration(
                   color: hasWorkout
                       ? context.colors.primary

@@ -19,6 +19,7 @@ import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dar
 import 'package:gymbro_flutter_new/shared/presentation/widgets/premium_feature_card.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/services/modal_service.dart';
+import 'package:gymbro_flutter_new/shared/presentation/services/snackbar_service.dart';
 
 /// Provider for weekly workout goal (default: 5 workouts per week)
 final weeklyWorkoutGoalProvider = StateProvider<int>((ref) => 5);
@@ -742,7 +743,7 @@ class _AnalyticsOverviewTabState extends ConsumerState<AnalyticsOverviewTab> {
         maxChildSize: safeMax,
         minChildSize: 0.4,
         expand: false,
-        builder: (context, scrollController) => Container(
+        builder: (context, scrollController) => DecoratedBox(
           decoration: BoxDecoration(
             color: theme.colorScheme.surface,
             borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
@@ -1213,12 +1214,7 @@ class _AnalyticsOverviewTabState extends ConsumerState<AnalyticsOverviewTab> {
         debugPrint('   - Exercises with no completed sets');
       }
 
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: const Text('No completed exercises found in your workouts'),
-          backgroundColor: Theme.of(context).colorScheme.error,
-        ),
-      );
+      SnackBarService.showError(context, 'No completed exercises found in your workouts');
       return;
     }
 
@@ -1278,12 +1274,7 @@ class _AnalyticsOverviewTabState extends ConsumerState<AnalyticsOverviewTab> {
       if (kDebugMode) {
         debugPrint('❌ [Analytics] ERROR: syntheticActivities is EMPTY after processing!');
       }
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: const Text('Unable to load exercise activities'),
-          backgroundColor: Theme.of(context).colorScheme.error,
-        ),
-      );
+      SnackBarService.showError(context, 'Unable to load exercise activities');
       return;
     }
 

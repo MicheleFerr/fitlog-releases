@@ -153,7 +153,7 @@ class _AddExerciseModalState extends ConsumerState<AddExerciseModal> with Ticker
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return DecoratedBox(
       decoration: BoxDecoration(
         color: context.colors.surface,
         borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
@@ -390,7 +390,7 @@ class _AddExerciseModalState extends ConsumerState<AddExerciseModal> with Ticker
                 title: Text(_selectedDropSetExercise!.nome),
                 subtitle: Text('Focus: ${_selectedDropSetExercise!.focus.join(", ")}'),
                 trailing: IconButton(
-                  icon: Icon(AppIcons.close),
+                  icon: const Icon(AppIcons.close),
                   onPressed: () {
                     setState(() {
                       _selectedDropSetExercise = null;
@@ -408,7 +408,7 @@ class _AddExerciseModalState extends ConsumerState<AddExerciseModal> with Ticker
             decoration: InputDecoration(
               labelText: context.l10n.exerciseNameLabel,
               hintText: context.l10n.exerciseNameHintBicepCurl,
-              prefixIcon: Icon(AppIcons.trendDown),
+              prefixIcon: const Icon(AppIcons.trendDown),
             ),
           ),
           const SizedBox(height: 20),
@@ -453,7 +453,7 @@ class _AddExerciseModalState extends ConsumerState<AddExerciseModal> with Ticker
                             );
                           });
                         },
-                        icon: Icon(AppIcons.add),
+                        icon: const Icon(AppIcons.add),
                         label: Text(context.l10n.addStageButton),
                       ),
                     ],
@@ -469,7 +469,7 @@ class _AddExerciseModalState extends ConsumerState<AddExerciseModal> with Ticker
             decoration: InputDecoration(
               labelText: context.l10n.notesOptional,
               hintText: context.l10n.notesHintWeightDrops,
-              prefixIcon: Icon(AppIcons.note),
+              prefixIcon: const Icon(AppIcons.note),
             ),
           ),
         ],
@@ -522,7 +522,7 @@ class _AddExerciseModalState extends ConsumerState<AddExerciseModal> with Ticker
                 title: Text(_selectedRestPauseExercise!.nome),
                 subtitle: Text('Focus: ${_selectedRestPauseExercise!.focus.join(", ")}'),
                 trailing: IconButton(
-                  icon: Icon(AppIcons.close),
+                  icon: const Icon(AppIcons.close),
                   onPressed: () {
                     setState(() {
                       _selectedRestPauseExercise = null;
@@ -540,7 +540,7 @@ class _AddExerciseModalState extends ConsumerState<AddExerciseModal> with Ticker
             decoration: InputDecoration(
               labelText: context.l10n.exerciseNameLabel,
               hintText: context.l10n.exerciseNameHintBenchPress,
-              prefixIcon: Icon(AppIcons.pauseCircle),
+              prefixIcon: const Icon(AppIcons.pauseCircle),
             ),
           ),
           const SizedBox(height: 16),
@@ -557,7 +557,7 @@ class _AddExerciseModalState extends ConsumerState<AddExerciseModal> with Ticker
                   controller: _restPauseWeightController,
                   decoration: InputDecoration(
                     labelText: context.l10n.weightKgLabel,
-                    prefixIcon: Icon(AppIcons.workout),
+                    prefixIcon: const Icon(AppIcons.workout),
                   ),
                   keyboardType: const TextInputType.numberWithOptions(decimal: true),
                 ),
@@ -568,7 +568,7 @@ class _AddExerciseModalState extends ConsumerState<AddExerciseModal> with Ticker
                   controller: _restPauseTargetRepsController,
                   decoration: InputDecoration(
                     labelText: context.l10n.targetRepsLabel,
-                    prefixIcon: Icon(AppIcons.repeat),
+                    prefixIcon: const Icon(AppIcons.repeat),
                   ),
                   keyboardType: TextInputType.number,
                 ),
@@ -591,7 +591,7 @@ class _AddExerciseModalState extends ConsumerState<AddExerciseModal> with Ticker
             decoration: InputDecoration(
               labelText: context.l10n.restPeriodSecondsLabel,
               hintText: context.l10n.restPeriodSecondsHint,
-              prefixIcon: Icon(AppIcons.timer),
+              prefixIcon: const Icon(AppIcons.timer),
             ),
             keyboardType: TextInputType.number,
           ),
@@ -602,7 +602,7 @@ class _AddExerciseModalState extends ConsumerState<AddExerciseModal> with Ticker
             decoration: InputDecoration(
               labelText: context.l10n.maxRestPauseSetsLabel,
               hintText: context.l10n.maxRestPauseSetsHint,
-              prefixIcon: Icon(AppIcons.repeat),
+              prefixIcon: const Icon(AppIcons.repeat),
             ),
             keyboardType: TextInputType.number,
           ),
@@ -615,7 +615,7 @@ class _AddExerciseModalState extends ConsumerState<AddExerciseModal> with Ticker
             decoration: InputDecoration(
               labelText: context.l10n.notesOptional,
               hintText: context.l10n.notesHintFormCues,
-              prefixIcon: Icon(AppIcons.note),
+              prefixIcon: const Icon(AppIcons.note),
             ),
           ),
         ],
@@ -714,7 +714,7 @@ class _AddExerciseModalState extends ConsumerState<AddExerciseModal> with Ticker
                       decoration: InputDecoration(
                         labelText: context.l10n.exerciseNameLabel,
                         hintText: context.l10n.exerciseNameHint,
-                        prefixIcon: Icon(AppIcons.workout),
+                        prefixIcon: const Icon(AppIcons.workout),
                       ),
                     ),
                     const SizedBox(height: 16),
@@ -734,7 +734,7 @@ class _AddExerciseModalState extends ConsumerState<AddExerciseModal> with Ticker
                       decoration: InputDecoration(
                         labelText: context.l10n.notesOptional,
                         hintText: context.l10n.notesHint,
-                        prefixIcon: Icon(AppIcons.note),
+                        prefixIcon: const Icon(AppIcons.note),
                       ),
                     ),
                   ],
@@ -799,7 +799,7 @@ class _AddExerciseModalState extends ConsumerState<AddExerciseModal> with Ticker
               onPressed: () {
                 ref.read(exerciseSetsProvider.notifier).addSet();
               },
-              icon: Icon(AppIcons.add, size: 18),
+              icon: const Icon(AppIcons.add, size: 18),
               label: Text(context.l10n.addSetLabel),
             ),
           ],
@@ -885,7 +885,7 @@ class _AddExerciseModalState extends ConsumerState<AddExerciseModal> with Ticker
             onPressed: () {
               ref.read(exerciseSetsProvider.notifier).removeSet(set.id);
             },
-            icon: Icon(AppIcons.removeCircleOutline, size: 20),
+            icon: const Icon(AppIcons.removeCircleOutline, size: 20),
             tooltip: context.l10n.removeSetTooltip,
           ),
       ],
@@ -1022,7 +1022,7 @@ class _AddExerciseModalState extends ConsumerState<AddExerciseModal> with Ticker
                     _dropsetStages.removeAt(index);
                   });
                 },
-                icon: Icon(AppIcons.removeCircleOutline, size: 20),
+                icon: const Icon(AppIcons.removeCircleOutline, size: 20),
               ),
           ],
         ),

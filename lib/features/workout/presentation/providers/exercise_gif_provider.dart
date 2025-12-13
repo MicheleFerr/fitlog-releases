@@ -10,8 +10,7 @@
 /// Provider per recuperare URL delle GIF degli esercizi dal database
 library;
 
-import 'dart:convert';
-import 'package:flutter/services.dart';
+import 'package:gymbro_flutter_new/features/exercise_database/data/utils/exercise_json_loader.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/shared/presentation/providers/app_config_provider.dart';
 
@@ -27,18 +26,9 @@ final exercisesDatabaseProvider = FutureProvider<List<Map<String, dynamic>>>((re
   try {
     // Ottieni la lingua dell'app
     final locale = ref.watch(localeProvider);
-    final languageCode = locale.languageCode;
 
-    // Scegli il file giusto in base alla lingua
-    final fileName = languageCode == 'it'
-        ? 'assets/data/exercises_it.json'
-        : 'assets/data/exercises.json';
-
-    // Debug log removed - was causing spam during scroll
-
-    final jsonString = await rootBundle.loadString(fileName);
-    final List<dynamic> jsonList = json.decode(jsonString);
-    return jsonList.cast<Map<String, dynamic>>();
+    // Usa nuova struttura a cartelle con fallback
+    return await ExerciseJsonLoader.loadExercises(locale.languageCode);
   } catch (_) {
     // Return empty list on error - no spam
     return [];

@@ -17,6 +17,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:gymbro_flutter_new/core/navigation/app_routes.dart';
 import 'package:gymbro_flutter_new/core/providers/tier_entitlements_provider.dart';
 import 'package:gymbro_flutter_new/features/analytics/domain/entities/exercise_history.dart';
 import 'package:gymbro_flutter_new/features/analytics/domain/entities/muscle_heatmap_data.dart';
@@ -298,7 +299,7 @@ class _ProAnalyticsSectionState extends ConsumerState<ProAnalyticsSection> {
               borderRadius: BorderRadius.circular(12),
               child: BackdropFilter(
                 filter: ImageFilter.blur(sigmaX: 6, sigmaY: 6),
-                child: Container(
+                child: ColoredBox(
                   color: colorScheme.surface.withValues(alpha: 0.4),
                   child: Center(
                     child: Column(
@@ -359,7 +360,7 @@ class _ProAnalyticsSectionState extends ConsumerState<ProAnalyticsSection> {
         child: FilledButton.icon(
           onPressed: () {
             HapticFeedback.mediumImpact();
-            context.push('/premium');
+            context.push(AppRoutes.premiumPath);
           },
           style: FilledButton.styleFrom(
             backgroundColor: colorScheme.tertiary,
@@ -369,7 +370,7 @@ class _ProAnalyticsSectionState extends ConsumerState<ProAnalyticsSection> {
               borderRadius: BorderRadius.circular(12),
             ),
           ),
-          icon: Icon(AppIcons.premium, size: AppIconSize.small),
+          icon: const Icon(AppIcons.premium, size: AppIconSize.small),
           label: Text(
             l10n.upgradeToPro,
             style: theme.textTheme.labelLarge?.copyWith(
@@ -491,7 +492,7 @@ class _ProAnalyticsCard extends StatelessWidget {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
 
-    return Container(
+    return DecoratedBox(
       decoration: BoxDecoration(
         color: colorScheme.surface,
         borderRadius: BorderRadius.circular(16),

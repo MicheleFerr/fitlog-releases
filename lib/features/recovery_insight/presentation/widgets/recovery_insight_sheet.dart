@@ -14,10 +14,15 @@ library;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
+import 'package:gymbro_flutter_new/core/navigation/app_routes.dart';
 import 'package:gymbro_flutter_new/features/auth/presentation/providers/consolidated_user_provider.dart';
 import 'package:gymbro_flutter_new/features/recovery_insight/domain/entities/recovery_insight.dart';
 import 'package:gymbro_flutter_new/features/recovery_insight/domain/entities/sleep_record.dart';
 import 'package:gymbro_flutter_new/features/recovery_insight/domain/entities/sleep_workout_correlation.dart';
+import 'package:gymbro_flutter_new/features/recovery_insight/presentation/extensions/recovery_category_l10n.dart';
+import 'package:gymbro_flutter_new/features/recovery_insight/presentation/extensions/recovery_recommendation_l10n.dart';
+import 'package:gymbro_flutter_new/features/recovery_insight/presentation/extensions/sleep_correlation_l10n.dart';
 import 'package:gymbro_flutter_new/features/recovery_insight/presentation/providers/recovery_insight_provider.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/services/modal_service.dart';
@@ -171,6 +176,10 @@ class _RecoveryInsightSheetState extends ConsumerState<RecoveryInsightSheet> {
         _buildCategoryBreakdown(context, insight),
         const SizedBox(height: 20),
 
+        // Score breakdown section
+        if (insight.hasSleepData) _buildScoreBreakdown(context, insight),
+        if (insight.hasSleepData) const SizedBox(height: 20),
+
         // Collapsible Sleep Details Section
         _buildCollapsibleSection(
           context: context,
@@ -290,7 +299,7 @@ class _RecoveryInsightSheetState extends ConsumerState<RecoveryInsightSheet> {
                     ),
                     const SizedBox(width: 8),
                     Text(
-                      insight.category.displayName,
+                      insight.category.localizedName(context),
                       style: context.textTheme.titleLarge?.copyWith(
                         fontWeight: FontWeight.bold,
                         color: categoryColor,
@@ -315,7 +324,6 @@ class _RecoveryInsightSheetState extends ConsumerState<RecoveryInsightSheet> {
 
   Widget _buildCategoryBreakdown(
       BuildContext context, RecoveryInsight insight) {
-    final categoryColor = _getCategoryColor(insight.category, context);
     final l10n = context.l10n;
 
     return Container(
@@ -493,7 +501,7 @@ class _RecoveryInsightSheetState extends ConsumerState<RecoveryInsightSheet> {
                 final hasRecord = index < weekRecords.length;
                 final record = hasRecord ? weekRecords[index] : null;
                 final hours = record?.asleepHours ?? 0;
-                final maxHours = 10.0;
+                const maxHours = 10.0;
                 final heightPercent = (hours / maxHours).clamp(0.0, 1.0);
                 final barColor = _getSleepBarColor(hours, context);
 
@@ -641,7 +649,7 @@ class _RecoveryInsightSheetState extends ConsumerState<RecoveryInsightSheet> {
                 const SizedBox(width: 8),
                 Expanded(
                   child: Text(
-                    correlation.summaryMessage,
+                    correlation.summaryMessageKey.localizedCorrelationSummary(context),
                     style: context.textTheme.bodySmall?.copyWith(
                       fontStyle: FontStyle.italic,
                     ),
@@ -752,7 +760,7 @@ class _RecoveryInsightSheetState extends ConsumerState<RecoveryInsightSheet> {
               HapticFeedback.mediumImpact();
               Navigator.pop(context);
               // Navigate to premium screen
-              // context.pushNamed(AppRoutes.premiumName);
+              context.pushNamed(AppRoutes.premiumName);
             },
             style: FilledButton.styleFrom(
               backgroundColor: context.colors.primary,
@@ -800,7 +808,7 @@ class _RecoveryInsightSheetState extends ConsumerState<RecoveryInsightSheet> {
           ),
           const SizedBox(height: 12),
           Text(
-            insight.recommendation,
+            insight.recommendation.localizedRecommendation(context),
             style: context.textTheme.bodyLarge?.copyWith(
               fontWeight: FontWeight.w500,
             ),
@@ -901,6 +909,244 @@ class _RecoveryInsightSheetState extends ConsumerState<RecoveryInsightSheet> {
     );
   }
 
+  Widget _buildScoreBreakdown(BuildContext context, RecoveryInsight insight) {
+    final l10n = context.l10n;
+    final categoryColor = _getCategoryColor(insight.category, context);
+
+    return Container(
+      padding: const EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        color: context.colors.surfaceContainer,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(
+          color: context.colors.outline.withValues(alpha: 0.2),
+        ),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Title
+          Row(
+            children: [
+              Icon(
+                AppIcons.calculate,
+                color: context.colors.primary,
+                size: AppIconSize.medium,
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: Text(
+                  l10n.howScoreCalculated,
+                  style: context.textTheme.titleSmall?.copyWith(
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 16),
+
+          // Formula visualization
+          Container(
+            padding: const EdgeInsets.all(16),
+            decoration: BoxDecoration(
+              color: categoryColor.withValues(alpha: 0.05),
+              borderRadius: BorderRadius.circular(12),
+              border: Border.all(
+                color: categoryColor.withValues(alpha: 0.2),
+              ),
+            ),
+            child: Column(
+              children: [
+                // Base Score
+                _buildScoreComponent(
+                  context,
+                  icon: AppIcons.workout,
+                  label: l10n.baseScore,
+                  value: insight.baseScore.toStringAsFixed(1),
+                  description: l10n.baseScoreDescription,
+                  color: context.colors.tertiary,
+                ),
+                const SizedBox(height: 12),
+
+                // Multiply icon
+                Center(
+                  child: Icon(
+                    AppIcons.close,
+                    color: context.colors.onSurfaceVariant.withValues(alpha: 0.5),
+                    size: AppIconSize.small,
+                  ),
+                ),
+                const SizedBox(height: 12),
+
+                // Sleep Modifier
+                _buildScoreComponent(
+                  context,
+                  icon: AppIcons.nightlight,
+                  label: l10n.sleepModifier,
+                  value: insight.sleepModifier.toStringAsFixed(2),
+                  description: l10n.sleepModifierDescription,
+                  color: context.colors.secondary,
+                ),
+                const SizedBox(height: 12),
+
+                // Multiply icon
+                Center(
+                  child: Icon(
+                    AppIcons.close,
+                    color: context.colors.onSurfaceVariant.withValues(alpha: 0.5),
+                    size: AppIconSize.small,
+                  ),
+                ),
+                const SizedBox(height: 12),
+
+                // Consecutive Penalty
+                _buildScoreComponent(
+                  context,
+                  icon: AppIcons.warning,
+                  label: l10n.consecutivePenalty,
+                  value: insight.consecutivePenalty.toStringAsFixed(2),
+                  description: l10n.consecutivePenaltyDescription,
+                  color: insight.consecutivePenalty < 1.0
+                      ? context.errorColor
+                      : context.successColor,
+                ),
+                const SizedBox(height: 16),
+
+                // Divider
+                Container(
+                  height: 2,
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      colors: [
+                        categoryColor.withValues(alpha: 0.1),
+                        categoryColor.withValues(alpha: 0.5),
+                        categoryColor.withValues(alpha: 0.1),
+                      ],
+                    ),
+                    borderRadius: BorderRadius.circular(1),
+                  ),
+                ),
+                const SizedBox(height: 16),
+
+                // Final Score Result
+                Row(
+                  children: [
+                    Icon(
+                      AppIcons.dragHandle,
+                      color: categoryColor,
+                      size: AppIconSize.medium,
+                    ),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            l10n.finalScore,
+                            style: context.textTheme.titleMedium?.copyWith(
+                              fontWeight: FontWeight.bold,
+                              color: categoryColor,
+                            ),
+                          ),
+                          Text(
+                            '${insight.baseScore.toStringAsFixed(1)} × ${insight.sleepModifier.toStringAsFixed(2)} × ${insight.consecutivePenalty.toStringAsFixed(2)}',
+                            style: context.textTheme.bodySmall?.copyWith(
+                              color: context.colors.onSurfaceVariant,
+                              fontFamily: 'monospace',
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 16,
+                        vertical: 8,
+                      ),
+                      decoration: BoxDecoration(
+                        color: categoryColor,
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: Text(
+                        '${insight.score}',
+                        style: context.textTheme.headlineSmall?.copyWith(
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildScoreComponent(
+    BuildContext context, {
+    required IconData icon,
+    required String label,
+    required String value,
+    required String description,
+    required Color color,
+  }) {
+    return Row(
+      children: [
+        Container(
+          padding: const EdgeInsets.all(10),
+          decoration: BoxDecoration(
+            color: color.withValues(alpha: 0.15),
+            borderRadius: BorderRadius.circular(10),
+          ),
+          child: Icon(
+            icon,
+            color: color,
+            size: AppIconSize.small,
+          ),
+        ),
+        const SizedBox(width: 12),
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    label,
+                    style: context.textTheme.bodyMedium?.copyWith(
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                  Text(
+                    value,
+                    style: context.textTheme.titleMedium?.copyWith(
+                      fontWeight: FontWeight.bold,
+                      color: color,
+                      fontFamily: 'monospace',
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 2),
+              Text(
+                description,
+                style: context.textTheme.bodySmall?.copyWith(
+                  color: context.colors.onSurfaceVariant,
+                  fontSize: 11,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+
   Widget _buildError(BuildContext context, Object error) {
     final l10n = context.l10n;
 
@@ -964,12 +1210,14 @@ class _RecoveryInsightSheetState extends ConsumerState<RecoveryInsightSheet> {
   }
 
   String _getCategoryName(int index, BuildContext context) {
+    // Short abbreviations for category breakdown dots
+    final l10n = context.l10n;
     return switch (index) {
-      0 => 'Crit',
-      1 => 'Basso',
-      2 => 'Mod',
-      3 => 'Buono',
-      4 => 'Top',
+      0 => l10n.recoveryCategoryShortCritical,
+      1 => l10n.recoveryCategoryShortLow,
+      2 => l10n.recoveryCategoryShortModerate,
+      3 => l10n.recoveryCategoryShortGood,
+      4 => l10n.recoveryCategoryShortOptimal,
       _ => '',
     };
   }

@@ -1,4 +1,17 @@
+/// Health Sync Settings Screen
+///
+/// Simplified, user-friendly screen for Apple Health / Health Connect integration.
+///
+/// **Design Goals**:
+/// - Clear, single-action primary CTA
+/// - Visual status indicator
+/// - Minimal cognitive load
+/// - Progressive disclosure of advanced options
+library;
+
+import 'dart:io' show Platform;
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:gymbro_flutter_new/features/health_sync/domain/entities/health_data_type.dart';
@@ -6,339 +19,365 @@ import 'package:gymbro_flutter_new/features/health_sync/domain/entities/health_p
 import 'package:gymbro_flutter_new/features/health_sync/presentation/providers/health_permission_provider.dart';
 import 'package:gymbro_flutter_new/features/health_sync/presentation/providers/health_background_sync_provider.dart';
 import 'package:gymbro_flutter_new/features/health_sync/presentation/providers/health_sync_provider.dart';
-import 'package:gymbro_flutter_new/features/health_sync/presentation/widgets/health_sync_status_widget.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
-import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_colors.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
 import 'package:gymbro_flutter_new/shared/presentation/services/snackbar_service.dart';
 
 /// Settings screen for Apple Health & Health Connect integration.
-///
-/// **Features**:
-/// - Permission management (request/revoke)
-/// - Sync status display (workout, body weight)
-/// - Manual sync triggers
-/// - Background sync configuration
-/// - Platform-specific UI (iOS HealthKit vs Android Health Connect)
-///
-/// **Architecture**:
-/// - Uses Riverpod providers for state management
-/// - Clean Architecture separation (presentation layer only)
-/// - Follows DESIGN_GUIDELINES.md patterns
-///
-/// **Platform Support**:
-/// - iOS 14+: HealthKit integration
-/// - Android 14+: Health Connect integration
-///
-/// **Usage**:
-/// ```dart
-/// Navigator.push(
-///   context,
-///   MaterialPageRoute(
-///     builder: (_) => const HealthSyncSettingsScreen(),
-///   ),
-/// );
-/// ```
-class HealthSyncSettingsScreen extends ConsumerWidget {
+class HealthSyncSettingsScreen extends ConsumerStatefulWidget {
   const HealthSyncSettingsScreen({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<HealthSyncSettingsScreen> createState() =>
+      _HealthSyncSettingsScreenState();
+}
+
+class _HealthSyncSettingsScreenState
+    extends ConsumerState<HealthSyncSettingsScreen> {
+  bool _isConnecting = false;
+
+  @override
+  Widget build(BuildContext context) {
     final permissionStatusAsync = ref.watch(healthPermissionStatusProvider);
-    final backgroundSyncState = ref.watch(healthBackgroundSyncControllerProvider);
+    final backgroundSyncState =
+        ref.watch(healthBackgroundSyncControllerProvider);
 
     return Scaffold(
       appBar: AppBar(
         title: Text(context.l10n.healthSyncSettings),
-        actions: [
-          // Help icon
-          IconButton(
-            onPressed: () => _showHelpDialog(context),
-            icon: SemanticIcon(
-              icon: AppIcons.help,
-              semanticLabel: context.l10n.healthSyncHelp,
-              size: AppIconSize.large,
-              color: context.iconPrimary,
-            ),
-          ),
-        ],
       ),
       body: permissionStatusAsync.when(
         data: (permissionStatus) => _buildContent(
           context,
-          ref,
           permissionStatus,
           backgroundSyncState,
         ),
         loading: () => const Center(child: LoadingIndicator()),
-        error: (err, stack) => _buildErrorState(context, err),
+        error: (err, stack) => _buildNotAvailableState(context),
       ),
     );
   }
 
-  /// Builds the main content with sections
   Widget _buildContent(
     BuildContext context,
-    WidgetRef ref,
-    dynamic permissionStatus, // HealthPermissionStatus
+    dynamic permissionStatus,
     BackgroundSyncState backgroundSyncState,
   ) {
-    return ListView(
-      padding: const EdgeInsets.all(16),
-      children: [
-        // Platform info banner
-        _buildPlatformBanner(context, permissionStatus),
+    final permissions = permissionStatus.permissions as Map;
+    final isConnected =
+        permissions[HealthDataType.workout] == PermissionState.authorized ||
+            permissions[HealthDataType.bodyWeight] == PermissionState.authorized;
 
-        const SizedBox(height: 24),
-
-        // Permission section
-        _buildSectionHeader(context, context.l10n.healthSyncPermissions),
-        const SizedBox(height: 12),
-        _buildPermissionsList(context, ref, permissionStatus),
-
-        const SizedBox(height: 24),
-
-        // Sync status section
-        _buildSectionHeader(context, context.l10n.healthSyncStatus),
-        const SizedBox(height: 12),
-        _buildSyncStatusList(context, ref, permissionStatus),
-
-        const SizedBox(height: 24),
-
-        // Background sync section
-        _buildSectionHeader(context, context.l10n.healthSyncBackgroundSync),
-        const SizedBox(height: 12),
-        _buildBackgroundSyncCard(context, ref, backgroundSyncState),
-
-        const SizedBox(height: 24),
-
-        // Clear cache button
-        _buildClearCacheButton(context, ref),
-
-        const SizedBox(height: 16),
-
-        // Debug button (for testing HealthKit/Health Connect)
-        _buildDebugButton(context),
-      ],
-    );
-  }
-
-  /// Builds platform banner (iOS HealthKit / Android Health Connect)
-  Widget _buildPlatformBanner(BuildContext context, dynamic permissionStatus) {
-    final isHealthConnectAvailable = permissionStatus.healthConnectAvailable ?? false;
-    final platformName = isHealthConnectAvailable ? 'Health Connect' : 'Apple Health';
-    final platformIcon = isHealthConnectAvailable ? AppIcons.phoneAndroid : AppIcons.apple;
-
-    return Container(
-      decoration: BoxDecoration(
-        color: context.colors.secondaryContainer,
-        borderRadius: BorderRadius.circular(12),
-      ),
-      padding: const EdgeInsets.all(16),
-      child: Row(
+    return SingleChildScrollView(
+      padding: const EdgeInsets.all(20),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          SemanticIcon(
-            icon: platformIcon,
-            semanticLabel: platformName,
-            size: AppIconSize.xlarge,
-            color: context.iconPrimary,
-          ),
-          const SizedBox(width: 12),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  platformName,
-                  style: context.textTheme.titleMedium?.copyWith(
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                Text(
-                  context.l10n.healthSyncDescription,
-                  style: context.textTheme.bodySmall?.copyWith(
-                    color: context.colors.onSurfaceVariant,
-                  ),
-                ),
-              ],
-            ),
-          ),
+          // Hero section with connection status
+          _buildHeroSection(context, isConnected),
+          const SizedBox(height: 32),
+
+          // Data types section
+          _buildDataTypesSection(context, permissions),
+          const SizedBox(height: 24),
+
+          // Auto-sync option
+          if (isConnected) ...[
+            _buildAutoSyncSection(context, backgroundSyncState),
+            const SizedBox(height: 24),
+          ],
+
+          // Advanced options
+          _buildAdvancedSection(context, isConnected),
         ],
       ),
     );
   }
 
-  /// Builds section header
-  Widget _buildSectionHeader(BuildContext context, String title) {
-    return Text(
-      title,
-      style: context.textTheme.titleLarge?.copyWith(
-        fontWeight: FontWeight.bold,
-      ),
-    );
-  }
+  Widget _buildHeroSection(BuildContext context, bool isConnected) {
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+    final l10n = context.l10n;
+    final platformName = Platform.isIOS ? 'Apple Health' : 'Health Connect';
 
-  /// Builds permissions list with toggle switches
-  Widget _buildPermissionsList(
-    BuildContext context,
-    WidgetRef ref,
-    dynamic permissionStatus,
-  ) {
-    final permissions = permissionStatus.permissions as Map;
-
-    return Column(
-      children: [
-        // Workout permission
-        _buildPermissionTile(
-          context,
-          ref,
-          title: context.l10n.healthDataWorkouts,
-          subtitle: context.l10n.healthSyncWorkoutsDescription,
-          dataType: HealthDataType.workout,
-          isGranted: permissions[HealthDataType.workout] == PermissionState.authorized,
-        ),
-
-        const SizedBox(height: 8),
-
-        // Body weight permission
-        _buildPermissionTile(
-          context,
-          ref,
-          title: context.l10n.healthDataBodyWeight,
-          subtitle: context.l10n.healthSyncBodyWeightDescription,
-          dataType: HealthDataType.bodyWeight,
-          isGranted: permissions[HealthDataType.bodyWeight] == PermissionState.authorized,
-        ),
-      ],
-    );
-  }
-
-  /// Builds a single permission tile with switch
-  Widget _buildPermissionTile(
-    BuildContext context,
-    WidgetRef ref, {
-    required String title,
-    required String subtitle,
-    required HealthDataType dataType,
-    required bool isGranted,
-  }) {
     return Container(
+      padding: const EdgeInsets.all(24),
       decoration: BoxDecoration(
-        color: context.colors.surfaceContainerHighest,
-        borderRadius: BorderRadius.circular(12),
-      ),
-      child: SwitchListTile(
-        title: Text(title),
-        subtitle: Text(
-          subtitle,
-          style: context.textTheme.bodySmall?.copyWith(
-            color: context.colors.onSurfaceVariant,
-          ),
+        gradient: LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: isConnected
+              ? [
+                  colorScheme.primaryContainer.withValues(alpha: 0.5),
+                  colorScheme.tertiaryContainer.withValues(alpha: 0.3),
+                ]
+              : [
+                  colorScheme.surfaceContainerHighest,
+                  colorScheme.surfaceContainerHigh,
+                ],
         ),
-        value: isGranted,
-        onChanged: (value) => _handlePermissionToggle(
-          context,
-          ref,
-          dataType,
-          value,
-        ),
-        secondary: SemanticIcon(
-          icon: isGranted ? AppIcons.checkCircle : AppIcons.block,
-          semanticLabel: isGranted ? 'Granted' : 'Denied',
-          size: AppIconSize.large,
-          color: isGranted ? context.iconSuccess : context.iconError,
+        borderRadius: BorderRadius.circular(24),
+        border: Border.all(
+          color: isConnected
+              ? colorScheme.primary.withValues(alpha: 0.3)
+              : colorScheme.outline.withValues(alpha: 0.2),
+          width: 1.5,
         ),
       ),
-    );
-  }
-
-  /// Builds sync status list (workout + body weight)
-  Widget _buildSyncStatusList(
-    BuildContext context,
-    WidgetRef ref,
-    dynamic permissionStatus,
-  ) {
-    final permissions = permissionStatus.permissions as Map;
-    final workoutGranted = permissions[HealthDataType.workout] == PermissionState.authorized;
-    final weightGranted = permissions[HealthDataType.bodyWeight] == PermissionState.authorized;
-
-    return Column(
-      children: [
-        // Workout sync status
-        if (workoutGranted)
-          HealthSyncStatusWidget(
-            dataType: HealthDataType.workout,
-            onManualSync: () => _handleManualSync(
-              context,
-              ref,
-              HealthDataType.workout,
-            ),
-          ),
-
-        if (workoutGranted) const SizedBox(height: 12),
-
-        // Body weight sync status
-        if (weightGranted)
-          HealthSyncStatusWidget(
-            dataType: HealthDataType.bodyWeight,
-            onManualSync: () => _handleManualSync(
-              context,
-              ref,
-              HealthDataType.bodyWeight,
-            ),
-          ),
-
-        // No permissions message
-        if (!workoutGranted && !weightGranted)
+      child: Column(
+        children: [
+          // Icon
           Container(
+            width: 80,
+            height: 80,
             decoration: BoxDecoration(
-              color: context.colors.surfaceContainerHighest,
-              borderRadius: BorderRadius.circular(12),
+              color: isConnected
+                  ? colorScheme.primary.withValues(alpha: 0.15)
+                  : colorScheme.surfaceContainerHighest,
+              shape: BoxShape.circle,
+              boxShadow: isConnected
+                  ? [
+                      BoxShadow(
+                        color: colorScheme.primary.withValues(alpha: 0.2),
+                        blurRadius: 20,
+                        spreadRadius: 2,
+                      ),
+                    ]
+                  : null,
             ),
-            padding: const EdgeInsets.all(16),
+            child: Icon(
+              Platform.isIOS ? AppIcons.apple : AppIcons.favorite,
+              size: 40,
+              color: isConnected
+                  ? colorScheme.primary
+                  : colorScheme.onSurface.withValues(alpha: 0.5),
+            ),
+          ),
+          const SizedBox(height: 16),
+
+          // Title
+          Text(
+            platformName,
+            style: theme.textTheme.headlineSmall?.copyWith(
+              fontWeight: FontWeight.bold,
+              color: colorScheme.onSurface,
+            ),
+          ),
+          const SizedBox(height: 8),
+
+          // Status
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            decoration: BoxDecoration(
+              color: isConnected
+                  ? colorScheme.primary.withValues(alpha: 0.15)
+                  : colorScheme.surfaceContainerHighest,
+              borderRadius: BorderRadius.circular(20),
+            ),
             child: Row(
+              mainAxisSize: MainAxisSize.min,
               children: [
-                SemanticIcon(
-                  icon: AppIcons.info,
-                  semanticLabel: 'Info',
-                  size: AppIconSize.large,
-                  color: context.iconSecondary,
+                Icon(
+                  isConnected ? AppIcons.checkCircle : AppIcons.block,
+                  size: 18,
+                  color: isConnected
+                      ? context.successColor
+                      : colorScheme.onSurface.withValues(alpha: 0.5),
                 ),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: Text(
-                    'Grant permissions above to enable sync', // TODO: Localize
-                    style: context.textTheme.bodyMedium?.copyWith(
-                      color: context.colors.onSurfaceVariant,
-                    ),
+                const SizedBox(width: 8),
+                Text(
+                  isConnected ? l10n.connected : l10n.notConnected,
+                  style: theme.textTheme.labelLarge?.copyWith(
+                    color: isConnected
+                        ? context.successColor
+                        : colorScheme.onSurface.withValues(alpha: 0.7),
+                    fontWeight: FontWeight.w600,
                   ),
                 ),
               ],
             ),
           ),
+          const SizedBox(height: 16),
+
+          // Description
+          Text(
+            l10n.healthSyncDescription,
+            style: theme.textTheme.bodyMedium?.copyWith(
+              color: colorScheme.onSurface.withValues(alpha: 0.7),
+            ),
+            textAlign: TextAlign.center,
+          ),
+          const SizedBox(height: 20),
+
+          // Primary action button
+          if (!isConnected)
+            SizedBox(
+              width: double.infinity,
+              child: FilledButton.icon(
+                onPressed: _isConnecting ? null : _handleConnect,
+                icon: _isConnecting
+                    ? const SizedBox(
+                        width: 20,
+                        height: 20,
+                        child: CircularProgressIndicator(
+                          strokeWidth: 2,
+                          color: Colors.white,
+                        ),
+                      )
+                    : const Icon(AppIcons.link, size: 20),
+                label: Text(_isConnecting ? l10n.connecting : l10n.connect),
+                style: FilledButton.styleFrom(
+                  padding: const EdgeInsets.symmetric(vertical: 16),
+                ),
+              ),
+            ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildDataTypesSection(
+    BuildContext context,
+    Map permissions,
+  ) {
+    final theme = Theme.of(context);
+    final l10n = context.l10n;
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          l10n.dataTypes,
+          style: theme.textTheme.titleMedium?.copyWith(
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        const SizedBox(height: 12),
+        _buildDataTypeTile(
+          context,
+          icon: AppIcons.workout,
+          title: l10n.healthDataWorkouts,
+          description: l10n.healthSyncWorkoutsDescription,
+          isEnabled:
+              permissions[HealthDataType.workout] == PermissionState.authorized,
+          dataType: HealthDataType.workout,
+        ),
+        const SizedBox(height: 8),
+        _buildDataTypeTile(
+          context,
+          icon: AppIcons.scale,
+          title: l10n.healthDataBodyWeight,
+          description: l10n.healthSyncBodyWeightDescription,
+          isEnabled: permissions[HealthDataType.bodyWeight] ==
+              PermissionState.authorized,
+          dataType: HealthDataType.bodyWeight,
+        ),
+        const SizedBox(height: 8),
+        _buildDataTypeTile(
+          context,
+          icon: AppIcons.bedtime,
+          title: l10n.sleepData,
+          description: l10n.sleepTrackingDescription,
+          isEnabled:
+              permissions[HealthDataType.workout] == PermissionState.authorized,
+          dataType: null, // Sleep is read via workout permission
+          isReadOnly: true,
+        ),
       ],
     );
   }
 
-  /// Builds background sync configuration card
-  Widget _buildBackgroundSyncCard(
-    BuildContext context,
-    WidgetRef ref,
-    BackgroundSyncState backgroundSyncState,
-  ) {
+  Widget _buildDataTypeTile(
+    BuildContext context, {
+    required IconData icon,
+    required String title,
+    required String description,
+    required bool isEnabled,
+    HealthDataType? dataType,
+    bool isReadOnly = false,
+  }) {
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+
     return Container(
       decoration: BoxDecoration(
-        color: context.colors.surfaceContainerHighest,
-        borderRadius: BorderRadius.circular(12),
+        color: colorScheme.surfaceContainerHighest.withValues(alpha: 0.5),
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(
+          color: isEnabled
+              ? context.successColor.withValues(alpha: 0.3)
+              : colorScheme.outline.withValues(alpha: 0.1),
+        ),
       ),
+      child: ListTile(
+        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+        leading: Container(
+          width: 44,
+          height: 44,
+          decoration: BoxDecoration(
+            color: isEnabled
+                ? context.successColor.withValues(alpha: 0.15)
+                : colorScheme.surfaceContainerHighest,
+            borderRadius: BorderRadius.circular(12),
+          ),
+          child: Icon(
+            icon,
+            color: isEnabled
+                ? context.successColor
+                : colorScheme.onSurface.withValues(alpha: 0.5),
+          ),
+        ),
+        title: Text(
+          title,
+          style: theme.textTheme.titleSmall?.copyWith(
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+        subtitle: Text(
+          description,
+          style: theme.textTheme.bodySmall?.copyWith(
+            color: colorScheme.onSurface.withValues(alpha: 0.6),
+          ),
+          maxLines: 2,
+          overflow: TextOverflow.ellipsis,
+        ),
+        trailing: isReadOnly
+            ? Icon(
+                isEnabled ? AppIcons.checkCircle : AppIcons.remove,
+                color: isEnabled
+                    ? context.successColor
+                    : colorScheme.onSurface.withValues(alpha: 0.3),
+              )
+            : Switch.adaptive(
+                value: isEnabled,
+                onChanged: dataType != null
+                    ? (value) => _handlePermissionToggle(dataType, value)
+                    : null,
+              ),
+      ),
+    );
+  }
+
+  Widget _buildAutoSyncSection(
+    BuildContext context,
+    BackgroundSyncState backgroundSyncState,
+  ) {
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+    final l10n = context.l10n;
+
+    return Container(
       padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: colorScheme.surfaceContainerHighest.withValues(alpha: 0.5),
+        borderRadius: BorderRadius.circular(16),
+      ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Title + toggle
           Row(
             children: [
               Expanded(
@@ -346,48 +385,45 @@ class HealthSyncSettingsScreen extends ConsumerWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'Auto Sync (Daily)', // TODO: Localize
-                      style: context.textTheme.titleMedium,
+                      l10n.autoSyncDaily,
+                      style: theme.textTheme.titleSmall?.copyWith(
+                        fontWeight: FontWeight.w600,
+                      ),
                     ),
+                    const SizedBox(height: 4),
                     Text(
-                      'Sync automatically every 24 hours', // TODO: Localize
-                      style: context.textTheme.bodySmall?.copyWith(
-                        color: context.colors.onSurfaceVariant,
+                      l10n.autoSyncDescription,
+                      style: theme.textTheme.bodySmall?.copyWith(
+                        color: colorScheme.onSurface.withValues(alpha: 0.6),
                       ),
                     ),
                   ],
                 ),
               ),
-              Switch(
+              Switch.adaptive(
                 value: backgroundSyncState.isScheduled,
-                onChanged: (value) => _handleBackgroundSyncToggle(
-                  context,
-                  ref,
-                  value,
-                ),
+                onChanged: _handleBackgroundSyncToggle,
               ),
             ],
           ),
-
-          // Last sync time (if available)
           if (backgroundSyncState.lastBackgroundSync != null) ...[
             const SizedBox(height: 12),
-            Text(
-              'Last synced: ${_formatDateTime(backgroundSyncState.lastBackgroundSync!)}', // TODO
-              style: context.textTheme.bodySmall?.copyWith(
-                color: context.colors.onSurfaceVariant,
-              ),
-            ),
-          ],
-
-          // Next sync time (if scheduled)
-          if (backgroundSyncState.nextScheduledSync != null) ...[
-            const SizedBox(height: 4),
-            Text(
-              'Next sync: ${_formatDateTime(backgroundSyncState.nextScheduledSync!)}', // TODO
-              style: context.textTheme.bodySmall?.copyWith(
-                color: context.colors.onSurfaceVariant,
-              ),
+            Row(
+              children: [
+                SemanticIcon(
+                  icon: AppIcons.history,
+                  semanticLabel: 'Last sync',
+                  size: AppIconSize.small,
+                  color: colorScheme.onSurface.withValues(alpha: 0.5),
+                ),
+                const SizedBox(width: 8),
+                Text(
+                  '${l10n.lastSynced}: ${_formatDateTime(backgroundSyncState.lastBackgroundSync!)}',
+                  style: theme.textTheme.bodySmall?.copyWith(
+                    color: colorScheme.onSurface.withValues(alpha: 0.5),
+                  ),
+                ),
+              ],
             ),
           ],
         ],
@@ -395,65 +431,146 @@ class HealthSyncSettingsScreen extends ConsumerWidget {
     );
   }
 
-  /// Builds clear cache button
-  Widget _buildClearCacheButton(BuildContext context, WidgetRef ref) {
-    return OutlinedButton.icon(
-      onPressed: () => _handleClearCache(context, ref),
-      icon: SemanticIcon(
-        icon: AppIcons.delete,
-        semanticLabel: 'Clear cache',
-        size: AppIconSize.small,
-        color: context.iconError,
+  Widget _buildAdvancedSection(BuildContext context, bool isConnected) {
+    final theme = Theme.of(context);
+    final l10n = context.l10n;
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          l10n.advanced,
+          style: theme.textTheme.titleMedium?.copyWith(
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        const SizedBox(height: 12),
+
+        // Manual sync button
+        if (isConnected)
+          _buildActionTile(
+            context,
+            icon: AppIcons.refresh,
+            title: l10n.syncNow,
+            subtitle: l10n.syncNowDescription,
+            onTap: _handleManualSync,
+          ),
+
+        if (isConnected) const SizedBox(height: 8),
+
+        // Clear cache button
+        _buildActionTile(
+          context,
+          icon: AppIcons.delete,
+          title: l10n.clearSyncCache,
+          subtitle: l10n.clearSyncCacheDescription,
+          onTap: () => _handleClearCache(context),
+          isDanger: true,
+        ),
+
+        const SizedBox(height: 8),
+
+        // Debug button
+        _buildActionTile(
+          context,
+          icon: AppIcons.bugReport,
+          title: l10n.runDiagnosticTests,
+          subtitle: l10n.diagnosticDescription,
+          onTap: () => context.pushNamed('health-debug'),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildActionTile(
+    BuildContext context, {
+    required IconData icon,
+    required String title,
+    required String subtitle,
+    required VoidCallback onTap,
+    bool isDanger = false,
+  }) {
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+    final tileColor = isDanger ? context.errorColor : colorScheme.primary;
+
+    return Container(
+      decoration: BoxDecoration(
+        color: colorScheme.surfaceContainerHighest.withValues(alpha: 0.5),
+        borderRadius: BorderRadius.circular(16),
       ),
-      label: const Text('Clear Sync Cache'), // TODO: Localize
-      style: OutlinedButton.styleFrom(
-        foregroundColor: context.colors.error,
+      child: ListTile(
+        onTap: onTap,
+        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+        leading: Container(
+          width: 40,
+          height: 40,
+          decoration: BoxDecoration(
+            color: tileColor.withValues(alpha: 0.1),
+            borderRadius: BorderRadius.circular(10),
+          ),
+          child: Icon(icon, color: tileColor, size: 20),
+        ),
+        title: Text(
+          title,
+          style: theme.textTheme.titleSmall?.copyWith(
+            fontWeight: FontWeight.w600,
+            color: isDanger ? tileColor : null,
+          ),
+        ),
+        subtitle: Text(
+          subtitle,
+          style: theme.textTheme.bodySmall?.copyWith(
+            color: colorScheme.onSurface.withValues(alpha: 0.6),
+          ),
+        ),
+        trailing: Icon(
+          AppIcons.forward,
+          color: colorScheme.onSurface.withValues(alpha: 0.3),
+          size: 20,
+        ),
       ),
     );
   }
 
-  /// Builds debug button for diagnostic testing
-  Widget _buildDebugButton(BuildContext context) {
-    return OutlinedButton.icon(
-      onPressed: () => context.pushNamed('health-debug'),
-      icon: SemanticIcon(
-        icon: AppIcons.bugReport,
-        semanticLabel: 'Debug',
-        size: AppIconSize.small,
-        color: context.colors.primary,
-      ),
-      label: const Text('Run Diagnostic Tests'), // Debug only
-      style: OutlinedButton.styleFrom(
-        foregroundColor: context.colors.primary,
-      ),
-    );
-  }
+  Widget _buildNotAvailableState(BuildContext context) {
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+    final l10n = context.l10n;
+    final platformName = Platform.isIOS ? 'Apple Health' : 'Health Connect';
 
-  /// Builds error state
-  Widget _buildErrorState(BuildContext context, Object error) {
     return Center(
       child: Padding(
-        padding: const EdgeInsets.all(24),
+        padding: const EdgeInsets.all(32),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            SemanticIcon(
-              icon: AppIcons.error,
-              semanticLabel: 'Error',
-              size: AppIconSize.xxlarge,
-              color: context.iconError,
+            Container(
+              width: 80,
+              height: 80,
+              decoration: BoxDecoration(
+                color: colorScheme.errorContainer.withValues(alpha: 0.3),
+                shape: BoxShape.circle,
+              ),
+              child: Icon(
+                AppIcons.block,
+                size: 40,
+                color: colorScheme.error,
+              ),
             ),
-            const SizedBox(height: 16),
+            const SizedBox(height: 24),
             Text(
-              'Failed to load health sync settings', // TODO: Localize
-              style: context.textTheme.titleMedium,
+              l10n.healthSyncNotAvailable,
+              style: theme.textTheme.titleLarge?.copyWith(
+                fontWeight: FontWeight.bold,
+              ),
               textAlign: TextAlign.center,
             ),
-            const SizedBox(height: 8),
+            const SizedBox(height: 12),
             Text(
-              error.toString(),
-              style: context.textTheme.bodySmall?.copyWith(
-                color: context.colors.onSurfaceVariant,
+              '$platformName ${l10n.notAvailableOnDevice}',
+              style: theme.textTheme.bodyMedium?.copyWith(
+                color: colorScheme.onSurface.withValues(alpha: 0.7),
               ),
               textAlign: TextAlign.center,
             ),
@@ -467,15 +584,42 @@ class HealthSyncSettingsScreen extends ConsumerWidget {
   // EVENT HANDLERS
   // ============================================================
 
-  /// Handles permission toggle
+  Future<void> _handleConnect() async {
+    HapticFeedback.mediumImpact();
+    setState(() => _isConnecting = true);
+
+    try {
+      final controller = ref.read(healthPermissionControllerProvider.notifier);
+      await controller.requestPermissionsSequential();
+
+      if (mounted) {
+        SnackBarService.showSuccess(
+          context,
+          context.l10n.healthKitConnected,
+        );
+      }
+    } catch (e) {
+      if (mounted) {
+        SnackBarService.showError(
+          context,
+          context.l10n.healthKitPermissionDenied,
+        );
+      }
+    } finally {
+      if (mounted) {
+        setState(() => _isConnecting = false);
+      }
+    }
+  }
+
   Future<void> _handlePermissionToggle(
-    BuildContext context,
-    WidgetRef ref,
     HealthDataType dataType,
     bool value,
   ) async {
+    HapticFeedback.lightImpact();
+
     if (!value) {
-      // Cannot revoke from app - must do in iOS Settings / Health Connect
+      // Cannot revoke from app - must do in iOS Settings
       SnackBarService.showWarning(
         context,
         context.l10n.healthSyncPermissionRevoke,
@@ -483,162 +627,110 @@ class HealthSyncSettingsScreen extends ConsumerWidget {
       return;
     }
 
-    // Request permission
     final controller = ref.read(healthPermissionControllerProvider.notifier);
     await controller.requestPermissions(dataTypes: [dataType]);
-
-    // Show result
-    final newStatus = ref.read(healthPermissionControllerProvider).valueOrNull;
-    if (newStatus != null) {
-      final isGranted = newStatus.canSync(dataType);
-      if (isGranted) {
-        SnackBarService.showSuccess(
-          context,
-          context.l10n.healthSyncPermissionGranted,
-        );
-      } else {
-        SnackBarService.showError(
-          context,
-          context.l10n.healthSyncPermissionDenied,
-        );
-      }
-    }
   }
 
-  /// Handles manual sync
-  Future<void> _handleManualSync(
-    BuildContext context,
-    WidgetRef ref,
-    HealthDataType dataType,
-  ) async {
-    final controller = ref.read(healthSyncControllerProvider.notifier);
+  Future<void> _handleBackgroundSyncToggle(bool value) async {
+    HapticFeedback.lightImpact();
 
-    try {
-      if (dataType == HealthDataType.workout) {
-        await controller.syncWorkouts();
-      } else if (dataType == HealthDataType.bodyWeight) {
-        await controller.syncBodyWeight();
-      }
-
-      SnackBarService.showSuccess(
-        context,
-        context.l10n.healthSyncCompleted,
-      );
-    } catch (e) {
-      SnackBarService.showError(
-        context,
-        context.l10n.healthSyncError(e.toString()),
-      );
-    }
-  }
-
-  /// Handles background sync toggle
-  Future<void> _handleBackgroundSyncToggle(
-    BuildContext context,
-    WidgetRef ref,
-    bool value,
-  ) async {
-    final controller = ref.read(healthBackgroundSyncControllerProvider.notifier);
+    final controller =
+        ref.read(healthBackgroundSyncControllerProvider.notifier);
 
     try {
       if (value) {
         await controller.enableBackgroundSync();
-        SnackBarService.showSuccess(
-          context,
-          'Background sync enabled', // TODO: Localize
-        );
+        if (mounted) {
+          SnackBarService.showSuccess(
+            context,
+            context.l10n.backgroundSyncEnabled,
+          );
+        }
       } else {
         await controller.disableBackgroundSync();
-        SnackBarService.showSuccess(
-          context,
-          'Background sync disabled', // TODO: Localize
-        );
+        if (mounted) {
+          SnackBarService.showSuccess(
+            context,
+            context.l10n.backgroundSyncDisabled,
+          );
+        }
       }
     } catch (e) {
-      SnackBarService.showError(
-        context,
-        'Failed to toggle background sync: $e', // TODO: Localize
-      );
+      if (mounted) {
+        SnackBarService.showError(
+          context,
+          context.l10n.backgroundSyncToggleError,
+        );
+      }
     }
   }
 
-  /// Handles clear cache
-  Future<void> _handleClearCache(BuildContext context, WidgetRef ref) async {
-    final repository = ref.read(healthRepositoryProvider);
+  Future<void> _handleManualSync() async {
+    HapticFeedback.mediumImpact();
 
-    // Confirm
+    final controller = ref.read(healthSyncControllerProvider.notifier);
+
+    try {
+      await controller.syncWorkouts();
+      await controller.syncBodyWeight();
+
+      if (mounted) {
+        SnackBarService.showSuccess(
+          context,
+          context.l10n.healthSyncCompleted,
+        );
+      }
+    } catch (e) {
+      if (mounted) {
+        SnackBarService.showError(
+          context,
+          context.l10n.healthSyncError(e.toString()),
+        );
+      }
+    }
+  }
+
+  Future<void> _handleClearCache(BuildContext context) async {
+    final l10n = context.l10n;
+
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Clear Sync Cache?'), // TODO: Localize
-        content: const Text(
-          'This will clear all synced data and sync history from local storage. '
-          'Data in Apple Health / Health Connect will not be affected.', // TODO
-        ),
+        title: Text(l10n.clearSyncCacheTitle),
+        content: Text(l10n.clearSyncCacheMessage),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context, false),
-            child: const Text('Cancel'), // TODO: Localize
+            child: Text(l10n.cancel),
           ),
           FilledButton(
             onPressed: () => Navigator.pop(context, true),
-            child: const Text('Clear Cache'), // TODO: Localize
+            style: FilledButton.styleFrom(
+              backgroundColor: context.errorColor,
+            ),
+            child: Text(l10n.clearSyncCache),
           ),
         ],
       ),
     );
 
-    if (confirmed != true) return;
+    if (confirmed != true || !mounted) return;
 
-    // Clear cache
+    final repository = ref.read(healthRepositoryProvider);
     final result = await repository.clearSyncCache();
 
     result.fold(
       (failure) => SnackBarService.showError(
         context,
-        'Failed to clear cache: ${failure.message}', // TODO: Localize
+        '${l10n.cacheClearError}: ${failure.message}',
       ),
       (_) => SnackBarService.showSuccess(
         context,
-        'Cache cleared successfully', // TODO: Localize
+        l10n.cacheCleared,
       ),
     );
   }
 
-  /// Shows help dialog
-  void _showHelpDialog(BuildContext context) {
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('Health Sync Help'), // TODO: Localize
-        content: const SingleChildScrollView(
-          child: Text(
-            'Apple Health & Health Connect Integration\n\n'
-            'Features:\n'
-            '• Import workouts from Apple Health / Health Connect\n'
-            '• Sync body weight data (bidirectional)\n'
-            '• Automatic daily background sync\n'
-            '• Manual sync anytime\n\n'
-            'Permissions:\n'
-            '• Workout: Import workout sessions\n'
-            '• Body Weight: Sync weight data\n\n'
-            'Background Sync:\n'
-            '• Auto-syncs every 24 hours\n'
-            '• Retry on failure (3 attempts max)\n'
-            '• Can be disabled if needed', // TODO: Localize all
-          ),
-        ),
-        actions: [
-          FilledButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('Got it'), // TODO: Localize
-          ),
-        ],
-      ),
-    );
-  }
-
-  /// Formats DateTime for display
   String _formatDateTime(DateTime dateTime) {
     return '${dateTime.day}/${dateTime.month}/${dateTime.year} '
         '${dateTime.hour.toString().padLeft(2, '0')}:'

@@ -298,7 +298,7 @@ class _TierAvatar extends StatelessWidget {
         ],
       ),
       padding: const EdgeInsets.all(3), // Thinner, more defined border
-      child: Container(
+      child: DecoratedBox(
         decoration: BoxDecoration(
           shape: BoxShape.circle,
           // ✨ Material 3 2025: Solid elevated surface

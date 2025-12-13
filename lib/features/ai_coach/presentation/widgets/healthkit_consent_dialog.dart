@@ -28,6 +28,7 @@ library;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
+import 'package:gymbro_flutter_new/shared/presentation/services/snackbar_service.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 
@@ -576,12 +577,7 @@ class RevokeHealthKitConsentDialog extends ConsumerWidget {
 
             if (context.mounted) {
               Navigator.pop(context, true);
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: const Text('Health data access revoked'),
-                  backgroundColor: context.colors.error,
-                ),
-              );
+              SnackBarService.showError(context, 'Health data access revoked');
             }
           },
           child: const Text('Revoke & Delete'),

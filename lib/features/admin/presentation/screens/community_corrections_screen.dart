@@ -16,6 +16,7 @@ import 'package:gymbro_flutter_new/features/admin/presentation/providers/communi
 import 'package:gymbro_flutter_new/features/admin/presentation/widgets/correction_review_card.dart';
 import 'package:gymbro_flutter_new/features/community/domain/entities/community_contribution.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator.dart';
 
 class CommunityCorrectionsScreen extends ConsumerWidget {
   const CommunityCorrectionsScreen({super.key});
@@ -231,7 +232,7 @@ class CommunityCorrectionsScreen extends ConsumerWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          CircularProgressIndicator(),
+          LoadingIndicator(),
           SizedBox(height: 16),
           Text('Loading corrections...'),
         ],

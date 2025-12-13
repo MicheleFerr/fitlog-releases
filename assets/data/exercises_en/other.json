@@ -1,0 +1,2512 @@
+[
+  {
+    "id": "all_fours_squad_stretch",
+    "nome": "All Fours Squad Stretch",
+    "imageUrl": "https://static.exercisedb.dev/media/qBcKorM.gif",
+    "muscoliSecondari": "GLUT",
+    "difficolta": "Principiante",
+    "tipoEsercizio": "Compound",
+    "attrezzatura": "Corpo Libero",
+    "patternMovimento": "Functional Movement",
+    "rangeRipetizioni": "8-15",
+    "noteTecniche": "Step:1 Start on all fours with your hands directly under your shoulders and your knees directly under your hips. | Step:2 Extend one leg straight back, keeping your knee bent and your foot flexed. | Step:3 Slowly lower your hips towards the ground, feeling a stretch in your quads. | Step:4 Hold this position for 20-30 seconds. | Step:5 Switch legs and repeat the stretch on the other side.",
+    "mobilitaPre": "General dynamic stretching 5-7 minutes, joint mobility work",
+    "attivazionePre": "Target muscle light activation 2-3 sets, 12-15 reps",
+    "aliases": [
+      "afss"
+    ],
+    "countingMode": "reps",
+    "focus": "FEMOR"
+  },
+  {
+    "id": "all_fours_squad_stretch_elevated_variation",
+    "nome": "All Fours Squad Stretch - Elevated Variation",
+    "imageUrl": "https://static.exercisedb.dev/media/LzX8YEz.gif",
+    "muscoliSecondari": "GLUT",
+    "difficolta": "Principiante",
+    "tipoEsercizio": "Compound",
+    "attrezzatura": "Corpo Libero",
+    "patternMovimento": "Functional Movement",
+    "rangeRipetizioni": "8-15",
+    "noteTecniche": "Step:1 Start on all fours with your hands directly under your shoulders and your knees directly under your hips. | Step:2 Extend one leg straight back, keeping your knee bent and your foot flexed. Maintain elevated form throughout. | Step:3 Slowly lower your hips towards the ground, feeling a stretch in your quads. | Step:4 Hold this position for 20-30 seconds. | Step:5 Switch legs and repeat the stretch on the other side.",
+    "mobilitaPre": "General dynamic stretching 5-7 minutes, joint mobility work",
+    "attivazionePre": "Target muscle light activation 2-3 sets, 12-15 reps",
+    "aliases": [
+      "afss-ev",
+      "all fours squad stretch   elevated variation",
+      "all fours squad stretch  elevated variation"
+    ],
+    "countingMode": "reps",
+    "focus": "FEMOR"
+  },
+  {
+    "id": "alternating_bear_crawl",
+    "nome": "Alternating Bear Crawl",
+    "imageUrl": "https://static.exercisedb.dev/media/gTGciXz.gif",
+    "muscoliSecondari": "DELT",
+    "difficolta": "Principiante",
+    "tipoEsercizio": "Compound",
+    "attrezzatura": "Corpo Libero",
+    "patternMovimento": "Functional Movement",
+    "rangeRipetizioni": "8-15",
+    "noteTecniche": "Step:1 Start on all fours with your hands directly under your shoulders and your knees directly under your hips. | Step:2 Lift your knees slightly off the ground, keeping your back flat and your core engaged. | Step:3 Move your right hand and left foot forward simultaneously, followed by your left hand and right foot. | Step:4 Continue crawling forward, alternating your hand and foot movements. | Step:5 Maintain a steady pace and keep your core tight throughout the exercise. | Step:6 (alternating variation) Continue for the desired distance or time.",
+    "mobilitaPre": "General dynamic stretching 5-7 minutes, joint mobility work",
+    "attivazionePre": "Target muscle light activation 2-3 sets, 12-15 reps",
+    "aliases": [
+      "abc"
+    ],
+    "countingMode": "reps",
+    "focus": "CORE"
+  },
+  {
+    "id": "assisted_prone_lying_quads_stretch",
+    "nome": "Assisted Prone Lying Quads Stretch",
+    "imageUrl": "https://static.exercisedb.dev/media/YUYAMEj.gif",
+    "muscoliSecondari": "FEMOR,GLUT",
+    "difficolta": "Principiante",
+    "tipoEsercizio": "Compound",
+    "attrezzatura": "Assistito",
+    "patternMovimento": "Functional Movement",
+    "rangeRipetizioni": "8-15",
+    "noteTecniche": "Step:1 Lie face down on the ground with your legs extended. | Step:2 Bend your left knee and reach back with your left hand to grab your left foot or ankle. | Step:3 Gently pull your left foot towards your glutes, feeling a stretch in your left quad. | Step:4 Hold the stretch for 20-30 seconds, then release. | Step:5 Repeat with your right leg.",
+    "mobilitaPre": "General dynamic stretching 5-7 minutes, joint mobility work",
+    "attivazionePre": "Target muscle light activation 2-3 sets, 12-15 reps",
+    "aliases": [
+      "aplqs"
+    ],
+    "countingMode": "weighted",
+    "focus": "QUAD"
+  },
+  {
+    "id": "astride_jumps_male",
+    "nome": "Astride Jumps (male)",
+    "imageUrl": "https://static.exercisedb.dev/media/f9lVSSI.gif",
+    "muscoliSecondari": "FEMOR,POLP,QUAD",
+    "difficolta": "Principiante",
+    "tipoEsercizio": "Compound",
+    "attrezzatura": "Corpo Libero",
+    "patternMovimento": "Functional Movement",
+    "rangeRipetizioni": "8-15",
+    "noteTecniche": "Step:1 Stand with your feet shoulder-width apart. | Step:2 Bend your knees and lower your body into a squat position. | Step:3 Jump explosively upwards, extending your legs and arms. | Step:4 While in the air, spread your legs apart and bring your arms out to the sides. | Step:5 Land softly with your feet shoulder-width apart, bending your knees to absorb the impact. | Step:6 Repeat for the desired number of repetitions.",
+    "mobilitaPre": "General dynamic stretching 5-7 minutes, joint mobility work",
+    "attivazionePre": "Target muscle light activation 2-3 sets, 12-15 reps",
+    "aliases": [
+      "aj("
+    ],
+    "countingMode": "reps",
+    "focus": "GLUT"
+  },
+  {
+    "id": "back_and_forth_step",
+    "nome": "Back and Forth Step",
+    "imageUrl": "https://static.exercisedb.dev/media/fNGumX0.gif",
+    "muscoliSecondari": "FEMOR,POLP,QUAD",
+    "difficolta": "Principiante",
+    "tipoEsercizio": "Compound",
+    "attrezzatura": "Corpo Libero",
+    "patternMovimento": "Functional Movement",
+    "rangeRipetizioni": "8-15",
+    "noteTecniche": "Step:1 Stand with your feet shoulder-width apart. | Step:2 Step forward with your right foot, bending your knee and lowering your body into a lunge position. | Step:3 Push off with your right foot and step back to the starting position. | Step:4 Repeat the movement with your left foot, alternating legs with each step. | Step:5 Continue stepping back and forth, maintaining a steady pace. | Step:6 Repeat for the desired duration or number of repetitions.",
+    "mobilitaPre": "General dynamic stretching 5-7 minutes, joint mobility work",
+    "attivazionePre": "Target muscle light activation 2-3 sets, 12-15 reps",
+    "aliases": [
+      "bafs"
+    ],
+    "countingMode": "reps",
+    "focus": "GLUT"
+  },
+  {
+    "id": "backward_jump",
+    "nome": "Backward Jump",
+    "imageUrl": "https://static.exercisedb.dev/media/SaDOwk7.gif",
+    "muscoliSecondari": "FEMOR,POLP",
+    "difficolta": "Principiante",
+    "tipoEsercizio": "Compound",
+    "attrezzatura": "Corpo Libero",
+    "patternMovimento": "Functional Movement",
+    "rangeRipetizioni": "8-15",
+    "noteTecniche": "Step:1 Stand with your feet shoulder-width apart. | Step:2 Bend your knees slightly and jump backwards, pushing off with both feet. | Step:3 Land softly on the balls of your feet, bending your knees to absorb the impact. | Step:4 Repeat for the desired number of repetitions.",
+    "mobilitaPre": "General dynamic stretching 5-7 minutes, joint mobility work",
+    "attivazionePre": "Target muscle light activation 2-3 sets, 12-15 reps",
+    "aliases": [
+      "bj"
+    ],
+    "countingMode": "reps",
+    "focus": "GLUT"
+  },
+  {
+    "id": "balance_board",
+    "nome": "Balance Board",
+    "imageUrl": "https://static.exercisedb.dev/media/xAySMB0.gif",
+    "muscoliSecondari": "FEMOR,GLUT,POLP",
+    "difficolta": "Principiante",
+    "tipoEsercizio": "Compound",
+    "attrezzatura": "Corpo Libero",
+    "patternMovimento": "Functional Movement",
+    "rangeRipetizioni": "8-15",
+    "noteTecniche": "Step:1 Place the balance board on a flat surface. | Step:2 Step onto the balance board with one foot, ensuring it is centered. | Step:3 Slowly shift your weight onto the foot on the balance board, keeping your core engaged. | Step:4 Maintain your balance and stability as you hold the position for a desired amount of time. | Step:5 Repeat the exercise with the other foot.",
+    "mobilitaPre": "General dynamic stretching 5-7 minutes, joint mobility work",
+    "attivazionePre": "Target muscle light activation 2-3 sets, 12-15 reps",
+    "aliases": [
+      "bb"
+    ],
+    "countingMode": "reps",
+    "focus": "CORE"
+  },
+  {
+    "id": "band_one_arm_single_leg_split_squat",
+    "nome": "Band One Arm Single Leg Split Squat",
+    "imageUrl": "https://static.exercisedb.dev/media/arsYEd3.gif",
+    "muscoliSecondari": "FEMOR,GLUT",
+    "difficolta": "Intermedio",
+    "tipoEsercizio": "Compound",
+    "attrezzatura": "Elastici",
+    "patternMovimento": "Squat Pattern",
+    "rangeRipetizioni": "8-15",
+    "noteTecniche": "Step:1 Stand with your feet hip-width apart and place a resistance band around your ankles. | Step:2 Extend one leg forward and rest the top of your foot on a bench or step behind you. | Step:3 Hold onto a support with one hand for balance. | Step:4 Bend your standing leg and lower your body down into a squat position, keeping your knee in line with your toes. | Step:5 Push through your heel to return to the starting position. | Step:6 Repeat for the desired number of repetitions, then switch legs.",
+    "mobilitaPre": "General dynamic stretching 5-7 minutes, joint mobility work",
+    "attivazionePre": "Target muscle light activation 2-3 sets, 12-15 reps",
+    "aliases": [
+      "boaslss",
+      "sq"
+    ],
+    "countingMode": "weighted",
+    "focus": "QUAD"
+  },
+  {
+    "id": "band_reverse_wrist_curl",
+    "nome": "Band Reverse Wrist Curl",
+    "focus": "AVA",
+    "imageUrl": "https://static.exercisedb.dev/media/Ezpnw9d.gif",
+    "difficolta": "Intermedio",
+    "tipoEsercizio": "Compound",
+    "attrezzatura": "Elastici",
+    "patternMovimento": "Isolation",
+    "rangeRipetizioni": "8-15",
+    "noteTecniche": "Step:1 Sit on a bench or chair with your feet flat on the ground. | Step:2 Hold the band with an overhand grip, palms facing down, and wrap it around your fingers. | Step:3 Rest your forearms on your thighs, with your wrists hanging off the edge. | Step:4 Slowly curl your wrists upward, squeezing your forearms. | Step:5 Pause for a moment at the top, then slowly lower your wrists back down to the starting position. | Step:6 Repeat for the desired number of repetitions.",
+    "mobilitaPre": "Wrist circles 2x10 each direction, finger flexion/extension 2x15, wrist rotations 2x10",
+    "attivazionePre": "Wrist curls (light) 2x15, reverse wrist curls 2x15, farmer walks (light) 2x30sec",
+    "aliases": [
+      "brwc",
+      "curl"
+    ],
+    "countingMode": "weighted",
+    "muscoliSecondari": "BICI"
+  },
+  {
+    "id": "band_shrug",
+    "nome": "Band Shrug",
+    "imageUrl": "https://static.exercisedb.dev/media/trmte8s.gif",
+    "muscoliSecondari": "DELT",
+    "difficolta": "Intermedio",
+    "tipoEsercizio": "Compound",
+    "attrezzatura": "Elastici",
+    "patternMovimento": "Functional Movement",
+    "rangeRipetizioni": "8-15",
+    "noteTecniche": "Step:1 Stand with your feet shoulder-width apart and place the band under your feet, holding the ends with your hands. | Step:2 Keep your arms straight and relaxed, and let the band hang in front of your thighs. | Step:3 Engage your traps by shrugging your shoulders upward, lifting the band as high as possible. | Step:4 Hold the contraction for a moment, then slowly lower your shoulders back down to the starting position. | Step:5 Repeat for the desired number of repetitions.",
+    "mobilitaPre": "General dynamic stretching 5-7 minutes, joint mobility work",
+    "attivazionePre": "Target muscle light activation 2-3 sets, 12-15 reps",
+    "aliases": [
+      "bs"
+    ],
+    "countingMode": "weighted",
+    "focus": "TRAP"
+  },
+  {
+    "id": "band_single_leg_split_squat",
+    "nome": "Band Single Leg Split Squat",
+    "imageUrl": "https://static.exercisedb.dev/media/y8bYM8w.gif",
+    "muscoliSecondari": "FEMOR,GLUT",
+    "difficolta": "Intermedio",
+    "tipoEsercizio": "Compound",
+    "attrezzatura": "Elastici",
+    "patternMovimento": "Squat Pattern",
+    "rangeRipetizioni": "8-15",
+    "noteTecniche": "Step:1 Stand with your feet hip-width apart and place a resistance band around your ankles. | Step:2 Take a big step forward with your right foot and a smaller step back with your left foot. | Step:3 Bend your knees and lower your body until your right thigh is parallel to the ground, keeping your left knee slightly above the ground. | Step:4 Push through your right heel to return to the starting position. | Step:5 Repeat on the other side.",
+    "mobilitaPre": "General dynamic stretching 5-7 minutes, joint mobility work",
+    "attivazionePre": "Target muscle light activation 2-3 sets, 12-15 reps",
+    "aliases": [
+      "bslss",
+      "sq"
+    ],
+    "countingMode": "weighted",
+    "focus": "QUAD"
+  },
+  {
+    "id": "band_wrist_curl",
+    "nome": "Band Wrist Curl",
+    "focus": "AVA",
+    "imageUrl": "https://static.exercisedb.dev/media/vUTfFHw.gif",
+    "difficolta": "Intermedio",
+    "tipoEsercizio": "Compound",
+    "attrezzatura": "Elastici",
+    "patternMovimento": "Isolation",
+    "rangeRipetizioni": "8-15",
+    "noteTecniche": "Step:1 Sit on a bench or chair with your feet flat on the ground. | Step:2 Hold the band with both hands, palms facing up, and rest your forearms on your thighs. | Step:3 Slowly curl your wrists upward, squeezing your forearms. | Step:4 Pause for a moment at the top, then slowly lower your wrists back down to the starting position. | Step:5 Repeat for the desired number of repetitions.",
+    "mobilitaPre": "Wrist circles 2x10 each direction, finger flexion/extension 2x15, wrist rotations 2x10",
+    "attivazionePre": "Wrist curls (light) 2x15, reverse wrist curls 2x15, farmer walks (light) 2x30sec",
+    "aliases": [
+      "bwc",
+      "curl"
+    ],
+    "countingMode": "weighted",
+    "muscoliSecondari": "BICI"
+  },
+  {
+    "id": "barbell_bench_front_squat",
+    "nome": "Barbell Bench Front Squat",
+    "imageUrl": "https://static.exercisedb.dev/media/Y7YcmIJ.gif",
+    "muscoliSecondari": "FEMOR,GLUT,POLP",
+    "difficolta": "Intermedio",
+    "tipoEsercizio": "Compound",
+    "attrezzatura": "Bilanciere",
+    "patternMovimento": "Push Pattern",
+    "rangeRipetizioni": "8-15",
+    "noteTecniche": "Step:1 Start by standing with your feet shoulder-width apart and the barbell resting on your upper chest, just below your collarbone. | Step:2 Hold the barbell with an overhand grip, keeping your elbows up and your upper arms parallel to the ground. | Step:3 Lower your body down into a squat position by bending at the knees and hips, keeping your back straight and your chest up. | Step:4 Pause for a moment at the bottom of the squat, then push through your heels to return to the starting position. | Step:5 Repeat for the desired number of repetitions.",
+    "mobilitaPre": "General dynamic stretching 5-7 minutes, joint mobility work",
+    "attivazionePre": "Target muscle light activation 2-3 sets, 12-15 reps",
+    "aliases": [
+      "bbfs",
+      "sq"
+    ],
+    "countingMode": "weighted",
+    "focus": "QUAD"
+  },
+  {
+    "id": "barbell_bench_squat",
+    "nome": "Barbell Bench Squat",
+    "imageUrl": "https://static.exercisedb.dev/media/W9pFVv1.gif",
+    "muscoliSecondari": "FEMOR,GLUT,POLP",
+    "difficolta": "Intermedio",
+    "tipoEsercizio": "Compound",
+    "attrezzatura": "Bilanciere",
+    "patternMovimento": "Push Pattern",
+    "rangeRipetizioni": "8-15",
+    "noteTecniche": "Step:1 Set up a barbell on a squat rack at chest height. | Step:2 Stand facing away from the rack, with your feet shoulder-width apart. | Step:3 Bend your knees and lower your body down into a squat position, keeping your back straight and chest up. | Step:4 Grasp the barbell with an overhand grip, slightly wider than shoulder-width apart. | Step:5 Lift the barbell off the rack and step back, ensuring your feet are still shoulder-width apart. | Step:6 Lower your body down into a squat, keeping your knees in line with your toes. | Step:7 Pause for a moment at the bottom, then push through your heels to return to the starting position. | Step:8 Repeat for the desired number of repetitions.",
+    "mobilitaPre": "General dynamic stretching 5-7 minutes, joint mobility work",
+    "attivazionePre": "Target muscle light activation 2-3 sets, 12-15 reps",
+    "aliases": [
+      "bbs",
+      "sq"
+    ],
+    "countingMode": "weighted",
+    "focus": "QUAD"
+  },
+  {
+    "id": "barbell_clean_and_press",
+    "nome": "Barbell Clean and Press",
+    "imageUrl": "https://static.exercisedb.dev/media/SGY8Zui.gif",
+    "muscoliSecondari": "FEMOR,GLUT",
+    "difficolta": "Intermedio",
+    "tipoEsercizio": "Compound",
+    "attrezzatura": "Bilanciere",
+    "patternMovimento": "Functional Movement",
+    "rangeRipetizioni": "8-15",
+    "noteTecniche": "Step:1 Stand with your feet shoulder-width apart and the barbell on the floor in front of you. | Step:2 Bend your knees and hinge at the hips to lower down and grip the barbell with an overhand grip, hands slightly wider than shoulder-width apart. | Step:3 Drive through your heels and extend your hips and knees to lift the barbell off the floor, keeping it close to your body. | Step:4 As the barbell reaches your thighs, explosively extend your hips, shrug your shoulders, and pull the barbell up towards your chest. | Step:5 As the barbell reaches chest height, quickly drop under it and catch it at shoulder level, with your elbows pointing forward and your palms facing up. | Step:6 From the catch position, press the barbell overhead by extending your arms and pushing the barbell straight up. | Step:7 Lower the barbell back down to the starting position and repeat for the desired number of repetitions.",
+    "mobilitaPre": "General dynamic stretching 5-7 minutes, joint mobility work",
+    "attivazionePre": "Target muscle light activation 2-3 sets, 12-15 reps",
+    "aliases": [
+      "bcap"
+    ],
+    "countingMode": "weighted",
+    "focus": "DELT"
+  },
+  {
+    "id": "barbell_one_leg_squat",
+    "nome": "Barbell One Leg Squat",
+    "imageUrl": "https://static.exercisedb.dev/media/uKyN64F.gif",
+    "muscoliSecondari": "FEMOR,GLUT,POLP",
+    "difficolta": "Intermedio",
+    "tipoEsercizio": "Compound",
+    "attrezzatura": "Bilanciere",
+    "patternMovimento": "Squat Pattern",
+    "rangeRipetizioni": "8-15",
+    "noteTecniche": "Step:1 Stand with your feet shoulder-width apart and hold a barbell across your upper back. | Step:2 Lift one foot off the ground and extend it forward, keeping it parallel to the ground. | Step:3 Bend your standing leg and lower your body down as if sitting back into a chair, keeping your chest up and your back straight. | Step:4 Lower yourself until your thigh is parallel to the ground, then push through your heel to return to the starting position. | Step:5 Repeat for the desired number of repetitions, then switch legs and repeat.",
+    "mobilitaPre": "General dynamic stretching 5-7 minutes, joint mobility work",
+    "attivazionePre": "Target muscle light activation 2-3 sets, 12-15 reps",
+    "aliases": [
+      "bols",
+      "sq"
+    ],
+    "countingMode": "weighted",
+    "focus": "QUAD"
+  },
+  {
+    "id": "barbell_overhead_squat",
+    "nome": "Barbell Overhead Squat",
+    "imageUrl": "https://static.exercisedb.dev/media/gfk9kD4.gif",
+    "muscoliSecondari": "CORE,FEMOR,GLUT,POLP",
+    "difficolta": "Intermedio",
+    "tipoEsercizio": "Compound",
+    "attrezzatura": "Bilanciere",
+    "patternMovimento": "Squat Pattern",
+    "rangeRipetizioni": "8-15",
+    "noteTecniche": "Step:1 Stand with your feet shoulder-width apart and toes slightly turned out. | Step:2 Hold the barbell with a wide grip, positioning it overhead with your arms fully extended. | Step:3 Engage your core and lower your body down into a squat position, keeping your chest up and knees tracking over your toes. | Step:4 Pause for a moment at the bottom, then push through your heels to return to the starting position. | Step:5 Repeat for the desired number of repetitions.",
+    "mobilitaPre": "General dynamic stretching 5-7 minutes, joint mobility work",
+    "attivazionePre": "Target muscle light activation 2-3 sets, 12-15 reps",
+    "aliases": [
+      "bos",
+      "sq"
+    ],
+    "countingMode": "weighted",
+    "focus": "QUAD"
+  },
+  {
+    "id": "barbell_palms_down_wrist_curl_over_a_bench",
+    "nome": "Barbell Palms Down Wrist Curl Over a Bench",
+    "focus": "AVA",
+    "imageUrl": "https://static.exercisedb.dev/media/yzYH9pI.gif",
+    "difficolta": "Intermedio",
+    "tipoEsercizio": "Compound",
+    "attrezzatura": "Bilanciere",
+    "patternMovimento": "Push Pattern",
+    "rangeRipetizioni": "8-15",
+    "noteTecniche": "Step:1 Sit on a bench with your feet flat on the ground and your forearms resting on your thighs, palms facing down. | Step:2 Hold a barbell with an overhand grip, hands shoulder-width apart. | Step:3 Lower the barbell towards the ground by flexing your wrists, keeping your forearms stationary. | Step:4 Pause for a moment at the bottom, then slowly raise the barbell back up by extending your wrists. | Step:5 Repeat for the desired number of repetitions.",
+    "mobilitaPre": "Wrist circles 2x10 each direction, finger flexion/extension 2x15, wrist rotations 2x10",
+    "attivazionePre": "Wrist curls (light) 2x15, reverse wrist curls 2x15, farmer walks (light) 2x30sec",
+    "aliases": [
+      "bpdwcoab",
+      "curl"
+    ],
+    "countingMode": "weighted",
+    "muscoliSecondari": "BICI"
+  },
+  {
+    "id": "barbell_palms_up_wrist_curl_over_a_bench",
+    "nome": "Barbell Palms Up Wrist Curl Over a Bench",
+    "focus": "AVA",
+    "imageUrl": "https://static.exercisedb.dev/media/SJAA2IQ.gif",
+    "muscoliSecondari": "DELT",
+    "difficolta": "Intermedio",
+    "tipoEsercizio": "Compound",
+    "attrezzatura": "Bilanciere",
+    "patternMovimento": "Push Pattern",
+    "rangeRipetizioni": "8-15",
+    "noteTecniche": "Step:1 Sit on a bench with your feet flat on the ground and hold a barbell with an underhand grip, palms facing up. | Step:2 Rest your forearms on the bench, allowing your wrists to hang off the edge. | Step:3 Keeping your forearms stationary, exhale and curl your wrists upwards as far as possible. | Step:4 Hold the contracted position for a brief pause, then inhale and slowly lower the barbell back to the starting position. | Step:5 Repeat for the desired number of repetitions.",
+    "mobilitaPre": "Wrist circles 2x10 each direction, finger flexion/extension 2x15, wrist rotations 2x10",
+    "attivazionePre": "Wrist curls (light) 2x15, reverse wrist curls 2x15, farmer walks (light) 2x30sec",
+    "aliases": [
+      "bpuwcoab",
+      "curl"
+    ],
+    "countingMode": "weighted"
+  },
+  {
+    "id": "barbell_revers_wrist_curl_v_2",
+    "nome": "Barbell Revers Wrist Curl V. 2",
+    "focus": "AVA",
+    "imageUrl": "https://static.exercisedb.dev/media/qDnGfDb.gif",
+    "difficolta": "Intermedio",
+    "tipoEsercizio": "Compound",
+    "attrezzatura": "Bilanciere",
+    "patternMovimento": "Isolation",
+    "rangeRipetizioni": "8-15",
+    "noteTecniche": "Step:1 Sit on a bench with your feet flat on the ground and your knees bent. | Step:2 Hold a barbell with an overhand grip, palms facing down, and your hands shoulder-width apart. | Step:3 Rest your forearms on your thighs, allowing your wrists to hang off the edge. | Step:4 Keeping your forearms stationary, exhale and curl your wrists upward as far as possible. | Step:5 Hold the contracted position for a brief pause, then inhale and slowly lower the barbell back to the starting position. | Step:6 Repeat for the desired number of repetitions.",
+    "mobilitaPre": "Wrist circles 2x10 each direction, finger flexion/extension 2x15, wrist rotations 2x10",
+    "attivazionePre": "Wrist curls (light) 2x15, reverse wrist curls 2x15, farmer walks (light) 2x30sec",
+    "aliases": [
+      "brwcv2",
+      "curl"
+    ],
+    "countingMode": "weighted",
+    "muscoliSecondari": "BICI"
+  },
+  {
+    "id": "barbell_reverse_wrist_curl",
+    "nome": "Barbell Reverse Wrist Curl",
+    "focus": "AVA",
+    "imageUrl": "https://static.exercisedb.dev/media/LsZkfU6.gif",
+    "difficolta": "Intermedio",
+    "tipoEsercizio": "Compound",
+    "attrezzatura": "Bilanciere",
+    "patternMovimento": "Isolation",
+    "rangeRipetizioni": "8-15",
+    "noteTecniche": "Step:1 Sit on a bench with your feet flat on the ground and hold a barbell with an overhand grip, palms facing down. | Step:2 Rest your forearms on your thighs, allowing your wrists to hang off the edge. | Step:3 Slowly curl your wrists upward, bringing the barbell towards your body. | Step:4 Pause for a moment at the top, then slowly lower the barbell back down to the starting position. | Step:5 Repeat for the desired number of repetitions.",
+    "mobilitaPre": "Wrist circles 2x10 each direction, finger flexion/extension 2x15, wrist rotations 2x10",
+    "attivazionePre": "Wrist curls (light) 2x15, reverse wrist curls 2x15, farmer walks (light) 2x30sec",
+    "aliases": [
+      "brwc",
+      "curl"
+    ],
+    "countingMode": "weighted",
+    "muscoliSecondari": "BICI"
+  },
+  {
+    "id": "barbell_reverse_wrist_curl_prone_variation",
+    "nome": "Barbell Reverse Wrist Curl - Prone Variation",
+    "focus": "AVA",
+    "imageUrl": "https://static.exercisedb.dev/media/YA2HKGz.gif",
+    "difficolta": "Intermedio",
+    "tipoEsercizio": "Compound",
+    "attrezzatura": "Bilanciere",
+    "patternMovimento": "Isolation",
+    "rangeRipetizioni": "8-15",
+    "noteTecniche": "Step:1 Sit on a bench with your feet flat on the ground and hold a barbell with an overhand grip, palms facing down. | Step:2 Rest your forearms on your thighs, allowing your wrists to hang off the edge. | Step:3 Slowly curl your wrists upward, bringing the barbell towards your body. Emphasize prone control. | Step:4 Pause for a moment at the top, then slowly lower the barbell back down to the starting position. | Step:5 Repeat for the desired number of repetitions.",
+    "mobilitaPre": "Wrist circles 2x10 each direction, finger flexion/extension 2x15, wrist rotations 2x10",
+    "attivazionePre": "Wrist curls (light) 2x15, reverse wrist curls 2x15, farmer walks (light) 2x30sec",
+    "aliases": [
+      "barbell reverse wrist curl   prone variation",
+      "barbell reverse wrist curl  prone variation",
+      "brwc-pv",
+      "curl"
+    ],
+    "countingMode": "weighted",
+    "muscoliSecondari": "BICI"
+  },
+  {
+    "id": "barbell_side_split_squat",
+    "nome": "Barbell Side Split Squat",
+    "imageUrl": "https://static.exercisedb.dev/media/W31mMjd.gif",
+    "muscoliSecondari": "FEMOR,GLUT,POLP",
+    "difficolta": "Intermedio",
+    "tipoEsercizio": "Compound",
+    "attrezzatura": "Bilanciere",
+    "patternMovimento": "Squat Pattern",
+    "rangeRipetizioni": "8-15",
+    "noteTecniche": "Step:1 Stand with your feet wider than shoulder-width apart, toes pointing slightly outward. | Step:2 Hold a barbell across your upper back, resting it on your traps. | Step:3 Engage your core and keep your chest up as you lower your body down into a squat position, bending at the knees and hips. | Step:4 As you lower, push your knees out to the sides and keep your weight on your heels. | Step:5 Lower until your thighs are parallel to the ground, then push through your heels to return to the starting position. | Step:6 Repeat for the desired number of repetitions.",
+    "mobilitaPre": "General dynamic stretching 5-7 minutes, joint mobility work",
+    "attivazionePre": "Target muscle light activation 2-3 sets, 12-15 reps",
+    "aliases": [
+      "bsss",
+      "sq"
+    ],
+    "countingMode": "weighted",
+    "focus": "QUAD"
+  },
+  {
+    "id": "barbell_side_split_squat_v_2",
+    "nome": "Barbell Side Split Squat V. 2",
+    "imageUrl": "https://static.exercisedb.dev/media/HUEqZ1y.gif",
+    "muscoliSecondari": "FEMOR,GLUT,POLP",
+    "difficolta": "Intermedio",
+    "tipoEsercizio": "Compound",
+    "attrezzatura": "Bilanciere",
+    "patternMovimento": "Squat Pattern",
+    "rangeRipetizioni": "8-15",
+    "noteTecniche": "Step:1 Stand with your feet wider than shoulder-width apart, toes pointing slightly outwards. | Step:2 Hold a barbell across your upper back, resting it on your shoulders. | Step:3 Take a big step to the side with your right foot, keeping your left foot planted. | Step:4 Bend your right knee and lower your body down into a squat position, keeping your chest up and your back straight. | Step:5 Push through your right heel to return to the starting position. | Step:6 Repeat on the other side, stepping out with your left foot. | Step:7 Continue alternating sides for the desired number of repetitions.",
+    "mobilitaPre": "General dynamic stretching 5-7 minutes, joint mobility work",
+    "attivazionePre": "Target muscle light activation 2-3 sets, 12-15 reps",
+    "aliases": [
+      "bsssv2",
+      "sq"
+    ],
+    "countingMode": "weighted",
+    "focus": "QUAD"
+  },
+  {
+    "id": "barbell_single_leg_split_squat",
+    "nome": "Barbell Single Leg Split Squat",
+    "imageUrl": "https://static.exercisedb.dev/media/gGNQmVt.gif",
+    "muscoliSecondari": "FEMOR,GLUT,POLP",
+    "difficolta": "Intermedio",
+    "tipoEsercizio": "Compound",
+    "attrezzatura": "Bilanciere",
+    "patternMovimento": "Squat Pattern",
+    "rangeRipetizioni": "8-15",
+    "noteTecniche": "Step:1 Stand with your feet shoulder-width apart, holding a barbell across your upper back. | Step:2 Take a large step forward with one leg, keeping your torso upright. | Step:3 Lower your body by bending your front knee and hip, while keeping your back leg straight. | Step:4 Continue lowering until your front thigh is parallel to the ground. | Step:5 Pause for a moment, then push through your front heel to return to the starting position. | Step:6 Repeat for the desired number of repetitions, then switch legs.",
+    "mobilitaPre": "General dynamic stretching 5-7 minutes, joint mobility work",
+    "attivazionePre": "Target muscle light activation 2-3 sets, 12-15 reps",
+    "aliases": [
+      "bslss",
+      "sq"
+    ],
+    "countingMode": "weighted",
+    "focus": "QUAD"
+  },
+  {
+    "id": "barbell_split_squat_v_2",
+    "nome": "Barbell Split Squat V. 2",
+    "imageUrl": "https://static.exercisedb.dev/media/HBYyX94.gif",
+    "muscoliSecondari": "FEMOR,GLUT,POLP",
+    "difficolta": "Intermedio",
+    "tipoEsercizio": "Compound",
+    "attrezzatura": "Bilanciere",
+    "patternMovimento": "Squat Pattern",
+    "rangeRipetizioni": "8-15",
+    "noteTecniche": "Step:1 Start by standing with your feet shoulder-width apart, holding a barbell across your upper back. | Step:2 Take a large step forward with your right foot, keeping your torso upright. | Step:3 Lower your body by bending your knees and hips until your right thigh is parallel to the ground. | Step:4 Pause for a moment, then push through your right heel to return to the starting position. | Step:5 Repeat with your left leg forward for the desired number of repetitions.",
+    "mobilitaPre": "General dynamic stretching 5-7 minutes, joint mobility work",
+    "attivazionePre": "Target muscle light activation 2-3 sets, 12-15 reps",
+    "aliases": [
+      "bssv2",
+      "sq"
+    ],
+    "countingMode": "weighted",
+    "focus": "QUAD"
+  },
+  {
+    "id": "barbell_squat_on_knees",
+    "nome": "Barbell Squat (on Knees)",
+    "imageUrl": "https://static.exercisedb.dev/media/oR7O9LW.gif",
+    "muscoliSecondari": "FEMOR,GLUT,POLP",
+    "difficolta": "Intermedio",
+    "tipoEsercizio": "Compound",
+    "attrezzatura": "Bilanciere",
+    "patternMovimento": "Squat Pattern",
+    "rangeRipetizioni": "8-15",
+    "noteTecniche": "Step:1 Start by kneeling on the ground with your knees hip-width apart and your toes pointing forward. | Step:2 Place a barbell across your shoulders, gripping it with an overhand grip and your hands slightly wider than shoulder-width apart. | Step:3 Engage your core and keep your chest lifted as you slowly lower your body down by bending your knees, keeping your back straight. | Step:4 Continue lowering until your thighs are parallel to the ground, or as low as you can comfortably go. | Step:5 Pause for a moment at the bottom, then push through your heels to return to the starting position. | Step:6 Repeat for the desired number of repetitions.",
+    "mobilitaPre": "General dynamic stretching 5-7 minutes, joint mobility work",
+    "attivazionePre": "Target muscle light activation 2-3 sets, 12-15 reps",
+    "aliases": [
+      "bs(k",
+      "sq"
+    ],
+    "countingMode": "weighted",
+    "focus": "QUAD"
+  },
+  {
+    "id": "barbell_squat_on_knees_with_pure",
+    "nome": "Barbell Squat (on Knees) with Pure",
+    "imageUrl": "https://static.exercisedb.dev/media/echClj7.gif",
+    "muscoliSecondari": "FEMOR,GLUT,POLP",
+    "difficolta": "Intermedio",
+    "tipoEsercizio": "Compound",
+    "attrezzatura": "Bilanciere",
+    "patternMovimento": "Squat Pattern",
+    "rangeRipetizioni": "8-15",
+    "noteTecniche": "Step:1 Start by kneeling on the ground with your knees hip-width apart and your toes pointing forward. | Step:2 Place a barbell across your shoulders, gripping it with an overhand grip and your hands slightly wider than shoulder-width apart. | Step:3 Engage your core and keep your chest lifted as you slowly lower your body down by bending your knees, keeping your back straight. Perform with pure intensity. | Step:4 Continue lowering until your thighs are parallel to the ground, or as low as you can comfortably go. | Step:5 Pause for a moment at the bottom, then push through your heels to return to the starting position. | Step:6 Repeat for the desired number of repetitions.",
+    "mobilitaPre": "General dynamic stretching 5-7 minutes, joint mobility work",
+    "attivazionePre": "Target muscle light activation 2-3 sets, 12-15 reps",
+    "aliases": [
+      "bs(kwp",
+      "sq"
+    ],
+    "countingMode": "weighted",
+    "focus": "QUAD"
+  },
+  {
+    "id": "barbell_squat_jump_step_rear_lunge",
+    "nome": "Barbell Squat Jump Step Rear Lunge",
+    "imageUrl": "https://static.exercisedb.dev/media/RYcV1kH.gif",
+    "muscoliSecondari": "FEMOR,GLUT,POLP",
+    "difficolta": "Intermedio",
+    "tipoEsercizio": "Compound",
+    "attrezzatura": "Bilanciere",
+    "patternMovimento": "Squat Pattern",
+    "rangeRipetizioni": "8-15",
+    "noteTecniche": "Step:1 Start by standing with your feet shoulder-width apart, holding a barbell across your upper back. | Step:2 Lower your body into a squat position by bending your knees and pushing your hips back. | Step:3 Explode upwards, jumping off the ground as high as you can. | Step:4 Land softly on your feet and immediately step back with one leg into a reverse lunge. | Step:5 Lower your body down until your front thigh is parallel to the ground, keeping your back straight. | Step:6 Push through your front heel to return to the starting position. | Step:7 Repeat the jump and lunge sequence on the other leg. | Step:8 Continue alternating legs for the desired number of repetitions.",
+    "mobilitaPre": "General dynamic stretching 5-7 minutes, joint mobility work",
+    "attivazionePre": "Target muscle light activation 2-3 sets, 12-15 reps",
+    "aliases": [
+      "bsjsrl",
+      "sq"
+    ],
+    "countingMode": "weighted",
+    "focus": "QUAD"
+  },
+  {
+    "id": "barbell_standing_back_wrist_curl",
+    "nome": "Barbell Standing Back Wrist Curl",
+    "focus": "AVA",
+    "imageUrl": "https://static.exercisedb.dev/media/2qTvJAZ.gif",
+    "muscoliSecondari": "DELT",
+    "difficolta": "Intermedio",
+    "tipoEsercizio": "Compound",
+    "attrezzatura": "Bilanciere",
+    "patternMovimento": "Isolation",
+    "rangeRipetizioni": "8-15",
+    "noteTecniche": "Step:1 Stand up straight with your feet shoulder-width apart and hold a barbell with an overhand grip. | Step:2 Rest the barbell on the back of your hands with your palms facing down and your fingers pointing towards your body. | Step:3 Keeping your upper arms stationary, exhale and curl your wrists upwards as far as possible. | Step:4 Hold the contracted position for a brief pause, then inhale and slowly lower the barbell back to the starting position. | Step:5 Repeat for the desired number of repetitions.",
+    "mobilitaPre": "Wrist circles 2x10 each direction, finger flexion/extension 2x15, wrist rotations 2x10",
+    "attivazionePre": "Wrist curls (light) 2x15, reverse wrist curls 2x15, farmer walks (light) 2x30sec",
+    "aliases": [
+      "bsbwc",
+      "curl"
+    ],
+    "countingMode": "weighted"
+  },
+  {
+    "id": "barbell_wide_squat",
+    "nome": "Barbell Wide Squat",
+    "imageUrl": "https://static.exercisedb.dev/media/s7HX1BY.gif",
+    "muscoliSecondari": "FEMOR,GLUT,POLP",
+    "difficolta": "Intermedio",
+    "tipoEsercizio": "Compound",
+    "attrezzatura": "Bilanciere",
+    "patternMovimento": "Squat Pattern",
+    "rangeRipetizioni": "8-15",
+    "noteTecniche": "Step:1 Stand with your feet wider than shoulder-width apart, toes pointing slightly outward. | Step:2 Hold the barbell across your upper back, resting it on your traps or rear delts. | Step:3 Engage your core and keep your chest up as you lower your body down into a squat, pushing your hips back and bending your knees. | Step:4 Lower until your thighs are parallel to the ground, or as low as you can comfortably go. | Step:5 Pause for a moment at the bottom, then push through your heels to return to the starting position. | Step:6 Repeat for the desired number of repetitions.",
+    "mobilitaPre": "General dynamic stretching 5-7 minutes, joint mobility work",
+    "attivazionePre": "Target muscle light activation 2-3 sets, 12-15 reps",
+    "aliases": [
+      "bws",
+      "sq"
+    ],
+    "countingMode": "weighted",
+    "focus": "QUAD"
+  },
+  {
+    "id": "barbell_wrist_curl",
+    "nome": "Barbell Wrist Curl",
+    "focus": "AVA",
+    "imageUrl": "https://static.exercisedb.dev/media/82LxxkW.gif",
+    "difficolta": "Intermedio",
+    "tipoEsercizio": "Compound",
+    "attrezzatura": "Bilanciere",
+    "patternMovimento": "Isolation",
+    "rangeRipetizioni": "8-15",
+    "noteTecniche": "Step:1 Sit on a bench with your feet flat on the ground and your forearms resting on your thighs, holding a barbell with an underhand grip. | Step:2 Allow the barbell to roll down to your fingertips, keeping your wrists straight. | Step:3 Slowly curl the barbell up towards your forearms by flexing your wrists. | Step:4 Pause for a moment at the top, then slowly lower the barbell back down to the starting position. | Step:5 Repeat for the desired number of repetitions.",
+    "mobilitaPre": "Wrist circles 2x10 each direction, finger flexion/extension 2x15, wrist rotations 2x10",
+    "attivazionePre": "Wrist curls (light) 2x15, reverse wrist curls 2x15, farmer walks (light) 2x30sec",
+    "aliases": [
+      "bwc",
+      "curl"
+    ],
+    "countingMode": "weighted",
+    "muscoliSecondari": "BICI"
+  },
+  {
+    "id": "barbell_wrist_curl_v_2",
+    "nome": "Barbell Wrist Curl V. 2",
+    "focus": "AVA",
+    "imageUrl": "https://static.exercisedb.dev/media/6kSxYnw.gif",
+    "difficolta": "Intermedio",
+    "tipoEsercizio": "Compound",
+    "attrezzatura": "Bilanciere",
+    "patternMovimento": "Isolation",
+    "rangeRipetizioni": "8-15",
+    "noteTecniche": "Step:1 Sit on a bench with your feet flat on the ground and your knees bent. | Step:2 Hold a barbell with an underhand grip, palms facing up, and your hands shoulder-width apart. | Step:3 Rest your forearms on your thighs, allowing your wrists to hang off the edge. | Step:4 Slowly curl your wrists upward, bringing the barbell towards your forearms. | Step:5 Pause for a moment at the top, then slowly lower the barbell back down to the starting position. | Step:6 Repeat for the desired number of repetitions.",
+    "mobilitaPre": "Wrist circles 2x10 each direction, finger flexion/extension 2x15, wrist rotations 2x10",
+    "attivazionePre": "Wrist curls (light) 2x15, reverse wrist curls 2x15, farmer walks (light) 2x30sec",
+    "aliases": [
+      "bwcv2",
+      "curl"
+    ],
+    "countingMode": "weighted",
+    "muscoliSecondari": "BICI"
+  },
+  {
+    "id": "bear_crawl",
+    "nome": "Bear Crawl",
+    "imageUrl": "https://static.exercisedb.dev/media/0Yz8WdV.gif",
+    "muscoliSecondari": "DELT",
+    "difficolta": "Principiante",
+    "tipoEsercizio": "Compound",
+    "attrezzatura": "Corpo Libero",
+    "patternMovimento": "Functional Movement",
+    "rangeRipetizioni": "8-15",
+    "noteTecniche": "Step:1 Start on all fours with your hands directly under your shoulders and your knees directly under your hips. | Step:2 Lift your knees slightly off the ground, keeping your back flat and your core engaged. | Step:3 Move your right hand and left foot forward simultaneously, followed by your left hand and right foot. | Step:4 Continue crawling forward, alternating your hand and foot movements. | Step:5 Maintain a steady pace and keep your core tight throughout the exercise. | Step:6 Continue for the desired distance or time.",
+    "mobilitaPre": "General dynamic stretching 5-7 minutes, joint mobility work",
+    "attivazionePre": "Target muscle light activation 2-3 sets, 12-15 reps",
+    "aliases": [
+      "bc"
+    ],
+    "countingMode": "reps",
+    "focus": "CORE"
+  },
+  {
+    "id": "burpee",
+    "nome": "Burpee",
+    "imageUrl": "https://static.exercisedb.dev/media/dK9394r.gif",
+    "muscoliSecondari": "DELT,FEMOR,PETT,POLP,QUAD",
+    "difficolta": "Principiante",
+    "tipoEsercizio": "Compound",
+    "attrezzatura": "Corpo Libero",
+    "patternMovimento": "Functional Movement",
+    "rangeRipetizioni": "8-15",
+    "noteTecniche": "Step:1 Start in a standing position with your feet shoulder-width apart. | Step:2 Lower your body into a squat position by bending your knees and placing your hands on the floor in front of you. | Step:3 Kick your feet back into a push-up position. | Step:4 Perform a push-up, keeping your body in a straight line. | Step:5 Jump your feet back into the squat position. | Step:6 Jump up explosively, reaching your arms overhead. | Step:7 Land softly and immediately lower back into a squat position to begin the next repetition.",
+    "mobilitaPre": "General dynamic stretching 5-7 minutes, joint mobility work",
+    "attivazionePre": "Target muscle light activation 2-3 sets, 12-15 reps",
+    "aliases": [
+      "bur",
+      "burpees"
+    ],
+    "countingMode": "reps",
+    "focus": "CORE"
+  },
+  {
+    "id": "cable_reverse_wrist_curl",
+    "nome": "Cable Reverse Wrist Curl",
+    "focus": "AVA",
+    "imageUrl": "https://static.exercisedb.dev/media/eYmsEPR.gif",
+    "difficolta": "Intermedio",
+    "tipoEsercizio": "Compound",
+    "attrezzatura": "Cavi",
+    "patternMovimento": "Isolation",
+    "rangeRipetizioni": "8-15",
+    "noteTecniche": "Step:1 Attach a cable to a low pulley and sit on a bench facing the cable machine. | Step:2 Grasp the cable handle with an overhand grip, palms facing down. | Step:3 Rest your forearms on your thighs, with your wrists hanging off the edge. | Step:4 Keeping your forearms stationary, exhale and curl your wrists upward as far as possible. | Step:5 Pause for a moment at the top, then inhale and slowly lower your wrists back down to the starting position. | Step:6 Repeat for the desired number of repetitions.",
+    "mobilitaPre": "Wrist circles 2x10 each direction, finger flexion/extension 2x15, wrist rotations 2x10",
+    "attivazionePre": "Wrist curls (light) 2x15, reverse wrist curls 2x15, farmer walks (light) 2x30sec",
+    "aliases": [
+      "crwc",
+      "curl"
+    ],
+    "countingMode": "weighted",
+    "muscoliSecondari": "BICI"
+  },
+  {
+    "id": "cable_standing_back_wrist_curl",
+    "nome": "Cable Standing Back Wrist Curl",
+    "focus": "AVA",
+    "imageUrl": "https://static.exercisedb.dev/media/VhX2JdE.gif",
+    "difficolta": "Intermedio",
+    "tipoEsercizio": "Compound",
+    "attrezzatura": "Cavi",
+    "patternMovimento": "Isolation",
+    "rangeRipetizioni": "8-15",
+    "noteTecniche": "Step:1 Stand facing a cable machine with your feet shoulder-width apart. | Step:2 Hold the cable handle with an overhand grip, palms facing down. | Step:3 Keep your arms straight and your elbows close to your sides. | Step:4 Slowly curl your wrists upward, bringing the cable handle towards your body. | Step:5 Pause for a moment at the top, then slowly lower the cable handle back to the starting position. | Step:6 Repeat for the desired number of repetitions.",
+    "mobilitaPre": "Wrist circles 2x10 each direction, finger flexion/extension 2x15, wrist rotations 2x10",
+    "attivazionePre": "Wrist curls (light) 2x15, reverse wrist curls 2x15, farmer walks (light) 2x30sec",
+    "aliases": [
+      "csbwc",
+      "curl"
+    ],
+    "countingMode": "weighted",
+    "muscoliSecondari": "BICI"
+  },
+  {
+    "id": "cable_wrist_curl",
+    "nome": "Cable Wrist Curl",
+    "focus": "AVA",
+    "imageUrl": "https://static.exercisedb.dev/media/LrV4s90.gif",
+    "difficolta": "Intermedio",
+    "tipoEsercizio": "Compound",
+    "attrezzatura": "Cavi",
+    "patternMovimento": "Isolation",
+    "rangeRipetizioni": "8-15",
+    "noteTecniche": "Step:1 Attach a straight bar to a low pulley cable machine. | Step:2 Stand facing the machine with your feet shoulder-width apart. | Step:3 Grasp the bar with an underhand grip, palms facing up, and your hands shoulder-width apart. | Step:4 Rest your forearms on a bench or pad, with your wrists hanging off the edge. | Step:5 Keeping your forearms stationary, exhale and curl your wrists upward as far as possible. | Step:6 Pause for a moment at the top, then inhale and slowly lower the bar back to the starting position. | Step:7 Repeat for the desired number of repetitions.",
+    "mobilitaPre": "Wrist circles 2x10 each direction, finger flexion/extension 2x15, wrist rotations 2x10",
+    "attivazionePre": "Wrist curls (light) 2x15, reverse wrist curls 2x15, farmer walks (light) 2x30sec",
+    "aliases": [
+      "curl",
+      "cwc"
+    ],
+    "countingMode": "weighted",
+    "muscoliSecondari": "BICI"
+  },
+  {
+    "id": "chair_leg_extended_stretch",
+    "nome": "Chair Leg Extended Stretch",
+    "imageUrl": "https://static.exercisedb.dev/media/xGgAGPm.gif",
+    "muscoliSecondari": "POLP",
+    "difficolta": "Principiante",
+    "tipoEsercizio": "Compound",
+    "attrezzatura": "Corpo Libero",
+    "patternMovimento": "Functional Movement",
+    "rangeRipetizioni": "8-15",
+    "noteTecniche": "Step:1 Sit on the edge of a chair with your back straight and feet flat on the ground. | Step:2 Extend one leg straight out in front of you, keeping your heel on the ground. | Step:3 Lean forward slightly, feeling a stretch in your quadriceps. | Step:4 Hold this position for 20-30 seconds. | Step:5 Switch legs and repeat the stretch.",
+    "mobilitaPre": "General dynamic stretching 5-7 minutes, joint mobility work",
+    "attivazionePre": "Target muscle light activation 2-3 sets, 12-15 reps",
+    "aliases": [
+      "cles"
+    ],
+    "countingMode": "reps",
+    "focus": "FEMOR"
+  },
+  {
+    "id": "chair_leg_extended_stretch_with_modified",
+    "nome": "Chair Leg Extended Stretch with Modified",
+    "imageUrl": "https://static.exercisedb.dev/media/fF6GKVh.gif",
+    "muscoliSecondari": "POLP",
+    "difficolta": "Principiante",
+    "tipoEsercizio": "Compound",
+    "attrezzatura": "Corpo Libero",
+    "patternMovimento": "Functional Movement",
+    "rangeRipetizioni": "8-15",
+    "noteTecniche": "Step:1 Sit on the edge of a chair with your back straight and feet flat on the ground. | Step:2 Extend one leg straight out in front of you, keeping your heel on the ground. | Step:3 Lean forward slightly, feeling a stretch in your quadriceps. | Step:4 Hold this position for 20-30 seconds. Focus on modified movement. | Step:5 Switch legs and repeat the stretch.",
+    "mobilitaPre": "General dynamic stretching 5-7 minutes, joint mobility work",
+    "attivazionePre": "Target muscle light activation 2-3 sets, 12-15 reps",
+    "aliases": [
+      "cleswm"
+    ],
+    "countingMode": "reps",
+    "focus": "FEMOR"
+  },
+  {
+    "id": "controlled_wrist_rollerer",
+    "nome": "Controlled Wrist Rollerer",
+    "focus": "AVA",
+    "imageUrl": "https://static.exercisedb.dev/media/MqNdIbe.gif",
+    "difficolta": "Intermedio",
+    "tipoEsercizio": "Compound",
+    "attrezzatura": "Zavorre",
+    "patternMovimento": "Functional Movement",
+    "rangeRipetizioni": "8-15",
+    "noteTecniche": "Step:1 Attach a weight to one end of a rope or bar. | Step:2 Hold the other end of the rope or bar with both hands, palms facing down. | Step:3 Stand with your feet shoulder-width apart and your arms fully extended in front of you. | Step:4 Slowly roll the weight up towards your hands by flexing your wrists. | Step:5 Pause for a moment at the top, then slowly lower the weight back down to the starting position. Perform with controlled intensity. | Step:6 Repeat for the desired number of repetitions.",
+    "mobilitaPre": "Wrist circles 2x10 each direction, finger flexion/extension 2x15, wrist rotations 2x10",
+    "attivazionePre": "Wrist curls (light) 2x15, reverse wrist curls 2x15, farmer walks (light) 2x30sec",
+    "aliases": [
+      "cwr"
+    ],
+    "countingMode": "weighted",
+    "muscoliSecondari": "BICI"
+  },
+  {
+    "id": "cycle_cross_trainer",
+    "nome": "Cycle Cross Trainer",
+    "imageUrl": "https://static.exercisedb.dev/media/XSCHmiI.gif",
+    "muscoliSecondari": "FEMOR,QUAD",
+    "difficolta": "Intermedio",
+    "tipoEsercizio": "Compound",
+    "attrezzatura": "Macchina",
+    "patternMovimento": "Functional Movement",
+    "rangeRipetizioni": "8-15",
+    "noteTecniche": "Step:1 Adjust the seat height and position yourself on the cycle cross trainer. | Step:2 Place your feet on the pedals and grip the handlebars. | Step:3 Start pedaling in a smooth and controlled motion. | Step:4 Maintain a steady pace and increase the resistance if desired. | Step:5 Continue pedaling for the desired duration of your cardio workout.",
+    "mobilitaPre": "General dynamic stretching 5-7 minutes, joint mobility work",
+    "attivazionePre": "Target muscle light activation 2-3 sets, 12-15 reps",
+    "aliases": [
+      "cct"
+    ],
+    "countingMode": "weighted",
+    "focus": "GLUT"
+  },
+  {
+    "id": "dumbbell_burpee",
+    "nome": "Dumbbell Burpee",
+    "imageUrl": "https://static.exercisedb.dev/media/0JtKWum.gif",
+    "muscoliSecondari": "DELT,FEMOR,POLP,QUAD",
+    "difficolta": "Intermedio",
+    "tipoEsercizio": "Compound",
+    "attrezzatura": "Manubri",
+    "patternMovimento": "Functional Movement",
+    "rangeRipetizioni": "8-15",
+    "noteTecniche": "Step:1 Start in a standing position with your feet shoulder-width apart and a dumbbell in each hand. | Step:2 Lower your body into a squat position, placing the dumbbells on the ground in front of you. | Step:3 Kick your feet back into a push-up position, keeping your body in a straight line. | Step:4 Perform a push-up, bending your elbows and lowering your chest towards the ground. | Step:5 Jump your feet back towards your hands, landing in a squat position. | Step:6 Stand up explosively, lifting the dumbbells off the ground and bringing them to your shoulders. | Step:7 Press the dumbbells overhead, fully extending your arms. | Step:8 Lower the dumbbells back to your shoulders and repeat the entire sequence for the desired number of repetitions.",
+    "mobilitaPre": "General dynamic stretching 5-7 minutes, joint mobility work",
+    "attivazionePre": "Target muscle light activation 2-3 sets, 12-15 reps",
+    "aliases": [
+      "db"
+    ],
+    "countingMode": "weighted",
+    "focus": "CORE"
+  },
+  {
+    "id": "dumbbell_finger_curls",
+    "nome": "Dumbbell Finger Curls",
+    "focus": "AVA",
+    "imageUrl": "https://static.exercisedb.dev/media/mtXengz.gif",
+    "difficolta": "Intermedio",
+    "tipoEsercizio": "Compound",
+    "attrezzatura": "Manubri",
+    "patternMovimento": "Isolation",
+    "rangeRipetizioni": "8-15",
+    "noteTecniche": "Step:1 Sit on a bench or chair with your feet flat on the ground and your back straight. | Step:2 Hold a dumbbell in one hand with an underhand grip, resting your forearm on your thigh, palm facing up. | Step:3 Allow the dumbbell to roll down to your fingertips, then curl it back up by flexing your fingers. | Step:4 Repeat for the desired number of repetitions, then switch to the other hand.",
+    "mobilitaPre": "Wrist circles 2x10 each direction, finger flexion/extension 2x15, wrist rotations 2x10",
+    "attivazionePre": "Wrist curls (light) 2x15, reverse wrist curls 2x15, farmer walks (light) 2x30sec",
+    "aliases": [
+      "curl",
+      "dfc"
+    ],
+    "countingMode": "weighted",
+    "muscoliSecondari": "BICI"
+  },
+  {
+    "id": "dumbbell_goblet_squat",
+    "nome": "Dumbbell Goblet Squat",
+    "imageUrl": "https://static.exercisedb.dev/media/yn8yg1r.gif",
+    "muscoliSecondari": "FEMOR,GLUT,POLP",
+    "difficolta": "Intermedio",
+    "tipoEsercizio": "Compound",
+    "attrezzatura": "Manubri",
+    "patternMovimento": "Squat Pattern",
+    "rangeRipetizioni": "8-15",
+    "noteTecniche": "Step:1 Stand with your feet shoulder-width apart, holding a dumbbell vertically against your chest with both hands. | Step:2 Keeping your chest up and core engaged, lower your body down into a squat position by pushing your hips back and bending your knees. | Step:3 Continue lowering until your thighs are parallel to the ground, or as low as you can comfortably go. | Step:4 Pause for a moment at the bottom, then push through your heels to return to the starting position. | Step:5 Repeat for the desired number of repetitions.",
+    "mobilitaPre": "General dynamic stretching 5-7 minutes, joint mobility work",
+    "attivazionePre": "Target muscle light activation 2-3 sets, 12-15 reps",
+    "aliases": [
+      "dgs",
+      "sq"
+    ],
+    "countingMode": "weighted",
+    "focus": "QUAD"
+  },
+  {
+    "id": "dumbbell_lying_pronation",
+    "nome": "Dumbbell Lying Pronation",
+    "focus": "AVA",
+    "imageUrl": "https://static.exercisedb.dev/media/mym4hJo.gif",
+    "muscoliSecondari": "DELT",
+    "difficolta": "Intermedio",
+    "tipoEsercizio": "Compound",
+    "attrezzatura": "Manubri",
+    "patternMovimento": "Functional Movement",
+    "rangeRipetizioni": "8-15",
+    "noteTecniche": "Step:1 Lie flat on a bench with your chest facing down and your arms extended straight down, holding a dumbbell in each hand. | Step:2 Rotate your palms so they are facing up. | Step:3 Keeping your upper arms stationary, exhale and curl the dumbbells as you rotate your palms to face down. | Step:4 Inhale and slowly lower the dumbbells back to the starting position. | Step:5 Repeat for the desired number of repetitions.",
+    "mobilitaPre": "Wrist circles 2x10 each direction, finger flexion/extension 2x15, wrist rotations 2x10",
+    "attivazionePre": "Wrist curls (light) 2x15, reverse wrist curls 2x15, farmer walks (light) 2x30sec",
+    "aliases": [
+      "dlp"
+    ],
+    "countingMode": "weighted"
+  },
+  {
+    "id": "dumbbell_lying_pronation_on_floor",
+    "nome": "Dumbbell Lying Pronation on Floor",
+    "focus": "AVA",
+    "imageUrl": "https://static.exercisedb.dev/media/7RWNjiB.gif",
+    "difficolta": "Intermedio",
+    "tipoEsercizio": "Compound",
+    "attrezzatura": "Manubri",
+    "patternMovimento": "Functional Movement",
+    "rangeRipetizioni": "8-15",
+    "noteTecniche": "Step:1 Lie flat on the floor with your face down and your arms extended straight out in front of you, holding a dumbbell in each hand. | Step:2 Rotate your palms so they are facing down towards the floor. | Step:3 Keeping your arms straight, lift the dumbbells off the floor by contracting your forearms. | Step:4 Continue lifting until your forearms are fully contracted and the dumbbells are at shoulder level. | Step:5 Hold for a moment, then slowly lower the dumbbells back down to the starting position. | Step:6 Repeat for the desired number of repetitions.",
+    "mobilitaPre": "Wrist circles 2x10 each direction, finger flexion/extension 2x15, wrist rotations 2x10",
+    "attivazionePre": "Wrist curls (light) 2x15, reverse wrist curls 2x15, farmer walks (light) 2x30sec",
+    "aliases": [
+      "dlpof"
+    ],
+    "countingMode": "weighted",
+    "muscoliSecondari": "BICI"
+  },
+  {
+    "id": "dumbbell_lying_supination",
+    "nome": "Dumbbell Lying Supination",
+    "focus": "AVA",
+    "imageUrl": "https://static.exercisedb.dev/media/M2Pm3zj.gif",
+    "muscoliSecondari": "DELT",
+    "difficolta": "Intermedio",
+    "tipoEsercizio": "Compound",
+    "attrezzatura": "Manubri",
+    "patternMovimento": "Functional Movement",
+    "rangeRipetizioni": "8-15",
+    "noteTecniche": "Step:1 Lie flat on a bench with your feet flat on the ground. | Step:2 Hold a dumbbell in each hand with your palms facing up and your arms fully extended. | Step:3 Keeping your upper arms stationary, curl the dumbbells towards your shoulders by contracting your forearms. | Step:4 Pause for a moment at the top, then slowly lower the dumbbells back to the starting position. | Step:5 Repeat for the desired number of repetitions.",
+    "mobilitaPre": "Wrist circles 2x10 each direction, finger flexion/extension 2x15, wrist rotations 2x10",
+    "attivazionePre": "Wrist curls (light) 2x15, reverse wrist curls 2x15, farmer walks (light) 2x30sec",
+    "aliases": [
+      "dls"
+    ],
+    "countingMode": "weighted"
+  },
+  {
+    "id": "dumbbell_lying_supination_on_floor",
+    "nome": "Dumbbell Lying Supination on Floor",
+    "focus": "AVA",
+    "imageUrl": "https://static.exercisedb.dev/media/rEhi2o5.gif",
+    "muscoliSecondari": "DELT",
+    "difficolta": "Intermedio",
+    "tipoEsercizio": "Compound",
+    "attrezzatura": "Manubri",
+    "patternMovimento": "Functional Movement",
+    "rangeRipetizioni": "8-15",
+    "noteTecniche": "Step:1 Lie flat on your back on the floor with your legs extended and your arms by your sides, holding a dumbbell in each hand. | Step:2 Rotate your palms to face up, keeping your elbows close to your sides. | Step:3 Slowly curl the dumbbells towards your shoulders, squeezing your forearms. | Step:4 Pause for a moment at the top, then slowly lower the dumbbells back down to the starting position. | Step:5 Repeat for the desired number of repetitions.",
+    "mobilitaPre": "Wrist circles 2x10 each direction, finger flexion/extension 2x15, wrist rotations 2x10",
+    "attivazionePre": "Wrist curls (light) 2x15, reverse wrist curls 2x15, farmer walks (light) 2x30sec",
+    "aliases": [
+      "dlsof"
+    ],
+    "countingMode": "weighted"
+  },
+  {
+    "id": "dumbbell_one_arm_reverse_wrist_curl",
+    "nome": "Dumbbell One Arm Reverse Wrist Curl",
+    "focus": "AVA",
+    "imageUrl": "https://static.exercisedb.dev/media/BwSNDGt.gif",
+    "difficolta": "Intermedio",
+    "tipoEsercizio": "Compound",
+    "attrezzatura": "Manubri",
+    "patternMovimento": "Isolation",
+    "rangeRipetizioni": "8-15",
+    "noteTecniche": "Step:1 Sit on a bench or chair with your feet flat on the ground. | Step:2 Hold a dumbbell in one hand with an overhand grip, palm facing down. | Step:3 Rest your forearm on your thigh, with your wrist hanging off the edge. | Step:4 Slowly lower the dumbbell towards the ground by flexing your wrist. | Step:5 Pause for a moment at the bottom, then slowly curl your wrist back up towards your body. | Step:6 Repeat for the desired number of repetitions, then switch to the other arm.",
+    "mobilitaPre": "Wrist circles 2x10 each direction, finger flexion/extension 2x15, wrist rotations 2x10",
+    "attivazionePre": "Wrist curls (light) 2x15, reverse wrist curls 2x15, farmer walks (light) 2x30sec",
+    "aliases": [
+      "curl",
+      "doarwc"
+    ],
+    "countingMode": "weighted",
+    "muscoliSecondari": "BICI"
+  },
+  {
+    "id": "dumbbell_one_arm_seated_neutral_wrist_curl",
+    "nome": "Dumbbell One Arm Seated Neutral Wrist Curl",
+    "focus": "AVA",
+    "imageUrl": "https://static.exercisedb.dev/media/YtaCTYl.gif",
+    "difficolta": "Intermedio",
+    "tipoEsercizio": "Compound",
+    "attrezzatura": "Manubri",
+    "patternMovimento": "Isolation",
+    "rangeRipetizioni": "8-15",
+    "noteTecniche": "Step:1 Sit on a bench with your feet flat on the ground and hold a dumbbell in one hand, palm facing up. | Step:2 Rest your forearm on your thigh, allowing your wrist to hang off the edge. | Step:3 Keeping your forearm stationary, curl your wrist upward as far as possible. | Step:4 Pause for a moment at the top, then slowly lower your wrist back down to the starting position. | Step:5 Repeat for the desired number of repetitions, then switch to the other hand.",
+    "mobilitaPre": "Wrist circles 2x10 each direction, finger flexion/extension 2x15, wrist rotations 2x10",
+    "attivazionePre": "Wrist curls (light) 2x15, reverse wrist curls 2x15, farmer walks (light) 2x30sec",
+    "aliases": [
+      "curl",
+      "doasnwc"
+    ],
+    "countingMode": "weighted",
+    "muscoliSecondari": "BICI"
+  },
+  {
+    "id": "dumbbell_one_arm_wrist_curl",
+    "nome": "Dumbbell One Arm Wrist Curl",
+    "focus": "AVA",
+    "imageUrl": "https://static.exercisedb.dev/media/q8aHNoF.gif",
+    "difficolta": "Intermedio",
+    "tipoEsercizio": "Compound",
+    "attrezzatura": "Manubri",
+    "patternMovimento": "Isolation",
+    "rangeRipetizioni": "8-15",
+    "noteTecniche": "Step:1 Sit on a bench or chair with your feet flat on the ground. | Step:2 Hold a dumbbell in one hand with an underhand grip, resting your forearm on your thigh. | Step:3 Allow your wrist to extend, letting the dumbbell roll down towards your fingers. | Step:4 Slowly curl your wrist back up, bringing the dumbbell towards your forearm. | Step:5 Repeat for the desired number of repetitions, then switch to the other hand.",
+    "mobilitaPre": "Wrist circles 2x10 each direction, finger flexion/extension 2x15, wrist rotations 2x10",
+    "attivazionePre": "Wrist curls (light) 2x15, reverse wrist curls 2x15, farmer walks (light) 2x30sec",
+    "aliases": [
+      "curl",
+      "doawc"
+    ],
+    "countingMode": "weighted",
+    "muscoliSecondari": "BICI"
+  },
+  {
+    "id": "dumbbell_over_bench_one_arm_reverse_wrist_curl",
+    "nome": "Dumbbell Over Bench One Arm Reverse Wrist Curl",
+    "focus": "AVA",
+    "imageUrl": "https://static.exercisedb.dev/media/4Jc36XM.gif",
+    "difficolta": "Intermedio",
+    "tipoEsercizio": "Compound",
+    "attrezzatura": "Manubri",
+    "patternMovimento": "Push Pattern",
+    "rangeRipetizioni": "8-15",
+    "noteTecniche": "Step:1 Sit on a bench with your feet flat on the ground and hold a dumbbell in one hand, palm facing down. | Step:2 Rest your forearm on the bench with your wrist hanging off the edge. | Step:3 Slowly curl your wrist upwards, bringing the dumbbell towards your forearm. | Step:4 Pause for a moment at the top, then slowly lower the dumbbell back down to the starting position. | Step:5 Repeat for the desired number of repetitions, then switch to the other arm.",
+    "mobilitaPre": "Wrist circles 2x10 each direction, finger flexion/extension 2x15, wrist rotations 2x10",
+    "attivazionePre": "Wrist curls (light) 2x15, reverse wrist curls 2x15, farmer walks (light) 2x30sec",
+    "aliases": [
+      "curl",
+      "doboarwc"
+    ],
+    "countingMode": "weighted",
+    "muscoliSecondari": "BICI"
+  },
+  {
+    "id": "dumbbell_over_bench_one_arm_wrist_curl",
+    "nome": "Dumbbell Over Bench One Arm Wrist Curl",
+    "focus": "AVA",
+    "imageUrl": "https://static.exercisedb.dev/media/KI1DjNN.gif",
+    "muscoliSecondari": "DELT",
+    "difficolta": "Intermedio",
+    "tipoEsercizio": "Compound",
+    "attrezzatura": "Manubri",
+    "patternMovimento": "Push Pattern",
+    "rangeRipetizioni": "8-15",
+    "noteTecniche": "Step:1 Sit on a bench with your feet flat on the ground and hold a dumbbell in one hand, palm facing down. | Step:2 Rest your forearm on the bench with your wrist hanging off the edge. | Step:3 Slowly curl your wrist upwards, bringing the dumbbell towards your forearm. | Step:4 Pause for a moment at the top, then slowly lower the dumbbell back down to the starting position. | Step:5 Repeat for the desired number of repetitions, then switch to the other arm.",
+    "mobilitaPre": "Wrist circles 2x10 each direction, finger flexion/extension 2x15, wrist rotations 2x10",
+    "attivazionePre": "Wrist curls (light) 2x15, reverse wrist curls 2x15, farmer walks (light) 2x30sec",
+    "aliases": [
+      "curl",
+      "doboawc"
+    ],
+    "countingMode": "weighted"
+  },
+  {
+    "id": "dumbbell_over_bench_one_arm_wrist_curl_strength_variation",
+    "nome": "Dumbbell Over Bench One Arm Wrist Curl - Strength Variation",
+    "focus": "AVA",
+    "imageUrl": "https://static.exercisedb.dev/media/7AnZtSv.gif",
+    "muscoliSecondari": "DELT",
+    "difficolta": "Intermedio",
+    "tipoEsercizio": "Compound",
+    "attrezzatura": "Manubri",
+    "patternMovimento": "Push Pattern",
+    "rangeRipetizioni": "8-15",
+    "noteTecniche": "Step:1 Sit on a bench with your feet flat on the ground and hold a dumbbell in one hand, palm facing down. | Step:2 Rest your forearm on the bench with your wrist hanging off the edge. | Step:3 Slowly curl your wrist upwards, bringing the dumbbell towards your forearm. | Step:4 Pause for a moment at the top, then slowly lower the dumbbell back down to the starting position. Maintain strength form throughout. | Step:5 Repeat for the desired number of repetitions, then switch to the other arm.",
+    "mobilitaPre": "Wrist circles 2x10 each direction, finger flexion/extension 2x15, wrist rotations 2x10",
+    "attivazionePre": "Wrist curls (light) 2x15, reverse wrist curls 2x15, farmer walks (light) 2x30sec",
+    "aliases": [
+      "curl",
+      "doboawc-sv",
+      "dumbbell over bench one arm wrist curl   strength variation",
+      "dumbbell over bench one arm wrist curl  strength variation"
+    ],
+    "countingMode": "weighted"
+  },
+  {
+    "id": "dumbbell_over_bench_revers_wrist_curl",
+    "nome": "Dumbbell Over Bench Revers Wrist Curl",
+    "focus": "AVA",
+    "imageUrl": "https://static.exercisedb.dev/media/3tAXPQ6.gif",
+    "difficolta": "Intermedio",
+    "tipoEsercizio": "Compound",
+    "attrezzatura": "Manubri",
+    "patternMovimento": "Push Pattern",
+    "rangeRipetizioni": "8-15",
+    "noteTecniche": "Step:1 Sit on a bench with your feet flat on the ground and hold a dumbbell in each hand, palms facing down. | Step:2 Rest your forearms on the bench, allowing your wrists to hang off the edge. | Step:3 Slowly curl your wrists upward, bringing the dumbbells towards your body. | Step:4 Pause for a moment at the top, then slowly lower the dumbbells back down to the starting position. | Step:5 Repeat for the desired number of repetitions.",
+    "mobilitaPre": "Wrist circles 2x10 each direction, finger flexion/extension 2x15, wrist rotations 2x10",
+    "attivazionePre": "Wrist curls (light) 2x15, reverse wrist curls 2x15, farmer walks (light) 2x30sec",
+    "aliases": [
+      "curl",
+      "dobrwc"
+    ],
+    "countingMode": "weighted",
+    "muscoliSecondari": "BICI"
+  },
+  {
+    "id": "dumbbell_over_bench_wrist_curl",
+    "nome": "Dumbbell Over Bench Wrist Curl",
+    "focus": "AVA",
+    "imageUrl": "https://static.exercisedb.dev/media/D1xYJAU.gif",
+    "difficolta": "Intermedio",
+    "tipoEsercizio": "Compound",
+    "attrezzatura": "Manubri",
+    "patternMovimento": "Push Pattern",
+    "rangeRipetizioni": "8-15",
+    "noteTecniche": "Step:1 Sit on a bench with your forearms resting on the bench and your palms facing up, holding a dumbbell in each hand. | Step:2 Allow your wrists to hang over the edge of the bench. | Step:3 Slowly curl your wrists upward, squeezing your forearms at the top of the movement. | Step:4 Pause for a moment, then slowly lower your wrists back down to the starting position. | Step:5 Repeat for the desired number of repetitions.",
+    "mobilitaPre": "Wrist circles 2x10 each direction, finger flexion/extension 2x15, wrist rotations 2x10",
+    "attivazionePre": "Wrist curls (light) 2x15, reverse wrist curls 2x15, farmer walks (light) 2x30sec",
+    "aliases": [
+      "curl",
+      "dobwc"
+    ],
+    "countingMode": "weighted",
+    "muscoliSecondari": "BICI"
+  },
+  {
+    "id": "dumbbell_reverse_wrist_curl",
+    "nome": "Dumbbell Reverse Wrist Curl",
+    "focus": "AVA",
+    "imageUrl": "https://static.exercisedb.dev/media/BLCvwr2.gif",
+    "difficolta": "Intermedio",
+    "tipoEsercizio": "Compound",
+    "attrezzatura": "Manubri",
+    "patternMovimento": "Isolation",
+    "rangeRipetizioni": "8-15",
+    "noteTecniche": "Step:1 Sit on a bench or chair with your feet flat on the ground. | Step:2 Hold a dumbbell in each hand with an overhand grip, palms facing down. | Step:3 Rest your forearms on your thighs, allowing your wrists to hang off the edge. | Step:4 Slowly curl your wrists upward, bringing the dumbbells towards your body. | Step:5 Pause for a moment at the top, then slowly lower the dumbbells back down to the starting position. | Step:6 Repeat for the desired number of repetitions.",
+    "mobilitaPre": "Wrist circles 2x10 each direction, finger flexion/extension 2x15, wrist rotations 2x10",
+    "attivazionePre": "Wrist curls (light) 2x15, reverse wrist curls 2x15, farmer walks (light) 2x30sec",
+    "aliases": [
+      "curl",
+      "drwc"
+    ],
+    "countingMode": "weighted",
+    "muscoliSecondari": "BICI"
+  },
+  {
+    "id": "dumbbell_seated_one_arm_rotate",
+    "nome": "Dumbbell Seated One Arm Rotate",
+    "focus": "AVA",
+    "imageUrl": "https://static.exercisedb.dev/media/7f2jsqP.gif",
+    "muscoliSecondari": "DELT",
+    "difficolta": "Intermedio",
+    "tipoEsercizio": "Compound",
+    "attrezzatura": "Manubri",
+    "patternMovimento": "Functional Movement",
+    "rangeRipetizioni": "8-15",
+    "noteTecniche": "Step:1 Sit on a bench with your back straight and hold a dumbbell in one hand, resting it on your thigh. | Step:2 Raise the dumbbell up to shoulder height, keeping your elbow close to your body. | Step:3 Rotate your forearm outward, away from your body, while keeping your upper arm stationary. | Step:4 Pause for a moment at the top, then slowly rotate your forearm back to the starting position. | Step:5 Repeat for the desired number of repetitions, then switch to the other arm.",
+    "mobilitaPre": "Wrist circles 2x10 each direction, finger flexion/extension 2x15, wrist rotations 2x10",
+    "attivazionePre": "Wrist curls (light) 2x15, reverse wrist curls 2x15, farmer walks (light) 2x30sec",
+    "aliases": [
+      "dsoar"
+    ],
+    "countingMode": "weighted"
+  },
+  {
+    "id": "dumbbell_seated_palms_up_wrist_curl",
+    "nome": "Dumbbell Seated Palms Up Wrist Curl",
+    "focus": "AVA",
+    "imageUrl": "https://static.exercisedb.dev/media/2dImyQ8.gif",
+    "muscoliSecondari": "DELT",
+    "difficolta": "Intermedio",
+    "tipoEsercizio": "Compound",
+    "attrezzatura": "Manubri",
+    "patternMovimento": "Isolation",
+    "rangeRipetizioni": "8-15",
+    "noteTecniche": "Step:1 Sit on a bench with your feet flat on the ground and hold a dumbbell in each hand, palms facing up. | Step:2 Rest your forearms on your thighs, allowing your wrists to hang off the edge. | Step:3 Slowly curl your wrists upward, squeezing your forearms at the top of the movement. | Step:4 Pause for a moment, then lower your wrists back down to the starting position. | Step:5 Repeat for the desired number of repetitions.",
+    "mobilitaPre": "Wrist circles 2x10 each direction, finger flexion/extension 2x15, wrist rotations 2x10",
+    "attivazionePre": "Wrist curls (light) 2x15, reverse wrist curls 2x15, farmer walks (light) 2x30sec",
+    "aliases": [
+      "curl",
+      "dspuwc"
+    ],
+    "countingMode": "weighted"
+  },
+  {
+    "id": "dumbbell_single_leg_split_squat",
+    "nome": "Dumbbell Single Leg Split Squat",
+    "imageUrl": "https://static.exercisedb.dev/media/qx4fgX7.gif",
+    "muscoliSecondari": "FEMOR,GLUT,POLP",
+    "difficolta": "Intermedio",
+    "tipoEsercizio": "Compound",
+    "attrezzatura": "Manubri",
+    "patternMovimento": "Squat Pattern",
+    "rangeRipetizioni": "8-15",
+    "noteTecniche": "Step:1 Stand with your feet shoulder-width apart, holding a dumbbell in each hand. | Step:2 Take a step forward with one foot and position your feet so that your front foot is flat on the ground and your back foot is elevated on a bench or step. | Step:3 Lower your body by bending your front knee and hip, keeping your back knee slightly bent and your back heel off the ground. | Step:4 Continue lowering until your front thigh is parallel to the ground, then push through your front heel to return to the starting position. | Step:5 Repeat for the desired number of repetitions, then switch legs and repeat.",
+    "mobilitaPre": "General dynamic stretching 5-7 minutes, joint mobility work",
+    "attivazionePre": "Target muscle light activation 2-3 sets, 12-15 reps",
+    "aliases": [
+      "dslss",
+      "sq"
+    ],
+    "countingMode": "weighted",
+    "focus": "QUAD"
+  },
+  {
+    "id": "dumbbell_step_up_lunge",
+    "nome": "Dumbbell Step-up Lunge",
+    "imageUrl": "https://static.exercisedb.dev/media/gFyFj9z.gif",
+    "muscoliSecondari": "FEMOR,GLUT,POLP",
+    "difficolta": "Intermedio",
+    "tipoEsercizio": "Compound",
+    "attrezzatura": "Manubri",
+    "patternMovimento": "Lunge Pattern",
+    "rangeRipetizioni": "8-15",
+    "noteTecniche": "Step:1 Stand in front of a step or platform with a dumbbell in each hand, palms facing your sides. | Step:2 Place your right foot on the step, ensuring your entire foot is on the surface. | Step:3 Push through your right heel and lift your body up onto the step, bringing your left foot up as well. | Step:4 Once both feet are on the step, lower your left foot back down to the starting position, keeping your right foot on the step. | Step:5 Repeat the movement, alternating which foot you step up with each time. | Step:6 Continue for the desired number of repetitions.",
+    "mobilitaPre": "General dynamic stretching 5-7 minutes, joint mobility work",
+    "attivazionePre": "Target muscle light activation 2-3 sets, 12-15 reps",
+    "aliases": [
+      "dsl",
+      "dumbbell step up lunge",
+      "dumbbell stepup lunge"
+    ],
+    "countingMode": "weighted",
+    "focus": "QUAD"
+  },
+  {
+    "id": "dumbbell_step_up_split_squat",
+    "nome": "Dumbbell Step-up Split Squat",
+    "imageUrl": "https://static.exercisedb.dev/media/QjE2DcA.gif",
+    "muscoliSecondari": "FEMOR,GLUT,POLP",
+    "difficolta": "Intermedio",
+    "tipoEsercizio": "Compound",
+    "attrezzatura": "Manubri",
+    "patternMovimento": "Squat Pattern",
+    "rangeRipetizioni": "8-15",
+    "noteTecniche": "Step:1 Stand in front of a bench or step with a dumbbell in each hand, palms facing your body. | Step:2 Place your right foot on the bench or step, ensuring your entire foot is in contact with the surface. | Step:3 Step up onto the bench or step with your right foot, pushing through your heel to lift your body up. | Step:4 As you step up, simultaneously lift your left knee towards your chest. | Step:5 Pause at the top of the movement, then slowly lower your left foot back to the ground while keeping your right foot on the bench or step. | Step:6 Repeat the movement with your left foot on the bench or step. | Step:7 Continue alternating between your right and left foot for the desired number of repetitions.",
+    "mobilitaPre": "General dynamic stretching 5-7 minutes, joint mobility work",
+    "attivazionePre": "Target muscle light activation 2-3 sets, 12-15 reps",
+    "aliases": [
+      "dsss",
+      "dumbbell step up split squat",
+      "dumbbell stepup split squat",
+      "sq"
+    ],
+    "countingMode": "weighted",
+    "focus": "QUAD"
+  },
+  {
+    "id": "dumbbell_supported_squat",
+    "nome": "Dumbbell Supported Squat",
+    "imageUrl": "https://static.exercisedb.dev/media/r5DgrW9.gif",
+    "muscoliSecondari": "FEMOR,GLUT,POLP",
+    "difficolta": "Intermedio",
+    "tipoEsercizio": "Compound",
+    "attrezzatura": "Manubri",
+    "patternMovimento": "Squat Pattern",
+    "rangeRipetizioni": "8-15",
+    "noteTecniche": "Step:1 Stand with your feet shoulder-width apart, holding a dumbbell in each hand at your sides. | Step:2 Keeping your chest up and core engaged, slowly lower your body down by bending your knees and pushing your hips back. | Step:3 Continue lowering until your thighs are parallel to the ground, or as low as you can comfortably go. | Step:4 Pause for a moment at the bottom, then push through your heels to return to the starting position. | Step:5 Repeat for the desired number of repetitions.",
+    "mobilitaPre": "General dynamic stretching 5-7 minutes, joint mobility work",
+    "attivazionePre": "Target muscle light activation 2-3 sets, 12-15 reps",
+    "aliases": [
+      "dss",
+      "sq"
+    ],
+    "countingMode": "weighted",
+    "focus": "QUAD"
+  },
+  {
+    "id": "farmers_walk",
+    "nome": "Farmers Walk",
+    "imageUrl": "https://static.exercisedb.dev/media/qPEzJjA.gif",
+    "muscoliSecondari": "CORE,POLP",
+    "difficolta": "Intermedio",
+    "tipoEsercizio": "Compound",
+    "attrezzatura": "Manubri",
+    "patternMovimento": "Carry Pattern",
+    "rangeRipetizioni": "8-15",
+    "noteTecniche": "Step:1 Stand up straight with a dumbbell in each hand, palms facing your sides. | Step:2 Keep your back straight and your shoulders back. | Step:3 Take small, controlled steps forward, maintaining an upright posture. | Step:4 Continue walking for the desired distance or time. | Step:5 To finish, stop walking and carefully lower the dumbbells to your sides.",
+    "mobilitaPre": "General dynamic stretching 5-7 minutes, joint mobility work",
+    "attivazionePre": "Target muscle light activation 2-3 sets, 12-15 reps",
+    "aliases": [
+      "fw"
+    ],
+    "countingMode": "weighted",
+    "focus": "GLUT"
+  },
+  {
+    "id": "finger_curls",
+    "nome": "Finger Curls",
+    "focus": "AVA",
+    "imageUrl": "https://static.exercisedb.dev/media/awG04cF.gif",
+    "difficolta": "Intermedio",
+    "tipoEsercizio": "Compound",
+    "attrezzatura": "Bilanciere",
+    "patternMovimento": "Isolation",
+    "rangeRipetizioni": "8-15",
+    "noteTecniche": "Step:1 Sit on a bench with your feet flat on the ground and hold a barbell with an underhand grip, palms facing up. | Step:2 Rest your forearms on your thighs, allowing your wrists to hang off the edge. | Step:3 Slowly curl your fingers towards your palms, squeezing the barbell tightly. | Step:4 Hold the contraction for a moment, then slowly release your fingers back to the starting position. | Step:5 Repeat for the desired number of repetitions.",
+    "mobilitaPre": "Wrist circles 2x10 each direction, finger flexion/extension 2x15, wrist rotations 2x10",
+    "attivazionePre": "Wrist curls (light) 2x15, reverse wrist curls 2x15, farmer walks (light) 2x30sec",
+    "aliases": [
+      "curl",
+      "fc"
+    ],
+    "countingMode": "weighted",
+    "muscoliSecondari": "BICI"
+  },
+  {
+    "id": "fluid_dumbbell_step_up_lunge",
+    "nome": "Fluid Dumbbell Step-up Lunge",
+    "imageUrl": "https://static.exercisedb.dev/media/7858za8.gif",
+    "muscoliSecondari": "FEMOR,GLUT,POLP",
+    "difficolta": "Intermedio",
+    "tipoEsercizio": "Compound",
+    "attrezzatura": "Manubri",
+    "patternMovimento": "Lunge Pattern",
+    "rangeRipetizioni": "8-15",
+    "noteTecniche": "Step:1 Stand in front of a step or platform with a dumbbell in each hand, palms facing your sides. | Step:2 Place your right foot on the step, ensuring your entire foot is on the surface. | Step:3 Push through your right heel and lift your body up onto the step, bringing your left foot up as well. | Step:4 (fluid variation) Once both feet are on the step, lower your left foot back down to the starting position, keeping your right foot on the step. | Step:5 Repeat the movement, alternating which foot you step up with each time. | Step:6 Continue for the desired number of repetitions.",
+    "mobilitaPre": "General dynamic stretching 5-7 minutes, joint mobility work",
+    "attivazionePre": "Target muscle light activation 2-3 sets, 12-15 reps",
+    "aliases": [
+      "fdsl",
+      "fluid dumbbell step up lunge",
+      "fluid dumbbell stepup lunge"
+    ],
+    "countingMode": "weighted",
+    "focus": "QUAD"
+  },
+  {
+    "id": "forward_jump",
+    "nome": "Forward Jump",
+    "imageUrl": "https://static.exercisedb.dev/media/uZKq7lo.gif",
+    "muscoliSecondari": "FEMOR,POLP",
+    "difficolta": "Principiante",
+    "tipoEsercizio": "Compound",
+    "attrezzatura": "Corpo Libero",
+    "patternMovimento": "Functional Movement",
+    "rangeRipetizioni": "8-15",
+    "noteTecniche": "Step:1 Stand with your feet shoulder-width apart. | Step:2 Bend your knees and lower your body into a squat position. | Step:3 Swing your arms back for momentum. | Step:4 Jump forward explosively, extending your hips, knees, and ankles. | Step:5 Land softly on the balls of your feet and immediately go into the next jump. | Step:6 Repeat for the desired number of repetitions.",
+    "mobilitaPre": "General dynamic stretching 5-7 minutes, joint mobility work",
+    "attivazionePre": "Target muscle light activation 2-3 sets, 12-15 reps",
+    "aliases": [
+      "fj"
+    ],
+    "countingMode": "reps",
+    "focus": "GLUT"
+  },
+  {
+    "id": "half_knee_bends_male",
+    "nome": "Half Knee Bends (male)",
+    "imageUrl": "https://static.exercisedb.dev/media/ia6kIIl.gif",
+    "muscoliSecondari": "FEMOR,GLUT",
+    "difficolta": "Principiante",
+    "tipoEsercizio": "Compound",
+    "attrezzatura": "Corpo Libero",
+    "patternMovimento": "Functional Movement",
+    "rangeRipetizioni": "8-15",
+    "noteTecniche": "Step:1 Stand with your feet shoulder-width apart. | Step:2 Bend your knees and lower your body down as if you were sitting back into a chair. | Step:3 Keep your chest up and your weight in your heels. | Step:4 Pause for a moment at the bottom, then push through your heels to return to the starting position. | Step:5 Repeat for the desired number of repetitions.",
+    "mobilitaPre": "General dynamic stretching 5-7 minutes, joint mobility work",
+    "attivazionePre": "Target muscle light activation 2-3 sets, 12-15 reps",
+    "aliases": [
+      "hkb("
+    ],
+    "countingMode": "reps",
+    "focus": "QUAD"
+  },
+  {
+    "id": "half_knee_bends_male_with_blunt",
+    "nome": "Half Knee Bends (male) with Blunt",
+    "imageUrl": "https://static.exercisedb.dev/media/v6EKk0O.gif",
+    "muscoliSecondari": "FEMOR,GLUT",
+    "difficolta": "Principiante",
+    "tipoEsercizio": "Compound",
+    "attrezzatura": "Corpo Libero",
+    "patternMovimento": "Functional Movement",
+    "rangeRipetizioni": "8-15",
+    "noteTecniche": "Step:1 Stand with your feet shoulder-width apart. | Step:2 Bend your knees and lower your body down as if you were sitting back into a chair. Emphasize blunt control. | Step:3 Keep your chest up and your weight in your heels. | Step:4 Pause for a moment at the bottom, then push through your heels to return to the starting position. | Step:5 Repeat for the desired number of repetitions.",
+    "mobilitaPre": "General dynamic stretching 5-7 minutes, joint mobility work",
+    "attivazionePre": "Target muscle light activation 2-3 sets, 12-15 reps",
+    "aliases": [
+      "hkb(wb"
+    ],
+    "countingMode": "reps",
+    "focus": "QUAD"
+  },
+  {
+    "id": "high_knee_against_wall",
+    "nome": "High Knee Against Wall",
+    "imageUrl": "https://static.exercisedb.dev/media/ealLwvX.gif",
+    "muscoliSecondari": "FEMOR,GLUT,POLP",
+    "difficolta": "Principiante",
+    "tipoEsercizio": "Compound",
+    "attrezzatura": "Corpo Libero",
+    "patternMovimento": "Functional Movement",
+    "rangeRipetizioni": "8-15",
+    "noteTecniche": "Step:1 Stand facing a wall with your feet hip-width apart. | Step:2 Place your hands on the wall for support. | Step:3 Engage your core and lift your right knee up towards your chest, while keeping your left foot on the ground. | Step:4 Quickly switch legs, bringing your left knee up towards your chest and lowering your right foot back down. | Step:5 Continue alternating legs in a running motion, bringing your knees up as high as possible. | Step:6 Maintain a fast pace and keep your upper body stable throughout the exercise. | Step:7 Repeat for the desired duration or number of repetitions.",
+    "mobilitaPre": "General dynamic stretching 5-7 minutes, joint mobility work",
+    "attivazionePre": "Target muscle light activation 2-3 sets, 12-15 reps",
+    "aliases": [
+      "hkaw"
+    ],
+    "countingMode": "reps",
+    "focus": "QUAD"
+  },
+  {
+    "id": "intermediate_hip_flexor_and_quad_stretch",
+    "nome": "Intermediate Hip Flexor and Quad Stretch",
+    "imageUrl": "https://static.exercisedb.dev/media/tFGKm99.gif",
+    "muscoliSecondari": "GLUT",
+    "difficolta": "Intermedio",
+    "tipoEsercizio": "Compound",
+    "attrezzatura": "Corde",
+    "patternMovimento": "Functional Movement",
+    "rangeRipetizioni": "8-15",
+    "noteTecniche": "Step:1 Stand upright with your feet shoulder-width apart. | Step:2 Hold onto a stable object for support. | Step:3 Bend your right knee and bring your right foot towards your glutes, grabbing the rope with your right hand. | Step:4 Slowly pull your right foot towards your glutes, feeling a stretch in your right quad. | Step:5 Hold the stretch for 20-30 seconds. | Step:6 Release the stretch and repeat on the left side.",
+    "mobilitaPre": "General dynamic stretching 5-7 minutes, joint mobility work",
+    "attivazionePre": "Target muscle light activation 2-3 sets, 12-15 reps",
+    "aliases": [
+      "ihfaqs"
+    ],
+    "countingMode": "weighted",
+    "focus": "FEMOR"
+  },
+  {
+    "id": "jack_burpee",
+    "nome": "Jack Burpee",
+    "imageUrl": "https://static.exercisedb.dev/media/mr7pkqP.gif",
+    "muscoliSecondari": "DELT,FEMOR,POLP,QUAD",
+    "difficolta": "Principiante",
+    "tipoEsercizio": "Compound",
+    "attrezzatura": "Corpo Libero",
+    "patternMovimento": "Functional Movement",
+    "rangeRipetizioni": "8-15",
+    "noteTecniche": "Step:1 Start in a standing position with your feet shoulder-width apart. | Step:2 Lower your body into a squat position, placing your hands on the ground in front of you. | Step:3 Kick your feet back, landing in a push-up position. | Step:4 Perform a push-up, lowering your chest to the ground and then pushing back up. | Step:5 Jump your feet forward, landing in a squat position. | Step:6 Jump up explosively, reaching your arms overhead. | Step:7 Land softly and immediately lower back into the squat position to begin the next repetition.",
+    "mobilitaPre": "General dynamic stretching 5-7 minutes, joint mobility work",
+    "attivazionePre": "Target muscle light activation 2-3 sets, 12-15 reps",
+    "aliases": [
+      "jb"
+    ],
+    "countingMode": "reps",
+    "focus": "CORE"
+  },
+  {
+    "id": "jack_jump_male",
+    "nome": "Jack Jump (male)",
+    "imageUrl": "https://static.exercisedb.dev/media/1g5bPpA.gif",
+    "muscoliSecondari": "POLP,QUAD",
+    "difficolta": "Principiante",
+    "tipoEsercizio": "Compound",
+    "attrezzatura": "Corpo Libero",
+    "patternMovimento": "Functional Movement",
+    "rangeRipetizioni": "8-15",
+    "noteTecniche": "Step:1 Stand with your feet together and your arms by your sides. | Step:2 Jump up, spreading your feet apart and raising your arms above your head. | Step:3 As you land, quickly jump back to the starting position. | Step:4 Repeat for the desired number of repetitions.",
+    "mobilitaPre": "General dynamic stretching 5-7 minutes, joint mobility work",
+    "attivazionePre": "Target muscle light activation 2-3 sets, 12-15 reps",
+    "aliases": [
+      "jj("
+    ],
+    "countingMode": "reps",
+    "focus": "GLUT"
+  },
+  {
+    "id": "jump_rope",
+    "nome": "Jump Rope",
+    "imageUrl": "https://static.exercisedb.dev/media/e1e76I2.gif",
+    "muscoliSecondari": "FEMOR,POLP,QUAD",
+    "difficolta": "Intermedio",
+    "tipoEsercizio": "Compound",
+    "attrezzatura": "Corde",
+    "patternMovimento": "Functional Movement",
+    "rangeRipetizioni": "8-15",
+    "noteTecniche": "Step:1 Hold the handles of the jump rope with your hands, palms facing inward. | Step:2 Stand with your feet shoulder-width apart and knees slightly bent. | Step:3 Swing the rope over your head and jump over it as it comes towards your feet. | Step:4 Land softly on the balls of your feet and repeat the jump as the rope comes around again. | Step:5 Continue jumping for the desired duration or number of repetitions.",
+    "mobilitaPre": "General dynamic stretching 5-7 minutes, joint mobility work",
+    "attivazionePre": "Target muscle light activation 2-3 sets, 12-15 reps",
+    "aliases": [
+      "jr"
+    ],
+    "countingMode": "weighted",
+    "focus": "GLUT"
+  },
+  {
+    "id": "kettlebell_alternating_hang_clean",
+    "nome": "Kettlebell Alternating Hang Clean",
+    "focus": "AVA",
+    "imageUrl": "https://static.exercisedb.dev/media/I4tibZG.gif",
+    "muscoliSecondari": "CORE,DELT",
+    "difficolta": "Intermedio",
+    "tipoEsercizio": "Compound",
+    "attrezzatura": "Kettlebell",
+    "patternMovimento": "Functional Movement",
+    "rangeRipetizioni": "8-15",
+    "noteTecniche": "Step:1 Stand with your feet shoulder-width apart, holding a kettlebell in each hand with an overhand grip. | Step:2 Bend your knees slightly and hinge forward at the hips, keeping your back straight and chest up. | Step:3 Allow the kettlebells to hang in front of your body with your arms fully extended. | Step:4 In one fluid motion, explosively extend your hips, shrug your shoulders, and pull the kettlebells up towards your shoulders. | Step:5 As the kettlebells reach shoulder height, rotate your wrists and catch the kettlebells in the rack position, with your palms facing inward and the kettlebells resting on the outside of your forearms. | Step:6 Lower the kettlebells back down to the starting position and repeat the movement with the opposite arm. | Step:7 Continue alternating arms for the desired number of repetitions.",
+    "mobilitaPre": "Wrist circles 2x10 each direction, finger flexion/extension 2x15, wrist rotations 2x10",
+    "attivazionePre": "Wrist curls (light) 2x15, reverse wrist curls 2x15, farmer walks (light) 2x30sec",
+    "aliases": [
+      "kahc"
+    ],
+    "countingMode": "time"
+  },
+  {
+    "id": "lever_alternate_leg_press",
+    "nome": "Lever Alternate Leg Press",
+    "imageUrl": "https://static.exercisedb.dev/media/V07qpXy.gif",
+    "muscoliSecondari": "FEMOR,GLUT",
+    "difficolta": "Intermedio",
+    "tipoEsercizio": "Compound",
+    "attrezzatura": "Macchina",
+    "patternMovimento": "Functional Movement",
+    "rangeRipetizioni": "8-15",
+    "noteTecniche": "Step:1 Adjust the seat and foot platform of the leverage machine to your desired position. | Step:2 Sit on the machine with your back against the backrest and your feet on the foot platform. | Step:3 Place your hands on the handles or sides of the machine for stability. | Step:4 Push one foot against the foot platform, extending your leg until it is almost fully straight. | Step:5 Pause for a moment, then slowly bend your leg and return to the starting position. | Step:6 Repeat with the other leg. | Step:7 Continue alternating legs for the desired number of repetitions.",
+    "mobilitaPre": "General dynamic stretching 5-7 minutes, joint mobility work",
+    "attivazionePre": "Target muscle light activation 2-3 sets, 12-15 reps",
+    "aliases": [
+      "lalp"
+    ],
+    "countingMode": "weighted",
+    "focus": "QUAD"
+  },
+  {
+    "id": "lever_gripper_hands",
+    "nome": "Lever Gripper Hands",
+    "focus": "AVA",
+    "imageUrl": "https://static.exercisedb.dev/media/mKwcrHn.gif",
+    "difficolta": "Intermedio",
+    "tipoEsercizio": "Compound",
+    "attrezzatura": "Macchina",
+    "patternMovimento": "Functional Movement",
+    "rangeRipetizioni": "8-15",
+    "noteTecniche": "Step:1 Adjust the seat height and grip the handles of the leverage machine. | Step:2 Keep your back straight and your feet flat on the ground. | Step:3 Exhale and squeeze the handles, contracting your forearms. | Step:4 Hold the contraction for a second, then slowly release and return to the starting position. | Step:5 Repeat for the desired number of repetitions.",
+    "mobilitaPre": "Wrist circles 2x10 each direction, finger flexion/extension 2x15, wrist rotations 2x10",
+    "attivazionePre": "Wrist curls (light) 2x15, reverse wrist curls 2x15, farmer walks (light) 2x30sec",
+    "aliases": [
+      "lgh"
+    ],
+    "countingMode": "weighted",
+    "muscoliSecondari": "BICI"
+  },
+  {
+    "id": "lever_leg_extension",
+    "nome": "Lever Leg Extension",
+    "imageUrl": "https://static.exercisedb.dev/media/my33uHU.gif",
+    "muscoliSecondari": "FEMOR",
+    "difficolta": "Intermedio",
+    "tipoEsercizio": "Compound",
+    "attrezzatura": "Macchina",
+    "patternMovimento": "Isolation",
+    "rangeRipetizioni": "8-15",
+    "noteTecniche": "Step:1 Adjust the seat height and backrest of the machine to fit your body. | Step:2 Sit on the machine with your back against the backrest and your feet on the footpad. | Step:3 Grasp the handles or sidebars for stability. | Step:4 Extend your legs forward by straightening your knees, lifting the weight. | Step:5 Pause for a moment at the top, then slowly lower the weight back to the starting position. | Step:6 Repeat for the desired number of repetitions.",
+    "mobilitaPre": "General dynamic stretching 5-7 minutes, joint mobility work",
+    "attivazionePre": "Target muscle light activation 2-3 sets, 12-15 reps",
+    "aliases": [
+      "leg ext",
+      "lle"
+    ],
+    "countingMode": "weighted",
+    "focus": "QUAD"
+  },
+  {
+    "id": "lying_side_quads_stretch",
+    "nome": "Lying (side) Quads Stretch",
+    "imageUrl": "https://static.exercisedb.dev/media/BWnJR72.gif",
+    "muscoliSecondari": "FEMOR",
+    "difficolta": "Principiante",
+    "tipoEsercizio": "Compound",
+    "attrezzatura": "Corpo Libero",
+    "patternMovimento": "Functional Movement",
+    "rangeRipetizioni": "8-15",
+    "noteTecniche": "Step:1 Lie on your side with your legs straight. | Step:2 Bend your top leg and grab your ankle or foot with your hand. | Step:3 Gently pull your ankle or foot towards your glutes until you feel a stretch in your quads. | Step:4 Hold the stretch for 20-30 seconds. | Step:5 Release the stretch and repeat on the other side.",
+    "mobilitaPre": "General dynamic stretching 5-7 minutes, joint mobility work",
+    "attivazionePre": "Target muscle light activation 2-3 sets, 12-15 reps",
+    "aliases": [
+      "l(qs"
+    ],
+    "countingMode": "reps",
+    "focus": "QUAD"
+  },
+  {
+    "id": "modified_push_up_to_lower_arms",
+    "nome": "Modified Push Up to Lower Arms",
+    "focus": "AVA",
+    "imageUrl": "https://static.exercisedb.dev/media/arvaszz.gif",
+    "muscoliSecondari": "DELT,PETT",
+    "difficolta": "Principiante",
+    "tipoEsercizio": "Compound",
+    "attrezzatura": "Corpo Libero",
+    "patternMovimento": "Push Pattern",
+    "rangeRipetizioni": "8-15",
+    "noteTecniche": "Step:1 Start in a push-up position with your hands directly under your shoulders and your body in a straight line. | Step:2 Lower your body down towards the ground by bending your elbows, keeping them close to your sides. | Step:3 Once your elbows are at a 90-degree angle, lower your forearms to the ground, keeping your elbows directly under your shoulders. | Step:4 Pause for a moment, then push through your palms to lift your forearms back up to the starting position. | Step:5 Repeat for the desired number of repetitions.",
+    "mobilitaPre": "Wrist circles 2x10 each direction, finger flexion/extension 2x15, wrist rotations 2x10",
+    "attivazionePre": "Wrist curls (light) 2x15, reverse wrist curls 2x15, farmer walks (light) 2x30sec",
+    "aliases": [
+      "mputla"
+    ],
+    "countingMode": "reps"
+  },
+  {
+    "id": "mountain_climber",
+    "nome": "Mountain Climber",
+    "imageUrl": "https://static.exercisedb.dev/media/RJgzwny.gif",
+    "muscoliSecondari": "DELT",
+    "difficolta": "Principiante",
+    "tipoEsercizio": "Compound",
+    "attrezzatura": "Corpo Libero",
+    "patternMovimento": "Functional Movement",
+    "rangeRipetizioni": "8-15",
+    "noteTecniche": "Step:1 Start in a high plank position with your hands directly under your shoulders and your body in a straight line. | Step:2 Engage your core and bring your right knee towards your chest, then quickly switch and bring your left knee towards your chest. | Step:3 Continue alternating legs in a running motion, keeping your hips low and your core engaged. | Step:4 Maintain a steady pace and breathe evenly throughout the exercise. | Step:5 Repeat for the desired number of repetitions.",
+    "mobilitaPre": "General dynamic stretching 5-7 minutes, joint mobility work",
+    "attivazionePre": "Target muscle light activation 2-3 sets, 12-15 reps",
+    "aliases": [
+      "mc"
+    ],
+    "countingMode": "reps",
+    "focus": "CORE"
+  },
+  {
+    "id": "neck_side_stretch",
+    "nome": "Neck Side Stretch",
+    "imageUrl": "https://static.exercisedb.dev/media/x2chWLO.gif",
+    "difficolta": "Principiante",
+    "tipoEsercizio": "Compound",
+    "attrezzatura": "Corpo Libero",
+    "patternMovimento": "Functional Movement",
+    "rangeRipetizioni": "8-15",
+    "noteTecniche": "Step:1 Stand or sit up straight with your shoulders relaxed. | Step:2 Tilt your head to one side, bringing your ear towards your shoulder. | Step:3 Hold the stretch for 15-30 seconds. | Step:4 Repeat on the other side. | Step:5 Perform 2-4 sets on each side.",
+    "mobilitaPre": "General dynamic stretching 5-7 minutes, joint mobility work",
+    "attivazionePre": "Target muscle light activation 2-3 sets, 12-15 reps",
+    "aliases": [
+      "nss"
+    ],
+    "countingMode": "reps",
+    "focus": "TRAP",
+    "muscoliSecondari": "DELT"
+  },
+  {
+    "id": "pulse_style_walk_elliptical_cross_trainer",
+    "nome": "Pulse Style Walk Elliptical Cross Trainer",
+    "imageUrl": "https://static.exercisedb.dev/media/PCUYOMs.gif",
+    "muscoliSecondari": "FEMOR,POLP,QUAD",
+    "difficolta": "Intermedio",
+    "tipoEsercizio": "Compound",
+    "attrezzatura": "Vario",
+    "patternMovimento": "Functional Movement",
+    "rangeRipetizioni": "8-15",
+    "noteTecniche": "Step:1 Adjust the resistance level and incline of the elliptical machine to your desired settings. | Step:2 Step onto the pedals of the machine and grip the handles lightly. | Step:3 Begin by pushing down with your feet and pulling the handles towards your body. | Step:4 Continue this motion, alternating between pushing and pulling, to simulate a walking or running motion. | Step:5 Maintain a steady pace and keep your core engaged throughout the exercise. Emphasize pulse control. | Step:6 Continue for the desired duration of your cardio workout. | Step:7 Gradually decrease the intensity and speed of the machine before stepping off.",
+    "mobilitaPre": "General dynamic stretching 5-7 minutes, joint mobility work",
+    "attivazionePre": "Target muscle light activation 2-3 sets, 12-15 reps",
+    "aliases": [
+      "pswect"
+    ],
+    "countingMode": "weighted",
+    "focus": "GLUT"
+  },
+  {
+    "id": "push_to_run",
+    "nome": "Push to Run",
+    "imageUrl": "https://static.exercisedb.dev/media/PrQbjvB.gif",
+    "muscoliSecondari": "FEMOR,POLP,QUAD",
+    "difficolta": "Principiante",
+    "tipoEsercizio": "Compound",
+    "attrezzatura": "Corpo Libero",
+    "patternMovimento": "Functional Movement",
+    "rangeRipetizioni": "8-15",
+    "noteTecniche": "Step:1 Start in a push-up position with your hands shoulder-width apart and your body in a straight line. | Step:2 Lower your chest towards the ground by bending your elbows, keeping your body straight. | Step:3 Push through your hands to extend your arms and return to the starting position. | Step:4 Quickly bring one knee towards your chest, then quickly switch and bring the other knee towards your chest. | Step:5 Continue alternating knees as fast as you can while maintaining good form. | Step:6 Continue for the desired duration or number of repetitions.",
+    "mobilitaPre": "General dynamic stretching 5-7 minutes, joint mobility work",
+    "attivazionePre": "Target muscle light activation 2-3 sets, 12-15 reps",
+    "aliases": [
+      "ptr"
+    ],
+    "countingMode": "reps",
+    "focus": "GLUT"
+  },
+  {
+    "id": "quads",
+    "nome": "Quads",
+    "imageUrl": "https://static.exercisedb.dev/media/6YUfHPL.gif",
+    "muscoliSecondari": "FEMOR,GLUT",
+    "difficolta": "Principiante",
+    "tipoEsercizio": "Compound",
+    "attrezzatura": "Corpo Libero",
+    "patternMovimento": "Functional Movement",
+    "rangeRipetizioni": "8-15",
+    "noteTecniche": "Step:1 Stand with your feet shoulder-width apart. | Step:2 Lower your body by bending your knees and pushing your hips back as if sitting on a chair. | Step:3 Keep your chest up and your back straight. | Step:4 Lower yourself until your thighs are parallel to the ground. | Step:5 Push through your heels to return to the starting position. | Step:6 Repeat for the desired number of repetitions.",
+    "mobilitaPre": "General dynamic stretching 5-7 minutes, joint mobility work",
+    "attivazionePre": "Target muscle light activation 2-3 sets, 12-15 reps",
+    "aliases": [
+      "qua",
+      "quadriceps",
+      "quad"
+    ],
+    "countingMode": "reps",
+    "focus": "QUAD"
+  },
+  {
+    "id": "quads_complex",
+    "nome": "Quads Complex",
+    "imageUrl": "https://static.exercisedb.dev/media/MDFxU4b.gif",
+    "muscoliSecondari": "FEMOR,GLUT",
+    "difficolta": "Principiante",
+    "tipoEsercizio": "Compound",
+    "attrezzatura": "Corpo Libero",
+    "patternMovimento": "Functional Movement",
+    "rangeRipetizioni": "8-15",
+    "noteTecniche": "Step:1 Stand with your feet shoulder-width apart. | Step:2 Lower your body by bending your knees and pushing your hips back as if sitting on a chair. | Step:3 Keep your chest up and your back straight. | Step:4 Lower yourself until your thighs are parallel to the ground. | Step:5 Push through your heels to return to the starting position. Emphasize complex control. | Step:6 Repeat for the desired number of repetitions.",
+    "mobilitaPre": "General dynamic stretching 5-7 minutes, joint mobility work",
+    "attivazionePre": "Target muscle light activation 2-3 sets, 12-15 reps",
+    "aliases": [
+      "qc"
+    ],
+    "countingMode": "reps",
+    "focus": "QUAD"
+  },
+  {
+    "id": "quick_feet_v_2",
+    "nome": "Quick Feet V. 2",
+    "imageUrl": "https://static.exercisedb.dev/media/mweqJin.gif",
+    "muscoliSecondari": "FEMOR,POLP",
+    "difficolta": "Principiante",
+    "tipoEsercizio": "Compound",
+    "attrezzatura": "Corpo Libero",
+    "patternMovimento": "Functional Movement",
+    "rangeRipetizioni": "8-15",
+    "noteTecniche": "Step:1 Stand with your feet shoulder-width apart and your arms by your sides. | Step:2 Begin by rapidly moving your feet up and down, as if you were running in place. | Step:3 Keep your movements quick and light, focusing on staying on the balls of your feet. | Step:4 Continue for the desired duration or number of repetitions.",
+    "mobilitaPre": "General dynamic stretching 5-7 minutes, joint mobility work",
+    "attivazionePre": "Target muscle light activation 2-3 sets, 12-15 reps",
+    "aliases": [
+      "qfv2"
+    ],
+    "countingMode": "reps",
+    "focus": "GLUT"
+  },
+  {
+    "id": "quick_feet_v_2_with_bent",
+    "nome": "Quick Feet V. 2 with Bent",
+    "imageUrl": "https://static.exercisedb.dev/media/IBj3nsn.gif",
+    "muscoliSecondari": "FEMOR,POLP",
+    "difficolta": "Principiante",
+    "tipoEsercizio": "Compound",
+    "attrezzatura": "Corpo Libero",
+    "patternMovimento": "Functional Movement",
+    "rangeRipetizioni": "8-15",
+    "noteTecniche": "Step:1 Stand with your feet shoulder-width apart and your arms by your sides. | Step:2 Begin by rapidly moving your feet up and down, as if you were running in place. | Step:3 Keep your movements quick and light, focusing on staying on the balls of your feet. | Step:4 Continue for the desired duration or number of repetitions. Emphasize bent control.",
+    "mobilitaPre": "General dynamic stretching 5-7 minutes, joint mobility work",
+    "attivazionePre": "Target muscle light activation 2-3 sets, 12-15 reps",
+    "aliases": [
+      "qfv2wb"
+    ],
+    "countingMode": "reps",
+    "focus": "GLUT"
+  },
+  {
+    "id": "resistance_band_leg_extension",
+    "nome": "Resistance Band Leg Extension",
+    "imageUrl": "https://static.exercisedb.dev/media/Y1MsI1l.gif",
+    "muscoliSecondari": "FEMOR",
+    "difficolta": "Intermedio",
+    "tipoEsercizio": "Compound",
+    "attrezzatura": "Elastici",
+    "patternMovimento": "Isolation",
+    "rangeRipetizioni": "8-15",
+    "noteTecniche": "Step:1 Attach the resistance band to a sturdy anchor point and secure it around your ankle. | Step:2 Stand facing the anchor point with your feet shoulder-width apart. | Step:3 Keeping your core engaged and your upper body stable, extend your leg straight out in front of you. | Step:4 Pause for a moment at the top, then slowly return your leg to the starting position. | Step:5 Repeat for the desired number of repetitions, then switch legs.",
+    "mobilitaPre": "General dynamic stretching 5-7 minutes, joint mobility work",
+    "attivazionePre": "Target muscle light activation 2-3 sets, 12-15 reps",
+    "aliases": [
+      "leg ext",
+      "rble"
+    ],
+    "countingMode": "weighted",
+    "focus": "QUAD"
+  },
+  {
+    "id": "resistance_band_leg_extension_declined",
+    "nome": "Resistance Band Leg Extension Declined",
+    "imageUrl": "https://static.exercisedb.dev/media/Ul5OFSV.gif",
+    "muscoliSecondari": "FEMOR",
+    "difficolta": "Intermedio",
+    "tipoEsercizio": "Compound",
+    "attrezzatura": "Elastici",
+    "patternMovimento": "Isolation",
+    "rangeRipetizioni": "8-15",
+    "noteTecniche": "Step:1 Attach the resistance band to a sturdy anchor point and secure it around your ankle. | Step:2 Stand facing the anchor point with your feet shoulder-width apart. | Step:3 Keeping your core engaged and your upper body stable, extend your leg straight out in front of you. | Step:4 Pause for a moment at the top, then slowly return your leg to the starting position. Focus on declined movement. | Step:5 Repeat for the desired number of repetitions, then switch legs.",
+    "mobilitaPre": "General dynamic stretching 5-7 minutes, joint mobility work",
+    "attivazionePre": "Target muscle light activation 2-3 sets, 12-15 reps",
+    "aliases": [
+      "leg ext",
+      "rbled"
+    ],
+    "countingMode": "weighted",
+    "focus": "QUAD"
+  },
+  {
+    "id": "run",
+    "nome": "Run",
+    "imageUrl": "https://static.exercisedb.dev/media/oLrKqDH.gif",
+    "muscoliSecondari": "FEMOR,POLP,QUAD",
+    "difficolta": "Principiante",
+    "tipoEsercizio": "Compound",
+    "attrezzatura": "Corpo Libero",
+    "patternMovimento": "Functional Movement",
+    "rangeRipetizioni": "8-15",
+    "noteTecniche": "Step:1 Start by standing upright with your feet hip-width apart. | Step:2 Engage your core and keep your upper body relaxed. | Step:3 Begin jogging in place, lifting your knees up towards your chest and landing softly on the balls of your feet. | Step:4 Maintain a steady pace and continue jogging for the desired duration or distance. | Step:5 Remember to breathe deeply and maintain good posture throughout the exercise.",
+    "mobilitaPre": "General dynamic stretching 5-7 minutes, joint mobility work",
+    "attivazionePre": "Target muscle light activation 2-3 sets, 12-15 reps",
+    "aliases": [
+      "running",
+      "sprint"
+    ],
+    "countingMode": "reps",
+    "focus": "GLUT"
+  },
+  {
+    "id": "run_equipment",
+    "nome": "Run (equipment)",
+    "imageUrl": "https://static.exercisedb.dev/media/y5p0H8a.gif",
+    "muscoliSecondari": "FEMOR,POLP,QUAD",
+    "difficolta": "Principiante",
+    "tipoEsercizio": "Compound",
+    "attrezzatura": "Corpo Libero",
+    "patternMovimento": "Functional Movement",
+    "rangeRipetizioni": "8-15",
+    "noteTecniche": "Step:1 Start by standing upright with your feet hip-width apart. | Step:2 Engage your core and keep your upper body relaxed. | Step:3 Begin jogging in place, lifting your knees up towards your chest and landing softly on the balls of your feet. | Step:4 Maintain a steady pace and continue jogging for the desired duration or distance. | Step:5 Remember to breathe deeply and maintain good posture throughout the exercise.",
+    "mobilitaPre": "General dynamic stretching 5-7 minutes, joint mobility work",
+    "attivazionePre": "Target muscle light activation 2-3 sets, 12-15 reps",
+    "aliases": [
+      "r("
+    ],
+    "countingMode": "reps",
+    "focus": "GLUT"
+  },
+  {
+    "id": "scissor_jumps_male",
+    "nome": "Scissor Jumps (male)",
+    "imageUrl": "https://static.exercisedb.dev/media/Eh2v5Iu.gif",
+    "muscoliSecondari": "FEMOR,POLP,QUAD",
+    "difficolta": "Principiante",
+    "tipoEsercizio": "Compound",
+    "attrezzatura": "Corpo Libero",
+    "patternMovimento": "Functional Movement",
+    "rangeRipetizioni": "8-15",
+    "noteTecniche": "Step:1 Stand with your feet shoulder-width apart. | Step:2 Jump off the ground and simultaneously cross your right leg in front of your left leg. | Step:3 As you land, quickly switch legs, crossing your left leg in front of your right leg. | Step:4 Continue alternating legs and jumping as quickly as possible. | Step:5 Repeat for the desired number of repetitions.",
+    "mobilitaPre": "General dynamic stretching 5-7 minutes, joint mobility work",
+    "attivazionePre": "Target muscle light activation 2-3 sets, 12-15 reps",
+    "aliases": [
+      "sj("
+    ],
+    "countingMode": "reps",
+    "focus": "GLUT"
+  },
+  {
+    "id": "semi_squat_jump_male",
+    "nome": "Semi Squat Jump (male)",
+    "imageUrl": "https://static.exercisedb.dev/media/6FMU51h.gif",
+    "muscoliSecondari": "FEMOR,POLP",
+    "difficolta": "Principiante",
+    "tipoEsercizio": "Compound",
+    "attrezzatura": "Corpo Libero",
+    "patternMovimento": "Squat Pattern",
+    "rangeRipetizioni": "8-15",
+    "noteTecniche": "Step:1 Stand with your feet shoulder-width apart. | Step:2 Bend your knees and lower your body into a squat position. | Step:3 Jump explosively, extending your hips and knees while swinging your arms for momentum. | Step:4 Land softly on the balls of your feet and immediately go into the next repetition. | Step:5 Repeat for the desired number of repetitions.",
+    "mobilitaPre": "General dynamic stretching 5-7 minutes, joint mobility work",
+    "attivazionePre": "Target muscle light activation 2-3 sets, 12-15 reps",
+    "aliases": [
+      "sq",
+      "ssj("
+    ],
+    "countingMode": "reps",
+    "focus": "QUAD"
+  },
+  {
+    "id": "short_stride_run",
+    "nome": "Short Stride Run",
+    "imageUrl": "https://static.exercisedb.dev/media/CcWEoWV.gif",
+    "muscoliSecondari": "FEMOR,POLP,QUAD",
+    "difficolta": "Principiante",
+    "tipoEsercizio": "Compound",
+    "attrezzatura": "Corpo Libero",
+    "patternMovimento": "Functional Movement",
+    "rangeRipetizioni": "8-15",
+    "noteTecniche": "Step:1 Find an open space or a treadmill to perform the exercise. | Step:2 Stand tall with your feet hip-width apart. | Step:3 Start jogging in place, lifting your knees high and pumping your arms. | Step:4 After a few seconds, start taking short strides forward, maintaining a quick pace. | Step:5 Continue running with short strides for the desired duration or distance.",
+    "mobilitaPre": "General dynamic stretching 5-7 minutes, joint mobility work",
+    "attivazionePre": "Target muscle light activation 2-3 sets, 12-15 reps",
+    "aliases": [
+      "ssr"
+    ],
+    "countingMode": "reps",
+    "focus": "GLUT"
+  },
+  {
+    "id": "side_push_neck_stretch",
+    "nome": "Side Push Neck Stretch",
+    "imageUrl": "https://static.exercisedb.dev/media/oQRJYkC.gif",
+    "difficolta": "Principiante",
+    "tipoEsercizio": "Compound",
+    "attrezzatura": "Corpo Libero",
+    "patternMovimento": "Functional Movement",
+    "rangeRipetizioni": "8-15",
+    "noteTecniche": "Step:1 Stand or sit up straight with your shoulders relaxed. | Step:2 Tilt your head to the right, bringing your right ear towards your right shoulder. | Step:3 Place your right hand on the left side of your head and gently apply pressure to increase the stretch. | Step:4 Hold the stretch for 15-30 seconds. | Step:5 Repeat on the other side, tilting your head to the left and applying pressure with your left hand. | Step:6 Repeat the stretch 2-3 times on each side.",
+    "mobilitaPre": "General dynamic stretching 5-7 minutes, joint mobility work",
+    "attivazionePre": "Target muscle light activation 2-3 sets, 12-15 reps",
+    "aliases": [
+      "spns"
+    ],
+    "countingMode": "reps",
+    "focus": "TRAP",
+    "muscoliSecondari": "DELT"
+  },
+  {
+    "id": "side_wrist_pull_stretch",
+    "nome": "Side Wrist Pull Stretch",
+    "focus": "AVA",
+    "imageUrl": "https://static.exercisedb.dev/media/UtmIqcI.gif",
+    "difficolta": "Principiante",
+    "tipoEsercizio": "Compound",
+    "attrezzatura": "Corpo Libero",
+    "patternMovimento": "Pull Pattern",
+    "rangeRipetizioni": "8-15",
+    "noteTecniche": "Step:1 Stand with your feet shoulder-width apart and your arms extended in front of you. | Step:2 Extend your right arm out to the side, parallel to the ground, with your palm facing down. | Step:3 With your left hand, grab your right hand and gently pull it towards your body, feeling a stretch in your right forearm. | Step:4 Hold the stretch for 15-30 seconds, then release. | Step:5 Repeat on the other side.",
+    "mobilitaPre": "Wrist circles 2x10 each direction, finger flexion/extension 2x15, wrist rotations 2x10",
+    "attivazionePre": "Wrist curls (light) 2x15, reverse wrist curls 2x15, farmer walks (light) 2x30sec",
+    "aliases": [
+      "swps"
+    ],
+    "countingMode": "reps",
+    "muscoliSecondari": "BICI"
+  },
+  {
+    "id": "sissy_squat",
+    "nome": "Sissy Squat",
+    "imageUrl": "https://static.exercisedb.dev/media/xdYPUtE.gif",
+    "muscoliSecondari": "GLUT,POLP",
+    "difficolta": "Principiante",
+    "tipoEsercizio": "Compound",
+    "attrezzatura": "Corpo Libero",
+    "patternMovimento": "Squat Pattern",
+    "rangeRipetizioni": "8-15",
+    "noteTecniche": "Step:1 Stand with your feet shoulder-width apart and your toes pointing slightly outward. | Step:2 Hold onto a stable object for balance if needed. | Step:3 Slowly lower your body by bending your knees and leaning back, keeping your torso upright. | Step:4 Continue lowering until your thighs are parallel to the ground or as far as you can comfortably go. | Step:5 Pause for a moment, then push through your heels to return to the starting position. | Step:6 Repeat for the desired number of repetitions.",
+    "mobilitaPre": "General dynamic stretching 5-7 minutes, joint mobility work",
+    "attivazionePre": "Target muscle light activation 2-3 sets, 12-15 reps",
+    "aliases": [
+      "sq",
+      "ss"
+    ],
+    "countingMode": "reps",
+    "focus": "QUAD"
+  },
+  {
+    "id": "sissy_squat_isolation",
+    "nome": "Sissy Squat Isolation",
+    "imageUrl": "https://static.exercisedb.dev/media/DoEYq4s.gif",
+    "muscoliSecondari": "GLUT,POLP",
+    "difficolta": "Principiante",
+    "tipoEsercizio": "Compound",
+    "attrezzatura": "Corpo Libero",
+    "patternMovimento": "Pull Pattern",
+    "rangeRipetizioni": "8-15",
+    "noteTecniche": "Step:1 Stand with your feet shoulder-width apart and your toes pointing slightly outward. | Step:2 Hold onto a stable object for balance if needed. | Step:3 Slowly lower your body by bending your knees and leaning back, keeping your torso upright. | Step:4 Continue lowering until your thighs are parallel to the ground or as far as you can comfortably go. | Step:5 Pause for a moment, then push through your heels to return to the starting position. | Step:6 Repeat for the desired number of repetitions. Emphasize isolation control.",
+    "mobilitaPre": "General dynamic stretching 5-7 minutes, joint mobility work",
+    "attivazionePre": "Target muscle light activation 2-3 sets, 12-15 reps",
+    "aliases": [
+      "sq",
+      "ssi"
+    ],
+    "countingMode": "reps",
+    "focus": "QUAD"
+  },
+  {
+    "id": "skater_hops",
+    "nome": "Skater Hops",
+    "imageUrl": "https://static.exercisedb.dev/media/zfNHMN9.gif",
+    "muscoliSecondari": "FEMOR,POLP,QUAD",
+    "difficolta": "Principiante",
+    "tipoEsercizio": "Compound",
+    "attrezzatura": "Corpo Libero",
+    "patternMovimento": "Functional Movement",
+    "rangeRipetizioni": "8-15",
+    "noteTecniche": "Step:1 Stand with your feet shoulder-width apart. | Step:2 Bend your knees slightly and jump to the right, landing on your right foot. | Step:3 As you land, swing your left leg behind your right leg and tap the ground with your left toes. | Step:4 Immediately jump to the left, landing on your left foot. | Step:5 As you land, swing your right leg behind your left leg and tap the ground with your right toes. | Step:6 Continue alternating sides, jumping and tapping the ground with each leg. | Step:7 Repeat for the desired number of repetitions.",
+    "mobilitaPre": "General dynamic stretching 5-7 minutes, joint mobility work",
+    "attivazionePre": "Target muscle light activation 2-3 sets, 12-15 reps",
+    "aliases": [
+      "sh"
+    ],
+    "countingMode": "reps",
+    "focus": "GLUT"
+  },
+  {
+    "id": "ski_step",
+    "nome": "Ski Step",
+    "imageUrl": "https://static.exercisedb.dev/media/5MRH8H2.gif",
+    "muscoliSecondari": "FEMOR,POLP,QUAD",
+    "difficolta": "Principiante",
+    "tipoEsercizio": "Compound",
+    "attrezzatura": "Corpo Libero",
+    "patternMovimento": "Functional Movement",
+    "rangeRipetizioni": "8-15",
+    "noteTecniche": "Step:1 Stand with your feet shoulder-width apart. | Step:2 Bend your knees slightly and keep your back straight. | Step:3 Jump to the right, landing on your right foot while swinging your left leg behind your right leg. | Step:4 Immediately jump to the left, landing on your left foot while swinging your right leg behind your left leg. | Step:5 Continue alternating jumps from side to side, mimicking a skiing motion. | Step:6 Repeat for the desired number of repetitions.",
+    "mobilitaPre": "General dynamic stretching 5-7 minutes, joint mobility work",
+    "attivazionePre": "Target muscle light activation 2-3 sets, 12-15 reps",
+    "aliases": [
+      "ss"
+    ],
+    "countingMode": "reps",
+    "focus": "GLUT"
+  },
+  {
+    "id": "smith_chair_squat",
+    "nome": "Smith Chair Squat",
+    "imageUrl": "https://static.exercisedb.dev/media/Gu2rNJd.gif",
+    "muscoliSecondari": "FEMOR,GLUT,POLP",
+    "difficolta": "Intermedio",
+    "tipoEsercizio": "Compound",
+    "attrezzatura": "Vario",
+    "patternMovimento": "Squat Pattern",
+    "rangeRipetizioni": "8-15",
+    "noteTecniche": "Step:1 Adjust the height of the smith machine bar to a comfortable position. | Step:2 Stand with your feet shoulder-width apart, toes slightly turned out. | Step:3 Place the barbell across your upper back, resting it on your traps. | Step:4 Engage your core and keep your chest up as you slowly lower your body by bending your knees and hips. | Step:5 Continue lowering until your thighs are parallel to the ground, or as low as you can comfortably go. | Step:6 Pause for a moment, then push through your heels to return to the starting position. | Step:7 Repeat for the desired number of repetitions.",
+    "mobilitaPre": "General dynamic stretching 5-7 minutes, joint mobility work",
+    "attivazionePre": "Target muscle light activation 2-3 sets, 12-15 reps",
+    "aliases": [
+      "scs",
+      "sq"
+    ],
+    "countingMode": "weighted",
+    "focus": "QUAD"
+  },
+  {
+    "id": "smith_seated_wrist_curl",
+    "nome": "Smith Seated Wrist Curl",
+    "focus": "AVA",
+    "imageUrl": "https://static.exercisedb.dev/media/B6dAO1t.gif",
+    "difficolta": "Intermedio",
+    "tipoEsercizio": "Compound",
+    "attrezzatura": "Vario",
+    "patternMovimento": "Isolation",
+    "rangeRipetizioni": "8-15",
+    "noteTecniche": "Step:1 Sit on a bench in front of a Smith machine with your feet flat on the ground. | Step:2 Grasp the barbell with an underhand grip, hands shoulder-width apart. | Step:3 Rest your forearms on your thighs, allowing your wrists to hang off. | Step:4 Slowly curl your wrists upward, bringing the barbell towards your forearms. | Step:5 Pause for a moment at the top, then slowly lower the barbell back down to the starting position. | Step:6 Repeat for the desired number of repetitions.",
+    "mobilitaPre": "Wrist circles 2x10 each direction, finger flexion/extension 2x15, wrist rotations 2x10",
+    "attivazionePre": "Wrist curls (light) 2x15, reverse wrist curls 2x15, farmer walks (light) 2x30sec",
+    "aliases": [
+      "curl",
+      "sswc"
+    ],
+    "countingMode": "weighted",
+    "muscoliSecondari": "BICI"
+  },
+  {
+    "id": "smith_single_leg_split_squat",
+    "nome": "Smith Single Leg Split Squat",
+    "imageUrl": "https://static.exercisedb.dev/media/wWFspEi.gif",
+    "muscoliSecondari": "FEMOR,GLUT",
+    "difficolta": "Intermedio",
+    "tipoEsercizio": "Compound",
+    "attrezzatura": "Vario",
+    "patternMovimento": "Squat Pattern",
+    "rangeRipetizioni": "8-15",
+    "noteTecniche": "Step:1 Stand in front of the smith machine with your feet shoulder-width apart. | Step:2 Place one foot behind you on a bench or step, with your toes pointing forward. | Step:3 Hold onto the smith machine bar for stability. | Step:4 Bend your front knee and lower your body down into a lunge position, keeping your back straight. | Step:5 Pause for a moment at the bottom, then push through your front heel to return to the starting position. | Step:6 Repeat for the desired number of repetitions, then switch legs.",
+    "mobilitaPre": "General dynamic stretching 5-7 minutes, joint mobility work",
+    "attivazionePre": "Target muscle light activation 2-3 sets, 12-15 reps",
+    "aliases": [
+      "sq",
+      "sslss"
+    ],
+    "countingMode": "weighted",
+    "focus": "QUAD"
+  },
+  {
+    "id": "smith_standing_back_wrist_curl",
+    "nome": "Smith Standing Back Wrist Curl",
+    "focus": "AVA",
+    "imageUrl": "https://static.exercisedb.dev/media/hfmQ0Tz.gif",
+    "difficolta": "Intermedio",
+    "tipoEsercizio": "Compound",
+    "attrezzatura": "Vario",
+    "patternMovimento": "Isolation",
+    "rangeRipetizioni": "8-15",
+    "noteTecniche": "Step:1 Stand facing the smith machine with your feet shoulder-width apart. | Step:2 Grasp the barbell with an overhand grip, hands shoulder-width apart. | Step:3 Keep your back straight and your elbows close to your body. | Step:4 Slowly curl your wrists upwards, bringing the barbell towards your body. | Step:5 Pause for a moment at the top, then slowly lower the barbell back down to the starting position. | Step:6 Repeat for the desired number of repetitions.",
+    "mobilitaPre": "Wrist circles 2x10 each direction, finger flexion/extension 2x15, wrist rotations 2x10",
+    "attivazionePre": "Wrist curls (light) 2x15, reverse wrist curls 2x15, farmer walks (light) 2x30sec",
+    "aliases": [
+      "curl",
+      "ssbwc"
+    ],
+    "countingMode": "weighted",
+    "muscoliSecondari": "BICI"
+  },
+  {
+    "id": "snatch_pull",
+    "nome": "Snatch Pull",
+    "imageUrl": "https://static.exercisedb.dev/media/dG5Smob.gif",
+    "muscoliSecondari": "FEMOR,GLUT,POLP",
+    "difficolta": "Intermedio",
+    "tipoEsercizio": "Compound",
+    "attrezzatura": "Bilanciere",
+    "patternMovimento": "Pull Pattern",
+    "rangeRipetizioni": "8-15",
+    "noteTecniche": "Step:1 Stand with your feet shoulder-width apart and the barbell on the ground in front of you. | Step:2 Bend your knees and hinge at the hips to lower into a squat position, gripping the barbell with an overhand grip. | Step:3 Keep your back straight and chest up as you drive through your heels to lift the barbell off the ground, extending your hips and knees. | Step:4 As the barbell reaches hip level, explosively pull it upwards, shrugging your shoulders and pulling your elbows high and to the sides. | Step:5 As the barbell reaches its highest point, quickly drop underneath it, pulling yourself into a deep squat position. | Step:6 Catch the barbell overhead with your arms fully extended and your knees bent. | Step:7 Stand up by extending your hips and knees, keeping the barbell overhead. | Step:8 Lower the barbell back down to the starting position by reversing the movement. | Step:9 Repeat for the desired number of repetitions.",
+    "mobilitaPre": "General dynamic stretching 5-7 minutes, joint mobility work",
+    "attivazionePre": "Target muscle light activation 2-3 sets, 12-15 reps",
+    "aliases": [
+      "sp"
+    ],
+    "countingMode": "weighted",
+    "focus": "DELT"
+  },
+  {
+    "id": "split_squats",
+    "nome": "Split Squats",
+    "imageUrl": "https://static.exercisedb.dev/media/9E25EOx.gif",
+    "muscoliSecondari": "FEMOR,GLUT,POLP",
+    "difficolta": "Principiante",
+    "tipoEsercizio": "Compound",
+    "attrezzatura": "Corpo Libero",
+    "patternMovimento": "Squat Pattern",
+    "rangeRipetizioni": "8-15",
+    "noteTecniche": "Step:1 Stand with your feet shoulder-width apart. | Step:2 Take a step forward with one foot and place it about two feet in front of the other foot. | Step:3 Lower your body by bending your knees and hips, keeping your back straight. | Step:4 Continue lowering until your front thigh is parallel to the ground, and your back knee is hovering just above the ground. | Step:5 Pause for a moment, then push through your front heel to return to the starting position. | Step:6 Repeat for the desired number of repetitions, then switch legs and repeat.",
+    "mobilitaPre": "General dynamic stretching 5-7 minutes, joint mobility work",
+    "attivazionePre": "Target muscle light activation 2-3 sets, 12-15 reps",
+    "aliases": [
+      "sq",
+      "ss"
+    ],
+    "countingMode": "reps",
+    "focus": "QUAD"
+  },
+  {
+    "id": "squat_jerk",
+    "nome": "Squat Jerk",
+    "imageUrl": "https://static.exercisedb.dev/media/IMRsOCn.gif",
+    "muscoliSecondari": "CORE,FEMOR,GLUT,POLP",
+    "difficolta": "Intermedio",
+    "tipoEsercizio": "Compound",
+    "attrezzatura": "Bilanciere",
+    "patternMovimento": "Squat Pattern",
+    "rangeRipetizioni": "8-15",
+    "noteTecniche": "Step:1 Start with the barbell resting on your shoulders, with your feet shoulder-width apart. | Step:2 Lower your body into a squat position, keeping your chest up and your knees tracking over your toes. | Step:3 As you reach the bottom of the squat, explosively drive through your legs and push the barbell overhead. | Step:4 As the barbell reaches its peak, quickly drop into a split position, with one foot forward and one foot back. | Step:5 Catch the barbell overhead with your arms fully extended and your back knee slightly touching the ground. | Step:6 Stand up from the split position, bringing your feet back together. | Step:7 Lower the barbell back to your shoulders and repeat for the desired number of repetitions.",
+    "mobilitaPre": "General dynamic stretching 5-7 minutes, joint mobility work",
+    "attivazionePre": "Target muscle light activation 2-3 sets, 12-15 reps",
+    "aliases": [
+      "sj",
+      "sq"
+    ],
+    "countingMode": "weighted",
+    "focus": "QUAD"
+  },
+  {
+    "id": "squat_on_bosu_ball",
+    "nome": "Squat on Bosu Ball",
+    "imageUrl": "https://static.exercisedb.dev/media/T2fA5Ir.gif",
+    "muscoliSecondari": "FEMOR,GLUT,POLP",
+    "difficolta": "Intermedio",
+    "tipoEsercizio": "Compound",
+    "attrezzatura": "Vario",
+    "patternMovimento": "Squat Pattern",
+    "rangeRipetizioni": "8-15",
+    "noteTecniche": "Step:1 Place the bosu ball on the ground with the flat side up. | Step:2 Stand with your feet shoulder-width apart and position yourself on top of the bosu ball. | Step:3 Lower your body down by bending your knees and hips, as if sitting back into a chair. | Step:4 Keep your chest up and your weight on your heels. | Step:5 Lower yourself until your thighs are parallel to the ground. | Step:6 Pause for a moment, then push through your heels to return to the starting position. | Step:7 Repeat for the desired number of repetitions.",
+    "mobilitaPre": "General dynamic stretching 5-7 minutes, joint mobility work",
+    "attivazionePre": "Target muscle light activation 2-3 sets, 12-15 reps",
+    "aliases": [
+      "sobb",
+      "sq"
+    ],
+    "countingMode": "weighted",
+    "focus": "QUAD"
+  },
+  {
+    "id": "squat_to_overhead_reach",
+    "nome": "Squat to Overhead Reach",
+    "imageUrl": "https://static.exercisedb.dev/media/QChZi3x.gif",
+    "muscoliSecondari": "CORE,FEMOR,GLUT",
+    "difficolta": "Principiante",
+    "tipoEsercizio": "Compound",
+    "attrezzatura": "Corpo Libero",
+    "patternMovimento": "Squat Pattern",
+    "rangeRipetizioni": "8-15",
+    "noteTecniche": "Step:1 Stand with your feet shoulder-width apart and toes slightly turned out. | Step:2 Lower your body down into a squat position by bending your knees and pushing your hips back. | Step:3 As you come up from the squat, extend your arms overhead, reaching towards the ceiling. | Step:4 Return to the starting position by lowering your arms and bending your knees to squat down again. | Step:5 Repeat for the desired number of repetitions.",
+    "mobilitaPre": "General dynamic stretching 5-7 minutes, joint mobility work",
+    "attivazionePre": "Target muscle light activation 2-3 sets, 12-15 reps",
+    "aliases": [
+      "sq",
+      "stor"
+    ],
+    "countingMode": "reps",
+    "focus": "QUAD"
+  },
+  {
+    "id": "squat_to_overhead_reach_with_twist",
+    "nome": "Squat to Overhead Reach with Twist",
+    "imageUrl": "https://static.exercisedb.dev/media/5BZHW9s.gif",
+    "muscoliSecondari": "CORE,FEMOR,GLUT",
+    "difficolta": "Principiante",
+    "tipoEsercizio": "Compound",
+    "attrezzatura": "Corpo Libero",
+    "patternMovimento": "Squat Pattern",
+    "rangeRipetizioni": "8-15",
+    "noteTecniche": "Step:1 Stand with your feet shoulder-width apart and toes slightly turned out. | Step:2 Lower your body into a squat position by bending your knees and pushing your hips back. | Step:3 As you come up from the squat, raise your arms overhead and twist your torso to one side. | Step:4 Return to the starting position and repeat the squat, this time twisting your torso to the opposite side. | Step:5 Continue alternating sides with each squat repetition.",
+    "mobilitaPre": "General dynamic stretching 5-7 minutes, joint mobility work",
+    "attivazionePre": "Target muscle light activation 2-3 sets, 12-15 reps",
+    "aliases": [
+      "sq",
+      "storwt"
+    ],
+    "countingMode": "reps",
+    "focus": "QUAD"
+  },
+  {
+    "id": "star_jump_male",
+    "nome": "Star Jump (male)",
+    "imageUrl": "https://static.exercisedb.dev/media/HtfCpfi.gif",
+    "muscoliSecondari": "FEMOR,POLP,QUAD",
+    "difficolta": "Principiante",
+    "tipoEsercizio": "Compound",
+    "attrezzatura": "Corpo Libero",
+    "patternMovimento": "Functional Movement",
+    "rangeRipetizioni": "8-15",
+    "noteTecniche": "Step:1 Stand with your feet shoulder-width apart and your arms by your sides. | Step:2 Bend your knees slightly and jump up explosively. | Step:3 As you jump, spread your legs and extend your arms out to the sides, forming a star shape with your body. | Step:4 Land softly on the balls of your feet with your knees slightly bent. | Step:5 Repeat for the desired number of repetitions.",
+    "mobilitaPre": "General dynamic stretching 5-7 minutes, joint mobility work",
+    "attivazionePre": "Target muscle light activation 2-3 sets, 12-15 reps",
+    "aliases": [
+      "sj("
+    ],
+    "countingMode": "reps",
+    "focus": "GLUT"
+  },
+  {
+    "id": "stationary_bike_run",
+    "nome": "Stationary Bike Run",
+    "imageUrl": "https://static.exercisedb.dev/media/H1PESYI.gif",
+    "muscoliSecondari": "FEMOR,POLP,QUAD",
+    "difficolta": "Intermedio",
+    "tipoEsercizio": "Compound",
+    "attrezzatura": "Cyclette",
+    "patternMovimento": "Functional Movement",
+    "rangeRipetizioni": "8-15",
+    "noteTecniche": "Step:1 Adjust the seat height and position to ensure proper alignment. | Step:2 Place your feet on the pedals and secure them with the straps if available. | Step:3 Start pedaling at a comfortable pace. | Step:4 Maintain a steady rhythm and increase the resistance as desired. | Step:5 Engage your core muscles to maintain stability and proper posture. | Step:6 Continue pedaling for the desired duration of your workout. | Step:7 Gradually decrease the resistance and slow down before coming to a complete stop. | Step:8 Stretch your legs and cool down after the workout.",
+    "mobilitaPre": "General dynamic stretching 5-7 minutes, joint mobility work",
+    "attivazionePre": "Target muscle light activation 2-3 sets, 12-15 reps",
+    "aliases": [
+      "sbr"
+    ],
+    "countingMode": "weighted",
+    "focus": "GLUT"
+  },
+  {
+    "id": "stationary_bike_walk",
+    "nome": "Stationary Bike Walk",
+    "imageUrl": "https://static.exercisedb.dev/media/a8VDgLw.gif",
+    "muscoliSecondari": "FEMOR,POLP,QUAD",
+    "difficolta": "Intermedio",
+    "tipoEsercizio": "Compound",
+    "attrezzatura": "Macchina",
+    "patternMovimento": "Functional Movement",
+    "rangeRipetizioni": "8-15",
+    "noteTecniche": "Step:1 Adjust the seat height and position on the stationary bike to ensure proper alignment. | Step:2 Place your feet on the pedals and secure them with the straps if available. | Step:3 Start pedaling at a comfortable pace, keeping your back straight and core engaged. | Step:4 Maintain a steady rhythm and increase the resistance level if desired. | Step:5 Continue pedaling for the desired duration of your cardio workout. | Step:6 Cool down by gradually reducing your pace and resistance level. | Step:7 Stretch your leg muscles after the workout to prevent tightness and promote recovery.",
+    "mobilitaPre": "General dynamic stretching 5-7 minutes, joint mobility work",
+    "attivazionePre": "Target muscle light activation 2-3 sets, 12-15 reps",
+    "aliases": [
+      "sbw"
+    ],
+    "countingMode": "weighted",
+    "focus": "GLUT"
+  },
+  {
+    "id": "suspended_split_squat",
+    "nome": "Suspended Split Squat",
+    "imageUrl": "https://static.exercisedb.dev/media/QpXqiq8.gif",
+    "muscoliSecondari": "FEMOR,GLUT,POLP",
+    "difficolta": "Principiante",
+    "tipoEsercizio": "Compound",
+    "attrezzatura": "Corpo Libero",
+    "patternMovimento": "Squat Pattern",
+    "rangeRipetizioni": "8-15",
+    "noteTecniche": "Step:1 Stand facing away from a suspension trainer with your feet shoulder-width apart. | Step:2 Extend one leg forward and place the top of your foot in the foot cradle of the suspension trainer. | Step:3 Bend your standing leg and lower your body down into a lunge position, keeping your chest up and your knee in line with your toes. | Step:4 Push through your heel to return to the starting position. | Step:5 Repeat for the desired number of repetitions, then switch legs.",
+    "mobilitaPre": "General dynamic stretching 5-7 minutes, joint mobility work",
+    "attivazionePre": "Target muscle light activation 2-3 sets, 12-15 reps",
+    "aliases": [
+      "sq",
+      "sss"
+    ],
+    "countingMode": "reps",
+    "focus": "QUAD"
+  },
+  {
+    "id": "swing_360",
+    "nome": "Swing 360",
+    "imageUrl": "https://static.exercisedb.dev/media/tnaj0mT.gif",
+    "muscoliSecondari": "CORE",
+    "difficolta": "Principiante",
+    "tipoEsercizio": "Compound",
+    "attrezzatura": "Corpo Libero",
+    "patternMovimento": "Functional Movement",
+    "rangeRipetizioni": "8-15",
+    "noteTecniche": "Step:1 Stand with your feet shoulder-width apart and knees slightly bent. | Step:2 Hold your arms straight out in front of you, parallel to the ground. | Step:3 Engage your core and swing your arms in a circular motion, rotating your torso as you do so. | Step:4 Continue the circular motion, swinging your arms and rotating your torso for the desired number of repetitions. | Step:5 Remember to breathe throughout the exercise.",
+    "mobilitaPre": "General dynamic stretching 5-7 minutes, joint mobility work",
+    "attivazionePre": "Target muscle light activation 2-3 sets, 12-15 reps",
+    "aliases": [
+      "s3"
+    ],
+    "countingMode": "reps",
+    "focus": "DELT"
+  },
+  {
+    "id": "walk_elliptical_cross_trainer",
+    "nome": "Walk Elliptical Cross Trainer",
+    "imageUrl": "https://static.exercisedb.dev/media/rjtuP6X.gif",
+    "muscoliSecondari": "FEMOR,POLP,QUAD",
+    "difficolta": "Intermedio",
+    "tipoEsercizio": "Compound",
+    "attrezzatura": "Vario",
+    "patternMovimento": "Functional Movement",
+    "rangeRipetizioni": "8-15",
+    "noteTecniche": "Step:1 Adjust the resistance level and incline of the elliptical machine to your desired settings. | Step:2 Step onto the pedals of the machine and grip the handles lightly. | Step:3 Begin by pushing down with your feet and pulling the handles towards your body. | Step:4 Continue this motion, alternating between pushing and pulling, to simulate a walking or running motion. | Step:5 Maintain a steady pace and keep your core engaged throughout the exercise. | Step:6 Continue for the desired duration of your cardio workout. | Step:7 Gradually decrease the intensity and speed of the machine before stepping off.",
+    "mobilitaPre": "General dynamic stretching 5-7 minutes, joint mobility work",
+    "attivazionePre": "Target muscle light activation 2-3 sets, 12-15 reps",
+    "aliases": [
+      "wect"
+    ],
+    "countingMode": "weighted",
+    "focus": "GLUT"
+  },
+  {
+    "id": "walk_elliptical_cross_trainer_expanded_variation",
+    "nome": "Walk Elliptical Cross Trainer - Expanded Variation",
+    "imageUrl": "https://static.exercisedb.dev/media/pFuK3by.gif",
+    "muscoliSecondari": "FEMOR,POLP,QUAD",
+    "difficolta": "Intermedio",
+    "tipoEsercizio": "Compound",
+    "attrezzatura": "Vario",
+    "patternMovimento": "Functional Movement",
+    "rangeRipetizioni": "8-15",
+    "noteTecniche": "Step:1 Adjust the resistance level and incline of the elliptical machine to your desired settings. | Step:2 Step onto the pedals of the machine and grip the handles lightly. | Step:3 Begin by pushing down with your feet and pulling the handles towards your body. | Step:4 Continue this motion, alternating between pushing and pulling, to simulate a walking or running motion. Emphasize expanded control. | Step:5 Maintain a steady pace and keep your core engaged throughout the exercise. | Step:6 Continue for the desired duration of your cardio workout. | Step:7 Gradually decrease the intensity and speed of the machine before stepping off.",
+    "mobilitaPre": "General dynamic stretching 5-7 minutes, joint mobility work",
+    "attivazionePre": "Target muscle light activation 2-3 sets, 12-15 reps",
+    "aliases": [
+      "walk elliptical cross trainer   expanded variation",
+      "walk elliptical cross trainer  expanded variation",
+      "wect-ev"
+    ],
+    "countingMode": "weighted",
+    "focus": "GLUT"
+  },
+  {
+    "id": "walking_high_knees_lunge",
+    "nome": "Walking High Knees Lunge",
+    "imageUrl": "https://static.exercisedb.dev/media/J9zIWig.gif",
+    "muscoliSecondari": "FEMOR,GLUT,POLP",
+    "difficolta": "Principiante",
+    "tipoEsercizio": "Compound",
+    "attrezzatura": "Corpo Libero",
+    "patternMovimento": "Lunge Pattern",
+    "rangeRipetizioni": "8-15",
+    "noteTecniche": "Step:1 Stand with your feet hip-width apart. | Step:2 Lift your right knee up towards your chest as high as you can while balancing on your left leg. | Step:3 Step forward with your right foot and lower your body into a lunge position, bending both knees to a 90-degree angle. | Step:4 Push off with your right foot and bring your left knee up towards your chest. | Step:5 Step forward with your left foot and lower your body into a lunge position. | Step:6 Continue alternating legs and lunging forward, keeping your core engaged and maintaining a steady pace. | Step:7 Repeat for the desired number of repetitions.",
+    "mobilitaPre": "General dynamic stretching 5-7 minutes, joint mobility work",
+    "attivazionePre": "Target muscle light activation 2-3 sets, 12-15 reps",
+    "aliases": [
+      "whkl"
+    ],
+    "countingMode": "reps",
+    "focus": "QUAD"
+  },
+  {
+    "id": "walking_on_incline_treadmill",
+    "nome": "Walking on Incline Treadmill",
+    "imageUrl": "https://static.exercisedb.dev/media/rjiM4L3.gif",
+    "muscoliSecondari": "FEMOR,POLP,QUAD",
+    "difficolta": "Intermedio",
+    "tipoEsercizio": "Compound",
+    "attrezzatura": "Macchina",
+    "patternMovimento": "Functional Movement",
+    "rangeRipetizioni": "8-15",
+    "noteTecniche": "Step:1 Adjust the incline level on the treadmill to your desired intensity. | Step:2 Stand on the treadmill with your feet shoulder-width apart. | Step:3 Start walking at a comfortable pace, ensuring that you maintain proper form. | Step:4 Engage your core muscles and keep your back straight throughout the exercise. | Step:5 Continue walking on the incline treadmill for the desired duration of your cardio workout. | Step:6 Gradually decrease the incline and speed of the treadmill to cool down before stopping.",
+    "mobilitaPre": "General dynamic stretching 5-7 minutes, joint mobility work",
+    "attivazionePre": "Target muscle light activation 2-3 sets, 12-15 reps",
+    "aliases": [
+      "woit"
+    ],
+    "countingMode": "weighted",
+    "focus": "GLUT"
+  },
+  {
+    "id": "walking_on_stepmill",
+    "nome": "Walking on Stepmill",
+    "imageUrl": "https://static.exercisedb.dev/media/j9Q5crt.gif",
+    "muscoliSecondari": "FEMOR,POLP,QUAD",
+    "difficolta": "Intermedio",
+    "tipoEsercizio": "Compound",
+    "attrezzatura": "Vario",
+    "patternMovimento": "Functional Movement",
+    "rangeRipetizioni": "8-15",
+    "noteTecniche": "Step:1 Adjust the stepmill machine to a comfortable level. | Step:2 Step onto the machine and place your hands on the handrails for support. | Step:3 Start walking by placing one foot on a step and then the other, alternating between legs. | Step:4 Maintain an upright posture and engage your core muscles. | Step:5 Continue walking for the desired duration or distance. | Step:6 Gradually increase the intensity or speed as you become more comfortable with the exercise. | Step:7 Remember to cool down and stretch after completing the exercise.",
+    "mobilitaPre": "General dynamic stretching 5-7 minutes, joint mobility work",
+    "attivazionePre": "Target muscle light activation 2-3 sets, 12-15 reps",
+    "aliases": [
+      "wos"
+    ],
+    "countingMode": "weighted",
+    "focus": "GLUT"
+  },
+  {
+    "id": "weighted_sissy_squat",
+    "nome": "Weighted Sissy Squat",
+    "imageUrl": "https://static.exercisedb.dev/media/0lQnxMZ.gif",
+    "muscoliSecondari": "FEMOR,GLUT,POLP",
+    "difficolta": "Intermedio",
+    "tipoEsercizio": "Compound",
+    "attrezzatura": "Zavorre",
+    "patternMovimento": "Squat Pattern",
+    "rangeRipetizioni": "8-15",
+    "noteTecniche": "Step:1 Stand with your feet shoulder-width apart and your toes pointing slightly outward. | Step:2 Hold a weight in front of your chest with both hands, or place a barbell across your upper back. | Step:3 Keeping your chest up and your core engaged, slowly lower your body down by bending at the knees and hips. | Step:4 Continue lowering until your thighs are parallel to the ground or as low as you can comfortably go. | Step:5 Pause for a moment at the bottom, then push through your heels to return to the starting position. | Step:6 Repeat for the desired number of repetitions.",
+    "mobilitaPre": "General dynamic stretching 5-7 minutes, joint mobility work",
+    "attivazionePre": "Target muscle light activation 2-3 sets, 12-15 reps",
+    "aliases": [
+      "sq",
+      "wss"
+    ],
+    "countingMode": "weighted",
+    "focus": "QUAD"
+  },
+  {
+    "id": "weighted_standing_hand_squeeze",
+    "nome": "Weighted Standing Hand Squeeze",
+    "focus": "AVA",
+    "imageUrl": "https://static.exercisedb.dev/media/bjqbauy.gif",
+    "difficolta": "Intermedio",
+    "tipoEsercizio": "Compound",
+    "attrezzatura": "Zavorre",
+    "patternMovimento": "Functional Movement",
+    "rangeRipetizioni": "8-15",
+    "noteTecniche": "Step:1 Stand with your feet shoulder-width apart and hold a weight in each hand. | Step:2 Extend your arms straight in front of you, palms facing each other. | Step:3 Squeeze your hands together as hard as you can, engaging your forearms. | Step:4 Hold the squeeze for a few seconds, then release. | Step:5 Repeat for the desired number of repetitions.",
+    "mobilitaPre": "Wrist circles 2x10 each direction, finger flexion/extension 2x15, wrist rotations 2x10",
+    "attivazionePre": "Wrist curls (light) 2x15, reverse wrist curls 2x15, farmer walks (light) 2x30sec",
+    "aliases": [
+      "wshs"
+    ],
+    "countingMode": "weighted",
+    "muscoliSecondari": "BICI"
+  },
+  {
+    "id": "wheel_run",
+    "nome": "Wheel Run",
+    "imageUrl": "https://static.exercisedb.dev/media/km2Ljzj.gif",
+    "muscoliSecondari": "FEMOR,POLP,QUAD",
+    "difficolta": "Principiante",
+    "tipoEsercizio": "Compound",
+    "attrezzatura": "Corpo Libero",
+    "patternMovimento": "Functional Movement",
+    "rangeRipetizioni": "8-15",
+    "noteTecniche": "Step:1 Start in a plank position with your hands on the wheel and your body straight. | Step:2 Engage your core and start rolling the wheel forward by extending your arms. | Step:3 Continue rolling until your body is fully extended and your arms are overhead. | Step:4 Reverse the movement by pulling the wheel back towards your body, using your core and arms. | Step:5 Repeat for the desired number of repetitions.",
+    "mobilitaPre": "General dynamic stretching 5-7 minutes, joint mobility work",
+    "attivazionePre": "Target muscle light activation 2-3 sets, 12-15 reps",
+    "aliases": [
+      "wr"
+    ],
+    "countingMode": "reps",
+    "focus": "GLUT"
+  },
+  {
+    "id": "wrist_circles",
+    "nome": "Wrist Circles",
+    "focus": "AVA",
+    "imageUrl": "https://static.exercisedb.dev/media/2zNKRUB.gif",
+    "difficolta": "Principiante",
+    "tipoEsercizio": "Compound",
+    "attrezzatura": "Corpo Libero",
+    "patternMovimento": "Functional Movement",
+    "rangeRipetizioni": "8-15",
+    "noteTecniche": "Step:1 Extend your arms straight out in front of you. | Step:2 Make a fist with both hands. | Step:3 Rotate your wrists in a circular motion, keeping your arms still. | Step:4 Continue the wrist circles for the desired number of repetitions.",
+    "mobilitaPre": "Wrist circles 2x10 each direction, finger flexion/extension 2x15, wrist rotations 2x10",
+    "attivazionePre": "Wrist curls (light) 2x15, reverse wrist curls 2x15, farmer walks (light) 2x30sec",
+    "aliases": [
+      "wc"
+    ],
+    "countingMode": "reps",
+    "muscoliSecondari": "BICI"
+  },
+  {
+    "id": "wrist_rollerer",
+    "nome": "Wrist Rollerer",
+    "focus": "AVA",
+    "imageUrl": "https://static.exercisedb.dev/media/bd5b860.gif",
+    "difficolta": "Intermedio",
+    "tipoEsercizio": "Compound",
+    "attrezzatura": "Zavorre",
+    "patternMovimento": "Functional Movement",
+    "rangeRipetizioni": "8-15",
+    "noteTecniche": "Step:1 Attach a weight to one end of a rope or bar. | Step:2 Hold the other end of the rope or bar with both hands, palms facing down. | Step:3 Stand with your feet shoulder-width apart and your arms fully extended in front of you. | Step:4 Slowly roll the weight up towards your hands by flexing your wrists. | Step:5 Pause for a moment at the top, then slowly lower the weight back down to the starting position. | Step:6 Repeat for the desired number of repetitions.",
+    "mobilitaPre": "Wrist circles 2x10 each direction, finger flexion/extension 2x15, wrist rotations 2x10",
+    "attivazionePre": "Wrist curls (light) 2x15, reverse wrist curls 2x15, farmer walks (light) 2x30sec",
+    "aliases": [
+      "wr"
+    ],
+    "countingMode": "weighted",
+    "muscoliSecondari": "BICI"
+  }
+]

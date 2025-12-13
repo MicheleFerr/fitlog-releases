@@ -25,7 +25,8 @@ mixin _$RecoveryInsight {
  int get streakDays;/// Sleep-workout correlation data (Pro only)
  SleepWorkoutCorrelation? get correlation;/// Timestamp when calculated
  DateTime? get calculatedAt;/// Whether sleep data is available
- bool get hasSleepData;
+ bool get hasSleepData;/// Score breakdown components for transparency
+ double get baseScore; double get sleepModifier; double get consecutivePenalty;
 /// Create a copy of RecoveryInsight
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -38,16 +39,16 @@ $RecoveryInsightCopyWith<RecoveryInsight> get copyWith => _$RecoveryInsightCopyW
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is RecoveryInsight&&(identical(other.score, score) || other.score == score)&&(identical(other.category, category) || other.category == category)&&(identical(other.recommendation, recommendation) || other.recommendation == recommendation)&&(identical(other.lastNightSleep, lastNightSleep) || other.lastNightSleep == lastNightSleep)&&(identical(other.weeklyAverageHours, weeklyAverageHours) || other.weeklyAverageHours == weeklyAverageHours)&&(identical(other.consecutiveBadNights, consecutiveBadNights) || other.consecutiveBadNights == consecutiveBadNights)&&(identical(other.streakDays, streakDays) || other.streakDays == streakDays)&&(identical(other.correlation, correlation) || other.correlation == correlation)&&(identical(other.calculatedAt, calculatedAt) || other.calculatedAt == calculatedAt)&&(identical(other.hasSleepData, hasSleepData) || other.hasSleepData == hasSleepData));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is RecoveryInsight&&(identical(other.score, score) || other.score == score)&&(identical(other.category, category) || other.category == category)&&(identical(other.recommendation, recommendation) || other.recommendation == recommendation)&&(identical(other.lastNightSleep, lastNightSleep) || other.lastNightSleep == lastNightSleep)&&(identical(other.weeklyAverageHours, weeklyAverageHours) || other.weeklyAverageHours == weeklyAverageHours)&&(identical(other.consecutiveBadNights, consecutiveBadNights) || other.consecutiveBadNights == consecutiveBadNights)&&(identical(other.streakDays, streakDays) || other.streakDays == streakDays)&&(identical(other.correlation, correlation) || other.correlation == correlation)&&(identical(other.calculatedAt, calculatedAt) || other.calculatedAt == calculatedAt)&&(identical(other.hasSleepData, hasSleepData) || other.hasSleepData == hasSleepData)&&(identical(other.baseScore, baseScore) || other.baseScore == baseScore)&&(identical(other.sleepModifier, sleepModifier) || other.sleepModifier == sleepModifier)&&(identical(other.consecutivePenalty, consecutivePenalty) || other.consecutivePenalty == consecutivePenalty));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,score,category,recommendation,lastNightSleep,weeklyAverageHours,consecutiveBadNights,streakDays,correlation,calculatedAt,hasSleepData);
+int get hashCode => Object.hash(runtimeType,score,category,recommendation,lastNightSleep,weeklyAverageHours,consecutiveBadNights,streakDays,correlation,calculatedAt,hasSleepData,baseScore,sleepModifier,consecutivePenalty);
 
 @override
 String toString() {
-  return 'RecoveryInsight(score: $score, category: $category, recommendation: $recommendation, lastNightSleep: $lastNightSleep, weeklyAverageHours: $weeklyAverageHours, consecutiveBadNights: $consecutiveBadNights, streakDays: $streakDays, correlation: $correlation, calculatedAt: $calculatedAt, hasSleepData: $hasSleepData)';
+  return 'RecoveryInsight(score: $score, category: $category, recommendation: $recommendation, lastNightSleep: $lastNightSleep, weeklyAverageHours: $weeklyAverageHours, consecutiveBadNights: $consecutiveBadNights, streakDays: $streakDays, correlation: $correlation, calculatedAt: $calculatedAt, hasSleepData: $hasSleepData, baseScore: $baseScore, sleepModifier: $sleepModifier, consecutivePenalty: $consecutivePenalty)';
 }
 
 
@@ -58,7 +59,7 @@ abstract mixin class $RecoveryInsightCopyWith<$Res>  {
   factory $RecoveryInsightCopyWith(RecoveryInsight value, $Res Function(RecoveryInsight) _then) = _$RecoveryInsightCopyWithImpl;
 @useResult
 $Res call({
- int score, RecoveryCategory category, String recommendation, Duration lastNightSleep, double weeklyAverageHours, int consecutiveBadNights, int streakDays, SleepWorkoutCorrelation? correlation, DateTime? calculatedAt, bool hasSleepData
+ int score, RecoveryCategory category, String recommendation, Duration lastNightSleep, double weeklyAverageHours, int consecutiveBadNights, int streakDays, SleepWorkoutCorrelation? correlation, DateTime? calculatedAt, bool hasSleepData, double baseScore, double sleepModifier, double consecutivePenalty
 });
 
 
@@ -75,7 +76,7 @@ class _$RecoveryInsightCopyWithImpl<$Res>
 
 /// Create a copy of RecoveryInsight
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? score = null,Object? category = null,Object? recommendation = null,Object? lastNightSleep = null,Object? weeklyAverageHours = null,Object? consecutiveBadNights = null,Object? streakDays = null,Object? correlation = freezed,Object? calculatedAt = freezed,Object? hasSleepData = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? score = null,Object? category = null,Object? recommendation = null,Object? lastNightSleep = null,Object? weeklyAverageHours = null,Object? consecutiveBadNights = null,Object? streakDays = null,Object? correlation = freezed,Object? calculatedAt = freezed,Object? hasSleepData = null,Object? baseScore = null,Object? sleepModifier = null,Object? consecutivePenalty = null,}) {
   return _then(_self.copyWith(
 score: null == score ? _self.score : score // ignore: cast_nullable_to_non_nullable
 as int,category: null == category ? _self.category : category // ignore: cast_nullable_to_non_nullable
@@ -87,7 +88,10 @@ as int,streakDays: null == streakDays ? _self.streakDays : streakDays // ignore:
 as int,correlation: freezed == correlation ? _self.correlation : correlation // ignore: cast_nullable_to_non_nullable
 as SleepWorkoutCorrelation?,calculatedAt: freezed == calculatedAt ? _self.calculatedAt : calculatedAt // ignore: cast_nullable_to_non_nullable
 as DateTime?,hasSleepData: null == hasSleepData ? _self.hasSleepData : hasSleepData // ignore: cast_nullable_to_non_nullable
-as bool,
+as bool,baseScore: null == baseScore ? _self.baseScore : baseScore // ignore: cast_nullable_to_non_nullable
+as double,sleepModifier: null == sleepModifier ? _self.sleepModifier : sleepModifier // ignore: cast_nullable_to_non_nullable
+as double,consecutivePenalty: null == consecutivePenalty ? _self.consecutivePenalty : consecutivePenalty // ignore: cast_nullable_to_non_nullable
+as double,
   ));
 }
 /// Create a copy of RecoveryInsight
@@ -184,10 +188,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int score,  RecoveryCategory category,  String recommendation,  Duration lastNightSleep,  double weeklyAverageHours,  int consecutiveBadNights,  int streakDays,  SleepWorkoutCorrelation? correlation,  DateTime? calculatedAt,  bool hasSleepData)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int score,  RecoveryCategory category,  String recommendation,  Duration lastNightSleep,  double weeklyAverageHours,  int consecutiveBadNights,  int streakDays,  SleepWorkoutCorrelation? correlation,  DateTime? calculatedAt,  bool hasSleepData,  double baseScore,  double sleepModifier,  double consecutivePenalty)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _RecoveryInsight() when $default != null:
-return $default(_that.score,_that.category,_that.recommendation,_that.lastNightSleep,_that.weeklyAverageHours,_that.consecutiveBadNights,_that.streakDays,_that.correlation,_that.calculatedAt,_that.hasSleepData);case _:
+return $default(_that.score,_that.category,_that.recommendation,_that.lastNightSleep,_that.weeklyAverageHours,_that.consecutiveBadNights,_that.streakDays,_that.correlation,_that.calculatedAt,_that.hasSleepData,_that.baseScore,_that.sleepModifier,_that.consecutivePenalty);case _:
   return orElse();
 
 }
@@ -205,10 +209,10 @@ return $default(_that.score,_that.category,_that.recommendation,_that.lastNightS
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int score,  RecoveryCategory category,  String recommendation,  Duration lastNightSleep,  double weeklyAverageHours,  int consecutiveBadNights,  int streakDays,  SleepWorkoutCorrelation? correlation,  DateTime? calculatedAt,  bool hasSleepData)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int score,  RecoveryCategory category,  String recommendation,  Duration lastNightSleep,  double weeklyAverageHours,  int consecutiveBadNights,  int streakDays,  SleepWorkoutCorrelation? correlation,  DateTime? calculatedAt,  bool hasSleepData,  double baseScore,  double sleepModifier,  double consecutivePenalty)  $default,) {final _that = this;
 switch (_that) {
 case _RecoveryInsight():
-return $default(_that.score,_that.category,_that.recommendation,_that.lastNightSleep,_that.weeklyAverageHours,_that.consecutiveBadNights,_that.streakDays,_that.correlation,_that.calculatedAt,_that.hasSleepData);case _:
+return $default(_that.score,_that.category,_that.recommendation,_that.lastNightSleep,_that.weeklyAverageHours,_that.consecutiveBadNights,_that.streakDays,_that.correlation,_that.calculatedAt,_that.hasSleepData,_that.baseScore,_that.sleepModifier,_that.consecutivePenalty);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -225,10 +229,10 @@ return $default(_that.score,_that.category,_that.recommendation,_that.lastNightS
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int score,  RecoveryCategory category,  String recommendation,  Duration lastNightSleep,  double weeklyAverageHours,  int consecutiveBadNights,  int streakDays,  SleepWorkoutCorrelation? correlation,  DateTime? calculatedAt,  bool hasSleepData)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int score,  RecoveryCategory category,  String recommendation,  Duration lastNightSleep,  double weeklyAverageHours,  int consecutiveBadNights,  int streakDays,  SleepWorkoutCorrelation? correlation,  DateTime? calculatedAt,  bool hasSleepData,  double baseScore,  double sleepModifier,  double consecutivePenalty)?  $default,) {final _that = this;
 switch (_that) {
 case _RecoveryInsight() when $default != null:
-return $default(_that.score,_that.category,_that.recommendation,_that.lastNightSleep,_that.weeklyAverageHours,_that.consecutiveBadNights,_that.streakDays,_that.correlation,_that.calculatedAt,_that.hasSleepData);case _:
+return $default(_that.score,_that.category,_that.recommendation,_that.lastNightSleep,_that.weeklyAverageHours,_that.consecutiveBadNights,_that.streakDays,_that.correlation,_that.calculatedAt,_that.hasSleepData,_that.baseScore,_that.sleepModifier,_that.consecutivePenalty);case _:
   return null;
 
 }
@@ -240,7 +244,7 @@ return $default(_that.score,_that.category,_that.recommendation,_that.lastNightS
 @JsonSerializable()
 
 class _RecoveryInsight extends RecoveryInsight {
-  const _RecoveryInsight({required this.score, required this.category, required this.recommendation, required this.lastNightSleep, required this.weeklyAverageHours, required this.consecutiveBadNights, required this.streakDays, this.correlation, this.calculatedAt = null, this.hasSleepData = true}): super._();
+  const _RecoveryInsight({required this.score, required this.category, required this.recommendation, required this.lastNightSleep, required this.weeklyAverageHours, required this.consecutiveBadNights, required this.streakDays, this.correlation, this.calculatedAt = null, this.hasSleepData = true, this.baseScore = 0.0, this.sleepModifier = 1.0, this.consecutivePenalty = 1.0}): super._();
   factory _RecoveryInsight.fromJson(Map<String, dynamic> json) => _$RecoveryInsightFromJson(json);
 
 /// Recovery score (0-100)
@@ -263,6 +267,10 @@ class _RecoveryInsight extends RecoveryInsight {
 @override@JsonKey() final  DateTime? calculatedAt;
 /// Whether sleep data is available
 @override@JsonKey() final  bool hasSleepData;
+/// Score breakdown components for transparency
+@override@JsonKey() final  double baseScore;
+@override@JsonKey() final  double sleepModifier;
+@override@JsonKey() final  double consecutivePenalty;
 
 /// Create a copy of RecoveryInsight
 /// with the given fields replaced by the non-null parameter values.
@@ -277,16 +285,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _RecoveryInsight&&(identical(other.score, score) || other.score == score)&&(identical(other.category, category) || other.category == category)&&(identical(other.recommendation, recommendation) || other.recommendation == recommendation)&&(identical(other.lastNightSleep, lastNightSleep) || other.lastNightSleep == lastNightSleep)&&(identical(other.weeklyAverageHours, weeklyAverageHours) || other.weeklyAverageHours == weeklyAverageHours)&&(identical(other.consecutiveBadNights, consecutiveBadNights) || other.consecutiveBadNights == consecutiveBadNights)&&(identical(other.streakDays, streakDays) || other.streakDays == streakDays)&&(identical(other.correlation, correlation) || other.correlation == correlation)&&(identical(other.calculatedAt, calculatedAt) || other.calculatedAt == calculatedAt)&&(identical(other.hasSleepData, hasSleepData) || other.hasSleepData == hasSleepData));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _RecoveryInsight&&(identical(other.score, score) || other.score == score)&&(identical(other.category, category) || other.category == category)&&(identical(other.recommendation, recommendation) || other.recommendation == recommendation)&&(identical(other.lastNightSleep, lastNightSleep) || other.lastNightSleep == lastNightSleep)&&(identical(other.weeklyAverageHours, weeklyAverageHours) || other.weeklyAverageHours == weeklyAverageHours)&&(identical(other.consecutiveBadNights, consecutiveBadNights) || other.consecutiveBadNights == consecutiveBadNights)&&(identical(other.streakDays, streakDays) || other.streakDays == streakDays)&&(identical(other.correlation, correlation) || other.correlation == correlation)&&(identical(other.calculatedAt, calculatedAt) || other.calculatedAt == calculatedAt)&&(identical(other.hasSleepData, hasSleepData) || other.hasSleepData == hasSleepData)&&(identical(other.baseScore, baseScore) || other.baseScore == baseScore)&&(identical(other.sleepModifier, sleepModifier) || other.sleepModifier == sleepModifier)&&(identical(other.consecutivePenalty, consecutivePenalty) || other.consecutivePenalty == consecutivePenalty));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,score,category,recommendation,lastNightSleep,weeklyAverageHours,consecutiveBadNights,streakDays,correlation,calculatedAt,hasSleepData);
+int get hashCode => Object.hash(runtimeType,score,category,recommendation,lastNightSleep,weeklyAverageHours,consecutiveBadNights,streakDays,correlation,calculatedAt,hasSleepData,baseScore,sleepModifier,consecutivePenalty);
 
 @override
 String toString() {
-  return 'RecoveryInsight(score: $score, category: $category, recommendation: $recommendation, lastNightSleep: $lastNightSleep, weeklyAverageHours: $weeklyAverageHours, consecutiveBadNights: $consecutiveBadNights, streakDays: $streakDays, correlation: $correlation, calculatedAt: $calculatedAt, hasSleepData: $hasSleepData)';
+  return 'RecoveryInsight(score: $score, category: $category, recommendation: $recommendation, lastNightSleep: $lastNightSleep, weeklyAverageHours: $weeklyAverageHours, consecutiveBadNights: $consecutiveBadNights, streakDays: $streakDays, correlation: $correlation, calculatedAt: $calculatedAt, hasSleepData: $hasSleepData, baseScore: $baseScore, sleepModifier: $sleepModifier, consecutivePenalty: $consecutivePenalty)';
 }
 
 
@@ -297,7 +305,7 @@ abstract mixin class _$RecoveryInsightCopyWith<$Res> implements $RecoveryInsight
   factory _$RecoveryInsightCopyWith(_RecoveryInsight value, $Res Function(_RecoveryInsight) _then) = __$RecoveryInsightCopyWithImpl;
 @override @useResult
 $Res call({
- int score, RecoveryCategory category, String recommendation, Duration lastNightSleep, double weeklyAverageHours, int consecutiveBadNights, int streakDays, SleepWorkoutCorrelation? correlation, DateTime? calculatedAt, bool hasSleepData
+ int score, RecoveryCategory category, String recommendation, Duration lastNightSleep, double weeklyAverageHours, int consecutiveBadNights, int streakDays, SleepWorkoutCorrelation? correlation, DateTime? calculatedAt, bool hasSleepData, double baseScore, double sleepModifier, double consecutivePenalty
 });
 
 
@@ -314,7 +322,7 @@ class __$RecoveryInsightCopyWithImpl<$Res>
 
 /// Create a copy of RecoveryInsight
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? score = null,Object? category = null,Object? recommendation = null,Object? lastNightSleep = null,Object? weeklyAverageHours = null,Object? consecutiveBadNights = null,Object? streakDays = null,Object? correlation = freezed,Object? calculatedAt = freezed,Object? hasSleepData = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? score = null,Object? category = null,Object? recommendation = null,Object? lastNightSleep = null,Object? weeklyAverageHours = null,Object? consecutiveBadNights = null,Object? streakDays = null,Object? correlation = freezed,Object? calculatedAt = freezed,Object? hasSleepData = null,Object? baseScore = null,Object? sleepModifier = null,Object? consecutivePenalty = null,}) {
   return _then(_RecoveryInsight(
 score: null == score ? _self.score : score // ignore: cast_nullable_to_non_nullable
 as int,category: null == category ? _self.category : category // ignore: cast_nullable_to_non_nullable
@@ -326,7 +334,10 @@ as int,streakDays: null == streakDays ? _self.streakDays : streakDays // ignore:
 as int,correlation: freezed == correlation ? _self.correlation : correlation // ignore: cast_nullable_to_non_nullable
 as SleepWorkoutCorrelation?,calculatedAt: freezed == calculatedAt ? _self.calculatedAt : calculatedAt // ignore: cast_nullable_to_non_nullable
 as DateTime?,hasSleepData: null == hasSleepData ? _self.hasSleepData : hasSleepData // ignore: cast_nullable_to_non_nullable
-as bool,
+as bool,baseScore: null == baseScore ? _self.baseScore : baseScore // ignore: cast_nullable_to_non_nullable
+as double,sleepModifier: null == sleepModifier ? _self.sleepModifier : sleepModifier // ignore: cast_nullable_to_non_nullable
+as double,consecutivePenalty: null == consecutivePenalty ? _self.consecutivePenalty : consecutivePenalty // ignore: cast_nullable_to_non_nullable
+as double,
   ));
 }
 

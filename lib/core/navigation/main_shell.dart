@@ -31,8 +31,7 @@ import 'package:gymbro_flutter_new/features/workout/domain/entities/workout.dart
 import 'package:gymbro_flutter_new/features/workout/presentation/providers/workout_provider.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/widgets/workout_mini_bar.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
-// TODO: Re-enable auto-pause feature after adding autoPauseOnNavigateAway to AppConfig
-// import 'package:gymbro_flutter_new/shared/presentation/providers/app_config_provider.dart';
+import 'package:gymbro_flutter_new/shared/presentation/providers/app_config_provider.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
 
@@ -60,6 +59,9 @@ class _MainShellState extends ConsumerState<MainShell> {
   bool _hasVisitedWorkoutScreen = false;
   String? _lastWorkoutId;
 
+  // Track previous tab index for auto-pause feature
+  int? _previousIndex;
+
   @override
   void initState() {
     super.initState();
@@ -82,6 +84,9 @@ class _MainShellState extends ConsumerState<MainShell> {
       _hasVisitedWorkoutScreen = true;
     }
 
+    // Handle auto-pause/resume when navigating between tabs
+    _handleAutoPause(currentIndex, workout);
+
     // Check if we should show mini-bar:
     // - Workout exists
     // - Workout is in progress or paused
@@ -102,13 +107,15 @@ class _MainShellState extends ConsumerState<MainShell> {
           widget.navigationShell,
 
           // Floating mini-bar positioned just above nav bar
+          // showMiniBar already checks workout != null
           if (showMiniBar)
             Positioned(
               left: 0,
               right: 0,
               bottom: 4, // Body ends at top of nav bar, so 4px gap is enough
               child: WorkoutMiniBar(
-                workout: workout!, // Safe: showMiniBar checks workout != null
+                // ignore: unnecessary_non_null_assertion
+                workout: workout!, // Safe: showMiniBar condition ensures workout != null
                 onDiscard: () => _showDiscardConfirmation(context),
                 onSave: () => _showSaveConfirmation(context),
               ),
@@ -123,8 +130,42 @@ class _MainShellState extends ConsumerState<MainShell> {
     );
   }
 
-  // TODO: Re-enable auto-pause feature after adding autoPauseOnNavigateAway to AppConfig
-  // void _handleAutoPause(int currentIndex, Workout? workout) { ... }
+  /// Handle auto-pause/resume when navigating between tabs
+  ///
+  /// When user leaves workout tab (index 1) with active workout → auto-pause
+  /// When user returns to workout tab with paused workout → auto-resume
+  void _handleAutoPause(int currentIndex, Workout? workout) {
+    if (_previousIndex == null) {
+      _previousIndex = currentIndex;
+      return;
+    }
+
+    final config = ref.read(appConfigProvider);
+
+    // Leaving workout tab → auto-pause
+    if (_previousIndex == 1 &&
+        currentIndex != 1 &&
+        config.autoPauseOnNavigateAway &&
+        workout != null &&
+        workout.status == WorkoutStatus.inProgress) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        ref.read(currentWorkoutProvider.notifier).pauseWorkout();
+      });
+    }
+
+    // Returning to workout tab → auto-resume
+    if (_previousIndex != 1 &&
+        currentIndex == 1 &&
+        config.autoPauseOnNavigateAway &&
+        workout != null &&
+        workout.status == WorkoutStatus.paused) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        ref.read(currentWorkoutProvider.notifier).resumeWorkout();
+      });
+    }
+
+    _previousIndex = currentIndex;
+  }
 
   /// Handle destination selection with branch switching
   void _onDestinationSelected(BuildContext context, int index) {

@@ -10,8 +10,8 @@ import 'dart:async';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
-import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
 
+import 'package:gymbro_flutter_new/shared/presentation/services/snackbar_service.dart';
 class RestPauseExecutionSheet extends ConsumerStatefulWidget {
 
   const RestPauseExecutionSheet({
@@ -82,12 +82,7 @@ class _RestPauseExecutionSheetState extends ConsumerState<RestPauseExecutionShee
   
   void _completeMiniSet(int index) {
     if (_reps[index] == null || _reps[index]! == 0) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(AppLocalizations.of(context).pleaseEnterValidData),
-          backgroundColor: context.colors.secondary,
-        ),
-      );
+      SnackBarService.showSuccess(context, AppLocalizations.of(context);
       return;
     }
     

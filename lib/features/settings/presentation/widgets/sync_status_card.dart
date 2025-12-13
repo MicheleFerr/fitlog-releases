@@ -18,6 +18,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/providers/workout_repository_provider.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
 import 'package:intl/intl.dart';
+import 'package:gymbro_flutter_new/shared/presentation/services/snackbar_service.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 
 /// Widget to display sync status for premium users
@@ -177,15 +178,11 @@ class SyncStatusCard extends ConsumerWidget {
                             .exportData();
                         // TODO: Save to file and share
                         if (context.mounted) {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(content: Text(l10n.dataExported)),
-                          );
+                          SnackBarService.showSuccess(context, l10n.dataExported);
                         }
                       } catch (e) {
                         if (context.mounted) {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(content: Text(l10n.exportFailedError(e.toString()))),
-                          );
+                          SnackBarService.showError(context, l10n.exportFailedError(e.toString()));
                         }
                       }
                     },

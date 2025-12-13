@@ -221,10 +221,12 @@ class WorkoutManager: NSObject, ObservableObject {
         WKInterfaceDevice.current().play(.start)
     }
 
+    /// End workout and SAVE to HealthKit
     func endWorkout() async throws {
         session?.end()
 
         guard let builder = builder else {
+            resetState()
             return
         }
 
@@ -236,14 +238,38 @@ class WorkoutManager: NSObject, ObservableObject {
             await ConnectivityManager.shared.sendWorkoutCompleted(workout)
         }
 
-        // Reset state
+        resetState()
+
+        // Trigger success haptic
+        WKInterfaceDevice.current().play(.success)
+    }
+
+    /// Discard workout WITHOUT saving to HealthKit
+    func discardWorkout() async throws {
+        session?.end()
+
+        guard let builder = builder else {
+            resetState()
+            return
+        }
+
+        try await builder.endCollection(at: Date())
+
+        // ✅ Discard instead of finishWorkout - does NOT save to HealthKit
+        builder.discardWorkout()
+
+        resetState()
+
+        // Trigger stop haptic (not success, since we discarded)
+        WKInterfaceDevice.current().play(.stop)
+    }
+
+    /// Reset internal state after workout ends
+    private func resetState() {
         self.session = nil
         self.builder = nil
         self.workoutStartDate = nil
         self.isWorkoutActive = false
-
-        // Trigger success haptic
-        WKInterfaceDevice.current().play(.success)
     }
 
     private func calculateHeartRateZone(bpm: Double) -> HeartRateZone {

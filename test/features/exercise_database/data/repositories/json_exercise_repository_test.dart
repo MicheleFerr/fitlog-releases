@@ -54,17 +54,21 @@ void main() {
     // Setup default locale
     repository = JsonExerciseRepository(locale: const Locale('en'));
 
-    // Mock AssetBundle.loadString for English exercises
+    // Mock AssetBundle.loadString for exercises (new folder structure)
     TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
         .setMockMethodCallHandler(
       const MethodChannel('flutter/assets'),
       (MethodCall methodCall) async {
         if (methodCall.method == 'load') {
           final String assetPath = methodCall.arguments as String;
-          if (assetPath == 'assets/data/exercises.json') {
+          // New folder structure paths
+          if (assetPath.startsWith('assets/data/exercises_en/') ||
+              assetPath.startsWith('assets/data/exercises/')) {
             return ByteData.sublistView(utf8.encode(testExercisesJson));
           }
-          if (assetPath == 'assets/data/exercises_it.json') {
+          // Legacy fallback paths (for backwards compatibility)
+          if (assetPath == 'assets/data/exercises.json' ||
+              assetPath == 'assets/data/exercises_it.json') {
             return ByteData.sublistView(utf8.encode(testExercisesJson));
           }
         }

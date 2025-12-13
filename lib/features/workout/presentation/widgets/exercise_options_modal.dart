@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:gymbro_flutter_new/features/exercise_database/data/utils/exercise_json_loader.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise.dart';
-import 'dart:convert';
 import 'package:gymbro_flutter_new/features/workout/presentation/widgets/exercise_gif_fullscreen.dart';
 import 'package:gymbro_flutter_new/features/exercise_database/presentation/widgets/exercise_card_feedback.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 
+import 'package:gymbro_flutter_new/shared/presentation/services/snackbar_service.dart';
 /// 🚀 TIER-1: Modal condiviso per opzioni esercizio sia per single che superset
 class ExerciseOptionsModal extends StatelessWidget {
 
@@ -141,7 +142,7 @@ class ExerciseOptionsModal extends StatelessWidget {
                   ),
                 ),
               ),
-              SizedBox(height: 8),
+              const SizedBox(height: 8),
             ],
 
             // Title
@@ -153,7 +154,7 @@ class ExerciseOptionsModal extends StatelessWidget {
                     AppIcons.workout,
                     color: Theme.of(context).colorScheme.primary,
                   ),
-                  SizedBox(width: 12),
+                  const SizedBox(width: 12),
                   Expanded(
                     child: Text(
                       exercise.name,
@@ -176,7 +177,7 @@ class ExerciseOptionsModal extends StatelessWidget {
                 children: [
                   // Info Esercizio
                   ListTile(
-                    leading: Icon(AppIcons.info),
+                    leading: const Icon(AppIcons.info),
                     title: Text(context.l10n.exerciseOptionsExerciseInfo),
                     subtitle: Text(context.l10n.exerciseOptionsExerciseInfoSubtitle),
                     onTap: () async {
@@ -185,12 +186,7 @@ class ExerciseOptionsModal extends StatelessWidget {
                       if (exerciseData != null && context.mounted) {
                         _showExerciseInfoModal(context, exerciseData);
                       } else if (context.mounted) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            content: Text(context.l10n.datiEsercizioNonDisponibili),
-                            duration: const Duration(seconds: 2),
-                          ),
-                        );
+                        SnackBarService.showInfo(context, context.l10n.datiEsercizioNonDisponibili);
                       }
                     },
                   ),
@@ -206,14 +202,9 @@ class ExerciseOptionsModal extends StatelessWidget {
                       if (exerciseData != null && _hasWarmupData(exerciseData) && context.mounted) {
                         _showWarmupModal(context, exerciseData);
                       } else if (context.mounted) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            content: Text(exerciseData == null
+                        SnackBarService.showInfo(context, exerciseData == null
                                 ? context.l10n.datiEsercizioNonDisponibili
-                                : context.l10n.exerciseOptionsNoWarmupDataAvailable),
-                            duration: const Duration(seconds: 2),
-                          ),
-                        );
+                                : context.l10n.exerciseOptionsNoWarmupDataAvailable);
                       }
                     },
                   ),
@@ -242,14 +233,9 @@ class ExerciseOptionsModal extends StatelessWidget {
                       if (exerciseData != null && _hasInjuryPreventionData(exerciseData) && context.mounted) {
                         _showInjuryPreventionModal(context, exerciseData);
                       } else if (context.mounted) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            content: Text(exerciseData == null
+                        SnackBarService.showInfo(context, exerciseData == null
                                 ? context.l10n.datiEsercizioNonDisponibili
-                                : context.l10n.exerciseOptionsNoInjuryPreventionDataAvailable),
-                            duration: const Duration(seconds: 2),
-                          ),
-                        );
+                                : context.l10n.exerciseOptionsNoInjuryPreventionDataAvailable);
                       }
                     },
                   ),
@@ -300,7 +286,7 @@ class ExerciseOptionsModal extends StatelessWidget {
 
                   if (onChangeCountingMode != null) ...[
                     ListTile(
-                      leading: Icon(AppIcons.swapHoriz),
+                      leading: const Icon(AppIcons.swapHoriz),
                       title: Text(context.l10n.exerciseOptionsChangeCountingFormat),
                       subtitle: Text(context.l10n.exerciseOptionsChangeCountingFormatSubtitle),
                       onTap: () {
@@ -312,7 +298,7 @@ class ExerciseOptionsModal extends StatelessWidget {
 
                   if (onDuplicate != null) ...[
                     ListTile(
-                      leading: Icon(AppIcons.iconCopy),
+                      leading: const Icon(AppIcons.iconCopy),
                       title: Text(context.l10n.exerciseOptionsDuplicate),
                       onTap: () {
                         Navigator.pop(context);
@@ -352,20 +338,19 @@ class ExerciseOptionsModal extends StatelessWidget {
   /// Load exercise data from JSON
   static Future<Map<String, dynamic>?> _loadExerciseDataFromJson(String exerciseName, String languageCode) async {
     try {
-      // Load the correct JSON file based on language
-      final String fileName = languageCode == 'it'
-          ? 'assets/data/exercises_it.json'
-          : 'assets/data/exercises.json';
-
-      debugPrint('[ExerciseOptions] Loading data for: "$exerciseName" from $fileName');
-      final String jsonString = await rootBundle.loadString(fileName);
-      final List<dynamic> exercises = json.decode(jsonString);
+      // Load from new folder structure with fallback
+      final exercises = await ExerciseJsonLoader.loadExercises(languageCode);
+      debugPrint('[ExerciseOptions] Loading data for: "$exerciseName"');
 
       // Find exercise by name (case-insensitive)
-      final exercise = exercises.firstWhere(
-        (ex) => ex['nome']?.toString().toLowerCase() == exerciseName.toLowerCase(),
-        orElse: () => null,
-      );
+      Map<String, dynamic>? exercise;
+      try {
+        exercise = exercises.firstWhere(
+          (ex) => ex['nome']?.toString().toLowerCase() == exerciseName.toLowerCase(),
+        );
+      } catch (e) {
+        exercise = null;
+      }
 
       if (exercise == null) {
         debugPrint('[ExerciseOptions] Exercise not found: "$exerciseName"');
@@ -429,7 +414,7 @@ class ExerciseOptionsModal extends StatelessWidget {
                 child: Row(
                   children: [
                     Icon(AppIcons.info, color: Theme.of(context).colorScheme.primary),
-                    SizedBox(width: 12),
+                    const SizedBox(width: 12),
                     Expanded(
                       child: Text(
                         exerciseData['nome'] ?? context.l10n.exerciseOptionsExerciseInfoTitle,
@@ -533,7 +518,7 @@ class ExerciseOptionsModal extends StatelessWidget {
                 child: Row(
                   children: [
                     Icon(AppIcons.whatshot, color: context.colors.warning),
-                    SizedBox(width: 12),
+                    const SizedBox(width: 12),
                     Expanded(
                       child: Text(
                         context.l10n.exerciseOptionsWarmupInfoTitle,
@@ -626,7 +611,7 @@ class ExerciseOptionsModal extends StatelessWidget {
                 child: Row(
                   children: [
                     Icon(AppIcons.shieldOutlined, color: context.colors.success),
-                    SizedBox(width: 12),
+                    const SizedBox(width: 12),
                     Expanded(
                       child: Text(
                         context.l10n.exerciseOptionsInjuryPreventionTitle,
@@ -716,7 +701,7 @@ class ExerciseOptionsModal extends StatelessWidget {
           Row(
             children: [
               Icon(icon, size: 20, color: Theme.of(context).colorScheme.primary),
-              SizedBox(width: 8),
+              const SizedBox(width: 8),
               Text(
                 title,
                 style: Theme.of(context).textTheme.titleSmall?.copyWith(
@@ -726,7 +711,7 @@ class ExerciseOptionsModal extends StatelessWidget {
               ),
             ],
           ),
-          SizedBox(height: 8),
+          const SizedBox(height: 8),
           if (content is List) ...[
             ...content.map((item) => Padding(
               padding: const EdgeInsets.only(bottom: 4),

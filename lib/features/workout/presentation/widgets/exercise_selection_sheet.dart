@@ -9,6 +9,7 @@ import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator.dart';
 
 /// 🚀 TIER-1: Optimized selection sheet with lazy loading
 class ExerciseSelectionSheet extends ConsumerStatefulWidget {
@@ -104,7 +105,7 @@ class _ExerciseSelectionSheetState extends ConsumerState<ExerciseSelectionSheet>
                     exerciseList,
                     scrollController,
                   ),
-                  loading: () => const Center(child: CircularProgressIndicator()),
+                  loading: () => const Center(child: LoadingIndicator()),
                   error: (error, _) => Center(child: Text('Error: $error')),
                 ),
               ),
@@ -542,7 +543,7 @@ class ExerciseSelectionTile extends ConsumerWidget {
             child: SizedBox(
               width: 20,
               height: 20,
-              child: CircularProgressIndicator(strokeWidth: 2),
+              child: LoadingIndicator(size: 20, strokeWidth: 2),
             ),
           ),
         ),

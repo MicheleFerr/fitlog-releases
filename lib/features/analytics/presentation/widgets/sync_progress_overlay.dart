@@ -4,6 +4,7 @@ import 'package:gymbro_flutter_new/features/analytics/presentation/providers/ana
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator.dart';
 
 class SyncProgressOverlay extends ConsumerWidget {
   const SyncProgressOverlay({super.key});
@@ -73,11 +74,7 @@ class SyncProgressOverlay extends ConsumerWidget {
                     ),
                   ),
                 ] else ...[
-                  CircularProgressIndicator(
-                    valueColor: AlwaysStoppedAnimation<Color>(
-                      theme.colorScheme.primary,
-                    ),
-                  ),
+                  const LoadingIndicator(),
                 ],
                 const SizedBox(height: 16),
 

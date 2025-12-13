@@ -11,7 +11,6 @@ import 'package:gymbro_flutter_new/features/home/providers/progress_widget_prefe
 import 'package:gymbro_flutter_new/features/home/providers/volume_settings_provider.dart';
 import 'package:gymbro_flutter_new/features/home/presentation/widgets/volume_display_widget.dart';
 import 'package:gymbro_flutter_new/features/profile/presentation/widgets/level_info_modal.dart';
-import 'package:gymbro_flutter_new/features/profile/presentation/widgets/compact_profile_header.dart';
 import 'package:gymbro_flutter_new/features/home/presentation/widgets/weekly_distribution_modal.dart';
 import 'package:gymbro_flutter_new/features/home/presentation/widgets/volume_details_modal.dart';
 import 'package:intl/intl.dart';
@@ -19,6 +18,7 @@ import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator.dart';
 
 class EnhancedProgressStatsWidget extends ConsumerStatefulWidget {
   
@@ -298,7 +298,7 @@ class _EnhancedProgressStatsWidgetState extends ConsumerState<EnhancedProgressSt
             const SizedBox(height: 16),
             // Metrics Grid
             if (analyticsState.isLoading)
-              const CircularProgressIndicator()
+              const LoadingIndicator()
             else
               _buildMetricsGrid(context, frequencyStats, preferences.visibleMetrics),
           ],
@@ -380,9 +380,9 @@ class _EnhancedProgressStatsWidgetState extends ConsumerState<EnhancedProgressSt
               ],
             ),
             const SizedBox(height: 24),
-            
+
             if (analyticsState.isLoading)
-              const Center(child: CircularProgressIndicator())
+              const Center(child: LoadingIndicator())
             else if (analyticsState.activities.isEmpty)
               _buildEmptyState(context)
             else ...[

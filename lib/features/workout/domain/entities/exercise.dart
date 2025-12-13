@@ -941,6 +941,7 @@ class SupersetExercise extends Exercise { // I set del superset
       'category': category.name,
       'notes': notes,
       'restTime': restTime,
+      'tut': tut, // ✅ Preserve TUT
       'createdAt': createdAt.toIso8601String(),
       'updatedAt': updatedAt.toIso8601String(),
       // Superset-specific fields
@@ -998,6 +999,7 @@ class DropSetExercise extends Exercise {
       'category': category.name,
       'notes': notes,
       'restTime': restTime,
+      'tut': tut, // ✅ Preserve TUT
       'createdAt': createdAt.toIso8601String(),
       'updatedAt': updatedAt.toIso8601String(),
       'stages': stages.map((s) => s.toJson()).toList(),
@@ -1098,6 +1100,7 @@ class RestPauseExercise extends Exercise {
       'category': category.name,
       'notes': notes,
       'restTime': restTime,
+      'tut': tut, // ✅ Preserve TUT
       'createdAt': createdAt.toIso8601String(),
       'updatedAt': updatedAt.toIso8601String(),
       'weight': weight,

@@ -3,7 +3,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'dart:async';
 import 'package:gymbro_flutter_new/features/workout/presentation/providers/set_duration_tracker_provider.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise.dart';
-import 'package:gymbro_flutter_new/shared/presentation/providers/app_config_provider.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 
@@ -158,8 +157,7 @@ class _SetExecutionTimerWidgetState extends ConsumerState<SetExecutionTimerWidge
   
   @override
   Widget build(BuildContext context) {
-    final config = ref.watch(appConfigProvider);
-    const showMilliseconds = true; // config.showPreciseTimings ?? true; // TODO: Add showPreciseTimings to AppConfig
+    const showMilliseconds = true; // Show milliseconds by default for precise timing
     
     return GestureDetector(
       onTap: widget.onTap,

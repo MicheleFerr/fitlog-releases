@@ -37,7 +37,6 @@ library;
 
 import 'dart:math' as math;
 import 'package:flutter/material.dart';
-import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 
 /// Utility class per accessibility checks
 class AccessibilityUtils {

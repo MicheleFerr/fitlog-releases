@@ -5,6 +5,7 @@ import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_locali
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/features/home/presentation/providers/insight_feedback_provider.dart';
 import 'package:gymbro_flutter_new/features/home/domain/entities/insight_feedback.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator.dart';
 import 'package:intl/intl.dart';
 
 /// Modal showing user's feedback history on AI Coach insights
@@ -73,7 +74,7 @@ class FeedbackHistoryModal extends ConsumerWidget {
                 }
                 return _buildFeedbackList(context, feedbackList, l10n, theme, colorScheme, scrollController);
               },
-              loading: () => const Center(child: CircularProgressIndicator()),
+              loading: () => const Center(child: LoadingIndicator()),
               error: (error, _) => Center(
                 child: Padding(
                   padding: const EdgeInsets.all(24),

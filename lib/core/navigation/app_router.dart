@@ -68,7 +68,6 @@ import 'package:gymbro_flutter_new/features/analytics/presentation/screens/pro_a
 
 // Settings (pushed from Profile)
 import 'package:gymbro_flutter_new/features/settings/presentation/settings_screen.dart';
-import 'package:gymbro_flutter_new/features/settings/presentation/screens/debug_log_settings_screen.dart';
 import 'package:gymbro_flutter_new/features/health_sync/presentation/screens/health_sync_settings_screen.dart';
 import 'package:gymbro_flutter_new/features/ai_coach/presentation/screens/healthkit_debug_screen.dart';
 import 'package:gymbro_flutter_new/features/import/presentation/screens/import_screen.dart';
@@ -81,6 +80,7 @@ import 'package:gymbro_flutter_new/features/body_measurements/presentation/scree
 import 'package:gymbro_flutter_new/features/body_measurements/data/repositories/consent_repository_provider.dart';
 import 'package:gymbro_flutter_new/features/body_measurements/domain/entities/metric_type.dart';
 import 'package:gymbro_flutter_new/features/body_measurements/domain/entities/user_consent.dart';
+import 'package:gymbro_flutter_new/features/premium/presentation/screens/simple_premium_screen.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator.dart';
 
 // Other routes
@@ -234,6 +234,17 @@ final appRouterProvider = Provider<GoRouter>((ref) {
                     path: 'templates',
                     name: AppRoutes.templatesName,
                     builder: (context, state) => const TemplatesHomeScreen(),
+                    routes: [
+                      // Template detail
+                      GoRoute(
+                        path: 'detail',
+                        name: AppRoutes.templateDetailName,
+                        builder: (context, state) {
+                          final templateId = state.extra as String;
+                          return _TemplateDetailPlaceholder(templateId: templateId);
+                        },
+                      ),
+                    ],
                   ),
                 ],
               ),
@@ -327,6 +338,19 @@ final appRouterProvider = Provider<GoRouter>((ref) {
                         path: 'exercise-progress',
                         name: AppRoutes.exerciseProgressName,
                         builder: (context, state) => const ExerciseProgressScreen(),
+                        routes: [
+                          // Exercise progress detail
+                          GoRoute(
+                            path: 'detail',
+                            name: AppRoutes.exerciseProgressDetailName,
+                            builder: (context, state) {
+                              final exerciseName = state.extra as String;
+                              return ExerciseDetailScreen(
+                                exerciseName: exerciseName,
+                              );
+                            },
+                          ),
+                        ],
                       ),
                       // Pro Analytics (tabbed version)
                       GoRoute(
@@ -342,12 +366,6 @@ final appRouterProvider = Provider<GoRouter>((ref) {
                     name: AppRoutes.settingsName,
                     builder: (context, state) => const SettingsScreen(),
                     routes: [
-                      // Debug log settings
-                      GoRoute(
-                        path: 'debug-log',
-                        name: AppRoutes.debugLogSettingsName,
-                        builder: (context, state) => const DebugLogSettingsScreen(),
-                      ),
                       // Health sync
                       GoRoute(
                         path: 'health-sync',
@@ -393,6 +411,12 @@ final appRouterProvider = Provider<GoRouter>((ref) {
                     path: 'edit',
                     name: AppRoutes.editProfileName,
                     builder: (context, state) => const EditProfileScreen(),
+                  ),
+                  // Premium screen
+                  GoRoute(
+                    path: 'premium',
+                    name: AppRoutes.premiumName,
+                    builder: (context, state) => const SimplePremiumScreen(),
                   ),
                 ],
               ),
@@ -458,6 +482,59 @@ class _RoutineComingSoonPlaceholder extends StatelessWidget {
                 'Routine feature is being rebuilt',
                 style: context.textTheme.bodyLarge?.copyWith(
                   color: context.colors.onSurfaceVariant,
+                ),
+                textAlign: TextAlign.center,
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+/// Placeholder widget for template detail screen
+class _TemplateDetailPlaceholder extends StatelessWidget {
+  const _TemplateDetailPlaceholder({required this.templateId});
+
+  final String templateId;
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(context.l10n.templates),
+      ),
+      body: Center(
+        child: Padding(
+          padding: const EdgeInsets.all(32.0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(
+                AppIcons.workout,
+                size: 64,
+                color: context.colors.primary,
+              ),
+              const SizedBox(height: 24),
+              Text(
+                context.l10n.comingSoon,
+                style: context.textTheme.headlineMedium,
+                textAlign: TextAlign.center,
+              ),
+              const SizedBox(height: 16),
+              Text(
+                'Template detail screen coming soon',
+                style: context.textTheme.bodyLarge?.copyWith(
+                  color: context.colors.onSurfaceVariant,
+                ),
+                textAlign: TextAlign.center,
+              ),
+              const SizedBox(height: 8),
+              Text(
+                'Template ID: $templateId',
+                style: context.textTheme.bodySmall?.copyWith(
+                  color: context.colors.onSurfaceVariant.withValues(alpha: 0.5),
                 ),
                 textAlign: TextAlign.center,
               ),

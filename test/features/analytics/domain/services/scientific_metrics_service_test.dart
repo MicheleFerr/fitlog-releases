@@ -1,5 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:gymbro_flutter_new/features/analytics/domain/services/scientific_metrics_service.dart';
+import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise_activity.dart';
 
 void main() {
@@ -675,14 +676,16 @@ void main() {
 ExerciseActivity _createActivity(
   String exerciseId,
   String exerciseName,
-  List<ExerciseActivitySet> sets,
-) {
+  List<ExerciseActivitySet> sets, {
+  ExerciseCategory category = ExerciseCategory.chest,
+}) {
   return ExerciseActivity(
     id: 'activity-${DateTime.now().millisecondsSinceEpoch}-${exerciseId.hashCode}',
     email: 'test@example.com',
     exerciseId: exerciseId,
     exerciseName: exerciseName,
     schedaName: 'Test Workout',
+    category: category,
     sets: sets,
     createdAt: DateTime.now(),
     lastModified: DateTime.now(),

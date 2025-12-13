@@ -1,15 +1,7 @@
 import 'dart:io';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:hive_ce/hive.dart';
-import 'package:path_provider/path_provider.dart';
-import 'package:gymbro_flutter_new/core/auth/admin_role_helper.dart';
 import 'package:gymbro_flutter_new/shared/domain/services/input_validator.dart';
 import 'package:gymbro_flutter_new/shared/domain/services/request_throttler.dart';
-import 'package:gymbro_flutter_new/core/utils/app_logger.dart';
-import 'package:firebase_auth/firebase_auth.dart' as firebase;
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/foundation.dart';
 
 /// 🛡️ SECURITY INTEGRATION TEST SUITE
 ///

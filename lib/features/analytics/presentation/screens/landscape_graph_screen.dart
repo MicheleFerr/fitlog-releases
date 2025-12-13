@@ -51,6 +51,7 @@ import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
 import 'package:gymbro_flutter_new/shared/presentation/services/snackbar_service.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator.dart';
 
 /// Landscape fullscreen graph screen
 ///
@@ -197,13 +198,10 @@ class _LandscapeGraphScreenState extends ConsumerState<LandscapeGraphScreen> {
           // Share chart button
           IconButton(
             icon: _isSharing
-                ? SizedBox(
+                ? const SizedBox(
                     width: AppIconSize.medium,
                     height: AppIconSize.medium,
-                    child: CircularProgressIndicator(
-                      strokeWidth: 2,
-                      color: context.colors.primary,
-                    ),
+                    child: LoadingIndicator(),
                   )
                 : SemanticIcon.button(
                     icon: AppIcons.share,

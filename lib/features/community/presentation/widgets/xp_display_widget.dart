@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/features/community/presentation/providers/community_provider.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator.dart';
 
 class XPDisplayWidget extends ConsumerStatefulWidget {
   
@@ -304,7 +305,7 @@ class _XPDisplayWidgetState extends ConsumerState<XPDisplayWidget>
         );
       },
       loading: () => const Center(
-        child: CircularProgressIndicator(),
+        child: LoadingIndicator(),
       ),
       error: (error, stack) => Center(
         child: Text('Errore: $error'),

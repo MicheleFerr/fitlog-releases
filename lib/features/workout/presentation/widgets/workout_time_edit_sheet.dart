@@ -91,7 +91,7 @@ class _WorkoutTimeEditSheetState extends ConsumerState<WorkoutTimeEditSheet> {
   Widget build(BuildContext context) {
     final l10n = context.l10n;
 
-    return Container(
+    return DecoratedBox(
       decoration: BoxDecoration(
         color: context.colors.surface,
         borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),

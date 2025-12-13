@@ -228,19 +228,19 @@ class RPEIntensityCard extends StatelessWidget {
                   _buildBarSegment(
                     context,
                     distribution.recoverySets / total,
-                    context.successColor.withOpacity(0.6),
+                    context.successColor.withValues(alpha: 0.6),
                   ),
                 if (distribution.moderateSets > 0)
                   _buildBarSegment(
                     context,
                     distribution.moderateSets / total,
-                    context.colors.tertiary.withOpacity(0.7),
+                    context.colors.tertiary.withValues(alpha: 0.7),
                   ),
                 if (distribution.hardSets > 0)
                   _buildBarSegment(
                     context,
                     distribution.hardSets / total,
-                    context.warningColor.withOpacity(0.7),
+                    context.warningColor.withValues(alpha: 0.7),
                   ),
                 if (distribution.veryHardSets > 0)
                   _buildBarSegment(
@@ -268,19 +268,19 @@ class RPEIntensityCard extends StatelessWidget {
             _buildLegendItem(
               context,
               l10n.rpeRecovery,
-              context.successColor.withOpacity(0.6),
+              context.successColor.withValues(alpha: 0.6),
               '${distribution.recoveryPercentage.toStringAsFixed(0)}%',
             ),
             _buildLegendItem(
               context,
               l10n.rpeModerate,
-              context.colors.tertiary.withOpacity(0.7),
+              context.colors.tertiary.withValues(alpha: 0.7),
               '${distribution.moderatePercentage.toStringAsFixed(0)}%',
             ),
             _buildLegendItem(
               context,
               l10n.rpeHard,
-              context.warningColor.withOpacity(0.7),
+              context.warningColor.withValues(alpha: 0.7),
               '${distribution.hardPercentage.toStringAsFixed(0)}%',
             ),
             _buildLegendItem(

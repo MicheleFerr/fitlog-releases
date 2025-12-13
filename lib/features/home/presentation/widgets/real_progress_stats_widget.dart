@@ -5,6 +5,7 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:gymbro_flutter_new/features/analytics/presentation/providers/analytics_provider.dart';
 import 'package:gymbro_flutter_new/features/home/domain/models/home_widget_config.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator.dart';
 import 'package:intl/intl.dart';
 
 class RealProgressStatsWidget extends ConsumerWidget {
@@ -84,7 +85,7 @@ class RealProgressStatsWidget extends ConsumerWidget {
               ),
               const Spacer(),
               if (analyticsState.isLoading)
-                const CircularProgressIndicator()
+                const LoadingIndicator()
               else ...[
                 Text(
                   'Ultimi 30 giorni',
@@ -198,7 +199,7 @@ class RealProgressStatsWidget extends ConsumerWidget {
               const SizedBox(height: 20),
               Expanded(
                 child: analyticsState.isLoading
-                    ? const Center(child: CircularProgressIndicator())
+                    ? const Center(child: LoadingIndicator())
                     : volumeData.isEmpty
                         ? _buildEmptyState(context)
                         : _buildWeeklyVolumeChart(context, volumeData),
@@ -225,7 +226,7 @@ class RealProgressStatsWidget extends ConsumerWidget {
           width: 1,
         ),
       ),
-      child: Container(
+      child: DecoratedBox(
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(24),
           gradient: LinearGradient(
@@ -291,9 +292,9 @@ class RealProgressStatsWidget extends ConsumerWidget {
                 ],
               ),
               const SizedBox(height: 24),
-              
+
               if (analyticsState.isLoading)
-                const Center(child: CircularProgressIndicator())
+                const Center(child: LoadingIndicator())
               else if (analyticsState.activities.isEmpty)
                 _buildEmptyState(context)
               else ...[

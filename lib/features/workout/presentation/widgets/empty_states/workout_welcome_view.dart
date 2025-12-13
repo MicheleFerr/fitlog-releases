@@ -260,7 +260,7 @@ class _ExpertEmptyState extends StatelessWidget {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Icon(AppIcons.playCircle, size: AppIconSize.medium),
+                          const Icon(AppIcons.playCircle, size: AppIconSize.medium),
                           const SizedBox(width: 8),
                           Text(l10n.homeEmptyExpertCTA),
                         ],
@@ -290,7 +290,7 @@ class _ExpertEmptyState extends StatelessWidget {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Icon(AppIcons.template, size: AppIconSize.medium),
+                          const Icon(AppIcons.template, size: AppIconSize.medium),
                           const SizedBox(width: 8),
                           Text(l10n.useTemplate),
                         ],

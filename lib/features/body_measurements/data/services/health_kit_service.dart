@@ -329,7 +329,7 @@ class HealthKitService {
 
       final syncStart = startDate ?? DateTime.now().subtract(const Duration(days: 30));
       int readCount = 0;
-      int writeCount = 0;
+      final int writeCount = 0;
 
       // Read from HealthKit (if needed)
       if (direction == SyncDirection.read || direction == SyncDirection.both) {

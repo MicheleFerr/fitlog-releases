@@ -10,6 +10,7 @@ import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
 
+import 'package:gymbro_flutter_new/shared/presentation/services/snackbar_service.dart';
 /// Widget per esecuzione SEQUENZIALE superset secondo metodologia scientifica
 ///
 /// Flow corretto:
@@ -173,12 +174,7 @@ class _SupersetSequentialExecutionSheetState
       // ✅ FIX: Non chiudere modal (già chiuso), solo mostra feedback
       // Il SupersetSequentialExecutionSheet è già stato chiuso in _executeRound()
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(context.l10n.supersetCompleted),
-            backgroundColor: context.colors.tertiary,
-          ),
-        );
+        SnackBarService.showSuccess(context, context.l10n.supersetCompleted);
       }
     } else {
       // Avvia timer riposo tra round
@@ -205,12 +201,7 @@ class _SupersetSequentialExecutionSheetState
   }
 
   void _showError(String message) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(message),
-        backgroundColor: context.colors.error,
-      ),
-    );
+    SnackBarService.showError(context, message);
   }
 
   /// ✅ FIX PROBLEMA 3: Show QuickEditOverlayV2 for editing exercise data

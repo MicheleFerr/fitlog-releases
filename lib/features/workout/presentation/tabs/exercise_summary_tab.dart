@@ -16,7 +16,6 @@ import 'package:gymbro_flutter_new/features/workout/domain/entities/chart_data_p
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
-import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
 
 /// Tab Sommario: mostra stats, grafico, record personali e livello di forza
 class ExerciseSummaryTab extends ConsumerStatefulWidget {

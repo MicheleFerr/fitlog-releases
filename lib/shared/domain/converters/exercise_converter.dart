@@ -34,7 +34,8 @@ class ExerciseConverter {
       type: WorkoutExercise.ExerciseType.single,
       category: mapFocusToCategory(exercise.focus),
       notes: null, // Note utente separate - non mappare noteTecniche qui
-      tut: exercise.tempoEsecuzione,
+      countingMode: exercise.countingMode, // ✅ Use counting mode from database
+      tut: exercise.tempoEsecuzione, // ✅ Pass TUT from database
       sets: [
         WorkoutExercise.ExerciseSet(setNumber: 1, weight: 0, reps: 10),
         WorkoutExercise.ExerciseSet(setNumber: 2, weight: 0, reps: 10),
@@ -66,7 +67,8 @@ class ExerciseConverter {
       type: WorkoutExercise.ExerciseType.single,
       category: mapFocusToCategory(exercise.focus),
       notes: null, // Note utente separate - non mappare noteTecniche qui
-      tut: exercise.tempoEsecuzione,
+      countingMode: exercise.countingMode, // ✅ Use counting mode from database
+      tut: exercise.tempoEsecuzione, // ✅ Pass TUT from database
       sets: sets,
     );
   }

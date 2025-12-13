@@ -13,6 +13,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/features/admin/presentation/providers/exercise_feedback_provider.dart';
 import 'package:gymbro_flutter_new/features/admin/presentation/screens/feedback_detail_screen.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator.dart';
 
 class ExerciseFeedbackScreen extends ConsumerWidget {
   const ExerciseFeedbackScreen({super.key});
@@ -480,7 +481,7 @@ class ExerciseFeedbackScreen extends ConsumerWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          const CircularProgressIndicator(),
+          const LoadingIndicator(),
           const SizedBox(height: 16),
           Text(l10n.feedbackLoadingMessage),
         ],

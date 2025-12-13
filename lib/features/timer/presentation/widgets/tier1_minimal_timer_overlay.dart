@@ -166,7 +166,7 @@ class _Tier1MinimalTimerOverlayState extends ConsumerState<Tier1MinimalTimerOver
                     onPanStart: _handlePanStart,
                     onPanUpdate: _handlePanUpdate,
                     onPanEnd: _handlePanEnd,
-                    child: Container(
+                    child: DecoratedBox(
                       decoration: _buildDecoration(timerState, progress),
                       child: _buildContent(timerState, remainingSeconds, progress),
                     ),

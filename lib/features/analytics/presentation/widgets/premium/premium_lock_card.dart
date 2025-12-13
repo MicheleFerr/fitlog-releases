@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+import 'package:gymbro_flutter_new/core/navigation/app_routes.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/workout.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
@@ -117,12 +119,8 @@ class PremiumLockCard extends StatelessWidget {
               // Unlock button
               FilledButton.icon(
                 onPressed: () {
-                  // TODO: Navigate to premium subscription screen
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: Text(l10n.premiumComingSoon),
-                    ),
-                  );
+                  // Navigate to premium subscription screen
+                  context.pushNamed(AppRoutes.premiumName);
                 },
                 icon: const SemanticIcon(
   icon: AppIcons.unlock,

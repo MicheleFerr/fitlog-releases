@@ -19,6 +19,7 @@ import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart'
 import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/providers/exercise_history_provider.dart';
 import 'package:intl/intl.dart';
+import 'package:gymbro_flutter_new/shared/presentation/services/snackbar_service.dart';
 
 class ExerciseCustomizationScreen extends ConsumerStatefulWidget { // 🔥 FIX: Add callback parameter
 
@@ -569,12 +570,7 @@ class _ExerciseCustomizationScreenState extends ConsumerState<ExerciseCustomizat
       }
     }
     
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text('${_customizations.length} esercizi aggiunti alla scheda!'),
-        backgroundColor: Theme.of(context).colorScheme.tertiary,
-      ),
-    );
+    SnackBarService.showSuccess(context, '${_customizations.length} esercizi aggiunti alla scheda!');
     
     // Go back - different behavior based on context
     if (widget.onExerciseAdded != null) {

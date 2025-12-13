@@ -7,7 +7,6 @@
 /// Servizio per sincronizzazione automatica e gestione aggiornamenti esercizi
 library;
 
-import 'package:flutter/foundation.dart' show kDebugMode;
 import 'dart:async';
 import 'package:flutter/foundation.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';

@@ -32,7 +32,7 @@ import 'package:gymbro_flutter_new/features/body_measurements/data/datasources/h
 ///             ),
 ///           );
 ///         }
-///         return CircularProgressIndicator();
+///         return LoadingIndicator();
 ///       },
 ///     );
 ///   }

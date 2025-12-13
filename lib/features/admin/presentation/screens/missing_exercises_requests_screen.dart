@@ -197,6 +197,7 @@ class _MissingExercisesRequestsScreenState
   }
 
   Widget _buildRequestCard(MissingExerciseRequest request) {
+    final l10n = context.l10n;
 
     return Card(
       margin: const EdgeInsets.only(bottom: 12),
@@ -285,7 +286,7 @@ class _MissingExercisesRequestsScreenState
   icon: AppIcons.close,
   semanticLabel: 'Close',
 ),
-                      label: const Text('Rifiuta'),
+                      label: Text(l10n.reject),
                       style: OutlinedButton.styleFrom(
                         foregroundColor: Theme.of(context).colorScheme.error,
                       ),
@@ -299,7 +300,7 @@ class _MissingExercisesRequestsScreenState
   icon: AppIcons.check,
   semanticLabel: 'Check',
 ),
-                      label: const Text('Approva'),
+                      label: Text(l10n.approve),
                     ),
                   ),
                 ],
@@ -319,7 +320,7 @@ class _MissingExercisesRequestsScreenState
   icon: AppIcons.doneAll,
   semanticLabel: 'Done all',
 ),
-                  label: const Text('Segna come Completato'),
+                  label: Text(l10n.markAsCompleted),
                 ),
               ),
             ],
@@ -356,23 +357,23 @@ class _MissingExercisesRequestsScreenState
 
   Future<void> _approveRequest(MissingExerciseRequest request) async {
     final service = ref.read(missingExerciseServiceProvider);
+    final l10n = context.l10n;
 
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Approva Richiesta'),
+        title: Text(l10n.approveRequest),
         content: Text(
-          'Vuoi approvare la richiesta per "${request.exerciseName}"?\n\n'
-          'Dopo l\'approvazione, dovrai aggiungere l\'esercizio completo al database.',
+          l10n.approveRequestMessage(request.exerciseName),
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(context).pop(false),
-            child: const Text('Annulla'),
+            child: Text(l10n.cancel),
           ),
           FilledButton(
             onPressed: () => Navigator.of(context).pop(true),
-            child: const Text('Approva'),
+            child: Text(l10n.approve),
           ),
         ],
       ),
@@ -382,13 +383,13 @@ class _MissingExercisesRequestsScreenState
       try {
         await service.approveRequest(
           requestId: request.id,
-          notes: 'Approvato per inserimento nel database',
+          notes: l10n.approvedForDatabaseInsertion,
         );
 
         if (mounted) {
           SnackBarService.showSuccess(
             context,
-            '✅ Richiesta approvata! Ricorda di aggiungere l\'esercizio al database.',
+            '✅ ${l10n.requestApprovedSuccess}',
             duration: const Duration(seconds: 4),
           );
         }
@@ -406,23 +407,24 @@ class _MissingExercisesRequestsScreenState
   Future<void> _rejectRequest(MissingExerciseRequest request) async {
     final service = ref.read(missingExerciseServiceProvider);
     final reasonController = TextEditingController();
+    final l10n = context.l10n;
 
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Rifiuta Richiesta'),
+        title: Text(l10n.rejectRequest),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('Rifiutare la richiesta per "${request.exerciseName}"?'),
+            Text(l10n.rejectRequestMessage(request.exerciseName)),
             const SizedBox(height: 16),
             TextField(
               controller: reasonController,
-              decoration: const InputDecoration(
-                labelText: 'Motivo (opzionale)',
-                hintText: 'es. Esercizio già presente, nome troppo generico...',
-                border: OutlineInputBorder(),
+              decoration: InputDecoration(
+                labelText: l10n.motivoOpzionale,
+                hintText: l10n.rejectionReasonPlaceholder,
+                border: const OutlineInputBorder(),
               ),
               maxLines: 3,
             ),
@@ -431,14 +433,14 @@ class _MissingExercisesRequestsScreenState
         actions: [
           TextButton(
             onPressed: () => Navigator.of(context).pop(false),
-            child: const Text('Annulla'),
+            child: Text(l10n.cancel),
           ),
           FilledButton(
             onPressed: () => Navigator.of(context).pop(true),
             style: FilledButton.styleFrom(
               backgroundColor: Theme.of(context).colorScheme.error,
             ),
-            child: const Text('Rifiuta'),
+            child: Text(l10n.reject),
           ),
         ],
       ),
@@ -449,14 +451,14 @@ class _MissingExercisesRequestsScreenState
         await service.rejectRequest(
           requestId: request.id,
           reason: reasonController.text.trim().isEmpty
-              ? 'Rifiutato dall\'admin'
+              ? l10n.rejectedByAdmin
               : reasonController.text.trim(),
         );
 
         if (mounted) {
           SnackBarService.showWarning(
             context,
-            'Richiesta rifiutata',
+            l10n.requestRejected,
           );
         }
       } catch (e) {
@@ -472,23 +474,23 @@ class _MissingExercisesRequestsScreenState
 
   Future<void> _markAsCompleted(MissingExerciseRequest request) async {
     final service = ref.read(missingExerciseServiceProvider);
+    final l10n = context.l10n;
 
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Segna come Completato'),
+        title: Text(l10n.markAsCompleted),
         content: Text(
-          'Segna "${request.exerciseName}" come completato?\n\n'
-          'Usa questa opzione solo dopo aver aggiunto l\'esercizio completo al database.',
+          l10n.markAsCompletedMessage(request.exerciseName),
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(context).pop(false),
-            child: const Text('Annulla'),
+            child: Text(l10n.cancel),
           ),
           FilledButton(
             onPressed: () => Navigator.of(context).pop(true),
-            child: const Text('Completato'),
+            child: Text(l10n.completed),
           ),
         ],
       ),
@@ -498,13 +500,13 @@ class _MissingExercisesRequestsScreenState
       try {
         await service.markAsCompleted(
           requestId: request.id,
-          notes: 'Esercizio aggiunto al database',
+          notes: l10n.exerciseAddedToDatabase,
         );
 
         if (mounted) {
           SnackBarService.showSuccess(
             context,
-            '✅ Richiesta completata!',
+            '✅ ${l10n.requestMarkedAsCompleted}',
           );
         }
       } catch (e) {

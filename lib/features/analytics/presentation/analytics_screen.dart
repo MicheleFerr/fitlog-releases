@@ -72,7 +72,7 @@ class AnalyticsScreen extends ConsumerWidget {
             if (Navigator.of(context).canPop()) {
               Navigator.of(context).pop();
             } else {
-              context.go('/');
+              context.go(AppRoutes.homePath);
             }
           },
         ),
@@ -1686,7 +1686,7 @@ class _EmptyStateView extends StatelessWidget {
           ),
           const SizedBox(height: 24),
           ElevatedButton.icon(
-            onPressed: () => context.go('/workout'),
+            onPressed: () => context.go(AppRoutes.workoutPath),
             icon: SemanticIcon.button(
               icon: AppIcons.play,
               semanticLabel: context.l10n.startYourFirstWorkout,
@@ -2052,7 +2052,7 @@ class _ProInsightsSection extends ConsumerWidget {
                     foregroundColor: colorScheme.onTertiary,
                     padding: const EdgeInsets.symmetric(vertical: 12),
                   ),
-                  icon: Icon(AppIcons.premium, size: AppIconSize.small),
+                  icon: const Icon(AppIcons.premium, size: AppIconSize.small),
                   label: Text(
                     l10n.upgradeToPro,
                     style: theme.textTheme.labelLarge?.copyWith(
@@ -2170,7 +2170,7 @@ class _ProUpgradeDialog extends StatelessWidget {
     final colorScheme = theme.colorScheme;
     final l10n = AppLocalizations.of(context);
 
-    return Container(
+    return DecoratedBox(
       decoration: BoxDecoration(
         color: colorScheme.surface,
         borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
@@ -2280,7 +2280,7 @@ class _ProUpgradeDialog extends StatelessWidget {
                     foregroundColor: colorScheme.onTertiary,
                     padding: const EdgeInsets.symmetric(vertical: 16),
                   ),
-                  icon: Icon(AppIcons.premium, size: AppIconSize.small),
+                  icon: const Icon(AppIcons.premium, size: AppIconSize.small),
                   label: Text(
                     l10n.upgradeToPro,
                     style: const TextStyle(
@@ -2659,7 +2659,7 @@ class _ProInsightCard extends StatelessWidget {
                   borderRadius: BorderRadius.circular(8),
                   child: BackdropFilter(
                     filter: ImageFilter.blur(sigmaX: 4, sigmaY: 4),
-                    child: Container(
+                    child: ColoredBox(
                       color: colorScheme.surface.withValues(alpha: 0.3),
                       child: Center(
                         child: Container(

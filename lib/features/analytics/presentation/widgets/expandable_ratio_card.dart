@@ -119,7 +119,7 @@ class _ExpandableRatioCardState extends State<ExpandableRatioCard>
     final ratioColor = widget.hasWarning ? colorScheme.error : colorScheme.primary;
     final hasData = widget.firstCategory.hasData || widget.secondCategory.hasData;
 
-    return Container(
+    return DecoratedBox(
       decoration: BoxDecoration(
         color: colorScheme.surface,
         borderRadius: BorderRadius.circular(16),
@@ -371,7 +371,7 @@ class _ExpandableRatioCardState extends State<ExpandableRatioCard>
           Center(
             child: TextButton.icon(
               onPressed: _openFullScreenSheet,
-              icon: Icon(AppIcons.fullscreen, size: AppIconSize.small),
+              icon: const Icon(AppIcons.fullscreen, size: AppIconSize.small),
               label: Text(l10n.dragToExpand),
               style: TextButton.styleFrom(
                 foregroundColor: colorScheme.primary,

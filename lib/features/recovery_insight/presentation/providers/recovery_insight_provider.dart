@@ -10,6 +10,7 @@ library;
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:health/health.dart' show NumericHealthValue;
 import 'package:gymbro_flutter_new/features/ai_coach/data/datasources/healthkit_datasource.dart';
 import 'package:gymbro_flutter_new/features/history/presentation/providers/workout_history_provider.dart';
 import 'package:gymbro_flutter_new/features/auth/presentation/providers/consolidated_user_provider.dart';
@@ -84,41 +85,124 @@ final sleepAnalyticsProvider =
 /// Converts raw HealthKit data to SleepRecord entities
 final sleepRecordsProvider =
     FutureProvider.autoDispose<List<SleepRecord>>((ref) async {
-  final analytics = await ref.watch(sleepAnalyticsProvider.future);
+  if (kDebugMode) {
+    debugPrint('');
+    debugPrint('╔══════════════════════════════════════════════════════════╗');
+    debugPrint('║  🔍 SLEEP RECORDS PROVIDER - DEBUG TRACE                 ║');
+    debugPrint('╚══════════════════════════════════════════════════════════╝');
+  }
 
-  if (analytics['available'] != true) {
+  final datasource = ref.watch(healthKitDatasourceProvider);
+
+  // Check if HealthKit is available (iOS only)
+  if (!datasource.isAvailable) {
+    if (kDebugMode) {
+      debugPrint('❌ [SleepRecords] HealthKit NOT available - STOPPING');
+    }
     return [];
   }
+  if (kDebugMode) {
+    debugPrint('✅ [SleepRecords] Step 1: HealthKit is available');
+  }
 
-  // For now, create records from the analytics summary
-  // In a full implementation, we'd fetch individual night data
-  final avgHours = (analytics['avg_sleep_hours'] as num?)?.toDouble() ?? 0;
-  final nightsWithData = (analytics['nights_with_data'] as int?) ?? 0;
+  try {
+    // Initialize HealthKit (request permissions if needed)
+    if (kDebugMode) {
+      debugPrint('🔄 [SleepRecords] Step 2: Calling datasource.initialize()...');
+    }
+    await datasource.initialize();
+    if (kDebugMode) {
+      debugPrint('✅ [SleepRecords] Step 2: Initialize completed');
+    }
 
-  if (nightsWithData == 0) {
+    // Fetch raw sleep data for last 7 days
+    if (kDebugMode) {
+      debugPrint('🔄 [SleepRecords] Step 3: Calling datasource.getSleepThisWeek()...');
+    }
+    final sleepData = await datasource.getSleepThisWeek();
+    if (kDebugMode) {
+      debugPrint('📊 [SleepRecords] Step 3: getSleepThisWeek() returned ${sleepData.length} data points');
+      if (sleepData.isNotEmpty) {
+        debugPrint('   First point: ${sleepData.first.dateFrom} - ${sleepData.first.value} (${sleepData.first.type.name})');
+        debugPrint('   Last point: ${sleepData.last.dateFrom} - ${sleepData.last.value} (${sleepData.last.type.name})');
+      }
+    }
+
+    if (sleepData.isEmpty) {
+      if (kDebugMode) {
+        debugPrint('⚠️ [SleepRecords] NO SLEEP DATA - returning empty list');
+        debugPrint('╚══════════════════════════════════════════════════════════╝');
+      }
+      return [];
+    }
+
+    // Group sleep data by night (date only, no time)
+    final nightlySleep = <DateTime, double>{};
+    for (final point in sleepData) {
+      final nightKey = DateTime(
+        point.dateFrom.year,
+        point.dateFrom.month,
+        point.dateFrom.day,
+      );
+      // Extract numeric value from NumericHealthValue wrapper
+      final numericValue = point.value as NumericHealthValue;
+      final minutes = numericValue.numericValue.toDouble();
+      nightlySleep[nightKey] = (nightlySleep[nightKey] ?? 0) + minutes;
+    }
+
+    // Fetch in-bed data for efficiency calculation (using datasource's initialized Health instance)
+    final inBedRawData = await datasource.getInBedThisWeek();
+
+    final nightlyInBed = <DateTime, double>{};
+    for (final point in inBedRawData) {
+      final nightKey = DateTime(
+        point.dateFrom.year,
+        point.dateFrom.month,
+        point.dateFrom.day,
+      );
+      // Extract numeric value from NumericHealthValue wrapper
+      final numericValue = point.value as NumericHealthValue;
+      final minutes = numericValue.numericValue.toDouble();
+      nightlyInBed[nightKey] = (nightlyInBed[nightKey] ?? 0) + minutes;
+    }
+
+    // Create SleepRecord for each night
+    final records = <SleepRecord>[];
+    for (final entry in nightlySleep.entries) {
+      final date = entry.key;
+      final asleepMinutes = entry.value;
+      final inBedMinutes = nightlyInBed[date] ?? asleepMinutes + 30; // Default to +30min if not available
+
+      records.add(SleepRecord.fromHealthData(
+        date: date,
+        asleepMinutes: asleepMinutes,
+        inBedMinutes: inBedMinutes,
+        source: 'HealthKit',
+      ));
+    }
+
+    // Sort by date descending (most recent first)
+    records.sort((a, b) => b.date.compareTo(a.date));
+
+    if (kDebugMode) {
+      debugPrint('');
+      debugPrint('✅ [SleepRecords] FINAL RESULT: ${records.length} sleep records');
+      for (final record in records) {
+        debugPrint('   📅 ${record.date.toIso8601String().split('T')[0]}: ${record.formattedDuration}');
+      }
+      debugPrint('╚══════════════════════════════════════════════════════════╝');
+    }
+
+    return records;
+  } catch (e, stackTrace) {
+    if (kDebugMode) {
+      debugPrint('');
+      debugPrint('❌ [SleepRecords] EXCEPTION: $e');
+      debugPrint('   Stack: $stackTrace');
+      debugPrint('╚══════════════════════════════════════════════════════════╝');
+    }
     return [];
   }
-
-  // Create synthetic records for demonstration
-  // TODO: Fetch actual per-night data from HealthKit
-  final records = <SleepRecord>[];
-  final now = DateTime.now();
-
-  for (int i = 0; i < nightsWithData; i++) {
-    final date = now.subtract(Duration(days: i + 1));
-    // Vary sleep around average for realism
-    final variance = (i % 3 - 1) * 0.5; // -0.5, 0, +0.5 hours
-    final sleepHours = (avgHours + variance).clamp(4.0, 12.0);
-
-    records.add(SleepRecord.fromHealthData(
-      date: date,
-      asleepMinutes: sleepHours * 60,
-      inBedMinutes: (sleepHours + 0.5) * 60, // Assume 30min awake time
-      source: 'HealthKit',
-    ));
-  }
-
-  return records;
 });
 
 // ==========================================
@@ -135,7 +219,7 @@ final recoveryInsightProvider =
     FutureProvider.autoDispose<RecoveryInsight>((ref) async {
   final service = ref.watch(sleepWorkoutCorrelationServiceProvider);
   final sleepRecords = await ref.watch(sleepRecordsProvider.future);
-  final isPro = ref.watch(isPremiumProvider);
+  final isPro = ref.watch(isPremiumUserProvider);
 
   // Get workout history
   List workoutHistory;
@@ -177,7 +261,7 @@ final recoveryInsightProvider =
 /// Returns null for free users
 final sleepCorrelationProvider =
     FutureProvider.autoDispose<SleepWorkoutCorrelation?>((ref) async {
-  final isPro = ref.watch(isPremiumProvider);
+  final isPro = ref.watch(isPremiumUserProvider);
   if (!isPro) return null;
 
   final insight = await ref.watch(recoveryInsightProvider.future);

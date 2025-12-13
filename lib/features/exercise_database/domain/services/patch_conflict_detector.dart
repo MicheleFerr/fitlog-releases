@@ -196,10 +196,6 @@ class PatchConflictDetector {
         return exercise.mobilitaPre ?? '';
       case 'attivazionePre':
         return exercise.attivazionePre ?? '';
-      case 'warmupSets':
-        return exercise.warmupSets ?? '';
-      case 'tempoWarmup':
-        return exercise.tempoWarmup ?? '';
       default:
         return null;
     }

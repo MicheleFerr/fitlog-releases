@@ -5,7 +5,6 @@ import 'package:gymbro_flutter_new/shared/domain/entities/pr_type.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
 import 'package:intl/intl.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
-import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
 
 /// Widget showing personal records timeline
 class PRTimelineWidget extends StatelessWidget {

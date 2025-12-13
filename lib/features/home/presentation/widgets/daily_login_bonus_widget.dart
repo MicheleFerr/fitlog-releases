@@ -4,6 +4,7 @@ import 'package:gymbro_flutter_new/features/home/providers/daily_login_provider.
 import 'package:gymbro_flutter_new/features/home/domain/models/level_system.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/services/snackbar_service.dart';
 
 class DailyLoginBonusWidget extends ConsumerWidget {
   const DailyLoginBonusWidget({super.key});
@@ -180,27 +181,15 @@ class DailyLoginBonusWidget extends ConsumerWidget {
   
   void _claimBonus(BuildContext context, WidgetRef ref) async {
     final success = await ref.read(dailyLoginProvider.notifier).claimDailyBonus();
-    
+
     if (success) {
       final bonusInfo = ref.read(dailyLoginProvider.notifier).getBonusInfo();
-      
+
       // Mostra animazione di successo
       if (context.mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Row(
-              children: [
-                Icon(AppIcons.celebration, color: context.colors.surface),
-                const SizedBox(width: 12),
-                Text(context.l10n.youEarnedBonus(bonusInfo.currentDayBonus)),
-              ],
-            ),
-            backgroundColor: context.colors.success,
-            behavior: SnackBarBehavior.floating,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(12),
-            ),
-          ),
+        SnackBarService.showSuccess(
+          context,
+          context.l10n.youEarnedBonus(bonusInfo.currentDayBonus),
         );
       }
     }

@@ -177,7 +177,7 @@ class _ImportExercisesScreenState extends State<ImportExercisesScreen> {
           context: context,
           builder: (dialogContext) => AlertDialog(
             title: Text(l10n.importSuccessTitle),
-            content: Text(l10n.importSuccessMessage),
+            content: Text(l10n.importExercisesSuccessMessage),
             actions: [
               TextButton(
                 onPressed: () {

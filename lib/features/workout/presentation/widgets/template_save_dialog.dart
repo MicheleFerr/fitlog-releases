@@ -20,6 +20,7 @@ import 'package:gymbro_flutter_new/shared/presentation/theme/app_spacing.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
 import 'package:gymbro_flutter_new/shared/presentation/services/snackbar_service.dart';
 import 'package:gymbro_flutter_new/shared/presentation/mixins/safe_set_state_mixin.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator.dart';
 
 /// Dialog options for template save
 enum TemplateSaveOption {
@@ -192,13 +193,10 @@ class _TemplateSaveDialogContentState
           FilledButton.icon(
             onPressed: _isLoading ? null : () => _handleChoice(TemplateSaveOption.updateTemplate),
             icon: _isLoading
-                ? SizedBox(
+                ? const SizedBox(
                     height: 18,
                     width: 18,
-                    child: CircularProgressIndicator(
-                      strokeWidth: 2,
-                      color: context.colors.onPrimary,
-                    ),
+                    child: LoadingIndicator(),
                   )
                 : SemanticIcon(
                     icon: AppIcons.save,

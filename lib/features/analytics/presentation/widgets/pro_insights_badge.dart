@@ -51,7 +51,7 @@ class ProInsightsBadge extends ConsumerWidget {
           context.push(AppRoutes.proAnalyticsPath);
         } else {
           // Navigate to premium purchase
-          context.push('/premium');
+          context.push(AppRoutes.premiumPath);
         }
       },
       borderRadius: BorderRadius.circular(16),

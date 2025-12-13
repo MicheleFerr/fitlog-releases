@@ -202,7 +202,7 @@ class _ExerciseReplacementDialogState extends ConsumerState<ExerciseReplacementD
             ],
           ),
           leading: IconButton(
-            icon: Icon(AppIcons.close),
+            icon: const Icon(AppIcons.close),
             onPressed: () => Navigator.of(context).pop(),
           ),
           bottom: TabBar(
@@ -213,11 +213,11 @@ class _ExerciseReplacementDialogState extends ConsumerState<ExerciseReplacementD
             unselectedLabelColor: theme.colorScheme.onSurfaceVariant,
             tabs: [
               Tab(
-                icon: Icon(AppIcons.autoAwesome),
+                icon: const Icon(AppIcons.autoAwesome),
                 text: l10n.smartSuggestions,
               ),
               Tab(
-                icon: Icon(AppIcons.list),
+                icon: const Icon(AppIcons.list),
                 text: l10n.allExercises,
               ),
             ],
@@ -349,10 +349,10 @@ class _ExerciseReplacementDialogState extends ConsumerState<ExerciseReplacementD
             onChanged: (value) => setState(() => _searchQuery = value),
             decoration: InputDecoration(
               hintText: l10n.searchExercises,
-              prefixIcon: Icon(AppIcons.search),
+              prefixIcon: const Icon(AppIcons.search),
               suffixIcon: _searchQuery.isNotEmpty
                   ? IconButton(
-                      icon: Icon(AppIcons.clear),
+                      icon: const Icon(AppIcons.clear),
                       onPressed: () {
                         _searchController.clear();
                         setState(() => _searchQuery = '');

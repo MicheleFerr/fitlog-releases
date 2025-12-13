@@ -6,6 +6,7 @@ import 'package:gymbro_flutter_new/features/strength_standards/domain/entities/u
 import 'package:gymbro_flutter_new/features/strength_standards/domain/entities/medical_clearance_questionnaire.dart';
 import 'package:gymbro_flutter_new/features/strength_standards/presentation/providers/strength_standards_providers.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_colors.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator.dart';
 
 /// Debug screen to show fitness profile status and weight suggestions
 class FitnessProfileDebugScreen extends ConsumerWidget {
@@ -204,7 +205,7 @@ class FitnessProfileDebugScreen extends ConsumerWidget {
                             ],
                           );
                         },
-                        loading: () => const CircularProgressIndicator(),
+                        loading: () => const LoadingIndicator(),
                         error: (e, s) => Text('Error loading mappings: $e'),
                       );
                     },

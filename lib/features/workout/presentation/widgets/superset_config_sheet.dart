@@ -9,6 +9,7 @@ import 'package:gymbro_flutter_new/features/workout/presentation/widgets/minimal
 import 'package:gymbro_flutter_new/shared/domain/utils/weight_helper.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/providers/app_config_provider.dart';
+import 'package:gymbro_flutter_new/shared/presentation/services/snackbar_service.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 /// Compact table-based configuration sheet for supersets.
@@ -49,7 +50,7 @@ class SupersetConfigSheet extends ConsumerStatefulWidget {
         initialChildSize: 0.85,
         minChildSize: 0.5,
         maxChildSize: 0.95,
-        builder: (context, scrollController) => Container(
+        builder: (context, scrollController) => DecoratedBox(
           decoration: BoxDecoration(
             color: Theme.of(context).colorScheme.surface,
             borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
@@ -159,12 +160,7 @@ class _SupersetConfigSheetState extends ConsumerState<SupersetConfigSheet> {
       }
     });
     HapticFeedback.mediumImpact();
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(context.l10n.copiedToAllRounds),
-        duration: const Duration(seconds: 1),
-      ),
-    );
+    SnackBarService.showSuccess(context, context.l10n.copiedToAllRounds);
   }
 
   void _updateCell(String exerciseId, int round, _CellConfig config) {
@@ -560,7 +556,7 @@ class _SupersetConfigSheetState extends ConsumerState<SupersetConfigSheet> {
           Expanded(
             child: OutlinedButton.icon(
               onPressed: _copyR1ToAll,
-              icon: Icon(AppIcons.copy, size: 18),
+              icon: const Icon(AppIcons.copy, size: 18),
               label: Text(context.l10n.copyR1ToAll),
               style: OutlinedButton.styleFrom(
                 padding: const EdgeInsets.symmetric(vertical: 12),
@@ -639,7 +635,7 @@ class _SupersetConfigSheetState extends ConsumerState<SupersetConfigSheet> {
             widget.onConfigurationComplete(config);
             HapticFeedback.mediumImpact();
           },
-          icon: Icon(AppIcons.check),
+          icon: const Icon(AppIcons.check),
           label: Text(context.l10n.createSuperset),
           style: FilledButton.styleFrom(
             padding: const EdgeInsets.symmetric(vertical: 16),

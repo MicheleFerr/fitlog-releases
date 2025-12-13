@@ -52,8 +52,8 @@ class ImportProgressDialog extends StatelessWidget {
   Widget build(BuildContext context) {
     final l10n = context.l10n;
 
-    return WillPopScope(
-      onWillPop: () async => false, // Prevent dismissing with back button
+    return PopScope(
+      canPop: false, // Prevent dismissing with back button
       child: Dialog(
         backgroundColor: context.colors.surface,
         child: Padding(

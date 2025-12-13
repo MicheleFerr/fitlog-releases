@@ -45,6 +45,7 @@ import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
+import 'package:gymbro_flutter_new/shared/presentation/services/snackbar_service.dart';
 
 /// AI Coach Screen - main recovery insights UI
 ///
@@ -592,12 +593,7 @@ class AICoachScreen extends ConsumerWidget {
   /// Show tier details (placeholder for future implementation)
   void _showTierDetails(BuildContext context, RecoveryTier tier) {
     // TODO: Navigate to detailed tier screen
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text('Tier details: ${tier.displayName}'),
-        duration: const Duration(seconds: 2),
-      ),
-    );
+    SnackBarService.showInfo(context, 'Tier details: ${tier.displayName}');
   }
 
   // Helper methods for colors and text

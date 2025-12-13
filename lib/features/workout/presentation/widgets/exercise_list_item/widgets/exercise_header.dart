@@ -176,12 +176,15 @@ class ExerciseHeader extends ConsumerWidget {
 
   /// Builds the badge row with timer and countdown indicators
   Widget _buildBadgeRow(BuildContext context, WidgetRef ref) {
+    // ✅ TUT visibility controlled by setDurationTracking toggle ("Durata esecuzione")
+    final showTutBadge = exercise.tut != null && (config.setDurationTracking ?? false);
+
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
       child: Row(
         children: [
-          // Timer indicator (if TUT/duration configured)
-          if (exercise.tut != null) ...[
+          // Timer indicator (if TUT/duration configured AND toggle enabled)
+          if (showTutBadge) ...[
             _buildTimerBadge(context),
             const SizedBox(width: 8),
           ],

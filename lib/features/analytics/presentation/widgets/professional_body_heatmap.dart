@@ -15,6 +15,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:svg_path_parser/svg_path_parser.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator.dart';
 
 /// Muscle groups mapping (from muscle_selector package)
 const _muscleGroups = {
@@ -210,7 +211,7 @@ class _ProfessionalBodyHeatmapState extends State<ProfessionalBodyHeatmap> {
     final colorScheme = context.colors;
 
     if (_isLoading) {
-      return const Center(child: CircularProgressIndicator.adaptive());
+      return const Center(child: LoadingIndicator());
     }
 
     if (_error != null) {

@@ -100,7 +100,7 @@ class _MuscleHeatmapWidgetState extends State<MuscleHeatmapWidget>
           children: [
             ElevatedButton.icon(
               onPressed: _toggleView,
-              icon: Icon(
+              icon: const Icon(
                 AppIcons.swapHoriz,
                 size: AppIconSize.small,
               ),
@@ -243,15 +243,15 @@ class MuscleHeatmapPainter extends CustomPainter {
     final path = Path();
 
     // Simple body outline (percentage-based)
-    final headTop = _percentToPixel(Offset(50, 5), size);
-    final headBottom = _percentToPixel(Offset(50, 12), size);
-    final shoulderLeft = _percentToPixel(Offset(20, 15), size);
-    final shoulderRight = _percentToPixel(Offset(80, 15), size);
-    final waist = _percentToPixel(Offset(50, 50), size);
-    final hipLeft = _percentToPixel(Offset(35, 50), size);
-    final hipRight = _percentToPixel(Offset(65, 50), size);
-    final footLeft = _percentToPixel(Offset(40, 95), size);
-    final footRight = _percentToPixel(Offset(60, 95), size);
+    final headTop = _percentToPixel(const Offset(50, 5), size);
+    final headBottom = _percentToPixel(const Offset(50, 12), size);
+    final shoulderLeft = _percentToPixel(const Offset(20, 15), size);
+    final shoulderRight = _percentToPixel(const Offset(80, 15), size);
+    final waist = _percentToPixel(const Offset(50, 50), size);
+    final hipLeft = _percentToPixel(const Offset(35, 50), size);
+    final hipRight = _percentToPixel(const Offset(65, 50), size);
+    final footLeft = _percentToPixel(const Offset(40, 95), size);
+    final footRight = _percentToPixel(const Offset(60, 95), size);
 
     // Head (circle)
     canvas.drawCircle(headTop, (headBottom.dy - headTop.dy) / 2, paint);

@@ -48,7 +48,7 @@ class StrongCsvParser {
     ).convert(csvContent);
 
     if (rows.isEmpty) {
-      return ImportParseResult(
+      return const ImportParseResult(
         sourceApp: 'strong',
         workouts: [],
         unmappedExercises: [],

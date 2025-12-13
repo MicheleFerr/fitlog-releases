@@ -8,6 +8,7 @@ import 'package:gymbro_flutter_new/shared/presentation/services/snackbar_service
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator.dart';
 
 class RegisterScreen extends ConsumerStatefulWidget {
   const RegisterScreen({super.key});
@@ -143,11 +144,11 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                           width: double.infinity,
                           child: FilledButton.icon(
                             onPressed: authController.isLoading ? null : _handleGoogleSignUp,
-                            icon: authController.isLoading 
+                            icon: authController.isLoading
                                 ? const SizedBox(
                                     height: 20,
                                     width: 20,
-                                    child: CircularProgressIndicator(strokeWidth: 2),
+                                    child: LoadingIndicator(),
                                   )
                                 : const SemanticIcon(
   icon: AppIcons.gMobiledata,
@@ -174,7 +175,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                                   ? const SizedBox(
                                       height: 20,
                                       width: 20,
-                                      child: CircularProgressIndicator(strokeWidth: 2),
+                                      child: LoadingIndicator(),
                                     )
                                   : const SemanticIcon(
   icon: AppIcons.apple,
@@ -324,7 +325,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                       ? const SizedBox(
                           height: 20,
                           width: 20,
-                          child: CircularProgressIndicator(strokeWidth: 2),
+                          child: LoadingIndicator(),
                         )
                       : Text(context.l10n.createAccount),
                 ),

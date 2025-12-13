@@ -522,6 +522,8 @@ class WatchConnectivityNotifier extends StateNotifier<WatchConnectivityData> {
   /// - rpeTrackingEnabled: Whether RPE/RIR tracking is enabled in app settings
   /// - effortScale: "rpe" (6-10 scale) or "rir" (0-4 scale)
   /// - locale: App locale ("en" or "it") for Watch UI strings
+  /// - formCues: Persistent technique reminders for the exercise
+  /// - tut: Time Under Tension (e.g., "3-1-2-0") for tempo guidance
   Future<void> notifyWorkoutStarted({
     required String exerciseName,
     required int currentSet,
@@ -532,6 +534,8 @@ class WatchConnectivityNotifier extends StateNotifier<WatchConnectivityData> {
     bool rpeTrackingEnabled = false,
     String effortScale = 'rpe',
     String locale = 'en',
+    String? formCues,
+    String? tut, // ⌚ BUG FIX #3: Time Under Tension
   }) async {
     // 🔍 DEBUG: Log entry and state check (using print for release mode visibility)
     print('⌚ [PROVIDER DEBUG] notifyWorkoutStarted called');
@@ -562,10 +566,12 @@ class WatchConnectivityNotifier extends StateNotifier<WatchConnectivityData> {
         'rpeTrackingEnabled': rpeTrackingEnabled,
         'effortScale': effortScale,
         'locale': locale,
+        'formCues': formCues ?? '',
+        'tut': tut ?? '', // ⌚ BUG FIX #3: Time Under Tension
       });
 
       print('⌚ [PROVIDER DEBUG] ✅ invokeMethod completed successfully');
-      print('🏋️ Notified Watch: workout started - $exerciseName (RPE: $rpeTrackingEnabled, locale: $locale)');
+      print('🏋️ Notified Watch: workout started - $exerciseName (RPE: $rpeTrackingEnabled, locale: $locale, TUT: ${tut ?? "none"})');
     } on PlatformException catch (e) {
       print('⌚ [PROVIDER DEBUG] ❌ PlatformException: $e');
     }
@@ -593,6 +599,8 @@ class WatchConnectivityNotifier extends StateNotifier<WatchConnectivityData> {
   /// - rpeTrackingEnabled: Whether RPE/RIR tracking is enabled in app settings
   /// - effortScale: "rpe" (6-10 scale) or "rir" (0-4 scale)
   /// - locale: App locale ("en" or "it") for Watch UI strings
+  /// - formCues: Persistent technique reminders for the exercise
+  /// - tut: Time Under Tension (e.g., "3-1-2-0") for tempo guidance
   Future<void> sendWorkoutUpdate({
     required String exerciseName,
     required int currentSet,
@@ -603,6 +611,8 @@ class WatchConnectivityNotifier extends StateNotifier<WatchConnectivityData> {
     bool rpeTrackingEnabled = false,
     String effortScale = 'rpe',
     String locale = 'en',
+    String? formCues,
+    String? tut, // ⌚ BUG FIX #3: Time Under Tension
   }) async {
     if (!Platform.isIOS) return;
 
@@ -619,8 +629,10 @@ class WatchConnectivityNotifier extends StateNotifier<WatchConnectivityData> {
         'rpeTrackingEnabled': rpeTrackingEnabled,
         'effortScale': effortScale,
         'locale': locale,
+        'formCues': formCues ?? '',
+        'tut': tut ?? '', // ⌚ BUG FIX #3: Time Under Tension
       });
-      print('⌚ Sent workout update: $exerciseName Set $currentSet/$totalSets');
+      print('⌚ Sent workout update: $exerciseName Set $currentSet/$totalSets (TUT: ${tut ?? "none"})');
     } on PlatformException catch (e) {
       if (kDebugMode) {
         debugPrint('Failed to send workout update to Watch: $e');

@@ -1,23 +1,22 @@
-import 'dart:convert';
-import 'package:flutter/services.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:gymbro_flutter_new/shared/domain/converters/exercise_converter.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise.dart' as WorkoutExercise;
+import 'package:gymbro_flutter_new/features/exercise_database/data/utils/exercise_json_loader.dart';
 import 'package:flutter/foundation.dart';
 
 class FirebaseExerciseImporter {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   static const String _collection = 'exercises';
 
-  Future<void> importExercisesFromJson() async {
+  /// Import exercises for a specific language (defaults to English)
+  Future<void> importExercisesFromJson({String languageCode = 'en'}) async {
     try {
       if (kDebugMode) {
-        debugPrint('🔥 IMPORTER: Starting exercise import from JSON...');
+        debugPrint('🔥 IMPORTER: Starting exercise import from JSON ($languageCode)...');
       }
-      
-      // 1. Load JSON file
-      final String jsonString = await rootBundle.loadString('assets/data/exercises.json');
-      final List<dynamic> jsonList = json.decode(jsonString);
+
+      // 1. Load JSON from new folder structure
+      final jsonList = await ExerciseJsonLoader.loadExercises(languageCode);
       
       if (kDebugMode) {
         debugPrint('📋 IMPORTER: Found ${jsonList.length} exercises in JSON');
@@ -144,14 +143,9 @@ class FirebaseExerciseImporter {
       'exerciseType': jsonData['tipoEsercizio'] ?? 'Isolamento',
       'movementPattern': jsonData['patternMovimento'] ?? '',
       'repRange': jsonData['rangeRipetizioni'] ?? '8-12',
-      'warmupSets': jsonData['warmupSets'] ?? '',
-      'warmupTime': jsonData['tempoWarmup'] ?? '',
       'preMobility': jsonData['mobilitaPre'] ?? '',
       'preActivation': jsonData['attivazionePre'] ?? '',
-      'technicalDrill': jsonData['drillTecnico'] ?? '',
-      'injuryPrevention': jsonData['prevenzioneInfortuni'] ?? '',
-      'cooldownRecommended': jsonData['cooldownConsigliato'] ?? '',
-      'termExplanation': jsonData['spiegazioneTermini'] ?? '',
+      'countingMode': jsonData['countingMode'] ?? 'weighted', // weighted, reps, or time
       'isActive': true,
       'createdAt': FieldValue.serverTimestamp(),
       'updatedAt': FieldValue.serverTimestamp(),
@@ -210,23 +204,19 @@ class FirebaseExerciseImporter {
   
   List<String> _parseInstructions(Map<String, dynamic> jsonData) {
     final instructions = <String>[];
-    
+
     if (jsonData['noteTecniche'] != null && jsonData['noteTecniche'].toString().isNotEmpty) {
       instructions.add('Tecnica: ${jsonData['noteTecniche']}');
     }
-    
+
     if (jsonData['mobilitaPre'] != null && jsonData['mobilitaPre'].toString().isNotEmpty) {
       instructions.add('Mobilità pre: ${jsonData['mobilitaPre']}');
     }
-    
+
     if (jsonData['attivazionePre'] != null && jsonData['attivazionePre'].toString().isNotEmpty) {
       instructions.add('Attivazione pre: ${jsonData['attivazionePre']}');
     }
-    
-    if (jsonData['drillTecnico'] != null && jsonData['drillTecnico'].toString().isNotEmpty) {
-      instructions.add('Drill tecnico: ${jsonData['drillTecnico']}');
-    }
-    
+
     return instructions.isEmpty ? ['Esegui l\'esercizio seguendo la tecnica corretta'] : instructions;
   }
   
@@ -274,15 +264,15 @@ class FirebaseExerciseImporter {
   }
   
   // Method to test a single exercise import
-  Future<void> testSingleExercise() async {
+  Future<void> testSingleExercise({String languageCode = 'en'}) async {
     try {
-      final String jsonString = await rootBundle.loadString('assets/data/exercises.json');
-      final List<dynamic> jsonList = json.decode(jsonString);
-      
+      // Load from new folder structure using ExerciseJsonLoader
+      final jsonList = await ExerciseJsonLoader.loadExercises(languageCode);
+
       if (jsonList.isNotEmpty) {
         final testExercise = jsonList.first as Map<String, dynamic>;
         final firebaseData = _convertJsonToFirebaseFormat(testExercise);
-        
+
         if (kDebugMode) {
           debugPrint('🧪 TEST: Converting exercise "${testExercise['nome']}"');
         }
@@ -294,13 +284,13 @@ class FirebaseExerciseImporter {
             debugPrint('   $key: $value');
           }
         });
-        
+
         // Test write to Firebase
         await _firestore.collection('test_exercises').doc('test').set(firebaseData);
         if (kDebugMode) {
           debugPrint('✅ TEST: Successfully wrote test exercise to Firebase');
         }
-        
+
         // Clean up test
         await _firestore.collection('test_exercises').doc('test').delete();
         if (kDebugMode) {

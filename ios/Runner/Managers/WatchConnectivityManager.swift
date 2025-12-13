@@ -18,6 +18,11 @@ final class WatchConnectivityManager: NSObject {
     private var isSessionActivated = false
     private let stateQueue = DispatchQueue(label: "com.gymbro.watch.state", attributes: .concurrent)
 
+    // ✅ Cache current workout state for Watch requests
+    // Updated when workout starts/updates, cleared when workout ends
+    private var currentWorkoutState: [String: Any]?
+    private var currentRestTimerState: [String: Any]?
+
     // MARK: - Initialization
     private override init() {
         super.init()
@@ -339,8 +344,13 @@ final class WatchConnectivityManager: NSObject {
             "effortScale": data["effortScale"] as? String ?? "rpe",
             // Locale for Watch UI strings (from Flutter app)
             "locale": data["locale"] as? String ?? "en",
+            // ⌚ BUG FIX #3: Time Under Tension (e.g., "3-1-2-0")
+            "tut": data["tut"] as? String ?? "",
             "timestamp": Date().timeIntervalSince1970
         ]
+
+        // ✅ Cache workout state for Watch requests
+        currentWorkoutState = message
 
         print("⌚ [DEBUG] Message to send: \(message)")
 
@@ -381,6 +391,10 @@ final class WatchConnectivityManager: NSObject {
     /// Notify Watch that workout ended
     /// CRITICAL: Must clear applicationContext to prevent stale state on Watch
     private func handleNotifyWorkoutEnded(result: @escaping FlutterResult) {
+        // ✅ Clear cached workout state
+        currentWorkoutState = nil
+        currentRestTimerState = nil
+
         guard let session = session else {
             result(true)
             return
@@ -423,11 +437,6 @@ final class WatchConnectivityManager: NSObject {
             return
         }
 
-        guard let session = session, session.isReachable else {
-            result(true) // Silent success if not reachable
-            return
-        }
-
         var message: [String: Any] = ["type": "workoutUpdate"]
         message.merge(data) { _, new in new }
         message["timestamp"] = Date().timeIntervalSince1970
@@ -443,9 +452,42 @@ final class WatchConnectivityManager: NSObject {
         if message["locale"] == nil {
             message["locale"] = data["locale"] as? String ?? "en"
         }
+        // ⌚ BUG FIX #3: Time Under Tension (e.g., "3-1-2-0")
+        if message["tut"] == nil {
+            message["tut"] = data["tut"] as? String ?? ""
+        }
 
-        session.sendMessage(message, replyHandler: nil) { error in
-            Logger.shared.log(.debug, "Watch update failed: \(error)", category: .general)
+        // ✅ Update cached workout state for Watch requests
+        // Merge new data into existing state to keep full context
+        if var existingState = currentWorkoutState {
+            existingState.merge(message) { _, new in new }
+            existingState["isActive"] = true  // Ensure active flag is set
+            currentWorkoutState = existingState
+        } else {
+            // No existing state, create new with isActive
+            message["isActive"] = true
+            currentWorkoutState = message
+        }
+
+        guard let session = session else {
+            result(true)
+            return
+        }
+
+        // ✅ ALSO update applicationContext for Watch cache (ensures fast recovery on Watch reopen)
+        do {
+            var currentContext = session.applicationContext
+            currentContext["workout"] = currentWorkoutState
+            try session.updateApplicationContext(currentContext)
+        } catch {
+            // Silent fail - sendMessage below will still work if reachable
+        }
+
+        // Send immediate update if reachable
+        if session.isReachable {
+            session.sendMessage(message, replyHandler: nil) { error in
+                Logger.shared.log(.debug, "Watch update failed: \(error)", category: .general)
+            }
         }
 
         result(true)
@@ -473,6 +515,9 @@ final class WatchConnectivityManager: NSObject {
             "timestamp": startTime
         ]
 
+        // ✅ Cache rest timer state for Watch requests
+        currentRestTimerState = message
+
         // ✅ FIX: MERGE with existing context to preserve workout state
         // This ensures Watch gets the timer even if app was in background
         // AND preserves the workout active state
@@ -498,6 +543,9 @@ final class WatchConnectivityManager: NSObject {
 
     /// Notify Watch that rest was skipped
     private func handleSendRestTimerSkipped(result: @escaping FlutterResult) {
+        // ✅ Clear rest timer cache when skipped
+        currentRestTimerState = nil
+
         guard let session = session, session.isReachable else {
             result(true)
             return
@@ -708,6 +756,9 @@ extension WatchConnectivityManager: WCSessionDelegate {
         case "requestTemplates":
             handleTemplatesRequest(message, replyHandler: replyHandler)
 
+        case "requestWorkoutState":
+            handleWorkoutStateRequest(message, replyHandler: replyHandler)
+
         case "workoutPaused":
             handleWorkoutPaused(message, replyHandler: replyHandler)
 
@@ -803,6 +854,40 @@ extension WatchConnectivityManager: WCSessionDelegate {
 
         // Reply will be sent separately via sendTemplates
         replyHandler(["pending": true])
+    }
+
+    /// Handle workout state request from Watch
+    /// Returns cached workout state immediately for fast response
+    private func handleWorkoutStateRequest(
+        _ message: [String: Any],
+        replyHandler: @escaping ([String: Any]) -> Void
+    ) {
+        Logger.shared.log(.info, "📱 Watch requested workout state", category: .general)
+
+        // Check if we have a cached workout state
+        if let workoutState = currentWorkoutState {
+            // We have an active workout - send current state
+            var response = workoutState
+            response["timestamp"] = Date().timeIntervalSince1970
+
+            // Include rest timer if active
+            if let timerState = currentRestTimerState {
+                response["restTimer"] = timerState
+            }
+
+            Logger.shared.log(.info, "✅ Sending workout state to Watch: isActive=true, exercise=\(response["exerciseName"] ?? "unknown")", category: .general)
+            replyHandler(response)
+        } else {
+            // No active workout
+            Logger.shared.log(.info, "✅ Sending workout state to Watch: isActive=false (no active workout)", category: .general)
+            replyHandler([
+                "isActive": false,
+                "timestamp": Date().timeIntervalSince1970
+            ])
+        }
+
+        // Also notify Flutter in case it needs to update anything
+        notifyFlutter(event: "onWorkoutStateRequested", data: message)
     }
 
     private func handleWorkoutPaused(

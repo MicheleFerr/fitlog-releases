@@ -21,6 +21,8 @@ import 'package:gymbro_flutter_new/features/auth/domain/entities/user_profile.da
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator.dart';
+import 'package:gymbro_flutter_new/shared/presentation/services/snackbar_service.dart';
 
 class PremiumPurchaseScreen extends ConsumerStatefulWidget {
   const PremiumPurchaseScreen({super.key});
@@ -596,9 +598,7 @@ class _PremiumPurchaseScreenState extends ConsumerState<PremiumPurchaseScreen>
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                CircularProgressIndicator(
-                  color: colorScheme.primary,
-                ),
+                LoadingIndicator(),
                 const SizedBox(height: 16),
                 Text(
                   _isRestoring ? context.l10n.restoringPurchases : context.l10n.processingPayment,
@@ -770,20 +770,11 @@ class _PremiumPurchaseScreenState extends ConsumerState<PremiumPurchaseScreen>
 
       if (userProfile?.isPremium ?? false) {
         // Successfully restored
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(context.l10n.premiumRestoredSuccess),
-            backgroundColor: context.colors.success,
-          ),
-        );
+        SnackBarService.showSuccess(context, context.l10n.premiumRestoredSuccess);
         Navigator.of(context).pop();
       } else {
         // No purchases to restore
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(context.l10n.noPurchasesToRestore),
-          ),
-        );
+        SnackBarService.showInfo(context, context.l10n.noPurchasesToRestore);
       }
     } finally {
       if (mounted) {
@@ -812,9 +803,7 @@ class _PremiumPurchaseScreenState extends ConsumerState<PremiumPurchaseScreen>
         builder: (context) => LegalDocumentScreen(documentType: type),
       ),
     ); */
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('Legal document: $type')),
-    );
+    SnackBarService.showInfo(context, 'Legal document: $type');
   }
 }
 

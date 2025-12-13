@@ -5,7 +5,7 @@ import 'package:gymbro_flutter_new/features/analytics/domain/models/progressive_
 import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise_activity.dart';
 import 'package:gymbro_flutter_new/features/analytics/presentation/widgets/contextual_training_advisor.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
-import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/services/snackbar_service.dart';
 
 class WeeklyDashboardWidget extends StatefulWidget {
 
@@ -561,12 +561,7 @@ class _WeeklyDashboardWidgetState extends State<WeeklyDashboardWidget>
           if (_currentWeekData != null) {
             HapticFeedback.lightImpact();
             widget.onDataSync?.call(_currentWeekData!);
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: const Text('Data synced to cloud'),
-                backgroundColor: Theme.of(context).colorScheme.primary,
-              ),
-            );
+            SnackBarService.showSuccess(context, 'Data synced to cloud');
           }
         },
         icon: const Icon(AppIcons.cloudUpload),

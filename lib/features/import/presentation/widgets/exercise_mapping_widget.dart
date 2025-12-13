@@ -303,7 +303,7 @@ class _ExerciseSearchSheetState extends State<_ExerciseSearchSheet> {
             autofocus: true,
             decoration: InputDecoration(
               hintText: context.l10n.searchExercise,
-              prefixIcon: Icon(AppIcons.search),
+              prefixIcon: const Icon(AppIcons.search),
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(12),
               ),

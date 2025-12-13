@@ -16,7 +16,7 @@ part 'sleep_workout_correlation.g.dart';
 
 /// Correlation between sleep and workout performance
 @freezed
-class SleepWorkoutCorrelation with _$SleepWorkoutCorrelation {
+abstract class SleepWorkoutCorrelation with _$SleepWorkoutCorrelation {
   const factory SleepWorkoutCorrelation({
     /// Volume change when sleeping >7h (e.g., +8%)
     required double volumeChangeAbove7h,
@@ -80,28 +80,33 @@ class SleepWorkoutCorrelation with _$SleepWorkoutCorrelation {
   /// Whether there's enough data to show correlation
   bool get hasEnoughData => workoutSampleSize >= 5 && sleepSampleSize >= 7;
 
-  /// Message explaining the correlation
-  String get summaryMessage {
+  /// Message KEY explaining the correlation
+  ///
+  /// Returns a key that should be localized in presentation layer.
+  /// Keys: 'not_enough_data', 'not_significant', 'significant'
+  /// For 'significant': includes effect directions as additional info
+  String get summaryMessageKey {
     if (!hasEnoughData) {
-      return 'Continua ad allenarti per vedere la correlazione sonno-performance.';
+      return 'not_enough_data';
     }
 
     if (!isSignificant) {
-      return 'Non abbastanza dati per una correlazione significativa.';
+      return 'not_significant';
     }
 
-    final goodEffect = volumeChangeAbove7h > 0 ? 'aumenta' : 'diminuisce';
-    final poorEffect = volumeChangeBelow6h < 0 ? 'diminuisce' : 'aumenta';
+    // Return key with params: good_effect:increase|decrease,poor_effect:increase|decrease,good_change:X%,poor_change:Y%
+    final goodEffect = volumeChangeAbove7h > 0 ? 'increase' : 'decrease';
+    final poorEffect = volumeChangeBelow6h < 0 ? 'decrease' : 'increase';
+    final goodChange = formattedGoodSleepChange.replaceAll('+', '').replaceAll('-', '');
+    final poorChange = formattedPoorSleepChange.replaceAll('+', '').replaceAll('-', '');
 
-    return 'Il tuo volume $goodEffect del ${formattedGoodSleepChange.replaceAll('+', '')} '
-        'con >7h di sonno e $poorEffect del ${formattedPoorSleepChange.replaceAll('-', '')} '
-        'con <6h.';
+    return 'significant:$goodEffect:$poorEffect:$goodChange:$poorChange';
   }
 }
 
 /// Individual data point for correlation analysis
 @freezed
-class SleepWorkoutDataPoint with _$SleepWorkoutDataPoint {
+abstract class SleepWorkoutDataPoint with _$SleepWorkoutDataPoint {
   const factory SleepWorkoutDataPoint({
     /// Date of the workout
     required DateTime workoutDate,

@@ -454,6 +454,12 @@
   "reps": "Reps",
   "notes": "Note",
   "notesHint": "Aggiungi note sulla forma, progressione, ecc.",
+  "formCues": "Promemoria Tecnici",
+  "formCuesHint": "Gomiti stretti, tocca il petto...",
+  "formCuesHelper": "Appare ogni volta che fai questo esercizio",
+  "sessionNotes": "Note della Sessione",
+  "sessionNotesHint": "Come ti sei sentito oggi?",
+  "sessionNotesHelper": "Salvate nella cronologia allenamenti",
   "exerciseTypeSingle": "Singolo",
   "exerciseTypeSuperset": "Superset",
   "exerciseTypeDropset": "Drop Set",
@@ -471,6 +477,7 @@
   "workoutStatusCompleted": "Completato",
   "workoutStatusPaused": "In Pausa",
   "exercises": "esercizi",
+  "yourExercises": "I tuoi esercizi",
   "reorderExercises": "Riordina esercizi",
   "confirmReorder": "Conferma ordine",
   "orderSaved": "Ordine salvato",
@@ -13118,6 +13125,22 @@
   "@bodyMeasurementsMetricBMR": {
     "description": "Etichetta metrica MB"
   },
+  "bodyMeasurementsAutoCalculated": "Calcolato automaticamente",
+  "@bodyMeasurementsAutoCalculated": {
+    "description": "Etichetta per campi calcolati automaticamente"
+  },
+  "bodyMeasurementsCalcBMI": "= peso / altezza²",
+  "@bodyMeasurementsCalcBMI": {
+    "description": "Formula calcolo BMI"
+  },
+  "bodyMeasurementsCalcLeanMass": "= peso × (1 - % grasso)",
+  "@bodyMeasurementsCalcLeanMass": {
+    "description": "Formula calcolo massa magra"
+  },
+  "bodyMeasurementsCalcBMR": "Formula Mifflin-St Jeor",
+  "@bodyMeasurementsCalcBMR": {
+    "description": "Formula calcolo MB"
+  },
   "bodyMeasurementsMetricShoulderCircumference": "Circonferenza Spalle",
   "@bodyMeasurementsMetricShoulderCircumference": {
     "description": "Etichetta metrica circonferenza spalle"
@@ -14248,6 +14271,30 @@
   "bodyMeasurementsImportFromHealth": "Importa da Salute",
   "@bodyMeasurementsImportFromHealth": {
     "description": "Tooltip per pulsante importa da HealthKit"
+  },
+  "bodyMeasurementsHealthKitConsentTitle": "Accesso ai Dati Salute",
+  "@bodyMeasurementsHealthKitConsentTitle": {
+    "description": "Titolo per dialog consenso HealthKit"
+  },
+  "bodyMeasurementsHealthKitConsentDescription": "FitLog Pro ha bisogno del tuo permesso per importare le misurazioni corporee da Apple Salute. Questo ti permette di sincronizzare peso, massa grassa e altre metriche automaticamente.",
+  "@bodyMeasurementsHealthKitConsentDescription": {
+    "description": "Descrizione per dialog consenso HealthKit"
+  },
+  "bodyMeasurementsHealthKitConsentDataTypes": "Dati a cui accederemo:",
+  "@bodyMeasurementsHealthKitConsentDataTypes": {
+    "description": "Etichetta per lista tipi dati nel dialog consenso"
+  },
+  "bodyMeasurementsHealthKitConsentPrivacy": "I tuoi dati sono archiviati in modo sicuro e non vengono mai condivisi con terze parti.",
+  "@bodyMeasurementsHealthKitConsentPrivacy": {
+    "description": "Avviso privacy nel dialog consenso"
+  },
+  "bodyMeasurementsHealthKitConsentGrant": "Consenti Accesso",
+  "@bodyMeasurementsHealthKitConsentGrant": {
+    "description": "Pulsante per concedere accesso HealthKit"
+  },
+  "bodyMeasurementsHealthKitConsentGranted": "Accesso ai dati salute concesso",
+  "@bodyMeasurementsHealthKitConsentGranted": {
+    "description": "Messaggio successo dopo consenso"
   },
   "weeks": "settimane",
   "@weeks": {
@@ -16342,6 +16389,15 @@
   "sleepDetails": "Dettagli Sonno",
   "sleepWorkoutCorrelation": "Correlazione Sonno-Allenamento",
   "readinessLevel": "Livello di Prontezza",
+  "howScoreCalculated": "Come viene calcolato il punteggio?",
+  "scoreCalculationFormula": "Calcolo Punteggio",
+  "baseScore": "Punteggio Base",
+  "sleepModifier": "Modificatore Sonno",
+  "consecutivePenalty": "Penalità",
+  "finalScore": "Punteggio Finale",
+  "baseScoreDescription": "Basato sulla cronologia allenamenti e tempo di recupero",
+  "sleepModifierDescription": "Impatto media settimanale sonno",
+  "consecutivePenaltyDescription": "Penalità per notti consecutive cattive",
   "weeklyOverview": "Panoramica Settimanale",
   "recommendedSleep": "7h raccomandate",
   "todaysRecommendation": "Raccomandazione di Oggi",
@@ -16355,11 +16411,33 @@
   "recoveryModerateDescription": "Considera un'intensità più leggera oggi",
   "recoveryLowDescription": "Il tuo corpo ha bisogno di più riposo",
   "recoveryCriticalDescription": "Giornata di riposo fortemente consigliata",
-  "connectAppleHealth": "Connetti Apple Health per insight personalizzati",
+  "connectAppleHealth": "Connetti Apple Health",
+  "healthKitOnlyiOS": "Apple Health è disponibile solo su iOS",
+  "healthKitConnected": "Apple Health connesso con successo",
+  "healthKitPermissionDenied": "Permessi negati. Abilita in Impostazioni > Privacy > Salute",
+  "sleepTrackingDescription": "Monitora il sonno per ottenere insight sul recupero e consigli personalizzati",
+  "sleepData": "Sonno",
+  "recoveryScore": "Score",
+  "personalizedTips": "Consigli",
   "lastNight": "Ieri Notte",
   "streakDays": "Serie",
-  "errorLoadingData": "Errore nel caricamento dati"
-,
+  "errorLoadingData": "Errore nel caricamento dati",
+  "noSleepDataFound": "Nessun dato sul sonno trovato",
+  "trackSleepHint": "Indossa il tuo Apple Watch o usa un'app che registra il sonno in Salute",
+  "refreshData": "Aggiorna",
+  "syncErrorRetry": "Impossibile caricare i dati. Controlla la connessione e riprova.",
+  "recoveryRecommendationOptimal": "Ottimo recupero! Pronto per allenamento intenso.",
+  "recoveryRecommendationGood": "Buon recupero. Pronto per allenamento normale.",
+  "recoveryRecommendationModerate": "Recupero moderato. Considera allenamento leggero.",
+  "recoveryRecommendationLow": "Recupero in corso. Prioritizza il riposo oggi.",
+  "recoveryRecommendationCritical": "Corpo in recupero. Giornata di riposo consigliata.",
+  "recoveryRecommendationConsecutiveBad2": "Recupero in corso. Considera allenamento leggero.",
+  "recoveryRecommendationConsecutiveBad3": "Prioritizza il riposo. {nights} notti consecutive sotto 6h.",
+  "correlationNotEnoughData": "Continua ad allenarti per vedere la correlazione sonno-performance.",
+  "correlationNotSignificant": "Non abbastanza dati per una correlazione significativa.",
+  "correlationEffectIncrease": "aumenta",
+  "correlationEffectDecrease": "diminuisce",
+  "correlationSignificant": "Il tuo volume {goodEffect} del {goodChange} con >7h di sonno e {poorEffect} del {poorChange} con <6h.",
   "clearSyncCache": "Cancella Cache di Sincronizzazione",
   "@clearSyncCache": {
     "description": "Etichetta pulsante per cancellare cache sincronizzazione salute"
@@ -16396,14 +16474,24 @@
   "@grantPermissionsPrompt": {
     "description": "Messaggio che chiede all'utente di concedere permessi"
   },
-  "autoSyncDaily": "Sincronizzazione Automatica (Giornaliera)",
+  "autoSyncDaily": "Sincronizzazione Auto",
   "@autoSyncDaily": {
     "description": "Etichetta per il toggle sincronizzazione automatica giornaliera"
   },
-  "autoSyncDescription": "Sincronizza automaticamente ogni 24 ore",
+  "autoSyncDescription": "Sincronizza i dati automaticamente in background",
   "@autoSyncDescription": {
     "description": "Descrizione della funzione sincronizzazione automatica"
   },
+  "connected": "Connesso",
+  "notConnected": "Non Connesso",
+  "connect": "Connetti",
+  "connecting": "Connessione...",
+  "dataTypes": "Tipi di Dati",
+  "syncNowDescription": "Sincronizza manualmente i dati da Salute",
+  "clearSyncCacheDescription": "Rimuovi la cronologia di sincronizzazione locale",
+  "diagnosticDescription": "Testa l'integrazione con Salute",
+  "healthSyncNotAvailable": "Sincronizzazione Salute Non Disponibile",
+  "notAvailableOnDevice": "non è disponibile su questo dispositivo",
   "lastSynced": "Ultima sincronizzazione",
   "@lastSynced": {
     "description": "Etichetta per timestamp ultima sincronizzazione"
@@ -16431,5 +16519,136 @@
   "healthSyncLoadError": "Impossibile caricare impostazioni sincronizzazione salute",
   "@healthSyncLoadError": {
     "description": "Messaggio di errore quando il caricamento impostazioni sincronizzazione salute fallisce"
+  },
+  "approveRequest": "Approva Richiesta",
+  "@approveRequest": {
+    "description": "Titolo dialogo admin per approvare richiesta esercizio mancante"
+  },
+  "approveRequestMessage": "Vuoi approvare la richiesta per \"{exerciseName}\"?\n\nDopo l'approvazione, dovrai aggiungere l'esercizio completo al database.",
+  "@approveRequestMessage": {
+    "description": "Messaggio dialogo admin per approvare richiesta esercizio mancante",
+    "placeholders": {
+      "exerciseName": {
+        "type": "String"
+      }
+    }
+  },
+  "requestApprovedSuccess": "Richiesta approvata! Ricorda di aggiungere l'esercizio al database.",
+  "@requestApprovedSuccess": {
+    "description": "Messaggio successo quando richiesta è approvata"
+  },
+  "rejectRequest": "Rifiuta Richiesta",
+  "@rejectRequest": {
+    "description": "Titolo dialogo admin per rifiutare richiesta esercizio mancante"
+  },
+  "rejectRequestMessage": "Rifiutare la richiesta per \"{exerciseName}\"?",
+  "@rejectRequestMessage": {
+    "description": "Messaggio dialogo admin per rifiutare richiesta esercizio mancante",
+    "placeholders": {
+      "exerciseName": {
+        "type": "String"
+      }
+    }
+  },
+  "rejectionReasonPlaceholder": "es. Esercizio già presente, nome troppo generico...",
+  "@rejectionReasonPlaceholder": {
+    "description": "Testo placeholder per campo motivo rifiuto"
+  },
+  "rejectedByAdmin": "Rifiutato dall'admin",
+  "@rejectedByAdmin": {
+    "description": "Motivo rifiuto predefinito"
+  },
+  "requestRejected": "Richiesta rifiutata",
+  "@requestRejected": {
+    "description": "Messaggio successo quando richiesta è rifiutata"
+  },
+  "markAsCompleted": "Segna come Completato",
+  "@markAsCompleted": {
+    "description": "Titolo dialogo admin per segnare richiesta come completata"
+  },
+  "markAsCompletedMessage": "Segna \"{exerciseName}\" come completato?\n\nUsa questa opzione solo dopo aver aggiunto l'esercizio completo al database.",
+  "@markAsCompletedMessage": {
+    "description": "Messaggio dialogo admin per segnare richiesta come completata",
+    "placeholders": {
+      "exerciseName": {
+        "type": "String"
+      }
+    }
+  },
+  "exerciseAddedToDatabase": "Esercizio aggiunto al database",
+  "@exerciseAddedToDatabase": {
+    "description": "Nota per richiesta completata"
+  },
+  "requestMarkedAsCompleted": "Richiesta segnata come completata",
+  "@requestMarkedAsCompleted": {
+    "description": "Messaggio successo quando richiesta è segnata come completata"
+  },
+  "approvedForDatabaseInsertion": "Approvato per inserimento nel database",
+  "@approvedForDatabaseInsertion": {
+    "description": "Nota per richiesta approvata"
+  },
+  "changeImageComingSoon": "Cambio immagine - In arrivo",
+  "@changeImageComingSoon": {
+    "description": "Messaggio in arrivo per funzionalità cambio immagine"
+  },
+  "recoveryCategoryOptimal": "Ottimale",
+  "@recoveryCategoryOptimal": {
+    "description": "Categoria recupero: Ottimale (85-100)"
+  },
+  "recoveryCategoryGood": "Buono",
+  "@recoveryCategoryGood": {
+    "description": "Categoria recupero: Buono (70-84)"
+  },
+  "recoveryCategoryModerate": "Moderato",
+  "@recoveryCategoryModerate": {
+    "description": "Categoria recupero: Moderato (55-69)"
+  },
+  "recoveryCategoryLow": "Basso",
+  "@recoveryCategoryLow": {
+    "description": "Categoria recupero: Basso (40-54)"
+  },
+  "recoveryCategoryCritical": "Critico",
+  "@recoveryCategoryCritical": {
+    "description": "Categoria recupero: Critico (0-39)"
+  },
+  "recoveryCategoryShortCritical": "Crit",
+  "@recoveryCategoryShortCritical": {
+    "description": "Forma breve di Critico per grafici"
+  },
+  "recoveryCategoryShortLow": "Basso",
+  "@recoveryCategoryShortLow": {
+    "description": "Forma breve di Basso per grafici"
+  },
+  "recoveryCategoryShortModerate": "Mod",
+  "@recoveryCategoryShortModerate": {
+    "description": "Forma breve di Moderato per grafici"
+  },
+  "recoveryCategoryShortGood": "Buono",
+  "@recoveryCategoryShortGood": {
+    "description": "Forma breve di Buono per grafici"
+  },
+  "recoveryCategoryShortOptimal": "Top",
+  "@recoveryCategoryShortOptimal": {
+    "description": "Forma breve di Ottimale per grafici"
+  },
+  "recoveryNoDataMessage": "Connetti Apple Health per insight personalizzati",
+  "@recoveryNoDataMessage": {
+    "description": "Messaggio mostrato quando non ci sono dati sul sonno"
+  },
+  "sleepQualityCritical": "Critico",
+  "@sleepQualityCritical": {
+    "description": "Qualità sonno: Critico (<6h)"
+  },
+  "sleepQualitySuboptimal": "Insufficiente",
+  "@sleepQualitySuboptimal": {
+    "description": "Qualità sonno: Insufficiente (6-7h)"
+  },
+  "sleepQualityOptimal": "Ottimale",
+  "@sleepQualityOptimal": {
+    "description": "Qualità sonno: Ottimale (7-9h)"
+  },
+  "sleepQualityExcessive": "Eccessivo",
+  "@sleepQualityExcessive": {
+    "description": "Qualità sonno: Eccessivo (>9h)"
   }
 }

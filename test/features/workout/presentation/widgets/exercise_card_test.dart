@@ -105,7 +105,7 @@ void main() {
               trailing: testExercise.restTime != null
                   ? Chip(
                       label: Text('${testExercise.restTime}s rest'),
-                      avatar: Icon(AppIcons.timer, size: 16),
+                      avatar: const Icon(AppIcons.timer, size: 16),
                     )
                   : null,
             ),
@@ -129,7 +129,7 @@ void main() {
                     padding: const EdgeInsets.all(8.0),
                     child: Row(
                       children: [
-                        Icon(AppIcons.note, size: 16),
+                        const Icon(AppIcons.note, size: 16),
                         const SizedBox(width: 4),
                         Text(testExercise.notes!),
                       ],

@@ -16,15 +16,17 @@ import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:flutter/foundation.dart' show kDebugMode;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:gymbro_flutter_new/core/data/providers/hive_box_manager_provider.dart';
+import 'package:gymbro_flutter_new/core/navigation/app_routes.dart';
 import 'package:gymbro_flutter_new/features/auth/presentation/providers/consolidated_user_provider.dart';
-import 'package:gymbro_flutter_new/features/workout/presentation/providers/workout_provider.dart';
 import 'package:gymbro_flutter_new/features/workout/data/repositories/hybrid_exercise_activity_repository.dart';
 import 'package:gymbro_flutter_new/features/workout/data/datasources/hive_workout_datasource.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
 import 'package:gymbro_flutter_new/features/auth/domain/entities/user_profile.dart';
 import 'package:intl/intl.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/services/snackbar_service.dart';
 
 /// State for sync operation
 class SyncState {
@@ -456,10 +458,9 @@ class PremiumSyncCard extends ConsumerWidget {
                           // Check for unsynced workouts first
                           final hasUnsynced = await _checkUnsyncedWorkouts(ref);
                           if (!hasUnsynced) {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(
-                                content: Text('All workouts are already synced'),
-                              ),
+                            SnackBarService.showInfo(
+                              context,
+                              'All workouts are already synced',
                             );
                             return;
                           }
@@ -604,7 +605,7 @@ class PremiumSyncCard extends ConsumerWidget {
             onPressed: () {
               Navigator.pop(context);
               // Navigate to premium purchase screen
-              // context.goNamed('premium');
+              context.goNamed(AppRoutes.premiumName);
             },
             child: const Text('Upgrade Now'),
           ),

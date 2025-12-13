@@ -8,14 +8,12 @@
 library;
 
 import 'dart:async';
-import 'dart:convert';
 import 'dart:ui';
 import 'package:flutter/foundation.dart';
-import 'package:flutter/foundation.dart' show kDebugMode;
-import 'package:flutter/services.dart';
 import 'package:gymbro_flutter_new/core/data/repositories/optimized_base_hybrid_repository.dart';
 import 'package:gymbro_flutter_new/features/exercise_database/domain/entities/exercise.dart';
 import 'package:gymbro_flutter_new/features/exercise_database/data/models/exercise_model.dart';
+import 'package:gymbro_flutter_new/features/exercise_database/data/utils/exercise_json_loader.dart';
 import 'package:gymbro_flutter_new/features/exercise_database/data/services/exercise_cache_manager.dart';
 import 'package:gymbro_flutter_new/features/exercise_database/data/services/exercise_version_service.dart';
 import 'package:gymbro_flutter_new/shared/domain/entities/sync_status.dart';
@@ -318,13 +316,7 @@ class HybridExerciseRepository extends OptimizedBaseHybridRepository<Exercise> {
   /// Ottiene esercizi da JSON asset (fallback)
   Future<List<Exercise>> _getExercisesFromAsset() async {
     try {
-      // Load the correct JSON file based on locale
-      final String fileName = locale.languageCode == 'it'
-          ? 'assets/data/exercises_it.json'
-          : 'assets/data/exercises.json';
-
-      final String jsonString = await rootBundle.loadString(fileName);
-      final List<dynamic> jsonList = json.decode(jsonString);
+      final jsonList = await ExerciseJsonLoader.loadExercises(locale.languageCode);
 
       return jsonList
           .map((json) => ExerciseModel.fromJson(json).toEntity())

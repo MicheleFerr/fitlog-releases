@@ -13,14 +13,11 @@ library;
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/features/home/domain/viewmodels/home_viewmodel.dart';
-import 'package:gymbro_flutter_new/features/home/presentation/providers/performance_logger.dart';
 
 class HomeViewModelImpl implements HomeViewModel {
-  HomeViewModelImpl(this._ref)
-      : _logger = _ref.read(performanceLoggerProvider);
+  HomeViewModelImpl(this._ref);
 
   final Ref _ref;
-  final PerformanceLogger _logger;
 
   @override
   AsyncValue<String> get greeting => _ref.watch(greetingProvider);
@@ -39,25 +36,17 @@ class HomeViewModelImpl implements HomeViewModel {
 
   @override
   Future<void> loadInitialData() async {
-    final stopwatch = Stopwatch()..start();
-
     // Load critical data first (greeting + active workout)
     await Future.wait([
       _ref.read(greetingProvider.future),
       _ref.read(workoutBannerProvider.future),
     ]);
 
-    final criticalTime = stopwatch.elapsed;
-    _logger.logDataFetch('critical_data', criticalTime, 100);
-
     // Load secondary data
     await Future.wait([
       _ref.read(aiCoachProvider.future),
       _ref.read(streakProvider.future),
     ]);
-
-    final secondaryTime = stopwatch.elapsed - criticalTime;
-    _logger.logDataFetch('secondary_data', secondaryTime, 150);
   }
 
   @override

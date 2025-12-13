@@ -18,6 +18,7 @@ import 'package:gymbro_flutter_new/features/workout/presentation/providers/worko
 import 'package:gymbro_flutter_new/features/workout/presentation/providers/workout_provider.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 
+import 'package:gymbro_flutter_new/shared/presentation/services/snackbar_service.dart';
 /// Bottom sheet for selecting workout category or entering custom name.
 ///
 /// Features:
@@ -407,34 +408,19 @@ class _WorkoutCategoryBottomSheetState
 
     // Validation: empty name
     if (name.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(context.l10n.workoutNameRequired),
-          backgroundColor: context.colors.error,
-        ),
-      );
+      SnackBarService.showError(context, context.l10n.workoutNameRequired);
       return;
     }
 
     // Validation: too short
     if (name.length < 2) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(context.l10n.workoutNameTooShort),
-          backgroundColor: context.colors.error,
-        ),
-      );
+      SnackBarService.showError(context, context.l10n.workoutNameTooShort);
       return;
     }
 
     // Validation: too long
     if (name.length > 50) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(context.l10n.workoutNameTooLong),
-          backgroundColor: context.colors.error,
-        ),
-      );
+      SnackBarService.showError(context, context.l10n.workoutNameTooLong);
       return;
     }
 

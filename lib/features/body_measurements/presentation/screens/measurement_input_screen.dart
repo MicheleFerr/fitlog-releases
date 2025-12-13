@@ -4,11 +4,15 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/features/body_measurements/domain/entities/measurement.dart';
 import 'package:gymbro_flutter_new/features/body_measurements/domain/entities/metric_type.dart';
 import 'package:gymbro_flutter_new/features/body_measurements/domain/repositories/consent_repository.dart';
+import 'package:gymbro_flutter_new/features/body_measurements/domain/repositories/measurement_repository.dart';
 import 'package:gymbro_flutter_new/features/body_measurements/domain/validators/measurement_validator.dart';
 import 'package:gymbro_flutter_new/features/body_measurements/data/repositories/measurement_repository_provider.dart';
 import 'package:gymbro_flutter_new/features/body_measurements/data/repositories/consent_repository_provider.dart';
+import 'package:gymbro_flutter_new/features/strength_standards/domain/entities/user_fitness_questionnaire.dart';
+import 'package:gymbro_flutter_new/features/strength_standards/presentation/providers/strength_standards_providers.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
 import 'package:gymbro_flutter_new/shared/presentation/services/snackbar_service.dart';
 import 'package:uuid/uuid.dart';
 
@@ -59,10 +63,25 @@ class _MeasurementInputScreenState
 
   final _validator = MeasurementValidator();
 
+  /// Set of metrics that can be auto-calculated (but user can override)
+  static const Set<MetricType> _calculatedMetrics = {
+    MetricType.bmi,
+    MetricType.leanMass,
+    MetricType.bmr,
+  };
+
+  /// Track which calculated fields the user has manually edited
+  /// (so we don't overwrite their values)
+  final Set<MetricType> _manuallyEditedFields = {};
+
+  /// User fitness data for BMR calculation (age, sex)
+  UserFitnessQuestionnaire? _fitnessProfile;
+
   @override
   void initState() {
     super.initState();
     _loadConsentedMetrics();
+    _loadFitnessProfile();
 
     // Initialize controllers with existing values if editing
     if (widget.existingMeasurement != null) {
@@ -71,6 +90,133 @@ class _MeasurementInputScreenState
         text: measurement.value.toString(),
       );
     }
+  }
+
+  /// Load user fitness profile for BMR calculation
+  Future<void> _loadFitnessProfile() async {
+    // First, ensure the questionnaire is loaded
+    final notifier = ref.read(userFitnessQuestionnaireProvider.notifier);
+    await notifier.loadQuestionnaire();
+
+    // Then read the value
+    final profile = ref.read(userFitnessQuestionnaireProvider);
+    if (mounted && profile != null) {
+      setState(() {
+        _fitnessProfile = profile;
+      });
+    }
+  }
+
+  /// Setup listeners for auto-calculation
+  void _setupCalculationListeners() {
+    // Listen to weight changes
+    _controllers[MetricType.weight]?.addListener(_recalculateAll);
+    // Listen to height changes
+    _controllers[MetricType.height]?.addListener(_recalculateAll);
+    // Listen to body fat changes
+    _controllers[MetricType.bodyFatPercentage]?.addListener(_recalculateAll);
+  }
+
+  /// Recalculate all derived metrics
+  void _recalculateAll() {
+    _calculateBMI();
+    _calculateLeanMass();
+    _calculateBMR();
+  }
+
+  /// Calculate BMI = weight / (height in meters)²
+  void _calculateBMI() {
+    // Don't overwrite if user manually edited this field
+    if (_manuallyEditedFields.contains(MetricType.bmi)) return;
+
+    final weightText = _controllers[MetricType.weight]?.text;
+    final heightText = _controllers[MetricType.height]?.text;
+
+    if (weightText == null || heightText == null) return;
+    if (weightText.isEmpty || heightText.isEmpty) {
+      _controllers[MetricType.bmi]?.text = '';
+      return;
+    }
+
+    final weight = double.tryParse(weightText);
+    final heightCm = double.tryParse(heightText);
+
+    if (weight == null || heightCm == null || heightCm <= 0) return;
+
+    final heightM = heightCm / 100;
+    final bmi = weight / (heightM * heightM);
+
+    if (_controllers.containsKey(MetricType.bmi)) {
+      _controllers[MetricType.bmi]?.text = bmi.toStringAsFixed(1);
+    }
+  }
+
+  /// Calculate Lean Mass = weight × (1 - body fat % / 100)
+  void _calculateLeanMass() {
+    // Don't overwrite if user manually edited this field
+    if (_manuallyEditedFields.contains(MetricType.leanMass)) return;
+
+    final weightText = _controllers[MetricType.weight]?.text;
+    final bodyFatText = _controllers[MetricType.bodyFatPercentage]?.text;
+
+    if (weightText == null || bodyFatText == null) return;
+    if (weightText.isEmpty || bodyFatText.isEmpty) {
+      _controllers[MetricType.leanMass]?.text = '';
+      return;
+    }
+
+    final weight = double.tryParse(weightText);
+    final bodyFat = double.tryParse(bodyFatText);
+
+    if (weight == null || bodyFat == null) return;
+    if (bodyFat < 0 || bodyFat > 100) return;
+
+    final leanMass = weight * (1 - bodyFat / 100);
+
+    if (_controllers.containsKey(MetricType.leanMass)) {
+      _controllers[MetricType.leanMass]?.text = leanMass.toStringAsFixed(1);
+    }
+  }
+
+  /// Calculate BMR using Mifflin-St Jeor formula
+  /// Men: BMR = 10 × weight(kg) + 6.25 × height(cm) - 5 × age + 5
+  /// Women: BMR = 10 × weight(kg) + 6.25 × height(cm) - 5 × age - 161
+  void _calculateBMR() {
+    // Don't overwrite if user manually edited this field
+    if (_manuallyEditedFields.contains(MetricType.bmr)) return;
+
+    final weightText = _controllers[MetricType.weight]?.text;
+    final heightText = _controllers[MetricType.height]?.text;
+
+    if (weightText == null || heightText == null) return;
+    if (weightText.isEmpty || heightText.isEmpty) {
+      _controllers[MetricType.bmr]?.text = '';
+      return;
+    }
+
+    final weight = double.tryParse(weightText);
+    final heightCm = double.tryParse(heightText);
+
+    if (weight == null || heightCm == null) return;
+
+    // Need age and sex from fitness profile
+    final profile = _fitnessProfile;
+    if (profile == null) return;
+
+    final age = profile.age;
+    final isMale = profile.sex == BiologicalSex.male;
+
+    // Mifflin-St Jeor formula
+    final bmr = (10 * weight) + (6.25 * heightCm) - (5 * age) + (isMale ? 5 : -161);
+
+    if (_controllers.containsKey(MetricType.bmr)) {
+      _controllers[MetricType.bmr]?.text = bmr.toStringAsFixed(0);
+    }
+  }
+
+  /// Check if a metric is auto-calculated
+  bool _isCalculatedMetric(MetricType metric) {
+    return _calculatedMetrics.contains(metric);
   }
 
   /// Load metrics that user has consented to
@@ -102,6 +248,10 @@ class _MeasurementInputScreenState
             _controllers[metric] = TextEditingController();
           }
         });
+        // Setup auto-calculation listeners after controllers are created
+        _setupCalculationListeners();
+        // Trigger initial calculation
+        _recalculateAll();
       },
     );
   }
@@ -159,12 +309,20 @@ class _MeasurementInputScreenState
             _controllers[metric] = TextEditingController();
           }
         });
+        // Setup auto-calculation listeners after controllers are created
+        _setupCalculationListeners();
+        // Trigger initial calculation
+        _recalculateAll();
       },
     );
   }
 
   @override
   void dispose() {
+    // Remove listeners before disposing
+    _controllers[MetricType.weight]?.removeListener(_recalculateAll);
+    _controllers[MetricType.height]?.removeListener(_recalculateAll);
+    _controllers[MetricType.bodyFatPercentage]?.removeListener(_recalculateAll);
     // Dispose all controllers
     for (final controller in _controllers.values) {
       controller.dispose();
@@ -280,7 +438,7 @@ class _MeasurementInputScreenState
 
         result.fold(
           (failure) {
-            throw Exception('Failed to save ${metric.name}: $failure');
+            throw Exception('Failed to save ${metric.name}: ${_getMeasurementFailureMessage(failure)}');
           },
           (_) {
             // Success
@@ -439,6 +597,8 @@ class _MeasurementInputScreenState
                             // Fields for this group
                             ...groupMetrics.map((metric) {
                               final controller = _controllers[metric]!;
+                              final isCalculated = _isCalculatedMetric(metric);
+                              final wasManuallyEdited = _manuallyEditedFields.contains(metric);
                               return Padding(
                                 padding: const EdgeInsets.only(bottom: 16),
                                 child: Column(
@@ -449,14 +609,47 @@ class _MeasurementInputScreenState
                                       keyboardType: const TextInputType.numberWithOptions(
                                         decimal: true,
                                       ),
+                                      onChanged: isCalculated
+                                          ? (value) {
+                                              // Track manual edits to calculated fields
+                                              if (value.isNotEmpty) {
+                                                _manuallyEditedFields.add(metric);
+                                              } else {
+                                                // If cleared, allow auto-calculation again
+                                                _manuallyEditedFields.remove(metric);
+                                                _recalculateAll();
+                                              }
+                                            }
+                                          : null,
                                       decoration: InputDecoration(
                                         labelText: _getMetricLabel(metric),
                                         suffixText: metric.defaultUnit,
                                         border: const OutlineInputBorder(),
                                         errorText: _errors[metric],
+                                        filled: isCalculated && !wasManuallyEdited,
+                                        fillColor: isCalculated && !wasManuallyEdited
+                                            ? context.colors.surfaceContainerHighest.withValues(alpha: 0.5)
+                                            : null,
+                                        prefixIcon: isCalculated
+                                            ? SemanticIcon(
+                                                icon: AppIcons.calculate,
+                                                semanticLabel: context.l10n.bodyMeasurementsAutoCalculated,
+                                                color: wasManuallyEdited
+                                                    ? context.colors.outline
+                                                    : context.colors.primary,
+                                              )
+                                            : null,
+                                        helperText: isCalculated
+                                            ? _getCalculationHelper(metric)
+                                            : null,
+                                        helperStyle: context.textTheme.bodySmall?.copyWith(
+                                          color: wasManuallyEdited
+                                              ? context.colors.outline
+                                              : context.colors.primary,
+                                          fontStyle: FontStyle.italic,
+                                        ),
                                       ),
-                                      validator: (value) =>
-                                          _validateField(metric, value ?? ''),
+                                      validator: (value) => _validateField(metric, value ?? ''),
                                     ),
                                     if (_errors[metric] != null)
                                       Padding(
@@ -504,5 +697,29 @@ class _MeasurementInputScreenState
       case MetricGroup.vitals:
         return context.l10n.bodyMeasurementsGroupVitals;
     }
+  }
+
+  /// Get error message from MeasurementFailure
+  String _getMeasurementFailureMessage(MeasurementFailure failure) {
+    return switch (failure) {
+      ConsentRequiredFailure(:final metricType) =>
+        'Consent required for ${metricType.name}',
+      ValidationFailure(:final message) => message,
+      StorageFailure(:final message) => message,
+      MeasurementNotFoundFailure(:final measurementId) =>
+        'Measurement not found: $measurementId',
+      SyncConflictFailure(:final message) => message,
+      HealthPlatformFailure(:final message) => message,
+    };
+  }
+
+  /// Get helper text explaining how this metric is calculated
+  String? _getCalculationHelper(MetricType metric) {
+    return switch (metric) {
+      MetricType.bmi => context.l10n.bodyMeasurementsCalcBMI,
+      MetricType.leanMass => context.l10n.bodyMeasurementsCalcLeanMass,
+      MetricType.bmr => context.l10n.bodyMeasurementsCalcBMR,
+      _ => null,
+    };
   }
 }

@@ -1,5 +1,4 @@
-import 'dart:convert';
-import 'package:flutter/services.dart';
+import 'package:gymbro_flutter_new/features/exercise_database/data/utils/exercise_json_loader.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/providers/exercise_selection_provider.dart';
 import 'package:gymbro_flutter_new/shared/presentation/providers/app_config_provider.dart';
@@ -68,15 +67,8 @@ class OptimizedExerciseNotifier extends AsyncNotifier<List<ExerciseData>> {
         return _cachedExercises!;
       }
 
-      // Carica JSON localizzato in modo ottimizzato
-      final jsonFile = languageCode == 'it'
-          ? 'assets/data/exercises_it.json'
-          : 'assets/data/exercises.json';
-
-      final jsonString = await rootBundle.loadString(jsonFile);
-      
-      // Parse JSON in background usando compute se disponibile
-      final List<dynamic> jsonList = json.decode(jsonString);
+      // Carica JSON dalla nuova struttura a cartelle
+      final jsonList = await ExerciseJsonLoader.loadExercises(languageCode);
       
       // Converti in batch per non bloccare UI
       final exercises = <ExerciseData>[];

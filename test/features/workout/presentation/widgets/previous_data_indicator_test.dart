@@ -36,7 +36,7 @@ void main() {
       // Arrange
       await tester.pumpWidget(
         wrapWithApp(
-          PreviousDataIndicator(
+          const PreviousDataIndicator(
             previousWeight: 90.0,
             previousReps: 10,
             daysSinceLastSession: 5,
@@ -53,7 +53,7 @@ void main() {
       // Arrange
       await tester.pumpWidget(
         wrapWithApp(
-          PreviousDataIndicator(
+          const PreviousDataIndicator(
             previousWeight: 90.0,
             previousReps: 10,
             daysSinceLastSession: 5,
@@ -93,7 +93,7 @@ void main() {
       // Arrange
       await tester.pumpWidget(
         wrapWithApp(
-          PreviousDataIndicator(
+          const PreviousDataIndicator(
             previousWeight: 90.0,
             previousReps: 10,
             daysSinceLastSession: 5,
@@ -110,7 +110,7 @@ void main() {
       // Arrange
       await tester.pumpWidget(
         wrapWithApp(
-          PreviousDataIndicator(
+          const PreviousDataIndicator(
             previousWeight: 90.0,
             previousReps: 10,
             daysSinceLastSession: 5,
@@ -144,7 +144,7 @@ void main() {
       // Arrange
       await tester.pumpWidget(
         wrapWithApp(
-          PreviousDataIndicator(
+          const PreviousDataIndicator(
             previousWeight: 90.0,
             previousReps: 10,
             daysSinceLastSession: 5,
@@ -162,7 +162,7 @@ void main() {
         // Arrange
         await tester.pumpWidget(
           wrapWithApp(
-            PreviousDataIndicator(
+            const PreviousDataIndicator(
               previousWeight: 90.0,
               previousReps: 10,
               daysSinceLastSession: 0, // Today
@@ -178,7 +178,7 @@ void main() {
         // Arrange
         await tester.pumpWidget(
           wrapWithApp(
-            PreviousDataIndicator(
+            const PreviousDataIndicator(
               previousWeight: 90.0,
               previousReps: 10,
               daysSinceLastSession: 1, // Yesterday
@@ -194,7 +194,7 @@ void main() {
         // Arrange
         await tester.pumpWidget(
           wrapWithApp(
-            PreviousDataIndicator(
+            const PreviousDataIndicator(
               previousWeight: 90.0,
               previousReps: 10,
               daysSinceLastSession: 5, // 5 days
@@ -210,7 +210,7 @@ void main() {
         // Arrange
         await tester.pumpWidget(
           wrapWithApp(
-            PreviousDataIndicator(
+            const PreviousDataIndicator(
               previousWeight: 90.0,
               previousReps: 10,
               daysSinceLastSession: 14, // 2 weeks
@@ -226,7 +226,7 @@ void main() {
         // Arrange
         await tester.pumpWidget(
           wrapWithApp(
-            PreviousDataIndicator(
+            const PreviousDataIndicator(
               previousWeight: 90.0,
               previousReps: 10,
               daysSinceLastSession: 60, // 2 months
@@ -244,7 +244,7 @@ void main() {
         // Arrange
         await tester.pumpWidget(
           wrapWithApp(
-            PreviousDataIndicator(
+            const PreviousDataIndicator(
               previousWeight: 90.0, // Whole number
               previousReps: 10,
               daysSinceLastSession: 5,
@@ -260,7 +260,7 @@ void main() {
         // Arrange
         await tester.pumpWidget(
           wrapWithApp(
-            PreviousDataIndicator(
+            const PreviousDataIndicator(
               previousWeight: 90.5, // Fractional
               previousReps: 10,
               daysSinceLastSession: 5,
@@ -279,7 +279,7 @@ void main() {
       // Arrange
       await tester.pumpWidget(
         wrapWithApp(
-          PreviousDataBadge(
+          const PreviousDataBadge(
             previousWeight: 90.0,
             previousReps: 10,
           ),
@@ -297,7 +297,7 @@ void main() {
       // Arrange
       await tester.pumpWidget(
         wrapWithApp(
-          NoPreviousDataIndicator(
+          const NoPreviousDataIndicator(
             isFirstWorkout: true,
           ),
         ),
@@ -312,7 +312,7 @@ void main() {
       // Arrange
       await tester.pumpWidget(
         wrapWithApp(
-          NoPreviousDataIndicator(
+          const NoPreviousDataIndicator(
             isFirstWorkout: false,
           ),
         ),

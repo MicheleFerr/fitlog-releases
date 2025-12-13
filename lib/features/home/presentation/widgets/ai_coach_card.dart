@@ -150,7 +150,7 @@ class _MinimalAICoachCard extends StatelessWidget {
     // Use theme colors
     final primaryColor = colorScheme.primary;
 
-    return Container(
+    return DecoratedBox(
       decoration: BoxDecoration(
         // ✨ Material 3 2025: Solid filled surface (no gradient)
         color: colorScheme.surfaceContainerLow,

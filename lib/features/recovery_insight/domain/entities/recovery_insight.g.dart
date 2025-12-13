@@ -26,6 +26,10 @@ _RecoveryInsight _$RecoveryInsightFromJson(Map<String, dynamic> json) =>
           ? null
           : DateTime.parse(json['calculatedAt'] as String),
       hasSleepData: json['hasSleepData'] as bool? ?? true,
+      baseScore: (json['baseScore'] as num?)?.toDouble() ?? 0.0,
+      sleepModifier: (json['sleepModifier'] as num?)?.toDouble() ?? 1.0,
+      consecutivePenalty:
+          (json['consecutivePenalty'] as num?)?.toDouble() ?? 1.0,
     );
 
 Map<String, dynamic> _$RecoveryInsightToJson(_RecoveryInsight instance) =>
@@ -40,6 +44,9 @@ Map<String, dynamic> _$RecoveryInsightToJson(_RecoveryInsight instance) =>
       'correlation': instance.correlation?.toJson(),
       'calculatedAt': instance.calculatedAt?.toIso8601String(),
       'hasSleepData': instance.hasSleepData,
+      'baseScore': instance.baseScore,
+      'sleepModifier': instance.sleepModifier,
+      'consecutivePenalty': instance.consecutivePenalty,
     };
 
 const _$RecoveryCategoryEnumMap = {

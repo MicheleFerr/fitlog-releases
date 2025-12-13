@@ -8,7 +8,6 @@
 /// Essential for premium users with multiple devices
 library;
 
-import 'package:flutter/foundation.dart' show kDebugMode;
 import 'dart:async';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';

@@ -66,6 +66,12 @@ class HealthKitDatasource {
   /// - Sleep deprivation reduces muscle protein synthesis by ~22% (Res et al.)
   /// - <6h sleep reduces strength output in multi-joint movements (Knowles et al.)
   /// - 7-9h recommended by AASM/Sleep Research Society
+  ///
+  /// **iOS 16+ Sleep Stages**: Apple Watch tracks sleep in stages:
+  /// - SLEEP_CORE: Core sleep (light sleep)
+  /// - SLEEP_DEEP: Deep sleep (restorative)
+  /// - SLEEP_REM: REM sleep (dreaming)
+  /// - SLEEP_AWAKE: Awake periods during sleep
   static const List<HealthDataType> supportedTypes = [
     HealthDataType.STEPS,
     HealthDataType.HEART_RATE,
@@ -73,8 +79,13 @@ class HealthKitDatasource {
     HealthDataType.ACTIVE_ENERGY_BURNED,
     HealthDataType.EXERCISE_TIME,
     // Sleep tracking for recovery correlation
-    HealthDataType.SLEEP_ASLEEP, // Time actually asleep
+    HealthDataType.SLEEP_ASLEEP, // Time actually asleep (legacy)
     HealthDataType.SLEEP_IN_BED, // Total time in bed
+    // iOS 16+ sleep stages (Apple Watch)
+    HealthDataType.SLEEP_AWAKE, // Awake periods during sleep
+    HealthDataType.SLEEP_DEEP, // Deep sleep
+    HealthDataType.SLEEP_REM, // REM sleep
+    HealthDataType.SLEEP_LIGHT, // Light/core sleep
   ];
 
   /// Initialize HealthKit and request permissions
@@ -118,6 +129,10 @@ class HealthKitDatasource {
           HealthDataAccess.READ, // EXERCISE_TIME
           HealthDataAccess.READ, // SLEEP_ASLEEP
           HealthDataAccess.READ, // SLEEP_IN_BED
+          HealthDataAccess.READ, // SLEEP_AWAKE
+          HealthDataAccess.READ, // SLEEP_DEEP
+          HealthDataAccess.READ, // SLEEP_REM
+          HealthDataAccess.READ, // SLEEP_LIGHT
         ],
       );
 
@@ -346,6 +361,85 @@ class HealthKitDatasource {
   // SLEEP DATA
   // ==========================================
 
+  /// All sleep types that count as actual sleep time (excluding AWAKE)
+  ///
+  /// **iOS 16+ Sleep Stages**:
+  /// - SLEEP_ASLEEP: Legacy type (still used by some apps)
+  /// - SLEEP_DEEP: Deep sleep (N3 stage)
+  /// - SLEEP_REM: REM sleep (dreaming)
+  /// - SLEEP_LIGHT: Light sleep (N1/N2 stages)
+  ///
+  /// Note: SLEEP_AWAKE is NOT included as it represents awake time
+  static const List<HealthDataType> _sleepTypes = [
+    HealthDataType.SLEEP_ASLEEP, // Legacy
+    HealthDataType.SLEEP_DEEP, // iOS 16+
+    HealthDataType.SLEEP_REM, // iOS 16+
+    HealthDataType.SLEEP_LIGHT, // iOS 16+
+  ];
+
+  /// Fetch all sleep data points for a time range
+  ///
+  /// Combines all sleep types (ASLEEP, DEEP, REM, LIGHT) into one list
+  Future<List<HealthDataPoint>> _getAllSleepData({
+    required DateTime startTime,
+    required DateTime endTime,
+  }) async {
+    if (kDebugMode) {
+      debugPrint('🔍 [_getAllSleepData] START');
+      debugPrint('   📅 Range: ${startTime.toIso8601String()} → ${endTime.toIso8601String()}');
+      debugPrint('   📋 Sleep types to fetch: ${_sleepTypes.map((t) => t.name).join(", ")}');
+    }
+
+    if (!isAvailable) {
+      if (kDebugMode) {
+        debugPrint('   ❌ HealthKit NOT available - returning empty');
+      }
+      return [];
+    }
+
+    final allSleepData = <HealthDataPoint>[];
+
+    for (final type in _sleepTypes) {
+      try {
+        if (kDebugMode) {
+          debugPrint('   🔄 Fetching ${type.name}...');
+        }
+        final data = await _health.getHealthDataFromTypes(
+          types: [type],
+          startTime: startTime,
+          endTime: endTime,
+        );
+        allSleepData.addAll(data);
+
+        if (kDebugMode) {
+          debugPrint('   😴 ${type.name}: ${data.length} records');
+          if (data.isNotEmpty) {
+            // Show first record details for debugging
+            final first = data.first;
+            debugPrint('      → First: ${first.dateFrom} to ${first.dateTo}');
+            debugPrint('      → Value: ${first.value} (${first.value.runtimeType})');
+            debugPrint('      → Unit: ${first.unit}');
+          }
+        }
+      } catch (e) {
+        if (kDebugMode) {
+          debugPrint(
+            '⚠️ [HealthKitDatasource] Failed to fetch ${type.name}: $e',
+          );
+        }
+        // Continue with other types
+      }
+    }
+
+    if (kDebugMode) {
+      debugPrint(
+        '📊 [HealthKitDatasource] Total sleep records: ${allSleepData.length}',
+      );
+    }
+
+    return allSleepData;
+  }
+
   /// Get total sleep duration for last night
   ///
   /// Returns `null` if permission denied or data unavailable
@@ -357,17 +451,22 @@ class HealthKitDatasource {
   /// - 6-7h: Suboptimal - -22% MPS (Res et al.)
   /// - 7-9h: Optimal (AASM recommendation)
   /// - >9h: May indicate illness/overtraining
+  ///
+  /// **Note**: Aggregates all sleep stages (ASLEEP, DEEP, REM, LIGHT)
   Future<HealthDataPoint?> getSleepLastNight() async {
     final now = DateTime.now();
     // Sleep window: yesterday 8 PM to today 12 PM (accounts for late sleepers)
     final sleepWindowStart = DateTime(now.year, now.month, now.day - 1, 20);
     final sleepWindowEnd = DateTime(now.year, now.month, now.day, 12);
 
-    return _getAggregatedData(
-      type: HealthDataType.SLEEP_ASLEEP,
+    final allSleepData = await _getAllSleepData(
       startTime: sleepWindowStart,
       endTime: sleepWindowEnd,
     );
+
+    if (allSleepData.isEmpty) return null;
+
+    return _sumDataPoints(allSleepData);
   }
 
   /// Get time in bed for last night (includes awake time)
@@ -391,9 +490,9 @@ class HealthKitDatasource {
     );
   }
 
-  /// Get average sleep duration for the last 7 days
+  /// Get all sleep data for the last 7 days
   ///
-  /// Returns `null` if permission denied or data unavailable
+  /// Returns empty list if permission denied or data unavailable
   ///
   /// **AI Coach Use Case**: Sleep trend analysis, chronic sleep debt detection
   ///
@@ -401,12 +500,39 @@ class HealthKitDatasource {
   /// - Consecutive sleep restriction shows cumulative performance decline
   /// - 1 bad night: minor impact
   /// - 3+ bad nights: significant strength reduction
+  ///
+  /// **Note**: Aggregates all sleep stages (ASLEEP, DEEP, REM, LIGHT)
   Future<List<HealthDataPoint>> getSleepThisWeek() async {
+    if (kDebugMode) {
+      debugPrint('');
+      debugPrint('🌙 [getSleepThisWeek] Called');
+    }
+    final now = DateTime.now();
+    final weekAgo = now.subtract(const Duration(days: 7));
+
+    final result = await _getAllSleepData(
+      startTime: weekAgo,
+      endTime: now,
+    );
+
+    if (kDebugMode) {
+      debugPrint('🌙 [getSleepThisWeek] Returning ${result.length} data points');
+    }
+    return result;
+  }
+
+  /// Get all in-bed data for the last 7 days
+  ///
+  /// Returns empty list if permission denied or data unavailable
+  ///
+  /// **AI Coach Use Case**: Sleep efficiency calculation
+  /// Sleep efficiency = (SLEEP_ASLEEP / SLEEP_IN_BED) * 100
+  Future<List<HealthDataPoint>> getInBedThisWeek() async {
     final now = DateTime.now();
     final weekAgo = now.subtract(const Duration(days: 7));
 
     return _getHealthData(
-      type: HealthDataType.SLEEP_ASLEEP,
+      type: HealthDataType.SLEEP_IN_BED,
       startTime: weekAgo,
       endTime: now,
     );
@@ -422,12 +548,14 @@ class HealthKitDatasource {
   /// - Track sleep before workout days vs rest days
   /// - Correlate sleep duration with workout volume/intensity
   /// - Identify optimal sleep patterns for individual user
+  ///
+  /// **Note**: Aggregates all sleep stages (ASLEEP, DEEP, REM, LIGHT)
   Future<Map<String, dynamic>> getSleepAnalytics({int days = 7}) async {
     final now = DateTime.now();
     final startDate = now.subtract(Duration(days: days));
 
-    final sleepData = await _getHealthData(
-      type: HealthDataType.SLEEP_ASLEEP,
+    // Fetch ALL sleep types (not just SLEEP_ASLEEP)
+    final sleepData = await _getAllSleepData(
       startTime: startDate,
       endTime: now,
     );

@@ -217,7 +217,7 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
       appBar: AppBar(
         title: Text(context.l10n.editProfile),
         leading: IconButton(
-          icon: Icon(AppIcons.arrowBackIos, size: AppIconSize.medium),
+          icon: const Icon(AppIcons.arrowBackIos, size: AppIconSize.medium),
           onPressed: () => context.pop(),
         ),
         actions: [
@@ -307,7 +307,7 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
               controller: _displayNameController,
               decoration: InputDecoration(
                 labelText: context.l10n.displayName,
-                prefixIcon: Icon(AppIcons.person),
+                prefixIcon: const Icon(AppIcons.person),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12),
                 ),
@@ -327,7 +327,7 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
               controller: _ageController,
               decoration: InputDecoration(
                 labelText: context.l10n.age,
-                prefixIcon: Icon(AppIcons.calendar),
+                prefixIcon: const Icon(AppIcons.calendar),
                 suffixText: context.l10n.years,
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12),
@@ -352,7 +352,7 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
               value: _selectedGender,
               decoration: InputDecoration(
                 labelText: context.l10n.gender,
-                prefixIcon: Icon(AppIcons.person),
+                prefixIcon: const Icon(AppIcons.person),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12),
                 ),
@@ -397,7 +397,7 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
                     controller: _heightController,
                     decoration: InputDecoration(
                       labelText: context.l10n.bodyMeasurementsMetricHeight,
-                      prefixIcon: Icon(AppIcons.bodyMeasurements),
+                      prefixIcon: const Icon(AppIcons.bodyMeasurements),
                       suffixText: 'cm',
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12),
@@ -422,7 +422,7 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
                     controller: _weightController,
                     decoration: InputDecoration(
                       labelText: context.l10n.weight,
-                      prefixIcon: Icon(AppIcons.scale),
+                      prefixIcon: const Icon(AppIcons.scale),
                       suffixText: 'kg',
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12),
@@ -449,7 +449,7 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
               initialValue: user?.email ?? '',
               decoration: InputDecoration(
                 labelText: context.l10n.emailLabel,
-                prefixIcon: Icon(AppIcons.email),
+                prefixIcon: const Icon(AppIcons.email),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12),
                 ),

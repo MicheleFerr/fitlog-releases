@@ -58,6 +58,7 @@ class ExerciseListItemHeader extends StatelessWidget {
     this.hasWarmupData,
     this.hasInjuryPreventionData,
     this.tutorialMenuKey,
+    this.formCues,
   });
 
   final Exercise exercise;
@@ -85,6 +86,9 @@ class ExerciseListItemHeader extends StatelessWidget {
   final VoidCallback onAddWarmupSets;
   final VoidCallback onEditNotes;
   final VoidCallback? onCreateSuperset;
+
+  /// Form Cues (persistent technique reminders) for this exercise
+  final String? formCues;
 
   // Optional validation functions
   final bool Function(Map<String, dynamic>)? hasWarmupData;
@@ -123,11 +127,10 @@ class ExerciseListItemHeader extends StatelessWidget {
                 const SizedBox(height: 4),
                 _buildInsightChip(context),
               ],
-              // Notes preview - conditional on showExerciseNotes
-              if ((config.showExerciseNotes ?? false) &&
-                  (exercise.notes?.isNotEmpty ?? false)) ...[
+              // Notes section - conditional on showExerciseNotes
+              if (config.showExerciseNotes ?? false) ...[
                 const SizedBox(height: 4),
-                _buildNotesPreview(context),
+                _buildNotesSection(context),
               ],
             ],
           ),
@@ -503,15 +506,127 @@ class ExerciseListItemHeader extends StatelessWidget {
     );
   }
 
-  /// Builds a compact notes preview chip
-  /// Tappable to edit notes via the notes dialog
-  Widget _buildNotesPreview(BuildContext context) {
-    final notesPreview = ExerciseNotesHandler.formatNotesPreview(
-      exercise.notes,
-      maxLength: 40,
-    );
+  /// Builds the complete notes section with Form Cues and Session Notes
+  /// Shows:
+  /// - Form Cues chip (prominent) if they exist
+  /// - Session Notes preview if they exist
+  /// - "Add notes" chip if both are empty
+  Widget _buildNotesSection(BuildContext context) {
+    final hasFormCues = formCues?.isNotEmpty ?? false;
+    final hasSessionNotes = exercise.notes?.isNotEmpty ?? false;
 
-    if (notesPreview.isEmpty) return const SizedBox.shrink();
+    // If no notes at all, show "Add notes" chip
+    if (!hasFormCues && !hasSessionNotes) {
+      return _buildAddNotesChip(context);
+    }
+
+    // Show Form Cues and/or Session Notes
+    return Wrap(
+      spacing: 8,
+      runSpacing: 4,
+      children: [
+        if (hasFormCues) _buildFormCuesChip(context),
+        if (hasSessionNotes) _buildSessionNotesChip(context),
+      ],
+    );
+  }
+
+  /// Builds "Add notes" chip when no notes exist
+  Widget _buildAddNotesChip(BuildContext context) {
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        onTap: () {
+          HapticFeedback.lightImpact();
+          onEditNotes();
+        },
+        borderRadius: BorderRadius.circular(12),
+        child: Ink(
+          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+          decoration: BoxDecoration(
+            color: context.colors.surfaceContainerHighest.withValues(alpha: 0.5),
+            borderRadius: BorderRadius.circular(12),
+            border: Border.all(
+              color: context.colors.outline.withValues(alpha: 0.2),
+            ),
+          ),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              SemanticIcon(
+                icon: AppIcons.add,
+                semanticLabel: context.l10n.notes,
+                size: AppIconSize.tiny,
+                color: context.colors.onSurfaceVariant,
+              ),
+              const SizedBox(width: 4),
+              Text(
+                context.l10n.notes,
+                style: context.textTheme.labelSmall?.copyWith(
+                  color: context.colors.onSurfaceVariant,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  /// Builds Form Cues chip (prominent style - persistent technique reminders)
+  Widget _buildFormCuesChip(BuildContext context) {
+    final preview = ExerciseNotesHandler.formatNotesPreview(formCues, maxLength: 35);
+
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        onTap: () {
+          HapticFeedback.lightImpact();
+          onEditNotes();
+        },
+        borderRadius: BorderRadius.circular(12),
+        child: Ink(
+          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+          decoration: BoxDecoration(
+            color: context.colors.primaryContainer.withValues(alpha: 0.4),
+            borderRadius: BorderRadius.circular(12),
+            border: Border.all(
+              color: context.colors.primary.withValues(alpha: 0.3),
+              width: 1.5,
+            ),
+          ),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              SemanticIcon(
+                icon: AppIcons.lightbulb,
+                semanticLabel: context.l10n.formCues,
+                size: AppIconSize.tiny,
+                color: context.colors.primary,
+              ),
+              const SizedBox(width: 4),
+              Flexible(
+                child: Text(
+                  preview,
+                  style: context.textTheme.labelSmall?.copyWith(
+                    color: context.colors.primary,
+                    fontWeight: FontWeight.w600,
+                  ),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  /// Builds Session Notes chip (subtle style - per-workout notes)
+  Widget _buildSessionNotesChip(BuildContext context) {
+    final preview = ExerciseNotesHandler.formatNotesPreview(exercise.notes, maxLength: 30);
 
     return Material(
       color: Colors.transparent,
@@ -535,14 +650,14 @@ class ExerciseListItemHeader extends StatelessWidget {
             children: [
               SemanticIcon(
                 icon: AppIcons.noteAlt,
-                semanticLabel: context.l10n.notes,
+                semanticLabel: context.l10n.sessionNotes,
                 size: AppIconSize.tiny,
                 color: context.colors.tertiary,
               ),
               const SizedBox(width: 4),
               Flexible(
                 child: Text(
-                  notesPreview,
+                  preview,
                   style: context.textTheme.labelSmall?.copyWith(
                     color: context.colors.tertiary,
                     fontWeight: FontWeight.w500,
@@ -550,13 +665,6 @@ class ExerciseListItemHeader extends StatelessWidget {
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                 ),
-              ),
-              const SizedBox(width: 4),
-              SemanticIcon(
-                icon: AppIcons.edit,
-                semanticLabel: context.l10n.edit,
-                size: AppIconSize.tiny,
-                color: context.colors.tertiary.withValues(alpha: 0.7),
               ),
             ],
           ),

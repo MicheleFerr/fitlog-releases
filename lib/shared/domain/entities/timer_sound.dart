@@ -28,9 +28,9 @@ enum TimerSound {
   /// Check if file exists in assets
   bool get isAssetSound => true;
   
-  /// Get localized display name (placeholder for future localization)
+  /// Get localized display name
+  /// Note: Currently returns displayName as-is; localization to be added when needed
   String getLocalizedName() {
-    // TODO: Implement with AppLocalizations when needed
     return displayName;
   }
 }

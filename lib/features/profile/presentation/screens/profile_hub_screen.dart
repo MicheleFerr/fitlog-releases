@@ -27,6 +27,7 @@ import 'package:gymbro_flutter_new/features/profile/presentation/widgets/weekly_
 import 'package:gymbro_flutter_new/features/profile/presentation/providers/user_goals_provider.dart';
 import 'package:gymbro_flutter_new/features/history/presentation/widgets/workout_detail_modal.dart';
 
+import 'package:gymbro_flutter_new/shared/presentation/services/snackbar_service.dart';
 /// Profile hub screen - Apple Fitness+ style design
 ///
 /// Features:
@@ -299,9 +300,7 @@ class _VolumeGoalEditSheetState extends State<_VolumeGoalEditSheet> {
                 final value = text.isEmpty ? null : double.tryParse(text);
                 await widget.onSave(value);
                 if (context.mounted) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text(context.l10n.goalSaved)),
-                  );
+                  SnackBarService.showInfo(context, context.l10n.goalSaved);
                   Navigator.of(context).pop();
                 }
               },

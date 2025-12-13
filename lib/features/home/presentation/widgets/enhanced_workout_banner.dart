@@ -10,6 +10,7 @@ import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/services/snackbar_service.dart';
 
 /// Enhanced workout banner that shows active workout status
 class EnhancedWorkoutBanner extends ConsumerWidget {
@@ -274,22 +275,7 @@ class EnhancedWorkoutBanner extends ConsumerWidget {
               }
 
               ref.read(currentWorkoutProvider.notifier).clearWorkout();
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Row(
-                    children: [
-                      Icon(AppIcons.deleteOutline, color: context.colors.surface),
-                      const SizedBox(width: 8),
-                      Text(l10n.workoutDiscarded),
-                    ],
-                  ),
-                  backgroundColor: theme.colorScheme.error,
-                  behavior: SnackBarBehavior.floating,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                ),
-              );
+              SnackBarService.showError(context, l10n.workoutDiscarded);
             },
             icon: const SemanticIcon(
   icon: AppIcons.deleteOutline,
@@ -307,22 +293,7 @@ class EnhancedWorkoutBanner extends ConsumerWidget {
               Navigator.pop(dialogContext);
               ref.read(currentWorkoutProvider.notifier).completeWorkout();
 
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Row(
-                    children: [
-                      Icon(AppIcons.complete, color: context.colors.surface),
-                      const SizedBox(width: 8),
-                      Text(l10n.workoutSavedSuccessfully),
-                    ],
-                  ),
-                  backgroundColor: theme.colorScheme.primary,
-                  behavior: SnackBarBehavior.floating,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                ),
-              );
+              SnackBarService.showSuccess(context, l10n.workoutSavedSuccessfully);
 
               Future.delayed(const Duration(milliseconds: 500), () {
                 ref.read(currentWorkoutProvider.notifier).clearWorkout();

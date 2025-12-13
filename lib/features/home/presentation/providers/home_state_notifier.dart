@@ -1,13 +1,11 @@
 import 'dart:async';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/features/home/presentation/providers/home_state.dart';
-import 'package:gymbro_flutter_new/features/home/presentation/providers/performance_logger.dart';
 import 'package:gymbro_flutter_new/features/auth/presentation/providers/auth_provider.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/providers/workout_provider.dart';
 
 class HomeStateNotifier extends AutoDisposeNotifier<HomeState> {
   Ref get _ref => ref;
-  late final PerformanceLogger _logger;
   Timer? _refreshTimer;
   bool _disposed = false;
 
@@ -16,8 +14,6 @@ class HomeStateNotifier extends AutoDisposeNotifier<HomeState> {
 
   @override
   HomeState build() {
-    _logger = ref.watch(performanceLoggerProvider);
-
     // Cleanup timer and set disposed on dispose
     ref.onDispose(() {
       _disposed = true;
@@ -66,8 +62,6 @@ class HomeStateNotifier extends AutoDisposeNotifier<HomeState> {
           'critical': stopwatch.elapsed,
         },
       );
-
-      _logger.logDataFetch('critical_data', stopwatch.elapsed, 100);
     } catch (e) {
       _handleError(e, 'critical');
     }
@@ -88,8 +82,6 @@ class HomeStateNotifier extends AutoDisposeNotifier<HomeState> {
           'secondary': stopwatch.elapsed,
         },
       );
-
-      _logger.logDataFetch('secondary_data', stopwatch.elapsed, 150);
     } catch (e) {
       _handleError(e, 'secondary');
     }
@@ -181,7 +173,5 @@ class HomeStateNotifier extends AutoDisposeNotifier<HomeState> {
       errorMessage: 'Failed to load $section: $error',
       loadingPhase: LoadingPhase.error,
     );
-
-    _logger.logDataFetch('${section}_error', Duration.zero, 0);
   }
 }

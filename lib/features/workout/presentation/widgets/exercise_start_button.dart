@@ -21,7 +21,6 @@ import 'dart:async';
 import 'package:gymbro_flutter_new/features/workout/presentation/providers/set_duration_tracker_provider.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
-import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
 
 class ExerciseStartButton extends ConsumerStatefulWidget {
   

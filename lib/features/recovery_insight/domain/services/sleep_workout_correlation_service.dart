@@ -10,7 +10,6 @@
 /// - Skein et al. 2011: Cumulative decline with consecutive sleep restriction
 library;
 
-import 'dart:math' as math;
 
 import 'package:flutter/foundation.dart';
 import 'package:gymbro_flutter_new/features/recovery_insight/domain/entities/recovery_insight.dart';
@@ -99,6 +98,9 @@ class SleepWorkoutCorrelationService {
       correlation: correlation,
       calculatedAt: DateTime.now(),
       hasSleepData: true,
+      baseScore: baseScore,
+      sleepModifier: sleepModifier,
+      consecutivePenalty: consecutivePenalty,
     );
   }
 
@@ -127,6 +129,7 @@ class SleepWorkoutCorrelationService {
 
       // Find previous night's sleep
       final workoutDate = workout.completedAt;
+      if (workoutDate == null) continue; // Skip workouts without completion date
       final previousNight = _findPreviousNightSleep(sleepHistory, workoutDate);
 
       if (previousNight != null) {
@@ -136,7 +139,7 @@ class SleepWorkoutCorrelationService {
           workoutDate: workoutDate,
           sleepHours: previousNight.asleepHours,
           workoutVolume: volume,
-          workoutDurationMinutes: workout.duration.inMinutes,
+          workoutDurationMinutes: workout.duration?.inMinutes ?? 0,
           exerciseCount: workout.exercises.length,
         ));
       }
@@ -204,14 +207,22 @@ class SleepWorkoutCorrelationService {
       return 75; // Default "good" when no workout data
     }
 
-    // Sort by date descending
-    final sorted = List<Workout>.from(workoutHistory)
-      ..sort((a, b) => b.completedAt.compareTo(a.completedAt));
+    // Filter to only workouts with completion dates and sort by date descending
+    final completedWorkouts = workoutHistory
+        .where((w) => w.completedAt != null)
+        .toList();
+
+    if (completedWorkouts.isEmpty) {
+      return 75; // Default "good" when no completed workouts
+    }
+
+    final sorted = completedWorkouts
+      ..sort((a, b) => b.completedAt!.compareTo(a.completedAt!));
 
     // Days since last workout (optimal: 1-3 days)
     final lastWorkout = sorted.first;
     final daysSinceLastWorkout =
-        DateTime.now().difference(lastWorkout.completedAt).inDays;
+        DateTime.now().difference(lastWorkout.completedAt!).inDays;
 
     double daysScore;
     if (daysSinceLastWorkout <= 1) {
@@ -227,7 +238,7 @@ class SleepWorkoutCorrelationService {
     // Weekly frequency (last 7 days)
     final weekAgo = DateTime.now().subtract(const Duration(days: 7));
     final workoutsThisWeek =
-        sorted.where((w) => w.completedAt.isAfter(weekAgo)).length;
+        sorted.where((w) => w.completedAt!.isAfter(weekAgo)).length;
 
     double frequencyScore;
     if (workoutsThisWeek >= 4) {
@@ -243,7 +254,7 @@ class SleepWorkoutCorrelationService {
     // Consistency (workouts in last 14 days)
     final twoWeeksAgo = DateTime.now().subtract(const Duration(days: 14));
     final workoutsLastTwoWeeks =
-        sorted.where((w) => w.completedAt.isAfter(twoWeeksAgo)).length;
+        sorted.where((w) => w.completedAt!.isAfter(twoWeeksAgo)).length;
 
     double consistencyScore;
     if (workoutsLastTwoWeeks >= 6) {
@@ -388,7 +399,11 @@ class SleepWorkoutCorrelationService {
         dataPoints.length;
   }
 
-  /// Get recommendation text based on recovery state
+  /// Get recommendation KEY based on recovery state
+  ///
+  /// Returns a key string that should be localized in presentation layer.
+  /// Keys: 'consecutive_bad_3', 'consecutive_bad_2', 'optimal', 'good',
+  ///       'moderate', 'low', 'critical'
   String _getRecommendation(
     RecoveryCategory category,
     double avgSleepHours,
@@ -396,25 +411,14 @@ class SleepWorkoutCorrelationService {
   ) {
     // Prioritize consecutive bad nights warning
     if (consecutiveBadNights >= 3) {
-      return 'Prioritizza il riposo. ${consecutiveBadNights} notti consecutive sotto 6h.';
+      return 'consecutive_bad_3:$consecutiveBadNights';
     }
 
     if (consecutiveBadNights >= 2) {
-      return 'Recupero in corso. Considera allenamento leggero.';
+      return 'consecutive_bad_2';
     }
 
     // Then use category-based recommendations
-    switch (category) {
-      case RecoveryCategory.optimal:
-        return 'Ottimo recupero! Pronto per allenamento intenso.';
-      case RecoveryCategory.good:
-        return 'Buon recupero. Pronto per allenamento normale.';
-      case RecoveryCategory.moderate:
-        return 'Recupero moderato. Considera allenamento leggero.';
-      case RecoveryCategory.low:
-        return 'Recupero in corso. Prioritizza il riposo oggi.';
-      case RecoveryCategory.critical:
-        return 'Corpo in recupero. Giornata di riposo consigliata.';
-    }
+    return category.name;
   }
 }

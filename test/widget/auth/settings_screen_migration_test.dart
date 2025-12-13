@@ -83,8 +83,8 @@ void main() {
               child: Column(
                 children: [
                   const Text('Account'),
-                  Text(freeUser.displayName ?? 'No Name'),
-                  Text(freeUser.email ?? 'No Email'),
+                  Text(freeUser.displayName),
+                  Text(freeUser.email),
                   if (freeUser.accountTier == AccountTier.free)
                     const Text('FREE'),
                 ],
@@ -115,8 +115,8 @@ void main() {
               child: Column(
                 children: [
                   const Text('Account'),
-                  Text(premiumUser.displayName ?? 'No Name'),
-                  Text(premiumUser.email ?? 'No Email'),
+                  Text(premiumUser.displayName),
+                  Text(premiumUser.email),
                   if (premiumUser.accountTier == AccountTier.premium) ...[
                     const Text('PREMIUM'),
                     const Icon(Icons.cloud_sync),
@@ -150,7 +150,7 @@ void main() {
             body: Card(
               child: Column(
                 children: [
-                  Text(adminUser.displayName ?? 'No Name'),
+                  Text(adminUser.displayName),
                   if (isAdmin) ...[
                     const Text('ADMIN'),
                     const Text('🔧 Admin Tools'),
@@ -181,7 +181,7 @@ void main() {
               children: [
                 // Test the logic without actually loading the image
                 Text('Has Photo: ${userWithPhoto.photoURL != null}'),
-                Text(userWithPhoto.displayName ?? 'No Name'),
+                Text(userWithPhoto.displayName),
               ],
             ),
           ),
@@ -352,7 +352,7 @@ void main() {
           child: Scaffold(
             body: Column(
               children: [
-                Text(freeUser.displayName ?? 'No Name'),
+                Text(freeUser.displayName),
                 if (canSync) ...[
                   const Text('Cloud Sync'),
                   const Icon(Icons.cloud_sync),
@@ -378,7 +378,7 @@ void main() {
           child: Scaffold(
             body: Column(
               children: [
-                Text(premiumUser.displayName ?? 'No Name'),
+                Text(premiumUser.displayName),
                 if (canSync) ...[
                   const Text('Cloud Sync'),
                   const Icon(Icons.cloud_sync),
@@ -445,8 +445,8 @@ void main() {
           child: Scaffold(
             body: Column(
               children: [
-                Text(minimalUser.displayName ?? 'No Name'),
-                Text(minimalUser.email.isNotEmpty == true ? minimalUser.email : 'No Email'),
+                Text(minimalUser.displayName),
+                Text(minimalUser.email.isNotEmpty ? minimalUser.email : 'No Email'),
               ],
             ),
           ),

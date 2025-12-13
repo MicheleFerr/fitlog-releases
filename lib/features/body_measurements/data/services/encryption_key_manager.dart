@@ -181,7 +181,19 @@ class EncryptionKeyManager {
   }) async {
     try {
       // Get latest key metadata
-      final metadataResult = await _getKeyMetadata(userId);
+      var metadataResult = await _getKeyMetadata(userId);
+
+      // Auto-generate key if not found
+      if (metadataResult.isLeft()) {
+        final generateResult = await generateKeyForUser(userId);
+        if (generateResult.isLeft()) {
+          return Left(generateResult.fold(
+            (failure) => failure,
+            (_) => throw Exception('Unexpected state'),
+          ));
+        }
+        metadataResult = await _getKeyMetadata(userId);
+      }
 
       return await metadataResult.fold(
         (failure) => Left(failure),

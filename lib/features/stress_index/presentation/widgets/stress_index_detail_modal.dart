@@ -37,7 +37,7 @@ class StressIndexDetailModal extends StatelessWidget {
       maxChildSize: 0.9,
       minChildSize: 0.4,
       builder: (context, scrollController) {
-        return Container(
+        return DecoratedBox(
           decoration: BoxDecoration(
             color: context.colors.surface,
             borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),

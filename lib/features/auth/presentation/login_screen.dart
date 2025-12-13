@@ -6,7 +6,7 @@ import 'dart:io';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/services/snackbar_service.dart';
 import 'package:gymbro_flutter_new/features/auth/presentation/providers/auth_provider.dart';
-import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator.dart';
 
 class LoginScreen extends ConsumerStatefulWidget {
   const LoginScreen({super.key});
@@ -191,7 +191,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                               ? const SizedBox(
                                   height: 20,
                                   width: 20,
-                                  child: CircularProgressIndicator(strokeWidth: 2),
+                                  child: LoadingIndicator(),
                                 )
                               : Text(context.l10n.signInButton),
                         ),
@@ -224,7 +224,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                         ? const SizedBox(
                             height: 20,
                             width: 20,
-                            child: CircularProgressIndicator(strokeWidth: 2),
+                            child: LoadingIndicator(),
                           )
                         : const Icon(AppIcons.gMobiledata, size: 24),
                     label: Text(context.l10n.signInWithGoogle),
@@ -247,7 +247,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                           ? const SizedBox(
                               height: 20,
                               width: 20,
-                              child: CircularProgressIndicator(strokeWidth: 2),
+                              child: LoadingIndicator(),
                             )
                           : const Icon(AppIcons.apple),
                       label: Text(context.l10n.signInWithApple),

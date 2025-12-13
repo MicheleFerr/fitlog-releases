@@ -1,9 +1,8 @@
-import 'dart:convert';
-import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise.dart';
 import 'package:gymbro_flutter_new/shared/presentation/providers/app_config_provider.dart';
 import 'package:gymbro_flutter_new/shared/domain/converters/exercise_converter.dart';
+import 'package:gymbro_flutter_new/features/exercise_database/data/utils/exercise_json_loader.dart';
 
 /// Provider che carica gli esercizi dal file JSON
 /// 🔧 MEMORY FIX: Added autoDispose to prevent memory leaks
@@ -13,14 +12,8 @@ final exerciseJsonProvider = FutureProvider.autoDispose<List<Exercise>>((ref) as
     // Get current locale
     final locale = ref.watch(localeProvider);
 
-    // Load the correct JSON file based on locale
-    final String fileName = locale.languageCode == 'it'
-        ? 'assets/data/exercises_it.json'
-        : 'assets/data/exercises.json';
-
-    // Carica il file JSON
-    final String jsonString = await rootBundle.loadString(fileName);
-    final List<dynamic> jsonData = json.decode(jsonString);
+    // Carica da nuova struttura a cartelle
+    final jsonData = await ExerciseJsonLoader.loadExercises(locale.languageCode);
     
     // Converte in Exercise entities
     final exercises = jsonData.map((item) {

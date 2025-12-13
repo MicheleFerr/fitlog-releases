@@ -7,6 +7,7 @@ import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator.dart';
 
 /// Widget di debug per mostrare gli allenamenti salvati in Firestore
 class WorkoutSaveDebug extends ConsumerWidget {
@@ -73,7 +74,7 @@ class WorkoutSaveDebug extends ConsumerWidget {
               SizedBox(
                 width: 20,
                 height: 20,
-                child: CircularProgressIndicator(strokeWidth: 2),
+                child: LoadingIndicator(size: 20, strokeWidth: 2),
               ),
               SizedBox(width: 12),
               Text('Caricamento utente...'),
@@ -127,7 +128,7 @@ class WorkoutSaveDebug extends ConsumerWidget {
                       .getUserActivities(userId: userEmail, limit: 20),
                   builder: (context, snapshot) {
                     if (snapshot.connectionState == ConnectionState.waiting) {
-                      return const Center(child: CircularProgressIndicator());
+                      return const Center(child: LoadingIndicator());
                     }
                     
                     if (snapshot.hasError) {

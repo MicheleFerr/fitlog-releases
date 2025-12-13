@@ -10,7 +10,7 @@ import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
-import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/services/snackbar_service.dart';
 
 /// Debug logger for widget
 class _WidgetLogger {
@@ -539,31 +539,16 @@ class ProgressDashboard extends ConsumerWidget {
   
   void _showStreakInfo(BuildContext context) {
     HapticFeedback.selectionClick();
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(AppLocalizations.of(context).streakInfo),
-        behavior: SnackBarBehavior.floating,
-      ),
-    );
+    SnackBarService.showInfo(context, AppLocalizations.of(context).streakInfo);
   }
   
   void _showWorkoutsInfo(BuildContext context) {
     HapticFeedback.selectionClick();
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(AppLocalizations.of(context).totalWorkoutsInfo),
-        behavior: SnackBarBehavior.floating,
-      ),
-    );
+    SnackBarService.showInfo(context, AppLocalizations.of(context).totalWorkoutsInfo);
   }
   
   void _showFrequencyInfo(BuildContext context) {
     HapticFeedback.selectionClick();
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(AppLocalizations.of(context).weeklyFrequencyInfo),
-        behavior: SnackBarBehavior.floating,
-      ),
-    );
+    SnackBarService.showInfo(context, AppLocalizations.of(context).weeklyFrequencyInfo);
   }
 }

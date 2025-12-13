@@ -134,14 +134,14 @@ final importNotifierProvider = StateNotifierProvider<ImportNotifier, ImportState
 /// Provider for available source apps
 final importSourceAppsProvider = Provider<List<ImportSourceApp>>((ref) {
   return [
-    ImportSourceApp(
+    const ImportSourceApp(
       id: 'strong',
       name: 'Strong',
       description: 'Import from Strong app CSV export',
       iconPath: 'assets/icons/strong_logo.png', // TODO: Add icon
       isSupported: true,
     ),
-    ImportSourceApp(
+    const ImportSourceApp(
       id: 'hevy',
       name: 'Hevy',
       description: 'Import from Hevy app CSV export',

@@ -175,15 +175,32 @@ class OneRMCalculator {
     final percentage = (weight / estimated1RM) * 100;
 
     // Based on strength training standards
-    if (reps == 1 && percentage > 100) return percentage <= 105; // Allow 5% variance
-    if (reps <= 3 && percentage > 93) return false;
-    if (reps <= 5 && percentage > 87) return false;
-    if (reps <= 8 && percentage > 80) return false;
-    if (reps <= 12 && percentage > 70) return false;
-    if (reps <= 15 && percentage > 65) return false;
-    if (reps <= 20 && percentage > 60) return false;
+    // Using specific ranges to avoid overlapping conditions
+    if (reps == 1) {
+      // 1 rep: Allow up to 105% (adrenaline/PR variance)
+      return percentage <= 105;
+    } else if (reps <= 3) {
+      // 2-3 reps: Max 93% of 1RM
+      return percentage <= 93;
+    } else if (reps <= 5) {
+      // 4-5 reps: Max 87% of 1RM
+      return percentage <= 87;
+    } else if (reps <= 8) {
+      // 6-8 reps: Max 80% of 1RM
+      return percentage <= 80;
+    } else if (reps <= 12) {
+      // 9-12 reps: Max 70% of 1RM
+      return percentage <= 70;
+    } else if (reps <= 15) {
+      // 13-15 reps: Max 65% of 1RM
+      return percentage <= 65;
+    } else if (reps <= 20) {
+      // 16-20 reps: Max 60% of 1RM
+      return percentage <= 60;
+    }
 
-    return true;
+    // Above 20 reps: too high to validate reliably, reject
+    return false;
   }
 }
 

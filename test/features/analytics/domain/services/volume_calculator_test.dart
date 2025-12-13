@@ -1,5 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:gymbro_flutter_new/features/analytics/domain/services/volume_calculator.dart';
+import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise_activity.dart';
 
 void main() {
@@ -31,6 +32,7 @@ void main() {
     String exerciseId = 'exercise-1',
     String exerciseName = 'Bench Press',
     String schedaName = 'Test Workout',
+    ExerciseCategory category = ExerciseCategory.chest,
     required List<ExerciseActivitySet> sets,
     DateTime? createdAt,
     DateTime? lastModified,
@@ -41,6 +43,7 @@ void main() {
       exerciseId: exerciseId,
       exerciseName: exerciseName,
       schedaName: schedaName,
+      category: category,
       sets: sets,
       createdAt: createdAt ?? DateTime.now(),
       lastModified: lastModified ?? DateTime.now(),

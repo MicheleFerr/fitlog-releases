@@ -78,8 +78,6 @@ class _PatchSubmissionDialogState
       'difficolta': 'Difficulty',
       'mobilitaPre': 'Pre-Mobility',
       'attivazionePre': 'Pre-Activation',
-      'warmupSets': 'Warmup Sets',
-      'tempoWarmup': 'Warmup Time',
     };
   }
 
@@ -106,10 +104,6 @@ class _PatchSubmissionDialogState
         return widget.exercise.mobilitaPre ?? '-';
       case 'attivazionePre':
         return widget.exercise.attivazionePre ?? '-';
-      case 'warmupSets':
-        return widget.exercise.warmupSets ?? '-';
-      case 'tempoWarmup':
-        return widget.exercise.tempoWarmup ?? '-';
       default:
         return '-';
     }
@@ -371,7 +365,7 @@ class _PatchSubmissionDialogState
       initialValue: _selectedField,
       decoration: InputDecoration(
         labelText: l10n.selectFieldToCorrect,
-        prefixIcon: Icon(AppIcons.edit, size: AppIconSize.medium),
+        prefixIcon: const Icon(AppIcons.edit, size: AppIconSize.medium),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
         ),
@@ -444,7 +438,7 @@ class _PatchSubmissionDialogState
       decoration: InputDecoration(
         labelText: l10n.newValue,
         hintText: l10n.enterCorrectedValue,
-        prefixIcon: Icon(AppIcons.check, size: AppIconSize.medium),
+        prefixIcon: const Icon(AppIcons.check, size: AppIconSize.medium),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
         ),
@@ -468,7 +462,7 @@ class _PatchSubmissionDialogState
       decoration: InputDecoration(
         labelText: l10n.reason,
         hintText: l10n.explainWhyCorrection,
-        prefixIcon: Icon(AppIcons.edit, size: AppIconSize.medium),
+        prefixIcon: const Icon(AppIcons.edit, size: AppIconSize.medium),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
         ),
@@ -507,7 +501,7 @@ class _PatchSubmissionDialogState
             : Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Icon(AppIcons.send, size: AppIconSize.small),
+                  const Icon(AppIcons.send, size: AppIconSize.small),
                   const SizedBox(width: 8),
                   Text(
                     l10n.submitCorrection,

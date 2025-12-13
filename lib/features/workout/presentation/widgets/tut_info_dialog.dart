@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:gymbro_flutter_new/features/exercise_database/domain/services/tut_decoder_service.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
@@ -25,7 +26,9 @@ class TutInfoBottomSheet extends StatelessWidget {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
     final theme = Theme.of(context);
-    final phases = _parseTutValue(tutValue);
+    // ✅ Use centralized TutDecoderService instead of local parsing
+    final decoded = TutDecoderService.decodeComplete(tutValue);
+    final phases = decoded?.phases ?? [];
 
     return DraggableScrollableSheet(
       initialChildSize: 0.7,
@@ -65,7 +68,7 @@ class TutInfoBottomSheet extends StatelessWidget {
                       const SizedBox(width: 12),
                       Expanded(
                         child: Text(
-                          l10n.tutTitle ?? 'TUT Info',
+                          l10n.tutTitle,
                           style: theme.textTheme.headlineSmall?.copyWith(
                             fontWeight: FontWeight.bold,
                             color: theme.colorScheme.onSurface,
@@ -110,7 +113,7 @@ class TutInfoBottomSheet extends StatelessWidget {
                         ),
                         const SizedBox(height: 8),
                         Text(
-                          _formatTutDisplay(phases),
+                          decoded?.code ?? tutValue,
                           style: theme.textTheme.headlineMedium?.copyWith(
                             color: theme.colorScheme.primary,
                             fontWeight: FontWeight.bold,
@@ -145,52 +148,55 @@ class TutInfoBottomSheet extends StatelessWidget {
 
                   const SizedBox(height: 16),
 
-                  // Individual Phases
-                  _buildPhaseInfo(
-                    theme: theme,
-                    l10n: l10n,
-                    icon: AppIcons.arrowDownward,
-                    label: l10n.tutEccentricPhase,
-                    description: l10n.tutEccentricFullDescription,
-                    value: phases.eccentric,
-                    color: theme.colorScheme.error,
-                  ),
+                  // Individual Phases - Using TutDecoderService phases
+                  // phases order: [0: eccentric, 1: bottomPause, 2: concentric, 3: topPause]
+                  if (phases.length >= 4) ...[
+                    _buildPhaseInfo(
+                      theme: theme,
+                      l10n: l10n,
+                      icon: AppIcons.arrowDownward,
+                      label: l10n.tutEccentricPhase,
+                      description: l10n.tutEccentricFullDescription,
+                      value: phases[0].displayText,
+                      color: theme.colorScheme.error,
+                    ),
 
-                  const SizedBox(height: 12),
+                    const SizedBox(height: 12),
 
-                  _buildPhaseInfo(
-                    theme: theme,
-                    l10n: l10n,
-                    icon: AppIcons.pause,
-                    label: l10n.tutBottomPausePhase,
-                    description: l10n.tutBottomPauseFullDescription,
-                    value: phases.bottomPause,
-                    color: theme.colorScheme.tertiary,
-                  ),
+                    _buildPhaseInfo(
+                      theme: theme,
+                      l10n: l10n,
+                      icon: AppIcons.pause,
+                      label: l10n.tutBottomPausePhase,
+                      description: l10n.tutBottomPauseFullDescription,
+                      value: phases[1].displayText,
+                      color: theme.colorScheme.tertiary,
+                    ),
 
-                  const SizedBox(height: 12),
+                    const SizedBox(height: 12),
 
-                  _buildPhaseInfo(
-                    theme: theme,
-                    l10n: l10n,
-                    icon: AppIcons.arrowUpward,
-                    label: l10n.tutConcentricPhase,
-                    description: l10n.tutConcentricFullDescription,
-                    value: phases.concentric,
-                    color: theme.colorScheme.secondary,
-                  ),
+                    _buildPhaseInfo(
+                      theme: theme,
+                      l10n: l10n,
+                      icon: AppIcons.arrowUpward,
+                      label: l10n.tutConcentricPhase,
+                      description: l10n.tutConcentricFullDescription,
+                      value: phases[2].displayText,
+                      color: theme.colorScheme.secondary,
+                    ),
 
-                  const SizedBox(height: 12),
+                    const SizedBox(height: 12),
 
-                  _buildPhaseInfo(
-                    theme: theme,
-                    l10n: l10n,
-                    icon: AppIcons.stop,
-                    label: l10n.tutTopPausePhase,
-                    description: l10n.tutTopPauseFullDescription,
-                    value: phases.topPause,
-                    color: theme.colorScheme.primary,
-                  ),
+                    _buildPhaseInfo(
+                      theme: theme,
+                      l10n: l10n,
+                      icon: AppIcons.stop,
+                      label: l10n.tutTopPausePhase,
+                      description: l10n.tutTopPauseFullDescription,
+                      value: phases[3].displayText,
+                      color: theme.colorScheme.primary,
+                    ),
+                  ],
 
                   const SizedBox(height: 80), // Extra space for button
                 ],
@@ -280,7 +286,7 @@ class TutInfoBottomSheet extends StatelessWidget {
                         borderRadius: BorderRadius.circular(12),
                       ),
                       child: Text(
-                        value == 'X' ? 'EXP' : '${value}s',
+                        value, // Already formatted by TutPhase.displayText
                         style: theme.textTheme.labelSmall?.copyWith(
                           color: theme.colorScheme.onPrimary,
                           fontWeight: FontWeight.bold,
@@ -305,41 +311,6 @@ class TutInfoBottomSheet extends StatelessWidget {
     );
   }
 
-  TutPhases _parseTutValue(String value) {
-    final parts = value.split('-');
-    if (parts.length != 4) {
-      return const TutPhases(
-        eccentric: '3',
-        bottomPause: '1',
-        concentric: '2',
-        topPause: '0',
-      );
-    }
-
-    return TutPhases(
-      eccentric: parts[0],
-      bottomPause: parts[1],
-      concentric: parts[2],
-      topPause: parts[3],
-    );
-  }
-
-  String _formatTutDisplay(TutPhases phases) {
-    return '${phases.eccentric}-${phases.bottomPause}-${phases.concentric}-${phases.topPause}';
-  }
-
-}
-
-class TutPhases {
-  const TutPhases({
-    required this.eccentric,
-    required this.bottomPause,
-    required this.concentric,
-    required this.topPause,
-  });
-
-  final String eccentric;
-  final String bottomPause;
-  final String concentric;
-  final String topPause;
+  // ✅ REMOVED: _parseTutValue, _formatTutDisplay, TutPhases
+  // Now using centralized TutDecoderService instead
 }

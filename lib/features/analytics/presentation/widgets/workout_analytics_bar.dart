@@ -20,6 +20,7 @@ import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_locali
 import 'package:gymbro_flutter_new/features/analytics/presentation/providers/workout_analytics_provider.dart';
 import 'package:gymbro_flutter_new/features/analytics/presentation/widgets/workout_comparison_widget.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator.dart';
 
 /// Real-time analytics bar showing key workout metrics during workout
 class WorkoutAnalyticsBar extends ConsumerWidget {
@@ -131,7 +132,7 @@ class WorkoutAnalyticsBar extends ConsumerWidget {
           const SizedBox(
             width: 16,
             height: 16,
-            child: CircularProgressIndicator(strokeWidth: 2),
+            child: LoadingIndicator(),
           ),
 
         // Expand button
@@ -211,7 +212,7 @@ class WorkoutAnalyticsBar extends ConsumerWidget {
                 child: SizedBox(
                   width: 16,
                   height: 16,
-                  child: CircularProgressIndicator(strokeWidth: 2),
+                  child: LoadingIndicator(),
                 ),
               ),
           ],

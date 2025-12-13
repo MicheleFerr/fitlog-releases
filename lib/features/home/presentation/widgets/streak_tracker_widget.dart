@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/features/analytics/presentation/providers/analytics_provider.dart';
 import 'package:gymbro_flutter_new/features/home/domain/models/home_widget_config.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator.dart';
 import 'package:intl/intl.dart';
 
 class StreakTrackerWidget extends ConsumerWidget {
@@ -88,7 +89,7 @@ class StreakTrackerWidget extends ConsumerWidget {
                   ),
                   const Spacer(),
                   if (isLoading)
-                    const CircularProgressIndicator()
+                    const LoadingIndicator()
                   else
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -251,7 +252,7 @@ class StreakTrackerWidget extends ConsumerWidget {
           width: 1,
         ),
       ),
-      child: Container(
+      child: DecoratedBox(
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(24),
           gradient: LinearGradient(
@@ -545,7 +546,7 @@ class StreakTrackerWidget extends ConsumerWidget {
                 onTap: hasWorkout 
                   ? () => _showDayDetails(context, date, activities)
                   : null,
-                child: Container(
+                child: DecoratedBox(
                   decoration: BoxDecoration(
                     color: isFuture
                       ? theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.3)

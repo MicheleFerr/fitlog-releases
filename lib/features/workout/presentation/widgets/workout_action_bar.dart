@@ -9,6 +9,7 @@ import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
 
+import 'package:gymbro_flutter_new/shared/presentation/services/snackbar_service.dart';
 /// 🎯 TIER-1 WORKOUT ACTION BAR
 /// Undo/Redo system with batch operations
 
@@ -298,8 +299,8 @@ class _OfflineIndicatorState extends State<_OfflineIndicator>
         return Container(
           padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
           decoration: BoxDecoration(
-            color: theme.colorScheme.errorContainer.withOpacity(
-              0.5 + (_pulseController.value * 0.5),
+            color: theme.colorScheme.errorContainer.withValues(
+              alpha: 0.5 + (_pulseController.value * 0.5),
             ),
             borderRadius: BorderRadius.circular(12),
           ),
@@ -689,20 +690,11 @@ class _ScreenAlwaysOnToggle extends ConsumerWidget {
             ref.read(screenWakelockProvider.notifier).toggleEnabled();
 
             // Show feedback toast
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text(
+            SnackBarService.showInfo(context, 
                   isEnabled
                     ? 'Schermo sempre acceso disattivato'
                     : 'Schermo sempre acceso attivato',
-                ),
-                duration: const Duration(seconds: 2),
-                behavior: SnackBarBehavior.floating,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(8),
-                ),
-              ),
-            );
+                );
           },
           borderRadius: BorderRadius.circular(8),
           child: Container(

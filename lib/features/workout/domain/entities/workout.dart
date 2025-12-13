@@ -70,6 +70,9 @@ abstract class Workout with _$Workout {
   bool get isActive => status == WorkoutStatus.inProgress;
   bool get isCompleted => status == WorkoutStatus.completed;
 
+  /// Alias for endTime - used by recovery_insight feature
+  DateTime? get completedAt => endTime;
+
   // Helper methods
   Workout addExercise(Exercise exercise) {
     return copyWith(

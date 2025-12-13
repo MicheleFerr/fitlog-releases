@@ -24,6 +24,7 @@ import 'package:gymbro_flutter_new/features/analytics/domain/entities/analytics_
 import 'package:gymbro_flutter_new/features/analytics/presentation/providers/analytics_feedback_provider.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator.dart';
 
 /// Widget feedback per Analytics con eligibility check
 class AnalyticsFeedbackWidget extends ConsumerStatefulWidget {
@@ -275,9 +276,7 @@ class _AnalyticsFeedbackWidgetState
                         ? const SizedBox(
                             width: 16,
                             height: 16,
-                            child: CircularProgressIndicator(
-                              strokeWidth: 2,
-                            ),
+                            child: LoadingIndicator(),
                           )
                         : const SemanticIcon(
   icon: AppIcons.send,

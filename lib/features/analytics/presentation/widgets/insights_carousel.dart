@@ -4,7 +4,6 @@ import 'package:gymbro_flutter_new/features/analytics/domain/services/insights_e
 import 'package:gymbro_flutter_new/features/analytics/domain/services/insight_localizer.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
-import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
 
 /// Carousel widget for displaying training insights
 class InsightsCarousel extends StatefulWidget {

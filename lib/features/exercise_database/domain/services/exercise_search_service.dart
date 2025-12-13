@@ -7,8 +7,7 @@
 /// - Sinonimi per categorie (push, pull, gambe, etc.)
 library;
 
-import 'dart:convert';
-import 'package:flutter/services.dart';
+import 'package:gymbro_flutter_new/features/exercise_database/data/utils/exercise_json_loader.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
 import 'package:gymbro_flutter_new/features/exercise_database/domain/entities/exercise_template.dart';
@@ -76,13 +75,7 @@ class ExerciseSearchService {
     if (_exercisesData.isNotEmpty) return;
 
     try {
-      final String fileName = localeCode == 'it'
-          ? 'assets/data/exercises_it.json'
-          : 'assets/data/exercises.json';
-
-      final String jsonString = await rootBundle.loadString(fileName);
-      final List<dynamic> jsonData = json.decode(jsonString);
-      _exercisesData = jsonData.cast<Map<String, dynamic>>();
+      _exercisesData = await ExerciseJsonLoader.loadExercises(localeCode);
     } catch (e) {
       if (kDebugMode) debugPrint('Error loading exercises: $e');
       _exercisesData = [];

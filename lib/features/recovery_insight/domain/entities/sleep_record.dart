@@ -43,20 +43,6 @@ extension SleepQualityExtension on SleepQuality {
     return SleepQuality.excessive;
   }
 
-  /// Display name for UI
-  String get displayName {
-    switch (this) {
-      case SleepQuality.critical:
-        return 'Critico';
-      case SleepQuality.suboptimal:
-        return 'Insufficiente';
-      case SleepQuality.optimal:
-        return 'Ottimale';
-      case SleepQuality.excessive:
-        return 'Eccessivo';
-    }
-  }
-
   /// Color name for theming
   String get colorName {
     switch (this) {
@@ -74,7 +60,7 @@ extension SleepQualityExtension on SleepQuality {
 
 /// A single night's sleep record
 @freezed
-class SleepRecord with _$SleepRecord {
+abstract class SleepRecord with _$SleepRecord {
   const factory SleepRecord({
     /// Date of the sleep (night of)
     required DateTime date,

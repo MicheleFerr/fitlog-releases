@@ -1,9 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'dart:convert';
-import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
-import 'package:gymbro_flutter_new/features/exercise_database/data/models/exercise_model.dart';
 import 'package:gymbro_flutter_new/features/exercise_database/domain/entities/exercise.dart';
+import 'package:gymbro_flutter_new/features/exercise_database/data/utils/exercise_json_loader.dart';
 import 'package:gymbro_flutter_new/shared/presentation/providers/app_config_provider.dart';
 
 class JsonExerciseRepository {
@@ -25,16 +23,11 @@ class JsonExerciseRepository {
     }
 
     try {
-      // Load the correct JSON file based on locale
-      final String fileName = locale.languageCode == 'it'
-          ? 'assets/data/exercises_it.json'
-          : 'assets/data/exercises.json';
-
-      final String jsonString = await rootBundle.loadString(fileName);
-      final List<dynamic> jsonList = json.decode(jsonString);
+      // Use ExerciseJsonLoader to load from folder structure
+      final jsonList = await ExerciseJsonLoader.loadExercises(locale.languageCode);
 
       _cachedExercises = jsonList
-          .map((json) => ExerciseModel.fromJson(json).toEntity())
+          .map((json) => Exercise.fromJson(json as Map<String, dynamic>))
           .toList();
 
       return _cachedExercises!;

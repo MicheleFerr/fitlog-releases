@@ -16,6 +16,7 @@ library;
 
 import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:gymbro_flutter_new/core/auth/admin_role_helper.dart';
 import 'package:gymbro_flutter_new/shared/domain/either/either.dart';
@@ -72,6 +73,11 @@ class HybridWorkoutRepositoryImpl
   // Prevents concurrent save/update/delete operations that could corrupt data
   final _workoutWriteMutex = MutexWrapper(name: 'WorkoutWrite');
 
+  // 🔄 SYNC QUEUE: Timer and connectivity for background sync
+  Timer? _syncQueueTimer;
+  StreamSubscription? _connectivitySubscription;
+  bool _isSyncInProgress = false;
+
   /// Initialize listener for user profile changes
   void _initUserProfileListener() {
     // MEMORY LEAK FIX: Assign subscription to variable for proper cleanup
@@ -80,10 +86,150 @@ class HybridWorkoutRepositoryImpl
 
       if (user != null) {
         await _loadUserProfile(user.uid);
+        // Start sync queue processing for authenticated users
+        _startSyncQueueProcessing();
       } else {
         _cachedUserProfile = null;
+        _stopSyncQueueProcessing();
       }
     });
+
+    // Listen to connectivity changes to trigger sync when back online
+    _connectivitySubscription = Connectivity().onConnectivityChanged.listen((results) {
+      if (_isDisposed) return;
+
+      // Check if we have any connectivity
+      final hasConnectivity = results.any((r) => r != ConnectivityResult.none);
+      if (hasConnectivity && _auth.currentUser != null) {
+        if (kDebugMode) {
+          debugPrint('🌐 [SyncQueue] Connectivity restored, triggering sync');
+        }
+        _scheduleSyncQueueProcessing();
+      }
+    });
+  }
+
+  /// Start periodic sync queue processing
+  void _startSyncQueueProcessing() {
+    _syncQueueTimer?.cancel();
+    // Process queue every 2 minutes
+    _syncQueueTimer = Timer.periodic(const Duration(minutes: 2), (_) {
+      _scheduleSyncQueueProcessing();
+    });
+    // Also process immediately on start
+    _scheduleSyncQueueProcessing();
+  }
+
+  /// Stop sync queue processing
+  void _stopSyncQueueProcessing() {
+    _syncQueueTimer?.cancel();
+    _syncQueueTimer = null;
+  }
+
+  /// Schedule sync queue processing (debounced)
+  void _scheduleSyncQueueProcessing() {
+    if (_isDisposed || _isSyncInProgress) return;
+
+    // Run in background without blocking
+    Future(() async {
+      await processSyncQueue();
+    });
+  }
+
+  /// Process pending items in sync queue with exponential backoff
+  ///
+  /// This method:
+  /// 1. Gets items ready for processing (respecting backoff times)
+  /// 2. Attempts to sync each item to the cloud
+  /// 3. Marks items as completed or failed with backoff
+  ///
+  /// Returns the number of successfully synced items.
+  Future<int> processSyncQueue() async {
+    if (_isDisposed) return 0;
+    if (_isSyncInProgress) return 0;
+
+    final currentUser = _auth.currentUser;
+    if (currentUser == null) return 0;
+
+    // Only premium users or admins can sync
+    if (!isPremiumUser && !(await isAdminUser)) return 0;
+
+    // Check connectivity before processing
+    if (!(await hasConnection)) {
+      if (kDebugMode) {
+        debugPrint('📴 [SyncQueue] No connection, skipping sync');
+      }
+      return 0;
+    }
+
+    _isSyncInProgress = true;
+    int syncedCount = 0;
+
+    try {
+      final pendingItems = await _localDataSource.getSyncQueueForProcessing(
+        currentUser.uid,
+      );
+
+      if (pendingItems.isEmpty) {
+        if (kDebugMode) {
+          debugPrint('✅ [SyncQueue] No pending items to sync');
+        }
+        return 0;
+      }
+
+      if (kDebugMode) {
+        debugPrint('🔄 [SyncQueue] Processing ${pendingItems.length} pending items');
+      }
+
+      for (final item in pendingItems) {
+        if (_isDisposed) break;
+
+        try {
+          await _processSyncItem(item, currentUser.uid);
+          await _localDataSource.markSyncCompleted(item.index);
+          await _localDataSource.markWorkoutAsSynced(item.workoutId, currentUser.uid);
+          syncedCount++;
+
+          if (kDebugMode) {
+            debugPrint('✅ [SyncQueue] Synced: ${item.operation} ${item.workoutId}');
+          }
+        } catch (e) {
+          await _localDataSource.markSyncFailed(item.index);
+          if (kDebugMode) {
+            debugPrint('❌ [SyncQueue] Failed: ${item.operation} ${item.workoutId} - $e');
+          }
+        }
+      }
+
+      if (kDebugMode) {
+        debugPrint('📊 [SyncQueue] Completed: $syncedCount/${pendingItems.length} items synced');
+      }
+    } finally {
+      _isSyncInProgress = false;
+    }
+
+    return syncedCount;
+  }
+
+  /// Process a single sync queue item
+  Future<void> _processSyncItem(SyncQueueItem item, String userId) async {
+    switch (item.operation) {
+      case 'create':
+      case 'update':
+        final workout = await _localDataSource.getWorkout(item.workoutId, userId);
+        if (workout != null) {
+          if (item.operation == 'create') {
+            await _remoteDataSource.saveWorkout(workout, userId);
+          } else {
+            await _remoteDataSource.updateWorkout(workout, userId);
+          }
+        }
+        break;
+
+      case 'delete':
+        await _remoteDataSource.deleteWorkout(item.workoutId, userId);
+        break;
+    }
   }
 
   /// Load user profile from Firestore
@@ -672,65 +818,39 @@ class HybridWorkoutRepositoryImpl
     }
   }
 
-  /// Sync to cloud in background (fire and forget)
+  /// Sync to cloud in background using the sync queue
+  ///
+  /// ✅ FIXED: Now uses persistent sync queue instead of fire-and-forget.
+  /// Items are already added to queue by HiveWorkoutDataSource.saveWorkout/updateWorkout.
+  /// This method just triggers queue processing.
   void _syncToCloudInBackground({
     required WorkoutModel workoutModel,
     required String userId,
     required String operation,
   }) {
-    // Run async without awaiting
-    Future(() async {
-      try {
-        if (await hasConnection) {
-          if (operation == 'save') {
-            await _remoteDataSource.saveWorkout(workoutModel, userId);
-          } else if (operation == 'update') {
-            await _remoteDataSource.updateWorkout(workoutModel, userId);
-          }
-        }
-      } catch (e) {
-        if (kDebugMode) {
-          debugPrint('Background cloud sync failed: $e');
-        }
-        // Will be retried next time
-      }
-    });
+    // Schedule queue processing - items are already in queue from datasource
+    _scheduleSyncQueueProcessing();
+
+    if (kDebugMode) {
+      debugPrint('📤 [SyncQueue] Scheduled sync for $operation: ${workoutModel.id}');
+    }
   }
 
-  /// Delete from cloud in background
+  /// Delete from cloud in background using the sync queue
+  ///
+  /// ✅ FIXED: Now uses persistent sync queue instead of fire-and-forget.
+  /// Items are already added to queue by HiveWorkoutDataSource.deleteWorkout.
+  /// This method just triggers queue processing.
   void _deleteFromCloudInBackground({
     required String workoutId,
     required String userId,
   }) {
-    Future(() async {
-      try {
-        if (await hasConnection) {
-          await _remoteDataSource.deleteWorkout(workoutId, userId);
-        }
-      } catch (e) {
-        if (kDebugMode) {
-          debugPrint('Background cloud delete failed: $e');
-        }
-      }
-    });
-  }
+    // Schedule queue processing - items are already in queue from datasource
+    _scheduleSyncQueueProcessing();
 
-  /// Complete workout in cloud in background
-  void _completeWorkoutInCloudBackground({
-    required WorkoutModel workoutModel,
-    required String userEmail,
-  }) {
-    Future(() async {
-      try {
-        if (await hasConnection) {
-          await _remoteDataSource.saveCompletedWorkout(workoutModel, userEmail);
-        }
-      } catch (e) {
-        if (kDebugMode) {
-          debugPrint('Background cloud complete workout failed: $e');
-        }
-      }
-    });
+    if (kDebugMode) {
+      debugPrint('📤 [SyncQueue] Scheduled sync for delete: $workoutId');
+    }
   }
 
   /// Update exercise set in cloud in background
@@ -907,12 +1027,22 @@ class HybridWorkoutRepositoryImpl
     _userProfileSubscription?.cancel();
     _userProfileSubscription = null;
 
-    // 3. Clear cached user profile
+    // 3. Cancel sync queue timer
+    _syncQueueTimer?.cancel();
+    _syncQueueTimer = null;
+
+    // 4. Cancel connectivity subscription
+    _connectivitySubscription?.cancel();
+    _connectivitySubscription = null;
+
+    // 5. Clear cached user profile
     _cachedUserProfile = null;
 
     if (kDebugMode) {
       debugPrint('✅ HybridWorkoutRepositoryImpl disposed');
       debugPrint('   - Auth state subscription cancelled');
+      debugPrint('   - Sync queue timer cancelled');
+      debugPrint('   - Connectivity subscription cancelled');
     }
   }
 

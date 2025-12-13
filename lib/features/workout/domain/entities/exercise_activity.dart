@@ -16,6 +16,7 @@ class ExerciseActivity {
     required this.createdAt,
     required this.lastModified,
     required this.category,
+    this.sessionNotes,
   });
 
   /// Crea ExerciseActivity da un Exercise completato
@@ -71,6 +72,7 @@ class ExerciseActivity {
       createdAt: activityDate,
       lastModified: now,
       category: exercise.category, // Add category here
+      sessionNotes: exercise.notes, // NEW: copy session notes from Exercise
     );
   }
 
@@ -96,6 +98,7 @@ class ExerciseActivity {
           (e) => e.name == data['category'],
           orElse: () => ExerciseCategory.other,
       ),
+      sessionNotes: data['sessionNotes'] as String?, // NEW: read session notes from Firestore
     );
   }
   final String id;
@@ -108,6 +111,7 @@ class ExerciseActivity {
   final DateTime createdAt;
   final DateTime lastModified;
   final ExerciseCategory category; // Added category here
+  final String? sessionNotes; // NEW: session-specific notes (copied from Exercise.notes)
 
   /// Calcola l'effort basato su reps e peso (1-5 scale)
   static int _calculateEffort(ExerciseSet set) {
@@ -168,6 +172,8 @@ class ExerciseActivity {
       'sets': sets.map((set) => set.toFirestore()).toList(),
       'createdAt': Timestamp.fromDate(createdAt),
       'lastModified': Timestamp.fromDate(lastModified),
+      'category': category.name, // Include category for completeness
+      'sessionNotes': sessionNotes, // NEW: save session notes to Firestore
     };
   }
 
@@ -181,6 +187,7 @@ class ExerciseActivity {
     DateTime? createdAt,
     DateTime? lastModified,
     ExerciseCategory? category,
+    String? sessionNotes, // NEW: allow copying with different session notes
   }) {
     return ExerciseActivity(
       id: id,
@@ -193,6 +200,7 @@ class ExerciseActivity {
       createdAt: createdAt ?? this.createdAt,
       lastModified: lastModified ?? this.lastModified,
       category: category ?? this.category,
+      sessionNotes: sessionNotes ?? this.sessionNotes, // NEW
     );
   }
 }

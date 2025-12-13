@@ -32,6 +32,8 @@ import 'package:flutter/services.dart';
 import 'package:health/health.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_colors.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator.dart';
+import 'package:gymbro_flutter_new/shared/presentation/services/snackbar_service.dart';
 
 /// HealthKit debug screen for systematic permission debugging
 class HealthKitDebugScreen extends StatefulWidget {
@@ -583,13 +585,7 @@ class _HealthKitDebugScreenState extends State<HealthKitDebugScreen> {
     await Clipboard.setData(ClipboardData(text: logsText));
 
     if (mounted) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Logs copied to clipboard (${_logs.length} lines)'),
-          duration: const Duration(seconds: 2),
-          behavior: SnackBarBehavior.floating,
-        ),
-      );
+      SnackBarService.showSuccess(context, 'Logs copied to clipboard (${_logs.length} lines)');
     }
   }
 
@@ -683,7 +679,7 @@ class _HealthKitDebugScreenState extends State<HealthKitDebugScreen> {
 
           // Logs
           Expanded(
-            child: Container(
+            child: ColoredBox(
               color: context.colors.surface,
               child: ListView.builder(
                 padding: const EdgeInsets.all(12),
@@ -734,13 +730,10 @@ class _HealthKitDebugScreenState extends State<HealthKitDebugScreen> {
                         SizedBox(
                           width: 20,
                           height: 20,
-                          child: CircularProgressIndicator(
-                            color: context.colors.onPrimary,
-                            strokeWidth: 2,
-                          ),
+                          child: LoadingIndicator(),
                         ),
-                        SizedBox(width: 12),
-                        Text(
+                        const SizedBox(width: 12),
+                        const Text(
                           'Running Tests...',
                           style: TextStyle(
                             fontSize: 16,

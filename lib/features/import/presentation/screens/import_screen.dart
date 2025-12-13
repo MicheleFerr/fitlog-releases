@@ -20,6 +20,7 @@ import 'package:gymbro_flutter_new/features/import/presentation/widgets/import_r
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator.dart';
+import 'package:gymbro_flutter_new/shared/presentation/services/snackbar_service.dart';
 
 /// Import screen for importing workout data
 class ImportScreen extends ConsumerStatefulWidget {
@@ -51,7 +52,7 @@ class _ImportScreenState extends ConsumerState<ImportScreen> {
         actions: [
           if (importState is ImportParsed)
             IconButton(
-              icon: Icon(AppIcons.refresh),
+              icon: const Icon(AppIcons.refresh),
               onPressed: () => ref.read(importNotifierProvider.notifier).reset(),
               tooltip: context.l10n.reset,
             ),
@@ -116,7 +117,7 @@ class _ImportScreenState extends ConsumerState<ImportScreen> {
           // Pick file button
           FilledButton.icon(
             onPressed: _pickAndParseFile,
-            icon: Icon(AppIcons.uploadFile),
+            icon: const Icon(AppIcons.uploadFile),
             label: Text(context.l10n.selectCsvFile),
           ),
 
@@ -411,7 +412,7 @@ class _ImportScreenState extends ConsumerState<ImportScreen> {
             const SizedBox(height: 24),
             FilledButton.icon(
               onPressed: () => ref.read(importNotifierProvider.notifier).reset(),
-              icon: Icon(AppIcons.refresh),
+              icon: const Icon(AppIcons.refresh),
               label: Text(context.l10n.tryAgain),
             ),
           ],
@@ -452,8 +453,6 @@ class _ImportScreenState extends ConsumerState<ImportScreen> {
   }
 
   void _showError(String message) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text(message)),
-    );
+    SnackBarService.showError(context, message);
   }
 }

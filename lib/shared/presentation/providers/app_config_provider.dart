@@ -708,9 +708,8 @@ final useRirModeProvider = Provider<bool>((ref) {
 });
 
 // Beta mode provider
-// TEMPORARY: Always return true to unlock premium features for all users during testing
 final betaModeEnabledProvider = Provider<bool>((ref) {
-  return true; // TODO: Revert to: ref.watch(appConfigProvider).betaModeEnabled ?? false;
+  return ref.watch(appConfigProvider).betaModeEnabled ?? false;
 });
 
 // Utility functions

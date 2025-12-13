@@ -12,6 +12,7 @@
 // import 'package:gymbro_flutter_new/features/timer/domain/models/unified_timer_state.dart';
 // import 'package:gymbro_flutter_new/shared/presentation/providers/app_config_provider.dart';
 // import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
+import 'package:gymbro_flutter_new/shared/presentation/services/snackbar_service.dart';
 //
 // /// Floating Action Button modulare per WorkoutScreen
 // /// Gestisce le azioni principali: start workout, add exercise, timer
@@ -83,11 +84,6 @@
 //     );
 //
 //     // Show snackbar feedback
-//     ScaffoldMessenger.of(context).showSnackBar(
-//       const SnackBar(
-//         content: Text('Rest timer started!'), // Simplified for now
-//         duration: Duration(seconds: 2),
-//       ),
-//     );
+//     SnackBarService.showInfo(context, 'Rest timer started!');
 //   }
 // }

@@ -6,6 +6,7 @@ import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
 import 'package:voo_logging/voo_logging.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/services/snackbar_service.dart';
 
 class DebugLogsScreen extends StatefulWidget {
   const DebugLogsScreen({super.key});
@@ -134,17 +135,10 @@ class _DebugLogsScreenState extends State<DebugLogsScreen> {
                   metadata: {'screen': 'DebugLogsScreen', 'action': 'test_log'},
                 );
                 // Show confirmation to user
-                if (context.mounted) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: Text(
-                        'VooLogger test message sent! Check console/DevTools.',
-                        style: TextStyle(color: context.colors.onPrimary),
-                      ),
-                      backgroundColor: context.colors.primary,
-                    ),
-                  );
-                }
+                SnackBarService.showSuccess(
+                  context,
+                  'VooLogger test message sent! Check console/DevTools.',
+                );
               },
               icon: const SemanticIcon(
                 icon: AppIcons.bugReport,

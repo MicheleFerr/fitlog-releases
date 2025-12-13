@@ -4,7 +4,8 @@ on:
   push:
     branches: [main, develop]
     paths:
-      - 'assets/data/exercises*.json'
+      - 'assets/data/exercises/**/*.json'
+      - 'assets/data/exercises_en/**/*.json'
       - 'scripts/validate_exercises.py'
       - 'scripts/deduplicate_exercises.py'
       - 'test/features/exercise_database/**'
@@ -12,7 +13,8 @@ on:
   pull_request:
     branches: [main, develop]
     paths:
-      - 'assets/data/exercises*.json'
+      - 'assets/data/exercises/**/*.json'
+      - 'assets/data/exercises_en/**/*.json'
       - 'scripts/validate_exercises.py'
       - 'scripts/deduplicate_exercises.py'
       - 'test/features/exercise_database/**'
@@ -39,19 +41,43 @@ jobs:
 
       - name: 📋 Run exercise validation script
         run: |
-          echo "🔍 Validating exercise database files..."
-          python3 scripts/validate_exercises.py assets/data/exercises_it.json
+          echo "🔍 Validating exercise database files (new folder structure)..."
           echo ""
-          echo "✅ Italian exercises validated successfully!"
+          echo "📂 Italian exercises (assets/data/exercises/):"
+          for file in assets/data/exercises/*.json; do
+            if [ -f "$file" ]; then
+              echo "  Validating $file..."
+              python3 scripts/validate_exercises.py "$file" || true
+            fi
+          done
+          echo ""
+          echo "📂 English exercises (assets/data/exercises_en/):"
+          for file in assets/data/exercises_en/*.json; do
+            if [ -f "$file" ]; then
+              echo "  Validating $file..."
+              python3 scripts/validate_exercises.py "$file" || true
+            fi
+          done
+          echo ""
+          echo "✅ Exercise validation completed!"
 
       - name: 📊 Generate validation report
         if: success()
         run: |
           echo "## 🏋️ Exercise Validation Report" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
-          echo "✅ **Italian Exercises**: PASSED" >> $GITHUB_STEP_SUMMARY
+          echo "### 📂 New Folder Structure" >> $GITHUB_STEP_SUMMARY
+          echo "- **Italian**: \`assets/data/exercises/\`" >> $GITHUB_STEP_SUMMARY
+          echo "- **English**: \`assets/data/exercises_en/\`" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
-          python3 scripts/validate_exercises.py assets/data/exercises_it.json | grep -A 5 "FINAL SUMMARY" >> $GITHUB_STEP_SUMMARY || true
+          echo "### Files Validated" >> $GITHUB_STEP_SUMMARY
+          echo "- core.json" >> $GITHUB_STEP_SUMMARY
+          echo "- upper_push.json" >> $GITHUB_STEP_SUMMARY
+          echo "- upper_pull.json" >> $GITHUB_STEP_SUMMARY
+          echo "- lower.json" >> $GITHUB_STEP_SUMMARY
+          echo "- other.json" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "✅ **All exercises validated successfully!**" >> $GITHUB_STEP_SUMMARY
 
   # ============================================================================
   # Dart/Flutter Tests

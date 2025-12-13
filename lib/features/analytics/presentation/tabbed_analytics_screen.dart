@@ -39,7 +39,7 @@ class TabbedAnalyticsScreen extends ConsumerWidget {
             if (Navigator.of(context).canPop()) {
               Navigator.of(context).pop();
             } else {
-              context.go('/');
+              context.go(AppRoutes.homePath);
             }
           },
         ),
@@ -152,7 +152,7 @@ class TabbedAnalyticsScreen extends ConsumerWidget {
             ),
             const SizedBox(height: 32),
             FilledButton(
-              onPressed: () => context.push('/login'),
+              onPressed: () => context.push(AppRoutes.loginPath),
               child: Text(l10n.signIn),
             ),
           ],
@@ -239,7 +239,7 @@ class TabbedAnalyticsScreen extends ConsumerWidget {
       proTip: l10n.proTipFirstWorkout,
       primaryActionLabel: l10n.startWorkout,
       primaryActionIcon: AppIcons.add,
-      onPrimaryAction: () => context.push('/workout'),
+      onPrimaryAction: () => context.push(AppRoutes.workoutPath),
     );
   }
 }

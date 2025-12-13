@@ -67,7 +67,7 @@ class HealthSyncStatusWidget extends ConsumerWidget {
     WidgetRef ref,
     HealthSyncStatus status,
   ) {
-    return Container(
+    return DecoratedBox(
       decoration: BoxDecoration(
         color: context.colors.surfaceContainerHighest,
         borderRadius: BorderRadius.circular(16),

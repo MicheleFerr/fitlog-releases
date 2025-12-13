@@ -8,6 +8,7 @@ import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart'
 import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
 import 'package:gymbro_flutter_new/shared/presentation/providers/app_config_provider.dart';
 
+import 'package:gymbro_flutter_new/shared/presentation/services/snackbar_service.dart';
 /// Modal for configuring RPE-based auto adjustment for exercises.
 class AutoAdjustmentModal extends ConsumerStatefulWidget {
 
@@ -323,12 +324,7 @@ class _AutoAdjustmentModalState extends ConsumerState<AutoAdjustmentModal> {
         final maxRPE = double.tryParse(_targetRPEMaxController.text.trim());
 
         if (minRPE == null || maxRPE == null || minRPE < 1 || maxRPE > 10 || minRPE >= maxRPE) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(context.l10n.invalidRpeRange),
-              backgroundColor: context.colors.error,
-            ),
-          );
+          SnackBarService.showError(context, context.l10n.invalidRpeRange);
           return;
         }
 
@@ -342,12 +338,7 @@ class _AutoAdjustmentModalState extends ConsumerState<AutoAdjustmentModal> {
         final targetRIR = int.tryParse(_targetRIRController.text.trim());
 
         if (targetRIR == null || targetRIR < 0 || targetRIR > 10) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(context.l10n.invalidRir),
-              backgroundColor: context.colors.error,
-            ),
-          );
+          SnackBarService.showError(context, context.l10n.invalidRir);
           return;
         }
 
@@ -363,11 +354,6 @@ class _AutoAdjustmentModalState extends ConsumerState<AutoAdjustmentModal> {
     widget.onSave(updatedExercise);
     Navigator.pop(context);
 
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(_isEnabled ? context.l10n.autoAdjustmentConfigured : context.l10n.autoAdjustmentCleared),
-        backgroundColor: context.colors.primary,
-      ),
-    );
+    SnackBarService.showSuccess(context, _isEnabled ? context.l10n.autoAdjustmentConfigured : context.l10n.autoAdjustmentCleared);
   }
 }

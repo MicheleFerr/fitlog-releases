@@ -106,15 +106,15 @@ abstract final class AppRoutes {
   static const String exerciseProgressPath = '/profile/analytics/exercise-progress';
   static const String exerciseProgressName = 'exercise-progress';
 
+  static const String exerciseProgressDetailPath = '/profile/analytics/exercise-progress/detail';
+  static const String exerciseProgressDetailName = 'exercise-progress-detail';
+
   static const String proAnalyticsPath = '/profile/analytics/pro';
   static const String proAnalyticsName = 'pro-analytics';
 
   // ═══════════════════════════════════════════════════════════════════════════
   // Settings Sub-Routes
   // ═══════════════════════════════════════════════════════════════════════════
-
-  static const String debugLogSettingsPath = '/settings/debug-log';
-  static const String debugLogSettingsName = 'debug-log-settings';
 
   static const String healthSyncPath = '/settings/health-sync';
   static const String healthSyncName = 'health-sync';
@@ -140,6 +140,9 @@ abstract final class AppRoutes {
 
   static const String templatesPath = '/templates';
   static const String templatesName = 'templates';
+
+  static const String templateDetailPath = '/templates/detail';
+  static const String templateDetailName = 'template-detail';
 
   static const String onboardingPath = '/onboarding';
   static const String onboardingName = 'onboarding';
@@ -172,6 +175,10 @@ abstract final class AppRoutes {
   /// Edit profile screen - pushed from Profile > ✏️ icon
   static const String editProfilePath = '/profile/edit';
   static const String editProfileName = 'edit-profile';
+
+  /// Premium screen - pushed from Profile or other screens
+  static const String premiumPath = '/profile/premium';
+  static const String premiumName = 'premium';
 
   // ═══════════════════════════════════════════════════════════════════════════
   // Branch Index Mapping (for StatefulShellRoute)

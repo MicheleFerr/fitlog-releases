@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:gymbro_flutter_new/features/analytics/domain/services/chart_data_service.dart';
+import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise_activity.dart';
 
 void main() {
@@ -30,6 +31,7 @@ void main() {
     String exerciseId = 'exercise-1',
     String exerciseName = 'Bench Press',
     String schedaName = 'Test Workout',
+    ExerciseCategory category = ExerciseCategory.chest,
     required List<ExerciseActivitySet> sets,
     required DateTime createdAt,
     DateTime? lastModified,
@@ -40,6 +42,7 @@ void main() {
       exerciseId: exerciseId,
       exerciseName: exerciseName,
       schedaName: schedaName,
+      category: category,
       sets: sets,
       createdAt: createdAt,
       lastModified: lastModified ?? createdAt,

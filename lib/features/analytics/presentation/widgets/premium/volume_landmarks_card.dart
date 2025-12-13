@@ -8,6 +8,7 @@ import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
+import 'package:gymbro_flutter_new/shared/presentation/services/snackbar_service.dart';
 
 /// Volume Landmarks Dashboard
 ///
@@ -1132,15 +1133,8 @@ class VolumeLandmarksCard extends StatelessWidget {
 
         // TODO: Save mapping to SharedPreferences/Hive
         // For now, show a snackbar
-        final muscleGroupName = _getMuscleGroupLocalizedName(context, selectedGroup);
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(
-              l10n.remappingComingSoon(exercise.exerciseName, muscleGroupName),
-            ),
-            duration: const Duration(seconds: 3),
-          ),
-        );
+        SnackBarService.showInfo(context, 
+              l10n.remappingComingSoon(exercise.exerciseName, muscleGroupName);
       }
     });
   }

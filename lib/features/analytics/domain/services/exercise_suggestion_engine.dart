@@ -73,25 +73,25 @@ class ExerciseSuggestionEngine {
   /// from `exercise_database` feature. For now, using hardcoded mappings.
   static final Map<String, List<_ExerciseTemplate>> _exerciseDatabase = {
     'back': [
-      _ExerciseTemplate(
+      const _ExerciseTemplate(
         name: 'Pull-ups',
         difficulty: ExerciseDifficulty.intermediate,
         equipment: ['pull_up_bar'],
         description: 'Classic compound movement for back width',
       ),
-      _ExerciseTemplate(
+      const _ExerciseTemplate(
         name: 'Barbell Row',
         difficulty: ExerciseDifficulty.intermediate,
         equipment: ['barbell'],
         description: 'Build back thickness and strength',
       ),
-      _ExerciseTemplate(
+      const _ExerciseTemplate(
         name: 'Lat Pulldown',
         difficulty: ExerciseDifficulty.beginner,
         equipment: ['cable_machine'],
         description: 'Machine alternative to pull-ups',
       ),
-      _ExerciseTemplate(
+      const _ExerciseTemplate(
         name: 'Dumbbell Row',
         difficulty: ExerciseDifficulty.beginner,
         equipment: ['dumbbells'],
@@ -99,19 +99,19 @@ class ExerciseSuggestionEngine {
       ),
     ],
     'hamstrings': [
-      _ExerciseTemplate(
+      const _ExerciseTemplate(
         name: 'Romanian Deadlift',
         difficulty: ExerciseDifficulty.intermediate,
         equipment: ['barbell'],
         description: 'Target hamstrings and glutes',
       ),
-      _ExerciseTemplate(
+      const _ExerciseTemplate(
         name: 'Leg Curl',
         difficulty: ExerciseDifficulty.beginner,
         equipment: ['leg_curl_machine'],
         description: 'Isolate hamstrings',
       ),
-      _ExerciseTemplate(
+      const _ExerciseTemplate(
         name: 'Nordic Curls',
         difficulty: ExerciseDifficulty.advanced,
         equipment: ['bodyweight'],
@@ -119,13 +119,13 @@ class ExerciseSuggestionEngine {
       ),
     ],
     'glutes': [
-      _ExerciseTemplate(
+      const _ExerciseTemplate(
         name: 'Hip Thrust',
         difficulty: ExerciseDifficulty.beginner,
         equipment: ['barbell', 'bench'],
         description: 'Best glute activation exercise',
       ),
-      _ExerciseTemplate(
+      const _ExerciseTemplate(
         name: 'Bulgarian Split Squat',
         difficulty: ExerciseDifficulty.intermediate,
         equipment: ['dumbbells', 'bench'],
@@ -133,13 +133,13 @@ class ExerciseSuggestionEngine {
       ),
     ],
     'calves': [
-      _ExerciseTemplate(
+      const _ExerciseTemplate(
         name: 'Standing Calf Raise',
         difficulty: ExerciseDifficulty.beginner,
         equipment: ['calf_raise_machine'],
         description: 'Build calf size',
       ),
-      _ExerciseTemplate(
+      const _ExerciseTemplate(
         name: 'Seated Calf Raise',
         difficulty: ExerciseDifficulty.beginner,
         equipment: ['seated_calf_machine'],
@@ -147,19 +147,19 @@ class ExerciseSuggestionEngine {
       ),
     ],
     'triceps': [
-      _ExerciseTemplate(
+      const _ExerciseTemplate(
         name: 'Close-Grip Bench Press',
         difficulty: ExerciseDifficulty.intermediate,
         equipment: ['barbell', 'bench'],
         description: 'Compound tricep builder',
       ),
-      _ExerciseTemplate(
+      const _ExerciseTemplate(
         name: 'Tricep Dips',
         difficulty: ExerciseDifficulty.intermediate,
         equipment: ['dip_bar'],
         description: 'Bodyweight tricep mass',
       ),
-      _ExerciseTemplate(
+      const _ExerciseTemplate(
         name: 'Overhead Tricep Extension',
         difficulty: ExerciseDifficulty.beginner,
         equipment: ['dumbbells'],
@@ -167,19 +167,19 @@ class ExerciseSuggestionEngine {
       ),
     ],
     'abs': [
-      _ExerciseTemplate(
+      const _ExerciseTemplate(
         name: 'Hanging Leg Raise',
         difficulty: ExerciseDifficulty.intermediate,
         equipment: ['pull_up_bar'],
         description: 'Full core activation',
       ),
-      _ExerciseTemplate(
+      const _ExerciseTemplate(
         name: 'Cable Crunch',
         difficulty: ExerciseDifficulty.beginner,
         equipment: ['cable_machine'],
         description: 'Progressive ab overload',
       ),
-      _ExerciseTemplate(
+      const _ExerciseTemplate(
         name: 'Plank Variations',
         difficulty: ExerciseDifficulty.beginner,
         equipment: ['bodyweight'],
@@ -187,19 +187,19 @@ class ExerciseSuggestionEngine {
       ),
     ],
     'shoulders': [
-      _ExerciseTemplate(
+      const _ExerciseTemplate(
         name: 'Overhead Press',
         difficulty: ExerciseDifficulty.intermediate,
         equipment: ['barbell'],
         description: 'Compound shoulder builder',
       ),
-      _ExerciseTemplate(
+      const _ExerciseTemplate(
         name: 'Lateral Raise',
         difficulty: ExerciseDifficulty.beginner,
         equipment: ['dumbbells'],
         description: 'Side delt isolation',
       ),
-      _ExerciseTemplate(
+      const _ExerciseTemplate(
         name: 'Face Pulls',
         difficulty: ExerciseDifficulty.beginner,
         equipment: ['cable_machine'],

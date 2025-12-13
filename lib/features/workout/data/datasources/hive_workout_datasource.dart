@@ -22,6 +22,39 @@ import 'package:gymbro_flutter_new/features/workout/domain/repositories/workout_
 import 'package:gymbro_flutter_new/core/data/hive_box_manager_enhanced.dart';
 import 'package:gymbro_flutter_new/core/data/hive_box_names.dart';
 
+/// Represents a sync queue item ready for processing
+class SyncQueueItem {
+  const SyncQueueItem({
+    required this.index,
+    required this.key,
+    required this.operation,
+    required this.userId,
+    required this.retryCount,
+    required this.maxRetries,
+  });
+
+  /// Index in the Hive box (for updating status)
+  final int index;
+
+  /// Key of the workout in format: userId_workoutId
+  final String key;
+
+  /// Operation type: create, update, delete
+  final String operation;
+
+  /// User ID
+  final String userId;
+
+  /// Current retry count
+  final int retryCount;
+
+  /// Maximum retries before permanent failure
+  final int maxRetries;
+
+  /// Extract workout ID from key
+  String get workoutId => key.split('_').last;
+}
+
 /// Local Hive data source for workout operations
 /// Provides fast, offline-first storage for all users
 ///
@@ -380,17 +413,140 @@ class HiveWorkoutDataSource {
   /// Add operation to sync queue for later processing
   Future<void> _addToSyncQueue(String key, String operation, String userId) async {
     final box = await _getSyncQueueBox();
-    
+
     final queueItem = {
       'key': key,
       'operation': operation, // create, update, delete
       'userId': userId,
       'timestamp': DateTime.now().toIso8601String(),
       'retryCount': 0,
+      'maxRetries': 5,
+      'nextRetryAt': DateTime.now().toIso8601String(), // Ready immediately
       'status': 'pending', // pending, processing, failed, completed
     };
-    
+
     await box.add(queueItem);
+  }
+
+  /// Get sync queue items ready for processing (respecting backoff)
+  ///
+  /// Only returns items where:
+  /// - status is 'pending' or 'failed'
+  /// - nextRetryAt <= now
+  /// - retryCount < maxRetries
+  Future<List<SyncQueueItem>> getSyncQueueForProcessing(String userId) async {
+    final box = await _getSyncQueueBox();
+    final now = DateTime.now();
+    final items = <SyncQueueItem>[];
+
+    for (var i = 0; i < box.length; i++) {
+      final item = box.getAt(i);
+      if (item == null) continue;
+
+      final itemUserId = item['userId'] as String?;
+      final status = item['status'] as String?;
+      final retryCount = (item['retryCount'] as int?) ?? 0;
+      final maxRetries = (item['maxRetries'] as int?) ?? 5;
+
+      if (itemUserId != userId) continue;
+      if (status != 'pending' && status != 'failed') continue;
+      if (retryCount >= maxRetries) continue;
+
+      // Check backoff time
+      final nextRetryAtStr = item['nextRetryAt'] as String?;
+      if (nextRetryAtStr != null) {
+        final nextRetryAt = DateTime.tryParse(nextRetryAtStr);
+        if (nextRetryAt != null && nextRetryAt.isAfter(now)) {
+          continue; // Not ready yet
+        }
+      }
+
+      items.add(SyncQueueItem(
+        index: i,
+        key: item['key'] as String,
+        operation: item['operation'] as String,
+        userId: userId,
+        retryCount: retryCount,
+        maxRetries: maxRetries,
+      ));
+    }
+
+    return items;
+  }
+
+  /// Mark sync item as failed with exponential backoff
+  ///
+  /// Backoff schedule: 1min → 2min → 4min → 8min → 16min
+  Future<void> markSyncFailed(int syncQueueIndex) async {
+    final box = await _getSyncQueueBox();
+
+    final item = box.getAt(syncQueueIndex);
+    if (item == null) return;
+
+    final retryCount = ((item['retryCount'] as int?) ?? 0) + 1;
+    final maxRetries = (item['maxRetries'] as int?) ?? 5;
+
+    if (retryCount >= maxRetries) {
+      // Max retries reached - mark as permanently failed
+      item['status'] = 'permanently_failed';
+      item['failedAt'] = DateTime.now().toIso8601String();
+      if (kDebugMode) {
+        debugPrint('❌ [SyncQueue] Item permanently failed after $retryCount retries: ${item['key']}');
+      }
+    } else {
+      // Calculate next retry with exponential backoff
+      final backoffMinutes = 1 << (retryCount - 1); // 1, 2, 4, 8, 16 minutes
+      final nextRetryAt = DateTime.now().add(Duration(minutes: backoffMinutes));
+
+      item['status'] = 'failed';
+      item['retryCount'] = retryCount;
+      item['nextRetryAt'] = nextRetryAt.toIso8601String();
+      item['lastError'] = DateTime.now().toIso8601String();
+
+      if (kDebugMode) {
+        debugPrint('⚠️ [SyncQueue] Item failed (retry $retryCount/$maxRetries), next retry in $backoffMinutes min: ${item['key']}');
+      }
+    }
+
+    await box.putAt(syncQueueIndex, item);
+  }
+
+  /// Get sync queue statistics for debugging
+  Future<Map<String, int>> getSyncQueueStats(String userId) async {
+    final box = await _getSyncQueueBox();
+
+    int pending = 0;
+    int failed = 0;
+    int completed = 0;
+    int permanentlyFailed = 0;
+
+    for (var i = 0; i < box.length; i++) {
+      final item = box.getAt(i);
+      if (item == null || item['userId'] != userId) continue;
+
+      switch (item['status']) {
+        case 'pending':
+          pending++;
+          break;
+        case 'failed':
+          failed++;
+          break;
+        case 'completed':
+          completed++;
+          break;
+        case 'permanently_failed':
+          permanentlyFailed++;
+          break;
+      }
+    }
+
+    return {
+      'pending': pending,
+      'failed': failed,
+      'completed': completed,
+      'permanentlyFailed': permanentlyFailed,
+      'total': pending + failed + completed + permanentlyFailed,
+    };
   }
 
   /// Get pending sync items for a user

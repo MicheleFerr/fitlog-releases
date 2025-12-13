@@ -2,19 +2,33 @@ import 'dart:convert';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter/services.dart' show rootBundle;
 
-// Load test data
+/// Exercise files in the new folder structure
+const _exerciseFiles = [
+  'core.json',
+  'upper_push.json',
+  'upper_pull.json',
+  'lower.json',
+  'other.json',
+];
+
+// Load test data from new folder structure
 Future<List<ExerciseModel>> _loadTestData() async {
-  const String exerciseJsonPath = 'assets/data/exercises_it.json';
-  try {
-    final String jsonData = await rootBundle.loadString(exerciseJsonPath);
-    final List<dynamic> jsonList = jsonDecode(jsonData) as List<dynamic>;
-    return jsonList
-        .map((e) => ExerciseModel.fromJson(e as Map<String, dynamic>))
-        .toList();
-  } catch (e) {
-    // If assets can't load in test, create minimal test data
-    return [];
+  const String baseFolder = 'assets/data/exercises'; // Italian folder
+  final List<ExerciseModel> allExercises = [];
+
+  for (final fileName in _exerciseFiles) {
+    try {
+      final String jsonData = await rootBundle.loadString('$baseFolder/$fileName');
+      final List<dynamic> jsonList = jsonDecode(jsonData) as List<dynamic>;
+      allExercises.addAll(
+        jsonList.map((e) => ExerciseModel.fromJson(e as Map<String, dynamic>)),
+      );
+    } catch (e) {
+      // File might not exist, skip silently
+    }
   }
+
+  return allExercises;
 }
 
 /// Exercise model for validation testing
@@ -73,12 +87,26 @@ void main() {
     late List<ExerciseModel> exercises;
 
     setUpAll(() async {
-      // Load exercise data from JSON file
-      const String exerciseJsonPath = 'assets/data/exercises_it.json';
+      // Load exercise data from new folder structure
+      const String baseFolder = 'assets/data/exercises'; // Italian folder
+      exerciseData = [];
 
       try {
-        final String jsonData = await rootBundle.loadString(exerciseJsonPath);
-        exerciseData = jsonDecode(jsonData) as List<dynamic>;
+        for (final fileName in _exerciseFiles) {
+          try {
+            final String jsonData = await rootBundle.loadString('$baseFolder/$fileName');
+            final List<dynamic> jsonList = jsonDecode(jsonData) as List<dynamic>;
+            exerciseData.addAll(jsonList);
+          } catch (e) {
+            // File might not exist, continue with others
+            print('Warning: Could not load $baseFolder/$fileName: $e');
+          }
+        }
+
+        if (exerciseData.isEmpty) {
+          fail('Failed to load any exercise JSON files from $baseFolder');
+        }
+
         exercises = exerciseData
             .map((e) => ExerciseModel.fromJson(e as Map<String, dynamic>))
             .toList();

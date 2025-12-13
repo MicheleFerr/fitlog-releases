@@ -18,6 +18,7 @@ import 'package:gymbro_flutter_new/features/admin/presentation/providers/admin_s
 import 'package:gymbro_flutter_new/features/auth/presentation/providers/auth_provider.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator.dart';
 
 class SyncDashboardScreen extends ConsumerStatefulWidget {
   const SyncDashboardScreen({super.key});
@@ -86,7 +87,7 @@ class _SyncDashboardScreenState extends ConsumerState<SyncDashboardScreen> {
         ],
       ),
       body: syncData.when(
-        loading: () => const Center(child: CircularProgressIndicator()),
+        loading: () => const Center(child: LoadingIndicator()),
         error: (error, stack) => Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,

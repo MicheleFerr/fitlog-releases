@@ -53,22 +53,6 @@ extension RecoveryCategoryExtension on RecoveryCategory {
     return RecoveryCategory.critical;
   }
 
-  /// Display name for UI
-  String get displayName {
-    switch (this) {
-      case RecoveryCategory.optimal:
-        return 'Ottimale';
-      case RecoveryCategory.good:
-        return 'Buono';
-      case RecoveryCategory.moderate:
-        return 'Moderato';
-      case RecoveryCategory.low:
-        return 'Basso';
-      case RecoveryCategory.critical:
-        return 'Critico';
-    }
-  }
-
   /// Color name for theming
   String get colorName {
     switch (this) {
@@ -120,7 +104,7 @@ extension RecoveryCategoryExtension on RecoveryCategory {
 
 /// Complete recovery insight data
 @freezed
-class RecoveryInsight with _$RecoveryInsight {
+abstract class RecoveryInsight with _$RecoveryInsight {
   const factory RecoveryInsight({
     /// Recovery score (0-100)
     required int score,
@@ -151,6 +135,11 @@ class RecoveryInsight with _$RecoveryInsight {
 
     /// Whether sleep data is available
     @Default(true) bool hasSleepData,
+
+    /// Score breakdown components for transparency
+    @Default(0.0) double baseScore,
+    @Default(1.0) double sleepModifier,
+    @Default(1.0) double consecutivePenalty,
   }) = _RecoveryInsight;
 
   const RecoveryInsight._();
@@ -159,11 +148,14 @@ class RecoveryInsight with _$RecoveryInsight {
       _$RecoveryInsightFromJson(json);
 
   /// Create a placeholder when no sleep data available
+  ///
+  /// Note: Domain layer uses generic English message.
+  /// Presentation layer should handle localization.
   factory RecoveryInsight.noData() {
     return const RecoveryInsight(
       score: 75, // Default to "good" when no data
       category: RecoveryCategory.good,
-      recommendation: 'Connetti Apple Health per insight personalizzati',
+      recommendation: 'Connect Apple Health for personalized insights',
       lastNightSleep: Duration.zero,
       weeklyAverageHours: 0,
       consecutiveBadNights: 0,

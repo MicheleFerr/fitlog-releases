@@ -18,14 +18,18 @@ import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator.dart';
+import 'package:gymbro_flutter_new/features/workout/presentation/providers/user_exercise_preferences_provider.dart';
 
 class ExerciseHistoryBottomSheet extends ConsumerStatefulWidget {
   const ExerciseHistoryBottomSheet({
     super.key,
     required this.exerciseName,
+    this.exerciseId,
   });
 
   final String exerciseName;
+  final String? exerciseId;
 
   @override
   ConsumerState<ExerciseHistoryBottomSheet> createState() =>
@@ -43,6 +47,12 @@ class _ExerciseHistoryBottomSheetState
         ref.watch(exerciseHistoryDataGroupedProvider(widget.exerciseName));
     final statsAsync =
         ref.watch(exerciseStatsFromActivitiesProvider(widget.exerciseName));
+
+    // Watch Form Cues for this exercise
+    final formCuesAsync = ref.watch(formCuesProvider((
+      exerciseId: widget.exerciseId,
+      exerciseName: widget.exerciseName,
+    )));
 
     return DraggableScrollableSheet(
       initialChildSize: 0.75,
@@ -70,6 +80,7 @@ class _ExerciseHistoryBottomSheetState
                   scrollController,
                   groupedHistory,
                   statsAsync,
+                  formCuesAsync,
                 ),
                 loading: () => _buildLoadingState(context),
                 error: (_, __) => _buildErrorState(context, l10n),
@@ -162,6 +173,7 @@ class _ExerciseHistoryBottomSheetState
               DateTime? lastWorkout,
             })>
         statsAsync,
+    AsyncValue<String?> formCuesAsync,
   ) {
     if (groupedHistory.isEmpty) {
       return _buildEmptyState(context, l10n);
@@ -188,6 +200,17 @@ class _ExerciseHistoryBottomSheetState
           ),
         ),
 
+        // Form Cues section
+        SliverToBoxAdapter(
+          child: formCuesAsync.when(
+            data: (formCues) => formCues != null && formCues.isNotEmpty
+                ? _buildFormCuesSection(context, l10n, formCues)
+                : const SizedBox.shrink(),
+            loading: () => const SizedBox.shrink(),
+            error: (_, __) => const SizedBox.shrink(),
+          ),
+        ),
+
         // History list
         SliverPadding(
           padding: const EdgeInsets.fromLTRB(20, 0, 20, 40),
@@ -203,6 +226,50 @@ class _ExerciseHistoryBottomSheetState
           ),
         ),
       ],
+    );
+  }
+
+  Widget _buildFormCuesSection(BuildContext context, AppLocalizations l10n, String formCues) {
+    return Container(
+      margin: const EdgeInsets.fromLTRB(20, 0, 20, 16),
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: context.colors.primaryContainer.withValues(alpha: 0.3),
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(
+          color: context.colors.primary.withValues(alpha: 0.3),
+          width: 1.5,
+        ),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Icon(
+                AppIcons.lightbulb,
+                color: context.colors.primary,
+                size: 18,
+              ),
+              const SizedBox(width: 8),
+              Text(
+                l10n.formCues,
+                style: context.textTheme.titleSmall?.copyWith(
+                  fontWeight: FontWeight.w600,
+                  color: context.colors.primary,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 8),
+          Text(
+            formCues,
+            style: context.textTheme.bodyMedium?.copyWith(
+              color: context.colors.onSurface,
+            ),
+          ),
+        ],
+      ),
     );
   }
 
@@ -579,7 +646,7 @@ class _ExerciseHistoryBottomSheetState
 
   Widget _buildLoadingState(BuildContext context) {
     return const Center(
-      child: CircularProgressIndicator(),
+      child: LoadingIndicator(),
     );
   }
 

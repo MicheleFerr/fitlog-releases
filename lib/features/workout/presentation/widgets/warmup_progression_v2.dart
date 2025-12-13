@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/services/snackbar_service.dart';
 
 class WarmupSet {
 
@@ -150,13 +151,7 @@ class _WarmupProgressionV2State extends State<WarmupProgressionV2> {
     // Check if all completed
     if (warmupSets.every((set) => set.completed)) {
       widget.onComplete?.call();
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: const Text('Warmup completed! Ready for working sets 💪'),
-          backgroundColor: context.colors.success,
-          duration: const Duration(seconds: 2),
-        ),
-      );
+      SnackBarService.showSuccess(context, 'Warmup completed! Ready for working sets 💪');
     }
   }
 

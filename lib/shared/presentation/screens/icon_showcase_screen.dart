@@ -228,10 +228,10 @@ class _IconShowcaseScreenState extends State<IconShowcaseScreen> {
                   controller: _searchController,
                   decoration: InputDecoration(
                     hintText: 'Search icons...',
-                    prefixIcon: Icon(AppIcons.search, size: AppIconSize.medium),
+                    prefixIcon: const Icon(AppIcons.search, size: AppIconSize.medium),
                     suffixIcon: _searchQuery.isNotEmpty
                         ? IconButton(
-                            icon: Icon(AppIcons.clear, size: AppIconSize.medium),
+                            icon: const Icon(AppIcons.clear, size: AppIconSize.medium),
                             onPressed: () {
                               _searchController.clear();
                               setState(() => _searchQuery = '');

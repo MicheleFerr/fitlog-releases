@@ -584,7 +584,8 @@ class AppLocalizationsIt extends AppLocalizations {
   String get autoSync => 'Sincronizzazione Automatica';
 
   @override
-  String get autoSyncDescription => 'Sincronizza automaticamente ogni 24 ore';
+  String get autoSyncDescription =>
+      'Sincronizza i dati automaticamente in background';
 
   @override
   String get syncFrequency => 'Frequenza Sincronizzazione';
@@ -1079,6 +1080,24 @@ class AppLocalizationsIt extends AppLocalizations {
   String get notesHint => 'Aggiungi note sulla forma, progressione, ecc.';
 
   @override
+  String get formCues => 'Punti Tecnici';
+
+  @override
+  String get formCuesHint => 'Gomiti stretti, tocca il petto...';
+
+  @override
+  String get formCuesHelper => 'Appare ogni volta che fai questo esercizio';
+
+  @override
+  String get sessionNotes => 'Note della Sessione';
+
+  @override
+  String get sessionNotesHint => 'Come ti sei sentito oggi?';
+
+  @override
+  String get sessionNotesHelper => 'Salvate nella cronologia allenamenti';
+
+  @override
   String get exerciseTypeSingle => 'Singolo';
 
   @override
@@ -1128,6 +1147,9 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get exercises => 'Esercizi';
+
+  @override
+  String get yourExercises => 'I tuoi esercizi';
 
   @override
   String get progress => 'Progressi';
@@ -11232,9 +11254,6 @@ class AppLocalizationsIt extends AppLocalizations {
   String get videoTutorial => 'Video Tutorial';
 
   @override
-  String get formCues => 'Punti Tecnici';
-
-  @override
   String get whyThisAnswer => 'Perché questa risposta?';
 
   @override
@@ -19696,6 +19715,18 @@ class AppLocalizationsIt extends AppLocalizations {
   String get bodyMeasurementsMetricBMR => 'MB (Metabolismo Basale)';
 
   @override
+  String get bodyMeasurementsAutoCalculated => 'Calcolato automaticamente';
+
+  @override
+  String get bodyMeasurementsCalcBMI => '= peso / altezza²';
+
+  @override
+  String get bodyMeasurementsCalcLeanMass => '= peso × (1 - % grasso)';
+
+  @override
+  String get bodyMeasurementsCalcBMR => 'Formula Mifflin-St Jeor';
+
+  @override
   String get bodyMeasurementsMetricShoulderCircumference =>
       'Circonferenza Spalle';
 
@@ -20532,6 +20563,28 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get bodyMeasurementsImportFromHealth => 'Importa da Salute';
+
+  @override
+  String get bodyMeasurementsHealthKitConsentTitle => 'Accesso ai Dati Salute';
+
+  @override
+  String get bodyMeasurementsHealthKitConsentDescription =>
+      'FitLog Pro ha bisogno del tuo permesso per importare le misurazioni corporee da Apple Salute. Questo ti permette di sincronizzare peso, massa grassa e altre metriche automaticamente.';
+
+  @override
+  String get bodyMeasurementsHealthKitConsentDataTypes =>
+      'Dati a cui accederemo:';
+
+  @override
+  String get bodyMeasurementsHealthKitConsentPrivacy =>
+      'I tuoi dati sono archiviati in modo sicuro e non vengono mai condivisi con terze parti.';
+
+  @override
+  String get bodyMeasurementsHealthKitConsentGrant => 'Consenti Accesso';
+
+  @override
+  String get bodyMeasurementsHealthKitConsentGranted =>
+      'Accesso ai dati salute concesso';
 
   @override
   String get weeks => 'settimane';
@@ -22959,6 +23012,35 @@ class AppLocalizationsIt extends AppLocalizations {
   String get readinessLevel => 'Livello di Prontezza';
 
   @override
+  String get howScoreCalculated => 'Come viene calcolato il punteggio?';
+
+  @override
+  String get scoreCalculationFormula => 'Calcolo Punteggio';
+
+  @override
+  String get baseScore => 'Punteggio Base';
+
+  @override
+  String get sleepModifier => 'Modificatore Sonno';
+
+  @override
+  String get consecutivePenalty => 'Penalità';
+
+  @override
+  String get finalScore => 'Punteggio Finale';
+
+  @override
+  String get baseScoreDescription =>
+      'Basato sulla cronologia allenamenti e tempo di recupero';
+
+  @override
+  String get sleepModifierDescription => 'Impatto media settimanale sonno';
+
+  @override
+  String get consecutivePenaltyDescription =>
+      'Penalità per notti consecutive cattive';
+
+  @override
   String get weeklyOverview => 'Panoramica Settimanale';
 
   @override
@@ -23002,14 +23084,103 @@ class AppLocalizationsIt extends AppLocalizations {
       'Giornata di riposo fortemente consigliata';
 
   @override
-  String get connectAppleHealth =>
-      'Connetti Apple Health per insight personalizzati';
+  String get connectAppleHealth => 'Connetti Apple Health';
+
+  @override
+  String get healthKitOnlyiOS => 'Apple Health è disponibile solo su iOS';
+
+  @override
+  String get healthKitConnected => 'Apple Health connesso con successo';
+
+  @override
+  String get healthKitPermissionDenied =>
+      'Permessi negati. Abilita in Impostazioni > Privacy > Salute';
+
+  @override
+  String get sleepTrackingDescription =>
+      'Monitora il sonno per ottenere insight sul recupero e consigli personalizzati';
+
+  @override
+  String get sleepData => 'Sonno';
+
+  @override
+  String get recoveryScore => 'Score';
+
+  @override
+  String get personalizedTips => 'Consigli';
 
   @override
   String get lastNight => 'Ieri Notte';
 
   @override
   String get streakDays => 'Serie';
+
+  @override
+  String get noSleepDataFound => 'Nessun dato sul sonno trovato';
+
+  @override
+  String get trackSleepHint =>
+      'Indossa il tuo Apple Watch o usa un\'app che registra il sonno in Salute';
+
+  @override
+  String get refreshData => 'Aggiorna';
+
+  @override
+  String get syncErrorRetry =>
+      'Impossibile caricare i dati. Controlla la connessione e riprova.';
+
+  @override
+  String get recoveryRecommendationOptimal =>
+      'Ottimo recupero! Pronto per allenamento intenso.';
+
+  @override
+  String get recoveryRecommendationGood =>
+      'Buon recupero. Pronto per allenamento normale.';
+
+  @override
+  String get recoveryRecommendationModerate =>
+      'Recupero moderato. Considera allenamento leggero.';
+
+  @override
+  String get recoveryRecommendationLow =>
+      'Recupero in corso. Prioritizza il riposo oggi.';
+
+  @override
+  String get recoveryRecommendationCritical =>
+      'Corpo in recupero. Giornata di riposo consigliata.';
+
+  @override
+  String get recoveryRecommendationConsecutiveBad2 =>
+      'Recupero in corso. Considera allenamento leggero.';
+
+  @override
+  String recoveryRecommendationConsecutiveBad3(String nights) {
+    return 'Prioritizza il riposo. $nights notti consecutive sotto 6h.';
+  }
+
+  @override
+  String get correlationNotEnoughData =>
+      'Continua ad allenarti per vedere la correlazione sonno-performance.';
+
+  @override
+  String get correlationNotSignificant =>
+      'Non abbastanza dati per una correlazione significativa.';
+
+  @override
+  String get correlationEffectIncrease => 'aumenta';
+
+  @override
+  String get correlationEffectDecrease => 'diminuisce';
+
+  @override
+  String correlationSignificant(
+    String goodEffect,
+    String goodChange,
+    String poorEffect,
+    String poorChange,
+  ) {
+    return 'Il tuo volume $goodEffect del $goodChange con >7h di sonno e $poorEffect del $poorChange con <6h.';
+  }
 
   @override
   String get clearSyncCache => 'Cancella Cache di Sincronizzazione';
@@ -23043,7 +23214,39 @@ class AppLocalizationsIt extends AppLocalizations {
       'Concedi i permessi sopra per abilitare la sincronizzazione';
 
   @override
-  String get autoSyncDaily => 'Sincronizzazione Automatica (Giornaliera)';
+  String get autoSyncDaily => 'Sincronizzazione Auto';
+
+  @override
+  String get connected => 'Connesso';
+
+  @override
+  String get notConnected => 'Non Connesso';
+
+  @override
+  String get connect => 'Connetti';
+
+  @override
+  String get connecting => 'Connessione...';
+
+  @override
+  String get dataTypes => 'Tipi di Dati';
+
+  @override
+  String get syncNowDescription => 'Sincronizza manualmente i dati da Salute';
+
+  @override
+  String get clearSyncCacheDescription =>
+      'Rimuovi la cronologia di sincronizzazione locale';
+
+  @override
+  String get diagnosticDescription => 'Testa l\'integrazione con Salute';
+
+  @override
+  String get healthSyncNotAvailable =>
+      'Sincronizzazione Salute Non Disponibile';
+
+  @override
+  String get notAvailableOnDevice => 'non è disponibile su questo dispositivo';
 
   @override
   String get nextSync => 'Prossima sincronizzazione';
@@ -23061,4 +23264,101 @@ class AppLocalizationsIt extends AppLocalizations {
   @override
   String get healthSyncLoadError =>
       'Impossibile caricare impostazioni sincronizzazione salute';
+
+  @override
+  String get approveRequest => 'Approva Richiesta';
+
+  @override
+  String approveRequestMessage(String exerciseName) {
+    return 'Vuoi approvare la richiesta per \"$exerciseName\"?\n\nDopo l\'approvazione, dovrai aggiungere l\'esercizio completo al database.';
+  }
+
+  @override
+  String get requestApprovedSuccess =>
+      'Richiesta approvata! Ricorda di aggiungere l\'esercizio al database.';
+
+  @override
+  String get rejectRequest => 'Rifiuta Richiesta';
+
+  @override
+  String rejectRequestMessage(String exerciseName) {
+    return 'Rifiutare la richiesta per \"$exerciseName\"?';
+  }
+
+  @override
+  String get rejectionReasonPlaceholder =>
+      'es. Esercizio già presente, nome troppo generico...';
+
+  @override
+  String get rejectedByAdmin => 'Rifiutato dall\'admin';
+
+  @override
+  String get requestRejected => 'Richiesta rifiutata';
+
+  @override
+  String get markAsCompleted => 'Segna come Completato';
+
+  @override
+  String markAsCompletedMessage(String exerciseName) {
+    return 'Segna \"$exerciseName\" come completato?\n\nUsa questa opzione solo dopo aver aggiunto l\'esercizio completo al database.';
+  }
+
+  @override
+  String get exerciseAddedToDatabase => 'Esercizio aggiunto al database';
+
+  @override
+  String get requestMarkedAsCompleted => 'Richiesta segnata come completata';
+
+  @override
+  String get approvedForDatabaseInsertion =>
+      'Approvato per inserimento nel database';
+
+  @override
+  String get changeImageComingSoon => 'Cambio immagine - In arrivo';
+
+  @override
+  String get recoveryCategoryOptimal => 'Ottimale';
+
+  @override
+  String get recoveryCategoryGood => 'Buono';
+
+  @override
+  String get recoveryCategoryModerate => 'Moderato';
+
+  @override
+  String get recoveryCategoryLow => 'Basso';
+
+  @override
+  String get recoveryCategoryCritical => 'Critico';
+
+  @override
+  String get recoveryCategoryShortCritical => 'Crit';
+
+  @override
+  String get recoveryCategoryShortLow => 'Basso';
+
+  @override
+  String get recoveryCategoryShortModerate => 'Mod';
+
+  @override
+  String get recoveryCategoryShortGood => 'Buono';
+
+  @override
+  String get recoveryCategoryShortOptimal => 'Top';
+
+  @override
+  String get recoveryNoDataMessage =>
+      'Connetti Apple Health per insight personalizzati';
+
+  @override
+  String get sleepQualityCritical => 'Critico';
+
+  @override
+  String get sleepQualitySuboptimal => 'Insufficiente';
+
+  @override
+  String get sleepQualityOptimal => 'Ottimale';
+
+  @override
+  String get sleepQualityExcessive => 'Eccessivo';
 }

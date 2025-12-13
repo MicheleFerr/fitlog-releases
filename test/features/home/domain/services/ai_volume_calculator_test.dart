@@ -159,6 +159,7 @@ void main() {
     ExerciseActivity createActivity({
       required String exerciseName,
       required List<ExerciseActivitySet> sets,
+      ExerciseCategory category = ExerciseCategory.chest,
     }) {
       return ExerciseActivity(
         id: 'activity_${exerciseName.toLowerCase()}',
@@ -166,6 +167,7 @@ void main() {
         exerciseId: 'ex_${exerciseName.toLowerCase()}',
         exerciseName: exerciseName,
         schedaName: 'Test Scheda',
+        category: category,
         sets: sets,
         createdAt: DateTime(2024, 1, 10),
         lastModified: DateTime(2024, 1, 10),

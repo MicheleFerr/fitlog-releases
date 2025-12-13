@@ -308,7 +308,7 @@ class _SupersetExercisesTooltipState extends ConsumerState<SupersetExercisesTool
                                 ),
                                 IconButton(
                                   onPressed: () => Navigator.of(context).pop(),
-                                  icon: Icon(AppIcons.close),
+                                  icon: const Icon(AppIcons.close),
                                   style: IconButton.styleFrom(
                                     backgroundColor: colorScheme.surfaceContainerHighest.withValues(alpha: 0.5),
                                   ),
@@ -523,7 +523,7 @@ class _SupersetExercisesTooltipState extends ConsumerState<SupersetExercisesTool
                 // Info button
                 IconButton(
                   onPressed: () => widget.onExerciseInfo?.call(exercise),
-                  icon: Icon(AppIcons.info),
+                  icon: const Icon(AppIcons.info),
                   style: IconButton.styleFrom(
                     backgroundColor: colorScheme.primaryContainer.withValues(alpha: 0.3),
                   ),

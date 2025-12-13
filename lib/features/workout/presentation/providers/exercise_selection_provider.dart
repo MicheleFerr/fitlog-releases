@@ -1,5 +1,4 @@
-import 'dart:convert';
-import 'package:flutter/services.dart';
+import 'package:gymbro_flutter_new/features/exercise_database/data/utils/exercise_json_loader.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise.dart';
 import 'package:gymbro_flutter_new/shared/presentation/providers/app_config_provider.dart';
@@ -75,13 +74,8 @@ class ExerciseDatabase {
   
   /// Build optimized indexes for O(1) lookups
   static Future<ExerciseDatabase> load({String languageCode = 'en'}) async {
-    // Use localized JSON file
-    final jsonFile = languageCode == 'it'
-        ? 'assets/data/exercises_it.json'
-        : 'assets/data/exercises.json';
-
-    final jsonString = await rootBundle.loadString(jsonFile);
-    final List<dynamic> jsonList = json.decode(jsonString);
+    // Use new folder structure with fallback
+    final jsonList = await ExerciseJsonLoader.loadExercises(languageCode);
     
     final exercises = jsonList
         .map((json) => ExerciseData.fromJson(json as Map<String, dynamic>))

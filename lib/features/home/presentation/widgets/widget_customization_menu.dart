@@ -4,9 +4,11 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
 import 'package:gymbro_flutter_new/features/home/providers/home_customization_provider.dart';
 import 'package:gymbro_flutter_new/features/home/domain/models/home_widget_config.dart';
+import 'package:gymbro_flutter_new/shared/presentation/services/modal_service.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
+import 'package:gymbro_flutter_new/shared/presentation/services/snackbar_service.dart';
 
 class WidgetCustomizationMenu extends ConsumerWidget {
   const WidgetCustomizationMenu({super.key});
@@ -185,12 +187,11 @@ class WidgetCustomizationMenu extends ConsumerWidget {
           ref.read(homeCustomizationProvider.notifier)
               .toggleWidgetVisibility(widget.id);
           HapticFeedback.lightImpact();
-          
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text('${widget.title} aggiunto alla home'),
-              duration: const Duration(seconds: 2),
-            ),
+
+          SnackBarService.showSuccess(
+            context,
+            '${widget.title} aggiunto alla home',
+            duration: const Duration(seconds: 2),
           );
         },
         borderRadius: BorderRadius.circular(12),
@@ -305,12 +306,8 @@ class WidgetCustomizationMenu extends ConsumerWidget {
               HapticFeedback.mediumImpact();
               Navigator.pop(context);
               Navigator.pop(context);
-              
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(
-                  content: Text('Layout ripristinato'),
-                ),
-              );
+
+              SnackBarService.showInfo(context, 'Layout ripristinato');
             },
             child: Text(AppLocalizations.of(context).reset),
           ),

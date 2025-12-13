@@ -18,7 +18,6 @@ import 'package:gymbro_flutter_new/features/auth/presentation/providers/admin_pr
 import 'package:gymbro_flutter_new/features/community/presentation/widgets/voting_card.dart';
 import 'package:gymbro_flutter_new/shared/presentation/services/snackbar_service.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator.dart';
-import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/services/modal_service.dart';
 
@@ -59,7 +58,7 @@ class _ContributionDetailModalState extends ConsumerState<ContributionDetailModa
       minChildSize: 0.5,
       maxChildSize: safeMax,
       builder: (context, scrollController) {
-        return Container(
+        return DecoratedBox(
           decoration: BoxDecoration(
             color: theme.colorScheme.surface,
             borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),

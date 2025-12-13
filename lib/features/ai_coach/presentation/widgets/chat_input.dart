@@ -23,6 +23,8 @@ import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator.dart';
+import 'package:gymbro_flutter_new/shared/presentation/services/snackbar_service.dart';
 
 /// Chat input widget
 class ChatInput extends ConsumerStatefulWidget {
@@ -140,12 +142,7 @@ class _ChatInputState extends ConsumerState<ChatInput> {
 
         // Show error snackbar if error occurred
         if (next.state == VoiceInputState.error && next.errorMessage != null) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(next.errorMessage!),
-              backgroundColor: context.colors.error,
-            ),
-          );
+          SnackBarService.showError(context, next.errorMessage!);
         }
       },
     );
@@ -230,12 +227,7 @@ class _ChatInputState extends ConsumerState<ChatInput> {
                           ? SizedBox(
                               width: AppIconSize.medium,
                               height: AppIconSize.medium,
-                              child: CircularProgressIndicator(
-                                strokeWidth: 2,
-                                valueColor: AlwaysStoppedAnimation<Color>(
-                                  context.colors.primary,
-                                ),
-                              ),
+                              child: LoadingIndicator(),
                             )
                           : SemanticIcon(
                               icon: AppIcons.mic,

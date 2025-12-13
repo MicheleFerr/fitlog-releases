@@ -15,6 +15,7 @@ import 'package:gymbro_flutter_new/features/exercise_database/presentation/widge
 import 'package:gymbro_flutter_new/features/auth/presentation/providers/admin_provider.dart' show isAdminCachedProvider;
 import 'package:gymbro_flutter_new/shared/presentation/providers/app_config_provider.dart';
 import 'package:gymbro_flutter_new/core/data/providers/hive_box_manager_provider.dart';
+import 'package:gymbro_flutter_new/shared/presentation/services/snackbar_service.dart';
 
 /// Stato del dialog di aggiornamento
 class ExerciseUpdateState {
@@ -136,13 +137,7 @@ class ExerciseUpdateNotifier extends Notifier<ExerciseUpdateState> {
           Navigator.of(context).pop();
 
           // Mostra snackbar di successo
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: const Text('✅ Database esercizi aggiornato!'),
-              backgroundColor: Theme.of(context).colorScheme.primary,
-              behavior: SnackBarBehavior.floating,
-            ),
-          );
+          SnackBarService.showSuccess(context, 'Database esercizi aggiornato!');
         }
       } else {
         state = state.copyWith(

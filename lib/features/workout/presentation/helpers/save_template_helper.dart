@@ -232,22 +232,7 @@ class SaveTemplateHelper {
 
               try {
                 // Mostra loading indicator
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    content: Row(
-                      children: [
-                        const SizedBox(
-                          width: 20,
-                          height: 20,
-                          child: LoadingIndicator(),
-                        ),
-                        const SizedBox(width: 16),
-                        Text(context.l10n.savingToFirebase),
-                      ],
-                    ),
-                    duration: const Duration(seconds: 30),
-                  ),
-                );
+                SnackBarService.showInfo(context, context.l10n.savingToFirebase);
 
                 // Crea e salva il template
                 await ref.read(workoutTemplateNotifierProvider.notifier)
@@ -258,8 +243,7 @@ class SaveTemplateHelper {
                       tags: [], // Potremmo aggiungere tags in futuro
                     );
 
-                // Rimuovi loading e mostra successo
-                ScaffoldMessenger.of(context).clearSnackBars();
+                // Mostra successo
                 SnackBarService.showCustom(
                   context,
                   message: '✅ ${context.l10n.templateSavedSuccessfully(name)}',

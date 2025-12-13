@@ -3,6 +3,7 @@ import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_locali
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator.dart';
 
 class AddExerciseStep extends StatefulWidget {
 
@@ -395,9 +396,8 @@ class _MockSearchBarState extends State<_MockSearchBar> {
                 child: SizedBox(
                   width: 20,
                   height: 20,
-                  child: CircularProgressIndicator(
-                    strokeWidth: 2,
-                    color: widget.colorScheme.primary,
+                  child: LoadingIndicator(
+                    size: 20,
                   ),
                 ),
               )

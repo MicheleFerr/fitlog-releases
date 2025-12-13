@@ -9,6 +9,7 @@ import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator.dart';
 
 class CommunityPulseCard extends ConsumerStatefulWidget {
   
@@ -206,7 +207,7 @@ class _CommunityPulseCardState extends ConsumerState<CommunityPulseCard>
                             );
                           },
                           loading: () => const Center(
-                            child: CircularProgressIndicator(),
+                            child: LoadingIndicator(),
                           ),
                           error: (error, _) => Text('Errore: $error'),
                         ),

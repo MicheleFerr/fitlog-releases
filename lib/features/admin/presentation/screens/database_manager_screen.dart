@@ -25,6 +25,7 @@ import 'package:intl/intl.dart';
 // 📊 Analytics migration imports
 import 'package:gymbro_flutter_new/features/analytics/presentation/providers/analytics_providers.dart';
 import 'package:gymbro_flutter_new/features/auth/presentation/providers/consolidated_user_provider.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator.dart';
 
 class DatabaseManagerScreen extends ConsumerStatefulWidget {
   const DatabaseManagerScreen({super.key});
@@ -363,7 +364,7 @@ class _DatabaseManagerScreenState extends ConsumerState<DatabaseManagerScreen> {
     DatabaseManagerState state,
   ) {
     if (state.isLoading) {
-      return const Center(child: CircularProgressIndicator());
+      return const Center(child: LoadingIndicator());
     }
 
     if (state.error != null) {
@@ -514,14 +515,9 @@ class _DatabaseManagerScreenState extends ConsumerState<DatabaseManagerScreen> {
       await Clipboard.setData(ClipboardData(text: json));
 
       if (context.mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: const Text('JSON copiato negli appunti'),
-            action: SnackBarAction(
-              label: l10n.ok,
-              onPressed: () {},
-            ),
-          ),
+        SnackBarService.showSuccess(
+          context,
+          'JSON copiato negli appunti',
         );
       }
     }
@@ -555,9 +551,7 @@ class _DatabaseManagerScreenState extends ConsumerState<DatabaseManagerScreen> {
             onPressed: () {
               Navigator.of(context).pop();
               // TODO: Implement file picker and import
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text(l10n.comingSoon)),
-              );
+              SnackBarService.showInfo(context, l10n.comingSoon);
             },
             child: Text(l10n.selectFile),
           ),
@@ -656,7 +650,7 @@ class _DatabaseManagerScreenState extends ConsumerState<DatabaseManagerScreen> {
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              CircularProgressIndicator(),
+              LoadingIndicator(),
               SizedBox(height: 16),
               Text('Migrating analytics...'),
               SizedBox(height: 8),
@@ -1055,7 +1049,7 @@ class _DatabaseManagerScreenState extends ConsumerState<DatabaseManagerScreen> {
           ),
         );
       },
-      loading: () => const Center(child: CircularProgressIndicator()),
+      loading: () => const Center(child: LoadingIndicator()),
       error: (error, stack) => Center(child: Text('Error: $error')),
     );
   }

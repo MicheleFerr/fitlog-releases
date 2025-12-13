@@ -7,6 +7,7 @@ import 'package:gymbro_flutter_new/features/workout/domain/entities/superset_con
 import 'package:gymbro_flutter_new/features/workout/presentation/widgets/minimal_set_edit_sheet.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/providers/app_config_provider.dart';
+import 'package:gymbro_flutter_new/shared/presentation/services/snackbar_service.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 /// Round-based superset configuration sheet.
@@ -123,12 +124,7 @@ class _SupersetRoundConfigSheetState
       _hasUnsavedChanges = true;
     });
     HapticFeedback.mediumImpact();
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(context.l10n.appliedToAllRounds),
-        duration: const Duration(seconds: 2),
-      ),
-    );
+    SnackBarService.showSuccess(context, context.l10n.appliedToAllRounds);
   }
 
   void _copyRoundToAll() {
@@ -144,12 +140,7 @@ class _SupersetRoundConfigSheetState
       _hasUnsavedChanges = true;
     });
     HapticFeedback.mediumImpact();
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(context.l10n.copiedToAllRounds),
-        duration: const Duration(seconds: 2),
-      ),
-    );
+    SnackBarService.showSuccess(context, context.l10n.copiedToAllRounds);
   }
 
   void _addRound() {
@@ -286,7 +277,7 @@ class _SupersetRoundConfigSheetState
           Navigator.of(context).pop();
         }
       },
-      child: Container(
+      child: DecoratedBox(
         decoration: BoxDecoration(
           color: context.colors.surface,
           borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
@@ -340,7 +331,7 @@ class _SupersetRoundConfigSheetState
                 Navigator.of(context).pop();
               }
             },
-            icon: Icon(AppIcons.close),
+            icon: const Icon(AppIcons.close),
           ),
           const SizedBox(width: 8),
           Icon(AppIcons.link, color: context.colors.primary),
@@ -402,12 +393,12 @@ class _SupersetRoundConfigSheetState
           // Add/Remove round buttons
           IconButton(
             onPressed: _rounds.length > 1 ? _removeRound : null,
-            icon: Icon(AppIcons.remove),
+            icon: const Icon(AppIcons.remove),
             tooltip: context.l10n.removeRound,
           ),
           IconButton(
             onPressed: _rounds.length < 10 ? _addRound : null,
-            icon: Icon(AppIcons.add),
+            icon: const Icon(AppIcons.add),
             tooltip: context.l10n.addRound,
           ),
         ],
@@ -420,7 +411,7 @@ class _SupersetRoundConfigSheetState
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       child: OutlinedButton.icon(
         onPressed: _copyRoundToAll,
-        icon: Icon(AppIcons.copy, size: 18),
+        icon: const Icon(AppIcons.copy, size: 18),
         label: Text(context.l10n.copyRoundToAll),
         style: OutlinedButton.styleFrom(
           padding: const EdgeInsets.symmetric(vertical: 12),
@@ -443,7 +434,7 @@ class _SupersetRoundConfigSheetState
                 HapticFeedback.mediumImpact();
               }
             : null,
-        icon: Icon(AppIcons.check),
+        icon: const Icon(AppIcons.check),
         label: Text(context.l10n.confirm),
         style: FilledButton.styleFrom(
           padding: const EdgeInsets.symmetric(vertical: 16),

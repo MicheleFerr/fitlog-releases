@@ -275,34 +275,34 @@ class DemoModalData {
       name: 'Push Day',
       description: 'Classic push workout: chest, shoulders, triceps',
       exercises: [
-        ExerciseTemplate(
+        const ExerciseTemplate(
           exerciseId: 'bench_press',
           exerciseName: 'Bench Press',
           category: ExerciseCategory.chest,
           sets: [
-            const SetTemplate(setNumber: 1, targetWeight: 80, targetReps: 10),
-            const SetTemplate(setNumber: 2, targetWeight: 85, targetReps: 8),
-            const SetTemplate(setNumber: 3, targetWeight: 90, targetReps: 6),
+            SetTemplate(setNumber: 1, targetWeight: 80, targetReps: 10),
+            SetTemplate(setNumber: 2, targetWeight: 85, targetReps: 8),
+            SetTemplate(setNumber: 3, targetWeight: 90, targetReps: 6),
           ],
         ),
-        ExerciseTemplate(
+        const ExerciseTemplate(
           exerciseId: 'incline_db_press',
           exerciseName: 'Incline Dumbbell Press',
           category: ExerciseCategory.chest,
           sets: [
-            const SetTemplate(setNumber: 1, targetWeight: 30, targetReps: 12),
-            const SetTemplate(setNumber: 2, targetWeight: 32.5, targetReps: 10),
-            const SetTemplate(setNumber: 3, targetWeight: 35, targetReps: 8),
+            SetTemplate(setNumber: 1, targetWeight: 30, targetReps: 12),
+            SetTemplate(setNumber: 2, targetWeight: 32.5, targetReps: 10),
+            SetTemplate(setNumber: 3, targetWeight: 35, targetReps: 8),
           ],
         ),
-        ExerciseTemplate(
+        const ExerciseTemplate(
           exerciseId: 'overhead_press',
           exerciseName: 'Overhead Press',
           category: ExerciseCategory.shoulders,
           sets: [
-            const SetTemplate(setNumber: 1, targetWeight: 40, targetReps: 10),
-            const SetTemplate(setNumber: 2, targetWeight: 42.5, targetReps: 8),
-            const SetTemplate(setNumber: 3, targetWeight: 45, targetReps: 6),
+            SetTemplate(setNumber: 1, targetWeight: 40, targetReps: 10),
+            SetTemplate(setNumber: 2, targetWeight: 42.5, targetReps: 8),
+            SetTemplate(setNumber: 3, targetWeight: 45, targetReps: 6),
           ],
         ),
       ],
@@ -352,26 +352,6 @@ class DemoModalData {
           'Face pull con elastico (15 reps) | '
           'Push-up leggeri (10 reps) | '
           'Band pull-aparts (15 reps)',
-      warmupSets:
-          '1x15 @ 20kg (bilanciere vuoto)\n'
-          '1x10 @ 40kg\n'
-          '1x6 @ 60kg\n'
-          '1x3 @ 75kg',
-      tempoWarmup: '5-8 minuti totali',
-      drillTecnico:
-          'Paused bench press: 2-3 secondi di pausa al petto per migliorare '
-          'la propriocezione e la stabilità',
-      prevenzioneInfortuni:
-          'Non bloccare i gomiti in estensione | '
-          'Evita di rimbalzare il bilanciere sul petto | '
-          'Usa sempre i fermi di sicurezza',
-      cooldownConsigliato:
-          'Stretching pettorale (30 sec x lato) | '
-          'Stretching tricipiti (30 sec x lato) | '
-          'Foam rolling toracico',
-      tempoEsecuzione: '3-1-1-0',
-      tempoNote:
-          '3 sec eccentrica (discesa), 1 sec pausa, 1 sec concentrica (spinta), 0 pausa in alto',
       aliases: ['panca', 'bench press', 'BP', 'flat bench'],
     );
   }
@@ -402,19 +382,6 @@ class DemoModalData {
           'Glute bridges (15 reps) | '
           'Good mornings con elastico (12 reps) | '
           'Dead bugs (10 per lato)',
-      warmupSets:
-          '1x10 @ 60kg\n'
-          '1x6 @ 80kg\n'
-          '1x3 @ 100kg\n'
-          '1x1 @ 120kg',
-      tempoWarmup: '8-10 minuti totali',
-      prevenzioneInfortuni:
-          'Mai arrotondare la schiena | '
-          'Inizia con carichi leggeri | '
-          'Usa la presa mista con cautela',
-      tempoEsecuzione: '2-0-1-1',
-      tempoNote:
-          '2 sec concentrica, 0 pausa in alto, 1 sec eccentrica, 1 sec pausa a terra',
       aliases: ['stacco', 'deadlift', 'DL', 'conventional deadlift'],
     );
   }
@@ -517,13 +484,13 @@ class DemoModalData {
         SupersetSet(
           setNumber: 1,
           exerciseData: {
-            'bench_press': SupersetExerciseData(
+            'bench_press': const SupersetExerciseData(
               exerciseId: 'bench_press',
               exerciseName: 'Bench Press',
               targetWeight: 80,
               targetReps: 10,
             ),
-            'bent_over_row': SupersetExerciseData(
+            'bent_over_row': const SupersetExerciseData(
               exerciseId: 'bent_over_row',
               exerciseName: 'Bent Over Row',
               targetWeight: 70,
@@ -534,13 +501,13 @@ class DemoModalData {
         SupersetSet(
           setNumber: 2,
           exerciseData: {
-            'bench_press': SupersetExerciseData(
+            'bench_press': const SupersetExerciseData(
               exerciseId: 'bench_press',
               exerciseName: 'Bench Press',
               targetWeight: 82.5,
               targetReps: 8,
             ),
-            'bent_over_row': SupersetExerciseData(
+            'bent_over_row': const SupersetExerciseData(
               exerciseId: 'bent_over_row',
               exerciseName: 'Bent Over Row',
               targetWeight: 75,
@@ -551,13 +518,13 @@ class DemoModalData {
         SupersetSet(
           setNumber: 3,
           exerciseData: {
-            'bench_press': SupersetExerciseData(
+            'bench_press': const SupersetExerciseData(
               exerciseId: 'bench_press',
               exerciseName: 'Bench Press',
               targetWeight: 85,
               targetReps: 6,
             ),
-            'bent_over_row': SupersetExerciseData(
+            'bent_over_row': const SupersetExerciseData(
               exerciseId: 'bent_over_row',
               exerciseName: 'Bent Over Row',
               targetWeight: 80,

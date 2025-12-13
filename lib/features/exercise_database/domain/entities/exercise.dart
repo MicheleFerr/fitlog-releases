@@ -11,6 +11,7 @@ library;
 import 'package:equatable/equatable.dart';
 import 'package:hive_ce/hive.dart';
 import 'package:gymbro_flutter_new/features/exercise_database/domain/entities/warmup_suggestion.dart';
+import 'package:gymbro_flutter_new/features/exercise_database/domain/entities/exercise_counting_mode.dart';
 
 part 'exercise.g.dart';
 
@@ -46,19 +47,15 @@ class ExerciseDefinition extends Equatable {
     this.noteTecniche,
     this.mobilitaPre,
     this.attivazionePre,
-    this.warmupSets,
-    this.tempoWarmup,
-    this.drillTecnico,
-    this.prevenzioneInfortuni,
-    this.cooldownConsigliato,
-    this.spiegazioneTermini,
-    this.tempoEsecuzione,
-    this.tempoNote,
     // Fuzzy matching fields
     this.aliases = const [],
     String? normalizedNome,
     List<String>? searchableFields,
     this.warmupSuggestions,
+    // Counting mode (weighted, reps, time)
+    this.countingMode = ExerciseCountingMode.weighted,
+    // TUT (Time Under Tension) - es: "2-1-2-0"
+    this.tempoEsecuzione,
   })  : normalizedNome = normalizedNome ?? _normalize(nome),
         searchableFields = searchableFields ?? _buildSearchableFields(nome, aliases);
 
@@ -78,19 +75,15 @@ class ExerciseDefinition extends Equatable {
       noteTecniche: json['noteTecniche']?.isEmpty == true ? null : json['noteTecniche'],
       mobilitaPre: json['mobilitaPre']?.isEmpty == true ? null : json['mobilitaPre'],
       attivazionePre: json['attivazionePre']?.isEmpty == true ? null : json['attivazionePre'],
-      warmupSets: json['warmupSets']?.isEmpty == true ? null : json['warmupSets'],
-      tempoWarmup: json['tempoWarmup']?.isEmpty == true ? null : json['tempoWarmup'],
-      drillTecnico: json['drillTecnico']?.isEmpty == true ? null : json['drillTecnico'],
-      prevenzioneInfortuni: json['prevenzioneInfortuni']?.isEmpty == true ? null : json['prevenzioneInfortuni'],
-      cooldownConsigliato: json['cooldownConsigliato']?.isEmpty == true ? null : json['cooldownConsigliato'],
-      spiegazioneTermini: json['spiegazioneTermini']?.isEmpty == true ? null : json['spiegazioneTermini'],
-      tempoEsecuzione: json['tempoEsecuzione']?.isEmpty == true ? null : json['tempoEsecuzione'],
-      tempoNote: json['tempoNote']?.isEmpty == true ? null : json['tempoNote'],
       // Fuzzy matching fields
       aliases: (json['aliases'] as List<dynamic>?)?.cast<String>() ?? [],
       warmupSuggestions: (json['warmupSuggestions'] as List<dynamic>?)
           ?.map((e) => WarmupSuggestion.fromJson(e as Map<String, dynamic>))
           .toList(),
+      // Counting mode (defaults to weighted if not present)
+      countingMode: ExerciseCountingMode.fromString(json['countingMode'] as String?),
+      // TUT (Time Under Tension)
+      tempoEsecuzione: json['tempoEsecuzione']?.isEmpty == true ? null : json['tempoEsecuzione'] as String?,
     );
   }
   @HiveField(0)
@@ -132,29 +125,6 @@ class ExerciseDefinition extends Equatable {
   @HiveField(12)
   final String? attivazionePre;
   
-  @HiveField(13)
-  final String? warmupSets;
-  
-  @HiveField(14)
-  final String? tempoWarmup;
-  
-  @HiveField(15)
-  final String? drillTecnico;
-  
-  @HiveField(16)
-  final String? prevenzioneInfortuni;
-  
-  @HiveField(17)
-  final String? cooldownConsigliato;
-  
-  @HiveField(18)
-  final String? spiegazioneTermini;
-
-  @HiveField(19)
-  final String? tempoEsecuzione; // Time Under Tension (e.g., "3-1-2-0")
-
-  @HiveField(20)
-  final String? tempoNote;
 
   // Fuzzy matching fields
   @HiveField(21)
@@ -168,6 +138,19 @@ class ExerciseDefinition extends Equatable {
 
   @HiveField(24)
   final List<WarmupSuggestion>? warmupSuggestions;
+
+  /// Counting mode: weighted (weight+reps), reps (bodyweight), time (isometric)
+  @HiveField(25)
+  final ExerciseCountingMode countingMode;
+
+  /// TUT (Time Under Tension) - formato: "X-Y-Z-W"
+  /// X = secondi fase eccentrica (discesa)
+  /// Y = secondi pausa in basso
+  /// Z = secondi fase concentrica (salita)
+  /// W = secondi pausa in alto
+  /// Es: "2-1-2-0" = 2s discesa, 1s pausa, 2s salita, 0s pausa alto
+  @HiveField(26)
+  final String? tempoEsecuzione;
 
   // Metodo helper per parsare stringhe separate da virgole
   static List<String> _parseCommaSeparated(String? value) {
@@ -254,18 +237,14 @@ class ExerciseDefinition extends Equatable {
       'noteTecniche': noteTecniche,
       'mobilitaPre': mobilitaPre,
       'attivazionePre': attivazionePre,
-      'warmupSets': warmupSets,
-      'tempoWarmup': tempoWarmup,
-      'drillTecnico': drillTecnico,
-      'prevenzioneInfortuni': prevenzioneInfortuni,
-      'cooldownConsigliato': cooldownConsigliato,
-      'spiegazioneTermini': spiegazioneTermini,
-      'tempoEsecuzione': tempoEsecuzione,
-      'tempoNote': tempoNote,
       // Fuzzy matching fields
       'aliases': aliases,
       'normalizedNome': normalizedNome,
       'warmupSuggestions': warmupSuggestions?.map((e) => e.toJson()).toList(),
+      // Counting mode
+      'countingMode': countingMode.toJson(),
+      // TUT
+      'tempoEsecuzione': tempoEsecuzione,
     };
   }
 
@@ -284,18 +263,14 @@ class ExerciseDefinition extends Equatable {
         noteTecniche,
         mobilitaPre,
         attivazionePre,
-        warmupSets,
-        tempoWarmup,
-        drillTecnico,
-        prevenzioneInfortuni,
-        cooldownConsigliato,
-        spiegazioneTermini,
-        tempoEsecuzione,
-        tempoNote,
         // Fuzzy matching fields
         aliases,
         normalizedNome,
         searchableFields,
         warmupSuggestions,
+        // Counting mode
+        countingMode,
+        // TUT
+        tempoEsecuzione,
       ];
 }

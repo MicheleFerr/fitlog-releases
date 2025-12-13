@@ -12,6 +12,7 @@ import 'package:intl/intl.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/services/snackbar_service.dart';
 
 class WorkoutShareSummary extends ConsumerStatefulWidget {
   
@@ -88,9 +89,7 @@ class _WorkoutShareSummaryState extends ConsumerState<WorkoutShareSummary> {
       }
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(context.l10n.errorPickingImage)),
-        );
+        SnackBarService.showError(context, context.l10n.errorPickingImage);
       }
     }
   }
@@ -129,9 +128,7 @@ class _WorkoutShareSummaryState extends ConsumerState<WorkoutShareSummary> {
       }
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(context.l10n.errorSharing)),
-        );
+        SnackBarService.showError(context, context.l10n.errorSharing);
       }
     } finally {
       setState(() {

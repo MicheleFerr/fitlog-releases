@@ -7,6 +7,7 @@ import 'package:gymbro_flutter_new/features/body_measurements/domain/entities/me
 import 'package:gymbro_flutter_new/features/body_measurements/domain/entities/metric_type.dart';
 import 'package:gymbro_flutter_new/features/body_measurements/data/repositories/measurement_repository_provider.dart';
 import 'package:gymbro_flutter_new/features/body_measurements/data/repositories/consent_repository_provider.dart';
+import 'package:gymbro_flutter_new/features/body_measurements/domain/repositories/consent_repository.dart';
 import 'package:gymbro_flutter_new/features/body_measurements/domain/repositories/measurement_repository.dart';
 import 'package:gymbro_flutter_new/features/body_measurements/presentation/providers/health_kit_service_provider.dart';
 import 'package:gymbro_flutter_new/features/body_measurements/presentation/screens/measurement_charts_screen.dart';
@@ -81,19 +82,39 @@ class _MeasurementListScreenState extends ConsumerState<MeasurementListScreen> {
       final consentRepo = ref.read(consentRepositoryProvider);
 
       // Get consented metrics
-      final consentResult = await consentRepo.getConsentedMetrics(widget.userId);
-      final consentedMetrics = consentResult.getOrElse((_) => <MetricType>[]);
+      var consentResult = await consentRepo.getConsentedMetrics(widget.userId);
+      var consentedMetrics = consentResult.getOrElse((_) => <MetricType>[]);
 
+      // If no consented metrics, show consent dialog automatically
       if (consentedMetrics.isEmpty) {
         if (!mounted) return;
-        SnackBarService.showError(
-          context,
-          context.l10n.bodyMeasurementsNoConsentedMetrics,
-        );
-        setState(() {
-          _isImporting = false;
-        });
-        return;
+
+        final consentGranted = await _showHealthKitConsentDialog();
+
+        if (!consentGranted) {
+          if (!mounted) return;
+          setState(() {
+            _isImporting = false;
+          });
+          return;
+        }
+
+        // Refresh consented metrics after grant
+        consentResult = await consentRepo.getConsentedMetrics(widget.userId);
+        consentedMetrics = consentResult.getOrElse((_) => <MetricType>[]);
+
+        // Safety check - if still empty something went wrong
+        if (consentedMetrics.isEmpty) {
+          if (!mounted) return;
+          SnackBarService.showError(
+            context,
+            context.l10n.bodyMeasurementsNoConsentedMetrics,
+          );
+          setState(() {
+            _isImporting = false;
+          });
+          return;
+        }
       }
 
       // Request HealthKit permissions
@@ -149,6 +170,184 @@ class _MeasurementListScreenState extends ConsumerState<MeasurementListScreen> {
         });
       }
     }
+  }
+
+  /// Show HealthKit consent dialog and handle consent grant
+  /// Returns true if consent was granted, false otherwise
+  Future<bool> _showHealthKitConsentDialog() async {
+    final l10n = context.l10n;
+
+    final result = await showDialog<bool>(
+      context: context,
+      barrierDismissible: false,
+      builder: (dialogContext) => AlertDialog(
+        title: Row(
+          children: [
+            Icon(AppIcons.healthAndSafety, color: context.colors.primary),
+            const SizedBox(width: 12),
+            Expanded(
+              child: Text(l10n.bodyMeasurementsHealthKitConsentTitle),
+            ),
+          ],
+        ),
+        content: SingleChildScrollView(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(l10n.bodyMeasurementsHealthKitConsentDescription),
+              const SizedBox(height: 16),
+              Container(
+                padding: const EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                  color: context.colors.primaryContainer.withValues(alpha: 0.3),
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      l10n.bodyMeasurementsHealthKitConsentDataTypes,
+                      style: context.textTheme.titleSmall?.copyWith(
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    _buildConsentDataItem(l10n.bodyMeasurementsMetricWeight),
+                    _buildConsentDataItem(l10n.bodyMeasurementsMetricBodyFat),
+                    _buildConsentDataItem(l10n.bodyMeasurementsMetricHeight),
+                    _buildConsentDataItem(l10n.bodyMeasurementsMetricLeanMass),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 16),
+              Row(
+                children: [
+                  Icon(
+                    AppIcons.shield,
+                    color: context.colors.primary,
+                    size: 20,
+                  ),
+                  const SizedBox(width: 8),
+                  Expanded(
+                    child: Text(
+                      l10n.bodyMeasurementsHealthKitConsentPrivacy,
+                      style: context.textTheme.bodySmall?.copyWith(
+                        color: context.colors.onSurfaceVariant,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(dialogContext, false),
+            child: Text(l10n.bodyMeasurementsInputCancel),
+          ),
+          FilledButton(
+            onPressed: () => Navigator.pop(dialogContext, true),
+            child: Text(l10n.bodyMeasurementsHealthKitConsentGrant),
+          ),
+        ],
+      ),
+    );
+
+    if (result != true) {
+      return false;
+    }
+
+    // User accepted - grant consent for essential metrics
+    final consentRepo = ref.read(consentRepositoryProvider);
+
+    // First check if consent record exists, if not create it
+    final existingConsent = await consentRepo.getConsent(widget.userId);
+
+    if (existingConsent.isLeft()) {
+      // No consent record exists - create initial consent
+      final createResult = await consentRepo.createInitialConsent(
+        userId: widget.userId,
+        ipAddress: '0.0.0.0', // Placeholder - can't get real IP easily
+      );
+
+      final createFailed = createResult.fold(
+        (failure) => failure,
+        (_) => null,
+      );
+
+      if (createFailed != null) {
+        if (mounted) {
+          SnackBarService.showError(
+            context,
+            'Failed to create consent: ${_getConsentFailureMessage(createFailed)}',
+          );
+        }
+        return false;
+      }
+    }
+
+    // Grant consent for essential metrics (weight, body fat, height, lean mass, BMI, BMR)
+    final grantResult = await consentRepo.grantConsent(
+      userId: widget.userId,
+      group: MetricGroup.essential,
+      ipAddress: '0.0.0.0',
+    );
+
+    final grantFailed = grantResult.fold(
+      (failure) => failure,
+      (_) => null,
+    );
+
+    if (grantFailed != null) {
+      if (mounted) {
+        SnackBarService.showError(
+          context,
+          'Failed to save consent: ${_getConsentFailureMessage(grantFailed)}',
+        );
+      }
+      return false;
+    }
+
+    if (mounted) {
+      SnackBarService.showSuccess(
+        context,
+        context.l10n.bodyMeasurementsHealthKitConsentGranted,
+      );
+    }
+
+    return true;
+  }
+
+  Widget _buildConsentDataItem(String text) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 4),
+      child: Row(
+        children: [
+          Icon(
+            AppIcons.check,
+            size: 16,
+            color: context.colors.primary,
+          ),
+          const SizedBox(width: 8),
+          Text(text, style: context.textTheme.bodySmall),
+        ],
+      ),
+    );
+  }
+
+  /// Get error message from ConsentFailure
+  String _getConsentFailureMessage(ConsentFailure failure) {
+    return switch (failure) {
+      FirebaseConsentFailure(:final message) => message,
+      ConsentNotFoundFailure() => 'Consent record not found',
+      ConsentAlreadyExistsFailure() => 'Consent already exists',
+      InvalidVersionFailure(:final currentVersion, :final attemptedVersion) =>
+        'Invalid version: $attemptedVersion (current: $currentVersion)',
+      RateLimitExceededFailure(:final limitPerDay, :final currentCount) =>
+        'Rate limit exceeded: $currentCount/$limitPerDay',
+    };
   }
 
   /// Load measurements from repository

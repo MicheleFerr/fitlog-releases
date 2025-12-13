@@ -30,6 +30,7 @@ import 'package:gymbro_flutter_new/shared/presentation/widgets/material_scroll_l
 import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/widgets/workout_time_edit_sheet.dart';
 import 'package:gymbro_flutter_new/features/auth/presentation/providers/consolidated_user_provider.dart';
+import 'package:gymbro_flutter_new/shared/presentation/services/snackbar_service.dart';
 
 /// Date range filter options
 enum DateRangeOption {
@@ -1109,13 +1110,7 @@ class _WorkoutHistoryScreenState extends ConsumerState<WorkoutHistoryScreen>
     AppLocalizations l10n,
   ) async {
     // Navigate to start workout from template
-    // For now, show a snackbar confirmation
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(l10n.workoutRepeated),
-        backgroundColor: Theme.of(context).colorScheme.tertiary,
-      ),
-    );
+    SnackBarService.showSuccess(context, l10n.workoutRepeated);
     // TODO: Implement actual repeat functionality (create workout from history)
   }
 
@@ -1152,21 +1147,10 @@ class _WorkoutHistoryScreenState extends ConsumerState<WorkoutHistoryScreen>
 
       deleteResult.fold(
         (failure) {
-          if (context.mounted) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text('Error: ${failure.message}'),
-                backgroundColor: Theme.of(context).colorScheme.error,
-              ),
-            );
-          }
+          SnackBarService.showError(context, 'Error: ${failure.message}');
         },
         (_) {
-          if (context.mounted) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text(l10n.workoutDeletedSuccessfully)),
-            );
-          }
+          SnackBarService.showInfo(context, l10n.workoutDeletedSuccessfully);
         },
       );
     }
@@ -1815,13 +1799,7 @@ class _WorkoutHistoryScreenState extends ConsumerState<WorkoutHistoryScreen>
             onPressed: () {
               Navigator.pop(context);
               // TODO: Navigate to premium/subscription screen when ready
-              // For now, show a snackbar indicating feature coming soon
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text(l10n.premiumComingSoon),
-                  backgroundColor: colorScheme.tertiary,
-                ),
-              );
+              SnackBarService.showSuccess(context, l10n.premiumComingSoon);
             },
             icon: const Icon(AppIcons.premium, size: AppIconSize.small),
             label: Text(l10n.upgradeToPremium),
@@ -1887,24 +1865,10 @@ class _WorkoutHistoryScreenState extends ConsumerState<WorkoutHistoryScreen>
 
       result.fold(
         (failure) {
-          if (context.mounted) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text('Error: ${failure.message}'),
-                backgroundColor: Theme.of(context).colorScheme.error,
-              ),
-            );
-          }
+          SnackBarService.showError(context, 'Error: ${failure.message}');
         },
         (_) {
-          if (context.mounted) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text(l10n.workoutUpdatedSuccessfully),
-                backgroundColor: Theme.of(context).colorScheme.primary,
-              ),
-            );
-          }
+          SnackBarService.showSuccess(context, l10n.workoutUpdatedSuccessfully);
           // Refresh the history list
           ref.invalidate(workoutHistoryProvider);
         },
@@ -1932,19 +1896,8 @@ class _WorkoutHistoryScreenState extends ConsumerState<WorkoutHistoryScreen>
                   .deleteWorkout(workout.id);
 
               result.fold(
-                (failure) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: Text('Errore: ${failure.message}'),
-                      backgroundColor: Theme.of(context).colorScheme.error,
-                    ),
-                  );
-                },
-                (_) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text(l10n.workoutDeletedSuccessfully)),
-                  );
-                },
+                (failure) => SnackBarService.showError(context, 'Errore: ${failure.message}'),
+                (_) => SnackBarService.showInfo(context, l10n.workoutDeletedSuccessfully),
               );
             },
             style: ElevatedButton.styleFrom(

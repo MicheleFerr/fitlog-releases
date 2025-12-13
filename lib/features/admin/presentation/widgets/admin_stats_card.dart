@@ -14,6 +14,7 @@ import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_locali
 import 'package:gymbro_flutter_new/features/admin/presentation/providers/firebase_init_provider.dart';
 import 'package:gymbro_flutter_new/features/admin/presentation/providers/admin_stats_provider.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator.dart';
 
 class AdminStatsCard extends ConsumerWidget {
   const AdminStatsCard({super.key});
@@ -199,7 +200,7 @@ class AdminStatsCard extends ConsumerWidget {
   Widget _buildLoadingStats(BuildContext context, AppLocalizations l10n) {
     return Column(
       children: [
-        const CircularProgressIndicator(),
+        const LoadingIndicator(),
         const SizedBox(height: 8),
         Text(l10n.loadingStats),
       ],

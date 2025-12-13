@@ -21,6 +21,7 @@ import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
+import 'package:gymbro_flutter_new/shared/presentation/services/snackbar_service.dart';
 
 class PremiumUpgradeScreen extends ConsumerStatefulWidget {
   const PremiumUpgradeScreen({super.key});
@@ -668,19 +669,7 @@ class _PremiumUpgradeScreenState extends ConsumerState<PremiumUpgradeScreen>
         if (!context.mounted) return;
 
         // Show success
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Row(
-              children: [
-                Icon(AppIcons.checkCircle, color: Theme.of(context).colorScheme.onPrimary),
-                const SizedBox(width: 8),
-                Text(context.l10n.welcomeToPremium),
-              ],
-            ),
-            backgroundColor: Theme.of(context).colorScheme.primary,
-            behavior: SnackBarBehavior.floating,
-          ),
-        );
+        SnackBarService.showSuccess(context, context.l10n.welcomeToPremium);
 
         // Navigate back or to premium features
         Navigator.of(context).pop(true);
@@ -690,25 +679,14 @@ class _PremiumUpgradeScreenState extends ConsumerState<PremiumUpgradeScreen>
 
         if (!context.mounted) return;
 
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(context.l10n.purchaseCancelled),
-            behavior: SnackBarBehavior.floating,
-          ),
-        );
+        SnackBarService.showInfo(context, context.l10n.purchaseCancelled);
       }
     } catch (e) {
       debugPrint('❌ Purchase error: $e');
 
       if (!context.mounted) return;
 
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(context.l10n.purchaseError(e.toString())),
-          backgroundColor: Theme.of(context).colorScheme.error,
-          behavior: SnackBarBehavior.floating,
-        ),
-      );
+      SnackBarService.showError(context, context.l10n.purchaseError(e.toString()));
     } finally {
       if (mounted) {
         setState(() {

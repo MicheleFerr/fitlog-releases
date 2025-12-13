@@ -1,4 +1,3 @@
-import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 /// Icon sizing system following Material Design 3 conventions
 ///
 /// Provides semantic size constants for consistent icon sizing across the app.

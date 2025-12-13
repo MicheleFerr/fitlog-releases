@@ -4,6 +4,7 @@ import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_colors.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
+import 'package:gymbro_flutter_new/shared/presentation/services/snackbar_service.dart';
 
 /// Screen that verifies user age before allowing registration.
 ///
@@ -83,11 +84,9 @@ class _AgeGateScreenState extends State<AgeGateScreen> {
   void _verifyContinue() {
     if (_selectedBirthDate == null) {
       // Show error: birth date required
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: const Text('Please select your date of birth'),
-          backgroundColor: context.colors.error,
-        ),
+      SnackBarService.showError(
+        context,
+        'Please select your date of birth',
       );
       return;
     }

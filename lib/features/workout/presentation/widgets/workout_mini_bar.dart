@@ -318,7 +318,7 @@ class _WorkoutMiniBarState extends State<WorkoutMiniBar>
                     borderRadius: BorderRadius.circular(AppSpacing.md),
                     child: BackdropFilter(
                       filter: ImageFilter.blur(sigmaX: 20, sigmaY: 20),
-                      child: Container(
+                      child: DecoratedBox(
                         decoration: BoxDecoration(
                           // Semi-transparent for frosted glass effect
                           color: context.colors.surface.withValues(alpha: 0.85),

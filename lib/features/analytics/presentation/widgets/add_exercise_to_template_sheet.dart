@@ -78,7 +78,7 @@ class _AddExerciseToTemplateSheetState
       snap: true,
       snapSizes: [0.4, 0.6, safeMax],
       builder: (context, scrollController) {
-        return Container(
+        return DecoratedBox(
           decoration: BoxDecoration(
             color: colorScheme.surface,
             borderRadius:
@@ -203,7 +203,7 @@ class _AddExerciseToTemplateSheetState
               ),
               IconButton(
                 onPressed: () => Navigator.of(context).pop(),
-                icon: Icon(AppIcons.close),
+                icon: const Icon(AppIcons.close),
                 style: IconButton.styleFrom(
                   backgroundColor: colorScheme.surfaceContainerHighest,
                 ),
@@ -385,7 +385,7 @@ class _AddExerciseToTemplateSheetState
                     height: 20,
                     child: LoadingIndicator(),
                   )
-                : Icon(AppIcons.add),
+                : const Icon(AppIcons.add),
             label: Text(
               _isAdding ? l10n.adding : l10n.addExerciseToTemplate,
             ),

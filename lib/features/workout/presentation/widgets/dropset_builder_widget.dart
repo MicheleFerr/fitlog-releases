@@ -7,6 +7,7 @@ import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise.dar
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
 import 'package:gymbro_flutter_new/shared/presentation/providers/app_config_provider.dart';
 import 'package:gymbro_flutter_new/shared/domain/utils/weight_helper.dart';
+import 'package:gymbro_flutter_new/shared/presentation/services/snackbar_service.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
 
@@ -107,12 +108,7 @@ class _DropsetBuilderWidgetState extends ConsumerState<DropsetBuilderWidget>
 
   void _createDropset() {
     if (_selectedExercise == null || _initialWeight <= 0) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(AppLocalizations.of(context).pleaseSelectExerciseAndWeight),
-          backgroundColor: Theme.of(context).colorScheme.error,
-        ),
-      );
+      SnackBarService.showError(context, AppLocalizations.of(context).pleaseSelectExerciseAndWeight);
       return;
     }
 
@@ -275,8 +271,8 @@ class _DropsetBuilderWidgetState extends ConsumerState<DropsetBuilderWidget>
                               fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
                               color: isSelected
                                   ? Theme.of(context).colorScheme.error
-                                  : Theme.of(context).colorScheme.onSurface.withOpacity(
-                                      isSelected ? 1.0 : 0.5,
+                                  : Theme.of(context).colorScheme.onSurface.withValues(
+                                      alpha: isSelected ? 1.0 : 0.5,
                                     ),
                             ),
                           ),

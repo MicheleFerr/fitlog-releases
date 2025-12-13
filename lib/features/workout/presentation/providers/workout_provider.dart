@@ -29,9 +29,7 @@ import 'package:gymbro_flutter_new/features/progress/presentation/providers/prog
 // App config for workout settings
 import 'package:gymbro_flutter_new/shared/presentation/providers/app_config_provider.dart';
 // Exercise history provider
-import 'package:gymbro_flutter_new/features/workout/presentation/providers/exercise_history_provider.dart';
 // 🔒 Feature Flags
-import 'package:gymbro_flutter_new/shared/config/feature_flags.dart';
 // 🔒 Security: Input validation & sanitization (consolidated)
 import 'package:gymbro_flutter_new/shared/domain/services/input_validator.dart';
 // Haptic feedback
@@ -80,6 +78,8 @@ import 'package:gymbro_flutter_new/features/notifications/presentation/providers
 import 'package:gymbro_flutter_new/features/analytics/domain/entities/personal_record.dart' as domain_pr;
 import 'package:gymbro_flutter_new/features/analytics/domain/entities/pr_celebration.dart';
 import 'package:gymbro_flutter_new/shared/domain/entities/pr_type.dart';
+// 📝 Form Cues for Apple Watch
+import 'package:gymbro_flutter_new/features/workout/presentation/providers/user_exercise_preferences_provider.dart';
 import 'package:gymbro_flutter_new/features/analytics/presentation/providers/achievement_provider.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise_activity.dart';
 // 🎮 Gamification: XP awarding on workout completion
@@ -137,6 +137,10 @@ class CurrentWorkoutNotifier extends Notifier<Workout?> {
   // 🧹 Cleanup timer fields
   Timer? _cleanupTimer;
   bool _timerPaused = false;
+
+  // ⌚ Debounce for Watch set completion (prevents duplicate processing)
+  DateTime? _lastWatchSetCompletion;
+  String? _lastCompletedSetId;
 
   // 💾 Helper method to auto-save modifications
   void _autoSaveIfNeeded() {
@@ -356,17 +360,10 @@ class CurrentWorkoutNotifier extends Notifier<Workout?> {
     print('⌚ [FLUTTER DEBUG] RPE Settings: enabled=$rpeTrackingEnabled, scale=$effortScale, locale=$locale');
 
     if (firstExercise != null) {
-      print('⌚ [FLUTTER DEBUG] Calling notifyWorkoutStarted with:');
-      print('   - exerciseName: ${firstExercise.name}');
-      print('   - currentSet: 1');
-      print('   - totalSets: ${firstExercise.sets.length}');
-      print('   - targetWeight: ${firstExercise.sets.isNotEmpty ? firstExercise.sets.first.weight : null}');
-      print('   - targetReps: ${firstExercise.sets.isNotEmpty ? firstExercise.sets.first.reps : null}');
-      print('   - rpeTrackingEnabled: $rpeTrackingEnabled');
-      print('   - effortScale: $effortScale');
-      print('   - locale: $locale');
-      watchNotifier.notifyWorkoutStarted(
+      // 📝 Get Form Cues for the exercise (async, fire and forget)
+      _getFormCuesAndNotifyWatch(
         exerciseName: firstExercise.name,
+        exerciseId: firstExercise.id,
         currentSet: 1,
         totalSets: firstExercise.sets.length,
         targetWeight: firstExercise.sets.isNotEmpty ? firstExercise.sets.first.weight : null,
@@ -375,8 +372,9 @@ class CurrentWorkoutNotifier extends Notifier<Workout?> {
         rpeTrackingEnabled: rpeTrackingEnabled,
         effortScale: effortScale,
         locale: locale,
+        tut: firstExercise.tut, // ⌚ BUG FIX #3: Time Under Tension
+        isStartup: true,
       );
-      print('⌚ [FLUTTER DEBUG] ✅ notifyWorkoutStarted called successfully');
     } else {
       print('⌚ [FLUTTER DEBUG] No first exercise, using workout name');
       watchNotifier.notifyWorkoutStarted(
@@ -387,6 +385,72 @@ class CurrentWorkoutNotifier extends Notifier<Workout?> {
         rpeTrackingEnabled: rpeTrackingEnabled,
         effortScale: effortScale,
         locale: locale,
+      );
+    }
+  }
+
+  /// Helper to get Form Cues and notify Watch
+  Future<void> _getFormCuesAndNotifyWatch({
+    required String exerciseName,
+    String? exerciseId,
+    required int currentSet,
+    required int totalSets,
+    double? targetWeight,
+    int? targetReps,
+    required int setsCompleted,
+    required bool rpeTrackingEnabled,
+    required String effortScale,
+    required String locale,
+    String? tut, // ⌚ BUG FIX #3: Time Under Tension (e.g., "3-1-2-0")
+    bool isStartup = false,
+  }) async {
+    final watchNotifier = ref.read(watchConnectivityProvider.notifier);
+    final prefsRepo = ref.read(userExercisePreferencesRepositoryProvider);
+
+    // Fetch Form Cues asynchronously
+    String? formCues;
+    try {
+      formCues = await prefsRepo.getFormCues(exerciseId, exerciseName);
+    } catch (e) {
+      print('⌚ [FLUTTER DEBUG] ⚠️ Failed to fetch Form Cues: $e');
+    }
+
+    print('⌚ [FLUTTER DEBUG] Form Cues for $exerciseName: ${formCues ?? "none"}');
+
+    if (isStartup) {
+      print('⌚ [FLUTTER DEBUG] Calling notifyWorkoutStarted with:');
+      print('   - exerciseName: $exerciseName');
+      print('   - currentSet: $currentSet');
+      print('   - totalSets: $totalSets');
+      print('   - formCues: ${formCues != null ? "${formCues.length} chars" : "none"}');
+      print('   - tut: ${tut ?? "none"}');
+      watchNotifier.notifyWorkoutStarted(
+        exerciseName: exerciseName,
+        currentSet: currentSet,
+        totalSets: totalSets,
+        targetWeight: targetWeight,
+        targetReps: targetReps,
+        setsCompleted: setsCompleted,
+        rpeTrackingEnabled: rpeTrackingEnabled,
+        effortScale: effortScale,
+        locale: locale,
+        formCues: formCues,
+        tut: tut, // ⌚ BUG FIX #3: Time Under Tension
+      );
+      print('⌚ [FLUTTER DEBUG] ✅ notifyWorkoutStarted called successfully');
+    } else {
+      watchNotifier.sendWorkoutUpdate(
+        exerciseName: exerciseName,
+        currentSet: currentSet,
+        totalSets: totalSets,
+        targetWeight: targetWeight,
+        targetReps: targetReps,
+        setsCompleted: setsCompleted,
+        rpeTrackingEnabled: rpeTrackingEnabled,
+        effortScale: effortScale,
+        locale: locale,
+        formCues: formCues,
+        tut: tut, // ⌚ BUG FIX #3: Time Under Tension
       );
     }
   }
@@ -417,8 +481,10 @@ class CurrentWorkoutNotifier extends Notifier<Workout?> {
       final currentSetIndex = currentExercise.sets.indexWhere((s) => !s.isCompleted);
       final currentSet = currentSetIndex >= 0 ? currentExercise.sets[currentSetIndex] : null;
 
-      ref.read(watchConnectivityProvider.notifier).sendWorkoutUpdate(
+      // 📝 Use async helper to fetch Form Cues and send update
+      _getFormCuesAndNotifyWatch(
         exerciseName: currentExercise.name,
+        exerciseId: currentExercise.id,
         currentSet: currentSetIndex >= 0 ? currentSetIndex + 1 : currentExercise.sets.length,
         totalSets: currentExercise.sets.length,
         targetWeight: currentSet?.weight,
@@ -427,6 +493,8 @@ class CurrentWorkoutNotifier extends Notifier<Workout?> {
         rpeTrackingEnabled: rpeTrackingEnabled,
         effortScale: effortScale,
         locale: locale,
+        tut: currentExercise.tut, // ⌚ BUG FIX #3: Time Under Tension
+        isStartup: false,
       );
     }
   }
@@ -1659,6 +1727,18 @@ class CurrentWorkoutNotifier extends Notifier<Workout?> {
       return;
     }
 
+    // ✅ DEDUPLICATION: Prevent duplicate processing from sendMessage + transferUserInfo
+    // Both are sent for reliability, but we only want to process once
+    final now = DateTime.now();
+    if (_lastCompletedSetId == currentSet.id &&
+        _lastWatchSetCompletion != null &&
+        now.difference(_lastWatchSetCompletion!).inSeconds < 3) {
+      print('⌚ [FLUTTER] ⚠️ Duplicate message ignored (set ${currentSet.id} already completed)');
+      return;
+    }
+    _lastWatchSetCompletion = now;
+    _lastCompletedSetId = currentSet.id;
+
     print('⌚ [FLUTTER] ✅ Completing set ${currentSet.setNumber} of ${currentExercise.name}');
 
     // Convert RIR to RPE if needed (RIR 0-4 → RPE 10-6)
@@ -1883,6 +1963,10 @@ class CurrentWorkoutNotifier extends Notifier<Workout?> {
 
       // 💾 Auto-save modifications
       _autoSaveIfNeeded();
+
+      // ⌚ BUG FIX #2: Notify Watch when set completion state changes
+      // This ensures deselecting a set (marking incomplete) syncs to Watch
+      _notifyWatchWorkoutUpdate();
     } catch (e, stackTrace) {
       if (kDebugMode) {
         debugLog(LogCategory.workout, '❌ [WorkoutProvider] Error updating exercise set: $e');

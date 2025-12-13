@@ -26,6 +26,7 @@ import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dar
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/providers/app_config_provider.dart';
 
+import 'package:gymbro_flutter_new/shared/presentation/services/snackbar_service.dart';
 /// Helper function to convert RPE to RIR
 int rpeToRir(double rpe) => (10 - rpe).round();
 
@@ -1173,11 +1174,9 @@ class _RpeSelectorBottomSheetState extends ConsumerState<RpeSelectorBottomSheet>
                       widget.onRPESuggestion!(suggestion.adjustedWeight);
                     }
                     // Show confirmation
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: Text('${l10n.nextSetWeight}: ${suggestion.adjustedWeight.toStringAsFixed(1)} kg'),
-                        duration: const Duration(seconds: 2),
-                      ),
+                    SnackBarService.showInfo(
+                      context,
+                      '${l10n.nextSetWeight}: ${suggestion.adjustedWeight.toStringAsFixed(1)} kg',
                     );
                   },
                   style: ElevatedButton.styleFrom(

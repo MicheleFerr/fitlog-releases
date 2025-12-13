@@ -1,8 +1,6 @@
-import 'dart:async';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/features/home/presentation/providers/home_state.dart';
 import 'package:gymbro_flutter_new/features/home/presentation/providers/home_state_notifier.dart';
-import 'package:gymbro_flutter_new/features/home/presentation/providers/performance_logger.dart';
 
 // Main state provider with auto-dispose
 final homeStateProvider = AutoDisposeNotifierProvider<

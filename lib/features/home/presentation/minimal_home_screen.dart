@@ -22,11 +22,16 @@ import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dar
 import 'package:gymbro_flutter_new/shared/presentation/services/snackbar_service.dart';
 import 'package:gymbro_flutter_new/shared/presentation/services/modal_service.dart';
 import 'package:gymbro_flutter_new/features/home/presentation/widgets/activity_rings_widget.dart';
+import 'package:gymbro_flutter_new/features/recovery_insight/presentation/widgets/recovery_insight_card.dart';
 
 /// Minimal Home Screen - Clean dark premium design
 ///
 /// Structure:
 /// - AppBar: Logo + Settings
+/// - Greeting + Motivational Quote
+/// - XPProgressBar: User level progress
+/// - ActivityRingsWidget: HealthKit activity rings
+/// - RecoveryInsightCard: Sleep-based recovery analysis
 /// - StartWorkoutCard: Hero CTA
 /// - TemplatesCarouselCompact: Quick access to templates
 /// - AICoachCard: AI insights (hidden if no data)
@@ -118,6 +123,13 @@ class MinimalHomeScreen extends ConsumerWidget {
                   padding: EdgeInsets.symmetric(horizontal: AppSpacing.md),
                   child: ActivityRingsWidget(),
                 ),
+                const SizedBox(height: 16),
+
+                // 0.8 Recovery Insight (Sleep-based recovery analysis)
+                const Padding(
+                  padding: EdgeInsets.symmetric(horizontal: AppSpacing.md),
+                  child: RecoveryInsightCard(),
+                ),
                 const SizedBox(height: 20),
 
                 // 1. Start Workout Card (Hero)
@@ -132,13 +144,13 @@ class MinimalHomeScreen extends ConsumerWidget {
                 primaryAdviceAsync.when(
                   data: (advice) {
                     if (advice != null) {
-                      return Padding(
-                        padding: const EdgeInsets.only(
+                      return const Padding(
+                        padding: EdgeInsets.only(
                           left: AppSpacing.md,
                           right: AppSpacing.md,
                           bottom: AppSpacing.xl,
                         ),
-                        child: const AICoachCard(),
+                        child: AICoachCard(),
                       );
                     }
                     return const SizedBox.shrink();
@@ -268,7 +280,7 @@ class _DeveloperToolsSheet extends StatelessWidget {
       minChildSize: 0.4,
       maxChildSize: safeMax,
       expand: false,
-      builder: (context, scrollController) => Container(
+      builder: (context, scrollController) => DecoratedBox(
         decoration: BoxDecoration(
           color: context.colors.surface,
           borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),

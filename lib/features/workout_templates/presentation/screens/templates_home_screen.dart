@@ -37,6 +37,7 @@ import 'package:gymbro_flutter_new/features/workout/presentation/screens/edit_te
 import 'package:gymbro_flutter_new/features/workout/presentation/providers/workout_provider.dart';
 import 'package:gymbro_flutter_new/features/workout_templates/presentation/widgets/template_share_sheet.dart';
 import 'package:gymbro_flutter_new/features/auth/presentation/providers/consolidated_user_provider.dart';
+import 'package:gymbro_flutter_new/core/navigation/app_routes.dart';
 
 class TemplatesHomeScreen extends ConsumerStatefulWidget {
   const TemplatesHomeScreen({super.key});
@@ -623,7 +624,7 @@ class _TemplatesHomeScreenState extends ConsumerState<TemplatesHomeScreen>
         final l10n = AppLocalizations.of(context);
         SnackBarService.showSuccess(context, l10n.workoutStartedFromTemplate(template.name));
         // Navigate to workout tab (separate branch in StatefulShellRoute)
-        context.go('/workout');
+        context.go(AppRoutes.workoutPath);
       }
     } catch (e) {
       if (context.mounted) {
@@ -910,7 +911,7 @@ class _TemplatesHomeScreenState extends ConsumerState<TemplatesHomeScreen>
   }
 
   void _viewPublicTemplate(BuildContext context, WorkoutTemplate template) {
-    context.push('/templates/public/${template.id}');
+    context.push(AppRoutes.templateDetailPath, extra: template.id);
   }
 
   Future<void> _downloadTemplate(BuildContext context, WorkoutTemplate template) async {
@@ -962,7 +963,7 @@ class _SliverTabBarDelegate extends SliverPersistentHeaderDelegate {
 
   @override
   Widget build(BuildContext context, double shrinkOffset, bool overlapsContent) {
-    return Container(
+    return ColoredBox(
       color: backgroundColor,
       child: tabBar,
     );
@@ -1213,7 +1214,7 @@ class _WorkoutTemplateCard extends ConsumerWidget {
 
     return GestureDetector(
       onTap: onTap,
-      child: Container(
+      child: DecoratedBox(
         decoration: BoxDecoration(
           color: context.colors.surface,
           borderRadius: BorderRadius.circular(AppSpacing.md),

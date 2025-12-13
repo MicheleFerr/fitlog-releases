@@ -219,7 +219,7 @@ class WorkoutSuggestionService {
       const optimalRecoveryDays = 3.0; // 72 hours
 
       // Base readiness from time
-      var baseReadiness = (daysSince / optimalRecoveryDays).clamp(0.0, 1.0);
+      final baseReadiness = (daysSince / optimalRecoveryDays).clamp(0.0, 1.0);
 
       // Apply volume decay (high volume = slower recovery)
       final volume = totalVolume[muscle] ?? 0;

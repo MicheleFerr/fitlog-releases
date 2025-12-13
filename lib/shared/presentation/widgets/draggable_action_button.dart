@@ -235,7 +235,7 @@ class _DraggableActionButtonState extends State<DraggableActionButton> {
         maxChildSize: safeMax, // Safe max (avoids notch)
         snap: true,
         snapSizes: [0.5, safeMax], // Snap points
-        builder: (context, scrollController) => Container(
+        builder: (context, scrollController) => DecoratedBox(
           decoration: BoxDecoration(
             color: Theme.of(context).colorScheme.surface,
             borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),

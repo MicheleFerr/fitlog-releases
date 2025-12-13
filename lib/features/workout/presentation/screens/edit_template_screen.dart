@@ -13,7 +13,6 @@ import 'package:gymbro_flutter_new/features/workout/presentation/widgets/add_exe
 import 'package:gymbro_flutter_new/features/workout/presentation/widgets/reps_picker_modal.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/widgets/rest_time_picker_modal.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/widgets/weight_picker_modal.dart';
-import 'package:gymbro_flutter_new/features/workout/presentation/providers/firebase_template_provider.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';

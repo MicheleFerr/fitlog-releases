@@ -30,6 +30,8 @@ class ConnectivityManager: NSObject, ObservableObject {
     @Published var targetWeight: Double = 0
     @Published var targetReps = 0
     @Published var setsCompleted = 0
+    @Published var formCues: String? = nil  // Persistent technique reminders
+    @Published var tut: String? = nil  // ⌚ BUG FIX #3: Time Under Tension (e.g., "3-1-2-0")
 
     // MARK: - Workout Summary (shown after workout ends)
     @Published var showWorkoutSummary = false
@@ -88,8 +90,16 @@ class ConnectivityManager: NSObject, ObservableObject {
             session?.delegate = self
             session?.activate()
 
-            DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) { [weak self] in
+            // ✅ TWO-PHASE SYNC for fast startup:
+            // Phase 1 (immediate): Show cached applicationContext for instant feedback
+            // Phase 2 (after 0.5s): Request fresh state from iPhone for accuracy
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) { [weak self] in
+                // Phase 1: Immediate UI from cache
                 self?.checkPendingApplicationContext()
+            }
+            DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) { [weak self] in
+                // Phase 2: Fresh state from iPhone (may update if different)
+                self?.requestWorkoutState()
             }
         } else {
             print("⚠️ WCSession not supported on this device")
@@ -194,15 +204,25 @@ class ConnectivityManager: NSObject, ObservableObject {
 
         // STEP 3: Determine delivery method based on criticality and reachability
         if critical {
-            // Critical data: use transferUserInfo (queued, guaranteed delivery)
-            do {
-                session.transferUserInfo(data)
-                print("✅ Queued critical message: \(data["type"] ?? "unknown")")
-                clearRetryCount(for: data)
-            } catch {
-                print("❌ Failed to queue critical message: \(error.localizedDescription)")
-                handleSendFailure(data, error: error, critical: true)
+            // ✅ FIX: Critical messages need IMMEDIATE delivery for user feedback
+            // Strategy: Try sendMessage first (immediate), ALSO queue via transferUserInfo (backup)
+            if session.isReachable {
+                // Try immediate delivery via sendMessage
+                session.sendMessage(data, replyHandler: { response in
+                    print("✅ Critical message delivered immediately: \(data["type"] ?? "unknown")")
+                    Task { @MainActor in
+                        self.clearRetryCount(for: data)
+                    }
+                }) { [weak self] error in
+                    print("⚠️ sendMessage failed for critical (\(data["type"] ?? "unknown")): \(error.localizedDescription)")
+                    // Fallback already queued via transferUserInfo below
+                }
             }
+
+            // ALSO queue via transferUserInfo for guaranteed delivery (backup)
+            session.transferUserInfo(data)
+            print("📦 Critical message also queued for backup: \(data["type"] ?? "unknown")")
+            clearRetryCount(for: data)
         } else if session.isReachable {
             // Non-critical: try sendMessage first (faster), fallback to transferUserInfo
             session.sendMessage(data, replyHandler: { response in
@@ -405,9 +425,13 @@ class ConnectivityManager: NSObject, ObservableObject {
         lastWorkoutCalories = calories
         lastWorkoutSaved = save
 
+        // ✅ FIX: Complete cleanup of workout and timer state
         isWorkoutActive = false
         restTimer?.invalidate()
         restTimer = nil
+        clearTimerState()  // Clear all timer-related state
+        shouldShowTimer = false
+        shouldNavigateToExercise = false
 
         showWorkoutSummary = true
 
@@ -541,6 +565,72 @@ class ConnectivityManager: NSObject, ObservableObject {
         )
     }
 
+    /// Request current workout state from iPhone
+    /// Called on app launch/foreground to sync with iPhone's active workout
+    func requestWorkoutState() {
+        print("📱 [WATCH] Requesting workout state from iPhone...")
+
+        guard isSessionReady() else {
+            print("⚠️ Cannot request workout state: session not ready")
+            // Fall back to checking cached applicationContext
+            checkPendingApplicationContext()
+            return
+        }
+
+        guard let session = session else {
+            checkPendingApplicationContext()
+            return
+        }
+
+        // If not reachable, rely on applicationContext
+        guard session.isReachable else {
+            print("⚠️ iPhone not reachable, using cached applicationContext")
+            checkPendingApplicationContext()
+            return
+        }
+
+        session.sendMessage(
+            ["type": "requestWorkoutState", "timestamp": Date().timeIntervalSince1970],
+            replyHandler: { [weak self] response in
+                Task { @MainActor in
+                    guard let self = self else { return }
+
+                    print("📱 [WATCH] Received workout state response: \(response)")
+
+                    // Check if workout is active
+                    if let isActive = response["isActive"] as? Bool {
+                        if isActive {
+                            self.isWorkoutActive = true
+                            self.handleWorkoutUpdate(response)
+                            print("✅ [WATCH] Workout state synced: ACTIVE")
+
+                            // Check if there's an active rest timer
+                            if let timerData = response["restTimer"] as? [String: Any] {
+                                self.handleRestTimerFromContext(timerData)
+                            }
+
+                            WKInterfaceDevice.current().play(.start)
+                        } else {
+                            self.isWorkoutActive = false
+                            print("✅ [WATCH] Workout state synced: INACTIVE")
+                        }
+                    } else {
+                        // No workout active on iPhone
+                        self.isWorkoutActive = false
+                        print("✅ [WATCH] No active workout on iPhone")
+                    }
+                }
+            },
+            errorHandler: { [weak self] error in
+                print("❌ [WATCH] Failed to request workout state: \(error.localizedDescription)")
+                // Fall back to cached applicationContext
+                Task { @MainActor in
+                    self?.checkPendingApplicationContext()
+                }
+            }
+        )
+    }
+
     // MARK: - Rest Timer Management
 
     private func startRestTimer(duration: Int) {
@@ -607,6 +697,7 @@ class ConnectivityManager: NSObject, ObservableObject {
         restTimeDuration = 0
         restTimeRemaining = 0
         isTimerSkipped = false
+        isTimerPaused = false  // ✅ FIX: Reset pause state to avoid stale UI
     }
 
     /// Timer tick handler - runs on main thread via RunLoop
@@ -655,9 +746,16 @@ class ConnectivityManager: NSObject, ObservableObject {
     }
 
     private func handleWorkoutUpdate(_ data: [String: Any]) {
-        if let active = data["isActive"] as? Bool {
-            isWorkoutActive = active
-        }
+        // ✅ FIX: DO NOT update isWorkoutActive here!
+        // This function updates exercise DETAILS only.
+        // isWorkoutActive should be managed explicitly by:
+        // - sendEndWorkout() for local user action
+        // - processIncomingMessage() for "workoutStarted"/"workoutEnded"
+        // - didReceiveApplicationContext() for state sync
+        // - requestWorkoutState() response handler
+        //
+        // Setting isWorkoutActive here causes race conditions where stale
+        // applicationContext data can override local user action (discard).
 
         if let exercise = data["exerciseName"] as? String {
             currentExerciseName = exercise
@@ -693,6 +791,20 @@ class ConnectivityManager: NSObject, ObservableObject {
 
         if let locale = data["locale"] as? String {
             appLocale = locale
+        }
+
+        // Form Cues (persistent technique reminders) - may be nil
+        if let cues = data["formCues"] as? String {
+            formCues = cues.isEmpty ? nil : cues
+        } else {
+            formCues = nil
+        }
+
+        // ⌚ BUG FIX #3: Time Under Tension (e.g., "3-1-2-0") - may be nil
+        if let tutValue = data["tut"] as? String {
+            tut = tutValue.isEmpty ? nil : tutValue
+        } else {
+            tut = nil
         }
     }
 
@@ -756,6 +868,18 @@ extension ConnectivityManager: WCSessionDelegate {
                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) { [weak self] in
                     self?.processPendingMessages()
                 }
+
+                // ⌚ BUG FIX #5: Request workout state when connection is restored
+                // This ensures we sync with iPhone if workout is active
+                // Helps recover from disconnect state (showing only HR instead of workout)
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.8) { [weak self] in
+                    guard let self = self else { return }
+                    // First check cached context for immediate UI
+                    self.checkPendingApplicationContext()
+                    // Then request fresh state from iPhone
+                    self.requestWorkoutState()
+                    print("⌚ [RECOVERY] Requested workout state after connection restored")
+                }
             } else {
                 print("⚠️ Connection lost, messages will be queued")
             }
@@ -803,9 +927,13 @@ extension ConnectivityManager: WCSessionDelegate {
                 WKInterfaceDevice.current().play(.start)
 
             case "workoutEnded":
+                // ✅ FIX: Complete cleanup of workout and timer state
                 isWorkoutActive = false
                 restTimer?.invalidate()
                 restTimer = nil
+                clearTimerState()
+                shouldShowTimer = false
+                shouldNavigateToExercise = false
                 WKInterfaceDevice.current().play(.success)
 
             case "workoutUpdate":
@@ -875,10 +1003,13 @@ extension ConnectivityManager: WCSessionDelegate {
                         WKInterfaceDevice.current().play(.start)
 
                     } else if type == "workoutEnded" {
+                        // ✅ FIX: Complete cleanup of workout and timer state
                         isWorkoutActive = false
                         restTimer?.invalidate()
                         restTimer = nil
+                        clearTimerState()
                         shouldShowTimer = false
+                        shouldNavigateToExercise = false
                         WKInterfaceDevice.current().play(.success)
                     }
                 }
@@ -895,10 +1026,13 @@ extension ConnectivityManager: WCSessionDelegate {
                         handleWorkoutUpdate(workoutData)
                         WKInterfaceDevice.current().play(.start)
                     } else if !isActive && isWorkoutActive {
+                        // ✅ FIX: Complete cleanup of workout and timer state
                         isWorkoutActive = false
                         restTimer?.invalidate()
                         restTimer = nil
+                        clearTimerState()
                         shouldShowTimer = false
+                        shouldNavigateToExercise = false
                     }
                 }
             }
@@ -912,8 +1046,24 @@ extension ConnectivityManager: WCSessionDelegate {
 
     /// Handle rest timer from applicationContext with proper time sync
     private func handleRestTimerFromContext(_ data: [String: Any]) {
+        // ✅ FIX: Only start timer if workout is active
+        // This prevents timer from restarting after workout ends
+        guard isWorkoutActive else {
+            print("⏱️ [TIMER] Ignoring timer context - workout not active")
+            return
+        }
+
         guard let duration = data["duration"] as? Int,
               let startTime = data["startTime"] as? TimeInterval else {
+            return
+        }
+
+        // ✅ BUG FIX #1: Prevent duplicate timer starts
+        // If we already have a timer running with the same startTime, don't restart
+        // This prevents race condition when checkPendingApplicationContext and requestWorkoutState
+        // both try to start the timer in quick succession
+        if restTimerStartTime == startTime && restTimer != nil {
+            print("⏱️ [TIMER] Timer already running with same startTime, skipping duplicate start")
             return
         }
 
@@ -929,6 +1079,9 @@ extension ConnectivityManager: WCSessionDelegate {
 
             objectWillChange.send()
             shouldShowTimer = true
+            print("⏱️ [TIMER] Started rest timer: \(remaining)s remaining (startTime: \(startTime))")
+        } else {
+            print("⏱️ [TIMER] Timer already expired (elapsed: \(elapsed)s), not starting")
         }
     }
 

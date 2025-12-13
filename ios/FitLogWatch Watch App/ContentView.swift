@@ -134,10 +134,10 @@ struct WorkoutCompanionView: View {
         }
         .tabViewStyle(.verticalPage)
         .onAppear {
-            // Start HealthKit workout session for heart rate
-            Task {
-                try? await workoutManager.startWorkout(type: .strengthTraining)
-            }
+            // ⌚ NOTE: HKWorkoutSession is now auto-started at app level (FitLogWatchApp.swift)
+            // when connectivity.isWorkoutActive becomes true. This ensures the session
+            // starts even if Watch app was in background when iPhone workout started.
+            // See BUG FIX #4 in FitLogWatchApp.swift
 
             // Check if timer should be showing on appear
             if connectivity.shouldShowTimer && selectedTab != 1 {
@@ -152,9 +152,9 @@ struct WorkoutCompanionView: View {
             tabSwitchTask?.cancel()
             tabSwitchTask = nil
 
-            Task {
-                try? await workoutManager.endWorkout()
-            }
+            // ✅ DO NOT auto-save workout here!
+            // User must explicitly choose "Save" or "Discard" in the confirmation dialog.
+            // If app is closed during workout, session can be recovered via recoverWorkoutSessionIfNeeded()
         }
         // Auto-navigate to timer tab when timer starts
         .onChange(of: connectivity.shouldShowTimer) { _, shouldShow in
@@ -215,6 +215,7 @@ struct ExerciseControlView: View {
     @State private var showingEffortPicker = false
     @State private var showingConfirmation = false
     @State private var confirmationTask: Task<Void, Never>?
+    @State private var showingFormCues = false
 
     // Localized strings (from Flutter app)
     private var isItalian: Bool { connectivity.appLocale == "it" }
@@ -223,10 +224,12 @@ struct ExerciseControlView: View {
     private var completeText: String { isItalian ? "Completo" : "Complete" }
     private var doneText: String { isItalian ? "Fatto!" : "Done!" }
     private var repsText: String { isItalian ? "rip" : "reps" }
+    private var formCuesTitle: String { isItalian ? "Form Cues" : "Form Cues" }
+    private var noFormCuesText: String { isItalian ? "Nessuna nota" : "No notes" }
 
     var body: some View {
         VStack(spacing: 10) {
-            // Top bar with HR badge
+            // Top bar with HR badge, TUT badge, and Form Cues button
             HStack {
                 // Heart Rate badge (top-left)
                 HStack(spacing: 4) {
@@ -248,6 +251,42 @@ struct ExerciseControlView: View {
                 .accessibilityLabel(isItalian ? "Frequenza cardiaca: \(Int(workoutManager.heartRate)) battiti per minuto" : "Heart rate: \(Int(workoutManager.heartRate)) beats per minute")
 
                 Spacer()
+
+                // TUT badge (Time Under Tension) - show if available
+                if let tut = connectivity.tut, !tut.isEmpty {
+                    HStack(spacing: 3) {
+                        Image(systemName: "timer")
+                            .font(.system(size: 9))
+                            .foregroundColor(.orange)
+                            .accessibilityHidden(true)
+                        Text(tut)
+                            .font(.system(size: 11, weight: .medium))
+                            .monospacedDigit()
+                    }
+                    .padding(.horizontal, 6)
+                    .padding(.vertical, 4)
+                    .background(
+                        Capsule()
+                            .fill(Color.orange.opacity(0.15))
+                    )
+                    .accessibilityElement(children: .combine)
+                    .accessibilityLabel(isItalian ? "Tempo sotto tensione: \(tut)" : "Time under tension: \(tut)")
+                }
+
+                // Form Cues button (top-right) - only show if has form cues
+                if let formCues = connectivity.formCues, !formCues.isEmpty {
+                    Button(action: {
+                        WKInterfaceDevice.current().play(.click)
+                        showingFormCues = true
+                    }) {
+                        Image(systemName: "info.circle.fill")
+                            .font(.system(size: 18))
+                            .foregroundColor(.blue)
+                    }
+                    .buttonStyle(.plain)
+                    .accessibilityLabel(isItalian ? "Mostra note sulla forma" : "Show form cues")
+                    .accessibilityHint(isItalian ? "Tocca per vedere i promemoria sulla tecnica" : "Tap to view technique reminders")
+                }
             }
             .padding(.horizontal, 4)
 
@@ -326,6 +365,16 @@ struct ExerciseControlView: View {
                 onSkip: {
                     showingEffortPicker = false
                     completeSet(effort: nil)
+                }
+            )
+        }
+        .sheet(isPresented: $showingFormCues) {
+            FormCuesSheetView(
+                exerciseName: connectivity.currentExerciseName,
+                formCues: connectivity.formCues ?? "",
+                locale: connectivity.appLocale,
+                onDismiss: {
+                    showingFormCues = false
                 }
             )
         }
@@ -684,6 +733,80 @@ struct EffortCircleButton: View {
     }
 }
 
+// MARK: - Form Cues Sheet View
+
+struct FormCuesSheetView: View {
+    let exerciseName: String
+    let formCues: String
+    let locale: String
+    let onDismiss: () -> Void
+
+    private var isItalian: Bool { locale == "it" }
+    private var titleText: String { isItalian ? "Form Cues" : "Form Cues" }
+    private var doneText: String { isItalian ? "Fatto" : "Done" }
+
+    var body: some View {
+        ScrollView {
+            VStack(spacing: 12) {
+                // Header with pin icon
+                HStack(spacing: 6) {
+                    Image(systemName: "pin.fill")
+                        .font(.system(size: 12))
+                        .foregroundColor(.blue)
+                        .accessibilityHidden(true)
+                    Text(titleText)
+                        .font(.system(size: 13, weight: .semibold))
+                        .foregroundColor(.secondary)
+                }
+                .padding(.top, 8)
+                .accessibilityAddTraits(.isHeader)
+
+                // Exercise name
+                Text(exerciseName)
+                    .font(.system(size: 16, weight: .bold))
+                    .multilineTextAlignment(.center)
+                    .lineLimit(2)
+
+                Divider()
+                    .padding(.horizontal, 20)
+                    .accessibilityHidden(true)
+
+                // Form cues content
+                Text(formCues)
+                    .font(.system(size: 14, weight: .regular))
+                    .multilineTextAlignment(.leading)
+                    .padding(.horizontal, 12)
+                    .padding(.vertical, 8)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .background(
+                        RoundedRectangle(cornerRadius: 10)
+                            .fill(Color.blue.opacity(0.1))
+                    )
+                    .padding(.horizontal, 8)
+
+                // Done button
+                Button(action: {
+                    WKInterfaceDevice.current().play(.click)
+                    onDismiss()
+                }) {
+                    Text(doneText)
+                        .font(.system(size: 14, weight: .semibold))
+                        .frame(maxWidth: .infinity)
+                        .frame(height: 36)
+                }
+                .buttonStyle(.borderedProminent)
+                .tint(.blue)
+                .padding(.horizontal, 20)
+                .padding(.top, 8)
+                .accessibilityLabel(isItalian ? "Chiudi" : "Close")
+            }
+            .padding(.vertical, 8)
+        }
+        .accessibilityElement(children: .contain)
+        .accessibilityLabel(isItalian ? "Promemoria sulla forma per \(exerciseName)" : "Form cues for \(exerciseName)")
+    }
+}
+
 // MARK: - Rest Timer View - Coherent Design with Flutter App
 
 struct RestTimerView: View {
@@ -951,35 +1074,34 @@ struct RestTimerView: View {
                 .accessibilityHidden(true)
             }
 
-            // Action buttons
-            HStack(spacing: 12) {
+            // Action buttons - icons only for compact UI
+            HStack(spacing: 16) {
+                // Cancel button - X icon, red tint
                 Button(action: {
                     cancelEdit()
                 }) {
-                    Text(cancelText)
-                        .font(.system(size: 12, weight: .medium))
-                        .frame(maxWidth: .infinity)
-                        .frame(height: 32)
+                    Image(systemName: "xmark")
+                        .font(.system(size: 16, weight: .bold))
+                        .frame(width: 44, height: 36)
                 }
                 .buttonStyle(.bordered)
-                .tint(.secondary)
+                .tint(.red)
                 .accessibilityLabel(isItalian ? "Annulla modifiche" : "Cancel changes")
                 .accessibilityHint(isItalian ? "Tocca per annullare e tornare al timer" : "Tap to cancel and return to timer")
 
+                // Confirm button - checkmark icon, green tint
                 Button(action: {
                     confirmEdit()
                 }) {
-                    Text(confirmText)
-                        .font(.system(size: 12, weight: .semibold))
-                        .frame(maxWidth: .infinity)
-                        .frame(height: 32)
+                    Image(systemName: "checkmark")
+                        .font(.system(size: 16, weight: .bold))
+                        .frame(width: 44, height: 36)
                 }
                 .buttonStyle(.borderedProminent)
                 .tint(.green)
                 .accessibilityLabel(isItalian ? "Conferma modifiche: \(formatWeight(editedWeight)) chilogrammi per \(editedReps) ripetizioni" : "Confirm changes: \(formatWeight(editedWeight)) kilograms for \(editedReps) reps")
                 .accessibilityHint(isItalian ? "Tocca per salvare le modifiche" : "Tap to save changes")
             }
-            .padding(.horizontal, 8)
         }
         .padding(.vertical, 8)
         .padding(.horizontal, 8)
@@ -1239,7 +1361,7 @@ struct StatsView: View {
         .padding(.horizontal, 4)
         // Save/Discard confirmation dialog
         .confirmationDialog(confirmEndText, isPresented: $showingEndOptions, titleVisibility: .visible) {
-            // Save button (primary action)
+            // Save button (primary action) - SAVES to HealthKit
             Button(saveText) {
                 WKInterfaceDevice.current().play(.success)
                 connectivity.sendEndWorkout(
@@ -1247,8 +1369,12 @@ struct StatsView: View {
                     duration: workoutManager.elapsedTime,
                     calories: workoutManager.activeCalories
                 )
+                // ✅ Save workout to HealthKit
+                Task {
+                    try? await workoutManager.endWorkout()
+                }
             }
-            // Discard button (destructive)
+            // Discard button (destructive) - does NOT save to HealthKit
             Button(discardText, role: .destructive) {
                 WKInterfaceDevice.current().play(.click)
                 connectivity.sendEndWorkout(
@@ -1256,15 +1382,13 @@ struct StatsView: View {
                     duration: workoutManager.elapsedTime,
                     calories: workoutManager.activeCalories
                 )
+                // ✅ Discard workout WITHOUT saving to HealthKit
+                Task {
+                    try? await workoutManager.discardWorkout()
+                }
             }
             Button(cancelText, role: .cancel) { }
         }
-    }
-
-    private func formatDuration(_ seconds: TimeInterval) -> String {
-        let mins = Int(seconds) / 60
-        let secs = Int(seconds) % 60
-        return String(format: "%d:%02d", mins, secs)
     }
 }
 

@@ -24,6 +24,7 @@ import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
 
+import 'package:gymbro_flutter_new/shared/presentation/services/snackbar_service.dart';
 class WorkoutHistoryEditorEnhanced extends ConsumerStatefulWidget {
 
   const WorkoutHistoryEditorEnhanced({
@@ -654,25 +655,16 @@ class _WorkoutHistoryEditorEnhancedState
       });
 
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(AppLocalizations.of(context).workoutSaved),
-            backgroundColor: Theme.of(context).colorScheme.primary,
-          ),
-        );
-
+        final l10n = AppLocalizations.of(context);
+        SnackBarService.showSuccess(context, l10n.workoutSaved);
         Navigator.of(context).pop();
       }
     } catch (e) {
       setState(() => _isSaving = false);
 
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(AppLocalizations.of(context).errorSavingWorkout),
-            backgroundColor: Theme.of(context).colorScheme.error,
-          ),
-        );
+        final l10n = AppLocalizations.of(context);
+        SnackBarService.showError(context, l10n.errorSavingWorkout);
       }
     }
   }

@@ -2,10 +2,9 @@ import 'package:flutter/foundation.dart' show kDebugMode;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise.dart';
-import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/services/snackbar_service.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
-import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
 
 class EditExerciseModal extends ConsumerStatefulWidget {
@@ -411,12 +410,7 @@ class _EditExerciseModalState extends ConsumerState<EditExerciseModal> {
       
       if (name.isEmpty) {
         if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(l10n.exerciseNameCannotBeEmpty(l10n.exerciseName)),
-              backgroundColor: Theme.of(context).colorScheme.error,
-            ),
-          );
+          SnackBarService.showError(context, l10n.exerciseNameCannotBeEmpty(l10n.exerciseName));
         }
         return;
       }
@@ -450,12 +444,7 @@ class _EditExerciseModalState extends ConsumerState<EditExerciseModal> {
           }
           // Invalid custom time entered
           if (mounted) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text(l10n.invalidRestTimeError),
-                backgroundColor: Theme.of(context).colorScheme.error,
-              ),
-            );
+            SnackBarService.showError(context, l10n.invalidRestTimeError);
           }
           return;
         }
@@ -487,19 +476,7 @@ class _EditExerciseModalState extends ConsumerState<EditExerciseModal> {
         
         // Show success message
         if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(l10n.exerciseUpdated(name)),
-              backgroundColor: Theme.of(context).colorScheme.primary,
-              action: restTime != null
-                  ? SnackBarAction(
-                      label: '${l10n.timerLabel}: ${restTime}s',
-                      textColor: context.colors.surface,
-                      onPressed: () {},
-                    )
-                  : null,
-            ),
-          );
+          SnackBarService.showSuccess(context, l10n.exerciseUpdated(name));
         }
       } catch (e) {
         if (kDebugMode) {
@@ -520,13 +497,8 @@ class _EditExerciseModalState extends ConsumerState<EditExerciseModal> {
         } catch (_) {
           // Ignore navigation errors
         }
-        
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(context.l10n.errorUpdatingExercise),
-            backgroundColor: Theme.of(context).colorScheme.error,
-          ),
-        );
+
+        SnackBarService.showError(context, context.l10n.errorUpdatingExercise);
       }
     }
   }

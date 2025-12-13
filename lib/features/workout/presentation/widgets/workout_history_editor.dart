@@ -25,6 +25,8 @@ import 'package:intl/intl.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator.dart';
+import 'package:gymbro_flutter_new/shared/presentation/services/snackbar_service.dart';
 
 class WorkoutHistoryEditor extends ConsumerStatefulWidget {
 
@@ -218,16 +220,11 @@ class _WorkoutHistoryEditorState extends ConsumerState<WorkoutHistoryEditor>
                 // Save button
                 FilledButton.icon(
                   onPressed: _hasUnsavedChanges && !_isSaving ? _saveWorkout : null,
-                  icon: _isSaving 
-                      ? SizedBox(
+                  icon: _isSaving
+                      ? const SizedBox(
                           width: 16,
                           height: 16,
-                          child: CircularProgressIndicator(
-                            strokeWidth: 2,
-                            valueColor: AlwaysStoppedAnimation<Color>(
-                              theme.colorScheme.onPrimary,
-                            ),
-                          ),
+                          child: LoadingIndicator(),
                         )
                       : const SemanticIcon(
   icon: AppIcons.save,
@@ -675,25 +672,14 @@ class _WorkoutHistoryEditorState extends ConsumerState<WorkoutHistoryEditor>
       
       // Show success message
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(AppLocalizations.of(context).workoutSaved),
-            backgroundColor: Theme.of(context).colorScheme.primary,
-          ),
-        );
-        
+        SnackBarService.showSuccess(context, AppLocalizations.of(context).workoutSaved);
         Navigator.of(context).pop();
       }
     } catch (e) {
       setState(() => _isSaving = false);
-      
+
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(AppLocalizations.of(context).errorSavingWorkout),
-            backgroundColor: Theme.of(context).colorScheme.error,
-          ),
-        );
+        SnackBarService.showError(context, AppLocalizations.of(context).errorSavingWorkout);
       }
     }
   }

@@ -28,6 +28,7 @@ import 'package:gymbro_flutter_new/features/auth/domain/entities/user_profile.da
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
+import 'package:gymbro_flutter_new/shared/presentation/services/snackbar_service.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
 
 class PremiumPurchaseScreenV2 extends ConsumerStatefulWidget {
@@ -1624,33 +1625,10 @@ class _PremiumPurchaseScreenV2State extends ConsumerState<PremiumPurchaseScreenV
       if (!context.mounted) return;
 
       if (userProfile?.isPremium ?? false) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Row(
-              children: [
-                Icon(AppIcons.checkCircle, color: context.colors.surface),
-                const SizedBox(width: 8),
-                const Text('Premium restored successfully!'),
-              ],
-            ),
-            backgroundColor: Theme.of(context).colorScheme.primary,
-            behavior: SnackBarBehavior.floating,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(12),
-            ),
-          ),
-        );
+        SnackBarService.showSuccess(context, 'Premium restored successfully!');
         Navigator.of(context).pop();
       } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: const Text('No purchases found to restore'),
-            behavior: SnackBarBehavior.floating,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(12),
-            ),
-          ),
-        );
+        SnackBarService.showInfo(context, 'No purchases found to restore');
       }
     } finally {
       if (mounted) {

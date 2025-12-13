@@ -146,7 +146,7 @@ class ImportResultWidget extends StatelessWidget {
           // Action buttons
           FilledButton.icon(
             onPressed: () => Navigator.of(context).pop(),
-            icon: Icon(AppIcons.check),
+            icon: const Icon(AppIcons.check),
             label: Text(context.l10n.done),
           ),
         ],

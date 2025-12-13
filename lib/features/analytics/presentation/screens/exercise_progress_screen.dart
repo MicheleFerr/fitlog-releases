@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:gymbro_flutter_new/core/navigation/app_routes.dart';
 import 'package:gymbro_flutter_new/features/analytics/domain/entities/exercise_progress_metrics.dart';
 import 'package:gymbro_flutter_new/features/analytics/presentation/providers/exercise_progress_provider.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
@@ -53,7 +54,7 @@ class _ExerciseProgressScreenState extends ConsumerState<ExerciseProgressScreen>
             if (Navigator.of(context).canPop()) {
               Navigator.of(context).pop();
             } else {
-              context.go('/');
+              context.go(AppRoutes.homePath);
             }
           },
         ),
@@ -138,7 +139,7 @@ class _ExerciseProgressScreenState extends ConsumerState<ExerciseProgressScreen>
             : 'No exercises match "$_searchQuery"',
         primaryActionLabel: context.l10n.startWorkout,
         primaryActionIcon: AppIcons.add,
-        onPrimaryAction: () => context.push('/workout'),
+        onPrimaryAction: () => context.push(AppRoutes.workoutPath),
       );
     }
 
@@ -162,7 +163,7 @@ class _ExerciseProgressScreenState extends ConsumerState<ExerciseProgressScreen>
       child: InkWell(
         onTap: () {
           HapticFeedback.lightImpact();
-          context.push('/exercise-progress/detail', extra: exerciseName);
+          context.push(AppRoutes.exerciseProgressDetailPath, extra: exerciseName);
         },
         borderRadius: BorderRadius.circular(12),
         child: Padding(

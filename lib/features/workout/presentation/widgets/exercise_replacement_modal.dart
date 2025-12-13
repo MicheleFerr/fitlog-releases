@@ -9,13 +9,13 @@ import 'package:gymbro_flutter_new/features/exercise_database/presentation/provi
 // Removed: FuzzySearchService (overengineered - simple token matching is sufficient)
 import 'package:gymbro_flutter_new/features/exercise_database/domain/entities/exercise.dart' as exercise_db;
 import 'package:gymbro_flutter_new/features/exercise_database/data/repositories/json_exercise_repository.dart';
-import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator.dart';
 
+import 'package:gymbro_flutter_new/shared/presentation/services/snackbar_service.dart';
 class ExerciseReplacementModal extends ConsumerStatefulWidget {
 
   const ExerciseReplacementModal({
@@ -763,21 +763,7 @@ class _ExerciseReplacementModalState extends ConsumerState<ExerciseReplacementMo
               Navigator.of(context).pop(); // Close modal
               widget.onReplace(newExercise);
               
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Row(
-                    children: [
-                      Icon(
-                        AppIcons.complete,
-                        color: theme.colorScheme.onTertiary,
-                      ),
-                      const SizedBox(width: 8),
-                      Text(l10n.exerciseReplaced),
-                    ],
-                  ),
-                  backgroundColor: theme.colorScheme.tertiary,
-                ),
-              );
+              SnackBarService.showSuccess(context, l10n.exerciseReplaced);
             },
             child: Text(l10n.replace),
           ),

@@ -19,6 +19,8 @@ class SupersetConverter {
         category: _mapFocusToCategory(dbExercise.focus),
         sets: [], // Will be filled by SupersetSet
         notes: '',
+        countingMode: dbExercise.countingMode, // ✅ Preserve counting mode
+        tut: dbExercise.tempoEsecuzione, // ✅ Preserve TUT from database
       );
     }).toList();
     

@@ -6,7 +6,6 @@ import 'dart:math' as math;
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
-import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
 
 /// Heatmap calendario stile GitHub contributions per visualizzare
 /// l'intensità e frequenza degli allenamenti

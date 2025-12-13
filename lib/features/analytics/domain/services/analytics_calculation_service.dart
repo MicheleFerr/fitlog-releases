@@ -25,7 +25,6 @@
 /// ```
 library;
 
-import 'package:flutter/foundation.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise_activity.dart';
 import 'package:gymbro_flutter_new/features/analytics/domain/services/volume_calculator.dart';
 import 'package:gymbro_flutter_new/features/analytics/domain/services/trend_analyzer.dart';

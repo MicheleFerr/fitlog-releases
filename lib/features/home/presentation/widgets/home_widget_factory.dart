@@ -13,6 +13,7 @@ import 'package:gymbro_flutter_new/features/analytics/presentation/providers/ana
 // Removed duplicate import - currentWorkoutProvider is already available from workout_provider.dart
 import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise_activity.dart';
 import 'package:gymbro_flutter_new/features/analytics/domain/services/insights_engine.dart';
+import 'package:gymbro_flutter_new/shared/presentation/services/snackbar_service.dart';
 // Nuovi widget tier-1
 import 'package:gymbro_flutter_new/features/home/presentation/widgets/enhanced_progress_stats_widget.dart';
 import 'package:gymbro_flutter_new/features/home/presentation/widgets/streak_tracker_widget.dart';
@@ -47,7 +48,7 @@ class HomeWidgetFactory {
       case HomeWidgetType.statsCard:
         // TODO: UnifiedStatsCard doesn't have size parameter - ignoring config.size
         widget = UnifiedStatsCard(
-          onTapXP: isPreview ? null : () => context.push('/community'),
+          onTapXP: isPreview ? null : () => context.push(AppRoutes.communityPath),
           onTapAchievements: isPreview ? null : () {},
         );
         break;
@@ -67,7 +68,7 @@ class HomeWidgetFactory {
         
       case HomeWidgetType.communityPulse:
         widget = CommunityPulseCard(
-          onViewAll: isPreview ? null : () => context.push('/community'),
+          onViewAll: isPreview ? null : () => context.push(AppRoutes.communityPath),
         );
         break;
         
@@ -152,7 +153,7 @@ class HomeWidgetFactory {
       return Card(
         elevation: 2,
         child: InkWell(
-          onTap: () => context.push('/workout'),
+          onTap: () => context.push(AppRoutes.workoutPath),
           borderRadius: BorderRadius.circular(16),
           child: Container(
             padding: const EdgeInsets.all(16), // Ridotto da 20
@@ -236,7 +237,7 @@ class HomeWidgetFactory {
           Material(
             color: Colors.transparent,
             child: InkWell(
-              onTap: () => context.push('/workout'),
+              onTap: () => context.push(AppRoutes.workoutPath),
               borderRadius: const BorderRadius.only(
                 topLeft: Radius.circular(16),
                 topRight: Radius.circular(16),
@@ -317,7 +318,7 @@ class HomeWidgetFactory {
                     icon: AppIcons.play,
                     label: context.l10n.resume,
                     color: theme.colorScheme.primary,
-                    onTap: () => context.push('/workout'),
+                    onTap: () => context.push(AppRoutes.workoutPath),
                   ),
                 ),
                 const SizedBox(width: 8),
@@ -473,12 +474,7 @@ class HomeWidgetFactory {
               // Scarta l'allenamento
               ref.read(currentWorkoutProvider.notifier).clearWorkout();
               // Mostra conferma
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text(context.l10n.workoutDiscarded),
-                  backgroundColor: Theme.of(context).colorScheme.error,
-                ),
-              );
+              SnackBarService.showError(context, context.l10n.workoutDiscarded);
             },
             style: FilledButton.styleFrom(
               backgroundColor: Theme.of(context).colorScheme.error,
@@ -518,7 +514,7 @@ class HomeWidgetFactory {
               // Salva e termina l'allenamento
               ref.read(currentWorkoutProvider.notifier).completeWorkout();
               // Vai alla schermata di riepilogo
-              context.push('/workout/summary');
+              context.push(AppRoutes.workoutCompletionPath);
             },
             child: Text(context.l10n.finishAndSave),
           ),
@@ -1488,7 +1484,7 @@ class HomeWidgetFactory {
       return Card(
         elevation: 2,
         child: InkWell(
-          onTap: isPreview ? null : () => context.push('/templates'),
+          onTap: isPreview ? null : () => context.push(AppRoutes.templatesPath),
           borderRadius: BorderRadius.circular(16),
           child: Container(
             padding: const EdgeInsets.all(16),
@@ -1555,7 +1551,7 @@ class HomeWidgetFactory {
       return Card(
         elevation: 2,
         child: InkWell(
-          onTap: isPreview ? null : () => context.push('/templates'),
+          onTap: isPreview ? null : () => context.push(AppRoutes.templatesPath),
           borderRadius: BorderRadius.circular(16),
           child: Container(
             padding: const EdgeInsets.all(20),
@@ -1630,7 +1626,7 @@ class HomeWidgetFactory {
       return Card(
         elevation: 2,
         child: InkWell(
-          onTap: isPreview ? null : () => context.push('/templates'),
+          onTap: isPreview ? null : () => context.push(AppRoutes.templatesPath),
           borderRadius: BorderRadius.circular(16),
           child: Container(
             padding: const EdgeInsets.all(24),

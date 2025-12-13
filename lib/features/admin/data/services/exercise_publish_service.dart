@@ -7,11 +7,9 @@
 /// Service per pubblicazione nuove versioni del database esercizi su Firestore
 library;
 
-import 'package:flutter/foundation.dart' show kDebugMode;
-import 'dart:convert';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter/services.dart';
+import 'package:gymbro_flutter_new/features/exercise_database/data/utils/exercise_json_loader.dart';
 
 class ExercisePublishService {
   ExercisePublishService({
@@ -35,9 +33,9 @@ class ExercisePublishService {
         debugPrint('📤 Publishing new exercise database version: $version');
       }
 
-      // 1. Carica esercizi da entrambi i file asset (EN + IT)
-      final exercisesEn = await _loadExercisesFromAsset('assets/data/exercises.json');
-      final exercisesIt = await _loadExercisesFromAsset('assets/data/exercises_it.json');
+      // 1. Carica esercizi usando ExerciseJsonLoader (nuova struttura folder-based)
+      final exercisesEn = await ExerciseJsonLoader.loadExercises('en');
+      final exercisesIt = await ExerciseJsonLoader.loadExercises('it');
       if (kDebugMode) {
         debugPrint('📋 Loaded ${exercisesEn.length} EN exercises, ${exercisesIt.length} IT exercises');
       }
@@ -69,23 +67,6 @@ class ExercisePublishService {
     } catch (e) {
       if (kDebugMode) {
         debugPrint('❌ Failed to publish version: $e');
-      }
-      rethrow;
-    }
-  }
-
-  /// Carica esercizi da asset JSON usando pattern performance-safe
-  Future<List<Map<String, dynamic>>> _loadExercisesFromAsset(String assetPath) async {
-    try {
-      // Best practice per file > 10KB: usa ByteData invece di loadString
-      final ByteData data = await rootBundle.load(assetPath);
-      final String jsonString = utf8.decode(data.buffer.asUint8List());
-      final List<dynamic> jsonList = jsonDecode(jsonString);
-
-      return jsonList.cast<Map<String, dynamic>>();
-    } catch (e) {
-      if (kDebugMode) {
-        debugPrint('❌ Failed to load exercises from asset ($assetPath): $e');
       }
       rethrow;
     }

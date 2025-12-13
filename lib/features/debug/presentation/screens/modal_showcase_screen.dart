@@ -5,6 +5,7 @@ import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
 import 'package:gymbro_flutter_new/shared/presentation/services/modal_service.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator.dart';
 
 // Modal imports - Existing
 import 'package:gymbro_flutter_new/features/analytics/presentation/widgets/weekly_modal.dart';
@@ -960,7 +961,7 @@ class ModalShowcaseScreen extends ConsumerWidget {
       builder: (dialogContext) => AlertDialog(
         content: Row(
           children: [
-            const CircularProgressIndicator(),
+            const LoadingIndicator(),
             const SizedBox(width: 24),
             Text(
               'Processing...',
@@ -1016,7 +1017,7 @@ class ModalShowcaseScreen extends ConsumerWidget {
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('Modal Design Guidelines'),
-        content: SingleChildScrollView(
+        content: const SingleChildScrollView(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisSize: MainAxisSize.min,

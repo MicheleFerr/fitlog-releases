@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'dart:ui';
 import 'package:go_router/go_router.dart';
+import 'package:gymbro_flutter_new/core/navigation/app_routes.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
@@ -63,7 +64,7 @@ class PremiumFeatureOverlay extends StatelessWidget {
               onTap: () {
                 HapticFeedback.lightImpact();
                 // Navigate to premium purchase screen
-                context.push('/premium');
+                context.push(AppRoutes.premiumPath);
               },
               borderRadius: BorderRadius.circular(12),
               child: DecoratedBox(

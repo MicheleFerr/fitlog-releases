@@ -99,7 +99,8 @@ class ConsentRepositoryImpl implements ConsentRepository {
       }
 
       // Parse Firestore data to UserConsent entity
-      final consent = UserConsent.fromJson(data);
+      // Convert Firestore Timestamps back to ISO8601 strings for fromJson
+      final consent = UserConsent.fromJson(_fromFirestoreData(data));
       return right(consent);
     } on FirebaseException catch (e) {
       return left(FirebaseConsentFailure(
@@ -147,7 +148,8 @@ class ConsentRepositoryImpl implements ConsentRepository {
       );
 
       // Save to Firestore (uses userId as document ID for easy lookup)
-      await _getConsentDoc(userId).set(consent.toJson());
+      // Convert to JSON and transform DateTime strings to Firestore Timestamps
+      await _getConsentDoc(userId).set(_toFirestoreData(consent.toJson()));
 
       // TODO: Create audit log entry (Task 2.9)
       // await _auditLogger.log(
@@ -196,8 +198,8 @@ class ConsentRepositoryImpl implements ConsentRepository {
           ? updatedConsent.copyWith(userAgent: userAgent)
           : updatedConsent;
 
-      // Save to Firestore
-      await _getConsentDoc(userId).update(consentWithAgent.toJson());
+      // Save to Firestore - convert DateTime strings to Timestamps
+      await _getConsentDoc(userId).update(_toFirestoreData(consentWithAgent.toJson()));
 
       // TODO: Create audit log entry (Task 2.9)
       // await _auditLogger.log(
@@ -247,8 +249,8 @@ class ConsentRepositoryImpl implements ConsentRepository {
           ? updatedConsent.copyWith(userAgent: userAgent)
           : updatedConsent;
 
-      // Save to Firestore
-      await _getConsentDoc(userId).update(consentWithAgent.toJson());
+      // Save to Firestore - convert DateTime strings to Timestamps
+      await _getConsentDoc(userId).update(_toFirestoreData(consentWithAgent.toJson()));
 
       // TODO: Create audit log entry (Task 2.9)
       // await _auditLogger.log(
@@ -345,8 +347,8 @@ class ConsentRepositoryImpl implements ConsentRepository {
         userAgent: userAgent,
       );
 
-      // Save to Firestore
-      await _getConsentDoc(userId).update(updatedConsent.toJson());
+      // Save to Firestore - convert DateTime strings to Timestamps
+      await _getConsentDoc(userId).update(_toFirestoreData(updatedConsent.toJson()));
 
       // TODO: Create audit log entry (Task 2.9)
       // await _auditLogger.log(
@@ -486,5 +488,73 @@ class ConsentRepositoryImpl implements ConsentRepository {
     }
     // Fallback: mask entire IP if format unknown
     return '***';
+  }
+
+  /// Convert Firestore data to entity-compatible format
+  ///
+  /// Firestore returns Timestamp objects for DateTime fields.
+  /// The fromJson method expects ISO8601 strings.
+  /// This method converts Timestamps to ISO8601 strings.
+  Map<String, dynamic> _fromFirestoreData(Map<String, dynamic> data) {
+    final result = Map<String, dynamic>.from(data);
+
+    // List of DateTime fields that might be Timestamps
+    const dateTimeFields = [
+      'acceptedAt',
+      'createdAt',
+      'updatedAt',
+      'essentialGrantedAt',
+      'measurementsGrantedAt',
+      'vitalsGrantedAt',
+      'revokedAt',
+    ];
+
+    for (final field in dateTimeFields) {
+      if (result[field] != null && result[field] is Timestamp) {
+        final timestamp = result[field] as Timestamp;
+        result[field] = timestamp.toDate().toIso8601String();
+      }
+    }
+
+    return result;
+  }
+
+  /// Convert JSON data to Firestore-compatible format
+  ///
+  /// Firestore security rules require DateTime fields to be Timestamps,
+  /// not ISO8601 strings. This method converts all DateTime string fields
+  /// to Firestore Timestamps.
+  ///
+  /// **DateTime fields converted**:
+  /// - acceptedAt (required)
+  /// - createdAt, updatedAt (optional)
+  /// - essentialGrantedAt, measurementsGrantedAt, vitalsGrantedAt (optional)
+  /// - revokedAt (optional)
+  Map<String, dynamic> _toFirestoreData(Map<String, dynamic> json) {
+    final result = Map<String, dynamic>.from(json);
+
+    // List of DateTime fields that need conversion to Timestamp
+    const dateTimeFields = [
+      'acceptedAt',
+      'createdAt',
+      'updatedAt',
+      'essentialGrantedAt',
+      'measurementsGrantedAt',
+      'vitalsGrantedAt',
+      'revokedAt',
+    ];
+
+    for (final field in dateTimeFields) {
+      if (result[field] != null && result[field] is String) {
+        try {
+          final dateTime = DateTime.parse(result[field] as String);
+          result[field] = Timestamp.fromDate(dateTime);
+        } catch (_) {
+          // Keep original value if parsing fails
+        }
+      }
+    }
+
+    return result;
   }
 }

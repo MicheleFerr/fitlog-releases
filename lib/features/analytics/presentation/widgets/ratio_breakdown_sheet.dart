@@ -55,7 +55,7 @@ class RatioBreakdownSheet extends StatelessWidget {
       snap: true,
       snapSizes: const [0.5, 0.8, 1.0],
       builder: (context, scrollController) {
-        return Container(
+        return DecoratedBox(
           decoration: BoxDecoration(
             color: colorScheme.surface,
             borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),

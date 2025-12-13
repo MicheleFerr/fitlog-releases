@@ -6,17 +6,22 @@
 /// - One-line recommendation
 /// - Last night's sleep
 ///
+/// **Always Visible**: Shows consent CTA if HealthKit not connected
 /// **Tap Action**: Opens RecoveryInsightSheet with full details
 library;
 
+import 'dart:io' show Platform;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:gymbro_flutter_new/features/ai_coach/data/errors/healthkit_errors.dart';
 import 'package:gymbro_flutter_new/features/recovery_insight/domain/entities/recovery_insight.dart';
+import 'package:gymbro_flutter_new/features/recovery_insight/presentation/extensions/recovery_category_l10n.dart';
+import 'package:gymbro_flutter_new/features/recovery_insight/presentation/extensions/recovery_recommendation_l10n.dart';
 import 'package:gymbro_flutter_new/features/recovery_insight/presentation/providers/recovery_insight_provider.dart';
 import 'package:gymbro_flutter_new/features/recovery_insight/presentation/widgets/recovery_insight_sheet.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
-import 'package:gymbro_flutter_new/shared/presentation/services/modal_service.dart';
+import 'package:gymbro_flutter_new/shared/presentation/services/snackbar_service.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator.dart';
@@ -75,10 +80,18 @@ class _RecoveryInsightCardState extends ConsumerState<RecoveryInsightCard>
         return Opacity(
           opacity: _fadeAnimation.value,
           child: insightAsync.when(
-            data: (insight) => _RecoveryInsightCardContent(
-              insight: insight,
-              onTap: () => _showRecoverySheet(context),
-            ),
+            data: (insight) {
+              // If no sleep data available, show the no-data card
+              if (!insight.hasSleepData) {
+                return _RecoveryInsightNoDataCard(
+                  onRefresh: () => ref.invalidate(recoveryInsightProvider),
+                );
+              }
+              return _RecoveryInsightCardContent(
+                insight: insight,
+                onTap: () => _showRecoverySheet(context),
+              );
+            },
             loading: () => _buildLoadingState(context),
             error: (e, _) => _buildErrorState(context, e),
           ),
@@ -91,7 +104,7 @@ class _RecoveryInsightCardState extends ConsumerState<RecoveryInsightCard>
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
 
-    return Container(
+    return DecoratedBox(
       decoration: BoxDecoration(
         color: colorScheme.surfaceContainerLow,
         borderRadius: BorderRadius.circular(24),
@@ -108,51 +121,71 @@ class _RecoveryInsightCardState extends ConsumerState<RecoveryInsightCard>
   }
 
   Widget _buildErrorState(BuildContext context, Object error) {
-    final theme = Theme.of(context);
-    final colorScheme = theme.colorScheme;
-    final l10n = context.l10n;
+    // Handle different error types with appropriate UI
+    if (error is HealthKitNotAvailableError || error is HealthKitDisabledError) {
+      // Platform not available - show info card
+      return _RecoveryInsightPlatformCard();
+    } else if (error is HealthKitNoDataError || error is HealthKitInvalidDataError) {
+      // Connected but no data - show no data card
+      return _RecoveryInsightNoDataCard(
+        onRefresh: () => ref.invalidate(recoveryInsightProvider),
+      );
+    } else if (error is HealthKitSyncNetworkError ||
+        error is HealthKitSyncTimeoutError ||
+        error is HealthKitSyncServerError ||
+        error is HealthKitSyncRateLimitError) {
+      // Sync error - show retry card
+      return _RecoveryInsightSyncErrorCard(
+        onRetry: () => ref.invalidate(recoveryInsightProvider),
+      );
+    } else {
+      // Permission errors or unknown - show connect card
+      return _RecoveryInsightConnectCard(
+        onConnect: () => _requestHealthKitPermissions(context),
+      );
+    }
+  }
 
-    return Container(
-      decoration: BoxDecoration(
-        color: colorScheme.surfaceContainerLow,
-        borderRadius: BorderRadius.circular(24),
-        border: Border.all(
-          color: colorScheme.outline.withValues(alpha: 0.15),
-          width: 1.5,
-        ),
-      ),
-      child: Padding(
-        padding: const EdgeInsets.all(20),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            SemanticIcon(
-              icon: AppIcons.bedtime,
-              semanticLabel: 'Sleep error',
-              size: AppIconSize.large,
-              color: colorScheme.onSurface.withValues(alpha: 0.5),
-            ),
-            const SizedBox(height: 8),
-            Text(
-              l10n.connectAppleHealth,
-              style: theme.textTheme.bodyMedium?.copyWith(
-                color: colorScheme.onSurface.withValues(alpha: 0.7),
-              ),
-              textAlign: TextAlign.center,
-            ),
-          ],
-        ),
-      ),
-    );
+  Future<void> _requestHealthKitPermissions(BuildContext context) async {
+    HapticFeedback.mediumImpact();
+
+    if (!Platform.isIOS) {
+      SnackBarService.showInfo(
+        context,
+        context.l10n.healthKitOnlyiOS,
+      );
+      return;
+    }
+
+    try {
+      final datasource = ref.read(healthKitDatasourceProvider);
+      await datasource.initialize();
+
+      // Refresh the provider to get new data
+      ref.invalidate(recoveryInsightProvider);
+
+      if (context.mounted) {
+        SnackBarService.showSuccess(
+          context,
+          context.l10n.healthKitConnected,
+        );
+      }
+    } catch (e) {
+      if (context.mounted) {
+        SnackBarService.showError(
+          context,
+          context.l10n.healthKitPermissionDenied,
+        );
+      }
+    }
   }
 
   Future<void> _showRecoverySheet(BuildContext context) async {
     HapticFeedback.lightImpact();
 
-    await ModalService.showBottomSheet(
-      context,
-      child: const RecoveryInsightSheet(),
-    );
+    // Use RecoveryInsightSheet.show() directly - it has its own DraggableScrollableSheet
+    // Don't use ModalService.showBottomSheet which would create a double sheet
+    await RecoveryInsightSheet.show(context);
   }
 }
 
@@ -183,7 +216,7 @@ class _RecoveryInsightCardContent extends StatelessWidget {
     final l10n = context.l10n;
     final categoryColor = _getCategoryColor(insight.category, context);
 
-    return Container(
+    return DecoratedBox(
       decoration: BoxDecoration(
         color: colorScheme.surfaceContainerLow,
         borderRadius: BorderRadius.circular(24),
@@ -248,7 +281,7 @@ class _RecoveryInsightCardContent extends StatelessWidget {
                               ),
                             ),
                             Text(
-                              insight.category.displayName,
+                              insight.category.localizedName(context),
                               style: theme.textTheme.bodySmall?.copyWith(
                                 color: categoryColor,
                                 fontWeight: FontWeight.w600,
@@ -300,7 +333,7 @@ class _RecoveryInsightCardContent extends StatelessWidget {
                         const SizedBox(width: 8),
                         Expanded(
                           child: Text(
-                            insight.recommendation,
+                            insight.recommendation.localizedRecommendation(context),
                             style: theme.textTheme.bodyMedium?.copyWith(
                               color: colorScheme.onSurface.withValues(alpha: 0.9),
                               fontWeight: FontWeight.w500,
@@ -438,6 +471,423 @@ class _RecoveryInsightCardContent extends StatelessWidget {
           ),
         ),
       ],
+    );
+  }
+}
+
+/// Card shown when HealthKit is not connected
+/// Provides clear CTA to connect Apple Health
+class _RecoveryInsightConnectCard extends StatelessWidget {
+  const _RecoveryInsightConnectCard({
+    required this.onConnect,
+  });
+
+  final VoidCallback onConnect;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+    final l10n = context.l10n;
+
+    return DecoratedBox(
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [
+            colorScheme.primaryContainer.withValues(alpha: 0.3),
+            colorScheme.tertiaryContainer.withValues(alpha: 0.3),
+          ],
+        ),
+        borderRadius: BorderRadius.circular(24),
+        border: Border.all(
+          color: colorScheme.primary.withValues(alpha: 0.2),
+          width: 1.5,
+        ),
+      ),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(24),
+        child: Material(
+          color: Colors.transparent,
+          child: InkWell(
+            onTap: onConnect,
+            borderRadius: BorderRadius.circular(24),
+            child: Padding(
+              padding: const EdgeInsets.all(20),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  // Icon with animated-like glow
+                  Container(
+                    width: 64,
+                    height: 64,
+                    decoration: BoxDecoration(
+                      color: colorScheme.primary.withValues(alpha: 0.15),
+                      shape: BoxShape.circle,
+                      boxShadow: [
+                        BoxShadow(
+                          color: colorScheme.primary.withValues(alpha: 0.2),
+                          blurRadius: 20,
+                          spreadRadius: 2,
+                        ),
+                      ],
+                    ),
+                    child: Icon(
+                      AppIcons.bedtime,
+                      color: colorScheme.primary,
+                      size: 32,
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+
+                  // Title
+                  Text(
+                    l10n.recoveryInsight,
+                    style: theme.textTheme.titleLarge?.copyWith(
+                      fontWeight: FontWeight.bold,
+                      color: colorScheme.onSurface,
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+
+                  // Description
+                  Text(
+                    l10n.sleepTrackingDescription,
+                    style: theme.textTheme.bodyMedium?.copyWith(
+                      color: colorScheme.onSurface.withValues(alpha: 0.7),
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                  const SizedBox(height: 20),
+
+                  // Connect button
+                  FilledButton.icon(
+                    onPressed: onConnect,
+                    icon: Icon(
+                      Platform.isIOS ? AppIcons.apple : AppIcons.favorite,
+                      size: 20,
+                    ),
+                    label: Text(l10n.connectAppleHealth),
+                    style: FilledButton.styleFrom(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 24,
+                        vertical: 12,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 12),
+
+                  // Benefits row
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      _buildBenefit(
+                        context,
+                        icon: AppIcons.nightlight,
+                        label: l10n.sleepData,
+                      ),
+                      const SizedBox(width: 16),
+                      _buildBenefit(
+                        context,
+                        icon: AppIcons.trendUp,
+                        label: l10n.recoveryScore,
+                      ),
+                      const SizedBox(width: 16),
+                      _buildBenefit(
+                        context,
+                        icon: AppIcons.tip,
+                        label: l10n.personalizedTips,
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildBenefit(
+    BuildContext context, {
+    required IconData icon,
+    required String label,
+  }) {
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Icon(
+          icon,
+          size: 20,
+          color: colorScheme.primary.withValues(alpha: 0.8),
+        ),
+        const SizedBox(height: 4),
+        Text(
+          label,
+          style: theme.textTheme.bodySmall?.copyWith(
+            color: colorScheme.onSurface.withValues(alpha: 0.6),
+            fontSize: 10,
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+/// Card shown when HealthKit is connected but has no sleep data
+class _RecoveryInsightNoDataCard extends StatelessWidget {
+  const _RecoveryInsightNoDataCard({
+    required this.onRefresh,
+  });
+
+  final VoidCallback onRefresh;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+    final l10n = context.l10n;
+
+    return DecoratedBox(
+      decoration: BoxDecoration(
+        color: colorScheme.surfaceContainerLow,
+        borderRadius: BorderRadius.circular(24),
+        border: Border.all(
+          color: colorScheme.outline.withValues(alpha: 0.2),
+          width: 1.5,
+        ),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(20),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            // Icon
+            Container(
+              width: 56,
+              height: 56,
+              decoration: BoxDecoration(
+                color: colorScheme.tertiary.withValues(alpha: 0.15),
+                shape: BoxShape.circle,
+              ),
+              child: Icon(
+                AppIcons.bedtime,
+                color: colorScheme.tertiary,
+                size: 28,
+              ),
+            ),
+            const SizedBox(height: 16),
+
+            // Title
+            Text(
+              l10n.recoveryInsight,
+              style: theme.textTheme.titleLarge?.copyWith(
+                fontWeight: FontWeight.bold,
+                color: colorScheme.onSurface,
+              ),
+            ),
+            const SizedBox(height: 8),
+
+            // Description - HealthKit connected but no data
+            Text(
+              l10n.noSleepDataFound,
+              style: theme.textTheme.bodyMedium?.copyWith(
+                color: colorScheme.onSurface.withValues(alpha: 0.7),
+              ),
+              textAlign: TextAlign.center,
+            ),
+            const SizedBox(height: 16),
+
+            // Tip
+            Container(
+              padding: const EdgeInsets.all(12),
+              decoration: BoxDecoration(
+                color: colorScheme.tertiary.withValues(alpha: 0.08),
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: Row(
+                children: [
+                  Icon(
+                    AppIcons.tip,
+                    color: colorScheme.tertiary,
+                    size: 18,
+                  ),
+                  const SizedBox(width: 8),
+                  Expanded(
+                    child: Text(
+                      l10n.trackSleepHint,
+                      style: theme.textTheme.bodySmall?.copyWith(
+                        color: colorScheme.onSurface.withValues(alpha: 0.8),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(height: 16),
+
+            // Refresh button
+            TextButton.icon(
+              onPressed: onRefresh,
+              icon: const SemanticIcon(
+                icon: AppIcons.refresh,
+                semanticLabel: 'Refresh',
+                size: AppIconSize.small,
+              ),
+              label: Text(l10n.refreshData),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+/// Card shown when HealthKit is not available on this platform
+class _RecoveryInsightPlatformCard extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+    final l10n = context.l10n;
+
+    return DecoratedBox(
+      decoration: BoxDecoration(
+        color: colorScheme.surfaceContainerLow,
+        borderRadius: BorderRadius.circular(24),
+        border: Border.all(
+          color: colorScheme.outline.withValues(alpha: 0.2),
+          width: 1.5,
+        ),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(20),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            // Icon
+            Container(
+              width: 56,
+              height: 56,
+              decoration: BoxDecoration(
+                color: colorScheme.surfaceContainerHighest,
+                shape: BoxShape.circle,
+              ),
+              child: Icon(
+                AppIcons.bedtime,
+                color: colorScheme.onSurface.withValues(alpha: 0.5),
+                size: 28,
+              ),
+            ),
+            const SizedBox(height: 16),
+
+            // Title
+            Text(
+              l10n.recoveryInsight,
+              style: theme.textTheme.titleLarge?.copyWith(
+                fontWeight: FontWeight.bold,
+                color: colorScheme.onSurface,
+              ),
+            ),
+            const SizedBox(height: 8),
+
+            // Description
+            Text(
+              l10n.healthKitOnlyiOS,
+              style: theme.textTheme.bodyMedium?.copyWith(
+                color: colorScheme.onSurface.withValues(alpha: 0.6),
+              ),
+              textAlign: TextAlign.center,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+/// Card shown when there's a sync error
+class _RecoveryInsightSyncErrorCard extends StatelessWidget {
+  const _RecoveryInsightSyncErrorCard({
+    required this.onRetry,
+  });
+
+  final VoidCallback onRetry;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+    final l10n = context.l10n;
+
+    return DecoratedBox(
+      decoration: BoxDecoration(
+        color: colorScheme.surfaceContainerLow,
+        borderRadius: BorderRadius.circular(24),
+        border: Border.all(
+          color: colorScheme.error.withValues(alpha: 0.2),
+          width: 1.5,
+        ),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(20),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            // Icon
+            Container(
+              width: 56,
+              height: 56,
+              decoration: BoxDecoration(
+                color: colorScheme.error.withValues(alpha: 0.15),
+                shape: BoxShape.circle,
+              ),
+              child: Icon(
+                AppIcons.wifiOff,
+                color: colorScheme.error,
+                size: 28,
+              ),
+            ),
+            const SizedBox(height: 16),
+
+            // Title
+            Text(
+              l10n.recoveryInsight,
+              style: theme.textTheme.titleLarge?.copyWith(
+                fontWeight: FontWeight.bold,
+                color: colorScheme.onSurface,
+              ),
+            ),
+            const SizedBox(height: 8),
+
+            // Description
+            Text(
+              l10n.syncErrorRetry,
+              style: theme.textTheme.bodyMedium?.copyWith(
+                color: colorScheme.onSurface.withValues(alpha: 0.7),
+              ),
+              textAlign: TextAlign.center,
+            ),
+            const SizedBox(height: 16),
+
+            // Retry button
+            FilledButton.icon(
+              onPressed: onRetry,
+              icon: const SemanticIcon(
+                icon: AppIcons.refresh,
+                semanticLabel: 'Retry',
+                size: AppIconSize.small,
+              ),
+              label: Text(l10n.retry),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }

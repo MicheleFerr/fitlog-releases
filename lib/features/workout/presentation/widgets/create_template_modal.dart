@@ -13,6 +13,7 @@ import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
 import 'package:gymbro_flutter_new/features/auth/presentation/providers/consolidated_user_provider.dart';
 
+import 'package:gymbro_flutter_new/shared/presentation/services/snackbar_service.dart';
 /// Template type for quick selection (replaces 15 confusing tags)
 enum TemplateType {
   upper,
@@ -571,25 +572,13 @@ class _CreateTemplateModalState extends ConsumerState<CreateTemplateModal> {
       if (mounted) {
         Navigator.of(context).pop();
 
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Template "$templateName" creato!'),
-            backgroundColor: context.colors.success,
-            behavior: SnackBarBehavior.floating,
-          ),
-        );
+        SnackBarService.showSuccess(context, 'Template "$templateName" creato!');
       }
     } catch (e) {
       setState(() => _isLoading = false);
 
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Errore: $e'),
-            backgroundColor: context.colors.error,
-            behavior: SnackBarBehavior.floating,
-          ),
-        );
+        SnackBarService.showError(context, 'Errore: $e');
       }
     }
   }

@@ -73,7 +73,7 @@ class ChatRepositoryImpl implements ChatRepository {
 
       // 🔐 SECURITY: Check for dangerous patterns
       if (_validator.containsDangerousPatterns(message)) {
-        yield Left(
+        yield const Left(
           ValidationFailure(
             'Invalid characters detected in message',
             code: 'DANGEROUS_PATTERNS_DETECTED',
@@ -84,8 +84,8 @@ class ChatRepositoryImpl implements ChatRepository {
 
       // Validate message length after sanitization
       if (sanitizedMessage.trim().isEmpty) {
-        yield Left(
-          const ValidationFailure(
+        yield const Left(
+          ValidationFailure(
             'Message cannot be empty',
             code: 'EMPTY_MESSAGE',
           ),

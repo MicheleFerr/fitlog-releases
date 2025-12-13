@@ -21,7 +21,6 @@ import 'package:gymbro_flutter_new/features/scheduling/presentation/widgets/sche
 import 'package:gymbro_flutter_new/features/workout/presentation/helpers/save_template_helper.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/screens/edit_template_screen.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/screens/workout_templates_screen.dart';
-import 'package:gymbro_flutter_new/features/timer/presentation/widgets/tier1_minimal_timer_overlay.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/widgets/workout_customization_modal_v3.dart';
 import 'package:gymbro_flutter_new/features/timer/presentation/providers/unified_timer_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
@@ -864,7 +863,7 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen> {
     showModalBottomSheet(
       context: context,
       backgroundColor: Colors.transparent,
-      builder: (context) => Container(
+      builder: (context) => DecoratedBox(
         decoration: BoxDecoration(
           color: context.colors.surface,
           borderRadius: const BorderRadius.vertical(

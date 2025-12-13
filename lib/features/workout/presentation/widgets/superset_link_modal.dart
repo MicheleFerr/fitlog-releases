@@ -200,7 +200,7 @@ class _SupersetLinkModalState extends ConsumerState<SupersetLinkModal> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
-    return Container(
+    return DecoratedBox(
       decoration: BoxDecoration(
         color: theme.colorScheme.surface,
         borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
@@ -458,7 +458,7 @@ class _SupersetLinkModalState extends ConsumerState<SupersetLinkModal> {
             onChanged: _onSearchChanged,
             decoration: InputDecoration(
               hintText: context.l10n.searchExercises,
-              prefixIcon: Icon(AppIcons.search),
+              prefixIcon: const Icon(AppIcons.search),
               filled: true,
               fillColor: theme.colorScheme.surfaceContainerHighest,
               border: OutlineInputBorder(
@@ -642,7 +642,7 @@ class _SupersetLinkModalState extends ConsumerState<SupersetLinkModal> {
           // Continue button
           FilledButton.icon(
             onPressed: _canContinue ? _onContinue : null,
-            icon: Icon(AppIcons.forward, size: 18),
+            icon: const Icon(AppIcons.forward, size: 18),
             label: Text(context.l10n.continueButton),
           ),
         ],

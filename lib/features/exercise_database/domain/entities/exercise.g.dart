@@ -30,27 +30,23 @@ class ExerciseDefinitionAdapter extends TypeAdapter<ExerciseDefinition> {
       noteTecniche: fields[10] as String?,
       mobilitaPre: fields[11] as String?,
       attivazionePre: fields[12] as String?,
-      warmupSets: fields[13] as String?,
-      tempoWarmup: fields[14] as String?,
-      drillTecnico: fields[15] as String?,
-      prevenzioneInfortuni: fields[16] as String?,
-      cooldownConsigliato: fields[17] as String?,
-      spiegazioneTermini: fields[18] as String?,
-      tempoEsecuzione: fields[19] as String?,
-      tempoNote: fields[20] as String?,
       aliases: fields[21] == null
           ? const []
           : (fields[21] as List).cast<String>(),
       normalizedNome: fields[22] as String?,
       searchableFields: (fields[23] as List?)?.cast<String>(),
       warmupSuggestions: (fields[24] as List?)?.cast<WarmupSuggestion>(),
+      countingMode: fields[25] == null
+          ? ExerciseCountingMode.weighted
+          : fields[25] as ExerciseCountingMode,
+      tempoEsecuzione: fields[26] as String?,
     );
   }
 
   @override
   void write(BinaryWriter writer, ExerciseDefinition obj) {
     writer
-      ..writeByte(25)
+      ..writeByte(19)
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)
@@ -77,22 +73,6 @@ class ExerciseDefinitionAdapter extends TypeAdapter<ExerciseDefinition> {
       ..write(obj.mobilitaPre)
       ..writeByte(12)
       ..write(obj.attivazionePre)
-      ..writeByte(13)
-      ..write(obj.warmupSets)
-      ..writeByte(14)
-      ..write(obj.tempoWarmup)
-      ..writeByte(15)
-      ..write(obj.drillTecnico)
-      ..writeByte(16)
-      ..write(obj.prevenzioneInfortuni)
-      ..writeByte(17)
-      ..write(obj.cooldownConsigliato)
-      ..writeByte(18)
-      ..write(obj.spiegazioneTermini)
-      ..writeByte(19)
-      ..write(obj.tempoEsecuzione)
-      ..writeByte(20)
-      ..write(obj.tempoNote)
       ..writeByte(21)
       ..write(obj.aliases)
       ..writeByte(22)
@@ -100,7 +80,11 @@ class ExerciseDefinitionAdapter extends TypeAdapter<ExerciseDefinition> {
       ..writeByte(23)
       ..write(obj.searchableFields)
       ..writeByte(24)
-      ..write(obj.warmupSuggestions);
+      ..write(obj.warmupSuggestions)
+      ..writeByte(25)
+      ..write(obj.countingMode)
+      ..writeByte(26)
+      ..write(obj.tempoEsecuzione);
   }
 
   @override

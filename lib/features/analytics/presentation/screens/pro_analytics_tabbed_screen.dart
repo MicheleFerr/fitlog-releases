@@ -13,6 +13,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:gymbro_flutter_new/core/navigation/app_routes.dart';
 import 'package:gymbro_flutter_new/features/analytics/presentation/providers/analytics_providers.dart';
 import 'package:gymbro_flutter_new/features/analytics/presentation/tabs/rep_zone_tab.dart';
 import 'package:gymbro_flutter_new/features/analytics/presentation/tabs/volume_progression_tab.dart';
@@ -75,7 +76,7 @@ class _ProAnalyticsTabbedScreenState
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
-          icon: Icon(AppIcons.arrowBack, size: AppIconSize.medium),
+          icon: const Icon(AppIcons.arrowBack, size: AppIconSize.medium),
           onPressed: () => context.pop(),
         ),
         title: Row(
@@ -118,7 +119,7 @@ class _ProAnalyticsTabbedScreenState
         ),
         bottom: PreferredSize(
           preferredSize: const Size.fromHeight(72),
-          child: Container(
+          child: DecoratedBox(
             decoration: BoxDecoration(
               color: colorScheme.surface,
               border: Border(
@@ -249,7 +250,7 @@ class _ProAnalyticsTabbedScreenState
             FilledButton.icon(
               onPressed: () {
                 HapticFeedback.mediumImpact();
-                context.push('/premium');
+                context.push(AppRoutes.premiumPath);
               },
               style: FilledButton.styleFrom(
                 backgroundColor: colorScheme.tertiary,
@@ -257,7 +258,7 @@ class _ProAnalyticsTabbedScreenState
                 padding:
                     const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
               ),
-              icon: Icon(AppIcons.premium, size: AppIconSize.small),
+              icon: const Icon(AppIcons.premium, size: AppIconSize.small),
               label: Text(
                 l10n.upgradeToPro,
                 style: context.textTheme.labelLarge?.copyWith(

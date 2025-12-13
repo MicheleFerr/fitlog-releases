@@ -6,7 +6,6 @@ import 'package:gymbro_flutter_new/features/analytics/presentation/widgets/exerc
 import 'package:gymbro_flutter_new/features/analytics/presentation/widgets/lazy_chart_wrapper.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
-import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
 
 class AnalyticsProgressTab extends ConsumerWidget {
   
@@ -137,12 +136,12 @@ class AnalyticsProgressTab extends ConsumerWidget {
             ),
           ),
         ),
-        SizedBox(height: 16),
+        const SizedBox(height: 16),
         
         // Personal Records Section
         _buildPersonalRecords(context, workouts),
         
-        SizedBox(height: 100), // Space for bottom navigation
+        const SizedBox(height: 100), // Space for bottom navigation
       ],
     );
   }
@@ -479,7 +478,7 @@ class AnalyticsProgressTab extends ConsumerWidget {
             ),
             const SizedBox(height: 12),
             ...workoutsInWeek.map((workout) => _buildWorkoutItem(context, workout)),
-            SizedBox(height: 16),
+            const SizedBox(height: 16),
           ],
         ),
       ),

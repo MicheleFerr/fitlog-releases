@@ -1139,7 +1139,7 @@ abstract class AppLocalizations {
   /// Description of auto sync feature
   ///
   /// In en, this message translates to:
-  /// **'Sync automatically every 24 hours'**
+  /// **'Sync data automatically in background'**
   String get autoSyncDescription;
 
   /// Sync frequency setting label
@@ -2042,6 +2042,42 @@ abstract class AppLocalizations {
   /// **'Add form cues, progression notes, etc.'**
   String get notesHint;
 
+  /// Section title for form cues
+  ///
+  /// In en, this message translates to:
+  /// **'Form Cues'**
+  String get formCues;
+
+  /// Form cues input field hint
+  ///
+  /// In en, this message translates to:
+  /// **'Keep elbows tucked, touch chest...'**
+  String get formCuesHint;
+
+  /// Form cues helper text explanation
+  ///
+  /// In en, this message translates to:
+  /// **'Appears every time you do this exercise'**
+  String get formCuesHelper;
+
+  /// Session notes section label
+  ///
+  /// In en, this message translates to:
+  /// **'Session Notes'**
+  String get sessionNotes;
+
+  /// Session notes input field hint
+  ///
+  /// In en, this message translates to:
+  /// **'How did this feel today?'**
+  String get sessionNotesHint;
+
+  /// Session notes helper text explanation
+  ///
+  /// In en, this message translates to:
+  /// **'Saved in your workout history'**
+  String get sessionNotesHelper;
+
   /// Single exercise type
   ///
   /// In en, this message translates to:
@@ -2143,6 +2179,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Exercises'**
   String get exercises;
+
+  /// Header for top exercises section
+  ///
+  /// In en, this message translates to:
+  /// **'Your Exercises'**
+  String get yourExercises;
 
   /// Progress tab label
   ///
@@ -19758,12 +19800,6 @@ abstract class AppLocalizations {
   /// **'Video Tutorial'**
   String get videoTutorial;
 
-  /// Section title for form cues
-  ///
-  /// In en, this message translates to:
-  /// **'Form Cues'**
-  String get formCues;
-
   /// Expandable section title for reasoning transparency in AI coach
   ///
   /// In en, this message translates to:
@@ -34998,6 +35034,30 @@ abstract class AppLocalizations {
   /// **'BMR (Basal Metabolic Rate)'**
   String get bodyMeasurementsMetricBMR;
 
+  /// Label for auto-calculated fields
+  ///
+  /// In en, this message translates to:
+  /// **'Auto-calculated'**
+  String get bodyMeasurementsAutoCalculated;
+
+  /// BMI calculation formula helper
+  ///
+  /// In en, this message translates to:
+  /// **'= weight / height²'**
+  String get bodyMeasurementsCalcBMI;
+
+  /// Lean mass calculation formula helper
+  ///
+  /// In en, this message translates to:
+  /// **'= weight × (1 - body fat%)'**
+  String get bodyMeasurementsCalcLeanMass;
+
+  /// BMR calculation formula helper
+  ///
+  /// In en, this message translates to:
+  /// **'Mifflin-St Jeor formula'**
+  String get bodyMeasurementsCalcBMR;
+
   /// Shoulder circumference metric label
   ///
   /// In en, this message translates to:
@@ -36401,6 +36461,42 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Import from Health'**
   String get bodyMeasurementsImportFromHealth;
+
+  /// Title for HealthKit consent dialog
+  ///
+  /// In en, this message translates to:
+  /// **'Health Data Access'**
+  String get bodyMeasurementsHealthKitConsentTitle;
+
+  /// Description for HealthKit consent dialog
+  ///
+  /// In en, this message translates to:
+  /// **'FitLog Pro needs your permission to import body measurements from Apple Health. This allows you to sync weight, body fat, and other metrics automatically.'**
+  String get bodyMeasurementsHealthKitConsentDescription;
+
+  /// Label for data types list in consent dialog
+  ///
+  /// In en, this message translates to:
+  /// **'Data we will access:'**
+  String get bodyMeasurementsHealthKitConsentDataTypes;
+
+  /// Privacy notice in consent dialog
+  ///
+  /// In en, this message translates to:
+  /// **'Your data is stored securely and never shared with third parties.'**
+  String get bodyMeasurementsHealthKitConsentPrivacy;
+
+  /// Button to grant HealthKit access
+  ///
+  /// In en, this message translates to:
+  /// **'Grant Access'**
+  String get bodyMeasurementsHealthKitConsentGrant;
+
+  /// Success message after granting consent
+  ///
+  /// In en, this message translates to:
+  /// **'Health data access granted'**
+  String get bodyMeasurementsHealthKitConsentGranted;
 
   /// Unit for weeks
   ///
@@ -40629,6 +40725,60 @@ abstract class AppLocalizations {
   /// **'Readiness Level'**
   String get readinessLevel;
 
+  /// Title for score breakdown section
+  ///
+  /// In en, this message translates to:
+  /// **'How is the score calculated?'**
+  String get howScoreCalculated;
+
+  /// Label for score calculation formula
+  ///
+  /// In en, this message translates to:
+  /// **'Score Calculation'**
+  String get scoreCalculationFormula;
+
+  /// Label for base score component
+  ///
+  /// In en, this message translates to:
+  /// **'Base Score'**
+  String get baseScore;
+
+  /// Label for sleep modifier component
+  ///
+  /// In en, this message translates to:
+  /// **'Sleep Modifier'**
+  String get sleepModifier;
+
+  /// Label for consecutive bad nights penalty
+  ///
+  /// In en, this message translates to:
+  /// **'Penalty'**
+  String get consecutivePenalty;
+
+  /// Label for final calculated score
+  ///
+  /// In en, this message translates to:
+  /// **'Final Score'**
+  String get finalScore;
+
+  /// Explanation for base score
+  ///
+  /// In en, this message translates to:
+  /// **'Based on workout history and recovery time'**
+  String get baseScoreDescription;
+
+  /// Explanation for sleep modifier
+  ///
+  /// In en, this message translates to:
+  /// **'Weekly sleep average impact'**
+  String get sleepModifierDescription;
+
+  /// Explanation for consecutive penalty
+  ///
+  /// In en, this message translates to:
+  /// **'Consecutive bad nights penalty'**
+  String get consecutivePenaltyDescription;
+
   /// Title for weekly sleep chart
   ///
   /// In en, this message translates to:
@@ -40707,11 +40857,53 @@ abstract class AppLocalizations {
   /// **'Rest day strongly recommended'**
   String get recoveryCriticalDescription;
 
-  /// Prompt to connect Apple Health
+  /// Button to connect Apple Health
   ///
   /// In en, this message translates to:
-  /// **'Connect Apple Health for personalized insights'**
+  /// **'Connect Apple Health'**
   String get connectAppleHealth;
+
+  /// Message when trying to use HealthKit on non-iOS device
+  ///
+  /// In en, this message translates to:
+  /// **'Apple Health is only available on iOS'**
+  String get healthKitOnlyiOS;
+
+  /// Success message when HealthKit is connected
+  ///
+  /// In en, this message translates to:
+  /// **'Apple Health connected successfully'**
+  String get healthKitConnected;
+
+  /// Error message when HealthKit permissions are denied
+  ///
+  /// In en, this message translates to:
+  /// **'Health permissions denied. Enable in Settings > Privacy > Health'**
+  String get healthKitPermissionDenied;
+
+  /// Description for sleep tracking feature
+  ///
+  /// In en, this message translates to:
+  /// **'Track your sleep to get personalized recovery insights and training recommendations'**
+  String get sleepTrackingDescription;
+
+  /// Label for sleep data
+  ///
+  /// In en, this message translates to:
+  /// **'Sleep'**
+  String get sleepData;
+
+  /// Label for recovery score
+  ///
+  /// In en, this message translates to:
+  /// **'Score'**
+  String get recoveryScore;
+
+  /// Label for personalized tips
+  ///
+  /// In en, this message translates to:
+  /// **'Tips'**
+  String get personalizedTips;
 
   /// Label for last night's sleep
   ///
@@ -40724,6 +40916,107 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Streak'**
   String get streakDays;
+
+  /// Message when HealthKit is connected but has no sleep data
+  ///
+  /// In en, this message translates to:
+  /// **'No sleep data found'**
+  String get noSleepDataFound;
+
+  /// Hint for how to track sleep data
+  ///
+  /// In en, this message translates to:
+  /// **'Wear your Apple Watch or use an app that tracks sleep to Apple Health'**
+  String get trackSleepHint;
+
+  /// Button to refresh data
+  ///
+  /// In en, this message translates to:
+  /// **'Refresh'**
+  String get refreshData;
+
+  /// Message for sync errors with retry option
+  ///
+  /// In en, this message translates to:
+  /// **'Unable to load data. Check your connection and try again.'**
+  String get syncErrorRetry;
+
+  /// Recommendation when recovery is optimal
+  ///
+  /// In en, this message translates to:
+  /// **'Great recovery! Ready for intense workout.'**
+  String get recoveryRecommendationOptimal;
+
+  /// Recommendation when recovery is good
+  ///
+  /// In en, this message translates to:
+  /// **'Good recovery. Ready for normal workout.'**
+  String get recoveryRecommendationGood;
+
+  /// Recommendation when recovery is moderate
+  ///
+  /// In en, this message translates to:
+  /// **'Moderate recovery. Consider lighter workout.'**
+  String get recoveryRecommendationModerate;
+
+  /// Recommendation when recovery is low
+  ///
+  /// In en, this message translates to:
+  /// **'Recovering. Prioritize rest today.'**
+  String get recoveryRecommendationLow;
+
+  /// Recommendation when recovery is critical
+  ///
+  /// In en, this message translates to:
+  /// **'Body recovering. Rest day recommended.'**
+  String get recoveryRecommendationCritical;
+
+  /// Recommendation after 2 consecutive bad sleep nights
+  ///
+  /// In en, this message translates to:
+  /// **'Recovery in progress. Consider light workout.'**
+  String get recoveryRecommendationConsecutiveBad2;
+
+  /// Recommendation after 3+ consecutive bad sleep nights
+  ///
+  /// In en, this message translates to:
+  /// **'Prioritize rest. {nights} consecutive nights under 6h.'**
+  String recoveryRecommendationConsecutiveBad3(String nights);
+
+  /// Message when not enough data for correlation
+  ///
+  /// In en, this message translates to:
+  /// **'Keep training to see sleep-performance correlation.'**
+  String get correlationNotEnoughData;
+
+  /// Message when correlation is not significant
+  ///
+  /// In en, this message translates to:
+  /// **'Not enough data for significant correlation.'**
+  String get correlationNotSignificant;
+
+  /// Word for volume increase
+  ///
+  /// In en, this message translates to:
+  /// **'increases'**
+  String get correlationEffectIncrease;
+
+  /// Word for volume decrease
+  ///
+  /// In en, this message translates to:
+  /// **'decreases'**
+  String get correlationEffectDecrease;
+
+  /// Significant correlation summary
+  ///
+  /// In en, this message translates to:
+  /// **'Your volume {goodEffect} by {goodChange} with >7h sleep and {poorEffect} by {poorChange} with <6h.'**
+  String correlationSignificant(
+    String goodEffect,
+    String goodChange,
+    String poorEffect,
+    String poorChange,
+  );
 
   /// Button label to clear health sync cache
   ///
@@ -40782,8 +41075,68 @@ abstract class AppLocalizations {
   /// Label for daily auto sync toggle
   ///
   /// In en, this message translates to:
-  /// **'Auto Sync (Daily)'**
+  /// **'Auto Sync'**
   String get autoSyncDaily;
+
+  /// Status label when connected
+  ///
+  /// In en, this message translates to:
+  /// **'Connected'**
+  String get connected;
+
+  /// Status label when not connected
+  ///
+  /// In en, this message translates to:
+  /// **'Not Connected'**
+  String get notConnected;
+
+  /// Button label to connect
+  ///
+  /// In en, this message translates to:
+  /// **'Connect'**
+  String get connect;
+
+  /// Status label while connecting
+  ///
+  /// In en, this message translates to:
+  /// **'Connecting...'**
+  String get connecting;
+
+  /// Section header for data types
+  ///
+  /// In en, this message translates to:
+  /// **'Data Types'**
+  String get dataTypes;
+
+  /// Description for manual sync action
+  ///
+  /// In en, this message translates to:
+  /// **'Manually sync data from Health'**
+  String get syncNowDescription;
+
+  /// Description for clear cache action
+  ///
+  /// In en, this message translates to:
+  /// **'Remove local sync history'**
+  String get clearSyncCacheDescription;
+
+  /// Description for diagnostic tests
+  ///
+  /// In en, this message translates to:
+  /// **'Test Health integration'**
+  String get diagnosticDescription;
+
+  /// Title when health sync is not available
+  ///
+  /// In en, this message translates to:
+  /// **'Health Sync Not Available'**
+  String get healthSyncNotAvailable;
+
+  /// Message when feature is not available on device
+  ///
+  /// In en, this message translates to:
+  /// **'is not available on this device'**
+  String get notAvailableOnDevice;
 
   /// Label for next scheduled sync timestamp
   ///
@@ -40814,6 +41167,180 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Failed to load health sync settings'**
   String get healthSyncLoadError;
+
+  /// Admin dialog title for approving missing exercise request
+  ///
+  /// In en, this message translates to:
+  /// **'Approve Request'**
+  String get approveRequest;
+
+  /// Admin dialog message for approving missing exercise request
+  ///
+  /// In en, this message translates to:
+  /// **'Do you want to approve the request for \"{exerciseName}\"?\n\nAfter approval, you will need to add the complete exercise to the database.'**
+  String approveRequestMessage(String exerciseName);
+
+  /// Success message when request is approved
+  ///
+  /// In en, this message translates to:
+  /// **'Request approved! Remember to add the exercise to the database.'**
+  String get requestApprovedSuccess;
+
+  /// Admin dialog title for rejecting missing exercise request
+  ///
+  /// In en, this message translates to:
+  /// **'Reject Request'**
+  String get rejectRequest;
+
+  /// Admin dialog message for rejecting missing exercise request
+  ///
+  /// In en, this message translates to:
+  /// **'Reject the request for \"{exerciseName}\"?'**
+  String rejectRequestMessage(String exerciseName);
+
+  /// Placeholder text for rejection reason field
+  ///
+  /// In en, this message translates to:
+  /// **'e.g. Exercise already present, name too generic...'**
+  String get rejectionReasonPlaceholder;
+
+  /// Default rejection reason
+  ///
+  /// In en, this message translates to:
+  /// **'Rejected by admin'**
+  String get rejectedByAdmin;
+
+  /// Success message when request is rejected
+  ///
+  /// In en, this message translates to:
+  /// **'Request rejected'**
+  String get requestRejected;
+
+  /// Admin dialog title for marking request as completed
+  ///
+  /// In en, this message translates to:
+  /// **'Mark as Completed'**
+  String get markAsCompleted;
+
+  /// Admin dialog message for marking request as completed
+  ///
+  /// In en, this message translates to:
+  /// **'Mark \"{exerciseName}\" as completed?\n\nUse this option only after adding the complete exercise to the database.'**
+  String markAsCompletedMessage(String exerciseName);
+
+  /// Note for completed request
+  ///
+  /// In en, this message translates to:
+  /// **'Exercise added to database'**
+  String get exerciseAddedToDatabase;
+
+  /// Success message when request is marked as completed
+  ///
+  /// In en, this message translates to:
+  /// **'Request marked as completed'**
+  String get requestMarkedAsCompleted;
+
+  /// Note for approved request
+  ///
+  /// In en, this message translates to:
+  /// **'Approved for database insertion'**
+  String get approvedForDatabaseInsertion;
+
+  /// Coming soon message for change image feature
+  ///
+  /// In en, this message translates to:
+  /// **'Change image - Coming soon'**
+  String get changeImageComingSoon;
+
+  /// Recovery category: Optimal (85-100)
+  ///
+  /// In en, this message translates to:
+  /// **'Optimal'**
+  String get recoveryCategoryOptimal;
+
+  /// Recovery category: Good (70-84)
+  ///
+  /// In en, this message translates to:
+  /// **'Good'**
+  String get recoveryCategoryGood;
+
+  /// Recovery category: Moderate (55-69)
+  ///
+  /// In en, this message translates to:
+  /// **'Moderate'**
+  String get recoveryCategoryModerate;
+
+  /// Recovery category: Low (40-54)
+  ///
+  /// In en, this message translates to:
+  /// **'Low'**
+  String get recoveryCategoryLow;
+
+  /// Recovery category: Critical (0-39)
+  ///
+  /// In en, this message translates to:
+  /// **'Critical'**
+  String get recoveryCategoryCritical;
+
+  /// Short form of Critical for charts
+  ///
+  /// In en, this message translates to:
+  /// **'Crit'**
+  String get recoveryCategoryShortCritical;
+
+  /// Short form of Low for charts
+  ///
+  /// In en, this message translates to:
+  /// **'Low'**
+  String get recoveryCategoryShortLow;
+
+  /// Short form of Moderate for charts
+  ///
+  /// In en, this message translates to:
+  /// **'Mod'**
+  String get recoveryCategoryShortModerate;
+
+  /// Short form of Good for charts
+  ///
+  /// In en, this message translates to:
+  /// **'Good'**
+  String get recoveryCategoryShortGood;
+
+  /// Short form of Optimal for charts
+  ///
+  /// In en, this message translates to:
+  /// **'Top'**
+  String get recoveryCategoryShortOptimal;
+
+  /// Message shown when no sleep data is available
+  ///
+  /// In en, this message translates to:
+  /// **'Connect Apple Health for personalized insights'**
+  String get recoveryNoDataMessage;
+
+  /// Sleep quality: Critical (<6h)
+  ///
+  /// In en, this message translates to:
+  /// **'Critical'**
+  String get sleepQualityCritical;
+
+  /// Sleep quality: Suboptimal (6-7h)
+  ///
+  /// In en, this message translates to:
+  /// **'Insufficient'**
+  String get sleepQualitySuboptimal;
+
+  /// Sleep quality: Optimal (7-9h)
+  ///
+  /// In en, this message translates to:
+  /// **'Optimal'**
+  String get sleepQualityOptimal;
+
+  /// Sleep quality: Excessive (>9h)
+  ///
+  /// In en, this message translates to:
+  /// **'Excessive'**
+  String get sleepQualityExcessive;
 }
 
 class _AppLocalizationsDelegate

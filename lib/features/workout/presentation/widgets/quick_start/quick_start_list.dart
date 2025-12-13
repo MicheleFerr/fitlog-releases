@@ -25,6 +25,7 @@ import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart'
 import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator.dart';
 
+import 'package:gymbro_flutter_new/shared/presentation/services/snackbar_service.dart';
 class QuickStartList extends ConsumerWidget {
   const QuickStartList({super.key});
 
@@ -249,20 +250,9 @@ class QuickStartList extends ConsumerWidget {
       // Now start workout (with exercises loaded)
       workoutNotifier.startWorkout();
       
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(AppLocalizations.of(context).workoutStartedFromTemplate(template.name)),
-          backgroundColor: Theme.of(context).colorScheme.tertiary,
-          duration: const Duration(seconds: 2),
-        ),
-      );
+      SnackBarService.showSuccess(context, AppLocalizations.of(context);
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('${AppLocalizations.of(context).errorStartingWorkout}: ${e.toString()}'),
-          backgroundColor: Theme.of(context).colorScheme.error,
-        ),
-      );
+      SnackBarService.showError(context, '${AppLocalizations.of(context);
     }
   }
 
@@ -322,21 +312,11 @@ class QuickStartList extends ConsumerWidget {
                 await ref.read(workoutTemplateNotifierProvider.notifier)
                     .deleteTemplate(template.id);
                 if (context.mounted) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: Text(AppLocalizations.of(context).templateDeleted(template.name)),
-                      backgroundColor: Theme.of(context).colorScheme.tertiary,
-                    ),
-                  );
+                  SnackBarService.showSuccess(context, AppLocalizations.of(context);
                 }
               } catch (e) {
                 if (context.mounted) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: Text('${AppLocalizations.of(context).errorDeleting}: ${e.toString()}'),
-                      backgroundColor: Theme.of(context).colorScheme.error,
-                    ),
-                  );
+                  SnackBarService.showError(context, '${AppLocalizations.of(context);
                 }
               }
             },

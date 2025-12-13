@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/providers/workout_provider.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/providers/exercise_selection_provider.dart';
@@ -11,6 +10,7 @@ import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 
+import 'package:gymbro_flutter_new/shared/presentation/services/snackbar_service.dart';
 /// 🚀 TIER-1: Enhanced Add Exercise Modal with database selection
 class EnhancedAddExerciseModal extends ConsumerStatefulWidget {
 
@@ -336,13 +336,7 @@ class _EnhancedAddExerciseModalState extends ConsumerState<EnhancedAddExerciseMo
             
             // Show success message
             if (mounted) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text(context.l10n.previousWeightsLoaded),
-                  backgroundColor: Theme.of(context).colorScheme.tertiary,
-                  duration: const Duration(seconds: 2),
-                ),
-              );
+              SnackBarService.showSuccess(context, context.l10n.previousWeightsLoaded);
             }
             return; // Found previous workout, exit
           }

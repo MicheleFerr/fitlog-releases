@@ -24,7 +24,7 @@ import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
-import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/services/snackbar_service.dart';
 
 class ExerciseSearchScreen extends ConsumerStatefulWidget { // New: Just select and return exercise template (for DropSet/Rest-Pause)
 
@@ -195,41 +195,29 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
         await tracker.decrementUsage(exerciseId: exercise.id);
 
         if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text('Priorità ridotta per "${exercise.nome}"'),
-              duration: const Duration(seconds: 2),
-              backgroundColor: context.colors.tertiary,
-            ),
-          );
+          SnackBarService.showInfo(context, 'Priorità ridotta per "${exercise.nome}"');
         }
       } else if (result == 'remove') {
         // Rimuovi completamente
         await tracker.removeExercise(exerciseId: exercise.id);
 
         if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text('"${exercise.nome}" rimosso dai popolari'),
-              duration: const Duration(seconds: 3),
-              backgroundColor: context.colors.error,
-              action: SnackBarAction(
-                label: 'ANNULLA',
-                textColor: context.colors.surface,
-                onPressed: () async {
-                  // Re-add with usage count 1
-                  final user = FirebaseAuth.instance.currentUser;
-                  if (user != null) {
-                    await tracker.incrementUsage(
-                      exerciseId: exercise.id,
-                      exerciseName: exercise.nome,
-                      userId: user.uid,
-                    );
-                    await _loadUsageStats();
-                  }
-                },
-              ),
-            ),
+          SnackBarService.showError(
+            context,
+            '"${exercise.nome}" rimosso dai popolari',
+            actionLabel: 'ANNULLA',
+            onAction: () async {
+              // Re-add with usage count 1
+              final user = FirebaseAuth.instance.currentUser;
+              if (user != null) {
+                await tracker.incrementUsage(
+                  exerciseId: exercise.id,
+                  exerciseName: exercise.nome,
+                  userId: user.uid,
+                );
+                await _loadUsageStats();
+              }
+            },
           );
         }
       }
@@ -806,12 +794,7 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
             onPressed: () {
               final exerciseName = nameController.text.trim();
               if (exerciseName.isEmpty) {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    content: Text(l10n.enterExerciseName),
-                    backgroundColor: context.colors.error,
-                  ),
-                );
+                SnackBarService.showError(context, l10n.enterExerciseName);
                 return;
               }
 
@@ -833,14 +816,6 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
                 noteTecniche: 'Esercizio temporaneo - In attesa di approvazione',
                 mobilitaPre: null,
                 attivazionePre: null,
-                warmupSets: null,
-                tempoWarmup: null,
-                drillTecnico: null,
-                prevenzioneInfortuni: null,
-                cooldownConsigliato: null,
-                spiegazioneTermini: null,
-                tempoEsecuzione: null,
-                tempoNote: null,
               );
 
               // Add to selected exercises so user can use it immediately
@@ -854,20 +829,14 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
               Navigator.of(context).pop();
 
               // Show confirmation
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text(l10n.temporaryExerciseAdded),
-                  backgroundColor: context.colors.primary,
-                  duration: const Duration(seconds: 3),
-                  action: SnackBarAction(
-                    label: l10n.add,
-                    textColor: context.colors.onPrimary,
-                    onPressed: () {
-                      // Add to workout directly
-                      _addSelectedToWorkout();
-                    },
-                  ),
-                ),
+              SnackBarService.showSuccess(
+                context,
+                l10n.temporaryExerciseAdded,
+                actionLabel: l10n.add,
+                onAction: () {
+                  // Add to workout directly
+                  _addSelectedToWorkout();
+                },
               );
             },
             icon: const SemanticIcon(
@@ -1745,6 +1714,7 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
           backgroundColor: Colors.transparent,
           builder: (context) => ExerciseHistoryBottomSheet(
             exerciseName: exercise.nome,
+            exerciseId: exercise.id,
           ),
         );
       },

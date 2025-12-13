@@ -2,8 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/workout.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise_activity.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/services/modal_service.dart';
+import 'package:gymbro_flutter_new/shared/presentation/services/snackbar_service.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
-import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
 
 class RecentWorkoutsCard extends StatelessWidget {
 
@@ -45,9 +46,7 @@ class RecentWorkoutsCard extends StatelessWidget {
                 TextButton(
                   onPressed: () {
                     // TODO: Navigate to full history
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(content: Text(context.l10n.fullHistoryComingSoon)),
-                    );
+                    SnackBarService.showInfo(context, context.l10n.fullHistoryComingSoon);
                   },
                   child: Text(context.l10n.viewAll),
                 ),

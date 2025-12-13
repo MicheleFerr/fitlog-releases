@@ -9,7 +9,6 @@ library;
 
 import 'dart:async';
 import 'package:flutter/foundation.dart';
-import 'package:flutter/foundation.dart' show kDebugMode;
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:gymbro_flutter_new/shared/domain/converters/exercise_converter.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise.dart' as WorkoutExercise;
@@ -345,14 +344,8 @@ class ExerciseMigrationService {
       'exerciseType': exercise.tipoEsercizio,
       'movementPattern': exercise.patternMovimento,
       'repRange': exercise.rangeRipetizioni,
-      'warmupSets': exercise.warmupSets,
-      'warmupTime': exercise.tempoWarmup,
       'preMobility': exercise.mobilitaPre,
       'preActivation': exercise.attivazionePre,
-      'technicalDrill': exercise.drillTecnico,
-      'injuryPrevention': exercise.prevenzioneInfortuni,
-      'cooldownRecommended': exercise.cooldownConsigliato,
-      'termExplanation': exercise.spiegazioneTermini,
       'isActive': true,
       'createdAt': FieldValue.serverTimestamp(),
       'updatedAt': FieldValue.serverTimestamp(),
