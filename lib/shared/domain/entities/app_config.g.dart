@@ -65,13 +65,15 @@ class AppConfigAdapter extends TypeAdapter<AppConfig> {
       autoAdjustWeightFromRpe: fields[43] as bool?,
       autoAdjustRestFromRpe: fields[44] as bool?,
       effortScale: fields[45] == null ? 'rpe' : fields[45] as String,
+      autoPauseOnNavigateAway: fields[46] == null ? true : fields[46] as bool,
+      useSimplifiedAnalytics: fields[47] == null ? false : fields[47] as bool?,
     );
   }
 
   @override
   void write(BinaryWriter writer, AppConfig obj) {
     writer
-      ..writeByte(46)
+      ..writeByte(48)
       ..writeByte(0)
       ..write(obj.languageCode)
       ..writeByte(1)
@@ -163,7 +165,11 @@ class AppConfigAdapter extends TypeAdapter<AppConfig> {
       ..writeByte(44)
       ..write(obj.autoAdjustRestFromRpe)
       ..writeByte(45)
-      ..write(obj.effortScale);
+      ..write(obj.effortScale)
+      ..writeByte(46)
+      ..write(obj.autoPauseOnNavigateAway)
+      ..writeByte(47)
+      ..write(obj.useSimplifiedAnalytics);
   }
 
   @override
