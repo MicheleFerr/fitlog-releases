@@ -65,6 +65,7 @@ import 'package:gymbro_flutter_new/features/analytics/presentation/tabbed_analyt
 import 'package:gymbro_flutter_new/features/analytics/presentation/screens/exercise_detail_screen.dart';
 import 'package:gymbro_flutter_new/features/analytics/presentation/screens/exercise_progress_screen.dart';
 import 'package:gymbro_flutter_new/features/analytics/presentation/screens/pro_analytics_tabbed_screen.dart';
+import 'package:gymbro_flutter_new/features/analytics/presentation/screens/simplified_analytics_dashboard.dart';
 
 // Settings (pushed from Profile)
 import 'package:gymbro_flutter_new/features/settings/presentation/settings_screen.dart';
@@ -314,7 +315,15 @@ final appRouterProvider = Provider<GoRouter>((ref) {
                   GoRoute(
                     path: 'analytics',
                     name: AppRoutes.analyticsName,
-                    builder: (context, state) => const AnalyticsScreen(),
+                    builder: (context, state) {
+                      // Feature flag: Enable new simplified dashboard
+                      // TODO: Read from AppConfig provider when ready for A/B testing
+                      const useSimplified = true;
+
+                      return useSimplified
+                          ? const SimplifiedAnalyticsDashboard()
+                          : const AnalyticsScreen();
+                    },
                     routes: [
                       // Analytics overview (tabbed)
                       GoRoute(
