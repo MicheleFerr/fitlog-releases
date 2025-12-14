@@ -18,6 +18,8 @@ import 'package:gymbro_flutter_new/features/exercise_database/domain/services/ex
 import 'package:gymbro_flutter_new/features/exercise_database/domain/services/exercise_usage_tracker.dart';
 import 'package:gymbro_flutter_new/features/exercise_database/presentation/providers/exercise_search_provider.dart';
 import 'package:gymbro_flutter_new/features/exercise_database/presentation/providers/missing_exercise_provider.dart';
+import 'package:gymbro_flutter_new/features/custom_exercises/presentation/widgets/custom_exercise_form_sheet.dart';
+import 'package:gymbro_flutter_new/features/custom_exercises/presentation/providers/custom_exercise_providers.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
@@ -573,6 +575,30 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
   Widget _buildSearchResults(List<Exercise> exercises) {
     final l10n = context.l10n;
 
+    // Watch custom exercises and merge with catalog
+    final customExercisesAsync = ref.watch(activeCustomExercisesProvider);
+    final customExercises = customExercisesAsync.valueOrNull ?? [];
+
+    // Convert custom exercises to Exercise format for display
+    final customAsExercises = customExercises.map((custom) => Exercise(
+      id: custom.id,
+      nome: custom.nome,
+      focus: custom.focus,
+      imageUrl: null,
+      muscoliSecondari: custom.muscoliSecondari,
+      difficolta: 'Intermedio',
+      tipoEsercizio: custom.tipoEsercizio,
+      attrezzatura: custom.attrezzatura,
+      patternMovimento: custom.patternMovimento,
+      rangeRipetizioni: '8-12',
+      noteTecniche: '',
+      mobilitaPre: null,
+      attivazionePre: null,
+    )).toList();
+
+    // Merge: custom exercises first, then catalog
+    final allExercises = [...customAsExercises, ...exercises];
+
     return Column(
       children: [
         // Results count
@@ -581,7 +607,7 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
           color: context.colors.surfaceContainerHighest.withValues(alpha: 0.5),
           child: Text(
-            '${exercises.length} ${l10n.exercisesFound}',
+            '${allExercises.length} ${l10n.exercisesFound}',
             style: context.textTheme.bodySmall,
           ),
         ),
@@ -590,17 +616,18 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
         Expanded(
           child: ListView.builder(
             key: const PageStorageKey('exercise_search_list'),
-            itemCount: exercises.length + 1, // +1 for missing exercise widget
+            itemCount: allExercises.length + 1, // +1 for missing exercise widget
             itemBuilder: (context, index) {
               // Show missing exercise widget as last item
-              if (index == exercises.length) {
+              if (index == allExercises.length) {
                 return _buildMissingExerciseWidget();
               }
 
-              final exercise = exercises[index];
+              final exercise = allExercises[index];
               final isSelected = _selectedExercises.contains(exercise);
+              final isCustom = index < customAsExercises.length;
 
-              return _buildExerciseCard(exercise, isSelected);
+              return _buildExerciseCard(exercise, isSelected, isCustom: isCustom);
             },
           ),
         ),
@@ -718,18 +745,38 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
             ),
           ),
           const SizedBox(height: 16),
+
+          // Create custom exercise button
           SizedBox(
             width: double.infinity,
             child: FilledButton.icon(
+              onPressed: () => _showCreateCustomSheet(context, _searchController.text),
+              icon: const SemanticIcon(
+                icon: AppIcons.add,
+                semanticLabel: 'Add',
+              ),
+              label: Text(l10n.createCustomExercise),
+              style: FilledButton.styleFrom(
+                backgroundColor: context.colors.primary,
+                foregroundColor: context.colors.onPrimary,
+                padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+              ),
+            ),
+          ),
+
+          const SizedBox(height: 8),
+
+          // Or add temporary (fallback option)
+          SizedBox(
+            width: double.infinity,
+            child: OutlinedButton.icon(
               onPressed: _showAddTemporaryExerciseDialog,
               icon: const SemanticIcon(
-  icon: AppIcons.addCircleOutline,
-  semanticLabel: 'Add circle outline',
-),
+                icon: AppIcons.addCircleOutline,
+                semanticLabel: 'Add circle outline',
+              ),
               label: Text(l10n.addTemporaryExercise),
-              style: FilledButton.styleFrom(
-                backgroundColor: context.colors.primaryContainer,
-                foregroundColor: context.colors.onPrimaryContainer,
+              style: OutlinedButton.styleFrom(
                 padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
               ),
             ),
@@ -1174,50 +1221,73 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
     }
   }
 
-  Widget _buildExerciseCard(Exercise exercise, bool isSelected) {
+  Widget _buildExerciseCard(Exercise exercise, bool isSelected, {bool isCustom = false}) {
     return Card(
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-      child: ListTile(
-        leading: _buildExerciseLeading(exercise, isSelected),
-        title: Text(
-          exercise.nome,
-          style: context.textTheme.bodyLarge?.copyWith(
-            fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
-          ),
-        ),
-        subtitle: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(exercise.focusDisplayName),
-            const SizedBox(height: 2),
-            Row(
+      child: Stack(
+        children: [
+          ListTile(
+            leading: _buildExerciseLeading(exercise, isSelected),
+            title: Row(
               children: [
-                Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-                  decoration: BoxDecoration(
-                    color: _getDifficultyColor(exercise.difficolta).withValues(alpha: 0.2),
-                    borderRadius: BorderRadius.circular(8),
-                  ),
+                Expanded(
                   child: Text(
-                    exercise.difficolta,
-                    style: context.textTheme.labelSmall?.copyWith(
-                      color: _getDifficultyColor(exercise.difficolta),
-                      fontWeight: FontWeight.bold,
+                    exercise.nome,
+                    style: context.textTheme.bodyLarge?.copyWith(
+                      fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
                     ),
                   ),
                 ),
-                const SizedBox(width: 8),
-                Text(
-                  exercise.attrezzatura,
-                  style: context.textTheme.bodySmall,
+                if (isCustom)
+                  Text('⚡', style: context.textTheme.titleMedium),
+              ],
+            ),
+            subtitle: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(exercise.focusDisplayName),
+                const SizedBox(height: 2),
+                Row(
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                      decoration: BoxDecoration(
+                        color: _getDifficultyColor(exercise.difficolta).withValues(alpha: 0.2),
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: Text(
+                        exercise.difficolta,
+                        style: context.textTheme.labelSmall?.copyWith(
+                          color: _getDifficultyColor(exercise.difficolta),
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 8),
+                    Text(
+                      exercise.attrezzatura,
+                      style: context.textTheme.bodySmall,
+                    ),
+                  ],
                 ),
               ],
             ),
-          ],
-        ),
-        trailing: isSelected
-            ? Icon(AppIcons.checkCircle, color: context.colors.primary)
-            : (widget.selectionMode ? const SemanticIcon(
+            trailing: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                // Create variant button for catalog exercises
+                if (!isCustom && !widget.selectionMode)
+                  IconButton(
+                    icon: const Icon(AppIcons.copy),
+                    tooltip: context.l10n.createVariant,
+                    onPressed: () => _showCreateVariantSheet(context, exercise),
+                    iconSize: 20,
+                  ),
+                const SizedBox(width: 8),
+                // Selection indicator
+                isSelected
+                    ? Icon(AppIcons.checkCircle, color: context.colors.primary)
+                    : (widget.selectionMode ? const SemanticIcon(
   icon: AppIcons.arrowForwardIos,
   semanticLabel: 'Arrow forward ios',
   size: AppIconSize.tiny,
@@ -1225,23 +1295,27 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
   icon: AppIcons.radioButtonUnchecked,
   semanticLabel: 'Radio button unchecked',
 )),
-        onTap: () {
-          // Selection mode: return exercise and close
-          if (widget.selectionMode) {
-            Navigator.of(context).pop(exercise);
-            return;
-          }
+              ],
+            ),
+            onTap: () {
+              // Selection mode: return exercise and close
+              if (widget.selectionMode) {
+                Navigator.of(context).pop(exercise);
+                return;
+              }
 
-          // Multi-select mode or normal mode: toggle selection
-          setState(() {
-            if (isSelected) {
-              _selectedExercises.remove(exercise);
-            } else {
-              _selectedExercises.add(exercise);
-            }
-          });
-        },
-        onLongPress: widget.selectionMode ? null : () => _showExerciseOptionsModal(exercise),
+              // Multi-select mode or normal mode: toggle selection
+              setState(() {
+                if (isSelected) {
+                  _selectedExercises.remove(exercise);
+                } else {
+                  _selectedExercises.add(exercise);
+                }
+              });
+            },
+            onLongPress: widget.selectionMode ? null : () => _showExerciseOptionsModal(exercise),
+          ),
+        ],
       ),
     );
   }
@@ -1721,6 +1795,47 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
       imageUrl: exercise.imageUrl,
       languageCode: locale.languageCode,
     );
+  }
+
+  /// Show custom exercise creation sheet (pure custom)
+  Future<void> _showCreateCustomSheet(BuildContext context, String initialName) async {
+    if (!mounted) return;
+
+    final result = await CustomExerciseFormSheet.show(
+      context,
+      onSave: (exercise) async {
+        final repository = ref.read(customExerciseRepositoryProvider);
+        await repository.save(exercise);
+      },
+    );
+
+    if (result != null && mounted) {
+      SnackBarService.showSuccess(
+        context,
+        '${result.nome} ${context.l10n.addedSuccessfully}',
+      );
+    }
+  }
+
+  /// Show custom exercise creation sheet (variant of base)
+  Future<void> _showCreateVariantSheet(BuildContext context, Exercise base) async {
+    if (!mounted) return;
+
+    final result = await CustomExerciseFormSheet.show(
+      context,
+      baseExercise: base,
+      onSave: (exercise) async {
+        final repository = ref.read(customExerciseRepositoryProvider);
+        await repository.save(exercise);
+      },
+    );
+
+    if (result != null && mounted) {
+      SnackBarService.showSuccess(
+        context,
+        '${result.nome} ${context.l10n.addedSuccessfully}',
+      );
+    }
   }
 
 

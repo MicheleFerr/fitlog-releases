@@ -79,6 +79,16 @@ class HiveBoxNames {
   static const String exerciseVersionCache = 'exercise_version_cache';
 
   // ═══════════════════════════════════════════════════════════
+  // 🎨 CUSTOM EXERCISES FEATURE
+  // ═══════════════════════════════════════════════════════════
+
+  /// Custom exercises created by users
+  static const String customExercises = 'custom_exercises';
+
+  /// Custom exercises sync queue (Premium users)
+  static const String customExercisesSyncQueue = 'custom_exercises_sync_queue';
+
+  // ═══════════════════════════════════════════════════════════
   // 📈 STRESS INDEX FEATURE
   // ═══════════════════════════════════════════════════════════
 
@@ -236,6 +246,9 @@ class HiveBoxNames {
         exercisesSyncQueue,
         exerciseUsage,
         exerciseVersionCache,
+        // Custom Exercises
+        customExercises,
+        customExercisesSyncQueue,
         // Stress Index
         stressIndexData,
         // Analytics

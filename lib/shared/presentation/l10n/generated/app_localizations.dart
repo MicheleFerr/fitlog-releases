@@ -4481,13 +4481,13 @@ abstract class AppLocalizations {
   /// **'Set a target weight first'**
   String get setTargetWeightFirst;
 
-  /// Primary muscles section title
+  /// Label for primary muscles field
   ///
   /// In en, this message translates to:
   /// **'Primary Muscles'**
   String get primaryMuscles;
 
-  /// Label for secondary muscles
+  /// Label for secondary muscles field
   ///
   /// In en, this message translates to:
   /// **'Secondary Muscles'**
@@ -4499,19 +4499,19 @@ abstract class AppLocalizations {
   /// **'Difficulty Level'**
   String get difficultyLevel;
 
-  /// Exercise type field label
+  /// Label for exercise type field
   ///
   /// In en, this message translates to:
   /// **'Exercise Type'**
   String get exerciseType;
 
-  /// Equipment field label
+  /// Label for equipment field
   ///
   /// In en, this message translates to:
   /// **'Equipment'**
   String get equipment;
 
-  /// Movement pattern label
+  /// Label for movement pattern field
   ///
   /// In en, this message translates to:
   /// **'Movement Pattern'**
@@ -6004,6 +6004,96 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Create Custom Exercise'**
   String get createCustomExercise;
+
+  /// Title for creating exercise variant
+  ///
+  /// In en, this message translates to:
+  /// **'Create Variant'**
+  String get createVariant;
+
+  /// Success message suffix when something is added
+  ///
+  /// In en, this message translates to:
+  /// **'added successfully'**
+  String get addedSuccessfully;
+
+  /// Title for editing custom exercise
+  ///
+  /// In en, this message translates to:
+  /// **'Edit Custom Exercise'**
+  String get editCustomExercise;
+
+  /// Label showing base exercise
+  ///
+  /// In en, this message translates to:
+  /// **'Based on'**
+  String get basedOn;
+
+  /// Section title for categorization fields
+  ///
+  /// In en, this message translates to:
+  /// **'Categorization'**
+  String get categorization;
+
+  /// Compound exercise type
+  ///
+  /// In en, this message translates to:
+  /// **'Compound'**
+  String get compound;
+
+  /// Isolation exercise type
+  ///
+  /// In en, this message translates to:
+  /// **'Isolation'**
+  String get isolation;
+
+  /// Warning about categorization changes
+  ///
+  /// In en, this message translates to:
+  /// **'Modifying focus/pattern may affect Push/Pull ratio calculations'**
+  String get categorizationWarning;
+
+  /// Helper text for inherited fields
+  ///
+  /// In en, this message translates to:
+  /// **'Inherited from base exercise'**
+  String get inheritedFromBase;
+
+  /// Exercise name validation message
+  ///
+  /// In en, this message translates to:
+  /// **'Exercise name is required'**
+  String get exerciseNameRequired;
+
+  /// Barbell equipment type
+  ///
+  /// In en, this message translates to:
+  /// **'Barbell'**
+  String get barbell;
+
+  /// Equipment type
+  ///
+  /// In en, this message translates to:
+  /// **'Dumbbells'**
+  String get dumbbells;
+
+  /// Equipment type
+  ///
+  /// In en, this message translates to:
+  /// **'Cables'**
+  String get cables;
+
+  /// Equipment type
+  ///
+  /// In en, this message translates to:
+  /// **'Machine'**
+  String get machine;
+
+  /// Bodyweight exercises stats label
+  ///
+  /// In en, this message translates to:
+  /// **'Bodyweight'**
+  String get bodyweight;
 
   /// Label for category field
   ///
@@ -9083,12 +9173,6 @@ abstract class AppLocalizations {
   /// **'Import from JSON'**
   String get importJson;
 
-  /// Bodyweight exercises stats label
-  ///
-  /// In en, this message translates to:
-  /// **'Bodyweight'**
-  String get bodyweight;
-
   /// Unique muscles stats label
   ///
   /// In en, this message translates to:
@@ -9160,12 +9244,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Delete {count} exercises?'**
   String confirmDeleteMultiple(int count);
-
-  /// Exercise name validation message
-  ///
-  /// In en, this message translates to:
-  /// **'Exercise name is required'**
-  String get exerciseNameRequired;
 
   /// Update exercise button
   ///
@@ -9364,6 +9442,30 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Modify exercises and sets'**
   String get editTemplateSubtitle;
+
+  /// Refresh template exercises from database menu item
+  ///
+  /// In en, this message translates to:
+  /// **'Sync Exercise Data'**
+  String get refreshFromDatabase;
+
+  /// Refresh from database menu item subtitle
+  ///
+  /// In en, this message translates to:
+  /// **'Update TUT and other fields'**
+  String get refreshFromDatabaseDescription;
+
+  /// Success message after syncing template with database
+  ///
+  /// In en, this message translates to:
+  /// **'{count} exercises updated'**
+  String refreshFromDatabaseSuccess(int count);
+
+  /// Message when no updates were needed
+  ///
+  /// In en, this message translates to:
+  /// **'Already up to date'**
+  String get refreshFromDatabaseNoUpdates;
 
   /// Share PDF menu item
   ///
@@ -14440,12 +14542,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Detected equipment'**
   String get detectedEquipmentType;
-
-  /// Barbell equipment type
-  ///
-  /// In en, this message translates to:
-  /// **'Barbell'**
-  String get barbell;
 
   /// Dumbbell equipment type
   ///
@@ -41360,17 +41456,125 @@ abstract class AppLocalizations {
   /// **'Excessive'**
   String get sleepQualityExcessive;
 
-  /// Last set information with weight and reps
+  /// Title for stress index recalculation setting
   ///
   /// In en, this message translates to:
-  /// **'Last: {weight}{unit} x {reps}'**
-  String lastSetInfo(String weight, String unit, int reps);
+  /// **'Recalculate Training Stress'**
+  String get recalculateStressIndex;
 
-  /// Indicator showing no change in weight compared to previous week
+  /// Description for stress index recalculation
   ///
   /// In en, this message translates to:
-  /// **'Same weight'**
-  String get sameWeightDelta;
+  /// **'Refresh stress data after exercise changes'**
+  String get recalculateStressIndexDesc;
+
+  /// Loading message while recalculating stress index
+  ///
+  /// In en, this message translates to:
+  /// **'Recalculating...'**
+  String get recalculatingStressIndex;
+
+  /// Success message after stress index recalculation
+  ///
+  /// In en, this message translates to:
+  /// **'Recalculated {count} workouts'**
+  String stressIndexRecalculatedSuccess(int count);
+
+  /// Message showing cleared stress index entries
+  ///
+  /// In en, this message translates to:
+  /// **'Cleared {count} entries'**
+  String stressIndexClearedCount(int count);
+
+  /// Message prompting user to create custom exercise
+  ///
+  /// In en, this message translates to:
+  /// **'Exercise not found? Create a custom one'**
+  String get exerciseNotFoundCreate;
+
+  /// Success message after creating exercise
+  ///
+  /// In en, this message translates to:
+  /// **'Exercise created successfully'**
+  String get exerciseCreated;
+
+  /// Message after deleting exercise
+  ///
+  /// In en, this message translates to:
+  /// **'Exercise deleted'**
+  String get exerciseDeleted;
+
+  /// Label for custom exercise (singular)
+  ///
+  /// In en, this message translates to:
+  /// **'Custom Exercise'**
+  String get customExercise;
+
+  /// Label for custom exercises (plural)
+  ///
+  /// In en, this message translates to:
+  /// **'Custom Exercises'**
+  String get customExercises;
+
+  /// Button text to save exercise
+  ///
+  /// In en, this message translates to:
+  /// **'Save Exercise'**
+  String get saveExercise;
+
+  /// Validation message for muscle selection
+  ///
+  /// In en, this message translates to:
+  /// **'Select at least one primary muscle'**
+  String get selectAtLeastOneMuscle;
+
+  /// Warning about maximum recommended muscles
+  ///
+  /// In en, this message translates to:
+  /// **'Recommended max {count} primary muscles'**
+  String maxMusclesRecommended(int count);
+
+  /// Shows usage of free custom exercises quota
+  ///
+  /// In en, this message translates to:
+  /// **'Free limit: {used}/{max} custom exercises'**
+  String freeExercisesLimit(int used, int max);
+
+  /// Label for premium unlimited exercises feature
+  ///
+  /// In en, this message translates to:
+  /// **'Unlimited custom exercises'**
+  String get unlimitedExercises;
+
+  /// Button text to watch ad for unlock
+  ///
+  /// In en, this message translates to:
+  /// **'Watch ad to unlock'**
+  String get watchAdToUnlock;
+
+  /// Label indicating unlock duration
+  ///
+  /// In en, this message translates to:
+  /// **'Unlock for 7 days'**
+  String get unlockFor7Days;
+
+  /// Label for expired custom exercise
+  ///
+  /// In en, this message translates to:
+  /// **'Expired - Renew'**
+  String get exerciseExpired;
+
+  /// Button text to renew with ad
+  ///
+  /// In en, this message translates to:
+  /// **'Renew with ad'**
+  String get renewWithAd;
+
+  /// Premium feature description for unlimited custom exercises
+  ///
+  /// In en, this message translates to:
+  /// **'Get unlimited custom exercises'**
+  String get unlimitedCustomExercises;
 }
 
 class _AppLocalizationsDelegate

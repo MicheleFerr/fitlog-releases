@@ -36,6 +36,7 @@ import 'package:voo_logging/voo_logging.dart'; // 🔍 Unified logging + HTTP in
 import 'package:gymbro_flutter_new/features/auth/data/auth_service.dart'; // google_sign_in 7.x init
 import 'package:gymbro_flutter_new/features/workout/domain/entities/workout_draft.dart'; // 💾 Workout Draft for auto-save
 import 'package:gymbro_flutter_new/features/workout/data/models/user_exercise_preferences.dart'; // 📝 Form Cues for exercises
+import 'package:gymbro_flutter_new/features/custom_exercises/domain/entities/custom_exercise.dart'; // 🏋️ Custom Exercises
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -157,6 +158,10 @@ void main() async {
   // 📝 User Exercise Preferences adapter for Form Cues
   if (!Hive.isAdapterRegistered(UserExercisePreferencesAdapter().typeId)) {
     Hive.registerAdapter(UserExercisePreferencesAdapter());
+  }
+  // 🏋️ Custom Exercise adapter for user-created exercises
+  if (!Hive.isAdapterRegistered(CustomExerciseAdapter().typeId)) {
+    Hive.registerAdapter(CustomExerciseAdapter());
   }
 
   // ✅ CRITICAL FIX: Initialize HiveBoxManagerEnhanced with pre-opened critical boxes

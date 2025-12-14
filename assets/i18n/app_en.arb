@@ -4248,6 +4248,86 @@
   "@createCustomExercise": {
     "description": "Dialog title for creating custom exercise"
   },
+  "createVariant": "Create Variant",
+  "@createVariant": {
+    "description": "Title for creating exercise variant"
+  },
+  "addedSuccessfully": "added successfully",
+  "@addedSuccessfully": {
+    "description": "Success message suffix when something is added"
+  },
+  "editCustomExercise": "Edit Custom Exercise",
+  "@editCustomExercise": {
+    "description": "Title for editing custom exercise"
+  },
+  "basedOn": "Based on",
+  "@basedOn": {
+    "description": "Label showing base exercise"
+  },
+  "categorization": "Categorization",
+  "@categorization": {
+    "description": "Section title for categorization fields"
+  },
+  "primaryMuscles": "Primary Muscles",
+  "@primaryMuscles": {
+    "description": "Label for primary muscles field"
+  },
+  "secondaryMuscles": "Secondary Muscles",
+  "@secondaryMuscles": {
+    "description": "Label for secondary muscles field"
+  },
+  "exerciseType": "Exercise Type",
+  "@exerciseType": {
+    "description": "Label for exercise type field"
+  },
+  "compound": "Compound",
+  "@compound": {
+    "description": "Compound exercise type"
+  },
+  "isolation": "Isolation",
+  "@isolation": {
+    "description": "Isolation exercise type"
+  },
+  "movementPattern": "Movement Pattern",
+  "@movementPattern": {
+    "description": "Label for movement pattern field"
+  },
+  "equipment": "Equipment",
+  "@equipment": {
+    "description": "Label for equipment field"
+  },
+  "categorizationWarning": "Modifying focus/pattern may affect Push/Pull ratio calculations",
+  "@categorizationWarning": {
+    "description": "Warning about categorization changes"
+  },
+  "inheritedFromBase": "Inherited from base exercise",
+  "@inheritedFromBase": {
+    "description": "Helper text for inherited fields"
+  },
+  "exerciseNameRequired": "Exercise name is required",
+  "@exerciseNameRequired": {
+    "description": "Validation error for empty name"
+  },
+  "barbell": "Barbell",
+  "@barbell": {
+    "description": "Equipment type"
+  },
+  "dumbbells": "Dumbbells",
+  "@dumbbells": {
+    "description": "Equipment type"
+  },
+  "cables": "Cables",
+  "@cables": {
+    "description": "Equipment type"
+  },
+  "machine": "Machine",
+  "@machine": {
+    "description": "Equipment type"
+  },
+  "bodyweight": "Bodyweight",
+  "@bodyweight": {
+    "description": "Equipment type"
+  },
   "category": "Category",
   "@category": {
     "description": "Label for category field"
@@ -6652,6 +6732,27 @@
   "editTemplateSubtitle": "Modify exercises and sets",
   "@editTemplateSubtitle": {
     "description": "Edit template menu item subtitle"
+  },
+  "refreshFromDatabase": "Sync Exercise Data",
+  "@refreshFromDatabase": {
+    "description": "Refresh template exercises from database menu item"
+  },
+  "refreshFromDatabaseDescription": "Update TUT and other fields",
+  "@refreshFromDatabaseDescription": {
+    "description": "Refresh from database menu item subtitle"
+  },
+  "refreshFromDatabaseSuccess": "{count} exercises updated",
+  "@refreshFromDatabaseSuccess": {
+    "description": "Success message after syncing template with database",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "refreshFromDatabaseNoUpdates": "Already up to date",
+  "@refreshFromDatabaseNoUpdates": {
+    "description": "Message when no updates were needed"
   },
   "sharePdf": "Share PDF",
   "@sharePdf": {
@@ -28335,23 +28436,108 @@
   "@sleepQualityExcessive": {
     "description": "Sleep quality: Excessive (>9h)"
   },
-  "lastSetInfo": "Last: {weight}{unit} x {reps}",
-  "@lastSetInfo": {
-    "description": "Last set information with weight and reps",
+  "recalculateStressIndex": "Recalculate Training Stress",
+  "@recalculateStressIndex": {
+    "description": "Title for stress index recalculation setting"
+  },
+  "recalculateStressIndexDesc": "Refresh stress data after exercise changes",
+  "@recalculateStressIndexDesc": {
+    "description": "Description for stress index recalculation"
+  },
+  "recalculatingStressIndex": "Recalculating...",
+  "@recalculatingStressIndex": {
+    "description": "Loading message while recalculating stress index"
+  },
+  "stressIndexRecalculatedSuccess": "Recalculated {count} workouts",
+  "@stressIndexRecalculatedSuccess": {
+    "description": "Success message after stress index recalculation",
     "placeholders": {
-      "weight": {
-        "type": "String"
-      },
-      "unit": {
-        "type": "String"
-      },
-      "reps": {
+      "count": {
         "type": "int"
       }
     }
   },
-  "sameWeightDelta": "Same weight",
-  "@sameWeightDelta": {
-    "description": "Indicator showing no change in weight compared to previous week"
+  "stressIndexClearedCount": "Cleared {count} entries",
+  "@stressIndexClearedCount": {
+    "description": "Message showing cleared stress index entries",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  }
+,
+  "exerciseNotFoundCreate": "Exercise not found? Create a custom one",
+  "@exerciseNotFoundCreate": {
+    "description": "Message prompting user to create custom exercise"
+  },
+  "exerciseCreated": "Exercise created successfully",
+  "@exerciseCreated": {
+    "description": "Success message after creating exercise"
+  },
+  "exerciseDeleted": "Exercise deleted",
+  "@exerciseDeleted": {
+    "description": "Message after deleting exercise"
+  },
+  "customExercise": "Custom Exercise",
+  "@customExercise": {
+    "description": "Label for custom exercise (singular)"
+  },
+  "customExercises": "Custom Exercises",
+  "@customExercises": {
+    "description": "Label for custom exercises (plural)"
+  },
+  "saveExercise": "Save Exercise",
+  "@saveExercise": {
+    "description": "Button text to save exercise"
+  },
+  "selectAtLeastOneMuscle": "Select at least one primary muscle",
+  "@selectAtLeastOneMuscle": {
+    "description": "Validation message for muscle selection"
+  },
+  "maxMusclesRecommended": "Recommended max {count} primary muscles",
+  "@maxMusclesRecommended": {
+    "description": "Warning about maximum recommended muscles",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "freeExercisesLimit": "Free limit: {used}/{max} custom exercises",
+  "@freeExercisesLimit": {
+    "description": "Shows usage of free custom exercises quota",
+    "placeholders": {
+      "used": {
+        "type": "int"
+      },
+      "max": {
+        "type": "int"
+      }
+    }
+  },
+  "unlimitedExercises": "Unlimited custom exercises",
+  "@unlimitedExercises": {
+    "description": "Label for premium unlimited exercises feature"
+  },
+  "watchAdToUnlock": "Watch ad to unlock",
+  "@watchAdToUnlock": {
+    "description": "Button text to watch ad for unlock"
+  },
+  "unlockFor7Days": "Unlock for 7 days",
+  "@unlockFor7Days": {
+    "description": "Label indicating unlock duration"
+  },
+  "exerciseExpired": "Expired - Renew",
+  "@exerciseExpired": {
+    "description": "Label for expired custom exercise"
+  },
+  "renewWithAd": "Renew with ad",
+  "@renewWithAd": {
+    "description": "Button text to renew with ad"
+  },
+  "unlimitedCustomExercises": "Get unlimited custom exercises",
+  "@unlimitedCustomExercises": {
+    "description": "Premium feature description for unlimited custom exercises"
   }
 }

@@ -3230,6 +3230,52 @@ class AppLocalizationsEn extends AppLocalizations {
   String get createCustomExercise => 'Create Custom Exercise';
 
   @override
+  String get createVariant => 'Create Variant';
+
+  @override
+  String get addedSuccessfully => 'added successfully';
+
+  @override
+  String get editCustomExercise => 'Edit Custom Exercise';
+
+  @override
+  String get basedOn => 'Based on';
+
+  @override
+  String get categorization => 'Categorization';
+
+  @override
+  String get compound => 'Compound';
+
+  @override
+  String get isolation => 'Isolation';
+
+  @override
+  String get categorizationWarning =>
+      'Modifying focus/pattern may affect Push/Pull ratio calculations';
+
+  @override
+  String get inheritedFromBase => 'Inherited from base exercise';
+
+  @override
+  String get exerciseNameRequired => 'Exercise name is required';
+
+  @override
+  String get barbell => 'Barbell';
+
+  @override
+  String get dumbbells => 'Dumbbells';
+
+  @override
+  String get cables => 'Cables';
+
+  @override
+  String get machine => 'Machine';
+
+  @override
+  String get bodyweight => 'Bodyweight';
+
+  @override
   String get category => 'Category';
 
   @override
@@ -4906,9 +4952,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get importJson => 'Import from JSON';
 
   @override
-  String get bodyweight => 'Bodyweight';
-
-  @override
   String get uniqueMuscles => 'Muscles';
 
   @override
@@ -4945,9 +4988,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String confirmDeleteMultiple(int count) {
     return 'Delete $count exercises?';
   }
-
-  @override
-  String get exerciseNameRequired => 'Exercise name is required';
 
   @override
   String get updateExercise => 'Update Exercise';
@@ -5067,6 +5107,20 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get editTemplateSubtitle => 'Modify exercises and sets';
+
+  @override
+  String get refreshFromDatabase => 'Sync Exercise Data';
+
+  @override
+  String get refreshFromDatabaseDescription => 'Update TUT and other fields';
+
+  @override
+  String refreshFromDatabaseSuccess(int count) {
+    return '$count exercises updated';
+  }
+
+  @override
+  String get refreshFromDatabaseNoUpdates => 'Already up to date';
 
   @override
   String get sharePdf => 'Share PDF';
@@ -8076,9 +8130,6 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get detectedEquipmentType => 'Detected equipment';
-
-  @override
-  String get barbell => 'Barbell';
 
   @override
   String get dumbbell => 'Dumbbell';
@@ -23144,10 +23195,72 @@ class AppLocalizationsEn extends AppLocalizations {
   String get sleepQualityExcessive => 'Excessive';
 
   @override
-  String lastSetInfo(String weight, String unit, int reps) {
-    return 'Last: $weight$unit x $reps';
+  String get recalculateStressIndex => 'Recalculate Training Stress';
+
+  @override
+  String get recalculateStressIndexDesc =>
+      'Refresh stress data after exercise changes';
+
+  @override
+  String get recalculatingStressIndex => 'Recalculating...';
+
+  @override
+  String stressIndexRecalculatedSuccess(int count) {
+    return 'Recalculated $count workouts';
   }
 
   @override
-  String get sameWeightDelta => 'Same weight';
+  String stressIndexClearedCount(int count) {
+    return 'Cleared $count entries';
+  }
+
+  @override
+  String get exerciseNotFoundCreate =>
+      'Exercise not found? Create a custom one';
+
+  @override
+  String get exerciseCreated => 'Exercise created successfully';
+
+  @override
+  String get exerciseDeleted => 'Exercise deleted';
+
+  @override
+  String get customExercise => 'Custom Exercise';
+
+  @override
+  String get customExercises => 'Custom Exercises';
+
+  @override
+  String get saveExercise => 'Save Exercise';
+
+  @override
+  String get selectAtLeastOneMuscle => 'Select at least one primary muscle';
+
+  @override
+  String maxMusclesRecommended(int count) {
+    return 'Recommended max $count primary muscles';
+  }
+
+  @override
+  String freeExercisesLimit(int used, int max) {
+    return 'Free limit: $used/$max custom exercises';
+  }
+
+  @override
+  String get unlimitedExercises => 'Unlimited custom exercises';
+
+  @override
+  String get watchAdToUnlock => 'Watch ad to unlock';
+
+  @override
+  String get unlockFor7Days => 'Unlock for 7 days';
+
+  @override
+  String get exerciseExpired => 'Expired - Renew';
+
+  @override
+  String get renewWithAd => 'Renew with ad';
+
+  @override
+  String get unlimitedCustomExercises => 'Get unlimited custom exercises';
 }

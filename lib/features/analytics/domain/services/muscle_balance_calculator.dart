@@ -18,6 +18,7 @@
 library;
 
 import 'package:gymbro_flutter_new/features/analytics/domain/entities/exercise_history.dart';
+import 'package:gymbro_flutter_new/features/custom_exercises/domain/entities/custom_exercise.dart';
 
 /// Muscle Balance Calculator Service
 ///
@@ -36,20 +37,34 @@ import 'package:gymbro_flutter_new/features/analytics/domain/entities/exercise_h
 class MuscleBalanceCalculator {
   /// Calculate balance metrics from exercise history
   ///
+  /// Uses custom exercise categorization first, then exercise name inference
+  /// to correctly classify push/pull when the stored muscleGroup is generic.
+  ///
+  /// [customExercises] - Map of exercise name (lowercase) to CustomExercise
+  /// for proper categorization of user-defined exercises
+  ///
   /// Returns [MuscleBalanceMetrics] with ratios, warnings, and suggestions
   MuscleBalanceMetrics calculateBalance(
-    List<ExerciseHistory> exerciseHistories,
-  ) {
+    List<ExerciseHistory> exerciseHistories, {
+    Map<String, CustomExercise>? customExercises,
+  }) {
     if (exerciseHistories.isEmpty) {
       return MuscleBalanceMetrics.empty();
     }
 
-    // Calculate volume per muscle group
+    // Calculate volume per muscle group with corrected classifications
     final Map<String, double> muscleVolumes = {};
     double totalVolume = 0;
 
     for (final history in exerciseHistories) {
-      final muscle = history.muscleGroup.toLowerCase();
+      // Use corrected muscle group with custom exercise data first
+      final customExercise = customExercises?[history.exerciseName.toLowerCase()];
+      final muscle = _getCorrectedMuscleGroup(
+        history.exerciseName,
+        history.muscleGroup,
+        customExercise: customExercise,
+      ).toLowerCase();
+
       final volume = history.sessions.fold<double>(
         0,
         (sum, session) => sum + session.totalVolume,
@@ -147,8 +162,11 @@ class MuscleBalanceCalculator {
   }
 
   /// Check if muscle is a push muscle
+  ///
+  /// Supports both English and Italian abbreviations
   bool _isPushMuscle(String muscle) {
     const pushMuscles = [
+      // English
       'chest',
       'pectorals',
       'triceps',
@@ -157,14 +175,22 @@ class MuscleBalanceCalculator {
       'anterior delts',
       'quads',
       'quadriceps',
+      // Italian abbreviations from JSON
+      'pett', // Pettorali
+      'tric', // Tricipiti
+      'delt', // Deltoidi
+      'quad', // Quadricipiti
     ];
 
     return pushMuscles.any((push) => muscle.contains(push));
   }
 
   /// Check if muscle is a pull muscle
+  ///
+  /// Supports both English and Italian abbreviations
   bool _isPullMuscle(String muscle) {
     const pullMuscles = [
+      // English
       'back',
       'lats',
       'traps',
@@ -173,14 +199,23 @@ class MuscleBalanceCalculator {
       'rear delts',
       'posterior',
       'rhomboids',
+      // Italian abbreviations from JSON
+      'lat', // Latissimus
+      'trap', // Trapezio
+      'bic', // Bicipiti
+      'femor', // Femorali (hamstrings)
+      'dorso', // Back
     ];
 
     return pullMuscles.any((pull) => muscle.contains(pull));
   }
 
   /// Check if muscle is upper body
+  ///
+  /// Supports both English and Italian abbreviations
   bool _isUpperBody(String muscle) {
     const upperMuscles = [
+      // English
       'chest',
       'pectorals',
       'back',
@@ -193,14 +228,26 @@ class MuscleBalanceCalculator {
       'arms',
       'abs',
       'core',
+      // Italian abbreviations
+      'pett', // Pettorali
+      'lat', // Latissimus
+      'trap', // Trapezio
+      'delt', // Deltoidi
+      'bic', // Bicipiti
+      'tric', // Tricipiti
+      'addom', // Addominali
+      'dorso', // Back
     ];
 
     return upperMuscles.any((upper) => muscle.contains(upper));
   }
 
   /// Check if muscle is lower body
+  ///
+  /// Supports both English and Italian abbreviations
   bool _isLowerBody(String muscle) {
     const lowerMuscles = [
+      // English
       'legs',
       'quads',
       'quadriceps',
@@ -208,9 +255,130 @@ class MuscleBalanceCalculator {
       'glutes',
       'calves',
       'hips',
+      // Italian abbreviations
+      'quad', // Quadricipiti
+      'femor', // Femorali
+      'glut', // Glutei
+      'polp', // Polpacci
     ];
 
     return lowerMuscles.any((lower) => muscle.contains(lower));
+  }
+
+  /// Infer specific muscle group from exercise name
+  ///
+  /// Returns specific muscle groups for push/pull classification
+  String _inferMuscleFromName(String exerciseName) {
+    final nameLower = exerciseName.toLowerCase();
+
+    // === PUSH EXERCISES ===
+
+    // Quad-dominant (PUSH)
+    const quadPatterns = [
+      'leg extension', 'leg press', 'squat', 'sissy squat', 'hack squat',
+      'front squat', 'affond', 'lunge', 'bulgarian', 'step up', 'pressa',
+      'quadricip',
+    ];
+    for (final pattern in quadPatterns) {
+      if (nameLower.contains(pattern)) return 'quads';
+    }
+
+    // Triceps (PUSH)
+    const tricepsPatterns = [
+      'tricep', 'pushdown', 'push down', 'skull crusher', 'french press',
+      'dip', 'close grip', 'diamond', 'kickback',
+      'estensione tricipiti', 'push-down',
+    ];
+    for (final pattern in tricepsPatterns) {
+      if (nameLower.contains(pattern)) return 'triceps';
+    }
+
+    // Chest (PUSH)
+    const chestPatterns = [
+      'bench press', 'panca piana', 'panca inclinata', 'panca declinata',
+      'chest', 'pettoral', 'fly', 'flye', 'crossover', 'pec deck', 'push up',
+      'pushup',
+    ];
+    for (final pattern in chestPatterns) {
+      if (nameLower.contains(pattern)) return 'chest';
+    }
+
+    // === PULL EXERCISES ===
+
+    // Hamstring-dominant (PULL)
+    const hamstringPatterns = [
+      'leg curl', 'lying curl', 'seated curl', 'stacco rumeno',
+      'romanian deadlift', 'rdl', 'good morning', 'glute ham',
+      'hip thrust', 'femorali', 'nordic', 'hyperextension',
+    ];
+    for (final pattern in hamstringPatterns) {
+      if (nameLower.contains(pattern)) return 'hamstrings';
+    }
+
+    // Biceps (PULL)
+    const bicepsPatterns = [
+      'bicep', 'curl', 'preacher', 'hammer', 'concentration',
+      'spider curl', 'incline curl', 'ez bar curl', 'barbell curl',
+    ];
+    for (final pattern in bicepsPatterns) {
+      if (nameLower.contains(pattern) && !nameLower.contains('leg curl')) {
+        return 'biceps';
+      }
+    }
+
+    // Back (PULL)
+    const backPatterns = [
+      'row', 'pull up', 'pullup', 'pull-up', 'chin up', 'chinup', 'chin-up',
+      'lat pull', 'pulldown', 'deadlift', 'stacco da terra',
+      'rematore', 'trazioni', 'lat machine', 't-bar',
+      'seal row', 'meadow', 'dorso',
+    ];
+    for (final pattern in backPatterns) {
+      if (nameLower.contains(pattern)) return 'back';
+    }
+
+    return '';
+  }
+
+  /// Get corrected muscle group using custom exercise data first, then name inference
+  ///
+  /// Priority order:
+  /// 1. User's custom exercise categorization (if exists)
+  /// 2. Name-based inference patterns
+  /// 3. Original stored muscle group
+  String _getCorrectedMuscleGroup(
+    String exerciseName,
+    String storedMuscleGroup, {
+    CustomExercise? customExercise,
+  }) {
+    // 1. Check custom exercise patternMovimento first (only if user modified it)
+    if (customExercise != null &&
+        customExercise.isModifiedFromBase &&
+        customExercise.patternMovimento.isNotEmpty) {
+      final pattern = customExercise.patternMovimento.toLowerCase();
+
+      // Map pattern to muscle group for push/pull classification
+      if (pattern == 'push') {
+        // Use first focus muscle or default to 'chest' for push
+        return customExercise.focus.isNotEmpty
+            ? customExercise.focus.first.toLowerCase()
+            : 'chest';
+      } else if (pattern == 'pull') {
+        // Use first focus muscle or default to 'back' for pull
+        return customExercise.focus.isNotEmpty
+            ? customExercise.focus.first.toLowerCase()
+            : 'back';
+      } else if (pattern == 'hinge' || pattern == 'squat' || pattern == 'accessory') {
+        // For other patterns, use first focus muscle if available
+        if (customExercise.focus.isNotEmpty) {
+          return customExercise.focus.first.toLowerCase();
+        }
+      }
+    }
+
+    // 2. Fallback to name-based inference
+    final inferred = _inferMuscleFromName(exerciseName);
+    return inferred.isNotEmpty ? inferred : storedMuscleGroup;
   }
 }
 

@@ -1106,6 +1106,26 @@
   "selectExerciseFromDatabase": "Seleziona Esercizio dal Database",
   "noExercisesInDatabase": "Nessun esercizio trovato nel database",
   "createCustomExercise": "Crea Esercizio Personalizzato",
+  "createVariant": "Crea Variante",
+  "addedSuccessfully": "aggiunto con successo",
+  "editCustomExercise": "Modifica Esercizio Personalizzato",
+  "basedOn": "Basato su",
+  "categorization": "Categorizzazione",
+  "primaryMuscles": "Muscoli Primari",
+  "secondaryMuscles": "Muscoli Secondari",
+  "exerciseType": "Tipo Esercizio",
+  "compound": "Compound",
+  "isolation": "Isolamento",
+  "movementPattern": "Pattern Movimento",
+  "equipment": "Attrezzatura",
+  "categorizationWarning": "Modificare focus/pattern può influenzare i calcoli del rapporto Push/Pull",
+  "inheritedFromBase": "Ereditato dall'esercizio base",
+  "exerciseNameRequired": "Il nome dell'esercizio è obbligatorio",
+  "barbell": "Bilanciere",
+  "dumbbells": "Manubri",
+  "cables": "Cavi",
+  "machine": "Macchina",
+  "bodyweight": "Corpo Libero",
   "category": "Categoria",
   "customExerciseNote": "Questo esercizio verrà salvato nella tua lista personale",
   "create": "Crea",
@@ -1821,6 +1841,10 @@
   },
   "startWorkoutWithTemplate": "Inizia allenamento con questo template",
   "editTemplateSubtitle": "Modifica esercizi e serie",
+  "refreshFromDatabase": "Sincronizza Esercizi",
+  "refreshFromDatabaseDescription": "Aggiorna TUT e altri campi",
+  "refreshFromDatabaseSuccess": "{count} esercizi aggiornati",
+  "refreshFromDatabaseNoUpdates": "Già aggiornato",
   "sharePdf": "Condividi PDF",
   "sharePdfSubtitle": "Esporta come PDF e condividi",
   "print": "Stampa",
@@ -16655,23 +16679,108 @@
   "@sleepQualityExcessive": {
     "description": "Qualità sonno: Eccessivo (>9h)"
   },
-  "lastSetInfo": "Ultimo: {weight}{unit} x {reps}",
-  "@lastSetInfo": {
-    "description": "Informazioni ultima serie con peso e ripetizioni",
+  "recalculateStressIndex": "Ricalcola Stress Allenamento",
+  "@recalculateStressIndex": {
+    "description": "Titolo per il ricalcolo dello stress index"
+  },
+  "recalculateStressIndexDesc": "Aggiorna i dati dopo modifiche agli esercizi",
+  "@recalculateStressIndexDesc": {
+    "description": "Descrizione per il ricalcolo dello stress index"
+  },
+  "recalculatingStressIndex": "Ricalcolo in corso...",
+  "@recalculatingStressIndex": {
+    "description": "Messaggio di caricamento durante il ricalcolo"
+  },
+  "stressIndexRecalculatedSuccess": "Ricalcolati {count} allenamenti",
+  "@stressIndexRecalculatedSuccess": {
+    "description": "Messaggio di successo dopo il ricalcolo dello stress index",
     "placeholders": {
-      "weight": {
-        "type": "String"
-      },
-      "unit": {
-        "type": "String"
-      },
-      "reps": {
+      "count": {
         "type": "int"
       }
     }
   },
-  "sameWeightDelta": "Stesso peso",
-  "@sameWeightDelta": {
-    "description": "Indicatore che mostra nessuna variazione di peso rispetto alla settimana precedente"
+  "stressIndexClearedCount": "Eliminati {count} dati",
+  "@stressIndexClearedCount": {
+    "description": "Messaggio che mostra gli entry dello stress index eliminati",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  }
+,
+  "exerciseNotFoundCreate": "Esercizio non trovato? Creane uno personalizzato",
+  "@exerciseNotFoundCreate": {
+    "description": "Messaggio per creare esercizio personalizzato"
+  },
+  "exerciseCreated": "Esercizio creato con successo",
+  "@exerciseCreated": {
+    "description": "Messaggio di successo dopo la creazione dell'esercizio"
+  },
+  "exerciseDeleted": "Esercizio eliminato",
+  "@exerciseDeleted": {
+    "description": "Messaggio dopo l'eliminazione dell'esercizio"
+  },
+  "customExercise": "Esercizio Personalizzato",
+  "@customExercise": {
+    "description": "Etichetta per esercizio personalizzato (singolare)"
+  },
+  "customExercises": "Esercizi Personalizzati",
+  "@customExercises": {
+    "description": "Etichetta per esercizi personalizzati (plurale)"
+  },
+  "saveExercise": "Salva Esercizio",
+  "@saveExercise": {
+    "description": "Testo pulsante per salvare esercizio"
+  },
+  "selectAtLeastOneMuscle": "Seleziona almeno un muscolo primario",
+  "@selectAtLeastOneMuscle": {
+    "description": "Messaggio di validazione per selezione muscoli"
+  },
+  "maxMusclesRecommended": "Consigliati max {count} muscoli primari",
+  "@maxMusclesRecommended": {
+    "description": "Avviso sul massimo muscoli consigliati",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "freeExercisesLimit": "Limite gratuito: {used}/{max} esercizi personalizzati",
+  "@freeExercisesLimit": {
+    "description": "Mostra l'uso della quota di esercizi personalizzati gratuiti",
+    "placeholders": {
+      "used": {
+        "type": "int"
+      },
+      "max": {
+        "type": "int"
+      }
+    }
+  },
+  "unlimitedExercises": "Esercizi personalizzati illimitati",
+  "@unlimitedExercises": {
+    "description": "Etichetta per funzione premium esercizi illimitati"
+  },
+  "watchAdToUnlock": "Guarda annuncio per sbloccare",
+  "@watchAdToUnlock": {
+    "description": "Testo pulsante per guardare annuncio e sbloccare"
+  },
+  "unlockFor7Days": "Sblocca per 7 giorni",
+  "@unlockFor7Days": {
+    "description": "Etichetta che indica la durata dello sblocco"
+  },
+  "exerciseExpired": "Scaduto - Rinnova",
+  "@exerciseExpired": {
+    "description": "Etichetta per esercizio personalizzato scaduto"
+  },
+  "renewWithAd": "Rinnova con annuncio",
+  "@renewWithAd": {
+    "description": "Testo pulsante per rinnovare con annuncio"
+  },
+  "unlimitedCustomExercises": "Ottieni esercizi personalizzati illimitati",
+  "@unlimitedCustomExercises": {
+    "description": "Descrizione funzione premium per esercizi personalizzati illimitati"
   }
 }
