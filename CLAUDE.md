@@ -89,12 +89,45 @@ lib/features/{name}/
 
 ---
 
+## 🚀 FITLOG COPILOT
+
+Comandi intelligenti per migliorare il workflow:
+
+| Comando | Cosa fa |
+|---------|---------|
+| `/fitlog <task>` | Suggerisce l'agente/comando giusto per il task |
+| `/context` | Carica contesto sessione (git, file recenti, TODO) |
+| `/cleanup` | Trova file zombie (duplicati, orfani, stale) |
+
+### Agenti Specializzati
+
+| Agente | Quando usarlo |
+|--------|---------------|
+| `flutter-architect` | Nuove feature, architettura |
+| `flutter-debugger` | Errori runtime, crash |
+| `ios-specialist` | Live Activities, Swift |
+| `timer-live-activity-specialist` | Timer, notifiche |
+| `firebase-expert` | Firestore, auth, sync |
+| `performance-optimizer` | Rebuild, memoria |
+
+### Rules Enforcer (automatico)
+
+Hook attivo su ogni Edit/Write che blocca violazioni:
+- `Icons.*` → usa `AppIcons.*`
+- `Colors.*` → usa `context.colors.*`
+- Hardcoded strings → usa `context.l10n.*`
+- `CircularProgressIndicator` → usa `LoadingIndicator()`
+
+---
+
 ## 🔧 COMANDI UTILI
 
 ```bash
 flutter gen-l10n              # Rigenera traduzioni
 flutter analyze               # Check errori
 ./scripts/checkpoint.sh       # Auto-commit checkpoint
+.claude/scripts/health-check.sh  # Check file zombie
+.claude/scripts/gather-context.sh # Carica contesto
 ```
 
 ---
