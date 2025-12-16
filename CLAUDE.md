@@ -8,9 +8,9 @@
 
 ## 📚 DOCUMENTATION FIRST
 
-**Prima di implementare**: [`docs/NAVIGATION/INDEX.md`](docs/NAVIGATION/INDEX.md) → trova feature → leggi docs → implementa
+**Entry point**: [`docs/INDEX.md`](docs/INDEX.md) → documentazione essenziale
 
-**Dettagli regole**: [`docs/DEVELOPMENT_RULES.md`](docs/DEVELOPMENT_RULES.md) | **Code examples**: [`docs/CODE_PATTERNS.md`](docs/CODE_PATTERNS.md)
+**Dettagli regole**: [`docs/DEVELOPMENT_RULES.md`](docs/DEVELOPMENT_RULES.md) | **Code patterns**: [`docs/CODE_PATTERNS.md`](docs/CODE_PATTERNS.md)
 
 ---
 
@@ -132,15 +132,18 @@ flutter analyze               # Check errori
 
 ---
 
-## 📖 DOCUMENTAZIONE DETTAGLIATA
+## 📖 DOCUMENTAZIONE
 
 | Argomento | File |
 |-----------|------|
+| Entry point | [`docs/INDEX.md`](docs/INDEX.md) |
+| Architettura | [`docs/architecture/OVERVIEW.md`](docs/architecture/OVERVIEW.md) |
 | Regole sviluppo | [`docs/DEVELOPMENT_RULES.md`](docs/DEVELOPMENT_RULES.md) |
 | Pattern codice | [`docs/CODE_PATTERNS.md`](docs/CODE_PATTERNS.md) |
 | Design system | [`docs/DESIGN_GUIDELINES.md`](docs/DESIGN_GUIDELINES.md) |
-| Taskmaster | [`docs/plans/TASKMASTER_GUIDE.md`](docs/plans/TASKMASTER_GUIDE.md) |
-| Navigation index | [`docs/NAVIGATION/INDEX.md`](docs/NAVIGATION/INDEX.md) |
+| ADR | [`docs/ADR/`](docs/ADR/) |
+
+> Documentazione precedente archiviata in `docs/_archived/`
 
 ---
 
