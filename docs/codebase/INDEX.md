@@ -12,6 +12,7 @@
 | [Core](#core-modules) | Infrastructure (15 modules) |
 | [Shared](#shared-modules) | Cross-cutting concerns (125+ components) |
 | [Features](#features) | Feature modules (38 features) |
+| [iOS Native](ios/README.md) | Swift layer (30+ files) - Live Activities, Watch, Audio |
 
 ---
 
