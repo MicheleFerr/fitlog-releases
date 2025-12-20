@@ -36,6 +36,10 @@ class _RestTimePickerModalState extends ConsumerState<RestTimePickerModal> {
   late bool _hasRestTime;
   List<RestTimePreset>? _presets;
 
+  // 🔧 FIX: Store controllers to allow programmatic scrolling when presets are selected
+  late FixedExtentScrollController _minutesController;
+  late FixedExtentScrollController _secondsController;
+
   @override
   void initState() {
     super.initState();
@@ -49,8 +53,19 @@ class _RestTimePickerModalState extends ConsumerState<RestTimePickerModal> {
       _hasRestTime = false;
     }
 
+    // Initialize scroll controllers
+    _minutesController = FixedExtentScrollController(initialItem: _selectedMinutes);
+    _secondsController = FixedExtentScrollController(initialItem: _selectedSeconds ~/ 15);
+
     // Load presets
     _loadPresets();
+  }
+
+  @override
+  void dispose() {
+    _minutesController.dispose();
+    _secondsController.dispose();
+    super.dispose();
   }
 
   Future<void> _loadPresets() async {
@@ -180,10 +195,18 @@ class _RestTimePickerModalState extends ConsumerState<RestTimePickerModal> {
                           exerciseId: widget.exerciseId,
                         );
 
+                        final newMinutes = preset.seconds! ~/ 60;
+                        final newSeconds = preset.seconds! % 60;
+
                         setState(() {
-                          _selectedMinutes = preset.seconds! ~/ 60;
-                          _selectedSeconds = preset.seconds! % 60;
+                          _selectedMinutes = newMinutes;
+                          _selectedSeconds = newSeconds;
                         });
+
+                        // 🔧 FIX: Animate pickers to new position so UI reflects selection
+                        // Use jumpToItem for instant update (no await needed)
+                        _minutesController.jumpToItem(newMinutes);
+                        _secondsController.jumpToItem(newSeconds ~/ 15);
                       }
                     },
                     selectedColor: context.colors.primary.withValues(alpha: 0.3),
@@ -217,9 +240,8 @@ class _RestTimePickerModalState extends ConsumerState<RestTimePickerModal> {
                         Expanded(
                           child: CupertinoPicker(
                             itemExtent: 28,
-                            scrollController: FixedExtentScrollController(
-                              initialItem: _selectedMinutes,
-                            ),
+                            // 🔧 FIX: Use stored controller for programmatic scrolling
+                            scrollController: _minutesController,
                             onSelectedItemChanged: (index) {
                               setState(() => _selectedMinutes = index);
                             },
@@ -257,9 +279,8 @@ class _RestTimePickerModalState extends ConsumerState<RestTimePickerModal> {
                         Expanded(
                           child: CupertinoPicker(
                             itemExtent: 28,
-                            scrollController: FixedExtentScrollController(
-                              initialItem: _selectedSeconds ~/ 15,
-                            ),
+                            // 🔧 FIX: Use stored controller for programmatic scrolling
+                            scrollController: _secondsController,
                             onSelectedItemChanged: (index) {
                               setState(() => _selectedSeconds = index * 15);
                             },
