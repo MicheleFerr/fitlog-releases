@@ -1262,7 +1262,7 @@ abstract class AppLocalizations {
   /// **'Clear'**
   String get clear;
 
-  /// Generic done/complete button label
+  /// Done button text
   ///
   /// In en, this message translates to:
   /// **'Done'**
@@ -7481,10 +7481,10 @@ abstract class AppLocalizations {
   /// **'Rest Day'**
   String get restDay;
 
-  /// Exercise count with pluralization
+  /// Number of exercises in template
   ///
   /// In en, this message translates to:
-  /// **'{count, plural, =0{No exercises} =1{1 exercise} other{{count} exercises}}'**
+  /// **'{count, plural, =1{1 exercise} other{{count} exercises}}'**
   String exerciseCount(int count);
 
   /// Duration in minutes
@@ -21960,7 +21960,7 @@ abstract class AppLocalizations {
   /// **'Start This Workout'**
   String get startThisWorkout;
 
-  /// Button to show alternative workout suggestions
+  /// Section title for alternative exercises
   ///
   /// In en, this message translates to:
   /// **'Alternatives'**
@@ -37962,10 +37962,10 @@ abstract class AppLocalizations {
   /// **'Expand exercise details'**
   String get expandExercise;
 
-  /// Hint text telling user to tap to expand content
+  /// Hint to tap card for details
   ///
   /// In en, this message translates to:
-  /// **'Tap to expand'**
+  /// **'Tap for details'**
   String get tapToExpand;
 
   /// Label for admin-only premium toggle section
@@ -39106,11 +39106,11 @@ abstract class AppLocalizations {
   /// **'Add to Template'**
   String get addExerciseToTemplate;
 
-  /// Success message after adding exercise
+  /// Success message when exercise added
   ///
   /// In en, this message translates to:
-  /// **'Exercise added to {templateName}'**
-  String exerciseAddedToTemplate(String templateName);
+  /// **'{exercise} added to {template}'**
+  String exerciseAddedToTemplate(String exercise, String template);
 
   /// Success message showing personalized volume when exercise is added to template
   ///
@@ -39171,7 +39171,7 @@ abstract class AppLocalizations {
   /// **'Make sure to maintain proper breathing'**
   String get weightJumpTip4;
 
-  /// Button to dismiss info sheet
+  /// Button text to dismiss explanation sheet
   ///
   /// In en, this message translates to:
   /// **'Got it'**
@@ -41049,6 +41049,12 @@ abstract class AppLocalizations {
   /// **'Refresh'**
   String get refreshData;
 
+  /// Description for refresh data button in Pro Insights
+  ///
+  /// In en, this message translates to:
+  /// **'Recalculate with updated exercise data'**
+  String get refreshDataDescription;
+
   /// Message for sync errors with retry option
   ///
   /// In en, this message translates to:
@@ -41131,6 +41137,18 @@ abstract class AppLocalizations {
     String poorEffect,
     String poorChange,
   );
+
+  /// Message for users who consistently sleep well
+  ///
+  /// In en, this message translates to:
+  /// **'Great consistency! With {avgSleep} average sleep, your volume is {avgVolume} per workout. Keep it up! ✨'**
+  String correlationConsistentlyGood(String avgSleep, String avgVolume);
+
+  /// Message for users who consistently sleep poorly
+  ///
+  /// In en, this message translates to:
+  /// **'You\'re averaging {avgSleep} sleep with {avgVolume} volume. Getting 7+ hours could boost your performance! 💪'**
+  String correlationConsistentlyPoor(String avgSleep, String avgVolume);
 
   /// Button label to clear health sync cache
   ///
@@ -41575,6 +41593,468 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Get unlimited custom exercises'**
   String get unlimitedCustomExercises;
+
+  /// Title for optimize training feature
+  ///
+  /// In en, this message translates to:
+  /// **'Optimize Training'**
+  String get optimizeTraining;
+
+  /// Subtitle for optimize training sheet
+  ///
+  /// In en, this message translates to:
+  /// **'Add variety to your workouts'**
+  String get optimizeTrainingSubtitle;
+
+  /// Hint text for optimize training CTA
+  ///
+  /// In en, this message translates to:
+  /// **'Your training is missing variety - add exercises to balance your rep zones'**
+  String get optimizeTrainingHint;
+
+  /// Button text for optimize action
+  ///
+  /// In en, this message translates to:
+  /// **'Optimize'**
+  String get optimize;
+
+  /// Alert title when training variety is low
+  ///
+  /// In en, this message translates to:
+  /// **'Low Variety Detected'**
+  String get lowVarietyDetected;
+
+  /// Header for view mode selection
+  ///
+  /// In en, this message translates to:
+  /// **'Choose view mode'**
+  String get chooseViewMode;
+
+  /// Swipe card mode option
+  ///
+  /// In en, this message translates to:
+  /// **'Swipe Mode'**
+  String get swipeMode;
+
+  /// Description of swipe mode
+  ///
+  /// In en, this message translates to:
+  /// **'Review suggestions one by one with Tinder-style swipe cards'**
+  String get swipeModeDescription;
+
+  /// List view mode option
+  ///
+  /// In en, this message translates to:
+  /// **'List Mode'**
+  String get listMode;
+
+  /// Description of list mode
+  ///
+  /// In en, this message translates to:
+  /// **'See all suggestions at once in a classic expandable list'**
+  String get listModeDescription;
+
+  /// Count of available suggestions
+  ///
+  /// In en, this message translates to:
+  /// **'{count} suggestions available'**
+  String suggestionsAvailable(int count);
+
+  /// Header showing suggestion count
+  ///
+  /// In en, this message translates to:
+  /// **'{count} suggestions'**
+  String suggestionsCount(int count);
+
+  /// Instructions for swipe cards
+  ///
+  /// In en, this message translates to:
+  /// **'Swipe right to add, left to skip'**
+  String get swipeInstructions;
+
+  /// Badge showing number of items added
+  ///
+  /// In en, this message translates to:
+  /// **'{count} added'**
+  String addedCount(int count);
+
+  /// Label for adding a specific zone
+  ///
+  /// In en, this message translates to:
+  /// **'Add {zone}'**
+  String addZone(String zone);
+
+  /// Label showing target template
+  ///
+  /// In en, this message translates to:
+  /// **'Add to {template}'**
+  String addTo(String template);
+
+  /// Reason when zone has 0%
+  ///
+  /// In en, this message translates to:
+  /// **'You have zero sets in the {zone} zone - adding variety will optimize your gains'**
+  String repZoneReasonEmpty(String zone);
+
+  /// Reason when zone is neglected
+  ///
+  /// In en, this message translates to:
+  /// **'The {zone} zone is underrepresented in your training'**
+  String repZoneReasonNeglected(String zone);
+
+  /// Reason for balancing zones
+  ///
+  /// In en, this message translates to:
+  /// **'Adding {zone} work will balance your training for optimal results'**
+  String repZoneReasonBalance(String zone);
+
+  /// Badge for neglected zone
+  ///
+  /// In en, this message translates to:
+  /// **'{zone} neglected'**
+  String zoneNeglected(String zone);
+
+  /// Title when all suggestions reviewed
+  ///
+  /// In en, this message translates to:
+  /// **'Optimization Complete!'**
+  String get optimizationComplete;
+
+  /// Subtitle when optimization complete
+  ///
+  /// In en, this message translates to:
+  /// **'Your templates have been updated with new exercises to improve variety'**
+  String get optimizationCompleteSubtitle;
+
+  /// Message when all suggestions done
+  ///
+  /// In en, this message translates to:
+  /// **'All suggestions reviewed'**
+  String get allSuggestionsReviewed;
+
+  /// Summary of exercises added
+  ///
+  /// In en, this message translates to:
+  /// **'{count} exercises added to your templates'**
+  String exercisesAddedSummary(int count);
+
+  /// Message when no suggestions
+  ///
+  /// In en, this message translates to:
+  /// **'No suggestions available'**
+  String get noSuggestionsAvailable;
+
+  /// Loading state for suggestions
+  ///
+  /// In en, this message translates to:
+  /// **'Loading suggestions...'**
+  String get loadingSuggestions;
+
+  /// Badge for added items
+  ///
+  /// In en, this message translates to:
+  /// **'Added'**
+  String get added;
+
+  /// Direct subtitle for optimize training v2
+  ///
+  /// In en, this message translates to:
+  /// **'Here are suggestions to balance your training'**
+  String get optimizeTrainingDirect;
+
+  /// Number of alternative exercises
+  ///
+  /// In en, this message translates to:
+  /// **'{count} alternatives'**
+  String alternativesCount(int count);
+
+  /// Technical motivations header
+  ///
+  /// In en, this message translates to:
+  /// **'Technical'**
+  String get motivationTechnical;
+
+  /// User data motivations header
+  ///
+  /// In en, this message translates to:
+  /// **'Your data'**
+  String get motivationYourData;
+
+  /// Section title for motivations
+  ///
+  /// In en, this message translates to:
+  /// **'Why this exercise?'**
+  String get whyThisExercise;
+
+  /// Compound exercise description
+  ///
+  /// In en, this message translates to:
+  /// **'Compound - activates {muscles}'**
+  String compoundActivates(String muscles);
+
+  /// Short compound exercise description
+  ///
+  /// In en, this message translates to:
+  /// **'Activates {muscles}'**
+  String compoundActivatesShort(String muscles);
+
+  /// Isolation exercise description
+  ///
+  /// In en, this message translates to:
+  /// **'Isolation - targets {muscle}'**
+  String isolationTargets(String muscle);
+
+  /// Short isolation exercise description
+  ///
+  /// In en, this message translates to:
+  /// **'Targets {muscle}'**
+  String isolationTargetsShort(String muscle);
+
+  /// Zone percentage in last 30 days
+  ///
+  /// In en, this message translates to:
+  /// **'{percent}% {zone} in last 30 days'**
+  String zonePercentLast30Days(String percent, String zone);
+
+  /// Days since exercise was last done
+  ///
+  /// In en, this message translates to:
+  /// **'You haven\'t done this exercise for {days} days'**
+  String notDoneSinceDays(int days);
+
+  /// When user never performed the exercise
+  ///
+  /// In en, this message translates to:
+  /// **'You\'ve never done this exercise'**
+  String get neverDoneExercise;
+
+  /// Equipment user already has
+  ///
+  /// In en, this message translates to:
+  /// **'You already have {equipment}'**
+  String equipmentAlreadyOwned(String equipment);
+
+  /// Natural rep range for exercise
+  ///
+  /// In en, this message translates to:
+  /// **'Natural rep range: {range}'**
+  String naturalRepRange(String range);
+
+  /// Movement pattern description
+  ///
+  /// In en, this message translates to:
+  /// **'Movement pattern: {pattern}'**
+  String movementPatternIs(String pattern);
+
+  /// Count of exercises added
+  ///
+  /// In en, this message translates to:
+  /// **'{count} exercises added'**
+  String exercisesAddedCount(int count);
+
+  /// Banner text for template view mode
+  ///
+  /// In en, this message translates to:
+  /// **'Presentation Mode'**
+  String get templateViewMode;
+
+  /// Message when exercise has no sets
+  ///
+  /// In en, this message translates to:
+  /// **'No sets configured'**
+  String get noSetsConfigured;
+
+  /// Accessibility label for menu button
+  ///
+  /// In en, this message translates to:
+  /// **'Menu options'**
+  String get menuOptions;
+
+  /// View action for template swipe
+  ///
+  /// In en, this message translates to:
+  /// **'View'**
+  String get templateActionView;
+
+  /// Title for priority explanation bottom sheet
+  ///
+  /// In en, this message translates to:
+  /// **'Priority Score'**
+  String get priorityExplanationTitle;
+
+  /// Description of how priority is calculated
+  ///
+  /// In en, this message translates to:
+  /// **'The priority score (0-10) helps you understand which muscles need attention most urgently. Based on sports science research, it considers three key factors.'**
+  String get priorityExplanationDescription;
+
+  /// Section title for priority score breakdown
+  ///
+  /// In en, this message translates to:
+  /// **'Score Breakdown'**
+  String get priorityBreakdown;
+
+  /// Label for severity component of priority
+  ///
+  /// In en, this message translates to:
+  /// **'Neglect Severity'**
+  String get prioritySeverityScore;
+
+  /// Label for antagonist imbalance component
+  ///
+  /// In en, this message translates to:
+  /// **'Antagonist Imbalance'**
+  String get priorityAntagonistScore;
+
+  /// Explanation of antagonist imbalance scoring
+  ///
+  /// In en, this message translates to:
+  /// **'Imbalance with opposing muscle (e.g., biceps vs triceps). Research shows a 1:1 ratio is optimal.'**
+  String get priorityAntagonistExplanation;
+
+  /// Label for posture risk component
+  ///
+  /// In en, this message translates to:
+  /// **'Posture Risk'**
+  String get priorityPostureScore;
+
+  /// Explanation of posture risk scoring
+  ///
+  /// In en, this message translates to:
+  /// **'Risk of postural issues (e.g., rounded shoulders from weak back + strong chest).'**
+  String get priorityPostureExplanation;
+
+  /// Label for current training volume
+  ///
+  /// In en, this message translates to:
+  /// **'Current Volume'**
+  String get currentVolume;
+
+  /// Label for recommended volume range
+  ///
+  /// In en, this message translates to:
+  /// **'Recommended'**
+  String get recommendedVolume;
+
+  /// Section title for severity threshold explanation
+  ///
+  /// In en, this message translates to:
+  /// **'Severity Thresholds'**
+  String get severityThresholds;
+
+  /// Critical severity threshold description
+  ///
+  /// In en, this message translates to:
+  /// **'< 2% of total volume'**
+  String get severityCriticalThreshold;
+
+  /// High severity threshold description
+  ///
+  /// In en, this message translates to:
+  /// **'2-3.5% of total volume'**
+  String get severityHighThreshold;
+
+  /// Medium severity threshold description
+  ///
+  /// In en, this message translates to:
+  /// **'3.5-5% of total volume'**
+  String get severityMediumThreshold;
+
+  /// Explanation for critical severity
+  ///
+  /// In en, this message translates to:
+  /// **'Severely undertrained - significantly below recommended volume'**
+  String get severityCriticalExplanation;
+
+  /// Explanation for high severity
+  ///
+  /// In en, this message translates to:
+  /// **'Undertrained - below recommended volume, needs attention'**
+  String get severityHighExplanation;
+
+  /// Explanation for medium severity
+  ///
+  /// In en, this message translates to:
+  /// **'Slightly undertrained - approaching recommended volume'**
+  String get severityMediumExplanation;
+
+  /// Badge text for exercises planned in templates
+  ///
+  /// In en, this message translates to:
+  /// **'Planned'**
+  String get planned;
+
+  /// Header for list of covering templates
+  ///
+  /// In en, this message translates to:
+  /// **'In Templates'**
+  String get inTemplates;
+
+  /// Prefix before template name for single template
+  ///
+  /// In en, this message translates to:
+  /// **'In: '**
+  String get inTemplatePrefix;
+
+  /// Text showing exercise is in N templates
+  ///
+  /// In en, this message translates to:
+  /// **'In {count} templates'**
+  String inNTemplates(int count);
+
+  /// Toggle label to show exercises already in templates
+  ///
+  /// In en, this message translates to:
+  /// **'Show planned exercises'**
+  String get showPlannedExercises;
+
+  /// Text indicating severity was reduced due to template coverage
+  ///
+  /// In en, this message translates to:
+  /// **'Severity reduced'**
+  String get severityReduced;
+
+  /// Shows original severity before adjustment
+  ///
+  /// In en, this message translates to:
+  /// **'Original: {severity}'**
+  String originalSeverity(String severity);
+
+  /// Indicator that muscle is covered by user templates
+  ///
+  /// In en, this message translates to:
+  /// **'Covered by your templates'**
+  String get coveredByTemplates;
+
+  /// Indicator that muscle is not covered by templates
+  ///
+  /// In en, this message translates to:
+  /// **'Not in templates'**
+  String get notInTemplates;
+
+  /// Message when no neglected muscles
+  ///
+  /// In en, this message translates to:
+  /// **'All muscles are well balanced'**
+  String get allMusclesBalanced;
+
+  /// Message when muscles need attention
+  ///
+  /// In en, this message translates to:
+  /// **'{count} neglected muscles need attention'**
+  String neglectedMusclesNeedAttention(int count);
+
+  /// Message when all neglected muscles are covered by templates
+  ///
+  /// In en, this message translates to:
+  /// **'{count} neglected muscles, all covered by your templates'**
+  String neglectedMusclesCovered(int count);
+
+  /// Message for partial template coverage
+  ///
+  /// In en, this message translates to:
+  /// **'{uncovered} of {total} neglected muscles not in templates'**
+  String partialCoverage(int uncovered, int total);
 }
 
 class _AppLocalizationsDelegate

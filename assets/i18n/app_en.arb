@@ -28116,6 +28116,10 @@
   "@refreshData": {
     "description": "Button to refresh data"
   },
+  "refreshDataDescription": "Recalculate with updated exercise data",
+  "@refreshDataDescription": {
+    "description": "Description for refresh data button in Pro Insights"
+  },
   "syncErrorRetry": "Unable to load data. Check your connection and try again.",
   "@syncErrorRetry": {
     "description": "Message for sync errors with retry option"
@@ -28189,6 +28193,34 @@
       "poorChange": {
         "type": "String",
         "example": "10%"
+      }
+    }
+  },
+  "correlationConsistentlyGood": "Great consistency! With {avgSleep} average sleep, your volume is {avgVolume} per workout. Keep it up! ✨",
+  "@correlationConsistentlyGood": {
+    "description": "Message for users who consistently sleep well",
+    "placeholders": {
+      "avgSleep": {
+        "type": "String",
+        "example": "7.8h"
+      },
+      "avgVolume": {
+        "type": "String",
+        "example": "5200kg"
+      }
+    }
+  },
+  "correlationConsistentlyPoor": "You're averaging {avgSleep} sleep with {avgVolume} volume. Getting 7+ hours could boost your performance! 💪",
+  "@correlationConsistentlyPoor": {
+    "description": "Message for users who consistently sleep poorly",
+    "placeholders": {
+      "avgSleep": {
+        "type": "String",
+        "example": "5.5h"
+      },
+      "avgVolume": {
+        "type": "String",
+        "example": "4200kg"
       }
     }
   }
@@ -28539,5 +28571,494 @@
   "unlimitedCustomExercises": "Get unlimited custom exercises",
   "@unlimitedCustomExercises": {
     "description": "Premium feature description for unlimited custom exercises"
+  },
+
+  "optimizeTraining": "Optimize Training",
+  "@optimizeTraining": {
+    "description": "Title for optimize training feature"
+  },
+  "optimizeTrainingSubtitle": "Add variety to your workouts",
+  "@optimizeTrainingSubtitle": {
+    "description": "Subtitle for optimize training sheet"
+  },
+  "optimizeTrainingHint": "Your training is missing variety - add exercises to balance your rep zones",
+  "@optimizeTrainingHint": {
+    "description": "Hint text for optimize training CTA"
+  },
+  "optimize": "Optimize",
+  "@optimize": {
+    "description": "Button text for optimize action"
+  },
+  "lowVarietyDetected": "Low Variety Detected",
+  "@lowVarietyDetected": {
+    "description": "Alert title when training variety is low"
+  },
+  "chooseViewMode": "Choose view mode",
+  "@chooseViewMode": {
+    "description": "Header for view mode selection"
+  },
+  "swipeMode": "Swipe Mode",
+  "@swipeMode": {
+    "description": "Swipe card mode option"
+  },
+  "swipeModeDescription": "Review suggestions one by one with Tinder-style swipe cards",
+  "@swipeModeDescription": {
+    "description": "Description of swipe mode"
+  },
+  "listMode": "List Mode",
+  "@listMode": {
+    "description": "List view mode option"
+  },
+  "listModeDescription": "See all suggestions at once in a classic expandable list",
+  "@listModeDescription": {
+    "description": "Description of list mode"
+  },
+  "suggestionsAvailable": "{count} suggestions available",
+  "@suggestionsAvailable": {
+    "description": "Count of available suggestions",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "suggestionsCount": "{count} suggestions",
+  "@suggestionsCount": {
+    "description": "Header showing suggestion count",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "swipeInstructions": "Swipe right to add, left to skip",
+  "@swipeInstructions": {
+    "description": "Instructions for swipe cards"
+  },
+  "addedCount": "{count} added",
+  "@addedCount": {
+    "description": "Badge showing number of items added",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "addZone": "Add {zone}",
+  "@addZone": {
+    "description": "Label for adding a specific zone",
+    "placeholders": {
+      "zone": {
+        "type": "String"
+      }
+    }
+  },
+  "addTo": "Add to {template}",
+  "@addTo": {
+    "description": "Label showing target template",
+    "placeholders": {
+      "template": {
+        "type": "String"
+      }
+    }
+  },
+  "repZoneReasonEmpty": "You have zero sets in the {zone} zone - adding variety will optimize your gains",
+  "@repZoneReasonEmpty": {
+    "description": "Reason when zone has 0%",
+    "placeholders": {
+      "zone": {
+        "type": "String"
+      }
+    }
+  },
+  "repZoneReasonNeglected": "The {zone} zone is underrepresented in your training",
+  "@repZoneReasonNeglected": {
+    "description": "Reason when zone is neglected",
+    "placeholders": {
+      "zone": {
+        "type": "String"
+      }
+    }
+  },
+  "repZoneReasonBalance": "Adding {zone} work will balance your training for optimal results",
+  "@repZoneReasonBalance": {
+    "description": "Reason for balancing zones",
+    "placeholders": {
+      "zone": {
+        "type": "String"
+      }
+    }
+  },
+  "zoneNeglected": "{zone} neglected",
+  "@zoneNeglected": {
+    "description": "Badge for neglected zone",
+    "placeholders": {
+      "zone": {
+        "type": "String"
+      }
+    }
+  },
+  "optimizationComplete": "Optimization Complete!",
+  "@optimizationComplete": {
+    "description": "Title when all suggestions reviewed"
+  },
+  "optimizationCompleteSubtitle": "Your templates have been updated with new exercises to improve variety",
+  "@optimizationCompleteSubtitle": {
+    "description": "Subtitle when optimization complete"
+  },
+  "allSuggestionsReviewed": "All suggestions reviewed",
+  "@allSuggestionsReviewed": {
+    "description": "Message when all suggestions done"
+  },
+  "exercisesAddedSummary": "{count} exercises added to your templates",
+  "@exercisesAddedSummary": {
+    "description": "Summary of exercises added",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "noSuggestionsAvailable": "No suggestions available",
+  "@noSuggestionsAvailable": {
+    "description": "Message when no suggestions"
+  },
+  "loadingSuggestions": "Loading suggestions...",
+  "@loadingSuggestions": {
+    "description": "Loading state for suggestions"
+  },
+  "exerciseAddedToTemplate": "{exercise} added to {template}",
+  "@exerciseAddedToTemplate": {
+    "description": "Success message when exercise added",
+    "placeholders": {
+      "exercise": {
+        "type": "String"
+      },
+      "template": {
+        "type": "String"
+      }
+    }
+  },
+  "added": "Added",
+  "@added": {
+    "description": "Badge for added items"
+  },
+  "done": "Done",
+  "@done": {
+    "description": "Done button text"
+  },
+
+  "optimizeTrainingDirect": "Here are suggestions to balance your training",
+  "@optimizeTrainingDirect": {
+    "description": "Direct subtitle for optimize training v2"
+  },
+  "tapToExpand": "Tap for details",
+  "@tapToExpand": {
+    "description": "Hint to tap card for details"
+  },
+  "alternativesCount": "{count} alternatives",
+  "@alternativesCount": {
+    "description": "Number of alternative exercises",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "motivationTechnical": "Technical",
+  "@motivationTechnical": {
+    "description": "Technical motivations header"
+  },
+  "motivationYourData": "Your data",
+  "@motivationYourData": {
+    "description": "User data motivations header"
+  },
+  "whyThisExercise": "Why this exercise?",
+  "@whyThisExercise": {
+    "description": "Section title for motivations"
+  },
+  "compoundActivates": "Compound - activates {muscles}",
+  "@compoundActivates": {
+    "description": "Compound exercise description",
+    "placeholders": {
+      "muscles": {
+        "type": "String"
+      }
+    }
+  },
+  "compoundActivatesShort": "Activates {muscles}",
+  "@compoundActivatesShort": {
+    "description": "Short compound exercise description",
+    "placeholders": {
+      "muscles": {
+        "type": "String"
+      }
+    }
+  },
+  "isolationTargets": "Isolation - targets {muscle}",
+  "@isolationTargets": {
+    "description": "Isolation exercise description",
+    "placeholders": {
+      "muscle": {
+        "type": "String"
+      }
+    }
+  },
+  "isolationTargetsShort": "Targets {muscle}",
+  "@isolationTargetsShort": {
+    "description": "Short isolation exercise description",
+    "placeholders": {
+      "muscle": {
+        "type": "String"
+      }
+    }
+  },
+  "zonePercentLast30Days": "{percent}% {zone} in last 30 days",
+  "@zonePercentLast30Days": {
+    "description": "Zone percentage in last 30 days",
+    "placeholders": {
+      "percent": {
+        "type": "String"
+      },
+      "zone": {
+        "type": "String"
+      }
+    }
+  },
+  "notDoneSinceDays": "You haven't done this exercise for {days} days",
+  "@notDoneSinceDays": {
+    "description": "Days since exercise was last done",
+    "placeholders": {
+      "days": {
+        "type": "int"
+      }
+    }
+  },
+  "neverDoneExercise": "You've never done this exercise",
+  "@neverDoneExercise": {
+    "description": "When user never performed the exercise"
+  },
+  "equipmentAlreadyOwned": "You already have {equipment}",
+  "@equipmentAlreadyOwned": {
+    "description": "Equipment user already has",
+    "placeholders": {
+      "equipment": {
+        "type": "String"
+      }
+    }
+  },
+  "naturalRepRange": "Natural rep range: {range}",
+  "@naturalRepRange": {
+    "description": "Natural rep range for exercise",
+    "placeholders": {
+      "range": {
+        "type": "String"
+      }
+    }
+  },
+  "movementPatternIs": "Movement pattern: {pattern}",
+  "@movementPatternIs": {
+    "description": "Movement pattern description",
+    "placeholders": {
+      "pattern": {
+        "type": "String"
+      }
+    }
+  },
+  "alternatives": "Alternatives",
+  "@alternatives": {
+    "description": "Section title for alternative exercises"
+  },
+  "exercisesAddedCount": "{count} exercises added",
+  "templateViewMode": "Presentation Mode",
+  "@templateViewMode": {
+    "description": "Banner text for template view mode"
+  },
+  "noSetsConfigured": "No sets configured",
+  "@noSetsConfigured": {
+    "description": "Message when exercise has no sets"
+  },
+  "exerciseCount": "{count, plural, =1{1 exercise} other{{count} exercises}}",
+  "@exerciseCount": {
+    "description": "Number of exercises in template",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "menuOptions": "Menu options",
+  "@menuOptions": {
+    "description": "Accessibility label for menu button"
+  },
+  "templateActionView": "View",
+  "@templateActionView": {
+    "description": "View action for template swipe"
+  },
+  "@exercisesAddedCount": {
+    "description": "Count of exercises added",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "priorityExplanationTitle": "Priority Score",
+  "@priorityExplanationTitle": {
+    "description": "Title for priority explanation bottom sheet"
+  },
+  "priorityExplanationDescription": "The priority score (0-10) helps you understand which muscles need attention most urgently. Based on sports science research, it considers three key factors.",
+  "@priorityExplanationDescription": {
+    "description": "Description of how priority is calculated"
+  },
+  "priorityBreakdown": "Score Breakdown",
+  "@priorityBreakdown": {
+    "description": "Section title for priority score breakdown"
+  },
+  "prioritySeverityScore": "Neglect Severity",
+  "@prioritySeverityScore": {
+    "description": "Label for severity component of priority"
+  },
+  "priorityAntagonistScore": "Antagonist Imbalance",
+  "@priorityAntagonistScore": {
+    "description": "Label for antagonist imbalance component"
+  },
+  "priorityAntagonistExplanation": "Imbalance with opposing muscle (e.g., biceps vs triceps). Research shows a 1:1 ratio is optimal.",
+  "@priorityAntagonistExplanation": {
+    "description": "Explanation of antagonist imbalance scoring"
+  },
+  "priorityPostureScore": "Posture Risk",
+  "@priorityPostureScore": {
+    "description": "Label for posture risk component"
+  },
+  "priorityPostureExplanation": "Risk of postural issues (e.g., rounded shoulders from weak back + strong chest).",
+  "@priorityPostureExplanation": {
+    "description": "Explanation of posture risk scoring"
+  },
+  "currentVolume": "Current Volume",
+  "@currentVolume": {
+    "description": "Label for current training volume"
+  },
+  "recommendedVolume": "Recommended",
+  "@recommendedVolume": {
+    "description": "Label for recommended volume range"
+  },
+  "severityThresholds": "Severity Thresholds",
+  "@severityThresholds": {
+    "description": "Section title for severity threshold explanation"
+  },
+  "severityCriticalThreshold": "< 2% of total volume",
+  "@severityCriticalThreshold": {
+    "description": "Critical severity threshold description"
+  },
+  "severityHighThreshold": "2-3.5% of total volume",
+  "@severityHighThreshold": {
+    "description": "High severity threshold description"
+  },
+  "severityMediumThreshold": "3.5-5% of total volume",
+  "@severityMediumThreshold": {
+    "description": "Medium severity threshold description"
+  },
+  "severityCriticalExplanation": "Severely undertrained - significantly below recommended volume",
+  "@severityCriticalExplanation": {
+    "description": "Explanation for critical severity"
+  },
+  "severityHighExplanation": "Undertrained - below recommended volume, needs attention",
+  "@severityHighExplanation": {
+    "description": "Explanation for high severity"
+  },
+  "severityMediumExplanation": "Slightly undertrained - approaching recommended volume",
+  "@severityMediumExplanation": {
+    "description": "Explanation for medium severity"
+  },
+  "understood": "Got it",
+  "@understood": {
+    "description": "Button text to dismiss explanation sheet"
+  },
+  "planned": "Planned",
+  "@planned": {
+    "description": "Badge text for exercises planned in templates"
+  },
+  "inTemplates": "In Templates",
+  "@inTemplates": {
+    "description": "Header for list of covering templates"
+  },
+  "inTemplatePrefix": "In: ",
+  "@inTemplatePrefix": {
+    "description": "Prefix before template name for single template"
+  },
+  "inNTemplates": "In {count} templates",
+  "@inNTemplates": {
+    "description": "Text showing exercise is in N templates",
+    "placeholders": {
+      "count": {
+        "type": "int",
+        "example": "2"
+      }
+    }
+  },
+  "showPlannedExercises": "Show planned exercises",
+  "@showPlannedExercises": {
+    "description": "Toggle label to show exercises already in templates"
+  },
+  "severityReduced": "Severity reduced",
+  "@severityReduced": {
+    "description": "Text indicating severity was reduced due to template coverage"
+  },
+  "originalSeverity": "Original: {severity}",
+  "@originalSeverity": {
+    "description": "Shows original severity before adjustment",
+    "placeholders": {
+      "severity": {
+        "type": "String",
+        "example": "HIGH"
+      }
+    }
+  },
+  "coveredByTemplates": "Covered by your templates",
+  "@coveredByTemplates": {
+    "description": "Indicator that muscle is covered by user templates"
+  },
+  "notInTemplates": "Not in templates",
+  "@notInTemplates": {
+    "description": "Indicator that muscle is not covered by templates"
+  },
+  "allMusclesBalanced": "All muscles are well balanced",
+  "@allMusclesBalanced": {
+    "description": "Message when no neglected muscles"
+  },
+  "neglectedMusclesNeedAttention": "{count} neglected muscles need attention",
+  "@neglectedMusclesNeedAttention": {
+    "description": "Message when muscles need attention",
+    "placeholders": {
+      "count": {
+        "type": "int",
+        "example": "3"
+      }
+    }
+  },
+  "neglectedMusclesCovered": "{count} neglected muscles, all covered by your templates",
+  "@neglectedMusclesCovered": {
+    "description": "Message when all neglected muscles are covered by templates",
+    "placeholders": {
+      "count": {
+        "type": "int",
+        "example": "2"
+      }
+    }
+  },
+  "partialCoverage": "{uncovered} of {total} neglected muscles not in templates",
+  "@partialCoverage": {
+    "description": "Message for partial template coverage",
+    "placeholders": {
+      "uncovered": {
+        "type": "int",
+        "example": "1"
+      },
+      "total": {
+        "type": "int",
+        "example": "3"
+      }
+    }
   }
 }

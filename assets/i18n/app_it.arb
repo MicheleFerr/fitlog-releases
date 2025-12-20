@@ -16453,6 +16453,13 @@
   "noSleepDataFound": "Nessun dato sul sonno trovato",
   "trackSleepHint": "Indossa il tuo Apple Watch o usa un'app che registra il sonno in Salute",
   "refreshData": "Aggiorna",
+  "@refreshData": {
+    "description": "Pulsante per aggiornare i dati"
+  },
+  "refreshDataDescription": "Ricalcola con dati esercizi aggiornati",
+  "@refreshDataDescription": {
+    "description": "Descrizione per il pulsante aggiorna in Pro Insights"
+  },
   "syncErrorRetry": "Impossibile caricare i dati. Controlla la connessione e riprova.",
   "recoveryRecommendationOptimal": "Ottimo recupero! Pronto per allenamento intenso.",
   "recoveryRecommendationGood": "Buon recupero. Pronto per allenamento normale.",
@@ -16466,6 +16473,8 @@
   "correlationEffectIncrease": "aumenta",
   "correlationEffectDecrease": "diminuisce",
   "correlationSignificant": "Il tuo volume {goodEffect} del {goodChange} con >7h di sonno e {poorEffect} del {poorChange} con <6h.",
+  "correlationConsistentlyGood": "Ottima costanza! Con {avgSleep} di sonno medio, il tuo volume è {avgVolume} per workout. Continua così! ✨",
+  "correlationConsistentlyPoor": "Dormi in media {avgSleep} con {avgVolume} di volume. Dormire 7+ ore potrebbe migliorare le tue performance! 💪",
   "clearSyncCache": "Cancella Cache di Sincronizzazione",
   "@clearSyncCache": {
     "description": "Etichetta pulsante per cancellare cache sincronizzazione salute"
@@ -16782,5 +16791,494 @@
   "unlimitedCustomExercises": "Ottieni esercizi personalizzati illimitati",
   "@unlimitedCustomExercises": {
     "description": "Descrizione funzione premium per esercizi personalizzati illimitati"
+  },
+
+  "optimizeTraining": "Ottimizza Allenamento",
+  "@optimizeTraining": {
+    "description": "Titolo per funzione ottimizzazione"
+  },
+  "optimizeTrainingSubtitle": "Aggiungi varietà ai tuoi allenamenti",
+  "@optimizeTrainingSubtitle": {
+    "description": "Sottotitolo per sheet ottimizzazione"
+  },
+  "optimizeTrainingHint": "Il tuo allenamento manca di varietà - aggiungi esercizi per bilanciare le zone rep",
+  "@optimizeTrainingHint": {
+    "description": "Testo hint per CTA ottimizzazione"
+  },
+  "optimize": "Ottimizza",
+  "@optimize": {
+    "description": "Testo pulsante ottimizza"
+  },
+  "lowVarietyDetected": "Poca Varietà Rilevata",
+  "@lowVarietyDetected": {
+    "description": "Titolo alert quando varietà è bassa"
+  },
+  "chooseViewMode": "Scegli modalità visualizzazione",
+  "@chooseViewMode": {
+    "description": "Header per selezione modalità"
+  },
+  "swipeMode": "Modalità Swipe",
+  "@swipeMode": {
+    "description": "Opzione modalità swipe card"
+  },
+  "swipeModeDescription": "Rivedi i suggerimenti uno alla volta con card stile Tinder",
+  "@swipeModeDescription": {
+    "description": "Descrizione modalità swipe"
+  },
+  "listMode": "Modalità Lista",
+  "@listMode": {
+    "description": "Opzione modalità lista"
+  },
+  "listModeDescription": "Vedi tutti i suggerimenti insieme in una lista espandibile",
+  "@listModeDescription": {
+    "description": "Descrizione modalità lista"
+  },
+  "suggestionsAvailable": "{count} suggerimenti disponibili",
+  "@suggestionsAvailable": {
+    "description": "Conteggio suggerimenti disponibili",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "suggestionsCount": "{count} suggerimenti",
+  "@suggestionsCount": {
+    "description": "Header con conteggio suggerimenti",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "swipeInstructions": "Swipe a destra per aggiungere, sinistra per saltare",
+  "@swipeInstructions": {
+    "description": "Istruzioni per swipe card"
+  },
+  "addedCount": "{count} aggiunti",
+  "@addedCount": {
+    "description": "Badge con numero elementi aggiunti",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "addZone": "Aggiungi {zone}",
+  "@addZone": {
+    "description": "Label per aggiungere zona specifica",
+    "placeholders": {
+      "zone": {
+        "type": "String"
+      }
+    }
+  },
+  "addTo": "Aggiungi a {template}",
+  "@addTo": {
+    "description": "Label con template target",
+    "placeholders": {
+      "template": {
+        "type": "String"
+      }
+    }
+  },
+  "repZoneReasonEmpty": "Hai zero serie nella zona {zone} - aggiungere varietà ottimizzerà i tuoi guadagni",
+  "@repZoneReasonEmpty": {
+    "description": "Motivo quando zona è a 0%",
+    "placeholders": {
+      "zone": {
+        "type": "String"
+      }
+    }
+  },
+  "repZoneReasonNeglected": "La zona {zone} è sottorappresentata nel tuo allenamento",
+  "@repZoneReasonNeglected": {
+    "description": "Motivo quando zona è trascurata",
+    "placeholders": {
+      "zone": {
+        "type": "String"
+      }
+    }
+  },
+  "repZoneReasonBalance": "Aggiungere lavoro in {zone} bilancerà il tuo allenamento per risultati ottimali",
+  "@repZoneReasonBalance": {
+    "description": "Motivo per bilanciare zone",
+    "placeholders": {
+      "zone": {
+        "type": "String"
+      }
+    }
+  },
+  "zoneNeglected": "{zone} trascurata",
+  "@zoneNeglected": {
+    "description": "Badge per zona trascurata",
+    "placeholders": {
+      "zone": {
+        "type": "String"
+      }
+    }
+  },
+  "optimizationComplete": "Ottimizzazione Completata!",
+  "@optimizationComplete": {
+    "description": "Titolo quando tutti i suggerimenti revisionati"
+  },
+  "optimizationCompleteSubtitle": "I tuoi template sono stati aggiornati con nuovi esercizi per migliorare la varietà",
+  "@optimizationCompleteSubtitle": {
+    "description": "Sottotitolo quando ottimizzazione completa"
+  },
+  "allSuggestionsReviewed": "Tutti i suggerimenti revisionati",
+  "@allSuggestionsReviewed": {
+    "description": "Messaggio quando tutti i suggerimenti completati"
+  },
+  "exercisesAddedSummary": "{count} esercizi aggiunti ai tuoi template",
+  "@exercisesAddedSummary": {
+    "description": "Riepilogo esercizi aggiunti",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "noSuggestionsAvailable": "Nessun suggerimento disponibile",
+  "@noSuggestionsAvailable": {
+    "description": "Messaggio quando non ci sono suggerimenti"
+  },
+  "loadingSuggestions": "Caricamento suggerimenti...",
+  "@loadingSuggestions": {
+    "description": "Stato caricamento suggerimenti"
+  },
+  "exerciseAddedToTemplate": "{exercise} aggiunto a {template}",
+  "@exerciseAddedToTemplate": {
+    "description": "Messaggio successo quando esercizio aggiunto",
+    "placeholders": {
+      "exercise": {
+        "type": "String"
+      },
+      "template": {
+        "type": "String"
+      }
+    }
+  },
+  "added": "Aggiunto",
+  "@added": {
+    "description": "Badge per elementi aggiunti"
+  },
+  "done": "Fatto",
+  "@done": {
+    "description": "Testo pulsante fatto"
+  },
+
+  "optimizeTrainingDirect": "Ecco i suggerimenti per bilanciare il tuo allenamento",
+  "@optimizeTrainingDirect": {
+    "description": "Sottotitolo diretto per ottimizzazione v2"
+  },
+  "tapToExpand": "Tocca per dettagli",
+  "@tapToExpand": {
+    "description": "Suggerimento tocca card per dettagli"
+  },
+  "alternativesCount": "{count} alternative",
+  "@alternativesCount": {
+    "description": "Numero di esercizi alternativi",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "motivationTechnical": "Tecnico",
+  "@motivationTechnical": {
+    "description": "Header motivazioni tecniche"
+  },
+  "motivationYourData": "I tuoi dati",
+  "@motivationYourData": {
+    "description": "Header motivazioni dati utente"
+  },
+  "whyThisExercise": "Perché questo esercizio?",
+  "@whyThisExercise": {
+    "description": "Titolo sezione motivazioni"
+  },
+  "compoundActivates": "Compound - attiva {muscles}",
+  "@compoundActivates": {
+    "description": "Descrizione esercizio compound",
+    "placeholders": {
+      "muscles": {
+        "type": "String"
+      }
+    }
+  },
+  "compoundActivatesShort": "Attiva {muscles}",
+  "@compoundActivatesShort": {
+    "description": "Descrizione breve esercizio compound",
+    "placeholders": {
+      "muscles": {
+        "type": "String"
+      }
+    }
+  },
+  "isolationTargets": "Isolamento - isola {muscle}",
+  "@isolationTargets": {
+    "description": "Descrizione esercizio isolamento",
+    "placeholders": {
+      "muscle": {
+        "type": "String"
+      }
+    }
+  },
+  "isolationTargetsShort": "Isola {muscle}",
+  "@isolationTargetsShort": {
+    "description": "Descrizione breve esercizio isolamento",
+    "placeholders": {
+      "muscle": {
+        "type": "String"
+      }
+    }
+  },
+  "zonePercentLast30Days": "{percent}% {zone} negli ultimi 30 giorni",
+  "@zonePercentLast30Days": {
+    "description": "Percentuale zona negli ultimi 30 giorni",
+    "placeholders": {
+      "percent": {
+        "type": "String"
+      },
+      "zone": {
+        "type": "String"
+      }
+    }
+  },
+  "notDoneSinceDays": "Non fai questo esercizio da {days} giorni",
+  "@notDoneSinceDays": {
+    "description": "Giorni dall'ultima volta esercizio fatto",
+    "placeholders": {
+      "days": {
+        "type": "int"
+      }
+    }
+  },
+  "neverDoneExercise": "Non hai mai fatto questo esercizio",
+  "@neverDoneExercise": {
+    "description": "Quando utente non ha mai fatto esercizio"
+  },
+  "equipmentAlreadyOwned": "Hai già {equipment}",
+  "@equipmentAlreadyOwned": {
+    "description": "Attrezzatura già posseduta",
+    "placeholders": {
+      "equipment": {
+        "type": "String"
+      }
+    }
+  },
+  "naturalRepRange": "Range rep naturale: {range}",
+  "@naturalRepRange": {
+    "description": "Range rep naturale esercizio",
+    "placeholders": {
+      "range": {
+        "type": "String"
+      }
+    }
+  },
+  "movementPatternIs": "Pattern movimento: {pattern}",
+  "@movementPatternIs": {
+    "description": "Descrizione pattern movimento",
+    "placeholders": {
+      "pattern": {
+        "type": "String"
+      }
+    }
+  },
+  "alternatives": "Alternative",
+  "@alternatives": {
+    "description": "Titolo sezione esercizi alternativi"
+  },
+  "exercisesAddedCount": "{count} esercizi aggiunti",
+  "templateViewMode": "Modalità Presentazione",
+  "@templateViewMode": {
+    "description": "Testo banner modalità visualizzazione template"
+  },
+  "noSetsConfigured": "Nessuna serie configurata",
+  "@noSetsConfigured": {
+    "description": "Messaggio quando esercizio non ha serie"
+  },
+  "exerciseCount": "{count, plural, =1{1 esercizio} other{{count} esercizi}}",
+  "@exerciseCount": {
+    "description": "Numero di esercizi nel template",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "menuOptions": "Opzioni menu",
+  "@menuOptions": {
+    "description": "Label accessibilità per pulsante menu"
+  },
+  "templateActionView": "Visualizza",
+  "@templateActionView": {
+    "description": "Azione visualizza per swipe template"
+  },
+  "@exercisesAddedCount": {
+    "description": "Conteggio esercizi aggiunti",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "priorityExplanationTitle": "Punteggio Priorità",
+  "@priorityExplanationTitle": {
+    "description": "Titolo per bottom sheet spiegazione priorità"
+  },
+  "priorityExplanationDescription": "Il punteggio priorità (0-10) ti aiuta a capire quali muscoli necessitano attenzione più urgente. Basato su ricerche scientifiche sportive, considera tre fattori chiave.",
+  "@priorityExplanationDescription": {
+    "description": "Descrizione di come viene calcolata la priorità"
+  },
+  "priorityBreakdown": "Composizione Punteggio",
+  "@priorityBreakdown": {
+    "description": "Titolo sezione per breakdown punteggio priorità"
+  },
+  "prioritySeverityScore": "Gravità Trascuratezza",
+  "@prioritySeverityScore": {
+    "description": "Label per componente gravità della priorità"
+  },
+  "priorityAntagonistScore": "Squilibrio Antagonista",
+  "@priorityAntagonistScore": {
+    "description": "Label per componente squilibrio antagonista"
+  },
+  "priorityAntagonistExplanation": "Squilibrio con muscolo opposto (es. bicipiti vs tricipiti). La ricerca mostra che un rapporto 1:1 è ottimale.",
+  "@priorityAntagonistExplanation": {
+    "description": "Spiegazione del punteggio squilibrio antagonista"
+  },
+  "priorityPostureScore": "Rischio Posturale",
+  "@priorityPostureScore": {
+    "description": "Label per componente rischio posturale"
+  },
+  "priorityPostureExplanation": "Rischio di problemi posturali (es. spalle arrotondate da schiena debole + petto forte).",
+  "@priorityPostureExplanation": {
+    "description": "Spiegazione del punteggio rischio posturale"
+  },
+  "currentVolume": "Volume Attuale",
+  "@currentVolume": {
+    "description": "Label per volume di allenamento attuale"
+  },
+  "recommendedVolume": "Consigliato",
+  "@recommendedVolume": {
+    "description": "Label per range volume consigliato"
+  },
+  "severityThresholds": "Soglie di Gravità",
+  "@severityThresholds": {
+    "description": "Titolo sezione per spiegazione soglie gravità"
+  },
+  "severityCriticalThreshold": "< 2% del volume totale",
+  "@severityCriticalThreshold": {
+    "description": "Descrizione soglia gravità critica"
+  },
+  "severityHighThreshold": "2-3.5% del volume totale",
+  "@severityHighThreshold": {
+    "description": "Descrizione soglia gravità alta"
+  },
+  "severityMediumThreshold": "3.5-5% del volume totale",
+  "@severityMediumThreshold": {
+    "description": "Descrizione soglia gravità media"
+  },
+  "severityCriticalExplanation": "Gravemente sotto-allenato - significativamente sotto il volume consigliato",
+  "@severityCriticalExplanation": {
+    "description": "Spiegazione per gravità critica"
+  },
+  "severityHighExplanation": "Sotto-allenato - sotto il volume consigliato, necessita attenzione",
+  "@severityHighExplanation": {
+    "description": "Spiegazione per gravità alta"
+  },
+  "severityMediumExplanation": "Leggermente sotto-allenato - vicino al volume consigliato",
+  "@severityMediumExplanation": {
+    "description": "Spiegazione per gravità media"
+  },
+  "understood": "Capito",
+  "@understood": {
+    "description": "Testo pulsante per chiudere sheet spiegazione"
+  },
+  "planned": "Pianificato",
+  "@planned": {
+    "description": "Badge per esercizi pianificati nei template"
+  },
+  "inTemplates": "Nei Template",
+  "@inTemplates": {
+    "description": "Intestazione lista template contenenti l'esercizio"
+  },
+  "inTemplatePrefix": "In: ",
+  "@inTemplatePrefix": {
+    "description": "Prefisso prima del nome template singolo"
+  },
+  "inNTemplates": "In {count} template",
+  "@inNTemplates": {
+    "description": "Testo che mostra esercizio in N template",
+    "placeholders": {
+      "count": {
+        "type": "int",
+        "example": "2"
+      }
+    }
+  },
+  "showPlannedExercises": "Mostra esercizi pianificati",
+  "@showPlannedExercises": {
+    "description": "Etichetta toggle per mostrare esercizi già in template"
+  },
+  "severityReduced": "Gravità ridotta",
+  "@severityReduced": {
+    "description": "Testo che indica gravità ridotta per copertura template"
+  },
+  "originalSeverity": "Originale: {severity}",
+  "@originalSeverity": {
+    "description": "Mostra gravità originale prima della regolazione",
+    "placeholders": {
+      "severity": {
+        "type": "String",
+        "example": "ALTA"
+      }
+    }
+  },
+  "coveredByTemplates": "Coperto dai tuoi template",
+  "@coveredByTemplates": {
+    "description": "Indicatore che muscolo è coperto dai template utente"
+  },
+  "notInTemplates": "Non nei template",
+  "@notInTemplates": {
+    "description": "Indicatore che muscolo non è coperto dai template"
+  },
+  "allMusclesBalanced": "Tutti i muscoli sono ben bilanciati",
+  "@allMusclesBalanced": {
+    "description": "Messaggio quando nessun muscolo trascurato"
+  },
+  "neglectedMusclesNeedAttention": "{count} muscoli trascurati richiedono attenzione",
+  "@neglectedMusclesNeedAttention": {
+    "description": "Messaggio quando muscoli richiedono attenzione",
+    "placeholders": {
+      "count": {
+        "type": "int",
+        "example": "3"
+      }
+    }
+  },
+  "neglectedMusclesCovered": "{count} muscoli trascurati, tutti coperti dai tuoi template",
+  "@neglectedMusclesCovered": {
+    "description": "Messaggio quando tutti i muscoli trascurati sono coperti dai template",
+    "placeholders": {
+      "count": {
+        "type": "int",
+        "example": "2"
+      }
+    }
+  },
+  "partialCoverage": "{uncovered} di {total} muscoli trascurati non nei template",
+  "@partialCoverage": {
+    "description": "Messaggio per copertura parziale template",
+    "placeholders": {
+      "uncovered": {
+        "type": "int",
+        "example": "1"
+      },
+      "total": {
+        "type": "int",
+        "example": "3"
+      }
+    }
   }
 }

@@ -4068,7 +4068,6 @@ class AppLocalizationsIt extends AppLocalizations {
       locale: localeName,
       other: '$count esercizi',
       one: '1 esercizio',
-      zero: 'Nessun esercizio',
     );
     return '$_temp0';
   }
@@ -21455,7 +21454,7 @@ class AppLocalizationsIt extends AppLocalizations {
   String get expandExercise => 'Espandi dettagli esercizio';
 
   @override
-  String get tapToExpand => 'Tocca per espandere';
+  String get tapToExpand => 'Tocca per dettagli';
 
   @override
   String get adminPremiumToggle => 'Toggle Premium Admin';
@@ -22055,8 +22054,8 @@ class AppLocalizationsIt extends AppLocalizations {
   String get addExerciseToTemplate => 'Aggiungi al Template';
 
   @override
-  String exerciseAddedToTemplate(String templateName) {
-    return 'Esercizio aggiunto a $templateName';
+  String exerciseAddedToTemplate(String exercise, String template) {
+    return '$exercise aggiunto a $template';
   }
 
   @override
@@ -22097,7 +22096,7 @@ class AppLocalizationsIt extends AppLocalizations {
   String get weightJumpTip4 => 'Mantieni una respirazione corretta';
 
   @override
-  String get understood => 'Ho capito';
+  String get understood => 'Capito';
 
   @override
   String get exerciseSummary => 'Riepilogo Esercizi';
@@ -23186,6 +23185,9 @@ class AppLocalizationsIt extends AppLocalizations {
   String get refreshData => 'Aggiorna';
 
   @override
+  String get refreshDataDescription => 'Ricalcola con dati esercizi aggiornati';
+
+  @override
   String get syncErrorRetry =>
       'Impossibile caricare i dati. Controlla la connessione e riprova.';
 
@@ -23240,6 +23242,16 @@ class AppLocalizationsIt extends AppLocalizations {
     String poorChange,
   ) {
     return 'Il tuo volume $goodEffect del $goodChange con >7h di sonno e $poorEffect del $poorChange con <6h.';
+  }
+
+  @override
+  String correlationConsistentlyGood(String avgSleep, String avgVolume) {
+    return 'Ottima costanza! Con $avgSleep di sonno medio, il tuo volume è $avgVolume per workout. Continua così! ✨';
+  }
+
+  @override
+  String correlationConsistentlyPoor(String avgSleep, String avgVolume) {
+    return 'Dormi in media $avgSleep con $avgVolume di volume. Dormire 7+ ore potrebbe migliorare le tue performance! 💪';
   }
 
   @override
@@ -23492,4 +23504,299 @@ class AppLocalizationsIt extends AppLocalizations {
   @override
   String get unlimitedCustomExercises =>
       'Ottieni esercizi personalizzati illimitati';
+
+  @override
+  String get optimizeTraining => 'Ottimizza Allenamento';
+
+  @override
+  String get optimizeTrainingSubtitle => 'Aggiungi varietà ai tuoi allenamenti';
+
+  @override
+  String get optimizeTrainingHint =>
+      'Il tuo allenamento manca di varietà - aggiungi esercizi per bilanciare le zone rep';
+
+  @override
+  String get optimize => 'Ottimizza';
+
+  @override
+  String get lowVarietyDetected => 'Poca Varietà Rilevata';
+
+  @override
+  String get chooseViewMode => 'Scegli modalità visualizzazione';
+
+  @override
+  String get swipeMode => 'Modalità Swipe';
+
+  @override
+  String get swipeModeDescription =>
+      'Rivedi i suggerimenti uno alla volta con card stile Tinder';
+
+  @override
+  String get listMode => 'Modalità Lista';
+
+  @override
+  String get listModeDescription =>
+      'Vedi tutti i suggerimenti insieme in una lista espandibile';
+
+  @override
+  String suggestionsAvailable(int count) {
+    return '$count suggerimenti disponibili';
+  }
+
+  @override
+  String suggestionsCount(int count) {
+    return '$count suggerimenti';
+  }
+
+  @override
+  String get swipeInstructions =>
+      'Swipe a destra per aggiungere, sinistra per saltare';
+
+  @override
+  String addedCount(int count) {
+    return '$count aggiunti';
+  }
+
+  @override
+  String addZone(String zone) {
+    return 'Aggiungi $zone';
+  }
+
+  @override
+  String addTo(String template) {
+    return 'Aggiungi a $template';
+  }
+
+  @override
+  String repZoneReasonEmpty(String zone) {
+    return 'Hai zero serie nella zona $zone - aggiungere varietà ottimizzerà i tuoi guadagni';
+  }
+
+  @override
+  String repZoneReasonNeglected(String zone) {
+    return 'La zona $zone è sottorappresentata nel tuo allenamento';
+  }
+
+  @override
+  String repZoneReasonBalance(String zone) {
+    return 'Aggiungere lavoro in $zone bilancerà il tuo allenamento per risultati ottimali';
+  }
+
+  @override
+  String zoneNeglected(String zone) {
+    return '$zone trascurata';
+  }
+
+  @override
+  String get optimizationComplete => 'Ottimizzazione Completata!';
+
+  @override
+  String get optimizationCompleteSubtitle =>
+      'I tuoi template sono stati aggiornati con nuovi esercizi per migliorare la varietà';
+
+  @override
+  String get allSuggestionsReviewed => 'Tutti i suggerimenti revisionati';
+
+  @override
+  String exercisesAddedSummary(int count) {
+    return '$count esercizi aggiunti ai tuoi template';
+  }
+
+  @override
+  String get noSuggestionsAvailable => 'Nessun suggerimento disponibile';
+
+  @override
+  String get loadingSuggestions => 'Caricamento suggerimenti...';
+
+  @override
+  String get added => 'Aggiunto';
+
+  @override
+  String get optimizeTrainingDirect =>
+      'Ecco i suggerimenti per bilanciare il tuo allenamento';
+
+  @override
+  String alternativesCount(int count) {
+    return '$count alternative';
+  }
+
+  @override
+  String get motivationTechnical => 'Tecnico';
+
+  @override
+  String get motivationYourData => 'I tuoi dati';
+
+  @override
+  String get whyThisExercise => 'Perché questo esercizio?';
+
+  @override
+  String compoundActivates(String muscles) {
+    return 'Compound - attiva $muscles';
+  }
+
+  @override
+  String compoundActivatesShort(String muscles) {
+    return 'Attiva $muscles';
+  }
+
+  @override
+  String isolationTargets(String muscle) {
+    return 'Isolamento - isola $muscle';
+  }
+
+  @override
+  String isolationTargetsShort(String muscle) {
+    return 'Isola $muscle';
+  }
+
+  @override
+  String zonePercentLast30Days(String percent, String zone) {
+    return '$percent% $zone negli ultimi 30 giorni';
+  }
+
+  @override
+  String notDoneSinceDays(int days) {
+    return 'Non fai questo esercizio da $days giorni';
+  }
+
+  @override
+  String get neverDoneExercise => 'Non hai mai fatto questo esercizio';
+
+  @override
+  String equipmentAlreadyOwned(String equipment) {
+    return 'Hai già $equipment';
+  }
+
+  @override
+  String naturalRepRange(String range) {
+    return 'Range rep naturale: $range';
+  }
+
+  @override
+  String movementPatternIs(String pattern) {
+    return 'Pattern movimento: $pattern';
+  }
+
+  @override
+  String exercisesAddedCount(int count) {
+    return '$count esercizi aggiunti';
+  }
+
+  @override
+  String get templateViewMode => 'Modalità Presentazione';
+
+  @override
+  String get noSetsConfigured => 'Nessuna serie configurata';
+
+  @override
+  String get menuOptions => 'Opzioni menu';
+
+  @override
+  String get templateActionView => 'Visualizza';
+
+  @override
+  String get priorityExplanationTitle => 'Punteggio Priorità';
+
+  @override
+  String get priorityExplanationDescription =>
+      'Il punteggio priorità (0-10) ti aiuta a capire quali muscoli necessitano attenzione più urgente. Basato su ricerche scientifiche sportive, considera tre fattori chiave.';
+
+  @override
+  String get priorityBreakdown => 'Composizione Punteggio';
+
+  @override
+  String get prioritySeverityScore => 'Gravità Trascuratezza';
+
+  @override
+  String get priorityAntagonistScore => 'Squilibrio Antagonista';
+
+  @override
+  String get priorityAntagonistExplanation =>
+      'Squilibrio con muscolo opposto (es. bicipiti vs tricipiti). La ricerca mostra che un rapporto 1:1 è ottimale.';
+
+  @override
+  String get priorityPostureScore => 'Rischio Posturale';
+
+  @override
+  String get priorityPostureExplanation =>
+      'Rischio di problemi posturali (es. spalle arrotondate da schiena debole + petto forte).';
+
+  @override
+  String get currentVolume => 'Volume Attuale';
+
+  @override
+  String get recommendedVolume => 'Consigliato';
+
+  @override
+  String get severityThresholds => 'Soglie di Gravità';
+
+  @override
+  String get severityCriticalThreshold => '< 2% del volume totale';
+
+  @override
+  String get severityHighThreshold => '2-3.5% del volume totale';
+
+  @override
+  String get severityMediumThreshold => '3.5-5% del volume totale';
+
+  @override
+  String get severityCriticalExplanation =>
+      'Gravemente sotto-allenato - significativamente sotto il volume consigliato';
+
+  @override
+  String get severityHighExplanation =>
+      'Sotto-allenato - sotto il volume consigliato, necessita attenzione';
+
+  @override
+  String get severityMediumExplanation =>
+      'Leggermente sotto-allenato - vicino al volume consigliato';
+
+  @override
+  String get planned => 'Pianificato';
+
+  @override
+  String get inTemplates => 'Nei Template';
+
+  @override
+  String get inTemplatePrefix => 'In: ';
+
+  @override
+  String inNTemplates(int count) {
+    return 'In $count template';
+  }
+
+  @override
+  String get showPlannedExercises => 'Mostra esercizi pianificati';
+
+  @override
+  String get severityReduced => 'Gravità ridotta';
+
+  @override
+  String originalSeverity(String severity) {
+    return 'Originale: $severity';
+  }
+
+  @override
+  String get coveredByTemplates => 'Coperto dai tuoi template';
+
+  @override
+  String get notInTemplates => 'Non nei template';
+
+  @override
+  String get allMusclesBalanced => 'Tutti i muscoli sono ben bilanciati';
+
+  @override
+  String neglectedMusclesNeedAttention(int count) {
+    return '$count muscoli trascurati richiedono attenzione';
+  }
+
+  @override
+  String neglectedMusclesCovered(int count) {
+    return '$count muscoli trascurati, tutti coperti dai tuoi template';
+  }
+
+  @override
+  String partialCoverage(int uncovered, int total) {
+    return '$uncovered di $total muscoli trascurati non nei template';
+  }
 }

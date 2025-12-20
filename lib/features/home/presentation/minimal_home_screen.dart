@@ -22,6 +22,7 @@ import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dar
 import 'package:gymbro_flutter_new/shared/presentation/services/snackbar_service.dart';
 import 'package:gymbro_flutter_new/shared/presentation/services/modal_service.dart';
 import 'package:gymbro_flutter_new/features/home/presentation/widgets/activity_rings_widget.dart';
+import 'package:gymbro_flutter_new/features/home/presentation/widgets/pro_insights_preview_section.dart';
 import 'package:gymbro_flutter_new/features/recovery_insight/presentation/widgets/recovery_insight_card.dart';
 
 /// Minimal Home Screen - Clean dark premium design
@@ -31,6 +32,7 @@ import 'package:gymbro_flutter_new/features/recovery_insight/presentation/widget
 /// - Greeting + Motivational Quote
 /// - XPProgressBar: User level progress
 /// - ActivityRingsWidget: HealthKit activity rings
+/// - ProInsightsPreviewSection: Pro Analytics CTA with previews
 /// - RecoveryInsightCard: Sleep-based recovery analysis
 /// - StartWorkoutCard: Hero CTA
 /// - TemplatesCarouselCompact: Quick access to templates
@@ -41,23 +43,28 @@ class MinimalHomeScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final primaryAdviceAsync = ref.watch(primaryAIAdviceProvider);
-    final isAdmin = ref.watch(isAdminCachedProvider);
-    final isDeveloper = ref.watch(isDeveloperProvider);
+    // 🔧 PERF FIX: Moved isAdmin and primaryAdvice watches to Consumer widgets
+    // to prevent entire screen rebuilds when these values change
 
     return Scaffold(
       backgroundColor: context.colors.surface,
-      floatingActionButton: isDeveloper
-          ? FloatingActionButton(
-              onPressed: () => _showDeveloperTools(context),
-              backgroundColor: context.colors.tertiary,
-              child: SemanticIcon(
-                icon: AppIcons.code,
-                semanticLabel: 'Developer Tools',
-                color: context.colors.onTertiary,
-              ),
-            )
-          : null,
+      // 🔧 PERF FIX: Isolated developer FAB in Consumer to prevent rebuilds
+      floatingActionButton: Consumer(
+        builder: (context, ref, child) {
+          final isDeveloper = ref.watch(isDeveloperProvider);
+          return isDeveloper
+              ? FloatingActionButton(
+                  onPressed: () => _showDeveloperTools(context),
+                  backgroundColor: context.colors.tertiary,
+                  child: SemanticIcon(
+                    icon: AppIcons.code,
+                    semanticLabel: 'Developer Tools',
+                    color: context.colors.onTertiary,
+                  ),
+                )
+              : const SizedBox.shrink();
+        },
+      ),
       body: CustomScrollView(
         slivers: [
           // Minimal AppBar
@@ -87,7 +94,7 @@ class MinimalHomeScreen extends ConsumerWidget {
                       .slideX(begin: -0.2, end: 0, duration: 600.ms),
                   const SizedBox(width: 6),
                   // "Pro" - premium badge style with separate animation
-                  _AnimatedProBadge(),
+                  const _AnimatedProBadge(),
                 ],
               ),
             ),
@@ -125,7 +132,11 @@ class MinimalHomeScreen extends ConsumerWidget {
                 ),
                 const SizedBox(height: 16),
 
-                // 0.8 Recovery Insight (Sleep-based recovery analysis)
+                // 0.85 Pro Insights Preview (CTA for Pro Analytics)
+                const ProInsightsPreviewSection(),
+                const SizedBox(height: 16),
+
+                // 0.9 Recovery Insight (Sleep-based recovery analysis)
                 const Padding(
                   padding: EdgeInsets.symmetric(horizontal: AppSpacing.md),
                   child: RecoveryInsightCard(),
@@ -140,34 +151,49 @@ class MinimalHomeScreen extends ConsumerWidget {
                 const TemplatesCarouselCompact(),
                 const SizedBox(height: 24),
 
-                // 3. AI Coach Card (conditional - only if insights available)
-                primaryAdviceAsync.when(
-                  data: (advice) {
-                    if (advice != null) {
-                      return const Padding(
-                        padding: EdgeInsets.only(
-                          left: AppSpacing.md,
-                          right: AppSpacing.md,
-                          bottom: AppSpacing.xl,
-                        ),
-                        child: AICoachCard(),
-                      );
-                    }
-                    return const SizedBox.shrink();
+                // 3. AI Coach Card - 🔧 PERF FIX: Isolated in Consumer
+                Consumer(
+                  builder: (context, ref, child) {
+                    final primaryAdviceAsync = ref.watch(primaryAIAdviceProvider);
+                    return primaryAdviceAsync.when(
+                      data: (advice) {
+                        if (advice != null) {
+                          return const Padding(
+                            padding: EdgeInsets.only(
+                              left: AppSpacing.md,
+                              right: AppSpacing.md,
+                              bottom: AppSpacing.xl,
+                            ),
+                            child: AICoachCard(),
+                          );
+                        }
+                        return const SizedBox.shrink();
+                      },
+                      loading: () => const SizedBox.shrink(),
+                      error: (_, __) => const SizedBox.shrink(),
+                    );
                   },
-                  loading: () => const SizedBox.shrink(),
-                  error: (_, __) => const SizedBox.shrink(),
                 ),
 
                 // 4. Exercise Wiki Card
                 const ExerciseWikiCardCompact(),
                 const SizedBox(height: 24),
 
-                // Admin feedback card (only for admins)
-                if (isAdmin) ...[
-                  _AdminFeedbackCard(),
-                  const SizedBox(height: 24),
-                ],
+                // Admin feedback card - 🔧 PERF FIX: Isolated in Consumer
+                Consumer(
+                  builder: (context, ref, child) {
+                    final isAdmin = ref.watch(isAdminCachedProvider);
+                    if (isAdmin) {
+                      return Column(
+                        children: [
+                          _AdminFeedbackCard(),
+                          const SizedBox(height: 24),
+                        ],
+                      );
+                    }
+                    return const SizedBox.shrink();
+                  },
+                ),
 
                 // Bottom padding for navigation bar
                 const SizedBox(height: 100),
@@ -458,10 +484,10 @@ class _DeveloperToolItem extends StatelessWidget {
           child: Row(
             children: [
               Container(
-                padding: const EdgeInsets.all(10),
+                padding: const EdgeInsets.all(12),
                 decoration: BoxDecoration(
                   color: context.colors.tertiary.withValues(alpha: 0.1),
-                  borderRadius: BorderRadius.circular(10),
+                  borderRadius: BorderRadius.circular(12),
                 ),
                 child: SemanticIcon(
                   icon: icon,
@@ -506,13 +532,18 @@ class _DeveloperToolItem extends StatelessWidget {
 }
 
 /// Animated "PRO" badge with entry animation + continuous shimmer
+/// 🔧 PERF FIX: Proper disposal of animation controller to prevent memory leaks
 class _AnimatedProBadge extends StatefulWidget {
+  const _AnimatedProBadge();
+
   @override
   State<_AnimatedProBadge> createState() => _AnimatedProBadgeState();
 }
 
-class _AnimatedProBadgeState extends State<_AnimatedProBadge> {
+class _AnimatedProBadgeState extends State<_AnimatedProBadge>
+    with SingleTickerProviderStateMixin {
   bool _entryComplete = false;
+  AnimationController? _shimmerController;
 
   @override
   void initState() {
@@ -526,6 +557,12 @@ class _AnimatedProBadgeState extends State<_AnimatedProBadge> {
   }
 
   @override
+  void dispose() {
+    _shimmerController?.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final badge = Container(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
@@ -536,7 +573,7 @@ class _AnimatedProBadgeState extends State<_AnimatedProBadge> {
             context.colors.primary.withValues(alpha: 0.8),
           ],
         ),
-        borderRadius: BorderRadius.circular(6),
+        borderRadius: BorderRadius.circular(8),
       ),
       child: Text(
         'PRO',
@@ -563,9 +600,12 @@ class _AnimatedProBadgeState extends State<_AnimatedProBadge> {
           );
     }
 
-    // After entry: continuous shimmer
+    // After entry: continuous shimmer with controlled animation
     return badge
-        .animate(onPlay: (controller) => controller.repeat())
+        .animate(
+          onInit: (controller) => _shimmerController = controller,
+          onPlay: (controller) => controller.repeat(),
+        )
         .shimmer(
           delay: 2000.ms,
           duration: 1500.ms,
