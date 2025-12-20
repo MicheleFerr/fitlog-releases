@@ -19,10 +19,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:gymbro_flutter_new/features/analytics/domain/entities/exercise_history.dart';
+import 'package:gymbro_flutter_new/features/analytics/domain/services/emg_movement_ratios.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:gymbro_flutter_new/features/analytics/domain/services/volume_analyzer.dart';
 import 'package:gymbro_flutter_new/features/analytics/presentation/widgets/tier1_muscle_balance_chart.dart';
+import 'package:gymbro_flutter_new/features/stress_index/presentation/providers/stress_index_provider.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
@@ -32,13 +34,20 @@ import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator
 ///
 /// Shows how training volume has changed over time,
 /// helping users track progressive overload.
+///
+/// Uses EMG-based ratios for accurate muscle volume distribution
+/// when exerciseMuscleMap is provided.
 class VolumeProgressionTab extends StatefulWidget {
   const VolumeProgressionTab({
     super.key,
     required this.exerciseHistories,
+    this.exerciseMuscleMap,
   });
 
   final List<ExerciseHistory> exerciseHistories;
+
+  /// Optional map for EMG-based weighted distribution
+  final Map<String, ExerciseMuscleData>? exerciseMuscleMap;
 
   @override
   State<VolumeProgressionTab> createState() => _VolumeProgressionTabState();
@@ -358,7 +367,10 @@ class _VolumeProgressionTabState extends State<VolumeProgressionTab> {
             ),
             child: Text(
               value,
-              style: TextStyle(color: color, fontWeight: FontWeight.bold),
+              style: context.textTheme.labelMedium?.copyWith(
+                color: color,
+                fontWeight: FontWeight.bold,
+              ),
             ),
           ),
         ],
@@ -378,8 +390,8 @@ class _VolumeProgressionTabState extends State<VolumeProgressionTab> {
       children: [
         _buildLegendItem(context, l10n.belowMaintenance, colorScheme.error),
         _buildLegendItem(context, l10n.maintenance, colorScheme.tertiary),
-        _buildLegendItem(context, l10n.effective, Colors.blue),
-        _buildLegendItem(context, l10n.optimal, const Color(0xFF4CAF50)),
+        _buildLegendItem(context, l10n.effective, colorScheme.primary),
+        _buildLegendItem(context, l10n.optimal, colorScheme.success),
         _buildLegendItem(context, l10n.excessive, colorScheme.error),
       ],
     );
@@ -519,7 +531,7 @@ class _VolumeProgressionTabState extends State<VolumeProgressionTab> {
                         final muscle = MuscleGroup.values[spot.barIndex];
                         return LineTooltipItem(
                           '${_getMuscleShortName(context, muscle)}: ${spot.y.toInt()} ${l10n.sets}',
-                          TextStyle(
+                          context.textTheme.bodySmall!.copyWith(
                             color: muscleColors[muscle],
                             fontWeight: FontWeight.bold,
                           ),
@@ -560,10 +572,10 @@ class _VolumeProgressionTabState extends State<VolumeProgressionTab> {
     return {
       MuscleGroup.chest: colorScheme.primary,
       MuscleGroup.back: colorScheme.tertiary,
-      MuscleGroup.shoulders: Colors.orange,
-      MuscleGroup.arms: Colors.purple,
-      MuscleGroup.legs: const Color(0xFF4CAF50),
-      MuscleGroup.core: Colors.cyan,
+      MuscleGroup.shoulders: colorScheme.warning,
+      MuscleGroup.arms: colorScheme.secondary,
+      MuscleGroup.legs: colorScheme.success,
+      MuscleGroup.core: colorScheme.inversePrimary,
     };
   }
 
@@ -619,19 +631,21 @@ class _VolumeProgressionTabState extends State<VolumeProgressionTab> {
   _VolumeData _calculateVolumeData() {
     final now = DateTime.now();
     final weeklyVolumes = <int, double>{};
-    final muscleVolumes = <MuscleGroup, int>{};
-    // Track weekly volumes per muscle for trend chart
-    final weeklyMuscleVolumes = <MuscleGroup, List<int>>{};
+    final muscleVolumes = <MuscleGroup, double>{};
+    // Track weekly volumes per muscle for trend chart (now double for weighted)
+    final weeklyMuscleVolumes = <MuscleGroup, List<double>>{};
 
     // Initialize weekly muscle volumes
     for (final muscle in MuscleGroup.values) {
-      weeklyMuscleVolumes[muscle] = [0, 0, 0, 0];
+      weeklyMuscleVolumes[muscle] = [0.0, 0.0, 0.0, 0.0];
+      muscleVolumes[muscle] = 0.0;
     }
 
     for (final history in widget.exerciseHistories) {
-      // Get muscle group from history
-      final muscleGroup =
-          _getMuscleGroupFromString(history.muscleGroup);
+      // Try to get muscle data for weighted distribution
+      // Use case-insensitive lookup: try exact match, then lowercase
+      final muscleData = widget.exerciseMuscleMap?[history.exerciseName] ??
+          widget.exerciseMuscleMap?[history.exerciseName.toLowerCase()];
 
       for (final session in history.sessions) {
         // Week calculation (0 = this week, 1 = last week, etc.)
@@ -640,17 +654,93 @@ class _VolumeProgressionTabState extends State<VolumeProgressionTab> {
           weeklyVolumes[weekDiff] =
               (weeklyVolumes[weekDiff] ?? 0) + session.totalVolume;
 
-          // Track sets per muscle per week for trend chart
-          if (muscleGroup != null) {
-            final weekIndex = 3 - weekDiff; // Convert to 0=oldest, 3=newest
-            weeklyMuscleVolumes[muscleGroup]![weekIndex] += session.sets.length;
-          }
-        }
+          final setCount = session.sets.length.toDouble();
 
-        // Count sets for muscle groups (last 7 days only)
-        if (weekDiff == 0 && muscleGroup != null) {
-          muscleVolumes[muscleGroup] =
-              (muscleVolumes[muscleGroup] ?? 0) + session.sets.length;
+          // Use weighted distribution if muscle data available
+          if (muscleData != null && muscleData.hasData) {
+            // Get movement pattern from patternMovimento (in fileCategory) or infer
+            final movementPattern = muscleData.fileCategory.isNotEmpty
+                ? EmgMovementRatios.fromPatternMovimento(
+                    muscleData.fileCategory,
+                    exerciseName: muscleData.exerciseName.isNotEmpty
+                        ? muscleData.exerciseName
+                        : history.exerciseName,
+                  )
+                : EmgMovementRatios.inferPattern(
+                    fileCategory: '',
+                    exerciseName: muscleData.exerciseName.isNotEmpty
+                        ? muscleData.exerciseName
+                        : history.exerciseName,
+                    focusMuscle: muscleData.primary.isNotEmpty
+                        ? muscleData.primary.first
+                        : null,
+                  );
+
+            // Get EMG-based tiered ratios
+            final (primaryRatio, highSynergistRatio, moderateSynergistRatio) =
+                EmgMovementRatios.getTieredRatios(movementPattern);
+
+            final weekIndex = 3 - weekDiff; // Convert to 0=oldest, 3=newest
+
+            // Distribute to primary muscles
+            if (muscleData.primary.isNotEmpty) {
+              final primarySets = setCount * primaryRatio;
+              final perPrimary = primarySets / muscleData.primary.length;
+              for (final muscle in muscleData.primary) {
+                final muscleGroup = _getMuscleGroupFromAbbreviation(muscle);
+                if (muscleGroup != null) {
+                  weeklyMuscleVolumes[muscleGroup]![weekIndex] += perPrimary;
+                  if (weekDiff == 0) {
+                    muscleVolumes[muscleGroup] =
+                        (muscleVolumes[muscleGroup] ?? 0) + perPrimary;
+                  }
+                }
+              }
+            }
+
+            // Distribute to secondary muscles with tiered approach
+            if (muscleData.secondary.isNotEmpty) {
+              // First synergist gets highSynergistRatio
+              final firstSynergist = muscleData.secondary.first;
+              final highSets = setCount * highSynergistRatio;
+              final firstGroup = _getMuscleGroupFromAbbreviation(firstSynergist);
+              if (firstGroup != null) {
+                weeklyMuscleVolumes[firstGroup]![weekIndex] += highSets;
+                if (weekDiff == 0) {
+                  muscleVolumes[firstGroup] =
+                      (muscleVolumes[firstGroup] ?? 0) + highSets;
+                }
+              }
+
+              // Remaining synergists split moderateSynergistRatio
+              if (muscleData.secondary.length > 1) {
+                final remaining = muscleData.secondary.sublist(1);
+                final modSets = setCount * moderateSynergistRatio;
+                final perMod = modSets / remaining.length;
+                for (final muscle in remaining) {
+                  final muscleGroup = _getMuscleGroupFromAbbreviation(muscle);
+                  if (muscleGroup != null) {
+                    weeklyMuscleVolumes[muscleGroup]![weekIndex] += perMod;
+                    if (weekDiff == 0) {
+                      muscleVolumes[muscleGroup] =
+                          (muscleVolumes[muscleGroup] ?? 0) + perMod;
+                    }
+                  }
+                }
+              }
+            }
+          } else {
+            // Fallback to single muscle group from name
+            final muscleGroup = _getMuscleGroupFromString(history.muscleGroup);
+            if (muscleGroup != null) {
+              final weekIndex = 3 - weekDiff;
+              weeklyMuscleVolumes[muscleGroup]![weekIndex] += setCount;
+              if (weekDiff == 0) {
+                muscleVolumes[muscleGroup] =
+                    (muscleVolumes[muscleGroup] ?? 0) + setCount;
+              }
+            }
+          }
         }
       }
     }
@@ -660,14 +750,69 @@ class _VolumeProgressionTabState extends State<VolumeProgressionTab> {
     final weeklyChange =
         lastWeek > 0 ? ((thisWeek - lastWeek) / lastWeek * 100).round() : 0;
 
+    // Convert double volumes to int for compatibility with existing UI
+    final muscleVolumesInt = muscleVolumes.map(
+      (key, value) => MapEntry(key, value.round()),
+    );
+    final weeklyMuscleVolumesInt = weeklyMuscleVolumes.map(
+      (key, value) => MapEntry(key, value.map((v) => v.round()).toList()),
+    );
+
     return _VolumeData(
       weeklyVolumes: List.generate(4, (i) => weeklyVolumes[3 - i] ?? 0),
       weeklyChange: weeklyChange,
       totalVolume: thisWeek,
       previousWeekVolume: lastWeek,
-      muscleVolumes: muscleVolumes,
-      weeklyMuscleVolumes: weeklyMuscleVolumes,
+      muscleVolumes: muscleVolumesInt,
+      weeklyMuscleVolumes: weeklyMuscleVolumesInt,
     );
+  }
+
+  /// Map muscle abbreviation (e.g., PETT, LAT) to MuscleGroup
+  MuscleGroup? _getMuscleGroupFromAbbreviation(String abbreviation) {
+    final abbr = abbreviation.toUpperCase();
+
+    // Chest
+    if (abbr.contains('PETT') || abbr.contains('CHEST')) {
+      return MuscleGroup.chest;
+    }
+    // Back
+    if (abbr.contains('LAT') ||
+        abbr.contains('TRAP') ||
+        abbr.contains('ROMBO') ||
+        abbr.contains('DORSO')) {
+      return MuscleGroup.back;
+    }
+    // Shoulders
+    if (abbr.contains('DELT') || abbr.contains('SPALL')) {
+      return MuscleGroup.shoulders;
+    }
+    // Arms
+    if (abbr.contains('BIC') ||
+        abbr.contains('TRIC') ||
+        abbr.contains('AVAMB') ||
+        abbr.contains('BRACC')) {
+      return MuscleGroup.arms;
+    }
+    // Legs
+    if (abbr.contains('QUAD') ||
+        abbr.contains('FEMOR') ||
+        abbr.contains('GLUT') ||
+        abbr.contains('POLP') ||
+        abbr.contains('ADD') ||
+        abbr.contains('GAMB')) {
+      return MuscleGroup.legs;
+    }
+    // Core
+    if (abbr.contains('ADDOM') ||
+        abbr.contains('OBLIQ') ||
+        abbr.contains('CORE') ||
+        abbr.contains('ERECT') ||
+        abbr.contains('LOMB')) {
+      return MuscleGroup.core;
+    }
+
+    return null;
   }
 
   MuscleGroup? _getMuscleGroupFromString(String muscle) {
@@ -759,7 +904,7 @@ class _VolumeProgressionTabState extends State<VolumeProgressionTab> {
       case VolumeZone.effective:
         return colorScheme.primary;
       case VolumeZone.optimal:
-        return const Color(0xFF4CAF50);
+        return colorScheme.success;
       case VolumeZone.excessive:
         return colorScheme.error;
     }
@@ -962,7 +1107,7 @@ class _VolumeProgressionTabState extends State<VolumeProgressionTab> {
             padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
             decoration: BoxDecoration(
               color: color.withValues(alpha: 0.1),
-              borderRadius: BorderRadius.circular(4),
+              borderRadius: BorderRadius.circular(8),
             ),
             child: Text(
               abbr,
@@ -1356,10 +1501,9 @@ class _LandscapeVolumeChartState extends State<_LandscapeVolumeChart> {
                       final muscle = MuscleGroup.values[spot.barIndex];
                       return LineTooltipItem(
                         '${_getMuscleShortName(context, muscle)}: ${spot.y.toInt()} ${l10n.sets}',
-                        TextStyle(
+                        context.textTheme.bodySmall!.copyWith(
                           color: muscleColors[muscle],
                           fontWeight: FontWeight.bold,
-                          fontSize: 14,
                         ),
                       );
                     }).toList();
@@ -1381,8 +1525,8 @@ class _LandscapeVolumeChartState extends State<_LandscapeVolumeChart> {
     final zones = [
       (l10n.belowMaintenance, colorScheme.error),
       (l10n.maintenance, colorScheme.tertiary),
-      (l10n.effective, Colors.blue),
-      (l10n.optimal, const Color(0xFF4CAF50)),
+      (l10n.effective, colorScheme.primary),
+      (l10n.optimal, colorScheme.success),
       (l10n.excessive, colorScheme.error),
     ];
 
@@ -1406,7 +1550,7 @@ class _LandscapeVolumeChartState extends State<_LandscapeVolumeChart> {
                 height: 16,
                 decoration: BoxDecoration(
                   color: zone.$2,
-                  borderRadius: BorderRadius.circular(4),
+                  borderRadius: BorderRadius.circular(8),
                 ),
               ),
               const SizedBox(width: 8),
@@ -1450,14 +1594,13 @@ class _LandscapeVolumeChartState extends State<_LandscapeVolumeChart> {
                 padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
                 decoration: BoxDecoration(
                   color: zoneColor.withValues(alpha: 0.1),
-                  borderRadius: BorderRadius.circular(4),
+                  borderRadius: BorderRadius.circular(8),
                 ),
                 child: Text(
                   '$sets',
-                  style: TextStyle(
+                  style: context.textTheme.labelSmall?.copyWith(
                     color: zoneColor,
                     fontWeight: FontWeight.bold,
-                    fontSize: 12,
                   ),
                 ),
               ),
@@ -1485,7 +1628,7 @@ class _LandscapeVolumeChartState extends State<_LandscapeVolumeChart> {
                 height: 16,
                 decoration: BoxDecoration(
                   color: entry.value,
-                  borderRadius: BorderRadius.circular(4),
+                  borderRadius: BorderRadius.circular(8),
                 ),
               ),
               const SizedBox(width: 8),
@@ -1547,7 +1690,7 @@ class _LandscapeVolumeChartState extends State<_LandscapeVolumeChart> {
       case VolumeZone.effective:
         return colorScheme.primary;
       case VolumeZone.optimal:
-        return const Color(0xFF4CAF50);
+        return colorScheme.success;
       case VolumeZone.excessive:
         return colorScheme.error;
     }
@@ -1557,10 +1700,10 @@ class _LandscapeVolumeChartState extends State<_LandscapeVolumeChart> {
     return {
       MuscleGroup.chest: colorScheme.primary,
       MuscleGroup.back: colorScheme.tertiary,
-      MuscleGroup.shoulders: Colors.orange,
-      MuscleGroup.arms: Colors.purple,
-      MuscleGroup.legs: const Color(0xFF4CAF50),
-      MuscleGroup.core: Colors.cyan,
+      MuscleGroup.shoulders: colorScheme.warning,
+      MuscleGroup.arms: colorScheme.secondary,
+      MuscleGroup.legs: colorScheme.success,
+      MuscleGroup.core: colorScheme.inversePrimary,
     };
   }
 }
