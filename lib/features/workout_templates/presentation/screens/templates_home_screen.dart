@@ -15,12 +15,15 @@
 /// metric cards, and DraggableActionButton (PiP).
 library;
 
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
 import 'package:gymbro_flutter_new/features/workout_templates/domain/entities/workout_template.dart';
+import 'package:gymbro_flutter_new/features/workout/domain/entities/template_stats.dart';
 import 'package:gymbro_flutter_new/features/workout_templates/presentation/providers/template_provider.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/providers/workout_template_provider.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/workout_template.dart' as workout_template;
@@ -35,7 +38,12 @@ import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dar
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/screens/edit_template_screen.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/providers/workout_provider.dart';
-import 'package:gymbro_flutter_new/features/workout_templates/presentation/widgets/template_share_sheet.dart';
+import 'package:gymbro_flutter_new/features/workout/presentation/widgets/pdf_export_bottom_sheet.dart';
+import 'package:gymbro_flutter_new/features/workout/presentation/providers/pdf_preferences_provider.dart';
+import 'package:gymbro_flutter_new/features/workout/services/pdf_template_service.dart';
+import 'package:share_plus/share_plus.dart';
+import 'package:path_provider/path_provider.dart';
+import 'dart:io';
 import 'package:gymbro_flutter_new/features/auth/presentation/providers/consolidated_user_provider.dart';
 import 'package:gymbro_flutter_new/core/navigation/app_routes.dart';
 
@@ -96,7 +104,10 @@ class _TemplatesHomeScreenState extends ConsumerState<TemplatesHomeScreen>
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
     final myTemplatesAsync = ref.watch(customWorkoutTemplatesProvider);
-    final templateState = ref.watch(templateProvider);
+    // 🔧 PERF FIX: Use .select() to only watch publicTemplates.length for metrics
+    final publicTemplatesCount = ref.watch(
+      templateProvider.select((state) => state.publicTemplates.length),
+    );
 
     return Scaffold(
       body: Stack(
@@ -227,7 +238,7 @@ class _TemplatesHomeScreenState extends ConsumerState<TemplatesHomeScreen>
                                 child: _buildAnimatedMetricCard(
                                   context,
                                   icon: AppIcons.public,
-                                  value: '${templateState.publicTemplates.length}',
+                                  value: '$publicTemplatesCount',
                                   label: l10n.discover,
                                   color: context.colors.secondary,
                                   labelOpacity: labelOpacity,
@@ -415,6 +426,10 @@ class _TemplatesHomeScreenState extends ConsumerState<TemplatesHomeScreen>
   }
 
   Widget _buildMyTemplatesGrid(List<workout_template.WorkoutTemplate> templates, BuildContext context) {
+    // 🚀 OPTIMIZATION: Batch load all template stats in one pass
+    final allStatsAsync = ref.watch(allTemplateStatsProvider);
+    final allStats = allStatsAsync.valueOrNull ?? {};
+
     return SliverPadding(
       padding: const EdgeInsets.symmetric(horizontal: AppSpacing.md),
       sliver: SliverGrid(
@@ -434,6 +449,7 @@ class _TemplatesHomeScreenState extends ConsumerState<TemplatesHomeScreen>
               onDuplicate: () => _duplicateTemplate(context, template),
               onShare: () => _shareTemplate(context, template),
               onDelete: () => _deleteWorkoutTemplate(context, template),
+              preloadedStats: allStats[template.id], // Pass pre-calculated stats
             );
           },
           childCount: templates.length,
@@ -564,7 +580,7 @@ class _TemplatesHomeScreenState extends ConsumerState<TemplatesHomeScreen>
                             ),
                             decoration: BoxDecoration(
                               color: context.colors.surfaceContainerHighest,
-                              borderRadius: BorderRadius.circular(4),
+                              borderRadius: BorderRadius.circular(8),
                             ),
                             child: Text(
                               'Soon',
@@ -609,9 +625,9 @@ class _TemplatesHomeScreenState extends ConsumerState<TemplatesHomeScreen>
       // Increment usage count
       await ref.read(workoutTemplateNotifierProvider.notifier).incrementUsage(template.id);
 
-      // Create and start workout from template
+      // Create and start workout from template with templateId for duration tracking
       final workoutNotifier = ref.read(currentWorkoutProvider.notifier);
-      workoutNotifier.createWorkout(template.name);
+      workoutNotifier.createWorkout(template.name, templateId: template.id);
       workoutNotifier.startWorkout();
 
       // Add exercises from template
@@ -692,13 +708,97 @@ class _TemplatesHomeScreenState extends ConsumerState<TemplatesHomeScreen>
     }
   }
 
-  void _shareTemplate(BuildContext context, workout_template.WorkoutTemplate template) {
-    showTemplateShareSheet(context: context, template: template);
+  Future<void> _shareTemplate(BuildContext context, workout_template.WorkoutTemplate template) async {
+    final l10n = AppLocalizations.of(context);
+
+    // Store navigator before any async gap to avoid context issues
+    final navigator = Navigator.of(context);
+
+    // Check saved preference first
+    final savedPreference = ref.read(pdfPreferencesProvider);
+    var selectedLevel = savedPreference;
+
+    // If no saved preference, show the bottom sheet
+    if (savedPreference == null) {
+      selectedLevel = await showPdfExportBottomSheet(context, ref);
+      if (selectedLevel == null) return; // User cancelled
+    }
+
+    // Show loading dialog for PDF generation
+    if (context.mounted) {
+      unawaited(showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (dialogContext) => Center(
+          child: Card(
+            child: Padding(
+              padding: const EdgeInsets.all(AppSpacing.lg),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  const LoadingIndicator(),
+                  const SizedBox(height: AppSpacing.md),
+                  Text(l10n.generatingPdf),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ));
+    }
+
+    try {
+      // Step 1: Generate PDF (with loading visible)
+      final pdfData = await PdfTemplateService.generateTemplatePdf(
+        template,
+        detailLevel: selectedLevel!,
+      );
+
+      // Step 2: Save to temp file
+      final tempDir = await getTemporaryDirectory();
+      final fileName = '${template.name.replaceAll(' ', '_')}_template.pdf';
+      final file = File('${tempDir.path}/$fileName');
+      await file.writeAsBytes(pdfData);
+
+      // Step 3: Dismiss loading BEFORE showing share sheet
+      if (navigator.mounted) {
+        navigator.pop();
+      }
+
+      // Step 4: Share with share_plus (provides proper callbacks)
+      final result = await SharePlus.instance.share(
+        ShareParams(
+          files: [XFile(file.path)],
+          subject: template.name,
+        ),
+      );
+
+      // Step 5: Handle result (optional: show feedback)
+      if (result.status == ShareResultStatus.dismissed && context.mounted) {
+        // User dismissed without sharing - no action needed
+      }
+
+      // Clean up temp file
+      if (await file.exists()) {
+        await file.delete();
+      }
+    } catch (e) {
+      // Dismiss loading if still visible
+      if (navigator.mounted) {
+        navigator.pop();
+      }
+      if (context.mounted) {
+        SnackBarService.showError(context, 'Error sharing PDF: $e');
+      }
+    }
   }
 
   Widget _buildDiscoverTab(BuildContext context) {
     final l10n = AppLocalizations.of(context);
-    final templateState = ref.watch(templateProvider);
+    // 🔧 PERF FIX: Use .select() to only watch publicTemplates list
+    final publicTemplates = ref.watch(
+      templateProvider.select((state) => state.publicTemplates),
+    );
 
     return RefreshIndicator(
       onRefresh: () => ref.read(templateProvider.notifier).loadPublicTemplates(),
@@ -769,7 +869,7 @@ class _TemplatesHomeScreenState extends ConsumerState<TemplatesHomeScreen>
           const SliverToBoxAdapter(child: SizedBox(height: AppSpacing.md)),
 
           // Public templates
-          if (templateState.publicTemplates.isEmpty)
+          if (publicTemplates.isEmpty)
             SliverFillRemaining(
               child: Center(
                 child: Text(l10n.noPublicTemplatesFound),
@@ -781,14 +881,14 @@ class _TemplatesHomeScreenState extends ConsumerState<TemplatesHomeScreen>
               sliver: SliverList(
                 delegate: SliverChildBuilderDelegate(
                   (context, index) {
-                    final template = templateState.publicTemplates[index];
+                    final template = publicTemplates[index];
                     return PublicTemplateCard(
                       template: template,
                       onTap: () => _viewPublicTemplate(context, template),
                       onDownload: () => _downloadTemplate(context, template),
                     );
                   },
-                  childCount: templateState.publicTemplates.length,
+                  childCount: publicTemplates.length,
                 ),
               ),
             ),
@@ -1198,6 +1298,7 @@ class _WorkoutTemplateCard extends ConsumerWidget {
     required this.onDuplicate,
     required this.onShare,
     required this.onDelete,
+    this.preloadedStats,
   });
 
   final workout_template.WorkoutTemplate template;
@@ -1207,10 +1308,21 @@ class _WorkoutTemplateCard extends ConsumerWidget {
   final VoidCallback onShare; // Shares template
   final VoidCallback onDelete;
 
+  /// Pre-calculated stats from parent (optimization: avoids N provider calls)
+  final TemplateStats? preloadedStats;
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = AppLocalizations.of(context);
-    final statsAsync = ref.watch(templateStatsProvider(template.id));
+
+    // 🚀 OPTIMIZATION: Use preloaded stats if available
+    final TemplateStats? stats;
+    if (preloadedStats != null) {
+      stats = preloadedStats;
+    } else {
+      final statsAsync = ref.watch(templateStatsProvider(template.id));
+      stats = statsAsync.valueOrNull;
+    }
 
     return GestureDetector(
       onTap: onTap,
@@ -1346,7 +1458,7 @@ class _WorkoutTemplateCard extends ConsumerWidget {
                               ),
                               decoration: BoxDecoration(
                                 color: context.colors.surfaceContainerHighest,
-                                borderRadius: BorderRadius.circular(4),
+                                borderRadius: BorderRadius.circular(8),
                               ),
                               child: Text(
                                 'Soon',
@@ -1425,38 +1537,22 @@ class _WorkoutTemplateCard extends ConsumerWidget {
                     color: context.colors.onSurfaceVariant,
                   ),
                   const SizedBox(width: AppSpacing.xs),
-                  statsAsync.when(
-                    data: (stats) {
-                      if (stats.totalCompletions > 0 && stats.avgDuration != null) {
-                        return Text(
-                          '${stats.avgDuration!.inMinutes}m',
-                          style: context.textTheme.bodySmall?.copyWith(
-                            color: context.colors.onSurfaceVariant,
-                          ),
-                        );
-                      } else {
-                        return Text(
-                          '~${template.estimatedDuration}m',
-                          style: context.textTheme.bodySmall?.copyWith(
-                            color: context.colors.onSurfaceVariant,
-                            fontStyle: FontStyle.italic,
-                          ),
-                        );
-                      }
-                    },
-                    loading: () => Text(
+                  // Duration display: real average or estimated
+                  if (stats != null && stats.totalCompletions > 0 && stats.avgDuration != null)
+                    Text(
+                      '${stats.avgDuration!.inMinutes}m',
+                      style: context.textTheme.bodySmall?.copyWith(
+                        color: context.colors.success, // Green for real data
+                      ),
+                    )
+                  else
+                    Text(
                       '~${template.estimatedDuration}m',
                       style: context.textTheme.bodySmall?.copyWith(
                         color: context.colors.onSurfaceVariant,
+                        fontStyle: FontStyle.italic,
                       ),
                     ),
-                    error: (_, __) => Text(
-                      '~${template.estimatedDuration}m',
-                      style: context.textTheme.bodySmall?.copyWith(
-                        color: context.colors.onSurfaceVariant,
-                      ),
-                    ),
-                  ),
                 ],
               ),
             ),

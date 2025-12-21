@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -10,15 +12,19 @@ import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise.dar
 import 'package:gymbro_flutter_new/features/workout/domain/entities/workout_template.dart' as wt;
 import 'package:gymbro_flutter_new/features/workout/domain/entities/pdf_detail_level.dart';
 import 'package:gymbro_flutter_new/features/workout/services/pdf_template_service.dart';
+import 'package:share_plus/share_plus.dart';
+import 'package:path_provider/path_provider.dart';
+import 'dart:io';
 import 'package:gymbro_flutter_new/features/workout/presentation/providers/workout_provider.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/providers/workout_template_provider.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/providers/pdf_preferences_provider.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/widgets/add_exercise_modal.dart';
-import 'package:gymbro_flutter_new/features/workout/presentation/widgets/pdf_export_options_dialog.dart';
+import 'package:gymbro_flutter_new/features/workout/presentation/widgets/pdf_export_bottom_sheet.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/widgets/create_template_modal.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/widgets/quick_start/context_gathering_bottom_sheet.dart';
 import 'package:gymbro_flutter_new/features/scheduling/presentation/widgets/schedule_bottom_sheet.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/helpers/save_template_helper.dart';
+import 'package:gymbro_flutter_new/features/workout/presentation/widgets/workout_actions/template_save_helper.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/screens/edit_template_screen.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/screens/workout_templates_screen.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/widgets/workout_customization_modal_v3.dart';
@@ -165,7 +171,8 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen> {
     // ✅ PERFORMANCE FIX: Use select() to only rebuild when exercises change
     // Previously watched full workout object, causing rebuild on EVERY change
     // (including updatedAt timestamp changes that don't affect UI)
-    // Now only rebuilds when: status, exercises list, or name changes
+    // Now only rebuilds when: status, exercises list, name, or data changes
+    // ✅ FIX: Added updatedAt to detect Watch target modifications
     final currentWorkout = ref.watch(
       currentWorkoutProvider.select((workout) => workout == null
           ? null
@@ -176,6 +183,7 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen> {
               exercises: workout.exercises,
               isActive: workout.isActive,
               startTime: workout.startTime,
+              updatedAt: workout.updatedAt,  // ✅ FIX: Detect data changes from Watch
             )),
     );
 
@@ -245,6 +253,8 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen> {
       onDeleteTemplate: (template) => _deleteTemplateFromQuickStart(context, template),
       onCreateTemplate: () => _showCreateTemplateModal(context),
       onScheduleTemplate: (template) => _scheduleTemplate(context, template),
+      onRefreshTemplate: (template) => _refreshTemplate(template),
+      onViewTemplate: (template) => _viewTemplate(template),
     );
   }
 
@@ -592,8 +602,7 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen> {
       backgroundColor: Colors.transparent,
       builder: (context) => AddExerciseModal(
         onExerciseAdded: (exercise) {
-          // ignore: avoid_print
-          print('🎯 [WorkoutScreen] CALLBACK RECEIVED: name=${exercise.name}, countingMode=${exercise.countingMode}');
+          debugPrint('🎯 [WorkoutScreen] CALLBACK RECEIVED: name=${exercise.name}, countingMode=${exercise.countingMode}');
           ref.read(workoutScreenControllerProvider.notifier).addExercise(exercise);
           // Note: Navigator.pop() is called by AddExerciseModal after this callback
           // Do NOT call pop() here - it would cause double-pop and black screen!
@@ -705,6 +714,11 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen> {
     BuildContext context,
     wt.WorkoutTemplate template,
   ) async {
+    final l10n = AppLocalizations.of(context);
+
+    // Store navigator before any async gap to avoid context issues
+    final navigator = Navigator.of(context);
+
     // Check saved preference
     final savedPreference = ref.read(pdfPreferencesProvider);
 
@@ -712,16 +726,16 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen> {
     PdfDetailLevel? selectedLevel = savedPreference;
 
     if (savedPreference == null) {
-      selectedLevel = await showPdfExportOptionsDialog(context, ref);
+      selectedLevel = await showPdfExportBottomSheet(context, ref);
       if (selectedLevel == null) return; // User cancelled
     }
 
-    // Show loading
+    // Show loading dialog for PDF generation
     if (context.mounted) {
-      showDialog(
+      unawaited(showDialog(
         context: context,
         barrierDismissible: false,
-        builder: (context) => Center(
+        builder: (dialogContext) => Center(
           child: Card(
             child: Padding(
               padding: const EdgeInsets.all(AppSpacing.lg),
@@ -730,29 +744,56 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen> {
                 children: [
                   const LoadingIndicator(),
                   const SizedBox(height: AppSpacing.md),
-                  Text(context.l10n.generatingPdf),
+                  Text(l10n.generatingPdf),
                 ],
               ),
             ),
           ),
         ),
-      );
+      ));
     }
 
     try {
-      // Generate and share PDF with selected detail level
-      await PdfTemplateService.shareTemplatePdf(
+      // Step 1: Generate PDF (with loading visible)
+      final pdfData = await PdfTemplateService.generateTemplatePdf(
         template,
         detailLevel: selectedLevel!,
       );
 
-      if (context.mounted) {
-        Navigator.pop(context); // Close loading
-        SnackBarService.showSuccess(context, '✅ PDF shared successfully!');
+      // Step 2: Save to temp file
+      final tempDir = await getTemporaryDirectory();
+      final fileName = '${template.name.replaceAll(' ', '_')}_template.pdf';
+      final file = File('${tempDir.path}/$fileName');
+      await file.writeAsBytes(pdfData);
+
+      // Step 3: Dismiss loading BEFORE showing share sheet
+      if (navigator.mounted) {
+        navigator.pop();
+      }
+
+      // Step 4: Share with share_plus (provides proper callbacks)
+      final result = await SharePlus.instance.share(
+        ShareParams(
+          files: [XFile(file.path)],
+          subject: template.name,
+        ),
+      );
+
+      // Step 5: Handle result (optional: show feedback)
+      if (result.status == ShareResultStatus.dismissed && context.mounted) {
+        // User dismissed without sharing - no action needed
+      }
+
+      // Clean up temp file
+      if (await file.exists()) {
+        await file.delete();
       }
     } catch (e) {
+      // Dismiss loading if still visible
+      if (navigator.mounted) {
+        navigator.pop();
+      }
       if (context.mounted) {
-        Navigator.pop(context); // Close loading
         SnackBarService.showError(context, '❌ Error sharing PDF: $e');
       }
     }
@@ -803,6 +844,46 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen> {
       templateId: template.id,
       templateName: template.name,
     );
+  }
+
+  /// View template in presentation mode
+  void _viewTemplate(wt.WorkoutTemplate template) {
+    context.push('/templates/detail', extra: template.id);
+  }
+
+  /// Refresh template from exercise database - syncs TUT and other fields
+  Future<void> _refreshTemplate(wt.WorkoutTemplate template) async {
+    final l10n = AppLocalizations.of(context);
+
+    try {
+      final updatedCount = await ref
+          .read(workoutTemplateNotifierProvider.notifier)
+          .refreshTemplateFromDatabase(template);
+
+      if (mounted) {
+        if (updatedCount > 0) {
+          // Invalidate providers to refresh UI
+          ref.invalidate(customWorkoutTemplatesProvider);
+
+          SnackBarService.showSuccess(
+            context,
+            l10n.refreshFromDatabaseSuccess(updatedCount),
+          );
+        } else {
+          SnackBarService.showInfo(
+            context,
+            l10n.refreshFromDatabaseNoUpdates,
+          );
+        }
+      }
+    } catch (e) {
+      if (mounted) {
+        SnackBarService.showError(
+          context,
+          'Errore: $e',
+        );
+      }
+    }
   }
 
   /// Duplicate template
@@ -909,6 +990,33 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen> {
                 onTap: () {
                   Navigator.of(context).pop();
                   _saveCurrentWorkoutAsTemplate(context);
+                },
+              ),
+              // Update template - only show if workout was started from a template
+              Builder(
+                builder: (context) {
+                  final currentWorkout = ref.read(currentWorkoutProvider);
+                  if (currentWorkout?.templateId == null) {
+                    return const SizedBox.shrink();
+                  }
+                  return ListTile(
+                    leading: SemanticIcon(
+                      icon: AppIcons.refresh,
+                      size: AppIconSize.medium,
+                      semanticLabel: l10n.updateTemplate,
+                      color: context.colors.primary,
+                    ),
+                    title: Text(l10n.updateTemplate),
+                    subtitle: Text(l10n.updateTemplateDescription),
+                    onTap: () {
+                      Navigator.of(context).pop();
+                      TemplateSaveHelper.showUpdateTemplateDialog(
+                        context,
+                        ref,
+                        currentWorkout!.templateId!,
+                      );
+                    },
+                  );
                 },
               ),
               // Start tutorial
