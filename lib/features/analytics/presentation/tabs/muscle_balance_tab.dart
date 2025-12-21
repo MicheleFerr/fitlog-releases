@@ -15,6 +15,7 @@ library;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:gymbro_flutter_new/features/analytics/domain/entities/exercise_history.dart';
+import 'package:gymbro_flutter_new/features/predictive_balance/presentation/widgets/predictive_balance_indicator.dart';
 import 'package:gymbro_flutter_new/features/analytics/domain/entities/ratio_breakdown.dart';
 import 'package:gymbro_flutter_new/features/analytics/domain/services/balance_trend_calculator.dart';
 import 'package:gymbro_flutter_new/features/analytics/domain/services/muscle_balance_calculator.dart';
@@ -23,6 +24,7 @@ import 'package:gymbro_flutter_new/features/analytics/domain/services/ratio_brea
 import 'package:gymbro_flutter_new/features/analytics/presentation/widgets/expandable_ratio_card.dart';
 import 'package:gymbro_flutter_new/features/analytics/presentation/widgets/professional_body_heatmap.dart';
 import 'package:gymbro_flutter_new/features/analytics/presentation/widgets/exercise_suggestions_widget.dart';
+import 'package:gymbro_flutter_new/features/stress_index/presentation/providers/stress_index_provider.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
@@ -30,13 +32,21 @@ import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart'
 /// Muscle Balance Tab
 ///
 /// Shows comprehensive muscle balance analysis with actionable insights.
+///
+/// When [exerciseMuscleMap] is provided, volume is distributed:
+/// - 70% to primary muscles (focus)
+/// - 30% to secondary muscles (muscoliSecondari)
 class MuscleBalanceTab extends StatefulWidget {
   const MuscleBalanceTab({
     super.key,
     required this.exerciseHistories,
+    this.exerciseMuscleMap,
   });
 
   final List<ExerciseHistory> exerciseHistories;
+
+  /// Optional map for weighted primary/secondary muscle distribution
+  final Map<String, ExerciseMuscleData>? exerciseMuscleMap;
 
   @override
   State<MuscleBalanceTab> createState() => _MuscleBalanceTabState();
@@ -60,7 +70,8 @@ class _MuscleBalanceTabState extends State<MuscleBalanceTab> {
   @override
   void didUpdateWidget(MuscleBalanceTab oldWidget) {
     super.didUpdateWidget(oldWidget);
-    if (widget.exerciseHistories != oldWidget.exerciseHistories) {
+    if (widget.exerciseHistories != oldWidget.exerciseHistories ||
+        widget.exerciseMuscleMap != oldWidget.exerciseMuscleMap) {
       _updateTrendData();
     }
   }
@@ -70,6 +81,7 @@ class _MuscleBalanceTabState extends State<MuscleBalanceTab> {
       _trendData = _trendCalculator.calculateTrend(
         exerciseHistories: widget.exerciseHistories,
         period: _selectedPeriod,
+        exerciseMuscleMap: widget.exerciseMuscleMap,
       );
       // Use corrected breakdown to fix historical data issues
       // (e.g., Leg Extension incorrectly categorized as chest)
@@ -119,6 +131,9 @@ class _MuscleBalanceTabState extends State<MuscleBalanceTab> {
             ),
           ),
           const SizedBox(height: 16),
+
+          // Predictive Balance Card (shows pattern progress)
+          const PredictiveBalanceCard(),
 
           // Time period filter
           _buildTimePeriodFilter(context),
@@ -315,11 +330,11 @@ class _MuscleBalanceTabState extends State<MuscleBalanceTab> {
     // Color based on score
     final Color scoreColor;
     if (balance.balanceScore >= 7.5) {
-      scoreColor = const Color(0xFF4CAF50); // Green
+      scoreColor = colorScheme.success;
     } else if (balance.balanceScore >= 6.0) {
-      scoreColor = const Color(0xFFFFA726); // Orange
+      scoreColor = colorScheme.warning;
     } else {
-      scoreColor = colorScheme.error; // Red
+      scoreColor = colorScheme.error;
     }
 
     return Container(
@@ -475,7 +490,9 @@ class _MuscleBalanceTabState extends State<MuscleBalanceTab> {
                   children: [
                     Text(
                       '• ',
-                      style: TextStyle(color: colorScheme.error),
+                      style: context.textTheme.bodyMedium?.copyWith(
+                        color: colorScheme.error,
+                      ),
                     ),
                     Expanded(
                       child: Text(
@@ -512,7 +529,7 @@ class _TrendIndicator extends StatelessWidget {
     switch (trendData.trendDirection) {
       case TrendDirection.improving:
         trendIcon = AppIcons.trendingUp;
-        trendColor = const Color(0xFF4CAF50);
+        trendColor = colorScheme.success;
         trendText = l10n.trendImproving;
         break;
       case TrendDirection.declining:
