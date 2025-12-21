@@ -350,22 +350,22 @@ class _MuscleMapPreview extends StatelessWidget {
     };
 
     for (final history in histories) {
-      // Simple heuristic based on exercise category
-      final category = (history.category ?? '').toLowerCase();
-      if (category.contains('push') || category.contains('chest')) {
+      // Use muscleGroup from ExerciseHistory entity
+      final muscleGroup = history.muscleGroup.toLowerCase();
+      if (muscleGroup.contains('push') || muscleGroup.contains('chest')) {
         muscleVolume['chest'] = (muscleVolume['chest'] ?? 0) + 1;
         muscleVolume['shoulders'] = (muscleVolume['shoulders'] ?? 0) + 0.3;
-      } else if (category.contains('pull') || category.contains('back')) {
+      } else if (muscleGroup.contains('pull') || muscleGroup.contains('back')) {
         muscleVolume['back'] = (muscleVolume['back'] ?? 0) + 1;
         muscleVolume['arms'] = (muscleVolume['arms'] ?? 0) + 0.3;
-      } else if (category.contains('legs') || category.contains('lower')) {
+      } else if (muscleGroup.contains('legs') || muscleGroup.contains('lower')) {
         muscleVolume['legs'] = (muscleVolume['legs'] ?? 0) + 1;
         muscleVolume['core'] = (muscleVolume['core'] ?? 0) + 0.2;
-      } else if (category.contains('core') || category.contains('abs')) {
+      } else if (muscleGroup.contains('core') || muscleGroup.contains('abs')) {
         muscleVolume['core'] = (muscleVolume['core'] ?? 0) + 1;
-      } else if (category.contains('arms')) {
+      } else if (muscleGroup.contains('arms') || muscleGroup.contains('biceps') || muscleGroup.contains('triceps')) {
         muscleVolume['arms'] = (muscleVolume['arms'] ?? 0) + 1;
-      } else if (category.contains('shoulders')) {
+      } else if (muscleGroup.contains('shoulders') || muscleGroup.contains('delts')) {
         muscleVolume['shoulders'] = (muscleVolume['shoulders'] ?? 0) + 1;
       }
     }
@@ -528,23 +528,26 @@ class _VolumeRadarPreview extends StatelessWidget {
     final counts = [0.0, 0.0, 0.0, 0.0, 0.0, 0.0];
 
     for (final history in histories) {
-      final category = (history.category ?? '').toLowerCase();
-      if (category.contains('chest') || category.contains('push')) {
+      // Use muscleGroup from ExerciseHistory entity
+      final muscleGroup = history.muscleGroup.toLowerCase();
+      if (muscleGroup.contains('chest') || muscleGroup.contains('push')) {
         counts[0] += 1;
       }
-      if (category.contains('back') || category.contains('pull')) {
+      if (muscleGroup.contains('back') || muscleGroup.contains('pull')) {
         counts[1] += 1;
       }
-      if (category.contains('shoulders')) {
+      if (muscleGroup.contains('shoulders') || muscleGroup.contains('delts')) {
         counts[2] += 1;
       }
-      if (category.contains('arms')) {
+      if (muscleGroup.contains('arms') ||
+          muscleGroup.contains('biceps') ||
+          muscleGroup.contains('triceps')) {
         counts[3] += 1;
       }
-      if (category.contains('legs') || category.contains('lower')) {
+      if (muscleGroup.contains('legs') || muscleGroup.contains('lower')) {
         counts[4] += 1;
       }
-      if (category.contains('core') || category.contains('abs')) {
+      if (muscleGroup.contains('core') || muscleGroup.contains('abs')) {
         counts[5] += 1;
       }
     }
@@ -781,15 +784,18 @@ class _RepZonesBarPreview extends StatelessWidget {
     int enduranceSets = 0;
 
     for (final history in histories) {
-      final sets = history.sets as List<dynamic>? ?? [];
-      for (final set in sets) {
-        final reps = (set.reps ?? 0) as int;
-        if (reps >= 1 && reps <= 5) {
-          strengthSets++;
-        } else if (reps >= 6 && reps <= 12) {
-          hypertrophySets++;
-        } else if (reps > 12) {
-          enduranceSets++;
+      // ExerciseHistory has sessions (List<ExerciseSession>)
+      // Each ExerciseSession has sets (List<AnalyticsSet>)
+      for (final session in history.sessions) {
+        for (final set in session.sets) {
+          final reps = set.reps;
+          if (reps >= 1 && reps <= 5) {
+            strengthSets++;
+          } else if (reps >= 6 && reps <= 12) {
+            hypertrophySets++;
+          } else if (reps > 12) {
+            enduranceSets++;
+          }
         }
       }
     }
