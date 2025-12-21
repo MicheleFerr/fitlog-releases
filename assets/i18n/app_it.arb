@@ -16557,6 +16557,26 @@
   "@healthSyncLoadError": {
     "description": "Messaggio di errore quando il caricamento impostazioni sincronizzazione salute fallisce"
   },
+  "healthConnectNotInstalled": "Health Connect Non Installato",
+  "@healthConnectNotInstalled": {
+    "description": "Titolo quando Health Connect non è installato su Android"
+  },
+  "healthConnectInstallDescription": "Health Connect è necessario per sincronizzare i dati di salute su Android. Installalo dal Play Store.",
+  "@healthConnectInstallDescription": {
+    "description": "Descrizione che spiega perché Health Connect deve essere installato"
+  },
+  "healthConnectInstall": "Installa Health Connect",
+  "@healthConnectInstall": {
+    "description": "Etichetta pulsante per installare Health Connect dal Play Store"
+  },
+  "healthConnectUpdateRequired": "Aggiornamento Health Connect Richiesto",
+  "@healthConnectUpdateRequired": {
+    "description": "Titolo quando Health Connect deve essere aggiornato"
+  },
+  "healthConnectUpdateDescription": "Aggiorna Health Connect all'ultima versione per la migliore compatibilità.",
+  "@healthConnectUpdateDescription": {
+    "description": "Descrizione quando Health Connect deve essere aggiornato"
+  },
   "approveRequest": "Approva Richiesta",
   "@approveRequest": {
     "description": "Titolo dialogo admin per approvare richiesta esercizio mancante"
@@ -17280,5 +17300,157 @@
         "example": "3"
       }
     }
+  },
+
+  "templateSuggestionTitle": "Allenamento consigliato",
+  "@templateSuggestionTitle": {
+    "description": "Titolo card suggerimento template home screen"
+  },
+  "templateRecommendationOptimal": "Ottimale",
+  "@templateRecommendationOptimal": {
+    "description": "Label per raccomandazione ottimale"
+  },
+  "templateRecommendationAcceptable": "Accettabile",
+  "@templateRecommendationAcceptable": {
+    "description": "Label per raccomandazione accettabile"
+  },
+  "templateRecommendationSuboptimal": "Subottimale",
+  "@templateRecommendationSuboptimal": {
+    "description": "Label per raccomandazione subottimale"
+  },
+  "templateRecommendationAvoid": "Evita",
+  "@templateRecommendationAvoid": {
+    "description": "Label per raccomandazione da evitare"
+  },
+  "templateViewAlternatives": "Vedi alternative",
+  "@templateViewAlternatives": {
+    "description": "Pulsante per vedere template alternativi"
+  },
+  "templateMusclesReady": "Pronti",
+  "@templateMusclesReady": {
+    "description": "Label per muscoli pronti"
+  },
+  "templateMusclesCaution": "Attenzione",
+  "@templateMusclesCaution": {
+    "description": "Label per muscoli che richiedono attenzione"
+  },
+  "templateMusclesTotal": "Totali",
+  "@templateMusclesTotal": {
+    "description": "Label per conteggio muscoli totali"
+  },
+  "templateRestDaySuggestionTitle": "Giorno di Riposo Consigliato",
+  "@templateRestDaySuggestionTitle": {
+    "description": "Titolo quando tutti i template sono da evitare"
+  },
+  "templateRestDaySuggestionBody": "I tuoi muscoli hanno bisogno di recupero. Considera un giorno di riposo oggi per ottimizzare i risultati.",
+  "@templateRestDaySuggestionBody": {
+    "description": "Messaggio quando tutti i template sono da evitare"
+  },
+  "templateOptimalityScoreTooltip": "Punteggio basato sul recupero muscolare: 90%+ ottimale, 70-89% accettabile, 40-69% subottimale, <40% da evitare",
+  "@templateOptimalityScoreTooltip": {
+    "description": "Tooltip che spiega il punteggio di ottimalità"
+  },
+  "templateAlternativesTitle": "Allenamenti Alternativi",
+  "@templateAlternativesTitle": {
+    "description": "Titolo per il bottom sheet delle alternative"
+  },
+  "templateOptimalityLabel": "ottimale",
+  "@templateOptimalityLabel": {
+    "description": "Etichetta per il punteggio di ottimalità nelle alternative"
+  },
+
+  "completeToBalance": "Completa {templateName} per bilanciare ✓",
+  "@completeToBalance": {
+    "description": "Indicatore predictive balance per completare workout",
+    "placeholders": {
+      "templateName": {
+        "type": "String",
+        "example": "Leg Day"
+      }
+    }
+  },
+  "weeklyPatternComplete": "Pattern Settimanale Completato",
+  "@weeklyPatternComplete": {
+    "description": "Titolo quando tutti i workout del pattern sono completati"
+  },
+  "allWorkoutsCompleted": "Tutti i {count} allenamenti completati questa settimana",
+  "@allWorkoutsCompleted": {
+    "description": "Messaggio quando tutti i workout del pattern sono fatti",
+    "placeholders": {
+      "count": {
+        "type": "int",
+        "example": "3"
+      }
+    }
+  },
+  "weeklyProgress": "Progressi Settimanali",
+  "@weeklyProgress": {
+    "description": "Titolo per card progressi workout settimanali"
+  },
+  "workoutsCompletedThisWeek": "{completed}/{expected} allenamenti questa settimana",
+  "@workoutsCompletedThisWeek": {
+    "description": "Messaggio progressi per workout settimanali",
+    "placeholders": {
+      "completed": {
+        "type": "int",
+        "example": "2"
+      },
+      "expected": {
+        "type": "int",
+        "example": "3"
+      }
+    }
+  },
+  "nextWorkoutSuggestion": "Prossimo: {templateName}",
+  "@nextWorkoutSuggestion": {
+    "description": "Suggerimento per prossimo workout da completare",
+    "placeholders": {
+      "templateName": {
+        "type": "String",
+        "example": "Pull Day"
+      }
+    }
+  },
+  "templateCompleteSplitTitle": "Completa la tua split?",
+  "@templateCompleteSplitTitle": {
+    "description": "Titolo per sezione che suggerisce di completare una split routine"
+  },
+  "templateTargetMuscles": "Muscoli target",
+  "@templateTargetMuscles": {
+    "description": "Etichetta per muscoli target nel template"
+  },
+  "templateSplitScienceExplanation": "Allenare gruppi muscolari diversi in giorni consecutivi è prassi standard nelle split. I muscoli principali ({muscles}) sono recuperati al {recovery}%.",
+  "@templateSplitScienceExplanation": {
+    "description": "Spiegazione scientifica per approccio split training",
+    "placeholders": {
+      "muscles": {
+        "type": "String",
+        "example": "Pettorali, Tricipiti"
+      },
+      "recovery": {
+        "type": "int",
+        "example": "65"
+      }
+    }
+  },
+  "templateProceedWithCaution": "Procedi con cautela",
+  "@templateProceedWithCaution": {
+    "description": "Testo pulsante quando i muscoli sono moderatamente recuperati"
+  },
+  "templateProceedAnyway": "Procedi comunque",
+  "@templateProceedAnyway": {
+    "description": "Testo pulsante quando i muscoli sono poco recuperati"
+  },
+  "unsavedChangesTitle": "Modifiche non salvate",
+  "@unsavedChangesTitle": {
+    "description": "Titolo per dialog di avviso modifiche non salvate"
+  },
+  "unsavedChangesMessage": "Hai delle modifiche non salvate. Andranno perse se continui.",
+  "@unsavedChangesMessage": {
+    "description": "Messaggio per dialog di avviso modifiche non salvate"
+  },
+  "continueText": "Continua",
+  "@continueText": {
+    "description": "Testo generico pulsante continua"
   }
 }

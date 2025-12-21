@@ -5248,7 +5248,7 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get unsavedChangesMessage =>
-      'Hai modifiche non salvate. Sei sicuro di volerle scartare?';
+      'Hai delle modifiche non salvate. Andranno perse se continui.';
 
   @override
   String get enterWorkoutName => 'Inserisci nome workout';
@@ -23338,6 +23338,24 @@ class AppLocalizationsIt extends AppLocalizations {
       'Impossibile caricare impostazioni sincronizzazione salute';
 
   @override
+  String get healthConnectNotInstalled => 'Health Connect Non Installato';
+
+  @override
+  String get healthConnectInstallDescription =>
+      'Health Connect è necessario per sincronizzare i dati di salute su Android. Installalo dal Play Store.';
+
+  @override
+  String get healthConnectInstall => 'Installa Health Connect';
+
+  @override
+  String get healthConnectUpdateRequired =>
+      'Aggiornamento Health Connect Richiesto';
+
+  @override
+  String get healthConnectUpdateDescription =>
+      'Aggiorna Health Connect all\'ultima versione per la migliore compatibilità.';
+
+  @override
   String get approveRequest => 'Approva Richiesta';
 
   @override
@@ -23799,4 +23817,94 @@ class AppLocalizationsIt extends AppLocalizations {
   String partialCoverage(int uncovered, int total) {
     return '$uncovered di $total muscoli trascurati non nei template';
   }
+
+  @override
+  String get templateSuggestionTitle => 'Allenamento consigliato';
+
+  @override
+  String get templateRecommendationOptimal => 'Ottimale';
+
+  @override
+  String get templateRecommendationAcceptable => 'Accettabile';
+
+  @override
+  String get templateRecommendationSuboptimal => 'Subottimale';
+
+  @override
+  String get templateRecommendationAvoid => 'Evita';
+
+  @override
+  String get templateViewAlternatives => 'Vedi alternative';
+
+  @override
+  String get templateMusclesReady => 'Pronti';
+
+  @override
+  String get templateMusclesCaution => 'Attenzione';
+
+  @override
+  String get templateMusclesTotal => 'Totali';
+
+  @override
+  String get templateRestDaySuggestionTitle => 'Giorno di Riposo Consigliato';
+
+  @override
+  String get templateRestDaySuggestionBody =>
+      'I tuoi muscoli hanno bisogno di recupero. Considera un giorno di riposo oggi per ottimizzare i risultati.';
+
+  @override
+  String get templateOptimalityScoreTooltip =>
+      'Punteggio basato sul recupero muscolare: 90%+ ottimale, 70-89% accettabile, 40-69% subottimale, <40% da evitare';
+
+  @override
+  String get templateAlternativesTitle => 'Allenamenti Alternativi';
+
+  @override
+  String get templateOptimalityLabel => 'ottimale';
+
+  @override
+  String completeToBalance(String templateName) {
+    return 'Completa $templateName per bilanciare ✓';
+  }
+
+  @override
+  String get weeklyPatternComplete => 'Pattern Settimanale Completato';
+
+  @override
+  String allWorkoutsCompleted(int count) {
+    return 'Tutti i $count allenamenti completati questa settimana';
+  }
+
+  @override
+  String workoutsCompletedThisWeek(int completed, int expected) {
+    return '$completed/$expected allenamenti questa settimana';
+  }
+
+  @override
+  String nextWorkoutSuggestion(String templateName) {
+    return 'Prossimo: $templateName';
+  }
+
+  @override
+  String get templateCompleteSplitTitle => 'Completa la tua split?';
+
+  @override
+  String get templateTargetMuscles => 'Muscoli target';
+
+  @override
+  String templateSplitScienceExplanation(String muscles, int recovery) {
+    return 'Allenare gruppi muscolari diversi in giorni consecutivi è prassi standard nelle split. I muscoli principali ($muscles) sono recuperati al $recovery%.';
+  }
+
+  @override
+  String get templateProceedWithCaution => 'Procedi con cautela';
+
+  @override
+  String get templateProceedAnyway => 'Procedi comunque';
+
+  @override
+  String get unsavedChangesTitle => 'Modifiche non salvate';
+
+  @override
+  String get continueText => 'Continua';
 }

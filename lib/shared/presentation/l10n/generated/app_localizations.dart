@@ -3799,7 +3799,7 @@ abstract class AppLocalizations {
   /// **'Your progress is steady. Great consistency!'**
   String get steadyProgressSummary;
 
-  /// Weekly progress title
+  /// Title for weekly workout progress card
   ///
   /// In en, this message translates to:
   /// **'Weekly Progress'**
@@ -9623,10 +9623,10 @@ abstract class AppLocalizations {
   /// **'Unsaved Changes'**
   String get unsavedChanges;
 
-  /// Message for unsaved changes dialog
+  /// Message for unsaved changes warning dialog
   ///
   /// In en, this message translates to:
-  /// **'You have unsaved changes. Are you sure you want to discard them?'**
+  /// **'You have unsaved changes. They will be lost if you continue.'**
   String get unsavedChangesMessage;
 
   /// Label for custom workout name input
@@ -41300,6 +41300,36 @@ abstract class AppLocalizations {
   /// **'Failed to load health sync settings'**
   String get healthSyncLoadError;
 
+  /// Title when Health Connect is not installed on Android
+  ///
+  /// In en, this message translates to:
+  /// **'Health Connect Not Installed'**
+  String get healthConnectNotInstalled;
+
+  /// Description explaining why Health Connect needs to be installed
+  ///
+  /// In en, this message translates to:
+  /// **'Health Connect is required to sync health data on Android. Please install it from the Play Store.'**
+  String get healthConnectInstallDescription;
+
+  /// Button label to install Health Connect from Play Store
+  ///
+  /// In en, this message translates to:
+  /// **'Install Health Connect'**
+  String get healthConnectInstall;
+
+  /// Title when Health Connect needs to be updated
+  ///
+  /// In en, this message translates to:
+  /// **'Health Connect Update Required'**
+  String get healthConnectUpdateRequired;
+
+  /// Description when Health Connect needs update
+  ///
+  /// In en, this message translates to:
+  /// **'Please update Health Connect to the latest version for best compatibility.'**
+  String get healthConnectUpdateDescription;
+
   /// Admin dialog title for approving missing exercise request
   ///
   /// In en, this message translates to:
@@ -42055,6 +42085,162 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'{uncovered} of {total} neglected muscles not in templates'**
   String partialCoverage(int uncovered, int total);
+
+  /// Template suggestion card title on home screen
+  ///
+  /// In en, this message translates to:
+  /// **'Suggested workout'**
+  String get templateSuggestionTitle;
+
+  /// Label for optimal recommendation
+  ///
+  /// In en, this message translates to:
+  /// **'Optimal'**
+  String get templateRecommendationOptimal;
+
+  /// Label for acceptable recommendation
+  ///
+  /// In en, this message translates to:
+  /// **'Acceptable'**
+  String get templateRecommendationAcceptable;
+
+  /// Label for suboptimal recommendation
+  ///
+  /// In en, this message translates to:
+  /// **'Suboptimal'**
+  String get templateRecommendationSuboptimal;
+
+  /// Label for avoid recommendation
+  ///
+  /// In en, this message translates to:
+  /// **'Avoid'**
+  String get templateRecommendationAvoid;
+
+  /// Button to view alternative templates
+  ///
+  /// In en, this message translates to:
+  /// **'View alternatives'**
+  String get templateViewAlternatives;
+
+  /// Label for muscles ready
+  ///
+  /// In en, this message translates to:
+  /// **'Ready'**
+  String get templateMusclesReady;
+
+  /// Label for muscles needing caution
+  ///
+  /// In en, this message translates to:
+  /// **'Caution'**
+  String get templateMusclesCaution;
+
+  /// Label for total muscles count
+  ///
+  /// In en, this message translates to:
+  /// **'Total'**
+  String get templateMusclesTotal;
+
+  /// Title when all templates should be avoided
+  ///
+  /// In en, this message translates to:
+  /// **'Rest Day Recommended'**
+  String get templateRestDaySuggestionTitle;
+
+  /// Message when all templates should be avoided
+  ///
+  /// In en, this message translates to:
+  /// **'Your muscles need recovery. Consider taking a rest day today to optimize your results.'**
+  String get templateRestDaySuggestionBody;
+
+  /// Tooltip explaining optimality score
+  ///
+  /// In en, this message translates to:
+  /// **'Score based on muscle recovery: 90%+ optimal, 70-89% acceptable, 40-69% suboptimal, <40% avoid'**
+  String get templateOptimalityScoreTooltip;
+
+  /// Title for alternatives bottom sheet
+  ///
+  /// In en, this message translates to:
+  /// **'Alternative Workouts'**
+  String get templateAlternativesTitle;
+
+  /// Label for optimality score in alternatives
+  ///
+  /// In en, this message translates to:
+  /// **'optimal'**
+  String get templateOptimalityLabel;
+
+  /// Predictive balance indicator showing which workout to complete
+  ///
+  /// In en, this message translates to:
+  /// **'Complete {templateName} to balance ✓'**
+  String completeToBalance(String templateName);
+
+  /// Title when all workouts in pattern are completed
+  ///
+  /// In en, this message translates to:
+  /// **'Weekly Pattern Complete'**
+  String get weeklyPatternComplete;
+
+  /// Message when all pattern workouts are done
+  ///
+  /// In en, this message translates to:
+  /// **'All {count} workouts completed this week'**
+  String allWorkoutsCompleted(int count);
+
+  /// Progress message for weekly workouts
+  ///
+  /// In en, this message translates to:
+  /// **'{completed}/{expected} workouts this week'**
+  String workoutsCompletedThisWeek(int completed, int expected);
+
+  /// Suggestion for next workout to complete
+  ///
+  /// In en, this message translates to:
+  /// **'Next: {templateName}'**
+  String nextWorkoutSuggestion(String templateName);
+
+  /// Title for section suggesting to complete a split routine
+  ///
+  /// In en, this message translates to:
+  /// **'Complete your split?'**
+  String get templateCompleteSplitTitle;
+
+  /// Label for target muscles in template
+  ///
+  /// In en, this message translates to:
+  /// **'Target muscles'**
+  String get templateTargetMuscles;
+
+  /// Scientific explanation for split training approach
+  ///
+  /// In en, this message translates to:
+  /// **'Training different muscle groups on consecutive days is standard practice in split routines. Primary muscles ({muscles}) are {recovery}% recovered.'**
+  String templateSplitScienceExplanation(String muscles, int recovery);
+
+  /// Button text when muscles are moderately recovered
+  ///
+  /// In en, this message translates to:
+  /// **'Proceed with caution'**
+  String get templateProceedWithCaution;
+
+  /// Button text when muscles are poorly recovered
+  ///
+  /// In en, this message translates to:
+  /// **'Proceed anyway'**
+  String get templateProceedAnyway;
+
+  /// Title for unsaved changes warning dialog
+  ///
+  /// In en, this message translates to:
+  /// **'Unsaved changes'**
+  String get unsavedChangesTitle;
+
+  /// Generic continue button text
+  ///
+  /// In en, this message translates to:
+  /// **'Continue'**
+  String get continueText;
 }
 
 class _AppLocalizationsDelegate

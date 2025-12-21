@@ -408,87 +408,70 @@ final userProfileNotifierProvider =
 
 /// Check if user is premium
 /// Replaces: isPremiumUserProvider, isCachedPremiumUserProvider, unifiedIsPremiumProvider
+/// 🔧 PERF FIX: Use .select() to only rebuild when accountTier changes
 final isPremiumUserProvider = Provider<bool>((ref) {
-  final userProfile = ref.watch(userProfileProvider);
-
-  return userProfile.when(
-    data: (profile) =>
-        profile?.accountTier == AccountTier.premium ||
-        profile?.accountTier == AccountTier.pro,
-    loading: () => false,
-    error: (_, __) => false,
+  final accountTier = ref.watch(
+    userProfileProvider.select((asyncValue) => asyncValue.valueOrNull?.accountTier),
   );
+
+  return accountTier == AccountTier.premium || accountTier == AccountTier.pro;
 });
 
 /// Get user's display name
 /// Replaces: cachedUserDisplayNameProvider, unifiedDisplayNameProvider, currentUserDisplayNameProvider
+/// 🔧 PERF FIX: Use .select() to only rebuild when displayName changes
 final userDisplayNameProvider = Provider<String>((ref) {
-  final userProfile = ref.watch(userProfileProvider);
-
-  return userProfile.when(
-    data: (profile) => profile?.displayName ?? 'GymBro User',
-    loading: () => 'Loading...',
-    error: (_, __) => 'GymBro User',
+  final displayName = ref.watch(
+    userProfileProvider.select((asyncValue) => asyncValue.valueOrNull?.displayName),
   );
+
+  return displayName ?? 'GymBro User';
 });
 
 /// Get user's account tier
 /// Replaces: currentAccountTierProvider, unifiedAccountTierProvider
+/// 🔧 PERF FIX: Use .select() to only rebuild when accountTier changes
 final accountTierProvider = Provider<AccountTier>((ref) {
-  final userProfile = ref.watch(userProfileProvider);
-
-  return userProfile.when(
-    data: (profile) => profile?.accountTier ?? AccountTier.free,
-    loading: () => AccountTier.free,
-    error: (_, __) => AccountTier.free,
+  final accountTier = ref.watch(
+    userProfileProvider.select((asyncValue) => asyncValue.valueOrNull?.accountTier),
   );
+
+  return accountTier ?? AccountTier.free;
 });
 
 /// Get template quota
 /// Replaces: templateQuotaProvider
+/// 🔧 PERF FIX: Use .select() to only rebuild when templateQuota changes
 final templateQuotaProvider = Provider<TemplateQuota>((ref) {
-  final userProfile = ref.watch(userProfileProvider);
-
-  return userProfile.when(
-    data: (profile) =>
-        profile?.templateQuota ?? TemplateQuota.forTier(AccountTier.free),
-    loading: () => TemplateQuota.forTier(AccountTier.free),
-    error: (_, __) => TemplateQuota.forTier(AccountTier.free),
+  final templateQuota = ref.watch(
+    userProfileProvider.select((asyncValue) => asyncValue.valueOrNull?.templateQuota),
   );
+
+  return templateQuota ?? TemplateQuota.forTier(AccountTier.free);
 });
 
 /// Check if user can save a template
 /// Replaces: canSaveTemplateProvider
+/// 🔧 PERF FIX: Use .select() to only rebuild when templateQuota changes
 final canSaveTemplateProvider = Provider.family<bool, bool>((ref, isPublic) {
-  final profileAsync = ref.watch(userProfileNotifierProvider);
-
-  return profileAsync.when(
-    data: (profile) {
-      if (profile == null) return false;
-      return isPublic
-          ? profile.templateQuota.canSavePublic
-          : profile.templateQuota.canSavePrivate;
-    },
-    loading: () => false,
-    error: (_, __) => false,
+  final templateQuota = ref.watch(
+    userProfileNotifierProvider.select((asyncValue) => asyncValue.valueOrNull?.templateQuota),
   );
+
+  if (templateQuota == null) return false;
+  return isPublic ? templateQuota.canSavePublic : templateQuota.canSavePrivate;
 });
 
 /// Get remaining template quota
 /// Replaces: remainingTemplateQuotaProvider
+/// 🔧 PERF FIX: Use .select() to only rebuild when templateQuota changes
 final remainingTemplateQuotaProvider = Provider.family<int, bool>((ref, isPublic) {
-  final profileAsync = ref.watch(userProfileNotifierProvider);
-
-  return profileAsync.when(
-    data: (profile) {
-      if (profile == null) return 0;
-      return isPublic
-          ? profile.templateQuota.remainingPublic
-          : profile.templateQuota.remainingPrivate;
-    },
-    loading: () => 0,
-    error: (_, __) => 0,
+  final templateQuota = ref.watch(
+    userProfileNotifierProvider.select((asyncValue) => asyncValue.valueOrNull?.templateQuota),
   );
+
+  if (templateQuota == null) return 0;
+  return isPublic ? templateQuota.remainingPublic : templateQuota.remainingPrivate;
 });
 
 /// ============================================================================
@@ -565,7 +548,7 @@ extension ConsolidatedUserProviderMigration on WidgetRef {
 ///
 ///     return userProfile.when(
 ///       data: (profile) => Text(profile?.displayName ?? 'Guest'),
-///       loading: () => CircularProgressIndicator(),
+///       loading: () => LoadingIndicator(),
 ///       error: (e, s) => Text('Error: $e'),
 ///     );
 ///   }

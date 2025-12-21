@@ -28337,6 +28337,26 @@
   "@healthSyncLoadError": {
     "description": "Error message when health sync settings fail to load"
   },
+  "healthConnectNotInstalled": "Health Connect Not Installed",
+  "@healthConnectNotInstalled": {
+    "description": "Title when Health Connect is not installed on Android"
+  },
+  "healthConnectInstallDescription": "Health Connect is required to sync health data on Android. Please install it from the Play Store.",
+  "@healthConnectInstallDescription": {
+    "description": "Description explaining why Health Connect needs to be installed"
+  },
+  "healthConnectInstall": "Install Health Connect",
+  "@healthConnectInstall": {
+    "description": "Button label to install Health Connect from Play Store"
+  },
+  "healthConnectUpdateRequired": "Health Connect Update Required",
+  "@healthConnectUpdateRequired": {
+    "description": "Title when Health Connect needs to be updated"
+  },
+  "healthConnectUpdateDescription": "Please update Health Connect to the latest version for best compatibility.",
+  "@healthConnectUpdateDescription": {
+    "description": "Description when Health Connect needs update"
+  },
   "approveRequest": "Approve Request",
   "@approveRequest": {
     "description": "Admin dialog title for approving missing exercise request"
@@ -29060,5 +29080,157 @@
         "example": "3"
       }
     }
+  },
+
+  "templateSuggestionTitle": "Suggested workout",
+  "@templateSuggestionTitle": {
+    "description": "Template suggestion card title on home screen"
+  },
+  "templateRecommendationOptimal": "Optimal",
+  "@templateRecommendationOptimal": {
+    "description": "Label for optimal recommendation"
+  },
+  "templateRecommendationAcceptable": "Acceptable",
+  "@templateRecommendationAcceptable": {
+    "description": "Label for acceptable recommendation"
+  },
+  "templateRecommendationSuboptimal": "Suboptimal",
+  "@templateRecommendationSuboptimal": {
+    "description": "Label for suboptimal recommendation"
+  },
+  "templateRecommendationAvoid": "Avoid",
+  "@templateRecommendationAvoid": {
+    "description": "Label for avoid recommendation"
+  },
+  "templateViewAlternatives": "View alternatives",
+  "@templateViewAlternatives": {
+    "description": "Button to view alternative templates"
+  },
+  "templateMusclesReady": "Ready",
+  "@templateMusclesReady": {
+    "description": "Label for muscles ready"
+  },
+  "templateMusclesCaution": "Caution",
+  "@templateMusclesCaution": {
+    "description": "Label for muscles needing caution"
+  },
+  "templateMusclesTotal": "Total",
+  "@templateMusclesTotal": {
+    "description": "Label for total muscles count"
+  },
+  "templateRestDaySuggestionTitle": "Rest Day Recommended",
+  "@templateRestDaySuggestionTitle": {
+    "description": "Title when all templates should be avoided"
+  },
+  "templateRestDaySuggestionBody": "Your muscles need recovery. Consider taking a rest day today to optimize your results.",
+  "@templateRestDaySuggestionBody": {
+    "description": "Message when all templates should be avoided"
+  },
+  "templateOptimalityScoreTooltip": "Score based on muscle recovery: 90%+ optimal, 70-89% acceptable, 40-69% suboptimal, <40% avoid",
+  "@templateOptimalityScoreTooltip": {
+    "description": "Tooltip explaining optimality score"
+  },
+  "templateAlternativesTitle": "Alternative Workouts",
+  "@templateAlternativesTitle": {
+    "description": "Title for alternatives bottom sheet"
+  },
+  "templateOptimalityLabel": "optimal",
+  "@templateOptimalityLabel": {
+    "description": "Label for optimality score in alternatives"
+  },
+
+  "completeToBalance": "Complete {templateName} to balance ✓",
+  "@completeToBalance": {
+    "description": "Predictive balance indicator showing which workout to complete",
+    "placeholders": {
+      "templateName": {
+        "type": "String",
+        "example": "Leg Day"
+      }
+    }
+  },
+  "weeklyPatternComplete": "Weekly Pattern Complete",
+  "@weeklyPatternComplete": {
+    "description": "Title when all workouts in pattern are completed"
+  },
+  "allWorkoutsCompleted": "All {count} workouts completed this week",
+  "@allWorkoutsCompleted": {
+    "description": "Message when all pattern workouts are done",
+    "placeholders": {
+      "count": {
+        "type": "int",
+        "example": "3"
+      }
+    }
+  },
+  "weeklyProgress": "Weekly Progress",
+  "@weeklyProgress": {
+    "description": "Title for weekly workout progress card"
+  },
+  "workoutsCompletedThisWeek": "{completed}/{expected} workouts this week",
+  "@workoutsCompletedThisWeek": {
+    "description": "Progress message for weekly workouts",
+    "placeholders": {
+      "completed": {
+        "type": "int",
+        "example": "2"
+      },
+      "expected": {
+        "type": "int",
+        "example": "3"
+      }
+    }
+  },
+  "nextWorkoutSuggestion": "Next: {templateName}",
+  "@nextWorkoutSuggestion": {
+    "description": "Suggestion for next workout to complete",
+    "placeholders": {
+      "templateName": {
+        "type": "String",
+        "example": "Pull Day"
+      }
+    }
+  },
+  "templateCompleteSplitTitle": "Complete your split?",
+  "@templateCompleteSplitTitle": {
+    "description": "Title for section suggesting to complete a split routine"
+  },
+  "templateTargetMuscles": "Target muscles",
+  "@templateTargetMuscles": {
+    "description": "Label for target muscles in template"
+  },
+  "templateSplitScienceExplanation": "Training different muscle groups on consecutive days is standard practice in split routines. Primary muscles ({muscles}) are {recovery}% recovered.",
+  "@templateSplitScienceExplanation": {
+    "description": "Scientific explanation for split training approach",
+    "placeholders": {
+      "muscles": {
+        "type": "String",
+        "example": "Chest, Triceps"
+      },
+      "recovery": {
+        "type": "int",
+        "example": "65"
+      }
+    }
+  },
+  "templateProceedWithCaution": "Proceed with caution",
+  "@templateProceedWithCaution": {
+    "description": "Button text when muscles are moderately recovered"
+  },
+  "templateProceedAnyway": "Proceed anyway",
+  "@templateProceedAnyway": {
+    "description": "Button text when muscles are poorly recovered"
+  },
+  "unsavedChangesTitle": "Unsaved changes",
+  "@unsavedChangesTitle": {
+    "description": "Title for unsaved changes warning dialog"
+  },
+  "unsavedChangesMessage": "You have unsaved changes. They will be lost if you continue.",
+  "@unsavedChangesMessage": {
+    "description": "Message for unsaved changes warning dialog"
+  },
+  "continueText": "Continue",
+  "@continueText": {
+    "description": "Generic continue button text"
   }
 }

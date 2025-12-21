@@ -17,6 +17,7 @@ import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
 import 'package:gymbro_flutter_new/features/auth/presentation/providers/consolidated_user_provider.dart';
+import 'package:gymbro_flutter_new/features/workout/presentation/screens/template_view_screen.dart';
 
 class EditTemplateScreen extends ConsumerStatefulWidget {
 
@@ -76,6 +77,16 @@ class _EditTemplateScreenState extends ConsumerState<EditTemplateScreen> {
         appBar: AppBar(
           title: Text(context.l10n.edit),
           actions: [
+            // View mode button (presentation mode)
+            IconButton(
+              onPressed: _navigateToViewMode,
+              icon: const SemanticIcon(
+                icon: AppIcons.visibility,
+                semanticLabel: 'View mode',
+                size: AppIconSize.medium,
+              ),
+              tooltip: context.l10n.templateViewMode,
+            ),
             if (_hasChanges)
               TextButton(
                 onPressed: _isLoading ? null : _saveTemplate,
@@ -534,7 +545,7 @@ class _EditTemplateScreenState extends ConsumerState<EditTemplateScreen> {
                             height: 40,
                             decoration: BoxDecoration(
                               color: context.colors.primary,
-                              borderRadius: BorderRadius.circular(10),
+                              borderRadius: BorderRadius.circular(12),
                             ),
                             child: Center(
                               child: Text(
@@ -986,6 +997,33 @@ class _EditTemplateScreenState extends ConsumerState<EditTemplateScreen> {
       });
       _markAsChanged();
     }
+  }
+
+  /// Navigate to presentation/view mode
+  void _navigateToViewMode() {
+    // If there are unsaved changes, warn the user
+    if (_hasChanges) {
+      ModalService.showConfirmDialog(
+        context,
+        title: context.l10n.unsavedChangesTitle,
+        message: context.l10n.unsavedChangesMessage,
+        confirmText: context.l10n.continueText,
+      ).then((confirmed) {
+        if (confirmed && mounted) {
+          _openViewMode();
+        }
+      });
+    } else {
+      _openViewMode();
+    }
+  }
+
+  void _openViewMode() {
+    Navigator.of(context).push(
+      MaterialPageRoute<void>(
+        builder: (_) => TemplateViewScreen(templateId: widget.template.id),
+      ),
+    );
   }
 
   Future<void> _saveTemplate() async {
