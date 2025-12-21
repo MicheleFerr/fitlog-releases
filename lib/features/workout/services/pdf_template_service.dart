@@ -1,6 +1,10 @@
+import 'dart:io';
+
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:printing/printing.dart';
+import 'package:share_plus/share_plus.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/workout_template.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/pdf_detail_level.dart';
 import 'package:flutter/foundation.dart';
@@ -50,14 +54,46 @@ class PdfTemplateService {
         },
         footer: (pw.Context context) {
           return pw.Container(
-            alignment: pw.Alignment.centerRight,
             margin: const pw.EdgeInsets.only(top: 20),
-            child: pw.Text(
-              'Page ${context.pageNumber} of ${context.pagesCount}',
-              style: pw.TextStyle(
-                color: lightGray,
-                fontSize: 10,
+            padding: const pw.EdgeInsets.only(top: 10),
+            decoration: const pw.BoxDecoration(
+              border: pw.Border(
+                top: pw.BorderSide(color: PdfColors.grey300, width: 0.5),
               ),
+            ),
+            child: pw.Row(
+              mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+              children: [
+                pw.Row(
+                  children: [
+                    pw.Container(
+                      padding: const pw.EdgeInsets.symmetric(
+                        horizontal: 8,
+                        vertical: 4,
+                      ),
+                      decoration: pw.BoxDecoration(
+                        color: primaryColor.shade(0.1),
+                        borderRadius: pw.BorderRadius.circular(4),
+                      ),
+                      child: pw.Text(
+                        'Generated with FitLog Pro',
+                        style: pw.TextStyle(
+                          color: primaryColor,
+                          fontSize: 9,
+                          fontWeight: pw.FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                pw.Text(
+                  'Page ${context.pageNumber} of ${context.pagesCount}',
+                  style: pw.TextStyle(
+                    color: lightGray,
+                    fontSize: 10,
+                  ),
+                ),
+              ],
             ),
           );
         },
@@ -425,22 +461,40 @@ class PdfTemplateService {
   }
 
   /// Condividi il PDF del template
-  static Future<void> shareTemplatePdf(
+  /// Returns ShareResultStatus to handle dismiss/success
+  static Future<ShareResultStatus> shareTemplatePdf(
     WorkoutTemplate template, {
     PdfDetailLevel detailLevel = PdfDetailLevel.compact,
   }) async {
+    File? tempFile;
     try {
       final pdfData = await generateTemplatePdf(template, detailLevel: detailLevel);
 
-      await Printing.sharePdf(
-        bytes: pdfData,
-        filename: '${template.name.replaceAll(' ', '_')}_template.pdf',
+      // Save to temp file
+      final tempDir = await getTemporaryDirectory();
+      final fileName = '${template.name.replaceAll(' ', '_')}_template.pdf';
+      tempFile = File('${tempDir.path}/$fileName');
+      await tempFile.writeAsBytes(pdfData);
+
+      // Share with share_plus
+      final result = await SharePlus.instance.share(
+        ShareParams(
+          files: [XFile(tempFile.path)],
+          subject: template.name,
+        ),
       );
+
+      return result.status;
     } catch (e) {
       if (kDebugMode) {
         debugPrint('Error sharing PDF: $e');
       }
       rethrow;
+    } finally {
+      // Clean up temp file
+      if (tempFile != null && await tempFile.exists()) {
+        await tempFile.delete();
+      }
     }
   }
 
