@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/mixins/safe_set_state_mixin.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise.dart';
 
@@ -75,7 +76,8 @@ enum _ExecutionPhase {
   completed,  // All done, showing summary
 }
 
-class _RestPauseExecutionModalState extends State<RestPauseExecutionModal> {
+class _RestPauseExecutionModalState extends State<RestPauseExecutionModal>
+    with SafeSetStateMixin {
   final List<RestPauseSet> _completedSets = [];
   final TextEditingController _repsController = TextEditingController();
 
@@ -146,12 +148,12 @@ class _RestPauseExecutionModalState extends State<RestPauseExecutionModal> {
     _restTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
       if (_restSecondsRemaining <= 1) {
         timer.cancel();
-        setState(() {
+        safeSetState(() {
           _phase = _ExecutionPhase.ready;
         });
         HapticFeedback.heavyImpact();
       } else {
-        setState(() {
+        safeSetState(() {
           _restSecondsRemaining--;
         });
       }
