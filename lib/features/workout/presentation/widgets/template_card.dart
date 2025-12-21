@@ -7,6 +7,7 @@ import 'package:gymbro_flutter_new/features/workout/domain/entities/template_sta
 import 'package:gymbro_flutter_new/features/workout/domain/entities/difficulty_level.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/template_category.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/providers/workout_provider.dart';
+import 'package:gymbro_flutter_new/features/workout/presentation/providers/workout_template_provider.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
@@ -29,10 +30,15 @@ class TemplateCard extends ConsumerStatefulWidget {
     super.key,
     required this.template,
     this.onTap,
+    this.preloadedStats,
   });
 
   final WorkoutTemplate template;
   final VoidCallback? onTap;
+
+  /// Pre-calculated stats from parent (optimization: avoids N provider calls)
+  /// If null, will fetch using templateStatsProvider (backward compatible)
+  final TemplateStats? preloadedStats;
 
   @override
   ConsumerState<TemplateCard> createState() => _TemplateCardState();
@@ -97,6 +103,16 @@ class _TemplateCardState extends ConsumerState<TemplateCard>
     final isDark = context.isDarkMode;
     final category = widget.template.effectiveCategory;
     final difficulty = widget.template.effectiveDifficulty;
+
+    // 🚀 OPTIMIZATION: Use preloaded stats if available (from parent batch provider)
+    // Otherwise fall back to per-card provider (backward compatible)
+    final TemplateStats? stats;
+    if (widget.preloadedStats != null) {
+      stats = widget.preloadedStats;
+    } else {
+      final statsAsync = ref.watch(templateStatsProvider(widget.template.id));
+      stats = statsAsync.valueOrNull;
+    }
 
     return FadeTransition(
       opacity: _fadeAnimation,
@@ -216,10 +232,10 @@ class _TemplateCardState extends ConsumerState<TemplateCard>
 
                       const Spacer(),
 
-                      // Footer: Metadata (⏱️ duration only, no stats yet)
+                      // Footer: Metadata (⏱️ duration + 🕐 last performed from real stats)
                       _MetadataRow(
                         template: widget.template,
-                        stats: null,
+                        stats: stats,
                       ),
                     ],
                   ),
@@ -346,6 +362,10 @@ class _ExercisePreview extends StatelessWidget {
 }
 
 /// Metadata row (⏱️ duration • last performed)
+///
+/// Duration display logic:
+/// - If we have real stats with avgDuration → show "~XX min" (average from history)
+/// - If no stats → show "XX min" (hardcoded estimatedDuration from template)
 class _MetadataRow extends StatelessWidget {
   const _MetadataRow({
     required this.template,
@@ -355,6 +375,24 @@ class _MetadataRow extends StatelessWidget {
   final WorkoutTemplate template;
   final TemplateStats? stats;
 
+  /// Get duration text to display
+  /// Returns "~XX min" if we have real average data, "XX min" otherwise
+  String _getDurationText() {
+    final avgDuration = stats?.avgDuration;
+    if (avgDuration != null && avgDuration.inMinutes > 0) {
+      // Real average from workout history - show with ~ prefix to indicate it's an average
+      return '~${avgDuration.inMinutes} min';
+    }
+    // Fallback to template's estimated duration (hardcoded value)
+    return '${template.estimatedDuration} min';
+  }
+
+  /// Check if we're showing real data (for color highlighting)
+  bool get _hasRealDuration {
+    final avgDuration = stats?.avgDuration;
+    return avgDuration != null && avgDuration.inMinutes > 0;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Row(
@@ -363,19 +401,25 @@ class _MetadataRow extends StatelessWidget {
         Icon(
           AppIcons.schedule,
           size: AppIconSize.small, // 20dp
-          color: context.colors.onSurfaceVariant,
+          // Highlight with success color when showing real data
+          color: _hasRealDuration
+              ? context.colors.success
+              : context.colors.onSurfaceVariant,
         ),
         const SizedBox(width: AppSpacing.xxs),
         Text(
-          '${template.estimatedDuration} min',
+          _getDurationText(),
           style: context.textTheme.bodySmall?.copyWith(
-            color: context.colors.onSurfaceVariant,
+            // Highlight with success color when showing real data
+            color: _hasRealDuration
+                ? context.colors.success
+                : context.colors.onSurfaceVariant,
             fontWeight: FontWeight.w600,
           ),
         ),
 
         // Bullet separator (8pt spacing each side)
-        if (stats != null) ...[
+        if (stats != null && stats!.lastPerformed != null) ...[
           const SizedBox(width: AppSpacing.xs),
           Container(
             width: AppSpacing.xxs,

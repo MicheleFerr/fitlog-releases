@@ -16,7 +16,6 @@ import 'package:gymbro_flutter_new/features/workout/presentation/screens/edit_te
 import 'package:gymbro_flutter_new/features/workout/presentation/widgets/weight_recovery_dialog.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/providers/previous_workout_provider.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/services/weight_recovery_service.dart';
-import 'package:gymbro_flutter_new/features/workout/presentation/providers/workout_repository_provider.dart' hide syncStatusProvider;
 import 'package:gymbro_flutter_new/shared/presentation/widgets/adaptive_banner_ad.dart';
 import 'package:gymbro_flutter_new/core/config/admob_config.dart';
 import 'package:flutter/foundation.dart';
@@ -323,7 +322,7 @@ class _WorkoutTemplatesScreenState extends ConsumerState<WorkoutTemplatesScreen>
                 const SizedBox(height: 8),
                 Text(
                   context.l10n.workoutTemplateMostUsedWillAppear,
-                  style: TextStyle(color: context.colors.surfaceContainerHighest),
+                  style: context.textTheme.bodyMedium?.copyWith(color: context.colors.onSurfaceVariant),
                 ),
               ],
             ),
@@ -368,7 +367,7 @@ class _WorkoutTemplatesScreenState extends ConsumerState<WorkoutTemplatesScreen>
                 const SizedBox(height: 8),
                 Text(
                   context.l10n.workoutTemplateCreateFirstCustom,
-                  style: TextStyle(color: context.colors.surfaceContainerHighest),
+                  style: context.textTheme.bodyMedium?.copyWith(color: context.colors.onSurfaceVariant),
                 ),
                 const SizedBox(height: 24),
                 ElevatedButton.icon(
@@ -408,6 +407,11 @@ class _WorkoutTemplatesScreenState extends ConsumerState<WorkoutTemplatesScreen>
       );
     }
 
+    // 🚀 OPTIMIZATION: Batch load all template stats in one pass
+    // Instead of N provider calls (one per card), we make 1 call
+    final allStatsAsync = ref.watch(allTemplateStatsProvider);
+    final allStats = allStatsAsync.valueOrNull ?? {};
+
     // Vertical ListView with fixed 200px item height for performance
     return ListView.builder(
       itemCount: templates.length,
@@ -421,9 +425,17 @@ class _WorkoutTemplatesScreenState extends ConsumerState<WorkoutTemplatesScreen>
           onDuplicate: () => _duplicateTemplate(template),
           onEdit: () => _editTemplate(template),
           onDelete: () => _deleteTemplate(template),
+          onRefresh: template.isCustom ? () => _refreshTemplate(template) : null,
+          onView: () => _viewTemplate(template),
+          preloadedStats: allStats[template.id], // Pass pre-calculated stats
         );
       },
     );
+  }
+
+  /// Navigate to template view screen (presentation mode)
+  void _viewTemplate(WorkoutTemplate template) {
+    context.push('/templates/detail', extra: template.id);
   }
 
   void _shareTemplate(WorkoutTemplate template) {
@@ -432,6 +444,40 @@ class _WorkoutTemplatesScreenState extends ConsumerState<WorkoutTemplatesScreen>
       context,
       context.l10n.workoutTemplateSharingComingSoon,
     );
+  }
+
+  /// ⌚ Refresh template from exercise database to sync TUT and other fields
+  Future<void> _refreshTemplate(WorkoutTemplate template) async {
+    try {
+      final updatedCount = await ref
+          .read(workoutTemplateNotifierProvider.notifier)
+          .refreshTemplateFromDatabase(template);
+
+      if (mounted) {
+        if (updatedCount > 0) {
+          // Invalidate providers to refresh UI
+          ref.invalidate(customWorkoutTemplatesProvider);
+          ref.invalidate(allWorkoutTemplatesProvider);
+
+          SnackBarService.showSuccess(
+            context,
+            context.l10n.refreshFromDatabaseSuccess(updatedCount),
+          );
+        } else {
+          SnackBarService.showInfo(
+            context,
+            context.l10n.refreshFromDatabaseNoUpdates,
+          );
+        }
+      }
+    } catch (e) {
+      if (mounted) {
+        SnackBarService.showError(
+          context,
+          'Errore: $e',
+        );
+      }
+    }
   }
 
   void _duplicateTemplate(WorkoutTemplate template) async {
@@ -541,17 +587,9 @@ class _WorkoutTemplatesScreenState extends ConsumerState<WorkoutTemplatesScreen>
       // LEGACY SYSTEM: Incrementa contatore utilizzo
       await ref.read(workoutTemplateNotifierProvider.notifier).incrementUsage(template.id);
 
-      // Crea workout dal template con templateId
+      // Crea workout dal template con templateId per tracciare durata media
       final workoutNotifier = ref.read(currentWorkoutProvider.notifier);
-      workoutNotifier.createWorkout(template.name);
-
-      // Aggiungi templateId al workout
-      final currentWorkout = ref.read(currentWorkoutProvider);
-      if (currentWorkout != null) {
-        final workoutWithTemplateId = currentWorkout.copyWith(templateId: template.id);
-        // Aggiorna il provider con il workout modificato
-        await ref.read(workoutRepositoryProvider).updateWorkout(workoutWithTemplateId);
-      }
+      workoutNotifier.createWorkout(template.name, templateId: template.id);
 
       // ⚠️ BUG FIX: Get exercises BEFORE weight recovery dialog
       // so they can be used for weight application
@@ -573,6 +611,7 @@ class _WorkoutTemplatesScreenState extends ConsumerState<WorkoutTemplatesScreen>
         }
 
         // 📊 APPLY WEIGHTS: Se l'utente ha scelto un'opzione, applica i pesi
+        final currentWorkout = ref.read(currentWorkoutProvider);
         if (selectedOption != null &&
             selectedOption != WeightRecoveryOption.none &&
             currentWorkout != null &&
@@ -789,7 +828,7 @@ class _WorkoutTemplatesScreenState extends ConsumerState<WorkoutTemplatesScreen>
                   const SizedBox(height: 8),
                   Text(
                     'Hai modifiche offline che verranno sincronizzate al prossimo accesso.',
-                    style: TextStyle(color: context.colors.secondary),
+                    style: context.textTheme.bodyMedium?.copyWith(color: context.colors.secondary),
                   ),
                 ],
               ],

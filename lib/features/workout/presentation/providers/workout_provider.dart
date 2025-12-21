@@ -88,6 +88,10 @@ import 'package:gymbro_flutter_new/features/home/providers/user_xp_provider.dart
 import 'package:gymbro_flutter_new/features/health_sync/presentation/providers/watch_connectivity_provider.dart';
 // 🍎 HealthKit Integration for Apple Fitness / Activity rings sync
 import 'package:gymbro_flutter_new/features/health_sync/presentation/providers/health_permission_provider.dart';
+// 📚 Exercise Database for real TUT lookup
+import 'package:gymbro_flutter_new/features/exercise_database/presentation/providers/hybrid_exercise_provider.dart';
+// 📱 iOS 17+ Workout Session Live Activity
+import 'package:gymbro_flutter_new/features/workout/presentation/providers/workout_session_la_provider.dart';
 
 // Hive datasource provider
 final hiveWorkoutDataSourceProvider = Provider<HiveWorkoutDataSource>((ref) {
@@ -228,14 +232,15 @@ class CurrentWorkoutNotifier extends Notifier<Workout?> {
     _autoSaveIfNeeded();
   }
 
-  void createWorkout(String name) {
+  void createWorkout(String name, {String? templateId}) {
     state = Workout(
       id: const Uuid().v4(),
       name: name,
       createdAt: DateTime.now(),
       updatedAt: DateTime.now(),
+      templateId: templateId, // ✅ FIX: Pass templateId for duration tracking
     );
-    _currentTemplateId = null; // Reset template ID for manual workouts
+    _currentTemplateId = templateId; // Set template ID for auto-save (null for manual workouts)
   }
 
   void startFromTemplate(wt.WorkoutTemplate workoutTemplate) async {
@@ -288,6 +293,15 @@ class CurrentWorkoutNotifier extends Notifier<Workout?> {
       // Attiva wakelock se abilitato nelle impostazioni
       ref.read(screenWakelockProvider.notifier).startWakelock();
 
+      // ⌚ Notify Apple Watch about workout start
+      _notifyWatchWorkoutStarted();
+
+      // 📱 Start iOS 17+ Workout Session Live Activity
+      if (Platform.isIOS) {
+        debugPrint('[WorkoutProvider] 📱 Starting LA for template workout: ${state!.name}');
+        ref.read(workoutSessionLAProvider.notifier).startLiveActivity(state!);
+      }
+
       // Incrementa il contatore di utilizzo del template
       // Questo verrà gestito dal template provider
     } catch (e, stackTrace) {
@@ -324,24 +338,29 @@ class CurrentWorkoutNotifier extends Notifier<Workout?> {
 
       // ⌚ Notify Apple Watch about workout start
       _notifyWatchWorkoutStarted();
+
+      // 📱 Start iOS 17+ Workout Session Live Activity
+      if (Platform.isIOS) {
+        ref.read(workoutSessionLAProvider.notifier).startLiveActivity(state!);
+      }
     }
   }
 
   /// ⌚ Notify Apple Watch that workout has started
   void _notifyWatchWorkoutStarted() {
-    print('⌚ [FLUTTER DEBUG] _notifyWatchWorkoutStarted called');
+    debugPrint('⌚ [FLUTTER DEBUG] _notifyWatchWorkoutStarted called');
 
     if (state == null) {
-      print('⌚ [FLUTTER DEBUG] ❌ state is null, returning');
+      debugPrint('⌚ [FLUTTER DEBUG] ❌ state is null, returning');
       return;
     }
 
     final workout = state!;
     final firstExercise = workout.exercises.isNotEmpty ? workout.exercises.first : null;
 
-    print('⌚ [FLUTTER DEBUG] Workout: ${workout.name}');
-    print('⌚ [FLUTTER DEBUG] First exercise: ${firstExercise?.name ?? "none"}');
-    print('⌚ [FLUTTER DEBUG] Exercise count: ${workout.exercises.length}');
+    debugPrint('⌚ [FLUTTER DEBUG] Workout: ${workout.name}');
+    debugPrint('⌚ [FLUTTER DEBUG] First exercise: ${firstExercise?.name ?? "none"}');
+    debugPrint('⌚ [FLUTTER DEBUG] Exercise count: ${workout.exercises.length}');
 
     // ⌚ Setup callbacks for Watch → iPhone communication
     final watchNotifier = ref.read(watchConnectivityProvider.notifier);
@@ -349,7 +368,10 @@ class CurrentWorkoutNotifier extends Notifier<Workout?> {
     watchNotifier.onSkipRestFromWatch = _skipRestFromWatch;
     watchNotifier.onHealthMetricsFromWatch = _handleHealthMetricsFromWatch;
     watchNotifier.onEndWorkoutFromWatch = _endWorkoutFromWatch;
-    print('⌚ [FLUTTER DEBUG] ✅ Watch callbacks registered');
+    watchNotifier.onEditCompletedSetRepsFromWatch = _editCompletedSetRepsFromWatch;
+    watchNotifier.onUncompleteSetFromWatch = _uncompleteSetFromWatch;
+    watchNotifier.onSetModificationFromWatch = _updateCurrentSetTargetFromWatch;
+    debugPrint('⌚ [FLUTTER DEBUG] ✅ Watch callbacks registered');
 
     // Get RPE tracking settings from app config
     final appConfig = ref.read(appConfigProvider);
@@ -357,10 +379,19 @@ class CurrentWorkoutNotifier extends Notifier<Workout?> {
     final effortScale = appConfig.effortScale;
     // Get locale for Watch UI strings
     final locale = ref.read(localeProvider).languageCode;
-    print('⌚ [FLUTTER DEBUG] RPE Settings: enabled=$rpeTrackingEnabled, scale=$effortScale, locale=$locale');
+    debugPrint('⌚ [FLUTTER DEBUG] RPE Settings: enabled=$rpeTrackingEnabled, scale=$effortScale, locale=$locale');
 
     if (firstExercise != null) {
       // 📝 Get Form Cues for the exercise (async, fire and forget)
+      // ⌚ Use actual TUT or generate default (same logic as UI)
+      final effectiveTut = firstExercise.tut ?? _getDefaultTut(firstExercise);
+
+      // ✅ FIX: Build allSets list for Watch navigation
+      final allSets = firstExercise.sets.map((s) => {
+        'weight': s.weight?.toDouble() ?? 0.0,
+        'reps': s.reps ?? 0,
+      }).toList();
+
       _getFormCuesAndNotifyWatch(
         exerciseName: firstExercise.name,
         exerciseId: firstExercise.id,
@@ -372,11 +403,12 @@ class CurrentWorkoutNotifier extends Notifier<Workout?> {
         rpeTrackingEnabled: rpeTrackingEnabled,
         effortScale: effortScale,
         locale: locale,
-        tut: firstExercise.tut, // ⌚ BUG FIX #3: Time Under Tension
+        tut: effectiveTut, // ⌚ TUT with fallback to default
         isStartup: true,
+        allSets: allSets, // ✅ FIX: All sets for Watch navigation
       );
     } else {
-      print('⌚ [FLUTTER DEBUG] No first exercise, using workout name');
+      debugPrint('⌚ [FLUTTER DEBUG] No first exercise, using workout name');
       watchNotifier.notifyWorkoutStarted(
         exerciseName: workout.name,
         currentSet: 1,
@@ -389,6 +421,20 @@ class CurrentWorkoutNotifier extends Notifier<Workout?> {
     }
   }
 
+  /// ⌚ Get default TUT based on exercise type (same logic as UI)
+  String _getDefaultTut(Exercise exercise) {
+    switch (exercise.type) {
+      case ExerciseType.single:
+        return exercise.category == ExerciseCategory.legs ? '3-0-1-0' : '2-1-2-0';
+      case ExerciseType.superset:
+        return '2-0-1-0';
+      case ExerciseType.dropset:
+        return '2-1-2-0';
+      case ExerciseType.restPause:
+        return '2-1-2-1';
+    }
+  }
+
   /// Helper to get Form Cues and notify Watch
   Future<void> _getFormCuesAndNotifyWatch({
     required String exerciseName,
@@ -398,11 +444,14 @@ class CurrentWorkoutNotifier extends Notifier<Workout?> {
     double? targetWeight,
     int? targetReps,
     required int setsCompleted,
+    int? setsCompletedInExercise,   // ✅ Sets completed in current exercise (for edit UI)
+    int? lastCompletedReps,          // ✅ Actual reps of last completed set (for edit UI)
     required bool rpeTrackingEnabled,
     required String effortScale,
     required String locale,
     String? tut, // ⌚ BUG FIX #3: Time Under Tension (e.g., "3-1-2-0")
     bool isStartup = false,
+    List<Map<String, dynamic>>? allSets, // ✅ FIX: All sets for Watch navigation
   }) async {
     final watchNotifier = ref.read(watchConnectivityProvider.notifier);
     final prefsRepo = ref.read(userExercisePreferencesRepositoryProvider);
@@ -412,18 +461,56 @@ class CurrentWorkoutNotifier extends Notifier<Workout?> {
     try {
       formCues = await prefsRepo.getFormCues(exerciseId, exerciseName);
     } catch (e) {
-      print('⌚ [FLUTTER DEBUG] ⚠️ Failed to fetch Form Cues: $e');
+      debugPrint('⌚ [FLUTTER DEBUG] ⚠️ Failed to fetch Form Cues: $e');
     }
 
-    print('⌚ [FLUTTER DEBUG] Form Cues for $exerciseName: ${formCues ?? "none"}');
+    // 📚 Look up real TUT and noteTecniche from exercise database
+    String? effectiveTut = tut;
+    String? effectiveFormCues = formCues;
+    try {
+      final exercises = await ref.read(allExercisesProvider.future);
+      // Find by name (case-insensitive)
+      final normalizedName = exerciseName.toLowerCase().trim();
+      final dbExercise = exercises.cast<dynamic>().firstWhere(
+        (e) => (e.nome as String?)?.toLowerCase().trim() == normalizedName,
+        orElse: () => null,
+      );
+      if (dbExercise != null) {
+        // 📚 TUT from database (tempoEsecuzione)
+        if (dbExercise.tempoEsecuzione != null) {
+          effectiveTut = dbExercise.tempoEsecuzione as String;
+          debugPrint('⌚ [FLUTTER DEBUG] 📚 Found real TUT from database: $effectiveTut');
+        } else {
+          debugPrint('⌚ [FLUTTER DEBUG] 📚 No database TUT found, using fallback: $tut');
+        }
+        // 📝 Form Cues fallback from database (noteTecniche)
+        if (effectiveFormCues == null && dbExercise.noteTecniche != null) {
+          final noteTecniche = dbExercise.noteTecniche as String;
+          // Truncate for Watch display (max 500 chars, preserve first steps)
+          if (noteTecniche.length > 500) {
+            effectiveFormCues = '${noteTecniche.substring(0, 497)}...';
+          } else {
+            effectiveFormCues = noteTecniche;
+          }
+          debugPrint('⌚ [FLUTTER DEBUG] 📝 Using noteTecniche as Form Cues fallback');
+        }
+      } else {
+        debugPrint('⌚ [FLUTTER DEBUG] 📚 Exercise not found in database: $exerciseName');
+      }
+    } catch (e) {
+      debugPrint('⌚ [FLUTTER DEBUG] ⚠️ Failed to fetch from database: $e');
+    }
+
+    debugPrint('⌚ [FLUTTER DEBUG] Form Cues for $exerciseName: ${effectiveFormCues != null ? "${effectiveFormCues.length} chars (from db: ${effectiveFormCues != formCues})" : "none"}');
 
     if (isStartup) {
-      print('⌚ [FLUTTER DEBUG] Calling notifyWorkoutStarted with:');
-      print('   - exerciseName: $exerciseName');
-      print('   - currentSet: $currentSet');
-      print('   - totalSets: $totalSets');
-      print('   - formCues: ${formCues != null ? "${formCues.length} chars" : "none"}');
-      print('   - tut: ${tut ?? "none"}');
+      debugPrint('⌚ [FLUTTER DEBUG] Calling notifyWorkoutStarted with:');
+      debugPrint('   - exerciseName: $exerciseName');
+      debugPrint('   - currentSet: $currentSet');
+      debugPrint('   - totalSets: $totalSets');
+      debugPrint('   - formCues: ${effectiveFormCues != null ? "${effectiveFormCues.length} chars" : "none"}');
+      debugPrint('   - tut: ${effectiveTut ?? "none"} (from db: ${effectiveTut != tut})');
+      debugPrint('   - allSets: ${allSets?.length ?? 0} sets');
       watchNotifier.notifyWorkoutStarted(
         exerciseName: exerciseName,
         currentSet: currentSet,
@@ -431,13 +518,16 @@ class CurrentWorkoutNotifier extends Notifier<Workout?> {
         targetWeight: targetWeight,
         targetReps: targetReps,
         setsCompleted: setsCompleted,
+        setsCompletedInExercise: setsCompletedInExercise ?? 0,  // ✅ NEW
+        lastCompletedReps: lastCompletedReps,                    // ✅ NEW
         rpeTrackingEnabled: rpeTrackingEnabled,
         effortScale: effortScale,
         locale: locale,
-        formCues: formCues,
-        tut: tut, // ⌚ BUG FIX #3: Time Under Tension
+        formCues: effectiveFormCues, // 📝 User saved or noteTecniche fallback
+        tut: effectiveTut, // ⌚ Real TUT from database or fallback
+        allSets: allSets, // ✅ FIX: All sets for Watch navigation
       );
-      print('⌚ [FLUTTER DEBUG] ✅ notifyWorkoutStarted called successfully');
+      debugPrint('⌚ [FLUTTER DEBUG] ✅ notifyWorkoutStarted called successfully');
     } else {
       watchNotifier.sendWorkoutUpdate(
         exerciseName: exerciseName,
@@ -446,11 +536,14 @@ class CurrentWorkoutNotifier extends Notifier<Workout?> {
         targetWeight: targetWeight,
         targetReps: targetReps,
         setsCompleted: setsCompleted,
+        setsCompletedInExercise: setsCompletedInExercise ?? 0,  // ✅ NEW
+        lastCompletedReps: lastCompletedReps,                    // ✅ NEW
         rpeTrackingEnabled: rpeTrackingEnabled,
         effortScale: effortScale,
         locale: locale,
-        formCues: formCues,
-        tut: tut, // ⌚ BUG FIX #3: Time Under Tension
+        formCues: effectiveFormCues, // 📝 User saved or noteTecniche fallback
+        tut: effectiveTut, // ⌚ Real TUT from database or fallback
+        allSets: allSets, // ✅ FIX: All sets for Watch navigation
       );
     }
   }
@@ -480,6 +573,26 @@ class CurrentWorkoutNotifier extends Notifier<Workout?> {
     if (currentExercise != null) {
       final currentSetIndex = currentExercise.sets.indexWhere((s) => !s.isCompleted);
       final currentSet = currentSetIndex >= 0 ? currentExercise.sets[currentSetIndex] : null;
+      // ⌚ Use actual TUT or generate default (same logic as UI)
+      final effectiveTut = currentExercise.tut ?? _getDefaultTut(currentExercise);
+
+      // ✅ FIX: Calculate sets completed IN CURRENT EXERCISE (not total workout)
+      final setsCompletedInExercise = currentExercise.sets.where((s) => s.isCompleted).length;
+
+      // ✅ FIX: Get actualReps of last completed set in current exercise
+      int? lastCompletedReps;
+      for (int i = currentExercise.sets.length - 1; i >= 0; i--) {
+        if (currentExercise.sets[i].isCompleted) {
+          lastCompletedReps = currentExercise.sets[i].actualReps ?? currentExercise.sets[i].reps;
+          break;
+        }
+      }
+
+      // ✅ FIX: Build allSets list for Watch navigation
+      final allSets = currentExercise.sets.map((s) => {
+        'weight': s.weight?.toDouble() ?? 0.0,
+        'reps': s.reps ?? 0,
+      }).toList();
 
       // 📝 Use async helper to fetch Form Cues and send update
       _getFormCuesAndNotifyWatch(
@@ -490,11 +603,44 @@ class CurrentWorkoutNotifier extends Notifier<Workout?> {
         targetWeight: currentSet?.weight,
         targetReps: currentSet?.reps,
         setsCompleted: completedSets,
+        setsCompletedInExercise: setsCompletedInExercise,  // ✅ NEW
+        lastCompletedReps: lastCompletedReps,               // ✅ NEW
         rpeTrackingEnabled: rpeTrackingEnabled,
         effortScale: effortScale,
         locale: locale,
-        tut: currentExercise.tut, // ⌚ BUG FIX #3: Time Under Tension
+        tut: effectiveTut, // ⌚ TUT with fallback to default
         isStartup: false,
+        allSets: allSets, // ✅ FIX: All sets for Watch navigation
+      );
+    }
+  }
+
+  /// 📱 Update Live Activity if active (iOS only)
+  /// Called when workout structure changes (exercises/sets added/removed)
+  void _updateLiveActivityIfActive() {
+    if (!Platform.isIOS) return;
+    if (state == null) return;
+
+    final laState = ref.read(workoutSessionLAProvider);
+    if (!laState.isActive) return;
+
+    final workout = state!;
+
+    // Find current exercise (first with incomplete sets)
+    final currentExercise = workout.exercises.cast<Exercise?>().firstWhere(
+      (e) => e != null && e.sets.any((s) => !s.isCompleted),
+      orElse: () => null,
+    );
+
+    if (currentExercise != null) {
+      final completedExercises = workout.exercises
+          .where((e) => e.sets.every((s) => s.isCompleted))
+          .length;
+
+      ref.read(workoutSessionLAProvider.notifier).updateExercise(
+        currentExercise,
+        completedExercises,
+        workout.exercises.length,
       );
     }
   }
@@ -519,6 +665,15 @@ class CurrentWorkoutNotifier extends Notifier<Workout?> {
 
       // Re-enable wakelock if workout is active
       ref.read(screenWakelockProvider.notifier).startWakelock();
+
+      // ⌚ Notify Apple Watch about workout restore
+      _notifyWatchWorkoutStarted();
+
+      // 📱 Start iOS 17+ Workout Session Live Activity
+      if (Platform.isIOS) {
+        debugPrint('[WorkoutProvider] 📱 Starting LA for restored workout: ${workout.name}');
+        ref.read(workoutSessionLAProvider.notifier).startLiveActivity(workout);
+      }
     }
 
     // Track restoration event
@@ -607,6 +762,11 @@ class CurrentWorkoutNotifier extends Notifier<Workout?> {
 
       // ⌚ Notify Apple Watch that workout ended
       ref.read(watchConnectivityProvider.notifier).notifyWorkoutEnded();
+
+      // 📱 End iOS 17+ Workout Session Live Activity (show completion for 5s)
+      if (Platform.isIOS) {
+        ref.read(workoutSessionLAProvider.notifier).endLiveActivity(dismissPolicy: 'after_5s');
+      }
 
       // 💾 Clear cache after workout completion (start fresh next time)
       if (_currentTemplateId != null) {
@@ -1275,39 +1435,6 @@ class CurrentWorkoutNotifier extends Notifier<Workout?> {
     }
   }
 
-  /// ⚠️ ROUTINE FEATURE DISABLED (v2.0 API migration pending)
-  /// Auto-complete routine day if workout matches scheduled template
-  ///
-  /// This method is currently stubbed out and always returns false.
-  /// Uses RoutineAutoCompletionService for robust auto-completion with multi-day support.
-  /// Returns true if a routine day was auto-completed, false otherwise.
-  Future<bool> _autoCompleteRoutineDay(Workout workout, BuildContext? context) async {
-    // ⚠️ ROUTINE FEATURE DISABLED: Always return false
-    // TODO: Re-enable when v2.0 routine API is ready
-    return false;
-
-    // Original implementation commented out:
-    // final autoCompletionService = ref.read(routineAutoCompletionServiceProvider);
-    //
-    // final result = await autoCompletionService.tryAutoCompleteRoutineDay(
-    //   completedWorkout: workout,
-    //   context: context,
-    // );
-    //
-    // // If multiple candidate dates found, show UI for user selection
-    // // (For now, we skip this case - will implement UI in next task)
-    // if (result.candidateDates != null && result.candidateDates!.isNotEmpty) {
-    //   if (kDebugMode) {
-    //     debugLog(LogCategory.workout, 'ℹ️ [WorkoutProvider] Multiple candidate dates found, but UI selection not yet implemented');
-    //     debugLog(LogCategory.workout, '   Candidates: ${result.candidateDates}');
-    //   }
-    //   // TODO: Show DaySelectionBottomSheet for user to pick date
-    //   return false;
-    // }
-    //
-    // return result.completed;
-  }
-
   /// 📁 Export workout data to JSON file and share
   ///
   /// Creates a JSON file with complete workout data (exercises, sets, reps, etc.)
@@ -1438,6 +1565,12 @@ class CurrentWorkoutNotifier extends Notifier<Workout?> {
       // 💾 Auto-save modifications
       _autoSaveIfNeeded();
 
+      // ⌚ Sync to Watch
+      _notifyWatchWorkoutUpdate();
+
+      // 📱 Sync Live Activity (iOS)
+      _updateLiveActivityIfActive();
+
       // 📊 Track exercise added
       final analytics = ref.read(analyticsServiceProvider);
       final tracker = WorkoutEventTracker(analytics);
@@ -1475,6 +1608,12 @@ class CurrentWorkoutNotifier extends Notifier<Workout?> {
 
       // Auto-save
       _autoSaveIfNeeded();
+
+      // ⌚ Sync to Watch
+      _notifyWatchWorkoutUpdate();
+
+      // 📱 Sync Live Activity (iOS)
+      _updateLiveActivityIfActive();
 
       // Track analytics
       final analytics = ref.read(analyticsServiceProvider);
@@ -1517,6 +1656,12 @@ class CurrentWorkoutNotifier extends Notifier<Workout?> {
       // 💾 Auto-save modifications
       _autoSaveIfNeeded();
 
+      // ⌚ Sync to Watch
+      _notifyWatchWorkoutUpdate();
+
+      // 📱 Sync Live Activity (iOS)
+      _updateLiveActivityIfActive();
+
       // 📊 Track exercise removed
       final analytics = ref.read(analyticsServiceProvider);
       final tracker = WorkoutEventTracker(analytics);
@@ -1555,6 +1700,12 @@ class CurrentWorkoutNotifier extends Notifier<Workout?> {
 
       // 💾 BUG FIX #5: Save after reordering
       _autoSaveIfNeeded();
+
+      // ⌚ Sync to Watch
+      _notifyWatchWorkoutUpdate();
+
+      // 📱 Sync Live Activity (iOS)
+      _updateLiveActivityIfActive();
     } catch (e, stackTrace) {
       if (kDebugMode) {
         debugLog(LogCategory.workout, '❌ [WorkoutProvider] Error reordering exercises: $e');
@@ -1572,6 +1723,12 @@ class CurrentWorkoutNotifier extends Notifier<Workout?> {
 
       // 💾 Auto-save modifications
       _autoSaveIfNeeded();
+
+      // ⌚ Sync to Watch
+      _notifyWatchWorkoutUpdate();
+
+      // 📱 Sync Live Activity (iOS)
+      _updateLiveActivityIfActive();
 
       // 📊 Track exercise customized
       final analytics = ref.read(analyticsServiceProvider);
@@ -1680,6 +1837,11 @@ class CurrentWorkoutNotifier extends Notifier<Workout?> {
       // 💾 Auto-save modifications
       _autoSaveIfNeeded();
 
+      // ⌚ Sync to Watch
+      _notifyWatchWorkoutUpdate();
+
+      // 📱 Sync Live Activity (iOS)
+      _updateLiveActivityIfActive();
     } catch (e, stackTrace) {
       if (kDebugMode) {
         debugLog(LogCategory.workout, '❌ [WorkoutProvider] Error in updateExerciseOnly: $e');
@@ -1693,13 +1855,13 @@ class CurrentWorkoutNotifier extends Notifier<Workout?> {
   /// - effort: Optional effort value (RPE 6-10 or RIR 0-4)
   /// - effortScale: "rpe" or "rir" to indicate how to interpret the effort value
   void completeCurrentSetFromWatch({int? effort, String? effortScale}) {
-    print('⌚ [FLUTTER] completeCurrentSetFromWatch called');
+    debugPrint('⌚ [FLUTTER] completeCurrentSetFromWatch called');
     if (effort != null) {
-      print('⌚ [FLUTTER] Effort from Watch: $effort (${effortScale ?? "rpe"})');
+      debugPrint('⌚ [FLUTTER] Effort from Watch: $effort (${effortScale ?? "rpe"})');
     }
 
     if (state == null) {
-      print('⌚ [FLUTTER] ❌ No active workout');
+      debugPrint('⌚ [FLUTTER] ❌ No active workout');
       return;
     }
 
@@ -1712,7 +1874,7 @@ class CurrentWorkoutNotifier extends Notifier<Workout?> {
     );
 
     if (currentExercise == null) {
-      print('⌚ [FLUTTER] ❌ No exercise with incomplete sets');
+      debugPrint('⌚ [FLUTTER] ❌ No exercise with incomplete sets');
       return;
     }
 
@@ -1723,7 +1885,7 @@ class CurrentWorkoutNotifier extends Notifier<Workout?> {
     );
 
     if (currentSet == null) {
-      print('⌚ [FLUTTER] ❌ No incomplete set found');
+      debugPrint('⌚ [FLUTTER] ❌ No incomplete set found');
       return;
     }
 
@@ -1733,13 +1895,14 @@ class CurrentWorkoutNotifier extends Notifier<Workout?> {
     if (_lastCompletedSetId == currentSet.id &&
         _lastWatchSetCompletion != null &&
         now.difference(_lastWatchSetCompletion!).inSeconds < 3) {
-      print('⌚ [FLUTTER] ⚠️ Duplicate message ignored (set ${currentSet.id} already completed)');
+      debugPrint('⌚ [FLUTTER] ⚠️ Duplicate message ignored (set ${currentSet.id} already completed)');
       return;
     }
     _lastWatchSetCompletion = now;
     _lastCompletedSetId = currentSet.id;
 
-    print('⌚ [FLUTTER] ✅ Completing set ${currentSet.setNumber} of ${currentExercise.name}');
+    debugPrint('⌚ [FLUTTER] ✅ Completing set ${currentSet.setNumber} of ${currentExercise.name}');
+    debugPrint('⌚ [FLUTTER] Exercise ID: ${currentExercise.id}, Set ID: ${currentSet.id}');
 
     // Convert RIR to RPE if needed (RIR 0-4 → RPE 10-6)
     int? rpeValue = effort;
@@ -1750,7 +1913,7 @@ class CurrentWorkoutNotifier extends Notifier<Workout?> {
       // RIR 3 = RPE 7
       // RIR 4+ = RPE 6
       rpeValue = (10 - effort).clamp(6, 10);
-      print('⌚ [FLUTTER] Converted RIR $effort to RPE $rpeValue');
+      debugPrint('⌚ [FLUTTER] Converted RIR $effort to RPE $rpeValue');
     }
 
     // If we have an effort value, update the set with RPE before completing
@@ -1767,13 +1930,15 @@ class CurrentWorkoutNotifier extends Notifier<Workout?> {
           final updatedExercises = List<Exercise>.from(workout.exercises);
           updatedExercises[exerciseIndex] = updatedExercise;
           state = workout.copyWith(exercises: updatedExercises);
-          print('⌚ [FLUTTER] ✅ Updated set with RPE $rpeValue');
+          debugPrint('⌚ [FLUTTER] ✅ Updated set with RPE $rpeValue');
         }
       }
     }
 
     // Use existing completeSet method
+    debugPrint('⌚ [FLUTTER] 🎯 Calling completeSet...');
     completeSet(currentExercise.id, currentSet.id);
+    debugPrint('⌚ [FLUTTER] ✅ completeSet finished');
 
     // Update Watch with new state
     _notifyWatchWorkoutUpdate();
@@ -1781,7 +1946,7 @@ class CurrentWorkoutNotifier extends Notifier<Workout?> {
 
   /// ⌚ Skip rest timer when triggered from Apple Watch
   void _skipRestFromWatch() {
-    print('⌚ [FLUTTER] ⏭️ Skipping rest timer from Watch');
+    debugPrint('⌚ [FLUTTER] ⏭️ Skipping rest timer from Watch');
 
     // Skip the timer using the unified timer provider
     ref.read(unifiedTimerProvider.notifier).skipTimer();
@@ -1793,7 +1958,7 @@ class CurrentWorkoutNotifier extends Notifier<Workout?> {
 
   /// ⌚ Handle health metrics from Apple Watch (HR, calories)
   void _handleHealthMetricsFromWatch(double heartRate, double calories, double elapsedTime) {
-    print('⌚ [FLUTTER] Health metrics from Watch: HR=${heartRate.toInt()}, Cal=${calories.toInt()}, Time=${elapsedTime.toInt()}s');
+    debugPrint('⌚ [FLUTTER] Health metrics from Watch: HR=${heartRate.toInt()}, Cal=${calories.toInt()}, Time=${elapsedTime.toInt()}s');
     // TODO: Store/display these metrics in the workout UI
     // For now, we just log them - can be integrated into WorkoutHeader or a dedicated widget
   }
@@ -1801,10 +1966,10 @@ class CurrentWorkoutNotifier extends Notifier<Workout?> {
   /// ⌚ End workout when triggered from Apple Watch
   /// [save] - if true, save the workout; if false, discard it
   void _endWorkoutFromWatch({bool save = true}) {
-    print('⌚ [FLUTTER] 🏁 Ending workout from Watch (save: $save)');
+    debugPrint('⌚ [FLUTTER] 🏁 Ending workout from Watch (save: $save)');
 
     if (state == null) {
-      print('⌚ [FLUTTER] ⚠️ No active workout to end');
+      debugPrint('⌚ [FLUTTER] ⚠️ No active workout to end');
       return;
     }
 
@@ -1823,8 +1988,271 @@ class CurrentWorkoutNotifier extends Notifier<Workout?> {
     }
   }
 
+  /// ⌚ Edit a SPECIFIC completed set's reps when triggered from Apple Watch
+  /// - setIndex: 0-indexed position within completed sets of current exercise
+  ///   (0 = first completed set, 1 = second completed set, etc.)
+  /// - newReps: The new reps value to set
+  void _editCompletedSetRepsFromWatch(int setIndex, int newReps) {
+    debugPrint('⌚ [FLUTTER] ✏️ Editing completed set at index $setIndex to: $newReps reps');
+
+    if (state == null) {
+      debugPrint('⌚ [FLUTTER] ⚠️ No active workout');
+      return;
+    }
+
+    final workout = state!;
+
+    // Find the current exercise (first with incomplete sets, or last exercise if all complete)
+    Exercise? currentExercise;
+    for (final exercise in workout.exercises) {
+      final hasIncompleteSets = exercise.sets.any((s) => !s.isCompleted);
+      if (hasIncompleteSets) {
+        currentExercise = exercise;
+        break;
+      }
+    }
+
+    // If all exercises are complete, use the last exercise
+    currentExercise ??= workout.exercises.isNotEmpty ? workout.exercises.last : null;
+
+    if (currentExercise == null) {
+      debugPrint('⌚ [FLUTTER] ⚠️ No exercise found');
+      return;
+    }
+
+    // Build list of completed sets with their original indices
+    final completedSets = <({ExerciseSet set, int originalIndex})>[];
+    for (int i = 0; i < currentExercise.sets.length; i++) {
+      if (currentExercise.sets[i].isCompleted) {
+        completedSets.add((set: currentExercise.sets[i], originalIndex: i));
+      }
+    }
+
+    // Validate setIndex
+    if (setIndex < 0 || setIndex >= completedSets.length) {
+      debugPrint('⌚ [FLUTTER] ⚠️ Invalid setIndex $setIndex (have ${completedSets.length} completed sets)');
+      return;
+    }
+
+    // Get the target set
+    final target = completedSets[setIndex];
+    final targetSet = target.set;
+    final originalIndex = target.originalIndex;
+
+    debugPrint('⌚ [FLUTTER] Found target set: #${targetSet.setNumber} at index $originalIndex (actualReps: ${targetSet.actualReps} → $newReps)');
+
+    // Update the set with new actualReps
+    final updatedSet = targetSet.copyWith(actualReps: newReps);
+    final updatedSets = List<ExerciseSet>.from(currentExercise.sets);
+    updatedSets[originalIndex] = updatedSet;
+    final updatedExercise = currentExercise.copyWith(sets: updatedSets);
+
+    // Find and update exercise in workout
+    final exerciseIndex = workout.exercises.indexWhere((e) => e.id == currentExercise!.id);
+    if (exerciseIndex >= 0) {
+      final updatedExercises = List<Exercise>.from(workout.exercises);
+      updatedExercises[exerciseIndex] = updatedExercise;
+      state = workout.copyWith(
+        exercises: updatedExercises,
+        updatedAt: DateTime.now(),
+      );
+
+      debugPrint('⌚ [FLUTTER] ✅ Updated set ${targetSet.setNumber} actualReps to $newReps');
+
+      // Trigger auto-save
+      _autoSaveIfNeeded();
+
+      // Update Watch with new state
+      _notifyWatchWorkoutUpdate();
+
+      // 📱 Sync Live Activity (iOS)
+      _updateLiveActivityIfActive();
+    }
+  }
+
+  /// ⌚ Uncomplete (undo) a completed set from Watch
+  /// - Parameter setIndex: 0-indexed position in completed sets list
+  void _uncompleteSetFromWatch(int setIndex) {
+    debugPrint('⌚ [FLUTTER] ↩️ Uncompleting set at index $setIndex');
+
+    if (state == null) {
+      debugPrint('⌚ [FLUTTER] ⚠️ No active workout');
+      return;
+    }
+
+    final workout = state!;
+
+    // Find the current exercise (first with incomplete sets, or last exercise if all complete)
+    Exercise? currentExercise;
+    for (final exercise in workout.exercises) {
+      final hasIncompleteSets = exercise.sets.any((s) => !s.isCompleted);
+      if (hasIncompleteSets) {
+        currentExercise = exercise;
+        break;
+      }
+    }
+
+    // If all exercises are complete, use the last exercise
+    currentExercise ??= workout.exercises.isNotEmpty ? workout.exercises.last : null;
+
+    if (currentExercise == null) {
+      debugPrint('⌚ [FLUTTER] ⚠️ No exercise found');
+      return;
+    }
+
+    // Build list of completed sets with their original indices
+    final completedSets = <({ExerciseSet set, int originalIndex})>[];
+    for (int i = 0; i < currentExercise.sets.length; i++) {
+      if (currentExercise.sets[i].isCompleted) {
+        completedSets.add((set: currentExercise.sets[i], originalIndex: i));
+      }
+    }
+
+    // Validate setIndex
+    if (setIndex < 0 || setIndex >= completedSets.length) {
+      debugPrint('⌚ [FLUTTER] ⚠️ Invalid setIndex $setIndex (have ${completedSets.length} completed sets)');
+      return;
+    }
+
+    // Get the target set
+    final target = completedSets[setIndex];
+    final targetSet = target.set;
+    final originalIndex = target.originalIndex;
+
+    debugPrint('⌚ [FLUTTER] Found target set: #${targetSet.setNumber} at index $originalIndex - marking as incomplete');
+
+    // ✅ FIX: Create new set directly instead of copyWith (copyWith can't set null values)
+    final updatedSet = ExerciseSet(
+      id: targetSet.id,
+      setNumber: targetSet.setNumber,
+      weight: targetSet.weight,
+      reps: targetSet.reps,
+      actualReps: null,  // ✅ Reset to null
+      rpe: null,         // ✅ Reset to null
+      restTime: targetSet.restTime,
+      seconds: targetSet.seconds,
+      distance: targetSet.distance,
+      isCompleted: false, // ✅ Mark as incomplete
+      notes: targetSet.notes,
+      completedAt: null,  // ✅ Reset to null
+      setDurationMillis: null,  // ✅ Reset to null
+      setStartedAt: null,  // ✅ Reset to null
+      isWarmup: targetSet.isWarmup,
+    );
+    final updatedSets = List<ExerciseSet>.from(currentExercise.sets);
+    updatedSets[originalIndex] = updatedSet;
+    final updatedExercise = currentExercise.copyWith(sets: updatedSets);
+
+    // Find and update exercise in workout
+    final exerciseIndex = workout.exercises.indexWhere((e) => e.id == currentExercise!.id);
+    if (exerciseIndex >= 0) {
+      final updatedExercises = List<Exercise>.from(workout.exercises);
+      updatedExercises[exerciseIndex] = updatedExercise;
+      state = workout.copyWith(
+        exercises: updatedExercises,
+        updatedAt: DateTime.now(),
+      );
+
+      debugPrint('⌚ [FLUTTER] ✅ Uncompleted set ${targetSet.setNumber}');
+
+      // Trigger auto-save
+      _autoSaveIfNeeded();
+
+      // Update Watch with new state
+      _notifyWatchWorkoutUpdate();
+
+      // 📱 Sync Live Activity (iOS)
+      _updateLiveActivityIfActive();
+    }
+  }
+
+  /// ⌚ Update current set target (weight/reps) from Watch
+  /// Called when user edits the target using Digital Crown before completing
+  void _updateCurrentSetTargetFromWatch(double weight, int reps) {
+    debugPrint('⌚ [FLUTTER] ✏️ Updating current set target: ${weight}kg × $reps reps');
+
+    if (state == null) {
+      debugPrint('⌚ [FLUTTER] ⚠️ No active workout');
+      return;
+    }
+
+    final workout = state!;
+
+    // Find the current exercise (first with incomplete sets)
+    Exercise? currentExercise;
+    int exerciseIndex = -1;
+    for (int i = 0; i < workout.exercises.length; i++) {
+      final exercise = workout.exercises[i];
+      final hasIncompleteSets = exercise.sets.any((s) => !s.isCompleted);
+      if (hasIncompleteSets) {
+        currentExercise = exercise;
+        exerciseIndex = i;
+        break;
+      }
+    }
+
+    if (currentExercise == null || exerciseIndex < 0) {
+      debugPrint('⌚ [FLUTTER] ⚠️ No exercise with incomplete sets found');
+      return;
+    }
+
+    // Find the first incomplete set (current set to modify)
+    int currentSetIndex = -1;
+    for (int i = 0; i < currentExercise.sets.length; i++) {
+      if (!currentExercise.sets[i].isCompleted) {
+        currentSetIndex = i;
+        break;
+      }
+    }
+
+    if (currentSetIndex < 0) {
+      debugPrint('⌚ [FLUTTER] ⚠️ No incomplete set found');
+      return;
+    }
+
+    final currentSet = currentExercise.sets[currentSetIndex];
+    debugPrint('⌚ [FLUTTER] Found current set: #${currentSet.setNumber} at index $currentSetIndex');
+
+    // Update the set with new weight and reps
+    final updatedSet = currentSet.copyWith(
+      weight: weight,
+      reps: reps,
+    );
+
+    final updatedSets = List<ExerciseSet>.from(currentExercise.sets);
+    updatedSets[currentSetIndex] = updatedSet;
+    final updatedExercise = currentExercise.copyWith(sets: updatedSets);
+
+    // Update exercise in workout
+    final updatedExercises = List<Exercise>.from(workout.exercises);
+    updatedExercises[exerciseIndex] = updatedExercise;
+    state = workout.copyWith(
+      exercises: updatedExercises,
+      updatedAt: DateTime.now(),
+    );
+
+    debugPrint('⌚ [FLUTTER] ✅ Updated set ${currentSet.setNumber} target to ${weight}kg × $reps reps');
+
+    // ✅ DEBUG: Verify the state was updated correctly
+    final verifyExercise = state!.exercises[exerciseIndex];
+    final verifySet = verifyExercise.sets[currentSetIndex];
+    debugPrint('⌚ [FLUTTER] 🔍 VERIFY: Exercise "${verifyExercise.name}" Set #${verifySet.setNumber}');
+    debugPrint('⌚ [FLUTTER] 🔍 VERIFY: weight=${verifySet.weight}, reps=${verifySet.reps}');
+
+    // Trigger auto-save
+    _autoSaveIfNeeded();
+
+    // Update Watch with new state (confirms the change)
+    _notifyWatchWorkoutUpdate();
+  }
+
   void completeSet(String exerciseId, String setId) {
-    if (state == null) return;
+    debugPrint('🏋️ [completeSet] Called with exerciseId=$exerciseId, setId=$setId');
+    if (state == null) {
+      debugPrint('🏋️ [completeSet] ❌ state is null, returning early');
+      return;
+    }
+    debugPrint('🏋️ [completeSet] ✅ state exists, proceeding...');
 
     // 🔒 SESSION: Record activity to prevent auto-logout during workout
     ref.read(sessionActivityRecorderProvider);
@@ -1904,20 +2332,24 @@ class CurrentWorkoutNotifier extends Notifier<Workout?> {
       // ⌚ Notify Apple Watch about set completion
       _notifyWatchWorkoutUpdate();
 
+      // 🔍 DEBUG: Log timer decision parameters
+      debugPrint('⏰ [TIMER DEBUG] completeSet finished - checking timer conditions:');
+      debugPrint('⏰ [TIMER DEBUG] targetExercise: ${targetExercise?.name ?? "NULL"}');
+      debugPrint('⏰ [TIMER DEBUG] completedSetNumber: $completedSetNumber');
+      debugPrint('⏰ [TIMER DEBUG] totalSets: $totalSets');
+
       // ✅ BUG #2 FIX: Auto-start rest timer after completing a set
       if (targetExercise != null && completedSetNumber > 0) {
         // Check if not the last set
         final isLastSet = completedSetNumber >= totalSets;
+        debugPrint('⏰ [TIMER DEBUG] isLastSet: $isLastSet');
 
         if (!isLastSet) {
           // Get rest time from exercise (default 90 seconds)
           final restTime = targetExercise!.restTime ?? 90;
           final nextSetNumber = completedSetNumber + 1;
 
-          if (kDebugMode) {
-            debugLog(LogCategory.workout, '⏰ [AUTO-TIMER] Starting rest timer after set $completedSetNumber/$totalSets');
-            debugLog(LogCategory.workout, '⏰ [AUTO-TIMER] Duration: ${restTime}s for next set $nextSetNumber');
-          }
+          debugPrint('⏰ [TIMER] 🚀 Starting rest timer: ${restTime}s for set $nextSetNumber/$totalSets');
 
           // Start the timer automatically
           ref.read(unifiedTimerProvider.notifier).startTimer(
@@ -1927,6 +2359,20 @@ class CurrentWorkoutNotifier extends Notifier<Workout?> {
             totalSets: totalSets,
             exerciseId: targetExercise!.id,
           );
+
+          debugPrint('⏰ [TIMER] ✅ Timer start called!');
+
+          // 📱 iOS 17+: Transition Live Activity to rest mode
+          if (Platform.isIOS) {
+            final laState = ref.read(workoutSessionLAProvider);
+            debugPrint('[WorkoutProvider] 📱 LA state before transition: isActive=${laState.isActive}, activityId=${laState.activityId}');
+
+            ref.read(workoutSessionLAProvider.notifier).transitionToRest(
+              restDurationSeconds: restTime,
+              nextExercise: targetExercise!,
+              nextSetIndex: nextSetNumber,
+            );
+          }
         } else {
           if (kDebugMode) {
             debugLog(LogCategory.workout, '⏰ [AUTO-TIMER] Last set completed - no timer started');
@@ -1967,6 +2413,9 @@ class CurrentWorkoutNotifier extends Notifier<Workout?> {
       // ⌚ BUG FIX #2: Notify Watch when set completion state changes
       // This ensures deselecting a set (marking incomplete) syncs to Watch
       _notifyWatchWorkoutUpdate();
+
+      // 📱 Sync Live Activity (iOS)
+      _updateLiveActivityIfActive();
     } catch (e, stackTrace) {
       if (kDebugMode) {
         debugLog(LogCategory.workout, '❌ [WorkoutProvider] Error updating exercise set: $e');
@@ -1997,6 +2446,12 @@ class CurrentWorkoutNotifier extends Notifier<Workout?> {
       }).toList();
 
       state = state!.copyWith(exercises: updatedExercises);
+
+      // ⌚ Sync to Watch
+      _notifyWatchWorkoutUpdate();
+
+      // 📱 Sync Live Activity (iOS)
+      _updateLiveActivityIfActive();
     } catch (e, stackTrace) {
       if (kDebugMode) {
         debugLog(LogCategory.workout, '❌ [WorkoutProvider] Error updating superset set: $e');
@@ -2030,6 +2485,12 @@ class CurrentWorkoutNotifier extends Notifier<Workout?> {
       }).toList();
 
       state = state!.copyWith(exercises: updatedExercises);
+
+      // ⌚ Sync to Watch
+      _notifyWatchWorkoutUpdate();
+
+      // 📱 Sync Live Activity (iOS)
+      _updateLiveActivityIfActive();
     } catch (e, stackTrace) {
       if (kDebugMode) {
         debugLog(LogCategory.workout, '❌ [WorkoutProvider] Error adding set to exercise: $e');
@@ -2066,6 +2527,12 @@ class CurrentWorkoutNotifier extends Notifier<Workout?> {
       }).toList();
 
       state = state!.copyWith(exercises: updatedExercises);
+
+      // ⌚ Sync to Watch
+      _notifyWatchWorkoutUpdate();
+
+      // 📱 Sync Live Activity (iOS)
+      _updateLiveActivityIfActive();
     } catch (e, stackTrace) {
       if (kDebugMode) {
         debugLog(LogCategory.workout, '❌ [WorkoutProvider] Error removing set from exercise: $e');
@@ -2122,6 +2589,12 @@ class CurrentWorkoutNotifier extends Notifier<Workout?> {
       }).toList();
 
       state = state!.copyWith(exercises: updatedExercises);
+
+      // ⌚ Sync to Watch
+      _notifyWatchWorkoutUpdate();
+
+      // 📱 Sync Live Activity (iOS)
+      _updateLiveActivityIfActive();
     } catch (e, stackTrace) {
       if (kDebugMode) {
         debugLog(LogCategory.workout, '❌ [WorkoutProvider] Error adding round to superset: $e');
@@ -2161,6 +2634,12 @@ class CurrentWorkoutNotifier extends Notifier<Workout?> {
       }).toList();
 
       state = state!.copyWith(exercises: updatedExercises);
+
+      // ⌚ Sync to Watch
+      _notifyWatchWorkoutUpdate();
+
+      // 📱 Sync Live Activity (iOS)
+      _updateLiveActivityIfActive();
     } catch (e, stackTrace) {
       if (kDebugMode) {
         debugLog(LogCategory.workout, '❌ [WorkoutProvider] Error removing round from superset: $e');
@@ -2222,6 +2701,16 @@ class CurrentWorkoutNotifier extends Notifier<Workout?> {
           elapsedSeconds: state!.duration?.inSeconds ?? 0,
           exerciseCount: state!.exercises.length,
         );
+
+        // ⌚ BUG FIX: Notify Watch to discard HKWorkoutSession
+        // Without this, Watch keeps its session running and SAVES to HealthKit
+        // when the session eventually ends, adding phantom workout minutes
+        ref.read(watchConnectivityProvider.notifier).notifyWorkoutEnded();
+
+        // 📱 End iOS 17+ Workout Session Live Activity
+        if (Platform.isIOS) {
+          ref.read(workoutSessionLAProvider.notifier).endLiveActivity(dismissPolicy: 'immediate');
+        }
       }
 
       state = null;
