@@ -2299,6 +2299,14 @@
   "@days": {
     "description": "Unit for days count"
   },
+  "noDataToShare": "No data to share",
+  "@noDataToShare": {
+    "description": "Message when there is no exercise data to share"
+  },
+  "errorSharingPdf": "Error sharing PDF",
+  "@errorSharingPdf": {
+    "description": "Error message when PDF sharing fails"
+  },
   "errorLoadingData": "Error loading data",
   "@errorLoadingData": {
     "description": "Error loading data message"
@@ -6774,6 +6782,14 @@
   "@pdfExportOptions": {
     "description": "Title for PDF export options dialog"
   },
+  "selectPdfFormat": "Select the export format",
+  "@selectPdfFormat": {
+    "description": "Subtitle for PDF export options"
+  },
+  "exportPdf": "Export PDF",
+  "@exportPdf": {
+    "description": "Button text for exporting PDF"
+  },
   "pdfDetailLevelCompact": "Compact Format",
   "@pdfDetailLevelCompact": {
     "description": "Option for compact PDF format"
@@ -10458,6 +10474,18 @@
   "@dropsetCompleted": {
     "description": "Success message when dropset is complete"
   },
+  "howHardWasTheDropset": "How hard was this dropset?",
+  "@howHardWasTheDropset": {
+    "description": "Question asking user to rate the overall dropset effort"
+  },
+  "stagesBreakdown": "Stages Breakdown",
+  "@stagesBreakdown": {
+    "description": "Title for the list of completed dropset stages"
+  },
+  "totalReps": "Total Reps",
+  "@totalReps": {
+    "description": "Label for total repetitions across all stages"
+  },
   "completeDropset": "Complete DropSet",
   "@completeDropset": {
     "description": "Button to complete entire dropset"
@@ -10471,6 +10499,19 @@
       }
     }
   },
+  "stageCompleted": "Stage {number} completed!",
+  "@stageCompleted": {
+    "description": "Success message when stage is completed",
+    "placeholders": {
+      "number": {
+        "type": "int"
+      }
+    }
+  },
+  "continueToNextStage": "Continue to next stage",
+  "@continueToNextStage": {
+    "description": "Message prompting to continue to next dropset stage"
+  },
   "cancelDropset": "Cancel DropSet?",
   "@cancelDropset": {
     "description": "Cancel dropset confirmation title"
@@ -10483,9 +10524,135 @@
   "@executeDropset": {
     "description": "Button to start dropset execution"
   },
+  "rerunDropset": "Re-run DropSet",
+  "@rerunDropset": {
+    "description": "Button to restart a completed dropset"
+  },
+  "addDropsetStage": "Add Extra Stage",
+  "@addDropsetStage": {
+    "description": "Title for adding a new stage to dropset"
+  },
+  "previousStageInfo": "Previous: {weight}kg × {reps} reps",
+  "@previousStageInfo": {
+    "description": "Info about previous dropset stage",
+    "placeholders": {
+      "weight": {
+        "type": "String"
+      },
+      "reps": {
+        "type": "int"
+      }
+    }
+  },
+  "quickWeightDrop": "Quick drop",
+  "@quickWeightDrop": {
+    "description": "Label for quick weight drop chips"
+  },
+  "addStage": "Add Stage",
+  "@addStage": {
+    "description": "Button to confirm adding new stage"
+  },
+  "dropsetNeedsMinStages": "DropSet needs at least 2 stages with valid weights",
+  "@dropsetNeedsMinStages": {
+    "description": "Error message when dropset has less than 2 valid stages"
+  },
   "executeRestPause": "Execute Rest-Pause",
   "@executeRestPause": {
     "description": "Button to start rest-pause execution"
+  },
+  "cancelRestPause": "Cancel Rest-Pause?",
+  "@cancelRestPause": {
+    "description": "Cancel rest-pause dialog title"
+  },
+  "cancelRestPauseMessage": "Your progress will not be saved. Are you sure?",
+  "@cancelRestPauseMessage": {
+    "description": "Cancel rest-pause dialog message"
+  },
+  "restPauseGoToFailure": "Go to failure or near failure",
+  "@restPauseGoToFailure": {
+    "description": "Instruction for rest-pause set"
+  },
+  "repsRemaining": "{count} reps remaining to target",
+  "@repsRemaining": {
+    "description": "Remaining reps to reach target",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "startSet": "Start Set",
+  "@startSet": {
+    "description": "Button to start a set"
+  },
+  "finishRestPause": "Finish Early",
+  "@finishRestPause": {
+    "description": "Button to finish rest-pause early"
+  },
+  "secondsRest": "seconds rest",
+  "@secondsRest": {
+    "description": "Label for rest timer"
+  },
+  "skipRest": "Skip Rest",
+  "@skipRest": {
+    "description": "Button to skip rest timer"
+  },
+  "howManyReps": "How many reps did you complete?",
+  "@howManyReps": {
+    "description": "Question for logging reps"
+  },
+  "logReps": "Log Reps",
+  "@logReps": {
+    "description": "Button to log reps"
+  },
+  "restPauseCompleted": "Rest-Pause Completed!",
+  "@restPauseCompleted": {
+    "description": "Title when rest-pause is finished"
+  },
+  "restPauseSummary": "{sets} sets, {reps} total reps",
+  "@restPauseSummary": {
+    "description": "Summary of rest-pause completion",
+    "placeholders": {
+      "sets": {
+        "type": "int"
+      },
+      "reps": {
+        "type": "int"
+      }
+    }
+  },
+  "howHardWasIt": "How hard was it?",
+  "@howHardWasIt": {
+    "description": "Question for RPE selection"
+  },
+  "completedSets": "Completed Sets",
+  "@completedSets": {
+    "description": "Label for completed sets list"
+  },
+  "rerunRestPause": "Re-run Rest-Pause",
+  "@rerunRestPause": {
+    "description": "Button to restart a completed rest-pause"
+  },
+  "restPauseAlreadyCompleted": "This rest-pause has already been completed. Do you want to run it again?",
+  "@restPauseAlreadyCompleted": {
+    "description": "Message when trying to execute already completed rest-pause"
+  },
+  "addRestPauseSet": "Add Extra Set",
+  "@addRestPauseSet": {
+    "description": "Button to add extra set to rest-pause"
+  },
+  "quickRepSelection": "Quick Selection",
+  "@quickRepSelection": {
+    "description": "Label for quick rep selection chips"
+  },
+  "restPauseSets": "{count, plural, =1{1 set} other{{count} sets}}",
+  "@restPauseSets": {
+    "description": "Rest-pause set count",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
   },
   "keepWorkoutActiveContent": "Do you want to go back to Home and keep your workout running in the background?\\n\\nYou can return to continue your workout anytime.",
   "@keepWorkoutActiveContent": {
@@ -15735,6 +15902,18 @@
   "countingModeChanged": "Counting format updated!",
   "@countingModeChanged": {
     "description": "Success message after counting mode change"
+  },
+  "countingModeChangedAndSaved": "Counting format saved as default!",
+  "@countingModeChangedAndSaved": {
+    "description": "Success message when counting mode is changed and saved permanently"
+  },
+  "saveAsDefaultForExercise": "Remember for this exercise",
+  "@saveAsDefaultForExercise": {
+    "description": "Checkbox label to save counting mode as default"
+  },
+  "saveAsDefaultForExerciseDesc": "Apply this format automatically in future workouts",
+  "@saveAsDefaultForExerciseDesc": {
+    "description": "Description for save as default checkbox"
   },
   "analyticsFeedbackThankYou": "Thank you for your feedback!",
   "@analyticsFeedbackThankYou": {

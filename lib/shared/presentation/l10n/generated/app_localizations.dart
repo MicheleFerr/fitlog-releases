@@ -3451,6 +3451,18 @@ abstract class AppLocalizations {
   /// **'days'**
   String get days;
 
+  /// Message when there is no exercise data to share
+  ///
+  /// In en, this message translates to:
+  /// **'No data to share'**
+  String get noDataToShare;
+
+  /// Error message when PDF sharing fails
+  ///
+  /// In en, this message translates to:
+  /// **'Error sharing PDF'**
+  String get errorSharingPdf;
+
   /// Generic error message for loading data
   ///
   /// In en, this message translates to:
@@ -7973,7 +7985,7 @@ abstract class AppLocalizations {
   /// **'Stages'**
   String get stages;
 
-  /// Add new drop set stage button
+  /// Button to confirm adding new stage
   ///
   /// In en, this message translates to:
   /// **'Add Stage'**
@@ -9496,6 +9508,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'PDF Export Options'**
   String get pdfExportOptions;
+
+  /// Subtitle for PDF export options
+  ///
+  /// In en, this message translates to:
+  /// **'Select the export format'**
+  String get selectPdfFormat;
+
+  /// Button text for exporting PDF
+  ///
+  /// In en, this message translates to:
+  /// **'Export PDF'**
+  String get exportPdf;
 
   /// Option for compact PDF format
   ///
@@ -13607,7 +13631,7 @@ abstract class AppLocalizations {
   /// **'Execute'**
   String get execute;
 
-  /// Button to skip rest period
+  /// Button to skip rest timer
   ///
   /// In en, this message translates to:
   /// **'Skip Rest'**
@@ -15794,6 +15818,24 @@ abstract class AppLocalizations {
   /// **'DropSet completed! 💪'**
   String get dropsetCompleted;
 
+  /// Question asking user to rate the overall dropset effort
+  ///
+  /// In en, this message translates to:
+  /// **'How hard was this dropset?'**
+  String get howHardWasTheDropset;
+
+  /// Title for the list of completed dropset stages
+  ///
+  /// In en, this message translates to:
+  /// **'Stages Breakdown'**
+  String get stagesBreakdown;
+
+  /// Label for total repetitions across all stages
+  ///
+  /// In en, this message translates to:
+  /// **'Total Reps'**
+  String get totalReps;
+
   /// Button to complete entire dropset
   ///
   /// In en, this message translates to:
@@ -15805,6 +15847,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Complete Stage {number}'**
   String completeStage(int number);
+
+  /// Success message when stage is completed
+  ///
+  /// In en, this message translates to:
+  /// **'Stage {number} completed!'**
+  String stageCompleted(int number);
+
+  /// Message prompting to continue to next dropset stage
+  ///
+  /// In en, this message translates to:
+  /// **'Continue to next stage'**
+  String get continueToNextStage;
 
   /// Cancel dropset confirmation title
   ///
@@ -15824,11 +15878,149 @@ abstract class AppLocalizations {
   /// **'Execute DropSet'**
   String get executeDropset;
 
+  /// Button to restart a completed dropset
+  ///
+  /// In en, this message translates to:
+  /// **'Re-run DropSet'**
+  String get rerunDropset;
+
+  /// Title for adding a new stage to dropset
+  ///
+  /// In en, this message translates to:
+  /// **'Add Extra Stage'**
+  String get addDropsetStage;
+
+  /// Info about previous dropset stage
+  ///
+  /// In en, this message translates to:
+  /// **'Previous: {weight}kg × {reps} reps'**
+  String previousStageInfo(String weight, int reps);
+
+  /// Label for quick weight drop chips
+  ///
+  /// In en, this message translates to:
+  /// **'Quick drop'**
+  String get quickWeightDrop;
+
+  /// Error message when dropset has less than 2 valid stages
+  ///
+  /// In en, this message translates to:
+  /// **'DropSet needs at least 2 stages with valid weights'**
+  String get dropsetNeedsMinStages;
+
   /// Button to start rest-pause execution
   ///
   /// In en, this message translates to:
   /// **'Execute Rest-Pause'**
   String get executeRestPause;
+
+  /// Cancel rest-pause dialog title
+  ///
+  /// In en, this message translates to:
+  /// **'Cancel Rest-Pause?'**
+  String get cancelRestPause;
+
+  /// Cancel rest-pause dialog message
+  ///
+  /// In en, this message translates to:
+  /// **'Your progress will not be saved. Are you sure?'**
+  String get cancelRestPauseMessage;
+
+  /// Instruction for rest-pause set
+  ///
+  /// In en, this message translates to:
+  /// **'Go to failure or near failure'**
+  String get restPauseGoToFailure;
+
+  /// Remaining reps to reach target
+  ///
+  /// In en, this message translates to:
+  /// **'{count} reps remaining to target'**
+  String repsRemaining(int count);
+
+  /// Button to start a set
+  ///
+  /// In en, this message translates to:
+  /// **'Start Set'**
+  String get startSet;
+
+  /// Button to finish rest-pause early
+  ///
+  /// In en, this message translates to:
+  /// **'Finish Early'**
+  String get finishRestPause;
+
+  /// Label for rest timer
+  ///
+  /// In en, this message translates to:
+  /// **'seconds rest'**
+  String get secondsRest;
+
+  /// Question for logging reps
+  ///
+  /// In en, this message translates to:
+  /// **'How many reps did you complete?'**
+  String get howManyReps;
+
+  /// Button to log reps
+  ///
+  /// In en, this message translates to:
+  /// **'Log Reps'**
+  String get logReps;
+
+  /// Title when rest-pause is finished
+  ///
+  /// In en, this message translates to:
+  /// **'Rest-Pause Completed!'**
+  String get restPauseCompleted;
+
+  /// Summary of rest-pause completion
+  ///
+  /// In en, this message translates to:
+  /// **'{sets} sets, {reps} total reps'**
+  String restPauseSummary(int sets, int reps);
+
+  /// Question for RPE selection
+  ///
+  /// In en, this message translates to:
+  /// **'How hard was it?'**
+  String get howHardWasIt;
+
+  /// Label for completed sets list
+  ///
+  /// In en, this message translates to:
+  /// **'Completed Sets'**
+  String get completedSets;
+
+  /// Button to restart a completed rest-pause
+  ///
+  /// In en, this message translates to:
+  /// **'Re-run Rest-Pause'**
+  String get rerunRestPause;
+
+  /// Message when trying to execute already completed rest-pause
+  ///
+  /// In en, this message translates to:
+  /// **'This rest-pause has already been completed. Do you want to run it again?'**
+  String get restPauseAlreadyCompleted;
+
+  /// Button to add extra set to rest-pause
+  ///
+  /// In en, this message translates to:
+  /// **'Add Extra Set'**
+  String get addRestPauseSet;
+
+  /// Label for quick rep selection chips
+  ///
+  /// In en, this message translates to:
+  /// **'Quick Selection'**
+  String get quickRepSelection;
+
+  /// Rest-pause set count
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 set} other{{count} sets}}'**
+  String restPauseSets(int count);
 
   /// Keep workout active dialog content
   ///
@@ -23129,6 +23321,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Counting format updated!'**
   String get countingModeChanged;
+
+  /// Success message when counting mode is changed and saved permanently
+  ///
+  /// In en, this message translates to:
+  /// **'Counting format saved as default!'**
+  String get countingModeChangedAndSaved;
+
+  /// Checkbox label to save counting mode as default
+  ///
+  /// In en, this message translates to:
+  /// **'Remember for this exercise'**
+  String get saveAsDefaultForExercise;
+
+  /// Description for save as default checkbox
+  ///
+  /// In en, this message translates to:
+  /// **'Apply this format automatically in future workouts'**
+  String get saveAsDefaultForExerciseDesc;
 
   /// Thank you message after submitting analytics feedback
   ///

@@ -1810,6 +1810,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get days => 'days';
 
   @override
+  String get noDataToShare => 'No data to share';
+
+  @override
+  String get errorSharingPdf => 'Error sharing PDF';
+
+  @override
   String get errorLoadingData => 'Error loading data';
 
   @override
@@ -5135,6 +5141,12 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get pdfExportOptions => 'PDF Export Options';
+
+  @override
+  String get selectPdfFormat => 'Select the export format';
+
+  @override
+  String get exportPdf => 'Export PDF';
 
   @override
   String get pdfDetailLevelCompact => 'Compact Format';
@@ -8818,12 +8830,29 @@ class AppLocalizationsEn extends AppLocalizations {
   String get dropsetCompleted => 'DropSet completed! 💪';
 
   @override
+  String get howHardWasTheDropset => 'How hard was this dropset?';
+
+  @override
+  String get stagesBreakdown => 'Stages Breakdown';
+
+  @override
+  String get totalReps => 'Total Reps';
+
+  @override
   String get completeDropset => 'Complete DropSet';
 
   @override
   String completeStage(int number) {
     return 'Complete Stage $number';
   }
+
+  @override
+  String stageCompleted(int number) {
+    return 'Stage $number completed!';
+  }
+
+  @override
+  String get continueToNextStage => 'Continue to next stage';
 
   @override
   String get cancelDropset => 'Cancel DropSet?';
@@ -8836,7 +8865,93 @@ class AppLocalizationsEn extends AppLocalizations {
   String get executeDropset => 'Execute DropSet';
 
   @override
+  String get rerunDropset => 'Re-run DropSet';
+
+  @override
+  String get addDropsetStage => 'Add Extra Stage';
+
+  @override
+  String previousStageInfo(String weight, int reps) {
+    return 'Previous: ${weight}kg × $reps reps';
+  }
+
+  @override
+  String get quickWeightDrop => 'Quick drop';
+
+  @override
+  String get dropsetNeedsMinStages =>
+      'DropSet needs at least 2 stages with valid weights';
+
+  @override
   String get executeRestPause => 'Execute Rest-Pause';
+
+  @override
+  String get cancelRestPause => 'Cancel Rest-Pause?';
+
+  @override
+  String get cancelRestPauseMessage =>
+      'Your progress will not be saved. Are you sure?';
+
+  @override
+  String get restPauseGoToFailure => 'Go to failure or near failure';
+
+  @override
+  String repsRemaining(int count) {
+    return '$count reps remaining to target';
+  }
+
+  @override
+  String get startSet => 'Start Set';
+
+  @override
+  String get finishRestPause => 'Finish Early';
+
+  @override
+  String get secondsRest => 'seconds rest';
+
+  @override
+  String get howManyReps => 'How many reps did you complete?';
+
+  @override
+  String get logReps => 'Log Reps';
+
+  @override
+  String get restPauseCompleted => 'Rest-Pause Completed!';
+
+  @override
+  String restPauseSummary(int sets, int reps) {
+    return '$sets sets, $reps total reps';
+  }
+
+  @override
+  String get howHardWasIt => 'How hard was it?';
+
+  @override
+  String get completedSets => 'Completed Sets';
+
+  @override
+  String get rerunRestPause => 'Re-run Rest-Pause';
+
+  @override
+  String get restPauseAlreadyCompleted =>
+      'This rest-pause has already been completed. Do you want to run it again?';
+
+  @override
+  String get addRestPauseSet => 'Add Extra Set';
+
+  @override
+  String get quickRepSelection => 'Quick Selection';
+
+  @override
+  String restPauseSets(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count sets',
+      one: '1 set',
+    );
+    return '$_temp0';
+  }
 
   @override
   String get keepWorkoutActiveContent =>
@@ -13083,6 +13198,16 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get countingModeChanged => 'Counting format updated!';
+
+  @override
+  String get countingModeChangedAndSaved => 'Counting format saved as default!';
+
+  @override
+  String get saveAsDefaultForExercise => 'Remember for this exercise';
+
+  @override
+  String get saveAsDefaultForExerciseDesc =>
+      'Apply this format automatically in future workouts';
 
   @override
   String get analyticsFeedbackThankYou => 'Thank you for your feedback!';

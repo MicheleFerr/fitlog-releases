@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -40,8 +42,12 @@ import 'package:gymbro_flutter_new/features/exercise_database/presentation/widge
 import 'package:gymbro_flutter_new/features/workout/domain/services/warmup_calculator_service.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/widgets/warmup_customization_modal.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/widgets/superset_link_modal.dart';
+import 'package:gymbro_flutter_new/features/workout/presentation/widgets/dropset_weight_picker_modal.dart';
+import 'package:gymbro_flutter_new/features/workout/presentation/widgets/dropset_completion_modal.dart';
+import 'package:gymbro_flutter_new/features/workout/presentation/widgets/rest_pause_execution_modal.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/widgets/exercise_list_item/utils/exercise_notes_handler.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/providers/user_exercise_preferences_provider.dart';
+import 'package:gymbro_flutter_new/features/analytics/data/repositories/exercise_preferences_repository.dart';
 
 /// Orchestrator widget that coordinates ExerciseListItemHeader and ExerciseListItemSets
 ///
@@ -1025,16 +1031,20 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem>
 
   /// BUG FIX: Show counting mode picker to change exercise counting mode
   /// This was missing from the new orchestrator implementation
+  ///
+  /// Now supports saving the counting mode as a permanent default for the exercise.
   Future<void> _handleShowCountingModePicker() async {
-    final newMode = await CountingModePickerModal.show(
+    final result = await CountingModePickerModal.show(
       context,
       currentMode: widget.exercise.countingMode,
+      exerciseId: widget.exercise.id, // ✅ workout exercise uses 'id' (preserves database exercise ID)
+      exerciseName: widget.exercise.name,
     );
 
-    if (newMode != null && newMode != widget.exercise.countingMode && mounted) {
+    if (result != null && result.mode != widget.exercise.countingMode && mounted) {
       // Update exercise with new counting mode
       final updatedExercise = widget.exercise.copyWith(
-        countingMode: newMode,
+        countingMode: result.mode,
         updatedAt: DateTime.now(),
       );
 
@@ -1043,18 +1053,30 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem>
           .read(currentWorkoutProvider.notifier)
           .updateExercise(widget.exercise.id, updatedExercise);
 
+      // If user wants to save as default, persist to Firestore
+      if (result.saveAsDefault) {
+        final repo = ref.read(exercisePreferencesRepositoryProvider);
+        if (repo != null) {
+          await repo.setCountingModeOverride(
+            widget.exercise.id, // ✅ workout exercise uses 'id' (preserves database exercise ID)
+            result.mode.name,
+          );
+        }
+      }
+
       // Show confirmation
       if (mounted) {
         HapticFeedback.mediumImpact();
-        SnackBarService.showSuccess(
-          context,
-          'Counting mode changed to ${newMode.name}',
-        );
+        final message = result.saveAsDefault
+            ? context.l10n.countingModeChangedAndSaved
+            : context.l10n.countingModeChanged;
+        SnackBarService.showSuccess(context, message);
       }
 
       if (kDebugMode) {
         debugPrint(
-          '🔄 [CountingMode] Changed from ${widget.exercise.countingMode.name} to ${newMode.name}',
+          '🔄 [CountingMode] Changed from ${widget.exercise.countingMode.name} to ${result.mode.name}'
+          '${result.saveAsDefault ? ' (saved as default)' : ''}',
         );
       }
     }
@@ -1255,16 +1277,242 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem>
     if (kDebugMode) {
       debugPrint('Execute dropset for ${widget.exercise.name}');
     }
-    // Dropset execution modal implementation from original file
-    // This would show the dropset execution flow
+
+    // Find first incomplete stage
+    final firstIncompleteIndex = dropsetExercise.stages.indexWhere(
+      (stage) => !stage.isCompleted,
+    );
+
+    if (firstIncompleteIndex == -1) {
+      // All stages completed - show completion message
+      SnackBarService.showSuccess(
+        context,
+        context.l10n.dropsetCompleted,
+      );
+      return;
+    }
+
+    // Start the dropset execution flow
+    _executeDropSetStage(
+      dropsetExercise: dropsetExercise,
+      stageIndex: firstIncompleteIndex,
+    );
   }
 
-  void _handleExecuteRestPause(RestPauseExercise restPauseExercise) {
+  /// Executes a single dropset stage, then continues to the next if available
+  Future<void> _executeDropSetStage({
+    required DropSetExercise dropsetExercise,
+    required int stageIndex,
+  }) async {
+    if (!mounted) return;
+
+    // Get previous stage weight for percentage calculation
+    final previousStageWeight = stageIndex > 0
+        ? dropsetExercise.stages[stageIndex - 1].weight
+        : null;
+
+    // Get current stage for initial weight (if editing)
+    final currentStage = dropsetExercise.stages[stageIndex];
+
+    // Try to get exercise definition for equipment detection
+    db.Exercise? selectedExercise;
+    if (_exerciseData != null) {
+      try {
+        selectedExercise = db.ExerciseDefinition.fromJson(_exerciseData!);
+      } catch (e) {
+        if (kDebugMode) {
+          debugPrint('Could not parse exercise data: $e');
+        }
+      }
+    }
+
+    // Show weight picker modal
+    final selectedWeight = await DropSetWeightPickerModal.show(
+      context: context,
+      stageIndex: stageIndex,
+      previousStageWeight: previousStageWeight,
+      initialWeight: currentStage.weight > 0 ? currentStage.weight : null,
+      selectedExercise: selectedExercise,
+      exerciseName: dropsetExercise.name,
+    );
+
+    // User cancelled
+    if (selectedWeight == null || !mounted) return;
+
+    // Update the stage with the selected weight and mark as completed
+    final updatedStages = List<DropSetStage>.from(dropsetExercise.stages);
+    updatedStages[stageIndex] = currentStage.copyWith(
+      weight: selectedWeight,
+      isCompleted: true,
+    );
+
+    // Create updated exercise
+    final updatedExercise = DropSetExercise(
+      id: dropsetExercise.id,
+      name: dropsetExercise.name,
+      category: dropsetExercise.category,
+      stages: updatedStages,
+      notes: dropsetExercise.notes,
+      restTime: dropsetExercise.restTime,
+    );
+
+    // Notify parent of the update
+    widget.onExerciseUpdate?.call(updatedExercise);
+
+    // Haptic feedback for stage completion (fire-and-forget)
+    unawaited(HapticFeedback.mediumImpact());
+
+    // Check if there are more stages
+    final nextStageIndex = stageIndex + 1;
+    if (nextStageIndex < updatedExercise.stages.length) {
+      // Show brief feedback then continue to next stage
+      if (mounted) {
+        SnackBarService.showInfo(
+          context,
+          '${context.l10n.stageCompleted(stageIndex + 1)} - ${context.l10n.continueToNextStage}',
+        );
+      }
+
+      // Small delay for user to see feedback, then continue
+      await Future.delayed(const Duration(milliseconds: 800));
+
+      if (mounted) {
+        // Continue to next stage
+        await _executeDropSetStage(
+          dropsetExercise: updatedExercise,
+          stageIndex: nextStageIndex,
+        );
+      }
+    } else {
+      // All stages completed - show completion modal for summary and RPE
+      if (mounted) {
+        final selectedRpe = await DropSetCompletionModal.show(
+          context: context,
+          exerciseName: updatedExercise.name,
+          stages: updatedExercise.stages,
+        );
+
+        // Update all stages with the selected RPE
+        if (selectedRpe != null && mounted) {
+          final stagesWithRpe = updatedExercise.stages
+              .map((stage) => stage.copyWith(rpe: selectedRpe))
+              .toList();
+
+          final exerciseWithRpe = DropSetExercise(
+            id: updatedExercise.id,
+            name: updatedExercise.name,
+            category: updatedExercise.category,
+            stages: stagesWithRpe,
+            notes: updatedExercise.notes,
+            restTime: updatedExercise.restTime,
+          );
+
+          // Notify parent of the update with RPE
+          widget.onExerciseUpdate?.call(exerciseWithRpe);
+        }
+
+        // Start rest timer after completing dropset
+        if (mounted) {
+          _handleStartRestTimer(
+            context,
+            ExerciseSet(
+              setNumber: 1,
+              weight: updatedExercise.stages.first.weight,
+              reps: updatedExercise.stages.first.reps,
+              restTime: updatedExercise.restTime,
+            ),
+          );
+        }
+      }
+    }
+  }
+
+  Future<void> _handleExecuteRestPause(RestPauseExercise restPauseExercise) async {
     if (kDebugMode) {
       debugPrint('Execute rest-pause for ${widget.exercise.name}');
     }
-    // Rest-pause execution sheet implementation from original file
-    // This would show the rest-pause execution flow
+
+    // Check if already completed
+    final allCompleted = restPauseExercise.restPauseSets.isNotEmpty &&
+        restPauseExercise.restPauseSets.every((s) => s.isCompleted);
+
+    if (allCompleted) {
+      // Ask if user wants to re-run
+      final shouldRerun = await showDialog<bool>(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: Text(context.l10n.rerunRestPause),
+          content: Text(context.l10n.restPauseAlreadyCompleted),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context, false),
+              child: Text(context.l10n.cancel),
+            ),
+            FilledButton(
+              onPressed: () => Navigator.pop(context, true),
+              child: Text(context.l10n.rerunRestPause),
+            ),
+          ],
+        ),
+      );
+
+      if (shouldRerun != true || !mounted) return;
+    }
+
+    // Show execution modal
+    final result = await RestPauseExecutionModal.show(
+      context: context,
+      exerciseName: restPauseExercise.name,
+      weight: restPauseExercise.weight,
+      targetReps: restPauseExercise.targetReps,
+      restPauseSets: restPauseExercise.restPauseSets,
+    );
+
+    // User cancelled
+    if (result == null || !mounted) return;
+
+    // Update the exercise with completed sets and RPE
+    final updatedSets = result.completedSets.map((set) {
+      return set.copyWith(rpe: result.rpe);
+    }).toList();
+
+    final updatedExercise = RestPauseExercise(
+      id: restPauseExercise.id,
+      name: restPauseExercise.name,
+      category: restPauseExercise.category,
+      weight: restPauseExercise.weight,
+      targetReps: restPauseExercise.targetReps,
+      restPauseSets: updatedSets,
+      notes: restPauseExercise.notes,
+      restTime: restPauseExercise.restTime,
+    );
+
+    // Notify parent of the update
+    widget.onExerciseUpdate?.call(updatedExercise);
+
+    // Haptic feedback for completion
+    unawaited(HapticFeedback.heavyImpact());
+
+    if (kDebugMode) {
+      debugPrint(
+        '✅ [RestPause] Completed ${result.completedSets.length} sets, '
+        'total ${result.completedSets.fold(0, (sum, s) => sum + s.effectiveReps)} reps, '
+        'RPE: ${result.rpe}',
+      );
+    }
+
+    // Start rest timer after completing rest-pause
+    if (mounted) {
+      _handleStartRestTimer(
+        context,
+        ExerciseSet(
+          setNumber: 1,
+          weight: restPauseExercise.weight,
+          reps: restPauseExercise.targetReps,
+          restTime: restPauseExercise.restTime,
+        ),
+      );
+    }
   }
 
   void _handleCollapseExercise() {

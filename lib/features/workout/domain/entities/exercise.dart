@@ -762,6 +762,7 @@ class SupersetExercise extends Exercise { // I set del superset
     List<SupersetSet>? supersetSets,
     super.notes,
     super.restTime,
+    super.tut,
   }) :
     exercises = exercises,
     supersetSets = supersetSets ?? [],
@@ -1012,30 +1013,61 @@ class DropSetStage {
   DropSetStage({
     required this.weight,
     required this.reps,
+    this.actualReps,
+    this.rpe,
     this.isCompleted = false,
+    this.completedAt,
   });
 
   factory DropSetStage.fromJson(Map<String, dynamic> json) {
     return DropSetStage(
       weight: (json['weight'] as num?)?.toDouble() ?? 0.0,
       reps: json['reps'] as int? ?? 0,
+      actualReps: json['actualReps'] as int?,
+      rpe: json['rpe'] as int?,
       isCompleted: json['isCompleted'] as bool? ?? false,
+      completedAt: json['completedAt'] != null
+          ? DateTime.tryParse(json['completedAt'] as String)
+          : null,
     );
   }
 
+  /// Target weight for this stage
   final double weight;
+
+  /// Target reps for this stage
   final int reps;
+
+  /// Actual reps completed (may differ from target)
+  final int? actualReps;
+
+  /// Rate of Perceived Exertion (6-10 scale)
+  final int? rpe;
+
+  /// Whether this stage has been completed
   final bool isCompleted;
+
+  /// When this stage was completed
+  final DateTime? completedAt;
+
+  /// Get effective reps (actual if available, otherwise target)
+  int get effectiveReps => actualReps ?? reps;
 
   DropSetStage copyWith({
     double? weight,
     int? reps,
+    int? actualReps,
+    int? rpe,
     bool? isCompleted,
+    DateTime? completedAt,
   }) {
     return DropSetStage(
       weight: weight ?? this.weight,
       reps: reps ?? this.reps,
+      actualReps: actualReps ?? this.actualReps,
+      rpe: rpe ?? this.rpe,
       isCompleted: isCompleted ?? this.isCompleted,
+      completedAt: completedAt ?? this.completedAt,
     );
   }
 
@@ -1043,7 +1075,10 @@ class DropSetStage {
     return {
       'weight': weight,
       'reps': reps,
+      'actualReps': actualReps,
+      'rpe': rpe,
       'isCompleted': isCompleted,
+      'completedAt': completedAt?.toIso8601String(),
     };
   }
 }
@@ -1115,30 +1150,61 @@ class RestPauseSet {
   RestPauseSet({
     required this.reps,
     required this.restSeconds,
+    this.actualReps,
+    this.rpe,
     this.isCompleted = false,
+    this.completedAt,
   });
 
   factory RestPauseSet.fromJson(Map<String, dynamic> json) {
     return RestPauseSet(
       reps: json['reps'] as int? ?? 0,
       restSeconds: json['restSeconds'] as int? ?? 0,
+      actualReps: json['actualReps'] as int?,
+      rpe: json['rpe'] as int?,
       isCompleted: json['isCompleted'] as bool? ?? false,
+      completedAt: json['completedAt'] != null
+          ? DateTime.tryParse(json['completedAt'] as String)
+          : null,
     );
   }
 
+  /// Target reps for this set
   final int reps;
+
+  /// Rest seconds before this set (0 for first set)
   final int restSeconds;
+
+  /// Actual reps completed (may differ from target)
+  final int? actualReps;
+
+  /// Rate of Perceived Exertion (6-10 scale)
+  final int? rpe;
+
+  /// Whether this set has been completed
   final bool isCompleted;
+
+  /// When this set was completed
+  final DateTime? completedAt;
+
+  /// Get effective reps (actual if available, otherwise target)
+  int get effectiveReps => actualReps ?? reps;
 
   RestPauseSet copyWith({
     int? reps,
     int? restSeconds,
+    int? actualReps,
+    int? rpe,
     bool? isCompleted,
+    DateTime? completedAt,
   }) {
     return RestPauseSet(
       reps: reps ?? this.reps,
       restSeconds: restSeconds ?? this.restSeconds,
+      actualReps: actualReps ?? this.actualReps,
+      rpe: rpe ?? this.rpe,
       isCompleted: isCompleted ?? this.isCompleted,
+      completedAt: completedAt ?? this.completedAt,
     );
   }
 
@@ -1146,7 +1212,10 @@ class RestPauseSet {
     return {
       'reps': reps,
       'restSeconds': restSeconds,
+      'actualReps': actualReps,
+      'rpe': rpe,
       'isCompleted': isCompleted,
+      'completedAt': completedAt?.toIso8601String(),
     };
   }
 }

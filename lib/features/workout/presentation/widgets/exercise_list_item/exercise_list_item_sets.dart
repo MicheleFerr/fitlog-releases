@@ -6,6 +6,8 @@ import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/widgets/minimal_set_edit_sheet.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/widgets/rpe_selector_bottom_sheet.dart';
+import 'package:gymbro_flutter_new/features/workout/presentation/widgets/add_dropset_stage_modal.dart';
+import 'package:gymbro_flutter_new/features/workout/presentation/widgets/add_rest_pause_set_modal.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/providers/exercise_expansion_provider.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/providers/set_display_provider.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/providers/set_duration_tracker_provider.dart';
@@ -101,94 +103,16 @@ class _ExerciseListItemSetsState extends ConsumerState<ExerciseListItemSets> {
 
   Widget _buildSetsSection(BuildContext context, AppConfig config) {
     if (widget.exercise.sets.isEmpty) {
-      // For DropSet exercises, show execute button instead of "No sets yet"
+      // For DropSet exercises, show stages and execute button
       if (widget.exercise.type == ExerciseType.dropset) {
         final dropsetExercise = widget.exercise as DropSetExercise;
-        return GestureDetector(
-          onTap: () => widget.onExecuteDropSet(dropsetExercise),
-          child: Container(
-            padding: const EdgeInsets.all(12),
-            decoration: BoxDecoration(
-              color: context.colors.tertiaryContainer.withValues(alpha: 0.3),
-              borderRadius: BorderRadius.circular(8),
-              border: Border.all(
-                color: context.colors.tertiary.withValues(alpha: 0.5),
-                style: BorderStyle.solid,
-              ),
-            ),
-            child: Row(
-              children: [
-                SemanticIcon(
-                  icon: AppIcons.playCircleOutline,
-                  semanticLabel: context.l10n.executeDropset,
-                  size: AppIconSize.small,
-                  color: context.colors.tertiary,
-                ),
-                const SizedBox(width: 8),
-                Expanded(
-                  child: Text(
-                    context.l10n.executeDropset,
-                    style: context.textTheme.bodySmall?.copyWith(
-                      color: context.colors.tertiary,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                ),
-                SemanticIcon(
-                  icon: AppIcons.forwardIos,
-                  semanticLabel: context.l10n.executeDropset,
-                  size: AppIconSize.tiny,
-                  color: context.colors.tertiary,
-                )
-              ],
-            ),
-          ),
-        );
+        return _buildDropSetSection(context, dropsetExercise);
       }
 
-      // For RestPause exercises, show execute button
+      // For RestPause exercises, show section with sets
       if (widget.exercise.type == ExerciseType.restPause) {
         final restPauseExercise = widget.exercise as RestPauseExercise;
-        return GestureDetector(
-          onTap: () => widget.onExecuteRestPause(restPauseExercise),
-          child: Container(
-            padding: const EdgeInsets.all(12),
-            decoration: BoxDecoration(
-              color: context.colors.primaryContainer.withValues(alpha: 0.3),
-              borderRadius: BorderRadius.circular(8),
-              border: Border.all(
-                color: context.colors.primary.withValues(alpha: 0.5),
-                style: BorderStyle.solid,
-              ),
-            ),
-            child: Row(
-              children: [
-                SemanticIcon(
-                  icon: AppIcons.playCircleOutline,
-                  semanticLabel: context.l10n.executeRestPause,
-                  size: AppIconSize.small,
-                  color: context.colors.primary,
-                ),
-                const SizedBox(width: 8),
-                Expanded(
-                  child: Text(
-                    context.l10n.executeRestPause,
-                    style: context.textTheme.bodySmall?.copyWith(
-                      color: context.colors.primary,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                ),
-                SemanticIcon(
-                  icon: AppIcons.forwardIos,
-                  semanticLabel: context.l10n.executeRestPause,
-                  size: AppIconSize.tiny,
-                  color: context.colors.primary,
-                )
-              ],
-            ),
-          ),
-        );
+        return _buildRestPauseSection(context, restPauseExercise);
       }
 
       return Container(
@@ -615,7 +539,7 @@ class _ExerciseListItemSetsState extends ConsumerState<ExerciseListItemSets> {
                     onTap: () => _quickEditSet(context, set),
                     borderRadius: BorderRadius.circular(8),
                     child: Padding(
-                      padding: const EdgeInsets.all(6),
+                      padding: const EdgeInsets.all(8),
                       child: SemanticIcon(
                         icon: AppIcons.edit,
                         semanticLabel: context.l10n.edit,
@@ -1169,5 +1093,598 @@ class _ExerciseListItemSetsState extends ConsumerState<ExerciseListItemSets> {
       return '$minutes:${remainingSeconds.toString().padLeft(2, '0')}';
     }
     return '${seconds}s';
+  }
+
+  // ============================================================================
+  // DROPSET SECTION
+  // ============================================================================
+
+  /// Build the DropSet section showing stages and execute button
+  Widget _buildDropSetSection(BuildContext context, DropSetExercise dropsetExercise) {
+    final stages = dropsetExercise.stages;
+    final completedStages = stages.where((s) => s.isCompleted).toList();
+    final allCompleted = completedStages.length == stages.length && stages.isNotEmpty;
+    final hasCompletedStages = completedStages.isNotEmpty;
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        // Header row with progress
+        Row(
+          children: [
+            Text(
+              context.l10n.dropsetStages(stages.length),
+              style: context.textTheme.labelMedium?.copyWith(
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+            if (hasCompletedStages) ...[
+              const SizedBox(width: 8),
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                decoration: BoxDecoration(
+                  color: allCompleted
+                      ? context.colors.success.withValues(alpha: 0.1)
+                      : context.colors.warning.withValues(alpha: 0.1),
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: Text(
+                  '${completedStages.length}/${stages.length}',
+                  style: context.textTheme.labelSmall?.copyWith(
+                    color: allCompleted
+                        ? context.colors.success
+                        : context.colors.warning,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+            ],
+            const Spacer(),
+            if (hasCompletedStages)
+              Text(
+                'Weight × Reps',
+                style: context.textTheme.labelSmall?.copyWith(
+                  color: context.colors.onSurfaceVariant,
+                ),
+              ),
+          ],
+        ),
+        const SizedBox(height: 8),
+
+        // Show stages if any are completed
+        if (hasCompletedStages) ...[
+          ...stages.asMap().entries.map((entry) {
+            final index = entry.key;
+            final stage = entry.value;
+            return _buildDropSetStageRow(context, index, stage, stages);
+          }),
+          const SizedBox(height: 8),
+        ],
+
+        // Execute/Re-run button
+        GestureDetector(
+          onTap: () => widget.onExecuteDropSet(dropsetExercise),
+          child: Container(
+            padding: const EdgeInsets.all(12),
+            decoration: BoxDecoration(
+              color: allCompleted
+                  ? context.colors.surfaceContainerHighest.withValues(alpha: 0.5)
+                  : context.colors.tertiaryContainer.withValues(alpha: 0.3),
+              borderRadius: BorderRadius.circular(8),
+              border: Border.all(
+                color: allCompleted
+                    ? context.colors.outline.withValues(alpha: 0.3)
+                    : context.colors.tertiary.withValues(alpha: 0.5),
+                style: BorderStyle.solid,
+              ),
+            ),
+            child: Row(
+              children: [
+                SemanticIcon(
+                  icon: allCompleted ? AppIcons.refresh : AppIcons.playCircleOutline,
+                  semanticLabel: context.l10n.executeDropset,
+                  size: AppIconSize.small,
+                  color: allCompleted
+                      ? context.colors.onSurfaceVariant
+                      : context.colors.tertiary,
+                ),
+                const SizedBox(width: 8),
+                Expanded(
+                  child: Text(
+                    allCompleted
+                        ? context.l10n.rerunDropset
+                        : context.l10n.executeDropset,
+                    style: context.textTheme.bodySmall?.copyWith(
+                      color: allCompleted
+                          ? context.colors.onSurfaceVariant
+                          : context.colors.tertiary,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ),
+                SemanticIcon(
+                  icon: AppIcons.forwardIos,
+                  semanticLabel: context.l10n.executeDropset,
+                  size: AppIconSize.tiny,
+                  color: allCompleted
+                      ? context.colors.onSurfaceVariant
+                      : context.colors.tertiary,
+                ),
+              ],
+            ),
+          ),
+        ),
+
+        // Add Stage button (only when dropset is completed)
+        if (allCompleted) ...[
+          const SizedBox(height: 8),
+          GestureDetector(
+            onTap: () => _onAddDropSetStage(context, dropsetExercise),
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+              decoration: BoxDecoration(
+                color: context.colors.primaryContainer.withValues(alpha: 0.3),
+                borderRadius: BorderRadius.circular(8),
+                border: Border.all(
+                  color: context.colors.primary.withValues(alpha: 0.5),
+                  style: BorderStyle.solid,
+                ),
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  SemanticIcon(
+                    icon: AppIcons.add,
+                    semanticLabel: context.l10n.addDropsetStage,
+                    size: AppIconSize.small,
+                    color: context.colors.primary,
+                  ),
+                  const SizedBox(width: 8),
+                  Text(
+                    context.l10n.addDropsetStage,
+                    style: context.textTheme.bodySmall?.copyWith(
+                      color: context.colors.primary,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
+      ],
+    );
+  }
+
+  /// Handle adding a new stage to a completed dropset
+  Future<void> _onAddDropSetStage(
+    BuildContext context,
+    DropSetExercise dropsetExercise,
+  ) async {
+    final stages = dropsetExercise.stages;
+    if (stages.isEmpty) return;
+
+    final lastStage = stages.last;
+    final newStageNumber = stages.length + 1;
+
+    final newStage = await AddDropsetStageModal.show(
+      context: context,
+      exerciseName: dropsetExercise.name,
+      lastStageWeight: lastStage.weight,
+      lastStageReps: lastStage.effectiveReps,
+      stageNumber: newStageNumber,
+    );
+
+    if (newStage != null && mounted) {
+      // Create updated exercise with the new stage
+      final updatedStages = [...stages, newStage];
+      final updatedExercise = DropSetExercise(
+        id: dropsetExercise.id,
+        name: dropsetExercise.name,
+        category: dropsetExercise.category,
+        stages: updatedStages,
+        notes: dropsetExercise.notes,
+        restTime: dropsetExercise.restTime,
+      );
+
+      widget.onExerciseUpdate(updatedExercise);
+
+      // Haptic feedback
+      HapticFeedbackService.selection(ref);
+    }
+  }
+
+  /// Build a single dropset stage row
+  Widget _buildDropSetStageRow(
+    BuildContext context,
+    int index,
+    DropSetStage stage,
+    List<DropSetStage> allStages,
+  ) {
+    final isCompleted = stage.isCompleted;
+    final isFirst = index == 0;
+
+    // Calculate weight drop from previous stage
+    String? weightDropText;
+    if (!isFirst && index < allStages.length) {
+      final prevWeight = allStages[index - 1].weight;
+      final drop = prevWeight - stage.weight;
+      if (drop > 0) {
+        weightDropText = '-${drop.toStringAsFixed(1)}';
+      }
+    }
+
+    return Container(
+      margin: const EdgeInsets.only(bottom: 6),
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+      decoration: BoxDecoration(
+        color: isCompleted
+            ? context.colors.surfaceContainerHighest.withValues(alpha: 0.5)
+            : context.colors.surface,
+        borderRadius: BorderRadius.circular(8),
+        border: Border.all(
+          color: isCompleted
+              ? context.colors.success.withValues(alpha: 0.3)
+              : context.colors.outline.withValues(alpha: 0.2),
+        ),
+      ),
+      child: Row(
+        children: [
+          // Stage number
+          Container(
+            width: 24,
+            height: 24,
+            decoration: BoxDecoration(
+              color: isCompleted
+                  ? context.colors.success.withValues(alpha: 0.1)
+                  : context.colors.surfaceContainerHighest,
+              shape: BoxShape.circle,
+            ),
+            child: Center(
+              child: isCompleted
+                  ? SemanticIcon(
+                      icon: AppIcons.complete,
+                      semanticLabel: 'Completed',
+                      size: AppIconSize.tiny,
+                      color: context.colors.success,
+                    )
+                  : Text(
+                      '${index + 1}',
+                      style: context.textTheme.labelSmall?.copyWith(
+                        fontWeight: FontWeight.bold,
+                        color: context.colors.onSurfaceVariant,
+                      ),
+                    ),
+            ),
+          ),
+          const SizedBox(width: 12),
+
+          // Weight
+          Expanded(
+            flex: 2,
+            child: Row(
+              children: [
+                Text(
+                  '${stage.weight.toStringAsFixed(stage.weight.truncateToDouble() == stage.weight ? 0 : 1)} kg',
+                  style: context.textTheme.bodyMedium?.copyWith(
+                    fontWeight: FontWeight.w600,
+                    color: isCompleted
+                        ? context.colors.onSurface
+                        : context.colors.onSurfaceVariant,
+                  ),
+                ),
+                if (weightDropText != null) ...[
+                  const SizedBox(width: 4),
+                  Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 1),
+                    decoration: BoxDecoration(
+                      color: context.colors.warning.withValues(alpha: 0.1),
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: Text(
+                      weightDropText,
+                      style: context.textTheme.labelSmall?.copyWith(
+                        color: context.colors.warning,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 10,
+                      ),
+                    ),
+                  ),
+                ],
+              ],
+            ),
+          ),
+
+          // Reps
+          Expanded(
+            child: Text(
+              '${stage.effectiveReps} reps',
+              style: context.textTheme.bodyMedium?.copyWith(
+                fontWeight: FontWeight.w500,
+                color: isCompleted
+                    ? context.colors.onSurface
+                    : context.colors.onSurfaceVariant,
+              ),
+            ),
+          ),
+
+          // RPE indicator (if completed with RPE)
+          if (isCompleted && stage.rpe != null)
+            RpeIndicator(
+              rpe: stage.rpe!,
+              showLabel: false,
+              compact: true,
+            ),
+        ],
+      ),
+    );
+  }
+
+  /// Build the RestPause section showing sets and execute button
+  Widget _buildRestPauseSection(BuildContext context, RestPauseExercise restPauseExercise) {
+    final sets = restPauseExercise.restPauseSets;
+    final completedSets = sets.where((s) => s.isCompleted).toList();
+    final allCompleted = completedSets.isNotEmpty;
+    final hasCompletedSets = completedSets.isNotEmpty;
+    final totalReps = completedSets.fold(0, (sum, s) => sum + s.effectiveReps);
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        // Header row with info
+        Row(
+          children: [
+            Text(
+              '${restPauseExercise.weight.toStringAsFixed(restPauseExercise.weight.truncateToDouble() == restPauseExercise.weight ? 0 : 1)} kg',
+              style: context.textTheme.labelMedium?.copyWith(
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+            const SizedBox(width: 8),
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+              decoration: BoxDecoration(
+                color: context.colors.tertiary.withValues(alpha: 0.1),
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: Text(
+                context.l10n.restPauseSets(sets.length),
+                style: context.textTheme.labelSmall?.copyWith(
+                  color: context.colors.tertiary,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+            if (hasCompletedSets) ...[
+              const SizedBox(width: 8),
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                decoration: BoxDecoration(
+                  color: context.colors.success.withValues(alpha: 0.1),
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: Text(
+                  '$totalReps/${restPauseExercise.targetReps} reps',
+                  style: context.textTheme.labelSmall?.copyWith(
+                    color: context.colors.success,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+            ],
+          ],
+        ),
+        const SizedBox(height: 8),
+
+        // Show sets if any are completed
+        if (hasCompletedSets) ...[
+          ...completedSets.asMap().entries.map((entry) {
+            final index = entry.key;
+            final set = entry.value;
+            return _buildRestPauseSetRow(context, index, set);
+          }),
+          const SizedBox(height: 8),
+        ],
+
+        // Execute/Re-run button
+        GestureDetector(
+          onTap: () => widget.onExecuteRestPause(restPauseExercise),
+          child: Container(
+            padding: const EdgeInsets.all(12),
+            decoration: BoxDecoration(
+              color: allCompleted
+                  ? context.colors.surfaceContainerHighest.withValues(alpha: 0.5)
+                  : context.colors.tertiaryContainer.withValues(alpha: 0.3),
+              borderRadius: BorderRadius.circular(8),
+              border: Border.all(
+                color: allCompleted
+                    ? context.colors.outline.withValues(alpha: 0.3)
+                    : context.colors.tertiary.withValues(alpha: 0.5),
+                style: BorderStyle.solid,
+              ),
+            ),
+            child: Row(
+              children: [
+                SemanticIcon(
+                  icon: allCompleted ? AppIcons.refresh : AppIcons.playCircleOutline,
+                  semanticLabel: context.l10n.executeRestPause,
+                  size: AppIconSize.small,
+                  color: allCompleted
+                      ? context.colors.onSurfaceVariant
+                      : context.colors.tertiary,
+                ),
+                const SizedBox(width: 8),
+                Expanded(
+                  child: Text(
+                    allCompleted
+                        ? context.l10n.rerunRestPause
+                        : context.l10n.executeRestPause,
+                    style: context.textTheme.bodySmall?.copyWith(
+                      color: allCompleted
+                          ? context.colors.onSurfaceVariant
+                          : context.colors.tertiary,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ),
+                SemanticIcon(
+                  icon: AppIcons.forwardIos,
+                  semanticLabel: context.l10n.executeRestPause,
+                  size: AppIconSize.tiny,
+                  color: allCompleted
+                      ? context.colors.onSurfaceVariant
+                      : context.colors.tertiary,
+                ),
+              ],
+            ),
+          ),
+        ),
+
+        // Add Set button (only when rest-pause has been executed)
+        if (allCompleted) ...[
+          const SizedBox(height: 8),
+          GestureDetector(
+            onTap: () => _onAddRestPauseSet(context, restPauseExercise),
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+              decoration: BoxDecoration(
+                color: context.colors.primaryContainer.withValues(alpha: 0.3),
+                borderRadius: BorderRadius.circular(8),
+                border: Border.all(
+                  color: context.colors.primary.withValues(alpha: 0.5),
+                  style: BorderStyle.solid,
+                ),
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  SemanticIcon(
+                    icon: AppIcons.add,
+                    semanticLabel: context.l10n.addRestPauseSet,
+                    size: AppIconSize.small,
+                    color: context.colors.primary,
+                  ),
+                  const SizedBox(width: 8),
+                  Text(
+                    context.l10n.addRestPauseSet,
+                    style: context.textTheme.bodySmall?.copyWith(
+                      color: context.colors.primary,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
+      ],
+    );
+  }
+
+  /// Build a single rest-pause set row
+  Widget _buildRestPauseSetRow(BuildContext context, int index, RestPauseSet set) {
+    return Container(
+      margin: const EdgeInsets.only(bottom: 6),
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+      decoration: BoxDecoration(
+        color: context.colors.surfaceContainerHighest.withValues(alpha: 0.5),
+        borderRadius: BorderRadius.circular(8),
+        border: Border.all(
+          color: context.colors.success.withValues(alpha: 0.3),
+        ),
+      ),
+      child: Row(
+        children: [
+          // Set number
+          Container(
+            width: 24,
+            height: 24,
+            decoration: BoxDecoration(
+              color: context.colors.success.withValues(alpha: 0.1),
+              shape: BoxShape.circle,
+            ),
+            child: Center(
+              child: SemanticIcon(
+                icon: AppIcons.complete,
+                semanticLabel: 'Completed',
+                size: AppIconSize.tiny,
+                color: context.colors.success,
+              ),
+            ),
+          ),
+          const SizedBox(width: 12),
+
+          // Set info
+          Expanded(
+            child: Text(
+              'Set ${index + 1}',
+              style: context.textTheme.bodyMedium?.copyWith(
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+          ),
+
+          // Reps
+          Text(
+            '${set.effectiveReps} reps',
+            style: context.textTheme.bodyMedium?.copyWith(
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+
+          // RPE indicator (if set)
+          if (set.rpe != null) ...[
+            const SizedBox(width: 8),
+            RpeIndicator(
+              rpe: set.rpe!,
+              showLabel: false,
+              compact: true,
+            ),
+          ],
+        ],
+      ),
+    );
+  }
+
+  /// Handle adding a new set to a completed rest-pause
+  Future<void> _onAddRestPauseSet(
+    BuildContext context,
+    RestPauseExercise restPauseExercise,
+  ) async {
+    final sets = restPauseExercise.restPauseSets;
+    if (sets.isEmpty) return;
+
+    // Show the dedicated AddRestPauseSetModal
+    final newSet = await AddRestPauseSetModal.show(
+      context: context,
+      exerciseName: restPauseExercise.name,
+      weight: restPauseExercise.weight,
+      targetReps: restPauseExercise.targetReps,
+      completedSets: sets,
+      setNumber: sets.length + 1,
+    );
+
+    if (newSet != null && mounted) {
+      final updatedSets = [...sets, newSet];
+      final updatedExercise = RestPauseExercise(
+        id: restPauseExercise.id,
+        name: restPauseExercise.name,
+        category: restPauseExercise.category,
+        weight: restPauseExercise.weight,
+        targetReps: restPauseExercise.targetReps,
+        restPauseSets: updatedSets,
+        notes: restPauseExercise.notes,
+        restTime: restPauseExercise.restTime,
+      );
+
+      widget.onExerciseUpdate(updatedExercise);
+      HapticFeedbackService.selection(ref);
+
+      if (kDebugMode) {
+        debugPrint(
+          '✅ [RestPause] Added set ${sets.length + 1}: ${newSet.effectiveReps} reps',
+        );
+      }
+    }
   }
 }

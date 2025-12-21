@@ -693,6 +693,8 @@
   "defaultView": "Vista Predefinita",
   "totalDays": "Giorni Totali",
   "days": "giorni",
+  "noDataToShare": "Nessun dato da condividere",
+  "errorSharingPdf": "Errore nella condivisione del PDF",
   "errorLoadingData": "Errore caricamento dati",
   "exportData": "Esporta Dati",
   "viewDetails": "Visualizza Dettagli",
@@ -1850,6 +1852,8 @@
   "print": "Stampa",
   "printTemplate": "Stampa template allenamento",
   "pdfExportOptions": "Opzioni Esportazione PDF",
+  "selectPdfFormat": "Seleziona il formato di esportazione",
+  "exportPdf": "Esporta PDF",
   "pdfDetailLevelCompact": "Formato Compatto",
   "pdfDetailLevelCompactDesc": "Raggruppa set identici (es. 3 x 10)",
   "pdfDetailLevelDetailed": "Dettagliato con Peso",
@@ -3244,12 +3248,40 @@
   "dropsetLastStage": "Ultimo stadio! Dai tutto quello che hai!",
   "dropsetReduceWeightNow": "Riduci il peso a {weight} kg ORA!",
   "dropsetCompleted": "DropSet completato! 💪",
+  "howHardWasTheDropset": "Quanto è stato faticoso questo dropset?",
+  "stagesBreakdown": "Riepilogo Stadi",
+  "totalReps": "Ripetizioni Totali",
   "completeDropset": "Completa DropSet",
   "completeStage": "Completa Stadio {number}",
   "cancelDropset": "Annullare DropSet?",
   "cancelDropsetMessage": "Il tuo progresso non sarà salvato. Sei sicuro?",
   "executeDropset": "Esegui DropSet",
+  "rerunDropset": "Ripeti DropSet",
+  "addDropsetStage": "Aggiungi Stage",
+  "previousStageInfo": "Precedente: {weight}kg × {reps} reps",
+  "quickWeightDrop": "Drop rapido",
+  "addStage": "Aggiungi Stage",
+  "dropsetNeedsMinStages": "Il DropSet richiede almeno 2 stadi con pesi validi",
   "executeRestPause": "Esegui Rest-Pause",
+  "cancelRestPause": "Annullare Rest-Pause?",
+  "cancelRestPauseMessage": "Il tuo progresso non sarà salvato. Sei sicuro?",
+  "restPauseGoToFailure": "Vai a cedimento o quasi",
+  "repsRemaining": "{count} reps rimanenti al target",
+  "startSet": "Inizia Set",
+  "finishRestPause": "Termina Prima",
+  "secondsRest": "secondi di riposo",
+  "skipRest": "Salta Riposo",
+  "howManyReps": "Quante reps hai completato?",
+  "logReps": "Registra Reps",
+  "restPauseCompleted": "Rest-Pause Completato!",
+  "restPauseSummary": "{sets} set, {reps} reps totali",
+  "howHardWasIt": "Quanto è stato difficile?",
+  "completedSets": "Set Completati",
+  "rerunRestPause": "Ripeti Rest-Pause",
+  "restPauseAlreadyCompleted": "Questo rest-pause è già stato completato. Vuoi ripeterlo?",
+  "addRestPauseSet": "Aggiungi Set Extra",
+  "quickRepSelection": "Selezione Rapida",
+  "restPauseSets": "{count, plural, =1{1 set} other{{count} set}}",
   "keepWorkoutActiveContent": "Vuoi tornare alla Home e mantenere il tuo allenamento attivo in background?\\n\\nPotrai tornare a continuare l'allenamento in qualsiasi momento.",
   "deleteTemplateQuestion": "Sei sicuro di voler eliminare \"{name}\"?",
   "cannotUndo": "Questa azione non può essere annullata.",
@@ -5570,6 +5602,9 @@
   "keepData": "Mantieni dati",
   "resetAll": "Resetta Tutto",
   "countingModeChanged": "Formato counting aggiornato!",
+  "countingModeChangedAndSaved": "Formato counting salvato come default!",
+  "saveAsDefaultForExercise": "Ricorda per questo esercizio",
+  "saveAsDefaultForExerciseDesc": "Applica questo formato automaticamente nei prossimi workout",
   "analyticsFeedbackThankYou": "Grazie per il tuo feedback!",
   "@analyticsFeedbackThankYou": {
     "description": "Messaggio di ringraziamento dopo l'invio del feedback"
@@ -17452,5 +17487,18 @@
   "continueText": "Continua",
   "@continueText": {
     "description": "Testo generico pulsante continua"
+  },
+  "stageCompleted": "Stadio {number} completato!",
+  "@stageCompleted": {
+    "description": "Messaggio di successo quando uno stadio è completato",
+    "placeholders": {
+      "number": {
+        "type": "int"
+      }
+    }
+  },
+  "continueToNextStage": "Continua al prossimo stadio",
+  "@continueToNextStage": {
+    "description": "Messaggio che invita a continuare al prossimo stadio del dropset"
   }
 }

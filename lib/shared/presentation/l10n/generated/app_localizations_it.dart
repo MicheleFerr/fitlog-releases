@@ -1829,6 +1829,12 @@ class AppLocalizationsIt extends AppLocalizations {
   String get days => 'giorni';
 
   @override
+  String get noDataToShare => 'Nessun dato da condividere';
+
+  @override
+  String get errorSharingPdf => 'Errore nella condivisione del PDF';
+
+  @override
   String get errorLoadingData => 'Errore nel caricamento dati';
 
   @override
@@ -4345,7 +4351,7 @@ class AppLocalizationsIt extends AppLocalizations {
   String get stages => 'Stadi';
 
   @override
-  String get addStage => 'Aggiungi Stadio';
+  String get addStage => 'Aggiungi Stage';
 
   @override
   String get miniSets => 'mini-set';
@@ -5174,6 +5180,12 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get pdfExportOptions => 'Opzioni Esportazione PDF';
+
+  @override
+  String get selectPdfFormat => 'Seleziona il formato di esportazione';
+
+  @override
+  String get exportPdf => 'Esporta PDF';
 
   @override
   String get pdfDetailLevelCompact => 'Formato Compatto';
@@ -7691,7 +7703,7 @@ class AppLocalizationsIt extends AppLocalizations {
   String get execute => 'Esegui';
 
   @override
-  String get skipRest => 'Salta pausa';
+  String get skipRest => 'Salta Riposo';
 
   @override
   String get supersetCompleted => 'Superset Completato';
@@ -8897,12 +8909,29 @@ class AppLocalizationsIt extends AppLocalizations {
   String get dropsetCompleted => 'DropSet completato! 💪';
 
   @override
+  String get howHardWasTheDropset => 'Quanto è stato faticoso questo dropset?';
+
+  @override
+  String get stagesBreakdown => 'Riepilogo Stadi';
+
+  @override
+  String get totalReps => 'Ripetizioni Totali';
+
+  @override
   String get completeDropset => 'Completa DropSet';
 
   @override
   String completeStage(int number) {
     return 'Completa Stadio $number';
   }
+
+  @override
+  String stageCompleted(int number) {
+    return 'Stadio $number completato!';
+  }
+
+  @override
+  String get continueToNextStage => 'Continua al prossimo stadio';
 
   @override
   String get cancelDropset => 'Annullare DropSet?';
@@ -8915,7 +8944,93 @@ class AppLocalizationsIt extends AppLocalizations {
   String get executeDropset => 'Esegui DropSet';
 
   @override
+  String get rerunDropset => 'Ripeti DropSet';
+
+  @override
+  String get addDropsetStage => 'Aggiungi Stage';
+
+  @override
+  String previousStageInfo(String weight, int reps) {
+    return 'Precedente: ${weight}kg × $reps reps';
+  }
+
+  @override
+  String get quickWeightDrop => 'Drop rapido';
+
+  @override
+  String get dropsetNeedsMinStages =>
+      'Il DropSet richiede almeno 2 stadi con pesi validi';
+
+  @override
   String get executeRestPause => 'Esegui Rest-Pause';
+
+  @override
+  String get cancelRestPause => 'Annullare Rest-Pause?';
+
+  @override
+  String get cancelRestPauseMessage =>
+      'Il tuo progresso non sarà salvato. Sei sicuro?';
+
+  @override
+  String get restPauseGoToFailure => 'Vai a cedimento o quasi';
+
+  @override
+  String repsRemaining(int count) {
+    return '$count reps rimanenti al target';
+  }
+
+  @override
+  String get startSet => 'Inizia Set';
+
+  @override
+  String get finishRestPause => 'Termina Prima';
+
+  @override
+  String get secondsRest => 'secondi di riposo';
+
+  @override
+  String get howManyReps => 'Quante reps hai completato?';
+
+  @override
+  String get logReps => 'Registra Reps';
+
+  @override
+  String get restPauseCompleted => 'Rest-Pause Completato!';
+
+  @override
+  String restPauseSummary(int sets, int reps) {
+    return '$sets set, $reps reps totali';
+  }
+
+  @override
+  String get howHardWasIt => 'Quanto è stato difficile?';
+
+  @override
+  String get completedSets => 'Set Completati';
+
+  @override
+  String get rerunRestPause => 'Ripeti Rest-Pause';
+
+  @override
+  String get restPauseAlreadyCompleted =>
+      'Questo rest-pause è già stato completato. Vuoi ripeterlo?';
+
+  @override
+  String get addRestPauseSet => 'Aggiungi Set Extra';
+
+  @override
+  String get quickRepSelection => 'Selezione Rapida';
+
+  @override
+  String restPauseSets(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count set',
+      one: '1 set',
+    );
+    return '$_temp0';
+  }
 
   @override
   String get keepWorkoutActiveContent =>
@@ -13223,6 +13338,17 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get countingModeChanged => 'Formato counting aggiornato!';
+
+  @override
+  String get countingModeChangedAndSaved =>
+      'Formato counting salvato come default!';
+
+  @override
+  String get saveAsDefaultForExercise => 'Ricorda per questo esercizio';
+
+  @override
+  String get saveAsDefaultForExerciseDesc =>
+      'Applica questo formato automaticamente nei prossimi workout';
 
   @override
   String get analyticsFeedbackThankYou => 'Grazie per il tuo feedback!';
