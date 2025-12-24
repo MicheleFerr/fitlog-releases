@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:uuid/uuid.dart';
+import 'package:gymbro_flutter_new/features/exercise_database/domain/entities/exercise_counting_mode.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise.dart';
 
 /// Template per workout riutilizzabili
@@ -46,10 +47,10 @@ class WorkoutTemplate { // 3, 6, o 10
               final exerciseTemplate = ExerciseTemplate.fromJson(exerciseJson);
               exercises.add(exerciseTemplate);
             }
-          } catch (e) {
+          } catch (_) {
+            // Skip malformed exercises - better to load partial template than fail completely
           }
         }
-      } else {
       }
     }
     
@@ -208,7 +209,9 @@ class ExerciseTemplate { // For superset, dropset, etc.
     List<SetTemplate>? sets,
     this.notes,
     this.restTime,
+    this.tut, // ⌚ Time Under Tension (e.g., "3-1-2-0")
     this.subExercises,
+    this.countingMode, // How this exercise is counted (weighted/reps/time)
   }) : sets = sets ?? const [];
 
   factory ExerciseTemplate.fromJson(Map<String, dynamic> json) {
@@ -309,6 +312,12 @@ class ExerciseTemplate { // For superset, dropset, etc.
       }
     }
     
+    // Parse countingMode if present
+    ExerciseCountingMode? countingMode;
+    if (json['countingMode'] != null) {
+      countingMode = ExerciseCountingMode.fromString(json['countingMode'] as String?);
+    }
+
     final exerciseTemplate = ExerciseTemplate(
       exerciseId: exerciseId,
       exerciseName: exerciseName,
@@ -318,9 +327,11 @@ class ExerciseTemplate { // For superset, dropset, etc.
       notes: json['notes']?.toString(),
       // FIX: Firebase may return restTime as double, use num to handle both int and double
       restTime: json['restTime'] is num ? (json['restTime'] as num).toInt() : null,
+      tut: json['tut']?.toString(), // ⌚ Time Under Tension
       subExercises: subExercises,
+      countingMode: countingMode,
     );
-    
+
     return exerciseTemplate;
   }
 
@@ -363,7 +374,9 @@ class ExerciseTemplate { // For superset, dropset, etc.
         sets: sets,
         notes: exercise.notes,
         restTime: exercise.restTime,
+        tut: exercise.tut, // ⌚ Time Under Tension
         subExercises: subExercises,
+        countingMode: exercise.countingMode,
       );
     }
 
@@ -387,6 +400,8 @@ class ExerciseTemplate { // For superset, dropset, etc.
         sets: sets,
         notes: exercise.notes,
         restTime: exercise.restTime,
+        tut: exercise.tut, // ⌚ Time Under Tension
+        countingMode: exercise.countingMode,
       );
     }
 
@@ -398,6 +413,7 @@ class ExerciseTemplate { // For superset, dropset, etc.
         return SetTemplate(
           setNumber: index + 1,
           targetReps: rpSet.reps,
+          restSeconds: rpSet.restSeconds, // ✅ Preserve restSeconds
         );
       }).toList();
 
@@ -409,6 +425,8 @@ class ExerciseTemplate { // For superset, dropset, etc.
         sets: sets,
         notes: exercise.notes,
         restTime: exercise.restTime,
+        tut: exercise.tut, // ⌚ Time Under Tension
+        countingMode: exercise.countingMode,
       );
     }
 
@@ -429,6 +447,8 @@ class ExerciseTemplate { // For superset, dropset, etc.
       }).toList(),
       notes: exercise.notes,
       restTime: exercise.restTime,
+      tut: exercise.tut, // ⌚ Time Under Tension
+      countingMode: exercise.countingMode,
     );
   }
 
@@ -439,7 +459,9 @@ class ExerciseTemplate { // For superset, dropset, etc.
   final List<SetTemplate> sets;
   final String? notes;
   final int? restTime;
+  final String? tut; // ⌚ Time Under Tension (e.g., "3-1-2-0")
   final List<ExerciseTemplate>? subExercises;
+  final ExerciseCountingMode? countingMode; // How this exercise is counted (weighted/reps/time)
 
   Map<String, dynamic> toJson() {
     return {
@@ -450,8 +472,10 @@ class ExerciseTemplate { // For superset, dropset, etc.
       'sets': sets.map((s) => s.toJson()).toList(),
       'notes': notes,
       'restTime': restTime,
-      if (subExercises != null && subExercises!.isNotEmpty) 
+      'tut': tut, // ⌚ Time Under Tension
+      if (subExercises != null && subExercises!.isNotEmpty)
         'exercises': subExercises!.map((e) => e.toJson()).toList(),
+      if (countingMode != null) 'countingMode': countingMode!.name,
     };
   }
 
@@ -464,7 +488,9 @@ class ExerciseTemplate { // For superset, dropset, etc.
     List<SetTemplate>? sets,
     String? notes,
     int? restTime,
+    String? tut, // ⌚ Time Under Tension
     List<ExerciseTemplate>? subExercises,
+    ExerciseCountingMode? countingMode,
   }) {
     return ExerciseTemplate(
       exerciseId: exerciseId ?? this.exerciseId,
@@ -474,7 +500,9 @@ class ExerciseTemplate { // For superset, dropset, etc.
       sets: sets ?? this.sets,
       notes: notes ?? this.notes,
       restTime: restTime ?? this.restTime,
+      tut: tut ?? this.tut, // ⌚ Time Under Tension
       subExercises: subExercises ?? this.subExercises,
+      countingMode: countingMode ?? this.countingMode,
     );
   }
 
@@ -482,7 +510,7 @@ class ExerciseTemplate { // For superset, dropset, etc.
   Exercise toWorkoutExercise() {
     // If it's a superset and has sub-exercises, create a SupersetExercise
     if (type == ExerciseType.superset && subExercises != null && subExercises!.isNotEmpty) {
-      final exercises = subExercises!.map((subTemplate) => 
+      final exercises = subExercises!.map((subTemplate) =>
         Exercise(
           name: subTemplate.exerciseName,
           type: ExerciseType.single, // Sub-exercises are singles
@@ -490,20 +518,23 @@ class ExerciseTemplate { // For superset, dropset, etc.
           sets: subTemplate.sets.map((s) => s.toExerciseSet()).toList(),
           notes: subTemplate.notes,
           restTime: subTemplate.restTime,
+          tut: subTemplate.tut, // ⌚ Time Under Tension
+          countingMode: subTemplate.countingMode ?? ExerciseCountingMode.weighted,
         )
       ).toList();
-      
+
       // Create SupersetSets with shared data for all exercises
       final supersetSets = <SupersetSet>[];
-      
+
       for (int setIndex = 0; setIndex < sets.length; setIndex++) {
         final setTemplate = sets[setIndex];
         final exerciseData = <String, SupersetExerciseData>{};
-        
+
         // Create data for each exercise in this superset set
         for (final exercise in exercises) {
-          exerciseData[exercise.name] = SupersetExerciseData(
-            exerciseId: exercise.name, // Using exercise name as ID for now
+          // ✅ FIX: Use exercise.id as key (not name) - SupersetCard looks up by ID
+          exerciseData[exercise.id] = SupersetExerciseData(
+            exerciseId: exercise.id,
             exerciseName: exercise.name,
             targetWeight: setTemplate.targetWeight,
             targetReps: setTemplate.targetReps,
@@ -513,7 +544,7 @@ class ExerciseTemplate { // For superset, dropset, etc.
             isCompleted: false,
           );
         }
-        
+
         // ✅ FIX: Aggiungi timestamp per ID univoco
         supersetSets.add(SupersetSet(
           id: 'superset_set_${DateTime.now().millisecondsSinceEpoch}_$setIndex',
@@ -522,16 +553,61 @@ class ExerciseTemplate { // For superset, dropset, etc.
           isCompleted: false,
         ));
       }
-      
+
       return SupersetExercise(
         name: exerciseName,
         exercises: exercises,
         supersetSets: supersetSets,
         notes: notes,
         restTime: restTime,
+        tut: tut, // ⌚ Time Under Tension
       );
     }
-    
+
+    // ✅ FIX: Handle DropSetExercise - convert SetTemplates back to DropSetStages
+    if (type == ExerciseType.dropset) {
+      final stages = sets.map((setTemplate) {
+        return DropSetStage(
+          weight: setTemplate.targetWeight ?? 0,
+          reps: setTemplate.targetReps ?? 8,
+          isCompleted: false,
+        );
+      }).toList();
+
+      return DropSetExercise(
+        name: exerciseName,
+        category: category,
+        stages: stages,
+        notes: notes,
+        restTime: restTime,
+      );
+    }
+
+    // ✅ FIX: Handle RestPauseExercise - convert SetTemplates back to RestPauseSets
+    if (type == ExerciseType.restPause) {
+      // Get weight from first set (all sets share same weight in rest-pause)
+      final weight = sets.isNotEmpty ? (sets.first.targetWeight ?? 0) : 0.0;
+      final targetReps = sets.isNotEmpty ? (sets.first.targetReps ?? 8) : 8;
+
+      final restPauseSets = sets.map((setTemplate) {
+        return RestPauseSet(
+          reps: setTemplate.targetReps ?? 0,
+          restSeconds: setTemplate.restSeconds ?? 15, // Use saved value or default 15s
+          isCompleted: false,
+        );
+      }).toList();
+
+      return RestPauseExercise(
+        name: exerciseName,
+        category: category,
+        weight: weight,
+        targetReps: targetReps,
+        restPauseSets: restPauseSets,
+        notes: notes,
+        restTime: restTime,
+      );
+    }
+
     // For normal exercises or superset without sub-exercises
     final exercise = Exercise(
       name: exerciseName,
@@ -540,8 +616,10 @@ class ExerciseTemplate { // For superset, dropset, etc.
       sets: sets.map((setTemplate) => setTemplate.toExerciseSet()).toList(),
       notes: notes,
       restTime: restTime,
+      tut: tut, // ⌚ Time Under Tension
+      countingMode: countingMode ?? ExerciseCountingMode.weighted,
     );
-    
+
     return exercise;
   }
 }
@@ -554,6 +632,7 @@ class SetTemplate {
     this.targetWeight,
     this.targetReps,
     this.targetRpe,
+    this.restSeconds,
     this.notes,
   });
 
@@ -577,11 +656,16 @@ class SetTemplate {
     final rpeRaw = json['targetRpe'] ?? json['rpe'];
     final targetRpe = rpeRaw is int ? rpeRaw : (rpeRaw is String ? int.tryParse(rpeRaw) : null);
 
+    // Parse restSeconds for RestPause sets
+    final restSecondsRaw = json['restSeconds'];
+    final restSeconds = restSecondsRaw is int ? restSecondsRaw : (restSecondsRaw is String ? int.tryParse(restSecondsRaw) : null);
+
     return SetTemplate(
       setNumber: setNumber,
       targetWeight: targetWeight,
       targetReps: targetReps,
       targetRpe: targetRpe,
+      restSeconds: restSeconds,
       notes: json['notes']?.toString(),
     );
   }
@@ -589,6 +673,7 @@ class SetTemplate {
   final double? targetWeight;
   final int? targetReps;
   final int? targetRpe; // Rate of Perceived Exertion
+  final int? restSeconds; // For RestPause sets (seconds between mini-sets)
   final String? notes;
 
   Map<String, dynamic> toJson() {
@@ -597,6 +682,7 @@ class SetTemplate {
       'targetWeight': targetWeight,
       'targetReps': targetReps,
       'targetRpe': targetRpe,
+      if (restSeconds != null) 'restSeconds': restSeconds,
       'notes': notes,
     };
   }
