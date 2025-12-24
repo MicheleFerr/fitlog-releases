@@ -412,6 +412,7 @@ class ExerciseTemplate { // For superset, dropset, etc.
         final rpSet = entry.value;
         return SetTemplate(
           setNumber: index + 1,
+          targetWeight: exercise.weight, // ✅ Preserve weight for all sets
           targetReps: rpSet.reps,
           restSeconds: rpSet.restSeconds, // ✅ Preserve restSeconds
         );
