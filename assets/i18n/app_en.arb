@@ -9120,6 +9120,10 @@
   "@restPauseTraining": {
     "description": "Rest-pause training technique title"
   },
+  "weightAndRepsRequired": "Weight and target reps are required",
+  "@weightAndRepsRequired": {
+    "description": "Error when weight or reps missing for rest-pause"
+  },
   "restPauseDescription": "Rest-Pause: Perform to failure, rest 10-15 seconds, repeat until target reps.",
   "@restPauseDescription": {
     "description": "Rest-pause technique description"
@@ -26152,6 +26156,14 @@
   "@volumeProgressionDescription": {
     "description": "Volume progression feature description"
   },
+  "exercisesThisWeek": "Exercises This Week",
+  "@exercisesThisWeek": {
+    "description": "Title for exercises counted this week card"
+  },
+  "noExercisesThisWeek": "No exercises recorded this week",
+  "@noExercisesThisWeek": {
+    "description": "Empty state for exercises this week"
+  },
   "muscleBalanceDescription": "Discover which muscle groups get the most work and find imbalances",
   "@muscleBalanceDescription": {
     "description": "Muscle balance feature description"
@@ -29411,5 +29423,391 @@
   "continueText": "Continue",
   "@continueText": {
     "description": "Generic continue button text"
+  },
+
+  "mergeSuggestionTitle": "Similar exercises found",
+  "@mergeSuggestionTitle": {
+    "description": "Title for merge suggestion card on home"
+  },
+  "mergeSuggestionSubtitle": "Consolidate for better tracking",
+  "@mergeSuggestionSubtitle": {
+    "description": "Subtitle for merge suggestion card"
+  },
+  "mergeExercisesTitle": "Merge Exercises",
+  "@mergeExercisesTitle": {
+    "description": "Title for merge exercises screen"
+  },
+  "mergeExercisesDescription": "Select a custom exercise and choose which database exercise to merge it with. All your history will be preserved.",
+  "@mergeExercisesDescription": {
+    "description": "Description on merge screen"
+  },
+  "selectTargetExercise": "Select target exercise",
+  "@selectTargetExercise": {
+    "description": "Label when selecting target exercise"
+  },
+  "noMergeCandidates": "All exercises are organized!",
+  "@noMergeCandidates": {
+    "description": "Title when no merge candidates"
+  },
+  "noMergeCandidatesDescription": "No custom exercises found that could be consolidated with database exercises.",
+  "@noMergeCandidatesDescription": {
+    "description": "Description when no merge candidates"
+  },
+  "sessions": "sessions",
+  "@sessions": {
+    "description": "Sessions label"
+  },
+  "mergeExercises": "Merge exercises",
+  "@mergeExercises": {
+    "description": "Merge button label"
+  },
+  "confirmMerge": "Confirm Merge",
+  "@confirmMerge": {
+    "description": "Title for confirm merge bottom sheet"
+  },
+  "confirmMergeDescription": "Review changes before merging",
+  "@confirmMergeDescription": {
+    "description": "Description for confirm merge"
+  },
+  "fromExercise": "From",
+  "@fromExercise": {
+    "description": "Source exercise label"
+  },
+  "toExercise": "To",
+  "@toExercise": {
+    "description": "Target exercise label"
+  },
+  "sessionsToMerge": "Sessions to merge",
+  "@sessionsToMerge": {
+    "description": "Sessions count label"
+  },
+  "personalRecord": "Personal Record",
+  "@personalRecord": {
+    "description": "PR label"
+  },
+  "secondaryMuscles": "Secondary muscles",
+  "@secondaryMuscles": {
+    "description": "Secondary muscles label"
+  },
+  "mergeWarning": "This action cannot be undone. All history will be updated to the new exercise name.",
+  "@mergeWarning": {
+    "description": "Warning message before merge"
+  },
+  "confirmMergeButton": "Merge",
+  "@confirmMergeButton": {
+    "description": "Confirm merge button text"
+  },
+  "merging": "Merging...",
+  "@merging": {
+    "description": "Loading state during merge"
+  },
+  "mergeSuccessful": "Exercises merged successfully!",
+  "@mergeSuccessful": {
+    "description": "Success message after merge"
+  },
+  "mergeError": "Error merging exercises. Please try again.",
+  "@mergeError": {
+    "description": "Error message after failed merge"
+  },
+  "mergeHelpTitle": "How it works",
+  "@mergeHelpTitle": {
+    "description": "Help dialog title"
+  },
+  "mergeHelpContent": "Merging allows you to consolidate similar exercises. Select a custom exercise you've been using, then choose the official exercise from the database. All your workout history, PRs, and templates will be updated to use the new name, improving your tracking accuracy.",
+  "@mergeHelpContent": {
+    "description": "Help dialog content"
+  },
+  "matchSimilarityTooltip": "Name similarity percentage",
+  "@matchSimilarityTooltip": {
+    "description": "Tooltip explaining the match percentage"
+  },
+  "openFitnessApp": "Open Fitness App",
+  "@openFitnessApp": {
+    "description": "Prompt to open fitness app for activity sync"
+  },
+  "tapToSyncActivityData": "Tap to sync activity data",
+  "@tapToSyncActivityData": {
+    "description": "Hint to tap and sync activity data"
+  },
+  "tapToRetry": "Tap to retry",
+  "@tapToRetry": {
+    "description": "Hint to tap and retry action"
+  },
+  "upgradeExerciseTooltip": "Upgrade to official exercise",
+  "@upgradeExerciseTooltip": {
+    "description": "Tooltip for upgrade exercise icon"
+  },
+  "upgradeExerciseTitle": "Upgrade Exercise",
+  "@upgradeExerciseTitle": {
+    "description": "Title for quick upgrade modal"
+  },
+  "upgradeExerciseSubtitle": "Update metadata for better tracking",
+  "@upgradeExerciseSubtitle": {
+    "description": "Subtitle for quick upgrade modal"
+  },
+  "updateOtherWorkouts": "Update in {count} other workout(s)",
+  "@updateOtherWorkouts": {
+    "description": "Checkbox label for updating other workouts",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "showAlternatives": "Show {count} more match(es)",
+  "@showAlternatives": {
+    "description": "Button to show alternative matches",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "hideAlternatives": "Hide alternatives",
+  "@hideAlternatives": {
+    "description": "Button to hide alternative matches"
+  },
+  "confirmUpgrade": "Upgrade",
+  "@confirmUpgrade": {
+    "description": "Button to confirm exercise upgrade"
+  },
+  "muscles": "Muscles",
+  "@muscles": {
+    "description": "Label for muscle groups"
+  },
+  "movementPattern": "Movement pattern",
+  "@movementPattern": {
+    "description": "Label for movement pattern"
+  },
+  "exerciseUpgraded": "Exercise upgraded successfully",
+  "@exerciseUpgraded": {
+    "description": "Success message after upgrading exercise"
+  },
+  "equipment": "Equipment",
+  "@equipment": {
+    "description": "Label for exercise equipment"
+  },
+
+  "progressPhotos": "Progress Photos",
+  "@progressPhotos": {
+    "description": "Title for progress photos screen"
+  },
+  "addPhoto": "Add Photo",
+  "@addPhoto": {
+    "description": "Button to add a new progress photo"
+  },
+  "noProgressPhotos": "No photos yet",
+  "@noProgressPhotos": {
+    "description": "Empty state title when no progress photos"
+  },
+  "noProgressPhotosDescription": "Start documenting your fitness journey by adding your first progress photo",
+  "@noProgressPhotosDescription": {
+    "description": "Empty state description for progress photos"
+  },
+  "photoUploadedSuccessfully": "Photo uploaded successfully",
+  "@photoUploadedSuccessfully": {
+    "description": "Success message after photo upload"
+  },
+  "camera": "Camera",
+  "@camera": {
+    "description": "Camera option for taking photos"
+  },
+  "gallery": "Gallery",
+  "@gallery": {
+    "description": "Gallery option for selecting photos"
+  },
+
+  "photoReminders": "Photo Reminders",
+  "@photoReminders": {
+    "description": "Title for photo reminder settings"
+  },
+  "photoRemindersDescription": "Get gentle reminders to capture your progress",
+  "@photoRemindersDescription": {
+    "description": "Description for photo reminders feature"
+  },
+  "enablePhotoReminders": "Enable Reminders",
+  "@enablePhotoReminders": {
+    "description": "Toggle label for enabling photo reminders"
+  },
+  "remindersEnabled": "You'll receive periodic reminders",
+  "@remindersEnabled": {
+    "description": "Status when reminders are enabled"
+  },
+  "remindersDisabled": "No reminders scheduled",
+  "@remindersDisabled": {
+    "description": "Status when reminders are disabled"
+  },
+  "reminderFrequency": "Reminder Frequency",
+  "@reminderFrequency": {
+    "description": "Label for frequency selector"
+  },
+  "everyTwoWeeks": "Every 2 weeks",
+  "@everyTwoWeeks": {
+    "description": "Biweekly reminder frequency option"
+  },
+  "everyFourWeeks": "Every 4 weeks",
+  "@everyFourWeeks": {
+    "description": "Monthly reminder frequency option (recommended)"
+  },
+  "everySixWeeks": "Every 6 weeks",
+  "@everySixWeeks": {
+    "description": "Six weeks reminder frequency option"
+  },
+  "customInterval": "Custom",
+  "@customInterval": {
+    "description": "Custom interval option"
+  },
+  "reminderTime": "Reminder Time",
+  "@reminderTime": {
+    "description": "Label for time selector"
+  },
+  "nextReminder": "Next Reminder",
+  "@nextReminder": {
+    "description": "Label for next scheduled reminder"
+  },
+  "photoReminderAntiSpamInfo": "Reminders will pause automatically if you skip them 3 times in a row",
+  "@photoReminderAntiSpamInfo": {
+    "description": "Info about anti-spam feature"
+  },
+  "remindersAutoPaused": "Reminders Paused",
+  "@remindersAutoPaused": {
+    "description": "Title when reminders are auto-paused"
+  },
+  "remindersAutoPausedDescription": "We noticed you've been skipping reminders. Enable them again when you're ready.",
+  "@remindersAutoPausedDescription": {
+    "description": "Description when reminders are auto-paused"
+  },
+
+  "exportData": "Export Data",
+  "@exportData": {
+    "description": "Export data menu item title"
+  },
+  "exportDataSubtitle": "Download your data (GDPR Art. 20)",
+  "@exportDataSubtitle": {
+    "description": "Export data menu item subtitle"
+  },
+  "exportDataDescription": "Download all your fitness data",
+  "@exportDataDescription": {
+    "description": "Export data description"
+  },
+  "gdprDataPortability": "Right to Data Portability",
+  "@gdprDataPortability": {
+    "description": "GDPR Article 20 title"
+  },
+  "gdprDataPortabilityDescription": "Under GDPR Article 20, you have the right to receive your personal data in a portable format.",
+  "@gdprDataPortabilityDescription": {
+    "description": "GDPR data portability explanation"
+  },
+  "exportCategories": "What to Export",
+  "@exportCategories": {
+    "description": "Export categories selection header"
+  },
+  "selectAll": "Select All",
+  "@selectAll": {
+    "description": "Select all button"
+  },
+  "deselectAll": "Deselect All",
+  "@deselectAll": {
+    "description": "Deselect all button"
+  },
+  "exportFormat": "Export Format",
+  "@exportFormat": {
+    "description": "Export format selection header"
+  },
+  "formatZip": "ZIP",
+  "@formatZip": {
+    "description": "ZIP format option"
+  },
+  "formatJson": "JSON",
+  "@formatJson": {
+    "description": "JSON format option"
+  },
+  "formatCsv": "CSV",
+  "@formatCsv": {
+    "description": "CSV format option"
+  },
+  "formatZipDescription": "Complete archive with all data files and README",
+  "@formatZipDescription": {
+    "description": "ZIP format description"
+  },
+  "formatJsonDescription": "Single JSON file with all data",
+  "@formatJsonDescription": {
+    "description": "JSON format description"
+  },
+  "formatCsvDescription": "Summary in spreadsheet-compatible format",
+  "@formatCsvDescription": {
+    "description": "CSV format description"
+  },
+  "startExport": "Export My Data",
+  "@startExport": {
+    "description": "Start export button"
+  },
+  "exporting": "Exporting...",
+  "@exporting": {
+    "description": "Export in progress message"
+  },
+  "exportCompleted": "Export Complete!",
+  "@exportCompleted": {
+    "description": "Export completed title"
+  },
+  "exportCompletedDescription": "Your data has been exported and is ready to share or save.",
+  "@exportCompletedDescription": {
+    "description": "Export completed description"
+  },
+  "shareExport": "Share Export",
+  "@shareExport": {
+    "description": "Share export button"
+  },
+  "exportFailed": "Export Failed",
+  "@exportFailed": {
+    "description": "Export failed title"
+  },
+  "exportFailedGeneric": "An error occurred during export. Please try again.",
+  "@exportFailedGeneric": {
+    "description": "Generic export failure message"
+  },
+  "exportShareFailed": "Failed to share export file",
+  "@exportShareFailed": {
+    "description": "Share export failed message"
+  },
+  "exportEmailSubject": "My FitLog Data Export",
+  "@exportEmailSubject": {
+    "description": "Email subject for export"
+  },
+  "exportEmailBody": "Attached is my fitness data exported from FitLog Pro.",
+  "@exportEmailBody": {
+    "description": "Email body for export"
+  },
+  "exportCategoryWorkouts": "Workouts",
+  "@exportCategoryWorkouts": {
+    "description": "Workout history export category"
+  },
+  "exportCategoryTemplates": "Templates",
+  "@exportCategoryTemplates": {
+    "description": "Templates export category"
+  },
+  "exportCategoryExercises": "Custom Exercises",
+  "@exportCategoryExercises": {
+    "description": "Custom exercises export category"
+  },
+  "exportCategoryMeasurements": "Body Measurements",
+  "@exportCategoryMeasurements": {
+    "description": "Body measurements export category"
+  },
+  "exportCategoryPhotos": "Progress Photos",
+  "@exportCategoryPhotos": {
+    "description": "Progress photos export category"
+  },
+  "exportCategoryRecords": "Personal Records",
+  "@exportCategoryRecords": {
+    "description": "Personal records export category"
+  },
+  "exportCategorySettings": "Settings",
+  "@exportCategorySettings": {
+    "description": "Settings export category"
+  },
+  "exportCategoryAchievements": "Achievements",
+  "@exportCategoryAchievements": {
+    "description": "Achievements export category"
   }
 }

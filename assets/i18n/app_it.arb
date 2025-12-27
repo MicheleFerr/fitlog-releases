@@ -2801,6 +2801,10 @@
   "@restPauseTraining": {
     "description": "Rest-pause training technique title"
   },
+  "weightAndRepsRequired": "Peso e ripetizioni target sono obbligatori",
+  "@weightAndRepsRequired": {
+    "description": "Error when weight or reps missing for rest-pause"
+  },
   "restPauseDescription": "Rest-Pause: Esegui a cedimento, riposa 10-15 secondi, ripeti fino al target di ripetizioni.",
   "@restPauseDescription": {
     "description": "Rest-pause training technique description"
@@ -15166,6 +15170,14 @@
   "@volumeProgressionDescription": {
     "description": "Volume progression feature description"
   },
+  "exercisesThisWeek": "Esercizi Questa Settimana",
+  "@exercisesThisWeek": {
+    "description": "Title for exercises counted this week card"
+  },
+  "noExercisesThisWeek": "Nessun esercizio registrato questa settimana",
+  "@noExercisesThisWeek": {
+    "description": "Empty state for exercises this week"
+  },
   "muscleBalance": "Bilanciamento Muscoli",
   "@muscleBalance": {
     "description": "Muscle balance feature title"
@@ -17500,5 +17512,391 @@
   "continueToNextStage": "Continua al prossimo stadio",
   "@continueToNextStage": {
     "description": "Messaggio che invita a continuare al prossimo stadio del dropset"
+  },
+
+  "mergeSuggestionTitle": "Esercizi simili trovati",
+  "@mergeSuggestionTitle": {
+    "description": "Titolo card suggerimento merge nella home"
+  },
+  "mergeSuggestionSubtitle": "Consolida per un tracking migliore",
+  "@mergeSuggestionSubtitle": {
+    "description": "Sottotitolo card suggerimento merge"
+  },
+  "mergeExercisesTitle": "Unisci Esercizi",
+  "@mergeExercisesTitle": {
+    "description": "Titolo schermata unione esercizi"
+  },
+  "mergeExercisesDescription": "Seleziona un esercizio personalizzato e scegli con quale esercizio del database unirlo. Tutto lo storico sarà preservato.",
+  "@mergeExercisesDescription": {
+    "description": "Descrizione schermata merge"
+  },
+  "selectTargetExercise": "Seleziona esercizio target",
+  "@selectTargetExercise": {
+    "description": "Label quando si seleziona esercizio target"
+  },
+  "noMergeCandidates": "Tutti gli esercizi sono organizzati!",
+  "@noMergeCandidates": {
+    "description": "Titolo quando non ci sono candidati merge"
+  },
+  "noMergeCandidatesDescription": "Nessun esercizio personalizzato trovato che possa essere consolidato con esercizi del database.",
+  "@noMergeCandidatesDescription": {
+    "description": "Descrizione quando non ci sono candidati merge"
+  },
+  "sessions": "sessioni",
+  "@sessions": {
+    "description": "Label sessioni"
+  },
+  "mergeExercises": "Unisci esercizi",
+  "@mergeExercises": {
+    "description": "Label pulsante merge"
+  },
+  "confirmMerge": "Conferma Unione",
+  "@confirmMerge": {
+    "description": "Titolo bottom sheet conferma merge"
+  },
+  "confirmMergeDescription": "Rivedi le modifiche prima di unire",
+  "@confirmMergeDescription": {
+    "description": "Descrizione conferma merge"
+  },
+  "fromExercise": "Da",
+  "@fromExercise": {
+    "description": "Label esercizio sorgente"
+  },
+  "toExercise": "A",
+  "@toExercise": {
+    "description": "Label esercizio target"
+  },
+  "sessionsToMerge": "Sessioni da unire",
+  "@sessionsToMerge": {
+    "description": "Label conteggio sessioni"
+  },
+  "personalRecord": "Record Personale",
+  "@personalRecord": {
+    "description": "Label PR"
+  },
+  "secondaryMuscles": "Muscoli secondari",
+  "@secondaryMuscles": {
+    "description": "Label muscoli secondari"
+  },
+  "mergeWarning": "Questa azione non può essere annullata. Tutto lo storico sarà aggiornato con il nuovo nome esercizio.",
+  "@mergeWarning": {
+    "description": "Messaggio avviso prima del merge"
+  },
+  "confirmMergeButton": "Unisci",
+  "@confirmMergeButton": {
+    "description": "Testo pulsante conferma merge"
+  },
+  "merging": "Unione in corso...",
+  "@merging": {
+    "description": "Stato di caricamento durante merge"
+  },
+  "mergeSuccessful": "Esercizi uniti con successo!",
+  "@mergeSuccessful": {
+    "description": "Messaggio successo dopo merge"
+  },
+  "mergeError": "Errore durante l'unione. Riprova.",
+  "@mergeError": {
+    "description": "Messaggio errore dopo merge fallito"
+  },
+  "mergeHelpTitle": "Come funziona",
+  "@mergeHelpTitle": {
+    "description": "Titolo dialog aiuto"
+  },
+  "mergeHelpContent": "L'unione ti permette di consolidare esercizi simili. Seleziona un esercizio personalizzato che hai usato, poi scegli l'esercizio ufficiale dal database. Tutto lo storico, i PR e i template saranno aggiornati con il nuovo nome, migliorando la precisione del tracking.",
+  "@mergeHelpContent": {
+    "description": "Contenuto dialog aiuto"
+  },
+  "matchSimilarityTooltip": "Percentuale di somiglianza del nome",
+  "@matchSimilarityTooltip": {
+    "description": "Tooltip che spiega la percentuale di match"
+  },
+  "openFitnessApp": "Apri l'app Fitness",
+  "@openFitnessApp": {
+    "description": "Prompt per aprire l'app fitness per sync attività"
+  },
+  "tapToSyncActivityData": "Tocca per sincronizzare i dati",
+  "@tapToSyncActivityData": {
+    "description": "Hint per toccare e sincronizzare i dati attività"
+  },
+  "tapToRetry": "Tocca per riprovare",
+  "@tapToRetry": {
+    "description": "Hint per toccare e riprovare l'azione"
+  },
+  "upgradeExerciseTooltip": "Aggiorna all'esercizio ufficiale",
+  "@upgradeExerciseTooltip": {
+    "description": "Tooltip per icona upgrade esercizio"
+  },
+  "upgradeExerciseTitle": "Aggiorna Esercizio",
+  "@upgradeExerciseTitle": {
+    "description": "Titolo per modal upgrade rapido"
+  },
+  "upgradeExerciseSubtitle": "Aggiorna i metadati per un tracking migliore",
+  "@upgradeExerciseSubtitle": {
+    "description": "Sottotitolo per modal upgrade rapido"
+  },
+  "updateOtherWorkouts": "Aggiorna in altri {count} workout",
+  "@updateOtherWorkouts": {
+    "description": "Label checkbox per aggiornare altri workout",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "showAlternatives": "Mostra altri {count} match",
+  "@showAlternatives": {
+    "description": "Pulsante per mostrare match alternativi",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "hideAlternatives": "Nascondi alternative",
+  "@hideAlternatives": {
+    "description": "Pulsante per nascondere match alternativi"
+  },
+  "confirmUpgrade": "Aggiorna",
+  "@confirmUpgrade": {
+    "description": "Pulsante per confermare upgrade esercizio"
+  },
+  "muscles": "Muscoli",
+  "@muscles": {
+    "description": "Label per gruppi muscolari"
+  },
+  "movementPattern": "Pattern di movimento",
+  "@movementPattern": {
+    "description": "Label per pattern di movimento"
+  },
+  "exerciseUpgraded": "Esercizio aggiornato con successo",
+  "@exerciseUpgraded": {
+    "description": "Messaggio successo dopo upgrade esercizio"
+  },
+  "equipment": "Attrezzatura",
+  "@equipment": {
+    "description": "Label per attrezzatura esercizio"
+  },
+
+  "progressPhotos": "Foto Progressi",
+  "@progressPhotos": {
+    "description": "Titolo schermata foto progressi"
+  },
+  "addPhoto": "Aggiungi Foto",
+  "@addPhoto": {
+    "description": "Pulsante per aggiungere una nuova foto progressi"
+  },
+  "noProgressPhotos": "Nessuna foto",
+  "@noProgressPhotos": {
+    "description": "Stato vuoto quando non ci sono foto progressi"
+  },
+  "noProgressPhotosDescription": "Inizia a documentare il tuo percorso fitness aggiungendo la tua prima foto progressi",
+  "@noProgressPhotosDescription": {
+    "description": "Descrizione stato vuoto per foto progressi"
+  },
+  "photoUploadedSuccessfully": "Foto caricata con successo",
+  "@photoUploadedSuccessfully": {
+    "description": "Messaggio successo dopo caricamento foto"
+  },
+  "camera": "Fotocamera",
+  "@camera": {
+    "description": "Opzione fotocamera per scattare foto"
+  },
+  "gallery": "Galleria",
+  "@gallery": {
+    "description": "Opzione galleria per selezionare foto"
+  },
+
+  "photoReminders": "Promemoria Foto",
+  "@photoReminders": {
+    "description": "Titolo impostazioni promemoria foto"
+  },
+  "photoRemindersDescription": "Ricevi promemoria gentili per catturare i tuoi progressi",
+  "@photoRemindersDescription": {
+    "description": "Descrizione funzionalità promemoria foto"
+  },
+  "enablePhotoReminders": "Abilita Promemoria",
+  "@enablePhotoReminders": {
+    "description": "Toggle per abilitare promemoria foto"
+  },
+  "remindersEnabled": "Riceverai promemoria periodici",
+  "@remindersEnabled": {
+    "description": "Stato quando i promemoria sono abilitati"
+  },
+  "remindersDisabled": "Nessun promemoria programmato",
+  "@remindersDisabled": {
+    "description": "Stato quando i promemoria sono disabilitati"
+  },
+  "reminderFrequency": "Frequenza Promemoria",
+  "@reminderFrequency": {
+    "description": "Etichetta selettore frequenza"
+  },
+  "everyTwoWeeks": "Ogni 2 settimane",
+  "@everyTwoWeeks": {
+    "description": "Opzione frequenza bisettimanale"
+  },
+  "everyFourWeeks": "Ogni 4 settimane",
+  "@everyFourWeeks": {
+    "description": "Opzione frequenza mensile (raccomandata)"
+  },
+  "everySixWeeks": "Ogni 6 settimane",
+  "@everySixWeeks": {
+    "description": "Opzione frequenza sei settimane"
+  },
+  "customInterval": "Personalizzato",
+  "@customInterval": {
+    "description": "Opzione intervallo personalizzato"
+  },
+  "reminderTime": "Orario Promemoria",
+  "@reminderTime": {
+    "description": "Etichetta selettore orario"
+  },
+  "nextReminder": "Prossimo Promemoria",
+  "@nextReminder": {
+    "description": "Etichetta prossimo promemoria programmato"
+  },
+  "photoReminderAntiSpamInfo": "I promemoria si sospenderanno automaticamente se li ignori 3 volte di seguito",
+  "@photoReminderAntiSpamInfo": {
+    "description": "Info sulla funzione anti-spam"
+  },
+  "remindersAutoPaused": "Promemoria Sospesi",
+  "@remindersAutoPaused": {
+    "description": "Titolo quando i promemoria sono auto-sospesi"
+  },
+  "remindersAutoPausedDescription": "Abbiamo notato che stai saltando i promemoria. Riabilitali quando sei pronto.",
+  "@remindersAutoPausedDescription": {
+    "description": "Descrizione quando i promemoria sono auto-sospesi"
+  },
+
+  "exportData": "Esporta Dati",
+  "@exportData": {
+    "description": "Titolo voce menu esportazione dati"
+  },
+  "exportDataSubtitle": "Scarica i tuoi dati (GDPR Art. 20)",
+  "@exportDataSubtitle": {
+    "description": "Sottotitolo voce menu esportazione dati"
+  },
+  "exportDataDescription": "Scarica tutti i tuoi dati fitness",
+  "@exportDataDescription": {
+    "description": "Descrizione esportazione dati"
+  },
+  "gdprDataPortability": "Diritto alla Portabilità dei Dati",
+  "@gdprDataPortability": {
+    "description": "Titolo GDPR Articolo 20"
+  },
+  "gdprDataPortabilityDescription": "Ai sensi dell'Art. 20 del GDPR, hai il diritto di ricevere i tuoi dati personali in un formato portabile.",
+  "@gdprDataPortabilityDescription": {
+    "description": "Spiegazione portabilità dati GDPR"
+  },
+  "exportCategories": "Cosa Esportare",
+  "@exportCategories": {
+    "description": "Intestazione selezione categorie export"
+  },
+  "selectAll": "Seleziona Tutto",
+  "@selectAll": {
+    "description": "Pulsante seleziona tutto"
+  },
+  "deselectAll": "Deseleziona Tutto",
+  "@deselectAll": {
+    "description": "Pulsante deseleziona tutto"
+  },
+  "exportFormat": "Formato Export",
+  "@exportFormat": {
+    "description": "Intestazione selezione formato export"
+  },
+  "formatZip": "ZIP",
+  "@formatZip": {
+    "description": "Opzione formato ZIP"
+  },
+  "formatJson": "JSON",
+  "@formatJson": {
+    "description": "Opzione formato JSON"
+  },
+  "formatCsv": "CSV",
+  "@formatCsv": {
+    "description": "Opzione formato CSV"
+  },
+  "formatZipDescription": "Archivio completo con tutti i file dati e README",
+  "@formatZipDescription": {
+    "description": "Descrizione formato ZIP"
+  },
+  "formatJsonDescription": "File JSON unico con tutti i dati",
+  "@formatJsonDescription": {
+    "description": "Descrizione formato JSON"
+  },
+  "formatCsvDescription": "Riepilogo in formato compatibile con fogli di calcolo",
+  "@formatCsvDescription": {
+    "description": "Descrizione formato CSV"
+  },
+  "startExport": "Esporta i Miei Dati",
+  "@startExport": {
+    "description": "Pulsante avvia export"
+  },
+  "exporting": "Esportazione in corso...",
+  "@exporting": {
+    "description": "Messaggio export in corso"
+  },
+  "exportCompleted": "Export Completato!",
+  "@exportCompleted": {
+    "description": "Titolo export completato"
+  },
+  "exportCompletedDescription": "I tuoi dati sono stati esportati e sono pronti per essere condivisi o salvati.",
+  "@exportCompletedDescription": {
+    "description": "Descrizione export completato"
+  },
+  "shareExport": "Condividi Export",
+  "@shareExport": {
+    "description": "Pulsante condividi export"
+  },
+  "exportFailed": "Export Fallito",
+  "@exportFailed": {
+    "description": "Titolo export fallito"
+  },
+  "exportFailedGeneric": "Si è verificato un errore durante l'esportazione. Riprova.",
+  "@exportFailedGeneric": {
+    "description": "Messaggio errore generico export"
+  },
+  "exportShareFailed": "Impossibile condividere il file di export",
+  "@exportShareFailed": {
+    "description": "Messaggio condivisione export fallita"
+  },
+  "exportEmailSubject": "Il Mio Export Dati FitLog",
+  "@exportEmailSubject": {
+    "description": "Oggetto email per export"
+  },
+  "exportEmailBody": "In allegato i miei dati fitness esportati da FitLog Pro.",
+  "@exportEmailBody": {
+    "description": "Corpo email per export"
+  },
+  "exportCategoryWorkouts": "Allenamenti",
+  "@exportCategoryWorkouts": {
+    "description": "Categoria export storico allenamenti"
+  },
+  "exportCategoryTemplates": "Schede",
+  "@exportCategoryTemplates": {
+    "description": "Categoria export schede"
+  },
+  "exportCategoryExercises": "Esercizi Personalizzati",
+  "@exportCategoryExercises": {
+    "description": "Categoria export esercizi personalizzati"
+  },
+  "exportCategoryMeasurements": "Misure Corporee",
+  "@exportCategoryMeasurements": {
+    "description": "Categoria export misure corporee"
+  },
+  "exportCategoryPhotos": "Foto Progressi",
+  "@exportCategoryPhotos": {
+    "description": "Categoria export foto progressi"
+  },
+  "exportCategoryRecords": "Record Personali",
+  "@exportCategoryRecords": {
+    "description": "Categoria export record personali"
+  },
+  "exportCategorySettings": "Impostazioni",
+  "@exportCategorySettings": {
+    "description": "Categoria export impostazioni"
+  },
+  "exportCategoryAchievements": "Traguardi",
+  "@exportCategoryAchievements": {
+    "description": "Categoria export traguardi"
   }
 }

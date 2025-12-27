@@ -18,6 +18,10 @@ import 'package:gymbro_flutter_new/features/onboarding/presentation/providers/tu
 import 'package:gymbro_flutter_new/features/onboarding/domain/registry/tutorial_registry.dart';
 import 'package:gymbro_flutter_new/features/auth/presentation/providers/admin_provider.dart';
 import 'package:gymbro_flutter_new/features/auth/domain/entities/user_profile.dart';
+import 'package:gymbro_flutter_new/features/stress_index/presentation/providers/stress_index_provider.dart';
+import 'package:gymbro_flutter_new/features/analytics/presentation/providers/workout_analytics_provider.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator.dart';
+import 'package:gymbro_flutter_new/features/data_export/presentation/widgets/data_export_sheet.dart';
 
 class SettingsScreen extends ConsumerWidget {
   const SettingsScreen({super.key});
@@ -555,6 +559,64 @@ class SettingsScreen extends ConsumerWidget {
                 semanticLabel: 'Import',
               ),
               onTap: () => context.pushNamed('import-data'),
+            ),
+
+            const Divider(),
+
+            // Export Data (GDPR Art. 20)
+            _buildSettingTile(
+              context,
+              title: context.l10n.exportData,
+              subtitle: context.l10n.exportDataSubtitle,
+              leading: const SemanticIcon(
+                icon: AppIcons.upload,
+                semanticLabel: 'Export',
+              ),
+              onTap: () => _showExportDataSheet(context),
+            ),
+
+            const Divider(),
+
+            // Reset All Analytics (Cache + Stress Index)
+            Consumer(
+              builder: (context, ref, _) {
+                final stressState = ref.watch(stressIndexNotifierProvider);
+                final isLoading = stressState.isLoading;
+
+                return _buildSettingTile(
+                  context,
+                  title: context.l10n.recalculateStressIndex,
+                  subtitle: isLoading
+                      ? context.l10n.recalculatingStressIndex
+                      : context.l10n.recalculateStressIndexDesc,
+                  leading: isLoading
+                      ? const LoadingIndicator(size: 24)
+                      : const SemanticIcon(
+                          icon: AppIcons.refresh,
+                          semanticLabel: 'Recalculate',
+                        ),
+                  onTap: isLoading
+                      ? null
+                      : () async {
+                          // Step 1: Clear analytics cache (forces recalculation of all views)
+                          final cacheService = ref.read(analyticsCacheServiceProvider);
+                          await cacheService.clear();
+
+                          // Step 2: Recalculate stress index with new EMG ratios
+                          // Use 365 days to recalculate all historical data
+                          final result = await ref
+                              .read(stressIndexNotifierProvider.notifier)
+                              .clearAndRecalculate(days: 365);
+
+                          if (context.mounted) {
+                            SnackBarService.showSuccess(
+                              context,
+                              context.l10n.stressIndexRecalculatedSuccess(result.$2),
+                            );
+                          }
+                        },
+                );
+              },
             ),
           ],
         ),
@@ -1222,6 +1284,15 @@ class SettingsScreen extends ConsumerWidget {
           ),
         ],
       ),
+    );
+  }
+
+  void _showExportDataSheet(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (context) => const DataExportSheet(),
     );
   }
 

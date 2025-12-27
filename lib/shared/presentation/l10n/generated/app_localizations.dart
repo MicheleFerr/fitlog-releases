@@ -1526,10 +1526,10 @@ abstract class AppLocalizations {
   /// **'Export completed successfully!'**
   String get exportSuccessful;
 
-  /// Export failure message
+  /// Export failed title
   ///
   /// In en, this message translates to:
-  /// **'Export failed. Please try again.'**
+  /// **'Export Failed'**
   String get exportFailed;
 
   /// Export file sharing text
@@ -3469,7 +3469,7 @@ abstract class AppLocalizations {
   /// **'Error loading data'**
   String get errorLoadingData;
 
-  /// Export data menu option
+  /// Export data menu item title
   ///
   /// In en, this message translates to:
   /// **'Export Data'**
@@ -4499,10 +4499,10 @@ abstract class AppLocalizations {
   /// **'Primary Muscles'**
   String get primaryMuscles;
 
-  /// Label for secondary muscles field
+  /// Secondary muscles label
   ///
   /// In en, this message translates to:
-  /// **'Secondary Muscles'**
+  /// **'Secondary muscles'**
   String get secondaryMuscles;
 
   /// Difficulty level section title
@@ -4517,16 +4517,16 @@ abstract class AppLocalizations {
   /// **'Exercise Type'**
   String get exerciseType;
 
-  /// Label for equipment field
+  /// Label for exercise equipment
   ///
   /// In en, this message translates to:
   /// **'Equipment'**
   String get equipment;
 
-  /// Label for movement pattern field
+  /// Label for movement pattern
   ///
   /// In en, this message translates to:
-  /// **'Movement Pattern'**
+  /// **'Movement pattern'**
   String get movementPattern;
 
   /// Repetition range field label
@@ -13157,7 +13157,7 @@ abstract class AppLocalizations {
   /// **'Reduce volume by {sets} sets or take an immediate deload week at 50% volume to recover.'**
   String volumeExcessiveAdvice(int sets);
 
-  /// Section title for exercises performed this week
+  /// Title for exercises counted this week card
   ///
   /// In en, this message translates to:
   /// **'Exercises This Week'**
@@ -13768,6 +13768,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Rest-Pause Training'**
   String get restPauseTraining;
+
+  /// Error when weight or reps missing for rest-pause
+  ///
+  /// In en, this message translates to:
+  /// **'Weight and target reps are required'**
+  String get weightAndRepsRequired;
 
   /// Rest-pause technique description
   ///
@@ -18486,7 +18492,7 @@ abstract class AppLocalizations {
   /// **'Effort Progression'**
   String get effortProgression;
 
-  /// Personal record full label
+  /// PR label
   ///
   /// In en, this message translates to:
   /// **'Personal Record'**
@@ -20658,7 +20664,7 @@ abstract class AppLocalizations {
   /// **'Select Available Equipment'**
   String get equipmentProfileSelectEquipment;
 
-  /// No description provided for @selectAll.
+  /// Select all button
   ///
   /// In en, this message translates to:
   /// **'Select All'**
@@ -24258,10 +24264,10 @@ abstract class AppLocalizations {
   /// **'Export'**
   String get export;
 
-  /// Auto-generated for exporting
+  /// Export in progress message
   ///
   /// In en, this message translates to:
-  /// **'Exporting'**
+  /// **'Exporting...'**
   String get exporting;
 
   /// Auto-generated for failed
@@ -37404,10 +37410,10 @@ abstract class AppLocalizations {
   /// **'{count, plural, =0{No days selected} =1{1 day selected} other{{count} days selected}}'**
   String daysSelected(int count);
 
-  /// Label for reminder time picker
+  /// Label for time selector
   ///
   /// In en, this message translates to:
-  /// **'Reminder time'**
+  /// **'Reminder Time'**
   String get reminderTime;
 
   /// Button to confirm scheduling
@@ -37703,6 +37709,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Track your weekly training volume and spot trends over time'**
   String get volumeProgressionDescription;
+
+  /// Empty state for exercises this week
+  ///
+  /// In en, this message translates to:
+  /// **'No exercises recorded this week'**
+  String get noExercisesThisWeek;
 
   /// Muscle balance feature description
   ///
@@ -42451,6 +42463,510 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Continue'**
   String get continueText;
+
+  /// Title for merge suggestion card on home
+  ///
+  /// In en, this message translates to:
+  /// **'Similar exercises found'**
+  String get mergeSuggestionTitle;
+
+  /// Subtitle for merge suggestion card
+  ///
+  /// In en, this message translates to:
+  /// **'Consolidate for better tracking'**
+  String get mergeSuggestionSubtitle;
+
+  /// Title for merge exercises screen
+  ///
+  /// In en, this message translates to:
+  /// **'Merge Exercises'**
+  String get mergeExercisesTitle;
+
+  /// Description on merge screen
+  ///
+  /// In en, this message translates to:
+  /// **'Select a custom exercise and choose which database exercise to merge it with. All your history will be preserved.'**
+  String get mergeExercisesDescription;
+
+  /// Label when selecting target exercise
+  ///
+  /// In en, this message translates to:
+  /// **'Select target exercise'**
+  String get selectTargetExercise;
+
+  /// Title when no merge candidates
+  ///
+  /// In en, this message translates to:
+  /// **'All exercises are organized!'**
+  String get noMergeCandidates;
+
+  /// Description when no merge candidates
+  ///
+  /// In en, this message translates to:
+  /// **'No custom exercises found that could be consolidated with database exercises.'**
+  String get noMergeCandidatesDescription;
+
+  /// Sessions label
+  ///
+  /// In en, this message translates to:
+  /// **'sessions'**
+  String get sessions;
+
+  /// Merge button label
+  ///
+  /// In en, this message translates to:
+  /// **'Merge exercises'**
+  String get mergeExercises;
+
+  /// Title for confirm merge bottom sheet
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm Merge'**
+  String get confirmMerge;
+
+  /// Description for confirm merge
+  ///
+  /// In en, this message translates to:
+  /// **'Review changes before merging'**
+  String get confirmMergeDescription;
+
+  /// Source exercise label
+  ///
+  /// In en, this message translates to:
+  /// **'From'**
+  String get fromExercise;
+
+  /// Target exercise label
+  ///
+  /// In en, this message translates to:
+  /// **'To'**
+  String get toExercise;
+
+  /// Sessions count label
+  ///
+  /// In en, this message translates to:
+  /// **'Sessions to merge'**
+  String get sessionsToMerge;
+
+  /// Warning message before merge
+  ///
+  /// In en, this message translates to:
+  /// **'This action cannot be undone. All history will be updated to the new exercise name.'**
+  String get mergeWarning;
+
+  /// Confirm merge button text
+  ///
+  /// In en, this message translates to:
+  /// **'Merge'**
+  String get confirmMergeButton;
+
+  /// Loading state during merge
+  ///
+  /// In en, this message translates to:
+  /// **'Merging...'**
+  String get merging;
+
+  /// Success message after merge
+  ///
+  /// In en, this message translates to:
+  /// **'Exercises merged successfully!'**
+  String get mergeSuccessful;
+
+  /// Error message after failed merge
+  ///
+  /// In en, this message translates to:
+  /// **'Error merging exercises. Please try again.'**
+  String get mergeError;
+
+  /// Help dialog title
+  ///
+  /// In en, this message translates to:
+  /// **'How it works'**
+  String get mergeHelpTitle;
+
+  /// Help dialog content
+  ///
+  /// In en, this message translates to:
+  /// **'Merging allows you to consolidate similar exercises. Select a custom exercise you\'ve been using, then choose the official exercise from the database. All your workout history, PRs, and templates will be updated to use the new name, improving your tracking accuracy.'**
+  String get mergeHelpContent;
+
+  /// Tooltip explaining the match percentage
+  ///
+  /// In en, this message translates to:
+  /// **'Name similarity percentage'**
+  String get matchSimilarityTooltip;
+
+  /// Prompt to open fitness app for activity sync
+  ///
+  /// In en, this message translates to:
+  /// **'Open Fitness App'**
+  String get openFitnessApp;
+
+  /// Hint to tap and sync activity data
+  ///
+  /// In en, this message translates to:
+  /// **'Tap to sync activity data'**
+  String get tapToSyncActivityData;
+
+  /// Hint to tap and retry action
+  ///
+  /// In en, this message translates to:
+  /// **'Tap to retry'**
+  String get tapToRetry;
+
+  /// Tooltip for upgrade exercise icon
+  ///
+  /// In en, this message translates to:
+  /// **'Upgrade to official exercise'**
+  String get upgradeExerciseTooltip;
+
+  /// Title for quick upgrade modal
+  ///
+  /// In en, this message translates to:
+  /// **'Upgrade Exercise'**
+  String get upgradeExerciseTitle;
+
+  /// Subtitle for quick upgrade modal
+  ///
+  /// In en, this message translates to:
+  /// **'Update metadata for better tracking'**
+  String get upgradeExerciseSubtitle;
+
+  /// Checkbox label for updating other workouts
+  ///
+  /// In en, this message translates to:
+  /// **'Update in {count} other workout(s)'**
+  String updateOtherWorkouts(int count);
+
+  /// Button to show alternative matches
+  ///
+  /// In en, this message translates to:
+  /// **'Show {count} more match(es)'**
+  String showAlternatives(int count);
+
+  /// Button to hide alternative matches
+  ///
+  /// In en, this message translates to:
+  /// **'Hide alternatives'**
+  String get hideAlternatives;
+
+  /// Button to confirm exercise upgrade
+  ///
+  /// In en, this message translates to:
+  /// **'Upgrade'**
+  String get confirmUpgrade;
+
+  /// Label for muscle groups
+  ///
+  /// In en, this message translates to:
+  /// **'Muscles'**
+  String get muscles;
+
+  /// Success message after upgrading exercise
+  ///
+  /// In en, this message translates to:
+  /// **'Exercise upgraded successfully'**
+  String get exerciseUpgraded;
+
+  /// Title for progress photos screen
+  ///
+  /// In en, this message translates to:
+  /// **'Progress Photos'**
+  String get progressPhotos;
+
+  /// Button to add a new progress photo
+  ///
+  /// In en, this message translates to:
+  /// **'Add Photo'**
+  String get addPhoto;
+
+  /// Empty state title when no progress photos
+  ///
+  /// In en, this message translates to:
+  /// **'No photos yet'**
+  String get noProgressPhotos;
+
+  /// Empty state description for progress photos
+  ///
+  /// In en, this message translates to:
+  /// **'Start documenting your fitness journey by adding your first progress photo'**
+  String get noProgressPhotosDescription;
+
+  /// Success message after photo upload
+  ///
+  /// In en, this message translates to:
+  /// **'Photo uploaded successfully'**
+  String get photoUploadedSuccessfully;
+
+  /// Camera option for taking photos
+  ///
+  /// In en, this message translates to:
+  /// **'Camera'**
+  String get camera;
+
+  /// Gallery option for selecting photos
+  ///
+  /// In en, this message translates to:
+  /// **'Gallery'**
+  String get gallery;
+
+  /// Title for photo reminder settings
+  ///
+  /// In en, this message translates to:
+  /// **'Photo Reminders'**
+  String get photoReminders;
+
+  /// Description for photo reminders feature
+  ///
+  /// In en, this message translates to:
+  /// **'Get gentle reminders to capture your progress'**
+  String get photoRemindersDescription;
+
+  /// Toggle label for enabling photo reminders
+  ///
+  /// In en, this message translates to:
+  /// **'Enable Reminders'**
+  String get enablePhotoReminders;
+
+  /// Status when reminders are enabled
+  ///
+  /// In en, this message translates to:
+  /// **'You\'ll receive periodic reminders'**
+  String get remindersEnabled;
+
+  /// Status when reminders are disabled
+  ///
+  /// In en, this message translates to:
+  /// **'No reminders scheduled'**
+  String get remindersDisabled;
+
+  /// Label for frequency selector
+  ///
+  /// In en, this message translates to:
+  /// **'Reminder Frequency'**
+  String get reminderFrequency;
+
+  /// Biweekly reminder frequency option
+  ///
+  /// In en, this message translates to:
+  /// **'Every 2 weeks'**
+  String get everyTwoWeeks;
+
+  /// Monthly reminder frequency option (recommended)
+  ///
+  /// In en, this message translates to:
+  /// **'Every 4 weeks'**
+  String get everyFourWeeks;
+
+  /// Six weeks reminder frequency option
+  ///
+  /// In en, this message translates to:
+  /// **'Every 6 weeks'**
+  String get everySixWeeks;
+
+  /// Custom interval option
+  ///
+  /// In en, this message translates to:
+  /// **'Custom'**
+  String get customInterval;
+
+  /// Label for next scheduled reminder
+  ///
+  /// In en, this message translates to:
+  /// **'Next Reminder'**
+  String get nextReminder;
+
+  /// Info about anti-spam feature
+  ///
+  /// In en, this message translates to:
+  /// **'Reminders will pause automatically if you skip them 3 times in a row'**
+  String get photoReminderAntiSpamInfo;
+
+  /// Title when reminders are auto-paused
+  ///
+  /// In en, this message translates to:
+  /// **'Reminders Paused'**
+  String get remindersAutoPaused;
+
+  /// Description when reminders are auto-paused
+  ///
+  /// In en, this message translates to:
+  /// **'We noticed you\'ve been skipping reminders. Enable them again when you\'re ready.'**
+  String get remindersAutoPausedDescription;
+
+  /// Export data menu item subtitle
+  ///
+  /// In en, this message translates to:
+  /// **'Download your data (GDPR Art. 20)'**
+  String get exportDataSubtitle;
+
+  /// Export data description
+  ///
+  /// In en, this message translates to:
+  /// **'Download all your fitness data'**
+  String get exportDataDescription;
+
+  /// GDPR Article 20 title
+  ///
+  /// In en, this message translates to:
+  /// **'Right to Data Portability'**
+  String get gdprDataPortability;
+
+  /// GDPR data portability explanation
+  ///
+  /// In en, this message translates to:
+  /// **'Under GDPR Article 20, you have the right to receive your personal data in a portable format.'**
+  String get gdprDataPortabilityDescription;
+
+  /// Export categories selection header
+  ///
+  /// In en, this message translates to:
+  /// **'What to Export'**
+  String get exportCategories;
+
+  /// Deselect all button
+  ///
+  /// In en, this message translates to:
+  /// **'Deselect All'**
+  String get deselectAll;
+
+  /// Export format selection header
+  ///
+  /// In en, this message translates to:
+  /// **'Export Format'**
+  String get exportFormat;
+
+  /// ZIP format option
+  ///
+  /// In en, this message translates to:
+  /// **'ZIP'**
+  String get formatZip;
+
+  /// JSON format option
+  ///
+  /// In en, this message translates to:
+  /// **'JSON'**
+  String get formatJson;
+
+  /// CSV format option
+  ///
+  /// In en, this message translates to:
+  /// **'CSV'**
+  String get formatCsv;
+
+  /// ZIP format description
+  ///
+  /// In en, this message translates to:
+  /// **'Complete archive with all data files and README'**
+  String get formatZipDescription;
+
+  /// JSON format description
+  ///
+  /// In en, this message translates to:
+  /// **'Single JSON file with all data'**
+  String get formatJsonDescription;
+
+  /// CSV format description
+  ///
+  /// In en, this message translates to:
+  /// **'Summary in spreadsheet-compatible format'**
+  String get formatCsvDescription;
+
+  /// Start export button
+  ///
+  /// In en, this message translates to:
+  /// **'Export My Data'**
+  String get startExport;
+
+  /// Export completed title
+  ///
+  /// In en, this message translates to:
+  /// **'Export Complete!'**
+  String get exportCompleted;
+
+  /// Export completed description
+  ///
+  /// In en, this message translates to:
+  /// **'Your data has been exported and is ready to share or save.'**
+  String get exportCompletedDescription;
+
+  /// Share export button
+  ///
+  /// In en, this message translates to:
+  /// **'Share Export'**
+  String get shareExport;
+
+  /// Generic export failure message
+  ///
+  /// In en, this message translates to:
+  /// **'An error occurred during export. Please try again.'**
+  String get exportFailedGeneric;
+
+  /// Share export failed message
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to share export file'**
+  String get exportShareFailed;
+
+  /// Email subject for export
+  ///
+  /// In en, this message translates to:
+  /// **'My FitLog Data Export'**
+  String get exportEmailSubject;
+
+  /// Email body for export
+  ///
+  /// In en, this message translates to:
+  /// **'Attached is my fitness data exported from FitLog Pro.'**
+  String get exportEmailBody;
+
+  /// Workout history export category
+  ///
+  /// In en, this message translates to:
+  /// **'Workouts'**
+  String get exportCategoryWorkouts;
+
+  /// Templates export category
+  ///
+  /// In en, this message translates to:
+  /// **'Templates'**
+  String get exportCategoryTemplates;
+
+  /// Custom exercises export category
+  ///
+  /// In en, this message translates to:
+  /// **'Custom Exercises'**
+  String get exportCategoryExercises;
+
+  /// Body measurements export category
+  ///
+  /// In en, this message translates to:
+  /// **'Body Measurements'**
+  String get exportCategoryMeasurements;
+
+  /// Progress photos export category
+  ///
+  /// In en, this message translates to:
+  /// **'Progress Photos'**
+  String get exportCategoryPhotos;
+
+  /// Personal records export category
+  ///
+  /// In en, this message translates to:
+  /// **'Personal Records'**
+  String get exportCategoryRecords;
+
+  /// Settings export category
+  ///
+  /// In en, this message translates to:
+  /// **'Settings'**
+  String get exportCategorySettings;
+
+  /// Achievements export category
+  ///
+  /// In en, this message translates to:
+  /// **'Achievements'**
+  String get exportCategoryAchievements;
 }
 
 class _AppLocalizationsDelegate

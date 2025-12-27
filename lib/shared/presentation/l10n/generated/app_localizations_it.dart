@@ -796,7 +796,7 @@ class AppLocalizationsIt extends AppLocalizations {
   String get exportSuccessful => 'Esportazione completata con successo!';
 
   @override
-  String get exportFailed => 'Esportazione fallita. Riprova.';
+  String get exportFailed => 'Export Fallito';
 
   @override
   String get gymbroTemplatesExport =>
@@ -2403,7 +2403,7 @@ class AppLocalizationsIt extends AppLocalizations {
   String get primaryMuscles => 'Muscoli Primari';
 
   @override
-  String get secondaryMuscles => 'Muscoli Secondari';
+  String get secondaryMuscles => 'Muscoli secondari';
 
   @override
   String get difficultyLevel => 'Livello di Difficoltà';
@@ -2415,7 +2415,7 @@ class AppLocalizationsIt extends AppLocalizations {
   String get equipment => 'Attrezzatura';
 
   @override
-  String get movementPattern => 'Pattern Movimento';
+  String get movementPattern => 'Pattern di movimento';
 
   @override
   String get repRange => 'Range Ripetizioni';
@@ -7773,6 +7773,10 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get restPauseTraining => 'Allenamento Rest-Pause';
+
+  @override
+  String get weightAndRepsRequired =>
+      'Peso e ripetizioni target sono obbligatori';
 
   @override
   String get restPauseDescription =>
@@ -13839,7 +13843,7 @@ class AppLocalizationsIt extends AppLocalizations {
   String get export => 'Esporta';
 
   @override
-  String get exporting => 'Exporting';
+  String get exporting => 'Esportazione in corso...';
 
   @override
   String get failed => 'Failed';
@@ -21147,7 +21151,7 @@ class AppLocalizationsIt extends AppLocalizations {
   }
 
   @override
-  String get reminderTime => 'Orario promemoria';
+  String get reminderTime => 'Orario Promemoria';
 
   @override
   String get confirmSchedule => 'Conferma programmazione';
@@ -21317,6 +21321,10 @@ class AppLocalizationsIt extends AppLocalizations {
   @override
   String get volumeProgressionDescription =>
       'Monitora il volume settimanale e identifica i trend nel tempo';
+
+  @override
+  String get noExercisesThisWeek =>
+      'Nessun esercizio registrato questa settimana';
 
   @override
   String get muscleBalanceDescription =>
@@ -24033,4 +24041,275 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get continueText => 'Continua';
+
+  @override
+  String get mergeSuggestionTitle => 'Esercizi simili trovati';
+
+  @override
+  String get mergeSuggestionSubtitle => 'Consolida per un tracking migliore';
+
+  @override
+  String get mergeExercisesTitle => 'Unisci Esercizi';
+
+  @override
+  String get mergeExercisesDescription =>
+      'Seleziona un esercizio personalizzato e scegli con quale esercizio del database unirlo. Tutto lo storico sarà preservato.';
+
+  @override
+  String get selectTargetExercise => 'Seleziona esercizio target';
+
+  @override
+  String get noMergeCandidates => 'Tutti gli esercizi sono organizzati!';
+
+  @override
+  String get noMergeCandidatesDescription =>
+      'Nessun esercizio personalizzato trovato che possa essere consolidato con esercizi del database.';
+
+  @override
+  String get sessions => 'sessioni';
+
+  @override
+  String get mergeExercises => 'Unisci esercizi';
+
+  @override
+  String get confirmMerge => 'Conferma Unione';
+
+  @override
+  String get confirmMergeDescription => 'Rivedi le modifiche prima di unire';
+
+  @override
+  String get fromExercise => 'Da';
+
+  @override
+  String get toExercise => 'A';
+
+  @override
+  String get sessionsToMerge => 'Sessioni da unire';
+
+  @override
+  String get mergeWarning =>
+      'Questa azione non può essere annullata. Tutto lo storico sarà aggiornato con il nuovo nome esercizio.';
+
+  @override
+  String get confirmMergeButton => 'Unisci';
+
+  @override
+  String get merging => 'Unione in corso...';
+
+  @override
+  String get mergeSuccessful => 'Esercizi uniti con successo!';
+
+  @override
+  String get mergeError => 'Errore durante l\'unione. Riprova.';
+
+  @override
+  String get mergeHelpTitle => 'Come funziona';
+
+  @override
+  String get mergeHelpContent =>
+      'L\'unione ti permette di consolidare esercizi simili. Seleziona un esercizio personalizzato che hai usato, poi scegli l\'esercizio ufficiale dal database. Tutto lo storico, i PR e i template saranno aggiornati con il nuovo nome, migliorando la precisione del tracking.';
+
+  @override
+  String get matchSimilarityTooltip => 'Percentuale di somiglianza del nome';
+
+  @override
+  String get openFitnessApp => 'Apri l\'app Fitness';
+
+  @override
+  String get tapToSyncActivityData => 'Tocca per sincronizzare i dati';
+
+  @override
+  String get tapToRetry => 'Tocca per riprovare';
+
+  @override
+  String get upgradeExerciseTooltip => 'Aggiorna all\'esercizio ufficiale';
+
+  @override
+  String get upgradeExerciseTitle => 'Aggiorna Esercizio';
+
+  @override
+  String get upgradeExerciseSubtitle =>
+      'Aggiorna i metadati per un tracking migliore';
+
+  @override
+  String updateOtherWorkouts(int count) {
+    return 'Aggiorna in altri $count workout';
+  }
+
+  @override
+  String showAlternatives(int count) {
+    return 'Mostra altri $count match';
+  }
+
+  @override
+  String get hideAlternatives => 'Nascondi alternative';
+
+  @override
+  String get confirmUpgrade => 'Aggiorna';
+
+  @override
+  String get muscles => 'Muscoli';
+
+  @override
+  String get exerciseUpgraded => 'Esercizio aggiornato con successo';
+
+  @override
+  String get progressPhotos => 'Foto Progressi';
+
+  @override
+  String get addPhoto => 'Aggiungi Foto';
+
+  @override
+  String get noProgressPhotos => 'Nessuna foto';
+
+  @override
+  String get noProgressPhotosDescription =>
+      'Inizia a documentare il tuo percorso fitness aggiungendo la tua prima foto progressi';
+
+  @override
+  String get photoUploadedSuccessfully => 'Foto caricata con successo';
+
+  @override
+  String get camera => 'Fotocamera';
+
+  @override
+  String get gallery => 'Galleria';
+
+  @override
+  String get photoReminders => 'Promemoria Foto';
+
+  @override
+  String get photoRemindersDescription =>
+      'Ricevi promemoria gentili per catturare i tuoi progressi';
+
+  @override
+  String get enablePhotoReminders => 'Abilita Promemoria';
+
+  @override
+  String get remindersEnabled => 'Riceverai promemoria periodici';
+
+  @override
+  String get remindersDisabled => 'Nessun promemoria programmato';
+
+  @override
+  String get reminderFrequency => 'Frequenza Promemoria';
+
+  @override
+  String get everyTwoWeeks => 'Ogni 2 settimane';
+
+  @override
+  String get everyFourWeeks => 'Ogni 4 settimane';
+
+  @override
+  String get everySixWeeks => 'Ogni 6 settimane';
+
+  @override
+  String get customInterval => 'Personalizzato';
+
+  @override
+  String get nextReminder => 'Prossimo Promemoria';
+
+  @override
+  String get photoReminderAntiSpamInfo =>
+      'I promemoria si sospenderanno automaticamente se li ignori 3 volte di seguito';
+
+  @override
+  String get remindersAutoPaused => 'Promemoria Sospesi';
+
+  @override
+  String get remindersAutoPausedDescription =>
+      'Abbiamo notato che stai saltando i promemoria. Riabilitali quando sei pronto.';
+
+  @override
+  String get exportDataSubtitle => 'Scarica i tuoi dati (GDPR Art. 20)';
+
+  @override
+  String get exportDataDescription => 'Scarica tutti i tuoi dati fitness';
+
+  @override
+  String get gdprDataPortability => 'Diritto alla Portabilità dei Dati';
+
+  @override
+  String get gdprDataPortabilityDescription =>
+      'Ai sensi dell\'Art. 20 del GDPR, hai il diritto di ricevere i tuoi dati personali in un formato portabile.';
+
+  @override
+  String get exportCategories => 'Cosa Esportare';
+
+  @override
+  String get deselectAll => 'Deseleziona Tutto';
+
+  @override
+  String get exportFormat => 'Formato Export';
+
+  @override
+  String get formatZip => 'ZIP';
+
+  @override
+  String get formatJson => 'JSON';
+
+  @override
+  String get formatCsv => 'CSV';
+
+  @override
+  String get formatZipDescription =>
+      'Archivio completo con tutti i file dati e README';
+
+  @override
+  String get formatJsonDescription => 'File JSON unico con tutti i dati';
+
+  @override
+  String get formatCsvDescription =>
+      'Riepilogo in formato compatibile con fogli di calcolo';
+
+  @override
+  String get startExport => 'Esporta i Miei Dati';
+
+  @override
+  String get exportCompleted => 'Export Completato!';
+
+  @override
+  String get exportCompletedDescription =>
+      'I tuoi dati sono stati esportati e sono pronti per essere condivisi o salvati.';
+
+  @override
+  String get shareExport => 'Condividi Export';
+
+  @override
+  String get exportFailedGeneric =>
+      'Si è verificato un errore durante l\'esportazione. Riprova.';
+
+  @override
+  String get exportShareFailed => 'Impossibile condividere il file di export';
+
+  @override
+  String get exportEmailSubject => 'Il Mio Export Dati FitLog';
+
+  @override
+  String get exportEmailBody =>
+      'In allegato i miei dati fitness esportati da FitLog Pro.';
+
+  @override
+  String get exportCategoryWorkouts => 'Allenamenti';
+
+  @override
+  String get exportCategoryTemplates => 'Schede';
+
+  @override
+  String get exportCategoryExercises => 'Esercizi Personalizzati';
+
+  @override
+  String get exportCategoryMeasurements => 'Misure Corporee';
+
+  @override
+  String get exportCategoryPhotos => 'Foto Progressi';
+
+  @override
+  String get exportCategoryRecords => 'Record Personali';
+
+  @override
+  String get exportCategorySettings => 'Impostazioni';
+
+  @override
+  String get exportCategoryAchievements => 'Traguardi';
 }
