@@ -24,6 +24,8 @@ import 'package:gymbro_flutter_new/shared/presentation/services/modal_service.da
 import 'package:gymbro_flutter_new/features/home/presentation/widgets/activity_rings_widget.dart';
 import 'package:gymbro_flutter_new/features/home/presentation/widgets/pro_insights_preview_section.dart';
 import 'package:gymbro_flutter_new/features/recovery_insight/presentation/widgets/recovery_insight_card.dart';
+import 'package:gymbro_flutter_new/features/stress_index/presentation/widgets/template_suggestion_card.dart';
+import 'package:gymbro_flutter_new/features/exercise_merge/presentation/widgets/merge_suggestion_card.dart';
 
 /// Minimal Home Screen - Clean dark premium design
 ///
@@ -68,12 +70,14 @@ class MinimalHomeScreen extends ConsumerWidget {
       body: CustomScrollView(
         slivers: [
           // Minimal AppBar
+          // 🔧 FIX: Changed from floating:true to pinned:true to prevent
+          // scroll jump/flash bug reported on iOS (Flutter issue #161377, #145419)
           SliverAppBar(
             expandedHeight: 80,
-            floating: true,
-            pinned: false,
+            floating: false,
+            pinned: true,
             backgroundColor: context.colors.surface,
-            surfaceTintColor: Colors.transparent,
+            surfaceTintColor: context.colors.surface.withValues(alpha: 0),
             flexibleSpace: FlexibleSpaceBar(
               titlePadding: const EdgeInsets.only(left: 16, bottom: 12),
               title: Row(
@@ -141,6 +145,14 @@ class MinimalHomeScreen extends ConsumerWidget {
                   padding: EdgeInsets.symmetric(horizontal: AppSpacing.md),
                   child: RecoveryInsightCard(),
                 ),
+                const SizedBox(height: 20),
+
+                // 0.95 Template Suggestion (AI-powered workout recommendation)
+                const TemplateSuggestionCard(),
+                const SizedBox(height: 16),
+
+                // 0.96 Exercise Merge Suggestion (consolidate custom exercises)
+                const MergeSuggestionCard(),
                 const SizedBox(height: 20),
 
                 // 1. Start Workout Card (Hero)
@@ -288,7 +300,7 @@ class MinimalHomeScreen extends ConsumerWidget {
   void _showDeveloperTools(BuildContext context) {
     showModalBottomSheet<void>(
       context: context,
-      backgroundColor: Colors.transparent,
+      backgroundColor: context.colors.surface.withValues(alpha: 0),
       builder: (context) => const _DeveloperToolsSheet(),
     );
   }
@@ -471,7 +483,7 @@ class _DeveloperToolItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Material(
-      color: Colors.transparent,
+      color: context.colors.surface.withValues(alpha: 0),
       child: InkWell(
         onTap: onTap,
         borderRadius: BorderRadius.circular(12),
@@ -600,16 +612,17 @@ class _AnimatedProBadgeState extends State<_AnimatedProBadge>
           );
     }
 
-    // After entry: continuous shimmer with controlled animation
+    // After entry: occasional shimmer (less aggressive to prevent scroll interference)
+    // 🔧 FIX: Increased delay to 8s to reduce animation frequency during scroll
     return badge
         .animate(
           onInit: (controller) => _shimmerController = controller,
           onPlay: (controller) => controller.repeat(),
         )
         .shimmer(
-          delay: 2000.ms,
-          duration: 1500.ms,
-          color: context.colors.onPrimary.withValues(alpha: 0.5),
+          delay: 8000.ms,
+          duration: 1200.ms,
+          color: context.colors.onPrimary.withValues(alpha: 0.4),
         );
   }
 }
@@ -632,7 +645,7 @@ class _AdminFeedbackCard extends StatelessWidget {
         borderRadius: BorderRadius.circular(16),
       ),
       child: Material(
-        color: Colors.transparent,
+        color: context.colors.surface.withValues(alpha: 0),
         child: InkWell(
           onTap: () {
             Navigator.of(context).push(
