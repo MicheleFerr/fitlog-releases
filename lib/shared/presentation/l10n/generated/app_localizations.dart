@@ -39238,6 +39238,72 @@ abstract class AppLocalizations {
   /// **'Complete a workout to see your training stress analysis'**
   String get completeWorkoutForStressIndex;
 
+  /// Recovery recommendation: stress 0-30, ready for intense session
+  ///
+  /// In en, this message translates to:
+  /// **'Ready for Hard Training'**
+  String get stressRecommendationReadyHard;
+
+  /// Recovery recommendation: stress 30-50, moderate intensity
+  ///
+  /// In en, this message translates to:
+  /// **'Moderate Session'**
+  String get stressRecommendationModerate;
+
+  /// Recovery recommendation: stress 50-70, light training
+  ///
+  /// In en, this message translates to:
+  /// **'Light Work Only'**
+  String get stressRecommendationLightOnly;
+
+  /// Recovery recommendation: stress 70-85, recovery focus
+  ///
+  /// In en, this message translates to:
+  /// **'Active Recovery'**
+  String get stressRecommendationActiveRecovery;
+
+  /// Recovery recommendation: stress 85+, complete rest
+  ///
+  /// In en, this message translates to:
+  /// **'Rest Required'**
+  String get stressRecommendationRestRequired;
+
+  /// Title for stress prediction card
+  ///
+  /// In en, this message translates to:
+  /// **'Recovery Status'**
+  String get stressPredictionTitle;
+
+  /// Label for current stress level
+  ///
+  /// In en, this message translates to:
+  /// **'Current'**
+  String get stressPredictionCurrent;
+
+  /// Label for predicted stress tomorrow
+  ///
+  /// In en, this message translates to:
+  /// **'Tomorrow'**
+  String get stressPredictionTomorrow;
+
+  /// Label for predicted stress if working out
+  ///
+  /// In en, this message translates to:
+  /// **'If Workout'**
+  String get stressPredictionIfWorkout;
+
+  /// Label for recovery rate per hour
+  ///
+  /// In en, this message translates to:
+  /// **'Recovery'**
+  String get stressPredictionRecoveryRate;
+
+  /// Hint to improve prediction accuracy via calibration
+  ///
+  /// In en, this message translates to:
+  /// **'Complete fitness profile for more accurate predictions'**
+  String get stressPredictionCalibrationHint;
+
   /// Section title for recent stress history
   ///
   /// In en, this message translates to:

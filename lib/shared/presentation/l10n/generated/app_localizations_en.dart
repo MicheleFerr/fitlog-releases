@@ -21937,6 +21937,40 @@ class AppLocalizationsEn extends AppLocalizations {
       'Complete a workout to see your training stress analysis';
 
   @override
+  String get stressRecommendationReadyHard => 'Ready for Hard Training';
+
+  @override
+  String get stressRecommendationModerate => 'Moderate Session';
+
+  @override
+  String get stressRecommendationLightOnly => 'Light Work Only';
+
+  @override
+  String get stressRecommendationActiveRecovery => 'Active Recovery';
+
+  @override
+  String get stressRecommendationRestRequired => 'Rest Required';
+
+  @override
+  String get stressPredictionTitle => 'Recovery Status';
+
+  @override
+  String get stressPredictionCurrent => 'Current';
+
+  @override
+  String get stressPredictionTomorrow => 'Tomorrow';
+
+  @override
+  String get stressPredictionIfWorkout => 'If Workout';
+
+  @override
+  String get stressPredictionRecoveryRate => 'Recovery';
+
+  @override
+  String get stressPredictionCalibrationHint =>
+      'Complete fitness profile for more accurate predictions';
+
+  @override
   String get recentHistory => 'Recent History';
 
   @override

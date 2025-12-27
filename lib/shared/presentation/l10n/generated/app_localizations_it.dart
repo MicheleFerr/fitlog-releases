@@ -22140,6 +22140,40 @@ class AppLocalizationsIt extends AppLocalizations {
       'Completa un allenamento per vedere l\'analisi dello stress';
 
   @override
+  String get stressRecommendationReadyHard => 'Pronto per Allenamento Intenso';
+
+  @override
+  String get stressRecommendationModerate => 'Sessione Moderata';
+
+  @override
+  String get stressRecommendationLightOnly => 'Solo Lavoro Leggero';
+
+  @override
+  String get stressRecommendationActiveRecovery => 'Recupero Attivo';
+
+  @override
+  String get stressRecommendationRestRequired => 'Riposo Necessario';
+
+  @override
+  String get stressPredictionTitle => 'Stato Recupero';
+
+  @override
+  String get stressPredictionCurrent => 'Attuale';
+
+  @override
+  String get stressPredictionTomorrow => 'Domani';
+
+  @override
+  String get stressPredictionIfWorkout => 'Se Allenamento';
+
+  @override
+  String get stressPredictionRecoveryRate => 'Recupero';
+
+  @override
+  String get stressPredictionCalibrationHint =>
+      'Completa il profilo fitness per previsioni più accurate';
+
+  @override
   String get recentHistory => 'Cronologia Recente';
 
   @override

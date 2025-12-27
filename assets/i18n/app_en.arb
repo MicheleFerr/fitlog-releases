@@ -27313,6 +27313,50 @@
   "@completeWorkoutForStressIndex": {
     "description": "Empty state message for stress index"
   },
+  "stressRecommendationReadyHard": "Ready for Hard Training",
+  "@stressRecommendationReadyHard": {
+    "description": "Recovery recommendation: stress 0-30, ready for intense session"
+  },
+  "stressRecommendationModerate": "Moderate Session",
+  "@stressRecommendationModerate": {
+    "description": "Recovery recommendation: stress 30-50, moderate intensity"
+  },
+  "stressRecommendationLightOnly": "Light Work Only",
+  "@stressRecommendationLightOnly": {
+    "description": "Recovery recommendation: stress 50-70, light training"
+  },
+  "stressRecommendationActiveRecovery": "Active Recovery",
+  "@stressRecommendationActiveRecovery": {
+    "description": "Recovery recommendation: stress 70-85, recovery focus"
+  },
+  "stressRecommendationRestRequired": "Rest Required",
+  "@stressRecommendationRestRequired": {
+    "description": "Recovery recommendation: stress 85+, complete rest"
+  },
+  "stressPredictionTitle": "Recovery Status",
+  "@stressPredictionTitle": {
+    "description": "Title for stress prediction card"
+  },
+  "stressPredictionCurrent": "Current",
+  "@stressPredictionCurrent": {
+    "description": "Label for current stress level"
+  },
+  "stressPredictionTomorrow": "Tomorrow",
+  "@stressPredictionTomorrow": {
+    "description": "Label for predicted stress tomorrow"
+  },
+  "stressPredictionIfWorkout": "If Workout",
+  "@stressPredictionIfWorkout": {
+    "description": "Label for predicted stress if working out"
+  },
+  "stressPredictionRecoveryRate": "Recovery",
+  "@stressPredictionRecoveryRate": {
+    "description": "Label for recovery rate per hour"
+  },
+  "stressPredictionCalibrationHint": "Complete fitness profile for more accurate predictions",
+  "@stressPredictionCalibrationHint": {
+    "description": "Hint to improve prediction accuracy via calibration"
+  },
   "recentHistory": "Recent History",
   "@recentHistory": {
     "description": "Section title for recent stress history"
