@@ -25,6 +25,7 @@ import 'package:gymbro_flutter_new/features/home/presentation/widgets/activity_r
 import 'package:gymbro_flutter_new/features/home/presentation/widgets/pro_insights_preview_section.dart';
 import 'package:gymbro_flutter_new/features/recovery_insight/presentation/widgets/recovery_insight_card.dart';
 import 'package:gymbro_flutter_new/features/stress_index/presentation/widgets/template_suggestion_card.dart';
+import 'package:gymbro_flutter_new/features/stress_index/presentation/widgets/stress_prediction_card.dart';
 import 'package:gymbro_flutter_new/features/exercise_merge/presentation/widgets/merge_suggestion_card.dart';
 
 /// Minimal Home Screen - Clean dark premium design
@@ -36,6 +37,8 @@ import 'package:gymbro_flutter_new/features/exercise_merge/presentation/widgets/
 /// - ActivityRingsWidget: HealthKit activity rings
 /// - ProInsightsPreviewSection: Pro Analytics CTA with previews
 /// - RecoveryInsightCard: Sleep-based recovery analysis
+/// - StressPredictionCard: Banister FFM stress predictions
+/// - TemplateSuggestionCard: AI-powered workout recommendation
 /// - StartWorkoutCard: Hero CTA
 /// - TemplatesCarouselCompact: Quick access to templates
 /// - AICoachCard: AI insights (hidden if no data)
@@ -145,6 +148,10 @@ class MinimalHomeScreen extends ConsumerWidget {
                   padding: EdgeInsets.symmetric(horizontal: AppSpacing.md),
                   child: RecoveryInsightCard(),
                 ),
+                const SizedBox(height: 16),
+
+                // 0.92 Stress Prediction (Banister FFM predictions)
+                const StressPredictionCard(),
                 const SizedBox(height: 20),
 
                 // 0.95 Template Suggestion (AI-powered workout recommendation)
