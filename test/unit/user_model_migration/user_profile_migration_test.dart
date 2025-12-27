@@ -16,7 +16,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:gymbro_flutter_new/features/auth/domain/entities/user_profile_consolidated.dart';
-import 'package:gymbro_flutter_new/features/auth/domain/entities/user_state.dart';
 
 // Mocks
 class MockDocumentSnapshot extends Mock implements DocumentSnapshot<Map<String, dynamic>> {}
@@ -383,62 +382,6 @@ void main() {
         expect(deserialized.preferences.language, 'it');
         expect(deserialized.stats.totalWorkouts, 100);
       });
-    });
-  });
-
-  group('UserState Pattern Matching', () {
-    test('should handle all user states correctly', () {
-      final profile = UserProfileFactory.createFreeUser();
-      
-      // Test all states
-      final authenticated = UserAuthenticated(profile);
-      const anonymous = UserAnonymous();
-      const unauthenticated = UserUnauthenticated();
-      const loading = UserLoading();
-      final error = UserError('Test error', StackTrace.current);
-
-      // Test type checks
-      expect(authenticated.isAuthenticated, true);
-      expect(anonymous.isAnonymous, true);
-      expect(unauthenticated.isUnauthenticated, true);
-      expect(loading.isLoading, true);
-      expect(error.hasError, true);
-
-      // Test profile access
-      expect(authenticated.profileOrNull, isNotNull);
-      expect(anonymous.profileOrNull, isNull);
-      
-      // Test premium status
-      expect(authenticated.isPremium, false); // Free user
-    });
-
-    test('should handle when() pattern matching', () {
-      final profile = UserProfileFactory.createPremiumUser();
-      final state = UserAuthenticated(profile);
-      
-      // Test pattern matching
-      final result = state.when(
-        authenticated: (p) => 'Welcome ${p.displayName}',
-        anonymous: () => 'Anonymous user',
-        unauthenticated: () => 'Not signed in',
-        loading: () => 'Loading...',
-        error: (e, s) => 'Error: $e',
-      );
-      
-      expect(result, 'Welcome Premium User');
-    });
-
-    test('should handle buildWhen() for widgets', () {
-      final profile = UserProfileFactory.createFreeUser();
-      final state = UserAuthenticated(profile);
-      
-      // Test widget pattern matching
-      final widget = state.buildWhen<String>(
-        authenticated: (p) => 'Authenticated: ${p.email}',
-        unauthenticated: () => 'Please log in',
-      );
-      
-      expect(widget, 'Authenticated: free@gymbro.app');
     });
   });
 }

@@ -653,9 +653,9 @@ void main() {
 
     test('maintains state consistency during rapid updates', () {
       final notifier = container.read(currentWorkoutProvider.notifier);
-      
+
       notifier.createWorkout('Rapid Test');
-      
+
       // Rapid fire updates
       for (int i = 0; i < 10; i++) {
         final exercise = Exercise(
@@ -667,17 +667,228 @@ void main() {
         );
         notifier.addExercise(exercise);
       }
-      
+
       final workout = container.read(currentWorkoutProvider);
       expect(workout!.exercises.length, 10);
-      
+
       // Remove every other exercise
       for (int i = 0; i < 10; i += 2) {
         notifier.removeExercise('ex-$i');
       }
-      
+
       final updatedWorkout = container.read(currentWorkoutProvider);
       expect(updatedWorkout!.exercises.length, 5);
+    });
+  });
+
+  // 🔥 SUPERSET: Test entity logic for set modification (isolated, no provider dependencies)
+  group('SupersetExercise Entity Logic', () {
+    test('SupersetExerciseData copyWith updates targetWeight and targetReps correctly', () {
+      // Test the core logic used by superset set modification
+      const original = SupersetExerciseData(
+        exerciseId: 'bench-press-123',
+        exerciseName: 'Bench Press',
+        targetWeight: 60.0,
+        targetReps: 10,
+      );
+
+      // Simulate Watch modification
+      final updated = original.copyWith(
+        targetWeight: 65.0,
+        targetReps: 8,
+      );
+
+      // Verify update
+      expect(updated.targetWeight, 65.0);
+      expect(updated.targetReps, 8);
+      // Other fields unchanged
+      expect(updated.exerciseId, 'bench-press-123');
+      expect(updated.exerciseName, 'Bench Press');
+      expect(updated.actualWeight, isNull);
+      expect(updated.actualReps, isNull);
+    });
+
+    test('SupersetSet copyWith updates exerciseData map correctly', () {
+      // Create initial round
+      final originalRound = SupersetSet(
+        setNumber: 1,
+        exerciseData: {
+          'bench-press-123': const SupersetExerciseData(
+            exerciseId: 'bench-press-123',
+            exerciseName: 'Bench Press',
+            targetWeight: 60.0,
+            targetReps: 10,
+          ),
+          'rows-456': const SupersetExerciseData(
+            exerciseId: 'rows-456',
+            exerciseName: 'Barbell Rows',
+            targetWeight: 50.0,
+            targetReps: 12,
+          ),
+        },
+      );
+
+      // Simulate Watch modification for first exercise only
+      final updatedExerciseData = originalRound.exerciseData['bench-press-123']!.copyWith(
+        targetWeight: 65.0,
+        targetReps: 8,
+      );
+
+      final updatedDataMap = Map<String, SupersetExerciseData>.from(originalRound.exerciseData);
+      updatedDataMap['bench-press-123'] = updatedExerciseData;
+
+      final updatedRound = originalRound.copyWith(exerciseData: updatedDataMap);
+
+      // First exercise (bench press) should be updated
+      expect(updatedRound.exerciseData['bench-press-123']!.targetWeight, 65.0);
+      expect(updatedRound.exerciseData['bench-press-123']!.targetReps, 8);
+
+      // Second exercise (rows) should remain unchanged
+      expect(updatedRound.exerciseData['rows-456']!.targetWeight, 50.0);
+      expect(updatedRound.exerciseData['rows-456']!.targetReps, 12);
+    });
+
+    test('SupersetExercise copyWith updates supersetSets correctly', () {
+      // Create superset with 2 rounds
+      final exercise1 = Exercise(
+        id: 'bench-press-123',
+        name: 'Bench Press',
+        type: ExerciseType.single,
+        category: ExerciseCategory.chest,
+        sets: [],
+      );
+
+      final exercise2 = Exercise(
+        id: 'rows-456',
+        name: 'Barbell Rows',
+        type: ExerciseType.single,
+        category: ExerciseCategory.back,
+        sets: [],
+      );
+
+      final superset = SupersetExercise(
+        id: 'superset-001',
+        name: 'Push-Pull Superset',
+        exercises: [exercise1, exercise2],
+        supersetSets: [
+          SupersetSet(
+            setNumber: 1,
+            exerciseData: {
+              'bench-press-123': const SupersetExerciseData(
+                exerciseId: 'bench-press-123',
+                exerciseName: 'Bench Press',
+                targetWeight: 60.0,
+                targetReps: 10,
+              ),
+              'rows-456': const SupersetExerciseData(
+                exerciseId: 'rows-456',
+                exerciseName: 'Barbell Rows',
+                targetWeight: 50.0,
+                targetReps: 12,
+              ),
+            },
+          ),
+          SupersetSet(
+            setNumber: 2,
+            exerciseData: {
+              'bench-press-123': const SupersetExerciseData(
+                exerciseId: 'bench-press-123',
+                exerciseName: 'Bench Press',
+                targetWeight: 60.0,
+                targetReps: 10,
+              ),
+              'rows-456': const SupersetExerciseData(
+                exerciseId: 'rows-456',
+                exerciseName: 'Barbell Rows',
+                targetWeight: 50.0,
+                targetReps: 12,
+              ),
+            },
+          ),
+        ],
+      );
+
+      // Simulate Watch modification: Update first exercise in first round
+      // This mimics _updateSupersetTargetFromWatch logic
+      const exerciseIndexInSuperset = 0;
+      const newWeight = 65.0;
+      const newReps = 8;
+      const currentRoundIndex = 0; // First incomplete round
+
+      // Get the exercise ID from exercises list (same as production code)
+      final targetExerciseId = superset.exercises[exerciseIndexInSuperset].id;
+      expect(targetExerciseId, 'bench-press-123');
+
+      // Update exerciseData in current round
+      final currentRound = superset.supersetSets[currentRoundIndex];
+      final existingData = currentRound.exerciseData[targetExerciseId]!;
+      final updatedExerciseData = existingData.copyWith(
+        targetWeight: newWeight,
+        targetReps: newReps,
+      );
+
+      final updatedDataMap = Map<String, SupersetExerciseData>.from(currentRound.exerciseData);
+      updatedDataMap[targetExerciseId] = updatedExerciseData;
+
+      final updatedRound = currentRound.copyWith(exerciseData: updatedDataMap);
+
+      final updatedSupersetSets = List<SupersetSet>.from(superset.supersetSets);
+      updatedSupersetSets[currentRoundIndex] = updatedRound;
+
+      final updatedSuperset = superset.copyWith(supersetSets: updatedSupersetSets);
+
+      // Verify: First exercise in first round updated
+      expect(updatedSuperset.supersetSets[0].exerciseData['bench-press-123']!.targetWeight, 65.0);
+      expect(updatedSuperset.supersetSets[0].exerciseData['bench-press-123']!.targetReps, 8);
+
+      // Verify: Second exercise in first round unchanged
+      expect(updatedSuperset.supersetSets[0].exerciseData['rows-456']!.targetWeight, 50.0);
+      expect(updatedSuperset.supersetSets[0].exerciseData['rows-456']!.targetReps, 12);
+
+      // Verify: Second round completely unchanged
+      expect(updatedSuperset.supersetSets[1].exerciseData['bench-press-123']!.targetWeight, 60.0);
+      expect(updatedSuperset.supersetSets[1].exerciseData['bench-press-123']!.targetReps, 10);
+      expect(updatedSuperset.supersetSets[1].exerciseData['rows-456']!.targetWeight, 50.0);
+      expect(updatedSuperset.supersetSets[1].exerciseData['rows-456']!.targetReps, 12);
+    });
+
+    test('exercise index maps correctly to exerciseId', () {
+      // This tests the key logic: using exerciseIndexInSuperset to find exerciseId
+      final exercise1 = Exercise(
+        id: 'ex-first',
+        name: 'First Exercise',
+        type: ExerciseType.single,
+        category: ExerciseCategory.chest,
+        sets: [],
+      );
+
+      final exercise2 = Exercise(
+        id: 'ex-second',
+        name: 'Second Exercise',
+        type: ExerciseType.single,
+        category: ExerciseCategory.back,
+        sets: [],
+      );
+
+      final exercise3 = Exercise(
+        id: 'ex-third',
+        name: 'Third Exercise',
+        type: ExerciseType.single,
+        category: ExerciseCategory.legs,
+        sets: [],
+      );
+
+      final superset = SupersetExercise(
+        id: 'superset-tri',
+        name: 'Tri-set',
+        exercises: [exercise1, exercise2, exercise3],
+        supersetSets: [],
+      );
+
+      // Test index → ID mapping (same logic as Watch sends)
+      expect(superset.exercises[0].id, 'ex-first');
+      expect(superset.exercises[1].id, 'ex-second');
+      expect(superset.exercises[2].id, 'ex-third');
     });
   });
 }
