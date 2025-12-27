@@ -1,8 +1,8 @@
 # PRIVACY POLICY - FITlog Pro
 
-**Last updated**: November 6, 2025
-**Data Controller**: [Developer Name], Brescia (BS), Italy
-**Email**: privacy@fitlogpro.com
+**Last updated**: December 21, 2025
+**Data Controller**: Michele, Brescia, Italy
+**Email**: ferrara-michele@hotmail.it
 
 ---
 
@@ -34,11 +34,17 @@ Pursuant to EU Regulation 2016/679 (GDPR) and Italian Legislative Decree 196/200
 - **Device ID**: For app functionality (not shared)
 - **App/OS version**: For technical support
 
-### 2.4 Data NOT Collected
+### 2.4 Analytics and Advertising Data
+- **Firebase Analytics**: Anonymous app usage events (screens visited, features used)
+- **Google AdMob**: Advertising identifier (IDFA/GAID) for personalized ads
+- **Crash Reports**: Technical data for debugging (Firebase Crashlytics)
+
+**Opt-out of personalized ads**: You can disable ad personalization in your device settings (iOS: Settings → Privacy → Advertising; Android: Settings → Google → Ads).
+
+### 2.5 Data NOT Collected
 - ❌ Biometric data (heart rate, calories)
 - ❌ Health data (injuries, conditions)
-- ❌ Tracking cookies (no Analytics, no Ads)
-- ❌ Geolocation
+- ❌ Precise geolocation
 - ❌ Contacts, photos, microphone
 
 ---
@@ -76,14 +82,18 @@ Pursuant to EU Regulation 2016/679 (GDPR) and Italian Legislative Decree 196/200
 
 ## 5. DATA SHARING WITH THIRD PARTIES
 
-**FITlog Pro does NOT share your data with third parties**, except:
+**FITlog Pro shares data with the following service providers**:
 
 | Third Party | Purpose | Data Shared | Legal Basis |
 |-------------|---------|-------------|-------------|
-| Google Firebase | Authentication, database | Email, UID, IP | DPA Art. 28 GDPR |
+| Google Firebase | Authentication, database, analytics | Email, UID, IP, usage events | DPA Art. 28 GDPR |
+| Google AdMob | In-app advertising | IDFA/GAID, device data | Consent (Art. 6.1.a) |
+| Firebase Crashlytics | Crash reporting | Technical error data | Legitimate interest |
 | Apple/Google (IAP) | Subscription payments | Transaction ID (no personal data) | Contract performance |
 
-**NO data selling**, **NO advertising**, **NO behavioral tracking**.
+**NO data selling to brokers**, **NO sharing with unlisted third parties**.
+
+⚠️ **Advertising**: The app displays ads via Google AdMob. You can disable personalization in your device settings.
 
 ---
 
@@ -102,13 +112,13 @@ Delete account and data: **Settings → Account → Delete Account**
 - Effect: Immediate deletion of local database + Firebase (30 days for backups)
 
 ### 6.4 Restriction (Art. 18)
-Temporarily suspend processing: Contact privacy@fitlogpro.com
+Temporarily suspend processing: Contact ferrara-michele@hotmail.it
 
 ### 6.5 Portability (Art. 20)
 Export data in JSON format: **Settings → Privacy → Export Data**
 
 ### 6.6 Object (Art. 21)
-Object to processing for legitimate interest: Contact privacy@fitlogpro.com
+Object to processing for legitimate interest: Contact ferrara-michele@hotmail.it
 
 ### 6.7 Complaint (Art. 77)
 File complaint with: **Italian Privacy Authority (Garante)** - garante@gpdp.it - Tel. +39 06 696771
@@ -157,7 +167,7 @@ If we discover a user under 14, we will immediately delete the account.
 
 Updates: In-app notification 30 days before. Continuing to use app = acceptance of new policy.
 
-**Current version**: 1.0 (November 6, 2025)
+**Current version**: 1.1 (December 21, 2025)
 **Version history**: docs/legal/PRIVACY_POLICY_CHANGELOG.md
 
 ---
@@ -165,10 +175,9 @@ Updates: In-app notification 30 days before. Continuing to use app = acceptance 
 ## 11. CONTACTS
 
 **Data Controller**:
-- Name: [Developer Name]
-- Address: Via [Address], Brescia (BS), Italy
-- Email: privacy@fitlogpro.com
-- PEC: [PEC if available]
+- Name: Michele
+- Location: Brescia, Italy
+- Email: ferrara-michele@hotmail.it
 
 **Data Protection Officer (DPO)**: Not required (single developer, <10,000 users)
 

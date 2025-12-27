@@ -1,8 +1,8 @@
 # TERMINI DI SERVIZIO - FITlog Pro
 
-**Data ultimo aggiornamento**: 06/11/2025
-**Fornitore**: [Nome Sviluppatore], Brescia (BS), Italia
-**Email**: support@fitlogpro.com
+**Data ultimo aggiornamento**: 21/12/2025
+**Fornitore**: Michele, Brescia, Italia
+**Email**: ferrara-michele@hotmail.it
 
 ---
 
@@ -177,7 +177,7 @@ Il Fornitore può modificare ToS in qualsiasi momento.
 **Foro competente**: Tribunale di Brescia, Italia (salvo foro consumatore se più favorevole per l'Utente)
 
 **Risoluzione dispute**:
-1. Tentativo conciliazione (contatta support@fitlogpro.com)
+1. Tentativo conciliazione (contatta ferrara-michele@hotmail.it)
 2. Mediazione obbligatoria (D.Lgs. 28/2010)
 3. Giudizio ordinario (Tribunale Brescia)
 
@@ -203,12 +203,11 @@ ToS + Privacy Policy = intero accordo (prevalgono su comunicazioni precedenti).
 ## 12. CONTATTI
 
 **Fornitore**:
-- Nome: [Nome Sviluppatore]
-- Indirizzo: Via [Indirizzo], Brescia (BS), Italia
-- Email: support@fitlogpro.com
-- PEC: [PEC se disponibile]
+- Nome: Michele
+- Località: Brescia, Italia
+- Email: ferrara-michele@hotmail.it
 
-**Supporto tecnico**: support@fitlogpro.com (risposta entro 48 ore lavorative)
+**Supporto tecnico**: ferrara-michele@hotmail.it (risposta entro 48 ore lavorative)
 
 ---
 
@@ -217,4 +216,4 @@ ToS + Privacy Policy = intero accordo (prevalgono su comunicazioni precedenti).
 Cliccando "Accetto" o usando l'App, dichiari di aver letto, compreso e accettato integralmente i presenti Termini di Servizio.
 
 **Data accettazione**: [Registrata automaticamente all'iscrizione]
-**Versione**: 1.0 (06/11/2025)
+**Versione**: 1.1 (21/12/2025)

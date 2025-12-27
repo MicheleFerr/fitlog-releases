@@ -1,8 +1,8 @@
 # TERMS OF SERVICE - FITlog Pro
 
-**Last updated**: November 6, 2025
-**Provider**: [Developer Name], Brescia (BS), Italy
-**Email**: support@fitlogpro.com
+**Last updated**: December 21, 2025
+**Provider**: Michele, Brescia, Italy
+**Email**: ferrara-michele@hotmail.it
 
 ---
 
@@ -177,7 +177,7 @@ Provider may modify ToS at any time.
 **Competent jurisdiction**: Court of Brescia, Italy (except consumer jurisdiction if more favorable for User)
 
 **Dispute resolution**:
-1. Attempted conciliation (contact support@fitlogpro.com)
+1. Attempted conciliation (contact ferrara-michele@hotmail.it)
 2. Mandatory mediation (D.Lgs. 28/2010)
 3. Ordinary judgment (Court of Brescia)
 
@@ -203,12 +203,11 @@ ToS + Privacy Policy = entire agreement (supersede prior communications).
 ## 12. CONTACTS
 
 **Provider**:
-- Name: [Developer Name]
-- Address: Via [Address], Brescia (BS), Italy
-- Email: support@fitlogpro.com
-- PEC: [PEC if available]
+- Name: Michele
+- Location: Brescia, Italy
+- Email: ferrara-michele@hotmail.it
 
-**Technical support**: support@fitlogpro.com (response within 48 business hours)
+**Technical support**: ferrara-michele@hotmail.it (response within 48 business hours)
 
 ---
 
@@ -217,4 +216,4 @@ ToS + Privacy Policy = entire agreement (supersede prior communications).
 By clicking "I Accept" or using the App, you declare that you have read, understood, and fully accepted these Terms of Service.
 
 **Acceptance date**: [Automatically recorded at registration]
-**Version**: 1.0 (November 6, 2025)
+**Version**: 1.1 (December 21, 2025)

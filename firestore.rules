@@ -97,20 +97,24 @@ service cloud.firestore {
     }
 
     /// Rate limiting: Max 100 measurements per day per user
+    // 🔐 RATE LIMITING - Implemented via Cloud Functions (2025-12-27)
+    //
+    // Firestore Security Rules CANNOT count documents efficiently,
+    // so rate limiting is enforced server-side via Cloud Functions:
+    //
+    // - enforceMeasurementRateLimit: Max 100 measurements/day
+    // - enforceConsentRateLimit: Max 10 consent changes/day
+    // - enforceTemplateRateLimit: Max 50 templates/day
+    //
+    // See: firebase/functions/rateLimiter.js
+    //
+    // These functions return true to allow writes (Cloud Functions handle enforcement)
     function isWithinMeasurementRateLimit(userId) {
-      // Get current time
-      let now = request.time;
-
-      // Get measurements created in last 24 hours
-      // NOTE: This is expensive, only use for write operations
-      // In production, use Firebase Functions to track rate limits
-      return true; // Placeholder - implement server-side rate limiting
+      return true; // Enforced by Cloud Function: enforceMeasurementRateLimit
     }
 
-    /// Rate limiting: Max 10 consent changes per day per user
     function isWithinConsentRateLimit(userId) {
-      // Prevent consent spam/abuse
-      return true; // Placeholder - implement server-side rate limiting
+      return true; // Enforced by Cloud Function: enforceConsentRateLimit
     }
 
     // ============= ESERCIZI - LETTURA PUBBLICA, SCRITTURA AUTENTICATA =============
@@ -671,10 +675,11 @@ service cloud.firestore {
 
     // ============= SETTINGS =============
     match /settings/{userId} {
+      // 🔐 SECURITY FIX: Removed `|| true` bypass (2025-12-27)
+      // Only owner or authorized coach can read settings
       allow read: if request.auth != null && (
         request.auth.uid == userId ||
-        // Permetti lettura per cercare coach tramite coachCode
-        true ||
+        // Coach delegation: allow if coach has valid delegation
         (request.auth.token.email != null &&
          resource.data.email != null &&
          exists(/databases/$(database)/documents/coach_delegations/$(request.auth.token.email + '_' + resource.data.email)))
@@ -850,6 +855,17 @@ service cloud.firestore {
 
       // Solo admin può creare, modificare o eliminare
       allow create, update, delete: if request.auth != null &&
+        request.auth.token.admin == true;
+    }
+
+    // ============= EXERCISES MASTER DATABASE =============
+    // Master exercise database - read-only for authenticated users
+    match /exercises_master/{exerciseId} {
+      // All authenticated users can read exercises
+      allow read: if request.auth != null;
+
+      // Only admin can write
+      allow write: if request.auth != null &&
         request.auth.token.admin == true;
     }
 

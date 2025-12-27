@@ -1,8 +1,8 @@
 # INFORMATIVA PRIVACY - FITlog Pro
 
-**Data ultimo aggiornamento**: 06/11/2025
-**Titolare del trattamento**: [Nome Sviluppatore], Brescia (BS), Italia
-**Email**: privacy@fitlogpro.com
+**Data ultimo aggiornamento**: 21/12/2025
+**Titolare del trattamento**: Michele, Brescia, Italia
+**Email**: ferrara-michele@hotmail.it
 
 ---
 
@@ -34,11 +34,17 @@ Ai sensi del Regolamento UE 2016/679 (GDPR) e del D.Lgs. 196/2003 (Codice Privac
 - **Device ID**: Per funzionalità app (non condiviso)
 - **Versione app/OS**: Per supporto tecnico
 
-### 2.4 Dati NON Raccolti
+### 2.4 Dati Analytics e Pubblicità
+- **Firebase Analytics**: Eventi anonimi di utilizzo app (schermate visitate, funzionalità usate)
+- **Google AdMob**: Identificatore pubblicitario (IDFA/GAID) per annunci personalizzati
+- **Crash Reports**: Dati tecnici per debug (Firebase Crashlytics)
+
+**Opt-out pubblicità personalizzata**: Puoi disabilitare la personalizzazione annunci nelle impostazioni del dispositivo (iOS: Impostazioni → Privacy → Pubblicità; Android: Impostazioni → Google → Annunci).
+
+### 2.5 Dati NON Raccolti
 - ❌ Dati biometrici (frequenza cardiaca, calorie)
 - ❌ Dati salute (infortuni, patologie)
-- ❌ Cookie di tracciamento (no Analytics, no Ads)
-- ❌ Geolocalizzazione
+- ❌ Geolocalizzazione precisa
 - ❌ Contatti, foto, microfono
 
 ---
@@ -76,14 +82,18 @@ Ai sensi del Regolamento UE 2016/679 (GDPR) e del D.Lgs. 196/2003 (Codice Privac
 
 ## 5. CONDIVISIONE DATI CON TERZE PARTI
 
-**FITlog Pro NON condivide i tuoi dati con terze parti**, eccetto:
+**FITlog Pro condivide dati con i seguenti fornitori di servizi**:
 
 | Terza Parte | Scopo | Dati Condivisi | Base Legale |
 |-------------|-------|----------------|-------------|
-| Google Firebase | Autenticazione, database | Email, UID, IP | DPA Art. 28 GDPR |
+| Google Firebase | Autenticazione, database, analytics | Email, UID, IP, eventi uso | DPA Art. 28 GDPR |
+| Google AdMob | Pubblicità in-app | IDFA/GAID, dati dispositivo | Consenso (Art. 6.1.a) |
+| Firebase Crashlytics | Crash reporting | Dati tecnici errore | Legittimo interesse |
 | Apple/Google (IAP) | Pagamenti subscription | Transaction ID (no dati personali) | Esecuzione contratto |
 
-**NO vendita dati**, **NO pubblicità**, **NO tracking comportamentale**.
+**NO vendita dati a broker**, **NO condivisione con terzi non elencati**.
+
+⚠️ **Pubblicità**: L'app mostra annunci tramite Google AdMob. Puoi disattivare la personalizzazione nelle impostazioni del dispositivo.
 
 ---
 
@@ -102,13 +112,13 @@ Eliminare account e dati: **Settings → Account → Elimina Account**
 - Effetto: Cancellazione immediata database locale + Firebase (30 giorni per backup)
 
 ### 6.4 Limitazione Trattamento (Art. 18)
-Sospendere temporaneamente processing: Contatta privacy@fitlogpro.com
+Sospendere temporaneamente processing: Contatta ferrara-michele@hotmail.it
 
 ### 6.5 Portabilità (Art. 20)
 Esportare dati in formato JSON: **Settings → Privacy → Esporta Dati**
 
 ### 6.6 Opposizione (Art. 21)
-Opporti a trattamento per legittimo interesse: Contatta privacy@fitlogpro.com
+Opporti a trattamento per legittimo interesse: Contatta ferrara-michele@hotmail.it
 
 ### 6.7 Reclamo (Art. 77)
 Presentare reclamo a: **Garante Privacy Italia** - garante@gpdp.it - Tel. 06 696771
@@ -157,7 +167,7 @@ Se scopriamo utente under-14, cancelleremo account immediatamente.
 
 Aggiornamenti: Notifica in-app 30 giorni prima. Continuare a usare app = accettazione nuova policy.
 
-**Versione attuale**: 1.0 (06/11/2025)
+**Versione attuale**: 1.1 (21/12/2025)
 **Storico versioni**: docs/legal/PRIVACY_POLICY_CHANGELOG.md
 
 ---
@@ -165,10 +175,9 @@ Aggiornamenti: Notifica in-app 30 giorni prima. Continuare a usare app = accetta
 ## 11. CONTATTI
 
 **Titolare del Trattamento**:
-- Nome: [Nome Sviluppatore]
-- Indirizzo: Via [Indirizzo], Brescia (BS), Italia
-- Email: privacy@fitlogpro.com
-- PEC: [PEC se disponibile]
+- Nome: Michele
+- Località: Brescia, Italia
+- Email: ferrara-michele@hotmail.it
 
 **Data Protection Officer (DPO)**: Non obbligatorio (singolo sviluppatore, <10.000 utenti)
 

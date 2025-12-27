@@ -1,7 +1,7 @@
 {
   "name": "gymbro-notification-functions",
   "version": "2.0.0",
-  "description": "Cloud Functions for Notification System v2.0",
+  "description": "Cloud Functions for Notification System v2.0 (DEPRECATED - use /functions/)",
   "main": "notificationCleanup.js",
   "engines": {
     "node": "20"

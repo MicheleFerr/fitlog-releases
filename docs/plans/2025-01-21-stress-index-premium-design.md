@@ -347,6 +347,245 @@ None - all infrastructure exists.
 
 ---
 
+## Template Stress Analyzer (KEY FEATURE)
+
+### Overview
+
+Analyze ALL user templates to recommend which workout to do today based on muscle recovery status.
+
+### Architecture
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│                  TEMPLATE STRESS ANALYZER                    │
+├─────────────────────────────────────────────────────────────┤
+│                                                             │
+│  1. Load user templates                                     │
+│     └── workoutTemplateRepository.getUserTemplates()        │
+│                                                             │
+│  2. For each template:                                      │
+│     ├── Extract exercises → muscles (primary + secondary)  │
+│     ├── Calculate expected stress (weight × reps × sets)   │
+│     └── Cross-reference with muscle recovery status        │
+│                                                             │
+│  3. Output per template:                                    │
+│     ├── expectedStress: 45                                  │
+│     ├── resultingTotalStress: 67                            │
+│     ├── muscleReadiness: {PETT: 82%, DELT: 75%}            │
+│     └── recommendation: optimal | acceptable | avoid        │
+│                                                             │
+│  4. Rank templates by optimality                            │
+│     └── Suggest best for today                              │
+└─────────────────────────────────────────────────────────────┘
+```
+
+### Entity
+
+```dart
+@freezed
+class TemplateStressAnalysis with _$TemplateStressAnalysis {
+  const factory TemplateStressAnalysis({
+    required String templateId,
+    required String templateName,
+
+    /// Stress this template would add
+    required double expectedStress,
+
+    /// Resulting total stress (current + expected)
+    required double resultingTotalStress,
+
+    /// Readiness per muscle involved (0-100%)
+    required Map<String, MuscleReadinessData> muscleReadiness,
+
+    /// Under-recovered muscles that would be stressed
+    required List<String> underRecoveredMuscles,
+
+    /// Recommendation
+    required TemplateRecommendation recommendation,
+
+    /// Human-readable explanation
+    required String rationale,
+  }) = _TemplateStressAnalysis;
+}
+
+enum TemplateRecommendation {
+  /// All muscles >90% recovered
+  optimal,
+
+  /// Some muscles 70-90% - doable but not ideal
+  acceptable,
+
+  /// Key muscles <70% - overtraining risk
+  suboptimal,
+
+  /// Critical muscles <50% - avoid
+  avoid,
+}
+```
+
+---
+
+## Multi-Factor Muscle Recovery Model
+
+### Recovery Factors
+
+| Factor | Impact | Data Source | Available |
+|--------|--------|-------------|-----------|
+| **Time** | Base | Workout history | ✅ |
+| **Sleep** | -22% MPS if <6h | HealthKit | ✅ |
+| **HRV** | Nervous system marker | HealthKit | ✅ |
+| **Age** | Slower with age | Questionnaire | ✅ |
+| **Experience** | Novice vs advanced | Questionnaire | ✅ |
+| **Injuries** | Slow recovery | Questionnaire | ✅ |
+| **Session Volume** | More = longer | Workout history | ✅ |
+| **Nutrition** | Protein, hydration | Not tracked | ❌ |
+| **Mental Stress** | Cortisol | Indirect via HRV | ⚠️ |
+
+### Recovery Formula
+
+```dart
+double calculateMuscleRecovery({
+  required String muscleId,
+  required DateTime lastWorkedAt,
+  required double lastWorkoutStress,
+  required PersonalCalibration calibration,
+  required HealthData? healthData,
+}) {
+  // 1. BASE: Time elapsed vs theoretical recovery time
+  final baseRecoveryHours = muscleRecoveryHours[muscleId] ?? 48;
+  final hoursSinceWorkout = DateTime.now().difference(lastWorkedAt).inHours;
+  double recoveryPercent = (hoursSinceWorkout / baseRecoveryHours) * 100;
+
+  // 2. SLEEP MODIFIER (HealthKit)
+  if (healthData?.sleepHoursLastNight != null) {
+    final sleep = healthData!.sleepHoursLastNight!;
+    if (sleep < 6) {
+      recoveryPercent *= 0.70; // Critical: -30%
+    } else if (sleep < 7) {
+      recoveryPercent *= 0.85; // Suboptimal: -15%
+    }
+  }
+
+  // 3. HRV MODIFIER (HealthKit)
+  if (healthData?.hrvMs != null && calibration.baselineHrv != null) {
+    final hrvRatio = healthData!.hrvMs! / calibration.baselineHrv!;
+    if (hrvRatio < 0.7) {
+      recoveryPercent *= 0.75; // System stressed
+    } else if (hrvRatio < 0.85) {
+      recoveryPercent *= 0.90;
+    } else if (hrvRatio > 1.1) {
+      recoveryPercent *= 1.10; // Accelerated recovery!
+    }
+  }
+
+  // 4. AGE MODIFIER
+  recoveryPercent *= calibration.ageFactor; // 0.8-1.0
+
+  // 5. PREVIOUS SESSION INTENSITY
+  if (lastWorkoutStress > 80) {
+    recoveryPercent *= 0.85; // Very hard session
+  } else if (lastWorkoutStress > 60) {
+    recoveryPercent *= 0.92; // Hard session
+  }
+
+  return recoveryPercent.clamp(0, 150); // Max 150% = supercompensation
+}
+```
+
+### Accuracy Estimate
+
+| Time only | +Sleep | +HRV | +Age/Exp | +Volume | **Total** |
+|-----------|--------|------|----------|---------|-----------|
+| ~55% | ~70% | ~80% | ~85% | ~90% | **~90%** |
+
+---
+
+## Home Screen Widget
+
+### Premium UI
+
+```
+╔══════════════════════════════════════════════════════════╗
+║  🏋️ Oggi ti consiglio...                    ⭐ Premium   ║
+╠══════════════════════════════════════════════════════════╣
+║                                                          ║
+║  ┌────────────────────────────────────────────────────┐  ║
+║  │  🟢 LEG DAY                              OTTIMALE  │  ║
+║  │                                                    │  ║
+║  │  Quad ████████████░░ 95%  ✓                       │  ║
+║  │  Glut ██████████████ 100% ✓                       │  ║
+║  │  Femor ███████████░░ 88%  ✓                       │  ║
+║  │                                                    │  ║
+║  │  Stress previsto: +38 → totale 60                 │  ║
+║  │                                                    │  ║
+║  │  [  Inizia Leg Day  ]                             │  ║
+║  └────────────────────────────────────────────────────┘  ║
+║                                                          ║
+║  ⚠️ Evita oggi:                                         ║
+║  • Push A - Deltoidi 68% (sotto-recuperati)             ║
+║  • Pull - Lat 72%, Trap 65%                             ║
+║                                                          ║
+║  📊 Basato su: 5.8h sonno • HRV 52ms (nella media)      ║
+╚══════════════════════════════════════════════════════════╝
+```
+
+### Free UI (Teaser)
+
+```
+╔══════════════════════════════════════════════════════════╗
+║  🏋️ Quale scheda fare oggi?                 🔒 Premium  ║
+╠══════════════════════════════════════════════════════════╣
+║                                                          ║
+║  Sblocca i consigli personalizzati basati su:           ║
+║  • Recupero muscolare reale                              ║
+║  • Qualità del sonno                                     ║
+║  • Variabilità cardiaca (HRV)                           ║
+║                                                          ║
+║  [  Prova Premium  ]                                     ║
+╚══════════════════════════════════════════════════════════╝
+```
+
+---
+
+## Updated File Structure
+
+```
+lib/features/stress_index/
+├── domain/
+│   ├── entities/
+│   │   ├── personal_calibration.dart         // NEW
+│   │   ├── calibration_factors.dart          // NEW
+│   │   ├── stress_insight.dart               // NEW
+│   │   ├── template_stress_analysis.dart     // NEW ⭐
+│   │   └── muscle_readiness_data.dart        // NEW ⭐
+│   ├── services/
+│   │   ├── stress_index_calculator.dart      // MODIFY
+│   │   ├── calibration_service.dart          // NEW
+│   │   ├── prediction_service.dart           // NEW
+│   │   └── template_stress_analyzer.dart     // NEW ⭐
+│   └── constants/
+│       └── stress_index_constants.dart       // MODIFY
+│
+├── data/
+│   ├── repositories/
+│   │   └── calibration_repository.dart       // NEW
+│   └── datasources/
+│       └── calibration_local_ds.dart         // NEW (Hive)
+│
+└── presentation/
+    ├── providers/
+    │   ├── stress_calibration_provider.dart     // NEW
+    │   ├── stress_insight_provider.dart         // NEW
+    │   └── template_suggestion_provider.dart    // NEW ⭐
+    └── widgets/
+        ├── stress_prediction_card.dart          // NEW
+        ├── stress_insight_widget.dart           // NEW
+        ├── template_suggestion_widget.dart      // NEW ⭐ (Home)
+        └── calibration_wizard.dart              // NEW
+```
+
+---
+
 ## References
 
 1. Banister EW (1975) "A systems model of training for athletic performance"
@@ -354,3 +593,5 @@ None - all infrastructure exists.
 3. Res PT et al. "Sleep deprivation and muscle protein synthesis"
 4. Knowles OE et al. "Sleep restriction and strength performance"
 5. AASM/Sleep Research Society "7-9h recommendation"
+6. Aandstad A et al. (2023) "Self-reported vs objective fitness"
+7. EMG studies on muscle activation patterns

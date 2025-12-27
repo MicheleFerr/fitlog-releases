@@ -1,0 +1,98 @@
+rules_version = '2';
+
+// Firebase Storage Security Rules for FitLog Pro
+// Progress Photos Feature (Coach Portal Phase 1)
+//
+// GDPR Compliance:
+// - Photos isolated by userId
+// - Only owner can upload/read their photos
+// - Coach access requires explicit sharing flag in Firestore
+// - Maximum file size: 10MB per photo
+// - Only image formats allowed
+
+service firebase.storage {
+  match /b/{bucket}/o {
+
+    // ============================================
+    // PROGRESS PHOTOS - User's Private Photos
+    // ============================================
+    // Path: users/{userId}/progress_photos/{date}/{filename}
+    //
+    // Structure:
+    //   users/
+    //     {userId}/
+    //       progress_photos/
+    //         2024-01-15/
+    //           abc123_frontRelaxed.webp
+    //           abc123_frontRelaxed_thumb.webp
+
+    match /users/{userId}/progress_photos/{allPaths=**} {
+      // Allow read if:
+      // 1. User is the owner
+      // 2. User is an authorized coach (checked via Firestore)
+      allow read: if request.auth != null && (
+        request.auth.uid == userId ||
+        isAuthorizedCoach(userId, request.auth.uid)
+      );
+
+      // Allow write only to owner
+      allow write: if request.auth != null &&
+                      request.auth.uid == userId &&
+                      isValidPhotoUpload();
+
+      // Allow delete only to owner
+      allow delete: if request.auth != null &&
+                       request.auth.uid == userId;
+    }
+
+    // ============================================
+    // HELPER FUNCTIONS
+    // ============================================
+
+    // Check if the upload is a valid photo
+    function isValidPhotoUpload() {
+      let maxSize = 10 * 1024 * 1024; // 10MB max
+      let allowedTypes = ['image/webp', 'image/jpeg', 'image/png'];
+
+      return request.resource.size < maxSize &&
+             request.resource.contentType in allowedTypes;
+    }
+
+    // Check if a user is an authorized coach for an athlete
+    // This queries Firestore to verify the coaching relationship
+    function isAuthorizedCoach(athleteId, coachId) {
+      // Check if there's an active coaching relationship
+      // with photo sharing enabled
+      return firestore.exists(
+        /databases/(default)/documents/users/$(athleteId)/coaches/$(coachId)
+      ) && firestore.get(
+        /databases/(default)/documents/users/$(athleteId)/coaches/$(coachId)
+      ).data.canViewPhotos == true;
+    }
+
+    // ============================================
+    // COACH SHARED PHOTOS (Future Phase 2)
+    // ============================================
+    // Path: coaches/{coachId}/shared_photos/{athleteId}/{photoId}
+    //
+    // This allows coaches to have a separate view of shared photos
+    // without accessing the athlete's original storage path
+
+    match /coaches/{coachId}/shared_photos/{athleteId}/{photoId} {
+      // Read: Coach can read photos shared with them
+      allow read: if request.auth != null &&
+                     request.auth.uid == coachId;
+
+      // Write: Only the system (via Cloud Functions) can write here
+      // Athletes don't write directly to coach's folder
+      allow write: if false; // Cloud Function handles this
+    }
+
+    // ============================================
+    // DEFAULT: Deny all other paths
+    // ============================================
+    match /{allPaths=**} {
+      allow read, write: if false;
+    }
+  }
+}

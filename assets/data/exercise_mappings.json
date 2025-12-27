@@ -26,12 +26,12 @@
       "gymbroName": "barbell reverse grip incline bench row",
       "gymbroEquipment": "Bilanciere",
       "gymbroFocus": "LAT, TRAP",
-      "confidence": 0.7634,
-      "status": "review",
-      "standardId": "barbell_incline_bench_press",
-      "standardName": "Barbell Incline Bench Press",
+      "confidence": 0.85,
+      "status": "verified",
+      "standardId": "barbell_bent_over_row",
+      "standardName": "Barbell Bent-Over Row",
       "standardEquipment": "Bilanciere",
-      "dataSource": "estimated_from_flat_bench"
+      "dataSource": "exrx_net"
     },
     {
       "gymbroId": "smith_narrow_row",
@@ -47,12 +47,12 @@
       "gymbroName": "barbell incline row",
       "gymbroEquipment": "Bilanciere",
       "gymbroFocus": "LAT, TRAP",
-      "confidence": 0.7552,
-      "status": "review",
-      "standardId": "barbell_incline_bench_press",
-      "standardName": "Barbell Incline Bench Press",
+      "confidence": 0.85,
+      "status": "verified",
+      "standardId": "barbell_bent_over_row",
+      "standardName": "Barbell Bent-Over Row",
       "standardEquipment": "Bilanciere",
-      "dataSource": "estimated_from_flat_bench"
+      "dataSource": "exrx_net"
     },
     {
       "gymbroId": "lever_reverse_grip_vertical_row",
@@ -194,12 +194,9 @@
       "gymbroName": "dumbbell lying rear delt row",
       "gymbroEquipment": "Manubri",
       "gymbroFocus": "LAT, TRAP",
-      "confidence": 0.6569,
-      "status": "review",
-      "standardId": "dumbbell_shoulder_press",
-      "standardName": "Dumbbell Shoulder Press",
-      "standardEquipment": "Manubri",
-      "dataSource": "estimated_from_barbell_ohp"
+      "confidence": 0.0,
+      "status": "fallback",
+      "fallbackReason": "rear_delt_isolation_no_standard"
     },
     {
       "gymbroId": "lever_one_arm_bent_over_row",
@@ -371,12 +368,12 @@
       "gymbroName": "dumbbell reverse grip incline bench two arm row",
       "gymbroEquipment": "Manubri",
       "gymbroFocus": "LAT, TRAP",
-      "confidence": 0.6956,
-      "status": "review",
-      "standardId": "barbell_incline_bench_press",
-      "standardName": "Barbell Incline Bench Press",
+      "confidence": 0.85,
+      "status": "verified",
+      "standardId": "barbell_bent_over_row",
+      "standardName": "Barbell Bent-Over Row",
       "standardEquipment": "Bilanciere",
-      "dataSource": "estimated_from_flat_bench"
+      "dataSource": "exrx_net"
     },
     {
       "gymbroId": "cambered_bar_lying_row",
@@ -626,12 +623,12 @@
       "gymbroName": "dumbbell reverse grip incline bench one arm row",
       "gymbroEquipment": "Manubri",
       "gymbroFocus": "LAT, TRAP",
-      "confidence": 0.6857,
-      "status": "review",
-      "standardId": "barbell_incline_bench_press",
-      "standardName": "Barbell Incline Bench Press",
+      "confidence": 0.85,
+      "status": "verified",
+      "standardId": "barbell_bent_over_row",
+      "standardName": "Barbell Bent-Over Row",
       "standardEquipment": "Bilanciere",
-      "dataSource": "estimated_from_flat_bench"
+      "dataSource": "exrx_net"
     },
     {
       "gymbroId": "front_lever_reps",
@@ -758,12 +755,9 @@
       "gymbroName": "dumbbell incline y-raise",
       "gymbroEquipment": "Manubri",
       "gymbroFocus": "LAT, TRAP",
-      "confidence": 0.666,
-      "status": "review",
-      "standardId": "lateral_raise",
-      "standardName": "Lateral Raise (Dumbbell)",
-      "standardEquipment": "Manubri",
-      "dataSource": "estimated_isolation"
+      "confidence": 0.0,
+      "status": "fallback",
+      "fallbackReason": "y_raise_is_back_not_shoulder"
     },
     {
       "gymbroId": "lever_bent_over_row_with_v_bar",
@@ -1135,13 +1129,13 @@
       "gymbroId": "smith_close_grip_bench_press",
       "gymbroName": "smith close-grip bench press",
       "gymbroEquipment": "Vario",
-      "gymbroFocus": "BICI, TRIC",
-      "confidence": 0.6634,
-      "status": "review",
-      "standardId": "dumbbell_bench_press",
-      "standardName": "Dumbbell Bench Press",
-      "standardEquipment": "Manubri",
-      "dataSource": "estimated_from_barbell"
+      "gymbroFocus": "PETT",
+      "confidence": 0.85,
+      "status": "verified",
+      "standardId": "barbell_bench_press",
+      "standardName": "Barbell Bench Press",
+      "standardEquipment": "Bilanciere",
+      "dataSource": "exrx_net"
     },
     {
       "gymbroId": "cable_lying_triceps_extension_v_2",
@@ -1469,12 +1463,9 @@
       "gymbroName": "overhead triceps stretch",
       "gymbroEquipment": "Corpo Libero",
       "gymbroFocus": "BICI, TRIC",
-      "confidence": 0.6294,
-      "status": "review",
-      "standardId": "tricep_extension",
-      "standardName": "Tricep Extension (Cable/Barbell)",
-      "standardEquipment": "Vario",
-      "dataSource": "estimated_isolation"
+      "confidence": 0.0,
+      "status": "fallback",
+      "fallbackReason": "stretch_not_strength_exercise"
     },
     {
       "gymbroId": "close_grip_push_up_on_knees",
@@ -1573,13 +1564,10 @@
       "gymbroId": "dumbbell_kickback",
       "gymbroName": "dumbbell kickback",
       "gymbroEquipment": "Manubri",
-      "gymbroFocus": "BICI, TRIC",
-      "confidence": 0.6075,
-      "status": "review",
-      "standardId": "dumbbell_bench_press",
-      "standardName": "Dumbbell Bench Press",
-      "standardEquipment": "Manubri",
-      "dataSource": "estimated_from_barbell"
+      "gymbroFocus": "TRIC",
+      "confidence": 0.0,
+      "status": "fallback",
+      "fallbackReason": "isolation_exercise"
     },
     {
       "gymbroId": "side_push_up",
@@ -1943,12 +1931,13 @@
       "gymbroName": "barbell close-grip bench press",
       "gymbroEquipment": "Bilanciere",
       "gymbroFocus": "BICI, TRIC",
-      "confidence": 0.7302,
-      "status": "review",
-      "standardId": "dumbbell_bench_press",
-      "standardName": "Dumbbell Bench Press",
-      "standardEquipment": "Manubri",
-      "dataSource": "estimated_from_barbell"
+      "confidence": 0.85,
+      "status": "verified",
+      "standardId": "barbell_bench_press",
+      "standardName": "Barbell Bench Press",
+      "standardEquipment": "Bilanciere",
+      "dataSource": "exrx_net",
+      "note": "Close grip typically ~90% of regular bench"
     },
     {
       "gymbroId": "assisted_standing_triceps_extension_with_towel",
@@ -2173,13 +2162,13 @@
       "gymbroId": "barbell_jm_bench_press",
       "gymbroName": "barbell jm bench press",
       "gymbroEquipment": "Bilanciere",
-      "gymbroFocus": "BICI, TRIC",
-      "confidence": 0.7904,
-      "status": "review",
-      "standardId": "dumbbell_bench_press",
-      "standardName": "Dumbbell Bench Press",
-      "standardEquipment": "Manubri",
-      "dataSource": "estimated_from_barbell"
+      "gymbroFocus": "PETT",
+      "confidence": 0.85,
+      "status": "verified",
+      "standardId": "barbell_bench_press",
+      "standardName": "Barbell Bench Press",
+      "standardEquipment": "Bilanciere",
+      "dataSource": "exrx_net"
     },
     {
       "gymbroId": "dumbbell_standing_alternating_tricep_kickback",
@@ -2260,13 +2249,13 @@
       "gymbroId": "barbell_reverse_close_grip_bench_press",
       "gymbroName": "barbell reverse close-grip bench press",
       "gymbroEquipment": "Bilanciere",
-      "gymbroFocus": "BICI, TRIC",
-      "confidence": 0.6767,
-      "status": "review",
-      "standardId": "dumbbell_bench_press",
-      "standardName": "Dumbbell Bench Press",
-      "standardEquipment": "Manubri",
-      "dataSource": "estimated_from_barbell"
+      "gymbroFocus": "PETT",
+      "confidence": 0.85,
+      "status": "verified",
+      "standardId": "barbell_bench_press",
+      "standardName": "Barbell Bench Press",
+      "standardEquipment": "Bilanciere",
+      "dataSource": "exrx_net"
     },
     {
       "gymbroId": "smith_machine_decline_close_grip_bench_press",
@@ -2741,12 +2730,9 @@
       "gymbroName": "dynamic style barbell lying back of the head tricep extension",
       "gymbroEquipment": "Bilanciere",
       "gymbroFocus": "BICI, TRIC",
-      "confidence": 0.6809,
-      "status": "review",
-      "standardId": "barbell_curl",
-      "standardName": "Barbell Curl",
-      "standardEquipment": "Bilanciere",
-      "dataSource": "estimated_isolation"
+      "confidence": 0.0,
+      "status": "fallback",
+      "fallbackReason": "triceps_isolation_no_standard"
     },
     {
       "gymbroId": "assisted_standing_triceps_extension_with_towel_with_horizontal",
@@ -2867,12 +2853,9 @@
       "gymbroName": "dumbbell shrug",
       "gymbroEquipment": "Manubri",
       "gymbroFocus": "LAT, TRAP",
-      "confidence": 0.6093,
-      "status": "review",
-      "standardId": "dumbbell_shoulder_press",
-      "standardName": "Dumbbell Shoulder Press",
-      "standardEquipment": "Manubri",
-      "dataSource": "estimated_from_barbell_ohp"
+      "confidence": 0.0,
+      "status": "fallback",
+      "fallbackReason": "shrug_trap_isolation_no_standard"
     },
     {
       "gymbroId": "lever_gripless_shrug",
@@ -2897,12 +2880,9 @@
       "gymbroName": "dumbbell incline shrug",
       "gymbroEquipment": "Manubri",
       "gymbroFocus": "LAT, TRAP",
-      "confidence": 0.6117,
-      "status": "review",
-      "standardId": "barbell_incline_bench_press",
-      "standardName": "Barbell Incline Bench Press",
-      "standardEquipment": "Bilanciere",
-      "dataSource": "estimated_from_flat_bench"
+      "confidence": 0.0,
+      "status": "fallback",
+      "fallbackReason": "trap_isolation_no_standard"
     },
     {
       "gymbroId": "dumbbell_decline_shrug_v_2",
@@ -3149,12 +3129,9 @@
       "gymbroName": "dumbbell incline shoulder raise",
       "gymbroEquipment": "Manubri",
       "gymbroFocus": "PETT",
-      "confidence": 0.6868,
-      "status": "review",
-      "standardId": "lateral_raise",
-      "standardName": "Lateral Raise (Dumbbell)",
-      "standardEquipment": "Manubri",
-      "dataSource": "estimated_isolation"
+      "confidence": 0.0,
+      "status": "fallback",
+      "fallbackReason": "chest_focus_not_shoulder"
     },
     {
       "gymbroId": "incline_scapula_push_up",
@@ -3229,13 +3206,13 @@
       "gymbroId": "barbell_bench_squat",
       "gymbroName": "barbell bench squat",
       "gymbroEquipment": "Bilanciere",
-      "gymbroFocus": null,
-      "confidence": 0.8223,
-      "status": "auto",
-      "standardId": "barbell_front_squat",
-      "standardName": "Barbell Front Squat",
+      "gymbroFocus": "GLUT",
+      "confidence": 0.85,
+      "status": "verified",
+      "standardId": "barbell_back_squat",
+      "standardName": "Barbell Back Squat",
       "standardEquipment": "Bilanciere",
-      "dataSource": "estimated_from_back_squat"
+      "dataSource": "exrx_net"
     },
     {
       "gymbroId": "suspended_split_squat",
@@ -3496,13 +3473,13 @@
       "gymbroId": "barbell_wide_squat",
       "gymbroName": "barbell wide squat",
       "gymbroEquipment": "Bilanciere",
-      "gymbroFocus": null,
-      "confidence": 0.7907,
-      "status": "review",
-      "standardId": "barbell_front_squat",
-      "standardName": "Barbell Front Squat",
+      "gymbroFocus": "GLUT",
+      "confidence": 0.95,
+      "status": "verified",
+      "standardId": "barbell_back_squat",
+      "standardName": "Barbell Back Squat",
       "standardEquipment": "Bilanciere",
-      "dataSource": "estimated_from_back_squat"
+      "dataSource": "exrx_net"
     },
     {
       "gymbroId": "forward_jump",
@@ -3788,12 +3765,9 @@
       "gymbroName": "barbell front raise and pullover",
       "gymbroEquipment": "Bilanciere",
       "gymbroFocus": "PETT",
-      "confidence": 0.6395,
-      "status": "review",
-      "standardId": "barbell_front_squat",
-      "standardName": "Barbell Front Squat",
-      "standardEquipment": "Bilanciere",
-      "dataSource": "estimated_from_back_squat"
+      "confidence": 0.0,
+      "status": "fallback",
+      "fallbackReason": "no_standard_available"
     },
     {
       "gymbroId": "full_planche_push_up",
@@ -3881,12 +3855,9 @@
       "gymbroName": "push and pull bodyweight",
       "gymbroEquipment": "Corpo Libero",
       "gymbroFocus": "PETT",
-      "confidence": 0.6225,
-      "status": "review",
-      "standardId": "pull_up_bodyweight",
-      "standardName": "Pull-up (Bodyweight)",
-      "standardEquipment": "Corpo Libero",
-      "dataSource": "reps_based_standard"
+      "confidence": 0.0,
+      "status": "fallback",
+      "fallbackReason": "combo_exercise_no_single_standard"
     },
     {
       "gymbroId": "roller_seated_single_leg_shoulder_flexor_depresor_retractor",
@@ -4046,12 +4017,12 @@
       "gymbroName": "barbell decline wide-grip press",
       "gymbroEquipment": "Bilanciere",
       "gymbroFocus": "PETT",
-      "confidence": 0.6054,
-      "status": "review",
-      "standardId": "barbell_incline_bench_press",
-      "standardName": "Barbell Incline Bench Press",
+      "confidence": 0.85,
+      "status": "verified",
+      "standardId": "barbell_bench_press",
+      "standardName": "Barbell Bench Press",
       "standardEquipment": "Bilanciere",
-      "dataSource": "estimated_from_flat_bench"
+      "dataSource": "exrx_net"
     },
     {
       "gymbroId": "dumbbell_bench_press",
@@ -4112,12 +4083,12 @@
       "gymbroName": "barbell reverse grip decline bench press",
       "gymbroEquipment": "Bilanciere",
       "gymbroFocus": "PETT",
-      "confidence": 0.6453,
-      "status": "review",
-      "standardId": "barbell_incline_bench_press",
-      "standardName": "Barbell Incline Bench Press",
+      "confidence": 0.85,
+      "status": "verified",
+      "standardId": "barbell_bench_press",
+      "standardName": "Barbell Bench Press",
       "standardEquipment": "Bilanciere",
-      "dataSource": "estimated_from_flat_bench"
+      "dataSource": "exrx_net"
     },
     {
       "gymbroId": "chest_stretch_with_exercise_ball",
@@ -4142,12 +4113,12 @@
       "gymbroName": "barbell wide reverse grip bench press",
       "gymbroEquipment": "Bilanciere",
       "gymbroFocus": "PETT",
-      "confidence": 0.6806,
-      "status": "review",
-      "standardId": "dumbbell_bench_press",
-      "standardName": "Dumbbell Bench Press",
-      "standardEquipment": "Manubri",
-      "dataSource": "estimated_from_barbell"
+      "confidence": 0.85,
+      "status": "verified",
+      "standardId": "barbell_bench_press",
+      "standardName": "Barbell Bench Press",
+      "standardEquipment": "Bilanciere",
+      "dataSource": "exrx_net"
     },
     {
       "gymbroId": "dumbbell_one_arm_fly_on_exercise_ball",
@@ -4385,12 +4356,12 @@
       "gymbroName": "barbell wide bench press",
       "gymbroEquipment": "Bilanciere",
       "gymbroFocus": "PETT",
-      "confidence": 0.7545,
-      "status": "review",
-      "standardId": "dumbbell_bench_press",
-      "standardName": "Dumbbell Bench Press",
-      "standardEquipment": "Manubri",
-      "dataSource": "estimated_from_barbell"
+      "confidence": 0.95,
+      "status": "verified",
+      "standardId": "barbell_bench_press",
+      "standardName": "Barbell Bench Press",
+      "standardEquipment": "Bilanciere",
+      "dataSource": "exrx_net"
     },
     {
       "gymbroId": "dumbbell_decline_fly",
@@ -4514,12 +4485,13 @@
       "gymbroName": "smith bench press",
       "gymbroEquipment": "Vario",
       "gymbroFocus": "PETT",
-      "confidence": 0.709,
-      "status": "review",
-      "standardId": "dumbbell_bench_press",
-      "standardName": "Dumbbell Bench Press",
-      "standardEquipment": "Manubri",
-      "dataSource": "estimated_from_barbell"
+      "confidence": 0.85,
+      "status": "verified",
+      "standardId": "barbell_bench_press",
+      "standardName": "Barbell Bench Press",
+      "standardEquipment": "Bilanciere",
+      "dataSource": "exrx_net",
+      "note": "Smith machine typically ~5-10% less than free barbell"
     },
     {
       "gymbroId": "dumbbell_pullover_hip_extension_on_exercise_ball",
@@ -4544,12 +4516,12 @@
       "gymbroName": "barbell bench press",
       "gymbroEquipment": "Bilanciere",
       "gymbroFocus": "PETT",
-      "confidence": 0.8187,
-      "status": "auto",
-      "standardId": "dumbbell_bench_press",
-      "standardName": "Dumbbell Bench Press",
-      "standardEquipment": "Manubri",
-      "dataSource": "estimated_from_barbell"
+      "confidence": 1.0,
+      "status": "verified",
+      "standardId": "barbell_bench_press",
+      "standardName": "Barbell Bench Press",
+      "standardEquipment": "Bilanciere",
+      "dataSource": "exrx_net"
     },
     {
       "gymbroId": "smith_reverse_grip_press",
@@ -4565,12 +4537,12 @@
       "gymbroName": "smith decline bench press",
       "gymbroEquipment": "Vario",
       "gymbroFocus": "PETT",
-      "confidence": 0.6045,
-      "status": "review",
-      "standardId": "dumbbell_bench_press",
-      "standardName": "Dumbbell Bench Press",
-      "standardEquipment": "Manubri",
-      "dataSource": "estimated_from_barbell"
+      "confidence": 0.85,
+      "status": "verified",
+      "standardId": "barbell_bench_press",
+      "standardName": "Barbell Bench Press",
+      "standardEquipment": "Bilanciere",
+      "dataSource": "exrx_net"
     },
     {
       "gymbroId": "push_up_wall",
@@ -4688,12 +4660,12 @@
       "gymbroName": "barbell guillotine bench press",
       "gymbroEquipment": "Bilanciere",
       "gymbroFocus": "PETT",
-      "confidence": 0.7078,
-      "status": "review",
-      "standardId": "dumbbell_bench_press",
-      "standardName": "Dumbbell Bench Press",
-      "standardEquipment": "Manubri",
-      "dataSource": "estimated_from_barbell"
+      "confidence": 0.95,
+      "status": "verified",
+      "standardId": "barbell_bench_press",
+      "standardName": "Barbell Bench Press",
+      "standardEquipment": "Bilanciere",
+      "dataSource": "exrx_net"
     },
     {
       "gymbroId": "clock_push_up",
@@ -4997,12 +4969,12 @@
       "gymbroName": "smith wide grip bench press",
       "gymbroEquipment": "Vario",
       "gymbroFocus": "PETT",
-      "confidence": 0.6451,
-      "status": "review",
-      "standardId": "dumbbell_bench_press",
-      "standardName": "Dumbbell Bench Press",
-      "standardEquipment": "Manubri",
-      "dataSource": "estimated_from_barbell"
+      "confidence": 0.85,
+      "status": "verified",
+      "standardId": "barbell_bench_press",
+      "standardName": "Barbell Bench Press",
+      "standardEquipment": "Bilanciere",
+      "dataSource": "exrx_net"
     },
     {
       "gymbroId": "smith_incline_reverse_grip_press",
@@ -5120,12 +5092,13 @@
       "gymbroName": "barbell decline bench press",
       "gymbroEquipment": "Bilanciere",
       "gymbroFocus": "PETT",
-      "confidence": 0.7366,
-      "status": "review",
-      "standardId": "barbell_incline_bench_press",
-      "standardName": "Barbell Incline Bench Press",
+      "confidence": 0.90,
+      "status": "verified",
+      "standardId": "barbell_bench_press",
+      "standardName": "Barbell Bench Press",
       "standardEquipment": "Bilanciere",
-      "dataSource": "estimated_from_flat_bench"
+      "dataSource": "exrx_net",
+      "note": "Decline typically ~5-10% stronger than flat bench"
     },
     {
       "gymbroId": "chest_tap_push_up_male",
@@ -6137,12 +6110,9 @@
       "gymbroName": "barbell pullover to press",
       "gymbroEquipment": "Bilanciere",
       "gymbroFocus": "LAT, TRAP",
-      "confidence": 0.6568,
-      "status": "review",
-      "standardId": "dumbbell_shoulder_press",
-      "standardName": "Dumbbell Shoulder Press",
-      "standardEquipment": "Manubri",
-      "dataSource": "estimated_from_barbell_ohp"
+      "confidence": 0.0,
+      "status": "fallback",
+      "fallbackReason": "combo_exercise_no_single_standard"
     },
     {
       "gymbroId": "cable_cross_over_lateral_pulldown",
@@ -6971,12 +6941,12 @@
       "gymbroName": "barbell full squat (back pov)",
       "gymbroEquipment": "Bilanciere",
       "gymbroFocus": "GLUT",
-      "confidence": 0.7986,
-      "status": "review",
-      "standardId": "barbell_front_squat",
-      "standardName": "Barbell Front Squat",
+      "confidence": 1.0,
+      "status": "verified",
+      "standardId": "barbell_back_squat",
+      "standardName": "Barbell Back Squat",
       "standardEquipment": "Bilanciere",
-      "dataSource": "estimated_from_back_squat"
+      "dataSource": "exrx_net"
     },
     {
       "gymbroId": "arms_apart_circular_toe_touch_male",
@@ -7073,12 +7043,12 @@
       "gymbroName": "barbell high bar squat",
       "gymbroEquipment": "Bilanciere",
       "gymbroFocus": "GLUT",
-      "confidence": 0.8446,
-      "status": "auto",
-      "standardId": "barbell_front_squat",
-      "standardName": "Barbell Front Squat",
+      "confidence": 1.0,
+      "status": "verified",
+      "standardId": "barbell_back_squat",
+      "standardName": "Barbell Back Squat",
       "standardEquipment": "Bilanciere",
-      "dataSource": "estimated_from_back_squat"
+      "dataSource": "exrx_net"
     },
     {
       "gymbroId": "kettlebell_front_squat",
@@ -7118,12 +7088,9 @@
       "gymbroName": "dumbbell one arm snatch",
       "gymbroEquipment": "Manubri",
       "gymbroFocus": "GLUT",
-      "confidence": 0.665,
-      "status": "review",
-      "standardId": "dumbbell_shoulder_press",
-      "standardName": "Dumbbell Shoulder Press",
-      "standardEquipment": "Manubri",
-      "dataSource": "estimated_from_barbell_ohp"
+      "confidence": 0.0,
+      "status": "fallback",
+      "fallbackReason": "olympic_lift_no_standard"
     },
     {
       "gymbroId": "sled_45в°_leg_wide_press",
@@ -7208,12 +7175,12 @@
       "gymbroName": "barbell jump squat",
       "gymbroEquipment": "Bilanciere",
       "gymbroFocus": "GLUT",
-      "confidence": 0.7793,
-      "status": "review",
-      "standardId": "barbell_front_squat",
-      "standardName": "Barbell Front Squat",
+      "confidence": 0.85,
+      "status": "verified",
+      "standardId": "barbell_back_squat",
+      "standardName": "Barbell Back Squat",
       "standardEquipment": "Bilanciere",
-      "dataSource": "estimated_from_back_squat"
+      "dataSource": "exrx_net"
     },
     {
       "gymbroId": "barbell_lunge",
@@ -7262,12 +7229,12 @@
       "gymbroName": "barbell low bar squat",
       "gymbroEquipment": "Bilanciere",
       "gymbroFocus": "GLUT",
-      "confidence": 0.8316,
-      "status": "auto",
-      "standardId": "barbell_front_squat",
-      "standardName": "Barbell Front Squat",
+      "confidence": 1.0,
+      "status": "verified",
+      "standardId": "barbell_back_squat",
+      "standardName": "Barbell Back Squat",
       "standardEquipment": "Bilanciere",
-      "dataSource": "estimated_from_back_squat"
+      "dataSource": "exrx_net"
     },
     {
       "gymbroId": "band_squat",
@@ -7295,24 +7262,24 @@
       "gymbroName": "cable pull through (with rope)",
       "gymbroEquipment": "Cavi",
       "gymbroFocus": "GLUT",
-      "confidence": 0.6227,
-      "status": "review",
-      "standardId": "face_pull",
-      "standardName": "Face Pull (Cable)",
-      "standardEquipment": "Cavi",
-      "dataSource": "estimated_cables"
+      "confidence": 0.80,
+      "status": "verified",
+      "standardId": "barbell_romanian_deadlift",
+      "standardName": "Romanian Deadlift",
+      "standardEquipment": "Bilanciere",
+      "dataSource": "estimated_hip_hinge"
     },
     {
       "gymbroId": "barbell_speed_squat",
       "gymbroName": "barbell speed squat",
       "gymbroEquipment": "Bilanciere",
       "gymbroFocus": "GLUT",
-      "confidence": 0.7761,
-      "status": "review",
-      "standardId": "barbell_front_squat",
-      "standardName": "Barbell Front Squat",
+      "confidence": 0.85,
+      "status": "verified",
+      "standardId": "barbell_back_squat",
+      "standardName": "Barbell Back Squat",
       "standardEquipment": "Bilanciere",
-      "dataSource": "estimated_from_back_squat"
+      "dataSource": "exrx_net"
     },
     {
       "gymbroId": "dumbbell_rear_lunge",
@@ -7394,12 +7361,12 @@
       "gymbroName": "smith squat",
       "gymbroEquipment": "Vario",
       "gymbroFocus": "GLUT",
-      "confidence": 0.6195,
-      "status": "review",
-      "standardId": "barbell_front_squat",
-      "standardName": "Barbell Front Squat",
+      "confidence": 0.85,
+      "status": "verified",
+      "standardId": "barbell_back_squat",
+      "standardName": "Barbell Back Squat",
       "standardEquipment": "Bilanciere",
-      "dataSource": "estimated_from_back_squat"
+      "dataSource": "exrx_net"
     },
     {
       "gymbroId": "barbell_single_leg_deadlift",
@@ -7553,12 +7520,12 @@
       "gymbroName": "dumbbell step-up",
       "gymbroEquipment": "Manubri",
       "gymbroFocus": "GLUT",
-      "confidence": 0.6285,
-      "status": "review",
-      "standardId": "lateral_raise",
-      "standardName": "Lateral Raise (Dumbbell)",
-      "standardEquipment": "Manubri",
-      "dataSource": "estimated_isolation"
+      "confidence": 0.80,
+      "status": "verified",
+      "standardId": "barbell_back_squat",
+      "standardName": "Barbell Back Squat",
+      "standardEquipment": "Bilanciere",
+      "dataSource": "estimated_compound"
     },
     {
       "gymbroId": "sled_45°_leg_press_side_pov",
@@ -7586,12 +7553,12 @@
       "gymbroName": "barbell full squat",
       "gymbroEquipment": "Bilanciere",
       "gymbroFocus": "GLUT",
-      "confidence": 0.8343,
-      "status": "auto",
-      "standardId": "barbell_front_squat",
-      "standardName": "Barbell Front Squat",
+      "confidence": 1.0,
+      "status": "verified",
+      "standardId": "barbell_back_squat",
+      "standardName": "Barbell Back Squat",
       "standardEquipment": "Bilanciere",
-      "dataSource": "estimated_from_back_squat"
+      "dataSource": "exrx_net"
     },
     {
       "gymbroId": "barbell_lying_lifting_on_hip",
@@ -7784,12 +7751,12 @@
       "gymbroName": "barbell jefferson squat",
       "gymbroEquipment": "Bilanciere",
       "gymbroFocus": "GLUT",
-      "confidence": 0.7391,
-      "status": "review",
-      "standardId": "barbell_front_squat",
-      "standardName": "Barbell Front Squat",
+      "confidence": 0.75,
+      "status": "verified",
+      "standardId": "barbell_back_squat",
+      "standardName": "Barbell Back Squat",
       "standardEquipment": "Bilanciere",
-      "dataSource": "estimated_from_back_squat"
+      "dataSource": "exrx_net"
     },
     {
       "gymbroId": "trap_bar_deadlift",
@@ -7877,12 +7844,12 @@
       "gymbroName": "barbell zercher squat",
       "gymbroEquipment": "Bilanciere",
       "gymbroFocus": "GLUT",
-      "confidence": 0.7274,
-      "status": "review",
-      "standardId": "barbell_front_squat",
-      "standardName": "Barbell Front Squat",
+      "confidence": 0.75,
+      "status": "verified",
+      "standardId": "barbell_back_squat",
+      "standardName": "Barbell Back Squat",
       "standardEquipment": "Bilanciere",
-      "dataSource": "estimated_from_back_squat"
+      "dataSource": "exrx_net"
     },
     {
       "gymbroId": "barbell_deadlift",
@@ -7928,12 +7895,12 @@
       "gymbroName": "barbell full zercher squat",
       "gymbroEquipment": "Bilanciere",
       "gymbroFocus": "GLUT",
-      "confidence": 0.7218,
-      "status": "review",
-      "standardId": "barbell_front_squat",
-      "standardName": "Barbell Front Squat",
+      "confidence": 0.75,
+      "status": "verified",
+      "standardId": "barbell_back_squat",
+      "standardName": "Barbell Back Squat",
       "standardEquipment": "Bilanciere",
-      "dataSource": "estimated_from_back_squat"
+      "dataSource": "exrx_net"
     },
     {
       "gymbroId": "dumbbell_sumo_pull_through",
@@ -7958,12 +7925,12 @@
       "gymbroName": "barbell full squat (side pov)",
       "gymbroEquipment": "Bilanciere",
       "gymbroFocus": "GLUT",
-      "confidence": 0.7565,
-      "status": "review",
-      "standardId": "barbell_front_squat",
-      "standardName": "Barbell Front Squat",
+      "confidence": 1.0,
+      "status": "verified",
+      "standardId": "barbell_back_squat",
+      "standardName": "Barbell Back Squat",
       "standardEquipment": "Bilanciere",
-      "dataSource": "estimated_from_back_squat"
+      "dataSource": "exrx_net"
     },
     {
       "gymbroId": "barbell_rear_lunge",
@@ -8015,12 +7982,12 @@
       "gymbroName": "smith low bar squat",
       "gymbroEquipment": "Vario",
       "gymbroFocus": "GLUT",
-      "confidence": 0.7112,
-      "status": "review",
-      "standardId": "barbell_front_squat",
-      "standardName": "Barbell Front Squat",
+      "confidence": 0.85,
+      "status": "verified",
+      "standardId": "barbell_back_squat",
+      "standardName": "Barbell Back Squat",
       "standardEquipment": "Bilanciere",
-      "dataSource": "estimated_from_back_squat"
+      "dataSource": "exrx_net"
     },
     {
       "gymbroId": "hug_keens_to_chest",
@@ -8099,12 +8066,12 @@
       "gymbroName": "barbell hack squat",
       "gymbroEquipment": "Bilanciere",
       "gymbroFocus": "GLUT",
-      "confidence": 0.7968,
-      "status": "review",
-      "standardId": "barbell_front_squat",
-      "standardName": "Barbell Front Squat",
+      "confidence": 0.80,
+      "status": "verified",
+      "standardId": "barbell_back_squat",
+      "standardName": "Barbell Back Squat",
       "standardEquipment": "Bilanciere",
-      "dataSource": "estimated_from_back_squat"
+      "dataSource": "exrx_net"
     },
     {
       "gymbroId": "band_seated_hip_internal_rotation",
@@ -8207,24 +8174,24 @@
       "gymbroName": "barbell narrow stance squat",
       "gymbroEquipment": "Bilanciere",
       "gymbroFocus": "GLUT",
-      "confidence": 0.774,
-      "status": "review",
-      "standardId": "barbell_front_squat",
-      "standardName": "Barbell Front Squat",
+      "confidence": 0.95,
+      "status": "verified",
+      "standardId": "barbell_back_squat",
+      "standardName": "Barbell Back Squat",
       "standardEquipment": "Bilanciere",
-      "dataSource": "estimated_from_back_squat"
+      "dataSource": "exrx_net"
     },
     {
       "gymbroId": "smith_full_squat",
       "gymbroName": "smith full squat",
       "gymbroEquipment": "Vario",
       "gymbroFocus": "GLUT",
-      "confidence": 0.6023,
-      "status": "review",
-      "standardId": "barbell_front_squat",
-      "standardName": "Barbell Front Squat",
+      "confidence": 0.85,
+      "status": "verified",
+      "standardId": "barbell_back_squat",
+      "standardName": "Barbell Back Squat",
       "standardEquipment": "Bilanciere",
-      "dataSource": "estimated_from_back_squat"
+      "dataSource": "exrx_net"
     },
     {
       "gymbroId": "monster_walk",
@@ -8486,24 +8453,24 @@
       "gymbroName": "micro style barbell speed squat",
       "gymbroEquipment": "Bilanciere",
       "gymbroFocus": "GLUT",
-      "confidence": 0.6895,
-      "status": "review",
-      "standardId": "barbell_front_squat",
-      "standardName": "Barbell Front Squat",
+      "confidence": 0.80,
+      "status": "verified",
+      "standardId": "barbell_back_squat",
+      "standardName": "Barbell Back Squat",
       "standardEquipment": "Bilanciere",
-      "dataSource": "estimated_from_back_squat"
+      "dataSource": "exrx_net"
     },
     {
       "gymbroId": "barbell_high_bar_squat_core",
       "gymbroName": "barbell high bar squat core",
       "gymbroEquipment": "Bilanciere",
       "gymbroFocus": "GLUT",
-      "confidence": 0.791,
-      "status": "review",
-      "standardId": "barbell_front_squat",
-      "standardName": "Barbell Front Squat",
+      "confidence": 0.95,
+      "status": "verified",
+      "standardId": "barbell_back_squat",
+      "standardName": "Barbell Back Squat",
       "standardEquipment": "Bilanciere",
-      "dataSource": "estimated_from_back_squat"
+      "dataSource": "exrx_net"
     },
     {
       "gymbroId": "sharp_style_dumbbell_sumo_pull_through",
@@ -8567,12 +8534,9 @@
       "gymbroName": "barbell wrist curl",
       "gymbroEquipment": "Bilanciere",
       "gymbroFocus": "AVA",
-      "confidence": 0.7052,
-      "status": "review",
-      "standardId": "barbell_curl",
-      "standardName": "Barbell Curl",
-      "standardEquipment": "Bilanciere",
-      "dataSource": "estimated_isolation"
+      "confidence": 0.0,
+      "status": "fallback",
+      "fallbackReason": "forearm_isolation_no_standard"
     },
     {
       "gymbroId": "dumbbell_lying_pronation_on_floor",
@@ -8597,12 +8561,9 @@
       "gymbroName": "barbell wrist curl v. 2",
       "gymbroEquipment": "Bilanciere",
       "gymbroFocus": "AVA",
-      "confidence": 0.6946,
-      "status": "review",
-      "standardId": "barbell_curl",
-      "standardName": "Barbell Curl",
-      "standardEquipment": "Bilanciere",
-      "dataSource": "estimated_isolation"
+      "confidence": 0.0,
+      "status": "fallback",
+      "fallbackReason": "forearm_isolation_no_standard"
     },
     {
       "gymbroId": "lever_gripper_hands",
@@ -8627,12 +8588,9 @@
       "gymbroName": "dumbbell one arm seated neutral wrist curl",
       "gymbroEquipment": "Manubri",
       "gymbroFocus": "AVA",
-      "confidence": 0.6123,
-      "status": "review",
-      "standardId": "dumbbell_shoulder_press",
-      "standardName": "Dumbbell Shoulder Press",
-      "standardEquipment": "Manubri",
-      "dataSource": "estimated_from_barbell_ohp"
+      "confidence": 0.0,
+      "status": "fallback",
+      "fallbackReason": "forearm_isolation_no_standard"
     },
     {
       "gymbroId": "dumbbell_lying_supination_on_floor",
@@ -8648,12 +8606,9 @@
       "gymbroName": "barbell standing back wrist curl",
       "gymbroEquipment": "Bilanciere",
       "gymbroFocus": "AVA",
-      "confidence": 0.8024,
-      "status": "auto",
-      "standardId": "barbell_curl",
-      "standardName": "Barbell Curl",
-      "standardEquipment": "Bilanciere",
-      "dataSource": "estimated_isolation"
+      "confidence": 0.0,
+      "status": "fallback",
+      "fallbackReason": "forearm_isolation_no_standard"
     },
     {
       "gymbroId": "barbell_palms_up_wrist_curl_over_a_bench",
@@ -8669,12 +8624,9 @@
       "gymbroName": "barbell reverse wrist curl",
       "gymbroEquipment": "Bilanciere",
       "gymbroFocus": "AVA",
-      "confidence": 0.6897,
-      "status": "review",
-      "standardId": "barbell_curl",
-      "standardName": "Barbell Curl",
-      "standardEquipment": "Bilanciere",
-      "dataSource": "estimated_isolation"
+      "confidence": 0.0,
+      "status": "fallback",
+      "fallbackReason": "forearm_isolation_no_standard"
     },
     {
       "gymbroId": "cable_wrist_curl",
@@ -8690,24 +8642,18 @@
       "gymbroName": "dumbbell seated palms up wrist curl",
       "gymbroEquipment": "Manubri",
       "gymbroFocus": "AVA",
-      "confidence": 0.6221,
-      "status": "review",
-      "standardId": "dumbbell_shoulder_press",
-      "standardName": "Dumbbell Shoulder Press",
-      "standardEquipment": "Manubri",
-      "dataSource": "estimated_from_barbell_ohp"
+      "confidence": 0.0,
+      "status": "fallback",
+      "fallbackReason": "forearm_isolation_no_standard"
     },
     {
       "gymbroId": "barbell_revers_wrist_curl_v_2",
       "gymbroName": "barbell revers wrist curl v. 2",
       "gymbroEquipment": "Bilanciere",
       "gymbroFocus": "AVA",
-      "confidence": 0.6672,
-      "status": "review",
-      "standardId": "barbell_curl",
-      "standardName": "Barbell Curl",
-      "standardEquipment": "Bilanciere",
-      "dataSource": "estimated_isolation"
+      "confidence": 0.0,
+      "status": "fallback",
+      "fallbackReason": "forearm_isolation_no_standard"
     },
     {
       "gymbroId": "side_wrist_pull_stretch",
@@ -8723,12 +8669,9 @@
       "gymbroName": "dumbbell lying supination",
       "gymbroEquipment": "Manubri",
       "gymbroFocus": "AVA",
-      "confidence": 0.6004,
-      "status": "review",
-      "standardId": "lateral_raise",
-      "standardName": "Lateral Raise (Dumbbell)",
-      "standardEquipment": "Manubri",
-      "dataSource": "estimated_isolation"
+      "confidence": 0.0,
+      "status": "fallback",
+      "fallbackReason": "forearm_isolation_no_standard"
     },
     {
       "gymbroId": "wrist_rollerer",
@@ -8762,12 +8705,9 @@
       "gymbroName": "dumbbell over bench one arm reverse wrist curl",
       "gymbroEquipment": "Manubri",
       "gymbroFocus": "AVA",
-      "confidence": 0.652,
-      "status": "review",
-      "standardId": "dumbbell_bench_press",
-      "standardName": "Dumbbell Bench Press",
-      "standardEquipment": "Manubri",
-      "dataSource": "estimated_from_barbell"
+      "confidence": 0.0,
+      "status": "fallback",
+      "fallbackReason": "forearm_isolation_no_standard"
     },
     {
       "gymbroId": "smith_seated_wrist_curl",
@@ -8810,24 +8750,18 @@
       "gymbroName": "dumbbell over bench revers wrist curl",
       "gymbroEquipment": "Manubri",
       "gymbroFocus": "AVA",
-      "confidence": 0.6355,
-      "status": "review",
-      "standardId": "dumbbell_bench_press",
-      "standardName": "Dumbbell Bench Press",
-      "standardEquipment": "Manubri",
-      "dataSource": "estimated_from_barbell"
+      "confidence": 0.0,
+      "status": "fallback",
+      "fallbackReason": "forearm_isolation_no_standard"
     },
     {
       "gymbroId": "dumbbell_one_arm_reverse_wrist_curl",
       "gymbroName": "dumbbell one arm reverse wrist curl",
       "gymbroEquipment": "Manubri",
       "gymbroFocus": "AVA",
-      "confidence": 0.6061,
-      "status": "review",
-      "standardId": "dumbbell_shoulder_press",
-      "standardName": "Dumbbell Shoulder Press",
-      "standardEquipment": "Manubri",
-      "dataSource": "estimated_from_barbell_ohp"
+      "confidence": 0.0,
+      "status": "fallback",
+      "fallbackReason": "forearm_isolation_no_standard"
     },
     {
       "gymbroId": "band_wrist_curl",
@@ -8843,12 +8777,9 @@
       "gymbroName": "dumbbell one arm wrist curl",
       "gymbroEquipment": "Manubri",
       "gymbroFocus": "AVA",
-      "confidence": 0.6341,
-      "status": "review",
-      "standardId": "dumbbell_shoulder_press",
-      "standardName": "Dumbbell Shoulder Press",
-      "standardEquipment": "Manubri",
-      "dataSource": "estimated_from_barbell_ohp"
+      "confidence": 0.0,
+      "status": "fallback",
+      "fallbackReason": "forearm_isolation_no_standard"
     },
     {
       "gymbroId": "cable_standing_back_wrist_curl",
@@ -8864,12 +8795,9 @@
       "gymbroName": "dumbbell over bench wrist curl",
       "gymbroEquipment": "Manubri",
       "gymbroFocus": "AVA",
-      "confidence": 0.6707,
-      "status": "review",
-      "standardId": "dumbbell_bench_press",
-      "standardName": "Dumbbell Bench Press",
-      "standardEquipment": "Manubri",
-      "dataSource": "estimated_from_barbell"
+      "confidence": 0.0,
+      "status": "fallback",
+      "fallbackReason": "forearm_isolation_no_standard"
     },
     {
       "gymbroId": "weighted_standing_hand_squeeze",
@@ -8906,12 +8834,9 @@
       "gymbroName": "dumbbell over bench one arm wrist curl",
       "gymbroEquipment": "Manubri",
       "gymbroFocus": "AVA",
-      "confidence": 0.6688,
-      "status": "review",
-      "standardId": "dumbbell_bench_press",
-      "standardName": "Dumbbell Bench Press",
-      "standardEquipment": "Manubri",
-      "dataSource": "estimated_from_barbell"
+      "confidence": 0.0,
+      "status": "fallback",
+      "fallbackReason": "forearm_isolation_no_standard"
     },
     {
       "gymbroId": "dumbbell_lying_pronation",
@@ -8927,24 +8852,18 @@
       "gymbroName": "dumbbell reverse wrist curl",
       "gymbroEquipment": "Manubri",
       "gymbroFocus": "AVA",
-      "confidence": 0.6029,
-      "status": "review",
-      "standardId": "dumbbell_shoulder_press",
-      "standardName": "Dumbbell Shoulder Press",
-      "standardEquipment": "Manubri",
-      "dataSource": "estimated_from_barbell_ohp"
+      "confidence": 0.0,
+      "status": "fallback",
+      "fallbackReason": "forearm_isolation_no_standard"
     },
     {
       "gymbroId": "dumbbell_over_bench_one_arm_wrist_curl_strength_variation",
       "gymbroName": "dumbbell over bench one arm wrist curl - strength variation",
       "gymbroEquipment": "Manubri",
       "gymbroFocus": "AVA",
-      "confidence": 0.6604,
-      "status": "review",
-      "standardId": "dumbbell_bench_press",
-      "standardName": "Dumbbell Bench Press",
-      "standardEquipment": "Manubri",
-      "dataSource": "estimated_from_barbell"
+      "confidence": 0.0,
+      "status": "fallback",
+      "fallbackReason": "forearm_isolation_no_standard"
     },
     {
       "gymbroId": "controlled_wrist_rollerer",
@@ -8960,12 +8879,9 @@
       "gymbroName": "barbell reverse wrist curl - prone variation",
       "gymbroEquipment": "Bilanciere",
       "gymbroFocus": "AVA",
-      "confidence": 0.6393,
-      "status": "review",
-      "standardId": "barbell_curl",
-      "standardName": "Barbell Curl",
-      "standardEquipment": "Bilanciere",
-      "dataSource": "estimated_isolation"
+      "confidence": 0.0,
+      "status": "fallback",
+      "fallbackReason": "forearm_isolation_no_standard"
     },
     {
       "gymbroId": "dumbbell_one_arm_shoulder_press",
@@ -9053,12 +8969,9 @@
       "gymbroName": "dumbbell incline t-raise",
       "gymbroEquipment": "Manubri",
       "gymbroFocus": "DELT",
-      "confidence": 0.6478,
-      "status": "review",
-      "standardId": "barbell_incline_bench_press",
-      "standardName": "Barbell Incline Bench Press",
-      "standardEquipment": "Bilanciere",
-      "dataSource": "estimated_from_flat_bench"
+      "confidence": 0.0,
+      "status": "fallback",
+      "fallbackReason": "shoulder_isolation_no_standard"
     },
     {
       "gymbroId": "dumbbell_single_arm_overhead_carry",
@@ -9086,12 +8999,9 @@
       "gymbroName": "cable kneeling rear delt row (with rope) (male)",
       "gymbroEquipment": "Cavi",
       "gymbroFocus": "DELT",
-      "confidence": 0.6808,
-      "status": "review",
-      "standardId": "cable_row",
-      "standardName": "Cable Row (Seated)",
-      "standardEquipment": "Cavi",
-      "dataSource": "estimated_cables"
+      "confidence": 0.0,
+      "status": "fallback",
+      "fallbackReason": "rear_delt_isolation_no_standard"
     },
     {
       "gymbroId": "dumbbell_seated_lateral_raise",
@@ -9281,12 +9191,9 @@
       "gymbroName": "cable upright row",
       "gymbroEquipment": "Cavi",
       "gymbroFocus": "DELT",
-      "confidence": 0.7456,
-      "status": "review",
-      "standardId": "cable_row",
-      "standardName": "Cable Row (Seated)",
-      "standardEquipment": "Cavi",
-      "dataSource": "estimated_cables"
+      "confidence": 0.0,
+      "status": "fallback",
+      "fallbackReason": "upright_row_is_shoulder_not_back"
     },
     {
       "gymbroId": "dumbbell_standing_alternate_overhead_press",
@@ -9593,12 +9500,12 @@
       "gymbroName": "barbell seated bradford rocky press",
       "gymbroEquipment": "Bilanciere",
       "gymbroFocus": "DELT",
-      "confidence": 0.6295,
-      "status": "review",
-      "standardId": "barbell_incline_bench_press",
-      "standardName": "Barbell Incline Bench Press",
+      "confidence": 0.85,
+      "status": "verified",
+      "standardId": "barbell_overhead_press",
+      "standardName": "Barbell Overhead Press",
       "standardEquipment": "Bilanciere",
-      "dataSource": "estimated_from_flat_bench"
+      "dataSource": "exrx_net"
     },
     {
       "gymbroId": "kettlebell_one_arm_clean_and_jerk",
@@ -9623,24 +9530,21 @@
       "gymbroName": "cable rear delt row (stirrups)",
       "gymbroEquipment": "Cavi",
       "gymbroFocus": "DELT",
-      "confidence": 0.6394,
-      "status": "review",
-      "standardId": "cable_row",
-      "standardName": "Cable Row (Seated)",
-      "standardEquipment": "Cavi",
-      "dataSource": "estimated_cables"
+      "confidence": 0.0,
+      "status": "fallback",
+      "fallbackReason": "rear_delt_isolation_no_standard"
     },
     {
       "gymbroId": "dumbbell_arnold_press",
       "gymbroName": "dumbbell arnold press",
       "gymbroEquipment": "Manubri",
       "gymbroFocus": "DELT",
-      "confidence": 0.7041,
-      "status": "review",
-      "standardId": "dumbbell_bench_press",
-      "standardName": "Dumbbell Bench Press",
+      "confidence": 0.90,
+      "status": "verified",
+      "standardId": "dumbbell_shoulder_press",
+      "standardName": "Dumbbell Shoulder Press",
       "standardEquipment": "Manubri",
-      "dataSource": "estimated_from_barbell"
+      "dataSource": "exrx_net"
     },
     {
       "gymbroId": "weighted_round_arm",
@@ -9668,12 +9572,9 @@
       "gymbroName": "dumbbell rear fly",
       "gymbroEquipment": "Manubri",
       "gymbroFocus": "DELT",
-      "confidence": 0.6424,
-      "status": "review",
-      "standardId": "chest_fly",
-      "standardName": "Chest Fly (Dumbbell/Cable)",
-      "standardEquipment": "Vario",
-      "dataSource": "estimated_isolation"
+      "confidence": 0.0,
+      "status": "fallback",
+      "fallbackReason": "rear_delt_isolation_no_standard"
     },
     {
       "gymbroId": "dumbbell_front_raise",
@@ -9809,12 +9710,12 @@
       "gymbroName": "dumbbell arnold press v. 2",
       "gymbroEquipment": "Manubri",
       "gymbroFocus": "DELT",
-      "confidence": 0.6592,
-      "status": "review",
-      "standardId": "dumbbell_bench_press",
-      "standardName": "Dumbbell Bench Press",
+      "confidence": 0.85,
+      "status": "verified",
+      "standardId": "dumbbell_shoulder_press",
+      "standardName": "Dumbbell Shoulder Press",
       "standardEquipment": "Manubri",
-      "dataSource": "estimated_from_barbell"
+      "dataSource": "estimated_from_barbell_ohp"
     },
     {
       "gymbroId": "cable_lateral_raise",
@@ -9881,12 +9782,9 @@
       "gymbroName": "dumbbell incline raise",
       "gymbroEquipment": "Manubri",
       "gymbroFocus": "DELT",
-      "confidence": 0.6709,
-      "status": "review",
-      "standardId": "barbell_incline_bench_press",
-      "standardName": "Barbell Incline Bench Press",
-      "standardEquipment": "Bilanciere",
-      "dataSource": "estimated_from_flat_bench"
+      "confidence": 0.0,
+      "status": "fallback",
+      "fallbackReason": "shoulder_isolation_no_standard"
     },
     {
       "gymbroId": "left_hook_boxing",
@@ -9947,12 +9845,9 @@
       "gymbroName": "cable rear delt row (with rope)",
       "gymbroEquipment": "Cavi",
       "gymbroFocus": "DELT",
-      "confidence": 0.6431,
-      "status": "review",
-      "standardId": "cable_row",
-      "standardName": "Cable Row (Seated)",
-      "standardEquipment": "Cavi",
-      "dataSource": "estimated_cables"
+      "confidence": 0.0,
+      "status": "fallback",
+      "fallbackReason": "rear_delt_isolation_no_standard"
     },
     {
       "gymbroId": "smith_standing_behind_head_military_press",
@@ -10085,24 +9980,18 @@
       "gymbroName": "barbell standing front raise over head",
       "gymbroEquipment": "Bilanciere",
       "gymbroFocus": "DELT",
-      "confidence": 0.6352,
-      "status": "review",
-      "standardId": "barbell_curl",
-      "standardName": "Barbell Curl",
-      "standardEquipment": "Bilanciere",
-      "dataSource": "estimated_isolation"
+      "confidence": 0.0,
+      "status": "fallback",
+      "fallbackReason": "shoulder_isolation_no_standard"
     },
     {
       "gymbroId": "barbell_front_raise",
       "gymbroName": "barbell front raise",
       "gymbroEquipment": "Bilanciere",
       "gymbroFocus": "DELT",
-      "confidence": 0.6718,
-      "status": "review",
-      "standardId": "barbell_front_squat",
-      "standardName": "Barbell Front Squat",
-      "standardEquipment": "Bilanciere",
-      "dataSource": "estimated_from_back_squat"
+      "confidence": 0.0,
+      "status": "fallback",
+      "fallbackReason": "no_standard_available"
     },
     {
       "gymbroId": "weighted_kneeling_step_with_swing",
@@ -10130,12 +10019,12 @@
       "gymbroName": "dumbbell scott press",
       "gymbroEquipment": "Manubri",
       "gymbroFocus": "DELT",
-      "confidence": 0.6884,
-      "status": "review",
-      "standardId": "dumbbell_bench_press",
-      "standardName": "Dumbbell Bench Press",
+      "confidence": 0.85,
+      "status": "verified",
+      "standardId": "dumbbell_shoulder_press",
+      "standardName": "Dumbbell Shoulder Press",
       "standardEquipment": "Manubri",
-      "dataSource": "estimated_from_barbell"
+      "dataSource": "estimated_from_barbell_ohp"
     },
     {
       "gymbroId": "kettlebell_double_snatch",
@@ -10154,12 +10043,12 @@
       "gymbroName": "dumbbell bench seated press",
       "gymbroEquipment": "Manubri",
       "gymbroFocus": "DELT",
-      "confidence": 0.8843,
-      "status": "auto",
-      "standardId": "dumbbell_bench_press",
-      "standardName": "Dumbbell Bench Press",
+      "confidence": 0.85,
+      "status": "verified",
+      "standardId": "dumbbell_shoulder_press",
+      "standardName": "Dumbbell Shoulder Press",
       "standardEquipment": "Manubri",
-      "dataSource": "estimated_from_barbell"
+      "dataSource": "estimated_from_barbell_ohp"
     },
     {
       "gymbroId": "dumbbell_seated_lateral_raise_v_2",
@@ -10475,12 +10364,9 @@
       "gymbroName": "cable standing rear delt row (with rope)",
       "gymbroEquipment": "Cavi",
       "gymbroFocus": "DELT",
-      "confidence": 0.6202,
-      "status": "review",
-      "standardId": "cable_row",
-      "standardName": "Cable Row (Seated)",
-      "standardEquipment": "Cavi",
-      "dataSource": "estimated_cables"
+      "confidence": 0.0,
+      "status": "fallback",
+      "fallbackReason": "rear_delt_isolation_no_standard"
     },
     {
       "gymbroId": "ez_barbell_anti_gravity_press",
@@ -10553,12 +10439,9 @@
       "gymbroName": "cable kneeling rear delt row (with rope) (male) expanded",
       "gymbroEquipment": "Cavi",
       "gymbroFocus": "DELT",
-      "confidence": 0.6498,
-      "status": "review",
-      "standardId": "cable_row",
-      "standardName": "Cable Row (Seated)",
-      "standardEquipment": "Cavi",
-      "dataSource": "estimated_cables"
+      "confidence": 0.0,
+      "status": "fallback",
+      "fallbackReason": "rear_delt_isolation_no_standard"
     },
     {
       "gymbroId": "lever_military_press_with_strength",
@@ -11018,12 +10901,9 @@
       "gymbroName": "seated calf stretch (male)",
       "gymbroEquipment": "Corpo Libero",
       "gymbroFocus": "POLP",
-      "confidence": 0.6097,
-      "status": "review",
-      "standardId": "calf_raise",
-      "standardName": "Calf Raise (Machine/Barbell)",
-      "standardEquipment": "Vario",
-      "dataSource": "estimated_isolation"
+      "confidence": 0.0,
+      "status": "fallback",
+      "fallbackReason": "stretching_exercise_no_standard"
     },
     {
       "gymbroId": "barbell_standing_calf_raise",
@@ -11087,12 +10967,12 @@
       "gymbroName": "lever calf press",
       "gymbroEquipment": "Macchina",
       "gymbroFocus": "POLP",
-      "confidence": 0.6176,
-      "status": "review",
-      "standardId": "leg_press",
-      "standardName": "Leg Press (Machine)",
-      "standardEquipment": "Macchina",
-      "dataSource": "estimated_machine"
+      "confidence": 0.85,
+      "status": "verified",
+      "standardId": "calf_raise",
+      "standardName": "Calf Raise (Machine/Barbell)",
+      "standardEquipment": "Vario",
+      "dataSource": "estimated_isolation"
     },
     {
       "gymbroId": "sled_forward_angled_calf_raise",
@@ -11153,12 +11033,12 @@
       "gymbroName": "sled one leg calf press on leg press",
       "gymbroEquipment": "Slitta",
       "gymbroFocus": "POLP",
-      "confidence": 0.6271,
-      "status": "review",
-      "standardId": "leg_press",
-      "standardName": "Leg Press (Machine)",
-      "standardEquipment": "Macchina",
-      "dataSource": "estimated_machine"
+      "confidence": 0.85,
+      "status": "verified",
+      "standardId": "calf_raise",
+      "standardName": "Calf Raise (Machine/Barbell)",
+      "standardEquipment": "Vario",
+      "dataSource": "estimated_isolation"
     },
     {
       "gymbroId": "calf_stretch_with_rope",
@@ -11414,12 +11294,9 @@
       "gymbroName": "standing calves calf stretch",
       "gymbroEquipment": "Corpo Libero",
       "gymbroFocus": "POLP",
-      "confidence": 0.6174,
-      "status": "review",
-      "standardId": "calf_raise",
-      "standardName": "Calf Raise (Machine/Barbell)",
-      "standardEquipment": "Vario",
-      "dataSource": "estimated_isolation"
+      "confidence": 0.0,
+      "status": "fallback",
+      "fallbackReason": "stretching_exercise_no_standard"
     },
     {
       "gymbroId": "assisted_lying_calves_stretch",
@@ -11885,12 +11762,9 @@
       "gymbroName": "dumbbell over bench one arm neutral wrist curl",
       "gymbroEquipment": "Manubri",
       "gymbroFocus": "BICI, TRIC",
-      "confidence": 0.6452,
-      "status": "review",
-      "standardId": "dumbbell_bench_press",
-      "standardName": "Dumbbell Bench Press",
-      "standardEquipment": "Manubri",
-      "dataSource": "estimated_from_barbell"
+      "confidence": 0.0,
+      "status": "fallback",
+      "fallbackReason": "forearm_isolation_no_standard"
     },
     {
       "gymbroId": "ez_barbell_close_grip_preacher_curl",
@@ -12722,12 +12596,12 @@
       "gymbroName": "dumbbell incline curl v. 2",
       "gymbroEquipment": "Manubri",
       "gymbroFocus": "BICI, TRIC",
-      "confidence": 0.6204,
-      "status": "review",
-      "standardId": "barbell_incline_bench_press",
-      "standardName": "Barbell Incline Bench Press",
+      "confidence": 0.85,
+      "status": "verified",
+      "standardId": "barbell_curl",
+      "standardName": "Barbell Curl",
       "standardEquipment": "Bilanciere",
-      "dataSource": "estimated_from_flat_bench"
+      "dataSource": "estimated_isolation"
     },
     {
       "gymbroId": "dumbbell_one_arm_standing_hammer_curl",
@@ -12827,12 +12701,9 @@
       "gymbroName": "dumbbell seated neutral wrist curl",
       "gymbroEquipment": "Manubri",
       "gymbroFocus": "BICI, TRIC",
-      "confidence": 0.611,
-      "status": "review",
-      "standardId": "dumbbell_shoulder_press",
-      "standardName": "Dumbbell Shoulder Press",
-      "standardEquipment": "Manubri",
-      "dataSource": "estimated_from_barbell_ohp"
+      "confidence": 0.0,
+      "status": "fallback",
+      "fallbackReason": "forearm_isolation_no_standard"
     },
     {
       "gymbroId": "dumbbell_alternate_preacher_curl",
@@ -13064,12 +12935,9 @@
       "gymbroName": "dumbbell over bench neutral wrist curl",
       "gymbroEquipment": "Manubri",
       "gymbroFocus": "BICI, TRIC",
-      "confidence": 0.6441,
-      "status": "review",
-      "standardId": "dumbbell_bench_press",
-      "standardName": "Dumbbell Bench Press",
-      "standardEquipment": "Manubri",
-      "dataSource": "estimated_from_barbell"
+      "confidence": 0.0,
+      "status": "fallback",
+      "fallbackReason": "forearm_isolation_no_standard"
     },
     {
       "gymbroId": "dumbbell_seated_biceps_curl_on_stability_ball",
@@ -13514,24 +13382,18 @@
       "gymbroName": "barbell press sit-up",
       "gymbroEquipment": "Bilanciere",
       "gymbroFocus": "CORE",
-      "confidence": 0.6917,
-      "status": "review",
-      "standardId": "dumbbell_shoulder_press",
-      "standardName": "Dumbbell Shoulder Press",
-      "standardEquipment": "Manubri",
-      "dataSource": "estimated_from_barbell_ohp"
+      "confidence": 0.0,
+      "status": "fallback",
+      "fallbackReason": "core_exercise_no_standard"
     },
     {
       "gymbroId": "dumbbell_side_bend",
       "gymbroName": "dumbbell side bend",
       "gymbroEquipment": "Manubri",
       "gymbroFocus": "CORE",
-      "confidence": 0.6219,
-      "status": "review",
-      "standardId": "lateral_raise",
-      "standardName": "Lateral Raise (Dumbbell)",
-      "standardEquipment": "Manubri",
-      "dataSource": "estimated_isolation"
+      "confidence": 0.0,
+      "status": "fallback",
+      "fallbackReason": "core_exercise_no_standard"
     },
     {
       "gymbroId": "sledge_hammer",
@@ -13709,12 +13571,9 @@
       "gymbroName": "vertical leg raise (on parallel bars)",
       "gymbroEquipment": "Corpo Libero",
       "gymbroFocus": "CORE",
-      "confidence": 0.6076,
-      "status": "review",
-      "standardId": "calf_raise",
-      "standardName": "Calf Raise (Machine/Barbell)",
-      "standardEquipment": "Vario",
-      "dataSource": "estimated_isolation"
+      "confidence": 0.0,
+      "status": "fallback",
+      "fallbackReason": "core_exercise_no_standard"
     },
     {
       "gymbroId": "side_to_side_toe_touch_male",
@@ -13793,12 +13652,9 @@
       "gymbroName": "barbell standing ab rollerout",
       "gymbroEquipment": "Bilanciere",
       "gymbroFocus": "CORE",
-      "confidence": 0.6444,
-      "status": "review",
-      "standardId": "barbell_curl",
-      "standardName": "Barbell Curl",
-      "standardEquipment": "Bilanciere",
-      "dataSource": "estimated_isolation"
+      "confidence": 0.0,
+      "status": "fallback",
+      "fallbackReason": "core_exercise_no_standard"
     },
     {
       "gymbroId": "weighted_overhead_crunch_on_stability_ball",
@@ -13994,12 +13850,9 @@
       "gymbroName": "barbell rollerout from bench",
       "gymbroEquipment": "Bilanciere",
       "gymbroFocus": "CORE",
-      "confidence": 0.6197,
-      "status": "review",
-      "standardId": "barbell_incline_bench_press",
-      "standardName": "Barbell Incline Bench Press",
-      "standardEquipment": "Bilanciere",
-      "dataSource": "estimated_from_flat_bench"
+      "confidence": 0.0,
+      "status": "fallback",
+      "fallbackReason": "core_exercise_no_standard"
     },
     {
       "gymbroId": "crunch_hands_overhead",
@@ -14330,12 +14183,9 @@
       "gymbroName": "kettlebell bent press",
       "gymbroEquipment": "Kettlebell",
       "gymbroFocus": "CORE",
-      "confidence": 0.6349,
-      "status": "review",
-      "standardId": "dumbbell_shoulder_press",
-      "standardName": "Dumbbell Shoulder Press",
-      "standardEquipment": "Manubri",
-      "dataSource": "estimated_from_barbell_ohp"
+      "confidence": 0.0,
+      "status": "fallback",
+      "fallbackReason": "core_exercise_no_standard"
     },
     {
       "gymbroId": "cable_seated_twist",
@@ -14405,12 +14255,9 @@
       "gymbroName": "barbell seated twist",
       "gymbroEquipment": "Bilanciere",
       "gymbroFocus": "CORE",
-      "confidence": 0.6433,
-      "status": "review",
-      "standardId": "barbell_bent_over_row",
-      "standardName": "Barbell Bent-Over Row",
-      "standardEquipment": "Bilanciere",
-      "dataSource": "estimated_from_benchmarks"
+      "confidence": 0.0,
+      "status": "fallback",
+      "fallbackReason": "core_exercise_no_standard"
     },
     {
       "gymbroId": "landmine_180",
@@ -14543,12 +14390,9 @@
       "gymbroName": "seated leg raise",
       "gymbroEquipment": "Corpo Libero",
       "gymbroFocus": "CORE",
-      "confidence": 0.6217,
-      "status": "review",
-      "standardId": "calf_raise",
-      "standardName": "Calf Raise (Machine/Barbell)",
-      "standardEquipment": "Vario",
-      "dataSource": "estimated_isolation"
+      "confidence": 0.0,
+      "status": "fallback",
+      "fallbackReason": "core_exercise_no_standard"
     },
     {
       "gymbroId": "band_assisted_wheel_rollerout",
@@ -14735,12 +14579,9 @@
       "gymbroName": "barbell side bent v. 2",
       "gymbroEquipment": "Bilanciere",
       "gymbroFocus": "CORE",
-      "confidence": 0.7198,
-      "status": "review",
-      "standardId": "barbell_bent_over_row",
-      "standardName": "Barbell Bent-Over Row",
-      "standardEquipment": "Bilanciere",
-      "dataSource": "estimated_from_benchmarks"
+      "confidence": 0.0,
+      "status": "fallback",
+      "fallbackReason": "core_exercise_no_standard"
     },
     {
       "gymbroId": "hanging_straight_leg_hip_raise",
@@ -14765,12 +14606,9 @@
       "gymbroName": "barbell sitted alternate leg raise",
       "gymbroEquipment": "Bilanciere",
       "gymbroFocus": "CORE",
-      "confidence": 0.631,
-      "status": "review",
-      "standardId": "calf_raise",
-      "standardName": "Calf Raise (Machine/Barbell)",
-      "standardEquipment": "Vario",
-      "dataSource": "estimated_isolation"
+      "confidence": 0.0,
+      "status": "fallback",
+      "fallbackReason": "core_exercise_no_standard"
     },
     {
       "gymbroId": "half_sit_up_male",
@@ -14849,12 +14687,9 @@
       "gymbroName": "barbell standing twist",
       "gymbroEquipment": "Bilanciere",
       "gymbroFocus": "CORE",
-      "confidence": 0.6689,
-      "status": "review",
-      "standardId": "barbell_curl",
-      "standardName": "Barbell Curl",
-      "standardEquipment": "Bilanciere",
-      "dataSource": "estimated_isolation"
+      "confidence": 0.0,
+      "status": "fallback",
+      "fallbackReason": "core_exercise_no_standard"
     },
     {
       "gymbroId": "lever_kneeling_twist",
