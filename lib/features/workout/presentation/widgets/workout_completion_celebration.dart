@@ -160,7 +160,7 @@ class _WorkoutCompletionCelebrationState
     final colorScheme = context.colors;
 
     return Material(
-      color: Colors.transparent,
+      color: colorScheme.surface.withValues(alpha: 0),
       child: Stack(
         children: [
           // Background overlay
@@ -267,7 +267,7 @@ class _WorkoutCompletionCelebrationState
                 Text(
                   context.l10n.workoutComplete,
                   style: context.textTheme.headlineSmall?.copyWith(
-                    color: Colors.white,
+                    color: colorScheme.onPrimary,
                     fontWeight: FontWeight.bold,
                   ),
                   textAlign: TextAlign.center,
@@ -277,7 +277,7 @@ class _WorkoutCompletionCelebrationState
                 Text(
                   widget.workout.name,
                   style: context.textTheme.titleMedium?.copyWith(
-                    color: Colors.white.withValues(alpha: 0.9),
+                    color: colorScheme.onPrimary.withValues(alpha: 0.9),
                     fontWeight: FontWeight.w500,
                   ),
                   textAlign: TextAlign.center,
@@ -338,7 +338,7 @@ class _WorkoutCompletionCelebrationState
                       child: OutlinedButton(
                         onPressed: _cancel,
                         style: OutlinedButton.styleFrom(
-                          padding: const EdgeInsets.symmetric(vertical: 14),
+                          padding: const EdgeInsets.symmetric(vertical: 16),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(12),
                           ),
@@ -353,7 +353,7 @@ class _WorkoutCompletionCelebrationState
                       child: FilledButton(
                         onPressed: _dismiss,
                         style: FilledButton.styleFrom(
-                          padding: const EdgeInsets.symmetric(vertical: 14),
+                          padding: const EdgeInsets.symmetric(vertical: 16),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(12),
                           ),
@@ -430,25 +430,26 @@ class _WorkoutCompletionCelebrationState
       animation: _mainController,
       builder: (context, child) {
         final pulse = (math.sin(_mainController.value * math.pi * 4) * 0.1) + 1.0;
+        final onPrimaryColor = context.colors.onPrimary;
         return Transform.scale(
           scale: pulse,
           child: Container(
             padding: const EdgeInsets.all(16),
             decoration: BoxDecoration(
-              color: Colors.white.withValues(alpha: 0.2),
+              color: onPrimaryColor.withValues(alpha: 0.2),
               shape: BoxShape.circle,
               boxShadow: [
                 BoxShadow(
-                  color: Colors.white.withValues(alpha: 0.3),
+                  color: onPrimaryColor.withValues(alpha: 0.3),
                   blurRadius: 20,
                   spreadRadius: 2,
                 ),
               ],
             ),
-            child: const Icon(
+            child: Icon(
               AppIcons.checkCircle,
               size: AppIconSize.xlarge,
-              color: Colors.white,
+              color: onPrimaryColor,
             ),
           ),
         );
@@ -809,7 +810,7 @@ Future<CelebrationResult> showWorkoutCompletionCelebration(
   final result = await showDialog<CelebrationResult>(
     context: context,
     barrierDismissible: false, // Must use buttons
-    barrierColor: Colors.transparent,
+    barrierColor: Theme.of(context).colorScheme.surface.withValues(alpha: 0),
     builder: (context) => WorkoutCompletionCelebration(
       workout: workout,
       onDismiss: () => Navigator.of(context).pop(CelebrationResult.confirmed),

@@ -177,10 +177,23 @@ class SleepWorkoutCorrelationService {
     final isSignificant =
         goodSleepWorkouts.length >= 3 && poorSleepWorkouts.length >= 3;
 
+    // Detect sleep pattern
+    final sleepPattern = _detectSleepPattern(
+      goodSleepWorkouts.length,
+      poorSleepWorkouts.length,
+      dataPoints.length,
+    );
+
+    // Calculate overall averages
+    final avgSleepHours = dataPoints.isNotEmpty
+        ? dataPoints.fold<double>(0, (sum, dp) => sum + dp.sleepHours) /
+            dataPoints.length
+        : 0.0;
+
     if (kDebugMode) {
       debugPrint('[Correlation] Good sleep workouts: ${goodSleepWorkouts.length}, '
           'Poor sleep workouts: ${poorSleepWorkouts.length}, '
-          'Significant: $isSignificant');
+          'Pattern: ${sleepPattern.name}');
       debugPrint('[Correlation] Volume change >7h: ${volumeChangeAbove7h.toStringAsFixed(1)}%, '
           '<6h: ${volumeChangeBelow6h.toStringAsFixed(1)}%');
     }
@@ -194,7 +207,47 @@ class SleepWorkoutCorrelationService {
       periodDays: periodDays,
       workoutsWithGoodSleep: goodSleepWorkouts.length,
       workoutsWithPoorSleep: poorSleepWorkouts.length,
+      sleepPattern: sleepPattern,
+      averageSleepHours: avgSleepHours,
+      averageVolume: overallAvgVolume,
     );
+  }
+
+  /// Detect user's sleep pattern based on workout distribution
+  ///
+  /// - **Variable**: Has at least 2 workouts in both good and poor sleep categories
+  /// - **Consistently good**: 80%+ workouts with ≥7h sleep
+  /// - **Consistently poor**: 80%+ workouts with <6h sleep
+  /// - **Unknown**: Not enough data or mixed pattern
+  SleepPattern _detectSleepPattern(
+    int goodSleepCount,
+    int poorSleepCount,
+    int totalCount,
+  ) {
+    if (totalCount < 5) {
+      return SleepPattern.unknown;
+    }
+
+    final goodRatio = goodSleepCount / totalCount;
+    final poorRatio = poorSleepCount / totalCount;
+
+    // Variable: has significant data in both categories
+    if (goodSleepCount >= 2 && poorSleepCount >= 2) {
+      return SleepPattern.variable;
+    }
+
+    // Consistently good: 80%+ good sleep
+    if (goodRatio >= 0.8) {
+      return SleepPattern.consistentlyGood;
+    }
+
+    // Consistently poor: 80%+ poor sleep
+    if (poorRatio >= 0.8) {
+      return SleepPattern.consistentlyPoor;
+    }
+
+    // Mixed pattern (moderate sleep 6-7h mostly) - treat as variable
+    return SleepPattern.variable;
   }
 
   // ==========================================

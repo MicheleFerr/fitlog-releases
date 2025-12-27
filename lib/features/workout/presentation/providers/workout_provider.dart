@@ -36,6 +36,7 @@ import 'package:gymbro_flutter_new/shared/domain/services/input_validator.dart';
 import 'package:gymbro_flutter_new/shared/presentation/services/haptic_feedback_service.dart';
 // ⏱️ Unified Timer for rest timer auto-start
 import 'package:gymbro_flutter_new/features/timer/presentation/providers/unified_timer_provider.dart';
+import 'package:gymbro_flutter_new/features/timer/presentation/providers/unified_timer_extensions.dart';
 // 🔄 Firestore Batch Writer for optimized cloud sync
 import 'package:gymbro_flutter_new/shared/data/services/firestore_batch_writer.dart';
 // 📸 Snapshot Sync Service for differential cloud sync
@@ -92,12 +93,6 @@ import 'package:gymbro_flutter_new/features/health_sync/presentation/providers/h
 import 'package:gymbro_flutter_new/features/exercise_database/presentation/providers/hybrid_exercise_provider.dart';
 // 📱 iOS 17+ Workout Session Live Activity
 import 'package:gymbro_flutter_new/features/workout/presentation/providers/workout_session_la_provider.dart';
-
-// Hive datasource provider
-final hiveWorkoutDataSourceProvider = Provider<HiveWorkoutDataSource>((ref) {
-  final boxManager = ref.watch(hiveBoxManagerProvider);
-  return HiveWorkoutDataSource(boxManager);
-});
 
 // Hybrid Exercise Activity Repository provider
 final hybridExerciseActivityRepositoryProvider = Provider<HybridExerciseActivityRepository>((ref) {
@@ -371,6 +366,13 @@ class CurrentWorkoutNotifier extends Notifier<Workout?> {
     watchNotifier.onEditCompletedSetRepsFromWatch = _editCompletedSetRepsFromWatch;
     watchNotifier.onUncompleteSetFromWatch = _uncompleteSetFromWatch;
     watchNotifier.onSetModificationFromWatch = _updateCurrentSetTargetFromWatch;
+    watchNotifier.onSupersetRoundCompletedFromWatch = _completeSupersetRoundFromWatch;
+    // 🔥 DROPSET: Register callbacks
+    watchNotifier.onDropsetStageCompletedFromWatch = _completeDropsetStageFromWatch;
+    watchNotifier.onDropsetCompletedFromWatch = _completeDropsetFromWatch;
+    // 🔥 REST-PAUSE: Register callbacks
+    watchNotifier.onRestPauseSetCompletedFromWatch = _completeRestPauseSetFromWatch;
+    watchNotifier.onRestPauseCompletedFromWatch = _completeRestPauseFromWatch;
     debugPrint('⌚ [FLUTTER DEBUG] ✅ Watch callbacks registered');
 
     // Get RPE tracking settings from app config
@@ -382,31 +384,41 @@ class CurrentWorkoutNotifier extends Notifier<Workout?> {
     debugPrint('⌚ [FLUTTER DEBUG] RPE Settings: enabled=$rpeTrackingEnabled, scale=$effortScale, locale=$locale');
 
     if (firstExercise != null) {
-      // 📝 Get Form Cues for the exercise (async, fire and forget)
-      // ⌚ Use actual TUT or generate default (same logic as UI)
-      final effectiveTut = firstExercise.tut ?? _getDefaultTut(firstExercise);
+      // 🔥 SUPERSET HANDLING at workout start
+      if (firstExercise is SupersetExercise) {
+        _handleSupersetWatchStartup(
+          superset: firstExercise,
+          rpeTrackingEnabled: rpeTrackingEnabled,
+          effortScale: effortScale,
+          locale: locale,
+        );
+      } else {
+        // 📝 Get Form Cues for the exercise (async, fire and forget)
+        // ⌚ Use actual TUT or generate default (same logic as UI)
+        final effectiveTut = firstExercise.tut ?? _getDefaultTut(firstExercise);
 
-      // ✅ FIX: Build allSets list for Watch navigation
-      final allSets = firstExercise.sets.map((s) => {
-        'weight': s.weight?.toDouble() ?? 0.0,
-        'reps': s.reps ?? 0,
-      }).toList();
+        // ✅ FIX: Build allSets list for Watch navigation
+        final allSets = firstExercise.sets.map((s) => {
+          'weight': s.weight?.toDouble() ?? 0.0,
+          'reps': s.reps ?? 0,
+        }).toList();
 
-      _getFormCuesAndNotifyWatch(
-        exerciseName: firstExercise.name,
-        exerciseId: firstExercise.id,
-        currentSet: 1,
-        totalSets: firstExercise.sets.length,
-        targetWeight: firstExercise.sets.isNotEmpty ? firstExercise.sets.first.weight : null,
-        targetReps: firstExercise.sets.isNotEmpty ? firstExercise.sets.first.reps : null,
-        setsCompleted: 0,
-        rpeTrackingEnabled: rpeTrackingEnabled,
-        effortScale: effortScale,
-        locale: locale,
-        tut: effectiveTut, // ⌚ TUT with fallback to default
-        isStartup: true,
-        allSets: allSets, // ✅ FIX: All sets for Watch navigation
-      );
+        _getFormCuesAndNotifyWatch(
+          exerciseName: firstExercise.name,
+          exerciseId: firstExercise.id,
+          currentSet: 1,
+          totalSets: firstExercise.sets.length,
+          targetWeight: firstExercise.sets.isNotEmpty ? firstExercise.sets.first.weight : null,
+          targetReps: firstExercise.sets.isNotEmpty ? firstExercise.sets.first.reps : null,
+          setsCompleted: 0,
+          rpeTrackingEnabled: rpeTrackingEnabled,
+          effortScale: effortScale,
+          locale: locale,
+          tut: effectiveTut, // ⌚ TUT with fallback to default
+          isStartup: true,
+          allSets: allSets, // ✅ FIX: All sets for Watch navigation
+        );
+      }
     } else {
       debugPrint('⌚ [FLUTTER DEBUG] No first exercise, using workout name');
       watchNotifier.notifyWorkoutStarted(
@@ -452,6 +464,14 @@ class CurrentWorkoutNotifier extends Notifier<Workout?> {
     String? tut, // ⌚ BUG FIX #3: Time Under Tension (e.g., "3-1-2-0")
     bool isStartup = false,
     List<Map<String, dynamic>>? allSets, // ✅ FIX: All sets for Watch navigation
+    // 🔥 SUPERSET SUPPORT
+    bool isSuperset = false,
+    String? supersetName,
+    List<String>? supersetExercises,
+    int currentExerciseInSuperset = 0,
+    int totalExercisesInSuperset = 0,
+    int supersetRound = 0,
+    int totalSupersetRounds = 0,
   }) async {
     final watchNotifier = ref.read(watchConnectivityProvider.notifier);
     final prefsRepo = ref.read(userExercisePreferencesRepositoryProvider);
@@ -511,6 +531,9 @@ class CurrentWorkoutNotifier extends Notifier<Workout?> {
       debugPrint('   - formCues: ${effectiveFormCues != null ? "${effectiveFormCues.length} chars" : "none"}');
       debugPrint('   - tut: ${effectiveTut ?? "none"} (from db: ${effectiveTut != tut})');
       debugPrint('   - allSets: ${allSets?.length ?? 0} sets');
+      if (isSuperset) {
+        debugPrint('   - 🔥 SUPERSET: $supersetName, Ex $currentExerciseInSuperset/$totalExercisesInSuperset, Round $supersetRound/$totalSupersetRounds');
+      }
       watchNotifier.notifyWorkoutStarted(
         exerciseName: exerciseName,
         currentSet: currentSet,
@@ -526,9 +549,20 @@ class CurrentWorkoutNotifier extends Notifier<Workout?> {
         formCues: effectiveFormCues, // 📝 User saved or noteTecniche fallback
         tut: effectiveTut, // ⌚ Real TUT from database or fallback
         allSets: allSets, // ✅ FIX: All sets for Watch navigation
+        // 🔥 SUPERSET SUPPORT
+        isSuperset: isSuperset,
+        supersetName: supersetName,
+        supersetExercises: supersetExercises,
+        currentExerciseInSuperset: currentExerciseInSuperset,
+        totalExercisesInSuperset: totalExercisesInSuperset,
+        supersetRound: supersetRound,
+        totalSupersetRounds: totalSupersetRounds,
       );
       debugPrint('⌚ [FLUTTER DEBUG] ✅ notifyWorkoutStarted called successfully');
     } else {
+      if (isSuperset) {
+        debugPrint('⌚ [FLUTTER DEBUG] 🔥 SUPERSET Update: $supersetName, Ex $currentExerciseInSuperset/$totalExercisesInSuperset, Round $supersetRound/$totalSupersetRounds');
+      }
       watchNotifier.sendWorkoutUpdate(
         exerciseName: exerciseName,
         currentSet: currentSet,
@@ -544,6 +578,14 @@ class CurrentWorkoutNotifier extends Notifier<Workout?> {
         formCues: effectiveFormCues, // 📝 User saved or noteTecniche fallback
         tut: effectiveTut, // ⌚ Real TUT from database or fallback
         allSets: allSets, // ✅ FIX: All sets for Watch navigation
+        // 🔥 SUPERSET SUPPORT
+        isSuperset: isSuperset,
+        supersetName: supersetName,
+        supersetExercises: supersetExercises,
+        currentExerciseInSuperset: currentExerciseInSuperset,
+        totalExercisesInSuperset: totalExercisesInSuperset,
+        supersetRound: supersetRound,
+        totalSupersetRounds: totalSupersetRounds,
       );
     }
   }
@@ -553,15 +595,6 @@ class CurrentWorkoutNotifier extends Notifier<Workout?> {
     if (state == null) return;
 
     final workout = state!;
-    // Find current exercise (first exercise with incomplete sets)
-    final currentExercise = workout.exercises.cast<Exercise?>().firstWhere(
-      (e) => e != null && e.sets.any((s) => !s.isCompleted),
-      orElse: () => null,
-    );
-    final completedSets = workout.exercises.fold<int>(
-      0,
-      (total, e) => total + e.sets.where((s) => s.isCompleted).length,
-    );
 
     // Get RPE tracking settings from app config
     final appConfig = ref.read(appConfigProvider);
@@ -570,49 +603,242 @@ class CurrentWorkoutNotifier extends Notifier<Workout?> {
     // Get locale for Watch UI strings
     final locale = ref.read(localeProvider).languageCode;
 
-    if (currentExercise != null) {
-      final currentSetIndex = currentExercise.sets.indexWhere((s) => !s.isCompleted);
-      final currentSet = currentSetIndex >= 0 ? currentExercise.sets[currentSetIndex] : null;
-      // ⌚ Use actual TUT or generate default (same logic as UI)
-      final effectiveTut = currentExercise.tut ?? _getDefaultTut(currentExercise);
-
-      // ✅ FIX: Calculate sets completed IN CURRENT EXERCISE (not total workout)
-      final setsCompletedInExercise = currentExercise.sets.where((s) => s.isCompleted).length;
-
-      // ✅ FIX: Get actualReps of last completed set in current exercise
-      int? lastCompletedReps;
-      for (int i = currentExercise.sets.length - 1; i >= 0; i--) {
-        if (currentExercise.sets[i].isCompleted) {
-          lastCompletedReps = currentExercise.sets[i].actualReps ?? currentExercise.sets[i].reps;
+    // 🔥 Find current exercise - handle both regular and superset exercises
+    Exercise? currentExercise;
+    for (final exercise in workout.exercises) {
+      if (exercise is SupersetExercise) {
+        // For superset: check if any round is incomplete
+        if (exercise.supersetSets.any((s) => !s.isCompleted)) {
+          currentExercise = exercise;
+          break;
+        }
+      } else {
+        // For regular exercise: check if any set is incomplete
+        if (exercise.sets.any((s) => !s.isCompleted)) {
+          currentExercise = exercise;
           break;
         }
       }
+    }
 
-      // ✅ FIX: Build allSets list for Watch navigation
-      final allSets = currentExercise.sets.map((s) => {
-        'weight': s.weight?.toDouble() ?? 0.0,
-        'reps': s.reps ?? 0,
-      }).toList();
+    // Calculate total completed sets (including superset rounds)
+    final completedSets = workout.exercises.fold<int>(
+      0,
+      (total, e) {
+        if (e is SupersetExercise) {
+          return total + e.supersetSets.where((s) => s.isCompleted).length;
+        }
+        return total + e.sets.where((s) => s.isCompleted).length;
+      },
+    );
 
-      // 📝 Use async helper to fetch Form Cues and send update
-      _getFormCuesAndNotifyWatch(
-        exerciseName: currentExercise.name,
-        exerciseId: currentExercise.id,
-        currentSet: currentSetIndex >= 0 ? currentSetIndex + 1 : currentExercise.sets.length,
-        totalSets: currentExercise.sets.length,
-        targetWeight: currentSet?.weight,
-        targetReps: currentSet?.reps,
-        setsCompleted: completedSets,
-        setsCompletedInExercise: setsCompletedInExercise,  // ✅ NEW
-        lastCompletedReps: lastCompletedReps,               // ✅ NEW
+    if (currentExercise == null) return;
+
+    // 🔥 SUPERSET HANDLING
+    if (currentExercise is SupersetExercise) {
+      _handleSupersetWatchUpdate(
+        superset: currentExercise,
+        completedSets: completedSets,
         rpeTrackingEnabled: rpeTrackingEnabled,
         effortScale: effortScale,
         locale: locale,
-        tut: effectiveTut, // ⌚ TUT with fallback to default
-        isStartup: false,
-        allSets: allSets, // ✅ FIX: All sets for Watch navigation
       );
+      return;
     }
+
+    // Regular exercise handling
+    final currentSetIndex = currentExercise.sets.indexWhere((s) => !s.isCompleted);
+    final currentSet = currentSetIndex >= 0 ? currentExercise.sets[currentSetIndex] : null;
+    // ⌚ Use actual TUT or generate default (same logic as UI)
+    final effectiveTut = currentExercise.tut ?? _getDefaultTut(currentExercise);
+
+    // ✅ FIX: Calculate sets completed IN CURRENT EXERCISE (not total workout)
+    final setsCompletedInExercise = currentExercise.sets.where((s) => s.isCompleted).length;
+
+    // ✅ FIX: Get actualReps of last completed set in current exercise
+    int? lastCompletedReps;
+    for (int i = currentExercise.sets.length - 1; i >= 0; i--) {
+      if (currentExercise.sets[i].isCompleted) {
+        lastCompletedReps = currentExercise.sets[i].actualReps ?? currentExercise.sets[i].reps;
+        break;
+      }
+    }
+
+    // ✅ FIX: Build allSets list for Watch navigation
+    final allSets = currentExercise.sets.map((s) => {
+      'weight': s.weight?.toDouble() ?? 0.0,
+      'reps': s.reps ?? 0,
+    }).toList();
+
+    // 📝 Use async helper to fetch Form Cues and send update
+    _getFormCuesAndNotifyWatch(
+      exerciseName: currentExercise.name,
+      exerciseId: currentExercise.id,
+      currentSet: currentSetIndex >= 0 ? currentSetIndex + 1 : currentExercise.sets.length,
+      totalSets: currentExercise.sets.length,
+      targetWeight: currentSet?.weight,
+      targetReps: currentSet?.reps,
+      setsCompleted: completedSets,
+      setsCompletedInExercise: setsCompletedInExercise,  // ✅ NEW
+      lastCompletedReps: lastCompletedReps,               // ✅ NEW
+      rpeTrackingEnabled: rpeTrackingEnabled,
+      effortScale: effortScale,
+      locale: locale,
+      tut: effectiveTut, // ⌚ TUT with fallback to default
+      isStartup: false,
+      allSets: allSets, // ✅ FIX: All sets for Watch navigation
+    );
+  }
+
+  /// 🔥 Handle superset-specific Watch update
+  void _handleSupersetWatchUpdate({
+    required SupersetExercise superset,
+    required int completedSets,
+    required bool rpeTrackingEnabled,
+    required String effortScale,
+    required String locale,
+  }) {
+    // Find current round (first incomplete)
+    final currentRoundIndex = superset.supersetSets.indexWhere((s) => !s.isCompleted);
+    if (currentRoundIndex < 0) return;
+
+    final currentRound = superset.supersetSets[currentRoundIndex];
+    final totalRounds = superset.supersetSets.length;
+
+    // Find current exercise within the round (first without actualReps)
+    int currentExerciseIndex = 0;
+    String currentExerciseName = superset.exercises.isNotEmpty
+        ? superset.exercises.first.name
+        : superset.name;
+    String? currentExerciseId;
+    double? targetWeight;
+    int? targetReps;
+
+    for (int i = 0; i < superset.exercises.length; i++) {
+      final ex = superset.exercises[i];
+      final data = currentRound.exerciseData[ex.id];
+      if (data != null && data.actualReps == null) {
+        // This exercise hasn't been completed yet in this round
+        currentExerciseIndex = i;
+        currentExerciseName = ex.name;
+        currentExerciseId = ex.id;
+        targetWeight = data.targetWeight;
+        targetReps = data.targetReps;
+        break;
+      }
+    }
+
+    // Build exercise names list for Watch display
+    final supersetExerciseNames = superset.exercises.map((e) => e.name).toList();
+
+    // Rounds completed in this superset
+    final roundsCompletedInSuperset = superset.supersetSets.where((s) => s.isCompleted).length;
+
+    debugPrint('⌚ [FLUTTER DEBUG] 🔥 SUPERSET Watch Update:');
+    debugPrint('   - Superset: ${superset.name}');
+    debugPrint('   - Exercises: ${supersetExerciseNames.join(", ")}');
+    debugPrint('   - Current Exercise: $currentExerciseName (${currentExerciseIndex + 1}/${superset.exercises.length})');
+    debugPrint('   - Round: ${currentRoundIndex + 1}/$totalRounds');
+
+    // Send update with superset info
+    _getFormCuesAndNotifyWatch(
+      exerciseName: currentExerciseName, // Current sub-exercise name
+      exerciseId: currentExerciseId,
+      currentSet: currentRoundIndex + 1, // Use round as "set" for Watch display
+      totalSets: totalRounds,
+      targetWeight: targetWeight,
+      targetReps: targetReps,
+      setsCompleted: completedSets,
+      setsCompletedInExercise: roundsCompletedInSuperset,
+      lastCompletedReps: null, // Could calculate if needed
+      rpeTrackingEnabled: rpeTrackingEnabled,
+      effortScale: effortScale,
+      locale: locale,
+      tut: superset.tut ?? '2-0-1-0', // Superset default TUT
+      isStartup: false,
+      allSets: [], // Superset doesn't use allSets navigation
+      // 🔥 SUPERSET SUPPORT
+      isSuperset: true,
+      supersetName: superset.name,
+      supersetExercises: supersetExerciseNames,
+      currentExerciseInSuperset: currentExerciseIndex + 1, // 1-indexed for display
+      totalExercisesInSuperset: superset.exercises.length,
+      supersetRound: currentRoundIndex + 1, // 1-indexed for display
+      totalSupersetRounds: totalRounds,
+    );
+  }
+
+  /// 🔥 Handle superset-specific Watch startup notification
+  void _handleSupersetWatchStartup({
+    required SupersetExercise superset,
+    required bool rpeTrackingEnabled,
+    required String effortScale,
+    required String locale,
+  }) {
+    if (superset.supersetSets.isEmpty) {
+      debugPrint('⌚ [FLUTTER DEBUG] ⚠️ Superset has no rounds, skipping Watch notification');
+      return;
+    }
+
+    // Use first round for startup
+    final firstRound = superset.supersetSets.first;
+    final totalRounds = superset.supersetSets.length;
+
+    // Use first exercise for initial display
+    final firstExerciseName = superset.exercises.isNotEmpty
+        ? superset.exercises.first.name
+        : superset.name;
+    final firstExerciseId = superset.exercises.isNotEmpty
+        ? superset.exercises.first.id
+        : null;
+
+    // Get target from first exercise in first round
+    double? targetWeight;
+    int? targetReps;
+    if (superset.exercises.isNotEmpty) {
+      final firstEx = superset.exercises.first;
+      final data = firstRound.exerciseData[firstEx.id];
+      if (data != null) {
+        targetWeight = data.targetWeight;
+        targetReps = data.targetReps;
+      }
+    }
+
+    // Build exercise names list for Watch display
+    final supersetExerciseNames = superset.exercises.map((e) => e.name).toList();
+
+    debugPrint('⌚ [FLUTTER DEBUG] 🔥 SUPERSET Watch Startup:');
+    debugPrint('   - Superset: ${superset.name}');
+    debugPrint('   - Exercises: ${supersetExerciseNames.join(", ")}');
+    debugPrint('   - First Exercise: $firstExerciseName');
+    debugPrint('   - Total Rounds: $totalRounds');
+
+    // Send startup notification with superset info
+    _getFormCuesAndNotifyWatch(
+      exerciseName: firstExerciseName, // First sub-exercise name
+      exerciseId: firstExerciseId,
+      currentSet: 1, // First round
+      totalSets: totalRounds,
+      targetWeight: targetWeight,
+      targetReps: targetReps,
+      setsCompleted: 0,
+      setsCompletedInExercise: 0,
+      lastCompletedReps: null,
+      rpeTrackingEnabled: rpeTrackingEnabled,
+      effortScale: effortScale,
+      locale: locale,
+      tut: superset.tut ?? '2-0-1-0', // Superset default TUT
+      isStartup: true, // This is startup, not update
+      allSets: [], // Superset doesn't use allSets navigation
+      // 🔥 SUPERSET SUPPORT
+      isSuperset: true,
+      supersetName: superset.name,
+      supersetExercises: supersetExerciseNames,
+      currentExerciseInSuperset: 1, // Start at first exercise
+      totalExercisesInSuperset: superset.exercises.length,
+      supersetRound: 1, // Start at first round
+      totalSupersetRounds: totalRounds,
+    );
   }
 
   /// 📱 Update Live Activity if active (iOS only)
@@ -2168,8 +2394,15 @@ class CurrentWorkoutNotifier extends Notifier<Workout?> {
 
   /// ⌚ Update current set target (weight/reps) from Watch
   /// Called when user edits the target using Digital Crown before completing
-  void _updateCurrentSetTargetFromWatch(double weight, int reps) {
-    debugPrint('⌚ [FLUTTER] ✏️ Updating current set target: ${weight}kg × $reps reps');
+  /// [isSuperset] - true if editing a superset exercise
+  /// [exerciseIndexInSuperset] - 0-indexed position of exercise within superset
+  void _updateCurrentSetTargetFromWatch(
+    double weight,
+    int reps, {
+    bool isSuperset = false,
+    int? exerciseIndexInSuperset,
+  }) {
+    debugPrint('⌚ [FLUTTER] ✏️ Updating current set target: ${weight}kg × $reps reps (superset: $isSuperset, exerciseIndex: $exerciseIndexInSuperset)');
 
     if (state == null) {
       debugPrint('⌚ [FLUTTER] ⚠️ No active workout');
@@ -2183,7 +2416,10 @@ class CurrentWorkoutNotifier extends Notifier<Workout?> {
     int exerciseIndex = -1;
     for (int i = 0; i < workout.exercises.length; i++) {
       final exercise = workout.exercises[i];
-      final hasIncompleteSets = exercise.sets.any((s) => !s.isCompleted);
+      // For superset, check supersetSets; for others, check sets
+      final hasIncompleteSets = exercise is SupersetExercise
+          ? exercise.supersetSets.any((s) => !s.isCompleted)
+          : exercise.sets.any((s) => !s.isCompleted);
       if (hasIncompleteSets) {
         currentExercise = exercise;
         exerciseIndex = i;
@@ -2196,6 +2432,20 @@ class CurrentWorkoutNotifier extends Notifier<Workout?> {
       return;
     }
 
+    // 🔥 SUPERSET: Handle superset set modification
+    if (isSuperset && currentExercise is SupersetExercise && exerciseIndexInSuperset != null) {
+      _updateSupersetTargetFromWatch(
+        workout: workout,
+        superset: currentExercise,
+        exerciseIndex: exerciseIndex,
+        exerciseIndexInSuperset: exerciseIndexInSuperset,
+        weight: weight,
+        reps: reps,
+      );
+      return;
+    }
+
+    // Standard exercise handling
     // Find the first incomplete set (current set to modify)
     int currentSetIndex = -1;
     for (int i = 0; i < currentExercise.sets.length; i++) {
@@ -2244,6 +2494,714 @@ class CurrentWorkoutNotifier extends Notifier<Workout?> {
 
     // Update Watch with new state (confirms the change)
     _notifyWatchWorkoutUpdate();
+  }
+
+  /// 🔥 SUPERSET: Update target weight/reps for a specific exercise within a superset
+  void _updateSupersetTargetFromWatch({
+    required Workout workout,
+    required SupersetExercise superset,
+    required int exerciseIndex,
+    required int exerciseIndexInSuperset,
+    required double weight,
+    required int reps,
+  }) {
+    debugPrint('⌚🔥 [FLUTTER] Updating superset target: exerciseIndex=$exerciseIndexInSuperset, weight=$weight, reps=$reps');
+
+    // Find the current round (first incomplete SupersetSet)
+    int currentRoundIndex = -1;
+    for (int i = 0; i < superset.supersetSets.length; i++) {
+      if (!superset.supersetSets[i].isCompleted) {
+        currentRoundIndex = i;
+        break;
+      }
+    }
+
+    if (currentRoundIndex < 0) {
+      debugPrint('⌚🔥 [FLUTTER] ⚠️ No incomplete superset round found');
+      return;
+    }
+
+    // Validate exercise index
+    if (exerciseIndexInSuperset < 0 || exerciseIndexInSuperset >= superset.exercises.length) {
+      debugPrint('⌚🔥 [FLUTTER] ⚠️ Invalid exercise index: $exerciseIndexInSuperset (max: ${superset.exercises.length - 1})');
+      return;
+    }
+
+    // Get the exercise ID from the exercises list
+    final targetExerciseId = superset.exercises[exerciseIndexInSuperset].id;
+    final targetExerciseName = superset.exercises[exerciseIndexInSuperset].name;
+    debugPrint('⌚🔥 [FLUTTER] Target exercise: "$targetExerciseName" (id: $targetExerciseId)');
+
+    // Get current round and update the exercise data
+    final currentRound = superset.supersetSets[currentRoundIndex];
+    final existingData = currentRound.exerciseData[targetExerciseId];
+
+    if (existingData == null) {
+      debugPrint('⌚🔥 [FLUTTER] ⚠️ No exercise data found for id: $targetExerciseId');
+      return;
+    }
+
+    // Update target weight and reps
+    final updatedExerciseData = existingData.copyWith(
+      targetWeight: weight,
+      targetReps: reps,
+    );
+
+    // Create updated exerciseData map
+    final updatedDataMap = Map<String, SupersetExerciseData>.from(currentRound.exerciseData);
+    updatedDataMap[targetExerciseId] = updatedExerciseData;
+
+    // Create updated round
+    final updatedRound = currentRound.copyWith(exerciseData: updatedDataMap);
+
+    // Create updated supersetSets list
+    final updatedSupersetSets = List<SupersetSet>.from(superset.supersetSets);
+    updatedSupersetSets[currentRoundIndex] = updatedRound;
+
+    // Create updated superset
+    final updatedSuperset = superset.copyWith(supersetSets: updatedSupersetSets);
+
+    // Update exercise in workout
+    final updatedExercises = List<Exercise>.from(workout.exercises);
+    updatedExercises[exerciseIndex] = updatedSuperset;
+    state = workout.copyWith(
+      exercises: updatedExercises,
+      updatedAt: DateTime.now(),
+    );
+
+    debugPrint('⌚🔥 [FLUTTER] ✅ Updated superset exercise "$targetExerciseName" target to ${weight}kg × $reps reps');
+
+    // Trigger auto-save
+    _autoSaveIfNeeded();
+
+    // Update Watch with new state (confirms the change)
+    _notifyWatchWorkoutUpdate();
+  }
+
+  /// 🧪 TEST ONLY: Public wrapper for testing superset target updates
+  /// DO NOT use in production code - use the Watch callback system instead
+  @visibleForTesting
+  void updateSupersetTargetFromWatchTest({
+    required int exerciseIndexInSuperset,
+    required double weight,
+    required int reps,
+  }) {
+    _updateCurrentSetTargetFromWatch(
+      weight,
+      reps,
+      isSuperset: true,
+      exerciseIndexInSuperset: exerciseIndexInSuperset,
+    );
+  }
+
+  /// ⌚ 🔥 SUPERSET: Complete an entire round when triggered from Apple Watch
+  /// This is called when the user taps "Completa Round" on the Watch
+  /// - roundNumber: 1-indexed round that was completed
+  /// - totalRounds: Total rounds in the superset
+  /// - exercises: List of exercise names in the round
+  /// - effort: Optional effort value (RPE 6-10 or RIR 0-4) for the entire round
+  /// - effortScale: "rpe" or "rir" to indicate how to interpret the effort value
+  void _completeSupersetRoundFromWatch({
+    required int roundNumber,
+    required int totalRounds,
+    required List<String> exercises,
+    int? effort,
+    String? effortScale,
+  }) {
+    debugPrint('⌚🔥 [FLUTTER] _completeSupersetRoundFromWatch called');
+    debugPrint('⌚🔥 [FLUTTER] Round $roundNumber/$totalRounds, exercises: $exercises');
+    if (effort != null) {
+      debugPrint('⌚🔥 [FLUTTER] Effort: $effort (${effortScale ?? "rpe"})');
+    }
+
+    if (state == null) {
+      debugPrint('⌚🔥 [FLUTTER] ❌ No active workout');
+      return;
+    }
+
+    final workout = state!;
+
+    // Find current superset exercise (first superset with incomplete rounds)
+    SupersetExercise? currentSuperset;
+    int supersetIndex = -1;
+    for (int i = 0; i < workout.exercises.length; i++) {
+      final exercise = workout.exercises[i];
+      if (exercise is SupersetExercise) {
+        if (exercise.supersetSets.any((s) => !s.isCompleted)) {
+          currentSuperset = exercise;
+          supersetIndex = i;
+          break;
+        }
+      }
+    }
+
+    if (currentSuperset == null || supersetIndex < 0) {
+      debugPrint('⌚🔥 [FLUTTER] ❌ No superset with incomplete rounds found');
+      return;
+    }
+
+    // Find the current round (first incomplete)
+    final currentRoundIndex = currentSuperset.supersetSets.indexWhere((s) => !s.isCompleted);
+    if (currentRoundIndex < 0) {
+      debugPrint('⌚🔥 [FLUTTER] ❌ No incomplete round found');
+      return;
+    }
+
+    final currentRound = currentSuperset.supersetSets[currentRoundIndex];
+    debugPrint('⌚🔥 [FLUTTER] Found round ${currentRoundIndex + 1} to complete');
+
+    // ✅ DEDUPLICATION: Prevent duplicate processing from sendMessage + transferUserInfo
+    final now = DateTime.now();
+    final roundKey = '${currentSuperset.id}_round_$currentRoundIndex';
+    if (_lastCompletedSetId == roundKey &&
+        _lastWatchSetCompletion != null &&
+        now.difference(_lastWatchSetCompletion!).inSeconds < 3) {
+      debugPrint('⌚🔥 [FLUTTER] ⚠️ Duplicate message ignored (round already completed)');
+      return;
+    }
+    _lastWatchSetCompletion = now;
+    _lastCompletedSetId = roundKey;
+
+    // Convert RIR to RPE if needed
+    int? rpeValue = effort;
+    if (effort != null && effortScale == 'rir') {
+      rpeValue = (10 - effort).clamp(6, 10);
+      debugPrint('⌚🔥 [FLUTTER] Converted RIR $effort to RPE $rpeValue');
+    }
+
+    // Build completed exercise data for all exercises in the round
+    final Map<String, SupersetExerciseData> completedExerciseData = {};
+    for (final ex in currentSuperset.exercises) {
+      final existingData = currentRound.exerciseData[ex.id];
+      completedExerciseData[ex.id] = SupersetExerciseData(
+        exerciseId: ex.id,
+        exerciseName: ex.name,
+        targetWeight: existingData?.targetWeight ?? 0.0,
+        targetReps: existingData?.targetReps ?? 10,
+        // Use actual values if already set, otherwise use target values
+        actualWeight: existingData?.actualWeight ?? existingData?.targetWeight ?? 0.0,
+        actualReps: existingData?.actualReps ?? existingData?.targetReps ?? 10,
+        rpe: rpeValue, // Apply RPE to all exercises in the round
+        isCompleted: true,
+      );
+    }
+
+    // Create completed SupersetSet
+    final completedSet = SupersetSet(
+      id: currentRound.id,
+      setNumber: currentRound.setNumber,
+      exerciseData: completedExerciseData,
+      isCompleted: true,
+      completedAt: DateTime.now(),
+    );
+
+    debugPrint('⌚🔥 [FLUTTER] ✅ Created completed SupersetSet for round ${currentRound.setNumber}');
+
+    // Update the superset with the completed round
+    final updatedSupersetSets = currentSuperset.supersetSets.map((set) {
+      if (set.setNumber == completedSet.setNumber) {
+        return completedSet;
+      }
+      return set;
+    }).toList();
+
+    final updatedSuperset = currentSuperset.copyWith(supersetSets: updatedSupersetSets);
+    final updatedExercises = List<Exercise>.from(workout.exercises);
+    updatedExercises[supersetIndex] = updatedSuperset;
+
+    state = workout.copyWith(
+      exercises: updatedExercises,
+      updatedAt: DateTime.now(),
+    );
+
+    debugPrint('⌚🔥 [FLUTTER] ✅ Updated workout state with completed round');
+
+    // Check if this was the last round
+    final remainingRounds = updatedSuperset.supersetSets.where((s) => !s.isCompleted).length;
+    final isLastRound = remainingRounds == 0;
+
+    debugPrint('⌚🔥 [FLUTTER] Remaining rounds: $remainingRounds, isLastRound: $isLastRound');
+
+    // 💾 Auto-save
+    _autoSaveIfNeeded();
+
+    // ⌚ Update Watch with new state
+    _notifyWatchWorkoutUpdate();
+
+    // 📱 Sync Live Activity (iOS)
+    _updateLiveActivityIfActive();
+
+    // ⏱️ Start rest timer if not last round
+    if (!isLastRound) {
+      final restDuration = currentSuperset.restTime ?? 90;
+      debugPrint('⌚🔥 [FLUTTER] ⏱️ Starting rest timer: ${restDuration}s');
+
+      // Use tier1TimerActions to start rest timer (same as UI)
+      final timerActions = ref.read(tier1TimerActionsProvider);
+      timerActions.startExerciseRest(
+        seconds: restDuration,
+        exerciseName: '${currentSuperset.name} - Round ${currentRoundIndex + 2}',
+        currentSet: currentRoundIndex + 2,
+        totalSets: currentSuperset.supersetSets.length,
+      );
+    } else {
+      debugPrint('⌚🔥 [FLUTTER] 🏁 Superset completed! No more rounds.');
+    }
+  }
+
+  // ============================================================
+  // 🔥 DROPSET: Watch handlers
+  // ============================================================
+
+  /// Handle dropset stage completion from Watch
+  void _completeDropsetStageFromWatch({
+    required int stageIndex,
+    required int totalStages,
+    required int actualReps,
+    int? effort,
+    String? effortScale,
+  }) {
+    debugPrint('⌚🔥 [FLUTTER] _completeDropsetStageFromWatch called');
+    debugPrint('⌚🔥 [FLUTTER] Stage ${stageIndex + 1}/$totalStages, reps: $actualReps');
+
+    if (state == null) {
+      debugPrint('⌚🔥 [FLUTTER] ❌ No active workout');
+      return;
+    }
+
+    final workout = state!;
+
+    // Find current dropset exercise (first dropset with incomplete stages)
+    DropSetExercise? currentDropset;
+    int exerciseIndex = -1;
+    for (int i = 0; i < workout.exercises.length; i++) {
+      final exercise = workout.exercises[i];
+      if (exercise is DropSetExercise) {
+        if (exercise.stages.any((s) => !s.isCompleted)) {
+          currentDropset = exercise;
+          exerciseIndex = i;
+          break;
+        }
+      }
+    }
+
+    if (currentDropset == null || exerciseIndex < 0) {
+      debugPrint('⌚🔥 [FLUTTER] ❌ No dropset with incomplete stages found');
+      return;
+    }
+
+    // Find the target stage (should match stageIndex or first incomplete)
+    final targetStageIndex = currentDropset.stages.indexWhere((s) => !s.isCompleted);
+    if (targetStageIndex < 0) {
+      debugPrint('⌚🔥 [FLUTTER] ❌ No incomplete stage found');
+      return;
+    }
+
+    // ✅ DEDUPLICATION: Prevent duplicate processing
+    final now = DateTime.now();
+    final stageKey = '${currentDropset.id}_stage_$targetStageIndex';
+    if (_lastCompletedSetId == stageKey &&
+        _lastWatchSetCompletion != null &&
+        now.difference(_lastWatchSetCompletion!).inSeconds < 3) {
+      debugPrint('⌚🔥 [FLUTTER] ⚠️ Duplicate message ignored');
+      return;
+    }
+    _lastWatchSetCompletion = now;
+    _lastCompletedSetId = stageKey;
+
+    // Convert RIR to RPE if needed
+    int? rpeValue = effort;
+    if (effort != null && effortScale == 'rir') {
+      rpeValue = (10 - effort).clamp(6, 10);
+    }
+
+    // Update the stage
+    final currentStage = currentDropset.stages[targetStageIndex];
+    final updatedStages = List<DropSetStage>.from(currentDropset.stages);
+    updatedStages[targetStageIndex] = currentStage.copyWith(
+      actualReps: actualReps,
+      rpe: rpeValue,
+      isCompleted: true,
+      completedAt: DateTime.now(),
+    );
+
+    // Create updated exercise
+    final updatedExercise = DropSetExercise(
+      id: currentDropset.id,
+      name: currentDropset.name,
+      category: currentDropset.category,
+      stages: updatedStages,
+      notes: currentDropset.notes,
+      restTime: currentDropset.restTime,
+    );
+
+    // Update workout state
+    final updatedExercises = List<Exercise>.from(workout.exercises);
+    updatedExercises[exerciseIndex] = updatedExercise;
+    state = workout.copyWith(
+      exercises: updatedExercises,
+      updatedAt: DateTime.now(),
+    );
+
+    debugPrint('⌚🔥 [FLUTTER] ✅ Dropset stage ${targetStageIndex + 1} completed');
+
+    // Check if there are more stages
+    final remainingStages = updatedExercise.stages.where((s) => !s.isCompleted).length;
+    final isLastStage = remainingStages == 0;
+
+    // 💾 Auto-save
+    _autoSaveIfNeeded();
+
+    // ⌚ Update Watch with new state
+    _notifyWatchWorkoutUpdate();
+
+    // 📱 Sync Live Activity (iOS)
+    _updateLiveActivityIfActive();
+
+    // Dropset stages are typically done without rest between them
+    // (the "drop" is immediate), but we can start rest after the LAST stage
+    if (isLastStage && currentDropset.restTime != null) {
+      final timerActions = ref.read(tier1TimerActionsProvider);
+      timerActions.startExerciseRest(
+        seconds: currentDropset.restTime!,
+        exerciseName: currentDropset.name,
+        currentSet: 1,
+        totalSets: 1,
+      );
+    }
+  }
+
+  /// Handle entire dropset completion from Watch (all stages done at once)
+  void _completeDropsetFromWatch({
+    required int totalStages,
+    int? effort,
+    String? effortScale,
+  }) {
+    debugPrint('⌚🔥 [FLUTTER] _completeDropsetFromWatch called');
+    debugPrint('⌚🔥 [FLUTTER] Total stages: $totalStages');
+
+    if (state == null) {
+      debugPrint('⌚🔥 [FLUTTER] ❌ No active workout');
+      return;
+    }
+
+    final workout = state!;
+
+    // Find current dropset exercise
+    DropSetExercise? currentDropset;
+    int exerciseIndex = -1;
+    for (int i = 0; i < workout.exercises.length; i++) {
+      final exercise = workout.exercises[i];
+      if (exercise is DropSetExercise) {
+        if (exercise.stages.any((s) => !s.isCompleted)) {
+          currentDropset = exercise;
+          exerciseIndex = i;
+          break;
+        }
+      }
+    }
+
+    if (currentDropset == null || exerciseIndex < 0) {
+      debugPrint('⌚🔥 [FLUTTER] ❌ No dropset with incomplete stages found');
+      return;
+    }
+
+    // Convert RIR to RPE if needed
+    int? rpeValue = effort;
+    if (effort != null && effortScale == 'rir') {
+      rpeValue = (10 - effort).clamp(6, 10);
+    }
+
+    // Mark all remaining stages as completed
+    final updatedStages = currentDropset.stages.map((stage) {
+      if (!stage.isCompleted) {
+        return stage.copyWith(
+          actualReps: stage.reps, // Use target reps as actual
+          rpe: rpeValue,
+          isCompleted: true,
+          completedAt: DateTime.now(),
+        );
+      }
+      return stage;
+    }).toList();
+
+    // Create updated exercise
+    final updatedExercise = DropSetExercise(
+      id: currentDropset.id,
+      name: currentDropset.name,
+      category: currentDropset.category,
+      stages: updatedStages,
+      notes: currentDropset.notes,
+      restTime: currentDropset.restTime,
+    );
+
+    // Update workout state
+    final updatedExercises = List<Exercise>.from(workout.exercises);
+    updatedExercises[exerciseIndex] = updatedExercise;
+    state = workout.copyWith(
+      exercises: updatedExercises,
+      updatedAt: DateTime.now(),
+    );
+
+    debugPrint('⌚🔥 [FLUTTER] ✅ Entire dropset completed');
+
+    // 💾 Auto-save
+    _autoSaveIfNeeded();
+
+    // ⌚ Update Watch with new state
+    _notifyWatchWorkoutUpdate();
+
+    // 📱 Sync Live Activity (iOS)
+    _updateLiveActivityIfActive();
+
+    // Start rest timer after completing dropset
+    if (currentDropset.restTime != null) {
+      final timerActions = ref.read(tier1TimerActionsProvider);
+      timerActions.startExerciseRest(
+        seconds: currentDropset.restTime!,
+        exerciseName: currentDropset.name,
+        currentSet: 1,
+        totalSets: 1,
+      );
+    }
+  }
+
+  // ============================================================
+  // 🔥 REST-PAUSE: Watch handlers
+  // ============================================================
+
+  /// Handle rest-pause set completion from Watch
+  void _completeRestPauseSetFromWatch({
+    required int setIndex,
+    required int totalSets,
+    required int actualReps,
+    required double weight,
+    int? effort,
+    String? effortScale,
+  }) {
+    debugPrint('⌚🔥 [FLUTTER] _completeRestPauseSetFromWatch called');
+    debugPrint('⌚🔥 [FLUTTER] Set ${setIndex + 1}/$totalSets, reps: $actualReps, weight: $weight');
+
+    if (state == null) {
+      debugPrint('⌚🔥 [FLUTTER] ❌ No active workout');
+      return;
+    }
+
+    final workout = state!;
+
+    // Find current rest-pause exercise (first with incomplete sets)
+    RestPauseExercise? currentRestPause;
+    int exerciseIndex = -1;
+    for (int i = 0; i < workout.exercises.length; i++) {
+      final exercise = workout.exercises[i];
+      if (exercise is RestPauseExercise) {
+        if (exercise.restPauseSets.any((s) => !s.isCompleted)) {
+          currentRestPause = exercise;
+          exerciseIndex = i;
+          break;
+        }
+      }
+    }
+
+    if (currentRestPause == null || exerciseIndex < 0) {
+      debugPrint('⌚🔥 [FLUTTER] ❌ No rest-pause with incomplete sets found');
+      return;
+    }
+
+    // Find the target set (should match setIndex or first incomplete)
+    final targetSetIndex = currentRestPause.restPauseSets.indexWhere((s) => !s.isCompleted);
+    if (targetSetIndex < 0) {
+      debugPrint('⌚🔥 [FLUTTER] ❌ No incomplete set found');
+      return;
+    }
+
+    // ✅ DEDUPLICATION: Prevent duplicate processing
+    final now = DateTime.now();
+    final setKey = '${currentRestPause.id}_set_$targetSetIndex';
+    if (_lastCompletedSetId == setKey &&
+        _lastWatchSetCompletion != null &&
+        now.difference(_lastWatchSetCompletion!).inSeconds < 3) {
+      debugPrint('⌚🔥 [FLUTTER] ⚠️ Duplicate message ignored');
+      return;
+    }
+    _lastWatchSetCompletion = now;
+    _lastCompletedSetId = setKey;
+
+    // Convert RIR to RPE if needed
+    int? rpeValue = effort;
+    if (effort != null && effortScale == 'rir') {
+      rpeValue = (10 - effort).clamp(6, 10);
+    }
+
+    // Update the set
+    final currentSet = currentRestPause.restPauseSets[targetSetIndex];
+    final updatedSets = List<RestPauseSet>.from(currentRestPause.restPauseSets);
+    updatedSets[targetSetIndex] = currentSet.copyWith(
+      actualReps: actualReps,
+      rpe: rpeValue,
+      isCompleted: true,
+      completedAt: DateTime.now(),
+    );
+
+    // Create updated exercise
+    final updatedExercise = RestPauseExercise(
+      id: currentRestPause.id,
+      name: currentRestPause.name,
+      category: currentRestPause.category,
+      weight: currentRestPause.weight,
+      targetReps: currentRestPause.targetReps,
+      restPauseSets: updatedSets,
+      notes: currentRestPause.notes,
+      restTime: currentRestPause.restTime,
+    );
+
+    // Update workout state
+    final updatedExercises = List<Exercise>.from(workout.exercises);
+    updatedExercises[exerciseIndex] = updatedExercise;
+    state = workout.copyWith(
+      exercises: updatedExercises,
+      updatedAt: DateTime.now(),
+    );
+
+    debugPrint('⌚🔥 [FLUTTER] ✅ Rest-Pause set ${targetSetIndex + 1} completed');
+
+    // Check if there are more sets
+    final remainingSets = updatedExercise.restPauseSets.where((s) => !s.isCompleted).length;
+    final isLastSet = remainingSets == 0;
+
+    // 💾 Auto-save
+    _autoSaveIfNeeded();
+
+    // ⌚ Update Watch with new state
+    _notifyWatchWorkoutUpdate();
+
+    // 📱 Sync Live Activity (iOS)
+    _updateLiveActivityIfActive();
+
+    // Start short rest timer between rest-pause sets (not the full rest)
+    if (!isLastSet) {
+      // Use the rest seconds from the NEXT set (if available)
+      final nextSetIndex = targetSetIndex + 1;
+      if (nextSetIndex < updatedExercise.restPauseSets.length) {
+        final nextSet = updatedExercise.restPauseSets[nextSetIndex];
+        final restSeconds = nextSet.restSeconds > 0 ? nextSet.restSeconds : 15; // Default 15s
+
+        final timerActions = ref.read(tier1TimerActionsProvider);
+        timerActions.startExerciseRest(
+          seconds: restSeconds,
+          exerciseName: '${currentRestPause.name} - Set ${nextSetIndex + 1}',
+          currentSet: nextSetIndex + 1,
+          totalSets: updatedExercise.restPauseSets.length,
+        );
+      }
+    } else if (currentRestPause.restTime != null) {
+      // Last set - start full rest timer
+      final timerActions = ref.read(tier1TimerActionsProvider);
+      timerActions.startExerciseRest(
+        seconds: currentRestPause.restTime!,
+        exerciseName: currentRestPause.name,
+        currentSet: 1,
+        totalSets: 1,
+      );
+    }
+  }
+
+  /// Handle entire rest-pause completion from Watch (all sets done at once)
+  void _completeRestPauseFromWatch({
+    required int totalSets,
+    required double weight,
+    int? effort,
+    String? effortScale,
+  }) {
+    debugPrint('⌚🔥 [FLUTTER] _completeRestPauseFromWatch called');
+    debugPrint('⌚🔥 [FLUTTER] Total sets: $totalSets, weight: $weight');
+
+    if (state == null) {
+      debugPrint('⌚🔥 [FLUTTER] ❌ No active workout');
+      return;
+    }
+
+    final workout = state!;
+
+    // Find current rest-pause exercise
+    RestPauseExercise? currentRestPause;
+    int exerciseIndex = -1;
+    for (int i = 0; i < workout.exercises.length; i++) {
+      final exercise = workout.exercises[i];
+      if (exercise is RestPauseExercise) {
+        if (exercise.restPauseSets.any((s) => !s.isCompleted)) {
+          currentRestPause = exercise;
+          exerciseIndex = i;
+          break;
+        }
+      }
+    }
+
+    if (currentRestPause == null || exerciseIndex < 0) {
+      debugPrint('⌚🔥 [FLUTTER] ❌ No rest-pause with incomplete sets found');
+      return;
+    }
+
+    // Convert RIR to RPE if needed
+    int? rpeValue = effort;
+    if (effort != null && effortScale == 'rir') {
+      rpeValue = (10 - effort).clamp(6, 10);
+    }
+
+    // Mark all remaining sets as completed
+    final updatedSets = currentRestPause.restPauseSets.map((set) {
+      if (!set.isCompleted) {
+        return set.copyWith(
+          actualReps: set.reps, // Use target reps as actual
+          rpe: rpeValue,
+          isCompleted: true,
+          completedAt: DateTime.now(),
+        );
+      }
+      return set;
+    }).toList();
+
+    // Create updated exercise
+    final updatedExercise = RestPauseExercise(
+      id: currentRestPause.id,
+      name: currentRestPause.name,
+      category: currentRestPause.category,
+      weight: currentRestPause.weight,
+      targetReps: currentRestPause.targetReps,
+      restPauseSets: updatedSets,
+      notes: currentRestPause.notes,
+      restTime: currentRestPause.restTime,
+    );
+
+    // Update workout state
+    final updatedExercises = List<Exercise>.from(workout.exercises);
+    updatedExercises[exerciseIndex] = updatedExercise;
+    state = workout.copyWith(
+      exercises: updatedExercises,
+      updatedAt: DateTime.now(),
+    );
+
+    debugPrint('⌚🔥 [FLUTTER] ✅ Entire rest-pause completed');
+
+    // 💾 Auto-save
+    _autoSaveIfNeeded();
+
+    // ⌚ Update Watch with new state
+    _notifyWatchWorkoutUpdate();
+
+    // 📱 Sync Live Activity (iOS)
+    _updateLiveActivityIfActive();
+
+    // Start rest timer after completing rest-pause
+    if (currentRestPause.restTime != null) {
+      final timerActions = ref.read(tier1TimerActionsProvider);
+      timerActions.startExerciseRest(
+        seconds: currentRestPause.restTime!,
+        exerciseName: currentRestPause.name,
+        currentSet: 1,
+        totalSets: 1,
+      );
+    }
   }
 
   void completeSet(String exerciseId, String setId) {

@@ -17,6 +17,7 @@ import 'package:gymbro_flutter_new/core/providers/tier_entitlements_provider.dar
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/providers/workout_provider.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/providers/workout_template_provider.dart';
+import 'package:gymbro_flutter_new/features/workout/domain/entities/workout_template.dart' as wt;
 import 'package:gymbro_flutter_new/shared/presentation/services/snackbar_service.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
@@ -379,6 +380,146 @@ class TemplateSaveHelper {
 
   static void _showErrorSnackBar(BuildContext context, String message) {
     SnackBarService.showError(context, message);
+  }
+
+  /// Show dialog to update an existing template with current workout exercises.
+  /// This allows users to update a template without ending the workout.
+  static void showUpdateTemplateDialog(BuildContext context, WidgetRef ref, String templateId) async {
+    final currentWorkout = ref.read(currentWorkoutProvider);
+    if (currentWorkout == null) return;
+
+    // Get the existing template
+    final existingTemplate = await ref.read(templateByIdProvider(templateId).future);
+    if (existingTemplate == null) {
+      if (context.mounted) {
+        _showErrorSnackBar(context, AppLocalizations.of(context).errorOccurred);
+      }
+      return;
+    }
+
+    if (!context.mounted) return;
+
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text(AppLocalizations.of(context).updateTemplate),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            SemanticIcon(
+              icon: AppIcons.refresh,
+              semanticLabel: 'Update',
+              size: AppIconSize.xlarge,
+              color: Theme.of(context).colorScheme.primary,
+            ),
+            const SizedBox(height: 16),
+            Text(
+              AppLocalizations.of(context).updateTemplateDescription,
+              textAlign: TextAlign.center,
+            ),
+            const SizedBox(height: 12),
+            Container(
+              padding: const EdgeInsets.all(12),
+              decoration: BoxDecoration(
+                color: Theme.of(context).colorScheme.primaryContainer.withValues(alpha: 0.3),
+                borderRadius: const BorderRadius.all(Radius.circular(8)),
+              ),
+              child: Row(
+                children: [
+                  const SemanticIcon(
+                    icon: AppIcons.template,
+                    semanticLabel: 'Template',
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          existingTemplate.name,
+                          style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        Text(
+                          '${currentWorkout.exercises.length} ${AppLocalizations.of(context).exercises.toLowerCase()}',
+                          style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                            color: Theme.of(context).colorScheme.onSurfaceVariant,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(),
+            child: Text(AppLocalizations.of(context).cancel),
+          ),
+          FilledButton.icon(
+            onPressed: () => _updateTemplate(context, ref, existingTemplate, currentWorkout),
+            icon: const SemanticIcon(
+              icon: AppIcons.save,
+              semanticLabel: 'Save',
+            ),
+            label: Text(AppLocalizations.of(context).save),
+          ),
+        ],
+      ),
+    );
+  }
+
+  static Future<void> _updateTemplate(
+    BuildContext context,
+    WidgetRef ref,
+    wt.WorkoutTemplate existingTemplate,
+    dynamic currentWorkout,
+  ) async {
+    Navigator.of(context).pop();
+
+    try {
+      // Show loading
+      SnackBarService.showCustom(
+        context,
+        message: AppLocalizations.of(context).savingToFirebase,
+        duration: const Duration(seconds: 30),
+      );
+
+      // Convert current workout exercises to ExerciseTemplates
+      final exerciseTemplates = currentWorkout.exercises.map<wt.ExerciseTemplate>((exercise) {
+        return wt.ExerciseTemplate.fromExercise(exercise);
+      }).toList();
+
+      // Create updated template preserving existing metadata
+      final updatedTemplate = existingTemplate.copyWith(
+        exercises: exerciseTemplates,
+        updatedAt: DateTime.now(),
+      );
+
+      // Save the updated template
+      await ref.read(workoutTemplateNotifierProvider.notifier).saveTemplate(updatedTemplate);
+
+      // Show success
+      if (context.mounted) {
+        SnackBarService.showCustom(
+          context,
+          message: '✅ ${AppLocalizations.of(context).templateSavedSuccessfully(existingTemplate.name)}',
+          actionLabel: AppLocalizations.of(context).view,
+          onAction: () => context.push('/templates'),
+        );
+      }
+    } catch (e) {
+      if (context.mounted) {
+        _showErrorSnackBar(
+          context,
+          AppLocalizations.of(context).saveError(e.toString().replaceAll('Exception: ', '')),
+        );
+      }
+    }
   }
 }
 

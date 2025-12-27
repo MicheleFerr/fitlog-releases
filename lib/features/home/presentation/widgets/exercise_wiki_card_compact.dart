@@ -32,7 +32,7 @@ class ExerciseWikiCardCompact extends ConsumerWidget {
           ),
         ),
         child: Material(
-          color: Colors.transparent,
+          color: context.colors.surface.withValues(alpha: 0),
           child: InkWell(
             onTap: () {
               HapticFeedback.lightImpact();

@@ -128,26 +128,6 @@ class ExerciseFuzzyMatcher {
 
     return results.first;
   }
-
-  /// Normalizza query utente (rimuove accenti, lowercase, trim)
-  static String _normalizeQuery(String query) {
-    return _normalizeString(query);
-  }
-
-  /// Normalizza qualsiasi stringa per il matching
-  /// Rimuove accenti, converte in lowercase, trim
-  static String _normalizeString(String text) {
-    return text
-        .toLowerCase()
-        .replaceAll(RegExp(r'[àáâãäå]'), 'a')
-        .replaceAll(RegExp(r'[èéêë]'), 'e')
-        .replaceAll(RegExp(r'[ìíîï]'), 'i')
-        .replaceAll(RegExp(r'[òóôõö]'), 'o')
-        .replaceAll(RegExp(r'[ùúûü]'), 'u')
-        .replaceAll(RegExp(r'[ñ]'), 'n')
-        .replaceAll(RegExp(r'[ç]'), 'c')
-        .trim();
-  }
 }
 
 /// Risultato fuzzy match con metadati per UI

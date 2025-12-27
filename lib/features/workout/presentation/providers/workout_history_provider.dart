@@ -90,10 +90,8 @@ class WorkoutHistoryNotifier extends AsyncNotifier<List<Workout>> {
     return state.valueOrNull ?? [];
   }
 
-  HiveWorkoutDataSource get _dataSource {
-    final boxManager = ref.watch(hiveBoxManagerProvider);
-    return HiveWorkoutDataSource(boxManager);
-  }
+  /// ✅ FIX: Use shared provider instead of creating new instance every time
+  HiveWorkoutDataSource get _dataSource => ref.read(hiveWorkoutDataSourceProvider);
 
   String? get _userId => ref.watch(firebaseUserProvider).valueOrNull?.uid;
   

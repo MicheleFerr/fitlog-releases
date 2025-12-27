@@ -178,6 +178,25 @@ abstract class IHealthRemoteDatasource {
     int? totalCalories,
     String? workoutName,
   });
+
+  // ============================================================
+  // HEALTH CONNECT (ANDROID) - AVAILABILITY & INSTALLATION
+  // ============================================================
+
+  /// Android-specific: Opens Play Store to install Health Connect.
+  ///
+  /// Call this when Health Connect is not available on the device.
+  /// iOS: No-op (uses native HealthKit).
+  ///
+  /// Example:
+  /// ```dart
+  /// final status = await datasource.checkPermissionStatus();
+  /// if (!status.healthConnectAvailable && Platform.isAndroid) {
+  ///   await datasource.installHealthConnect();
+  ///   // Show dialog: "Please install Health Connect and return to the app"
+  /// }
+  /// ```
+  Future<void> installHealthConnect();
 }
 
 /// Implementation of [IHealthRemoteDatasource] using the `health` package.
@@ -405,19 +424,87 @@ class HealthRemoteDatasourceImpl implements IHealthRemoteDatasource {
     );
   }
 
-  /// Android-specific: Checks if Health Connect app is installed.
+  /// Android-specific: Checks if Health Connect app is installed and SDK status.
   ///
   /// iOS always returns false (uses native HealthKit).
+  ///
+  /// **Health Connect SDK Status**:
+  /// - `sdkAvailable`: Health Connect is installed and ready
+  /// - `sdkUnavailable`: Health Connect not available (old Android version)
+  /// - `sdkUnavailableProviderUpdateRequired`: Health Connect needs update
+  ///
+  /// Example:
+  /// ```dart
+  /// final available = await _isHealthConnectAvailable();
+  /// if (!available) {
+  ///   // Show dialog to install Health Connect
+  /// }
+  /// ```
   Future<bool> _isHealthConnectAvailable() async {
     if (!Platform.isAndroid) return false;
 
-    // The health package automatically checks Health Connect availability
-    // when requesting permissions. We can infer availability by checking
-    // if any permission can be granted.
-    //
-    // Alternative: Use a platform channel to check package manager.
-    // For MVP, we assume Health Connect is available if on Android 14+.
-    return true; // Placeholder - health package handles this internally
+    try {
+      final status = await _health.getHealthConnectSdkStatus();
+      if (kDebugMode) {
+        debugPrint('🏥 [HealthConnect] SDK Status: $status');
+      }
+
+      // sdkAvailable means Health Connect is installed and ready
+      return status == health_pkg.HealthConnectSdkStatus.sdkAvailable;
+    } catch (e) {
+      if (kDebugMode) {
+        debugPrint('🏥 [HealthConnect] Error checking SDK status: $e');
+      }
+      return false;
+    }
+  }
+
+  /// Android-specific: Opens Play Store to install Health Connect.
+  ///
+  /// Call this when [_isHealthConnectAvailable] returns false.
+  ///
+  /// Example:
+  /// ```dart
+  /// if (!await _isHealthConnectAvailable()) {
+  ///   await installHealthConnect();
+  /// }
+  /// ```
+  @override
+  Future<void> installHealthConnect() async {
+    if (!Platform.isAndroid) return;
+
+    try {
+      await _health.installHealthConnect();
+      if (kDebugMode) {
+        debugPrint('🏥 [HealthConnect] Opened Play Store for installation');
+      }
+    } catch (e) {
+      if (kDebugMode) {
+        debugPrint('🏥 [HealthConnect] Error opening Play Store: $e');
+      }
+      rethrow;
+    }
+  }
+
+  /// Android-specific: Gets detailed Health Connect SDK status.
+  ///
+  /// Returns one of:
+  /// - `sdkAvailable`: Ready to use
+  /// - `sdkUnavailable`: Not supported on this device
+  /// - `sdkUnavailableProviderUpdateRequired`: Needs update
+  ///
+  /// iOS returns null.
+  Future<health_pkg.HealthConnectSdkStatus?> getHealthConnectStatus() async {
+    if (!Platform.isAndroid) return null;
+
+    try {
+      return await _health.getHealthConnectSdkStatus();
+    } catch (e) {
+      if (kDebugMode) {
+        debugPrint('🏥 [HealthConnect] Error getting status: $e');
+      }
+      return null;
+    }
   }
 
   // ============================================================

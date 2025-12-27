@@ -16,6 +16,7 @@ class StrengthStandardsRepositoryImpl implements StrengthStandardsRepository {
   List<ExerciseMapping>? _cachedMappings;
   Map<String, StrengthStandard>? _standardsById;
   Map<String, ExerciseMapping>? _mappingsByExerciseId;
+  Map<String, ExerciseMapping>? _mappingsByExerciseName; // Index by name for UI lookups
 
   @override
   Future<List<StrengthStandard>> getStrengthStandards({
@@ -52,11 +53,19 @@ class StrengthStandardsRepositoryImpl implements StrengthStandardsRepository {
   }
 
   @override
-  Future<ExerciseMapping?> getMappingForExercise(String exerciseId) async {
+  Future<ExerciseMapping?> getMappingForExercise(String exerciseKey) async {
     if (_mappingsByExerciseId == null) {
       await getExerciseMappings();
     }
-    return _mappingsByExerciseId?[exerciseId];
+    // Try lookup by gymbroId first, then by normalized name
+    // This allows both ID-based and name-based lookups from UI
+    return _mappingsByExerciseId?[exerciseKey]
+        ?? _mappingsByExerciseName?[_normalizeForLookup(exerciseKey)];
+  }
+
+  /// Normalize string for name-based lookup (lowercase, trim)
+  String _normalizeForLookup(String text) {
+    return text.toLowerCase().trim();
   }
 
   @override
@@ -116,6 +125,7 @@ class StrengthStandardsRepositoryImpl implements StrengthStandardsRepository {
     _cachedMappings = null;
     _standardsById = null;
     _mappingsByExerciseId = null;
+    _mappingsByExerciseName = null;
   }
 
   /// Build index for fast ID lookup
@@ -127,10 +137,20 @@ class StrengthStandardsRepositoryImpl implements StrengthStandardsRepository {
   }
 
   /// Build index for fast exercise ID lookup
+  /// Creates two indices: by gymbroId and by gymbroName (normalized)
   void _buildMappingsIndex() {
     if (_cachedMappings == null) return;
+
+    // Primary index: by gymbroId (e.g., "barbell_bench_press")
     _mappingsByExerciseId = {
       for (final mapping in _cachedMappings!) mapping.gymbroId: mapping
+    };
+
+    // Secondary index: by gymbroName normalized (e.g., "barbell bench press")
+    // Allows UI to lookup by exercise display name
+    _mappingsByExerciseName = {
+      for (final mapping in _cachedMappings!)
+        mapping.gymbroName.toLowerCase().trim(): mapping
     };
   }
 }

@@ -26,28 +26,99 @@ final stressIndexRepositoryProvider = Provider<StressIndexRepository>((ref) {
 });
 
 // ====================
-// EXERCISE FOCUS MAP PROVIDER
+// EXERCISE MUSCLE MAP PROVIDER
 // ====================
 
-/// Provider that builds a map of exercise name → focus muscles
+/// Data class for exercise muscle targeting
+///
+/// Holds primary (focus), secondary muscles, and file category for an exercise.
+/// The file category is used to infer movement pattern for EMG-based ratios.
+class ExerciseMuscleData {
+  const ExerciseMuscleData({
+    required this.primary,
+    required this.secondary,
+    this.fileCategory = '',
+    this.exerciseName = '',
+  });
+
+  /// Primary muscles (focus)
+  final List<String> primary;
+
+  /// Secondary muscles
+  final List<String> secondary;
+
+  /// File category (e.g., 'upper_push.json', 'lower.json')
+  /// Used to infer MovementPattern for EMG-based ratio distribution
+  final String fileCategory;
+
+  /// Exercise name (used for pattern inference fallback)
+  final String exerciseName;
+
+  /// Check if exercise has any muscle data
+  bool get hasData => primary.isNotEmpty || secondary.isNotEmpty;
+}
+
+/// Provider that builds a map of exercise name → muscle data (primary + secondary)
 ///
 /// Used by the calculator for accurate muscle-level stress tracking.
-final exerciseFocusMapProvider =
-    FutureProvider.autoDispose<Map<String, List<String>>>((ref) async {
+/// Includes file category for EMG-based movement pattern inference.
+///
+/// **EXPANDED WITH ALIASES**: Maps both `nome` AND all `aliases` to muscle data
+/// for better matching when workout stores different name variants.
+/// Example: "Panca Piana con Bilanciere", "panca piana", "bp" all → same muscle data
+final exerciseMuscleMapProvider =
+    FutureProvider.autoDispose<Map<String, ExerciseMuscleData>>((ref) async {
   try {
     final repository = ref.watch(hybridExerciseRepositoryProvider);
     final exercises = await repository.getAllExercises();
 
-    final focusMap = <String, List<String>>{};
+    final muscleMap = <String, ExerciseMuscleData>{};
     for (final exercise in exercises) {
-      if (exercise.focus.isNotEmpty) {
-        focusMap[exercise.nome] = exercise.focus;
+      if (exercise.focus.isNotEmpty || exercise.muscoliSecondari.isNotEmpty) {
+        final muscleData = ExerciseMuscleData(
+          primary: exercise.focus,
+          secondary: exercise.muscoliSecondari,
+          // Use patternMovimento for movement pattern inference (replaces missing file field)
+          fileCategory: exercise.patternMovimento,
+          exerciseName: exercise.nome,
+        );
+
+        // Add main name (exact match)
+        muscleMap[exercise.nome] = muscleData;
+
+        // Add lowercase version for case-insensitive matching
+        final nomeLower = exercise.nome.toLowerCase();
+        if (!muscleMap.containsKey(nomeLower)) {
+          muscleMap[nomeLower] = muscleData;
+        }
+
+        // Add all aliases for flexible matching
+        // Example: "panca piana", "bp", "ppcb" all map to "Panca Piana con Bilanciere"
+        for (final alias in exercise.aliases) {
+          final aliasNormalized = alias.toLowerCase().trim();
+          if (aliasNormalized.isNotEmpty && !muscleMap.containsKey(aliasNormalized)) {
+            muscleMap[aliasNormalized] = muscleData;
+          }
+        }
       }
     }
 
-    return focusMap;
+    return muscleMap;
   } catch (e) {
     // Return empty map on error - calculator will use category fallback
+    return {};
+  }
+});
+
+/// @deprecated Use [exerciseMuscleMapProvider] instead
+/// Kept for backward compatibility
+final exerciseFocusMapProvider =
+    FutureProvider.autoDispose<Map<String, List<String>>>((ref) async {
+  try {
+    final muscleMap = await ref.watch(exerciseMuscleMapProvider.future);
+    // Convert to old format (primary muscles only)
+    return muscleMap.map((key, value) => MapEntry(key, value.primary));
+  } catch (e) {
     return {};
   }
 });
@@ -128,9 +199,9 @@ class StressIndexNotifier extends StateNotifier<AsyncValue<StressIndexState>> {
 
       if (recentWorkouts.isEmpty) return 0;
 
-      final focusMap = await _ref
-          .read(exerciseFocusMapProvider.future)
-          .catchError((_) => <String, List<String>>{});
+      final muscleMap = await _ref
+          .read(exerciseMuscleMapProvider.future)
+          .catchError((_) => <String, ExerciseMuscleData>{});
 
       final repository = _ref.read(stressIndexRepositoryProvider);
       int count = 0;
@@ -144,7 +215,7 @@ class StressIndexNotifier extends StateNotifier<AsyncValue<StressIndexState>> {
 
         final result = StressIndexCalculator.calculate(
           workout,
-          exerciseFocusMap: focusMap,
+          exerciseMuscleMap: muscleMap,
         );
 
         final adjustedResult = StressIndexResult(
@@ -178,14 +249,14 @@ class StressIndexNotifier extends StateNotifier<AsyncValue<StressIndexState>> {
   /// Calculate and save stress index for a completed workout
   Future<StressIndexResult?> calculateAndSave(Workout workout) async {
     try {
-      // Get exercise focus map for accurate muscle tracking
-      final focusMap =
-          await _ref.read(exerciseFocusMapProvider.future).catchError((_) => <String, List<String>>{});
+      // Get exercise muscle map for accurate muscle tracking (primary + secondary)
+      final muscleMap =
+          await _ref.read(exerciseMuscleMapProvider.future).catchError((_) => <String, ExerciseMuscleData>{});
 
       // Calculate stress index
       final result = StressIndexCalculator.calculate(
         workout,
-        exerciseFocusMap: focusMap,
+        exerciseMuscleMap: muscleMap,
       );
 
       // Save to repository
@@ -220,6 +291,40 @@ class StressIndexNotifier extends StateNotifier<AsyncValue<StressIndexState>> {
     await _initialize();
   }
 
+  /// Clear all stress index data and recalculate from workout history
+  ///
+  /// Use this after modifying exercise focus values in the JSON database.
+  /// This will:
+  /// 1. Delete all existing stress index results (local + cloud)
+  /// 2. Recalculate from workout history using updated exercise focus values
+  ///
+  /// Returns a tuple of (cleared count, recalculated count)
+  Future<(int cleared, int recalculated)> clearAndRecalculate({int days = 30}) async {
+    state = const AsyncValue.loading();
+
+    try {
+      // Step 1: Clear all existing data
+      final repository = _ref.read(stressIndexRepositoryProvider);
+      final clearedCount = await repository.clearAll();
+
+      if (kDebugMode) {
+        debugPrint('[StressIndex] Cleared $clearedCount existing results');
+      }
+
+      // Step 2: Recalculate from history
+      final recalculatedCount = await backfillFromHistory(days: days);
+
+      if (kDebugMode) {
+        debugPrint('[StressIndex] Recalculated $recalculatedCount workouts');
+      }
+
+      return (clearedCount, recalculatedCount);
+    } catch (e, st) {
+      state = AsyncValue.error(e, st);
+      return (0, 0);
+    }
+  }
+
   /// Get stress index for a specific workout
   Future<StressIndexResult?> getForWorkout(String workoutId) async {
     final repository = _ref.read(stressIndexRepositoryProvider);
@@ -250,10 +355,10 @@ class StressIndexNotifier extends StateNotifier<AsyncValue<StressIndexState>> {
         return 0;
       }
 
-      // Get exercise focus map
-      final focusMap = await _ref
-          .read(exerciseFocusMapProvider.future)
-          .catchError((_) => <String, List<String>>{});
+      // Get exercise muscle map (primary + secondary)
+      final muscleMap = await _ref
+          .read(exerciseMuscleMapProvider.future)
+          .catchError((_) => <String, ExerciseMuscleData>{});
 
       final repository = _ref.read(stressIndexRepositoryProvider);
       int processedCount = 0;
@@ -276,7 +381,7 @@ class StressIndexNotifier extends StateNotifier<AsyncValue<StressIndexState>> {
         // Calculate stress index
         final result = StressIndexCalculator.calculate(
           workout,
-          exerciseFocusMap: focusMap,
+          exerciseMuscleMap: muscleMap,
         );
 
         // Override calculatedAt with the actual workout completion date

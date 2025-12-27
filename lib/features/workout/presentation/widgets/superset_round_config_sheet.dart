@@ -44,7 +44,7 @@ class SupersetRoundConfigSheet extends ConsumerStatefulWidget {
     return showModalBottomSheet<SupersetConfiguration>(
       context: context,
       isScrollControlled: true,
-      backgroundColor: Colors.transparent,
+      backgroundColor: Theme.of(context).colorScheme.surface.withValues(alpha: 0),
       isDismissible: false,
       enableDrag: false,
       builder: (context) => DraggableScrollableSheet(
@@ -376,7 +376,7 @@ class _SupersetRoundConfigSheetState
                         color: i == _currentRoundIndex
                             ? context.colors.primary
                             : context.colors.outlineVariant,
-                        borderRadius: BorderRadius.circular(5),
+                        borderRadius: BorderRadius.circular(8),
                       ),
                     ),
                   ),

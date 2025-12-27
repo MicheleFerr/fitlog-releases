@@ -289,7 +289,7 @@ class _WorkoutMiniBarState extends State<WorkoutMiniBar>
                   child: _buildActionIndicator(
                     icon: AppIcons.checkCircle,
                     backgroundColor: context.colors.success,
-                    iconColor: Colors.white,
+                    iconColor: context.colors.onPrimary,
                     opacity: saveOpacity,
                   ),
                 ),
@@ -301,7 +301,7 @@ class _WorkoutMiniBarState extends State<WorkoutMiniBar>
                   child: _buildActionIndicator(
                     icon: AppIcons.delete,
                     backgroundColor: context.colors.error,
-                    iconColor: Colors.white,
+                    iconColor: context.colors.onError,
                     opacity: discardOpacity,
                   ),
                 ),

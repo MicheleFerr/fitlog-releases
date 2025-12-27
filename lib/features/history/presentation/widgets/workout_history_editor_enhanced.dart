@@ -23,7 +23,7 @@ import 'package:intl/intl.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
-
+import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator.dart';
 import 'package:gymbro_flutter_new/shared/presentation/services/snackbar_service.dart';
 class WorkoutHistoryEditorEnhanced extends ConsumerStatefulWidget {
 
@@ -190,15 +190,9 @@ class _WorkoutHistoryEditorEnhancedState
                       onPressed:
                           _hasUnsavedChanges && !_isSaving ? _saveWorkout : null,
                       icon: _isSaving
-                          ? SizedBox(
-                              width: 16,
-                              height: 16,
-                              child: CircularProgressIndicator(
-                                strokeWidth: 2,
-                                valueColor: AlwaysStoppedAnimation<Color>(
-                                  theme.colorScheme.onPrimary,
-                                ),
-                              ),
+                          ? LoadingIndicator(
+                              size: 16,
+                              color: theme.colorScheme.onPrimary,
                             )
                           : const SemanticIcon(
   icon: AppIcons.save,

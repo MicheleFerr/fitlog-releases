@@ -19,11 +19,14 @@ library;
 
 import 'dart:math';
 
+import 'package:gymbro_flutter_new/features/analytics/domain/services/emg_movement_ratios.dart';
 import 'package:gymbro_flutter_new/features/stress_index/data/mappers/muscle_abbreviation_mapper.dart';
 import 'package:gymbro_flutter_new/features/stress_index/domain/constants/stress_index_constants.dart';
 import 'package:gymbro_flutter_new/features/stress_index/domain/entities/muscle_recovery_status.dart';
 import 'package:gymbro_flutter_new/features/stress_index/domain/entities/muscle_stress_data.dart';
 import 'package:gymbro_flutter_new/features/stress_index/domain/entities/stress_index_result.dart';
+import 'package:gymbro_flutter_new/features/stress_index/domain/services/fitness_fatigue_service.dart';
+import 'package:gymbro_flutter_new/features/stress_index/presentation/providers/stress_index_provider.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/workout.dart';
 
@@ -61,14 +64,20 @@ class StressIndexCalculator {
   ///
   /// Parameters:
   /// - [workout]: The completed workout to analyze
-  /// - [exerciseFocusMap]: Optional map of exercise name → focus list
-  ///   (e.g., {"Panca Piana": ["PETT", "TRIC"]})
+  /// - [exerciseFocusMap]: Optional map of exercise name → focus list (deprecated)
+  /// - [exerciseMuscleMap]: Optional map of exercise name → muscle data (primary + secondary)
   ///   If not provided, uses ExerciseCategory as fallback.
+  ///
+  /// Stress distribution:
+  /// - Primary muscles (focus): 70% of total stress
+  /// - Secondary muscles: 30% of total stress (split among them)
   ///
   /// Returns: [StressIndexResult] with primary/fallback scores and muscle breakdown
   static StressIndexResult calculate(
     Workout workout, {
+    @Deprecated('Use exerciseMuscleMap instead')
     Map<String, List<String>>? exerciseFocusMap,
+    Map<String, ExerciseMuscleData>? exerciseMuscleMap,
   }) {
     final muscleStress = <String, _MuscleAccumulator>{};
     int totalSets = 0;
@@ -77,8 +86,12 @@ class StressIndexCalculator {
     double rawScoreWithoutRpe = 0.0;
 
     for (final exercise in workout.exercises) {
-      // Get muscles from focus map or fallback to category
-      final muscles = _getMusclesForExercise(exercise, exerciseFocusMap);
+      // Get muscles from muscle map or fallback
+      final muscleData = _getMuscleDataForExercise(
+        exercise,
+        exerciseMuscleMap,
+        exerciseFocusMap,
+      );
 
       // Get movement multiplier
       final movementMultiplier = _getMovementMultiplier(exercise.movementType);
@@ -116,24 +129,15 @@ class StressIndexCalculator {
         }
         rawScoreWithoutRpe += setStressWithoutRpe;
 
-        // Distribute stress to muscles
-        if (muscles.isNotEmpty) {
-          // Distribute evenly across targeted muscles
-          final stressPerMuscle = setStressWithRpe / muscles.length;
-          final volumePerMuscle = (weight * reps) / muscles.length;
-
-          for (final muscle in muscles) {
-            muscleStress.putIfAbsent(
-              muscle.id,
-              () => _MuscleAccumulator(muscle.displayNameEn),
-            );
-            muscleStress[muscle.id]!.add(
-              stress: stressPerMuscle,
-              volume: volumePerMuscle,
-              rpe: rpe?.toDouble(),
-            );
-          }
-        }
+        // Distribute stress to muscles with weighted distribution
+        final totalVolume = weight * reps;
+        _distributeStressToMuscles(
+          muscleStress: muscleStress,
+          muscleData: muscleData,
+          totalStress: setStressWithRpe,
+          totalVolume: totalVolume,
+          rpe: rpe?.toDouble(),
+        );
       }
     }
 
@@ -177,44 +181,208 @@ class StressIndexCalculator {
     );
   }
 
-  /// Get muscles for an exercise
+  /// Internal structure for muscle distribution with movement pattern
   ///
-  /// Priority:
-  /// 1. Exercise focus map (if provided)
-  /// 2. Fallback to ExerciseCategory → default muscles
-  static List<MuscleInfo> _getMusclesForExercise(
+  /// Now includes MovementPattern for EMG-based ratio distribution.
+  static ({
+    List<MuscleInfo> primary,
+    List<MuscleInfo> secondary,
+    MovementPattern pattern,
+  }) _getMuscleDataForExercise(
     Exercise exercise,
+    Map<String, ExerciseMuscleData>? exerciseMuscleMap,
     Map<String, List<String>>? exerciseFocusMap,
   ) {
-    // Try focus map first
-    if (exerciseFocusMap != null) {
-      final focusList = exerciseFocusMap[exercise.name];
-      if (focusList != null && focusList.isNotEmpty) {
-        return focusList
-            .map((abbr) => MuscleAbbreviationMapper.getMuscleInfo(abbr))
-            .whereType<MuscleInfo>()
-            .toList();
+    // Try new muscle map first (has primary + secondary + patternMovimento)
+    // Supports aliases and case-insensitive matching via expanded map
+    if (exerciseMuscleMap != null) {
+      // Try exact match first, then lowercase for alias/case-insensitive matching
+      final muscleData = exerciseMuscleMap[exercise.name] ??
+          exerciseMuscleMap[exercise.name.toLowerCase()];
+      if (muscleData != null && muscleData.hasData) {
+        // Determine movement pattern from patternMovimento (stored in fileCategory)
+        final pattern = muscleData.fileCategory.isNotEmpty
+            ? EmgMovementRatios.fromPatternMovimento(
+                muscleData.fileCategory,
+                exerciseName: muscleData.exerciseName.isNotEmpty
+                    ? muscleData.exerciseName
+                    : exercise.name,
+              )
+            : EmgMovementRatios.inferPattern(
+                fileCategory: '',
+                exerciseName: exercise.name,
+                focusMuscle: muscleData.primary.isNotEmpty
+                    ? muscleData.primary.first
+                    : null,
+              );
+
+        return (
+          primary: muscleData.primary
+              .map((abbr) => MuscleAbbreviationMapper.getMuscleInfo(abbr))
+              .whereType<MuscleInfo>()
+              .toList(),
+          secondary: muscleData.secondary
+              .map((abbr) => MuscleAbbreviationMapper.getMuscleInfo(abbr))
+              .whereType<MuscleInfo>()
+              .toList(),
+          pattern: pattern,
+        );
       }
     }
 
-    // Fallback to category-based default muscles
-    return _getDefaultMusclesForCategory(exercise.category);
+    // Fallback to old focus map (primary only)
+    if (exerciseFocusMap != null) {
+      final focusList = exerciseFocusMap[exercise.name] ??
+          exerciseFocusMap[exercise.name.toLowerCase()];
+      if (focusList != null && focusList.isNotEmpty) {
+        // Infer pattern from exercise name
+        final pattern = EmgMovementRatios.inferPattern(
+          fileCategory: '',
+          exerciseName: exercise.name,
+          focusMuscle: focusList.isNotEmpty ? focusList.first : null,
+        );
+
+        return (
+          primary: focusList
+              .map((abbr) => MuscleAbbreviationMapper.getMuscleInfo(abbr))
+              .whereType<MuscleInfo>()
+              .toList(),
+          secondary: <MuscleInfo>[],
+          pattern: pattern,
+        );
+      }
+    }
+
+    // Fallback to category-based default muscles with inferred pattern
+    final pattern = EmgMovementRatios.inferPattern(
+      fileCategory: '',
+      exerciseName: exercise.name,
+    );
+
+    return (
+      primary: _getDefaultMusclesForCategory(exercise.category),
+      secondary: <MuscleInfo>[],
+      pattern: pattern,
+    );
+  }
+
+  /// Distribute stress to muscles with EMG-based weighted distribution
+  ///
+  /// Uses dynamic ratios based on movement pattern (from EMG research):
+  /// - Push Horizontal: Primary 60%, Synergists 40% (25% high, 15% moderate)
+  /// - Squat: Primary 50%, Synergists 50% (35% high, 15% moderate)
+  /// - Isolation: Primary 85%, Synergists 15%
+  ///
+  /// Synergist tiers:
+  /// - First synergist (secondary[0]) = High synergist (more activation)
+  /// - Other synergists (secondary[1+]) = Moderate synergists (split remaining)
+  static void _distributeStressToMuscles({
+    required Map<String, _MuscleAccumulator> muscleStress,
+    required ({
+      List<MuscleInfo> primary,
+      List<MuscleInfo> secondary,
+      MovementPattern pattern,
+    }) muscleData,
+    required double totalStress,
+    required double totalVolume,
+    double? rpe,
+  }) {
+    final primaryMuscles = muscleData.primary;
+    final secondaryMuscles = muscleData.secondary;
+    final pattern = muscleData.pattern;
+
+    // If no muscles at all, skip
+    if (primaryMuscles.isEmpty && secondaryMuscles.isEmpty) return;
+
+    // Get EMG-based tiered ratios for this movement pattern
+    final (primaryRatio, highSynergistRatio, moderateSynergistRatio) =
+        EmgMovementRatios.getTieredRatios(pattern);
+
+    // Handle edge cases
+    double actualPrimaryRatio;
+    double actualHighRatio;
+    double actualModRatio;
+
+    if (primaryMuscles.isNotEmpty && secondaryMuscles.isNotEmpty) {
+      // Both primary and secondary: use full EMG ratios
+      actualPrimaryRatio = primaryRatio;
+      actualHighRatio = highSynergistRatio;
+      actualModRatio = moderateSynergistRatio;
+    } else if (primaryMuscles.isNotEmpty) {
+      // Only primary: 100% to primary
+      actualPrimaryRatio = 1.0;
+      actualHighRatio = 0.0;
+      actualModRatio = 0.0;
+    } else {
+      // Only secondary (rare): distribute all to secondary
+      actualPrimaryRatio = 0.0;
+      actualHighRatio = 0.6; // Main secondary gets 60%
+      actualModRatio = 0.4; // Others split 40%
+    }
+
+    // Distribute to primary muscles (split evenly among them)
+    if (primaryMuscles.isNotEmpty) {
+      final stressPerPrimary = (totalStress * actualPrimaryRatio) / primaryMuscles.length;
+      final volumePerPrimary = (totalVolume * actualPrimaryRatio) / primaryMuscles.length;
+
+      for (final muscle in primaryMuscles) {
+        muscleStress.putIfAbsent(
+          muscle.id,
+          () => _MuscleAccumulator(muscle.displayNameEn),
+        );
+        muscleStress[muscle.id]!.add(
+          stress: stressPerPrimary,
+          volume: volumePerPrimary,
+          rpe: rpe,
+        );
+      }
+    }
+
+    // Distribute to secondary muscles with tiered approach
+    if (secondaryMuscles.isNotEmpty) {
+      // First synergist gets highSynergistRatio
+      final firstSynergist = secondaryMuscles.first;
+      final highStress = totalStress * actualHighRatio;
+      final highVolume = totalVolume * actualHighRatio;
+
+      muscleStress.putIfAbsent(
+        firstSynergist.id,
+        () => _MuscleAccumulator(firstSynergist.displayNameEn),
+      );
+      muscleStress[firstSynergist.id]!.add(
+        stress: highStress,
+        volume: highVolume,
+        rpe: rpe,
+      );
+
+      // Remaining synergists split moderateSynergistRatio
+      if (secondaryMuscles.length > 1) {
+        final remainingSynergists = secondaryMuscles.sublist(1);
+        final stressPerMod = (totalStress * actualModRatio) / remainingSynergists.length;
+        final volumePerMod = (totalVolume * actualModRatio) / remainingSynergists.length;
+
+        for (final muscle in remainingSynergists) {
+          muscleStress.putIfAbsent(
+            muscle.id,
+            () => _MuscleAccumulator(muscle.displayNameEn),
+          );
+          muscleStress[muscle.id]!.add(
+            stress: stressPerMod,
+            volume: volumePerMod,
+            rpe: rpe,
+          );
+        }
+      }
+    }
   }
 
   /// Get default muscles based on ExerciseCategory
+  ///
+  /// **SINGLE SOURCE OF TRUTH**: Uses MuscleAbbreviationMapper.
   static List<MuscleInfo> _getDefaultMusclesForCategory(
       ExerciseCategory category) {
-    // Map category to default muscle abbreviations
-    final abbrs = switch (category) {
-      ExerciseCategory.chest => ['PETT'],
-      ExerciseCategory.back => ['LAT', 'TRAP'],
-      ExerciseCategory.shoulders => ['DELT'],
-      ExerciseCategory.arms => ['BICI', 'TRIC'],
-      ExerciseCategory.legs => ['QUAD', 'GLUT', 'FEMOR'],
-      ExerciseCategory.abs => ['CORE'],
-      ExerciseCategory.cardio => <String>[],
-      ExerciseCategory.other => <String>[],
-    };
+    // Use centralized mapper for category → abbreviations
+    final abbrs = MuscleAbbreviationMapper.categoryToAbbreviations(category);
 
     return abbrs
         .map((abbr) => MuscleAbbreviationMapper.getMuscleInfo(abbr))
@@ -334,5 +502,87 @@ class StressIndexCalculator {
       StressLevel.hard => 'Hard Session',
       StressLevel.veryHard => 'Very Hard Session',
     };
+  }
+
+  // === FITNESS-FATIGUE MODEL (FFM) INTEGRATION ===
+
+  /// Calculate recovery using Fitness-Fatigue Model (more accurate)
+  ///
+  /// FFM accounts for accumulated fitness and fatigue, providing
+  /// more nuanced recovery predictions than simple linear decay.
+  ///
+  /// Parameters:
+  /// - [recentWorkouts]: List of stress results (60+ days recommended for accuracy)
+  /// - [atTime]: Calculate prediction for this time (defaults to now)
+  ///
+  /// Returns: Map of muscle ID → FFM recovery prediction
+  static Map<String, MuscleRecoveryPrediction> calculateRecoveryFFM(
+    List<StressIndexResult> recentWorkouts, {
+    DateTime? atTime,
+  }) {
+    return FitnessFatigueService.calculateRecovery(
+      recentWorkouts,
+      atTime: atTime,
+    );
+  }
+
+  /// Get overall readiness score using FFM
+  ///
+  /// Returns a weighted average of all muscle performance levels.
+  /// 100 = baseline, >100 = supercompensation, <100 = fatigued
+  static double getOverallReadinessFFM(List<StressIndexResult> recentWorkouts) {
+    return FitnessFatigueService.getOverallReadiness(recentWorkouts);
+  }
+
+  /// Find optimal day to train a specific muscle group
+  ///
+  /// Searches the next [maxDays] to find when performance will peak.
+  static DateTime? findOptimalTrainingDay({
+    required List<StressIndexResult> recentWorkouts,
+    required String muscleId,
+    int maxDays = 7,
+  }) {
+    return FitnessFatigueService.findOptimalTrainingDay(
+      workoutHistory: recentWorkouts,
+      muscleId: muscleId,
+      maxDays: maxDays,
+    );
+  }
+
+  /// Convert FFM state to legacy RecoveryState for backward compatibility
+  static RecoveryState ffmStateToRecoveryState(FFMRecoveryState ffmState) {
+    return switch (ffmState) {
+      FFMRecoveryState.supercompensation => RecoveryState.fullyRecovered,
+      FFMRecoveryState.optimal => RecoveryState.fullyRecovered,
+      FFMRecoveryState.acceptable => RecoveryState.almostReady,
+      FFMRecoveryState.suboptimal => RecoveryState.recovering,
+      FFMRecoveryState.overtraining => RecoveryState.fatigued,
+      FFMRecoveryState.critical => RecoveryState.exhausted,
+      FFMRecoveryState.untrained => RecoveryState.fullyRecovered,
+    };
+  }
+
+  /// Convert FFM predictions to legacy MuscleRecoveryStatus format
+  ///
+  /// For backward compatibility with existing UI components.
+  static Map<String, MuscleRecoveryStatus> ffmToLegacyRecovery(
+    Map<String, MuscleRecoveryPrediction> ffmPredictions,
+  ) {
+    final legacyMap = <String, MuscleRecoveryStatus>{};
+
+    for (final entry in ffmPredictions.entries) {
+      final prediction = entry.value;
+      legacyMap[entry.key] = MuscleRecoveryStatus(
+        muscleId: prediction.muscleId,
+        displayName: prediction.displayName,
+        // Map FFM performance to percentage (performance of 100 = 100% recovery)
+        recoveryPercentage: prediction.performanceLevel,
+        lastWorked: prediction.lastTrainedAt ?? DateTime.now(),
+        lastStressScore: prediction.fatigueComponent,
+        state: ffmStateToRecoveryState(prediction.state),
+      );
+    }
+
+    return legacyMap;
   }
 }

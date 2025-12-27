@@ -17,6 +17,11 @@ _SleepWorkoutCorrelation _$SleepWorkoutCorrelationFromJson(
   periodDays: (json['periodDays'] as num?)?.toInt() ?? 30,
   workoutsWithGoodSleep: (json['workoutsWithGoodSleep'] as num?)?.toInt() ?? 0,
   workoutsWithPoorSleep: (json['workoutsWithPoorSleep'] as num?)?.toInt() ?? 0,
+  sleepPattern:
+      $enumDecodeNullable(_$SleepPatternEnumMap, json['sleepPattern']) ??
+      SleepPattern.unknown,
+  averageSleepHours: (json['averageSleepHours'] as num?)?.toDouble() ?? 0.0,
+  averageVolume: (json['averageVolume'] as num?)?.toDouble() ?? 0.0,
 );
 
 Map<String, dynamic> _$SleepWorkoutCorrelationToJson(
@@ -30,6 +35,16 @@ Map<String, dynamic> _$SleepWorkoutCorrelationToJson(
   'periodDays': instance.periodDays,
   'workoutsWithGoodSleep': instance.workoutsWithGoodSleep,
   'workoutsWithPoorSleep': instance.workoutsWithPoorSleep,
+  'sleepPattern': _$SleepPatternEnumMap[instance.sleepPattern]!,
+  'averageSleepHours': instance.averageSleepHours,
+  'averageVolume': instance.averageVolume,
+};
+
+const _$SleepPatternEnumMap = {
+  SleepPattern.variable: 'variable',
+  SleepPattern.consistentlyGood: 'consistentlyGood',
+  SleepPattern.consistentlyPoor: 'consistentlyPoor',
+  SleepPattern.unknown: 'unknown',
 };
 
 _SleepWorkoutDataPoint _$SleepWorkoutDataPointFromJson(

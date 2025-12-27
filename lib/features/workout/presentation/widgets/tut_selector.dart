@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
@@ -314,7 +315,7 @@ class _TutSelectorState extends State<TutSelector> {
                       decoration: BoxDecoration(
                         color: value == _tutOptions[i]
                             ? color.withValues(alpha: 0.15)
-                            : Colors.transparent,
+                            : context.colors.surface.withValues(alpha: 0),
                         borderRadius: BorderRadius.horizontal(
                           left: i == 0 ? const Radius.circular(7) : Radius.zero,
                           right: i == _tutOptions.length - 1 ? const Radius.circular(7) : Radius.zero,

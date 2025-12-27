@@ -377,4 +377,16 @@ class HealthRepositoryImpl implements IHealthRepository {
       );
     }
   }
+
+  @override
+  Future<Either<Failure, void>> installHealthConnect() async {
+    try {
+      await _remoteDatasource.installHealthConnect();
+      return right(null);
+    } catch (e) {
+      return left(
+        ServerFailure('Failed to open Play Store for Health Connect: $e'),
+      );
+    }
+  }
 }

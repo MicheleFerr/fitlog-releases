@@ -54,7 +54,6 @@ class AppConfig { // Auto-adjust rest time based on RPE feedback
     this.autoAdjustRestFromRpe,
     this.effortScale = 'rpe', // 'rpe' or 'rir' - global effort tracking preference
     this.autoPauseOnNavigateAway = true, // Auto-pause workout when navigating away from workout tab
-    this.useSimplifiedAnalytics = false,
   });
 
   factory AppConfig.fromJson(Map<String, dynamic> json) {
@@ -87,7 +86,6 @@ class AppConfig { // Auto-adjust rest time based on RPE feedback
       onboardingVersion: json['onboardingVersion'] ?? 1,
       betaModeEnabled: json['betaModeEnabled'] ?? false,
       effortScale: json['effortScale'] ?? 'rpe',
-      useSimplifiedAnalytics: json['useSimplifiedAnalytics'] as bool? ?? false,
     );
   }
   @HiveField(0)
@@ -234,8 +232,7 @@ class AppConfig { // Auto-adjust rest time based on RPE feedback
   @HiveField(46)
   final bool autoPauseOnNavigateAway; // Auto-pause workout when navigating away
 
-  @HiveField(47)
-  final bool? useSimplifiedAnalytics; // Use simplified analytics dashboard (allows rollback to old analytics)
+  // Note: HiveField(47) was useSimplifiedAnalytics, removed after analytics rollback
 
   Locale get locale => Locale(languageCode, countryCode);
 
@@ -287,7 +284,6 @@ class AppConfig { // Auto-adjust rest time based on RPE feedback
     bool? autoAdjustRestFromRpe,
     String? effortScale,
     bool? autoPauseOnNavigateAway,
-    bool? useSimplifiedAnalytics,
   }) {
     return AppConfig(
       languageCode: languageCode ?? this.languageCode,
@@ -337,7 +333,6 @@ class AppConfig { // Auto-adjust rest time based on RPE feedback
       autoAdjustRestFromRpe: autoAdjustRestFromRpe ?? this.autoAdjustRestFromRpe,
       effortScale: effortScale ?? this.effortScale,
       autoPauseOnNavigateAway: autoPauseOnNavigateAway ?? this.autoPauseOnNavigateAway,
-      useSimplifiedAnalytics: useSimplifiedAnalytics ?? this.useSimplifiedAnalytics,
     );
   }
 
@@ -365,7 +360,6 @@ class AppConfig { // Auto-adjust rest time based on RPE feedback
       'onboardingVersion': onboardingVersion,
       'betaModeEnabled': betaModeEnabled,
       'effortScale': effortScale,
-      'useSimplifiedAnalytics': useSimplifiedAnalytics,
     };
   }
 

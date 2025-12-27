@@ -209,7 +209,7 @@ class _WorkoutCategoryBottomSheetState
         button: true,
         enabled: true,
         child: Material(
-          color: Colors.transparent,
+          color: context.colors.surface.withValues(alpha: 0),
           borderRadius: BorderRadius.circular(16),
           child: InkWell(
             onTap: () => _onCategorySelected(context, category, workoutName),

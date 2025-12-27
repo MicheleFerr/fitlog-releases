@@ -5,6 +5,7 @@ import 'package:gymbro_flutter_new/features/workout/presentation/providers/exerc
 import 'package:gymbro_flutter_new/features/workout/data/services/exercise_history_service.dart';
 import 'package:gymbro_flutter_new/features/strength_standards/presentation/providers/strength_standards_providers.dart';
 import 'package:gymbro_flutter_new/features/strength_standards/domain/entities/strength_standard.dart';
+import 'package:gymbro_flutter_new/features/exercise_database/presentation/providers/hybrid_exercise_provider.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator.dart';
 import 'package:gymbro_flutter_new/shared/presentation/services/modal_service.dart';
@@ -23,8 +24,12 @@ class ExerciseSummaryTab extends ConsumerStatefulWidget {
   const ExerciseSummaryTab({
     super.key,
     required this.exerciseName,
+    this.exerciseId,
   });
   final String exerciseName;
+  /// Optional exercise database ID for strength standards lookup.
+  /// If provided, enables accurate mapping to strength standards.
+  final String? exerciseId;
 
   @override
   ConsumerState<ExerciseSummaryTab> createState() => _ExerciseSummaryTabState();
@@ -482,16 +487,52 @@ class _ExerciseSummaryTabState extends ConsumerState<ExerciseSummaryTab> {
     );
   }
 
+  /// Check if a string looks like a UUID (contains dashes and is long)
+  bool _looksLikeUuid(String? id) {
+    if (id == null) return false;
+    // UUIDs are 36 characters with 4 dashes (8-4-4-4-12 format)
+    return id.contains('-') && id.length >= 32;
+  }
+
   Widget _buildStrengthLevelSection() {
     // Ottieni mapping esercizio → strength standard
-    final mappingAsync = ref.watch(exerciseMappingByIdProvider(widget.exerciseName));
+    // If exerciseId looks like a UUID (from old workouts), lookup database ID by name
+    final hasValidDatabaseId = widget.exerciseId != null && !_looksLikeUuid(widget.exerciseId);
 
-    // Ottieni cronologia per calcolare 1RM
-    final historyAsync = ref.watch(exerciseHistoryDataGroupedProvider(widget.exerciseName));
+    // If we have a valid database ID, use it directly
+    // Otherwise, lookup the database ID from the exercise name
+    if (hasValidDatabaseId) {
+      return _buildStrengthLevelWithKey(widget.exerciseId!);
+    }
 
-    // Usa un bodyweight di riferimento standard (80kg) per i benchmark
-    const standardBodyweight = 80.0;
+    // Fallback: lookup database ID by exercise name
+    final databaseIdAsync = ref.watch(exerciseIdByNameProvider(widget.exerciseName));
 
+    return databaseIdAsync.when(
+      data: (databaseId) {
+        if (kDebugMode) {
+          debugPrint('🏋️ [STRENGTH LEVEL DEBUG] Database ID lookup by name:');
+          debugPrint('   Exercise name: ${widget.exerciseName}');
+          debugPrint('   Found database ID: $databaseId');
+        }
+
+        if (databaseId == null) {
+          // No database ID found, show placeholder
+          return _buildStrengthLevelCardWrapper(_buildStrengthLevelPlaceholder());
+        }
+
+        return _buildStrengthLevelWithKey(databaseId);
+      },
+      loading: () => _buildStrengthLevelCardWrapper(const LoadingIndicator()),
+      error: (error, stack) {
+        if (kDebugMode) debugPrint('❌ Error looking up database ID: $error');
+        return _buildStrengthLevelCardWrapper(_buildStrengthLevelPlaceholder());
+      },
+    );
+  }
+
+  /// Wrapper for the strength level card
+  Widget _buildStrengthLevelCardWrapper(Widget child) {
     return Card(
       elevation: 2,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
@@ -514,13 +555,32 @@ class _ExerciseSummaryTabState extends ConsumerState<ExerciseSummaryTab> {
               ],
             ),
             const SizedBox(height: 16),
+            child,
+          ],
+        ),
+      ),
+    );
+  }
 
-            // Calcola e mostra livello di forza
-            mappingAsync.when(
+  /// Build strength level section with a known database ID
+  Widget _buildStrengthLevelWithKey(String lookupKey) {
+    final mappingAsync = ref.watch(exerciseMappingByIdProvider(lookupKey));
+
+    // Ottieni cronologia per calcolare 1RM (always uses exerciseName)
+    final historyAsync = ref.watch(exerciseHistoryDataGroupedProvider(widget.exerciseName));
+
+    // Usa un bodyweight di riferimento standard (80kg) per i benchmark
+    const standardBodyweight = 80.0;
+
+    return _buildStrengthLevelCardWrapper(
+      // Calcola e mostra livello di forza
+      mappingAsync.when(
               data: (mapping) {
                 if (kDebugMode) {
                   debugPrint('🏋️ [STRENGTH LEVEL DEBUG] Step 1 - Mapping received: $mapping');
                   debugPrint('   Exercise: ${widget.exerciseName}');
+                  debugPrint('   ExerciseId: ${widget.exerciseId}');
+                  debugPrint('   LookupKey: $lookupKey');
                   debugPrint('   Mapping standardId: ${mapping?.standardId}');
                 }
 
@@ -609,9 +669,6 @@ class _ExerciseSummaryTabState extends ConsumerState<ExerciseSummaryTab> {
                 return _buildStrengthLevelPlaceholder();
               },
             ),
-          ],
-        ),
-      ),
     );
   }
 

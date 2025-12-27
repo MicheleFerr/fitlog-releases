@@ -17,6 +17,7 @@ import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_
 import 'package:gymbro_flutter_new/shared/presentation/services/snackbar_service.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator.dart';
 
 /// Widget button per segnalare problemi su esercizi
 class ExerciseFeedbackButton extends ConsumerStatefulWidget {
@@ -224,11 +225,7 @@ class ExerciseFeedbackButton extends ConsumerStatefulWidget {
                 }
               },
               icon: isSubmitting
-                  ? const SizedBox(
-                      width: 16,
-                      height: 16,
-                      child: CircularProgressIndicator(strokeWidth: 2),
-                    )
+                  ? const LoadingIndicator(size: 16)
                   : const SemanticIcon(
   icon: AppIcons.send,
   semanticLabel: 'Send',
@@ -392,15 +389,9 @@ class _ExerciseFeedbackButtonState
           ElevatedButton.icon(
             onPressed: _isSubmitting ? null : _submitFeedback,
             icon: _isSubmitting
-                ? SizedBox(
-                    width: 16,
-                    height: 16,
-                    child: CircularProgressIndicator(
-                      strokeWidth: 2,
-                      valueColor: AlwaysStoppedAnimation<Color>(
-                        context.colors.onPrimary,
-                      ),
-                    ),
+                ? LoadingIndicator(
+                    size: 16,
+                    color: context.colors.onPrimary,
                   )
                 : const SemanticIcon(
   icon: AppIcons.send,

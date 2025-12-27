@@ -181,7 +181,7 @@ class _PlateCalculatorWidgetState extends ConsumerState<PlateCalculatorWidget> {
                 margin: const EdgeInsets.symmetric(horizontal: 4),
                 decoration: BoxDecoration(
                   color: theme.colorScheme.outline,
-                  borderRadius: BorderRadius.circular(4),
+                  borderRadius: BorderRadius.circular(8),
                 ),
               ),
               

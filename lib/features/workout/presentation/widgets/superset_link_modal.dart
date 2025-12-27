@@ -43,7 +43,7 @@ class SupersetLinkModal extends ConsumerStatefulWidget {
     return showModalBottomSheet<SupersetConfiguration>(
       context: context,
       isScrollControlled: true,
-      backgroundColor: Colors.transparent,
+      backgroundColor: Theme.of(context).colorScheme.surface.withValues(alpha: 0),
       builder: (_) => DraggableScrollableSheet(
         initialChildSize: 0.85,
         minChildSize: 0.5,
@@ -287,10 +287,10 @@ class _SupersetLinkModalState extends ConsumerState<SupersetLinkModal> {
                   ),
                 ),
                 Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
                   decoration: BoxDecoration(
                     color: theme.colorScheme.primary,
-                    borderRadius: BorderRadius.circular(4),
+                    borderRadius: BorderRadius.circular(8),
                   ),
                   child: Text(
                     '1',
@@ -356,11 +356,11 @@ class _SupersetLinkModalState extends ConsumerState<SupersetLinkModal> {
       },
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 200),
-        padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 12),
+        padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 12),
         decoration: BoxDecoration(
           color: isSelected
               ? theme.colorScheme.primary
-              : Colors.transparent,
+              : theme.colorScheme.surface.withValues(alpha: 0),
           borderRadius: BorderRadius.circular(8),
         ),
         child: Row(
@@ -540,7 +540,7 @@ class _SupersetLinkModalState extends ConsumerState<SupersetLinkModal> {
                         ? theme.colorScheme.primary.withValues(alpha: 0.2)
                         : isSelected
                             ? theme.colorScheme.primary
-                            : Colors.transparent,
+                            : theme.colorScheme.surface.withValues(alpha: 0),
                     border: Border.all(
                       color: isLocked
                           ? theme.colorScheme.primary.withValues(alpha: 0.5)

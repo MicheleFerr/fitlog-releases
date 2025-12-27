@@ -71,6 +71,13 @@ class _HealthSyncSettingsScreenState
         permissions[HealthDataType.workout] == PermissionState.authorized ||
             permissions[HealthDataType.bodyWeight] == PermissionState.authorized;
 
+    // Android: Check if Health Connect is installed
+    final healthConnectAvailable =
+        permissionStatus.healthConnectAvailable as bool;
+    if (Platform.isAndroid && !healthConnectAvailable) {
+      return _buildHealthConnectInstallState(context);
+    }
+
     return SingleChildScrollView(
       padding: const EdgeInsets.all(20),
       child: Column(
@@ -219,13 +226,9 @@ class _HealthSyncSettingsScreenState
               child: FilledButton.icon(
                 onPressed: _isConnecting ? null : _handleConnect,
                 icon: _isConnecting
-                    ? const SizedBox(
-                        width: 20,
-                        height: 20,
-                        child: CircularProgressIndicator(
-                          strokeWidth: 2,
-                          color: Colors.white,
-                        ),
+                    ? LoadingIndicator(
+                        size: 20,
+                        color: Theme.of(context).colorScheme.onPrimary,
                       )
                     : const Icon(AppIcons.link, size: 20),
                 label: Text(_isConnecting ? l10n.connecting : l10n.connect),
@@ -507,7 +510,7 @@ class _HealthSyncSettingsScreenState
           height: 40,
           decoration: BoxDecoration(
             color: tileColor.withValues(alpha: 0.1),
-            borderRadius: BorderRadius.circular(10),
+            borderRadius: BorderRadius.circular(12),
           ),
           child: Icon(icon, color: tileColor, size: 20),
         ),
@@ -577,6 +580,123 @@ class _HealthSyncSettingsScreenState
           ],
         ),
       ),
+    );
+  }
+
+  /// Android-specific: Shows Health Connect installation prompt
+  Widget _buildHealthConnectInstallState(BuildContext context) {
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+    final l10n = context.l10n;
+
+    return Center(
+      child: Padding(
+        padding: const EdgeInsets.all(32),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            // Health Connect icon
+            Container(
+              width: 100,
+              height: 100,
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                  colors: [
+                    colorScheme.primaryContainer,
+                    colorScheme.tertiaryContainer,
+                  ],
+                ),
+                shape: BoxShape.circle,
+                boxShadow: [
+                  BoxShadow(
+                    color: colorScheme.primary.withValues(alpha: 0.2),
+                    blurRadius: 20,
+                    spreadRadius: 2,
+                  ),
+                ],
+              ),
+              child: Icon(
+                AppIcons.favorite,
+                size: 48,
+                color: colorScheme.primary,
+              ),
+            ),
+            const SizedBox(height: 32),
+
+            // Title
+            Text(
+              l10n.healthConnectNotInstalled,
+              style: theme.textTheme.headlineSmall?.copyWith(
+                fontWeight: FontWeight.bold,
+              ),
+              textAlign: TextAlign.center,
+            ),
+            const SizedBox(height: 16),
+
+            // Description
+            Text(
+              l10n.healthConnectInstallDescription,
+              style: theme.textTheme.bodyMedium?.copyWith(
+                color: colorScheme.onSurface.withValues(alpha: 0.7),
+              ),
+              textAlign: TextAlign.center,
+            ),
+            const SizedBox(height: 32),
+
+            // Install button
+            SizedBox(
+              width: double.infinity,
+              child: FilledButton.icon(
+                onPressed: _handleInstallHealthConnect,
+                icon: const Icon(AppIcons.download, size: 20),
+                label: Text(l10n.healthConnectInstall),
+                style: FilledButton.styleFrom(
+                  padding: const EdgeInsets.symmetric(vertical: 16),
+                ),
+              ),
+            ),
+            const SizedBox(height: 16),
+
+            // Refresh button
+            TextButton.icon(
+              onPressed: () {
+                // Refresh permission status to check if Health Connect was installed
+                ref.invalidate(healthPermissionStatusProvider);
+              },
+              icon: const Icon(AppIcons.refresh, size: 18),
+              label: Text(l10n.refresh),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Future<void> _handleInstallHealthConnect() async {
+    HapticFeedback.mediumImpact();
+
+    final repository = ref.read(healthRepositoryProvider);
+    final result = await repository.installHealthConnect();
+
+    result.fold(
+      (failure) {
+        if (mounted) {
+          SnackBarService.showError(
+            context,
+            failure.message,
+          );
+        }
+      },
+      (_) {
+        if (mounted) {
+          SnackBarService.showInfo(
+            context,
+            context.l10n.healthConnectInstall,
+          );
+        }
+      },
     );
   }
 

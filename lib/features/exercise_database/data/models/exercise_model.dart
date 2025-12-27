@@ -22,9 +22,9 @@ class ExerciseModel {
     return ExerciseModel(
       id: json['id'] ?? '',
       nome: json['nome'] ?? '',
-      focus: json['focus'] ?? '',
+      focus: _toCommaSeparatedString(json['focus']),
       imageUrl: json['imageUrl']?.isEmpty == true ? null : json['imageUrl'],
-      muscoliSecondari: json['muscoliSecondari'] ?? '',
+      muscoliSecondari: _toCommaSeparatedString(json['muscoliSecondari']),
       difficolta: json['difficolta'] ?? '',
       tipoEsercizio: json['tipoEsercizio'] ?? '',
       attrezzatura: json['attrezzatura'] ?? '',
@@ -34,6 +34,15 @@ class ExerciseModel {
       mobilitaPre: json['mobilitaPre']?.isEmpty == true ? null : json['mobilitaPre'],
       attivazionePre: json['attivazionePre']?.isEmpty == true ? null : json['attivazionePre'],
     );
+  }
+
+  /// Converts a field that may be String or List to comma-separated String.
+  /// Handles JSON format migration from List to String format.
+  static String _toCommaSeparatedString(dynamic value) {
+    if (value == null) return '';
+    if (value is String) return value;
+    if (value is List) return value.join(', ');
+    return value.toString();
   }
 
   factory ExerciseModel.fromEntity(Exercise exercise) {

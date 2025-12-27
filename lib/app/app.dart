@@ -16,6 +16,7 @@ import 'package:gymbro_flutter_new/shared/domain/auth/session_timeout_service.da
 import 'package:gymbro_flutter_new/features/timer/presentation/providers/unified_timer_provider.dart';
 import 'package:gymbro_flutter_new/features/notifications/presentation/providers/notification_provider.dart';
 import 'package:gymbro_flutter_new/core/navigation/app_router.dart';
+import 'package:gymbro_flutter_new/features/splash/presentation/screens/animated_splash_screen.dart';
 
 /// Provider for async notification initialization
 final notificationInitProvider = FutureProvider<void>((ref) async {
@@ -27,11 +28,30 @@ final notificationInitProvider = FutureProvider<void>((ref) async {
   }
 });
 
+/// Provider to track if animated splash has completed
+/// Set to true after 3-second animation finishes
+final animatedSplashCompletedProvider = StateProvider<bool>((ref) => false);
+
 class FitLogApp extends ConsumerWidget {
   const FitLogApp({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    // 🎬 ANIMATED SPLASH: Show splash with lightning animation before app
+    final splashCompleted = ref.watch(animatedSplashCompletedProvider);
+
+    if (!splashCompleted) {
+      // Wrap in MaterialApp to provide Directionality and other required ancestors
+      return MaterialApp(
+        debugShowCheckedModeBanner: false,
+        home: AnimatedSplashScreen(
+          onComplete: () {
+            ref.read(animatedSplashCompletedProvider.notifier).state = true;
+          },
+        ),
+      );
+    }
+
     // Use new StatefulShellRoute-based router
     final router = ref.watch(appRouterProvider);
     final config = ref.watch(appConfigProvider);
@@ -115,13 +135,12 @@ class FitLogApp extends ConsumerWidget {
               children: [
                 const LoadingIndicator(),
                 const SizedBox(height: 24),
-                Text(
-                  'Loading FitLog Pro...',
-                  style: TextStyle(
-                    fontSize: 16 * config.fontSize,
-                    color: themeMode == ThemeMode.dark
-                      ? Colors.white.withValues(alpha: 0.7)
-                      : Colors.black.withValues(alpha: 0.87),
+                Builder(
+                  builder: (context) => Text(
+                    'Loading FitLog Pro...',
+                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                      color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7),
+                    ),
                   ),
                 ),
               ],
@@ -181,29 +200,26 @@ class FitLogApp extends ConsumerWidget {
                       : const Color(0xFFD32F2F),
                   ),
                   const SizedBox(height: 24),
-                  Text(
-                    'Failed to initialize app',
-                    style: TextStyle(
-                      fontSize: 20 * config.fontSize,
-                      fontWeight: FontWeight.bold,
-                      color: themeMode == ThemeMode.dark
-                        ? Colors.white
-                        : Colors.black87,
+                  Builder(
+                    builder: (ctx) => Text(
+                      'Failed to initialize app',
+                      style: Theme.of(ctx).textTheme.titleLarge?.copyWith(
+                        fontWeight: FontWeight.bold,
+                      ),
+                      textAlign: TextAlign.center,
                     ),
-                    textAlign: TextAlign.center,
                   ),
                   const SizedBox(height: 16),
-                  Text(
-                    kDebugMode
-                      ? 'Error: $e'
-                      : 'Please restart the app',
-                    style: TextStyle(
-                      fontSize: 14 * config.fontSize,
-                      color: themeMode == ThemeMode.dark
-                        ? Colors.white.withValues(alpha: 0.7)
-                        : Colors.black.withValues(alpha: 0.54),
+                  Builder(
+                    builder: (ctx) => Text(
+                      kDebugMode
+                        ? 'Error: $e'
+                        : 'Please restart the app',
+                      style: Theme.of(ctx).textTheme.bodyMedium?.copyWith(
+                        color: Theme.of(ctx).colorScheme.onSurface.withValues(alpha: 0.7),
+                      ),
+                      textAlign: TextAlign.center,
                     ),
-                    textAlign: TextAlign.center,
                   ),
                 ],
               ),

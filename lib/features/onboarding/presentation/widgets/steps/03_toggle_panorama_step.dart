@@ -505,7 +505,7 @@ class _TogglePanoramaStepState extends ConsumerState<TogglePanoramaStep>
               ),
               if (toggle.isPro)
                 Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
                   decoration: BoxDecoration(
                     gradient: LinearGradient(
                       colors: [context.colors.warning.withValues(alpha: 0.8), context.colors.warning],

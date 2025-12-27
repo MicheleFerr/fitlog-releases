@@ -23,6 +23,13 @@ class ExerciseCacheManager {
   static const String _metadataBoxName = 'exercises_metadata';
   static const String _syncQueueBoxName = 'exercises_sync_queue';
 
+  /// Cache schema version - increment when JSON structure changes
+  /// This forces cache invalidation on app update
+  /// v2: Added countingMode to all exercises (2025-12-14)
+  /// v3: Major database update - 737 new exercises translated, total 2282 (2025-12-17)
+  /// v4: Deep quality fix - 7 rounds of text corrections, 90% error reduction (2025-12-17)
+  static const int _cacheSchemaVersion = 4;
+
   final HiveBoxManagerEnhanced _boxManager;
   late Box<Map> _exercisesBox;
   late Box<Map> _metadataBox;
@@ -39,6 +46,9 @@ class ExerciseCacheManager {
       _metadataBox = await _boxManager.openBox<Map>(_metadataBoxName);
       _syncQueueBox = await _boxManager.openBox<Map>(_syncQueueBoxName);
 
+      // Check cache schema version - invalidate if outdated
+      await _checkAndMigrateSchema();
+
       _initialized = true;
       debugPrint('✅ ExerciseCacheManager initialized');
 
@@ -47,6 +57,32 @@ class ExerciseCacheManager {
     } catch (e) {
       debugPrint('❌ Failed to initialize ExerciseCacheManager: $e');
       rethrow;
+    }
+  }
+
+  /// Check cache schema version and clear if outdated
+  Future<void> _checkAndMigrateSchema() async {
+    try {
+      final metadata = _metadataBox.get('metadata');
+      final storedVersion = metadata?['schemaVersion'] as int? ?? 1;
+
+      if (storedVersion < _cacheSchemaVersion) {
+        debugPrint('🔄 Cache schema outdated (v$storedVersion → v$_cacheSchemaVersion), clearing cache...');
+        await _exercisesBox.clear();
+        await _metadataBox.clear();
+        await _syncQueueBox.clear();
+        // Save new schema version to prevent re-clearing on next launch
+        await _metadataBox.put('metadata', {
+          'schemaVersion': _cacheSchemaVersion,
+          'updatedAt': DateTime.now().toIso8601String(),
+        });
+        debugPrint('✅ Cache cleared and schema updated to v$_cacheSchemaVersion');
+      }
+    } catch (e) {
+      debugPrint('⚠️ Error checking schema version: $e');
+      // Clear cache on error to be safe
+      await _exercisesBox.clear();
+      await _metadataBox.clear();
     }
   }
 
@@ -194,6 +230,7 @@ class ExerciseCacheManager {
       lastUpdated: DateTime.now(),
       cacheSize: await _calculateCacheSize(),
       locale: locale,
+      schemaVersion: _cacheSchemaVersion,
     );
 
     await _metadataBox.put('metadata', metadata.toMap());
@@ -391,6 +428,7 @@ class CacheMetadata {
     required this.lastUpdated,
     required this.cacheSize,
     required this.locale,
+    required this.schemaVersion,
   });
 
   factory CacheMetadata.fromMap(Map<String, dynamic> map) {
@@ -400,6 +438,7 @@ class CacheMetadata {
       lastUpdated: DateTime.parse(map['last_updated'] as String),
       cacheSize: map['cache_size'] as int,
       locale: map['locale'] as String? ?? 'en', // Default to 'en' for old caches
+      schemaVersion: map['schemaVersion'] as int? ?? 1, // Default to 1 for old caches
     );
   }
   final String version;
@@ -407,6 +446,7 @@ class CacheMetadata {
   final DateTime lastUpdated;
   final int cacheSize;
   final String locale; // Language code: 'it', 'en', etc.
+  final int schemaVersion; // Cache schema version for auto-invalidation
 
   Map<String, dynamic> toMap() {
     return {
@@ -415,6 +455,7 @@ class CacheMetadata {
       'last_updated': lastUpdated.toIso8601String(),
       'cache_size': cacheSize,
       'locale': locale,
+      'schemaVersion': schemaVersion,
     };
   }
 }

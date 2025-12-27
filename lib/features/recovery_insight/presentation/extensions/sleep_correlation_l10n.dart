@@ -13,6 +13,8 @@ extension SleepCorrelationL10n on String {
   /// Handles keys:
   /// - 'not_enough_data' - needs more workout data
   /// - 'not_significant' - not enough for significant correlation
+  /// - 'consistently_good:Xh:Ykg' - sleeps well consistently
+  /// - 'consistently_poor:Xh:Ykg' - sleeps poorly consistently
   /// - 'significant:increase|decrease:increase|decrease:X%:Y%' - full summary
   String localizedCorrelationSummary(BuildContext context) {
     final l10n = context.l10n;
@@ -23,6 +25,26 @@ extension SleepCorrelationL10n on String {
 
     if (this == 'not_significant') {
       return l10n.correlationNotSignificant;
+    }
+
+    // Parse consistently_good key: consistently_good:avgSleep:avgVolume
+    if (startsWith('consistently_good:')) {
+      final parts = split(':');
+      if (parts.length >= 3) {
+        final avgSleep = parts[1];
+        final avgVolume = parts[2];
+        return l10n.correlationConsistentlyGood(avgSleep, avgVolume);
+      }
+    }
+
+    // Parse consistently_poor key: consistently_poor:avgSleep:avgVolume
+    if (startsWith('consistently_poor:')) {
+      final parts = split(':');
+      if (parts.length >= 3) {
+        final avgSleep = parts[1];
+        final avgVolume = parts[2];
+        return l10n.correlationConsistentlyPoor(avgSleep, avgVolume);
+      }
     }
 
     // Parse significant key: significant:goodEffect:poorEffect:goodChange:poorChange

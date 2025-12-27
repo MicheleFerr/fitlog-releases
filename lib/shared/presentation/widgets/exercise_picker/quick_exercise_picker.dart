@@ -18,6 +18,7 @@ import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator.dart';
 
 /// Modal semplificato per quick pick di esercizi
 /// Usato in Community per "Contribuisci"
@@ -150,7 +151,7 @@ class _QuickExercisePickerState extends ConsumerState<QuickExercisePicker> {
                   searchQuery: _searchQuery,
                 );
               },
-              loading: () => const Center(child: CircularProgressIndicator()),
+              loading: () => const LoadingIndicator(),
               error: (error, stack) => Center(
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -187,7 +188,7 @@ extension QuickExercisePickerExtension on BuildContext {
     return showModalBottomSheet<Exercise>(
       context: this,
       isScrollControlled: true,
-      backgroundColor: Colors.transparent,
+      backgroundColor: Theme.of(this).colorScheme.surface.withValues(alpha: 0),
       builder: (context) => QuickExercisePicker(
         onExerciseSelected: onExerciseSelected,
       ),

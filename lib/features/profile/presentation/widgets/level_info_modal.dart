@@ -40,7 +40,7 @@ class LevelInfoModal extends StatefulWidget {
       isScrollControlled: true,
       isDismissible: true,
       enableDrag: true,
-      backgroundColor: Colors.transparent,
+      backgroundColor: Theme.of(context).colorScheme.surface.withValues(alpha: 0),
       builder: (context) => LevelInfoModal(
         currentXP: currentXP,
         currentTier: currentTier,
@@ -128,7 +128,7 @@ class _LevelInfoModalState extends State<LevelInfoModal> {
           Row(
             children: [
               Container(
-                padding: const EdgeInsets.all(10),
+                padding: const EdgeInsets.all(12),
                 decoration: BoxDecoration(
                   color: context.colors.primaryContainer,
                   borderRadius: BorderRadius.circular(12),
@@ -259,7 +259,7 @@ class _LevelInfoModalState extends State<LevelInfoModal> {
 
             // Progress bar
             ClipRRect(
-              borderRadius: BorderRadius.circular(4),
+              borderRadius: BorderRadius.circular(8),
               child: LinearProgressIndicator(
                 value: progress,
                 minHeight: 8,
@@ -385,7 +385,7 @@ class _LevelInfoModalState extends State<LevelInfoModal> {
                         child: Text(
                           context.l10n.current,
                           style: context.textTheme.labelSmall?.copyWith(
-                            color: Colors.white,
+                            color: Theme.of(context).colorScheme.onPrimary,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
@@ -480,7 +480,7 @@ class _LevelInfoModalState extends State<LevelInfoModal> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Container(
-          padding: const EdgeInsets.all(6),
+          padding: const EdgeInsets.all(8),
           decoration: BoxDecoration(
             color: context.colors.primary.withValues(alpha: 0.1),
             borderRadius: BorderRadius.circular(8),

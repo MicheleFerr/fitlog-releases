@@ -222,7 +222,7 @@ class _StreakCalendarScreenState extends ConsumerState<StreakCalendarScreen> {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
-      backgroundColor: Colors.transparent,
+      backgroundColor: Theme.of(context).colorScheme.surface.withValues(alpha: 0),
       builder: (context) => _DayDetailsSheet(
         date: date,
         formattedDate: dateFormat.format(date),

@@ -555,11 +555,7 @@ class _MeasurementListScreenState extends ConsumerState<MeasurementListScreen> {
             _isImporting
                 ? const Padding(
                     padding: EdgeInsets.all(16),
-                    child: SizedBox(
-                      width: 20,
-                      height: 20,
-                      child: CircularProgressIndicator(strokeWidth: 2),
-                    ),
+                    child: LoadingIndicator(size: 20),
                   )
                 : IconButton(
                     icon: const Icon(AppIcons.download),
@@ -814,7 +810,7 @@ class _MeasurementListScreenState extends ConsumerState<MeasurementListScreen> {
                                 const SizedBox(width: 8),
                                 Text(
                                   context.l10n.bodyMeasurementsListDelete,
-                                  style: TextStyle(
+                                  style: context.textTheme.bodyMedium?.copyWith(
                                     color: context.colors.error,
                                   ),
                                 ),

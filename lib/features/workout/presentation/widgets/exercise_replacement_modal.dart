@@ -16,6 +16,8 @@ import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dar
 import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator.dart';
 
 import 'package:gymbro_flutter_new/shared/presentation/services/snackbar_service.dart';
+import 'package:gymbro_flutter_new/features/stress_index/data/mappers/muscle_abbreviation_mapper.dart';
+
 class ExerciseReplacementModal extends ConsumerStatefulWidget {
 
   const ExerciseReplacementModal({
@@ -36,7 +38,7 @@ class ExerciseReplacementModal extends ConsumerStatefulWidget {
     return showModalBottomSheet(
       context: context,
       isScrollControlled: true,
-      backgroundColor: Colors.transparent,
+      backgroundColor: Theme.of(context).colorScheme.surface.withValues(alpha: 0),
       builder: (_) => DraggableScrollableSheet(
         initialChildSize: 0.85,
         minChildSize: 0.85,
@@ -70,15 +72,6 @@ class _ExerciseReplacementModalState extends ConsumerState<ExerciseReplacementMo
   // Chiave: nome esercizio lowercase
   // Valore: Exercise arricchito con category corretta dal DB
   static final Map<String, Exercise> _enrichedExercisesCache = {};
-
-  /// Svuota la cache degli esercizi arricchiti
-  /// Utile quando il database JSON viene aggiornato o per testing
-  static void clearEnrichedCache() {
-    _enrichedExercisesCache.clear();
-    if (kDebugMode) {
-      debugPrint('🗑️ [ExerciseReplacement] Cache cleared');
-    }
-  }
 
   @override
   void initState() {
@@ -142,8 +135,8 @@ class _ExerciseReplacementModalState extends ConsumerState<ExerciseReplacementMo
         orElse: () => throw Exception('Exercise not found'),
       );
 
-      // Mappa categoria dai muscoli del database
-      final enrichedCategory = _mapCategoryFromMuscles(dbExercise.focus);
+      // Mappa categoria dai muscoli del database (single source of truth)
+      final enrichedCategory = MuscleAbbreviationMapper.focusListToExerciseCategory(dbExercise.focus);
 
       // Crea esercizio arricchito solo se categoria è diversa da quella attuale
       // O se categoria attuale è "other" (default fallback)
@@ -253,7 +246,7 @@ class _ExerciseReplacementModalState extends ConsumerState<ExerciseReplacementMo
           matchingWorkoutExercise = Exercise(
             name: dbExercise.nome,
             type: ExerciseType.single, // Default to single exercise
-            category: _mapCategoryFromMuscles(dbExercise.focus),
+            category: MuscleAbbreviationMapper.focusListToExerciseCategory(dbExercise.focus),
           );
         }
 
@@ -286,7 +279,7 @@ class _ExerciseReplacementModalState extends ConsumerState<ExerciseReplacementMo
           matchingWorkoutExercise = Exercise(
             name: dbExercise.nome,
             type: ExerciseType.single,
-            category: _mapCategoryFromMuscles(dbExercise.focus),
+            category: MuscleAbbreviationMapper.focusListToExerciseCategory(dbExercise.focus),
           );
         }
 
@@ -855,30 +848,5 @@ class _ExerciseReplacementModalState extends ConsumerState<ExerciseReplacementMo
     } else {
       return l10n.differentMuscleGroup;
     }
-  }
-
-  /// Map database exercise muscles to workout category
-  ExerciseCategory _mapCategoryFromMuscles(List<String> muscles) {
-    // Convert to uppercase for case-insensitive matching
-    final musclesUpper = muscles.map((m) => m.toUpperCase()).toList();
-
-    // Check each muscle group
-    if (musclesUpper.any((m) => m.contains('PETT') || m.contains('CHEST') || m.contains('PECS'))) {
-      return ExerciseCategory.chest;
-    } else if (musclesUpper.any((m) => m.contains('DORS') || m.contains('LAT') || m.contains('BACK'))) {
-      return ExerciseCategory.back;
-    } else if (musclesUpper.any((m) => m.contains('SPALL') || m.contains('DELT') || m.contains('SHOULDER'))) {
-      return ExerciseCategory.shoulders;
-    } else if (musclesUpper.any((m) => m.contains('BRAC') || m.contains('BICIP') || m.contains('TRIC') || m.contains('ARM'))) {
-      return ExerciseCategory.arms;
-    } else if (musclesUpper.any((m) => m.contains('QUAD') || m.contains('GLUT') || m.contains('FEMO') || m.contains('POLP') || m.contains('LEG'))) {
-      return ExerciseCategory.legs;
-    } else if (musclesUpper.any((m) => m.contains('CORE') || m.contains('ABS') || m.contains('ADDOME'))) {
-      return ExerciseCategory.abs;
-    } else if (musclesUpper.any((m) => m.contains('CARDIO'))) {
-      return ExerciseCategory.cardio;
-    }
-
-    return ExerciseCategory.other;
   }
 }

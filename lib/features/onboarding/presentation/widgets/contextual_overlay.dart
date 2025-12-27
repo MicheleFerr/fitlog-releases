@@ -133,7 +133,7 @@ class _ContextualOverlayState extends State<ContextualOverlay>
             child: Container(
               width: screenSize.width,
               height: screenSize.height,
-              color: Colors.transparent,
+              color: context.colors.surface.withValues(alpha: 0),
               child: CustomPaint(
                 painter: _SpotlightPainter(
                   spotlightRect: _targetRect!,

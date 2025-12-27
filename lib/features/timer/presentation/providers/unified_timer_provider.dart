@@ -13,6 +13,10 @@ import 'package:timezone/timezone.dart' as tz;
 import 'package:gymbro_flutter_new/features/timer/domain/models/unified_timer_state.dart';
 import 'package:gymbro_flutter_new/shared/presentation/providers/app_config_provider.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/providers/set_duration_tracker_provider.dart';
+import 'package:gymbro_flutter_new/features/workout/presentation/providers/workout_session_la_provider.dart';
+import 'package:gymbro_flutter_new/features/workout/data/services/workout_session_la_service.dart' show WorkoutSessionMode;
+import 'package:gymbro_flutter_new/features/workout/presentation/providers/workout_provider.dart';
+import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise.dart';
 import 'package:gymbro_flutter_new/features/timer/domain/services/notification_service.dart';
 import 'package:gymbro_flutter_new/core/data/providers/hive_box_manager_provider.dart';
 import 'package:gymbro_flutter_new/core/cache/user_cache_key_manager.dart';
@@ -90,6 +94,47 @@ class UnifiedTimerProvider extends Notifier<UnifiedTimerState?>
                 debugPrint('❌ [iOS AUDIO] Error calling startSet: $e');
               }
             }
+          }
+
+          // ✅ FIX: Complete the timer state when iOS notifies completion
+          // This ensures the timer is properly marked as completed even when
+          // the ticker was suspended in background
+          state = state!.copyWith(
+            status: TimerStatus.completed,
+            remainingSeconds: 0,
+            completionTime: DateTime.now(),
+          );
+          await _saveState();
+          debugPrint('🍎 [iOS AUDIO] Timer state marked as completed');
+
+          // ✅ FIX: Transition WorkoutSession Live Activity from REST to EXERCISE mode
+          // This is critical for when the app is in background and iOS timer completes
+          try {
+            final laState = ref.read(workoutSessionLAProvider);
+            if (laState.isActive && laState.mode == WorkoutSessionMode.rest) {
+              debugPrint('🍎 [iOS AUDIO] LA is in REST mode - transitioning to EXERCISE');
+              final workout = ref.read(currentWorkoutProvider);
+              if (workout != null) {
+                for (final exercise in workout.exercises) {
+                  final incompleteSetIndex = exercise.sets.indexWhere((set) => !set.isCompleted);
+                  if (incompleteSetIndex != -1) {
+                    final completedExercises = workout.exercises
+                        .where((e) => e.sets.every((s) => s.isCompleted))
+                        .length;
+                    await ref.read(workoutSessionLAProvider.notifier).transitionToExercise(
+                      exercise: exercise,
+                      setIndex: incompleteSetIndex + 1,
+                      completedExercises: completedExercises,
+                      totalExercises: workout.exercises.length,
+                    );
+                    debugPrint('✅ [iOS AUDIO] LA transitioned to EXERCISE: ${exercise.name} set ${incompleteSetIndex + 1}');
+                    break;
+                  }
+                }
+              }
+            }
+          } catch (e) {
+            debugPrint('❌ [iOS AUDIO] Error transitioning LA to exercise: $e');
           }
         }
       }
@@ -436,15 +481,32 @@ class UnifiedTimerProvider extends Notifier<UnifiedTimerState?>
     if (_isDisposed || state?.canPause != true) return;
 
     try {
+      final remainingSeconds = state!.remainingSeconds;
       state = state!.pause();
       _stopTicker();
 
       // Cancel scheduled notifications
       await _cancelScheduledNotifications();
 
-      // Update Live Activity
+      // Update Live Activity based on which system is active
       if (Platform.isIOS) {
-        await _updateLiveActivity();
+        // Check if WorkoutSession Live Activity is active
+        bool workoutSessionLAActive = false;
+        try {
+          final wsLAState = ref.read(workoutSessionLAProvider);
+          workoutSessionLAActive = wsLAState.isActive && wsLAState.mode == WorkoutSessionMode.rest;
+        } catch (e) {
+          // Provider not available
+        }
+
+        if (workoutSessionLAActive) {
+          // Pause WorkoutSession Live Activity
+          debugPrint('[UnifiedTimer] ⏸️ Pausing WorkoutSession LA with $remainingSeconds seconds');
+          final wsLAService = ref.read(workoutSessionLAServiceProvider);
+          await wsLAService.pauseRestTimer(remainingSeconds);
+        } else {
+          await _updateLiveActivity();
+        }
       }
 
       // ⌚ Notify Apple Watch about rest timer pause
@@ -468,6 +530,7 @@ class UnifiedTimerProvider extends Notifier<UnifiedTimerState?>
     if (_isDisposed || state?.isPaused != true) return;
 
     try {
+      final remainingSeconds = state!.remainingSeconds;
       state = state!.resume();
       _startTicker();
 
@@ -475,9 +538,25 @@ class UnifiedTimerProvider extends Notifier<UnifiedTimerState?>
       // Only play sound when timer completes, no notification
       // await _scheduleCompletion();
 
-      // iOS operations handled through unified channel
+      // Update Live Activity based on which system is active
       if (Platform.isIOS) {
-        await _updateLiveActivity();
+        // Check if WorkoutSession Live Activity is active
+        bool workoutSessionLAActive = false;
+        try {
+          final wsLAState = ref.read(workoutSessionLAProvider);
+          workoutSessionLAActive = wsLAState.isActive && wsLAState.mode == WorkoutSessionMode.rest;
+        } catch (e) {
+          // Provider not available
+        }
+
+        if (workoutSessionLAActive) {
+          // Resume WorkoutSession Live Activity
+          debugPrint('[UnifiedTimer] ▶️ Resuming WorkoutSession LA with $remainingSeconds seconds');
+          final wsLAService = ref.read(workoutSessionLAServiceProvider);
+          await wsLAService.resumeRestTimer(remainingSeconds);
+        } else {
+          await _updateLiveActivity();
+        }
       }
 
       // ⌚ Notify Apple Watch about rest timer resume
@@ -540,11 +619,31 @@ class UnifiedTimerProvider extends Notifier<UnifiedTimerState?>
   }
 
   /// Add time to current timer
-  Future<void> addTime(int seconds) async {
+  ///
+  /// This method updates Flutter state and syncs to Live Activity + Watch.
+  /// The sync behavior depends on which Live Activity system is active:
+  /// - Workout Session LA: Updates via workoutSessionLAService + Watch notification
+  /// - Legacy timer LA: Updates via _updateLiveActivity()
+  ///
+  /// [fromLiveActivity] - Set to true when called from Live Activity button tap.
+  /// This prevents double-updating the LA since the AppIntent already updated it.
+  Future<void> addTime(int seconds, {bool fromLiveActivity = false}) async {
+    debugPrint('[UnifiedTimer] ⏰ addTime called: +$seconds seconds, fromLiveActivity=$fromLiveActivity');
+
     // CRITICAL FIX: Ensure initialization is complete before timer operations
     await _ensureInitialized();
 
-    if (_isDisposed || state?.isActive != true) return;
+    if (_isDisposed) {
+      debugPrint('[UnifiedTimer] ❌ addTime: provider is disposed');
+      return;
+    }
+
+    if (state == null) {
+      debugPrint('[UnifiedTimer] ❌ addTime: state is null');
+      return;
+    }
+
+    debugPrint('[UnifiedTimer] 📊 Current state: isActive=${state!.isActive}, remaining=${state!.remainingSeconds}s, total=${state!.totalDurationSeconds}s');
 
     try {
       // Add the extra seconds to both remaining and total duration
@@ -557,14 +656,69 @@ class UnifiedTimerProvider extends Notifier<UnifiedTimerState?>
         endTime: state!.endTime?.add(Duration(seconds: seconds)),
       );
 
-      // Update Live Activity
-      if (Platform.isIOS && state!.liveActivityActive) {
-        await _updateLiveActivity();
+      // CRITICAL FIX: Update _cachedEndTime to match the new endTime
+      // Without this, _calculateRemainingSeconds() uses stale cached value
+      // and the next tick overwrites the added time!
+      _cachedEndTime = state!.endTime;
+
+      debugPrint('[UnifiedTimer] ✅ Time added: newRemaining=${newRemainingSeconds}s, newTotal=${newTotalDurationSeconds}s, cachedEndTime updated');
+
+      // Sync to Live Activity + Watch
+      if (Platform.isIOS) {
+        // Check which Live Activity system is active
+        bool workoutSessionLAActive = false;
+        try {
+          final wsLAState = ref.read(workoutSessionLAProvider);
+          workoutSessionLAActive = wsLAState.isActive;
+          debugPrint('[UnifiedTimer] 📊 Workout Session LA active: $workoutSessionLAActive');
+        } catch (e) {
+          debugPrint('[UnifiedTimer] ⚠️ Could not read workoutSessionLAProvider: $e');
+          // Provider not available, use legacy system
+        }
+
+        if (workoutSessionLAActive) {
+          // Workout Session LA is active
+          if (fromLiveActivity) {
+            // Called from LA button - LA already updated by AppIntent, only notify Watch
+            debugPrint('[UnifiedTimer] 📡 From LA: skipping LA update, notifying Watch only...');
+            await ref.read(watchConnectivityProvider.notifier).sendRestTimerExtended(
+              seconds,
+              newTotalDurationSeconds,
+            );
+            debugPrint('[UnifiedTimer] ✅ Synced: LA (already updated) ✓ Watch notification sent ✓');
+          } else {
+            // Called from Flutter app - need to update both LA and Watch
+            debugPrint('[UnifiedTimer] 📡 From app: syncing +$seconds to Workout Session LA & Watch');
+
+            // Update Workout Session Live Activity
+            final wsLAService = ref.read(workoutSessionLAServiceProvider);
+            await wsLAService.extendRestTimer(seconds);
+            debugPrint('[UnifiedTimer] ✅ Workout Session LA extended');
+
+            // Notify Apple Watch
+            await ref.read(watchConnectivityProvider.notifier).sendRestTimerExtended(
+              seconds,
+              newTotalDurationSeconds,
+            );
+            debugPrint('[UnifiedTimer] ✅ Watch notification sent');
+
+            debugPrint('[UnifiedTimer] ✅ Synced: WorkoutSession LA ✓ Watch ✓');
+          }
+        } else if (state!.liveActivityActive) {
+          // Legacy timer LA is active
+          debugPrint('[UnifiedTimer] 📡 Using legacy LA update');
+          await _updateLiveActivity();
+        } else {
+          debugPrint('[UnifiedTimer] ⚠️ No LA active, skipping LA/Watch sync');
+        }
       }
 
       await _saveState();
-      // Added $seconds seconds to timer
-    } catch (e) {}
+      debugPrint('[UnifiedTimer] ✅ addTime completed successfully');
+    } catch (e, stack) {
+      debugPrint('[UnifiedTimer] ❌ addTime error: $e');
+      debugPrint('[UnifiedTimer] ❌ Stack trace: $stack');
+    }
   }
 
   /// Skip the current timer (complete immediately without audio)
@@ -605,8 +759,47 @@ class UnifiedTimerProvider extends Notifier<UnifiedTimerState?>
 
       // Update Live Activity with skipped state
       if (Platform.isIOS) {
-        await _updateLiveActivity();
-        await _stopLiveActivity();
+        // ✅ FIX: Check if WorkoutSession LA is active - transition it instead of stopping
+        try {
+          final laState = ref.read(workoutSessionLAProvider);
+          if (laState.isActive && laState.mode == WorkoutSessionMode.rest) {
+            // WorkoutSession LA is in REST mode - transition to EXERCISE
+            if (kDebugMode) {
+              debugPrint('⏭️ [SKIP-FIX] WorkoutSession LA is in REST - transitioning to EXERCISE');
+            }
+            final workout = ref.read(currentWorkoutProvider);
+            if (workout != null) {
+              for (final exercise in workout.exercises) {
+                final incompleteSetIndex = exercise.sets.indexWhere((set) => !set.isCompleted);
+                if (incompleteSetIndex != -1) {
+                  final completedExercises = workout.exercises
+                      .where((e) => e.sets.every((s) => s.isCompleted))
+                      .length;
+                  await ref.read(workoutSessionLAProvider.notifier).transitionToExercise(
+                    exercise: exercise,
+                    setIndex: incompleteSetIndex + 1,
+                    completedExercises: completedExercises,
+                    totalExercises: workout.exercises.length,
+                  );
+                  if (kDebugMode) {
+                    debugPrint('✅ [SKIP-FIX] LA transitioned to EXERCISE: ${exercise.name} set ${incompleteSetIndex + 1}');
+                  }
+                  break;
+                }
+              }
+            }
+          } else if (state!.liveActivityActive) {
+            // Timer's own LA was started - stop it
+            await _updateLiveActivity();
+            await _stopLiveActivity();
+          }
+        } catch (e) {
+          // Fallback: only stop if timer LA was actually active
+          if (state!.liveActivityActive) {
+            await _updateLiveActivity();
+            await _stopLiveActivity();
+          }
+        }
       }
 
       await _saveState();
@@ -1238,6 +1431,17 @@ class UnifiedTimerProvider extends Notifier<UnifiedTimerState?>
   }) async {
     if (state == null) return;
 
+    // DEBUG: Track where this method is being called from
+    if (kDebugMode) {
+      debugPrint('🔷 [NOTIFICATION-SOURCE-C] Flutter _sendTimerCompletionNotification called');
+      debugPrint('   - Timestamp: ${DateTime.now()}');
+      debugPrint('   - hasLiveActivity: $hasLiveActivity');
+      debugPrint('   - Timer state: ${state?.type}');
+      debugPrint('   - Stack trace (first 5 frames):');
+      final stackTrace = StackTrace.current.toString().split('\n').take(8).join('\n');
+      debugPrint(stackTrace);
+    }
+
     try {
       // CRITICAL FIX: iOS uses native notifications with proper localization
       if (Platform.isIOS) {
@@ -1275,7 +1479,10 @@ class UnifiedTimerProvider extends Notifier<UnifiedTimerState?>
         // Use localized titles and bodies instead of hardcoded NotificationService
         String? notificationId;
         try {
-          notificationId = await _unifiedChannel.invokeMethod(
+          // FIX: Removed faulty delivery verification that caused duplicate notifications
+          // The verification was returning false even when notification was delivered,
+          // causing a second notification to be sent 1 second later
+          await _unifiedChannel.invokeMethod(
             'sendNotification',
             {
               'title': _getNotificationTitle(),
@@ -1288,47 +1495,9 @@ class UnifiedTimerProvider extends Notifier<UnifiedTimerState?>
             },
           );
 
-          // ✅ FIX #2: Verify notification was delivered after 1s
-          if (notificationId is String &&
-              notificationId.isNotEmpty &&
-              notificationId != 'skipped_live_activity') {
-            await Future.delayed(const Duration(seconds: 1));
-
-            try {
-              final wasDelivered = await _unifiedChannel.invokeMethod<bool>(
-                'wasNotificationDelivered',
-                {'identifier': notificationId},
-              );
-
-              if (wasDelivered != true) {
-                if (kDebugMode) {
-                  debugPrint('⚠️ [FIX-2] Notification was NOT delivered:');
-                  debugPrint('  - ID: $notificationId');
-                  debugPrint('  - Sending fallback notification');
-                }
-
-                // Send fallback notification without Live Activity coordination
-                await _unifiedChannel.invokeMethod('sendNotification', {
-                  'title': _getNotificationTitle(),
-                  'body': _getNotificationBody(),
-                  'sound': state!.customSoundName ?? 'sound',
-                  'categoryIdentifier': 'TIMER_COMPLETE',
-                  'isBackground': false,
-                  'hasLiveActivity': false, // Force send
-                });
-              } else {
-                if (kDebugMode) {
-                  debugPrint('✅ [FIX-2] Notification delivered successfully');
-                }
-              }
-            } catch (e) {
-              if (kDebugMode) {
-                debugPrint('❌ [FIX-2] Failed to verify delivery: $e');
-              }
-            }
+          if (kDebugMode) {
+            debugPrint('✅ [NOTIFICATION] Timer completion notification sent');
           }
-
-          // iOS native notification sent with localization
         } catch (e) {
           // Fallback to NotificationService if native channel fails
           final notificationService = NotificationService();
@@ -1357,9 +1526,48 @@ class UnifiedTimerProvider extends Notifier<UnifiedTimerState?>
     }
   }
 
-  /// Start iOS Live Activity
+  /// Start iOS Live Activity (OLD timer-based system)
+  /// NOTE: This is SKIPPED when WorkoutSession Live Activity is active
   Future<void> _startLiveActivity() async {
     if (state == null) return;
+
+    // 🚫 SKIP: If WorkoutSession Live Activity is active, don't start the old timer LA
+    // Instead, transition the WorkoutSession LA to REST mode
+    try {
+      final workoutSessionLAState = ref.read(workoutSessionLAProvider);
+      if (workoutSessionLAState.isActive) {
+        if (kDebugMode) {
+          debugPrint('📱 [TIMER-LA] WorkoutSession LA is active - transitioning to REST mode');
+        }
+
+        // Get current workout to find exercise info
+        final workout = ref.read(currentWorkoutProvider);
+        if (workout != null && state != null) {
+          // Find the exercise by name
+          Exercise? targetExercise;
+          if (state!.exerciseName != null) {
+            targetExercise = workout.exercises.where((e) => e.name == state!.exerciseName).firstOrNull;
+          }
+          targetExercise ??= workout.exercises.firstOrNull;
+
+          if (targetExercise != null) {
+            // Transition WorkoutSession LA to REST mode
+            await ref.read(workoutSessionLAProvider.notifier).transitionToRest(
+              restDurationSeconds: state!.totalDurationSeconds,
+              nextExercise: targetExercise,
+              nextSetIndex: state!.currentSet ?? 1,
+            );
+            debugPrint('📱 [TIMER-LA] ✅ WorkoutSession LA transitioned to REST: ${state!.totalDurationSeconds}s');
+          }
+        }
+        return; // Don't start the old timer LA
+      }
+    } catch (e) {
+      // If we can't read the provider, continue with old behavior
+      if (kDebugMode) {
+        debugPrint('📱 [TIMER-LA] Error checking WorkoutSession LA: $e');
+      }
+    }
 
     try {
       // CRITICAL FIX: End ALL previous Live Activities before starting a new one
@@ -1401,10 +1609,20 @@ class UnifiedTimerProvider extends Notifier<UnifiedTimerState?>
     }
   }
 
-  /// Update iOS Live Activity
+  /// Update iOS Live Activity (OLD timer-based system)
   Future<void> _updateLiveActivity() async {
     if (state?.liveActivityActive != true) {
       return;
+    }
+
+    // 🚫 SKIP: If WorkoutSession Live Activity is active
+    try {
+      final workoutSessionLAState = ref.read(workoutSessionLAProvider);
+      if (workoutSessionLAState.isActive) {
+        return;
+      }
+    } catch (e) {
+      // If we can't read the provider, continue with old behavior
     }
 
     try {

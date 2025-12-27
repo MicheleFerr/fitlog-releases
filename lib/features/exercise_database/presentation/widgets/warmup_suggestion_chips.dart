@@ -115,7 +115,7 @@ class _WarmupChip extends StatelessWidget {
         : context.colors.primary;
 
     return Material(
-      color: Colors.transparent,
+      color: context.colors.surface.withValues(alpha: 0),
       child: InkWell(
         onTap: onTap != null
             ? () {

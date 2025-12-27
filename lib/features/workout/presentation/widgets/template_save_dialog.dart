@@ -55,7 +55,7 @@ Future<TemplateSaveResult?> showTemplateSaveDialog({
     isScrollControlled: true,
     isDismissible: true,
     enableDrag: true,
-    backgroundColor: Colors.transparent,
+    backgroundColor: Theme.of(context).colorScheme.surface.withValues(alpha: 0),
     builder: (context) => _TemplateSaveDialogContent(
       completedWorkout: completedWorkout,
       originalTemplate: originalTemplate,
@@ -117,7 +117,7 @@ class _TemplateSaveDialogContentState
           Row(
             children: [
               Container(
-                padding: const EdgeInsets.all(10),
+                padding: const EdgeInsets.all(12),
                 decoration: BoxDecoration(
                   color: context.colors.primary.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(12),
@@ -206,7 +206,7 @@ class _TemplateSaveDialogContentState
                   ),
             label: Text(context.l10n.updateTemplate),
             style: FilledButton.styleFrom(
-              padding: const EdgeInsets.symmetric(vertical: 14),
+              padding: const EdgeInsets.symmetric(vertical: 16),
             ),
           ),
 
@@ -222,7 +222,7 @@ class _TemplateSaveDialogContentState
             ),
             label: Text(context.l10n.keepOriginal),
             style: OutlinedButton.styleFrom(
-              padding: const EdgeInsets.symmetric(vertical: 14),
+              padding: const EdgeInsets.symmetric(vertical: 16),
               foregroundColor: context.colors.onSurfaceVariant,
             ),
           ),
@@ -331,22 +331,9 @@ class _TemplateSaveDialogContentState
 
   Future<void> _updateTemplate() async {
     final updatedTemplate = widget.originalTemplate.copyWith(
+      // ✅ FIX: Use fromExercise() to properly preserve all fields including TUT
       exercises: widget.completedWorkout.exercises.map((ex) {
-        // Generate exerciseId from exercise name (lowercase, snake_case)
-        final exerciseId = ex.name.toLowerCase().replaceAll(' ', '_');
-        return ExerciseTemplate(
-          exerciseId: exerciseId,
-          exerciseName: ex.name,
-          type: ex.type,
-          category: ex.category,
-          sets: ex.sets.map((set) {
-            return SetTemplate(
-              setNumber: set.setNumber,
-              targetReps: set.reps,
-              targetWeight: set.weight,
-            );
-          }).toList(),
-        );
+        return ExerciseTemplate.fromExercise(ex);
       }).toList(),
       updatedAt: DateTime.now(),
     );

@@ -14,6 +14,21 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 part 'sleep_workout_correlation.freezed.dart';
 part 'sleep_workout_correlation.g.dart';
 
+/// User's sleep pattern type
+enum SleepPattern {
+  /// Has both good and poor sleep nights - can show comparison
+  variable,
+
+  /// Consistently sleeps well (≥7h) - celebrate consistency
+  consistentlyGood,
+
+  /// Consistently sleeps poorly (<6h) - encourage improvement
+  consistentlyPoor,
+
+  /// Not enough data to determine pattern
+  unknown,
+}
+
 /// Correlation between sleep and workout performance
 @freezed
 abstract class SleepWorkoutCorrelation with _$SleepWorkoutCorrelation {
@@ -42,6 +57,15 @@ abstract class SleepWorkoutCorrelation with _$SleepWorkoutCorrelation {
 
     /// Workouts with <6h sleep the night before
     @Default(0) int workoutsWithPoorSleep,
+
+    /// User's detected sleep pattern
+    @Default(SleepPattern.unknown) SleepPattern sleepPattern,
+
+    /// Average sleep hours over the period
+    @Default(0.0) double averageSleepHours,
+
+    /// Average workout volume (for stats display)
+    @Default(0.0) double averageVolume,
   }) = _SleepWorkoutCorrelation;
 
   const SleepWorkoutCorrelation._();
@@ -80,21 +104,46 @@ abstract class SleepWorkoutCorrelation with _$SleepWorkoutCorrelation {
   /// Whether there's enough data to show correlation
   bool get hasEnoughData => workoutSampleSize >= 5 && sleepSampleSize >= 7;
 
+  /// Whether user has a consistent sleep pattern (good or poor)
+  bool get hasConsistentPattern =>
+      sleepPattern == SleepPattern.consistentlyGood ||
+      sleepPattern == SleepPattern.consistentlyPoor;
+
+  /// Formatted average sleep hours
+  String get formattedAverageSleep => '${averageSleepHours.toStringAsFixed(1)}h';
+
+  /// Formatted average volume (in kg)
+  String get formattedAverageVolume => '${averageVolume.toStringAsFixed(0)}kg';
+
   /// Message KEY explaining the correlation
   ///
   /// Returns a key that should be localized in presentation layer.
-  /// Keys: 'not_enough_data', 'not_significant', 'significant'
-  /// For 'significant': includes effect directions as additional info
+  /// Keys:
+  /// - 'not_enough_data': insufficient workout/sleep data
+  /// - 'consistently_good:Xh:Ykg': sleeps well consistently
+  /// - 'consistently_poor:Xh:Ykg': sleeps poorly consistently
+  /// - 'not_significant': variable but not statistically significant
+  /// - 'significant:...': variable with significant correlation
   String get summaryMessageKey {
     if (!hasEnoughData) {
       return 'not_enough_data';
     }
 
+    // Handle consistent patterns first
+    if (sleepPattern == SleepPattern.consistentlyGood) {
+      return 'consistently_good:$formattedAverageSleep:$formattedAverageVolume';
+    }
+
+    if (sleepPattern == SleepPattern.consistentlyPoor) {
+      return 'consistently_poor:$formattedAverageSleep:$formattedAverageVolume';
+    }
+
+    // Variable pattern - check significance
     if (!isSignificant) {
       return 'not_significant';
     }
 
-    // Return key with params: good_effect:increase|decrease,poor_effect:increase|decrease,good_change:X%,poor_change:Y%
+    // Return key with params for significant variable pattern
     final goodEffect = volumeChangeAbove7h > 0 ? 'increase' : 'decrease';
     final poorEffect = volumeChangeBelow6h < 0 ? 'decrease' : 'increase';
     final goodChange = formattedGoodSleepChange.replaceAll('+', '').replaceAll('-', '');

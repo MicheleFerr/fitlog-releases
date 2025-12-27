@@ -15,6 +15,7 @@ import 'package:gymbro_flutter_new/features/import/domain/entities/import_result
 import 'package:gymbro_flutter_new/features/workout/domain/entities/workout.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise.dart' as workout_entities;
 import 'package:gymbro_flutter_new/features/workout/domain/repositories/workout_repository.dart';
+import 'package:gymbro_flutter_new/features/stress_index/data/mappers/muscle_abbreviation_mapper.dart';
 
 /// Repository for importing workout data from external apps
 class ImportRepository {
@@ -231,32 +232,8 @@ class ImportRepository {
   }
 
   /// Map focus area to exercise category
+  /// Uses centralized MuscleAbbreviationMapper as single source of truth
   workout_entities.ExerciseCategory _mapCategory(String focus) {
-    final lower = focus.toLowerCase();
-
-    if (lower.contains('pett') || lower.contains('chest')) {
-      return workout_entities.ExerciseCategory.chest;
-    }
-    if (lower.contains('dorsal') || lower.contains('back') || lower.contains('lat')) {
-      return workout_entities.ExerciseCategory.back;
-    }
-    if (lower.contains('spall') || lower.contains('delt') || lower.contains('shoulder')) {
-      return workout_entities.ExerciseCategory.shoulders;
-    }
-    if (lower.contains('bicip') || lower.contains('tricip') || lower.contains('arm')) {
-      return workout_entities.ExerciseCategory.arms;
-    }
-    if (lower.contains('gamb') || lower.contains('quad') || lower.contains('leg') ||
-        lower.contains('glut') || lower.contains('polp')) {
-      return workout_entities.ExerciseCategory.legs;
-    }
-    if (lower.contains('addom') || lower.contains('core') || lower.contains('abs')) {
-      return workout_entities.ExerciseCategory.abs;
-    }
-    if (lower.contains('cardio')) {
-      return workout_entities.ExerciseCategory.cardio;
-    }
-
-    return workout_entities.ExerciseCategory.other;
+    return MuscleAbbreviationMapper.focusToExerciseCategory(focus);
   }
 }

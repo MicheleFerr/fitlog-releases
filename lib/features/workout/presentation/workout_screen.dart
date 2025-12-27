@@ -321,16 +321,16 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen> {
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                   decoration: BoxDecoration(
-                    color: Colors.red.withValues(alpha: 0.15),
+                    color: context.colors.error.withValues(alpha: 0.15),
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      const Icon(
+                      Icon(
                         AppIcons.favorite,
                         size: 14,
-                        color: Colors.red,
+                        color: context.colors.error,
                       ),
                       const SizedBox(width: 4),
                       Text(
@@ -580,7 +580,7 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen> {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
-      backgroundColor: Colors.transparent,
+      backgroundColor: context.colors.surface.withValues(alpha: 0),
       builder: (context) => const ContextGatheringBottomSheet(),
     );
   }
@@ -599,7 +599,7 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen> {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
-      backgroundColor: Colors.transparent,
+      backgroundColor: context.colors.surface.withValues(alpha: 0),
       builder: (context) => AddExerciseModal(
         onExerciseAdded: (exercise) {
           debugPrint('🎯 [WorkoutScreen] CALLBACK RECEIVED: name=${exercise.name}, countingMode=${exercise.countingMode}');
@@ -619,7 +619,7 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen> {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
-      backgroundColor: Colors.transparent,
+      backgroundColor: context.colors.surface.withValues(alpha: 0),
       builder: (context) => const CreateTemplateModal(),
     );
   }
@@ -650,7 +650,7 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen> {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
-      backgroundColor: Colors.transparent,
+      backgroundColor: context.colors.surface.withValues(alpha: 0),
       builder: (context) => AddExerciseModal(
         onExerciseAdded: (newExercise) {
           // Update the exercise at the old exercise's ID position
@@ -943,7 +943,7 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen> {
 
     showModalBottomSheet(
       context: context,
-      backgroundColor: Colors.transparent,
+      backgroundColor: context.colors.surface.withValues(alpha: 0),
       builder: (context) => DecoratedBox(
         decoration: BoxDecoration(
           color: context.colors.surface,

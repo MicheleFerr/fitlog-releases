@@ -46,7 +46,11 @@ class PrivacyManager {
     try {
       final box = await _manager.openBox<dynamic>(_consentBoxName);
       final value = box.get(type.name, defaultValue: false);
-      return value is bool ? value : false;
+      final result = value is bool ? value : false;
+      if (kDebugMode) {
+        debugPrint('🔐 [PrivacyManager] hasConsent(${type.name}): $result (raw value: $value)');
+      }
+      return result;
     } catch (e) {
       if (kDebugMode) {
         debugPrint('⚠️ Error checking consent for ${type.name}: $e');
@@ -61,8 +65,14 @@ class PrivacyManager {
   /// Stores consent preferences and timestamp for audit trail
   /// Automatically adds essential consent
   static Future<void> saveConsents(Set<ConsentType> consents) async {
+    if (kDebugMode) {
+      debugPrint('🔐 [PrivacyManager] saveConsents called with: ${consents.map((c) => c.name).join(", ")}');
+    }
     try {
       final box = await _manager.openBox<dynamic>(_consentBoxName);
+      if (kDebugMode) {
+        debugPrint('🔐 [PrivacyManager] Box opened: $_consentBoxName');
+      }
 
       // Always include essential consent
       final consentSet = {...consents, ConsentType.essential};
@@ -73,20 +83,31 @@ class PrivacyManager {
       // Save new consents
       for (final type in ConsentType.values) {
         await box.put(type.name, consentSet.contains(type));
+        if (kDebugMode) {
+          debugPrint('🔐 [PrivacyManager] Saved ${type.name} = ${consentSet.contains(type)}');
+        }
       }
 
       // Save timestamp for audit trail (GDPR Art. 7(1))
-      await box.put(_consentTimestampKey, DateTime.now().toIso8601String());
+      final timestamp = DateTime.now().toIso8601String();
+      await box.put(_consentTimestampKey, timestamp);
 
       // Save privacy policy version
       await box.put(_privacyPolicyVersionKey, _currentPrivacyPolicyVersion);
 
       if (kDebugMode) {
-        debugPrint('✅ Consents saved: ${consentSet.map((c) => c.name).join(", ")}');
+        debugPrint('✅ [PrivacyManager] Consents saved: ${consentSet.map((c) => c.name).join(", ")}');
+        debugPrint('🔐 [PrivacyManager] Timestamp: $timestamp');
+
+        // Verify save worked
+        final verifyTimestamp = box.get(_consentTimestampKey);
+        final verifyAnalytics = box.get('analytics');
+        debugPrint('🔐 [PrivacyManager] VERIFY - timestamp in box: $verifyTimestamp');
+        debugPrint('🔐 [PrivacyManager] VERIFY - analytics in box: $verifyAnalytics');
       }
     } catch (e) {
       if (kDebugMode) {
-        debugPrint('❌ Error saving consents: $e');
+        debugPrint('❌ [PrivacyManager] Error saving consents: $e');
       }
       rethrow;
     }
@@ -151,7 +172,16 @@ class PrivacyManager {
   static Future<bool> hasProvidedConsent() async {
     try {
       final box = await _manager.openBox<dynamic>(_consentBoxName);
-      return box.containsKey(_consentTimestampKey);
+      final hasTimestamp = box.containsKey(_consentTimestampKey);
+      if (kDebugMode) {
+        debugPrint('🔐 [PrivacyManager] hasProvidedConsent check:');
+        debugPrint('   - Box keys: ${box.keys.toList()}');
+        debugPrint('   - Has timestamp key: $hasTimestamp');
+        if (hasTimestamp) {
+          debugPrint('   - Timestamp value: ${box.get(_consentTimestampKey)}');
+        }
+      }
+      return hasTimestamp;
     } catch (e) {
       if (kDebugMode) {
         debugPrint('⚠️ Error checking if consent provided: $e');

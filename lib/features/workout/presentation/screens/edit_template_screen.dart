@@ -820,7 +820,7 @@ class _EditTemplateScreenState extends ConsumerState<EditTemplateScreen> {
     await showModalBottomSheet(
       context: context,
       isScrollControlled: true,
-      backgroundColor: Colors.transparent,
+      backgroundColor: context.colors.surface.withValues(alpha: 0),
       builder: (context) => Container(
         decoration: BoxDecoration(
           color: context.colors.surface,

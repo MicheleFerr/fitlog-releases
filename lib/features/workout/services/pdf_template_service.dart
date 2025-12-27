@@ -73,7 +73,7 @@ class PdfTemplateService {
                       ),
                       decoration: pw.BoxDecoration(
                         color: primaryColor.shade(0.1),
-                        borderRadius: pw.BorderRadius.circular(4),
+                        borderRadius: pw.BorderRadius.circular(8),
                       ),
                       child: pw.Text(
                         'Generated with FitLog Pro',
@@ -169,7 +169,7 @@ class PdfTemplateService {
             padding: const pw.EdgeInsets.symmetric(horizontal: 8, vertical: 4),
             decoration: pw.BoxDecoration(
               color: primaryColor.shade(0.1),
-              borderRadius: pw.BorderRadius.circular(4),
+              borderRadius: pw.BorderRadius.circular(8),
             ),
             child: pw.Text(
               'Custom Template',

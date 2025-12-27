@@ -2,10 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:gymbro_flutter_new/features/exercise_merge/domain/entities/merge_candidate.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise_activity.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/providers/exercise_gif_provider.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/providers/exercise_autocollapse_provider.dart';
+import 'package:gymbro_flutter_new/features/workout/presentation/providers/upgrade_matches_provider.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/widgets/exercise_gif_widget.dart';
 import 'package:gymbro_flutter_new/shared/domain/entities/app_config.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
@@ -55,6 +57,7 @@ class ExerciseListItemHeader extends StatelessWidget {
     required this.onAddWarmupSets,
     required this.onEditNotes,
     this.onCreateSuperset,
+    this.onShowQuickUpgrade,
     this.hasWarmupData,
     this.hasInjuryPreventionData,
     this.tutorialMenuKey,
@@ -86,6 +89,9 @@ class ExerciseListItemHeader extends StatelessWidget {
   final VoidCallback onAddWarmupSets;
   final VoidCallback onEditNotes;
   final VoidCallback? onCreateSuperset;
+
+  /// Callback per mostrare modal upgrade esercizio
+  final void Function(MergeCandidate candidate)? onShowQuickUpgrade;
 
   /// Form Cues (persistent technique reminders) for this exercise
   final String? formCues;
@@ -146,10 +152,19 @@ class ExerciseListItemHeader extends StatelessWidget {
   Widget _buildExerciseNameRow(BuildContext context) {
     return InkWell(
       onTap: () {
+        // Debug: trace exercise ID being passed to navigation
+        debugPrint('🏋️ [STRENGTH DEBUG] Navigation to exercise detail:');
+        debugPrint('   exercise.name: ${exercise.name}');
+        debugPrint('   exercise.id: ${exercise.id}');
+        debugPrint('   ID looks like UUID: ${exercise.id.contains('-') && exercise.id.length > 30}');
+
         context.pushNamed(
           'workout-exercise-detail',
           pathParameters: {
             'exerciseName': Uri.encodeComponent(exercise.name),
+          },
+          queryParameters: {
+            'id': exercise.id, // Pass exercise database ID for strength standards lookup
           },
         );
       },
@@ -165,6 +180,12 @@ class ExerciseListItemHeader extends StatelessWidget {
                     ?.copyWith(fontWeight: FontWeight.bold),
               ),
             ),
+            // Upgrade icon - isolated in ConsumerWidget for performance
+            if (onShowQuickUpgrade != null)
+              _UpgradeIconInline(
+                exerciseName: exercise.name,
+                onTap: onShowQuickUpgrade!,
+              ),
             SemanticIcon(
               icon: AppIcons.info,
               semanticLabel: 'Information',
@@ -263,7 +284,7 @@ class ExerciseListItemHeader extends StatelessWidget {
           border: Border.all(
             color: exercise.restTime != null
                 ? context.colors.primary.withValues(alpha: 0.3)
-                : Colors.transparent,
+                : context.colors.surface.withValues(alpha: 0),
             width: 1,
           ),
         ),
@@ -457,7 +478,7 @@ class ExerciseListItemHeader extends StatelessWidget {
         : maxWeight.toStringAsFixed(1);
 
     return Material(
-      color: Colors.transparent,
+      color: context.colors.surface.withValues(alpha: 0),
       child: InkWell(
         onTap: () {
           HapticFeedback.mediumImpact();
@@ -534,7 +555,7 @@ class ExerciseListItemHeader extends StatelessWidget {
   /// Builds "Add notes" chip when no notes exist
   Widget _buildAddNotesChip(BuildContext context) {
     return Material(
-      color: Colors.transparent,
+      color: context.colors.surface.withValues(alpha: 0),
       child: InkWell(
         onTap: () {
           HapticFeedback.lightImpact();
@@ -579,7 +600,7 @@ class ExerciseListItemHeader extends StatelessWidget {
     final preview = ExerciseNotesHandler.formatNotesPreview(formCues, maxLength: 35);
 
     return Material(
-      color: Colors.transparent,
+      color: context.colors.surface.withValues(alpha: 0),
       child: InkWell(
         onTap: () {
           HapticFeedback.lightImpact();
@@ -629,7 +650,7 @@ class ExerciseListItemHeader extends StatelessWidget {
     final preview = ExerciseNotesHandler.formatNotesPreview(exercise.notes, maxLength: 30);
 
     return Material(
-      color: Colors.transparent,
+      color: context.colors.surface.withValues(alpha: 0),
       child: InkWell(
         onTap: () {
           HapticFeedback.lightImpact();
@@ -1096,6 +1117,70 @@ class _ExerciseGifIcon extends ConsumerWidget {
         semanticLabel: exercise.type.name,
         color: color,
         size: AppIconSize.small,
+      ),
+    );
+  }
+}
+
+/// Icona upgrade inline isolata in ConsumerWidget
+///
+/// ✅ PERFORMANCE: Isolato per evitare rebuild dell'header
+/// quando cambia lo stato del provider upgrade matches.
+class _UpgradeIconInline extends ConsumerWidget {
+  const _UpgradeIconInline({
+    required this.exerciseName,
+    required this.onTap,
+  });
+
+  final String exerciseName;
+  final void Function(MergeCandidate candidate) onTap;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final candidate = ref.watch(upgradeMatchForExerciseProvider(exerciseName));
+
+    // Non mostrare se non c'è match
+    if (candidate == null) {
+      return const SizedBox.shrink();
+    }
+
+    return Padding(
+      padding: const EdgeInsets.only(right: 8),
+      child: Tooltip(
+        message: context.l10n.upgradeExerciseTooltip,
+        child: InkWell(
+          onTap: () {
+            HapticFeedback.lightImpact();
+            onTap(candidate);
+          },
+          borderRadius: BorderRadius.circular(12),
+          child: Container(
+            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+            decoration: BoxDecoration(
+              color: context.colors.primaryContainer,
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Icon(
+                  AppIcons.syncAlt,
+                  size: 14,
+                  color: context.colors.onPrimaryContainer,
+                ),
+                const SizedBox(width: 2),
+                Text(
+                  '${(candidate.bestMatchScore * 100).toStringAsFixed(0)}%',
+                  style: context.textTheme.labelSmall?.copyWith(
+                    color: context.colors.onPrimaryContainer,
+                    fontWeight: FontWeight.w600,
+                    fontSize: 10,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
       ),
     );
   }

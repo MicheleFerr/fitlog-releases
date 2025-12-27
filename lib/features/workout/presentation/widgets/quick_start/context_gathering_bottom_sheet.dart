@@ -241,7 +241,7 @@ class _ContextGatheringBottomSheetState
       button: true,
       enabled: true,
       child: Material(
-        color: Colors.transparent,
+        color: context.colors.surface.withValues(alpha: 0),
         borderRadius: BorderRadius.circular(16),
         child: InkWell(
           onTap: () => _onTimeSelected(minutes),
@@ -254,7 +254,7 @@ class _ContextGatheringBottomSheetState
                   : context.colors.surfaceContainerHighest,
               borderRadius: BorderRadius.circular(16),
               border: Border.all(
-                color: isSelected ? color : Colors.transparent,
+                color: isSelected ? color : context.colors.surface.withValues(alpha: 0),
                 width: 2,
               ),
             ),
@@ -366,7 +366,7 @@ class _ContextGatheringBottomSheetState
       button: true,
       enabled: true,
       child: Material(
-        color: Colors.transparent,
+        color: context.colors.surface.withValues(alpha: 0),
         borderRadius: BorderRadius.circular(16),
         child: InkWell(
           onTap: () => _onExperienceSelected(level),
@@ -379,7 +379,7 @@ class _ContextGatheringBottomSheetState
                   : context.colors.surfaceContainerHighest,
               borderRadius: BorderRadius.circular(16),
               border: Border.all(
-                color: isSelected ? levelColor : Colors.transparent,
+                color: isSelected ? levelColor : context.colors.surface.withValues(alpha: 0),
                 width: 2,
               ),
             ),
@@ -526,7 +526,7 @@ class _ContextGatheringBottomSheetState
       button: true,
       enabled: true,
       child: Material(
-        color: Colors.transparent,
+        color: context.colors.surface.withValues(alpha: 0),
         borderRadius: BorderRadius.circular(16),
         child: InkWell(
           onTap: () => _onGenderSelected(value),
@@ -539,7 +539,7 @@ class _ContextGatheringBottomSheetState
                   : context.colors.surfaceContainerHighest,
               borderRadius: BorderRadius.circular(16),
               border: Border.all(
-                color: isSelected ? context.colors.primary : Colors.transparent,
+                color: isSelected ? context.colors.primary : context.colors.surface.withValues(alpha: 0),
                 width: 2,
               ),
             ),

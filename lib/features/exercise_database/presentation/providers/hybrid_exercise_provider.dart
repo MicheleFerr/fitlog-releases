@@ -94,6 +94,30 @@ final exerciseByIdProvider = FutureProvider.autoDispose.family<Exercise?, String
   return repository.getExerciseById(exerciseId);
 });
 
+/// Provider per trovare l'ID database di un esercizio dal nome (italiano)
+/// Usato per il lookup strength standards quando l'ID è un UUID (workout esistenti)
+/// Returns null if exercise not found
+final exerciseIdByNameProvider = FutureProvider.autoDispose.family<String?, String>((ref, exerciseName) async {
+  final repository = ref.read(hybridExerciseRepositoryProvider);
+
+  // Search for exercise with exact name match (case-insensitive)
+  final exercises = await repository.searchExercises(exerciseName);
+
+  // Find exact match by name
+  for (final exercise in exercises) {
+    if (exercise.nome.toLowerCase() == exerciseName.toLowerCase()) {
+      return exercise.id;
+    }
+  }
+
+  // Fallback: return first result if it's a close match
+  if (exercises.isNotEmpty && exercises.first.nome.toLowerCase().contains(exerciseName.toLowerCase().split(' ').first)) {
+    return exercises.first.id;
+  }
+
+  return null;
+});
+
 // ====================
 // SYNC STATUS PROVIDERS
 // ====================

@@ -256,7 +256,7 @@ class _ProgressIndicator extends StatelessWidget {
         // Progress bar
         Expanded(
           child: ClipRRect(
-            borderRadius: BorderRadius.circular(4),
+            borderRadius: BorderRadius.circular(8),
             child: LinearProgressIndicator(
               value: current / total,
               backgroundColor: context.colors.surfaceContainerHighest,

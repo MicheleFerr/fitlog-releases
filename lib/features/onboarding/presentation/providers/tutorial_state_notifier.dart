@@ -2,6 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hive_ce_flutter/hive_flutter.dart';
 import 'package:gymbro_flutter_new/features/onboarding/domain/entities/tutorial_state.dart';
+import 'package:gymbro_flutter_new/features/onboarding/domain/entities/onboarding_state.dart';
 import 'package:gymbro_flutter_new/core/data/providers/hive_box_manager_provider.dart';
 import 'package:gymbro_flutter_new/core/data/hive_box_manager_enhanced.dart';
 
@@ -92,7 +93,8 @@ class TutorialStateNotifier extends Notifier<TutorialState> {
         return;
       }
 
-      final legacyBox = Hive.box(legacyBoxName);
+      // Use correct type - the box is opened as Box<OnboardingState>
+      final legacyBox = Hive.box<OnboardingState>(legacyBoxName);
       final legacyState = legacyBox.get('state');
 
       if (legacyState == null) {
@@ -114,12 +116,10 @@ class TutorialStateNotifier extends Notifier<TutorialState> {
         ]);
       }
 
-      if (legacyState.seenOverlays != null) {
-        for (final overlay in legacyState.seenOverlays) {
-          final mapped = _mapLegacyOverlay(overlay as String);
-          if (mapped != null && !seenTutorials.contains(mapped)) {
-            seenTutorials.add(mapped);
-          }
+      for (final overlay in legacyState.seenOverlays) {
+        final mapped = _mapLegacyOverlay(overlay);
+        if (mapped != null && !seenTutorials.contains(mapped)) {
+          seenTutorials.add(mapped);
         }
       }
 
@@ -128,8 +128,8 @@ class TutorialStateNotifier extends Notifier<TutorialState> {
         seenTutorialsList: seenTutorials,
         dismissedHintsList: const [],
         lastDismissTimeList: const [],
-        totalWorkouts: legacyState.hasCompletedFirstWorkout == true ? 1 : 0,
-        firstWorkoutDate: legacyState.quickStartCompletedAt as DateTime?,
+        totalWorkouts: legacyState.hasCompletedFirstWorkout ? 1 : 0,
+        firstWorkoutDate: legacyState.quickStartCompletedAt,
       );
 
       await _saveState();

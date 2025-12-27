@@ -10,6 +10,7 @@ library;
 
 import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise_activity.dart';
 import 'package:gymbro_flutter_new/features/exercise_database/domain/entities/exercise.dart';
+import 'package:gymbro_flutter_new/features/stress_index/data/mappers/muscle_abbreviation_mapper.dart';
 
 /// Risultato del calcolo volume per un muscle group
 class MuscleGroupVolume {
@@ -96,8 +97,11 @@ class AIVolumeCalculator {
           );
         }
       } else {
-        // Fallback: usa categorizzazione base se esercizio non trovato (custom exercise)
-        final muscleGroup = _fallbackCategorization(activity.exerciseName);
+        // Fallback: usa categorizzazione SSOT se esercizio non trovato (custom exercise)
+        // **Uses SSOT**: MuscleAbbreviationMapper.categorizeExerciseToAbbreviation
+        final muscleGroup = MuscleAbbreviationMapper.categorizeExerciseToAbbreviation(
+          activity.exerciseName,
+        );
         _addVolumeToMuscle(
           volumeByMuscle,
           muscleGroup,
@@ -155,59 +159,8 @@ class AIVolumeCalculator {
     return volume;
   }
 
-  /// Categorizzazione fallback quando esercizio non è nel database
-  /// Supporta keyword in italiano e inglese
-  static String _fallbackCategorization(String exerciseName) {
-    final name = exerciseName.toLowerCase();
-
-    // QUAD - Quadricipiti
-    if (name.contains('squat') || name.contains('leg press') ||
-        name.contains('leg extension') || name.contains('affondi') ||
-        name.contains('lunge')) return 'QUAD';
-
-    // FEMOR - Femorali
-    if (name.contains('deadlift') || name.contains('romanian') ||
-        name.contains('stacco') || name.contains('leg curl') ||
-        name.contains('hamstring')) return 'FEMOR';
-
-    // PETT - Pettorali
-    if (name.contains('bench') || name.contains('chest') ||
-        name.contains('panca') || name.contains('pettoral') ||
-        name.contains('croci') || name.contains('fly')) return 'PETT';
-
-    // DORS - Dorsali
-    if (name.contains('pull') || name.contains('row') || name.contains('lat') ||
-        name.contains('pulley') || name.contains('rematore') ||
-        name.contains('trazion') || name.contains('dorsal')) return 'DORS';
-
-    // TRIC - Tricipiti (check before DELT because "french press" contains "press")
-    if (name.contains('tricep') || name.contains('dip') ||
-        name.contains('french press') || name.contains('pushdown') ||
-        name.contains('skull')) return 'TRIC';
-
-    // DELT - Deltoidi/Spalle
-    if (name.contains('shoulder') || name.contains('lateral') ||
-        name.contains('spall') || name.contains('alzat') ||
-        name.contains('military') || name.contains('delt') ||
-        (name.contains('press') && !name.contains('leg') && !name.contains('chest') && !name.contains('french'))) return 'DELT';
-
-    // BICI/BRAC - Bicipiti
-    if (name.contains('curl') && !name.contains('leg')) return 'BICI';
-    if (name.contains('bicep') || name.contains('bicip')) return 'BICI';
-
-    // POLP - Polpacci
-    if (name.contains('calf') || name.contains('polpacc')) return 'POLP';
-
-    // GLUT - Glutei
-    if (name.contains('glute') || name.contains('glut') ||
-        name.contains('hip thrust')) return 'GLUT';
-
-    // CORE - Addominali
-    if (name.contains('ab') || name.contains('core') || name.contains('plank') ||
-        name.contains('crunch') || name.contains('addominal')) return 'CORE';
-
-    return 'VARIO';
-  }
+  // NOTE: _fallbackCategorization REMOVED
+  // Use MuscleAbbreviationMapper.categorizeExerciseToAbbreviation as SSOT
 
   /// Parse weight safely
   static double _parseWeight(dynamic weight) {

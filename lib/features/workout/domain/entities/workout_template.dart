@@ -513,6 +513,7 @@ class ExerciseTemplate { // For superset, dropset, etc.
     if (type == ExerciseType.superset && subExercises != null && subExercises!.isNotEmpty) {
       final exercises = subExercises!.map((subTemplate) =>
         Exercise(
+          id: subTemplate.exerciseId, // ✅ Preserve database ID for strength standards lookup
           name: subTemplate.exerciseName,
           type: ExerciseType.single, // Sub-exercises are singles
           category: subTemplate.category,
@@ -556,6 +557,7 @@ class ExerciseTemplate { // For superset, dropset, etc.
       }
 
       return SupersetExercise(
+        id: exerciseId, // ✅ Preserve database ID for strength standards lookup
         name: exerciseName,
         exercises: exercises,
         supersetSets: supersetSets,
@@ -576,6 +578,7 @@ class ExerciseTemplate { // For superset, dropset, etc.
       }).toList();
 
       return DropSetExercise(
+        id: exerciseId, // ✅ Preserve database ID for strength standards lookup
         name: exerciseName,
         category: category,
         stages: stages,
@@ -599,6 +602,7 @@ class ExerciseTemplate { // For superset, dropset, etc.
       }).toList();
 
       return RestPauseExercise(
+        id: exerciseId, // ✅ Preserve database ID for strength standards lookup
         name: exerciseName,
         category: category,
         weight: weight,
@@ -611,6 +615,7 @@ class ExerciseTemplate { // For superset, dropset, etc.
 
     // For normal exercises or superset without sub-exercises
     final exercise = Exercise(
+      id: exerciseId, // ✅ Preserve database ID for strength standards lookup
       name: exerciseName,
       type: type,
       category: category,

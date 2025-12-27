@@ -12,8 +12,8 @@ import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
 import 'package:gymbro_flutter_new/features/auth/presentation/providers/consolidated_user_provider.dart';
-
 import 'package:gymbro_flutter_new/shared/presentation/services/snackbar_service.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator.dart';
 /// Template type for quick selection (replaces 15 confusing tags)
 enum TemplateType {
   upper,
@@ -248,13 +248,9 @@ class _CreateTemplateModalState extends ConsumerState<CreateTemplateModal> {
             child: FilledButton.icon(
               onPressed: _isLoading ? null : _createTemplate,
               icon: _isLoading
-                  ? SizedBox(
-                      width: 20,
-                      height: 20,
-                      child: CircularProgressIndicator(
-                        strokeWidth: 2,
-                        color: context.colors.onPrimary,
-                      ),
+                  ? LoadingIndicator(
+                      size: 20,
+                      color: context.colors.onPrimary,
                     )
                   : const Icon(AppIcons.check),
               label: Text(
@@ -409,7 +405,7 @@ class _CreateTemplateModalState extends ConsumerState<CreateTemplateModal> {
   Widget _buildAdvancedOptionsSection(AppLocalizations l10n) {
     return Theme(
       data: Theme.of(context).copyWith(
-        dividerColor: Colors.transparent,
+        dividerColor: context.colors.surface.withValues(alpha: 0),
       ),
       child: ExpansionTile(
         tilePadding: EdgeInsets.zero,
@@ -519,24 +515,9 @@ class _CreateTemplateModalState extends ConsumerState<CreateTemplateModal> {
             : currentWorkout.name;
 
         exerciseTemplates = currentWorkout.exercises.map((exercise) {
-          final restTime = _defaultRestTime;
-
-          return ExerciseTemplate(
-            exerciseId: exercise.id,
-            exerciseName: exercise.name,
-            category: exercise.category,
-            type: exercise.type,
-            sets: exercise.sets.map((set) {
-              return SetTemplate(
-                setNumber: set.setNumber,
-                targetWeight: set.weight,
-                targetReps: set.reps,
-                targetRpe: set.rpe,
-                notes: set.notes,
-              );
-            }).toList(),
-            notes: exercise.notes,
-            restTime: restTime,
+          // ✅ FIX: Use fromExercise() to properly preserve all fields including TUT
+          return ExerciseTemplate.fromExercise(exercise).copyWith(
+            restTime: _defaultRestTime,
           );
         }).toList();
       }

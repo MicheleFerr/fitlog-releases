@@ -61,13 +61,6 @@ class _CreateWorkoutStepState extends State<CreateWorkoutStep> with TickerProvid
     super.dispose();
   }
 
-  void _startDemo() {
-    setState(() {
-      _showDemo = true;
-    });
-    _slideController.forward();
-  }
-
   void _expandFab() {
     setState(() {
       _fabExpanded = true;

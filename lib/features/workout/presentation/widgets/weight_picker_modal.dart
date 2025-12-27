@@ -16,7 +16,7 @@ class WeightPickerModal {
       isScrollControlled: true,
       isDismissible: true,
       enableDrag: true,
-      backgroundColor: Colors.transparent,
+      backgroundColor: Theme.of(context).colorScheme.surface.withValues(alpha: 0),
       builder: (context) => _WeightPicker(
         initialWeight: initialWeight,
       ),

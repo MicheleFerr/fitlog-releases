@@ -351,7 +351,7 @@ class PremiumBottomActionBar extends StatelessWidget {
                   onPressed: action.onPressed,
                   icon: action.icon,
                   tooltip: action.label,
-                  backgroundColor: Colors.transparent,
+                  backgroundColor: colorScheme.surface.withValues(alpha: 0),
                   foregroundColor: colorScheme.onSurfaceVariant,
                 ),
               );

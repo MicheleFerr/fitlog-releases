@@ -25,6 +25,8 @@ class WelcomeView extends ConsumerWidget {
     required this.onDeleteTemplate,
     required this.onCreateTemplate,
     this.onScheduleTemplate,
+    this.onRefreshTemplate,
+    this.onViewTemplate,
     super.key,
   });
 
@@ -52,6 +54,12 @@ class WelcomeView extends ConsumerWidget {
   /// Callback when the user wants to schedule a template (swipe right action)
   final void Function(wt.WorkoutTemplate template)? onScheduleTemplate;
 
+  /// Callback when the user wants to refresh template from database (sync TUT)
+  final void Function(wt.WorkoutTemplate template)? onRefreshTemplate;
+
+  /// Callback when the user wants to view a template in presentation mode
+  final void Function(wt.WorkoutTemplate template)? onViewTemplate;
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return SafeArea(
@@ -77,7 +85,7 @@ class WelcomeView extends ConsumerWidget {
   /// Builds the prominent quick start card - Clean Apple-style CTA
   Widget _buildQuickStartCard(BuildContext context) {
     return Material(
-      color: Colors.transparent,
+      color: context.colors.surface.withValues(alpha: 0),
       borderRadius: BorderRadius.circular(16),
       child: InkWell(
         onTap: onQuickStart,
@@ -196,7 +204,7 @@ class WelcomeView extends ConsumerWidget {
                 ],
               ),
               indicatorSize: TabBarIndicatorSize.tab,
-              dividerColor: Colors.transparent,
+              dividerColor: context.colors.surface.withValues(alpha: 0),
               labelStyle: context.textTheme.labelLarge
                   ?.copyWith(fontWeight: FontWeight.w600),
               unselectedLabelStyle: context.textTheme.labelLarge,
@@ -294,6 +302,12 @@ class WelcomeView extends ConsumerWidget {
           onDelete: () => onDeleteTemplate(template),
           onSchedule: onScheduleTemplate != null
               ? () => onScheduleTemplate!(template)
+              : null,
+          onRefresh: (onRefreshTemplate != null && template.isCustom)
+              ? () => onRefreshTemplate!(template)
+              : null,
+          onView: onViewTemplate != null
+              ? () => onViewTemplate!(template)
               : null,
         );
       },

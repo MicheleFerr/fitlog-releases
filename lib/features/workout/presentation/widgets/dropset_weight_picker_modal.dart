@@ -1,6 +1,7 @@
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/features/exercise_database/domain/entities/exercise.dart' as ExerciseDB;
 import 'package:gymbro_flutter_new/features/workout/presentation/utils/weight_rounding_utils.dart';
@@ -54,7 +55,7 @@ class DropSetWeightPickerModal extends StatefulWidget {
       isScrollControlled: true,
       isDismissible: true,
       enableDrag: true,
-      backgroundColor: Colors.transparent,
+      backgroundColor: Theme.of(context).colorScheme.surface.withValues(alpha: 0),
       builder: (context) => DropSetWeightPickerModal(
         stageIndex: stageIndex,
         previousStageWeight: previousStageWeight,
@@ -67,13 +68,17 @@ class DropSetWeightPickerModal extends StatefulWidget {
 }
 
 class _DropSetWeightPickerModalState extends State<DropSetWeightPickerModal> {
+  static const String _prefKeyUseAbsoluteDrop = 'dropset_use_absolute_weight_drop';
+  static const List<double> absoluteDropValues = [2.5, 5, 10, 15, 20];
+
   late final TextEditingController _weightController;
   EquipmentType? _detectedEquipmentType;
   EquipmentType? _userSelectedEquipmentType;
-  DumbbellIncrement _dumbbellIncrement = DumbbellIncrement.standard;
+  final DumbbellIncrement _dumbbellIncrement = DumbbellIncrement.standard;
   bool _showEquipmentSelector = false;
-  bool _showIncrementSelector = false;
+  bool _useAbsoluteDrop = true; // Default to absolute (more intuitive)
   int? _selectedDropPercentage;
+  double? _selectedAbsoluteDrop;
   double? _calculatedWeight;
 
   @override
@@ -83,13 +88,32 @@ class _DropSetWeightPickerModalState extends State<DropSetWeightPickerModal> {
       text: widget.initialWeight?.toStringAsFixed(1) ?? '',
     );
 
-    // Detect equipment type
+    // Load preference and detect equipment
+    _loadPreferences();
     _detectEquipment();
 
-    // If subsequent stage and equipment is known, show percentage selector
+    // If subsequent stage, show drop selector with default
     if (widget.stageIndex > 0 && widget.previousStageWeight != null) {
-      _showPercentageSelector();
+      _initializeDropSelector();
     }
+  }
+
+  Future<void> _loadPreferences() async {
+    final prefs = await SharedPreferences.getInstance();
+    if (mounted) {
+      setState(() {
+        _useAbsoluteDrop = prefs.getBool(_prefKeyUseAbsoluteDrop) ?? true;
+      });
+      // Recalculate if we have a drop selected
+      if (widget.stageIndex > 0 && widget.previousStageWeight != null) {
+        _initializeDropSelector();
+      }
+    }
+  }
+
+  Future<void> _savePreference(bool useAbsolute) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool(_prefKeyUseAbsoluteDrop, useAbsolute);
   }
 
   @override
@@ -107,50 +131,55 @@ class _DropSetWeightPickerModalState extends State<DropSetWeightPickerModal> {
       attrezzaturaField: attrezzatura,
     );
 
-    // If unknown, show equipment selector
+    // Only show equipment selector if truly unknown (no JSON data)
     if (_detectedEquipmentType == EquipmentType.unknown) {
-      setState(() {
-        _showEquipmentSelector = true;
-      });
-    } else if (_detectedEquipmentType == EquipmentType.dumbbell) {
-      // For dumbbells, show increment selector
-      setState(() {
-        _showIncrementSelector = true;
-      });
+      _showEquipmentSelector = true;
     }
   }
 
-  void _showPercentageSelector() {
+  void _initializeDropSelector() {
     // Don't auto-show if we already have initial weight
     if (widget.initialWeight != null) return;
 
-    // Default to 20% drop
-    _selectedDropPercentage = 20;
+    if (_useAbsoluteDrop) {
+      // Default to -5kg for absolute mode
+      _selectedAbsoluteDrop = 5;
+      _selectedDropPercentage = null;
+    } else {
+      // Default to 20% for percentage mode
+      _selectedDropPercentage = 20;
+      _selectedAbsoluteDrop = null;
+    }
     _calculateDroppedWeight();
   }
 
   void _calculateDroppedWeight() {
-    if (_selectedDropPercentage == null || widget.previousStageWeight == null) {
-      return;
+    if (widget.previousStageWeight == null) return;
+
+    double? calculatedWeight;
+
+    if (_useAbsoluteDrop && _selectedAbsoluteDrop != null) {
+      // Absolute mode: subtract directly
+      calculatedWeight = widget.previousStageWeight! - _selectedAbsoluteDrop!;
+      if (calculatedWeight < 0) calculatedWeight = 0;
+    } else if (!_useAbsoluteDrop && _selectedDropPercentage != null) {
+      // Percentage mode: use smart rounding
+      final equipmentType = _userSelectedEquipmentType ?? _detectedEquipmentType ?? EquipmentType.unknown;
+      calculatedWeight = WeightRoundingUtils.calculateNextStageWeight(
+        currentWeight: widget.previousStageWeight!,
+        dropPercentage: _selectedDropPercentage!,
+        equipmentType: equipmentType,
+        dumbbellIncrement: _dumbbellIncrement,
+      );
     }
 
-    final equipmentType = _userSelectedEquipmentType ?? _detectedEquipmentType ?? EquipmentType.unknown;
-
-    final calculatedWeight = WeightRoundingUtils.calculateNextStageWeight(
-      currentWeight: widget.previousStageWeight!,
-      dropPercentage: _selectedDropPercentage!,
-      equipmentType: equipmentType,
-      dumbbellIncrement: _dumbbellIncrement,
-    );
-
-    setState(() {
-      _calculatedWeight = calculatedWeight;
-      _weightController.text = calculatedWeight.toStringAsFixed(1);
-    });
+    if (calculatedWeight != null) {
+      setState(() {
+        _calculatedWeight = calculatedWeight;
+        _weightController.text = calculatedWeight!.toStringAsFixed(1);
+      });
+    }
   }
-
-  EquipmentType get _effectiveEquipmentType =>
-      _userSelectedEquipmentType ?? _detectedEquipmentType ?? EquipmentType.unknown;
 
   @override
   Widget build(BuildContext context) {
@@ -218,39 +247,51 @@ class _DropSetWeightPickerModalState extends State<DropSetWeightPickerModal> {
 
           Flexible(
             child: SingleChildScrollView(
-              padding: const EdgeInsets.all(16),
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  // Equipment type info/selector
+                  // Equipment selector - ONLY if unknown
                   _buildEquipmentSection(),
 
-                  const SizedBox(height: 20),
-
-                  // Percentage selector (for subsequent stages)
-                  if (widget.stageIndex > 0 && widget.previousStageWeight != null)
+                  // For subsequent stages: percentage chips + calculated weight
+                  if (widget.stageIndex > 0 && widget.previousStageWeight != null) ...[
                     _buildPercentageSelector(),
+                    const SizedBox(height: 16),
+                    // Show calculated weight prominently
+                    if (_calculatedWeight != null)
+                      Center(
+                        child: Text(
+                          '${_calculatedWeight!.toStringAsFixed(1)} kg',
+                          style: context.textTheme.displaySmall?.copyWith(
+                            fontWeight: FontWeight.bold,
+                            color: context.colors.primary,
+                          ),
+                        ),
+                      ),
+                    const SizedBox(height: 12),
+                  ],
 
-                  const SizedBox(height: 20),
-
-                  // Weight input
+                  // Weight input (compact for subsequent stages)
                   _buildWeightInput(),
 
-                  const SizedBox(height: 24),
+                  const SizedBox(height: 16),
 
-                  // Confirm button
+                  // Confirm button - show weight in button for clarity
                   FilledButton(
                     onPressed: _canConfirm() ? _confirmWeight : null,
                     child: Padding(
                       padding: const EdgeInsets.all(16),
                       child: Text(
-                        context.l10n.confirm,
+                        _weightController.text.isNotEmpty
+                            ? '${context.l10n.confirm} ${_weightController.text} kg'
+                            : context.l10n.confirm,
                         style: const TextStyle(fontSize: 16),
                       ),
                     ),
                   ),
 
-                  SizedBox(height: context.bottomPadding + 16),
+                  SizedBox(height: context.bottomPadding + 8),
                 ],
               ),
             ),
@@ -261,71 +302,14 @@ class _DropSetWeightPickerModalState extends State<DropSetWeightPickerModal> {
   }
 
   Widget _buildEquipmentSection() {
+    // ONLY show equipment selector if equipment is truly unknown
+    // If auto-detected from JSON, don't show anything - just use the data silently
     if (_showEquipmentSelector) {
       return _buildEquipmentSelector();
     }
 
-    // Show detected equipment type
-    return Card(
-      color: context.colors.primaryContainer.withValues(alpha: 0.3),
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Row(
-          children: [
-            Icon(
-              _effectiveEquipmentType == EquipmentType.barbell
-                  ? AppIcons.workout
-                  : _effectiveEquipmentType == EquipmentType.machine
-                      ? AppIcons.settings
-                      : AppIcons.gymnastics,
-              color: context.colors.primary,
-            ),
-            const SizedBox(width: 12),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    context.l10n.detectedEquipmentType,
-                    style: context.textTheme.bodySmall?.copyWith(
-                      color: context.colors.onSurfaceVariant,
-                    ),
-                  ),
-                  Text(
-                    _effectiveEquipmentType == EquipmentType.barbell
-                        ? context.l10n.barbell
-                        : _effectiveEquipmentType == EquipmentType.machine
-                            ? 'Machine'
-                            : context.l10n.dumbbell,
-                    style: context.textTheme.titleMedium?.copyWith(
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  Text(
-                    _effectiveEquipmentType == EquipmentType.barbell
-                        ? context.l10n.barbellRoundingInfo
-                        : _effectiveEquipmentType == EquipmentType.machine
-                            ? '5kg increments'
-                            : '2.5kg increments',
-                    style: context.textTheme.bodySmall?.copyWith(
-                      color: context.colors.onSurfaceVariant,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            TextButton(
-              onPressed: () {
-                setState(() {
-                  _showEquipmentSelector = !_showEquipmentSelector;
-                });
-              },
-              child: Text(context.l10n.edit),
-            ),
-          ],
-        ),
-      ),
-    );
+    // Equipment auto-detected - no UI needed, data used silently
+    return const SizedBox.shrink();
   }
 
   Widget _buildEquipmentSelector() {
@@ -393,13 +377,6 @@ class _DropSetWeightPickerModalState extends State<DropSetWeightPickerModal> {
           _userSelectedEquipmentType = type;
           _showEquipmentSelector = false;
 
-          // Show increment selector only for dumbbells
-          if (type == EquipmentType.dumbbell) {
-            _showIncrementSelector = true;
-          } else {
-            _showIncrementSelector = false;
-          }
-
           // Recalculate if we have a percentage selected
           if (_selectedDropPercentage != null) {
             _calculateDroppedWeight();
@@ -450,181 +427,123 @@ class _DropSetWeightPickerModalState extends State<DropSetWeightPickerModal> {
   }
 
   Widget _buildPercentageSelector() {
-    return Card(
-      color: context.colors.secondaryContainer.withValues(alpha: 0.3),
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              children: [
-                Icon(
-                  AppIcons.trendDown,
-                  color: context.colors.secondary,
-                ),
-                const SizedBox(width: 8),
-                Text(
-                  context.l10n.selectWeightDrop,
-                  style: context.textTheme.titleMedium?.copyWith(
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 12),
-            Wrap(
-              spacing: 8,
-              runSpacing: 8,
-              children: WeightRoundingUtils.standardDropPercentages.map((percentage) {
-                final isSelected = _selectedDropPercentage == percentage;
-                return ChoiceChip(
-                  label: Text('-$percentage%'),
-                  selected: isSelected,
-                  onSelected: (selected) {
-                    setState(() {
-                      _selectedDropPercentage = selected ? percentage : null;
-                      _calculateDroppedWeight();
-                    });
-                  },
-                  selectedColor: context.colors.secondary,
-                  labelStyle: TextStyle(
-                    color: isSelected ? context.colors.onSecondary : null,
-                    fontWeight: isSelected ? FontWeight.bold : null,
-                  ),
-                );
-              }).toList(),
-            ),
-            if (_calculatedWeight != null) ...[
-              const SizedBox(height: 16),
-              Container(
-                padding: const EdgeInsets.all(12),
-                decoration: BoxDecoration(
-                  color: context.colors.primary.withValues(alpha: 0.1),
-                  borderRadius: BorderRadius.circular(8),
-                  border: Border.all(color: context.colors.primary),
-                ),
-                child: Row(
-                  children: [
-                    Icon(
-                      AppIcons.calculate,
-                      color: context.colors.primary,
-                    ),
-                    const SizedBox(width: 12),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            context.l10n.calculatedWeight,
-                            style: context.textTheme.bodySmall?.copyWith(
-                              color: context.colors.onSurfaceVariant,
-                            ),
-                          ),
-                          Text(
-                            '${_calculatedWeight!.toStringAsFixed(1)} kg',
-                            style: context.textTheme.titleLarge?.copyWith(
-                              fontWeight: FontWeight.bold,
-                              color: context.colors.primary,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ],
-            if (_effectiveEquipmentType == EquipmentType.dumbbell && _showIncrementSelector)
-              _buildIncrementSelector(),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildIncrementSelector() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const SizedBox(height: 16),
-        const Divider(),
-        const SizedBox(height: 12),
-        Text(
-          context.l10n.dumbbellIncrementQuestion,
-          style: context.textTheme.titleSmall?.copyWith(
-            fontWeight: FontWeight.w600,
-          ),
+        // Mode toggle - subtle, saved in preferences
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            _buildModeChip(true, 'kg'),
+            const SizedBox(width: 8),
+            _buildModeChip(false, '%'),
+          ],
         ),
-        const SizedBox(height: 8),
-        ...DumbbellIncrement.values.map((increment) {
-          final isSelected = _dumbbellIncrement == increment;
-          return RadioListTile<DumbbellIncrement>(
-            value: increment,
-            groupValue: _dumbbellIncrement,
-            onChanged: (value) {
-              if (value != null) {
-                setState(() {
-                  _dumbbellIncrement = value;
-                  // Recalculate weight with new increment
-                  if (_selectedDropPercentage != null) {
-                    _calculateDroppedWeight();
-                  }
-                });
-              }
-            },
-            title: Text(
-              _getIncrementDisplayName(increment),
-              style: context.textTheme.bodyMedium?.copyWith(
-                fontWeight: isSelected ? FontWeight.bold : null,
-              ),
-            ),
-            dense: true,
-            contentPadding: EdgeInsets.zero,
-          );
-        }),
+        const SizedBox(height: 12),
+
+        // Drop value chips based on mode
+        Wrap(
+          spacing: 8,
+          runSpacing: 8,
+          alignment: WrapAlignment.center,
+          children: _useAbsoluteDrop
+              ? _buildAbsoluteDropChips()
+              : _buildPercentageDropChips(),
+        ),
       ],
     );
   }
 
-  String _getIncrementDisplayName(DumbbellIncrement increment) {
-    switch (increment) {
-      case DumbbellIncrement.standard:
-        return '2.5kg (17.5, 20, 22.5, 25...)';
-      case DumbbellIncrement.halfKg:
-        return context.l10n.dumbbellIncrementHalfKg;
-      case DumbbellIncrement.oneKg:
-        return context.l10n.dumbbellIncrementOneKg;
-      case DumbbellIncrement.twoKg:
-        return context.l10n.dumbbellIncrementTwoKg;
-    }
+  Widget _buildModeChip(bool isAbsolute, String label) {
+    final isSelected = _useAbsoluteDrop == isAbsolute;
+    return FilterChip(
+      label: Text(label),
+      selected: isSelected,
+      onSelected: (selected) {
+        if (selected && _useAbsoluteDrop != isAbsolute) {
+          setState(() {
+            _useAbsoluteDrop = isAbsolute;
+            _selectedAbsoluteDrop = null;
+            _selectedDropPercentage = null;
+            _calculatedWeight = null;
+          });
+          _savePreference(isAbsolute);
+          _initializeDropSelector();
+        }
+      },
+      showCheckmark: false,
+      visualDensity: VisualDensity.compact,
+    );
+  }
+
+  List<Widget> _buildAbsoluteDropChips() {
+    return absoluteDropValues.map((drop) {
+      final isSelected = _selectedAbsoluteDrop == drop;
+      final label = drop == 2.5 ? '-2.5' : '-${drop.toInt()}';
+      return ChoiceChip(
+        label: Text('$label kg'),
+        selected: isSelected,
+        onSelected: (selected) {
+          setState(() {
+            _selectedAbsoluteDrop = selected ? drop : null;
+            _selectedDropPercentage = null;
+          });
+          _calculateDroppedWeight();
+        },
+        visualDensity: VisualDensity.compact,
+      );
+    }).toList();
+  }
+
+  List<Widget> _buildPercentageDropChips() {
+    return WeightRoundingUtils.standardDropPercentages.map((percentage) {
+      final isSelected = _selectedDropPercentage == percentage;
+      return ChoiceChip(
+        label: Text('-$percentage%'),
+        selected: isSelected,
+        onSelected: (selected) {
+          setState(() {
+            _selectedDropPercentage = selected ? percentage : null;
+            _selectedAbsoluteDrop = null;
+          });
+          _calculateDroppedWeight();
+        },
+        visualDensity: VisualDensity.compact,
+      );
+    }).toList();
   }
 
   Widget _buildWeightInput() {
+    // For stage 1: show title, for subsequent stages: just the field (calculated weight is shown above)
+    final showTitle = widget.stageIndex == 0;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          widget.stageIndex == 0
-              ? context.l10n.enterInitialWeight
-              : context.l10n.confirmOrAdjustWeight,
-          style: context.textTheme.titleMedium?.copyWith(
-            fontWeight: FontWeight.bold,
+        if (showTitle) ...[
+          Text(
+            context.l10n.enterInitialWeight,
+            style: context.textTheme.titleMedium?.copyWith(
+              fontWeight: FontWeight.bold,
+            ),
           ),
-        ),
-        const SizedBox(height: 12),
+          const SizedBox(height: 12),
+        ],
         TextField(
           controller: _weightController,
           keyboardType: const TextInputType.numberWithOptions(decimal: true),
           inputFormatters: [
             FilteringTextInputFormatter.allow(RegExp(r'^\d+\.?\d{0,1}')),
           ],
+          textAlign: TextAlign.center,
+          style: context.textTheme.headlineSmall?.copyWith(
+            fontWeight: FontWeight.bold,
+          ),
           decoration: InputDecoration(
-            labelText: context.l10n.weight,
-            hintText: '100.0',
+            hintText: showTitle ? '100.0' : null,
             suffixText: 'kg',
-            prefixIcon: const Icon(AppIcons.workout),
             border: const OutlineInputBorder(),
+            contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
           ),
           onChanged: (value) {
             setState(() {

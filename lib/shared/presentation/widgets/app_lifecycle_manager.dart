@@ -57,6 +57,8 @@ import 'package:gymbro_flutter_new/features/settings/presentation/providers/clou
 import 'package:gymbro_flutter_new/features/auth/presentation/providers/auth_provider.dart';
 import 'package:gymbro_flutter_new/features/progress/presentation/providers/progress_provider.dart';
 import 'package:gymbro_flutter_new/features/home/presentation/providers/ai_coach_provider.dart';
+import 'package:gymbro_flutter_new/features/workout/presentation/providers/workout_session_la_provider.dart';
+import 'package:gymbro_flutter_new/features/health_sync/presentation/providers/watch_connectivity_provider.dart';
 
 /// Widget che gestisce il ciclo di vita dell'app
 ///
@@ -176,6 +178,18 @@ class _AppLifecycleManagerState extends ConsumerState<AppLifecycleManager>
       }
       // Cancel workout forgotten notification when returning to app
       _cancelWorkoutForgottenNotification();
+
+      // 📱 FIX: Check for pending Live Activity events on iOS
+      // When app is suspended, Darwin notifications from LA button taps
+      // (like +30s) may not be delivered. Check UserDefaults for missed events.
+      if (Platform.isIOS) {
+        _checkPendingLiveActivityEvents();
+
+        // ⌚ FIX: Check for pending Watch commands on iOS
+        // When app is suspended and Watch sends endWorkout, the message may be lost.
+        // Check UserDefaults for pending commands and process them.
+        _checkPendingWatchCommands();
+      }
     }
 
     // App sta terminando (detached)
@@ -240,6 +254,61 @@ class _AppLifecycleManagerState extends ConsumerState<AppLifecycleManager>
     if (kDebugMode) {
       debugPrint('📱 [AppLifecycle] Canceled workout forgotten notification');
     }
+  }
+
+  /// 📱 FIX: Check for pending Live Activity events on app resume
+  ///
+  /// When the app is suspended (screen locked), Darwin notifications from Live Activity
+  /// button taps (like +30s) may not wake the app. This method checks UserDefaults
+  /// for any pending events and processes them.
+  ///
+  /// This fixes the bug where pressing +30s on the Live Activity while the phone
+  /// is locked doesn't update the Flutter timer.
+  void _checkPendingLiveActivityEvents() {
+    // Only check if there's an active workout
+    final currentWorkout = ref.read(currentWorkoutProvider);
+    if (currentWorkout == null) {
+      if (kDebugMode) {
+        debugPrint('📱 [AppLifecycle] No active workout, skipping LA event check');
+      }
+      return;
+    }
+
+    if (kDebugMode) {
+      debugPrint('📱 [AppLifecycle] Checking for pending Live Activity events...');
+    }
+
+    // Fire-and-forget - the check will trigger event handling through the normal flow
+    ref.read(workoutSessionLAProvider.notifier).checkPendingEventsOnResume().catchError((error) {
+      if (kDebugMode) {
+        debugPrint('❌ [AppLifecycle] Failed to check pending LA events: $error');
+      }
+    });
+  }
+
+  /// ⌚ FIX: Check for pending Watch commands on app resume
+  ///
+  /// When the app is suspended (in background) and Watch sends critical commands like
+  /// endWorkout, the Flutter engine may not receive them. The native iOS side saves
+  /// these commands to UserDefaults, and this method processes them on resume.
+  ///
+  /// This fixes the bug where ending workout from Watch while iPhone is in background
+  /// causes the workout data to be lost.
+  void _checkPendingWatchCommands() {
+    if (kDebugMode) {
+      debugPrint('⌚ [AppLifecycle] Checking for pending Watch commands...');
+    }
+
+    // Fire-and-forget - the check will trigger event handling through callbacks
+    ref.read(watchConnectivityProvider.notifier).processPendingWatchCommands().then((processed) {
+      if (processed && kDebugMode) {
+        debugPrint('⌚ [AppLifecycle] ✅ Processed pending Watch commands');
+      }
+    }).catchError((error) {
+      if (kDebugMode) {
+        debugPrint('❌ [AppLifecycle] Failed to check pending Watch commands: $error');
+      }
+    });
   }
 
   /// 💾 FIX: Emergency save current workout when app goes to background (GLOBAL)

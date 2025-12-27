@@ -368,7 +368,7 @@ class _ExerciseListItemSetsState extends ConsumerState<ExerciseListItemSets> {
               _toggleWarmupSet(set, index);
               Slidable.of(slideContext)?.close();
             },
-            backgroundColor: Colors.transparent,
+            backgroundColor: context.colors.surface.withValues(alpha: 0),
             foregroundColor: isWarmup
                 ? context.colors.onSurfaceVariant
                 : context.warningColor,
@@ -411,7 +411,7 @@ class _ExerciseListItemSetsState extends ConsumerState<ExerciseListItemSets> {
               Slidable.of(slideContext)?.close();
               _confirmDeleteSet(context, set, index, isWarmup);
             },
-            backgroundColor: Colors.transparent,
+            backgroundColor: context.colors.surface.withValues(alpha: 0),
             foregroundColor: context.errorColor,
             padding: EdgeInsets.zero,
             child: SemanticIcon(
@@ -1121,7 +1121,7 @@ class _ExerciseListItemSetsState extends ConsumerState<ExerciseListItemSets> {
             if (hasCompletedStages) ...[
               const SizedBox(width: 8),
               Container(
-                padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
                 decoration: BoxDecoration(
                   color: allCompleted
                       ? context.colors.success.withValues(alpha: 0.1)

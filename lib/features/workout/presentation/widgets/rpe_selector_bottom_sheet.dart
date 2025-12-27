@@ -951,7 +951,7 @@ class _RpeSelectorBottomSheetState extends ConsumerState<RpeSelectorBottomSheet>
                         : null,
                     style: FilledButton.styleFrom(
                       padding: const EdgeInsets.symmetric(vertical: 12),
-                      backgroundColor: Colors.transparent,
+                      backgroundColor: context.colors.surface.withValues(alpha: 0),
                       foregroundColor: context.colors.surface,
                       disabledBackgroundColor: colorScheme.surfaceContainerHighest,
                       shape: RoundedRectangleBorder(

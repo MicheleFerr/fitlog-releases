@@ -245,8 +245,8 @@ class _WorkoutViewState extends ConsumerState<WorkoutView> {
   Widget _buildReorderableList(BuildContext context, WidgetRef ref) {
     return Theme(
       data: context.theme.copyWith(
-        canvasColor: Colors.transparent,
-        shadowColor: Colors.transparent,
+        canvasColor: context.colors.surface.withValues(alpha: 0),
+        shadowColor: context.colors.surface.withValues(alpha: 0),
       ),
       child: ReorderableListView.builder(
         padding: const EdgeInsets.only(

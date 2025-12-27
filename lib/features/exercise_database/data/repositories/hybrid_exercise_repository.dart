@@ -16,6 +16,7 @@ import 'package:gymbro_flutter_new/features/exercise_database/data/models/exerci
 import 'package:gymbro_flutter_new/features/exercise_database/data/utils/exercise_json_loader.dart';
 import 'package:gymbro_flutter_new/features/exercise_database/data/services/exercise_cache_manager.dart';
 import 'package:gymbro_flutter_new/features/exercise_database/data/services/exercise_version_service.dart';
+import 'package:gymbro_flutter_new/features/stress_index/data/mappers/muscle_abbreviation_mapper.dart';
 import 'package:gymbro_flutter_new/shared/domain/entities/sync_status.dart';
 
 class HybridExerciseRepository extends OptimizedBaseHybridRepository<Exercise> {
@@ -357,25 +358,16 @@ class HybridExerciseRepository extends OptimizedBaseHybridRepository<Exercise> {
   }
 
   /// Converte muscle groups a formato focus
+  ///
+  /// **SINGLE SOURCE OF TRUTH**: Uses MuscleAbbreviationMapper for name → abbreviation.
   String _convertMuscleGroupsToFocus(List<dynamic> muscleGroups) {
     if (muscleGroups.isEmpty) return 'VARIO';
 
-    final focusMap = {
-      'chest': 'PETT',
-      'back': 'DORS',
-      'shoulders': 'DELT',
-      'biceps': 'BRAC',
-      'triceps': 'TRIC',
-      'quadriceps': 'QUAD',
-      'hamstrings': 'FEMOR',
-      'glutes': 'GLUT',
-      'calves': 'POLP',
-      'core': 'CORE',
-    };
-
-    final convertedFocus = muscleGroups
-        .map((muscle) => focusMap[muscle.toString().toLowerCase()] ?? muscle.toString().toUpperCase())
-        .toList();
+    final convertedFocus = muscleGroups.map((muscle) {
+      final muscleName = muscle.toString().toLowerCase();
+      final abbreviation = MuscleAbbreviationMapper.nameToAbbreviation(muscleName);
+      return abbreviation ?? muscle.toString().toUpperCase();
+    }).toList();
 
     return convertedFocus.join(', ');
   }

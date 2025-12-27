@@ -157,11 +157,16 @@ class WorkoutHistoryRepositoryEnhanced {
       await _metadataBox!.put('last_sync_timestamp', DateTime.now().toIso8601String());
 
       if (kDebugMode) {
-        debugPrint('✅ Initial sync completed: ${workouts.length} workouts downloaded');
+        debugPrint('✅ Initial sync completed: ${workouts.length} workouts downloaded from Firebase');
       }
 
-      // Emit updated workouts
-      _workoutsController.add(workouts);
+      // 🔧 FIX: Emit ALL local workouts (including pre-existing ones not on Firebase)
+      // Previous bug: emitted only downloaded workouts, hiding locally-saved ones
+      final allLocalWorkouts = await _getLocalWorkouts();
+      if (kDebugMode) {
+        debugPrint('📋 Total local workouts after sync: ${allLocalWorkouts.length}');
+      }
+      _workoutsController.add(allLocalWorkouts);
       _syncStatusController.add(SyncStatus.synced);
 
     } catch (e) {
@@ -185,10 +190,13 @@ class WorkoutHistoryRepositoryEnhanced {
       final userId = _auth.currentUser!.uid;
 
       // Query for updates since last sync
+      // 🔧 PERF FIX: Add limit to prevent unbounded reads
       final querySnapshot = await _firestore
           .collection('workouts')
           .where('userId', isEqualTo: userId)
           .where('updatedAt', isGreaterThan: Timestamp.fromDate(lastSync))
+          .orderBy('updatedAt', descending: true)
+          .limit(100) // Limit to prevent fetching thousands of documents
           .get();
 
       if (querySnapshot.docs.isNotEmpty) {
@@ -429,6 +437,11 @@ class WorkoutHistoryRepositoryEnhanced {
       await _performIncrementalSync();
       await _processSyncQueue();
     }
+
+    // 🔧 FIX: Always emit current local workouts after force sync
+    // Ensures UI is updated even if no Firebase changes were found
+    final currentWorkouts = await _getLocalWorkouts();
+    _workoutsController.add(currentWorkouts);
 
     _syncStatusController.add(SyncStatus.synced);
   }

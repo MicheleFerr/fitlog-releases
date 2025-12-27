@@ -242,7 +242,7 @@ class _RecoveryInsightCardContent extends StatelessWidget {
       child: ClipRRect(
         borderRadius: BorderRadius.circular(24),
         child: Material(
-          color: Colors.transparent,
+          color: context.colors.surface.withValues(alpha: 0),
           child: InkWell(
             onTap: onTap,
             borderRadius: BorderRadius.circular(24),
@@ -260,7 +260,7 @@ class _RecoveryInsightCardContent extends StatelessWidget {
                         height: 44,
                         decoration: BoxDecoration(
                           color: categoryColor.withValues(alpha: 0.15),
-                          borderRadius: BorderRadius.circular(22),
+                          borderRadius: BorderRadius.circular(24),
                         ),
                         child: Icon(
                           AppIcons.bedtime,
@@ -509,7 +509,7 @@ class _RecoveryInsightConnectCard extends StatelessWidget {
       child: ClipRRect(
         borderRadius: BorderRadius.circular(24),
         child: Material(
-          color: Colors.transparent,
+          color: context.colors.surface.withValues(alpha: 0),
           child: InkWell(
             onTap: onConnect,
             borderRadius: BorderRadius.circular(24),

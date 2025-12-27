@@ -13,6 +13,7 @@ import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_
 import 'package:gymbro_flutter_new/shared/presentation/services/snackbar_service.dart';
 import 'package:flutter/foundation.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
+import 'package:gymbro_flutter_new/features/stress_index/data/mappers/muscle_abbreviation_mapper.dart';
 
 class AddExerciseModal extends ConsumerStatefulWidget {
 
@@ -40,7 +41,7 @@ class AddExerciseModal extends ConsumerStatefulWidget {
       isScrollControlled: true,
       isDismissible: true,
       enableDrag: true,
-      backgroundColor: Colors.transparent,
+      backgroundColor: Theme.of(context).colorScheme.surface.withValues(alpha: 0),
       builder: (context) => DraggableScrollableSheet(
         initialChildSize: 0.80,        // 80% initial
         minChildSize: 0.50,            // Min 50%
@@ -125,6 +126,11 @@ class _AddExerciseModalState extends ConsumerState<AddExerciseModal> with Ticker
           });
         }
       }
+    });
+
+    // ✅ FIX: Rebuild UI when exercise name changes to show/hide stages
+    _nameController.addListener(() {
+      setState(() {});
     });
   }
 
@@ -231,7 +237,7 @@ class _AddExerciseModalState extends ConsumerState<AddExerciseModal> with Ticker
           borderRadius: BorderRadius.circular(_isMainToggleCompacted ? 16 : 8),
         ),
         indicatorSize: TabBarIndicatorSize.tab,
-        dividerColor: Colors.transparent,
+        dividerColor: context.colors.surface.withValues(alpha: 0),
         labelColor: context.colors.onPrimary,
         unselectedLabelColor: context.colors.onSurfaceVariant,
         labelStyle: TextStyle(
@@ -301,7 +307,7 @@ class _AddExerciseModalState extends ConsumerState<AddExerciseModal> with Ticker
           borderRadius: BorderRadius.circular(_isAdvancedToggleCompacted ? 14 : 8),
         ),
         indicatorSize: TabBarIndicatorSize.tab,
-        dividerColor: Colors.transparent,
+        dividerColor: context.colors.surface.withValues(alpha: 0),
         labelColor: context.colors.onSecondary,
         unselectedLabelColor: context.colors.onSurfaceVariant,
         labelStyle: TextStyle(
@@ -346,6 +352,8 @@ class _AddExerciseModalState extends ConsumerState<AddExerciseModal> with Ticker
   }
 
   Widget _buildDropSetTab() {
+    final hasExercise = _selectedDropSetExercise != null || _nameController.text.trim().isNotEmpty;
+
     return SingleChildScrollView(
       padding: const EdgeInsets.all(16),
       child: Column(
@@ -377,12 +385,16 @@ class _AddExerciseModalState extends ConsumerState<AddExerciseModal> with Ticker
           ),
           const SizedBox(height: 20),
 
-          // Exercise search and selection for DropSet
-          _buildExerciseSearchSection(onExerciseSelected: _onDropSetExerciseSelected),
-          const SizedBox(height: 20),
+          // ═══════════════════════════════════════════════════════════════
+          // SECTION 1: Exercise Selection from Database (Primary)
+          // ═══════════════════════════════════════════════════════════════
+          _buildAdvancedExerciseSearchButton(
+            onExerciseSelected: _onDropSetExerciseSelected,
+          ),
 
           // Show selected exercise
-          if (_selectedDropSetExercise != null)
+          if (_selectedDropSetExercise != null) ...[
+            const SizedBox(height: 12),
             Card(
               color: context.colors.primaryContainer.withValues(alpha: 0.3),
               child: ListTile(
@@ -400,25 +412,17 @@ class _AddExerciseModalState extends ConsumerState<AddExerciseModal> with Ticker
                 ),
               ),
             ),
-          if (_selectedDropSetExercise != null) const SizedBox(height: 20),
-
-          // Exercise name
-          TextField(
-            controller: _nameController,
-            decoration: InputDecoration(
-              labelText: context.l10n.exerciseNameLabel,
-              hintText: context.l10n.exerciseNameHintBicepCurl,
-              prefixIcon: const Icon(AppIcons.trendDown),
-            ),
-          ),
+          ],
           const SizedBox(height: 20),
 
-          // Drop Set Stages - Only show when exercise is selected
+          // ═══════════════════════════════════════════════════════════════
+          // SECTION 2: DropSet Configuration (show when exercise selected)
+          // ═══════════════════════════════════════════════════════════════
           AnimatedSize(
             duration: const Duration(milliseconds: 400),
             curve: Curves.easeInOutCubic,
             alignment: Alignment.topCenter,
-            child: _selectedDropSetExercise != null
+            child: hasExercise
                 ? Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -430,12 +434,22 @@ class _AddExerciseModalState extends ConsumerState<AddExerciseModal> with Ticker
                       ),
                       const SizedBox(height: 12),
 
-                      _buildDropSetStage(context.l10n.stageHeavy, 0),
+                      // Dynamically render ALL stages
+                      ..._dropsetStages.asMap().entries.map((entry) {
+                        final index = entry.key;
+                        final stageLabel = index == 0
+                            ? context.l10n.stageHeavy
+                            : index == 1
+                                ? context.l10n.stageMedium
+                                : index == 2
+                                    ? context.l10n.stageLight
+                                    : '${context.l10n.dropsetStage(index + 1)}';
+                        return Padding(
+                          padding: const EdgeInsets.only(bottom: 8),
+                          child: _buildDropSetStage(stageLabel, index),
+                        );
+                      }),
                       const SizedBox(height: 8),
-                      _buildDropSetStage(context.l10n.stageMedium, 1),
-                      const SizedBox(height: 8),
-                      _buildDropSetStage(context.l10n.stageLight, 2),
-                      const SizedBox(height: 16),
 
                       // Add stage button
                       OutlinedButton.icon(
@@ -456,28 +470,134 @@ class _AddExerciseModalState extends ConsumerState<AddExerciseModal> with Ticker
                         icon: const Icon(AppIcons.add),
                         label: Text(context.l10n.addStageButton),
                       ),
+                      const SizedBox(height: 16),
+
+                      // Notes
+                      TextField(
+                        controller: _notesController,
+                        maxLines: 2,
+                        decoration: InputDecoration(
+                          labelText: context.l10n.notesOptional,
+                          hintText: context.l10n.notesHintWeightDrops,
+                          prefixIcon: const Icon(AppIcons.note),
+                        ),
+                      ),
+                      const SizedBox(height: 24),
+
+                      // Add to workout button
+                      SizedBox(
+                        width: double.infinity,
+                        child: FilledButton.icon(
+                          onPressed: _canCreateDropSet() ? _createDropSetExercise : null,
+                          icon: const Icon(AppIcons.add),
+                          label: Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 12),
+                            child: Text(context.l10n.createDropset),
+                          ),
+                        ),
+                      ),
                     ],
                   )
                 : const SizedBox.shrink(),
           ),
-          const SizedBox(height: 16),
-          
-          // Notes
-          TextField(
-            controller: _notesController,
-            maxLines: 3,
-            decoration: InputDecoration(
-              labelText: context.l10n.notesOptional,
-              hintText: context.l10n.notesHintWeightDrops,
-              prefixIcon: const Icon(AppIcons.note),
+
+          // ═══════════════════════════════════════════════════════════════
+          // SECTION 3: Custom Exercise (at bottom, separate section)
+          // ═══════════════════════════════════════════════════════════════
+          if (_selectedDropSetExercise == null) ...[
+            const SizedBox(height: 24),
+            _buildCustomExerciseSection(
+              icon: AppIcons.trendDown,
+              hintText: context.l10n.exerciseNameHintBicepCurl,
             ),
-          ),
+          ],
+
+          const SizedBox(height: 16),
         ],
       ),
     );
   }
 
+  bool _canCreateDropSet() {
+    // Must have an exercise selected OR a name entered
+    final hasExercise = _selectedDropSetExercise != null || _nameController.text.trim().isNotEmpty;
+    if (!hasExercise) return false;
+
+    // Must have at least 2 stages with valid weights
+    int validStages = 0;
+    for (final stage in _dropsetStages) {
+      final weight = double.tryParse(stage.weightController.text);
+      if (weight != null && weight > 0) {
+        validStages++;
+      }
+    }
+    return validStages >= 2;
+  }
+
+  void _createDropSetExercise() {
+    // Build stages from UI state
+    final stages = <DropSetStage>[];
+    for (final stageData in _dropsetStages) {
+      final weight = double.tryParse(stageData.weightController.text);
+      final reps = int.tryParse(stageData.repsController.text) ?? 8;
+      if (weight != null && weight > 0) {
+        stages.add(DropSetStage(
+          weight: weight,
+          reps: reps,
+          isCompleted: false,
+        ));
+      }
+    }
+
+    if (stages.length < 2) {
+      SnackBarService.showError(context, context.l10n.dropsetNeedsMinStages);
+      return;
+    }
+
+    // Get exercise name
+    final exerciseName = _selectedDropSetExercise?.nome ??
+        _nameController.text.trim();
+
+    if (exerciseName.isEmpty) {
+      SnackBarService.showError(context, context.l10n.exerciseNameRequired);
+      return;
+    }
+
+    // Get category from exercise focus or selected category
+    final selectedCategory = ref.read(selectedExerciseCategoryProvider);
+    final category = _selectedDropSetExercise != null
+        ? MuscleAbbreviationMapper.focusListToExerciseCategory(_selectedDropSetExercise!.focus)
+        : selectedCategory;
+
+    // Create the DropSetExercise
+    final dropsetExercise = DropSetExercise(
+      id: DateTime.now().millisecondsSinceEpoch.toString(),
+      name: exerciseName,
+      category: category,
+      stages: stages,
+      notes: _notesController.text.trim().isEmpty ? null : _notesController.text.trim(),
+    );
+
+    // Add to workout
+    if (widget.onExerciseAdded != null) {
+      widget.onExerciseAdded!(dropsetExercise);
+    } else {
+      ref.read(currentWorkoutProvider.notifier).addExercise(dropsetExercise);
+    }
+
+    // Close modal
+    Navigator.of(context).pop();
+
+    // Show success message
+    SnackBarService.showSuccess(
+      context,
+      context.l10n.dropsetAddedMessage(exerciseName),
+    );
+  }
+
   Widget _buildRestPauseTab() {
+    final hasExercise = _selectedRestPauseExercise != null || _nameController.text.trim().isNotEmpty;
+
     return SingleChildScrollView(
       padding: const EdgeInsets.all(16),
       child: Column(
@@ -509,12 +629,16 @@ class _AddExerciseModalState extends ConsumerState<AddExerciseModal> with Ticker
           ),
           const SizedBox(height: 20),
 
-          // Exercise search and selection for Rest-Pause
-          _buildExerciseSearchSection(onExerciseSelected: _onRestPauseExerciseSelected),
-          const SizedBox(height: 20),
+          // ═══════════════════════════════════════════════════════════════
+          // SECTION 1: Exercise Selection from Database (Primary)
+          // ═══════════════════════════════════════════════════════════════
+          _buildAdvancedExerciseSearchButton(
+            onExerciseSelected: _onRestPauseExerciseSelected,
+          ),
 
           // Show selected exercise
-          if (_selectedRestPauseExercise != null)
+          if (_selectedRestPauseExercise != null) ...[
+            const SizedBox(height: 12),
             Card(
               color: context.colors.primaryContainer.withValues(alpha: 0.3),
               child: ListTile(
@@ -532,94 +656,194 @@ class _AddExerciseModalState extends ConsumerState<AddExerciseModal> with Ticker
                 ),
               ),
             ),
-          if (_selectedRestPauseExercise != null) const SizedBox(height: 20),
-
-          // Exercise name
-          TextField(
-            controller: _nameController,
-            decoration: InputDecoration(
-              labelText: context.l10n.exerciseNameLabel,
-              hintText: context.l10n.exerciseNameHintBenchPress,
-              prefixIcon: const Icon(AppIcons.pauseCircle),
-            ),
-          ),
-          const SizedBox(height: 16),
-          
-          // Category selection
-          _buildCategorySelector(),
+          ],
           const SizedBox(height: 20),
-          
-          // Target configuration
-          Row(
-            children: [
-              Expanded(
-                child: TextField(
-                  controller: _restPauseWeightController,
-                  decoration: InputDecoration(
-                    labelText: context.l10n.weightKgLabel,
-                    prefixIcon: const Icon(AppIcons.workout),
-                  ),
-                  keyboardType: const TextInputType.numberWithOptions(decimal: true),
-                ),
-              ),
-              const SizedBox(width: 16),
-              Expanded(
-                child: TextField(
-                  controller: _restPauseTargetRepsController,
-                  decoration: InputDecoration(
-                    labelText: context.l10n.targetRepsLabel,
-                    prefixIcon: const Icon(AppIcons.repeat),
-                  ),
-                  keyboardType: TextInputType.number,
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 16),
 
-          // Rest periods
-          Text(
-            context.l10n.restPauseConfiguration,
-            style: context.textTheme.titleMedium?.copyWith(
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          const SizedBox(height: 12),
+          // ═══════════════════════════════════════════════════════════════
+          // SECTION 2: Rest-Pause Configuration (show when exercise selected)
+          // ═══════════════════════════════════════════════════════════════
+          AnimatedSize(
+            duration: const Duration(milliseconds: 400),
+            curve: Curves.easeInOutCubic,
+            alignment: Alignment.topCenter,
+            child: hasExercise
+                ? Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        context.l10n.restPauseConfiguration,
+                        style: context.textTheme.titleMedium?.copyWith(
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      const SizedBox(height: 12),
 
-          TextField(
-            controller: _restPauseRestSecondsController,
-            decoration: InputDecoration(
-              labelText: context.l10n.restPeriodSecondsLabel,
-              hintText: context.l10n.restPeriodSecondsHint,
-              prefixIcon: const Icon(AppIcons.timer),
-            ),
-            keyboardType: TextInputType.number,
-          ),
-          const SizedBox(height: 16),
+                      // Weight and Target Reps
+                      Row(
+                        children: [
+                          Expanded(
+                            child: TextField(
+                              controller: _restPauseWeightController,
+                              decoration: InputDecoration(
+                                labelText: context.l10n.weightKgLabel,
+                                prefixIcon: const Icon(AppIcons.workout),
+                              ),
+                              keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                            ),
+                          ),
+                          const SizedBox(width: 16),
+                          Expanded(
+                            child: TextField(
+                              controller: _restPauseTargetRepsController,
+                              decoration: InputDecoration(
+                                labelText: context.l10n.targetRepsLabel,
+                                prefixIcon: const Icon(AppIcons.repeat),
+                              ),
+                              keyboardType: TextInputType.number,
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 16),
 
-          TextField(
-            controller: _restPauseMaxSetsController,
-            decoration: InputDecoration(
-              labelText: context.l10n.maxRestPauseSetsLabel,
-              hintText: context.l10n.maxRestPauseSetsHint,
-              prefixIcon: const Icon(AppIcons.repeat),
-            ),
-            keyboardType: TextInputType.number,
+                      // Rest period and max sets
+                      Row(
+                        children: [
+                          Expanded(
+                            child: TextField(
+                              controller: _restPauseRestSecondsController,
+                              decoration: InputDecoration(
+                                labelText: context.l10n.restPeriodSecondsLabel,
+                                hintText: '15',
+                                prefixIcon: const Icon(AppIcons.timer),
+                              ),
+                              keyboardType: TextInputType.number,
+                            ),
+                          ),
+                          const SizedBox(width: 16),
+                          Expanded(
+                            child: TextField(
+                              controller: _restPauseMaxSetsController,
+                              decoration: InputDecoration(
+                                labelText: context.l10n.maxRestPauseSetsLabel,
+                                hintText: '3-5',
+                                prefixIcon: const Icon(AppIcons.repeat),
+                              ),
+                              keyboardType: TextInputType.number,
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 16),
+
+                      // Notes
+                      TextField(
+                        controller: _notesController,
+                        maxLines: 2,
+                        decoration: InputDecoration(
+                          labelText: context.l10n.notesOptional,
+                          hintText: context.l10n.notesHintFormCues,
+                          prefixIcon: const Icon(AppIcons.note),
+                        ),
+                      ),
+                      const SizedBox(height: 24),
+
+                      // Add to workout button
+                      SizedBox(
+                        width: double.infinity,
+                        child: FilledButton.icon(
+                          onPressed: _canCreateRestPause() ? _createRestPauseExercise : null,
+                          icon: const Icon(AppIcons.add),
+                          label: Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 12),
+                            child: Text(context.l10n.createRestPause),
+                          ),
+                        ),
+                      ),
+                    ],
+                  )
+                : const SizedBox.shrink(),
           ),
+
+          // ═══════════════════════════════════════════════════════════════
+          // SECTION 3: Custom Exercise (at bottom, separate section)
+          // ═══════════════════════════════════════════════════════════════
+          if (_selectedRestPauseExercise == null) ...[
+            const SizedBox(height: 24),
+            _buildCustomExerciseSection(
+              icon: AppIcons.pauseCircle,
+              hintText: context.l10n.exerciseNameHintBenchPress,
+            ),
+          ],
+
           const SizedBox(height: 16),
-          
-          // Notes
-          TextField(
-            controller: _notesController,
-            maxLines: 3,
-            decoration: InputDecoration(
-              labelText: context.l10n.notesOptional,
-              hintText: context.l10n.notesHintFormCues,
-              prefixIcon: const Icon(AppIcons.note),
-            ),
-          ),
         ],
       ),
+    );
+  }
+
+  bool _canCreateRestPause() {
+    // Must have an exercise selected OR a name entered
+    final hasExercise = _selectedRestPauseExercise != null || _nameController.text.trim().isNotEmpty;
+    if (!hasExercise) return false;
+
+    // Must have valid weight and target reps
+    final weight = double.tryParse(_restPauseWeightController.text.trim());
+    final targetReps = int.tryParse(_restPauseTargetRepsController.text.trim());
+
+    return weight != null && weight > 0 && targetReps != null && targetReps > 0;
+  }
+
+  void _createRestPauseExercise() {
+    final weight = double.tryParse(_restPauseWeightController.text.trim());
+    final targetReps = int.tryParse(_restPauseTargetRepsController.text.trim());
+    final restSeconds = int.tryParse(_restPauseRestSecondsController.text.trim()) ?? 15;
+
+    if (weight == null || targetReps == null) {
+      SnackBarService.showError(context, context.l10n.weightAndRepsRequired);
+      return;
+    }
+
+    // Get exercise name
+    final exerciseName = _selectedRestPauseExercise?.nome ?? _nameController.text.trim();
+
+    if (exerciseName.isEmpty) {
+      SnackBarService.showError(context, context.l10n.exerciseNameRequired);
+      return;
+    }
+
+    // Get category from exercise focus or selected category
+    final selectedCategory = ref.read(selectedExerciseCategoryProvider);
+    final category = _selectedRestPauseExercise != null
+        ? MuscleAbbreviationMapper.focusListToExerciseCategory(_selectedRestPauseExercise!.focus)
+        : selectedCategory;
+
+    // Create the RestPauseExercise with empty sets - will be filled during execution
+    final restPauseExercise = RestPauseExercise(
+      id: DateTime.now().millisecondsSinceEpoch.toString(),
+      name: exerciseName,
+      category: category,
+      weight: weight,
+      targetReps: targetReps,
+      restPauseSets: [], // Start with empty sets - filled during execution
+      restTime: restSeconds,
+      notes: _notesController.text.trim().isEmpty ? null : _notesController.text.trim(),
+    );
+
+    // Add to workout
+    if (widget.onExerciseAdded != null) {
+      widget.onExerciseAdded!(restPauseExercise);
+    } else {
+      ref.read(currentWorkoutProvider.notifier).addExercise(restPauseExercise);
+    }
+
+    // Close modal
+    Navigator.of(context).pop();
+
+    // Show success message
+    SnackBarService.showSuccess(
+      context,
+      context.l10n.restPauseAddedMessage(exerciseName),
     );
   }
 
@@ -681,7 +905,7 @@ class _AddExerciseModalState extends ConsumerState<AddExerciseModal> with Ticker
         // Expandable section for custom exercise - Hidden by default
         Theme(
           data: context.theme.copyWith(
-            dividerColor: Colors.transparent,
+            dividerColor: context.colors.surface.withValues(alpha: 0),
           ),
           child: ExpansionTile(
             tilePadding: const EdgeInsets.symmetric(horizontal: 16),
@@ -744,6 +968,98 @@ class _AddExerciseModalState extends ConsumerState<AddExerciseModal> with Ticker
           ),
         ),
       ],
+    );
+  }
+
+  /// Simplified exercise search for advanced tabs (DropSet/RestPause)
+  /// Shows only the database browse button - custom exercise is handled separately at bottom
+  Widget _buildAdvancedExerciseSearchButton({
+    required Function(ExerciseDB.Exercise) onExerciseSelected,
+  }) {
+    return Card(
+      elevation: 2,
+      child: ListTile(
+        leading: Icon(
+          AppIcons.libraryBooks,
+          color: context.colors.primary,
+        ),
+        title: Text(
+          context.l10n.browseExerciseDatabase,
+          style: const TextStyle(fontWeight: FontWeight.w600),
+        ),
+        subtitle: Text(context.l10n.chooseFromLibrary),
+        trailing: Icon(
+          AppIcons.arrowForwardIos,
+          size: 16,
+          color: context.colors.primary,
+        ),
+        onTap: () async {
+          final selectedExercise = await Navigator.of(context).push<ExerciseDB.Exercise>(
+            MaterialPageRoute(
+              builder: (context) => const ExerciseSearchScreen(
+                selectionMode: true,
+              ),
+            ),
+          );
+
+          if (selectedExercise != null) {
+            onExerciseSelected(selectedExercise);
+          }
+        },
+      ),
+    );
+  }
+
+  /// Custom exercise section for advanced tabs - shown at bottom
+  Widget _buildCustomExerciseSection({
+    required IconData icon,
+    required String hintText,
+  }) {
+    return Container(
+      margin: const EdgeInsets.only(top: 8),
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: context.colors.surfaceContainerHighest.withValues(alpha: 0.3),
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(
+          color: context.colors.outline.withValues(alpha: 0.2),
+        ),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Icon(
+                AppIcons.addCircleOutline,
+                size: 20,
+                color: context.colors.onSurfaceVariant,
+              ),
+              const SizedBox(width: 8),
+              Text(
+                context.l10n.cantFindExercise,
+                style: context.textTheme.titleSmall?.copyWith(
+                  fontWeight: FontWeight.w600,
+                  color: context.colors.onSurfaceVariant,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 12),
+          TextField(
+            controller: _nameController,
+            decoration: InputDecoration(
+              labelText: context.l10n.exerciseNameLabel,
+              hintText: hintText,
+              prefixIcon: Icon(icon),
+              filled: true,
+              fillColor: context.colors.surface,
+            ),
+          ),
+          const SizedBox(height: 12),
+          _buildCategorySelector(),
+        ],
+      ),
     );
   }
 
@@ -892,59 +1208,6 @@ class _AddExerciseModalState extends ConsumerState<AddExerciseModal> with Ticker
     );
   }
 
-  Widget _buildSupersetExerciseCard(String title, int index) {
-    return Card(
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              title,
-              style: context.textTheme.titleSmall?.copyWith(
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            const SizedBox(height: 12),
-            TextField(
-              decoration: InputDecoration(
-                labelText: context.l10n.exerciseNameLabel,
-                hintText: 'e.g., Push-ups',
-                isDense: true,
-              ),
-            ),
-            const SizedBox(height: 8),
-            Row(
-              children: [
-                Expanded(
-                  child: TextField(
-                    decoration: InputDecoration(
-                      labelText: context.l10n.weightKgLabel,
-                      isDense: true,
-                    ),
-                    keyboardType: TextInputType.number,
-                  ),
-                ),
-                const SizedBox(width: 8),
-                const Text('×'),
-                const SizedBox(width: 8),
-                Expanded(
-                  child: TextField(
-                    decoration: InputDecoration(
-                      labelText: context.l10n.repsHintLabel,
-                      isDense: true,
-                    ),
-                    keyboardType: TextInputType.number,
-                  ),
-                ),
-              ],
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
   Widget _buildDropSetStage(String title, int index) {
     if (index >= _dropsetStages.length) {
       return const SizedBox.shrink();
@@ -1078,116 +1341,13 @@ class _AddExerciseModalState extends ConsumerState<AddExerciseModal> with Ticker
     }
   }
 
-  bool _canAddExercise() {
-    return _nameController.text.trim().isNotEmpty;
-  }
-
-  void _addExercise() {
-    if (!_canAddExercise()) return;
-
-    // Only handle single exercises (tab index 0)
-    if (_tabController.index != 0) {
-      // Advanced tab - handled by respective widgets
-      return;
-    }
-
-    final selectedCategory = ref.read(selectedExerciseCategoryProvider);
-    final sets = ref.read(exerciseSetsProvider);
-
-    final exercise = Exercise(
-      name: _nameController.text.trim(),
-      type: ExerciseType.single, // Always single for the first tab
-      category: selectedCategory,
-      notes: _notesController.text.trim().isEmpty ? null : _notesController.text.trim(),
-      sets: sets,
-    );
-
-    // Se c'è un callback, lo usa invece di aggiungere al workout corrente
-    if (widget.onExerciseAdded != null) {
-      widget.onExerciseAdded!(exercise);
-    } else {
-      ref.read(currentWorkoutProvider.notifier).addExercise(exercise);
-    }
-
-    // Reset the sets for next exercise
-    ref.read(exerciseSetsProvider.notifier).reset();
-
-    Navigator.pop(context);
-
-    SnackBarService.showSuccess(
-      context,
-      '✅ ${context.l10n.exerciseAddedToWorkout(exercise.name)}',
-    );
-  }
-
-  bool _shouldShowAddButton() {
-    // Show for Single tab
-    if (_tabController.index == 0) {
-      return true;
-    }
-
-    // Show for Advanced tab, but not for Superset (it has its own button)
-    if (_tabController.index == 1) {
-      return _advancedTabController.index != 0; // 0 = Superset tab
-    }
-
-    return false;
-  }
-
-  bool _canAddAdvancedExercise() {
-    if (_tabController.index == 0) {
-      // Single tab
-      return _canAddExercise();
-    }
-
-    // Advanced tabs
-    if (_tabController.index == 1) {
-      switch (_advancedTabController.index) {
-        case 0: // Superset - handled by SupersetBuilderWidget
-          return false;
-        case 1: // DropSet
-          return _nameController.text.trim().isNotEmpty;
-        case 2: // Rest-Pause
-          return _nameController.text.trim().isNotEmpty &&
-                 _restPauseWeightController.text.trim().isNotEmpty &&
-                 _restPauseTargetRepsController.text.trim().isNotEmpty;
-        default:
-          return false;
-      }
-    }
-
-    return false;
-  }
-
-  void _addAdvancedExercise() {
-    if (_tabController.index == 0) {
-      // Single tab
-      _addExercise();
-      return;
-    }
-
-    // Advanced tabs
-    if (_tabController.index == 1) {
-      switch (_advancedTabController.index) {
-        case 0: // Superset - handled by SupersetBuilderWidget
-          break;
-        case 1: // DropSet
-          _createDropSet();
-          break;
-        case 2: // Rest-Pause
-          _createRestPause();
-          break;
-      }
-    }
-  }
-
   void _onDropSetExerciseSelected(ExerciseDB.Exercise exercise) {
     setState(() {
       _selectedDropSetExercise = exercise;
       _nameController.text = '${exercise.nome} - Drop Set';
 
-      // Map exercise focus to category
-      final category = _mapExerciseFocusToCategory(exercise.focus.isNotEmpty ? exercise.focus.first : '');
+      // Map exercise focus to category using single source of truth
+      final category = MuscleAbbreviationMapper.focusListToExerciseCategory(exercise.focus);
       ref.read(selectedExerciseCategoryProvider.notifier).state = category;
     });
   }
@@ -1197,191 +1357,10 @@ class _AddExerciseModalState extends ConsumerState<AddExerciseModal> with Ticker
       _selectedRestPauseExercise = exercise;
       _nameController.text = '${exercise.nome} - Rest-Pause';
 
-      // Map exercise focus to category
-      final category = _mapExerciseFocusToCategory(exercise.focus.isNotEmpty ? exercise.focus.first : '');
+      // Map exercise focus to category using single source of truth
+      final category = MuscleAbbreviationMapper.focusListToExerciseCategory(exercise.focus);
       ref.read(selectedExerciseCategoryProvider.notifier).state = category;
     });
-  }
-
-  ExerciseCategory _mapExerciseFocusToCategory(String focus) {
-    final focusLower = focus.toLowerCase();
-
-    // Chest
-    if (focusLower.contains('chest') || focusLower.contains('petto') || focusLower.contains('pett')) {
-      return ExerciseCategory.chest;
-    }
-
-    // Back
-    if (focusLower.contains('back') || focusLower.contains('dorso') ||
-        focusLower.contains('schiena') || focusLower.contains('lats') ||
-        focusLower.contains('dors')) {
-      return ExerciseCategory.back;
-    }
-
-    // Shoulders
-    if (focusLower.contains('shoulder') || focusLower.contains('spalle') ||
-        focusLower.contains('delt') || focusLower.contains('spal')) {
-      return ExerciseCategory.shoulders;
-    }
-
-    // Arms
-    if (focusLower.contains('arm') || focusLower.contains('bracci') ||
-        focusLower.contains('bicep') || focusLower.contains('tricep') ||
-        focusLower.contains('avambracci')) {
-      return ExerciseCategory.arms;
-    }
-
-    // Legs
-    if (focusLower.contains('leg') || focusLower.contains('gambe') ||
-        focusLower.contains('quad') || focusLower.contains('hamstring') ||
-        focusLower.contains('glut') || focusLower.contains('polp') ||
-        focusLower.contains('addut') || focusLower.contains('abdut')) {
-      return ExerciseCategory.legs;
-    }
-
-    // Abs/Core
-    if (focusLower.contains('abs') || focusLower.contains('core') ||
-        focusLower.contains('addominali') || focusLower.contains('addome')) {
-      return ExerciseCategory.abs;
-    }
-
-    // Cardio
-    if (focusLower.contains('cardio')) {
-      return ExerciseCategory.cardio;
-    }
-
-    return ExerciseCategory.other;
-  }
-
-  /// Validate weight input (0.1kg - 999.9kg)
-  double? _validateWeight(String value) {
-    final weight = double.tryParse(value.trim());
-    if (weight == null || weight <= 0 || weight > 999.9) {
-      return null;
-    }
-    return weight;
-  }
-
-  /// Validate reps input (1-999)
-  int? _validateReps(String value) {
-    final reps = int.tryParse(value.trim());
-    if (reps == null || reps < 1 || reps > 999) {
-      return null;
-    }
-    return reps;
-  }
-
-  /// Validate rest seconds (1-600 seconds = 10 minutes max)
-  int? _validateRestSeconds(String value) {
-    final seconds = int.tryParse(value.trim());
-    if (seconds == null || seconds < 1 || seconds > 600) {
-      return null;
-    }
-    return seconds;
-  }
-
-  /// Validate max sets (1-20)
-  int? _validateMaxSets(String value) {
-    final maxSets = int.tryParse(value.trim());
-    if (maxSets == null || maxSets < 1 || maxSets > 20) {
-      return null;
-    }
-    return maxSets;
-  }
-
-  void _createDropSet() {
-    final selectedCategory = ref.read(selectedExerciseCategoryProvider);
-
-    // Validate and parse stages from controllers
-    final stages = <DropSetStage>[];
-    for (var stageData in _dropsetStages) {
-      final weight = _validateWeight(stageData.weightController.text);
-      final reps = _validateReps(stageData.repsController.text);
-
-      if (weight == null || reps == null) {
-        // Show error for invalid input
-        SnackBarService.showError(
-          context,
-          'Invalid input, please check the values',
-        );
-        return;
-      }
-
-      stages.add(DropSetStage(weight: weight, reps: reps));
-    }
-
-    final exercise = DropSetExercise(
-      name: _nameController.text.trim(),
-      category: selectedCategory,
-      stages: stages,
-      notes: _notesController.text.trim().isEmpty ? null : _notesController.text.trim(),
-    );
-
-    // Add to workout or use callback
-    if (widget.onExerciseAdded != null) {
-      widget.onExerciseAdded!(exercise);
-    } else {
-      ref.read(currentWorkoutProvider.notifier).addExercise(exercise);
-    }
-
-    Navigator.pop(context);
-
-    SnackBarService.showSuccess(
-      context,
-      '✅ ${context.l10n.exerciseAddedDropSet(exercise.name)}',
-    );
-  }
-
-  void _createRestPause() {
-    final selectedCategory = ref.read(selectedExerciseCategoryProvider);
-
-    // Validate all inputs
-    final weight = _validateWeight(_restPauseWeightController.text);
-    final targetReps = _validateReps(_restPauseTargetRepsController.text);
-    final restSeconds = _validateRestSeconds(_restPauseRestSecondsController.text);
-    final maxSets = _validateMaxSets(_restPauseMaxSetsController.text);
-
-    // Check if any validation failed
-    if (weight == null || targetReps == null || restSeconds == null || maxSets == null) {
-      // Show error for invalid input
-      SnackBarService.showError(
-        context,
-        'Invalid input, please check the values',
-      );
-      return;
-    }
-
-    // Create default rest-pause sets (user will complete them during workout)
-    final restPauseSets = List.generate(
-      maxSets,
-      (index) => RestPauseSet(
-        reps: 0, // Will be filled during workout
-        restSeconds: restSeconds,
-      ),
-    );
-
-    final exercise = RestPauseExercise(
-      name: _nameController.text.trim(),
-      category: selectedCategory,
-      weight: weight,
-      targetReps: targetReps,
-      restPauseSets: restPauseSets,
-      notes: _notesController.text.trim().isEmpty ? null : _notesController.text.trim(),
-    );
-
-    // Add to workout or use callback
-    if (widget.onExerciseAdded != null) {
-      widget.onExerciseAdded!(exercise);
-    } else {
-      ref.read(currentWorkoutProvider.notifier).addExercise(exercise);
-    }
-
-    Navigator.pop(context);
-
-    SnackBarService.showSuccess(
-      context,
-      '✅ ${context.l10n.exerciseAddedRestPause(exercise.name)}',
-    );
   }
 }
 

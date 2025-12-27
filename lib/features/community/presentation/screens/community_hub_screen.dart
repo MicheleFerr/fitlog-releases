@@ -115,7 +115,7 @@ class _CommunityHubScreenState extends ConsumerState<CommunityHubScreen>
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
-      backgroundColor: Colors.transparent,
+      backgroundColor: Theme.of(context).colorScheme.surface.withValues(alpha: 0),
       builder: (context) => const CreateContributionModal(),
     );
   }
@@ -470,7 +470,7 @@ class _ContributionFeedCard extends ConsumerWidget {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
-      backgroundColor: Colors.transparent,
+      backgroundColor: Theme.of(context).colorScheme.surface.withValues(alpha: 0),
       builder: (context) => ContributionDetailModal(contribution: contribution),
     );
   }
@@ -673,13 +673,13 @@ class _XPRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 6),
+      padding: const EdgeInsets.symmetric(vertical: 8),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Text(action, style: context.textTheme.bodyMedium),
           Container(
-            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
             decoration: BoxDecoration(
               color: context.colors.primary.withValues(alpha: 0.15),
               borderRadius: BorderRadius.circular(12),

@@ -52,7 +52,7 @@ class WorkoutTimeEditSheet extends ConsumerStatefulWidget {
     await showModalBottomSheet<void>(
       context: context,
       isScrollControlled: true,
-      backgroundColor: Colors.transparent,
+      backgroundColor: Theme.of(context).colorScheme.surface.withValues(alpha: 0),
       builder: (context) => WorkoutTimeEditSheet(
         workout: workout,
         showSuspiciousWarning: showSuspiciousWarning,

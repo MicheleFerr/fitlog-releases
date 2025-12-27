@@ -228,7 +228,7 @@ class _DraggableActionButtonState extends State<DraggableActionButton> {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true, // Required for DraggableScrollableSheet
-      backgroundColor: Colors.transparent,
+      backgroundColor: Theme.of(context).colorScheme.surface.withValues(alpha: 0),
       builder: (context) => DraggableScrollableSheet(
         initialChildSize: 0.5, // Start at 50%
         minChildSize: 0.3, // Can shrink to 30%

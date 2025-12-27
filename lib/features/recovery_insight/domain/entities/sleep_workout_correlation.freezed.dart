@@ -24,7 +24,10 @@ mixin _$SleepWorkoutCorrelation {
  bool get isSignificant;/// Period analyzed (in days)
  int get periodDays;/// Workouts with >7h sleep the night before
  int get workoutsWithGoodSleep;/// Workouts with <6h sleep the night before
- int get workoutsWithPoorSleep;
+ int get workoutsWithPoorSleep;/// User's detected sleep pattern
+ SleepPattern get sleepPattern;/// Average sleep hours over the period
+ double get averageSleepHours;/// Average workout volume (for stats display)
+ double get averageVolume;
 /// Create a copy of SleepWorkoutCorrelation
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -37,16 +40,16 @@ $SleepWorkoutCorrelationCopyWith<SleepWorkoutCorrelation> get copyWith => _$Slee
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is SleepWorkoutCorrelation&&(identical(other.volumeChangeAbove7h, volumeChangeAbove7h) || other.volumeChangeAbove7h == volumeChangeAbove7h)&&(identical(other.volumeChangeBelow6h, volumeChangeBelow6h) || other.volumeChangeBelow6h == volumeChangeBelow6h)&&(identical(other.workoutSampleSize, workoutSampleSize) || other.workoutSampleSize == workoutSampleSize)&&(identical(other.sleepSampleSize, sleepSampleSize) || other.sleepSampleSize == sleepSampleSize)&&(identical(other.isSignificant, isSignificant) || other.isSignificant == isSignificant)&&(identical(other.periodDays, periodDays) || other.periodDays == periodDays)&&(identical(other.workoutsWithGoodSleep, workoutsWithGoodSleep) || other.workoutsWithGoodSleep == workoutsWithGoodSleep)&&(identical(other.workoutsWithPoorSleep, workoutsWithPoorSleep) || other.workoutsWithPoorSleep == workoutsWithPoorSleep));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is SleepWorkoutCorrelation&&(identical(other.volumeChangeAbove7h, volumeChangeAbove7h) || other.volumeChangeAbove7h == volumeChangeAbove7h)&&(identical(other.volumeChangeBelow6h, volumeChangeBelow6h) || other.volumeChangeBelow6h == volumeChangeBelow6h)&&(identical(other.workoutSampleSize, workoutSampleSize) || other.workoutSampleSize == workoutSampleSize)&&(identical(other.sleepSampleSize, sleepSampleSize) || other.sleepSampleSize == sleepSampleSize)&&(identical(other.isSignificant, isSignificant) || other.isSignificant == isSignificant)&&(identical(other.periodDays, periodDays) || other.periodDays == periodDays)&&(identical(other.workoutsWithGoodSleep, workoutsWithGoodSleep) || other.workoutsWithGoodSleep == workoutsWithGoodSleep)&&(identical(other.workoutsWithPoorSleep, workoutsWithPoorSleep) || other.workoutsWithPoorSleep == workoutsWithPoorSleep)&&(identical(other.sleepPattern, sleepPattern) || other.sleepPattern == sleepPattern)&&(identical(other.averageSleepHours, averageSleepHours) || other.averageSleepHours == averageSleepHours)&&(identical(other.averageVolume, averageVolume) || other.averageVolume == averageVolume));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,volumeChangeAbove7h,volumeChangeBelow6h,workoutSampleSize,sleepSampleSize,isSignificant,periodDays,workoutsWithGoodSleep,workoutsWithPoorSleep);
+int get hashCode => Object.hash(runtimeType,volumeChangeAbove7h,volumeChangeBelow6h,workoutSampleSize,sleepSampleSize,isSignificant,periodDays,workoutsWithGoodSleep,workoutsWithPoorSleep,sleepPattern,averageSleepHours,averageVolume);
 
 @override
 String toString() {
-  return 'SleepWorkoutCorrelation(volumeChangeAbove7h: $volumeChangeAbove7h, volumeChangeBelow6h: $volumeChangeBelow6h, workoutSampleSize: $workoutSampleSize, sleepSampleSize: $sleepSampleSize, isSignificant: $isSignificant, periodDays: $periodDays, workoutsWithGoodSleep: $workoutsWithGoodSleep, workoutsWithPoorSleep: $workoutsWithPoorSleep)';
+  return 'SleepWorkoutCorrelation(volumeChangeAbove7h: $volumeChangeAbove7h, volumeChangeBelow6h: $volumeChangeBelow6h, workoutSampleSize: $workoutSampleSize, sleepSampleSize: $sleepSampleSize, isSignificant: $isSignificant, periodDays: $periodDays, workoutsWithGoodSleep: $workoutsWithGoodSleep, workoutsWithPoorSleep: $workoutsWithPoorSleep, sleepPattern: $sleepPattern, averageSleepHours: $averageSleepHours, averageVolume: $averageVolume)';
 }
 
 
@@ -57,7 +60,7 @@ abstract mixin class $SleepWorkoutCorrelationCopyWith<$Res>  {
   factory $SleepWorkoutCorrelationCopyWith(SleepWorkoutCorrelation value, $Res Function(SleepWorkoutCorrelation) _then) = _$SleepWorkoutCorrelationCopyWithImpl;
 @useResult
 $Res call({
- double volumeChangeAbove7h, double volumeChangeBelow6h, int workoutSampleSize, int sleepSampleSize, bool isSignificant, int periodDays, int workoutsWithGoodSleep, int workoutsWithPoorSleep
+ double volumeChangeAbove7h, double volumeChangeBelow6h, int workoutSampleSize, int sleepSampleSize, bool isSignificant, int periodDays, int workoutsWithGoodSleep, int workoutsWithPoorSleep, SleepPattern sleepPattern, double averageSleepHours, double averageVolume
 });
 
 
@@ -74,7 +77,7 @@ class _$SleepWorkoutCorrelationCopyWithImpl<$Res>
 
 /// Create a copy of SleepWorkoutCorrelation
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? volumeChangeAbove7h = null,Object? volumeChangeBelow6h = null,Object? workoutSampleSize = null,Object? sleepSampleSize = null,Object? isSignificant = null,Object? periodDays = null,Object? workoutsWithGoodSleep = null,Object? workoutsWithPoorSleep = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? volumeChangeAbove7h = null,Object? volumeChangeBelow6h = null,Object? workoutSampleSize = null,Object? sleepSampleSize = null,Object? isSignificant = null,Object? periodDays = null,Object? workoutsWithGoodSleep = null,Object? workoutsWithPoorSleep = null,Object? sleepPattern = null,Object? averageSleepHours = null,Object? averageVolume = null,}) {
   return _then(_self.copyWith(
 volumeChangeAbove7h: null == volumeChangeAbove7h ? _self.volumeChangeAbove7h : volumeChangeAbove7h // ignore: cast_nullable_to_non_nullable
 as double,volumeChangeBelow6h: null == volumeChangeBelow6h ? _self.volumeChangeBelow6h : volumeChangeBelow6h // ignore: cast_nullable_to_non_nullable
@@ -84,7 +87,10 @@ as int,isSignificant: null == isSignificant ? _self.isSignificant : isSignifican
 as bool,periodDays: null == periodDays ? _self.periodDays : periodDays // ignore: cast_nullable_to_non_nullable
 as int,workoutsWithGoodSleep: null == workoutsWithGoodSleep ? _self.workoutsWithGoodSleep : workoutsWithGoodSleep // ignore: cast_nullable_to_non_nullable
 as int,workoutsWithPoorSleep: null == workoutsWithPoorSleep ? _self.workoutsWithPoorSleep : workoutsWithPoorSleep // ignore: cast_nullable_to_non_nullable
-as int,
+as int,sleepPattern: null == sleepPattern ? _self.sleepPattern : sleepPattern // ignore: cast_nullable_to_non_nullable
+as SleepPattern,averageSleepHours: null == averageSleepHours ? _self.averageSleepHours : averageSleepHours // ignore: cast_nullable_to_non_nullable
+as double,averageVolume: null == averageVolume ? _self.averageVolume : averageVolume // ignore: cast_nullable_to_non_nullable
+as double,
   ));
 }
 
@@ -169,10 +175,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( double volumeChangeAbove7h,  double volumeChangeBelow6h,  int workoutSampleSize,  int sleepSampleSize,  bool isSignificant,  int periodDays,  int workoutsWithGoodSleep,  int workoutsWithPoorSleep)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( double volumeChangeAbove7h,  double volumeChangeBelow6h,  int workoutSampleSize,  int sleepSampleSize,  bool isSignificant,  int periodDays,  int workoutsWithGoodSleep,  int workoutsWithPoorSleep,  SleepPattern sleepPattern,  double averageSleepHours,  double averageVolume)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _SleepWorkoutCorrelation() when $default != null:
-return $default(_that.volumeChangeAbove7h,_that.volumeChangeBelow6h,_that.workoutSampleSize,_that.sleepSampleSize,_that.isSignificant,_that.periodDays,_that.workoutsWithGoodSleep,_that.workoutsWithPoorSleep);case _:
+return $default(_that.volumeChangeAbove7h,_that.volumeChangeBelow6h,_that.workoutSampleSize,_that.sleepSampleSize,_that.isSignificant,_that.periodDays,_that.workoutsWithGoodSleep,_that.workoutsWithPoorSleep,_that.sleepPattern,_that.averageSleepHours,_that.averageVolume);case _:
   return orElse();
 
 }
@@ -190,10 +196,10 @@ return $default(_that.volumeChangeAbove7h,_that.volumeChangeBelow6h,_that.workou
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( double volumeChangeAbove7h,  double volumeChangeBelow6h,  int workoutSampleSize,  int sleepSampleSize,  bool isSignificant,  int periodDays,  int workoutsWithGoodSleep,  int workoutsWithPoorSleep)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( double volumeChangeAbove7h,  double volumeChangeBelow6h,  int workoutSampleSize,  int sleepSampleSize,  bool isSignificant,  int periodDays,  int workoutsWithGoodSleep,  int workoutsWithPoorSleep,  SleepPattern sleepPattern,  double averageSleepHours,  double averageVolume)  $default,) {final _that = this;
 switch (_that) {
 case _SleepWorkoutCorrelation():
-return $default(_that.volumeChangeAbove7h,_that.volumeChangeBelow6h,_that.workoutSampleSize,_that.sleepSampleSize,_that.isSignificant,_that.periodDays,_that.workoutsWithGoodSleep,_that.workoutsWithPoorSleep);case _:
+return $default(_that.volumeChangeAbove7h,_that.volumeChangeBelow6h,_that.workoutSampleSize,_that.sleepSampleSize,_that.isSignificant,_that.periodDays,_that.workoutsWithGoodSleep,_that.workoutsWithPoorSleep,_that.sleepPattern,_that.averageSleepHours,_that.averageVolume);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -210,10 +216,10 @@ return $default(_that.volumeChangeAbove7h,_that.volumeChangeBelow6h,_that.workou
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( double volumeChangeAbove7h,  double volumeChangeBelow6h,  int workoutSampleSize,  int sleepSampleSize,  bool isSignificant,  int periodDays,  int workoutsWithGoodSleep,  int workoutsWithPoorSleep)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( double volumeChangeAbove7h,  double volumeChangeBelow6h,  int workoutSampleSize,  int sleepSampleSize,  bool isSignificant,  int periodDays,  int workoutsWithGoodSleep,  int workoutsWithPoorSleep,  SleepPattern sleepPattern,  double averageSleepHours,  double averageVolume)?  $default,) {final _that = this;
 switch (_that) {
 case _SleepWorkoutCorrelation() when $default != null:
-return $default(_that.volumeChangeAbove7h,_that.volumeChangeBelow6h,_that.workoutSampleSize,_that.sleepSampleSize,_that.isSignificant,_that.periodDays,_that.workoutsWithGoodSleep,_that.workoutsWithPoorSleep);case _:
+return $default(_that.volumeChangeAbove7h,_that.volumeChangeBelow6h,_that.workoutSampleSize,_that.sleepSampleSize,_that.isSignificant,_that.periodDays,_that.workoutsWithGoodSleep,_that.workoutsWithPoorSleep,_that.sleepPattern,_that.averageSleepHours,_that.averageVolume);case _:
   return null;
 
 }
@@ -225,7 +231,7 @@ return $default(_that.volumeChangeAbove7h,_that.volumeChangeBelow6h,_that.workou
 @JsonSerializable()
 
 class _SleepWorkoutCorrelation extends SleepWorkoutCorrelation {
-  const _SleepWorkoutCorrelation({required this.volumeChangeAbove7h, required this.volumeChangeBelow6h, required this.workoutSampleSize, required this.sleepSampleSize, required this.isSignificant, this.periodDays = 30, this.workoutsWithGoodSleep = 0, this.workoutsWithPoorSleep = 0}): super._();
+  const _SleepWorkoutCorrelation({required this.volumeChangeAbove7h, required this.volumeChangeBelow6h, required this.workoutSampleSize, required this.sleepSampleSize, required this.isSignificant, this.periodDays = 30, this.workoutsWithGoodSleep = 0, this.workoutsWithPoorSleep = 0, this.sleepPattern = SleepPattern.unknown, this.averageSleepHours = 0.0, this.averageVolume = 0.0}): super._();
   factory _SleepWorkoutCorrelation.fromJson(Map<String, dynamic> json) => _$SleepWorkoutCorrelationFromJson(json);
 
 /// Volume change when sleeping >7h (e.g., +8%)
@@ -245,6 +251,12 @@ class _SleepWorkoutCorrelation extends SleepWorkoutCorrelation {
 @override@JsonKey() final  int workoutsWithGoodSleep;
 /// Workouts with <6h sleep the night before
 @override@JsonKey() final  int workoutsWithPoorSleep;
+/// User's detected sleep pattern
+@override@JsonKey() final  SleepPattern sleepPattern;
+/// Average sleep hours over the period
+@override@JsonKey() final  double averageSleepHours;
+/// Average workout volume (for stats display)
+@override@JsonKey() final  double averageVolume;
 
 /// Create a copy of SleepWorkoutCorrelation
 /// with the given fields replaced by the non-null parameter values.
@@ -259,16 +271,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _SleepWorkoutCorrelation&&(identical(other.volumeChangeAbove7h, volumeChangeAbove7h) || other.volumeChangeAbove7h == volumeChangeAbove7h)&&(identical(other.volumeChangeBelow6h, volumeChangeBelow6h) || other.volumeChangeBelow6h == volumeChangeBelow6h)&&(identical(other.workoutSampleSize, workoutSampleSize) || other.workoutSampleSize == workoutSampleSize)&&(identical(other.sleepSampleSize, sleepSampleSize) || other.sleepSampleSize == sleepSampleSize)&&(identical(other.isSignificant, isSignificant) || other.isSignificant == isSignificant)&&(identical(other.periodDays, periodDays) || other.periodDays == periodDays)&&(identical(other.workoutsWithGoodSleep, workoutsWithGoodSleep) || other.workoutsWithGoodSleep == workoutsWithGoodSleep)&&(identical(other.workoutsWithPoorSleep, workoutsWithPoorSleep) || other.workoutsWithPoorSleep == workoutsWithPoorSleep));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _SleepWorkoutCorrelation&&(identical(other.volumeChangeAbove7h, volumeChangeAbove7h) || other.volumeChangeAbove7h == volumeChangeAbove7h)&&(identical(other.volumeChangeBelow6h, volumeChangeBelow6h) || other.volumeChangeBelow6h == volumeChangeBelow6h)&&(identical(other.workoutSampleSize, workoutSampleSize) || other.workoutSampleSize == workoutSampleSize)&&(identical(other.sleepSampleSize, sleepSampleSize) || other.sleepSampleSize == sleepSampleSize)&&(identical(other.isSignificant, isSignificant) || other.isSignificant == isSignificant)&&(identical(other.periodDays, periodDays) || other.periodDays == periodDays)&&(identical(other.workoutsWithGoodSleep, workoutsWithGoodSleep) || other.workoutsWithGoodSleep == workoutsWithGoodSleep)&&(identical(other.workoutsWithPoorSleep, workoutsWithPoorSleep) || other.workoutsWithPoorSleep == workoutsWithPoorSleep)&&(identical(other.sleepPattern, sleepPattern) || other.sleepPattern == sleepPattern)&&(identical(other.averageSleepHours, averageSleepHours) || other.averageSleepHours == averageSleepHours)&&(identical(other.averageVolume, averageVolume) || other.averageVolume == averageVolume));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,volumeChangeAbove7h,volumeChangeBelow6h,workoutSampleSize,sleepSampleSize,isSignificant,periodDays,workoutsWithGoodSleep,workoutsWithPoorSleep);
+int get hashCode => Object.hash(runtimeType,volumeChangeAbove7h,volumeChangeBelow6h,workoutSampleSize,sleepSampleSize,isSignificant,periodDays,workoutsWithGoodSleep,workoutsWithPoorSleep,sleepPattern,averageSleepHours,averageVolume);
 
 @override
 String toString() {
-  return 'SleepWorkoutCorrelation(volumeChangeAbove7h: $volumeChangeAbove7h, volumeChangeBelow6h: $volumeChangeBelow6h, workoutSampleSize: $workoutSampleSize, sleepSampleSize: $sleepSampleSize, isSignificant: $isSignificant, periodDays: $periodDays, workoutsWithGoodSleep: $workoutsWithGoodSleep, workoutsWithPoorSleep: $workoutsWithPoorSleep)';
+  return 'SleepWorkoutCorrelation(volumeChangeAbove7h: $volumeChangeAbove7h, volumeChangeBelow6h: $volumeChangeBelow6h, workoutSampleSize: $workoutSampleSize, sleepSampleSize: $sleepSampleSize, isSignificant: $isSignificant, periodDays: $periodDays, workoutsWithGoodSleep: $workoutsWithGoodSleep, workoutsWithPoorSleep: $workoutsWithPoorSleep, sleepPattern: $sleepPattern, averageSleepHours: $averageSleepHours, averageVolume: $averageVolume)';
 }
 
 
@@ -279,7 +291,7 @@ abstract mixin class _$SleepWorkoutCorrelationCopyWith<$Res> implements $SleepWo
   factory _$SleepWorkoutCorrelationCopyWith(_SleepWorkoutCorrelation value, $Res Function(_SleepWorkoutCorrelation) _then) = __$SleepWorkoutCorrelationCopyWithImpl;
 @override @useResult
 $Res call({
- double volumeChangeAbove7h, double volumeChangeBelow6h, int workoutSampleSize, int sleepSampleSize, bool isSignificant, int periodDays, int workoutsWithGoodSleep, int workoutsWithPoorSleep
+ double volumeChangeAbove7h, double volumeChangeBelow6h, int workoutSampleSize, int sleepSampleSize, bool isSignificant, int periodDays, int workoutsWithGoodSleep, int workoutsWithPoorSleep, SleepPattern sleepPattern, double averageSleepHours, double averageVolume
 });
 
 
@@ -296,7 +308,7 @@ class __$SleepWorkoutCorrelationCopyWithImpl<$Res>
 
 /// Create a copy of SleepWorkoutCorrelation
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? volumeChangeAbove7h = null,Object? volumeChangeBelow6h = null,Object? workoutSampleSize = null,Object? sleepSampleSize = null,Object? isSignificant = null,Object? periodDays = null,Object? workoutsWithGoodSleep = null,Object? workoutsWithPoorSleep = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? volumeChangeAbove7h = null,Object? volumeChangeBelow6h = null,Object? workoutSampleSize = null,Object? sleepSampleSize = null,Object? isSignificant = null,Object? periodDays = null,Object? workoutsWithGoodSleep = null,Object? workoutsWithPoorSleep = null,Object? sleepPattern = null,Object? averageSleepHours = null,Object? averageVolume = null,}) {
   return _then(_SleepWorkoutCorrelation(
 volumeChangeAbove7h: null == volumeChangeAbove7h ? _self.volumeChangeAbove7h : volumeChangeAbove7h // ignore: cast_nullable_to_non_nullable
 as double,volumeChangeBelow6h: null == volumeChangeBelow6h ? _self.volumeChangeBelow6h : volumeChangeBelow6h // ignore: cast_nullable_to_non_nullable
@@ -306,7 +318,10 @@ as int,isSignificant: null == isSignificant ? _self.isSignificant : isSignifican
 as bool,periodDays: null == periodDays ? _self.periodDays : periodDays // ignore: cast_nullable_to_non_nullable
 as int,workoutsWithGoodSleep: null == workoutsWithGoodSleep ? _self.workoutsWithGoodSleep : workoutsWithGoodSleep // ignore: cast_nullable_to_non_nullable
 as int,workoutsWithPoorSleep: null == workoutsWithPoorSleep ? _self.workoutsWithPoorSleep : workoutsWithPoorSleep // ignore: cast_nullable_to_non_nullable
-as int,
+as int,sleepPattern: null == sleepPattern ? _self.sleepPattern : sleepPattern // ignore: cast_nullable_to_non_nullable
+as SleepPattern,averageSleepHours: null == averageSleepHours ? _self.averageSleepHours : averageSleepHours // ignore: cast_nullable_to_non_nullable
+as double,averageVolume: null == averageVolume ? _self.averageVolume : averageVolume // ignore: cast_nullable_to_non_nullable
+as double,
   ));
 }
 

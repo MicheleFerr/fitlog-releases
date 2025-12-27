@@ -1,24 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:gymbro_flutter_new/features/stress_index/data/mappers/muscle_abbreviation_mapper.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 /// Muscle abbreviations with full Italian names
-const Map<String, String> muscleAbbreviations = {
-  'PETT': 'Pettorali',
-  'DELT ANT': 'Deltoidi Anteriori',
-  'DELT LAT': 'Deltoidi Laterali',
-  'DELT POST': 'Deltoidi Posteriori',
-  'TRIC': 'Tricipiti',
-  'BIC': 'Bicipiti',
-  'LAT': 'Dorsali',
-  'TRAP': 'Trapezio',
-  'QUAD': 'Quadricipiti',
-  'FEMOR': 'Femorali',
-  'GLUT': 'Glutei',
-  'POLP': 'Polpacci',
-  'ADDOM': 'Addominali',
-  'CORE': 'Core',
-};
+///
+/// **SINGLE SOURCE OF TRUTH**: Uses MuscleAbbreviationMapper.
+/// This getter provides the same data but from a centralized source.
+Map<String, String> get muscleAbbreviations =>
+    MuscleAbbreviationMapper.getAllMusclesForSelector();
 
 /// Widget for selecting focus muscles in custom exercise creation.
 ///

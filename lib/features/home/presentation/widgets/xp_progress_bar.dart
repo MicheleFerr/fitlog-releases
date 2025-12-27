@@ -196,7 +196,7 @@ class XPProgressBar extends ConsumerWidget {
 
   Widget _buildProgressBar(BuildContext context, double progress) {
     return ClipRRect(
-      borderRadius: BorderRadius.circular(4),
+      borderRadius: BorderRadius.circular(8),
       child: Stack(
         children: [
           // Background

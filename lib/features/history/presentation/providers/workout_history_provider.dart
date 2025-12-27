@@ -419,3 +419,47 @@ final filteredWorkoutsProvider = Provider<List<WorkoutHistoryDetail>>((ref) {
   final filter = ref.watch(workoutHistoryFilterProvider);
   return ref.watch(filteredWorkoutHistoryProvider(filter));
 });
+
+/// 🔧 PERF FIX: Memoized provider for grouped workouts by week
+/// Caches the expensive grouping computation instead of recalculating in build()
+final groupedWorkoutsByWeekProvider = Provider.family<Map<String, List<WorkoutHistoryDetail>>, String>((ref, locale) {
+  final workouts = ref.watch(filteredWorkoutsProvider);
+
+  if (workouts.isEmpty) {
+    return {};
+  }
+
+  final now = DateTime.now();
+  final today = DateTime(now.year, now.month, now.day);
+  final thisWeekStart = today.subtract(Duration(days: today.weekday - 1));
+  final lastWeekStart = thisWeekStart.subtract(const Duration(days: 7));
+
+  final groups = <String, List<WorkoutHistoryDetail>>{};
+
+  for (final workout in workouts) {
+    final workoutDay = DateTime(
+      workout.completedAt.year,
+      workout.completedAt.month,
+      workout.completedAt.day,
+    );
+
+    String groupKey;
+    if (workoutDay.isAfter(thisWeekStart.subtract(const Duration(days: 1))) ||
+        workoutDay.isAtSameMomentAs(thisWeekStart)) {
+      // Use locale-agnostic key, UI will localize
+      groupKey = '_thisWeek';
+    } else if (workoutDay.isAfter(lastWeekStart.subtract(const Duration(days: 1))) ||
+        workoutDay.isAtSameMomentAs(lastWeekStart)) {
+      groupKey = '_lastWeek';
+    } else {
+      // Use ISO date format for consistent sorting
+      final weekStart = workoutDay.subtract(Duration(days: workoutDay.weekday - 1));
+      groupKey = weekStart.toIso8601String().substring(0, 10);
+    }
+
+    groups.putIfAbsent(groupKey, () => []);
+    groups[groupKey]!.add(workout);
+  }
+
+  return groups;
+});

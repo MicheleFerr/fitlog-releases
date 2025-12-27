@@ -10,6 +10,7 @@ import 'package:gymbro_flutter_new/features/workout/data/repositories/workout_te
 import 'package:gymbro_flutter_new/features/workout/data/repositories/firebase_workout_template_repository.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/providers/workout_history_provider.dart';
 import 'package:gymbro_flutter_new/features/workout_templates/domain/services/template_cloud_service.dart';
+import 'package:gymbro_flutter_new/features/exercise_database/presentation/providers/hybrid_exercise_provider.dart';
 
 // Repository provider - Firebase se utente autenticato, altrimenti locale
 final workoutTemplateRepositoryProvider = Provider<dynamic>((ref) {
@@ -577,7 +578,185 @@ class WorkoutTemplateNotifier extends Notifier<WorkoutTemplateState> {
   void clearError() {
     state = state.copyWith(error: null);
   }
+
+  /// ⌚ Aggiorna template dal database esercizi (sincronizza TUT e altri campi)
+  ///
+  /// Questa funzione recupera i dati più recenti dal database esercizi
+  /// per ogni esercizio nel template, aggiornando campi come TUT (tempoEsecuzione).
+  ///
+  /// Utile per template creati prima dell'aggiunta del campo TUT.
+  Future<int> refreshTemplateFromDatabase(WorkoutTemplate template) async {
+    try {
+      if (kDebugMode) {
+        debugPrint('🔄 PROVIDER: Refreshing template "${template.name}" from exercise database');
+      }
+
+      // Get exercise database
+      final exerciseDatabase = await ref.read(allExercisesProvider.future);
+
+      // Create a lookup map by exercise ID and name for fast matching
+      final exerciseMap = <String, dynamic>{};
+      for (final dbExercise in exerciseDatabase) {
+        exerciseMap[dbExercise.id] = dbExercise;
+        // Also map by normalized name for fallback matching
+        final normalizedName = dbExercise.nome.toLowerCase().replaceAll(' ', '_');
+        exerciseMap[normalizedName] = dbExercise;
+      }
+
+      var updatedCount = 0;
+
+      // Update each exercise in the template
+      final updatedExercises = template.exercises.map((exerciseTemplate) {
+        // Try to find matching exercise in database
+        dynamic dbExercise = exerciseMap[exerciseTemplate.exerciseId];
+
+        // Fallback: try by normalized exercise name
+        if (dbExercise == null) {
+          final normalizedName = exerciseTemplate.exerciseName.toLowerCase().replaceAll(' ', '_');
+          dbExercise = exerciseMap[normalizedName];
+        }
+
+        if (dbExercise != null) {
+          // Check if TUT needs updating
+          final dbTut = dbExercise.tempoEsecuzione as String?;
+          if (dbTut != null && dbTut != exerciseTemplate.tut) {
+            updatedCount++;
+            if (kDebugMode) {
+              debugPrint('   📝 Updated TUT for "${exerciseTemplate.exerciseName}": ${exerciseTemplate.tut} → $dbTut');
+            }
+            return exerciseTemplate.copyWith(tut: dbTut);
+          }
+        }
+
+        return exerciseTemplate;
+      }).toList();
+
+      if (updatedCount > 0) {
+        // Save updated template
+        final updatedTemplate = template.copyWith(
+          exercises: updatedExercises,
+          updatedAt: DateTime.now(),
+        );
+
+        await saveTemplate(updatedTemplate);
+
+        if (kDebugMode) {
+          debugPrint('✅ PROVIDER: Template refreshed - $updatedCount exercises updated');
+        }
+      } else {
+        if (kDebugMode) {
+          debugPrint('ℹ️ PROVIDER: Template already up to date, no changes needed');
+        }
+      }
+
+      return updatedCount;
+    } catch (e) {
+      if (kDebugMode) {
+        debugPrint('❌ PROVIDER: Error refreshing template: $e');
+      }
+      state = state.copyWith(error: e.toString());
+      rethrow;
+    }
+  }
+
+  /// ⌚ Check if a template has exercises that need TUT sync from database
+  /// Returns true if at least one exercise has different TUT in database
+  Future<bool> templateNeedsRefresh(WorkoutTemplate template) async {
+    try {
+      // Get exercise database
+      final exerciseDatabase = await ref.read(allExercisesProvider.future);
+
+      // Create a lookup map by exercise ID and name for fast matching
+      final exerciseMap = <String, dynamic>{};
+      for (final dbExercise in exerciseDatabase) {
+        exerciseMap[dbExercise.id] = dbExercise;
+        final normalizedName = dbExercise.nome.toLowerCase().replaceAll(' ', '_');
+        exerciseMap[normalizedName] = dbExercise;
+      }
+
+      // Check each exercise in the template
+      for (final exerciseTemplate in template.exercises) {
+        dynamic dbExercise = exerciseMap[exerciseTemplate.exerciseId];
+
+        if (dbExercise == null) {
+          final normalizedName = exerciseTemplate.exerciseName.toLowerCase().replaceAll(' ', '_');
+          dbExercise = exerciseMap[normalizedName];
+        }
+
+        if (dbExercise != null) {
+          final dbTut = dbExercise.tempoEsecuzione as String?;
+          // If database has TUT and it's different from template, needs refresh
+          if (dbTut != null && dbTut.isNotEmpty && dbTut != exerciseTemplate.tut) {
+            return true;
+          }
+        }
+      }
+
+      return false;
+    } catch (e) {
+      if (kDebugMode) {
+        debugPrint('❌ PROVIDER: Error checking template refresh: $e');
+      }
+      return false;
+    }
+  }
 }
+
+/// Provider that returns a Set of template IDs that need TUT refresh
+/// Reads exercise database ONCE and checks ALL custom templates in a single pass
+/// This avoids N separate database reads (one per template in the list)
+final templatesNeedingRefreshProvider = FutureProvider.autoDispose<Set<String>>((ref) async {
+  try {
+    // Get all custom templates and exercise database in parallel
+    final customTemplates = await ref.watch(customWorkoutTemplatesProvider.future);
+    final exerciseDatabase = await ref.read(allExercisesProvider.future);
+
+    // Create a lookup map for fast matching
+    final exerciseMap = <String, dynamic>{};
+    for (final dbExercise in exerciseDatabase) {
+      exerciseMap[dbExercise.id] = dbExercise;
+      final normalizedName = dbExercise.nome.toLowerCase().replaceAll(' ', '_');
+      exerciseMap[normalizedName] = dbExercise;
+    }
+
+    // Check each custom template
+    final needsRefresh = <String>{};
+    for (final template in customTemplates) {
+      if (!template.isCustom) continue;
+
+      for (final exerciseTemplate in template.exercises) {
+        dynamic dbExercise = exerciseMap[exerciseTemplate.exerciseId];
+        if (dbExercise == null) {
+          final normalizedName =
+              exerciseTemplate.exerciseName.toLowerCase().replaceAll(' ', '_');
+          dbExercise = exerciseMap[normalizedName];
+        }
+
+        if (dbExercise != null) {
+          final dbTut = dbExercise.tempoEsecuzione as String?;
+          if (dbTut != null && dbTut.isNotEmpty && dbTut != exerciseTemplate.tut) {
+            needsRefresh.add(template.id);
+            break; // Found one mismatch, no need to check more exercises
+          }
+        }
+      }
+    }
+
+    return needsRefresh;
+  } catch (e) {
+    return <String>{};
+  }
+});
+
+/// Provider to check if a specific template needs TUT refresh (uses cached Set)
+/// This is now O(1) lookup instead of a full database read per template
+final templateNeedsRefreshProvider = FutureProvider.autoDispose.family<bool, String>((
+  ref,
+  templateId,
+) async {
+  final needsRefreshSet = await ref.watch(templatesNeedingRefreshProvider.future);
+  return needsRefreshSet.contains(templateId);
+});
 
 // Provider per ottenere tutti i tag disponibili
 /// 🔧 MEMORY FIX: Added autoDispose to prevent memory leaks

@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:share_plus/share_plus.dart';
-import 'package:intl/intl.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/tabs/exercise_summary_tab.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/tabs/exercise_history_tab.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/tabs/exercise_alternatives_tab.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/providers/exercise_history_provider.dart';
 import 'package:gymbro_flutter_new/features/workout/data/services/exercise_history_service.dart';
+import 'package:gymbro_flutter_new/features/workout/services/pdf_exercise_service.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
+import 'package:gymbro_flutter_new/shared/presentation/services/snackbar_service.dart';
 
 /// Schermata di dettaglio esercizio con 3 tab: Sommario, Cronologia, Istruzioni
 ///
@@ -23,8 +23,12 @@ class WorkoutExerciseDetailScreen extends ConsumerStatefulWidget {
   const WorkoutExerciseDetailScreen({
     super.key,
     required this.exerciseName,
+    this.exerciseId,
   });
   final String exerciseName;
+  /// Optional exercise database ID for strength standards lookup.
+  /// If provided, enables accurate mapping to strength standards.
+  final String? exerciseId;
 
   @override
   ConsumerState<WorkoutExerciseDetailScreen> createState() =>
@@ -53,7 +57,7 @@ class _WorkoutExerciseDetailScreenState
     super.dispose();
   }
 
-  /// Share exercise personal records and stats
+  /// Share exercise personal records and stats as PDF
   Future<void> _shareExerciseData() async {
     await HapticFeedback.lightImpact();
 
@@ -70,27 +74,59 @@ class _WorkoutExerciseDetailScreenState
 
         if (allSets.isEmpty) {
           // No data to share
+          if (mounted) {
+            SnackBarService.showWarning(
+              context,
+              context.l10n.noDataToShare,
+            );
+          }
           return;
         }
 
-        // Calculate personal records (same logic as ExerciseSummaryTab)
+        // Calculate personal records
         final records = _calculateRecords(allSets, historyMap);
 
-        // Format share text
-        final dateFormatter = DateFormat('dd/MM/yyyy');
-        final text = _formatShareText(records, dateFormatter);
-
-        // Share using share_plus
-        await Share.share(
-          text,
-          subject: '🏋️ ${widget.exerciseName} - Personal Records',
+        // Create PDF data
+        final pdfData = ExerciseRecordsData(
+          exerciseName: widget.exerciseName,
+          maxWeight: records.maxWeight,
+          maxWeightDate: records.maxWeightDate,
+          maxWeightReps: records.maxWeightReps,
+          best1RM: records.best1RM,
+          best1RMDate: records.best1RMDate,
+          best1RMWeight: records.best1RMWeight,
+          best1RMReps: records.best1RMReps,
+          bestSetVolume: records.bestSetVolume,
+          bestSetVolumeDate: records.bestSetVolumeDate,
+          bestSetVolumeWeight: records.bestSetVolumeWeight,
+          bestSetVolumeReps: records.bestSetVolumeReps,
+          totalWorkouts: records.totalWorkouts,
+          historyData: historyMap,
         );
+
+        // Share as PDF
+        try {
+          await PdfExerciseService.shareExercisePdf(pdfData);
+        } catch (e) {
+          if (mounted) {
+            SnackBarService.showError(
+              context,
+              context.l10n.errorSharingPdf,
+            );
+          }
+        }
       },
       loading: () {
         // Still loading, do nothing
       },
       error: (error, stack) {
-        // Error loading data, do nothing
+        // Error loading data
+        if (mounted) {
+          SnackBarService.showError(
+            context,
+            context.l10n.errorLoadingData,
+          );
+        }
       },
     );
   }
@@ -174,44 +210,6 @@ class _WorkoutExerciseDetailScreenState
     return weight * (36 / (37 - reps));
   }
 
-  /// Format exercise data as shareable text
-  String _formatShareText(_ExerciseRecords records, DateFormat dateFormatter) {
-    final buffer = StringBuffer();
-
-    buffer.writeln('🏋️ ${widget.exerciseName}');
-    buffer.writeln('');
-    buffer.writeln('📊 Personal Records:');
-    buffer.writeln('');
-
-    // Max Weight
-    buffer.writeln('💪 Max Weight: ${records.maxWeight.toStringAsFixed(1)} kg');
-    if (records.maxWeightDate != null) {
-      buffer.writeln('   ${records.maxWeightReps} reps • ${dateFormatter.format(records.maxWeightDate!)}');
-    }
-    buffer.writeln('');
-
-    // Best 1RM
-    buffer.writeln('⭐ Best 1RM: ${records.best1RM.toStringAsFixed(1)} kg');
-    if (records.best1RMDate != null && records.best1RMWeight != null && records.best1RMReps != null) {
-      buffer.writeln('   ${records.best1RMWeight!.toStringAsFixed(1)} kg × ${records.best1RMReps} reps • ${dateFormatter.format(records.best1RMDate!)}');
-    }
-    buffer.writeln('');
-
-    // Best Set Volume
-    buffer.writeln('📈 Best Set Volume: ${records.bestSetVolume.toStringAsFixed(0)} kg');
-    if (records.bestSetVolumeDate != null && records.bestSetVolumeWeight != null && records.bestSetVolumeReps != null) {
-      buffer.writeln('   ${records.bestSetVolumeWeight!.toStringAsFixed(1)} kg × ${records.bestSetVolumeReps} reps • ${dateFormatter.format(records.bestSetVolumeDate!)}');
-    }
-    buffer.writeln('');
-
-    // Total workouts
-    buffer.writeln('📅 Total Workouts: ${records.totalWorkouts}');
-    buffer.writeln('');
-    buffer.writeln('Generated by GymBro TrackLog 💪');
-
-    return buffer.toString();
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -273,7 +271,10 @@ class _WorkoutExerciseDetailScreenState
       body: TabBarView(
         controller: _tabController,
         children: [
-          ExerciseSummaryTab(exerciseName: widget.exerciseName),
+          ExerciseSummaryTab(
+            exerciseName: widget.exerciseName,
+            exerciseId: widget.exerciseId,
+          ),
           ExerciseHistoryTab(exerciseName: widget.exerciseName),
           ExerciseAlternativesTab(exerciseName: widget.exerciseName),
         ],

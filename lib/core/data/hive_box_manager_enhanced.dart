@@ -59,13 +59,17 @@ class HiveBoxManagerEnhanced {
   /// - GDPR-regulated data (consent history)
   /// - PII (email, displayName)
   /// - Privacy settings
-  /// - User preferences
   ///
   /// Encryption is applied AUTOMATICALLY when opening these boxes.
+  ///
+  /// NOTE: app_config was removed from this list (2024-12) because it only
+  /// contains UI preferences (theme, language, font size) - NO PII or GDPR data.
+  /// This reduces startup time by ~15s by avoiding encryption overhead during
+  /// WebView initialization for GDPR consent.
   static const List<String> _sensitiveBoxes = [
     'user_consents',       // GDPR consent history
     'privacy',             // Privacy settings
-    'app_config',          // User preferences
+    // 'app_config' removed - only UI preferences, no PII
     'user_profile_cache',  // Cached user profile (email, displayName)
   ];
 

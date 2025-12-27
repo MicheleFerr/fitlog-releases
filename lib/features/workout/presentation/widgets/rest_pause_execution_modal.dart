@@ -46,7 +46,7 @@ class RestPauseExecutionModal extends StatefulWidget {
       isScrollControlled: true,
       isDismissible: false,
       enableDrag: false,
-      backgroundColor: Colors.transparent,
+      backgroundColor: Theme.of(context).colorScheme.surface.withValues(alpha: 0),
       builder: (context) => RestPauseExecutionModal(
         exerciseName: exerciseName,
         weight: weight,

@@ -374,6 +374,12 @@ class AppIcons {
   /// 📷 Camera
   static const IconData camera = Icons.camera_alt;
 
+  /// 🔄 Switch camera (front/back)
+  static const IconData cameraSwitch = Icons.cameraswitch;
+
+  /// 🎚️ Opacity/Transparency
+  static const IconData opacity = Icons.opacity;
+
   /// 🖼️ Image
   static const IconData image = Icons.image;
 
@@ -765,6 +771,7 @@ class AppIcons {
   static const IconData swapHoriz = Icons.swap_horiz;
   static const IconData swapHorizRounded = Icons.swap_horiz_rounded;
   static const IconData swapVert = Icons.swap_vert;
+  static const IconData compare = Icons.compare;
   static const IconData swipe = Icons.swipe;
   static const IconData sync = Icons.sync;
   static const IconData syncAlt = Icons.sync_alt;
@@ -989,6 +996,15 @@ class AppIcons {
 
   /// 🎓 School/Education
   static const IconData school = Icons.school;
+
+  /// 🔀 Merge/Consolidate exercises
+  static const IconData merge = Icons.merge;
+
+  /// ⬇️ Arrow down
+  static const IconData arrowDown = Icons.arrow_downward;
+
+  /// 🏆 Trophy/Personal record
+  static const IconData trophy = Icons.emoji_events;
 
   // ========================================
   // 🔄 Base Icon Variants (snake_case mappings)

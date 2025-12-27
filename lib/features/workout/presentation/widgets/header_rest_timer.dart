@@ -37,13 +37,35 @@ class HeaderRestTimer extends ConsumerStatefulWidget {
 class _HeaderRestTimerState extends ConsumerState<HeaderRestTimer> {
   @override
   Widget build(BuildContext context) {
-    final timerState = ref.watch(unifiedTimerProvider);
-    final config = ref.watch(appConfigProvider);
+    // 🔧 PERF FIX: Use .select() to only rebuild when specific fields change
+    // instead of rebuilding on every timer tick (60+ rebuilds/min)
+    final isTimerActive = ref.watch(
+      unifiedTimerProvider.select((state) => state != null),
+    );
+    final isIdle = ref.watch(
+      unifiedTimerProvider.select((state) => state == null || state.isIdle),
+    );
+    final isRunning = ref.watch(
+      unifiedTimerProvider.select((state) => state?.isActive ?? false),
+    );
+    final isPaused = ref.watch(
+      unifiedTimerProvider.select((state) => state?.isPaused ?? false),
+    );
+    final isCompleted = ref.watch(
+      unifiedTimerProvider.select((state) => state?.isCompleted ?? false),
+    );
+    final remainingSeconds = ref.watch(
+      unifiedTimerProvider.select((state) => state?.remainingSeconds ?? 0),
+    );
+    final remainingProgress = ref.watch(
+      unifiedTimerProvider.select((state) => state?.remainingProgress ?? 0.0),
+    );
+    // Only watch the timerSound field from config, not entire config
+    final timerSound = ref.watch(appConfigProvider.select((c) => c.timerSound));
 
     // Auto-reset quando completa (status completed O remainingSeconds == 0)
-    final shouldReset = timerState != null &&
-        (timerState.isCompleted ||
-         (timerState.remainingSeconds <= 0 && !timerState.isIdle));
+    final shouldReset = isTimerActive &&
+        (isCompleted || (remainingSeconds <= 0 && !isIdle));
 
     if (shouldReset) {
       // Schedule reset after build
@@ -54,15 +76,11 @@ class _HeaderRestTimerState extends ConsumerState<HeaderRestTimer> {
       });
     }
 
-    final isIdle = timerState == null || timerState.isIdle;
-    final isRunning = timerState?.isActive ?? false;
-    final isPaused = timerState?.isPaused ?? false;
-
     return GestureDetector(
       onTap: () {
         HapticFeedback.mediumImpact();
         if (isIdle) {
-          _showTimerModal(context, config);
+          _showTimerModal(context, timerSound);
         } else if (isRunning) {
           ref.read(unifiedTimerProvider.notifier).pauseTimer();
         } else if (isPaused) {
@@ -85,10 +103,10 @@ class _HeaderRestTimerState extends ConsumerState<HeaderRestTimer> {
           vertical: widget.compact ? 4 : 6,
         ),
         decoration: BoxDecoration(
-          color: _getBackgroundColor(context, isIdle, isRunning, isPaused, timerState),
+          color: _getBackgroundColor(context, isIdle, isRunning, isPaused, remainingSeconds),
           borderRadius: BorderRadius.circular(widget.compact ? 10 : 12),
           border: Border.all(
-            color: _getBorderColor(context, isIdle, isRunning, isPaused, timerState),
+            color: _getBorderColor(context, isIdle, isRunning, isPaused, remainingSeconds),
             width: 1,
           ),
         ),
@@ -99,7 +117,7 @@ class _HeaderRestTimerState extends ConsumerState<HeaderRestTimer> {
             Icon(
               isRunning ? AppIcons.timer : (isPaused ? AppIcons.pause : AppIcons.timer),
               size: widget.compact ? AppIconSize.tiny : AppIconSize.small,
-              color: _getTextColor(context, isIdle, isRunning, isPaused, timerState),
+              color: _getTextColor(context, isIdle, isRunning, isPaused, remainingSeconds),
             ),
             SizedBox(width: widget.compact ? 4 : 6),
             // Testo
@@ -109,11 +127,11 @@ class _HeaderRestTimerState extends ConsumerState<HeaderRestTimer> {
                 style: TextStyle(
                   fontSize: widget.compact ? 11 : 13,
                   fontWeight: FontWeight.w600,
-                  color: _getTextColor(context, isIdle, isRunning, isPaused, timerState),
+                  color: _getTextColor(context, isIdle, isRunning, isPaused, remainingSeconds),
                 ),
               )
             else
-              _buildCountdown(context, timerState),
+              _buildCountdown(context, remainingSeconds, remainingProgress, isRunning, isPaused),
           ],
         ),
         ),
@@ -122,12 +140,8 @@ class _HeaderRestTimerState extends ConsumerState<HeaderRestTimer> {
   }
 
   /// Countdown grande e leggibile
-  Widget _buildCountdown(BuildContext context, UnifiedTimerState timerState) {
-    final remainingSeconds = timerState.remainingSeconds;
-    final progress = timerState.remainingProgress;
-    final isRunning = timerState.isActive;
-    final isPaused = timerState.isPaused;
-
+  /// 🔧 PERF FIX: Accept primitives instead of full UnifiedTimerState
+  Widget _buildCountdown(BuildContext context, int remainingSeconds, double progress, bool isRunning, bool isPaused) {
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
@@ -138,7 +152,7 @@ class _HeaderRestTimerState extends ConsumerState<HeaderRestTimer> {
             fontSize: widget.compact ? 12 : 14,
             fontWeight: FontWeight.bold,
             fontFeatures: const [FontFeature.tabularFigures()],
-            color: _getTextColor(context, false, isRunning, isPaused, timerState),
+            color: _getTextColor(context, false, isRunning, isPaused, remainingSeconds),
           ),
         ),
         SizedBox(width: widget.compact ? 4 : 6),
@@ -162,10 +176,12 @@ class _HeaderRestTimerState extends ConsumerState<HeaderRestTimer> {
   }
 
   /// Mostra modal per selezione timer personalizzato
-  void _showTimerModal(BuildContext context, dynamic config) {
+  // 🔧 PERF FIX: Accept timerSound directly instead of entire config
+  void _showTimerModal(BuildContext context, String timerSound) {
     showModalBottomSheet(
       context: context,
-      backgroundColor: Colors.transparent,
+      // 🔧 PERF FIX: Use theme color instead of hardcoded Colors.transparent
+      backgroundColor: Theme.of(context).colorScheme.surface.withValues(alpha: 0),
       isScrollControlled: true,
       builder: (context) => _CustomTimerModal(
         onSelectDuration: (seconds) {
@@ -174,14 +190,15 @@ class _HeaderRestTimerState extends ConsumerState<HeaderRestTimer> {
             durationSeconds: seconds,
             type: TimerType.rest,
             exerciseName: 'Rest',
-            customSound: config.timerSound,
+            customSound: timerSound,
           );
         },
       ),
     );
   }
 
-  Color _getBackgroundColor(BuildContext context, bool isIdle, bool isRunning, bool isPaused, UnifiedTimerState? timerState) {
+  /// 🔧 PERF FIX: Accept remainingSeconds directly instead of UnifiedTimerState
+  Color _getBackgroundColor(BuildContext context, bool isIdle, bool isRunning, bool isPaused, int remainingSeconds) {
     if (isIdle) {
       return context.colors.surfaceContainerHighest.withValues(alpha: 0.8);
     }
@@ -189,10 +206,9 @@ class _HeaderRestTimerState extends ConsumerState<HeaderRestTimer> {
       return context.colors.secondaryContainer.withValues(alpha: 0.5);
     }
     if (isRunning) {
-      final remaining = timerState?.remainingSeconds ?? 0;
-      if (remaining <= 5) {
+      if (remainingSeconds <= 5) {
         return context.colors.errorContainer.withValues(alpha: 0.5);
-      } else if (remaining <= 15) {
+      } else if (remainingSeconds <= 15) {
         return context.colors.tertiaryContainer.withValues(alpha: 0.5);
       }
       return context.colors.primaryContainer.withValues(alpha: 0.5);
@@ -200,7 +216,8 @@ class _HeaderRestTimerState extends ConsumerState<HeaderRestTimer> {
     return context.colors.surfaceContainerHighest;
   }
 
-  Color _getBorderColor(BuildContext context, bool isIdle, bool isRunning, bool isPaused, UnifiedTimerState? timerState) {
+  /// 🔧 PERF FIX: Accept remainingSeconds directly instead of UnifiedTimerState
+  Color _getBorderColor(BuildContext context, bool isIdle, bool isRunning, bool isPaused, int remainingSeconds) {
     if (isIdle) {
       return context.colors.outline.withValues(alpha: 0.3);
     }
@@ -208,12 +225,13 @@ class _HeaderRestTimerState extends ConsumerState<HeaderRestTimer> {
       return context.colors.secondary.withValues(alpha: 0.5);
     }
     if (isRunning) {
-      return _getProgressColor(context, timerState?.remainingSeconds ?? 0).withValues(alpha: 0.5);
+      return _getProgressColor(context, remainingSeconds).withValues(alpha: 0.5);
     }
     return context.colors.outline.withValues(alpha: 0.3);
   }
 
-  Color _getTextColor(BuildContext context, bool isIdle, bool isRunning, bool isPaused, UnifiedTimerState? timerState) {
+  /// 🔧 PERF FIX: Accept remainingSeconds directly instead of UnifiedTimerState
+  Color _getTextColor(BuildContext context, bool isIdle, bool isRunning, bool isPaused, int remainingSeconds) {
     if (isIdle) {
       return context.colors.onSurfaceVariant;
     }
@@ -221,7 +239,7 @@ class _HeaderRestTimerState extends ConsumerState<HeaderRestTimer> {
       return context.colors.secondary;
     }
     if (isRunning) {
-      return _getProgressColor(context, timerState?.remainingSeconds ?? 0);
+      return _getProgressColor(context, remainingSeconds);
     }
     return context.colors.onSurface;
   }

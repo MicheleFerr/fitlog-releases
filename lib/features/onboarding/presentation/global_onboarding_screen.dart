@@ -15,6 +15,7 @@ import 'package:gymbro_flutter_new/features/onboarding/presentation/widgets/step
 import 'package:gymbro_flutter_new/features/onboarding/presentation/widgets/steps/06_execute_set_step.dart';
 import 'package:gymbro_flutter_new/features/onboarding/presentation/widgets/steps/07_timer_rest_step.dart';
 import 'package:gymbro_flutter_new/features/onboarding/presentation/widgets/steps/08_advanced_features_step.dart';
+import 'package:gymbro_flutter_new/features/onboarding/presentation/widgets/legal_disclaimer_modal.dart';
 
 class GlobalOnboardingScreen extends ConsumerStatefulWidget {
   const GlobalOnboardingScreen({super.key});
@@ -145,13 +146,50 @@ class _GlobalOnboardingScreenState extends ConsumerState<GlobalOnboardingScreen>
   }
 
   void _skipOnboarding() {
-    ref.read(onboardingStateProvider.notifier).skipOnboarding();
-    // Note: No longer updating AppConfig - OnboardingState is the single source of truth
-    context.goNamed('home');
+    _showLegalDisclaimerThenNavigate(isSkip: true);
   }
 
   void _completeOnboarding() {
-    ref.read(onboardingStateProvider.notifier).completeOnboarding();
+    _showLegalDisclaimerThenNavigate(isSkip: false);
+  }
+
+  /// Shows legal disclaimer modal before navigating to home
+  /// User MUST accept to continue using the app
+  void _showLegalDisclaimerThenNavigate({required bool isSkip}) {
+    final state = ref.read(onboardingStateProvider);
+
+    // If already accepted, skip the modal
+    if (state.hasAcceptedLegalDisclaimer) {
+      _finishOnboardingAndNavigate(isSkip: isSkip);
+      return;
+    }
+
+    // Show legal disclaimer modal
+    LegalDisclaimerModal.show(
+      context: context,
+      onAccept: () {
+        // Save acceptance
+        ref.read(onboardingStateProvider.notifier).acceptLegalDisclaimer();
+        // Then finish onboarding and navigate
+        _finishOnboardingAndNavigate(isSkip: isSkip);
+      },
+      onDecline: () {
+        // User declined - cannot use the app
+        // Show explanation and stay on onboarding
+        if (kDebugMode) {
+          debugPrint('⚠️ User declined legal disclaimer');
+        }
+        // Don't navigate - user must accept to continue
+      },
+    );
+  }
+
+  void _finishOnboardingAndNavigate({required bool isSkip}) {
+    if (isSkip) {
+      ref.read(onboardingStateProvider.notifier).skipOnboarding();
+    } else {
+      ref.read(onboardingStateProvider.notifier).completeOnboarding();
+    }
     // Note: No longer updating AppConfig - OnboardingState is the single source of truth
     context.goNamed('home');
   }
@@ -217,7 +255,7 @@ class _GlobalOnboardingScreenState extends ConsumerState<GlobalOnboardingScreen>
                         ),
                         child: Text(
                           l10n.onboardingSkip,
-                          style: const TextStyle(fontWeight: FontWeight.w600),
+                          style: theme.textTheme.labelLarge?.copyWith(fontWeight: FontWeight.w600),
                         ),
                       ),
                     ],
@@ -282,7 +320,7 @@ class _GlobalOnboardingScreenState extends ConsumerState<GlobalOnboardingScreen>
                           width: isCurrent ? 32 : 8,
                           height: 8,
                           decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(4),
+                            borderRadius: BorderRadius.circular(8),
                             color: isCompleted || isCurrent
                                 ? colorScheme.primary
                                 : isAccessible
@@ -334,7 +372,7 @@ class _GlobalOnboardingScreenState extends ConsumerState<GlobalOnboardingScreen>
                             ),
                             child: Text(
                               l10n.onboardingBack,
-                              style: TextStyle(
+                              style: theme.textTheme.labelLarge?.copyWith(
                                 color: colorScheme.onSurface,
                                 fontWeight: FontWeight.w600,
                               ),
@@ -360,10 +398,9 @@ class _GlobalOnboardingScreenState extends ConsumerState<GlobalOnboardingScreen>
                             state.currentStep == OnboardingState.totalSteps - 1
                                 ? l10n.onboardingStart
                                 : l10n.onboardingNext,
-                            style: TextStyle(
+                            style: theme.textTheme.labelLarge?.copyWith(
                               color: colorScheme.onPrimary,
                               fontWeight: FontWeight.w600,
-                              fontSize: 16,
                             ),
                           ),
                         ),

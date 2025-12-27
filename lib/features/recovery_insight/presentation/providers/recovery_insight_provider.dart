@@ -136,18 +136,60 @@ final sleepRecordsProvider =
       return [];
     }
 
-    // Group sleep data by night (date only, no time)
+    // ============================================================
+    // EDGE CASE HANDLING FOR SLEEP DATA
+    // ============================================================
+    //
+    // 1. Use END time (wake up) for grouping - not start time
+    // 2. Filter out short naps (<2h) - only count real night sleep
+    // 3. Deduplicate overlapping records from multiple sources
+    // 4. Handle "still sleeping" edge case
+    //
+    // Group sleep data by night (using END time - when you wake up)
+    // This ensures sleep from 23:00 Dec 20 → 06:00 Dec 21 counts as "Dec 21"
+    // which matches "last night" when viewing on Dec 21
     final nightlySleep = <DateTime, double>{};
+
+    // Track sleep sessions to avoid double-counting overlapping records
+    final processedSessions = <String>{}; // "startTime-endTime" keys
+
     for (final point in sleepData) {
-      final nightKey = DateTime(
-        point.dateFrom.year,
-        point.dateFrom.month,
-        point.dateFrom.day,
-      );
       // Extract numeric value from NumericHealthValue wrapper
       final numericValue = point.value as NumericHealthValue;
       final minutes = numericValue.numericValue.toDouble();
+
+      // EDGE CASE 1: Skip very short sleep segments (<5 min)
+      // These are often noise from movement during sleep
+      if (minutes < 5) continue;
+
+      // EDGE CASE 2: Deduplication - skip if we've seen this exact time range
+      // Different sources (Watch, iPhone) may report same sleep
+      final sessionKey = '${point.dateFrom.millisecondsSinceEpoch}-${point.dateTo.millisecondsSinceEpoch}';
+      if (processedSessions.contains(sessionKey)) continue;
+      processedSessions.add(sessionKey);
+
+      // Use dateTo (wake time) for grouping, not dateFrom (sleep start)
+      final nightKey = DateTime(
+        point.dateTo.year,
+        point.dateTo.month,
+        point.dateTo.day,
+      );
+
       nightlySleep[nightKey] = (nightlySleep[nightKey] ?? 0) + minutes;
+    }
+
+    // EDGE CASE 3: Filter out "nap days" - nights with <2h total sleep
+    // These are likely naps, not actual night sleep
+    // We keep track but filter in the final records
+    final validNights = <DateTime, double>{};
+    const minNightSleepMinutes = 120.0; // 2 hours minimum for "night sleep"
+
+    for (final entry in nightlySleep.entries) {
+      if (entry.value >= minNightSleepMinutes) {
+        validNights[entry.key] = entry.value;
+      } else if (kDebugMode) {
+        debugPrint('   ⚠️ Filtered out ${entry.key}: ${entry.value.round()}min (<2h, likely nap)');
+      }
     }
 
     // Fetch in-bed data for efficiency calculation (using datasource's initialized Health instance)
@@ -155,10 +197,11 @@ final sleepRecordsProvider =
 
     final nightlyInBed = <DateTime, double>{};
     for (final point in inBedRawData) {
+      // Use dateTo (wake time) for grouping, consistent with sleep grouping
       final nightKey = DateTime(
-        point.dateFrom.year,
-        point.dateFrom.month,
-        point.dateFrom.day,
+        point.dateTo.year,
+        point.dateTo.month,
+        point.dateTo.day,
       );
       // Extract numeric value from NumericHealthValue wrapper
       final numericValue = point.value as NumericHealthValue;
@@ -166,12 +209,22 @@ final sleepRecordsProvider =
       nightlyInBed[nightKey] = (nightlyInBed[nightKey] ?? 0) + minutes;
     }
 
-    // Create SleepRecord for each night
+    // Create SleepRecord for each VALID night (filtered out naps)
     final records = <SleepRecord>[];
-    for (final entry in nightlySleep.entries) {
+    for (final entry in validNights.entries) {
       final date = entry.key;
       final asleepMinutes = entry.value;
-      final inBedMinutes = nightlyInBed[date] ?? asleepMinutes + 30; // Default to +30min if not available
+
+      // EDGE CASE 4: Ensure inBedMinutes >= asleepMinutes
+      // This prevents efficiency > 100% from data inconsistencies
+      var inBedMinutes = nightlyInBed[date] ?? asleepMinutes + 30;
+      if (inBedMinutes < asleepMinutes) {
+        // If in-bed is less than asleep (data error), use asleep + small buffer
+        inBedMinutes = asleepMinutes + 15;
+        if (kDebugMode) {
+          debugPrint('   ⚠️ Corrected inBed for $date: was ${nightlyInBed[date]?.round()}min, now ${inBedMinutes.round()}min');
+        }
+      }
 
       records.add(SleepRecord.fromHealthData(
         date: date,
@@ -183,6 +236,26 @@ final sleepRecordsProvider =
 
     // Sort by date descending (most recent first)
     records.sort((a, b) => b.date.compareTo(a.date));
+
+    // EDGE CASE 5: Handle "today's sleep might be incomplete"
+    // If user opens app before 10 AM and today has very little sleep data,
+    // it might be because they're still sleeping or watch hasn't synced yet
+    final now = DateTime.now();
+    final today = DateTime(now.year, now.month, now.day);
+    final isEarlyMorning = now.hour < 10; // Before 10 AM
+
+    if (isEarlyMorning && records.isNotEmpty && records.first.date == today) {
+      // Today's record exists but might be incomplete
+      final todayRecord = records.first;
+      if (todayRecord.asleepDuration.inMinutes < 180) {
+        // Less than 3 hours - likely incomplete data
+        // Remove "today" from the list, use yesterday as "last night"
+        if (kDebugMode) {
+          debugPrint('   ⚠️ Removed incomplete today record: ${todayRecord.formattedDuration} (before 10 AM)');
+        }
+        records.removeAt(0);
+      }
+    }
 
     if (kDebugMode) {
       debugPrint('');

@@ -207,7 +207,7 @@ class TemplateQuotaIndicator extends StatelessWidget {
         ),
         const SizedBox(height: 4),
         ClipRRect(
-          borderRadius: BorderRadius.circular(4),
+          borderRadius: BorderRadius.circular(8),
           child: LinearProgressIndicator(
             value: percentage,
             minHeight: 8,

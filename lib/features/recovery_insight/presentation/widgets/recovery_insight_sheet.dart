@@ -39,7 +39,7 @@ class RecoveryInsightSheet extends ConsumerStatefulWidget {
     return showModalBottomSheet<void>(
       context: context,
       isScrollControlled: true,
-      backgroundColor: Colors.transparent,
+      backgroundColor: Theme.of(context).colorScheme.surface.withValues(alpha: 0),
       builder: (context) => const RecoveryInsightSheet(),
     );
   }
@@ -75,7 +75,7 @@ class _RecoveryInsightSheetState extends ConsumerState<RecoveryInsightSheet> {
             borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withValues(alpha: 0.1),
+                color: context.colors.shadow.withValues(alpha: 0.1),
                 blurRadius: 20,
                 offset: const Offset(0, -5),
               ),
@@ -168,17 +168,13 @@ class _RecoveryInsightSheetState extends ConsumerState<RecoveryInsightSheet> {
       controller: scrollController,
       padding: const EdgeInsets.all(20),
       children: [
-        // Main score card
-        _buildScoreCard(context, insight),
+        // Main score card with trend
+        _buildScoreCard(context, insight, sleepRecords),
         const SizedBox(height: 20),
 
         // Category breakdown
         _buildCategoryBreakdown(context, insight),
         const SizedBox(height: 20),
-
-        // Score breakdown section
-        if (insight.hasSleepData) _buildScoreBreakdown(context, insight),
-        if (insight.hasSleepData) const SizedBox(height: 20),
 
         // Collapsible Sleep Details Section
         _buildCollapsibleSection(
@@ -223,8 +219,17 @@ class _RecoveryInsightSheetState extends ConsumerState<RecoveryInsightSheet> {
     );
   }
 
-  Widget _buildScoreCard(BuildContext context, RecoveryInsight insight) {
+  Widget _buildScoreCard(
+    BuildContext context,
+    RecoveryInsight insight,
+    List<SleepRecord> sleepRecords,
+  ) {
     final categoryColor = _getCategoryColor(insight.category, context);
+
+    // Calculate yesterday's estimated score for comparison
+    final yesterdayScore = _estimateYesterdayScore(sleepRecords, insight);
+    final scoreDiff = insight.score - yesterdayScore;
+    final hasTrend = yesterdayScore > 0 && sleepRecords.length >= 2;
 
     return Container(
       padding: const EdgeInsets.all(24),
@@ -240,91 +245,244 @@ class _RecoveryInsightSheetState extends ConsumerState<RecoveryInsightSheet> {
         borderRadius: BorderRadius.circular(24),
         border: Border.all(color: categoryColor.withValues(alpha: 0.3)),
       ),
+      child: Column(
+        children: [
+          Row(
+            children: [
+              // Circular score indicator with animation
+              TweenAnimationBuilder<double>(
+                tween: Tween(begin: 0, end: insight.score / 100),
+                duration: const Duration(milliseconds: 1200),
+                curve: Curves.easeOutCubic,
+                builder: (context, value, child) {
+                  return SizedBox(
+                    width: 110,
+                    height: 110,
+                    child: Stack(
+                      alignment: Alignment.center,
+                      children: [
+                        // Background circle
+                        LoadingIndicator(
+                          size: 110,
+                          progress: 1,
+                          color: categoryColor.withValues(alpha: 0.15),
+                        ),
+                        // Progress circle
+                        LoadingIndicator(
+                          size: 110,
+                          progress: value,
+                          color: categoryColor,
+                        ),
+                        // Score text
+                        Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Text(
+                              '${(value * 100).round()}',
+                              style: context.textTheme.headlineLarge?.copyWith(
+                                fontWeight: FontWeight.bold,
+                                color: categoryColor,
+                                fontSize: 36,
+                              ),
+                            ),
+                            // Trend indicator
+                            if (hasTrend)
+                              Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Icon(
+                                    scoreDiff >= 0
+                                        ? AppIcons.trendUp
+                                        : AppIcons.trendDown,
+                                    size: 14,
+                                    color: scoreDiff >= 0
+                                        ? context.successColor
+                                        : context.errorColor,
+                                  ),
+                                  const SizedBox(width: 2),
+                                  Text(
+                                    '${scoreDiff >= 0 ? '+' : ''}$scoreDiff',
+                                    style: context.textTheme.labelSmall
+                                        ?.copyWith(
+                                      fontWeight: FontWeight.bold,
+                                      color: scoreDiff >= 0
+                                          ? context.successColor
+                                          : context.errorColor,
+                                    ),
+                                  ),
+                                ],
+                              )
+                            else
+                              Text(
+                                '/100',
+                                style: context.textTheme.bodySmall?.copyWith(
+                                  color: categoryColor.withValues(alpha: 0.7),
+                                ),
+                              ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  );
+                },
+              ),
+              const SizedBox(width: 20),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      children: [
+                        Text(
+                          insight.category.emoji,
+                          style: context.textTheme.headlineSmall,
+                        ),
+                        const SizedBox(width: 8),
+                        Flexible(
+                          child: Text(
+                            insight.category.localizedName(context),
+                            style: context.textTheme.titleLarge?.copyWith(
+                              fontWeight: FontWeight.bold,
+                              color: categoryColor,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 8),
+                    Text(
+                      _getCategoryDescription(insight.category, context),
+                      style: context.textTheme.bodyMedium?.copyWith(
+                        color: context.colors.onSurface.withValues(alpha: 0.8),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+          // Mini weekly trend sparkline
+          if (sleepRecords.length >= 3) ...[
+            const SizedBox(height: 16),
+            _buildMiniTrendSparkline(context, sleepRecords, categoryColor),
+          ],
+        ],
+      ),
+    );
+  }
+
+  /// Mini sparkline showing 7-day sleep trend
+  Widget _buildMiniTrendSparkline(
+    BuildContext context,
+    List<SleepRecord> records,
+    Color accentColor,
+  ) {
+    final weekRecords = records.take(7).toList().reversed.toList();
+    if (weekRecords.isEmpty) return const SizedBox.shrink();
+
+    final hours = weekRecords.map((r) => r.asleepHours).toList();
+    final maxHours = hours.reduce((a, b) => a > b ? a : b).clamp(7.0, 12.0);
+    final minHours = hours.reduce((a, b) => a < b ? a : b).clamp(0.0, 6.0);
+
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+      decoration: BoxDecoration(
+        color: context.colors.surfaceContainerHighest.withValues(alpha: 0.5),
+        borderRadius: BorderRadius.circular(12),
+      ),
       child: Row(
         children: [
-          // Circular score indicator
-          SizedBox(
-            width: 100,
-            height: 100,
-            child: Stack(
-              alignment: Alignment.center,
-              children: [
-                // Background circle
-                CircularProgressIndicator(
-                  value: 1,
-                  strokeWidth: 8,
-                  backgroundColor: categoryColor.withValues(alpha: 0.1),
-                  valueColor:
-                      AlwaysStoppedAnimation(categoryColor.withValues(alpha: 0.2)),
-                ),
-                // Progress circle
-                CircularProgressIndicator(
-                  value: insight.score / 100,
-                  strokeWidth: 8,
-                  backgroundColor: Colors.transparent,
-                  valueColor: AlwaysStoppedAnimation(categoryColor),
-                ),
-                // Score text
-                Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Text(
-                      '${insight.score}',
-                      style: context.textTheme.headlineLarge?.copyWith(
-                        fontWeight: FontWeight.bold,
-                        color: categoryColor,
-                      ),
-                    ),
-                    Text(
-                      '/100',
-                      style: context.textTheme.bodySmall?.copyWith(
-                        color: categoryColor.withValues(alpha: 0.7),
-                      ),
-                    ),
-                  ],
-                ),
-              ],
+          Icon(
+            AppIcons.timeline,
+            size: AppIconSize.small,
+            color: context.colors.onSurfaceVariant,
+          ),
+          const SizedBox(width: 8),
+          Text(
+            context.l10n.weeklyTrend,
+            style: context.textTheme.labelSmall?.copyWith(
+              color: context.colors.onSurfaceVariant,
             ),
           ),
-          const SizedBox(width: 20),
+          const SizedBox(width: 12),
           Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  children: [
-                    Text(
-                      insight.category.emoji,
-                      style: context.textTheme.headlineSmall,
-                    ),
-                    const SizedBox(width: 8),
-                    Text(
-                      insight.category.localizedName(context),
-                      style: context.textTheme.titleLarge?.copyWith(
-                        fontWeight: FontWeight.bold,
-                        color: categoryColor,
-                      ),
-                    ),
-                  ],
+            child: SizedBox(
+              height: 24,
+              child: CustomPaint(
+                painter: _SparklinePainter(
+                  values: hours,
+                  maxValue: maxHours,
+                  minValue: minHours,
+                  lineColor: accentColor,
+                  fillColor: accentColor.withValues(alpha: 0.2),
+                  dotColor: accentColor,
                 ),
-                const SizedBox(height: 8),
-                Text(
-                  _getCategoryDescription(insight.category, context),
-                  style: context.textTheme.bodyMedium?.copyWith(
-                    color: context.colors.onSurface.withValues(alpha: 0.8),
-                  ),
-                ),
-              ],
+              ),
             ),
+          ),
+          const SizedBox(width: 8),
+          // Average indicator
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
+              Text(
+                '${(hours.reduce((a, b) => a + b) / hours.length).toStringAsFixed(1)}h',
+                style: context.textTheme.labelMedium?.copyWith(
+                  fontWeight: FontWeight.bold,
+                  color: accentColor,
+                ),
+              ),
+              Text(
+                context.l10n.average,
+                style: context.textTheme.labelSmall?.copyWith(
+                  fontSize: 9,
+                  color: context.colors.onSurfaceVariant,
+                ),
+              ),
+            ],
           ),
         ],
       ),
     );
   }
 
+  /// Estimate yesterday's score based on sleep records
+  int _estimateYesterdayScore(
+      List<SleepRecord> records, RecoveryInsight currentInsight) {
+    if (records.length < 2) return 0;
+
+    // Find yesterday's record
+    final yesterday = DateTime.now().subtract(const Duration(days: 1));
+    final yesterdayRecord = records.firstWhere(
+      (r) =>
+          r.date.year == yesterday.year &&
+          r.date.month == yesterday.month &&
+          r.date.day == yesterday.day,
+      orElse: () => records.length > 1 ? records[1] : records.first,
+    );
+
+    // Simple estimation based on sleep hours
+    final sleepHours = yesterdayRecord.asleepHours;
+    double modifier;
+    if (sleepHours >= 7) {
+      modifier = 1.0 + (sleepHours - 7) * 0.05; // Bonus for good sleep
+    } else if (sleepHours >= 6) {
+      modifier = 0.85 + (sleepHours - 6) * 0.15;
+    } else {
+      modifier = 0.5 + sleepHours * 0.058;
+    }
+    modifier = modifier.clamp(0.5, 1.15);
+
+    return (currentInsight.baseScore * modifier).round().clamp(0, 100);
+  }
+
   Widget _buildCategoryBreakdown(
       BuildContext context, RecoveryInsight insight) {
     final l10n = context.l10n;
+    final categoryColor = _getCategoryColor(insight.category, context);
+
+    // Calculate cursor position based on score (0-100 mapped to 0-1)
+    final cursorPosition = insight.score / 100;
 
     return Container(
       padding: const EdgeInsets.all(16),
@@ -335,57 +493,171 @@ class _RecoveryInsightSheetState extends ConsumerState<RecoveryInsightSheet> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            l10n.readinessLevel,
-            style: context.textTheme.titleSmall?.copyWith(
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          const SizedBox(height: 12),
-          // Progress dots (5 dots showing category)
           Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: List.generate(5, (index) {
-              final isFilled = index < insight.category.filledDots;
-              final dotColor = _getDotColor(index, context);
-              return Expanded(
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 4),
-                  child: Column(
-                    children: [
-                      Container(
-                        height: 12,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(8),
-                          color: isFilled
-                              ? dotColor
-                              : context.colors.surfaceContainerHighest,
-                          border: isFilled
-                              ? null
-                              : Border.all(
-                                  color: context.colors.outline
-                                      .withValues(alpha: 0.3),
-                                ),
-                        ),
-                      ),
-                      const SizedBox(height: 4),
-                      Text(
-                        _getCategoryName(index, context),
-                        style: context.textTheme.labelSmall?.copyWith(
-                          color: isFilled
-                              ? dotColor
-                              : context.colors.onSurface.withValues(alpha: 0.4),
-                          fontSize: 8,
-                        ),
-                        textAlign: TextAlign.center,
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                    ],
+            children: [
+              Text(
+                l10n.readinessLevel,
+                style: context.textTheme.titleSmall?.copyWith(
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              const Spacer(),
+              // Score badge
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+                decoration: BoxDecoration(
+                  color: categoryColor.withValues(alpha: 0.15),
+                  borderRadius: BorderRadius.circular(12),
+                  border: Border.all(
+                    color: categoryColor.withValues(alpha: 0.3),
                   ),
                 ),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
+                      insight.category.emoji,
+                      style: const TextStyle(fontSize: 12),
+                    ),
+                    const SizedBox(width: 4),
+                    Text(
+                      '${insight.score}',
+                      style: context.textTheme.labelMedium?.copyWith(
+                        fontWeight: FontWeight.bold,
+                        color: categoryColor,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 16),
+
+          // Progress bar with segments and cursor
+          LayoutBuilder(
+            builder: (context, constraints) {
+              final totalWidth = constraints.maxWidth;
+              final cursorX = cursorPosition * totalWidth;
+
+              return Column(
+                children: [
+                  // Cursor indicator
+                  SizedBox(
+                    height: 20,
+                    child: Stack(
+                      clipBehavior: Clip.none,
+                      children: [
+                        Positioned(
+                          left: cursorX - 12,
+                          top: 0,
+                          child: Column(
+                            children: [
+                              Container(
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 6, vertical: 2),
+                                decoration: BoxDecoration(
+                                  color: categoryColor,
+                                  borderRadius: BorderRadius.circular(8),
+                                ),
+                                child: Text(
+                                  '${insight.score}',
+                                  style: context.textTheme.labelSmall?.copyWith(
+                                    color: context.colors.onPrimary,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 10,
+                                  ),
+                                ),
+                              ),
+                              CustomPaint(
+                                size: const Size(8, 4),
+                                painter: _TrianglePainter(color: categoryColor),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+
+                  // Segmented progress bar
+                  Row(
+                    children: List.generate(5, (index) {
+                      final isFilled = index < insight.category.filledDots;
+                      final isCurrentSegment =
+                          index == insight.category.filledDots - 1;
+                      final dotColor = _getDotColor(index, context);
+
+                      return Expanded(
+                        child: Padding(
+                          padding: EdgeInsets.only(
+                            left: index == 0 ? 0 : 2,
+                            right: index == 4 ? 0 : 2,
+                          ),
+                          child: AnimatedContainer(
+                            duration: const Duration(milliseconds: 300),
+                            height: isCurrentSegment ? 14 : 10,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(8),
+                              color: isFilled
+                                  ? dotColor
+                                  : context.colors.surfaceContainerHighest,
+                              border: isFilled
+                                  ? null
+                                  : Border.all(
+                                      color: context.colors.outline
+                                          .withValues(alpha: 0.2),
+                                    ),
+                              boxShadow: isCurrentSegment
+                                  ? [
+                                      BoxShadow(
+                                        color: dotColor.withValues(alpha: 0.4),
+                                        blurRadius: 6,
+                                        offset: const Offset(0, 2),
+                                      ),
+                                    ]
+                                  : null,
+                            ),
+                          ),
+                        ),
+                      );
+                    }),
+                  ),
+                  const SizedBox(height: 8),
+
+                  // Category labels
+                  Row(
+                    children: List.generate(5, (index) {
+                      final isFilled = index < insight.category.filledDots;
+                      final isCurrentSegment =
+                          index == insight.category.filledDots - 1;
+                      final dotColor = _getDotColor(index, context);
+
+                      return Expanded(
+                        child: Text(
+                          _getCategoryName(index, context),
+                          style: context.textTheme.labelSmall?.copyWith(
+                            color: isCurrentSegment
+                                ? dotColor
+                                : isFilled
+                                    ? dotColor.withValues(alpha: 0.7)
+                                    : context.colors.onSurface
+                                        .withValues(alpha: 0.4),
+                            fontSize: 9,
+                            fontWeight: isCurrentSegment
+                                ? FontWeight.bold
+                                : FontWeight.normal,
+                          ),
+                          textAlign: TextAlign.center,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      );
+                    }),
+                  ),
+                ],
               );
-            }),
+            },
           ),
         ],
       ),
@@ -909,244 +1181,6 @@ class _RecoveryInsightSheetState extends ConsumerState<RecoveryInsightSheet> {
     );
   }
 
-  Widget _buildScoreBreakdown(BuildContext context, RecoveryInsight insight) {
-    final l10n = context.l10n;
-    final categoryColor = _getCategoryColor(insight.category, context);
-
-    return Container(
-      padding: const EdgeInsets.all(20),
-      decoration: BoxDecoration(
-        color: context.colors.surfaceContainer,
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(
-          color: context.colors.outline.withValues(alpha: 0.2),
-        ),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // Title
-          Row(
-            children: [
-              Icon(
-                AppIcons.calculate,
-                color: context.colors.primary,
-                size: AppIconSize.medium,
-              ),
-              const SizedBox(width: 12),
-              Expanded(
-                child: Text(
-                  l10n.howScoreCalculated,
-                  style: context.textTheme.titleSmall?.copyWith(
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 16),
-
-          // Formula visualization
-          Container(
-            padding: const EdgeInsets.all(16),
-            decoration: BoxDecoration(
-              color: categoryColor.withValues(alpha: 0.05),
-              borderRadius: BorderRadius.circular(12),
-              border: Border.all(
-                color: categoryColor.withValues(alpha: 0.2),
-              ),
-            ),
-            child: Column(
-              children: [
-                // Base Score
-                _buildScoreComponent(
-                  context,
-                  icon: AppIcons.workout,
-                  label: l10n.baseScore,
-                  value: insight.baseScore.toStringAsFixed(1),
-                  description: l10n.baseScoreDescription,
-                  color: context.colors.tertiary,
-                ),
-                const SizedBox(height: 12),
-
-                // Multiply icon
-                Center(
-                  child: Icon(
-                    AppIcons.close,
-                    color: context.colors.onSurfaceVariant.withValues(alpha: 0.5),
-                    size: AppIconSize.small,
-                  ),
-                ),
-                const SizedBox(height: 12),
-
-                // Sleep Modifier
-                _buildScoreComponent(
-                  context,
-                  icon: AppIcons.nightlight,
-                  label: l10n.sleepModifier,
-                  value: insight.sleepModifier.toStringAsFixed(2),
-                  description: l10n.sleepModifierDescription,
-                  color: context.colors.secondary,
-                ),
-                const SizedBox(height: 12),
-
-                // Multiply icon
-                Center(
-                  child: Icon(
-                    AppIcons.close,
-                    color: context.colors.onSurfaceVariant.withValues(alpha: 0.5),
-                    size: AppIconSize.small,
-                  ),
-                ),
-                const SizedBox(height: 12),
-
-                // Consecutive Penalty
-                _buildScoreComponent(
-                  context,
-                  icon: AppIcons.warning,
-                  label: l10n.consecutivePenalty,
-                  value: insight.consecutivePenalty.toStringAsFixed(2),
-                  description: l10n.consecutivePenaltyDescription,
-                  color: insight.consecutivePenalty < 1.0
-                      ? context.errorColor
-                      : context.successColor,
-                ),
-                const SizedBox(height: 16),
-
-                // Divider
-                Container(
-                  height: 2,
-                  decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      colors: [
-                        categoryColor.withValues(alpha: 0.1),
-                        categoryColor.withValues(alpha: 0.5),
-                        categoryColor.withValues(alpha: 0.1),
-                      ],
-                    ),
-                    borderRadius: BorderRadius.circular(1),
-                  ),
-                ),
-                const SizedBox(height: 16),
-
-                // Final Score Result
-                Row(
-                  children: [
-                    Icon(
-                      AppIcons.dragHandle,
-                      color: categoryColor,
-                      size: AppIconSize.medium,
-                    ),
-                    const SizedBox(width: 12),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            l10n.finalScore,
-                            style: context.textTheme.titleMedium?.copyWith(
-                              fontWeight: FontWeight.bold,
-                              color: categoryColor,
-                            ),
-                          ),
-                          Text(
-                            '${insight.baseScore.toStringAsFixed(1)} × ${insight.sleepModifier.toStringAsFixed(2)} × ${insight.consecutivePenalty.toStringAsFixed(2)}',
-                            style: context.textTheme.bodySmall?.copyWith(
-                              color: context.colors.onSurfaceVariant,
-                              fontFamily: 'monospace',
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    Container(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 16,
-                        vertical: 8,
-                      ),
-                      decoration: BoxDecoration(
-                        color: categoryColor,
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      child: Text(
-                        '${insight.score}',
-                        style: context.textTheme.headlineSmall?.copyWith(
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildScoreComponent(
-    BuildContext context, {
-    required IconData icon,
-    required String label,
-    required String value,
-    required String description,
-    required Color color,
-  }) {
-    return Row(
-      children: [
-        Container(
-          padding: const EdgeInsets.all(10),
-          decoration: BoxDecoration(
-            color: color.withValues(alpha: 0.15),
-            borderRadius: BorderRadius.circular(10),
-          ),
-          child: Icon(
-            icon,
-            color: color,
-            size: AppIconSize.small,
-          ),
-        ),
-        const SizedBox(width: 12),
-        Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    label,
-                    style: context.textTheme.bodyMedium?.copyWith(
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                  Text(
-                    value,
-                    style: context.textTheme.titleMedium?.copyWith(
-                      fontWeight: FontWeight.bold,
-                      color: color,
-                      fontFamily: 'monospace',
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 2),
-              Text(
-                description,
-                style: context.textTheme.bodySmall?.copyWith(
-                  color: context.colors.onSurfaceVariant,
-                  fontSize: 11,
-                ),
-              ),
-            ],
-          ),
-        ),
-      ],
-    );
-  }
-
   Widget _buildError(BuildContext context, Object error) {
     final l10n = context.l10n;
 
@@ -1238,5 +1272,132 @@ class _RecoveryInsightSheetState extends ConsumerState<RecoveryInsightSheet> {
             .weekday -
         1);
     return days[dayIndex % 7];
+  }
+}
+
+/// Custom painter for sparkline chart showing sleep trend
+class _SparklinePainter extends CustomPainter {
+  _SparklinePainter({
+    required this.values,
+    required this.maxValue,
+    required this.minValue,
+    required this.lineColor,
+    required this.fillColor,
+    required this.dotColor,
+  });
+
+  final List<double> values;
+  final double maxValue;
+  final double minValue;
+  final Color lineColor;
+  final Color fillColor;
+  final Color dotColor;
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    if (values.isEmpty) return;
+
+    final range = maxValue - minValue;
+    if (range <= 0) return;
+
+    final path = Path();
+    final fillPath = Path();
+    final points = <Offset>[];
+
+    for (var i = 0; i < values.length; i++) {
+      final x = (i / (values.length - 1)) * size.width;
+      final normalizedValue = (values[i] - minValue) / range;
+      final y = size.height - (normalizedValue * size.height);
+      points.add(Offset(x, y));
+    }
+
+    // Draw fill
+    fillPath.moveTo(0, size.height);
+    for (final point in points) {
+      fillPath.lineTo(point.dx, point.dy);
+    }
+    fillPath.lineTo(size.width, size.height);
+    fillPath.close();
+
+    final fillPaint = Paint()
+      ..color = fillColor
+      ..style = PaintingStyle.fill;
+    canvas.drawPath(fillPath, fillPaint);
+
+    // Draw line
+    path.moveTo(points.first.dx, points.first.dy);
+    for (var i = 1; i < points.length; i++) {
+      path.lineTo(points[i].dx, points[i].dy);
+    }
+
+    final linePaint = Paint()
+      ..color = lineColor
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 2
+      ..strokeCap = StrokeCap.round
+      ..strokeJoin = StrokeJoin.round;
+    canvas.drawPath(path, linePaint);
+
+    // Draw dots
+    final dotPaint = Paint()
+      ..color = dotColor
+      ..style = PaintingStyle.fill;
+
+    for (final point in points) {
+      canvas.drawCircle(point, 3, dotPaint);
+    }
+
+    // Highlight last dot
+    if (points.isNotEmpty) {
+      canvas.drawCircle(
+        points.last,
+        4,
+        Paint()
+          ..color = dotColor
+          ..style = PaintingStyle.fill,
+      );
+      canvas.drawCircle(
+        points.last,
+        5,
+        Paint()
+          ..color = dotColor.withValues(alpha: 0.3)
+          ..style = PaintingStyle.stroke
+          ..strokeWidth = 2,
+      );
+    }
+  }
+
+  @override
+  bool shouldRepaint(_SparklinePainter oldDelegate) {
+    return oldDelegate.values != values ||
+        oldDelegate.lineColor != lineColor ||
+        oldDelegate.fillColor != fillColor;
+  }
+}
+
+/// Custom painter for triangle pointer indicator
+class _TrianglePainter extends CustomPainter {
+  _TrianglePainter({required this.color});
+
+  final Color color;
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final paint = Paint()
+      ..color = color
+      ..style = PaintingStyle.fill;
+
+    final path = Path()
+      ..moveTo(size.width / 2, size.height)
+      ..lineTo(0, 0)
+      ..lineTo(size.width, 0)
+      ..close();
+
+    canvas.drawPath(path, paint);
+  }
+
+  @override
+  bool shouldRepaint(_TrianglePainter oldDelegate) {
+    return oldDelegate.color != color;
   }
 }

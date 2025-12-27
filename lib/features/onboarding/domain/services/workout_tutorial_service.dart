@@ -141,7 +141,9 @@ class WorkoutTutorialNotifier extends StateNotifier<WorkoutTutorialState> {
     if (!state.isActive) return;
 
     final l10n = AppLocalizations.of(context);
-    final colors = Theme.of(context).colorScheme;
+    final theme = Theme.of(context);
+    final colors = theme.colorScheme;
+    final textTheme = theme.textTheme;
 
     // Check if target exists
     if (targetKey.currentContext == null) {
@@ -189,9 +191,8 @@ class WorkoutTutorialNotifier extends StateNotifier<WorkoutTutorialState> {
       colorShadow: colors.surface,
       opacityShadow: 0.85,
       textSkip: l10n.skip,
-      textStyleSkip: TextStyle(
+      textStyleSkip: textTheme.labelMedium!.copyWith(
         color: colors.onSurface.withValues(alpha: 0.7),
-        fontSize: 14,
         fontWeight: FontWeight.w500,
       ),
       paddingFocus: 10,
@@ -310,7 +311,7 @@ class WorkoutTutorialNotifier extends StateNotifier<WorkoutTutorialState> {
                 ),
               ),
               Container(
-                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
                 decoration: BoxDecoration(
                   color: colors.primaryContainer,
                   borderRadius: BorderRadius.circular(12),
@@ -344,7 +345,7 @@ class WorkoutTutorialNotifier extends StateNotifier<WorkoutTutorialState> {
                   onPressed: onSkip,
                   child: Text(
                     AppLocalizations.of(context).skip,
-                    style: TextStyle(
+                    style: context.textTheme.labelMedium?.copyWith(
                       color: colors.onSurface.withValues(alpha: 0.6),
                     ),
                   ),

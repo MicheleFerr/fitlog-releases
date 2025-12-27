@@ -409,7 +409,7 @@ class _MinimalSetEditSheetState extends State<MinimalSetEditSheet> {
                             : hasWeight
                                 ? context.colors.primary.withValues(alpha: 0.5)
                                 : context.colors.outlineVariant,
-                        borderRadius: BorderRadius.circular(5),
+                        borderRadius: BorderRadius.circular(8),
                         border: !hasWeight && !isActive
                             ? Border.all(
                                 color: context.colors.outline.withValues(alpha: 0.3),
@@ -813,7 +813,7 @@ class _MinimalSetEditSheetState extends State<MinimalSetEditSheet> {
           color: isActive
               ? context.colors.primary.withValues(alpha: 0.15)
               : context.colors.surfaceContainerHighest.withValues(alpha: 0.5),
-          borderRadius: BorderRadius.circular(6),
+          borderRadius: BorderRadius.circular(8),
           border: isActive
               ? Border.all(color: context.colors.primary.withValues(alpha: 0.3))
               : null,
@@ -830,7 +830,7 @@ class _MinimalSetEditSheetState extends State<MinimalSetEditSheet> {
                     decoration: isNearCurrent
                         ? BoxDecoration(
                             color: context.colors.primary.withValues(alpha: 0.3),
-                            borderRadius: BorderRadius.circular(4),
+                            borderRadius: BorderRadius.circular(8),
                           )
                         : null,
                     child: Text(
@@ -1008,7 +1008,7 @@ extension MinimalSetEditSheetExtension on BuildContext {
     return showModalBottomSheet<void>(
       context: this,
       isScrollControlled: true,
-      backgroundColor: Colors.transparent,
+      backgroundColor: colors.surface.withValues(alpha: 0),
       builder: (context) => MinimalSetEditSheet(
         exerciseSet: exerciseSet,
         onSave: onSave,

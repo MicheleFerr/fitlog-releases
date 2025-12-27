@@ -55,6 +55,7 @@ import 'package:gymbro_flutter_new/features/workout_templates/presentation/scree
 import 'package:gymbro_flutter_new/features/workout/presentation/workout_screen.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/screens/workout_completion_summary_screen.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/screens/workout_exercise_detail_screen.dart';
+import 'package:gymbro_flutter_new/features/workout/presentation/screens/template_view_screen.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/workout.dart';
 import 'package:gymbro_flutter_new/features/exercise_database/presentation/exercise_search_screen.dart';
 import 'package:gymbro_flutter_new/features/history/presentation/screens/workout_history_screen.dart';
@@ -65,7 +66,6 @@ import 'package:gymbro_flutter_new/features/analytics/presentation/tabbed_analyt
 import 'package:gymbro_flutter_new/features/analytics/presentation/screens/exercise_detail_screen.dart';
 import 'package:gymbro_flutter_new/features/analytics/presentation/screens/exercise_progress_screen.dart';
 import 'package:gymbro_flutter_new/features/analytics/presentation/screens/pro_analytics_tabbed_screen.dart';
-import 'package:gymbro_flutter_new/features/analytics/presentation/screens/simplified_analytics_dashboard.dart';
 
 // Settings (pushed from Profile)
 import 'package:gymbro_flutter_new/features/settings/presentation/settings_screen.dart';
@@ -82,6 +82,7 @@ import 'package:gymbro_flutter_new/features/body_measurements/data/repositories/
 import 'package:gymbro_flutter_new/features/body_measurements/domain/entities/metric_type.dart';
 import 'package:gymbro_flutter_new/features/body_measurements/domain/entities/user_consent.dart';
 import 'package:gymbro_flutter_new/features/premium/presentation/screens/simple_premium_screen.dart';
+import 'package:gymbro_flutter_new/features/exercise_merge/presentation/screens/exercise_merge_screen.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator.dart';
 
 // Other routes
@@ -236,13 +237,13 @@ final appRouterProvider = Provider<GoRouter>((ref) {
                     name: AppRoutes.templatesName,
                     builder: (context, state) => const TemplatesHomeScreen(),
                     routes: [
-                      // Template detail
+                      // Template detail (view mode)
                       GoRoute(
                         path: 'detail',
                         name: AppRoutes.templateDetailName,
                         builder: (context, state) {
                           final templateId = state.extra as String;
-                          return _TemplateDetailPlaceholder(templateId: templateId);
+                          return TemplateViewScreen(templateId: templateId);
                         },
                       ),
                     ],
@@ -278,8 +279,10 @@ final appRouterProvider = Provider<GoRouter>((ref) {
                     name: AppRoutes.workoutExerciseDetailName,
                     builder: (context, state) {
                       final exerciseName = state.pathParameters['exerciseName']!;
+                      final exerciseId = state.uri.queryParameters['id'];
                       return WorkoutExerciseDetailScreen(
                         exerciseName: Uri.decodeComponent(exerciseName),
+                        exerciseId: exerciseId,
                       );
                     },
                   ),
@@ -315,15 +318,7 @@ final appRouterProvider = Provider<GoRouter>((ref) {
                   GoRoute(
                     path: 'analytics',
                     name: AppRoutes.analyticsName,
-                    builder: (context, state) {
-                      // Feature flag: Enable new simplified dashboard
-                      // TODO: Read from AppConfig provider when ready for A/B testing
-                      const useSimplified = true;
-
-                      return useSimplified
-                          ? const SimplifiedAnalyticsDashboard()
-                          : const AnalyticsScreen();
-                    },
+                    builder: (context, state) => const AnalyticsScreen(),
                     routes: [
                       // Analytics overview (tabbed)
                       GoRoute(
@@ -427,6 +422,12 @@ final appRouterProvider = Provider<GoRouter>((ref) {
                     name: AppRoutes.premiumName,
                     builder: (context, state) => const SimplePremiumScreen(),
                   ),
+                  // Exercise merge (consolidate custom exercises)
+                  GoRoute(
+                    path: 'exercise-merge',
+                    name: AppRoutes.exerciseMergeName,
+                    builder: (context, state) => const ExerciseMergeScreen(),
+                  ),
                 ],
               ),
             ],
@@ -502,58 +503,6 @@ class _RoutineComingSoonPlaceholder extends StatelessWidget {
   }
 }
 
-/// Placeholder widget for template detail screen
-class _TemplateDetailPlaceholder extends StatelessWidget {
-  const _TemplateDetailPlaceholder({required this.templateId});
-
-  final String templateId;
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(context.l10n.templates),
-      ),
-      body: Center(
-        child: Padding(
-          padding: const EdgeInsets.all(32.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Icon(
-                AppIcons.workout,
-                size: 64,
-                color: context.colors.primary,
-              ),
-              const SizedBox(height: 24),
-              Text(
-                context.l10n.comingSoon,
-                style: context.textTheme.headlineMedium,
-                textAlign: TextAlign.center,
-              ),
-              const SizedBox(height: 16),
-              Text(
-                'Template detail screen coming soon',
-                style: context.textTheme.bodyLarge?.copyWith(
-                  color: context.colors.onSurfaceVariant,
-                ),
-                textAlign: TextAlign.center,
-              ),
-              const SizedBox(height: 8),
-              Text(
-                'Template ID: $templateId',
-                style: context.textTheme.bodySmall?.copyWith(
-                  color: context.colors.onSurfaceVariant.withValues(alpha: 0.5),
-                ),
-                textAlign: TextAlign.center,
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-}
 
 /// Wrapper to provide userId to MeasurementListScreen with GDPR consent handling
 class _MeasurementListWrapper extends ConsumerStatefulWidget {

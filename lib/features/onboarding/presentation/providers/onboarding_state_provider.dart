@@ -332,6 +332,22 @@ class OnboardingStateNotifier extends Notifier<OnboardingState> {
     }
   }
 
+  /// Accept legal disclaimer (medical/liability)
+  /// Required before user can access main app features
+  Future<void> acceptLegalDisclaimer() async {
+    if (!state.hasAcceptedLegalDisclaimer) {
+      state = state.copyWith(
+        hasAcceptedLegalDisclaimer: true,
+        legalDisclaimerAcceptedAt: DateTime.now(),
+        lastInteraction: DateTime.now(),
+      );
+      await _saveState();
+      if (kDebugMode) {
+        debugPrint('⚖️ Legal disclaimer accepted at ${state.legalDisclaimerAcceptedAt}');
+      }
+    }
+  }
+
   /// Reset overlay version (for testing/deprecation)
   Future<void> resetOverlayVersion() async {
     state = state.copyWith(

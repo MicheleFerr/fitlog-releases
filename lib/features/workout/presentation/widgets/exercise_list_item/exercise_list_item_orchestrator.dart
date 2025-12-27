@@ -48,6 +48,9 @@ import 'package:gymbro_flutter_new/features/workout/presentation/widgets/rest_pa
 import 'package:gymbro_flutter_new/features/workout/presentation/widgets/exercise_list_item/utils/exercise_notes_handler.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/providers/user_exercise_preferences_provider.dart';
 import 'package:gymbro_flutter_new/features/analytics/data/repositories/exercise_preferences_repository.dart';
+import 'package:gymbro_flutter_new/features/exercise_merge/domain/entities/merge_candidate.dart';
+import 'package:gymbro_flutter_new/features/workout/presentation/widgets/quick_upgrade_modal.dart';
+import 'package:gymbro_flutter_new/features/workout/presentation/providers/exercise_upgrade_provider.dart';
 
 /// Orchestrator widget that coordinates ExerciseListItemHeader and ExerciseListItemSets
 ///
@@ -900,7 +903,7 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem>
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
-      backgroundColor: Colors.transparent,
+      backgroundColor: context.colors.surface.withValues(alpha: 0),
       builder: (context) => ExerciseHistoryBottomSheet(
         exerciseName: widget.exercise.name,
         exerciseId: widget.exercise.id,
@@ -1025,6 +1028,57 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem>
       SnackBarService.showSuccess(
         context,
         context.l10n.supersetCreated,
+      );
+    }
+  }
+
+  /// Show quick upgrade modal for exercise metadata update
+  Future<void> _handleShowQuickUpgrade(MergeCandidate candidate) async {
+    // Get affected items count before showing modal
+    final upgradeService = ref.read(exerciseUpgradeServiceProvider);
+    final affectedItems = await upgradeService.countAffectedItems(
+      widget.exercise.name,
+    );
+
+    if (!mounted) return;
+
+    final result = await QuickUpgradeModal.show(
+      context,
+      currentExerciseName: widget.exercise.name,
+      candidate: candidate,
+      affectedWorkoutsCount: affectedItems.total,
+    );
+
+    if (result != null && mounted) {
+      // Update exercise with new metadata from target exercise
+      final workoutNotifier = ref.read(currentWorkoutProvider.notifier);
+
+      // Update exercise name in current workout
+      workoutNotifier.updateExercise(
+        widget.exercise.id,
+        widget.exercise.copyWith(
+          name: result.targetExercise.nome,
+        ),
+      );
+
+      // If user wants to update other workouts/templates
+      if (result.updateOtherWorkouts && affectedItems.hasAffectedItems) {
+        final updatedCount = await upgradeService.updateExerciseAcrossItems(
+          oldExerciseName: widget.exercise.name,
+          newExerciseName: result.targetExercise.nome,
+        );
+
+        if (kDebugMode) {
+          debugPrint(
+            '🔄 [QuickUpgrade] Updated $updatedCount workouts/templates',
+          );
+        }
+      }
+
+      HapticFeedback.mediumImpact();
+      SnackBarService.showSuccess(
+        context,
+        context.l10n.exerciseUpgraded,
       );
     }
   }
@@ -1656,14 +1710,14 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem>
             boxShadow: [
               // ✅ DESIGN: Lighter, more subtle shadow
               BoxShadow(
-                color: Colors.black.withValues(alpha: 0.03),
+                color: context.colors.shadow.withValues(alpha: 0.03),
                 blurRadius: 4,
                 offset: const Offset(0, 1),
               ),
             ],
           ),
           child: Material(
-            color: Colors.transparent,
+            color: context.colors.surface.withValues(alpha: 0),
             borderRadius: BorderRadius.circular(16),
             clipBehavior: Clip.antiAlias,
             child: Column(
@@ -1698,6 +1752,7 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem>
                     onAddWarmupSets: _handleAddWarmupSets,
                     onEditNotes: _handleEditNotes,
                     onCreateSuperset: _handleCreateSuperset,
+                    onShowQuickUpgrade: _handleShowQuickUpgrade,
                     hasWarmupData: _hasWarmupData,
                     hasInjuryPreventionData: _hasInjuryPreventionData,
                     tutorialMenuKey: widget.tutorialExerciseMenuKey,
@@ -1814,7 +1869,7 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem>
                     padding: const EdgeInsets.only(bottom: 12),
                     child: Center(
                       child: Material(
-                        color: Colors.transparent,
+                        color: context.colors.surface.withValues(alpha: 0),
                         child: InkWell(
                           onTap: () {
                             _expansionNotifier.expand();

@@ -174,7 +174,7 @@ class PdfExerciseService {
         // Titolo sezione
         pw.Container(
           width: double.infinity,
-          padding: const pw.EdgeInsets.symmetric(vertical: 10, horizontal: 16),
+          padding: const pw.EdgeInsets.symmetric(vertical: 12, horizontal: 16),
           decoration: pw.BoxDecoration(
             color: successColor,
             borderRadius: const pw.BorderRadius.only(
@@ -340,7 +340,7 @@ class PdfExerciseService {
         // Titolo sezione
         pw.Container(
           width: double.infinity,
-          padding: const pw.EdgeInsets.symmetric(vertical: 10, horizontal: 16),
+          padding: const pw.EdgeInsets.symmetric(vertical: 12, horizontal: 16),
           decoration: pw.BoxDecoration(
             color: accentColor,
             borderRadius: const pw.BorderRadius.only(
@@ -441,7 +441,7 @@ class PdfExerciseService {
 
   static pw.Widget _buildTableHeader(String text) {
     return pw.Container(
-      padding: const pw.EdgeInsets.all(10),
+      padding: const pw.EdgeInsets.all(12),
       child: pw.Text(
         text,
         style: pw.TextStyle(
@@ -454,7 +454,7 @@ class PdfExerciseService {
 
   static pw.Widget _buildTableCell(String text, PdfColor? color, {bool bold = false}) {
     return pw.Container(
-      padding: const pw.EdgeInsets.all(10),
+      padding: const pw.EdgeInsets.all(12),
       child: pw.Text(
         text,
         style: pw.TextStyle(
@@ -483,7 +483,7 @@ class PdfExerciseService {
                 padding: const pw.EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                 decoration: pw.BoxDecoration(
                   color: primaryColor,
-                  borderRadius: pw.BorderRadius.circular(4),
+                  borderRadius: pw.BorderRadius.circular(8),
                 ),
                 child: pw.Text(
                   'FitLog Pro',

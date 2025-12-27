@@ -11,6 +11,7 @@ import 'package:gymbro_flutter_new/features/exercise_database/data/utils/exercis
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
 import 'package:gymbro_flutter_new/features/exercise_database/domain/entities/exercise_template.dart';
+import 'package:gymbro_flutter_new/features/stress_index/data/mappers/muscle_abbreviation_mapper.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise.dart';
 
 class ExerciseSearchService {
@@ -21,48 +22,27 @@ class ExerciseSearchService {
   List<Map<String, dynamic>> _exercisesData = [];
   String? _cachedLocaleCode;
 
-  // Mapping categorie → codici muscoli
-  static const Map<String, List<String>> categoryMappings = {
-    // Categorie generali
-    'upper body': ['PET', 'LAT', 'SCH', 'DORS', 'DORSO', 'DELT', 'DEL', 'SPALLA', 'BIC', 'TRIC', 'TRAP', 'ROMBOIDI', 'AVAMB'],
-    'lower body': ['QUAD', 'GLUT', 'GLUTEI', 'FEMOR', 'POLP', 'LOM', 'ADDU'],
-    'core': ['CORE', 'ADDOM', 'ABD', 'OBLIQ'],
-    'full body': ['PET', 'LAT', 'SCH', 'DORS', 'DELT', 'DEL', 'BIC', 'TRIC', 'QUAD', 'GLUT', 'GLUTEI', 'FEMOR'],
+  /// Get search abbreviations for a query term
+  ///
+  /// **SINGLE SOURCE OF TRUTH**: Delegates to MuscleAbbreviationMapper.
+  /// Returns muscle abbreviation codes that match the search term.
+  static List<String> _getSearchAbbreviations(String query) {
+    return MuscleAbbreviationMapper.getSearchAbbreviations(query);
+  }
 
-    // Pattern di movimento
-    'push': ['PET', 'TRIC', 'DELT', 'DEL', 'SPALLA'],
-    'pull': ['LAT', 'SCH', 'DORS', 'DORSO', 'BIC', 'TRAP', 'ROMBOIDI', 'AVAMB'],
-    'legs': ['QUAD', 'GLUT', 'GLUTEI', 'FEMOR', 'POLP', 'LOM', 'ADDU'],
-    'hinge': ['FEMOR', 'GLUT', 'GLUTEI', 'LOM', 'TRAP'],
-    'squat': ['QUAD', 'GLUT', 'GLUTEI'],
+  /// Get display name for a muscle code
+  ///
+  /// **SINGLE SOURCE OF TRUTH**: Delegates to MuscleAbbreviationMapper.
+  static String _getMuscleDisplayName(String code) {
+    return MuscleAbbreviationMapper.codeToDisplayName(code);
+  }
 
-    // Sinonimi IT → muscoli
-    'petto': ['PET'], 'pettorali': ['PET'], 'chest': ['PET'],
-    'schiena': ['LAT', 'SCH', 'DORS', 'DORSO', 'TRAP', 'ROMBOIDI'],
-    'dorsali': ['LAT', 'SCH', 'DORS', 'DORSO'], 'back': ['LAT', 'SCH', 'DORS', 'DORSO', 'TRAP', 'ROMBOIDI'],
-    'spalle': ['DELT', 'DEL', 'SPALLA'], 'deltoidi': ['DELT', 'DEL'], 'shoulders': ['DELT', 'DEL', 'SPALLA'],
-    'braccia': ['BIC', 'TRIC', 'AVAMB'], 'bicipiti': ['BIC'], 'tricipiti': ['TRIC'],
-    'arms': ['BIC', 'TRIC', 'AVAMB'], 'biceps': ['BIC'], 'triceps': ['TRIC'],
-    'gambe': ['QUAD', 'GLUT', 'GLUTEI', 'FEMOR', 'POLP', 'LOM', 'ADDU'],
-    'quadricipiti': ['QUAD'], 'quads': ['QUAD'],
-    'glutei': ['GLUT', 'GLUTEI'], 'glutes': ['GLUT', 'GLUTEI'],
-    'femorali': ['FEMOR'], 'hamstrings': ['FEMOR'],
-    'polpacci': ['POLP'], 'calves': ['POLP'],
-    'lombari': ['LOM'], 'lower back': ['LOM'],
-    'addominali': ['ADDOM', 'ABD'], 'abs': ['ADDOM', 'ABD'],
-    'trapezi': ['TRAP'], 'traps': ['TRAP'],
-    'avambracci': ['AVAMB'], 'forearms': ['AVAMB'],
-  };
-
-  // Mapping codice muscolo → nome leggibile
-  static const Map<String, String> muscleNameMappings = {
-    'PET': 'Pettorali', 'LAT': 'Dorsali', 'SCH': 'Dorsali', 'DORS': 'Dorsali', 'DORSO': 'Dorsali',
-    'DELT': 'Deltoidi', 'DEL': 'Deltoidi', 'SPALLA': 'Spalle',
-    'BIC': 'Bicipiti', 'TRIC': 'Tricipiti', 'TRAP': 'Trapezi', 'ROMBOIDI': 'Romboidi',
-    'QUAD': 'Quadricipiti', 'GLUT': 'Glutei', 'GLUTEI': 'Glutei', 'FEMOR': 'Femorali',
-    'POLP': 'Polpacci', 'LOM': 'Lombari', 'ADDOM': 'Addominali', 'ABD': 'Addominali',
-    'OBLIQ': 'Obliqui', 'AVAMB': 'Avambracci', 'ADDU': 'Adduttori', 'CORE': 'Core', 'COLLO': 'Collo',
-  };
+  /// Check if a code is a valid muscle abbreviation
+  ///
+  /// **SINGLE SOURCE OF TRUTH**: Delegates to MuscleAbbreviationMapper.
+  static bool _isValidMuscleCode(String code) {
+    return MuscleAbbreviationMapper.getMuscleInfo(code) != null;
+  }
 
   Future<void> loadExercises([Locale? locale]) async {
     final localeCode = locale?.languageCode ?? 'en';
@@ -185,21 +165,19 @@ class ExerciseSearchService {
         .trim();
   }
 
+  /// Get muscle codes for a search query
+  ///
+  /// **SINGLE SOURCE OF TRUTH**: Uses MuscleAbbreviationMapper for all mappings.
   List<String> _getMappedMuscles(String query) {
     final muscles = <String>{};
 
-    if (categoryMappings.containsKey(query)) {
-      muscles.addAll(categoryMappings[query]!);
-    }
+    // Get search abbreviations from mapper (handles patterns like 'push', 'legs', etc.)
+    final searchAbbrs = _getSearchAbbreviations(query);
+    muscles.addAll(searchAbbrs);
 
-    for (final entry in categoryMappings.entries) {
-      if (entry.key.contains(query) || query.contains(entry.key)) {
-        muscles.addAll(entry.value);
-      }
-    }
-
+    // Also check if query itself is a valid muscle code
     final upperQuery = query.toUpperCase();
-    if (muscleNameMappings.containsKey(upperQuery)) {
+    if (_isValidMuscleCode(upperQuery)) {
       muscles.add(upperQuery);
     }
 
@@ -251,30 +229,27 @@ class ExerciseSearchService {
     );
   }
 
+  /// Parse muscle codes into display names
+  ///
+  /// **SINGLE SOURCE OF TRUTH**: Uses MuscleAbbreviationMapper.
   List<String> _parseMuscleGroups(String focus) {
     final groups = <String>[];
     final parts = focus.split(',').map((s) => s.trim()).toList();
 
     for (final part in parts) {
-      final muscleName = muscleNameMappings[part];
-      groups.add(muscleName ?? part);
+      final displayName = _getMuscleDisplayName(part);
+      groups.add(displayName);
     }
 
     return groups;
   }
 
+  /// Determine exercise category from focus codes
+  ///
+  /// **SINGLE SOURCE OF TRUTH**: Uses MuscleAbbreviationMapper.
   ExerciseCategory _determineCategory(String focus) {
-    final primaryMuscle = focus.split(',').first.trim();
-
-    switch (primaryMuscle) {
-      case 'PET': return ExerciseCategory.chest;
-      case 'LAT': case 'TRAP': case 'ROMBOIDI': return ExerciseCategory.back;
-      case 'DELT': case 'DEL': return ExerciseCategory.shoulders;
-      case 'BIC': case 'TRIC': case 'AVAMB': return ExerciseCategory.arms;
-      case 'QUAD': case 'GLUT': case 'FEMOR': case 'POLP': case 'ADDU': return ExerciseCategory.legs;
-      case 'ADDOM': case 'OBLIQ': case 'CORE': return ExerciseCategory.abs;
-      default: return ExerciseCategory.other;
-    }
+    final parts = focus.split(',').map((s) => s.trim()).toList();
+    return MuscleAbbreviationMapper.focusListToExerciseCategory(parts);
   }
 
   // Quick filter buttons

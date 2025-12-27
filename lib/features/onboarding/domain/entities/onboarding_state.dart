@@ -23,6 +23,8 @@ class OnboardingState {
     this.hasSeenRestTimerExplanation = false,
     this.userGoal,
     this.weeklyWorkoutTarget,
+    this.hasAcceptedLegalDisclaimer = false,
+    this.legalDisclaimerAcceptedAt,
   });
 
   factory OnboardingState.fromJson(Map<String, dynamic> json) {
@@ -52,6 +54,10 @@ class OnboardingState {
       hasSeenRestTimerExplanation: json['hasSeenRestTimerExplanation'] ?? false,
       userGoal: json['userGoal'],
       weeklyWorkoutTarget: json['weeklyWorkoutTarget'],
+      hasAcceptedLegalDisclaimer: json['hasAcceptedLegalDisclaimer'] ?? false,
+      legalDisclaimerAcceptedAt: json['legalDisclaimerAcceptedAt'] != null
+          ? DateTime.parse(json['legalDisclaimerAcceptedAt'])
+          : null,
     );
   }
   @HiveField(0)
@@ -107,6 +113,13 @@ class OnboardingState {
 
   @HiveField(19)
   final int? weeklyWorkoutTarget; // Weekly workout frequency (2-7 per week)
+
+  // Legal Disclaimer acceptance (required for App Store compliance)
+  @HiveField(20)
+  final bool hasAcceptedLegalDisclaimer;
+
+  @HiveField(21)
+  final DateTime? legalDisclaimerAcceptedAt;
 
   static const int totalSteps = 8;
 
@@ -177,6 +190,8 @@ class OnboardingState {
     bool? hasSeenRestTimerExplanation,
     String? userGoal,
     int? weeklyWorkoutTarget,
+    bool? hasAcceptedLegalDisclaimer,
+    DateTime? legalDisclaimerAcceptedAt,
   }) {
     return OnboardingState(
       hasSeenGlobalOnboarding: hasSeenGlobalOnboarding ?? this.hasSeenGlobalOnboarding,
@@ -196,6 +211,8 @@ class OnboardingState {
       hasSeenRestTimerExplanation: hasSeenRestTimerExplanation ?? this.hasSeenRestTimerExplanation,
       userGoal: userGoal ?? this.userGoal,
       weeklyWorkoutTarget: weeklyWorkoutTarget ?? this.weeklyWorkoutTarget,
+      hasAcceptedLegalDisclaimer: hasAcceptedLegalDisclaimer ?? this.hasAcceptedLegalDisclaimer,
+      legalDisclaimerAcceptedAt: legalDisclaimerAcceptedAt ?? this.legalDisclaimerAcceptedAt,
     );
   }
 
@@ -218,6 +235,8 @@ class OnboardingState {
       'hasSeenRestTimerExplanation': hasSeenRestTimerExplanation,
       'userGoal': userGoal,
       'weeklyWorkoutTarget': weeklyWorkoutTarget,
+      'hasAcceptedLegalDisclaimer': hasAcceptedLegalDisclaimer,
+      'legalDisclaimerAcceptedAt': legalDisclaimerAcceptedAt?.toIso8601String(),
     };
   }
 

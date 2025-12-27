@@ -325,13 +325,18 @@ final streakWeeksProgressProvider = FutureProvider.autoDispose<StreakWeeksProgre
 });
 
 /// Quick access provider for current workouts per week goal
+/// 🔧 PERF FIX: Use .select() to only rebuild when workoutsPerWeek changes
 final workoutsPerWeekGoalProvider = Provider<int>((ref) {
-  final goals = ref.watch(userGoalsProvider);
-  return goals.valueOrNull?.workoutsPerWeek ?? 2;
+  final workoutsPerWeek = ref.watch(
+    userGoalsProvider.select((asyncValue) => asyncValue.valueOrNull?.workoutsPerWeek),
+  );
+  return workoutsPerWeek ?? 2;
 });
 
 /// Quick access provider for current weekly volume target
+/// 🔧 PERF FIX: Use .select() to only rebuild when weeklyVolumeTargetKg changes
 final weeklyVolumeTargetProvider = Provider<double?>((ref) {
-  final goals = ref.watch(userGoalsProvider);
-  return goals.valueOrNull?.weeklyVolumeTargetKg;
+  return ref.watch(
+    userGoalsProvider.select((asyncValue) => asyncValue.valueOrNull?.weeklyVolumeTargetKg),
+  );
 });

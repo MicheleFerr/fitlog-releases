@@ -10,8 +10,10 @@ library;
 
 import 'package:gymbro_flutter_new/features/exercise_database/domain/entities/exercise.dart'
     as DatabaseExercise;
+import 'package:gymbro_flutter_new/features/exercise_database/domain/entities/exercise_counting_mode.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise.dart'
     as WorkoutExercise;
+import 'package:gymbro_flutter_new/features/stress_index/data/mappers/muscle_abbreviation_mapper.dart';
 
 /// Converter centralizzato per la conversione di esercizi
 /// da Database Exercise a Workout Exercise
@@ -20,21 +22,32 @@ class ExerciseConverter {
 
   /// Converte un Database Exercise in un Workout Exercise con 3 set di default
   ///
+  /// [countingModeOverride] - Optional override for the counting mode.
+  /// If provided, it will be used instead of the database exercise's counting mode.
+  /// This is used when the user has saved a preferred counting mode for this exercise.
+  ///
   /// Esempio:
   /// ```dart
   /// final dbExercise = Exercise(nome: 'Squat', focus: ['QUAD', 'GLUT'], ...);
   /// final workoutExercise = ExerciseConverter.fromDatabaseExercise(dbExercise);
+  ///
+  /// // With override:
+  /// final workoutExercise = ExerciseConverter.fromDatabaseExercise(
+  ///   dbExercise,
+  ///   countingModeOverride: ExerciseCountingMode.reps,
+  /// );
   /// ```
   static WorkoutExercise.Exercise fromDatabaseExercise(
-    DatabaseExercise.Exercise exercise,
-  ) {
+    DatabaseExercise.Exercise exercise, {
+    ExerciseCountingMode? countingModeOverride,
+  }) {
     return WorkoutExercise.Exercise(
       id: exercise.id, // ✅ Preserve original database exercise ID
       name: exercise.nome,
       type: WorkoutExercise.ExerciseType.single,
       category: mapFocusToCategory(exercise.focus),
       notes: null, // Note utente separate - non mappare noteTecniche qui
-      countingMode: exercise.countingMode, // ✅ Use counting mode from database
+      countingMode: countingModeOverride ?? exercise.countingMode, // ✅ Use override if provided, otherwise database
       tut: exercise.tempoEsecuzione, // ✅ Pass TUT from database
       sets: [
         WorkoutExercise.ExerciseSet(setNumber: 1, weight: 0, reps: 10),
@@ -45,6 +58,8 @@ class ExerciseConverter {
   }
 
   /// Converte un Database Exercise in un Workout Exercise con set custom
+  ///
+  /// [countingModeOverride] - Optional override for the counting mode.
   ///
   /// Esempio:
   /// ```dart
@@ -59,15 +74,16 @@ class ExerciseConverter {
   /// ```
   static WorkoutExercise.Exercise fromDatabaseExerciseWithSets(
     DatabaseExercise.Exercise exercise,
-    List<WorkoutExercise.ExerciseSet> sets,
-  ) {
+    List<WorkoutExercise.ExerciseSet> sets, {
+    ExerciseCountingMode? countingModeOverride,
+  }) {
     return WorkoutExercise.Exercise(
       id: exercise.id, // ✅ Preserve original database exercise ID
       name: exercise.nome,
       type: WorkoutExercise.ExerciseType.single,
       category: mapFocusToCategory(exercise.focus),
       notes: null, // Note utente separate - non mappare noteTecniche qui
-      countingMode: exercise.countingMode, // ✅ Use counting mode from database
+      countingMode: countingModeOverride ?? exercise.countingMode, // ✅ Use override if provided
       tut: exercise.tempoEsecuzione, // ✅ Pass TUT from database
       sets: sets,
     );
@@ -75,147 +91,47 @@ class ExerciseConverter {
 
   /// Mappa i codici muscoli focus a category di workout
   ///
-  /// **IMPORTANTE**: Usa `.any()` per controllare TUTTI gli elementi del focus,
-  /// non solo il primo. Questo risolve il bug dove ['QUAD', 'PETTO'] veniva
-  /// mappato a legs invece di chest quando si usava `.first`.
+  /// **SINGLE SOURCE OF TRUTH**: Delega a MuscleAbbreviationMapper
+  /// che è la fonte centralizzata per il mapping abbreviazione → categoria.
   ///
   /// Esempio:
   /// ```dart
-  /// mapFocusToCategory(['PETTO', 'DELT']) // → ExerciseCategory.chest
+  /// mapFocusToCategory(['PETT', 'DELT']) // → ExerciseCategory.chest
   /// mapFocusToCategory(['QUAD', 'GLUT'])  // → ExerciseCategory.legs
-  /// mapFocusToCategory(['BICIPITI'])      // → ExerciseCategory.arms
+  /// mapFocusToCategory(['LAT'])           // → ExerciseCategory.back
   /// ```
   static WorkoutExercise.ExerciseCategory mapFocusToCategory(
     List<String> focus,
   ) {
-    if (focus.isEmpty) {
-      return WorkoutExercise.ExerciseCategory.other;
-    }
-
-    // Converti tutto in uppercase per confronto case-insensitive
-    final upperFocus = focus.map((f) => f.toUpperCase()).toList();
-
-    // Chest - Pettorali
-    if (upperFocus.any((f) => ['PETTO', 'CHEST', 'PECT'].contains(f))) {
-      return WorkoutExercise.ExerciseCategory.chest;
-    }
-
-    // Back - Dorso/Schiena
-    if (upperFocus.any((f) => ['DORSO', 'BACK', 'LAT', 'LATS', 'TRAP', 'TRAPS', 'SCHIENA'].contains(f))) {
-      return WorkoutExercise.ExerciseCategory.back;
-    }
-
-    // Shoulders - Spalle
-    if (upperFocus.any((f) => ['SPALLE', 'DELT', 'SHOULDERS', 'SHOULDER'].contains(f))) {
-      return WorkoutExercise.ExerciseCategory.shoulders;
-    }
-
-    // Arms - Braccia
-    if (upperFocus.any((f) => ['BICIPITI', 'TRICIPITI', 'ARMS', 'BRACCI', 'BIC', 'TRIC', 'BICEPS', 'TRICEPS', 'AVAMB', 'FOREARMS'].contains(f))) {
-      return WorkoutExercise.ExerciseCategory.arms;
-    }
-
-    // Legs - Gambe
-    if (upperFocus.any((f) => ['QUAD', 'GLUT', 'FEMOR', 'POLP', 'LEGS', 'GAMBE', 'HAM', 'HAMSTRINGS', 'CALVES'].contains(f))) {
-      return WorkoutExercise.ExerciseCategory.legs;
-    }
-
-    // Core/Abs - Addome
-    if (upperFocus.any((f) => ['CORE', 'ADDOME', 'ABS', 'ADDOM'].contains(f))) {
-      return WorkoutExercise.ExerciseCategory.abs;
-    }
-
-    // Cardio
-    if (upperFocus.any((f) => f == 'CARDIO')) {
-      return WorkoutExercise.ExerciseCategory.cardio;
-    }
-
-    return WorkoutExercise.ExerciseCategory.other;
+    // Usa il mapper centralizzato come single source of truth
+    return MuscleAbbreviationMapper.focusListToExerciseCategory(focus);
   }
 
   /// Mappa nomi di muscoli (IT/EN) ai codici standardizzati
   ///
-  /// Usato per reverse mapping quando si crea un esercizio custom
-  /// e si vuole convertire "Pettorali" → "PET"
+  /// **SINGLE SOURCE OF TRUTH**: Delega a MuscleAbbreviationMapper.
   ///
   /// Esempio:
   /// ```dart
-  /// mapMuscleNameToCode('Pettorali')    // → 'PET'
+  /// mapMuscleNameToCode('Pettorali')    // → 'PETT'
   /// mapMuscleNameToCode('Quadricipiti') // → 'QUAD'
-  /// mapMuscleNameToCode('Chest')        // → 'PET'
+  /// mapMuscleNameToCode('Chest')        // → 'PETT'
   /// mapMuscleNameToCode('Unknown')      // → 'OTHER'
   /// ```
   static String mapMuscleNameToCode(String muscleName) {
-    final mappings = {
-      'pettorali': 'PET',
-      'chest': 'PET',
-      'petto': 'PET',
-      'dorsali': 'LAT',
-      'back': 'LAT',
-      'dorso': 'LAT',
-      'lats': 'LAT',
-      'deltoidi': 'DELT',
-      'shoulders': 'DELT',
-      'spalle': 'DELT',
-      'bicipiti': 'BIC',
-      'biceps': 'BIC',
-      'tricipiti': 'TRIC',
-      'triceps': 'TRIC',
-      'trapezi': 'TRAP',
-      'traps': 'TRAP',
-      'quadricipiti': 'QUAD',
-      'quads': 'QUAD',
-      'glutei': 'GLUT',
-      'glutes': 'GLUT',
-      'femorali': 'FEMOR',
-      'hamstrings': 'FEMOR',
-      'polpacci': 'POLP',
-      'calves': 'POLP',
-      'addominali': 'ADDOM',
-      'abs': 'ADDOM',
-      'core': 'CORE',
-      'avambracci': 'AVAMB',
-      'forearms': 'AVAMB',
-    };
-
-    // Cerca il mapping usando contains per match parziale
-    final lowerMuscleName = muscleName.toLowerCase();
-    for (final entry in mappings.entries) {
-      if (lowerMuscleName.contains(entry.key)) {
-        return entry.value;
-      }
-    }
-
-    return 'OTHER';
+    return MuscleAbbreviationMapper.nameToAbbreviation(muscleName) ?? 'OTHER';
   }
 
   /// Converte un codice muscolo al nome IT display-friendly
   ///
+  /// **SINGLE SOURCE OF TRUTH**: Delega a MuscleAbbreviationMapper.
+  ///
   /// Esempio:
   /// ```dart
-  /// mapMuscleCodeToName('PET')  // → 'Pettorali'
+  /// mapMuscleCodeToName('PETT') // → 'Pettorali'
   /// mapMuscleCodeToName('QUAD') // → 'Quadricipiti'
   /// ```
   static String mapMuscleCodeToName(String code) {
-    final mappings = {
-      'PET': 'Pettorali',
-      'PETTO': 'Pettorali',
-      'LAT': 'Dorsali',
-      'DORSO': 'Dorsali',
-      'DELT': 'Deltoidi',
-      'SPALLE': 'Deltoidi',
-      'BIC': 'Bicipiti',
-      'TRIC': 'Tricipiti',
-      'TRAP': 'Trapezi',
-      'QUAD': 'Quadricipiti',
-      'GLUT': 'Glutei',
-      'FEMOR': 'Femorali',
-      'POLP': 'Polpacci',
-      'ADDOM': 'Addominali',
-      'CORE': 'Core',
-      'AVAMB': 'Avambracci',
-    };
-
-    return mappings[code.toUpperCase()] ?? code;
+    return MuscleAbbreviationMapper.codeToDisplayName(code);
   }
 }

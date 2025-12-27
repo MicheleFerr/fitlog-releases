@@ -64,8 +64,9 @@ class _SupersetCardState extends ConsumerState<SupersetCard> {
   @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
-    final config = ref.watch(appConfigProvider);
-    
+    // 🔧 PERF FIX: Removed unused config watch - was causing unnecessary rebuilds
+    // Config fields are watched with .select() only where needed
+
     return Dismissible(
       key: Key('superset_${widget.superset.name}'),
       direction: DismissDirection.endToStart,
@@ -76,10 +77,11 @@ class _SupersetCardState extends ConsumerState<SupersetCard> {
       background: Container(
         alignment: Alignment.centerRight,
         padding: const EdgeInsets.only(right: 16),
+        // 🔧 PERF FIX: Use theme color instead of hardcoded Colors.transparent
         decoration: BoxDecoration(
           gradient: LinearGradient(
             colors: [
-              Colors.transparent,
+              context.colors.surface.withValues(alpha: 0),
               context.colors.error.withValues(alpha: 0.3),
             ],
           ),
@@ -136,7 +138,7 @@ class _SupersetCardState extends ConsumerState<SupersetCard> {
             ),
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withValues(alpha: 0.03),
+                color: context.colors.shadow.withValues(alpha: 0.03),
                 blurRadius: 4,
                 offset: const Offset(0, 1),
               ),
@@ -151,7 +153,7 @@ class _SupersetCardState extends ConsumerState<SupersetCard> {
               // Sets section (collapsible)
               if (_isExpanded) ...[
                 const Divider(height: 1),
-                _buildSupersetSets(context, l10n, config),
+                _buildSupersetSets(context, l10n),
               ],
 
               // Note del superset (se presenti)
@@ -324,7 +326,8 @@ class _SupersetCardState extends ConsumerState<SupersetCard> {
     );
   }
 
-  Widget _buildSupersetSets(BuildContext context, AppLocalizations l10n, config) {
+  // 🔧 PERF FIX: Removed config parameter - no longer needed as .select() is used directly
+  Widget _buildSupersetSets(BuildContext context, AppLocalizations l10n) {
     final completedSets = widget.superset.supersetSets.where((s) => s.isFullyCompleted).length;
     final totalSets = widget.superset.supersetSets.length;
     // ✅ FIX Issue 2: Use setDisplayProvider for Comodo/Compatto mode
@@ -363,7 +366,7 @@ class _SupersetCardState extends ConsumerState<SupersetCard> {
             final index = entry.key;
             final supersetSet = entry.value;
             return _buildSetRowLikeExerciseListItem(
-              context, supersetSet, index + 1, l10n, config, displayMode,
+              context, supersetSet, index + 1, l10n, displayMode,
             );
           }),
         ],
@@ -460,12 +463,12 @@ class _SupersetCardState extends ConsumerState<SupersetCard> {
   /// Set row styled to show ALL exercises in the round
   /// ✅ NEW: Shows each exercise with its weight × reps so user knows what to do
   /// ✅ FIX Issue 2: Uses SetDisplayMode for Comodo/Compatto styling
+  // 🔧 PERF FIX: Removed config parameter - no longer needed
   Widget _buildSetRowLikeExerciseListItem(
     BuildContext context,
     SupersetSet supersetSet,
     int setNumber,
     AppLocalizations l10n,
-    config,
     SetDisplayMode displayMode,
   ) {
     final isFullyCompleted = supersetSet.isFullyCompleted;
@@ -600,8 +603,11 @@ class _SupersetCardState extends ConsumerState<SupersetCard> {
     final reps = exerciseData?.actualReps ?? exerciseData?.targetReps ?? 0;
 
     // ✅ TUT visibility controlled by setDurationTracking toggle
-    final config = ref.watch(appConfigProvider);
-    final showTut = exercise.tut != null && (config.setDurationTracking ?? false);
+    // 🔧 PERF FIX: Use .select() to only watch the specific field needed
+    final setDurationTracking = ref.watch(
+      appConfigProvider.select((c) => c.setDurationTracking ?? false),
+    );
+    final showTut = exercise.tut != null && setDurationTracking;
 
     // Truncate exercise name if too long
     final maxNameLength = displayMode == SetDisplayMode.compact ? 12 : 16;
@@ -656,7 +662,7 @@ class _SupersetCardState extends ConsumerState<SupersetCard> {
           GestureDetector(
             onTap: () => showTutInfoBottomSheet(context, exercise.tut!),
             child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
               decoration: BoxDecoration(
                 color: context.colors.secondary.withValues(alpha: 0.15),
                 borderRadius: BorderRadius.circular(8),

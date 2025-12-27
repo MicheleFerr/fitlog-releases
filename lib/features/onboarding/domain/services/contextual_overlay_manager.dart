@@ -52,7 +52,7 @@ class ContextualOverlayManager {
       await showDialog(
         context: context,
         barrierDismissible: dismissible,
-        barrierColor: Colors.transparent,
+        barrierColor: Theme.of(context).colorScheme.surface.withValues(alpha: 0),
         builder: (dialogContext) => ContextualOverlay(
           targetKey: targetKey,
           message: message,

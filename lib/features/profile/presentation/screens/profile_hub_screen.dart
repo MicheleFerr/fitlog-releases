@@ -356,7 +356,7 @@ class _RecentWorkoutsSection extends ConsumerWidget {
                   showModalBottomSheet(
                     context: context,
                     isScrollControlled: true,
-                    backgroundColor: Colors.transparent,
+                    backgroundColor: Theme.of(context).colorScheme.surface.withValues(alpha: 0),
                     builder: (_) => DraggableScrollableSheet(
                       initialChildSize: 0.8,
                       minChildSize: 0.8,

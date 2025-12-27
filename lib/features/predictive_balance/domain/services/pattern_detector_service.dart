@@ -11,6 +11,7 @@ import 'dart:convert';
 
 import 'package:gymbro_flutter_new/features/predictive_balance/domain/entities/weekly_pattern.dart';
 import 'package:gymbro_flutter_new/features/predictive_balance/domain/entities/workout_fingerprint.dart';
+import 'package:gymbro_flutter_new/features/stress_index/data/mappers/muscle_abbreviation_mapper.dart';
 import 'package:gymbro_flutter_new/features/stress_index/presentation/providers/stress_index_provider.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/workout.dart';
@@ -211,25 +212,10 @@ class PatternDetectorService {
 
   /// Normalize muscle codes from JSON to standard names
   ///
+  /// **SINGLE SOURCE OF TRUTH**: Delegates to MuscleAbbreviationMapper.
   /// Exposed for use by PredictionEngineService.
   static String normalizeMuscle(String code) {
-    final upper = code.toUpperCase().trim();
-
-    return switch (upper) {
-      'PETT' || 'PETTORALI' || 'CHEST' => 'chest',
-      'DELT' || 'SPALLE' || 'DELTOIDI' || 'SHOULDERS' => 'shoulders',
-      'TRIC' || 'TRICIPITI' || 'TRICEPS' => 'triceps',
-      'BIC' || 'BICIPITI' || 'BICEPS' => 'biceps',
-      'DORSO' || 'LAT' || 'DORSALI' || 'BACK' || 'LATISSIMUS' => 'back',
-      'QUAD' || 'QUADRICIPITI' || 'QUADRICEPS' => 'quadriceps',
-      'GLUT' || 'GLUTEI' || 'GLUTES' => 'glutes',
-      'FEMORALI' || 'HAMSTRINGS' || 'ISCHIOCRURALI' => 'hamstrings',
-      'CORE' || 'ADD' || 'ADDOMINALI' || 'ABS' => 'core',
-      'POLP' || 'POLPACCI' || 'CALVES' => 'calves',
-      'TRAP' || 'TRAPEZIO' || 'TRAPEZIUS' => 'trapezius',
-      'AVAMBRACCI' || 'FOREARMS' => 'forearms',
-      _ => code.toLowerCase(),
-    };
+    return MuscleAbbreviationMapper.normalizeToHeatmapKey(code);
   }
 
   /// Infer workout category from dominant muscles

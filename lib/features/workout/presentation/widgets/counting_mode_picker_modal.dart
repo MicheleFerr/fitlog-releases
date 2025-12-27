@@ -7,36 +7,66 @@ import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart'
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_colors.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
 
+/// Result of the counting mode picker modal
+///
+/// Contains both the selected mode and whether to save it as default
+typedef CountingModePickerResult = ({
+  ExerciseCountingMode mode,
+  bool saveAsDefault,
+});
+
 /// 🎯 TIER-1: Modal per cambiare il counting mode di un esercizio
 ///
 /// Mostra 3 opzioni (weighted/reps/time) con preview e conferma.
 /// Usato durante workout attivo per correggere errori di template.
+/// Ora supporta anche il salvataggio permanente del counting mode scelto.
 class CountingModePickerModal extends StatefulWidget {
   const CountingModePickerModal({
     super.key,
     required this.currentMode,
     required this.onConfirm,
+    this.exerciseId,
+    this.exerciseName,
+    this.showSaveAsDefault = true,
   });
 
   final ExerciseCountingMode currentMode;
-  final ValueChanged<ExerciseCountingMode> onConfirm;
+  final void Function(CountingModePickerResult result) onConfirm;
+
+  /// Optional exercise ID for saving the preference permanently
+  final String? exerciseId;
+
+  /// Optional exercise name for display in the save default checkbox
+  final String? exerciseName;
+
+  /// Whether to show the "Save as default" checkbox
+  final bool showSaveAsDefault;
 
   @override
   State<CountingModePickerModal> createState() => _CountingModePickerModalState();
 
   /// Static helper to show modal
-  static Future<ExerciseCountingMode?> show(
+  ///
+  /// Returns a [CountingModePickerResult] with the selected mode and
+  /// whether to save it as the default for future workouts.
+  static Future<CountingModePickerResult?> show(
     BuildContext context, {
     required ExerciseCountingMode currentMode,
+    String? exerciseId,
+    String? exerciseName,
+    bool showSaveAsDefault = true,
   }) async {
     HapticFeedback.mediumImpact();
-    return showModalBottomSheet<ExerciseCountingMode>(
+    return showModalBottomSheet<CountingModePickerResult>(
       context: context,
       isScrollControlled: true,
-      backgroundColor: Colors.transparent,
+      backgroundColor: Theme.of(context).colorScheme.surface.withValues(alpha: 0),
       builder: (context) => CountingModePickerModal(
         currentMode: currentMode,
-        onConfirm: (mode) => Navigator.pop(context, mode),
+        exerciseId: exerciseId,
+        exerciseName: exerciseName,
+        showSaveAsDefault: showSaveAsDefault,
+        onConfirm: (result) => Navigator.pop(context, result),
       ),
     );
   }
@@ -44,6 +74,7 @@ class CountingModePickerModal extends StatefulWidget {
 
 class _CountingModePickerModalState extends State<CountingModePickerModal> {
   late ExerciseCountingMode _selectedMode;
+  bool _saveAsDefault = false;
 
   @override
   void initState() {
@@ -176,6 +207,75 @@ class _CountingModePickerModalState extends State<CountingModePickerModal> {
               ),
             ),
 
+            // Save as default checkbox
+            if (widget.showSaveAsDefault && widget.exerciseId != null) ...[
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                child: GestureDetector(
+                  onTap: () {
+                    HapticFeedback.selectionClick();
+                    setState(() {
+                      _saveAsDefault = !_saveAsDefault;
+                    });
+                  },
+                  child: Container(
+                    padding: const EdgeInsets.all(12),
+                    decoration: BoxDecoration(
+                      color: _saveAsDefault
+                          ? context.colors.primaryContainer.withValues(alpha: 0.3)
+                          : context.colors.surfaceContainerHighest.withValues(alpha: 0.5),
+                      borderRadius: BorderRadius.circular(12),
+                      border: Border.all(
+                        color: _saveAsDefault
+                            ? context.colors.primary
+                            : context.colors.outline.withValues(alpha: 0.2),
+                      ),
+                    ),
+                    child: Row(
+                      children: [
+                        Checkbox(
+                          value: _saveAsDefault,
+                          onChanged: (value) {
+                            HapticFeedback.selectionClick();
+                            setState(() {
+                              _saveAsDefault = value ?? false;
+                            });
+                          },
+                          activeColor: context.colors.primary,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                        ),
+                        const SizedBox(width: 8),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                context.l10n.saveAsDefaultForExercise,
+                                style: context.textTheme.bodyMedium?.copyWith(
+                                  fontWeight: FontWeight.w500,
+                                  color: context.colors.onSurface,
+                                ),
+                              ),
+                              const SizedBox(height: 2),
+                              Text(
+                                context.l10n.saveAsDefaultForExerciseDesc,
+                                style: context.textTheme.bodySmall?.copyWith(
+                                  color: context.colors.onSurface.withValues(alpha: 0.6),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 12),
+            ],
+
             // Action buttons
             Padding(
               padding: const EdgeInsets.all(20),
@@ -204,7 +304,10 @@ class _CountingModePickerModalState extends State<CountingModePickerModal> {
                       onPressed: _selectedMode != widget.currentMode
                           ? () {
                               HapticFeedback.mediumImpact();
-                              widget.onConfirm(_selectedMode);
+                              widget.onConfirm((
+                                mode: _selectedMode,
+                                saveAsDefault: _saveAsDefault,
+                              ));
                             }
                           : null,
                       style: FilledButton.styleFrom(
@@ -280,7 +383,7 @@ class _CountingModePickerModalState extends State<CountingModePickerModal> {
                 ),
                 color: isSelected
                     ? context.colors.primary
-                    : Colors.transparent,
+                    : context.colors.surface.withValues(alpha: 0),
               ),
               child: isSelected
                   ? SemanticIcon(

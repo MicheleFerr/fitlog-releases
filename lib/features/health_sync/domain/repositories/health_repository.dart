@@ -250,4 +250,37 @@ abstract class IHealthRepository {
     required DateTime startDate,
     required DateTime endDate,
   });
+
+  // ============================================================
+  // HEALTH CONNECT (ANDROID) - INSTALLATION
+  // ============================================================
+
+  /// Android-specific: Opens Play Store to install Health Connect.
+  ///
+  /// Call this when Health Connect is not available on the device.
+  /// iOS: No-op (returns Right immediately).
+  ///
+  /// Use case:
+  /// - User is on Android 14+ but Health Connect is not installed
+  /// - Show dialog explaining why Health Connect is needed
+  /// - Button to install from Play Store
+  ///
+  /// Returns:
+  /// - Right: void (Play Store opened or iOS no-op)
+  /// - Left: [ServerFailure] if opening Play Store fails
+  ///
+  /// Example:
+  /// ```dart
+  /// final status = await repository.checkPermissionStatus();
+  /// status.fold(
+  ///   (failure) => showError(failure),
+  ///   (permission) async {
+  ///     if (!permission.healthConnectAvailable && Platform.isAndroid) {
+  ///       await repository.installHealthConnect();
+  ///       // Show snackbar: "Please install Health Connect and return"
+  ///     }
+  ///   },
+  /// );
+  /// ```
+  Future<Either<Failure, void>> installHealthConnect();
 }

@@ -33,7 +33,7 @@ class WorkoutCustomizationModalV3 extends ConsumerStatefulWidget {
     return showModalBottomSheet(
       context: context,
       isScrollControlled: true,
-      backgroundColor: Colors.transparent,
+      backgroundColor: Theme.of(context).colorScheme.surface.withValues(alpha: 0),
       builder: (context) => const WorkoutCustomizationModalV3(),
     );
   }
@@ -532,7 +532,7 @@ class _WorkoutCustomizationModalV3State
         ),
       ),
       child: Theme(
-        data: theme.copyWith(dividerColor: Colors.transparent),
+        data: theme.copyWith(dividerColor: theme.colorScheme.surface.withValues(alpha: 0)),
         child: ExpansionTile(
           initiallyExpanded: initiallyExpanded,
           tilePadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
@@ -624,7 +624,7 @@ class _WorkoutCustomizationModalV3State
     final displayMode = ref.watch(setDisplayProvider);
 
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 10),
+      padding: const EdgeInsets.symmetric(vertical: 12),
       child: Row(
         children: [
           Icon(
@@ -686,7 +686,7 @@ class _WorkoutCustomizationModalV3State
     }
 
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 10),
+      padding: const EdgeInsets.symmetric(vertical: 12),
       child: Row(
         children: [
           Icon(

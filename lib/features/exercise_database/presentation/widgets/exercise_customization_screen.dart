@@ -27,9 +27,12 @@ class ExerciseCustomizationScreen extends ConsumerStatefulWidget { // 🔥 FIX: 
     super.key,
     required this.selectedExercises,
     this.onExerciseAdded, // 🔥 FIX: Optional callback
+    this.countingModeOverrides, // ✅ User-saved counting mode preferences
   });
   final List<Exercise> selectedExercises;
   final Function(WorkoutExercise.Exercise)? onExerciseAdded;
+  /// Map of exerciseId → ExerciseCountingMode from user preferences
+  final Map<String, ExerciseCountingMode>? countingModeOverrides;
 
   @override
   ConsumerState<ExerciseCustomizationScreen> createState() => _ExerciseCustomizationScreenState();
@@ -42,8 +45,8 @@ class _ExerciseCustomizationScreenState extends ConsumerState<ExerciseCustomizat
   void initState() {
     super.initState();
     _customizations = widget.selectedExercises.map((exercise) {
-      // ✅ Default to weighted mode (DatabaseExercise → Exercise conversion needed for full detection)
-      const countingMode = ExerciseCountingMode.weighted;
+      // ✅ Priority: 1. User override, 2. Database default
+      final countingMode = widget.countingModeOverrides?[exercise.id] ?? exercise.countingMode;
 
       // ✅ NUOVO: Create default sets based on counting mode
       List<SetCustomization> defaultSets;
@@ -153,15 +156,14 @@ class _ExerciseCustomizationScreenState extends ConsumerState<ExerciseCustomizat
                       Row(
                         children: [
                           Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
                             decoration: BoxDecoration(
                               color: _getDifficultyColor(customization.exercise.difficolta).withValues(alpha: 0.2),
                               borderRadius: BorderRadius.circular(8),
                             ),
                             child: Text(
                               customization.exercise.difficolta,
-                              style: TextStyle(
-                                fontSize: 10,
+                              style: Theme.of(context).textTheme.labelSmall?.copyWith(
                                 color: _getDifficultyColor(customization.exercise.difficolta),
                                 fontWeight: FontWeight.bold,
                               ),
@@ -447,7 +449,7 @@ class _ExerciseCustomizationScreenState extends ConsumerState<ExerciseCustomizat
             ),
           ),
           const SizedBox(width: 8),
-          const Text('×', style: TextStyle(fontWeight: FontWeight.bold)),
+          Text('×', style: Theme.of(context).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.bold)),
           const SizedBox(width: 8),
         ],
 
@@ -611,11 +613,6 @@ class _ExerciseCustomizationScreenState extends ConsumerState<ExerciseCustomizat
     return result;
   }
 
-  WorkoutExercise.ExerciseCategory _mapFocusToCategory(List<String> focus) {
-    // Use centralized converter
-    return ExerciseConverter.mapFocusToCategory(focus);
-  }
-
   Color _getDifficultyColor(String difficulty) {
     switch (difficulty.toLowerCase()) {
       case 'principiante':
@@ -735,7 +732,7 @@ class _ExerciseCustomizationScreenState extends ConsumerState<ExerciseCustomizat
                     },
                     backgroundColor: theme.colorScheme.surface,
                     selectedColor: theme.colorScheme.secondaryContainer,
-                    labelStyle: TextStyle(
+                    labelStyle: theme.textTheme.labelMedium?.copyWith(
                       color: isSelected
                           ? theme.colorScheme.onSecondaryContainer
                           : theme.colorScheme.onSurface,
@@ -850,7 +847,7 @@ class _ExerciseCustomizationScreenState extends ConsumerState<ExerciseCustomizat
                     },
                     backgroundColor: theme.colorScheme.surface,
                     selectedColor: theme.colorScheme.tertiaryContainer,
-                    labelStyle: TextStyle(
+                    labelStyle: theme.textTheme.labelMedium?.copyWith(
                       color: isSelected
                           ? theme.colorScheme.onTertiaryContainer
                           : theme.colorScheme.onSurface,
@@ -1027,7 +1024,7 @@ class _ExerciseCustomizationScreenState extends ConsumerState<ExerciseCustomizat
                                 final isSelected = (displayWeight - selectedWeight).abs() < 0.05;
 
                                 return Material(
-                                  color: Colors.transparent,
+                                  color: context.colors.surface.withValues(alpha: 0),
                                   child: InkWell(
                                     onTap: () {
                                       setModalState(() => selectedWeight = displayWeight);
@@ -1155,7 +1152,7 @@ class _ExerciseCustomizationScreenState extends ConsumerState<ExerciseCustomizat
 ),
                         label: Text(
                           increment.toStringAsFixed(increment.truncateToDouble() == increment ? 0 : 1),
-                          style: const TextStyle(fontWeight: FontWeight.bold),
+                          style: theme.textTheme.labelMedium?.copyWith(fontWeight: FontWeight.bold),
                         ),
                       ),
                       // Increment button
@@ -1181,7 +1178,7 @@ class _ExerciseCustomizationScreenState extends ConsumerState<ExerciseCustomizat
 ),
                         label: Text(
                           '+${increment.toStringAsFixed(increment.truncateToDouble() == increment ? 0 : 1)}',
-                          style: const TextStyle(fontWeight: FontWeight.bold),
+                          style: theme.textTheme.labelMedium?.copyWith(fontWeight: FontWeight.bold),
                         ),
                       ),
                       // Quick jumps (10, 20, 50 for kg or similar for lbs)
@@ -1207,7 +1204,7 @@ class _ExerciseCustomizationScreenState extends ConsumerState<ExerciseCustomizat
                           ),
                           child: Text(
                             jump > 0 ? '+$jump' : '$jump',
-                            style: TextStyle(
+                            style: theme.textTheme.labelMedium?.copyWith(
                               fontWeight: FontWeight.w500,
                               color: jump > 0
                                   ? theme.colorScheme.tertiary
@@ -1245,7 +1242,7 @@ class _ExerciseCustomizationScreenState extends ConsumerState<ExerciseCustomizat
                       ),
                       child: Text(
                         jump > 0 ? '+$jump' : '$jump',
-                        style: TextStyle(
+                        style: theme.textTheme.labelMedium?.copyWith(
                           fontWeight: FontWeight.bold,
                           color: jump > 0
                               ? theme.colorScheme.primary

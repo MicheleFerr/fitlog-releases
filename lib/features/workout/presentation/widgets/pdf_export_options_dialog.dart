@@ -182,7 +182,7 @@ class _PdfExportOptionsDialogState extends ConsumerState<PdfExportOptionsDialog>
           borderRadius: BorderRadius.circular(12),
           color: isSelected
               ? colorScheme.primaryContainer.withValues(alpha: 0.3)
-              : Colors.transparent,
+              : colorScheme.surface.withValues(alpha: 0),
         ),
         child: Row(
           children: [

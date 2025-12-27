@@ -49,7 +49,7 @@ class SupersetSequentialExecutionSheet extends ConsumerStatefulWidget {
       isScrollControlled: true,
       isDismissible: true,
       enableDrag: true,
-      backgroundColor: Colors.transparent,
+      backgroundColor: Theme.of(context).colorScheme.surface.withValues(alpha: 0),
       builder: (context) => SupersetSequentialExecutionSheet(
         superset: superset,
         roundIndex: roundIndex,
@@ -230,7 +230,7 @@ class _SupersetSequentialExecutionSheetState
           // Dismiss on tap outside
           GestureDetector(
             onTap: () => Navigator.of(context).pop(),
-            child: Container(color: Colors.transparent),
+            child: Container(color: context.colors.surface.withValues(alpha: 0)),
           ),
           // QuickEdit overlay
           QuickEditOverlayV2(

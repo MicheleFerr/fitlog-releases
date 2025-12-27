@@ -31,6 +31,7 @@ import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dar
 import 'package:gymbro_flutter_new/features/workout/presentation/widgets/workout_time_edit_sheet.dart';
 import 'package:gymbro_flutter_new/features/auth/presentation/providers/consolidated_user_provider.dart';
 import 'package:gymbro_flutter_new/shared/presentation/services/snackbar_service.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator.dart';
 
 /// Date range filter options
 enum DateRangeOption {
@@ -209,7 +210,7 @@ class _WorkoutHistoryScreenState extends ConsumerState<WorkoutHistoryScreen>
       backgroundColor: colorScheme.surface,
       appBar: AppBar(
         title: Text(l10n.workoutDatabase),
-        backgroundColor: Colors.transparent,
+        backgroundColor: colorScheme.surface.withValues(alpha: 0),
         elevation: 0,
         scrolledUnderElevation: 0,
         leading: IconButton(
@@ -296,13 +297,9 @@ class _WorkoutHistoryScreenState extends ConsumerState<WorkoutHistoryScreen>
                 padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                 child: Row(
                   children: [
-                    SizedBox(
-                      width: 16,
-                      height: 16,
-                      child: CircularProgressIndicator(
-                        strokeWidth: 2,
-                        color: colorScheme.primary,
-                      ),
+                    LoadingIndicator(
+                      size: 16,
+                      color: colorScheme.primary,
                     ),
                     const SizedBox(width: 12),
                     Text(
@@ -658,7 +655,7 @@ class _WorkoutHistoryScreenState extends ConsumerState<WorkoutHistoryScreen>
                 color: colorScheme.primaryContainer,
                 shape: BoxShape.circle,
               ),
-              todayTextStyle: TextStyle(
+              todayTextStyle: theme.textTheme.bodyMedium!.copyWith(
                 color: colorScheme.onPrimaryContainer,
                 fontWeight: FontWeight.bold,
               ),
@@ -667,14 +664,14 @@ class _WorkoutHistoryScreenState extends ConsumerState<WorkoutHistoryScreen>
                 color: colorScheme.primary,
                 shape: BoxShape.circle,
               ),
-              selectedTextStyle: TextStyle(
+              selectedTextStyle: theme.textTheme.bodyMedium!.copyWith(
                 color: colorScheme.onPrimary,
                 fontWeight: FontWeight.bold,
               ),
               // Default
-              defaultTextStyle: TextStyle(color: colorScheme.onSurface),
-              weekendTextStyle: TextStyle(color: colorScheme.onSurface),
-              outsideTextStyle: TextStyle(
+              defaultTextStyle: theme.textTheme.bodyMedium!.copyWith(color: colorScheme.onSurface),
+              weekendTextStyle: theme.textTheme.bodyMedium!.copyWith(color: colorScheme.onSurface),
+              outsideTextStyle: theme.textTheme.bodyMedium!.copyWith(
                 color: colorScheme.onSurface.withValues(alpha: 0.4),
               ),
               // Markers
@@ -1074,8 +1071,10 @@ class _WorkoutHistoryScreenState extends ConsumerState<WorkoutHistoryScreen>
     Alignment alignment,
   ) {
     final theme = Theme.of(context);
+    // 🔧 PERF FIX: Use theme color instead of hardcoded Colors.white
+    final onColorText = theme.colorScheme.onPrimary;
     final textStyle = theme.textTheme.labelLarge?.copyWith(
-      color: Colors.white,
+      color: onColorText,
       fontWeight: FontWeight.bold,
     );
 
@@ -1091,14 +1090,14 @@ class _WorkoutHistoryScreenState extends ConsumerState<WorkoutHistoryScreen>
         mainAxisSize: MainAxisSize.min,
         children: alignment == Alignment.centerLeft
             ? [
-                Icon(icon, color: Colors.white, size: AppIconSize.medium),
+                Icon(icon, color: onColorText, size: AppIconSize.medium),
                 const SizedBox(width: 8),
                 Text(label, style: textStyle),
               ]
             : [
                 Text(label, style: textStyle),
                 const SizedBox(width: 8),
-                Icon(icon, color: Colors.white, size: AppIconSize.medium),
+                Icon(icon, color: onColorText, size: AppIconSize.medium),
               ],
       ),
     );
@@ -1164,7 +1163,7 @@ class _WorkoutHistoryScreenState extends ConsumerState<WorkoutHistoryScreen>
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
-      backgroundColor: Colors.transparent,
+      backgroundColor: Theme.of(context).colorScheme.surface.withValues(alpha: 0),
       builder: (context) => _ViewSettingsSheet(l10n: l10n),
     );
   }
@@ -1207,22 +1206,9 @@ class _WorkoutHistoryScreenState extends ConsumerState<WorkoutHistoryScreen>
   }
 
   Widget _buildLoadingState(AppLocalizations l10n, ColorScheme colorScheme, ThemeData theme) {
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          CircularProgressIndicator(
-            color: colorScheme.primary,
-          ),
-          const SizedBox(height: 16),
-          Text(
-            l10n.loadingWorkouts,
-            style: theme.textTheme.bodyMedium?.copyWith(
-              color: colorScheme.onSurface.withValues(alpha: 0.6),
-            ),
-          ),
-        ],
-      ),
+    return LoadingIndicator(
+      message: l10n.loadingWorkouts,
+      color: colorScheme.primary,
     );
   }
 
@@ -1353,9 +1339,10 @@ class _WorkoutHistoryScreenState extends ConsumerState<WorkoutHistoryScreen>
         decoration: BoxDecoration(
           color: colorScheme.surfaceContainerHighest,
           borderRadius: BorderRadius.circular(16),
+          // 🔧 PERF FIX: Use theme shadow color instead of hardcoded Colors.black
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withValues(alpha: 0.05),
+              color: colorScheme.shadow.withValues(alpha: 0.05),
               blurRadius: 8,
               offset: const Offset(0, 2),
             ),
@@ -1494,7 +1481,7 @@ class _WorkoutHistoryScreenState extends ConsumerState<WorkoutHistoryScreen>
                             Expanded(
                               child: Text(
                                 l10n.editWorkout,
-                                style: TextStyle(
+                                style: theme.textTheme.bodyMedium?.copyWith(
                                   color: canEdit
                                       ? null
                                       : colorScheme.outline,
@@ -1701,7 +1688,7 @@ class _WorkoutHistoryScreenState extends ConsumerState<WorkoutHistoryScreen>
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
-      backgroundColor: Colors.transparent,
+      backgroundColor: Theme.of(context).colorScheme.surface.withValues(alpha: 0),
       builder: (_) => DraggableScrollableSheet(
         initialChildSize: 0.8,
         minChildSize: 0.8,
@@ -1825,7 +1812,7 @@ class _WorkoutHistoryScreenState extends ConsumerState<WorkoutHistoryScreen>
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
-      backgroundColor: Colors.transparent,
+      backgroundColor: Theme.of(context).colorScheme.surface.withValues(alpha: 0),
       builder: (context) => WorkoutHistoryEditorEnhanced(
         historyWorkout: workout,
       ),

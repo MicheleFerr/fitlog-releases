@@ -265,7 +265,7 @@ class _TemplateViewContent extends ConsumerWidget {
     required String label,
   }) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
       decoration: BoxDecoration(
         color: context.colors.surfaceContainerHighest,
         borderRadius: BorderRadius.circular(16),

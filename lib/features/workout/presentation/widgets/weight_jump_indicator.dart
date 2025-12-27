@@ -43,7 +43,7 @@ class WeightJumpIndicator extends StatelessWidget {
     return Tooltip(
       message: context.l10n.weightJumpDetected,
       child: Material(
-        color: Colors.transparent,
+        color: context.colors.surface.withValues(alpha: 0),
         child: InkWell(
           onTap: () => _showWeightJumpInfo(context),
           borderRadius: BorderRadius.circular(16),

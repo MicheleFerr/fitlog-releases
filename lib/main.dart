@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hive_ce_flutter/hive_flutter.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -39,7 +40,9 @@ import 'package:gymbro_flutter_new/features/workout/data/models/user_exercise_pr
 import 'package:gymbro_flutter_new/features/custom_exercises/domain/entities/custom_exercise.dart'; // 🏋️ Custom Exercises
 
 void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
+  // 🚀 SPLASH: Preserve native splash screen during initialization
+  final widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
+  FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
 
   // ========================================
   // 🔍 LOGGING: Initialize VooLogger
@@ -298,6 +301,9 @@ void main() async {
 
   // Initialize SharedPreferences for notification settings v2.0
   final sharedPreferences = await SharedPreferences.getInstance();
+
+  // 🚀 SPLASH: Remove splash screen now that initialization is complete
+  FlutterNativeSplash.remove();
 
   // ========================================
   // 🔔 DEEP LINKING: Pass initial deep link to app via ProviderScope override

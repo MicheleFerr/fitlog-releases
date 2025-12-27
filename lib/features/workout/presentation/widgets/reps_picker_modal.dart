@@ -9,7 +9,7 @@ class RepsPickerModal {
       isScrollControlled: true,
       isDismissible: true,
       enableDrag: true,
-      backgroundColor: Colors.transparent,
+      backgroundColor: Theme.of(context).colorScheme.surface.withValues(alpha: 0),
       builder: (context) => _RepsPicker(initialReps: initialReps),
     );
   }

@@ -5,6 +5,7 @@ import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator.dart';
 
 /// GDPR Consent Dialog
 ///
@@ -107,13 +108,9 @@ class _ConsentDialogState extends State<ConsentDialog> {
         FilledButton(
           onPressed: _isLoading ? null : _saveConsents,
           child: _isLoading
-              ? SizedBox(
-                  width: 16,
-                  height: 16,
-                  child: CircularProgressIndicator(
-                    strokeWidth: 2,
-                    color: context.colors.onPrimary,
-                  ),
+              ? LoadingIndicator(
+                  size: 16,
+                  color: context.colors.onPrimary,
                 )
               : const Text('Save Preferences'),
         ),

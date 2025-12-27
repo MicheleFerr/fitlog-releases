@@ -156,7 +156,7 @@ class _AdaptiveBannerAdState extends ConsumerState<AdaptiveBannerAd> {
     if (!_isLoaded || _bannerAd == null) {
       return Container(
         height: widget.height ?? 50,
-        color: Colors.transparent,
+        color: Theme.of(context).colorScheme.surface.withValues(alpha: 0),
         child: const Center(
           child: LoadingIndicator(size: 20),
         ),

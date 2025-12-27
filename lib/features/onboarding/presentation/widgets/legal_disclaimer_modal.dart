@@ -4,6 +4,7 @@ import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_colors.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
+import 'package:gymbro_flutter_new/features/onboarding/presentation/screens/legal_document_screen.dart';
 
 /// Bottom sheet modal that displays medical disclaimer and liability limitations.
 ///
@@ -40,7 +41,7 @@ class LegalDisclaimerModal extends StatelessWidget {
       isScrollControlled: true,
       isDismissible: false,  // Cannot dismiss without accepting
       enableDrag: false,      // Cannot swipe to close
-      backgroundColor: Colors.transparent,
+      backgroundColor: Theme.of(context).colorScheme.surface.withValues(alpha: 0),
       builder: (context) => LegalDisclaimerModal(
         onAccept: onAccept,
         onDecline: onDecline,
@@ -80,7 +81,7 @@ class LegalDisclaimerModal extends StatelessWidget {
           Row(
             children: [
               Container(
-                padding: const EdgeInsets.all(10),
+                padding: const EdgeInsets.all(12),
                 decoration: BoxDecoration(
                   color: context.colors.errorContainer,
                   borderRadius: BorderRadius.circular(12),
@@ -127,17 +128,17 @@ class LegalDisclaimerModal extends StatelessWidget {
                     children: [
                       TextButton.icon(
                         onPressed: () {
-                          // TODO: Open Privacy Policy (Task 7)
+                          LegalDocumentScreen.showPrivacyPolicy(context);
                         },
                         icon: SemanticIcon(
                           icon: AppIcons.privacyTipRounded,
-                          semanticLabel: 'Privacy Policy',
+                          semanticLabel: context.l10n.privacyPolicy,
                           size: AppIconSize.small,
                           color: context.colors.primary,
                         ),
                         label: Text(
-                          'Privacy Policy',
-                          style: TextStyle(
+                          context.l10n.privacyPolicy,
+                          style: context.textTheme.bodyMedium?.copyWith(
                             color: context.colors.primary,
                             decoration: TextDecoration.underline,
                           ),
@@ -145,17 +146,17 @@ class LegalDisclaimerModal extends StatelessWidget {
                       ),
                       TextButton.icon(
                         onPressed: () {
-                          // TODO: Open Terms of Service (Task 7)
+                          LegalDocumentScreen.showTermsOfService(context);
                         },
                         icon: SemanticIcon(
                           icon: AppIcons.document,
-                          semanticLabel: 'Terms of Service',
+                          semanticLabel: context.l10n.termsOfService,
                           size: AppIconSize.small,
                           color: context.colors.primary,
                         ),
                         label: Text(
-                          'Terms of Service',
-                          style: TextStyle(
+                          context.l10n.termsOfService,
+                          style: context.textTheme.bodyMedium?.copyWith(
                             color: context.colors.primary,
                             decoration: TextDecoration.underline,
                           ),
@@ -177,7 +178,7 @@ class LegalDisclaimerModal extends StatelessWidget {
               onAccept();
             },
             style: FilledButton.styleFrom(
-              padding: const EdgeInsets.symmetric(vertical: 14),
+              padding: const EdgeInsets.symmetric(vertical: 16),
             ),
             child: Text(context.l10n.legalDisclaimerAccept),
           ),
@@ -190,7 +191,7 @@ class LegalDisclaimerModal extends StatelessWidget {
                 onDecline!();
               },
               style: OutlinedButton.styleFrom(
-                padding: const EdgeInsets.symmetric(vertical: 14),
+                padding: const EdgeInsets.symmetric(vertical: 16),
                 foregroundColor: context.colors.error,
               ),
               child: Text(context.l10n.legalDisclaimerDecline),

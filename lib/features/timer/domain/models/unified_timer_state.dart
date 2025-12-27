@@ -125,7 +125,8 @@ class UnifiedTimerState {
   
   bool get isActive => status == TimerStatus.running;
   bool get isPaused => status == TimerStatus.paused;
-  bool get isCompleted => status == TimerStatus.completed;
+  /// Timer is completed when status is completed OR remaining seconds reached 0
+  bool get isCompleted => status == TimerStatus.completed || (status == TimerStatus.running && remainingSeconds <= 0);
   bool get isIdle => status == TimerStatus.idle;
   
   bool get canStart => status == TimerStatus.idle || status == TimerStatus.paused;

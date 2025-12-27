@@ -51,15 +51,6 @@ class ExerciseHistoryService {
   /// Enable debug logging (useful for troubleshooting)
   final bool enableDebugLogging;
   
-  /// Helper method for conditional debug logging
-  void _debugLog(String message) {
-    if (enableDebugLogging) {
-      if (kDebugMode) {
-        debugPrint(message);
-      }
-    }
-  }
-
   /// Get recent weights for a specific exercise from previous workouts
   Future<List<double>> getRecentWeights(String exerciseName, String userId, {int limit = 5}) async {
     final historyData = await _getExerciseHistory(exerciseName, userId, limit: 20);

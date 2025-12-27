@@ -503,7 +503,7 @@ class _ExplanatoryMetric extends StatelessWidget {
 
     showModalBottomSheet(
       context: context,
-      backgroundColor: Colors.transparent,
+      backgroundColor: colorScheme.surface.withValues(alpha: 0),
       builder: (context) => Container(
         margin: const EdgeInsets.all(16),
         padding: const EdgeInsets.all(20),
@@ -525,7 +525,7 @@ class _ExplanatoryMetric extends StatelessWidget {
             Row(
               children: [
                 Container(
-                  padding: const EdgeInsets.all(10),
+                  padding: const EdgeInsets.all(12),
                   decoration: BoxDecoration(
                     color: color.withValues(alpha: 0.15),
                     borderRadius: BorderRadius.circular(12),
@@ -560,7 +560,7 @@ class _ExplanatoryMetric extends StatelessWidget {
             // Progress visualization (if available)
             if (progress != null) ...[
               ClipRRect(
-                borderRadius: BorderRadius.circular(4),
+                borderRadius: BorderRadius.circular(8),
                 child: LinearProgressIndicator(
                   value: progress!.clamp(0.0, 1.0),
                   backgroundColor: colorScheme.surfaceContainerHighest,
@@ -662,7 +662,7 @@ class _AIInsightsModalState extends ConsumerState<AIInsightsModal> {
                   await showModalBottomSheet(
                     context: context,
                     isScrollControlled: true,
-                    backgroundColor: Colors.transparent,
+                    backgroundColor: colorScheme.surface.withValues(alpha: 0),
                     builder: (_) => DraggableScrollableSheet(
                       initialChildSize: 0.8,
                       minChildSize: 0.8,
@@ -836,7 +836,7 @@ class _CompactInsightCard extends StatelessWidget {
         ),
       ),
       child: Material(
-        color: Colors.transparent,
+        color: colorScheme.surface.withValues(alpha: 0),
         child: InkWell(
           borderRadius: BorderRadius.circular(16),
           onTap: onTap,
@@ -1577,11 +1577,7 @@ class _InsightDetailsModalState extends ConsumerState<InsightDetailsModal> {
       child: FilledButton.icon(
         onPressed: _isReplacingExercise ? null : () => _handleReplaceExercise(context, ref, insight),
         icon: _isReplacingExercise
-            ? const SizedBox(
-                width: 16,
-                height: 16,
-                child: CircularProgressIndicator(strokeWidth: 2),
-              )
+            ? const LoadingIndicator(size: 16)
             : const SemanticIcon(
   icon: AppIcons.swapHoriz,
   semanticLabel: 'Swap horiz',

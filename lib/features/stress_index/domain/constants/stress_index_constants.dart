@@ -41,7 +41,11 @@ class StressIndexConstants {
     'FEMOR': 72, // Hamstrings
     'LAT': 72, // Large back muscles
     'PETT': 72, // Chest
-    'DELT': 48, // Shoulders
+    // Deltoid portions (P0 fix: split DELT into ANT/LAT/POST)
+    'DELT_ANT': 48, // Anterior deltoid (front raises, pressing)
+    'DELT_LAT': 48, // Lateral deltoid (lateral raises)
+    'DELT_POST': 48, // Posterior deltoid (rear delt work)
+    'DELT': 48, // Generic shoulders (backward compatibility)
     'TRAP': 48, // Trapezius
     'BICI': 48, // Biceps
     'TRIC': 48, // Triceps
@@ -49,9 +53,9 @@ class StressIndexConstants {
     'AVA': 48, // Forearms
     'POLP': 48, // Calves
     'ADD': 48, // Adductors
-    'ADDO': 48, // Adductors (alternative)
+    'ABDU': 48, // Abductors
     'LOMBAR': 72, // Lower back
-    'BIC': 48, // Biceps (typo variant)
+    'COLLO': 24, // Neck (smaller muscle, faster recovery)
   };
 
   /// Default recovery hours for unknown muscle groups
@@ -78,6 +82,13 @@ class StressIndexConstants {
 
   // Very hard session: 80-100
 
+  // === MUSCLE STRESS DISTRIBUTION WEIGHTS ===
+  /// Weight for primary muscles (focus) - receives most stress
+  static const double primaryMuscleWeight = 0.70;
+
+  /// Weight for secondary muscles - receives less stress
+  static const double secondaryMuscleWeight = 0.30;
+
   // === RECOVERY STATE THRESHOLDS (percentage) ===
   /// Fully recovered: 100%
   static const double fullyRecoveredMin = 100.0;
@@ -92,4 +103,85 @@ class StressIndexConstants {
   static const double fatiguedMin = 25.0;
 
   // Exhausted: 0-24%
+
+  // === FITNESS-FATIGUE MODEL (FFM) CONSTANTS ===
+  // Based on Banister et al. (1975) and Morton et al. (1990)
+  //
+  // Formula: Performance(t) = p* + Fitness(t) - Fatigue(t)
+  // Where:
+  //   Fitness(t) = k₁ × ∑(wᵢ × e^(-(t-tᵢ)/τ₁))
+  //   Fatigue(t) = k₂ × ∑(wᵢ × e^(-(t-tᵢ)/τ₂))
+
+  /// Baseline performance level (100% = fully recovered)
+  static const double ffmBaseline = 100.0;
+
+  /// Fitness time constant τ₁ (hours)
+  /// Research suggests 30-50 days; using 42 days = 1008 hours
+  /// Fitness builds slowly and decays slowly
+  static const double fitnessTimeConstant = 1008.0; // 42 days in hours
+
+  /// Fatigue time constant τ₂ (hours)
+  /// Research suggests 7-15 days; using 10 days = 240 hours
+  /// Fatigue builds quickly and decays relatively quickly
+  static const double fatigueTimeConstant = 240.0; // 10 days in hours
+
+  /// Fitness gain multiplier k₁
+  /// How much each unit of training contributes to fitness
+  /// Typical range: 0.8-1.5 (we start conservative)
+  static const double fitnessGainK1 = 1.0;
+
+  /// Fatigue gain multiplier k₂
+  /// How much each unit of training contributes to fatigue
+  /// k₂ > k₁ means initial dip in performance after training
+  /// Typical range: 1.5-3.0
+  static const double fatigueGainK2 = 2.0;
+
+  /// Muscle-specific τ₂ modifiers (fatigue decay)
+  /// Large muscles fatigue longer, small muscles recover faster
+  static const Map<String, double> muscleFatigueModifiers = {
+    'QUAD': 1.2, // Large muscle, slower fatigue decay
+    'GLUT': 1.2,
+    'FEMOR': 1.1,
+    'LAT': 1.1,
+    'PETT': 1.0, // Reference
+    'DELT_ANT': 0.9,
+    'DELT_LAT': 0.9,
+    'DELT_POST': 0.9,
+    'DELT': 0.9, // Backward compatibility
+    'TRAP': 0.9,
+    'BICI': 0.8, // Small muscle, faster fatigue decay
+    'TRIC': 0.8,
+    'CORE': 0.7, // Core recovers relatively fast
+    'AVA': 0.7,
+    'POLP': 0.8,
+    'ADD': 0.9,
+    'ABDU': 0.9,
+    'LOMBAR': 1.1, // Lower back is resilient but needs time
+    'COLLO': 0.6, // Neck recovers quickly
+  };
+
+  /// Default fatigue modifier for unknown muscles
+  static const double defaultFatigueModifier = 1.0;
+
+  // === FFM PERFORMANCE THRESHOLDS ===
+
+  /// Supercompensation threshold (above baseline)
+  /// Performance peaks 1-3 days after fatigue dissipates
+  static const double supercompensationThreshold = 102.0;
+
+  /// Optimal training window lower bound
+  /// Best time to train again for progressive overload
+  static const double optimalTrainingMin = 95.0;
+
+  /// Acceptable training threshold
+  /// Below this, training is suboptimal but not harmful
+  static const double acceptableTrainingMin = 85.0;
+
+  /// Overtraining warning threshold
+  /// Below this, risk of overtraining and injury increases
+  static const double overtrainingWarning = 70.0;
+
+  /// Critical fatigue threshold
+  /// Below this, strongly recommend rest
+  static const double criticalFatigue = 50.0;
 }

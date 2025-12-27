@@ -203,23 +203,9 @@ class WorkoutTemplateRepository {
     List<String>? tags,
     String? imageUrl,
   }) async {
+    // ✅ FIX: Use fromExercise() to properly preserve all fields including TUT
     final exerciseTemplates = exercises.map((exercise) {
-      return ExerciseTemplate(
-        exerciseId: exercise.id,
-        exerciseName: exercise.name,
-        category: exercise.category,
-        type: exercise.type,
-        sets: exercise.sets.map((set) {
-          return SetTemplate(
-            setNumber: set.setNumber,
-            targetWeight: set.weight,
-            targetReps: set.reps,
-            notes: set.notes,
-          );
-        }).toList(),
-        notes: exercise.notes,
-        restTime: exercise.restTime,
-      );
+      return ExerciseTemplate.fromExercise(exercise);
     }).toList();
 
     final template = WorkoutTemplate(

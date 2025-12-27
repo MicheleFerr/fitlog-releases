@@ -108,77 +108,22 @@ class FirebaseWorkoutDataSource {
   }
 
   /// Save completed workout as exercise activities
+  ///
+  /// ⚠️ DEPRECATED: This method wrote to the deprecated 'exerciseActivities' collection
+  /// which no longer exists and has no security rules. The app now uses:
+  /// - `users/{userId}/workouts/{workoutId}` for workout data
+  ///
+  /// This method now returns an empty list (no-op) to prevent permission errors.
+  /// Use saveWorkout() instead to save workouts to the proper collection.
+  @Deprecated('Use saveWorkout() instead. exerciseActivities collection is deprecated.')
   Future<List<String>> saveCompletedWorkout(
     WorkoutModel workout,
     String userEmail,
   ) async {
-    final batch = _firestore.batch();
-    final activityIds = <String>[];
-
-    // Create exercise activities for each completed exercise
-    for (final exercise in workout.exercises) {
-      final completedSets = exercise.sets.where((set) => set.isCompleted).toList();
-      
-      if (completedSets.isNotEmpty) {
-        final activityRef = _firestore.collection('exerciseActivities').doc();
-        
-        final activityData = {
-          'id': activityRef.id,
-          'userEmail': userEmail.toLowerCase().trim(),
-          'exerciseName': exercise.name,
-          'category': exercise.category,
-          'type': exercise.type,
-          'workoutId': workout.id,
-          'workoutName': workout.name,
-          'sets': completedSets.map((set) => set.toJson()).toList(),
-          'totalVolume': completedSets.fold<double>(
-            0.0, 
-            (sum, set) => sum + set.volume,
-          ),
-          'totalSets': completedSets.length,
-          'date': workout.startTime ?? workout.createdAt,
-          'createdAt': FieldValue.serverTimestamp(),
-          'metadata': {
-            'duration': workout.endTime != null && workout.startTime != null
-                ? workout.endTime!.difference(workout.startTime!).inSeconds
-                : null,
-            'notes': exercise.notes,
-            'restTime': exercise.restTime,
-          }
-        };
-
-        batch.set(activityRef, activityData);
-        activityIds.add(activityRef.id);
-      }
-    }
-
-    // Also save workout summary
-    final summaryRef = _firestore.collection('workoutSummaries').doc();
-    final summaryData = {
-      'id': summaryRef.id,
-      'userEmail': userEmail.toLowerCase().trim(),
-      'workoutId': workout.id,
-      'workoutName': workout.name,
-      'totalExercises': workout.exercises.length,
-      'completedExercises': workout.exercises.where((e) => e.isCompleted).length,
-      'totalSets': workout.exercises.fold(0, (sum, e) => sum + e.sets.length),
-      'completedSets': workout.exercises.fold(0, 
-        (sum, e) => sum + e.sets.where((s) => s.isCompleted).length),
-      'totalVolume': workout.exercises.fold<double>(0.0, 
-        (sum, e) => sum + e.totalVolume),
-      'duration': workout.endTime != null && workout.startTime != null
-          ? workout.endTime!.difference(workout.startTime!).inSeconds
-          : null,
-      'date': workout.startTime ?? workout.createdAt,
-      'status': workout.status,
-      'createdAt': FieldValue.serverTimestamp(),
-    };
-
-    batch.set(summaryRef, summaryData);
-    activityIds.add(summaryRef.id);
-
-    await batch.commit();
-    return activityIds;
+    // ⚠️ NO-OP: Prevents writing to deprecated 'exerciseActivities' collection
+    // which causes Firestore permission errors.
+    // Workouts are now saved via saveWorkout() to users/{userId}/workouts/{workoutId}
+    return [];
   }
 
   /// Update specific exercise set

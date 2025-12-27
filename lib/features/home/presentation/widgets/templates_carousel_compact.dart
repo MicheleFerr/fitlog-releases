@@ -218,7 +218,7 @@ class _TemplateCard extends ConsumerWidget {
           ),
         ),
         child: Material(
-          color: Colors.transparent,
+          color: colorScheme.surface.withValues(alpha: 0),
           child: InkWell(
             onTap: () => _startWorkoutFromTemplate(context, ref),
             borderRadius: BorderRadius.circular(16),

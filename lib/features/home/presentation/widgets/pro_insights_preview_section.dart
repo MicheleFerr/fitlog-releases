@@ -19,6 +19,8 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:gymbro_flutter_new/core/navigation/app_routes.dart';
+import 'package:gymbro_flutter_new/features/analytics/domain/entities/exercise_history.dart';
+import 'package:gymbro_flutter_new/features/analytics/domain/services/muscle_balance_calculator.dart';
 import 'package:gymbro_flutter_new/features/analytics/presentation/providers/analytics_providers.dart';
 import 'package:gymbro_flutter_new/features/auth/presentation/providers/consolidated_user_provider.dart';
 import 'package:gymbro_flutter_new/features/stress_index/presentation/providers/stress_index_provider.dart';
@@ -241,19 +243,30 @@ class ProInsightsPreviewSection extends ConsumerWidget {
   }
 }
 
-/// Muscle Map Preview - Simplified body heatmap
-class _MuscleMapPreview extends StatelessWidget {
+/// Muscle Map Preview - Uses same MuscleBalanceCalculator as Pro Analytics
+class _MuscleMapPreview extends ConsumerWidget {
   const _MuscleMapPreview({required this.histories});
 
-  final List<dynamic> histories;
+  final List<ExerciseHistory> histories;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final colorScheme = context.colors;
     final l10n = context.l10n;
 
-    // Calculate muscle activity from histories
-    final muscleActivity = _calculateMuscleActivity();
+    // Use same exerciseMuscleMapProvider as Pro Analytics
+    final exerciseMuscleMapAsync = ref.watch(exerciseMuscleMapProvider);
+    final exerciseMuscleMap = exerciseMuscleMapAsync.valueOrNull;
+
+    // Calculate muscle activity using MuscleBalanceCalculator (same as Pro Analytics)
+    final calculator = MuscleBalanceCalculator();
+    final metrics = calculator.calculateBalance(
+      histories,
+      exerciseMuscleMap: exerciseMuscleMap,
+    );
+
+    // Convert muscleVolumePercentages to grouped display format
+    final muscleActivity = _groupMuscleVolumes(metrics.muscleVolumePercentages);
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -337,10 +350,10 @@ class _MuscleMapPreview extends StatelessWidget {
     );
   }
 
-  Map<String, double> _calculateMuscleActivity() {
-    // Simplified calculation from exercise histories
-    // Real implementation uses exerciseMuscleMap for accurate EMG-based distribution
-    final muscleVolume = <String, double>{
+  /// Group detailed muscle percentages into display categories
+  /// Same grouping logic as Pro Analytics muscle balance chart
+  Map<String, double> _groupMuscleVolumes(Map<String, double> volumePercentages) {
+    final grouped = <String, double>{
       'chest': 0.0,
       'back': 0.0,
       'shoulders': 0.0,
@@ -349,36 +362,63 @@ class _MuscleMapPreview extends StatelessWidget {
       'core': 0.0,
     };
 
-    for (final history in histories) {
-      // Use muscleGroup from ExerciseHistory entity
-      final muscleGroup = history.muscleGroup.toLowerCase();
-      if (muscleGroup.contains('push') || muscleGroup.contains('chest')) {
-        muscleVolume['chest'] = (muscleVolume['chest'] ?? 0) + 1;
-        muscleVolume['shoulders'] = (muscleVolume['shoulders'] ?? 0) + 0.3;
-      } else if (muscleGroup.contains('pull') || muscleGroup.contains('back')) {
-        muscleVolume['back'] = (muscleVolume['back'] ?? 0) + 1;
-        muscleVolume['arms'] = (muscleVolume['arms'] ?? 0) + 0.3;
-      } else if (muscleGroup.contains('legs') || muscleGroup.contains('lower')) {
-        muscleVolume['legs'] = (muscleVolume['legs'] ?? 0) + 1;
-        muscleVolume['core'] = (muscleVolume['core'] ?? 0) + 0.2;
-      } else if (muscleGroup.contains('core') || muscleGroup.contains('abs')) {
-        muscleVolume['core'] = (muscleVolume['core'] ?? 0) + 1;
-      } else if (muscleGroup.contains('arms') || muscleGroup.contains('biceps') || muscleGroup.contains('triceps')) {
-        muscleVolume['arms'] = (muscleVolume['arms'] ?? 0) + 1;
-      } else if (muscleGroup.contains('shoulders') || muscleGroup.contains('delts')) {
-        muscleVolume['shoulders'] = (muscleVolume['shoulders'] ?? 0) + 1;
-      }
-    }
+    volumePercentages.forEach((muscle, percentage) {
+      final muscleLower = muscle.toLowerCase();
 
-    // Normalize to 0-1 range
-    final maxVolume = muscleVolume.values.fold(0.0, math.max);
+      // Chest: pett, chest, pectorals
+      if (muscleLower.contains('pett') || muscleLower.contains('chest')) {
+        grouped['chest'] = (grouped['chest'] ?? 0) + percentage;
+      }
+      // Back: lat, trap, dorso, back, rhomboids
+      else if (muscleLower.contains('lat') ||
+          muscleLower.contains('trap') ||
+          muscleLower.contains('dorso') ||
+          muscleLower.contains('back') ||
+          muscleLower.contains('rhomb')) {
+        grouped['back'] = (grouped['back'] ?? 0) + percentage;
+      }
+      // Shoulders: delt (all types)
+      else if (muscleLower.contains('delt') || muscleLower.contains('spall')) {
+        grouped['shoulders'] = (grouped['shoulders'] ?? 0) + percentage;
+      }
+      // Arms: bic, tric, avamb
+      else if (muscleLower.contains('bic') ||
+          muscleLower.contains('tric') ||
+          muscleLower.contains('avamb') ||
+          muscleLower.contains('forearm')) {
+        grouped['arms'] = (grouped['arms'] ?? 0) + percentage;
+      }
+      // Legs: quad, femor, glut, polp, addut, abdut
+      else if (muscleLower.contains('quad') ||
+          muscleLower.contains('femor') ||
+          muscleLower.contains('glut') ||
+          muscleLower.contains('polp') ||
+          muscleLower.contains('addut') ||
+          muscleLower.contains('abdut') ||
+          muscleLower.contains('leg') ||
+          muscleLower.contains('hamstring') ||
+          muscleLower.contains('calv')) {
+        grouped['legs'] = (grouped['legs'] ?? 0) + percentage;
+      }
+      // Core: addom, core, abs, lombar
+      else if (muscleLower.contains('addom') ||
+          muscleLower.contains('core') ||
+          muscleLower.contains('abs') ||
+          muscleLower.contains('lombar') ||
+          muscleLower.contains('lomb')) {
+        grouped['core'] = (grouped['core'] ?? 0) + percentage;
+      }
+    });
+
+    // Normalize to 0-1 range for display
+    final maxVolume = grouped.values.fold(0.0, math.max);
     if (maxVolume > 0) {
-      for (final key in muscleVolume.keys) {
-        muscleVolume[key] = muscleVolume[key]! / maxVolume;
+      for (final key in grouped.keys) {
+        grouped[key] = (grouped[key] ?? 0) / maxVolume;
       }
     }
 
-    return muscleVolume;
+    return grouped;
   }
 
   Color _getHeatColor(double heat) {
@@ -440,19 +480,30 @@ class _MuscleBar extends StatelessWidget {
   }
 }
 
-/// Volume Radar Preview - Mini radar chart
-class _VolumeRadarPreview extends StatelessWidget {
+/// Volume Radar Preview - Mini radar chart (uses same data as Pro Analytics)
+class _VolumeRadarPreview extends ConsumerWidget {
   const _VolumeRadarPreview({required this.histories});
 
-  final List<dynamic> histories;
+  final List<ExerciseHistory> histories;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final colorScheme = context.colors;
     final l10n = context.l10n;
 
-    // Calculate volume distribution
-    final volumeData = _calculateVolumeDistribution();
+    // Use same exerciseMuscleMapProvider as Pro Analytics
+    final exerciseMuscleMapAsync = ref.watch(exerciseMuscleMapProvider);
+    final exerciseMuscleMap = exerciseMuscleMapAsync.valueOrNull;
+
+    // Calculate using MuscleBalanceCalculator (same as Pro Analytics)
+    final calculator = MuscleBalanceCalculator();
+    final metrics = calculator.calculateBalance(
+      histories,
+      exerciseMuscleMap: exerciseMuscleMap,
+    );
+
+    // Convert to radar chart format
+    final volumeData = _metricsToRadarData(metrics.muscleVolumePercentages);
 
     return Container(
       height: 120,
@@ -495,14 +546,14 @@ class _VolumeRadarPreview extends StatelessWidget {
                     borderWidth: 2,
                   ),
                 ],
-                radarBackgroundColor: Colors.transparent,
+                radarBackgroundColor: colorScheme.surface.withValues(alpha: 0),
                 tickCount: 3,
                 // Hidden labels - transparent color to hide tick/title text
                 ticksTextStyle: context.textTheme.bodySmall!.copyWith(
-                  color: Colors.transparent,
+                  color: colorScheme.surface.withValues(alpha: 0),
                 ),
                 titleTextStyle: context.textTheme.bodySmall!.copyWith(
-                  color: Colors.transparent,
+                  color: colorScheme.surface.withValues(alpha: 0),
                 ),
                 radarBorderData: BorderSide(
                   color: colorScheme.outlineVariant.withValues(alpha: 0.3),
@@ -522,39 +573,65 @@ class _VolumeRadarPreview extends StatelessWidget {
     );
   }
 
-  List<double> _calculateVolumeDistribution() {
-    // 6-point radar for muscle groups
-    // Returns normalized values 0-100
-    final counts = [0.0, 0.0, 0.0, 0.0, 0.0, 0.0];
+  /// Convert MuscleBalanceCalculator percentages to 6-point radar format
+  List<double> _metricsToRadarData(Map<String, double> volumePercentages) {
+    // 6-point radar: chest, back, shoulders, arms, legs, core
+    final grouped = <String, double>{
+      'chest': 0.0,
+      'back': 0.0,
+      'shoulders': 0.0,
+      'arms': 0.0,
+      'legs': 0.0,
+      'core': 0.0,
+    };
 
-    for (final history in histories) {
-      // Use muscleGroup from ExerciseHistory entity
-      final muscleGroup = history.muscleGroup.toLowerCase();
-      if (muscleGroup.contains('chest') || muscleGroup.contains('push')) {
-        counts[0] += 1;
-      }
-      if (muscleGroup.contains('back') || muscleGroup.contains('pull')) {
-        counts[1] += 1;
-      }
-      if (muscleGroup.contains('shoulders') || muscleGroup.contains('delts')) {
-        counts[2] += 1;
-      }
-      if (muscleGroup.contains('arms') ||
-          muscleGroup.contains('biceps') ||
-          muscleGroup.contains('triceps')) {
-        counts[3] += 1;
-      }
-      if (muscleGroup.contains('legs') || muscleGroup.contains('lower')) {
-        counts[4] += 1;
-      }
-      if (muscleGroup.contains('core') || muscleGroup.contains('abs')) {
-        counts[5] += 1;
-      }
-    }
+    volumePercentages.forEach((muscle, percentage) {
+      final muscleLower = muscle.toLowerCase();
 
-    // Normalize
-    final maxVal = counts.fold(1.0, math.max);
-    return counts.map((c) => (c / maxVal) * 100).toList();
+      if (muscleLower.contains('pett') || muscleLower.contains('chest')) {
+        grouped['chest'] = (grouped['chest'] ?? 0) + percentage;
+      } else if (muscleLower.contains('lat') ||
+          muscleLower.contains('trap') ||
+          muscleLower.contains('dorso') ||
+          muscleLower.contains('back') ||
+          muscleLower.contains('rhomb')) {
+        grouped['back'] = (grouped['back'] ?? 0) + percentage;
+      } else if (muscleLower.contains('delt') || muscleLower.contains('spall')) {
+        grouped['shoulders'] = (grouped['shoulders'] ?? 0) + percentage;
+      } else if (muscleLower.contains('bic') ||
+          muscleLower.contains('tric') ||
+          muscleLower.contains('avamb') ||
+          muscleLower.contains('forearm')) {
+        grouped['arms'] = (grouped['arms'] ?? 0) + percentage;
+      } else if (muscleLower.contains('quad') ||
+          muscleLower.contains('femor') ||
+          muscleLower.contains('glut') ||
+          muscleLower.contains('polp') ||
+          muscleLower.contains('addut') ||
+          muscleLower.contains('abdut') ||
+          muscleLower.contains('leg') ||
+          muscleLower.contains('hamstring') ||
+          muscleLower.contains('calv')) {
+        grouped['legs'] = (grouped['legs'] ?? 0) + percentage;
+      } else if (muscleLower.contains('addom') ||
+          muscleLower.contains('core') ||
+          muscleLower.contains('abs') ||
+          muscleLower.contains('lombar') ||
+          muscleLower.contains('lomb')) {
+        grouped['core'] = (grouped['core'] ?? 0) + percentage;
+      }
+    });
+
+    // Return as list: [chest, back, shoulders, arms, legs, core]
+    // Already in percentages (0-100 range from MuscleBalanceCalculator)
+    return [
+      grouped['chest'] ?? 0.0,
+      grouped['back'] ?? 0.0,
+      grouped['shoulders'] ?? 0.0,
+      grouped['arms'] ?? 0.0,
+      grouped['legs'] ?? 0.0,
+      grouped['core'] ?? 0.0,
+    ];
   }
 }
 
@@ -686,7 +763,7 @@ class _StressIndexPreview extends ConsumerWidget {
 class _RepZonesBarPreview extends StatelessWidget {
   const _RepZonesBarPreview({required this.histories});
 
-  final List<dynamic> histories;
+  final List<ExerciseHistory> histories;
 
   @override
   Widget build(BuildContext context) {

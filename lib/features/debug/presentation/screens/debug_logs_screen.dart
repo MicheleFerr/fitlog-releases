@@ -5,7 +5,6 @@ import 'package:share_plus/share_plus.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
 import 'package:voo_logging/voo_logging.dart';
-import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/services/snackbar_service.dart';
 
 class DebugLogsScreen extends StatefulWidget {
@@ -102,10 +101,10 @@ class _DebugLogsScreenState extends State<DebugLogsScreen> {
             Container(
               padding: const EdgeInsets.all(8),
               color: Theme.of(context).colorScheme.surfaceContainerHighest,
-              child: const Text(
+              child: Text(
                 'Timer Debug Logs - Auto-refresh every 2s\n'
                 'Look for [KEEP-ALIVE] and [COMPLETION] tags',
-                style: TextStyle(fontSize: 12),
+                style: Theme.of(context).textTheme.labelSmall,
               ),
             ),
             const SizedBox(height: 8),
@@ -114,9 +113,8 @@ class _DebugLogsScreenState extends State<DebugLogsScreen> {
                 reverse: true, // Show latest logs at bottom
                 child: SelectableText(
                   _logs,
-                  style: const TextStyle(
+                  style: Theme.of(context).textTheme.labelSmall?.copyWith(
                     fontFamily: 'monospace',
-                    fontSize: 10,
                   ),
                 ),
               ),

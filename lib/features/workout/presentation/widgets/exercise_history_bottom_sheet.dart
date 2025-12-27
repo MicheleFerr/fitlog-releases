@@ -49,8 +49,9 @@ class _ExerciseHistoryBottomSheetState
         ref.watch(exerciseStatsFromActivitiesProvider(widget.exerciseName));
 
     // Watch Form Cues for this exercise
+    // ⚠️ FIX: Use null for exerciseId to always use name-based key
     final formCuesAsync = ref.watch(formCuesProvider((
-      exerciseId: widget.exerciseId,
+      exerciseId: null, // Use name-based key for persistence across workouts
       exerciseName: widget.exerciseName,
     )));
 
@@ -552,10 +553,10 @@ class _ExerciseHistoryBottomSheetState
   ) {
     return Container(
       margin: const EdgeInsets.only(bottom: 6),
-      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
       decoration: BoxDecoration(
         color: context.colors.surfaceContainerHighest.withValues(alpha: 0.4),
-        borderRadius: BorderRadius.circular(10),
+        borderRadius: BorderRadius.circular(12),
       ),
       child: Row(
         children: [

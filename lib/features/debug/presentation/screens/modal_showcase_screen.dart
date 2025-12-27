@@ -749,11 +749,12 @@ class ModalShowcaseScreen extends ConsumerWidget {
     CountingModePickerModal.show(
       context,
       currentMode: ExerciseCountingMode.weighted, // Must be ExerciseCountingMode enum
-    ).then((selectedMode) {
-      if (selectedMode != null && context.mounted) {
+      showSaveAsDefault: false, // Demo mode - don't show save checkbox
+    ).then((result) {
+      if (result != null && context.mounted) {
         SnackBarService.showSuccess(
           context,
-          'Mode: ${selectedMode.name} (demo)',
+          'Mode: ${result.mode.name} (demo)',
         );
       }
     });
@@ -1241,11 +1242,11 @@ class _GuidelineItem extends StatelessWidget {
                 children: [
                   TextSpan(
                     text: '$title: ',
-                    style: const TextStyle(fontWeight: FontWeight.w600),
+                    style: context.textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w600),
                   ),
                   TextSpan(
                     text: value,
-                    style: TextStyle(color: context.colors.onSurfaceVariant),
+                    style: context.textTheme.bodyMedium?.copyWith(color: context.colors.onSurfaceVariant),
                   ),
                 ],
               ),

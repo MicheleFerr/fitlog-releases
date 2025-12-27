@@ -343,8 +343,7 @@ class WorkoutScreenController extends Notifier<WorkoutScreenState> {
   ///
   /// Adds the exercise to the end of the workout's exercise list.
   Future<void> addExercise(Exercise exercise) async {
-    // ignore: avoid_print
-    print('➕ [WorkoutScreenController] Adding exercise: ${exercise.name}, countingMode=${exercise.countingMode}');
+    debugPrint('➕ [WorkoutScreenController] Adding exercise: ${exercise.name}, countingMode=${exercise.countingMode}');
 
     try {
       ref.read(currentWorkoutProvider.notifier).addExercise(exercise);

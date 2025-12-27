@@ -9,5 +9,4 @@ export 'exercise_list_item_orchestrator.dart';
 
 // Sub-components
 export 'exercise_list_item_header.dart';
-export 'exercise_list_item_actions.dart';
 export 'exercise_list_item_sets.dart';

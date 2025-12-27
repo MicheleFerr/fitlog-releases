@@ -353,6 +353,8 @@ class TemplateCloudService {
       'category': exercise.category.name,
       'restTime': exercise.restTime,
       'notes': exercise.notes,
+      'tut': exercise.tut, // ⌚ Time Under Tension (e.g., "3-1-2-0")
+      'countingMode': exercise.countingMode.name,
     };
 
     // Handle different exercise types with their specific data

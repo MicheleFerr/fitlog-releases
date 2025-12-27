@@ -297,8 +297,8 @@ class _BottomNavigationBar extends StatelessWidget {
         elevation: 0,
         // Same color as scaffold for seamless transition
         backgroundColor: context.colors.surfaceContainer,
-        indicatorColor: Colors.transparent, // No indicator background
-        surfaceTintColor: Colors.transparent,
+        indicatorColor: context.colors.surfaceContainer.withValues(alpha: 0), // No indicator background
+        surfaceTintColor: context.colors.surfaceContainer.withValues(alpha: 0),
         height: 64,
         labelBehavior: NavigationDestinationLabelBehavior.alwaysShow,
         animationDuration: const Duration(milliseconds: 200),

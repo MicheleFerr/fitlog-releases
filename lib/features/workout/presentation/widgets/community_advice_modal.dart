@@ -16,6 +16,7 @@ import 'package:gymbro_flutter_new/features/community/domain/entities/community_
 import 'package:gymbro_flutter_new/features/community/presentation/providers/community_provider.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator.dart';
 
 class CommunityAdviceModal extends ConsumerStatefulWidget {
 
@@ -123,7 +124,7 @@ class _CommunityAdviceModalState extends ConsumerState<CommunityAdviceModal> {
                   );
                 },
                 loading: () => Center(
-                  child: CircularProgressIndicator(
+                  child: LoadingIndicator(
                     color: theme.colorScheme.primary,
                   ),
                 ),

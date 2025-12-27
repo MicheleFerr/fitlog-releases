@@ -23,9 +23,14 @@ mixin _$StrengthStandard {
  List<String> get muscleGroups;/// Data source identifier (e.g., "exrx_net", "estimated_from_benchmarks")
  String get dataSource;/// Bodyweight table: kg → level → 1RM (kg)
 /// Example: {"60": {"novice": 57.5, "intermediate": 70.0}}
- Map<String, Map<String, double>> get bodyweightTable;/// Bodyweight multipliers: level → multiplier
+/// Optional - some exercises only have estimated multipliers
+ Map<String, Map<String, double>>? get bodyweightTable;/// Bodyweight multipliers: level → multiplier
 /// Example: {"novice": 0.93, "intermediate": 1.13}
- Map<String, double> get bodyweightMultipliers;/// Whether this is bodyweight exercise (reps-based instead of weight)
+/// Optional - some exercises only have estimated multipliers
+ Map<String, double>? get bodyweightMultipliers;/// Estimated multipliers for exercises derived from main lifts
+/// Example: {"untrained": 0.60, "novice": 0.75, "intermediate": 0.90}
+/// Used when no exact bodyweightTable is available
+ Map<String, double>? get estimatedMultipliers;/// Whether this is bodyweight exercise (reps-based instead of weight)
  bool get isBodyweightExercise;
 /// Create a copy of StrengthStandard
 /// with the given fields replaced by the non-null parameter values.
@@ -39,16 +44,16 @@ $StrengthStandardCopyWith<StrengthStandard> get copyWith => _$StrengthStandardCo
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is StrengthStandard&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&const DeepCollectionEquality().equals(other.keywords, keywords)&&(identical(other.equipment, equipment) || other.equipment == equipment)&&const DeepCollectionEquality().equals(other.muscleGroups, muscleGroups)&&(identical(other.dataSource, dataSource) || other.dataSource == dataSource)&&const DeepCollectionEquality().equals(other.bodyweightTable, bodyweightTable)&&const DeepCollectionEquality().equals(other.bodyweightMultipliers, bodyweightMultipliers)&&(identical(other.isBodyweightExercise, isBodyweightExercise) || other.isBodyweightExercise == isBodyweightExercise));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is StrengthStandard&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&const DeepCollectionEquality().equals(other.keywords, keywords)&&(identical(other.equipment, equipment) || other.equipment == equipment)&&const DeepCollectionEquality().equals(other.muscleGroups, muscleGroups)&&(identical(other.dataSource, dataSource) || other.dataSource == dataSource)&&const DeepCollectionEquality().equals(other.bodyweightTable, bodyweightTable)&&const DeepCollectionEquality().equals(other.bodyweightMultipliers, bodyweightMultipliers)&&const DeepCollectionEquality().equals(other.estimatedMultipliers, estimatedMultipliers)&&(identical(other.isBodyweightExercise, isBodyweightExercise) || other.isBodyweightExercise == isBodyweightExercise));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,name,const DeepCollectionEquality().hash(keywords),equipment,const DeepCollectionEquality().hash(muscleGroups),dataSource,const DeepCollectionEquality().hash(bodyweightTable),const DeepCollectionEquality().hash(bodyweightMultipliers),isBodyweightExercise);
+int get hashCode => Object.hash(runtimeType,id,name,const DeepCollectionEquality().hash(keywords),equipment,const DeepCollectionEquality().hash(muscleGroups),dataSource,const DeepCollectionEquality().hash(bodyweightTable),const DeepCollectionEquality().hash(bodyweightMultipliers),const DeepCollectionEquality().hash(estimatedMultipliers),isBodyweightExercise);
 
 @override
 String toString() {
-  return 'StrengthStandard(id: $id, name: $name, keywords: $keywords, equipment: $equipment, muscleGroups: $muscleGroups, dataSource: $dataSource, bodyweightTable: $bodyweightTable, bodyweightMultipliers: $bodyweightMultipliers, isBodyweightExercise: $isBodyweightExercise)';
+  return 'StrengthStandard(id: $id, name: $name, keywords: $keywords, equipment: $equipment, muscleGroups: $muscleGroups, dataSource: $dataSource, bodyweightTable: $bodyweightTable, bodyweightMultipliers: $bodyweightMultipliers, estimatedMultipliers: $estimatedMultipliers, isBodyweightExercise: $isBodyweightExercise)';
 }
 
 
@@ -59,7 +64,7 @@ abstract mixin class $StrengthStandardCopyWith<$Res>  {
   factory $StrengthStandardCopyWith(StrengthStandard value, $Res Function(StrengthStandard) _then) = _$StrengthStandardCopyWithImpl;
 @useResult
 $Res call({
- String id, String name, List<String> keywords, String equipment, List<String> muscleGroups, String dataSource, Map<String, Map<String, double>> bodyweightTable, Map<String, double> bodyweightMultipliers, bool isBodyweightExercise
+ String id, String name, List<String> keywords, String equipment, List<String> muscleGroups, String dataSource, Map<String, Map<String, double>>? bodyweightTable, Map<String, double>? bodyweightMultipliers, Map<String, double>? estimatedMultipliers, bool isBodyweightExercise
 });
 
 
@@ -76,7 +81,7 @@ class _$StrengthStandardCopyWithImpl<$Res>
 
 /// Create a copy of StrengthStandard
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? name = null,Object? keywords = null,Object? equipment = null,Object? muscleGroups = null,Object? dataSource = null,Object? bodyweightTable = null,Object? bodyweightMultipliers = null,Object? isBodyweightExercise = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? name = null,Object? keywords = null,Object? equipment = null,Object? muscleGroups = null,Object? dataSource = null,Object? bodyweightTable = freezed,Object? bodyweightMultipliers = freezed,Object? estimatedMultipliers = freezed,Object? isBodyweightExercise = null,}) {
   return _then(_self.copyWith(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
@@ -84,9 +89,10 @@ as String,keywords: null == keywords ? _self.keywords : keywords // ignore: cast
 as List<String>,equipment: null == equipment ? _self.equipment : equipment // ignore: cast_nullable_to_non_nullable
 as String,muscleGroups: null == muscleGroups ? _self.muscleGroups : muscleGroups // ignore: cast_nullable_to_non_nullable
 as List<String>,dataSource: null == dataSource ? _self.dataSource : dataSource // ignore: cast_nullable_to_non_nullable
-as String,bodyweightTable: null == bodyweightTable ? _self.bodyweightTable : bodyweightTable // ignore: cast_nullable_to_non_nullable
-as Map<String, Map<String, double>>,bodyweightMultipliers: null == bodyweightMultipliers ? _self.bodyweightMultipliers : bodyweightMultipliers // ignore: cast_nullable_to_non_nullable
-as Map<String, double>,isBodyweightExercise: null == isBodyweightExercise ? _self.isBodyweightExercise : isBodyweightExercise // ignore: cast_nullable_to_non_nullable
+as String,bodyweightTable: freezed == bodyweightTable ? _self.bodyweightTable : bodyweightTable // ignore: cast_nullable_to_non_nullable
+as Map<String, Map<String, double>>?,bodyweightMultipliers: freezed == bodyweightMultipliers ? _self.bodyweightMultipliers : bodyweightMultipliers // ignore: cast_nullable_to_non_nullable
+as Map<String, double>?,estimatedMultipliers: freezed == estimatedMultipliers ? _self.estimatedMultipliers : estimatedMultipliers // ignore: cast_nullable_to_non_nullable
+as Map<String, double>?,isBodyweightExercise: null == isBodyweightExercise ? _self.isBodyweightExercise : isBodyweightExercise // ignore: cast_nullable_to_non_nullable
 as bool,
   ));
 }
@@ -172,10 +178,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String name,  List<String> keywords,  String equipment,  List<String> muscleGroups,  String dataSource,  Map<String, Map<String, double>> bodyweightTable,  Map<String, double> bodyweightMultipliers,  bool isBodyweightExercise)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String name,  List<String> keywords,  String equipment,  List<String> muscleGroups,  String dataSource,  Map<String, Map<String, double>>? bodyweightTable,  Map<String, double>? bodyweightMultipliers,  Map<String, double>? estimatedMultipliers,  bool isBodyweightExercise)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _StrengthStandard() when $default != null:
-return $default(_that.id,_that.name,_that.keywords,_that.equipment,_that.muscleGroups,_that.dataSource,_that.bodyweightTable,_that.bodyweightMultipliers,_that.isBodyweightExercise);case _:
+return $default(_that.id,_that.name,_that.keywords,_that.equipment,_that.muscleGroups,_that.dataSource,_that.bodyweightTable,_that.bodyweightMultipliers,_that.estimatedMultipliers,_that.isBodyweightExercise);case _:
   return orElse();
 
 }
@@ -193,10 +199,10 @@ return $default(_that.id,_that.name,_that.keywords,_that.equipment,_that.muscleG
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String name,  List<String> keywords,  String equipment,  List<String> muscleGroups,  String dataSource,  Map<String, Map<String, double>> bodyweightTable,  Map<String, double> bodyweightMultipliers,  bool isBodyweightExercise)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String name,  List<String> keywords,  String equipment,  List<String> muscleGroups,  String dataSource,  Map<String, Map<String, double>>? bodyweightTable,  Map<String, double>? bodyweightMultipliers,  Map<String, double>? estimatedMultipliers,  bool isBodyweightExercise)  $default,) {final _that = this;
 switch (_that) {
 case _StrengthStandard():
-return $default(_that.id,_that.name,_that.keywords,_that.equipment,_that.muscleGroups,_that.dataSource,_that.bodyweightTable,_that.bodyweightMultipliers,_that.isBodyweightExercise);case _:
+return $default(_that.id,_that.name,_that.keywords,_that.equipment,_that.muscleGroups,_that.dataSource,_that.bodyweightTable,_that.bodyweightMultipliers,_that.estimatedMultipliers,_that.isBodyweightExercise);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -213,10 +219,10 @@ return $default(_that.id,_that.name,_that.keywords,_that.equipment,_that.muscleG
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String name,  List<String> keywords,  String equipment,  List<String> muscleGroups,  String dataSource,  Map<String, Map<String, double>> bodyweightTable,  Map<String, double> bodyweightMultipliers,  bool isBodyweightExercise)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String name,  List<String> keywords,  String equipment,  List<String> muscleGroups,  String dataSource,  Map<String, Map<String, double>>? bodyweightTable,  Map<String, double>? bodyweightMultipliers,  Map<String, double>? estimatedMultipliers,  bool isBodyweightExercise)?  $default,) {final _that = this;
 switch (_that) {
 case _StrengthStandard() when $default != null:
-return $default(_that.id,_that.name,_that.keywords,_that.equipment,_that.muscleGroups,_that.dataSource,_that.bodyweightTable,_that.bodyweightMultipliers,_that.isBodyweightExercise);case _:
+return $default(_that.id,_that.name,_that.keywords,_that.equipment,_that.muscleGroups,_that.dataSource,_that.bodyweightTable,_that.bodyweightMultipliers,_that.estimatedMultipliers,_that.isBodyweightExercise);case _:
   return null;
 
 }
@@ -228,7 +234,7 @@ return $default(_that.id,_that.name,_that.keywords,_that.equipment,_that.muscleG
 @JsonSerializable()
 
 class _StrengthStandard implements StrengthStandard {
-  const _StrengthStandard({required this.id, required this.name, required final  List<String> keywords, required this.equipment, required final  List<String> muscleGroups, required this.dataSource, required final  Map<String, Map<String, double>> bodyweightTable, required final  Map<String, double> bodyweightMultipliers, this.isBodyweightExercise = false}): _keywords = keywords,_muscleGroups = muscleGroups,_bodyweightTable = bodyweightTable,_bodyweightMultipliers = bodyweightMultipliers;
+  const _StrengthStandard({required this.id, required this.name, required final  List<String> keywords, required this.equipment, required final  List<String> muscleGroups, required this.dataSource, final  Map<String, Map<String, double>>? bodyweightTable, final  Map<String, double>? bodyweightMultipliers, final  Map<String, double>? estimatedMultipliers, this.isBodyweightExercise = false}): _keywords = keywords,_muscleGroups = muscleGroups,_bodyweightTable = bodyweightTable,_bodyweightMultipliers = bodyweightMultipliers,_estimatedMultipliers = estimatedMultipliers;
   factory _StrengthStandard.fromJson(Map<String, dynamic> json) => _$StrengthStandardFromJson(json);
 
 /// Unique identifier (e.g., "barbell_bench_press")
@@ -259,24 +265,47 @@ class _StrengthStandard implements StrengthStandard {
 @override final  String dataSource;
 /// Bodyweight table: kg → level → 1RM (kg)
 /// Example: {"60": {"novice": 57.5, "intermediate": 70.0}}
- final  Map<String, Map<String, double>> _bodyweightTable;
+/// Optional - some exercises only have estimated multipliers
+ final  Map<String, Map<String, double>>? _bodyweightTable;
 /// Bodyweight table: kg → level → 1RM (kg)
 /// Example: {"60": {"novice": 57.5, "intermediate": 70.0}}
-@override Map<String, Map<String, double>> get bodyweightTable {
+/// Optional - some exercises only have estimated multipliers
+@override Map<String, Map<String, double>>? get bodyweightTable {
+  final value = _bodyweightTable;
+  if (value == null) return null;
   if (_bodyweightTable is EqualUnmodifiableMapView) return _bodyweightTable;
   // ignore: implicit_dynamic_type
-  return EqualUnmodifiableMapView(_bodyweightTable);
+  return EqualUnmodifiableMapView(value);
 }
 
 /// Bodyweight multipliers: level → multiplier
 /// Example: {"novice": 0.93, "intermediate": 1.13}
- final  Map<String, double> _bodyweightMultipliers;
+/// Optional - some exercises only have estimated multipliers
+ final  Map<String, double>? _bodyweightMultipliers;
 /// Bodyweight multipliers: level → multiplier
 /// Example: {"novice": 0.93, "intermediate": 1.13}
-@override Map<String, double> get bodyweightMultipliers {
+/// Optional - some exercises only have estimated multipliers
+@override Map<String, double>? get bodyweightMultipliers {
+  final value = _bodyweightMultipliers;
+  if (value == null) return null;
   if (_bodyweightMultipliers is EqualUnmodifiableMapView) return _bodyweightMultipliers;
   // ignore: implicit_dynamic_type
-  return EqualUnmodifiableMapView(_bodyweightMultipliers);
+  return EqualUnmodifiableMapView(value);
+}
+
+/// Estimated multipliers for exercises derived from main lifts
+/// Example: {"untrained": 0.60, "novice": 0.75, "intermediate": 0.90}
+/// Used when no exact bodyweightTable is available
+ final  Map<String, double>? _estimatedMultipliers;
+/// Estimated multipliers for exercises derived from main lifts
+/// Example: {"untrained": 0.60, "novice": 0.75, "intermediate": 0.90}
+/// Used when no exact bodyweightTable is available
+@override Map<String, double>? get estimatedMultipliers {
+  final value = _estimatedMultipliers;
+  if (value == null) return null;
+  if (_estimatedMultipliers is EqualUnmodifiableMapView) return _estimatedMultipliers;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableMapView(value);
 }
 
 /// Whether this is bodyweight exercise (reps-based instead of weight)
@@ -295,16 +324,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _StrengthStandard&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&const DeepCollectionEquality().equals(other._keywords, _keywords)&&(identical(other.equipment, equipment) || other.equipment == equipment)&&const DeepCollectionEquality().equals(other._muscleGroups, _muscleGroups)&&(identical(other.dataSource, dataSource) || other.dataSource == dataSource)&&const DeepCollectionEquality().equals(other._bodyweightTable, _bodyweightTable)&&const DeepCollectionEquality().equals(other._bodyweightMultipliers, _bodyweightMultipliers)&&(identical(other.isBodyweightExercise, isBodyweightExercise) || other.isBodyweightExercise == isBodyweightExercise));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _StrengthStandard&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&const DeepCollectionEquality().equals(other._keywords, _keywords)&&(identical(other.equipment, equipment) || other.equipment == equipment)&&const DeepCollectionEquality().equals(other._muscleGroups, _muscleGroups)&&(identical(other.dataSource, dataSource) || other.dataSource == dataSource)&&const DeepCollectionEquality().equals(other._bodyweightTable, _bodyweightTable)&&const DeepCollectionEquality().equals(other._bodyweightMultipliers, _bodyweightMultipliers)&&const DeepCollectionEquality().equals(other._estimatedMultipliers, _estimatedMultipliers)&&(identical(other.isBodyweightExercise, isBodyweightExercise) || other.isBodyweightExercise == isBodyweightExercise));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,name,const DeepCollectionEquality().hash(_keywords),equipment,const DeepCollectionEquality().hash(_muscleGroups),dataSource,const DeepCollectionEquality().hash(_bodyweightTable),const DeepCollectionEquality().hash(_bodyweightMultipliers),isBodyweightExercise);
+int get hashCode => Object.hash(runtimeType,id,name,const DeepCollectionEquality().hash(_keywords),equipment,const DeepCollectionEquality().hash(_muscleGroups),dataSource,const DeepCollectionEquality().hash(_bodyweightTable),const DeepCollectionEquality().hash(_bodyweightMultipliers),const DeepCollectionEquality().hash(_estimatedMultipliers),isBodyweightExercise);
 
 @override
 String toString() {
-  return 'StrengthStandard(id: $id, name: $name, keywords: $keywords, equipment: $equipment, muscleGroups: $muscleGroups, dataSource: $dataSource, bodyweightTable: $bodyweightTable, bodyweightMultipliers: $bodyweightMultipliers, isBodyweightExercise: $isBodyweightExercise)';
+  return 'StrengthStandard(id: $id, name: $name, keywords: $keywords, equipment: $equipment, muscleGroups: $muscleGroups, dataSource: $dataSource, bodyweightTable: $bodyweightTable, bodyweightMultipliers: $bodyweightMultipliers, estimatedMultipliers: $estimatedMultipliers, isBodyweightExercise: $isBodyweightExercise)';
 }
 
 
@@ -315,7 +344,7 @@ abstract mixin class _$StrengthStandardCopyWith<$Res> implements $StrengthStanda
   factory _$StrengthStandardCopyWith(_StrengthStandard value, $Res Function(_StrengthStandard) _then) = __$StrengthStandardCopyWithImpl;
 @override @useResult
 $Res call({
- String id, String name, List<String> keywords, String equipment, List<String> muscleGroups, String dataSource, Map<String, Map<String, double>> bodyweightTable, Map<String, double> bodyweightMultipliers, bool isBodyweightExercise
+ String id, String name, List<String> keywords, String equipment, List<String> muscleGroups, String dataSource, Map<String, Map<String, double>>? bodyweightTable, Map<String, double>? bodyweightMultipliers, Map<String, double>? estimatedMultipliers, bool isBodyweightExercise
 });
 
 
@@ -332,7 +361,7 @@ class __$StrengthStandardCopyWithImpl<$Res>
 
 /// Create a copy of StrengthStandard
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? name = null,Object? keywords = null,Object? equipment = null,Object? muscleGroups = null,Object? dataSource = null,Object? bodyweightTable = null,Object? bodyweightMultipliers = null,Object? isBodyweightExercise = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? name = null,Object? keywords = null,Object? equipment = null,Object? muscleGroups = null,Object? dataSource = null,Object? bodyweightTable = freezed,Object? bodyweightMultipliers = freezed,Object? estimatedMultipliers = freezed,Object? isBodyweightExercise = null,}) {
   return _then(_StrengthStandard(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
@@ -340,9 +369,10 @@ as String,keywords: null == keywords ? _self._keywords : keywords // ignore: cas
 as List<String>,equipment: null == equipment ? _self.equipment : equipment // ignore: cast_nullable_to_non_nullable
 as String,muscleGroups: null == muscleGroups ? _self._muscleGroups : muscleGroups // ignore: cast_nullable_to_non_nullable
 as List<String>,dataSource: null == dataSource ? _self.dataSource : dataSource // ignore: cast_nullable_to_non_nullable
-as String,bodyweightTable: null == bodyweightTable ? _self._bodyweightTable : bodyweightTable // ignore: cast_nullable_to_non_nullable
-as Map<String, Map<String, double>>,bodyweightMultipliers: null == bodyweightMultipliers ? _self._bodyweightMultipliers : bodyweightMultipliers // ignore: cast_nullable_to_non_nullable
-as Map<String, double>,isBodyweightExercise: null == isBodyweightExercise ? _self.isBodyweightExercise : isBodyweightExercise // ignore: cast_nullable_to_non_nullable
+as String,bodyweightTable: freezed == bodyweightTable ? _self._bodyweightTable : bodyweightTable // ignore: cast_nullable_to_non_nullable
+as Map<String, Map<String, double>>?,bodyweightMultipliers: freezed == bodyweightMultipliers ? _self._bodyweightMultipliers : bodyweightMultipliers // ignore: cast_nullable_to_non_nullable
+as Map<String, double>?,estimatedMultipliers: freezed == estimatedMultipliers ? _self._estimatedMultipliers : estimatedMultipliers // ignore: cast_nullable_to_non_nullable
+as Map<String, double>?,isBodyweightExercise: null == isBodyweightExercise ? _self.isBodyweightExercise : isBodyweightExercise // ignore: cast_nullable_to_non_nullable
 as bool,
   ));
 }

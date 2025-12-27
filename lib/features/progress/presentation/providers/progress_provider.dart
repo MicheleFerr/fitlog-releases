@@ -3,15 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:gymbro_flutter_new/features/auth/presentation/providers/auth_provider.dart';
 import 'package:gymbro_flutter_new/features/progress/domain/entities/progress_data.dart';
-import 'package:gymbro_flutter_new/features/workout/data/datasources/hive_workout_datasource.dart';
-import 'package:gymbro_flutter_new/core/data/providers/hive_box_manager_provider.dart';
-
-/// ⚡ PERFORMANCE FIX: Provider for HiveWorkoutDataSource
-/// Uses local Hive storage instead of Firestore queries
-final hiveWorkoutDataSourceProvider = Provider<HiveWorkoutDataSource>((ref) {
-  final boxManager = ref.watch(hiveBoxManagerProvider);
-  return HiveWorkoutDataSource(boxManager);
-});
+import 'package:gymbro_flutter_new/features/workout/presentation/providers/workout_repository_provider.dart';
 
 /// ✅ MIGRATED: Removed ExerciseActivityRepository dependency
 /// This provider is DEPRECATED - use workout-based providers instead

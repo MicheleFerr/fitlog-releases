@@ -152,14 +152,23 @@ class ExerciseDefinition extends Equatable {
   @HiveField(26)
   final String? tempoEsecuzione;
 
-  // Metodo helper per parsare stringhe separate da virgole
-  static List<String> _parseCommaSeparated(String? value) {
-    if (value == null || value.isEmpty) return [];
-    return value.split(',').map((e) => e.trim()).where((e) => e.isNotEmpty).toList();
+  // Metodo helper per parsare stringhe separate da virgole O array
+  static List<String> _parseCommaSeparated(dynamic value) {
+    if (value == null) return [];
+    // Se è già una lista, castala
+    if (value is List) {
+      return value.cast<String>();
+    }
+    // Se è una stringa, split per virgola
+    if (value is String) {
+      if (value.isEmpty) return [];
+      return value.split(',').map((e) => e.trim()).where((e) => e.isNotEmpty).toList();
+    }
+    return [];
   }
 
   // Metodo pubblico per il model
-  static List<String> parseCommaSeparated(String? value) {
+  static List<String> parseCommaSeparated(dynamic value) {
     return _parseCommaSeparated(value);
   }
 

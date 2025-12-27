@@ -653,10 +653,11 @@ class AppConfigNotifier extends Notifier<AppConfig> {
 
 }
 
-// Helper providers for specific config values
+// 🔧 PERF FIX: Helper providers use .select() to only rebuild when specific field changes
+// This reduces unnecessary rebuilds when unrelated config fields change
+
 final localeProvider = Provider<Locale>((ref) {
-  final config = ref.watch(appConfigProvider);
-  return config.locale;
+  return ref.watch(appConfigProvider.select((c) => c.locale));
 });
 
 final appLocalizationsProvider = Provider<AppLocalizations>((ref) {
@@ -665,41 +666,41 @@ final appLocalizationsProvider = Provider<AppLocalizations>((ref) {
 });
 
 final themeModeProvider = Provider<ThemeMode>((ref) {
-  return ref.watch(appConfigProvider).themeMode;
+  return ref.watch(appConfigProvider.select((c) => c.themeMode));
 });
 
 final measurementUnitProvider = Provider<String>((ref) {
-  return ref.watch(appConfigProvider).measurementUnit;
+  return ref.watch(appConfigProvider.select((c) => c.measurementUnit));
 });
 
 final soundEnabledProvider = Provider<bool>((ref) {
-  return ref.watch(appConfigProvider).soundEnabled;
+  return ref.watch(appConfigProvider.select((c) => c.soundEnabled));
 });
 
 final defaultRestTimeProvider = Provider<int>((ref) {
-  return ref.watch(appConfigProvider).defaultRestTime;
+  return ref.watch(appConfigProvider.select((c) => c.defaultRestTime));
 });
 
 final fontSizeProvider = Provider<double>((ref) {
-  return ref.watch(appConfigProvider).fontSize;
+  return ref.watch(appConfigProvider.select((c) => c.fontSize));
 });
 
 final preferredTemplateIdProvider = Provider<String?>((ref) {
-  return ref.watch(appConfigProvider).preferredTemplateId;
+  return ref.watch(appConfigProvider.select((c) => c.preferredTemplateId));
 });
 
 // DEPRECATED: Legacy provider - use OnboardingState instead
 // final hasSeenWorkoutOnboardingProvider = Provider<bool>((ref) {
-//   return ref.watch(appConfigProvider).hasSeenWorkoutOnboarding;
+//   return ref.watch(appConfigProvider.select((c) => c.hasSeenWorkoutOnboarding));
 // });
 
 final onboardingVersionProvider = Provider<int>((ref) {
-  return ref.watch(appConfigProvider).onboardingVersion;
+  return ref.watch(appConfigProvider.select((c) => c.onboardingVersion));
 });
 
 /// Effort scale provider - 'rpe' or 'rir'
 final effortScaleProvider = Provider<String>((ref) {
-  return ref.watch(appConfigProvider).effortScale;
+  return ref.watch(appConfigProvider.select((c) => c.effortScale));
 });
 
 /// Helper to check if using RIR mode
@@ -709,7 +710,7 @@ final useRirModeProvider = Provider<bool>((ref) {
 
 // Beta mode provider
 final betaModeEnabledProvider = Provider<bool>((ref) {
-  return ref.watch(appConfigProvider).betaModeEnabled ?? false;
+  return ref.watch(appConfigProvider.select((c) => c.betaModeEnabled ?? false));
 });
 
 // Utility functions

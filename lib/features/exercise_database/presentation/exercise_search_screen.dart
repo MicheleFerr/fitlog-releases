@@ -27,6 +27,9 @@ import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
 import 'package:gymbro_flutter_new/shared/presentation/services/snackbar_service.dart';
+import 'package:gymbro_flutter_new/features/analytics/data/repositories/exercise_preferences_repository.dart';
+import 'package:gymbro_flutter_new/features/exercise_database/domain/entities/exercise_counting_mode.dart';
+import 'package:gymbro_flutter_new/features/stress_index/data/mappers/muscle_abbreviation_mapper.dart';
 
 class ExerciseSearchScreen extends ConsumerStatefulWidget { // New: Just select and return exercise template (for DropSet/Rest-Pause)
 
@@ -952,71 +955,11 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
     );
   }
 
+  /// Normalize muscle codes to canonical form
+  ///
+  /// **SINGLE SOURCE OF TRUTH**: Delegates to MuscleAbbreviationMapper.
   String _normalizedMuscleCode(String muscleCode) {
-    // Normalize muscle codes to canonical form
-    final normalized = muscleCode.toUpperCase().trim();
-
-    // Map variations to canonical codes
-    switch (normalized) {
-      case 'BICI': return 'BIC';
-      case 'PETT': return 'PET';
-      case 'AVA': return 'AVAMB';
-      case 'ADDO': return 'ADD';
-      default: return normalized;
-    }
-  }
-
-  String _getMuscleGroupLocalizedName(String muscleCode) {
-    final l10n = context.l10n;
-    final normalized = _normalizedMuscleCode(muscleCode);
-
-    // Map muscle codes to localized names
-    switch (normalized) {
-      case 'PET':
-        return l10n.musclePectorals;
-      case 'LAT':
-      case 'SCH':
-      case 'DORS':
-      case 'DORSO':
-        return l10n.muscleLats;
-      case 'DELT':
-      case 'DEL':
-      case 'SPALLA':
-        return l10n.muscleDeltoids;
-      case 'BIC':
-        return l10n.muscleBiceps;
-      case 'TRIC':
-        return l10n.muscleTriceps;
-      case 'TRAP':
-        return l10n.muscleTrapezius;
-      case 'ROMBOIDI':
-        return l10n.muscleRhomboids;
-      case 'QUAD':
-        return l10n.muscleQuads;
-      case 'GLUT':
-      case 'GLUTEI':
-        return l10n.muscleGlutes;
-      case 'FEMOR':
-        return l10n.muscleHamstrings;
-      case 'POLP':
-        return l10n.muscleCalves;
-      case 'ADDOM':
-      case 'ABD':
-      case 'ADD':
-        return l10n.muscleAbs;
-      case 'OBLIQ':
-        return l10n.muscleObliques;
-      case 'CORE':
-        return l10n.muscleCore;
-      case 'AVAMB':
-        return l10n.muscleForearms;
-      case 'ADDU':
-        return l10n.muscleAdductors;
-      case 'LOM':
-        return l10n.muscleLowerBack;
-      default:
-        return muscleCode;
-    }
+    return MuscleAbbreviationMapper.normalizeToCanonicalId(muscleCode);
   }
 
   Widget _buildAdvancedFilters(List<Exercise> exercises) {
@@ -1250,7 +1193,7 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
                 Row(
                   children: [
                     Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
                       decoration: BoxDecoration(
                         color: _getDifficultyColor(exercise.difficolta).withValues(alpha: 0.2),
                         borderRadius: BorderRadius.circular(8),
@@ -1372,7 +1315,7 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
             ),
             // Match percentage badge
             Container(
-              padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
               decoration: BoxDecoration(
                 color: matchColor.withValues(alpha: 0.2),
                 borderRadius: BorderRadius.circular(8),
@@ -1411,7 +1354,7 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
                 children: [
                   if (isFrequent)
                     Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
                       decoration: BoxDecoration(
                         color: context.colors.warning.withValues(alpha: 0.2),
                         borderRadius: BorderRadius.circular(12),
@@ -1437,7 +1380,7 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
                   if (isFrequent && isTrending) const SizedBox(width: 4),
                   if (isTrending)
                     Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
                       decoration: BoxDecoration(
                         color: context.colors.warning.withValues(alpha: 0.2),
                         borderRadius: BorderRadius.circular(12),
@@ -1469,7 +1412,7 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
             Row(
               children: [
                 Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
                   decoration: BoxDecoration(
                     color: _getDifficultyColor(exercise.difficolta).withValues(alpha: 0.2),
                     borderRadius: BorderRadius.circular(8),
@@ -1686,24 +1629,6 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
         .any((filter) => filter['query'] == query.toLowerCase());
   }
 
-  void _applyQuickFilter(List<String> focusGroups) {
-    setState(() {
-      _selectedFocus = focusGroups;
-      _selectedMuscleGroups.clear();
-      _selectedEquipment.clear();
-      _selectedDifficulty.clear();
-    });
-  }
-
-  void _applyEquipmentFilter(List<String> equipment) {
-    setState(() {
-      _selectedEquipment = equipment;
-      _selectedFocus.clear();
-      _selectedMuscleGroups.clear();
-      _selectedDifficulty.clear();
-    });
-  }
-
   void _applySmartFilter(String query) {
     setState(() {
       _searchQuery = query;
@@ -1737,15 +1662,22 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
 
   void _addSelectedToWorkout() {
     if (_selectedExercises.isEmpty) return;
-    
-    // Navigate to customization screen with selected exercises
-    
-    // Navigate to customization screen and pass callback
+
+    // ✅ Read user's saved counting mode preferences
+    final overridesAsync = ref.read(allCountingModeOverridesProvider);
+    final Map<String, ExerciseCountingMode> overrides = overridesAsync.when(
+      data: (data) => data.map((key, value) => MapEntry(key, ExerciseCountingMode.fromString(value))),
+      loading: () => {},
+      error: (_, __) => {},
+    );
+
+    // Navigate to customization screen and pass callback + overrides
     Navigator.of(context).push(
       MaterialPageRoute(
         builder: (context) => ExerciseCustomizationScreen(
           selectedExercises: _selectedExercises.toList(),
           onExerciseAdded: widget.onExerciseAdded, // 🔥 FIX: Pass callback
+          countingModeOverrides: overrides.isEmpty ? null : overrides, // ✅ Pass user preferences
         ),
       ),
     );
@@ -1759,18 +1691,21 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
   }
 
   WorkoutExercise.Exercise _convertToWorkoutExercise(Exercise exercise) {
-    // Use centralized converter
-    return ExerciseConverter.fromDatabaseExercise(exercise);
-  }
+    // ✅ Check for user-saved counting mode override
+    final overridesAsync = ref.read(allCountingModeOverridesProvider);
+    ExerciseCountingMode? override;
+    overridesAsync.whenData((data) {
+      final savedMode = data[exercise.id];
+      if (savedMode != null) {
+        override = ExerciseCountingMode.fromString(savedMode);
+      }
+    });
 
-  WorkoutExercise.ExerciseCategory _mapFocusToCategory(List<String> focus) {
-    // Use centralized converter
-    return ExerciseConverter.mapFocusToCategory(focus);
-  }
-
-  String _mapMuscleNameToCode(String muscleName) {
-    // Use centralized converter
-    return ExerciseConverter.mapMuscleNameToCode(muscleName);
+    // Use centralized converter with optional override
+    return ExerciseConverter.fromDatabaseExercise(
+      exercise,
+      countingModeOverride: override,
+    );
   }
 
   void _showExerciseOptionsModal(Exercise exercise) {
@@ -1785,7 +1720,7 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
         showModalBottomSheet(
           context: context,
           isScrollControlled: true,
-          backgroundColor: Colors.transparent,
+          backgroundColor: Theme.of(context).colorScheme.surface.withValues(alpha: 0),
           builder: (context) => ExerciseHistoryBottomSheet(
             exerciseName: exercise.nome,
             exerciseId: exercise.id,

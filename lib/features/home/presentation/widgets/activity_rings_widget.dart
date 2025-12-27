@@ -12,10 +12,15 @@
 /// - Stand (Blue): Stand hours
 library;
 
-import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
+import 'dart:async' show unawaited;
+import 'dart:io' show Platform;
 import 'dart:math' as math;
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:url_launcher/url_launcher.dart';
+
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/features/health_sync/presentation/providers/activity_rings_provider.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator.dart';
@@ -48,12 +53,24 @@ class ActivityRingsWidget extends ConsumerStatefulWidget {
 }
 
 class _ActivityRingsWidgetState extends ConsumerState<ActivityRingsWidget> {
+  bool _timedOut = false;
+
   @override
   void initState() {
     super.initState();
     // Fetch data on mount
     WidgetsBinding.instance.addPostFrameCallback((_) {
       ref.read(activityRingsProvider.notifier).fetchActivityData();
+    });
+
+    // Timeout after 5 seconds to avoid infinite loader
+    Future.delayed(const Duration(seconds: 5), () {
+      if (mounted) {
+        final data = ref.read(activityRingsProvider);
+        if (!data.hasData && !data.hasError) {
+          setState(() => _timedOut = true);
+        }
+      }
     });
   }
 
@@ -103,13 +120,16 @@ class _ActivityRingsWidgetState extends ConsumerState<ActivityRingsWidget> {
               const SizedBox(height: 16),
 
               // Rings or loading/error state
-              if (!data.hasData && !data.hasError)
+              if (!data.hasData && !data.hasError && !_timedOut)
                 SizedBox(
                   height: widget.size,
                   child: const Center(child: LoadingIndicator()),
                 )
-              else if (data.hasError)
-                _buildErrorState(context, data.errorMessage ?? 'Error')
+              else if (data.hasError || _timedOut)
+                _buildErrorState(
+                  context,
+                  _timedOut ? 'No activity data' : (data.errorMessage ?? 'Error'),
+                )
               else
                 Row(
                   children: [
@@ -219,32 +239,74 @@ class _ActivityRingsWidgetState extends ConsumerState<ActivityRingsWidget> {
   }
 
   Widget _buildErrorState(BuildContext context, String message) {
-    return SizedBox(
-      height: widget.size,
-      child: Center(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Icon(
-              AppIcons.errorOutline,
-              color: context.colors.error,
-              size: 32,
-            ),
-            const SizedBox(height: 8),
-            Text(
-              'Connect Health',
-              style: context.textTheme.bodyMedium,
-            ),
-            Text(
-              'Tap to retry',
-              style: context.textTheme.bodySmall?.copyWith(
-                color: context.colors.onSurface.withValues(alpha: 0.5),
+    final isNoData = _timedOut || message.contains('No activity');
+
+    return GestureDetector(
+      onTap: () => _openFitnessApp(),
+      child: SizedBox(
+        height: widget.size,
+        child: Center(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(
+                isNoData ? AppIcons.fitnessCenter : AppIcons.errorOutline,
+                color: isNoData ? context.colors.primary : context.colors.error,
+                size: 32,
               ),
-            ),
-          ],
+              const SizedBox(height: 8),
+              Text(
+                isNoData
+                    ? context.l10n.openFitnessApp
+                    : 'Connect Health',
+                style: context.textTheme.bodyMedium?.copyWith(
+                  fontWeight: FontWeight.w500,
+                ),
+                textAlign: TextAlign.center,
+              ),
+              const SizedBox(height: 4),
+              Text(
+                isNoData
+                    ? context.l10n.tapToSyncActivityData
+                    : context.l10n.tapToRetry,
+                style: context.textTheme.bodySmall?.copyWith(
+                  color: context.colors.primary,
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
+  }
+
+  /// Open Apple Fitness app (iOS) or Google Fit (Android)
+  Future<void> _openFitnessApp() async {
+    if (Platform.isIOS) {
+      // Try Apple Fitness first, fallback to Health
+      final fitnessUri = Uri.parse('fb1562915830686498://'); // Fitness app
+      final healthUri = Uri.parse('x-apple-health://'); // Health app
+
+      if (await canLaunchUrl(fitnessUri)) {
+        await launchUrl(fitnessUri);
+      } else if (await canLaunchUrl(healthUri)) {
+        await launchUrl(healthUri);
+      }
+    } else if (Platform.isAndroid) {
+      // Google Fit
+      final fitUri = Uri.parse('https://www.google.com/fit/');
+      if (await canLaunchUrl(fitUri)) {
+        await launchUrl(fitUri, mode: LaunchMode.externalApplication);
+      }
+    }
+
+    // Retry fetch after a short delay
+    await Future.delayed(const Duration(seconds: 2));
+    if (mounted) {
+      // Fire and forget - we don't need to wait for the fetch to complete
+      unawaited(ref.read(activityRingsProvider.notifier).fetchActivityData());
+      setState(() => _timedOut = false);
+    }
   }
 
   // Apple-style colors

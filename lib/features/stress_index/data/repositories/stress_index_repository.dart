@@ -31,6 +31,9 @@ abstract class StressIndexRepositoryInterface {
   /// Delete stress index result for a workout
   Future<void> delete(String workoutId);
 
+  /// Clear all stress index data (for recalculation after exercise focus changes)
+  Future<int> clearAll();
+
   /// Dispose resources
   Future<void> dispose();
 }
@@ -216,6 +219,67 @@ class StressIndexRepository implements StressIndexRepositoryInterface {
     } catch (e) {
       if (kDebugMode) {
         debugPrint('[StressIndexRepository] Failed to delete: $e');
+      }
+    }
+  }
+
+  @override
+  Future<int> clearAll() async {
+    if (_isDisposed) return 0;
+    await _ensureInitialized();
+
+    try {
+      final count = _localBox?.length ?? 0;
+
+      // Clear local Hive box
+      await _localBox?.clear();
+
+      // Clear cloud data if user is logged in
+      await _clearCloudData();
+
+      // Emit update
+      _emitRecentUpdate();
+
+      if (kDebugMode) {
+        debugPrint('[StressIndexRepository] Cleared all stress index data ($count entries)');
+      }
+
+      return count;
+    } catch (e) {
+      if (kDebugMode) {
+        debugPrint('[StressIndexRepository] Failed to clear all: $e');
+      }
+      return 0;
+    }
+  }
+
+  /// Clear all stress index data from Firestore
+  Future<void> _clearCloudData() async {
+    final userId = _auth.currentUser?.uid;
+    if (userId == null) return;
+
+    try {
+      final collection = _firestore
+          .collection('users')
+          .doc(userId)
+          .collection(_collectionName);
+
+      // Get all documents and delete them
+      final snapshot = await collection.get();
+      final batch = _firestore.batch();
+
+      for (final doc in snapshot.docs) {
+        batch.delete(doc.reference);
+      }
+
+      await batch.commit();
+
+      if (kDebugMode) {
+        debugPrint('[StressIndexRepository] Cleared ${snapshot.docs.length} entries from cloud');
+      }
+    } catch (e) {
+      if (kDebugMode) {
+        debugPrint('[StressIndexRepository] Failed to clear cloud data: $e');
       }
     }
   }

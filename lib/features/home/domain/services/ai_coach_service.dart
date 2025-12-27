@@ -16,6 +16,7 @@ import 'package:gymbro_flutter_new/features/exercise_database/domain/entities/ex
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
 import 'package:gymbro_flutter_new/features/home/domain/services/ai_volume_calculator.dart';
 import 'package:gymbro_flutter_new/features/workout_templates/domain/entities/workout_template.dart';
+import 'package:gymbro_flutter_new/features/stress_index/data/mappers/muscle_abbreviation_mapper.dart';
 
 /// Types of AI insights that can be generated
 enum InsightType {
@@ -809,31 +810,11 @@ https://doi.org/10.1136/bjsports-2013-092538''',
   }
 
   /// Helper per ottenere nome muscle group localizzato
+  ///
+  /// Uses [MuscleAbbreviationMapper] as SINGLE SOURCE OF TRUTH.
+  /// Note: l10n parameter kept for API compatibility but displayNameIt is used.
   static String _getMuscleGroupName(String code, AppLocalizations l10n) {
-    switch (code) {
-      case 'PETT':
-        return 'Pettorali';
-      case 'DORS':
-        return 'Dorsali';
-      case 'DELT':
-        return 'Deltoidi';
-      case 'BRAC':
-        return 'Bicipiti';
-      case 'TRIC':
-        return 'Tricipiti';
-      case 'QUAD':
-        return 'Quadricipiti';
-      case 'FEMOR':
-        return 'Femorali';
-      case 'GLUT':
-        return 'Glutei';
-      case 'POLP':
-        return 'Polpacci';
-      case 'CORE':
-        return 'Core';
-      default:
-        return code;
-    }
+    return MuscleAbbreviationMapper.getMuscleInfo(code)?.displayNameIt ?? code;
   }
 
   /// Get maximum weight used in an activity

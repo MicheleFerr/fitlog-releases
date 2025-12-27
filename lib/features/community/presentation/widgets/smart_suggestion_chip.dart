@@ -49,7 +49,7 @@ class SmartSuggestionChip extends StatelessWidget {
     return Tooltip(
       message: suggestion,
       child: Material(
-        color: Colors.transparent,
+        color: Theme.of(context).colorScheme.surface.withValues(alpha: 0),
         child: InkWell(
           onTap: () => _handleTap(context),
           borderRadius: BorderRadius.circular(16),

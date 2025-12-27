@@ -22,7 +22,7 @@ void showWeeklyStatsBottomSheet(BuildContext context) {
   showModalBottomSheet(
     context: context,
     isScrollControlled: true,
-    backgroundColor: Colors.transparent,
+    backgroundColor: Theme.of(context).colorScheme.surface.withValues(alpha: 0),
     builder: (context) => const _WeeklyStatsBottomSheetContent(),
   );
 }

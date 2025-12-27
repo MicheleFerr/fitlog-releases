@@ -9,7 +9,7 @@ void showTutInfoBottomSheet(BuildContext context, String tutValue) {
   showModalBottomSheet(
     context: context,
     isScrollControlled: true,
-    backgroundColor: Colors.transparent,
+    backgroundColor: Theme.of(context).colorScheme.surface.withValues(alpha: 0),
     builder: (context) => TutInfoBottomSheet(tutValue: tutValue),
   );
 }

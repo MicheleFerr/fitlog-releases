@@ -42,13 +42,17 @@ class OnboardingStateAdapter extends TypeAdapter<OnboardingState> {
           : fields[17] as bool,
       userGoal: fields[18] as String?,
       weeklyWorkoutTarget: (fields[19] as num?)?.toInt(),
+      hasAcceptedLegalDisclaimer: fields[20] == null
+          ? false
+          : fields[20] as bool,
+      legalDisclaimerAcceptedAt: fields[21] as DateTime?,
     );
   }
 
   @override
   void write(BinaryWriter writer, OnboardingState obj) {
     writer
-      ..writeByte(17)
+      ..writeByte(19)
       ..writeByte(0)
       ..write(obj.hasSeenGlobalOnboarding)
       ..writeByte(1)
@@ -82,7 +86,11 @@ class OnboardingStateAdapter extends TypeAdapter<OnboardingState> {
       ..writeByte(18)
       ..write(obj.userGoal)
       ..writeByte(19)
-      ..write(obj.weeklyWorkoutTarget);
+      ..write(obj.weeklyWorkoutTarget)
+      ..writeByte(20)
+      ..write(obj.hasAcceptedLegalDisclaimer)
+      ..writeByte(21)
+      ..write(obj.legalDisclaimerAcceptedAt);
   }
 
   @override

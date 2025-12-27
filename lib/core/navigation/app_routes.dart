@@ -180,6 +180,10 @@ abstract final class AppRoutes {
   static const String premiumPath = '/profile/premium';
   static const String premiumName = 'premium';
 
+  /// Exercise merge screen - consolidate similar exercises
+  static const String exerciseMergePath = '/profile/exercise-merge';
+  static const String exerciseMergeName = 'exercise-merge';
+
   // ═══════════════════════════════════════════════════════════════════════════
   // Branch Index Mapping (for StatefulShellRoute)
   // ═══════════════════════════════════════════════════════════════════════════

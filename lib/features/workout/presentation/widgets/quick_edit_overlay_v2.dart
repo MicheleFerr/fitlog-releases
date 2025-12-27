@@ -25,6 +25,8 @@ import 'package:gymbro_flutter_new/features/workout/presentation/widgets/plate_c
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator.dart';
+import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 
 class QuickEditOverlayV2 extends ConsumerStatefulWidget {
 
@@ -346,7 +348,7 @@ class _QuickEditOverlayV2State extends ConsumerState<QuickEditOverlayV2>
           );
         },
         child: Material(
-          color: Colors.transparent,
+          color: theme.colorScheme.surface.withValues(alpha: 0),
           child: Stack(
             children: [
               Container(
@@ -1088,11 +1090,7 @@ class _QuickEditOverlayV2State extends ConsumerState<QuickEditOverlayV2>
           loading: () => const SizedBox(
             height: 36,
             child: Center(
-              child: SizedBox(
-                width: 16,
-                height: 16,
-                child: CircularProgressIndicator(strokeWidth: 2),
-              ),
+              child: LoadingIndicator(size: 16),
             ),
           ),
           error: (_, __) => const SizedBox.shrink(),
@@ -1143,7 +1141,7 @@ class _QuickEditOverlayV2State extends ConsumerState<QuickEditOverlayV2>
 
             // ✅ COMPACT SINGLE-ROW LAYOUT
             return Material(
-              color: Colors.transparent,
+              color: context.colors.surface.withValues(alpha: 0),
               child: InkWell(
                 onTap: () {
                   HapticFeedback.mediumImpact();
@@ -1332,7 +1330,7 @@ class _QuickEditOverlayV2State extends ConsumerState<QuickEditOverlayV2>
         duration: const Duration(milliseconds: 150),
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
         decoration: BoxDecoration(
-          color: isSelected ? theme.colorScheme.primary : Colors.transparent,
+          color: isSelected ? theme.colorScheme.primary : theme.colorScheme.surface.withValues(alpha: 0),
           borderRadius: BorderRadius.circular(8),
         ),
         child: Text(
@@ -1388,9 +1386,9 @@ class _QuickEditOverlayV2State extends ConsumerState<QuickEditOverlayV2>
 
   Widget _buildPlateCalculatorButton(ThemeData theme, String measurementUnit) {
     final hasWeight = _selectedWeight > 0;
-    
+
     return Material(
-      color: Colors.transparent,
+      color: theme.colorScheme.surface.withValues(alpha: 0),
       child: InkWell(
         onTap: hasWeight ? () => _showPlateCalculator(context) : null,
         borderRadius: BorderRadius.circular(8),
@@ -1498,7 +1496,7 @@ class _QuickEditOverlayV2State extends ConsumerState<QuickEditOverlayV2>
 
   Widget _buildAdjustButton(String label, VoidCallback onTap, Color color, ThemeData theme) {
     return Material(
-      color: Colors.transparent,
+      color: theme.colorScheme.surface.withValues(alpha: 0),
       child: InkWell(
         onTap: onTap,
         borderRadius: BorderRadius.circular(8),
@@ -1541,7 +1539,7 @@ class _QuickEditOverlayV2State extends ConsumerState<QuickEditOverlayV2>
         // ✅ NEW: Apply to remaining sets toggle (only if there are remaining sets)
         if (hasRemainingSets && widget.onApplyToRemaining != null) ...[
           Material(
-            color: Colors.transparent,
+            color: theme.colorScheme.surface.withValues(alpha: 0),
             child: InkWell(
               onTap: () {
                 setState(() => _applyToRemaining = !_applyToRemaining);
@@ -1832,7 +1830,7 @@ class _QuickEditOverlayV2State extends ConsumerState<QuickEditOverlayV2>
           return Padding(
             padding: const EdgeInsets.only(right: 8),
             child: Material(
-              color: Colors.transparent,
+              color: theme.colorScheme.surface.withValues(alpha: 0),
               child: InkWell(
                 onTap: () => _switchToExercise(index),
                 borderRadius: BorderRadius.circular(16),
@@ -2353,7 +2351,7 @@ extension QuickEditOverlayV2Extension on BuildContext {
     return showModalBottomSheet<void>(
       context: this,
       isScrollControlled: true,
-      backgroundColor: Colors.transparent,
+      backgroundColor: colors.surface.withValues(alpha: 0),
       builder: (context) => Padding(
         padding: EdgeInsets.only(
           bottom: MediaQuery.of(context).viewInsets.bottom,
@@ -2405,7 +2403,7 @@ extension QuickEditOverlayV2Extension on BuildContext {
     return showModalBottomSheet<void>(
       context: this,
       isScrollControlled: true,
-      backgroundColor: Colors.transparent,
+      backgroundColor: colors.surface.withValues(alpha: 0),
       builder: (context) => Padding(
         padding: EdgeInsets.only(
           bottom: MediaQuery.of(context).viewInsets.bottom,

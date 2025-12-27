@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:gymbro_flutter_new/tools/firebase_exercise_importer.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator.dart';
 
 class ImportExercisesScreen extends StatefulWidget {
   const ImportExercisesScreen({super.key});
@@ -82,13 +83,9 @@ class _ImportExercisesScreenState extends State<ImportExercisesScreen> {
                   ? Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        SizedBox(
-                          width: 20,
-                          height: 20,
-                          child: CircularProgressIndicator(
-                            strokeWidth: 2,
-                            valueColor: AlwaysStoppedAnimation<Color>(context.colors.onPrimary),
-                          ),
+                        LoadingIndicator(
+                          size: 20,
+                          color: context.colors.onPrimary,
                         ),
                         const SizedBox(width: 10),
                         Text(

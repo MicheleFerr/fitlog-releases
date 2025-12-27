@@ -8,6 +8,7 @@ import 'package:gymbro_flutter_new/features/exercise_database/domain/entities/ex
 import 'package:gymbro_flutter_new/shared/domain/converters/exercise_converter.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
+import 'package:gymbro_flutter_new/features/workout/presentation/widgets/exercise_gif_widget.dart';
 
 /// Provider per filtrare esercizi alternativi basati sulla categoria
 final alternativeExercisesProvider = FutureProvider.autoDispose.family<List<Exercise>, String>((ref, currentExerciseName) async {
@@ -124,64 +125,63 @@ class ExerciseAlternativesTab extends ConsumerWidget {
       elevation: 2,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
+        padding: const EdgeInsets.all(12),
+        child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Exercise name
-            Row(
-              children: [
-                Icon(
-                  AppIcons.fitnessCenter,
-                  color: context.colors.primary,
-                  size: 20,
-                ),
-                const SizedBox(width: 8),
-                Expanded(
-                  child: Text(
+            // Exercise image/GIF
+            ExerciseGifWidget(
+              gifUrl: exercise.imageUrl,
+              exerciseName: exercise.nome,
+              size: 64,
+            ),
+            const SizedBox(width: 12),
+            // Exercise info
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Exercise name
+                  Text(
                     exercise.nome,
                     style: context.textTheme.titleMedium?.copyWith(
                       fontWeight: FontWeight.bold,
                       color: context.colors.onSurface,
                     ),
                   ),
-                ),
-              ],
-            ),
-
-            const SizedBox(height: 12),
-
-            // Metadata chips row
-            Wrap(
-              spacing: 8,
-              runSpacing: 8,
-              children: [
-                // Difficulty
-                _buildMetadataChip(
-                  context,
-                  _getDifficultyIcon(exercise.difficolta),
-                  exercise.difficolta,
-                  _getDifficultyColor(context, exercise.difficolta),
-                ),
-
-                // Equipment
-                if (exercise.attrezzatura.isNotEmpty)
-                  _buildMetadataChip(
-                    context,
-                    AppIcons.construction,
-                    exercise.attrezzatura,
-                    context.colors.tertiary,
+                  const SizedBox(height: 8),
+                  // Metadata chips row
+                  Wrap(
+                    spacing: 6,
+                    runSpacing: 6,
+                    children: [
+                      // Difficulty
+                      _buildMetadataChip(
+                        context,
+                        _getDifficultyIcon(exercise.difficolta),
+                        exercise.difficolta,
+                        _getDifficultyColor(context, exercise.difficolta),
+                      ),
+                      // Equipment
+                      if (exercise.attrezzatura.isNotEmpty)
+                        _buildMetadataChip(
+                          context,
+                          AppIcons.construction,
+                          exercise.attrezzatura,
+                          context.colors.tertiary,
+                        ),
+                      // Primary muscles
+                      if (exercise.focus.isNotEmpty)
+                        _buildMetadataChip(
+                          context,
+                          AppIcons.accessibility,
+                          exercise.focus.join(', '),
+                          context.colors.secondary,
+                        ),
+                    ],
                   ),
-
-                // Primary muscles
-                if (exercise.focus.isNotEmpty)
-                  _buildMetadataChip(
-                    context,
-                    AppIcons.accessibility,
-                    exercise.focus.join(', '),
-                    context.colors.secondary,
-                  ),
-              ],
+                ],
+              ),
             ),
           ],
         ),
@@ -192,7 +192,7 @@ class ExerciseAlternativesTab extends ConsumerWidget {
   /// Build metadata chip
   Widget _buildMetadataChip(BuildContext context, IconData icon, String label, Color color) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
       decoration: BoxDecoration(
         color: color.withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(8),
