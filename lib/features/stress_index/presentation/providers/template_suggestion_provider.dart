@@ -17,6 +17,141 @@ import 'package:gymbro_flutter_new/features/stress_index/presentation/providers/
 import 'package:gymbro_flutter_new/features/strength_standards/presentation/providers/strength_standards_providers.dart';
 import 'package:gymbro_flutter_new/features/workout_templates/presentation/providers/template_provider.dart';
 import 'package:gymbro_flutter_new/features/auth/presentation/providers/auth_provider.dart';
+import 'package:gymbro_flutter_new/features/recovery_insight/presentation/providers/recovery_insight_provider.dart';
+import 'package:health/health.dart' show NumericHealthValue;
+
+// ============================================================================
+// HEALTH DATA SNAPSHOT PROVIDER
+// ============================================================================
+
+/// Provider for HealthDataSnapshot from HealthKit
+///
+/// Fetches sleep, HRV, and resting heart rate from HealthKit to create
+/// a snapshot for calibration and stress analysis.
+///
+/// **Returns**:
+/// - HealthDataSnapshot with real data if available
+/// - HealthDataSnapshot.empty if HealthKit not available or errors
+final healthDataSnapshotProvider =
+    FutureProvider.autoDispose<HealthDataSnapshot>((ref) async {
+  final datasource = ref.watch(healthKitDatasourceProvider);
+
+  // Check if HealthKit is available (iOS only)
+  if (!datasource.isAvailable) {
+    if (kDebugMode) {
+      debugPrint('[HealthDataSnapshot] HealthKit not available');
+    }
+    return HealthDataSnapshot.empty;
+  }
+
+  try {
+    // Initialize HealthKit (request permissions if needed)
+    await datasource.initialize();
+
+    // Fetch all needed data in parallel for efficiency
+    final results = await Future.wait([
+      datasource.getSleepLastNight(),
+      datasource.getHrvToday(),
+      datasource.getRestingHeartRate(),
+    ]);
+
+    final sleepData = results[0];
+    final hrvData = results[1];
+    final restingHrData = results[2];
+
+    // Extract values
+    double? sleepHours;
+    if (sleepData != null) {
+      final sleepMinutes = (sleepData.value as NumericHealthValue).numericValue;
+      sleepHours = sleepMinutes / 60.0;
+    }
+
+    double? hrvMs;
+    if (hrvData != null) {
+      hrvMs = (hrvData.value as NumericHealthValue).numericValue.toDouble();
+    }
+
+    double? restingHr;
+    if (restingHrData != null) {
+      restingHr =
+          (restingHrData.value as NumericHealthValue).numericValue.toDouble();
+    }
+
+    if (kDebugMode) {
+      debugPrint('[HealthDataSnapshot] Fetched from HealthKit:');
+      debugPrint('  - Sleep: ${sleepHours?.toStringAsFixed(1)}h');
+      debugPrint('  - HRV: ${hrvMs?.toStringAsFixed(0)}ms');
+      debugPrint('  - Resting HR: ${restingHr?.toStringAsFixed(0)}bpm');
+    }
+
+    return HealthDataSnapshot(
+      sleepHoursLastNight: sleepHours,
+      hrvMs: hrvMs,
+      restingHeartRate: restingHr,
+    );
+  } catch (e) {
+    if (kDebugMode) {
+      debugPrint('[HealthDataSnapshot] Error: $e');
+    }
+    return HealthDataSnapshot.empty;
+  }
+});
+
+/// Provider for historical HRV data (last 7 days)
+///
+/// Used for calculating personal HRV baseline
+final historicalHrvProvider =
+    FutureProvider.autoDispose<List<double>?>((ref) async {
+  final datasource = ref.watch(healthKitDatasourceProvider);
+
+  if (!datasource.isAvailable) return null;
+
+  try {
+    await datasource.initialize();
+    final hrvData = await datasource.getHrvThisWeek();
+
+    if (hrvData.isEmpty) return null;
+
+    // Extract numeric values
+    final values = hrvData.map((p) {
+      final numValue = p.value as NumericHealthValue;
+      return numValue.numericValue.toDouble();
+    }).toList();
+
+    if (kDebugMode) {
+      debugPrint('[HistoricalHRV] ${values.length} days of HRV data');
+    }
+
+    return values;
+  } catch (e) {
+    if (kDebugMode) {
+      debugPrint('[HistoricalHRV] Error: $e');
+    }
+    return null;
+  }
+});
+
+/// Provider for historical sleep data (last 7 days)
+///
+/// Used for calculating personal sleep baseline
+final historicalSleepProvider =
+    FutureProvider.autoDispose<List<double>?>((ref) async {
+  // Reuse sleep records from recovery insight
+  final sleepRecords = await ref.watch(sleepRecordsProvider.future);
+
+  if (sleepRecords.isEmpty) return null;
+
+  // Convert to hours
+  final values = sleepRecords
+      .map((r) => r.asleepDuration.inMinutes / 60.0)
+      .toList();
+
+  if (kDebugMode) {
+    debugPrint('[HistoricalSleep] ${values.length} nights of sleep data');
+  }
+
+  return values;
+});
 
 // ============================================================================
 // PERSONAL CALIBRATION PROVIDER
@@ -37,14 +172,12 @@ final personalCalibrationProvider =
   // Get user questionnaire if available
   final questionnaire = ref.watch(userFitnessQuestionnaireProvider);
 
-  // TODO: Get HealthKit data when available
-  // For now, use empty snapshot
-  const healthData = HealthDataSnapshot.empty;
+  // Get HealthKit data (sleep, HRV, resting HR)
+  final healthData = await ref.watch(healthDataSnapshotProvider.future);
 
-  // TODO: Get historical HRV and sleep data for baselines
-  // This would come from HealthKit over time
-  const List<double>? historicalHrv = null;
-  const List<double>? historicalSleep = null;
+  // Get historical HRV and sleep data for baselines
+  final historicalHrv = await ref.watch(historicalHrvProvider.future);
+  final historicalSleep = await ref.watch(historicalSleepProvider.future);
 
   // Calculate calibration
   final calibration = CalibrationService.calculateCalibration(
@@ -167,8 +300,8 @@ final templateSuggestionProvider =
     final currentStress =
         stressState.valueOrNull?.latestResult?.displayScore ?? 0;
 
-    // TODO: Get HealthKit data for today
-    const healthData = HealthDataSnapshot.empty;
+    // Get HealthKit data for today
+    final healthData = await ref.watch(healthDataSnapshotProvider.future);
 
     // Analyze all templates
     final analyses = TemplateStressAnalyzer.analyzeAllTemplates(
