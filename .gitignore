@@ -110,3 +110,7 @@ ios/build/
 test_firestore_rules/node_modules/
 test_firestore_rules/package-lock.json
 
+
+# Node modules for Firebase Functions
+functions/node_modules/
+firebase/functions/node_modules/
