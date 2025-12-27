@@ -574,13 +574,14 @@ class HealthKitDatasource {
       };
     }
 
-    // Group by night
+    // Group by night (using END time - when you wake up)
+    // Sleep from 23:00 Dec 20 → 06:00 Dec 21 counts as "Dec 21"
     final nightlySleep = <DateTime, double>{};
     for (final point in sleepData) {
       final nightKey = DateTime(
-        point.dateFrom.year,
-        point.dateFrom.month,
-        point.dateFrom.day,
+        point.dateTo.year,
+        point.dateTo.month,
+        point.dateTo.day,
       );
       final minutes = (point.value as num).toDouble();
       nightlySleep[nightKey] = (nightlySleep[nightKey] ?? 0) + minutes;
@@ -604,10 +605,11 @@ class HealthKitDatasource {
     if (inBedData.isNotEmpty) {
       final nightlyInBed = <DateTime, double>{};
       for (final point in inBedData) {
+        // Use dateTo for consistency with sleep grouping
         final nightKey = DateTime(
-          point.dateFrom.year,
-          point.dateFrom.month,
-          point.dateFrom.day,
+          point.dateTo.year,
+          point.dateTo.month,
+          point.dateTo.day,
         );
         final minutes = (point.value as num).toDouble();
         nightlyInBed[nightKey] = (nightlyInBed[nightKey] ?? 0) + minutes;
