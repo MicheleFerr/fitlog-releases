@@ -1,5 +1,6 @@
 import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise_activity.dart';
 import 'package:gymbro_flutter_new/features/analytics/domain/services/volume_calculator.dart';
+import 'package:gymbro_flutter_new/features/stress_index/data/mappers/muscle_abbreviation_mapper.dart';
 
 /// Scientific muscle group balance analyzer
 ///
@@ -25,7 +26,10 @@ class MuscleBalanceAnalyzer {
     final pullGroups = {'Back'};                 // Posterior chain
 
     for (final activity in activities) {
-      final muscleGroup = _categorizeExercise(activity.exerciseName);
+      // **Uses SSOT**: MuscleAbbreviationMapper.categorizeExerciseByName
+      final muscleGroup = MuscleAbbreviationMapper.categorizeExerciseByName(
+        activity.exerciseName,
+      );
       final volume = VolumeCalculator.calculateTotalVolume(activity.sets);
       final setCount = activity.sets.where((s) => s.done).length;
 
@@ -152,82 +156,6 @@ class MuscleBalanceAnalyzer {
     }
   }
 
-  // Helper to use VolumeCalculator's categorization
-  static String _categorizeExercise(String exerciseName) {
-    final name = exerciseName.toLowerCase();
-
-    // CHEST patterns
-    if (name.contains('bench') ||
-        name.contains('chest') ||
-        name.contains('fly') ||
-        name.contains('flyes') ||
-        name.contains('pec') ||
-        name.contains('dip') && !name.contains('shoulder')) {
-      return 'Chest';
-    }
-
-    // BACK patterns
-    else if (name.contains('pull') && !name.contains('pullover') ||
-             name.contains('row') ||
-             name.contains('lat') ||
-             name.contains('back') ||
-             name.contains('deadlift') ||
-             name.contains('t-bar') ||
-             name.contains('chin')) {
-      return 'Back';
-    }
-
-    // SHOULDERS patterns
-    else if (name.contains('shoulder') ||
-             name.contains('delt') ||
-             name.contains('lateral') ||
-             name.contains('overhead') && name.contains('press') ||
-             name.contains('military') ||
-             name.contains('arnold') ||
-             name.contains('face pull') ||
-             name.contains('upright row')) {
-      return 'Shoulders';
-    }
-
-    // LEGS patterns
-    else if (name.contains('squat') ||
-             name.contains('leg') ||
-             name.contains('quad') ||
-             name.contains('hamstring') ||
-             name.contains('glute') ||
-             name.contains('lunge') ||
-             name.contains('calf') ||
-             name.contains('rdl') ||
-             name.contains('hip thrust')) {
-      return 'Legs';
-    }
-
-    // ARMS patterns
-    else if (name.contains('curl') ||
-             name.contains('bicep') ||
-             name.contains('tricep') ||
-             name.contains('arm') ||
-             name.contains('pushdown') ||
-             name.contains('extension') && !name.contains('leg') ||
-             name.contains('kickback')) {
-      return 'Arms';
-    }
-
-    // CORE patterns
-    else if (name.contains('ab') ||
-             name.contains('core') ||
-             name.contains('plank') ||
-             name.contains('crunch') ||
-             name.contains('sit up') ||
-             name.contains('russian twist') ||
-             name.contains('leg raise') && !name.contains('calf')) {
-      return 'Core';
-    }
-
-    else {
-      return 'Other';
-    }
-  }
 }
 
 /// Push:Pull balance data

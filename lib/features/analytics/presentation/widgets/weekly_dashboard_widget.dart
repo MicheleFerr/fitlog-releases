@@ -507,9 +507,8 @@ class _WeeklyDashboardWidgetState extends State<WeeklyDashboardWidget>
                   ),
                   child: Text(
                     'PR!',
-                    style: TextStyle(
+                    style: context.textTheme.labelSmall!.copyWith(
                       color: Theme.of(context).colorScheme.surface,
-                      fontSize: 12,
                       fontWeight: FontWeight.bold,
                     ),
                   ),

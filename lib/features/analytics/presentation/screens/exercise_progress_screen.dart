@@ -43,7 +43,7 @@ class _ExerciseProgressScreenState extends ConsumerState<ExerciseProgressScreen>
       backgroundColor: context.colors.surface,
       appBar: AppBar(
         backgroundColor: context.colors.surface,
-        surfaceTintColor: Colors.transparent,
+        surfaceTintColor: context.colors.surface.withValues(alpha: 0),
         elevation: 0,
         leading: IconButton(
           icon: const SemanticIcon(
@@ -325,8 +325,7 @@ class _ExerciseProgressScreenState extends ConsumerState<ExerciseProgressScreen>
           const SizedBox(width: 4),
           Text(
             label,
-            style: TextStyle(
-              fontSize: 12,
+            style: context.textTheme.labelSmall?.copyWith(
               color: color,
               fontWeight: FontWeight.bold,
             ),

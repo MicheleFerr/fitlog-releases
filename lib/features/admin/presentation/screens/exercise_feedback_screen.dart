@@ -165,7 +165,7 @@ class ExerciseFeedbackScreen extends ConsumerWidget {
             padding: const EdgeInsets.all(12),
             child: Row(
               children: [
-                Text(emoji, style: const TextStyle(fontSize: 20)),
+                Text(emoji, style: context.textTheme.titleLarge),
                 const SizedBox(width: 12),
                 Expanded(
                   child: Text(
@@ -238,7 +238,7 @@ class ExerciseFeedbackScreen extends ConsumerWidget {
                   height: 32,
                   decoration: BoxDecoration(
                     color: severityColor,
-                    borderRadius: BorderRadius.circular(4),
+                    borderRadius: BorderRadius.circular(8),
                   ),
                 ),
                 const SizedBox(width: 12),
@@ -399,7 +399,7 @@ class ExerciseFeedbackScreen extends ConsumerWidget {
               children: [
                 Text(
                   typeEmojis[feedback.feedbackType] ?? '•',
-                  style: const TextStyle(fontSize: 18),
+                  style: context.textTheme.titleMedium,
                 ),
                 const SizedBox(width: 8),
                 Expanded(

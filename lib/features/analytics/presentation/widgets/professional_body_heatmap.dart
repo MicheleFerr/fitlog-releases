@@ -14,6 +14,7 @@ library;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:svg_path_parser/svg_path_parser.dart';
+import 'package:gymbro_flutter_new/features/stress_index/data/mappers/muscle_abbreviation_mapper.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator.dart';
 
@@ -55,13 +56,26 @@ class MuscleHeatValues {
 
   final Map<String, double> _values;
 
+  /// Normalizes input keys to SVG heatmap group names.
+  ///
+  /// Uses centralized [MuscleAbbreviationMapper.normalizeToHeatmapKey] as
+  /// SINGLE SOURCE OF TRUTH for abbreviation → heatmap key conversion.
+  ///
+  /// This handles:
+  /// - IT abbreviations: 'lat', 'pett', 'quad' → 'lats', 'chest', 'quadriceps'
+  /// - EN names: 'back', 'chest' → 'lats', 'chest'
+  /// - Already correct keys: 'lats', 'quadriceps' → pass through
   static Map<String, double> _normalizeKeys(Map<String, double> input) {
     final normalized = <String, double>{};
     for (final entry in input.entries) {
-      final key = entry.key.toLowerCase().replaceAll(' ', '_');
-      normalized[key] = (entry.value / 100).clamp(0.0, 1.0);
+      // Use centralized mapper for abbreviation → heatmap key conversion
+      final mappedKey = MuscleAbbreviationMapper.normalizeToHeatmapKey(entry.key);
+      // Accumulate values (multiple abbreviations may map to same group)
+      normalized[mappedKey] = (normalized[mappedKey] ?? 0) +
+          (entry.value / 100).clamp(0.0, 1.0);
     }
-    return normalized;
+    // Clamp accumulated values to 1.0 max
+    return normalized.map((k, v) => MapEntry(k, v.clamp(0.0, 1.0)));
   }
 
   /// Get heat value for a muscle group (0.0 - 1.0)
@@ -218,7 +232,7 @@ class _ProfessionalBodyHeatmapState extends State<ProfessionalBodyHeatmap> {
       return Center(
         child: Text(
           _error!,
-          style: TextStyle(color: colorScheme.error),
+          style: context.textTheme.bodyMedium?.copyWith(color: colorScheme.error),
         ),
       );
     }
@@ -335,7 +349,7 @@ class _BodyHeatmapPainter extends CustomPainter {
       final strokePaint = Paint()
         ..color = isSelected
             ? colorScheme.primary
-            : Colors.white.withValues(alpha: 0.5)
+            : colorScheme.surface.withValues(alpha: 0.5)
         ..style = PaintingStyle.stroke
         ..strokeWidth = isSelected ? 2.0 : 0.5;
       canvas.drawPath(muscle.path, strokePaint);
@@ -417,7 +431,7 @@ class _MuscleInfoCard extends StatelessWidget {
               child: Text(
                 '$percentage%',
                 style: context.textTheme.labelMedium?.copyWith(
-                  color: Colors.white,
+                  color: context.colors.onPrimary,
                   fontWeight: FontWeight.bold,
                 ),
               ),

@@ -100,7 +100,7 @@ class _ExpandableRatioCardState extends State<ExpandableRatioCard>
       context: context,
       isScrollControlled: true,
       useSafeArea: true,
-      backgroundColor: Colors.transparent,
+      backgroundColor: context.colors.surface.withValues(alpha: 0),
       builder: (context) => RatioBreakdownSheet(
         title: widget.title,
         firstCategory: widget.firstCategory,
@@ -148,10 +148,10 @@ class _ExpandableRatioCardState extends State<ExpandableRatioCard>
                   Row(
                     children: [
                       Container(
-                        padding: const EdgeInsets.all(10),
+                        padding: const EdgeInsets.all(12),
                         decoration: BoxDecoration(
                           color: ratioColor.withValues(alpha: 0.1),
-                          borderRadius: BorderRadius.circular(10),
+                          borderRadius: BorderRadius.circular(12),
                         ),
                         child: Icon(widget.icon, color: ratioColor, size: AppIconSize.medium),
                       ),
@@ -267,7 +267,7 @@ class _ExpandableRatioCardState extends State<ExpandableRatioCard>
               height: 8,
               decoration: BoxDecoration(
                 color: colorScheme.surfaceContainerHighest,
-                borderRadius: BorderRadius.circular(4),
+                borderRadius: BorderRadius.circular(8),
               ),
             ),
             // Center marker (optimal 1.0)
@@ -470,7 +470,7 @@ class _ExpandableRatioCardState extends State<ExpandableRatioCard>
             height: 8,
             decoration: BoxDecoration(
               color: colorScheme.surfaceContainerHighest,
-              borderRadius: BorderRadius.circular(4),
+              borderRadius: BorderRadius.circular(8),
             ),
             child: FractionallySizedBox(
               alignment: Alignment.centerLeft,
@@ -478,7 +478,7 @@ class _ExpandableRatioCardState extends State<ExpandableRatioCard>
               child: Container(
                 decoration: BoxDecoration(
                   color: color,
-                  borderRadius: BorderRadius.circular(4),
+                  borderRadius: BorderRadius.circular(8),
                 ),
               ),
             ),

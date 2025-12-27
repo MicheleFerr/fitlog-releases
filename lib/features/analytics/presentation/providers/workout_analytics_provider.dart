@@ -20,6 +20,7 @@ import 'package:hive_ce_flutter/hive_flutter.dart';
 import 'package:gymbro_flutter_new/core/data/providers/hive_box_manager_provider.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/workout.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/providers/workout_provider.dart';
+import 'package:gymbro_flutter_new/features/workout/presentation/providers/workout_repository_provider.dart';
 import 'package:gymbro_flutter_new/features/analytics/domain/entities/workout_metrics.dart';
 import 'package:gymbro_flutter_new/features/analytics/domain/repositories/workout_analytics_repository.dart';
 import 'package:gymbro_flutter_new/features/analytics/data/repositories/workout_analytics_repository_impl.dart';
@@ -27,18 +28,11 @@ import 'package:gymbro_flutter_new/features/analytics/domain/usecases/calculate_
 import 'package:gymbro_flutter_new/features/analytics/domain/usecases/detect_personal_records_usecase.dart';
 import 'package:gymbro_flutter_new/features/analytics/domain/usecases/compare_workouts_usecase.dart';
 import 'package:gymbro_flutter_new/features/analytics/domain/services/pr_tracker.dart';
-import 'package:gymbro_flutter_new/features/workout/data/datasources/hive_workout_datasource.dart';
 import 'package:gymbro_flutter_new/features/analytics/data/services/analytics_cache_service.dart';
 
 // =============================================================================
 // PROVIDERS SETUP
 // =============================================================================
-
-/// Hive workout data source provider
-final hiveWorkoutDataSourceProvider = Provider<HiveWorkoutDataSource>((ref) {
-  final boxManager = ref.watch(hiveBoxManagerProvider);
-  return HiveWorkoutDataSource(boxManager);
-});
 
 /// Hive cache box for workout metrics
 final workoutMetricsCacheProvider = Provider<Box<Map>>((ref) {

@@ -6,6 +6,7 @@ import 'package:gymbro_flutter_new/features/analytics/domain/services/pr_tracker
 import 'package:gymbro_flutter_new/shared/domain/entities/pr_type.dart';
 import 'package:gymbro_flutter_new/features/analytics/domain/services/scientific_metrics_service.dart';
 import 'package:gymbro_flutter_new/features/analytics/domain/services/muscle_balance_analyzer.dart';
+import 'package:gymbro_flutter_new/features/stress_index/data/mappers/muscle_abbreviation_mapper.dart';
 
 /// Types of insights
 enum InsightType {
@@ -702,13 +703,8 @@ class InsightsEngine {
         },
       ));
     }
-    
+
     return insights;
-  }
-  
-  static List<String> _getSuggestedExercises(String muscleGroup) {
-    // Removed - not giving exercise prescriptions
-    return [];
   }
 
   static List<TrainingInsight> _generateRecoveryInsights(
@@ -762,10 +758,13 @@ class InsightsEngine {
     }
     
     // Check rest between similar muscle groups with specific recovery times
+    // **Uses SSOT**: MuscleAbbreviationMapper.categorizeExerciseByName
     final muscleGroupDates = <String, DateTime>{};
     for (final activity in activities.take(20)) {
-      final group = _categorizeExercise(activity.exerciseName);
-      if (!muscleGroupDates.containsKey(group) || 
+      final group = MuscleAbbreviationMapper.categorizeExerciseByName(
+        activity.exerciseName,
+      );
+      if (!muscleGroupDates.containsKey(group) ||
           activity.createdAt.isAfter(muscleGroupDates[group]!)) {
         muscleGroupDates[group] = activity.createdAt;
       }
@@ -1142,23 +1141,5 @@ class InsightsEngine {
     return insights;
   }
 
-  static String _categorizeExercise(String exerciseName) {
-    final name = exerciseName.toLowerCase();
-
-    if (name.contains('chest') || name.contains('bench') || name.contains('fly')) {
-      return 'Chest';
-    } else if (name.contains('back') || name.contains('row') || name.contains('pull')) {
-      return 'Back';
-    } else if (name.contains('shoulder') || name.contains('press') || name.contains('delt')) {
-      return 'Shoulders';
-    } else if (name.contains('squat') || name.contains('leg') || name.contains('calf')) {
-      return 'Legs';
-    } else if (name.contains('bicep') || name.contains('tricep') || name.contains('curl')) {
-      return 'Arms';
-    } else if (name.contains('ab') || name.contains('core') || name.contains('plank')) {
-      return 'Core';
-    } else {
-      return 'Other';
-    }
-  }
+  // NOTE: _categorizeExercise REMOVED - use MuscleAbbreviationMapper.categorizeExerciseByName
 }

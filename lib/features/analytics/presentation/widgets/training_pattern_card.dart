@@ -139,7 +139,7 @@ class _TrainingPatternCardState extends State<TrainingPatternCard>
         ],
       ),
       child: Material(
-        color: Colors.transparent,
+        color: context.colors.surface.withValues(alpha: 0),
         child: InkWell(
           onTap: _toggleExpanded,
           borderRadius: BorderRadius.circular(16),
@@ -182,7 +182,7 @@ class _TrainingPatternCardState extends State<TrainingPatternCard>
           padding: const EdgeInsets.all(8),
           decoration: BoxDecoration(
             color: config.iconBackgroundColor,
-            borderRadius: BorderRadius.circular(10),
+            borderRadius: BorderRadius.circular(12),
           ),
           child: Icon(
             _getPatternIcon(),
@@ -389,7 +389,7 @@ class _TrainingPatternCardState extends State<TrainingPatternCard>
       runSpacing: 8,
       children: metrics.entries.map((entry) {
         return Container(
-          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
           decoration: BoxDecoration(
             color: config.iconBackgroundColor,
             borderRadius: BorderRadius.circular(8),

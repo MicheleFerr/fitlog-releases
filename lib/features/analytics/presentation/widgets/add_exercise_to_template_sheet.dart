@@ -104,7 +104,7 @@ class _AddExerciseToTemplateSheetState
                   error: (error, _) => Center(
                     child: Text(
                       l10n.errorLoadingTemplates,
-                      style: TextStyle(color: colorScheme.error),
+                      style: context.textTheme.bodyMedium?.copyWith(color: colorScheme.error),
                     ),
                   ),
                   data: (templates) {
@@ -170,10 +170,10 @@ class _AddExerciseToTemplateSheetState
           Row(
             children: [
               Container(
-                padding: const EdgeInsets.all(10),
+                padding: const EdgeInsets.all(12),
                 decoration: BoxDecoration(
                   color: colorScheme.primaryContainer,
-                  borderRadius: BorderRadius.circular(10),
+                  borderRadius: BorderRadius.circular(12),
                 ),
                 child: Icon(
                   AppIcons.fitnessCenter,
@@ -303,12 +303,12 @@ class _AddExerciseToTemplateSheetState
                 children: [
                   // Template icon
                   Container(
-                    padding: const EdgeInsets.all(10),
+                    padding: const EdgeInsets.all(12),
                     decoration: BoxDecoration(
                       color: isSelected
                           ? colorScheme.primary.withValues(alpha: 0.1)
                           : colorScheme.surfaceContainerHigh,
-                      borderRadius: BorderRadius.circular(10),
+                      borderRadius: BorderRadius.circular(12),
                     ),
                     child: Icon(
                       AppIcons.assignment,
@@ -409,7 +409,7 @@ class _AddExerciseToTemplateSheetState
 
       // Calculate personalized volume based on user questionnaire
       final questionnaire = ref.read(userFitnessQuestionnaireProvider);
-      final volumeService = const VolumeRecommendationService();
+      const volumeService = VolumeRecommendationService();
 
       final VolumeRecommendation volume;
       if (questionnaire != null) {
@@ -434,13 +434,15 @@ class _AddExerciseToTemplateSheetState
       );
 
       // Create ExerciseTemplate from suggestion with personalized volume
+      // Use the real exerciseId and countingMode from the database
       final newExercise = ExerciseTemplate(
-        exerciseId: widget.suggestion.exerciseName.toLowerCase().replaceAll(' ', '_'),
+        exerciseId: widget.suggestion.exerciseId,
         exerciseName: widget.suggestion.exerciseName,
         category: _mapMuscleToCategory(widget.suggestion.targetMuscle),
         type: ExerciseType.single,
         sets: sets,
         restTime: volume.restSeconds,
+        countingMode: widget.suggestion.countingMode,
       );
 
       // Add exercise to template
@@ -456,7 +458,7 @@ class _AddExerciseToTemplateSheetState
           .saveTemplate(updatedTemplate);
 
       // Notify success
-      HapticFeedback.mediumImpact();
+      await HapticFeedback.mediumImpact();
       widget.onExerciseAdded();
 
       if (mounted) {

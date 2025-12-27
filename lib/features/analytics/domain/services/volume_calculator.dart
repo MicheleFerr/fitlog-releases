@@ -1,4 +1,5 @@
 import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise_activity.dart';
+import 'package:gymbro_flutter_new/features/stress_index/data/mappers/muscle_abbreviation_mapper.dart';
 
 /// Calculator for various volume metrics
 class VolumeCalculator {
@@ -39,18 +40,22 @@ class VolumeCalculator {
   }
 
   /// Calculate volume per muscle group
+  ///
+  /// **Uses SSOT**: [MuscleAbbreviationMapper.categorizeExerciseByName]
   static Map<String, double> calculateVolumeByMuscleGroup(
     List<ExerciseActivity> activities,
   ) {
     final volumeByGroup = <String, double>{};
-    
+
     for (final activity in activities) {
-      final muscleGroup = _categorizeExercise(activity.exerciseName);
+      final muscleGroup = MuscleAbbreviationMapper.categorizeExerciseByName(
+        activity.exerciseName,
+      );
       final volume = calculateTotalVolume(activity.sets);
-      
+
       volumeByGroup[muscleGroup] = (volumeByGroup[muscleGroup] ?? 0) + volume;
     }
-    
+
     return volumeByGroup;
   }
 
@@ -206,86 +211,6 @@ class VolumeCalculator {
   }
 
   // Helper methods
-  
-  /// Categorize exercise by name with improved pattern matching
-  ///
-  /// Scientific Note: Muscle group categorization affects volume distribution
-  /// analysis for balance and injury prevention (Croisier et al., 2008)
-  static String _categorizeExercise(String exerciseName) {
-    final name = exerciseName.toLowerCase();
-
-    // CHEST patterns - order matters (specific first)
-    if (name.contains('bench') ||
-        name.contains('chest') ||
-        name.contains('fly') ||
-        name.contains('flyes') ||
-        name.contains('pec') ||
-        name.contains('dip') && !name.contains('shoulder')) {
-      return 'Chest';
-    }
-
-    // BACK patterns - distinguish from bench/chest
-    else if (name.contains('pull') && !name.contains('pullover') ||
-             name.contains('row') ||
-             name.contains('lat') ||
-             name.contains('back') ||
-             name.contains('deadlift') ||
-             name.contains('t-bar') ||
-             name.contains('chin')) {
-      return 'Back';
-    }
-
-    // SHOULDERS patterns - distinguish from chest press
-    else if (name.contains('shoulder') ||
-             name.contains('delt') ||
-             name.contains('lateral') ||
-             name.contains('overhead') && name.contains('press') ||
-             name.contains('military') ||
-             name.contains('arnold') ||
-             name.contains('face pull') ||
-             name.contains('upright row')) {
-      return 'Shoulders';
-    }
-
-    // LEGS patterns - separate quad/hamstring when possible
-    else if (name.contains('squat') ||
-             name.contains('leg') ||
-             name.contains('quad') ||
-             name.contains('hamstring') ||
-             name.contains('glute') ||
-             name.contains('lunge') ||
-             name.contains('calf') ||
-             name.contains('rdl') ||
-             name.contains('hip thrust')) {
-      return 'Legs';
-    }
-
-    // ARMS patterns - separate biceps/triceps
-    else if (name.contains('curl') ||
-             name.contains('bicep') ||
-             name.contains('tricep') ||
-             name.contains('arm') ||
-             name.contains('pushdown') ||
-             name.contains('extension') && !name.contains('leg') ||
-             name.contains('kickback')) {
-      return 'Arms';
-    }
-
-    // CORE patterns
-    else if (name.contains('ab') ||
-             name.contains('core') ||
-             name.contains('plank') ||
-             name.contains('crunch') ||
-             name.contains('sit up') ||
-             name.contains('russian twist') ||
-             name.contains('leg raise') && !name.contains('calf')) {
-      return 'Core';
-    }
-
-    else {
-      return 'Other';
-    }
-  }
 
   static int _getWeekNumber(DateTime date, DateTime reference) {
     final diff = reference.difference(date).inDays;

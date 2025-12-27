@@ -20,9 +20,11 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:gymbro_flutter_new/features/analytics/domain/entities/exercise_history.dart';
 import 'package:gymbro_flutter_new/features/analytics/domain/services/emg_movement_ratios.dart';
+import 'package:gymbro_flutter_new/features/stress_index/data/mappers/muscle_abbreviation_mapper.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:gymbro_flutter_new/features/analytics/domain/services/volume_analyzer.dart';
+import 'package:gymbro_flutter_new/features/analytics/domain/utils/muscle_group_mapper.dart';
 import 'package:gymbro_flutter_new/features/analytics/presentation/widgets/tier1_muscle_balance_chart.dart';
 import 'package:gymbro_flutter_new/features/stress_index/presentation/providers/stress_index_provider.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
@@ -103,6 +105,12 @@ class _VolumeProgressionTabState extends State<VolumeProgressionTab> {
 
           // Main chart (Radar or Trend)
           _buildMainChart(context, volumeData),
+
+          // Exercises counted this week (only for radar view)
+          if (_viewMode == _VolumeViewMode.radar) ...[
+            const SizedBox(height: 16),
+            _buildExercisesCountedCard(context, volumeData),
+          ],
           const SizedBox(height: 16),
 
           // Landscape hint
@@ -168,7 +176,7 @@ class _VolumeProgressionTabState extends State<VolumeProgressionTab> {
         duration: const Duration(milliseconds: 200),
         padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
         decoration: BoxDecoration(
-          color: isSelected ? colorScheme.primary : Colors.transparent,
+          color: isSelected ? colorScheme.primary : colorScheme.surface.withValues(alpha: 0),
           borderRadius: BorderRadius.circular(8),
         ),
         child: Row(
@@ -189,6 +197,144 @@ class _VolumeProgressionTabState extends State<VolumeProgressionTab> {
             ),
           ],
         ),
+      ),
+    );
+  }
+
+  /// Card showing which exercises are counted this week per muscle group
+  Widget _buildExercisesCountedCard(BuildContext context, _VolumeData data) {
+    final colorScheme = context.colors;
+    final l10n = context.l10n;
+
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: colorScheme.surface,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: colorScheme.outline.withValues(alpha: 0.2)),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Icon(
+                AppIcons.fitnessCenter,
+                size: AppIconSize.small,
+                color: colorScheme.primary,
+              ),
+              const SizedBox(width: 8),
+              Text(
+                l10n.exercisesThisWeek,
+                style: context.textTheme.titleSmall?.copyWith(
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 12),
+          // List exercises per muscle group
+          ...MuscleGroup.values.map((muscle) {
+            final exercises = data.exercisesPerMuscle[muscle] ?? {};
+            if (exercises.isEmpty) return const SizedBox.shrink();
+
+            final sets = data.muscleVolumes[muscle] ?? 0;
+            final zone = VolumeAnalyzer.getVolumeZone(sets, muscle);
+            final zoneColor = _getZoneColor(zone, colorScheme);
+
+            return Padding(
+              padding: const EdgeInsets.only(bottom: 12),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Muscle header with sets count
+                  Row(
+                    children: [
+                      Container(
+                        width: 8,
+                        height: 8,
+                        decoration: BoxDecoration(
+                          color: zoneColor,
+                          shape: BoxShape.circle,
+                        ),
+                      ),
+                      const SizedBox(width: 8),
+                      Text(
+                        _getMuscleDisplayName(context, muscle),
+                        style: context.textTheme.labelMedium?.copyWith(
+                          fontWeight: FontWeight.bold,
+                          color: zoneColor,
+                        ),
+                      ),
+                      const SizedBox(width: 8),
+                      Text(
+                        '($sets ${l10n.sets})',
+                        style: context.textTheme.labelSmall?.copyWith(
+                          color: colorScheme.onSurfaceVariant,
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 4),
+                  // Exercise list with contribution
+                  Padding(
+                    padding: const EdgeInsets.only(left: 16),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: exercises.entries.map((entry) {
+                        final exerciseName = entry.key;
+                        final contribution = entry.value;
+                        return Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 2),
+                          child: Row(
+                            children: [
+                              Icon(
+                                AppIcons.checkCircle,
+                                size: 12,
+                                color: colorScheme.primary.withValues(alpha: 0.7),
+                              ),
+                              const SizedBox(width: 6),
+                              Expanded(
+                                child: Text(
+                                  exerciseName,
+                                  style: context.textTheme.bodySmall?.copyWith(
+                                    color: colorScheme.onSurfaceVariant,
+                                  ),
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                              ),
+                              Text(
+                                '+${contribution.toStringAsFixed(1)}',
+                                style: context.textTheme.labelSmall?.copyWith(
+                                  color: colorScheme.primary,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ],
+                          ),
+                        );
+                      }).toList(),
+                    ),
+                  ),
+                ],
+              ),
+            );
+          }),
+          // Empty state
+          if (data.exercisesPerMuscle.values.every((e) => e.isEmpty))
+            Center(
+              child: Padding(
+                padding: const EdgeInsets.all(16),
+                child: Text(
+                  l10n.noExercisesThisWeek,
+                  style: context.textTheme.bodyMedium?.copyWith(
+                    color: colorScheme.onSurfaceVariant,
+                  ),
+                ),
+              ),
+            ),
+        ],
       ),
     );
   }
@@ -249,7 +395,7 @@ class _VolumeProgressionTabState extends State<VolumeProgressionTab> {
             child: RadarChart(
               RadarChartData(
                 dataSets: radarData,
-                radarBackgroundColor: Colors.transparent,
+                radarBackgroundColor: colorScheme.surface.withValues(alpha: 0),
                 borderData: FlBorderData(show: false),
                 radarBorderData: BorderSide(
                   color: colorScheme.outline.withValues(alpha: 0.3),
@@ -634,11 +780,14 @@ class _VolumeProgressionTabState extends State<VolumeProgressionTab> {
     final muscleVolumes = <MuscleGroup, double>{};
     // Track weekly volumes per muscle for trend chart (now double for weighted)
     final weeklyMuscleVolumes = <MuscleGroup, List<double>>{};
+    // Track exercises contributing to each muscle group this week
+    final exercisesPerMuscle = <MuscleGroup, Map<String, double>>{};
 
-    // Initialize weekly muscle volumes
+    // Initialize weekly muscle volumes and exercises
     for (final muscle in MuscleGroup.values) {
       weeklyMuscleVolumes[muscle] = [0.0, 0.0, 0.0, 0.0];
       muscleVolumes[muscle] = 0.0;
+      exercisesPerMuscle[muscle] = {};
     }
 
     for (final history in widget.exerciseHistories) {
@@ -648,13 +797,20 @@ class _VolumeProgressionTabState extends State<VolumeProgressionTab> {
           widget.exerciseMuscleMap?[history.exerciseName.toLowerCase()];
 
       for (final session in history.sessions) {
+        // Days since session
+        final daysDiff = now.difference(session.date).inDays;
         // Week calculation (0 = this week, 1 = last week, etc.)
-        final weekDiff = now.difference(session.date).inDays ~/ 7;
+        final weekDiff = daysDiff ~/ 7;
+
+        // Scientific volume is calculated weekly (7 days)
+        final isThisWeek = weekDiff == 0;
+
         if (weekDiff < 4) {
           weeklyVolumes[weekDiff] =
               (weeklyVolumes[weekDiff] ?? 0) + session.totalVolume;
 
           final setCount = session.sets.length.toDouble();
+          final exerciseName = history.exerciseName;
 
           // Use weighted distribution if muscle data available
           if (muscleData != null && muscleData.hasData) {
@@ -690,9 +846,14 @@ class _VolumeProgressionTabState extends State<VolumeProgressionTab> {
                 final muscleGroup = _getMuscleGroupFromAbbreviation(muscle);
                 if (muscleGroup != null) {
                   weeklyMuscleVolumes[muscleGroup]![weekIndex] += perPrimary;
-                  if (weekDiff == 0) {
+                  // Add to radar chart for this week only (scientific 7-day volume)
+                  if (isThisWeek) {
                     muscleVolumes[muscleGroup] =
                         (muscleVolumes[muscleGroup] ?? 0) + perPrimary;
+                    // Track exercise contribution
+                    exercisesPerMuscle[muscleGroup]![exerciseName] =
+                        (exercisesPerMuscle[muscleGroup]![exerciseName] ?? 0) +
+                            perPrimary;
                   }
                 }
               }
@@ -706,9 +867,13 @@ class _VolumeProgressionTabState extends State<VolumeProgressionTab> {
               final firstGroup = _getMuscleGroupFromAbbreviation(firstSynergist);
               if (firstGroup != null) {
                 weeklyMuscleVolumes[firstGroup]![weekIndex] += highSets;
-                if (weekDiff == 0) {
+                if (isThisWeek) {
                   muscleVolumes[firstGroup] =
                       (muscleVolumes[firstGroup] ?? 0) + highSets;
+                  // Track exercise contribution
+                  exercisesPerMuscle[firstGroup]![exerciseName] =
+                      (exercisesPerMuscle[firstGroup]![exerciseName] ?? 0) +
+                          highSets;
                 }
               }
 
@@ -721,23 +886,41 @@ class _VolumeProgressionTabState extends State<VolumeProgressionTab> {
                   final muscleGroup = _getMuscleGroupFromAbbreviation(muscle);
                   if (muscleGroup != null) {
                     weeklyMuscleVolumes[muscleGroup]![weekIndex] += perMod;
-                    if (weekDiff == 0) {
+                    if (isThisWeek) {
                       muscleVolumes[muscleGroup] =
                           (muscleVolumes[muscleGroup] ?? 0) + perMod;
+                      // Track exercise contribution
+                      exercisesPerMuscle[muscleGroup]![exerciseName] =
+                          (exercisesPerMuscle[muscleGroup]![exerciseName] ?? 0) +
+                              perMod;
                     }
                   }
                 }
               }
             }
           } else {
-            // Fallback to single muscle group from name
-            final muscleGroup = _getMuscleGroupFromString(history.muscleGroup);
+            // Fallback to single muscle group - try multiple strategies
+            // 1. First try history.muscleGroup (may be set on custom exercises)
+            MuscleGroup? muscleGroup = _getMuscleGroupFromString(history.muscleGroup);
+
+            // 2. If not found, use pattern matching on exercise name (SSOT)
+            if (muscleGroup == null) {
+              final abbr = MuscleAbbreviationMapper.categorizeExerciseToAbbreviation(
+                history.exerciseName,
+              );
+              muscleGroup = _getMuscleGroupFromAbbreviation(abbr);
+            }
+
             if (muscleGroup != null) {
               final weekIndex = 3 - weekDiff;
               weeklyMuscleVolumes[muscleGroup]![weekIndex] += setCount;
-              if (weekDiff == 0) {
+              if (isThisWeek) {
                 muscleVolumes[muscleGroup] =
                     (muscleVolumes[muscleGroup] ?? 0) + setCount;
+                // Track exercise contribution
+                exercisesPerMuscle[muscleGroup]![exerciseName] =
+                    (exercisesPerMuscle[muscleGroup]![exerciseName] ?? 0) +
+                        setCount;
               }
             }
           }
@@ -765,82 +948,22 @@ class _VolumeProgressionTabState extends State<VolumeProgressionTab> {
       previousWeekVolume: lastWeek,
       muscleVolumes: muscleVolumesInt,
       weeklyMuscleVolumes: weeklyMuscleVolumesInt,
+      exercisesPerMuscle: exercisesPerMuscle,
     );
   }
 
   /// Map muscle abbreviation (e.g., PETT, LAT) to MuscleGroup
+  ///
+  /// Uses centralized [MuscleGroupMapper] as SINGLE SOURCE OF TRUTH.
   MuscleGroup? _getMuscleGroupFromAbbreviation(String abbreviation) {
-    final abbr = abbreviation.toUpperCase();
-
-    // Chest
-    if (abbr.contains('PETT') || abbr.contains('CHEST')) {
-      return MuscleGroup.chest;
-    }
-    // Back
-    if (abbr.contains('LAT') ||
-        abbr.contains('TRAP') ||
-        abbr.contains('ROMBO') ||
-        abbr.contains('DORSO')) {
-      return MuscleGroup.back;
-    }
-    // Shoulders
-    if (abbr.contains('DELT') || abbr.contains('SPALL')) {
-      return MuscleGroup.shoulders;
-    }
-    // Arms
-    if (abbr.contains('BIC') ||
-        abbr.contains('TRIC') ||
-        abbr.contains('AVAMB') ||
-        abbr.contains('BRACC')) {
-      return MuscleGroup.arms;
-    }
-    // Legs
-    if (abbr.contains('QUAD') ||
-        abbr.contains('FEMOR') ||
-        abbr.contains('GLUT') ||
-        abbr.contains('POLP') ||
-        abbr.contains('ADD') ||
-        abbr.contains('GAMB')) {
-      return MuscleGroup.legs;
-    }
-    // Core
-    if (abbr.contains('ADDOM') ||
-        abbr.contains('OBLIQ') ||
-        abbr.contains('CORE') ||
-        abbr.contains('ERECT') ||
-        abbr.contains('LOMB')) {
-      return MuscleGroup.core;
-    }
-
-    return null;
+    return MuscleGroupMapper.fromMuscleAbbreviation(abbreviation);
   }
 
+  /// Map English muscle name (e.g., 'chest', 'back') to MuscleGroup
+  ///
+  /// Uses centralized [MuscleGroupMapper] as SINGLE SOURCE OF TRUTH.
   MuscleGroup? _getMuscleGroupFromString(String muscle) {
-    final lowerMuscle = muscle.toLowerCase();
-
-    if (lowerMuscle.contains('chest') || lowerMuscle.contains('pec')) {
-      return MuscleGroup.chest;
-    } else if (lowerMuscle.contains('back') ||
-        lowerMuscle.contains('lat') ||
-        lowerMuscle.contains('trap')) {
-      return MuscleGroup.back;
-    } else if (lowerMuscle.contains('shoulder') ||
-        lowerMuscle.contains('delt')) {
-      return MuscleGroup.shoulders;
-    } else if (lowerMuscle.contains('arm') ||
-        lowerMuscle.contains('bicep') ||
-        lowerMuscle.contains('tricep')) {
-      return MuscleGroup.arms;
-    } else if (lowerMuscle.contains('leg') ||
-        lowerMuscle.contains('quad') ||
-        lowerMuscle.contains('ham') ||
-        lowerMuscle.contains('glute') ||
-        lowerMuscle.contains('calf')) {
-      return MuscleGroup.legs;
-    } else if (lowerMuscle.contains('core') || lowerMuscle.contains('ab')) {
-      return MuscleGroup.core;
-    }
-    return null;
+    return MuscleGroupMapper.fromEnglishString(muscle);
   }
 
   String _getMuscleShortName(BuildContext context, MuscleGroup muscle) {
@@ -1104,7 +1227,7 @@ class _VolumeProgressionTabState extends State<VolumeProgressionTab> {
         children: [
           Container(
             width: 40,
-            padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
             decoration: BoxDecoration(
               color: color.withValues(alpha: 0.1),
               borderRadius: BorderRadius.circular(8),
@@ -1149,6 +1272,7 @@ class _VolumeData {
     required this.previousWeekVolume,
     required this.muscleVolumes,
     required this.weeklyMuscleVolumes,
+    required this.exercisesPerMuscle,
   });
 
   final List<double> weeklyVolumes;
@@ -1157,6 +1281,8 @@ class _VolumeData {
   final double previousWeekVolume;
   final Map<MuscleGroup, int> muscleVolumes;
   final Map<MuscleGroup, List<int>> weeklyMuscleVolumes;
+  /// Exercises contributing to each muscle group this week with their set contribution
+  final Map<MuscleGroup, Map<String, double>> exercisesPerMuscle;
 }
 
 /// Landscape full-screen volume chart
@@ -1251,7 +1377,7 @@ class _LandscapeVolumeChartState extends State<_LandscapeVolumeChart> {
       backgroundColor: colorScheme.surface,
       appBar: AppBar(
         title: Text(l10n.volumeProgression),
-        backgroundColor: Colors.transparent,
+        backgroundColor: colorScheme.surface.withValues(alpha: 0),
         elevation: 0,
         actions: [
           // Share button
@@ -1341,7 +1467,7 @@ class _LandscapeVolumeChartState extends State<_LandscapeVolumeChart> {
           child: RadarChart(
             RadarChartData(
               dataSets: radarData,
-              radarBackgroundColor: Colors.transparent,
+              radarBackgroundColor: colorScheme.surface.withValues(alpha: 0),
               borderData: FlBorderData(show: false),
               radarBorderData: BorderSide(
                 color: colorScheme.outline.withValues(alpha: 0.3),
@@ -1620,7 +1746,7 @@ class _LandscapeVolumeChartState extends State<_LandscapeVolumeChart> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: colors.entries.map((entry) {
         return Padding(
-          padding: const EdgeInsets.symmetric(vertical: 6),
+          padding: const EdgeInsets.symmetric(vertical: 8),
           child: Row(
             children: [
               Container(

@@ -15,6 +15,7 @@ library;
 
 import 'package:gymbro_flutter_new/features/analytics/domain/entities/exercise_history.dart';
 import 'package:gymbro_flutter_new/features/analytics/domain/services/muscle_balance_calculator.dart';
+import 'package:gymbro_flutter_new/features/stress_index/presentation/providers/stress_index_provider.dart';
 
 /// Time Filter Period
 enum TimePeriod {
@@ -91,9 +92,14 @@ class BalanceTrendCalculator {
   final MuscleBalanceCalculator _balanceCalculator = MuscleBalanceCalculator();
 
   /// Calculate balance trend with period filtering
+  ///
+  /// [exerciseMuscleMap] - Optional map of exercise name to ExerciseMuscleData
+  /// for weighted primary/secondary muscle distribution. When provided, volume
+  /// is distributed: 70% to primary muscles, 30% to secondary muscles.
   BalanceTrendData calculateTrend({
     required List<ExerciseHistory> exerciseHistories,
     required TimePeriod period,
+    Map<String, ExerciseMuscleData>? exerciseMuscleMap,
   }) {
     final now = DateTime.now();
 
@@ -115,10 +121,16 @@ class BalanceTrendCalculator {
       end: currentPeriodStart,
     );
 
-    // Calculate metrics
-    final currentMetrics = _balanceCalculator.calculateBalance(currentHistories);
+    // Calculate metrics with weighted muscle distribution when map is available
+    final currentMetrics = _balanceCalculator.calculateBalance(
+      currentHistories,
+      exerciseMuscleMap: exerciseMuscleMap,
+    );
     final previousMetrics = previousHistories.isNotEmpty
-        ? _balanceCalculator.calculateBalance(previousHistories)
+        ? _balanceCalculator.calculateBalance(
+            previousHistories,
+            exerciseMuscleMap: exerciseMuscleMap,
+          )
         : null;
 
     // Calculate trend

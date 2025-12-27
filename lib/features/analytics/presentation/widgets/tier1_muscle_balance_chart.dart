@@ -117,7 +117,7 @@ class _Tier1MuscleBalanceChartState extends ConsumerState<Tier1MuscleBalanceChar
                 gradient: RadialGradient(
                   colors: [
                     theme.colorScheme.primary.withValues(alpha: 0.05),
-                    Colors.transparent,
+                    theme.colorScheme.surface.withValues(alpha: 0),
                   ],
                   radius: 1.5,
                 ),
@@ -152,7 +152,7 @@ class _Tier1MuscleBalanceChartState extends ConsumerState<Tier1MuscleBalanceChar
                             child: RadarChart(
                               RadarChartData(
                                 radarBorderData: BorderSide.none,
-                                radarBackgroundColor: Colors.transparent,
+                                radarBackgroundColor: theme.colorScheme.surface.withValues(alpha: 0),
                                 radarShape: RadarShape.polygon,
                                 tickCount: 5,
                                 tickBorderData: BorderSide(
@@ -164,7 +164,7 @@ class _Tier1MuscleBalanceChartState extends ConsumerState<Tier1MuscleBalanceChar
                                   width: 1,
                                 ),
                                 titlePositionPercentageOffset: 0.25,
-                                ticksTextStyle: const TextStyle(fontSize: 0),
+                                ticksTextStyle: theme.textTheme.labelSmall!.copyWith(fontSize: 0),
                                 getTitle: (index, angle) {
                                   final muscle = MuscleGroup.values[index];
                                   final isSelected = muscle == _selectedMuscle;
@@ -176,8 +176,7 @@ class _Tier1MuscleBalanceChartState extends ConsumerState<Tier1MuscleBalanceChar
                                     positionPercentageOffset: isSelected || isHovered ? 0.35 : 0.25,
                                   );
                                 },
-                                titleTextStyle: TextStyle(
-                                  fontSize: 13,
+                                titleTextStyle: theme.textTheme.labelMedium!.copyWith(
                                   fontWeight: FontWeight.bold,
                                   color: theme.colorScheme.onSurface,
                                 ),
@@ -328,8 +327,7 @@ class _Tier1MuscleBalanceChartState extends ConsumerState<Tier1MuscleBalanceChar
           ),
           child: Text(
             _getBalanceRating(overallBalance, l10n),
-            style: TextStyle(
-              fontSize: 11,
+            style: theme.textTheme.labelSmall!.copyWith(
               fontWeight: FontWeight.w600,
               color: balanceColor,
             ),
@@ -377,7 +375,7 @@ class _Tier1MuscleBalanceChartState extends ConsumerState<Tier1MuscleBalanceChar
     // Target strength (customizable)
     dataSets.add(
       RadarDataSet(
-        fillColor: Colors.transparent,
+        fillColor: context.colors.surface.withValues(alpha: 0),
         borderColor: context.colors.success.withValues(alpha: 0.4),
         borderWidth: 1.5,
         entryRadius: 0,
@@ -961,7 +959,7 @@ class _Tier1MuscleBalanceChartState extends ConsumerState<Tier1MuscleBalanceChar
             ),
             child: Text(
               formula,
-              style: TextStyle(
+              style: theme.textTheme.bodyMedium!.copyWith(
                 fontFamily: 'monospace',
                 color: theme.colorScheme.primary,
               ),

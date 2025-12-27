@@ -230,7 +230,7 @@ class _ExerciseDetailScreenState extends ConsumerState<ExerciseDetailScreen> {
       backgroundColor: context.colors.surface,
       appBar: AppBar(
         backgroundColor: context.colors.surface,
-        surfaceTintColor: Colors.transparent,
+        surfaceTintColor: context.colors.surface.withValues(alpha: 0),
         elevation: 0,
         title: Text(
           widget.exerciseName,
@@ -609,7 +609,7 @@ class _ExerciseDetailScreenState extends ConsumerState<ExerciseDetailScreen> {
         child: Container(
           margin: const EdgeInsets.all(4),
           decoration: BoxDecoration(
-            color: isSelected ? context.colors.primary : Colors.transparent,
+            color: isSelected ? context.colors.primary : context.colors.surface.withValues(alpha: 0),
             borderRadius: BorderRadius.circular(8),
           ),
           child: Center(
@@ -852,10 +852,9 @@ class _ExerciseDetailScreenState extends ConsumerState<ExerciseDetailScreen> {
                       : '';
                   return LineTooltipItem(
                     '$date\n${spot.y.toStringAsFixed(1)} kg',
-                    TextStyle(
+                    context.textTheme.labelSmall!.copyWith(
                       color: context.colors.onPrimary,
                       fontWeight: FontWeight.w600,
-                      fontSize: 12,
                     ),
                   );
                 }).toList();
@@ -1009,10 +1008,9 @@ class _ExerciseDetailScreenState extends ConsumerState<ExerciseDetailScreen> {
                       : '';
                   return LineTooltipItem(
                     '$date\n${formatVolume(spot.y)}',
-                    TextStyle(
+                    context.textTheme.labelSmall!.copyWith(
                       color: context.colors.onSecondary,
                       fontWeight: FontWeight.w600,
-                      fontSize: 12,
                     ),
                   );
                 }).toList();
@@ -1158,10 +1156,9 @@ class _ExerciseDetailScreenState extends ConsumerState<ExerciseDetailScreen> {
                       : '';
                   return LineTooltipItem(
                     '$date\n${spot.y.toInt()} reps',
-                    TextStyle(
+                    context.textTheme.labelSmall!.copyWith(
                       color: context.colors.onPrimary,
                       fontWeight: FontWeight.w600,
-                      fontSize: 12,
                     ),
                   );
                 }).toList();
@@ -1317,10 +1314,9 @@ class _ExerciseDetailScreenState extends ConsumerState<ExerciseDetailScreen> {
                   final rpeValue = spot.y.toInt();
                   return LineTooltipItem(
                     '$date\nRPE $rpeValue (${getRpeLabel(rpeValue)})',
-                    TextStyle(
+                    context.textTheme.labelSmall!.copyWith(
                       color: context.colors.onPrimary,
                       fontWeight: FontWeight.w600,
-                      fontSize: 12,
                     ),
                   );
                 }).toList();

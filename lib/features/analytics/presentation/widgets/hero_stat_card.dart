@@ -34,7 +34,7 @@ class HeroStatCard extends StatelessWidget {
           ];
     
     return Material(
-      color: Colors.transparent,
+      color: theme.colorScheme.surface.withValues(alpha: 0),
       child: InkWell(
         onTap: onTap,
         borderRadius: BorderRadius.circular(20),

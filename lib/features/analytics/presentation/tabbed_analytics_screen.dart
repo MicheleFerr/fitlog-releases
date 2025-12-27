@@ -28,7 +28,7 @@ class TabbedAnalyticsScreen extends ConsumerWidget {
       backgroundColor: theme.colorScheme.surface,
       appBar: AppBar(
         backgroundColor: theme.colorScheme.surface,
-        surfaceTintColor: Colors.transparent,
+        surfaceTintColor: theme.colorScheme.surface.withValues(alpha: 0),
         elevation: 0,
         leading: IconButton(
           icon: const SemanticIcon(

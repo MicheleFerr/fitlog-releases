@@ -18,7 +18,12 @@ mixin _$ExercisePreferencesModel {
 /// Set of exercise names marked as favorite
 ///
 /// Stored as List in Firestore, converted to Set for O(1) lookup
- List<String> get favorites;/// Timestamp of last update
+ List<String> get favorites;/// Map of exerciseId -> preferred counting mode
+///
+/// Allows users to override the default counting mode for specific exercises.
+/// Key: exerciseId (e.g., 'bench_press_barbell')
+/// Value: counting mode name ('weighted', 'reps', 'time')
+ Map<String, String> get countingModeOverrides;/// Timestamp of last update
 ///
 /// Used for sync conflict resolution and cache invalidation
 @TimestampConverter() DateTime? get lastUpdated;
@@ -34,16 +39,16 @@ $ExercisePreferencesModelCopyWith<ExercisePreferencesModel> get copyWith => _$Ex
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is ExercisePreferencesModel&&const DeepCollectionEquality().equals(other.favorites, favorites)&&(identical(other.lastUpdated, lastUpdated) || other.lastUpdated == lastUpdated));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is ExercisePreferencesModel&&const DeepCollectionEquality().equals(other.favorites, favorites)&&const DeepCollectionEquality().equals(other.countingModeOverrides, countingModeOverrides)&&(identical(other.lastUpdated, lastUpdated) || other.lastUpdated == lastUpdated));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(favorites),lastUpdated);
+int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(favorites),const DeepCollectionEquality().hash(countingModeOverrides),lastUpdated);
 
 @override
 String toString() {
-  return 'ExercisePreferencesModel(favorites: $favorites, lastUpdated: $lastUpdated)';
+  return 'ExercisePreferencesModel(favorites: $favorites, countingModeOverrides: $countingModeOverrides, lastUpdated: $lastUpdated)';
 }
 
 
@@ -54,7 +59,7 @@ abstract mixin class $ExercisePreferencesModelCopyWith<$Res>  {
   factory $ExercisePreferencesModelCopyWith(ExercisePreferencesModel value, $Res Function(ExercisePreferencesModel) _then) = _$ExercisePreferencesModelCopyWithImpl;
 @useResult
 $Res call({
- List<String> favorites,@TimestampConverter() DateTime? lastUpdated
+ List<String> favorites, Map<String, String> countingModeOverrides,@TimestampConverter() DateTime? lastUpdated
 });
 
 
@@ -71,10 +76,11 @@ class _$ExercisePreferencesModelCopyWithImpl<$Res>
 
 /// Create a copy of ExercisePreferencesModel
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? favorites = null,Object? lastUpdated = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? favorites = null,Object? countingModeOverrides = null,Object? lastUpdated = freezed,}) {
   return _then(_self.copyWith(
 favorites: null == favorites ? _self.favorites : favorites // ignore: cast_nullable_to_non_nullable
-as List<String>,lastUpdated: freezed == lastUpdated ? _self.lastUpdated : lastUpdated // ignore: cast_nullable_to_non_nullable
+as List<String>,countingModeOverrides: null == countingModeOverrides ? _self.countingModeOverrides : countingModeOverrides // ignore: cast_nullable_to_non_nullable
+as Map<String, String>,lastUpdated: freezed == lastUpdated ? _self.lastUpdated : lastUpdated // ignore: cast_nullable_to_non_nullable
 as DateTime?,
   ));
 }
@@ -160,10 +166,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( List<String> favorites, @TimestampConverter()  DateTime? lastUpdated)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( List<String> favorites,  Map<String, String> countingModeOverrides, @TimestampConverter()  DateTime? lastUpdated)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _ExercisePreferencesModel() when $default != null:
-return $default(_that.favorites,_that.lastUpdated);case _:
+return $default(_that.favorites,_that.countingModeOverrides,_that.lastUpdated);case _:
   return orElse();
 
 }
@@ -181,10 +187,10 @@ return $default(_that.favorites,_that.lastUpdated);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( List<String> favorites, @TimestampConverter()  DateTime? lastUpdated)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( List<String> favorites,  Map<String, String> countingModeOverrides, @TimestampConverter()  DateTime? lastUpdated)  $default,) {final _that = this;
 switch (_that) {
 case _ExercisePreferencesModel():
-return $default(_that.favorites,_that.lastUpdated);case _:
+return $default(_that.favorites,_that.countingModeOverrides,_that.lastUpdated);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -201,10 +207,10 @@ return $default(_that.favorites,_that.lastUpdated);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( List<String> favorites, @TimestampConverter()  DateTime? lastUpdated)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( List<String> favorites,  Map<String, String> countingModeOverrides, @TimestampConverter()  DateTime? lastUpdated)?  $default,) {final _that = this;
 switch (_that) {
 case _ExercisePreferencesModel() when $default != null:
-return $default(_that.favorites,_that.lastUpdated);case _:
+return $default(_that.favorites,_that.countingModeOverrides,_that.lastUpdated);case _:
   return null;
 
 }
@@ -216,7 +222,7 @@ return $default(_that.favorites,_that.lastUpdated);case _:
 @JsonSerializable()
 
 class _ExercisePreferencesModel extends ExercisePreferencesModel {
-  const _ExercisePreferencesModel({final  List<String> favorites = const [], @TimestampConverter() this.lastUpdated}): _favorites = favorites,super._();
+  const _ExercisePreferencesModel({final  List<String> favorites = const [], final  Map<String, String> countingModeOverrides = const {}, @TimestampConverter() this.lastUpdated}): _favorites = favorites,_countingModeOverrides = countingModeOverrides,super._();
   factory _ExercisePreferencesModel.fromJson(Map<String, dynamic> json) => _$ExercisePreferencesModelFromJson(json);
 
 /// Set of exercise names marked as favorite
@@ -230,6 +236,23 @@ class _ExercisePreferencesModel extends ExercisePreferencesModel {
   if (_favorites is EqualUnmodifiableListView) return _favorites;
   // ignore: implicit_dynamic_type
   return EqualUnmodifiableListView(_favorites);
+}
+
+/// Map of exerciseId -> preferred counting mode
+///
+/// Allows users to override the default counting mode for specific exercises.
+/// Key: exerciseId (e.g., 'bench_press_barbell')
+/// Value: counting mode name ('weighted', 'reps', 'time')
+ final  Map<String, String> _countingModeOverrides;
+/// Map of exerciseId -> preferred counting mode
+///
+/// Allows users to override the default counting mode for specific exercises.
+/// Key: exerciseId (e.g., 'bench_press_barbell')
+/// Value: counting mode name ('weighted', 'reps', 'time')
+@override@JsonKey() Map<String, String> get countingModeOverrides {
+  if (_countingModeOverrides is EqualUnmodifiableMapView) return _countingModeOverrides;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableMapView(_countingModeOverrides);
 }
 
 /// Timestamp of last update
@@ -250,16 +273,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _ExercisePreferencesModel&&const DeepCollectionEquality().equals(other._favorites, _favorites)&&(identical(other.lastUpdated, lastUpdated) || other.lastUpdated == lastUpdated));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _ExercisePreferencesModel&&const DeepCollectionEquality().equals(other._favorites, _favorites)&&const DeepCollectionEquality().equals(other._countingModeOverrides, _countingModeOverrides)&&(identical(other.lastUpdated, lastUpdated) || other.lastUpdated == lastUpdated));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(_favorites),lastUpdated);
+int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(_favorites),const DeepCollectionEquality().hash(_countingModeOverrides),lastUpdated);
 
 @override
 String toString() {
-  return 'ExercisePreferencesModel(favorites: $favorites, lastUpdated: $lastUpdated)';
+  return 'ExercisePreferencesModel(favorites: $favorites, countingModeOverrides: $countingModeOverrides, lastUpdated: $lastUpdated)';
 }
 
 
@@ -270,7 +293,7 @@ abstract mixin class _$ExercisePreferencesModelCopyWith<$Res> implements $Exerci
   factory _$ExercisePreferencesModelCopyWith(_ExercisePreferencesModel value, $Res Function(_ExercisePreferencesModel) _then) = __$ExercisePreferencesModelCopyWithImpl;
 @override @useResult
 $Res call({
- List<String> favorites,@TimestampConverter() DateTime? lastUpdated
+ List<String> favorites, Map<String, String> countingModeOverrides,@TimestampConverter() DateTime? lastUpdated
 });
 
 
@@ -287,10 +310,11 @@ class __$ExercisePreferencesModelCopyWithImpl<$Res>
 
 /// Create a copy of ExercisePreferencesModel
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? favorites = null,Object? lastUpdated = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? favorites = null,Object? countingModeOverrides = null,Object? lastUpdated = freezed,}) {
   return _then(_ExercisePreferencesModel(
 favorites: null == favorites ? _self._favorites : favorites // ignore: cast_nullable_to_non_nullable
-as List<String>,lastUpdated: freezed == lastUpdated ? _self.lastUpdated : lastUpdated // ignore: cast_nullable_to_non_nullable
+as List<String>,countingModeOverrides: null == countingModeOverrides ? _self._countingModeOverrides : countingModeOverrides // ignore: cast_nullable_to_non_nullable
+as Map<String, String>,lastUpdated: freezed == lastUpdated ? _self.lastUpdated : lastUpdated // ignore: cast_nullable_to_non_nullable
 as DateTime?,
   ));
 }

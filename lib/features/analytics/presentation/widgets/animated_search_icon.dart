@@ -145,7 +145,7 @@ class _AnimatedSearchIconState extends State<AnimatedSearchIcon>
                       theme.colorScheme.primary.withValues(
                         alpha: 0.1 * _glowAnimation.value,
                       ),
-                      Colors.transparent,
+                      theme.colorScheme.surface.withValues(alpha: 0),
                     ],
                   ),
                 ),
@@ -236,7 +236,7 @@ class _AnimatedSearchIconState extends State<AnimatedSearchIcon>
                     ),
                     decoration: BoxDecoration(
                       color: context.colors.error,
-                      borderRadius: BorderRadius.circular(10),
+                      borderRadius: BorderRadius.circular(12),
                     ),
                     child: Text(
                       'NEW',
@@ -313,7 +313,7 @@ class _PulsingSearchIconState extends State<PulsingSearchIcon>
               widget.onPressed();
             },
             icon: Container(
-              padding: const EdgeInsets.all(6),
+              padding: const EdgeInsets.all(8),
               decoration: BoxDecoration(
                 gradient: LinearGradient(
                   colors: [

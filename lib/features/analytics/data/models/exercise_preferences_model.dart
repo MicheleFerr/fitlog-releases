@@ -14,6 +14,7 @@
 /// userExercisePreferences/{userId}
 /// {
 ///   favorites: ['Bench Press', 'Squat', 'Deadlift'],
+///   countingModeOverrides: {'bench_press': 'weighted', 'plank': 'time'},
 ///   lastUpdated: Timestamp
 /// }
 /// ```
@@ -44,6 +45,7 @@ part 'exercise_preferences_model.g.dart';
 ///
 /// **Fields**:
 /// - favorites: Set of exercise names marked as favorite
+/// - countingModeOverrides: Map of exerciseId -> preferred counting mode
 /// - lastUpdated: Timestamp of last modification
 ///
 /// **Firestore Cost Optimization**:
@@ -58,6 +60,13 @@ abstract class ExercisePreferencesModel with _$ExercisePreferencesModel {
     ///
     /// Stored as List in Firestore, converted to Set for O(1) lookup
     @Default([]) List<String> favorites,
+
+    /// Map of exerciseId -> preferred counting mode
+    ///
+    /// Allows users to override the default counting mode for specific exercises.
+    /// Key: exerciseId (e.g., 'bench_press_barbell')
+    /// Value: counting mode name ('weighted', 'reps', 'time')
+    @Default({}) Map<String, String> countingModeOverrides,
 
     /// Timestamp of last update
     ///
@@ -74,6 +83,16 @@ abstract class ExercisePreferencesModel with _$ExercisePreferencesModel {
   ///
   /// Use this in provider to avoid repeated conversions
   Set<String> get favoritesSet => favorites.toSet();
+
+  /// Get counting mode override for a specific exercise
+  ///
+  /// Returns null if no override is set for this exercise
+  String? getCountingModeOverride(String exerciseId) =>
+      countingModeOverrides[exerciseId];
+
+  /// Check if exercise has a counting mode override
+  bool hasCountingModeOverride(String exerciseId) =>
+      countingModeOverrides.containsKey(exerciseId);
 }
 
 /// Timestamp converter for Firestore Timestamp ↔ DateTime

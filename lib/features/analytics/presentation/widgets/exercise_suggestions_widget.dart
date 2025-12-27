@@ -7,22 +7,27 @@
 /// Exercise Suggestions Widget - Actionable UI for neglected muscle suggestions
 ///
 /// **Features**:
+/// - Uses real exercise database (1500+ exercises)
 /// - Lists neglected muscles with severity badges
 /// - Exercise recommendations with difficulty labels
 /// - "Add to Template" buttons that open template selector
 /// - Priority-based sorting
+/// - Correct countingMode from database
 library;
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/features/analytics/domain/services/exercise_suggestion_engine.dart';
 import 'package:gymbro_flutter_new/features/analytics/domain/services/neglected_muscle_detector.dart';
+import 'package:gymbro_flutter_new/features/analytics/presentation/providers/exercise_suggestion_provider.dart';
 import 'package:gymbro_flutter_new/features/analytics/presentation/widgets/add_exercise_to_template_sheet.dart';
-import 'package:gymbro_flutter_new/features/workout/presentation/providers/workout_template_provider.dart';
+import 'package:gymbro_flutter_new/features/analytics/presentation/widgets/priority_explanation_sheet.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator.dart';
 
 /// Exercise Suggestions Widget - Shows neglected muscles with exercise suggestions
 ///
@@ -53,86 +58,103 @@ class ExerciseSuggestionsWidget extends ConsumerWidget {
     final colorScheme = theme.colorScheme;
     final l10n = context.l10n;
 
-    // Get exercises already in user's templates to exclude them
-    final templatesAsync = ref.watch(customWorkoutTemplatesProvider);
-    final exercisesInTemplates = templatesAsync.maybeWhen(
-      data: (templates) => _extractExerciseNames(templates),
-      orElse: () => <String>{},
+    // Watch the async provider for suggestions from real database
+    final suggestionsAsync = ref.watch(
+      exerciseSuggestionsGroupedProvider(
+        ExerciseSuggestionParams(neglectedMuscles: neglectedMuscles),
+      ),
     );
 
-    // Generate suggestions, excluding exercises already in templates
-    final engine = ExerciseSuggestionEngine();
-    final suggestionsByMuscle = engine.generateSuggestionsGroupedByMuscle(
-      neglectedMuscles: neglectedMuscles,
-      excludeExercises: exercisesInTemplates,
-    );
-
-    if (suggestionsByMuscle.isEmpty) {
-      return Container(
-        padding: const EdgeInsets.all(16),
+    return suggestionsAsync.when(
+      loading: () => Container(
+        padding: const EdgeInsets.all(24),
         decoration: BoxDecoration(
           color: colorScheme.surfaceContainerHighest,
+          borderRadius: BorderRadius.circular(12),
+        ),
+        child: const Center(child: LoadingIndicator()),
+      ),
+      error: (error, _) => Container(
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: colorScheme.errorContainer,
           borderRadius: BorderRadius.circular(12),
         ),
         child: Row(
           children: [
             Icon(
-              AppIcons.checkCircle,
-              color: context.colors.success,
+              AppIcons.error,
+              color: colorScheme.error,
               size: AppIconSize.large,
             ),
             const SizedBox(width: 12),
             Expanded(
               child: Text(
-                l10n.noNeglectedMuscles,
+                l10n.errorLoadingExercises,
                 style: theme.textTheme.bodyMedium?.copyWith(
-                  color: colorScheme.onSurfaceVariant,
+                  color: colorScheme.onErrorContainer,
                 ),
               ),
             ),
           ],
         ),
-      );
-    }
-
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          l10n.neglectedMuscles,
-          style: theme.textTheme.titleMedium?.copyWith(
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        const SizedBox(height: 12),
-        ...suggestionsByMuscle.entries.map((entry) {
-          final muscleName = entry.key;
-          final suggestions = entry.value;
-          final neglectedMuscle = neglectedMuscles.firstWhere(
-            (m) => m.muscleName == muscleName,
+      ),
+      data: (suggestionsByMuscle) {
+        if (suggestionsByMuscle.isEmpty) {
+          return Container(
+            padding: const EdgeInsets.all(16),
+            decoration: BoxDecoration(
+              color: colorScheme.surfaceContainerHighest,
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: Row(
+              children: [
+                Icon(
+                  AppIcons.checkCircle,
+                  color: context.colors.success,
+                  size: AppIconSize.large,
+                ),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: Text(
+                    l10n.noNeglectedMuscles,
+                    style: theme.textTheme.bodyMedium?.copyWith(
+                      color: colorScheme.onSurfaceVariant,
+                    ),
+                  ),
+                ),
+              ],
+            ),
           );
+        }
 
-          return _MuscleGroupCard(
-            neglectedMuscle: neglectedMuscle,
-            suggestions: suggestions,
-            onExerciseAdded: onExerciseAdded,
-          );
-        }).toList(),
-      ],
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              l10n.neglectedMuscles,
+              style: theme.textTheme.titleMedium?.copyWith(
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            const SizedBox(height: 12),
+            ...suggestionsByMuscle.entries.map((entry) {
+              final muscleName = entry.key;
+              final suggestions = entry.value;
+              final neglectedMuscle = neglectedMuscles.firstWhere(
+                (m) => m.muscleName == muscleName,
+              );
+
+              return _MuscleGroupCard(
+                neglectedMuscle: neglectedMuscle,
+                suggestions: suggestions,
+                onExerciseAdded: onExerciseAdded,
+              );
+            }),
+          ],
+        );
+      },
     );
-  }
-
-  /// Extract all exercise names from user's templates
-  Set<String> _extractExerciseNames(List<dynamic> templates) {
-    final exerciseNames = <String>{};
-
-    for (final template in templates) {
-      for (final exercise in template.exercises) {
-        exerciseNames.add(exercise.exerciseName);
-      }
-    }
-
-    return exerciseNames;
   }
 }
 
@@ -147,6 +169,22 @@ class _MuscleGroupCard extends StatelessWidget {
   final NeglectedMuscle neglectedMuscle;
   final List<ExerciseSuggestion> suggestions;
   final VoidCallback? onExerciseAdded;
+
+  void _showPriorityExplanation(
+    BuildContext context,
+    NeglectedMuscle muscle,
+  ) {
+    HapticFeedback.selectionClick();
+    showModalBottomSheet<void>(
+      context: context,
+      isScrollControlled: true,
+      useSafeArea: true,
+      backgroundColor: context.colors.surface.withValues(alpha: 0),
+      builder: (context) => PriorityExplanationSheet(
+        neglectedMuscle: muscle,
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -190,14 +228,28 @@ class _MuscleGroupCard extends StatelessWidget {
                 ),
                 _SeverityBadge(severity: neglectedMuscle.severity),
                 const SizedBox(width: 8),
-                Chip(
-                  label: Text(
-                    '${l10n.priority}: ${neglectedMuscle.priority.toStringAsFixed(1)}',
+                GestureDetector(
+                  onTap: () => _showPriorityExplanation(context, neglectedMuscle),
+                  child: Chip(
+                    label: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(
+                          '${l10n.priority}: ${neglectedMuscle.priority.toStringAsFixed(1)}',
+                        ),
+                        const SizedBox(width: 4),
+                        Icon(
+                          AppIcons.info,
+                          size: AppIconSize.tiny,
+                          color: colorScheme.onTertiaryContainer,
+                        ),
+                      ],
+                    ),
+                    backgroundColor: colorScheme.tertiaryContainer,
+                    side: BorderSide.none,
+                    padding: EdgeInsets.zero,
+                    visualDensity: VisualDensity.compact,
                   ),
-                  backgroundColor: colorScheme.tertiaryContainer,
-                  side: BorderSide.none,
-                  padding: EdgeInsets.zero,
-                  visualDensity: VisualDensity.compact,
                 ),
               ],
             ),
@@ -221,7 +273,7 @@ class _MuscleGroupCard extends StatelessWidget {
                     suggestion: suggestion,
                     onExerciseAdded: onExerciseAdded,
                   );
-                }).toList(),
+                }),
               ],
             ),
           ),
@@ -237,7 +289,7 @@ class _MuscleGroupCard extends StatelessWidget {
       case NeglectSeverity.high:
         return context.colors.warning;
       case NeglectSeverity.medium:
-        return Colors.orange;
+        return context.colors.tertiary;
     }
   }
 }
@@ -251,7 +303,6 @@ class _SeverityBadge extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
-    final colorScheme = Theme.of(context).colorScheme;
 
     final label = _getSeverityLabel(l10n, severity);
     final color = _getSeverityColor(context, severity);
@@ -260,14 +311,13 @@ class _SeverityBadge extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
       decoration: BoxDecoration(
         color: color.withValues(alpha: 0.2),
-        borderRadius: BorderRadius.circular(4),
+        borderRadius: BorderRadius.circular(8),
         border: Border.all(color: color),
       ),
       child: Text(
         label,
-        style: TextStyle(
+        style: context.textTheme.labelSmall!.copyWith(
           color: color,
-          fontSize: 12,
           fontWeight: FontWeight.bold,
         ),
       ),
@@ -292,7 +342,7 @@ class _SeverityBadge extends StatelessWidget {
       case NeglectSeverity.high:
         return context.colors.warning;
       case NeglectSeverity.medium:
-        return Colors.orange;
+        return context.colors.tertiary;
     }
   }
 }
@@ -313,7 +363,7 @@ class _ExerciseSuggestionTile extends StatelessWidget {
       context: context,
       isScrollControlled: true,
       useSafeArea: true,
-      backgroundColor: Colors.transparent,
+      backgroundColor: context.colors.surface.withValues(alpha: 0),
       builder: (context) => AddExerciseToTemplateSheet(
         suggestion: suggestion,
         onExerciseAdded: () {
@@ -341,6 +391,44 @@ class _ExerciseSuggestionTile extends StatelessWidget {
       ),
       child: Row(
         children: [
+          // Exercise GIF thumbnail
+          if (suggestion.imageUrl != null && suggestion.imageUrl!.isNotEmpty)
+            Padding(
+              padding: const EdgeInsets.only(right: 12),
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(8),
+                child: CachedNetworkImage(
+                  imageUrl: suggestion.imageUrl!,
+                  width: 56,
+                  height: 56,
+                  fit: BoxFit.cover,
+                  placeholder: (context, url) => Container(
+                    width: 56,
+                    height: 56,
+                    color: colorScheme.surfaceContainerHighest,
+                    child: Center(
+                      child: Icon(
+                        AppIcons.workout,
+                        size: AppIconSize.medium,
+                        color: colorScheme.onSurfaceVariant,
+                      ),
+                    ),
+                  ),
+                  errorWidget: (context, url, error) => Container(
+                    width: 56,
+                    height: 56,
+                    color: colorScheme.surfaceContainerHighest,
+                    child: Center(
+                      child: Icon(
+                        AppIcons.workout,
+                        size: AppIconSize.medium,
+                        color: colorScheme.onSurfaceVariant,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ),
           // Exercise info
           Expanded(
             child: Column(
@@ -399,7 +487,6 @@ class _DifficultyChip extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
-    final colorScheme = Theme.of(context).colorScheme;
 
     final label = _getDifficultyLabel(l10n, difficulty);
     final color = _getDifficultyColor(context, difficulty);
@@ -410,9 +497,8 @@ class _DifficultyChip extends StatelessWidget {
       side: BorderSide(color: color),
       padding: EdgeInsets.zero,
       visualDensity: VisualDensity.compact,
-      labelStyle: TextStyle(
+      labelStyle: context.textTheme.labelSmall!.copyWith(
         color: color,
-        fontSize: 11,
         fontWeight: FontWeight.bold,
       ),
     );

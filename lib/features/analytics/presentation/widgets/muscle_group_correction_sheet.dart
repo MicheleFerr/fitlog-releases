@@ -32,6 +32,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/features/analytics/domain/entities/muscle_correction.dart';
 import 'package:gymbro_flutter_new/features/analytics/presentation/providers/muscle_correction_provider.dart';
+import 'package:gymbro_flutter_new/features/stress_index/data/mappers/muscle_abbreviation_mapper.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/services/snackbar_service.dart';
@@ -91,24 +92,27 @@ class _MuscleGroupCorrectionSheetState
   ];
 
   /// Get localized muscle group name
+  ///
+  /// **SINGLE SOURCE OF TRUTH**: Uses [MuscleAbbreviationMapper.normalizeToCategory]
+  /// to normalize input to canonical category, then maps to l10n.
   String _getLocalizedMuscleGroupName(BuildContext context, String group) {
-    final l10n = context.l10n;
-    switch (group) {
-      case 'Chest':
-        return l10n.muscleGroupChest;
-      case 'Back':
-        return l10n.muscleGroupBack;
-      case 'Legs':
-        return l10n.muscleGroupLegs;
-      case 'Shoulders':
-        return l10n.muscleGroupShoulders;
-      case 'Arms':
-        return l10n.muscleGroupArms;
-      case 'Core':
-        return l10n.muscleGroupCore;
-      default:
-        return group;
+    final category = MuscleAbbreviationMapper.normalizeToCategory(group);
+
+    if (category == null) {
+      // Fallback: capitalize first letter
+      return group.isEmpty
+          ? group
+          : group[0].toUpperCase() + group.substring(1).toLowerCase();
     }
+
+    return switch (category) {
+      MuscleCategory.chest => context.l10n.muscleGroupChest,
+      MuscleCategory.back => context.l10n.muscleGroupBack,
+      MuscleCategory.shoulders => context.l10n.muscleGroupShoulders,
+      MuscleCategory.arms => context.l10n.muscleGroupArms,
+      MuscleCategory.legs => context.l10n.muscleGroupLegs,
+      MuscleCategory.core => context.l10n.muscleGroupCore,
+    };
   }
 
   /// Save correction locally

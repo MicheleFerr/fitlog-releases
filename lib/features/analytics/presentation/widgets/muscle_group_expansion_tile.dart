@@ -48,6 +48,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/features/analytics/presentation/providers/muscle_group_expansion_provider.dart';
+import 'package:gymbro_flutter_new/features/stress_index/data/mappers/muscle_abbreviation_mapper.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
@@ -150,35 +151,29 @@ class MuscleGroupExpansionTile extends ConsumerWidget {
 
   /// Get localized muscle group name
   ///
-  /// Maps muscle group name to localized string from context.l10n
+  /// **SINGLE SOURCE OF TRUTH**: Uses [MuscleAbbreviationMapper.normalizeToCategory]
+  /// to normalize various input formats (EN, IT) to canonical categories,
+  /// then maps to localized strings from context.l10n.
   String _getLocalizedMuscleGroupName(BuildContext context, String group) {
-    // Normalize group name (lowercase, trim)
-    final normalized = group.toLowerCase().trim();
+    // Use mapper to normalize to canonical category (SSOT)
+    final category = MuscleAbbreviationMapper.normalizeToCategory(group);
 
-    // Map to localization key
-    // Note: Localization keys will be added in Task 1.5 and 1.6
-    switch (normalized) {
-      case 'chest':
-      case 'petto':
-        return context.l10n.muscleGroupChest;
-      case 'back':
-      case 'schiena':
-        return context.l10n.muscleGroupBack;
-      case 'legs':
-      case 'gambe':
-        return context.l10n.muscleGroupLegs;
-      case 'shoulders':
-      case 'spalle':
-        return context.l10n.muscleGroupShoulders;
-      case 'arms':
-      case 'braccia':
-        return context.l10n.muscleGroupArms;
-      case 'core':
-        return context.l10n.muscleGroupCore;
-      default:
-        // Fallback: capitalize first letter
-        return group[0].toUpperCase() + group.substring(1).toLowerCase();
+    if (category == null) {
+      // Fallback: capitalize first letter
+      return group.isEmpty
+          ? group
+          : group[0].toUpperCase() + group.substring(1).toLowerCase();
     }
+
+    // Map category to localized string
+    return switch (category) {
+      MuscleCategory.chest => context.l10n.muscleGroupChest,
+      MuscleCategory.back => context.l10n.muscleGroupBack,
+      MuscleCategory.shoulders => context.l10n.muscleGroupShoulders,
+      MuscleCategory.arms => context.l10n.muscleGroupArms,
+      MuscleCategory.legs => context.l10n.muscleGroupLegs,
+      MuscleCategory.core => context.l10n.muscleGroupCore,
+    };
   }
 
   /// Get exercise count text

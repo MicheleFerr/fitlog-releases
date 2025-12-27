@@ -15,6 +15,7 @@ import 'package:gymbro_flutter_new/features/admin/presentation/providers/databas
 import 'package:gymbro_flutter_new/features/admin/data/services/database_manager_service.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/services/snackbar_service.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator.dart';
 
 class ExerciseQuickEditCard extends ConsumerStatefulWidget {
 
@@ -145,7 +146,7 @@ class _ExerciseQuickEditCardState extends ConsumerState<ExerciseQuickEditCard> {
                       margin: const EdgeInsets.only(left: 8),
                       width: 20,
                       height: 20,
-                      child: const CircularProgressIndicator(strokeWidth: 2),
+                      child: const LoadingIndicator(size: 20),
                     ),
                 ],
               ),

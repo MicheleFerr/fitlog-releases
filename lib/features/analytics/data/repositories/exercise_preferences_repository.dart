@@ -178,6 +178,89 @@ class ExercisePreferencesRepository {
     await setFavorites(newSet);
   }
 
+  // === COUNTING MODE OVERRIDES ===
+
+  /// Set counting mode override for a specific exercise
+  ///
+  /// **Parameters**:
+  /// - exerciseId: The unique ID of the exercise (e.g., 'bench_press_barbell')
+  /// - countingMode: The preferred counting mode ('weighted', 'reps', 'time')
+  ///
+  /// **Firestore Cost**: 1 read + 1 write (debounced)
+  Future<void> setCountingModeOverride(
+    String exerciseId,
+    String countingMode,
+  ) async {
+    // Get current preferences
+    final current = await getPreferences();
+    final currentOverrides =
+        Map<String, String>.from(current?.countingModeOverrides ?? {});
+
+    // Update override
+    currentOverrides[exerciseId] = countingMode;
+
+    // Save to Firestore
+    await _saveWithOverrides(
+      favorites: current?.favorites ?? [],
+      countingModeOverrides: currentOverrides,
+    );
+  }
+
+  /// Remove counting mode override for a specific exercise
+  ///
+  /// **Parameters**:
+  /// - exerciseId: The unique ID of the exercise
+  ///
+  /// **Firestore Cost**: 1 read + 1 write (debounced)
+  Future<void> removeCountingModeOverride(String exerciseId) async {
+    final current = await getPreferences();
+    final currentOverrides =
+        Map<String, String>.from(current?.countingModeOverrides ?? {});
+
+    // Remove override
+    currentOverrides.remove(exerciseId);
+
+    // Save to Firestore
+    await _saveWithOverrides(
+      favorites: current?.favorites ?? [],
+      countingModeOverrides: currentOverrides,
+    );
+  }
+
+  /// Get counting mode override for a specific exercise
+  ///
+  /// Returns null if no override exists
+  ///
+  /// **Firestore Cost**: 1 read (cached after first call)
+  Future<String?> getCountingModeOverride(String exerciseId) async {
+    final prefs = await getPreferences();
+    return prefs?.getCountingModeOverride(exerciseId);
+  }
+
+  /// Internal helper to save preferences with both favorites and overrides
+  Future<void> _saveWithOverrides({
+    required List<String> favorites,
+    required Map<String, String> countingModeOverrides,
+  }) async {
+    // Cancel previous debounce timer
+    _debounceTimer?.cancel();
+
+    // Start new debounce timer (500ms)
+    _debounceTimer = Timer(const Duration(milliseconds: 500), () async {
+      try {
+        final model = ExercisePreferencesModel(
+          favorites: favorites,
+          countingModeOverrides: countingModeOverrides,
+          lastUpdated: DateTime.now(),
+        );
+
+        await _userDoc.set(model.toJson());
+      } catch (e) {
+        // Silently fail (UI already updated optimistically)
+      }
+    });
+  }
+
   /// Dispose resources
   ///
   /// Call this when provider is disposed to cancel pending debounce timers
@@ -206,4 +289,35 @@ final exercisePreferencesRepositoryProvider =
   ref.onDispose(() => repo.dispose());
 
   return repo;
+});
+
+/// Provider for counting mode override of a specific exercise
+///
+/// **Usage**:
+/// ```dart
+/// final override = ref.watch(countingModeOverrideProvider('bench_press'));
+/// ```
+///
+/// **Returns**: The counting mode override as string, or null if not set
+final countingModeOverrideProvider =
+    FutureProvider.autoDispose.family<String?, String>((ref, exerciseId) async {
+  final repo = ref.watch(exercisePreferencesRepositoryProvider);
+  if (repo == null) return null;
+
+  return repo.getCountingModeOverride(exerciseId);
+});
+
+/// Provider for all counting mode overrides (for batch operations)
+///
+/// **Usage**:
+/// ```dart
+/// final overrides = ref.watch(allCountingModeOverridesProvider);
+/// ```
+final allCountingModeOverridesProvider =
+    FutureProvider.autoDispose<Map<String, String>>((ref) async {
+  final repo = ref.watch(exercisePreferencesRepositoryProvider);
+  if (repo == null) return {};
+
+  final prefs = await repo.getPreferences();
+  return prefs?.countingModeOverrides ?? {};
 });

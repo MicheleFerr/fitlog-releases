@@ -163,21 +163,45 @@ class RatioBreakdownCalculator {
   /// Supports both English and Italian abbreviations:
   /// - English: chest, pectorals, triceps, shoulders, delts, quads
   /// - Italian: pett (pettorali), tric (tricipiti), delt (deltoidi), quad (quadricipiti)
+  ///
+  /// **Deltoid Classification** (P0 fix):
+  /// - DELT_ANT (anterior) → PUSH
+  /// - DELT_LAT (lateral) → NEUTRAL (excluded from push/pull)
+  /// - DELT_POST (posterior) → PULL (see _isPullMuscle)
+  /// - DELT (generic) → PUSH (backward compatibility)
   bool _isPushMuscle(String muscle) {
+    // First, check for specific deltoid portions
+    final muscleLower = muscle.toLowerCase();
+
+    // DELT_LAT is neutral (not push, not pull) - skip it
+    if (muscleLower.contains('delt_lat')) {
+      return false;
+    }
+
+    // DELT_POST is a pull muscle - skip it
+    if (muscleLower.contains('delt_post')) {
+      return false;
+    }
+
+    // DELT_ANT is a push muscle
+    if (muscleLower.contains('delt_ant')) {
+      return true;
+    }
+
     const pushMuscles = [
       // English
       'chest',
       'pectorals',
       'triceps',
       'shoulders',
-      'delts',
       'anterior delts',
+      'front delts',
       'quads',
       'quadriceps',
       // Italian abbreviations from JSON
       'pett', // Pettorali
       'tric', // Tricipiti
-      'delt', // Deltoidi (general shoulders = push)
+      'delt', // Deltoidi (generic - legacy, backward compatibility)
       'quad', // Quadricipiti
     ];
     return pushMuscles.any((push) => muscle.contains(push));
@@ -188,7 +212,25 @@ class RatioBreakdownCalculator {
   /// Supports both English and Italian abbreviations:
   /// - English: back, lats, traps, biceps, hamstrings, rear delts
   /// - Italian: lat (latissimus), trap (trapezio), bic (bicipiti), femor (femorali)
+  ///
+  /// **Deltoid Classification** (P0 fix):
+  /// - DELT_POST (posterior) → PULL
+  /// - DELT_ANT (anterior) → PUSH (see _isPushMuscle)
+  /// - DELT_LAT (lateral) → NEUTRAL (excluded from push/pull)
   bool _isPullMuscle(String muscle) {
+    // First, check for specific deltoid portions
+    final muscleLower = muscle.toLowerCase();
+
+    // DELT_POST is a pull muscle
+    if (muscleLower.contains('delt_post')) {
+      return true;
+    }
+
+    // DELT_ANT and DELT_LAT are NOT pull muscles
+    if (muscleLower.contains('delt_ant') || muscleLower.contains('delt_lat')) {
+      return false;
+    }
+
     const pullMuscles = [
       // English
       'back',
@@ -197,10 +239,11 @@ class RatioBreakdownCalculator {
       'biceps',
       'hamstrings',
       'rear delts',
+      'posterior delts',
       'posterior',
       'rhomboids',
       // Italian abbreviations from JSON
-      'lat', // Latissimus (nota: "delt lat" matcha per errore, ma "lat" da solo è back)
+      'lat', // Latissimus
       'trap', // Trapezio
       'bic', // Bicipiti
       'femor', // Femorali (hamstrings)
@@ -225,8 +268,10 @@ class RatioBreakdownCalculator {
       'biceps',
       'triceps',
       'arms',
+      'forearms',
       'abs',
       'core',
+      'neck',
       // Italian abbreviations
       'pett', // Pettorali
       'lat', // Latissimus
@@ -234,8 +279,14 @@ class RatioBreakdownCalculator {
       'delt', // Deltoidi
       'bic', // Bicipiti
       'tric', // Tricipiti
+      'ava', // Avambracci (forearms)
+      'avamb', // Avambracci
       'addom', // Addominali
       'dorso', // Back
+      'lombar', // Lombari
+      'lomb', // Lombari
+      'lom', // Lombari
+      'collo', // Collo (neck)
     ];
     return upperMuscles.any((upper) => muscle.contains(upper));
   }
@@ -253,11 +304,19 @@ class RatioBreakdownCalculator {
       'glutes',
       'calves',
       'hips',
+      'adductors',
+      'abductors',
       // Italian abbreviations
       'quad', // Quadricipiti
       'femor', // Femorali
+      'femo', // Femorali (short)
       'glut', // Glutei
       'polp', // Polpacci
+      'poll', // Polpacci (variant)
+      'addut', // Adduttori (specific, avoids matching 'addom')
+      'addu', // Adduttori (specific, avoids matching 'addom')
+      'abdut', // Abduttori
+      'abdu', // Abduttori
     ];
     return lowerMuscles.any((lower) => muscle.contains(lower));
   }

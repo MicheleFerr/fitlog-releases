@@ -57,7 +57,7 @@ class ExerciseCorrelationsSheet extends ConsumerStatefulWidget {
     return showModalBottomSheet<void>(
       context: context,
       isScrollControlled: true,
-      backgroundColor: Colors.transparent,
+      backgroundColor: context.colors.surface.withValues(alpha: 0),
       builder: (context) => ExerciseCorrelationsSheet(
         exerciseId: exerciseId,
         exerciseName: exerciseName,
@@ -94,7 +94,7 @@ class _ExerciseCorrelationsSheetState
             borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withValues(alpha: 0.1),
+                color: context.colors.shadow.withValues(alpha: 0.1),
                 blurRadius: 20,
                 offset: const Offset(0, -5),
               ),

@@ -7,22 +7,39 @@
 /// - Endurance (15+ reps)
 ///
 /// Based on Schoenfeld et al. (2021) research.
+///
+/// **New Features**:
+/// - "Optimize Training" button when variety < 80%
+/// - Actionable suggestions to balance rep zones
+/// - Tinder-style swipe cards or classic list view
 library;
 
 import 'package:fl_chart/fl_chart.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/features/analytics/domain/entities/exercise_history.dart';
+import 'package:gymbro_flutter_new/features/analytics/domain/entities/rep_zone_suggestion.dart';
+import 'package:gymbro_flutter_new/features/analytics/domain/services/rep_zone_suggestion_engine.dart';
 import 'package:gymbro_flutter_new/features/analytics/domain/services/volume_analyzer.dart';
+import 'package:gymbro_flutter_new/features/analytics/presentation/providers/rep_zone_suggestion_provider.dart';
+import 'package:gymbro_flutter_new/features/analytics/presentation/widgets/rep_zone_optimization_sheet.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 /// Rep Zone Distribution Tab
 ///
 /// Shows how training is distributed across different rep ranges,
 /// helping users understand if their training aligns with their goals.
-class RepZoneTab extends StatefulWidget {
+///
+/// **Optimization Feature**:
+/// When variety is low (>80% in one zone), shows an "Optimize Training"
+/// button that opens a modal with actionable suggestions.
+class RepZoneTab extends ConsumerStatefulWidget {
   const RepZoneTab({
     super.key,
     required this.exerciseHistories,
@@ -31,10 +48,10 @@ class RepZoneTab extends StatefulWidget {
   final List<ExerciseHistory> exerciseHistories;
 
   @override
-  State<RepZoneTab> createState() => _RepZoneTabState();
+  ConsumerState<RepZoneTab> createState() => _RepZoneTabState();
 }
 
-class _RepZoneTabState extends State<RepZoneTab>
+class _RepZoneTabState extends ConsumerState<RepZoneTab>
     with SingleTickerProviderStateMixin {
   int _touchedIndex = -1;
   bool _showPieChart = false;
@@ -50,6 +67,11 @@ class _RepZoneTabState extends State<RepZoneTab>
     if (data.totalSets == 0) {
       return _buildEmptyState(context);
     }
+
+    // Check if optimization is needed using RepZoneSuggestionEngine
+    final analysis = ref.watch(repZoneAnalysisProvider(widget.exerciseHistories));
+    final needsOptimization = analysis.needsSuggestions &&
+        analysis.totalSets >= RepZoneSuggestionEngine.minimumSetsForAnalysis;
 
     return SingleChildScrollView(
       padding: const EdgeInsets.all(16),
@@ -71,6 +93,12 @@ class _RepZoneTabState extends State<RepZoneTab>
             ),
           ),
           const SizedBox(height: 24),
+
+          // Optimization CTA (when variety is low)
+          if (needsOptimization) ...[
+            _buildOptimizationCTA(context, analysis),
+            const SizedBox(height: 24),
+          ],
 
           // Total sets badge
           Center(
@@ -137,6 +165,186 @@ class _RepZoneTabState extends State<RepZoneTab>
         ],
       ),
     );
+  }
+
+  /// Build optimization CTA button
+  Widget _buildOptimizationCTA(BuildContext context, RepZoneAnalysis analysis) {
+    final colorScheme = context.colors;
+    final l10n = context.l10n;
+
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          colors: [
+            colorScheme.primaryContainer,
+            colorScheme.primaryContainer.withValues(alpha: 0.7),
+          ],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
+        borderRadius: BorderRadius.circular(16),
+        boxShadow: [
+          BoxShadow(
+            color: colorScheme.primary.withValues(alpha: 0.2),
+            blurRadius: 12,
+            offset: const Offset(0, 4),
+          ),
+        ],
+      ),
+      child: Row(
+        children: [
+          Container(
+            padding: const EdgeInsets.all(12),
+            decoration: BoxDecoration(
+              color: colorScheme.primary.withValues(alpha: 0.1),
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: Icon(
+              AppIcons.autoAwesome,
+              color: colorScheme.primary,
+              size: AppIconSize.large,
+            ),
+          ),
+          const SizedBox(width: 16),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  l10n.lowVarietyDetected,
+                  style: context.textTheme.titleSmall?.copyWith(
+                    fontWeight: FontWeight.bold,
+                    color: colorScheme.onPrimaryContainer,
+                  ),
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  l10n.optimizeTrainingHint,
+                  style: context.textTheme.bodySmall?.copyWith(
+                    color: colorScheme.onPrimaryContainer.withValues(alpha: 0.8),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(width: 8),
+          FilledButton.icon(
+            onPressed: () => _openOptimizationSheet(analysis),
+            icon: const Icon(AppIcons.arrowForward, size: AppIconSize.small),
+            label: Text(l10n.optimize),
+            style: FilledButton.styleFrom(
+              backgroundColor: colorScheme.primary,
+              foregroundColor: colorScheme.onPrimary,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  /// Open optimization sheet
+  void _openOptimizationSheet(RepZoneAnalysis analysis) async {
+    debugPrint('🔍 [REP_ZONE_TAB] _openOptimizationSheet called');
+    debugPrint('🔍 [REP_ZONE_TAB] exerciseHistories: ${widget.exerciseHistories.length}');
+    HapticFeedback.mediumImpact();
+
+    // Show loading dialog
+    if (!mounted) return;
+    showDialog<void>(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) => Center(
+        child: Container(
+          padding: const EdgeInsets.all(24),
+          decoration: BoxDecoration(
+            color: context.colors.surface,
+            borderRadius: BorderRadius.circular(16),
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const LoadingIndicator(),
+              const SizedBox(height: 16),
+              Text(
+                context.l10n.loadingSuggestions,
+                style: context.textTheme.bodyMedium,
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+    debugPrint('🔍 [REP_ZONE_TAB] Loading dialog shown');
+
+    try {
+      debugPrint('🔍 [REP_ZONE_TAB] Calling provider...');
+      // Load suggestions with timeout
+      final suggestions = await ref
+          .read(repZoneSuggestionsProvider(widget.exerciseHistories).future)
+          .timeout(
+            const Duration(seconds: 10),
+            onTimeout: () {
+              debugPrint('⏱️ [REP_ZONE_TAB] TIMEOUT after 10s!');
+              return <RepZoneSuggestion>[];
+            },
+          );
+      debugPrint('🔍 [REP_ZONE_TAB] Got ${suggestions.length} suggestions');
+
+      // Close loading dialog
+      debugPrint('🔍 [REP_ZONE_TAB] mounted=$mounted');
+      if (!mounted) {
+        debugPrint('❌ [REP_ZONE_TAB] NOT MOUNTED - returning');
+        return;
+      }
+      debugPrint('🔍 [REP_ZONE_TAB] Closing loading dialog...');
+      Navigator.of(context, rootNavigator: true).pop();
+      debugPrint('🔍 [REP_ZONE_TAB] Dialog closed');
+
+      // Open optimization sheet
+      if (suggestions.isEmpty) {
+        debugPrint('🔍 [REP_ZONE_TAB] No suggestions - showing snackbar');
+        // No suggestions available
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(context.l10n.noSuggestionsAvailable),
+            behavior: SnackBarBehavior.floating,
+          ),
+        );
+        return;
+      }
+
+      debugPrint('🔍 [REP_ZONE_TAB] Opening bottom sheet with ${suggestions.length} suggestions...');
+      await showModalBottomSheet<void>(
+        context: context,
+        isScrollControlled: true,
+        useSafeArea: true,
+        backgroundColor: context.colors.surface.withValues(alpha: 0),
+        builder: (context) => DraggableScrollableSheet(
+          initialChildSize: 0.9,
+          minChildSize: 0.5,
+          maxChildSize: 0.95,
+          builder: (context, scrollController) => RepZoneOptimizationSheet(
+            suggestions: suggestions,
+            analysis: analysis,
+          ),
+        ),
+      );
+      debugPrint('🔍 [REP_ZONE_TAB] Bottom sheet closed');
+    } catch (e, stack) {
+      debugPrint('❌ [REP_ZONE_TAB] ERROR: $e');
+      debugPrint('❌ [REP_ZONE_TAB] STACK: $stack');
+      // Close loading dialog on error
+      if (!mounted) return;
+      Navigator.of(context, rootNavigator: true).pop();
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(context.l10n.errorLoadingExercises),
+          behavior: SnackBarBehavior.floating,
+        ),
+      );
+    }
   }
 
   RepContinuumData _calculateRepZoneData() {
@@ -295,10 +503,9 @@ class _RepZoneTabState extends State<RepZoneTab>
                   child: data.strengthPercentage > 12
                       ? Text(
                           '${data.strengthPercentage.toStringAsFixed(0)}%',
-                          style: TextStyle(
+                          style: context.textTheme.labelMedium!.copyWith(
                             color: colorScheme.onError,
                             fontWeight: FontWeight.bold,
-                            fontSize: 14,
                           ),
                         )
                       : null,
@@ -314,10 +521,9 @@ class _RepZoneTabState extends State<RepZoneTab>
                   child: data.hypertrophyPercentage > 12
                       ? Text(
                           '${data.hypertrophyPercentage.toStringAsFixed(0)}%',
-                          style: TextStyle(
+                          style: context.textTheme.labelMedium!.copyWith(
                             color: colorScheme.onPrimary,
                             fontWeight: FontWeight.bold,
-                            fontSize: 14,
                           ),
                         )
                       : null,
@@ -332,10 +538,9 @@ class _RepZoneTabState extends State<RepZoneTab>
                   child: data.endurancePercentage > 12
                       ? Text(
                           '${data.endurancePercentage.toStringAsFixed(0)}%',
-                          style: TextStyle(
+                          style: context.textTheme.labelMedium!.copyWith(
                             color: colorScheme.onTertiary,
                             fontWeight: FontWeight.bold,
-                            fontSize: 14,
                           ),
                         )
                       : null,
@@ -364,8 +569,10 @@ class _RepZoneTabState extends State<RepZoneTab>
               ? '${l10n.strengthZone}\n${data.strengthPercentage.toStringAsFixed(1)}%'
               : '${data.strengthPercentage.toStringAsFixed(0)}%',
           radius: isTouched ? 75 : 65,
-          titleStyle: TextStyle(
-            fontSize: isTouched ? 14 : 12,
+          titleStyle: (isTouched
+                  ? context.textTheme.labelMedium
+                  : context.textTheme.labelSmall)!
+              .copyWith(
             fontWeight: FontWeight.bold,
             color: colorScheme.onError,
           ),
@@ -385,8 +592,10 @@ class _RepZoneTabState extends State<RepZoneTab>
               ? '${l10n.hypertrophyZone}\n${data.hypertrophyPercentage.toStringAsFixed(1)}%'
               : '${data.hypertrophyPercentage.toStringAsFixed(0)}%',
           radius: isTouched ? 75 : 65,
-          titleStyle: TextStyle(
-            fontSize: isTouched ? 14 : 12,
+          titleStyle: (isTouched
+                  ? context.textTheme.labelMedium
+                  : context.textTheme.labelSmall)!
+              .copyWith(
             fontWeight: FontWeight.bold,
             color: colorScheme.onPrimary,
           ),
@@ -409,8 +618,10 @@ class _RepZoneTabState extends State<RepZoneTab>
               ? '${l10n.enduranceZone}\n${data.endurancePercentage.toStringAsFixed(1)}%'
               : '${data.endurancePercentage.toStringAsFixed(0)}%',
           radius: isTouched ? 75 : 65,
-          titleStyle: TextStyle(
-            fontSize: isTouched ? 14 : 12,
+          titleStyle: (isTouched
+                  ? context.textTheme.labelMedium
+                  : context.textTheme.labelSmall)!
+              .copyWith(
             fontWeight: FontWeight.bold,
             color: colorScheme.onTertiary,
           ),

@@ -20,10 +20,14 @@ import 'package:gymbro_flutter_new/features/analytics/presentation/tabs/volume_p
 import 'package:gymbro_flutter_new/features/analytics/presentation/tabs/muscle_balance_tab.dart';
 import 'package:gymbro_flutter_new/features/analytics/presentation/tabs/stress_index_tab.dart';
 import 'package:gymbro_flutter_new/features/auth/presentation/providers/consolidated_user_provider.dart';
+import 'package:gymbro_flutter_new/features/stress_index/presentation/providers/stress_index_provider.dart';
+import 'package:gymbro_flutter_new/features/analytics/presentation/providers/workout_analytics_provider.dart';
+import 'package:gymbro_flutter_new/features/analytics/presentation/providers/analytics_provider.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator.dart';
+import 'package:gymbro_flutter_new/shared/presentation/services/snackbar_service.dart';
 
 /// Pro Analytics Tabbed Screen
 ///
@@ -79,6 +83,37 @@ class _ProAnalyticsTabbedScreenState
           icon: const Icon(AppIcons.arrowBack, size: AppIconSize.medium),
           onPressed: () => context.pop(),
         ),
+        actions: [
+          // Refresh button - clears cache and reloads analytics
+          IconButton(
+            icon: const Icon(AppIcons.refresh, size: AppIconSize.medium),
+            tooltip: l10n.refreshData,
+            onPressed: () async {
+              await HapticFeedback.mediumImpact();
+
+              // 1. Clear analytics cache
+              final cacheService = ref.read(analyticsCacheServiceProvider);
+              await cacheService.clear();
+
+              // 2. Refresh analytics data
+              ref.read(analyticsRefreshProvider)();
+
+              // 3. Invalidate stress index for fresh calculation
+              ref.invalidate(stressIndexNotifierProvider);
+
+              // 4. Invalidate exercise history stream to refresh UI
+              ref.invalidate(exerciseHistoryStreamProvider(userId));
+
+              // 5. Show confirmation
+              if (context.mounted) {
+                SnackBarService.showSuccess(
+                  context,
+                  l10n.refreshed,
+                );
+              }
+            },
+          ),
+        ],
         title: Row(
           children: [
             // PRO badge
@@ -155,7 +190,7 @@ class _ProAnalyticsTabbedScreenState
                 fontWeight: FontWeight.w600,
               ),
               unselectedLabelStyle: context.textTheme.labelMedium,
-              dividerColor: Colors.transparent,
+              dividerColor: colorScheme.surface.withValues(alpha: 0),
               tabs: [
                 _buildPremiumTab(
                   icon: AppIcons.barChart,
@@ -185,17 +220,27 @@ class _ProAnalyticsTabbedScreenState
             return _buildPremiumGate(context);
           }
 
+          // Get exercise muscle map for weighted distribution (70% primary, 30% secondary)
+          final exerciseMuscleMapAsync = ref.watch(exerciseMuscleMapProvider);
+          final exerciseMuscleMap = exerciseMuscleMapAsync.valueOrNull;
+
           return TabBarView(
             controller: _tabController,
             children: [
               // Tab 1: Rep Zone Distribution
               RepZoneTab(exerciseHistories: exerciseHistories),
 
-              // Tab 2: Volume Progression
-              VolumeProgressionTab(exerciseHistories: exerciseHistories),
+              // Tab 2: Volume Progression (with EMG-based distribution)
+              VolumeProgressionTab(
+                exerciseHistories: exerciseHistories,
+                exerciseMuscleMap: exerciseMuscleMap,
+              ),
 
-              // Tab 3: Muscle Balance
-              MuscleBalanceTab(exerciseHistories: exerciseHistories),
+              // Tab 3: Muscle Balance (with EMG-based distribution)
+              MuscleBalanceTab(
+                exerciseHistories: exerciseHistories,
+                exerciseMuscleMap: exerciseMuscleMap,
+              ),
 
               // Tab 4: Stress Index
               const StressIndexTab(),

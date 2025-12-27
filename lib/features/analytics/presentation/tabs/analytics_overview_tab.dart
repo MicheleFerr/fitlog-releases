@@ -20,6 +20,7 @@ import 'package:gymbro_flutter_new/shared/presentation/widgets/premium_feature_c
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/services/modal_service.dart';
 import 'package:gymbro_flutter_new/shared/presentation/services/snackbar_service.dart';
+import 'package:gymbro_flutter_new/features/stress_index/data/mappers/muscle_abbreviation_mapper.dart';
 
 /// Provider for weekly workout goal (default: 5 workouts per week)
 final weeklyWorkoutGoalProvider = StateProvider<int>((ref) => 5);
@@ -315,7 +316,7 @@ class _AnalyticsOverviewTabState extends ConsumerState<AnalyticsOverviewTab> {
         child: Container(
           margin: const EdgeInsets.all(4),
           decoration: BoxDecoration(
-            color: isSelected ? theme.colorScheme.primary : Colors.transparent,
+            color: isSelected ? theme.colorScheme.primary : theme.colorScheme.surface.withValues(alpha: 0),
             borderRadius: BorderRadius.circular(8),
           ),
           child: Center(
@@ -669,7 +670,7 @@ class _AnalyticsOverviewTabState extends ConsumerState<AnalyticsOverviewTab> {
     final workoutName = workout.name;
 
     return Material(
-      color: Colors.transparent,
+      color: theme.colorScheme.surface.withValues(alpha: 0),
       child: InkWell(
         onTap: () {
           HapticFeedback.lightImpact();
@@ -737,7 +738,7 @@ class _AnalyticsOverviewTabState extends ConsumerState<AnalyticsOverviewTab> {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
-      backgroundColor: Colors.transparent,
+      backgroundColor: theme.colorScheme.surface.withValues(alpha: 0),
       builder: (context) => DraggableScrollableSheet(
         initialChildSize: 0.7,
         maxChildSize: safeMax,
@@ -945,11 +946,11 @@ class _AnalyticsOverviewTabState extends ConsumerState<AnalyticsOverviewTab> {
             final isWarmupSet = set.isWarmup || (set.rpe != null && set.rpe == 0);
 
             return Container(
-              padding: const EdgeInsets.symmetric(vertical: 6),
+              padding: const EdgeInsets.symmetric(vertical: 8),
               decoration: BoxDecoration(
                 color: isWarmupSet
                     ? theme.colorScheme.secondary.withValues(alpha: 0.1)
-                    : Colors.transparent,
+                    : theme.colorScheme.surface.withValues(alpha: 0),
                 borderRadius: BorderRadius.circular(8),
               ),
               child: Row(
@@ -1085,37 +1086,6 @@ class _AnalyticsOverviewTabState extends ConsumerState<AnalyticsOverviewTab> {
     );
   }
   
-  Widget _buildTrend(double value) {
-    final theme = Theme.of(context);
-    final color = value > 0
-        ? theme.colorScheme.tertiary
-        : value < 0
-            ? theme.colorScheme.error
-            : theme.colorScheme.outline;
-    final icon = value > 0 ? AppIcons.trendUp : value < 0 ? AppIcons.trendDown : AppIcons.remove;
-    
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-      decoration: BoxDecoration(
-        color: color.withValues(alpha: 0.1),
-        borderRadius: BorderRadius.circular(12),
-      ),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Icon(icon, size: AppIconSize.tiny, color: color),
-          const SizedBox(width: 2),
-          Text(
-            '${value.abs().toStringAsFixed(0)}%',
-            style: theme.textTheme.labelSmall?.copyWith(
-              color: color,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
   
   void _showAllWorkouts(BuildContext context) {
     if (kDebugMode) {
@@ -1303,147 +1273,6 @@ class _AnalyticsOverviewTabState extends ConsumerState<AnalyticsOverviewTab> {
     }
   }
 
-  String _getPeriodSubtitle(BuildContext context, TimePeriod period) {
-    final l10n = AppLocalizations.of(context);
-    switch (period) {
-      case TimePeriod.week:
-        return l10n.last7Days;
-      case TimePeriod.month:
-        return l10n.last30Days;
-      case TimePeriod.year:
-        return l10n.last365Days;
-      case TimePeriod.all:
-        return l10n.allTime;
-    }
-  }
-
-  // REMOVED: _calculateStats - now using memoized provider
-  Map<String, dynamic> _calculateStatsOLD_UNUSED(List<Workout> workouts, TimePeriod period) {
-    final now = DateTime.now();
-    final weekStart = now.subtract(Duration(days: now.weekday - 1));
-    final monthStart = DateTime(now.year, now.month, 1);
-    
-    // Period stats
-    final periodWorkouts = workouts.length;
-    final periodVolume = _calculateTotalVolume(workouts);
-    
-    // Total stats (using all workouts if not already 'all')
-    final allWorkouts = period == TimePeriod.all ? workouts : widget.workouts;
-    final totalWorkouts = allWorkouts.length;
-    final totalVolume = _calculateTotalVolume(allWorkouts);
-    
-    // Trends (comparing to previous period)
-    List<Workout> prevPeriodWorkouts;
-    switch (period) {
-      case TimePeriod.week:
-        final prevWeekStart = weekStart.subtract(const Duration(days: 7));
-        prevPeriodWorkouts = widget.workouts.where((w) => 
-          (w.endTime ?? w.createdAt).isAfter(prevWeekStart) && (w.endTime ?? w.createdAt).isBefore(weekStart)).toList();
-        break;
-      case TimePeriod.month:
-        final prevMonthStart = monthStart.subtract(const Duration(days: 30));
-        prevPeriodWorkouts = widget.workouts.where((w) => 
-          (w.endTime ?? w.createdAt).isAfter(prevMonthStart) && (w.endTime ?? w.createdAt).isBefore(monthStart)).toList();
-        break;
-      case TimePeriod.year:
-        final prevYearStart = DateTime(now.year - 1);
-        prevPeriodWorkouts = widget.workouts.where((w) => 
-          (w.endTime ?? w.createdAt).isAfter(prevYearStart) && (w.endTime ?? w.createdAt).isBefore(DateTime(now.year))).toList();
-        break;
-      case TimePeriod.all:
-        prevPeriodWorkouts = [];
-        break;
-    }
-    
-    final prevPeriodVolume = _calculateTotalVolume(prevPeriodWorkouts);
-    final volumeTrend = prevPeriodVolume > 0 
-        ? ((periodVolume - prevPeriodVolume) / prevPeriodVolume * 100)
-        : periodVolume > 0 ? 100.0 : 0.0;
-    
-    final prevPeriodWorkoutCount = prevPeriodWorkouts.length;
-    final workoutTrend = prevPeriodWorkoutCount > 0
-        ? ((periodWorkouts - prevPeriodWorkoutCount) / prevPeriodWorkoutCount * 100)
-        : periodWorkouts > 0 ? 100.0 : 0.0;
-    
-    // Streak
-    final streak = _calculateStreak(allWorkouts);
-    
-    // Consistency (last 30 days)
-    final thirtyDaysAgo = now.subtract(const Duration(days: 30));
-    final last30DaysWorkouts = allWorkouts.where((w) => 
-      (w.endTime ?? w.createdAt).isAfter(thirtyDaysAgo)).toList();
-    final daysWithWorkout = _countUniqueWorkoutDays(last30DaysWorkouts);
-    final consistency = (daysWithWorkout / 30 * 100).round();
-    
-    return {
-      'periodWorkouts': periodWorkouts,
-      'periodVolume': periodVolume.round(),
-      'totalWorkouts': totalWorkouts,
-      'totalVolume': totalVolume,
-      'volumeTrend': volumeTrend,
-      'workoutTrend': workoutTrend,
-      'currentStreak': streak,
-      'consistency': consistency,
-    };
-  }
-  
-  int _countUniqueWorkoutDays(List<Workout> workouts) {
-    final uniqueDays = <String>{};
-    for (final workout in workouts) {
-      uniqueDays.add(DateFormat('yyyy-MM-dd').format(workout.endTime ?? workout.createdAt));
-    }
-    return uniqueDays.length;
-  }
-  
-  double _calculateTotalVolume(List<Workout> workouts) {
-    double total = 0;
-    for (final workout in workouts) {
-      total += workout.exercises.fold(0.0, (sum, exercise) => sum + exercise.totalVolume);
-    }
-    return total;
-  }
-  
-  int _calculateStreak(List<Workout> workouts) {
-    if (workouts.isEmpty) return 0;
-    
-    final sortedWorkouts = workouts.toList()
-      ..sort((a, b) => (b.endTime ?? b.createdAt).compareTo(a.endTime ?? a.createdAt));
-    
-    final uniqueDates = sortedWorkouts
-        .map((w) => w.endTime ?? w.createdAt)
-        .map((date) => DateTime(date.year, date.month, date.day))
-        .toSet()
-        .toList();
-    
-    if (uniqueDates.isEmpty) return 0;
-    
-    int streak = 0;
-    final today = DateTime.now();
-    final todayDate = DateTime(today.year, today.month, today.day);
-    final yesterday = todayDate.subtract(const Duration(days: 1));
-
-    if (uniqueDates.first == todayDate || uniqueDates.first == yesterday) {
-        streak = 1;
-        for (int i = 1; i < uniqueDates.length; i++) {
-            if (uniqueDates[i-1].difference(uniqueDates[i]).inDays == 1) {
-                streak++;
-            } else {
-                break;
-            }
-        }
-    }
-    
-    return streak;
-  }
-  
-  String _formatVolume(double volume) {
-    if (volume >= 1000000) {
-      return '${(volume / 1000000).toStringAsFixed(1)}M';
-    } else if (volume >= 1000) {
-      return '${(volume / 1000).toStringAsFixed(1)}k';
-    }
-    return volume.toStringAsFixed(0);
-  }
   
   String _getTimeAgo(BuildContext context, DateTime date) {
     final l10n = AppLocalizations.of(context);
@@ -1801,7 +1630,7 @@ class _AllActivitiesModalState extends State<_AllActivitiesModal> {
     return Card(
       clipBehavior: Clip.antiAlias,
       child: Theme(
-        data: Theme.of(context).copyWith(dividerColor: Colors.transparent),
+        data: Theme.of(context).copyWith(dividerColor: theme.colorScheme.surface.withValues(alpha: 0)),
         child: ExpansionTile(
           tilePadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
           childrenPadding: const EdgeInsets.only(left: 16, right: 16, bottom: 16),
@@ -1961,7 +1790,7 @@ class _AllActivitiesModalState extends State<_AllActivitiesModal> {
                                     ...[
                                     const SizedBox(width: 12),
                                     Container(
-                                      padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
                                       decoration: BoxDecoration(
                                         color: theme.colorScheme.secondaryContainer,
                                         borderRadius: BorderRadius.circular(8),
@@ -2101,31 +1930,11 @@ class _AllActivitiesModalState extends State<_AllActivitiesModal> {
     return totalReps;
   }
   
+  /// Get display name for muscle code using centralized mapper
+  ///
+  /// Uses [MuscleAbbreviationMapper] as SINGLE SOURCE OF TRUTH.
   String _getMuscleGroupName(String code) {
-    // Map muscle group codes to display names
-    final muscleGroups = {
-      'CHEST': 'Chest',
-      'BACK': 'Back',
-      'SHOULDERS': 'Shoulders',
-      'ARMS': 'Arms',
-      'BICEPS': 'Biceps',
-      'TRICEPS': 'Triceps',
-      'LEGS': 'Legs',
-      'QUAD': 'Quadriceps',
-      'HAMSTRINGS': 'Hamstrings',
-      'GLUT': 'Glutes',
-      'CALVES': 'Calves',
-      'ABS': 'Abs',
-      'CORE': 'Core',
-      'CARDIO': 'Cardio',
-      'TRAP': 'Traps',
-      'LATS': 'Lats',
-      'DELTS': 'Delts',
-      'FOREARMS': 'Forearms',
-      'OTHER': 'Other',
-    };
-    
-    return muscleGroups[code.toUpperCase()] ?? code;
+    return MuscleAbbreviationMapper.getMuscleInfo(code)?.displayNameEn ?? code;
   }
 }
 

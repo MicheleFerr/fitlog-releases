@@ -17,6 +17,7 @@ import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator.dart';
 
 class FeedbackDetailScreen extends ConsumerStatefulWidget {
 
@@ -272,11 +273,7 @@ class _FeedbackDetailScreenState extends ConsumerState<FeedbackDetailScreen> {
                       child: ElevatedButton.icon(
                         onPressed: _isSaving ? null : _saveNotes,
                         icon: _isSaving
-                            ? const SizedBox(
-                                width: 16,
-                                height: 16,
-                                child: CircularProgressIndicator(strokeWidth: 2),
-                              )
+                            ? const LoadingIndicator(size: 16)
                             : const SemanticIcon(
   icon: AppIcons.save,
   semanticLabel: 'Save',

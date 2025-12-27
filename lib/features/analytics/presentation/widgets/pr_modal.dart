@@ -508,7 +508,7 @@ class PRModal extends StatelessWidget {
               ),
               if (pr.isRecent)
                 Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
                   decoration: BoxDecoration(
                     color: context.colors.success,
                     borderRadius: BorderRadius.circular(12),

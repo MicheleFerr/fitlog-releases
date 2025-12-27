@@ -317,7 +317,7 @@ class _TemplateAwareMuscleCard extends StatelessWidget {
       context: context,
       isScrollControlled: true,
       useSafeArea: true,
-      backgroundColor: Colors.transparent,
+      backgroundColor: context.colors.surface.withValues(alpha: 0),
       builder: (context) => PriorityExplanationSheet(
         neglectedMuscle: adjustedMuscle.original,
       ),
@@ -480,7 +480,7 @@ class _TemplateAwareMuscleCard extends StatelessWidget {
       case NeglectSeverity.high:
         return context.colors.warning;
       case NeglectSeverity.medium:
-        return Colors.orange;
+        return context.colors.tertiary;
     }
   }
 }
@@ -548,7 +548,7 @@ class _SeverityBadge extends StatelessWidget {
       case NeglectSeverity.high:
         return context.colors.warning;
       case NeglectSeverity.medium:
-        return Colors.orange;
+        return context.colors.tertiary;
     }
   }
 }
@@ -616,7 +616,7 @@ class _TemplateAwareExerciseTile extends StatelessWidget {
       context: context,
       isScrollControlled: true,
       useSafeArea: true,
-      backgroundColor: Colors.transparent,
+      backgroundColor: context.colors.surface.withValues(alpha: 0),
       builder: (context) => AddExerciseToTemplateSheet(
         suggestion: suggestion,
         onExerciseAdded: () {

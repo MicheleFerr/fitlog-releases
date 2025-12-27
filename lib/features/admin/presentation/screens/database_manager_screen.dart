@@ -351,7 +351,7 @@ class _DatabaseManagerScreenState extends ConsumerState<DatabaseManagerScreen> {
           TextButton.icon(
             onPressed: () => _confirmBulkDelete(context, l10n),
             icon: Icon(AppIcons.delete, size: 18, color: context.colors.error),
-            label: Text(l10n.delete, style: TextStyle(color: context.colors.error)),
+            label: Text(l10n.delete, style: context.textTheme.bodyMedium?.copyWith(color: context.colors.error)),
           ),
         ],
       ),
@@ -535,7 +535,7 @@ class _DatabaseManagerScreenState extends ConsumerState<DatabaseManagerScreen> {
             const SizedBox(height: 16),
             Text(
               l10n.importWarning,
-              style: TextStyle(
+              style: context.textTheme.bodyMedium?.copyWith(
                 color: Theme.of(context).colorScheme.error,
                 fontWeight: FontWeight.bold,
               ),
@@ -605,21 +605,21 @@ class _DatabaseManagerScreenState extends ConsumerState<DatabaseManagerScreen> {
                 color: context.colors.surfaceContainerHighest,
                 borderRadius: BorderRadius.circular(8),
               ),
-              child: const Column(
+              child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
                     '📊 What this does:',
-                    style: TextStyle(fontWeight: FontWeight.bold),
+                    style: context.textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.bold),
                   ),
-                  SizedBox(height: 8),
-                  Text('• Reads all completed workouts'),
-                  Text('• Extracts exercise sessions'),
-                  Text('• Updates analytics collection'),
-                  SizedBox(height: 12),
+                  const SizedBox(height: 8),
+                  const Text('• Reads all completed workouts'),
+                  const Text('• Extracts exercise sessions'),
+                  const Text('• Updates analytics collection'),
+                  const SizedBox(height: 12),
                   Text(
                     '✅ Safe: Can be run multiple times',
-                    style: TextStyle(fontWeight: FontWeight.bold),
+                    style: context.textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.bold),
                   ),
                 ],
               ),
@@ -646,17 +646,17 @@ class _DatabaseManagerScreenState extends ConsumerState<DatabaseManagerScreen> {
       showDialog(
         context: context,
         barrierDismissible: false,
-        builder: (context) => const AlertDialog(
+        builder: (ctx) => AlertDialog(
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              LoadingIndicator(),
-              SizedBox(height: 16),
-              Text('Migrating analytics...'),
-              SizedBox(height: 8),
+              const LoadingIndicator(),
+              const SizedBox(height: 16),
+              const Text('Migrating analytics...'),
+              const SizedBox(height: 8),
               Text(
                 'This may take a few seconds',
-                style: TextStyle(fontSize: 12),
+                style: Theme.of(ctx).textTheme.labelSmall,
               ),
             ],
           ),
@@ -719,9 +719,9 @@ class _DatabaseManagerScreenState extends ConsumerState<DatabaseManagerScreen> {
                   mainAxisSize: MainAxisSize.min,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Text(
+                    Text(
                       'Successfully migrated workouts to analytics collection!',
-                      style: TextStyle(fontWeight: FontWeight.bold),
+                      style: context.textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.bold),
                     ),
                     const SizedBox(height: 16),
                     Container(
@@ -1358,7 +1358,7 @@ class _FilterChip extends StatelessWidget {
           DropdownButtonHideUnderline(
             child: DropdownButton<String>(
               value: value,
-              hint: Text(label, style: const TextStyle(fontSize: 12)),
+              hint: Text(label, style: context.textTheme.labelSmall),
               items: [
                 DropdownMenuItem(
                   value: null,
@@ -1366,7 +1366,7 @@ class _FilterChip extends StatelessWidget {
                 ),
                 ...items.map((item) => DropdownMenuItem(
                       value: item,
-                      child: Text(item, style: const TextStyle(fontSize: 12)),
+                      child: Text(item, style: context.textTheme.labelSmall),
                     )),
               ],
               onChanged: onChanged,
@@ -1383,7 +1383,7 @@ class _FilterChip extends StatelessWidget {
             GestureDetector(
               onTap: () => onChanged(null),
               child: Container(
-                padding: const EdgeInsets.all(2),
+                padding: const EdgeInsets.all(4),
                 decoration: BoxDecoration(
                   color: Theme.of(context).colorScheme.onPrimaryContainer.withValues(alpha: 0.1),
                   shape: BoxShape.circle,
