@@ -25,6 +25,7 @@
 library;
 
 import 'dart:io' show Platform;
+import 'dart:math' show sqrt;
 import 'package:flutter/foundation.dart';
 import 'package:health/health.dart';
 import 'package:gymbro_flutter_new/features/ai_coach/data/errors/healthkit_errors.dart';
@@ -72,6 +73,13 @@ class HealthKitDatasource {
   /// - SLEEP_DEEP: Deep sleep (restorative)
   /// - SLEEP_REM: REM sleep (dreaming)
   /// - SLEEP_AWAKE: Awake periods during sleep
+  ///
+  /// **HRV (Heart Rate Variability)**: Key recovery marker
+  /// Based on research (PMC6204890, MDPI Sensors 2024):
+  /// - RMSSD is primary marker for parasympathetic activity
+  /// - SDNN reflects overall ANS balance
+  /// - Normal RMSSD: 35-107ms for athletes
+  /// - Low HRV indicates insufficient recovery
   static const List<HealthDataType> supportedTypes = [
     HealthDataType.STEPS,
     HealthDataType.HEART_RATE,
@@ -86,6 +94,8 @@ class HealthKitDatasource {
     HealthDataType.SLEEP_DEEP, // Deep sleep
     HealthDataType.SLEEP_REM, // REM sleep
     HealthDataType.SLEEP_LIGHT, // Light/core sleep
+    // HRV for recovery assessment (Coach Plus feature)
+    HealthDataType.HEART_RATE_VARIABILITY_SDNN, // Apple Watch primary HRV
   ];
 
   /// Initialize HealthKit and request permissions
@@ -133,6 +143,7 @@ class HealthKitDatasource {
           HealthDataAccess.READ, // SLEEP_DEEP
           HealthDataAccess.READ, // SLEEP_REM
           HealthDataAccess.READ, // SLEEP_LIGHT
+          HealthDataAccess.READ, // HEART_RATE_VARIABILITY_SDNN
         ],
       );
 
@@ -267,6 +278,140 @@ class HealthKitDatasource {
       startTime: today2AM,
       endTime: today6AM,
     );
+  }
+
+  // ==========================================
+  // HRV DATA (Heart Rate Variability)
+  // ==========================================
+
+  /// Get most recent HRV (SDNN) value
+  ///
+  /// Returns `null` if permission denied or data unavailable
+  ///
+  /// **Scientific Basis** (PMC6204890, MDPI Sensors 2024):
+  /// - SDNN is Apple Watch's primary HRV metric
+  /// - Reflects overall autonomic nervous system balance
+  /// - Higher HRV = better recovery capacity
+  /// - Normal range for athletes: 35-107ms
+  ///
+  /// **AI Coach Use Case**: Recovery assessment, readiness prediction
+  Future<HealthDataPoint?> getHrvToday() async {
+    final now = DateTime.now();
+    final startOfDay = DateTime(now.year, now.month, now.day);
+
+    return _getAggregatedData(
+      type: HealthDataType.HEART_RATE_VARIABILITY_SDNN,
+      startTime: startOfDay,
+      endTime: now,
+    );
+  }
+
+  /// Get HRV data for the last 7 days
+  ///
+  /// Returns empty list if permission denied or no HRV data
+  ///
+  /// **Use Case**: Calculate personal HRV baseline
+  ///
+  /// **Scientific Basis** (SimpliFaster, Elite HRV):
+  /// - Weekly averages provide stable baseline
+  /// - CV (coefficient of variation) indicates adaptation
+  /// - Consistent daily measurement is key (≥5 days/week)
+  Future<List<HealthDataPoint>> getHrvThisWeek() async {
+    final now = DateTime.now();
+    final weekAgo = now.subtract(const Duration(days: 7));
+
+    return _getHealthData(
+      type: HealthDataType.HEART_RATE_VARIABILITY_SDNN,
+      startTime: weekAgo,
+      endTime: now,
+    );
+  }
+
+  /// Get HRV analytics for recovery assessment
+  ///
+  /// Returns map with baseline, current, and deviation analysis
+  ///
+  /// **Scientific Basis**:
+  /// - Ratio < 0.7 of baseline = system stressed (recovery compromised)
+  /// - Ratio > 1.1 of baseline = accelerated recovery
+  /// - Progressive decrease may indicate overtraining
+  Future<Map<String, dynamic>> getHrvAnalytics({int days = 7}) async {
+    final hrvData = await getHrvThisWeek();
+
+    if (hrvData.isEmpty) {
+      return {
+        'available': false,
+        'message': 'No HRV data available',
+      };
+    }
+
+    // Calculate statistics
+    final values = hrvData.map((p) => (p.value as num).toDouble()).toList();
+    final avgHrv = values.reduce((a, b) => a + b) / values.length;
+    final minHrv = values.reduce((a, b) => a < b ? a : b);
+    final maxHrv = values.reduce((a, b) => a > b ? a : b);
+
+    // Calculate coefficient of variation (CV)
+    final variance = values.map((v) => (v - avgHrv) * (v - avgHrv))
+        .reduce((a, b) => a + b) / values.length;
+    final stdDev = variance > 0 && values.length > 1 ? sqrt(variance) : 0.0;
+    final cv = avgHrv > 0 ? (stdDev / avgHrv) * 100 : 0.0;
+
+    // Get today's HRV
+    final todayHrv = await getHrvToday();
+    final currentHrv = todayHrv != null
+        ? (todayHrv.value as num).toDouble()
+        : null;
+
+    // Calculate ratio to baseline
+    double? ratioToBaseline;
+    String? recoveryStatus;
+    if (currentHrv != null && avgHrv > 0) {
+      ratioToBaseline = currentHrv / avgHrv;
+
+      if (ratioToBaseline < 0.7) {
+        recoveryStatus = 'critical';
+      } else if (ratioToBaseline < 0.85) {
+        recoveryStatus = 'stressed';
+      } else if (ratioToBaseline > 1.1) {
+        recoveryStatus = 'accelerated';
+      } else {
+        recoveryStatus = 'normal';
+      }
+    }
+
+    // Determine quality category
+    String category;
+    if (avgHrv >= 70) {
+      category = 'excellent';
+    } else if (avgHrv >= 50) {
+      category = 'good';
+    } else if (avgHrv >= 35) {
+      category = 'normal';
+    } else {
+      category = 'low';
+    }
+
+    return {
+      'available': true,
+      'days_analyzed': days,
+      'data_points': values.length,
+      'avg_hrv_ms': avgHrv,
+      'min_hrv_ms': minHrv,
+      'max_hrv_ms': maxHrv,
+      'std_dev': stdDev,
+      'cv_percent': cv,
+      'current_hrv_ms': currentHrv,
+      'ratio_to_baseline': ratioToBaseline,
+      'recovery_status': recoveryStatus,
+      'category': category,
+      'scientific_basis': {
+        'source_pmid': 'PMC6204890 - HRV in sports medicine',
+        'source_mdpi': 'MDPI Sensors 2024 - HRV mobile monitoring',
+        'normal_range': '35-107ms for athletes',
+        'interpretation': 'Higher HRV = better recovery capacity',
+      },
+    };
   }
 
   // ==========================================
