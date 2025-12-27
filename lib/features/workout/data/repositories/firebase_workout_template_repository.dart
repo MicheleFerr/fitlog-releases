@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -306,10 +307,20 @@ class FirebaseWorkoutTemplateRepository with RateLimitedFirestoreMixin {
     if (_auth.currentUser != null) {
       try {
         // Check if template already exists (update vs create)
+        // 🔧 FIX: Add 5s timeout to prevent hanging when offline
         final existingDoc = await _firestore
             .collection(_templatesCollection)
             .doc(template.id)
-            .get();
+            .get()
+            .timeout(
+              const Duration(seconds: 5),
+              onTimeout: () {
+                if (kDebugMode) {
+                  debugPrint('⏱️ Firestore get() timed out - treating as offline');
+                }
+                throw TimeoutException('Firestore operation timed out');
+              },
+            );
 
         final isNewTemplate = !existingDoc.exists;
 

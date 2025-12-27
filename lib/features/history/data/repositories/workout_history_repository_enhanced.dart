@@ -58,6 +58,24 @@ class WorkoutHistoryRepositoryEnhanced {
   Stream<List<WorkoutHistoryDetail>> get workoutsStream => _workoutsController.stream;
   Stream<SyncStatus> get syncStatusStream => _syncStatusController.stream;
 
+  /// 🔧 FIX: Notify stream listeners that a workout was added directly to Hive
+  /// Call this from workout_provider after saving to history box
+  Future<void> notifyLocalWorkoutAdded() async {
+    try {
+      await _ensureInitialized();
+      final workouts = await _getLocalWorkouts();
+      _workoutsController.add(workouts);
+
+      if (kDebugMode) {
+        debugPrint('📢 [WorkoutHistoryRepo] Notified listeners of new local workout (${workouts.length} total)');
+      }
+    } catch (e) {
+      if (kDebugMode) {
+        debugPrint('⚠️ [WorkoutHistoryRepo] Failed to notify listeners: $e');
+      }
+    }
+  }
+
   /// Initialize the repository
   Future<void> _initialize() async {
     if (_isInitialized) return;

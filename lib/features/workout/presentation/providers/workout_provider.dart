@@ -21,6 +21,7 @@ import 'package:gymbro_flutter_new/features/workout/data/models/workout_model.da
 import 'package:gymbro_flutter_new/features/auth/presentation/providers/auth_provider.dart';
 import 'package:gymbro_flutter_new/core/data/providers/hive_box_manager_provider.dart';
 import 'package:gymbro_flutter_new/features/history/domain/entities/workout_history_detail.dart';
+import 'package:gymbro_flutter_new/features/history/presentation/providers/workout_history_provider.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/providers/screen_wakelock_provider.dart';
 // Auto-sync for cached progress stats
 import 'package:gymbro_flutter_new/features/progress/presentation/providers/cached_progress_provider.dart';
@@ -1127,6 +1128,17 @@ class CurrentWorkoutNotifier extends Notifier<Workout?> {
 
             if (kDebugMode) {
               debugLog(LogCategory.workout, '✅ [WorkoutProvider] Workout saved to history box (key: $historyKey)');
+            }
+
+            // 🔧 FIX: Notify history provider that new workout was added
+            // Without this, UI won't update until Firebase sync completes
+            try {
+              final historyRepo = ref.read(workoutHistoryRepositoryProvider);
+              await historyRepo.notifyLocalWorkoutAdded();
+            } catch (notifyError) {
+              if (kDebugMode) {
+                debugLog(LogCategory.workout, '⚠️ [WorkoutProvider] Failed to notify history: $notifyError');
+              }
             }
           } catch (historyBoxError) {
             // Non-critical: la cronologia verrà popolata dal sync Firebase

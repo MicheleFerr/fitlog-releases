@@ -90,28 +90,38 @@ class _TemplateSaveDialogContentState
   Widget build(BuildContext context) {
     final changes = _detectChanges();
 
-    return Container(
-      padding: const EdgeInsets.all(AppSpacing.lg),
-      decoration: BoxDecoration(
-        color: context.colors.surface,
-        borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
-      ),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          // Handle bar
-          Center(
-            child: Container(
-              margin: const EdgeInsets.only(bottom: AppSpacing.md),
-              width: 40,
-              height: 4,
-              decoration: BoxDecoration(
-                color: context.colors.onSurfaceVariant.withValues(alpha: 0.4),
-                borderRadius: BorderRadius.circular(2),
-              ),
-            ),
+    // 🔧 FIX: Prevent swipe-to-dismiss during loading to avoid losing workout data
+    return PopScope(
+      canPop: !_isLoading,
+      child: GestureDetector(
+        // Block drag gestures during loading
+        onVerticalDragStart: _isLoading ? (_) {} : null,
+        child: Container(
+          padding: const EdgeInsets.all(AppSpacing.lg),
+          decoration: BoxDecoration(
+            color: context.colors.surface,
+            borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
           ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              // Handle bar - hidden during loading to indicate non-dismissible
+              Center(
+                child: AnimatedOpacity(
+                  opacity: _isLoading ? 0.2 : 1.0,
+                  duration: const Duration(milliseconds: 200),
+                  child: Container(
+                    margin: const EdgeInsets.only(bottom: AppSpacing.md),
+                    width: 40,
+                    height: 4,
+                    decoration: BoxDecoration(
+                      color: context.colors.onSurfaceVariant.withValues(alpha: 0.4),
+                      borderRadius: BorderRadius.circular(2),
+                    ),
+                  ),
+                ),
+              ),
 
           // Compact header with icon
           Row(
@@ -227,13 +237,17 @@ class _TemplateSaveDialogContentState
             ),
           ),
 
-          // Hint about swipe behavior
+          // Hint about swipe behavior - changes during loading
           Padding(
             padding: const EdgeInsets.only(top: AppSpacing.sm),
             child: Text(
-              context.l10n.swipeDownToSave,
+              _isLoading
+                  ? context.l10n.savingWorkout
+                  : context.l10n.swipeDownToSave,
               style: context.textTheme.labelSmall?.copyWith(
-                color: context.colors.outline,
+                color: _isLoading
+                    ? context.colors.primary
+                    : context.colors.outline,
               ),
               textAlign: TextAlign.center,
             ),
@@ -242,6 +256,8 @@ class _TemplateSaveDialogContentState
           // Bottom safe area
           SizedBox(height: MediaQuery.of(context).padding.bottom),
         ],
+      ),
+      ),
       ),
     );
   }
