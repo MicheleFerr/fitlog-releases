@@ -3,7 +3,8 @@
  * Handles both iOS (App Store) and Android (Google Play) purchases
  */
 
-import * as functions from 'firebase-functions';
+import { onCall, HttpsError, CallableRequest } from 'firebase-functions/v2/https';
+import { onSchedule } from 'firebase-functions/v2/scheduler';
 import * as admin from 'firebase-admin';
 import * as appleReceiptVerify from 'node-apple-receipt-verify';
 import { google } from 'googleapis';
@@ -18,7 +19,7 @@ let appleReceiptConfigured = false;
 function ensureAppleReceiptConfigured(): void {
   if (appleReceiptConfigured) return;
 
-  const secret = functions.config().apple?.shared_secret;
+  const secret = process.env.APPLE_SHARED_SECRET;
   if (!secret) {
     console.warn('Apple shared_secret not configured. iOS purchase verification will fail.');
     return;
@@ -35,31 +36,39 @@ function ensureAppleReceiptConfigured(): void {
 
 // Google Play API will be initialized per-request with auth
 
+interface PurchaseData {
+  userId: string;
+  productId: string;
+  purchaseToken: string;
+  platform: 'ios' | 'android';
+  purchaseId?: string;
+}
+
 /**
  * Verify premium purchase from iOS or Android
  */
-export const verifyPremiumPurchase = functions.https.onCall(async (data, context) => {
+export const verifyPremiumPurchase = onCall<PurchaseData>(async (request) => {
   // Verify authenticated user
-  if (!context.auth) {
-    throw new functions.https.HttpsError(
+  if (!request.auth) {
+    throw new HttpsError(
       'unauthenticated',
       'User must be authenticated to verify purchase'
     );
   }
 
-  const { userId, productId, purchaseToken, platform, purchaseId } = data;
+  const { userId, productId, purchaseToken, platform, purchaseId } = request.data;
 
   // Validate input
   if (!userId || !productId || !purchaseToken || !platform) {
-    throw new functions.https.HttpsError(
+    throw new HttpsError(
       'invalid-argument',
       'Missing required purchase data'
     );
   }
 
   // Verify the user matches the authenticated user
-  if (userId !== context.auth.uid) {
-    throw new functions.https.HttpsError(
+  if (userId !== request.auth.uid) {
+    throw new HttpsError(
       'permission-denied',
       'User ID mismatch'
     );
@@ -82,7 +91,7 @@ export const verifyPremiumPurchase = functions.https.onCall(async (data, context
       expiryDate = result.expiryDate;
       purchaseType = result.purchaseType;
     } else {
-      throw new functions.https.HttpsError(
+      throw new HttpsError(
         'invalid-argument',
         'Invalid platform specified'
       );
@@ -95,7 +104,7 @@ export const verifyPremiumPurchase = functions.https.onCall(async (data, context
 
     // Update user profile with premium status
     const userRef = admin.firestore().collection('users').doc(userId);
-    const updateData: any = {
+    const updateData: Record<string, unknown> = {
       accountTier: purchaseType === 'lifetime' ? 'pro' : 'premium',
       premiumActivatedAt: admin.firestore.FieldValue.serverTimestamp(),
       lastPurchaseId: purchaseId,
@@ -135,7 +144,7 @@ export const verifyPremiumPurchase = functions.https.onCall(async (data, context
 
   } catch (error) {
     console.error('Purchase verification error:', error);
-    throw new functions.https.HttpsError(
+    throw new HttpsError(
       'internal',
       'Failed to verify purchase',
       error
@@ -160,8 +169,8 @@ async function verifyApplePurchase(
     });
 
     // Find the specific product
-    const product = products.find((p: any) => p.productId === productId);
-    
+    const product = products.find((p: { productId: string }) => p.productId === productId);
+
     if (!product) {
       console.error('Product not found in receipt', { productId });
       return { verified: false, expiryDate: null, purchaseType: 'subscription' };
@@ -169,12 +178,12 @@ async function verifyApplePurchase(
 
     // Check if it's a lifetime purchase
     const isLifetime = productId.includes('lifetime');
-    
+
     // For subscriptions, check expiry
     let expiryDate: Date | null = null;
     if (!isLifetime && product.expiresDate) {
       expiryDate = new Date(parseInt(product.expiresDate));
-      
+
       // Check if subscription is still active
       if (expiryDate < new Date()) {
         console.error('Subscription expired', { expiryDate });
@@ -202,9 +211,8 @@ async function verifyGooglePurchase(
   productId: string
 ): Promise<{ verified: boolean; expiryDate: Date | null; purchaseType: 'subscription' | 'lifetime' }> {
   try {
-    // Authenticate with Google Play API
+    // Authenticate with Google Play API using Application Default Credentials
     const auth = new google.auth.GoogleAuth({
-      keyFile: 'path/to/service-account-key.json', // Configure this
       scopes: ['https://www.googleapis.com/auth/androidpublisher'],
     });
 
@@ -215,7 +223,7 @@ async function verifyGooglePurchase(
       auth: authClient as Parameters<typeof google.androidpublisher>[0]['auth'],
     });
 
-    const packageName = functions.config().android?.package_name || 'com.gymbro.app';
+    const packageName = process.env.ANDROID_PACKAGE_NAME || 'com.gymbro.app';
     const isLifetime = productId.includes('lifetime');
 
     if (isLifetime) {
@@ -275,31 +283,29 @@ async function verifyGooglePurchase(
 /**
  * Scheduled function to check and update expired subscriptions
  */
-export const checkExpiredSubscriptions = functions.pubsub
-  .schedule('every 24 hours')
-  .onRun(async (context) => {
-    const now = admin.firestore.Timestamp.now();
-    
-    // Find users with expired premium
-    const expiredUsers = await admin.firestore()
-      .collection('users')
-      .where('accountTier', 'in', ['premium', 'pro'])
-      .where('premiumExpiresAt', '<', now)
-      .get();
+export const checkExpiredSubscriptions = onSchedule('every 24 hours', async () => {
+  const now = admin.firestore.Timestamp.now();
 
-    console.log(`Found ${expiredUsers.size} expired subscriptions`);
+  // Find users with expired premium
+  const expiredUsers = await admin.firestore()
+    .collection('users')
+    .where('accountTier', 'in', ['premium', 'pro'])
+    .where('premiumExpiresAt', '<', now)
+    .get();
 
-    // Downgrade expired users
-    const batch = admin.firestore().batch();
-    
-    expiredUsers.forEach((doc) => {
-      batch.update(doc.ref, {
-        accountTier: 'free',
-        premiumExpiredAt: now,
-      });
+  console.log(`Found ${expiredUsers.size} expired subscriptions`);
+
+  // Downgrade expired users
+  const batch = admin.firestore().batch();
+
+  expiredUsers.forEach((doc) => {
+    batch.update(doc.ref, {
+      accountTier: 'free',
+      premiumExpiredAt: now,
     });
+  });
 
-    await batch.commit();
-    
-    console.log(`Downgraded ${expiredUsers.size} expired users to free tier`);
+  await batch.commit();
+
+  console.log(`Downgraded ${expiredUsers.size} expired users to free tier`);
 });

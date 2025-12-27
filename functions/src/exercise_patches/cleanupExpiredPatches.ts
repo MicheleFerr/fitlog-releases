@@ -1,10 +1,14 @@
 /**
  * GymBro Cloud Functions - Exercise Patches
  * Cleanup expired patches (30-day TTL)
+ *
+ * Migrated to Firebase Functions v2 API (2025-12-27)
  */
 
-import * as functions from 'firebase-functions';
 import * as admin from 'firebase-admin';
+import { logger } from 'firebase-functions';
+import { onSchedule } from 'firebase-functions/v2/scheduler';
+import { onRequest } from 'firebase-functions/v2/https';
 
 /**
  * Cloud Function: Cleanup expired patches
@@ -26,15 +30,17 @@ import * as admin from 'firebase-admin';
  * - Soft delete only (status change, no document deletion)
  * - Preserves patch history for analytics
  */
-export const cleanupExpiredPatches = functions.pubsub
-  .schedule('0 2 * * *') // Daily at 02:00 UTC
-  .timeZone('UTC')
-  .onRun(async (context) => {
+export const cleanupExpiredPatches = onSchedule(
+  {
+    schedule: '0 2 * * *', // Daily at 02:00 UTC
+    timeZone: 'UTC',
+  },
+  async () => {
     const now = admin.firestore.Timestamp.now();
     const batch = admin.firestore().batch();
     let expiredCount = 0;
 
-    console.log('Starting expired patches cleanup', { timestamp: now.toDate() });
+    logger.info('Starting expired patches cleanup', { timestamp: now.toDate() });
 
     try {
       // Query pending patches that have expired
@@ -46,11 +52,11 @@ export const cleanupExpiredPatches = functions.pubsub
         .get();
 
       if (expiredPatches.empty) {
-        console.log('No expired patches found');
-        return { success: true, expiredCount: 0 };
+        logger.info('No expired patches found');
+        return;
       }
 
-      console.log(`Found ${expiredPatches.size} expired patches`);
+      logger.info(`Found ${expiredPatches.size} expired patches`);
 
       // Update each expired patch
       expiredPatches.forEach((doc) => {
@@ -65,7 +71,7 @@ export const cleanupExpiredPatches = functions.pubsub
 
         expiredCount++;
 
-        console.log(`Expiring patch ${doc.id}`, {
+        logger.debug(`Expiring patch ${doc.id}`, {
           exerciseId: patchData.exerciseId,
           fieldName: patchData.fieldName,
           createdAt: patchData.createdAt?.toDate(),
@@ -76,26 +82,17 @@ export const cleanupExpiredPatches = functions.pubsub
       // Commit batch update
       await batch.commit();
 
-      console.log(`Successfully expired ${expiredCount} patches`);
+      logger.info(`Successfully expired ${expiredCount} patches`);
 
-      return {
-        success: true,
-        expiredCount,
-        timestamp: now.toDate(),
-      };
     } catch (error) {
-      console.error('Failed to cleanup expired patches', {
-        error: error instanceof Error ? error.message : String(error),
+      const errorMessage = error instanceof Error ? error.message : String(error);
+      logger.error('Failed to cleanup expired patches', {
+        error: errorMessage,
         expiredCount,
       });
-
-      return {
-        success: false,
-        error: error instanceof Error ? error.message : String(error),
-        expiredCount,
-      };
     }
-  });
+  }
+);
 
 /**
  * Manual trigger for cleanup (HTTP endpoint for admin tools)
@@ -103,7 +100,7 @@ export const cleanupExpiredPatches = functions.pubsub
  * **Usage**: POST /cleanupExpiredPatchesManual
  * **Auth**: Requires admin token
  */
-export const cleanupExpiredPatchesManual = functions.https.onRequest(async (req, res) => {
+export const cleanupExpiredPatchesManual = onRequest(async (req, res) => {
   // Verify admin auth (simplified - enhance with proper admin verification)
   const authHeader = req.headers.authorization;
   if (!authHeader || !authHeader.startsWith('Bearer ')) {
@@ -112,11 +109,19 @@ export const cleanupExpiredPatchesManual = functions.https.onRequest(async (req,
   }
 
   // In production, verify the token is from an admin user
-  // const token = authHeader.split('Bearer ')[1];
-  // const decodedToken = await admin.auth().verifyIdToken(token);
-  // if (!decodedToken.admin) { ... }
+  try {
+    const token = authHeader.split('Bearer ')[1];
+    const decodedToken = await admin.auth().verifyIdToken(token);
+    if (!decodedToken.admin) {
+      res.status(403).json({ error: 'Admin access required' });
+      return;
+    }
+  } catch {
+    res.status(401).json({ error: 'Invalid token' });
+    return;
+  }
 
-  const now = admin.firestore().Timestamp.now();
+  const now = admin.firestore.Timestamp.now();
   const batch = admin.firestore().batch();
   let expiredCount = 0;
 
@@ -151,10 +156,11 @@ export const cleanupExpiredPatchesManual = functions.https.onRequest(async (req,
       timestamp: now.toDate(),
     });
   } catch (error) {
-    console.error('Manual cleanup failed', error);
+    const errorMessage = error instanceof Error ? error.message : String(error);
+    logger.error('Manual cleanup failed', { error: errorMessage });
     res.status(500).json({
       success: false,
-      error: error instanceof Error ? error.message : String(error),
+      error: errorMessage,
     });
   }
 });

@@ -13,10 +13,10 @@
   },
   "main": "lib/index.js",
   "dependencies": {
-    "firebase-admin": "^11.11.1",
-    "firebase-functions": "^4.5.0",
-    "node-apple-receipt-verify": "^1.12.1",
-    "googleapis": "^128.0.0"
+    "firebase-admin": "^13.6.0",
+    "firebase-functions": "^7.0.2",
+    "googleapis": "^128.0.0",
+    "node-apple-receipt-verify": "^1.12.1"
   },
   "devDependencies": {
     "@typescript-eslint/eslint-plugin": "^5.48.2",
@@ -24,7 +24,7 @@
     "eslint": "^8.32.0",
     "eslint-config-google": "^0.14.0",
     "eslint-plugin-import": "^2.27.5",
-    "firebase-functions-test": "^3.1.0",
+    "firebase-functions-test": "^3.4.1",
     "typescript": "^4.9.4"
   },
   "private": true

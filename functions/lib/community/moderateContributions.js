@@ -42,7 +42,7 @@ var __importStar = (this && this.__importStar) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.rejectContribution = exports.approveContribution = void 0;
-const functions = __importStar(require("firebase-functions"));
+const https_1 = require("firebase-functions/v2/https");
 const admin = __importStar(require("firebase-admin"));
 /**
  * Check if a user is admin via custom claims
@@ -120,29 +120,29 @@ async function updateUserStats(userId, status) {
  * }
  * ```
  */
-exports.approveContribution = functions.https.onCall(async (data, context) => {
+exports.approveContribution = (0, https_1.onCall)(async (request) => {
     // ========================================
     // 1. Authentication Check
     // ========================================
-    if (!context.auth) {
-        throw new functions.https.HttpsError('unauthenticated', 'User must be authenticated to moderate contributions');
+    if (!request.auth) {
+        throw new https_1.HttpsError('unauthenticated', 'User must be authenticated to moderate contributions');
     }
-    const adminUid = context.auth.uid;
-    const adminEmail = context.auth.token.email;
+    const adminUid = request.auth.uid;
+    const adminEmail = request.auth.token.email;
     // ========================================
     // 2. Authorization Check (Admin Only)
     // ========================================
     const callerIsAdmin = await isAdmin(adminUid);
     if (!callerIsAdmin) {
         console.warn(`🚨 Unauthorized contribution approval attempt by ${adminEmail} (${adminUid})`);
-        throw new functions.https.HttpsError('permission-denied', 'Only admins can approve contributions');
+        throw new https_1.HttpsError('permission-denied', 'Only admins can approve contributions');
     }
     // ========================================
     // 3. Validate Request Data
     // ========================================
-    const { contributionId } = data;
+    const { contributionId } = request.data;
     if (!contributionId || typeof contributionId !== 'string') {
-        throw new functions.https.HttpsError('invalid-argument', 'contributionId is required and must be a string');
+        throw new https_1.HttpsError('invalid-argument', 'contributionId is required and must be a string');
     }
     // ========================================
     // 4. Get Contribution Document
@@ -153,7 +153,7 @@ exports.approveContribution = functions.https.onCall(async (data, context) => {
     try {
         const snapshot = await contributionRef.get();
         if (!snapshot.exists) {
-            throw new functions.https.HttpsError('not-found', `Contribution ${contributionId} not found`);
+            throw new https_1.HttpsError('not-found', `Contribution ${contributionId} not found`);
         }
         const contributionData = snapshot.data();
         const contributorUserId = contributionData.userId;
@@ -214,7 +214,7 @@ exports.approveContribution = functions.https.onCall(async (data, context) => {
             status: 'error',
             error: String(error),
         });
-        throw new functions.https.HttpsError('internal', 'Failed to approve contribution. Check server logs.');
+        throw new https_1.HttpsError('internal', 'Failed to approve contribution. Check server logs.');
     }
 });
 /**
@@ -246,32 +246,32 @@ exports.approveContribution = functions.https.onCall(async (data, context) => {
  * }
  * ```
  */
-exports.rejectContribution = functions.https.onCall(async (data, context) => {
+exports.rejectContribution = (0, https_1.onCall)(async (request) => {
     // ========================================
     // 1. Authentication Check
     // ========================================
-    if (!context.auth) {
-        throw new functions.https.HttpsError('unauthenticated', 'User must be authenticated to moderate contributions');
+    if (!request.auth) {
+        throw new https_1.HttpsError('unauthenticated', 'User must be authenticated to moderate contributions');
     }
-    const adminUid = context.auth.uid;
-    const adminEmail = context.auth.token.email;
+    const adminUid = request.auth.uid;
+    const adminEmail = request.auth.token.email;
     // ========================================
     // 2. Authorization Check (Admin Only)
     // ========================================
     const callerIsAdmin = await isAdmin(adminUid);
     if (!callerIsAdmin) {
         console.warn(`🚨 Unauthorized contribution rejection attempt by ${adminEmail} (${adminUid})`);
-        throw new functions.https.HttpsError('permission-denied', 'Only admins can reject contributions');
+        throw new https_1.HttpsError('permission-denied', 'Only admins can reject contributions');
     }
     // ========================================
     // 3. Validate Request Data
     // ========================================
-    const { contributionId, reason } = data;
+    const { contributionId, reason } = request.data;
     if (!contributionId || typeof contributionId !== 'string') {
-        throw new functions.https.HttpsError('invalid-argument', 'contributionId is required and must be a string');
+        throw new https_1.HttpsError('invalid-argument', 'contributionId is required and must be a string');
     }
     if (!reason || typeof reason !== 'string' || reason.trim().length === 0) {
-        throw new functions.https.HttpsError('invalid-argument', 'reason is required and must be a non-empty string');
+        throw new https_1.HttpsError('invalid-argument', 'reason is required and must be a non-empty string');
     }
     // ========================================
     // 4. Get Contribution Document
@@ -282,7 +282,7 @@ exports.rejectContribution = functions.https.onCall(async (data, context) => {
     try {
         const snapshot = await contributionRef.get();
         if (!snapshot.exists) {
-            throw new functions.https.HttpsError('not-found', `Contribution ${contributionId} not found`);
+            throw new https_1.HttpsError('not-found', `Contribution ${contributionId} not found`);
         }
         const contributionData = snapshot.data();
         const contributorUserId = contributionData.userId;
@@ -335,7 +335,7 @@ exports.rejectContribution = functions.https.onCall(async (data, context) => {
             status: 'error',
             error: String(error),
         });
-        throw new functions.https.HttpsError('internal', 'Failed to reject contribution. Check server logs.');
+        throw new https_1.HttpsError('internal', 'Failed to reject contribution. Check server logs.');
     }
 });
 //# sourceMappingURL=moderateContributions.js.map

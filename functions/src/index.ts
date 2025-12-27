@@ -47,7 +47,18 @@ export {
 // 🔐 SECURITY: Rate Limit Cleanup (Scheduled)
 // ========================================
 // Export rate limit cleanup (runs daily to remove expired entries)
-export { cleanupExpiredRateLimits } from './security/rateLimiter';
+export { cleanupExpiredRateLimits } from './security/rateLimiterV1';
+
+// ========================================
+// 🔐 SECURITY: Document Rate Limiting (Firestore Triggers)
+// ========================================
+// Enforces rate limits on document creation (2025-12-27 Security Audit)
+// - Body measurements: Max 100/day per user
+// - Consent changes: Max 10/day per user
+export {
+  enforceMeasurementRateLimit,
+  enforceConsentRateLimit,
+} from './security/documentRateLimiter';
 
 // ========================================
 // 📝 TEMPLATE QUOTA MANAGEMENT (Server-Side Enforcement)

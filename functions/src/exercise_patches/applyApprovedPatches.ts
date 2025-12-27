@@ -1,10 +1,13 @@
 /**
  * GymBro Cloud Functions - Exercise Patches
  * Automatically apply approved patches to exercise database
+ *
+ * Migrated to Firebase Functions v2 API (2025-12-27)
  */
 
-import * as functions from 'firebase-functions';
 import * as admin from 'firebase-admin';
+import { logger } from 'firebase-functions';
+import { onDocumentUpdated } from 'firebase-functions/v2/firestore';
 
 /**
  * Cloud Function: Apply approved patches to exercises
@@ -24,20 +27,25 @@ import * as admin from 'firebase-admin';
  * - If update fails: Log error, patch status unchanged
  * - If field invalid: Log error, skip update
  */
-export const applyApprovedPatches = functions.firestore
-  .document('exercise_patches/{patchId}')
-  .onUpdate(async (change, context) => {
-    const before = change.before.data();
-    const after = change.after.data();
-    const patchId = context.params.patchId;
-
-    // Only process if status changed to 'approved'
-    if (before.status === 'approved' || after.status !== 'approved') {
-      console.log(`Patch ${patchId}: Status is ${after.status}, skipping auto-apply`);
+export const applyApprovedPatches = onDocumentUpdated(
+  'exercise_patches/{patchId}',
+  async (event) => {
+    if (!event.data) {
+      logger.warn('No data in patch updated event');
       return null;
     }
 
-    console.log(`Patch ${patchId}: Status changed to 'approved', applying patch`);
+    const before = event.data.before.data();
+    const after = event.data.after.data();
+    const patchId = event.params.patchId;
+
+    // Only process if status changed to 'approved'
+    if (before.status === 'approved' || after.status !== 'approved') {
+      logger.debug(`Patch ${patchId}: Status is ${after.status}, skipping auto-apply`);
+      return null;
+    }
+
+    logger.info(`Patch ${patchId}: Status changed to 'approved', applying patch`);
 
     const {
       exerciseId,
@@ -48,7 +56,7 @@ export const applyApprovedPatches = functions.firestore
 
     // Validate required fields
     if (!exerciseId || !fieldName || !language) {
-      console.error(`Patch ${patchId}: Missing required fields`, {
+      logger.error(`Patch ${patchId}: Missing required fields`, {
         exerciseId,
         fieldName,
         language,
@@ -67,7 +75,7 @@ export const applyApprovedPatches = functions.firestore
       const exerciseDoc = await exerciseRef.get();
 
       if (!exerciseDoc.exists) {
-        console.warn(`Patch ${patchId}: Exercise ${exerciseId} not found in ${collectionName}`);
+        logger.warn(`Patch ${patchId}: Exercise ${exerciseId} not found in ${collectionName}`);
         return null;
       }
 
@@ -78,7 +86,7 @@ export const applyApprovedPatches = functions.firestore
         lastModifiedBy: 'patch_system',
       });
 
-      console.log(`Patch ${patchId}: Successfully applied to ${exerciseId}.${fieldName}`, {
+      logger.info(`Patch ${patchId}: Successfully applied to ${exerciseId}.${fieldName}`, {
         collection: collectionName,
         oldValue: exerciseDoc.data()?.[fieldName],
         newValue,
@@ -86,14 +94,16 @@ export const applyApprovedPatches = functions.firestore
 
       return { success: true, patchId, exerciseId, fieldName };
     } catch (error) {
-      console.error(`Patch ${patchId}: Failed to apply patch`, {
-        error: error instanceof Error ? error.message : String(error),
+      const errorMessage = error instanceof Error ? error.message : String(error);
+      logger.error(`Patch ${patchId}: Failed to apply patch`, {
+        error: errorMessage,
         exerciseId,
         fieldName,
         collection: collectionName,
       });
 
       // Don't throw - let patch remain approved for manual investigation
-      return { success: false, patchId, error };
+      return { success: false, patchId, error: errorMessage };
     }
-  });
+  }
+);

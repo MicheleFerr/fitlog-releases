@@ -56,7 +56,7 @@ var __importStar = (this && this.__importStar) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.getTemplateQuota = exports.createTemplate = void 0;
-const functions = __importStar(require("firebase-functions"));
+const https_1 = require("firebase-functions/v2/https");
 const admin = __importStar(require("firebase-admin"));
 const rateLimiterV1_1 = require("../security/rateLimiterV1");
 // ========================================
@@ -135,7 +135,7 @@ async function countUserTemplates(userId) {
     }
     catch (error) {
         console.error('Error counting user templates:', error);
-        throw new functions.https.HttpsError('internal', 'Failed to count user templates');
+        throw new https_1.HttpsError('internal', 'Failed to count user templates');
     }
 }
 /**
@@ -190,25 +190,25 @@ function generateTemplateId() {
 /**
  * Create a new workout template with quota enforcement
  *
- * @param data - Template data (name, description, exercises, tags, isPublic)
- * @param context - Firebase callable context
+ * @param request - CallableRequest with template data (name, description, exercises, tags, isPublic)
  * @returns Created template with ID
  */
-exports.createTemplate = (0, rateLimiterV1_1.withRateLimit)(async (data, context) => {
+exports.createTemplate = (0, rateLimiterV1_1.withRateLimit)(async (request) => {
     var _a;
     // ========================================
     // 1. Authentication Check
     // ========================================
-    if (!context.auth) {
-        throw new functions.https.HttpsError('unauthenticated', 'User must be authenticated to create templates');
+    if (!request.auth) {
+        throw new https_1.HttpsError('unauthenticated', 'User must be authenticated to create templates');
     }
-    const userId = context.auth.uid;
+    const userId = request.auth.uid;
+    const data = request.data;
     // ========================================
     // 2. Validate Input Data
     // ========================================
     const validation = validateTemplateData(data);
     if (!validation.valid) {
-        throw new functions.https.HttpsError('invalid-argument', validation.error || 'Invalid template data');
+        throw new https_1.HttpsError('invalid-argument', validation.error || 'Invalid template data');
     }
     // ========================================
     // 3. Get User's Account Tier
@@ -229,14 +229,14 @@ exports.createTemplate = (0, rateLimiterV1_1.withRateLimit)(async (data, context
     if (isPublic) {
         if (publicCount >= quotas.maxPublicTemplates) {
             console.warn(`🚨 Quota exceeded for user ${userId}: ${publicCount}/${quotas.maxPublicTemplates} public templates`);
-            throw new functions.https.HttpsError('resource-exhausted', `Public template quota exceeded. You have ${publicCount}/${quotas.maxPublicTemplates} public templates. ` +
+            throw new https_1.HttpsError('resource-exhausted', `Public template quota exceeded. You have ${publicCount}/${quotas.maxPublicTemplates} public templates. ` +
                 (accountTier === 'free' ? 'Upgrade to Premium for more templates.' : 'Delete existing templates to create new ones.'));
         }
     }
     else {
         if (privateCount >= quotas.maxPrivateTemplates) {
             console.warn(`🚨 Quota exceeded for user ${userId}: ${privateCount}/${quotas.maxPrivateTemplates} private templates`);
-            throw new functions.https.HttpsError('resource-exhausted', `Private template quota exceeded. You have ${privateCount}/${quotas.maxPrivateTemplates} private templates. ` +
+            throw new https_1.HttpsError('resource-exhausted', `Private template quota exceeded. You have ${privateCount}/${quotas.maxPrivateTemplates} private templates. ` +
                 (accountTier === 'free' ? 'Upgrade to Premium for more templates.' : 'Delete existing templates to create new ones.'));
         }
     }
@@ -273,7 +273,7 @@ exports.createTemplate = (0, rateLimiterV1_1.withRateLimit)(async (data, context
             const currentCount = (await countQuery.count().get()).data().count;
             const maxAllowed = isPublic ? quotas.maxPublicTemplates : quotas.maxPrivateTemplates;
             if (currentCount >= maxAllowed) {
-                throw new functions.https.HttpsError('resource-exhausted', 'Template quota exceeded (race condition prevented)');
+                throw new https_1.HttpsError('resource-exhausted', 'Template quota exceeded (race condition prevented)');
             }
             // Create the template
             const templateRef = admin.firestore()
@@ -343,10 +343,10 @@ exports.createTemplate = (0, rateLimiterV1_1.withRateLimit)(async (data, context
             error: String(error),
         });
         console.error('Error creating template:', error);
-        if (error instanceof functions.https.HttpsError) {
+        if (error instanceof https_1.HttpsError) {
             throw error;
         }
-        throw new functions.https.HttpsError('internal', 'Failed to create template. Please try again.');
+        throw new https_1.HttpsError('internal', 'Failed to create template. Please try again.');
     }
 }, Object.assign(Object.assign({}, rateLimiterV1_1.RATE_LIMITS.STANDARD), { identifier: 'createTemplate' }));
 // ========================================
@@ -355,15 +355,14 @@ exports.createTemplate = (0, rateLimiterV1_1.withRateLimit)(async (data, context
 /**
  * Get user's current template quota status
  *
- * @param data - Empty object
- * @param context - Firebase callable context
+ * @param request - CallableRequest (empty data)
  * @returns Current quota status
  */
-exports.getTemplateQuota = functions.https.onCall(async (data, context) => {
-    if (!context.auth) {
-        throw new functions.https.HttpsError('unauthenticated', 'User must be authenticated');
+exports.getTemplateQuota = (0, https_1.onCall)(async (request) => {
+    if (!request.auth) {
+        throw new https_1.HttpsError('unauthenticated', 'User must be authenticated');
     }
-    const userId = context.auth.uid;
+    const userId = request.auth.uid;
     const accountTier = await getUserAccountTier(userId);
     const quotas = TEMPLATE_QUOTAS[accountTier];
     const { privateCount, publicCount } = await countUserTemplates(userId);

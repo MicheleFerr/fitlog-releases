@@ -28,7 +28,8 @@ var __importStar = (this && this.__importStar) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.checkExpiredSubscriptions = exports.verifyPremiumPurchase = void 0;
-const functions = __importStar(require("firebase-functions"));
+const https_1 = require("firebase-functions/v2/https");
+const scheduler_1 = require("firebase-functions/v2/scheduler");
 const admin = __importStar(require("firebase-admin"));
 const appleReceiptVerify = __importStar(require("node-apple-receipt-verify"));
 const googleapis_1 = require("googleapis");
@@ -39,10 +40,9 @@ let appleReceiptConfigured = false;
  * This avoids validation errors when the module loads without config
  */
 function ensureAppleReceiptConfigured() {
-    var _a;
     if (appleReceiptConfigured)
         return;
-    const secret = (_a = functions.config().apple) === null || _a === void 0 ? void 0 : _a.shared_secret;
+    const secret = process.env.APPLE_SHARED_SECRET;
     if (!secret) {
         console.warn('Apple shared_secret not configured. iOS purchase verification will fail.');
         return;
@@ -55,23 +55,22 @@ function ensureAppleReceiptConfigured() {
     });
     appleReceiptConfigured = true;
 }
-// Google Play API will be initialized per-request with auth
 /**
  * Verify premium purchase from iOS or Android
  */
-exports.verifyPremiumPurchase = functions.https.onCall(async (data, context) => {
+exports.verifyPremiumPurchase = (0, https_1.onCall)(async (request) => {
     // Verify authenticated user
-    if (!context.auth) {
-        throw new functions.https.HttpsError('unauthenticated', 'User must be authenticated to verify purchase');
+    if (!request.auth) {
+        throw new https_1.HttpsError('unauthenticated', 'User must be authenticated to verify purchase');
     }
-    const { userId, productId, purchaseToken, platform, purchaseId } = data;
+    const { userId, productId, purchaseToken, platform, purchaseId } = request.data;
     // Validate input
     if (!userId || !productId || !purchaseToken || !platform) {
-        throw new functions.https.HttpsError('invalid-argument', 'Missing required purchase data');
+        throw new https_1.HttpsError('invalid-argument', 'Missing required purchase data');
     }
     // Verify the user matches the authenticated user
-    if (userId !== context.auth.uid) {
-        throw new functions.https.HttpsError('permission-denied', 'User ID mismatch');
+    if (userId !== request.auth.uid) {
+        throw new https_1.HttpsError('permission-denied', 'User ID mismatch');
     }
     try {
         let verified = false;
@@ -91,7 +90,7 @@ exports.verifyPremiumPurchase = functions.https.onCall(async (data, context) => 
             purchaseType = result.purchaseType;
         }
         else {
-            throw new functions.https.HttpsError('invalid-argument', 'Invalid platform specified');
+            throw new https_1.HttpsError('invalid-argument', 'Invalid platform specified');
         }
         if (!verified) {
             console.error('Purchase verification failed', { userId, productId, platform });
@@ -135,7 +134,7 @@ exports.verifyPremiumPurchase = functions.https.onCall(async (data, context) => 
     }
     catch (error) {
         console.error('Purchase verification error:', error);
-        throw new functions.https.HttpsError('internal', 'Failed to verify purchase', error);
+        throw new https_1.HttpsError('internal', 'Failed to verify purchase', error);
     }
 });
 /**
@@ -182,11 +181,9 @@ async function verifyApplePurchase(receiptData, productId) {
  * Verify Google Play purchase
  */
 async function verifyGooglePurchase(purchaseToken, productId) {
-    var _a;
     try {
-        // Authenticate with Google Play API
+        // Authenticate with Google Play API using Application Default Credentials
         const auth = new googleapis_1.google.auth.GoogleAuth({
-            keyFile: 'path/to/service-account-key.json',
             scopes: ['https://www.googleapis.com/auth/androidpublisher'],
         });
         // Create authenticated androidpublisher client
@@ -195,7 +192,7 @@ async function verifyGooglePurchase(purchaseToken, productId) {
             version: 'v3',
             auth: authClient,
         });
-        const packageName = ((_a = functions.config().android) === null || _a === void 0 ? void 0 : _a.package_name) || 'com.gymbro.app';
+        const packageName = process.env.ANDROID_PACKAGE_NAME || 'com.gymbro.app';
         const isLifetime = productId.includes('lifetime');
         if (isLifetime) {
             // Verify one-time product purchase
@@ -246,9 +243,7 @@ async function verifyGooglePurchase(purchaseToken, productId) {
 /**
  * Scheduled function to check and update expired subscriptions
  */
-exports.checkExpiredSubscriptions = functions.pubsub
-    .schedule('every 24 hours')
-    .onRun(async (context) => {
+exports.checkExpiredSubscriptions = (0, scheduler_1.onSchedule)('every 24 hours', async () => {
     const now = admin.firestore.Timestamp.now();
     // Find users with expired premium
     const expiredUsers = await admin.firestore()

@@ -17,7 +17,7 @@
  * @see lib/features/community/data/repositories/community_repository.dart (old impl)
  */
 
-import * as functions from 'firebase-functions';
+import { onCall, HttpsError, CallableRequest } from 'firebase-functions/v2/https';
 import * as admin from 'firebase-admin';
 
 /**
@@ -55,6 +55,15 @@ async function updateUserStats(userId: string, status: 'approved' | 'rejected'):
       lastContributionAt: admin.firestore.FieldValue.serverTimestamp(),
     });
   }
+}
+
+interface ApproveContributionData {
+  contributionId: string;
+}
+
+interface RejectContributionData {
+  contributionId: string;
+  reason: string;
 }
 
 /**
@@ -96,19 +105,19 @@ async function updateUserStats(userId: string, status: 'approved' | 'rejected'):
  * }
  * ```
  */
-export const approveContribution = functions.https.onCall(async (data, context) => {
+export const approveContribution = onCall<ApproveContributionData>(async (request) => {
   // ========================================
   // 1. Authentication Check
   // ========================================
-  if (!context.auth) {
-    throw new functions.https.HttpsError(
+  if (!request.auth) {
+    throw new HttpsError(
       'unauthenticated',
       'User must be authenticated to moderate contributions'
     );
   }
 
-  const adminUid = context.auth.uid;
-  const adminEmail = context.auth.token.email;
+  const adminUid = request.auth.uid;
+  const adminEmail = request.auth.token.email;
 
   // ========================================
   // 2. Authorization Check (Admin Only)
@@ -117,7 +126,7 @@ export const approveContribution = functions.https.onCall(async (data, context) 
 
   if (!callerIsAdmin) {
     console.warn(`🚨 Unauthorized contribution approval attempt by ${adminEmail} (${adminUid})`);
-    throw new functions.https.HttpsError(
+    throw new HttpsError(
       'permission-denied',
       'Only admins can approve contributions'
     );
@@ -126,10 +135,10 @@ export const approveContribution = functions.https.onCall(async (data, context) 
   // ========================================
   // 3. Validate Request Data
   // ========================================
-  const { contributionId } = data;
+  const { contributionId } = request.data;
 
   if (!contributionId || typeof contributionId !== 'string') {
-    throw new functions.https.HttpsError(
+    throw new HttpsError(
       'invalid-argument',
       'contributionId is required and must be a string'
     );
@@ -146,7 +155,7 @@ export const approveContribution = functions.https.onCall(async (data, context) 
     const snapshot = await contributionRef.get();
 
     if (!snapshot.exists) {
-      throw new functions.https.HttpsError(
+      throw new HttpsError(
         'not-found',
         `Contribution ${contributionId} not found`
       );
@@ -219,7 +228,7 @@ export const approveContribution = functions.https.onCall(async (data, context) 
       error: String(error),
     });
 
-    throw new functions.https.HttpsError(
+    throw new HttpsError(
       'internal',
       'Failed to approve contribution. Check server logs.'
     );
@@ -255,19 +264,19 @@ export const approveContribution = functions.https.onCall(async (data, context) 
  * }
  * ```
  */
-export const rejectContribution = functions.https.onCall(async (data, context) => {
+export const rejectContribution = onCall<RejectContributionData>(async (request) => {
   // ========================================
   // 1. Authentication Check
   // ========================================
-  if (!context.auth) {
-    throw new functions.https.HttpsError(
+  if (!request.auth) {
+    throw new HttpsError(
       'unauthenticated',
       'User must be authenticated to moderate contributions'
     );
   }
 
-  const adminUid = context.auth.uid;
-  const adminEmail = context.auth.token.email;
+  const adminUid = request.auth.uid;
+  const adminEmail = request.auth.token.email;
 
   // ========================================
   // 2. Authorization Check (Admin Only)
@@ -276,7 +285,7 @@ export const rejectContribution = functions.https.onCall(async (data, context) =
 
   if (!callerIsAdmin) {
     console.warn(`🚨 Unauthorized contribution rejection attempt by ${adminEmail} (${adminUid})`);
-    throw new functions.https.HttpsError(
+    throw new HttpsError(
       'permission-denied',
       'Only admins can reject contributions'
     );
@@ -285,17 +294,17 @@ export const rejectContribution = functions.https.onCall(async (data, context) =
   // ========================================
   // 3. Validate Request Data
   // ========================================
-  const { contributionId, reason } = data;
+  const { contributionId, reason } = request.data;
 
   if (!contributionId || typeof contributionId !== 'string') {
-    throw new functions.https.HttpsError(
+    throw new HttpsError(
       'invalid-argument',
       'contributionId is required and must be a string'
     );
   }
 
   if (!reason || typeof reason !== 'string' || reason.trim().length === 0) {
-    throw new functions.https.HttpsError(
+    throw new HttpsError(
       'invalid-argument',
       'reason is required and must be a non-empty string'
     );
@@ -312,7 +321,7 @@ export const rejectContribution = functions.https.onCall(async (data, context) =
     const snapshot = await contributionRef.get();
 
     if (!snapshot.exists) {
-      throw new functions.https.HttpsError(
+      throw new HttpsError(
         'not-found',
         `Contribution ${contributionId} not found`
       );
@@ -376,7 +385,7 @@ export const rejectContribution = functions.https.onCall(async (data, context) =
       error: String(error),
     });
 
-    throw new functions.https.HttpsError(
+    throw new HttpsError(
       'internal',
       'Failed to reject contribution. Check server logs.'
     );

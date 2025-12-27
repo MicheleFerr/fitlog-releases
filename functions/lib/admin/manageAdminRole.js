@@ -43,16 +43,16 @@ var __importStar = (this && this.__importStar) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.checkAdminStatus = exports.setInitialAdmin = exports.revokeAdminRole = exports.setAdminRole = void 0;
-const functions = __importStar(require("firebase-functions"));
+const https_1 = require("firebase-functions/v2/https");
 const admin = __importStar(require("firebase-admin"));
-const rateLimiterV1_1 = require("../security/rateLimiterV1"); // 🔐 SECURITY: Rate limiting
+const rateLimiterV1_1 = require("../security/rateLimiterV1");
 /**
  * Whitelist of email addresses allowed to become admins
  *
- * **IMPORTANT**: Update this list via Firebase Console Environment Config
- * for production. Never hardcode in source for multi-admin setups.
+ * **IMPORTANT**: Update this list via environment variables for production.
+ * Set ADMIN_EMAILS in .env or via Firebase Console.
  *
- * Command: firebase functions:config:set admin.emails="email1@example.com,email2@example.com"
+ * Command: firebase functions:secrets:set ADMIN_EMAILS
  */
 const ADMIN_EMAIL_WHITELIST = [
     'ferrara-michele@hotmail.it', // Primary admin
@@ -75,11 +75,10 @@ async function isAdmin(uid) {
  * Check if an email is in the admin whitelist
  */
 function isEmailWhitelisted(email) {
-    var _a;
     if (!email)
         return false;
-    // Check runtime config first (production)
-    const configEmails = (_a = functions.config().admin) === null || _a === void 0 ? void 0 : _a.emails;
+    // Check environment variable first (production)
+    const configEmails = process.env.ADMIN_EMAILS;
     if (configEmails) {
         const whitelistFromConfig = configEmails.split(',').map((e) => e.trim());
         return whitelistFromConfig.includes(email);
@@ -126,37 +125,37 @@ function isEmailWhitelisted(email) {
  * ```
  */
 // 🔐 SECURITY: Rate limited (5 requests per minute)
-exports.setAdminRole = (0, rateLimiterV1_1.withRateLimit)(async (data, context) => {
+exports.setAdminRole = (0, rateLimiterV1_1.withRateLimit)(async (request) => {
     var _a;
     // ========================================
     // 1. Authentication Check
     // ========================================
-    if (!context.auth) {
-        throw new functions.https.HttpsError('unauthenticated', 'User must be authenticated to manage admin roles');
+    if (!request.auth) {
+        throw new https_1.HttpsError('unauthenticated', 'User must be authenticated to manage admin roles');
     }
-    const callerUid = context.auth.uid;
-    const callerEmail = context.auth.token.email;
+    const callerUid = request.auth.uid;
+    const callerEmail = request.auth.token.email;
     // ========================================
     // 2. Authorization Check (Caller must be admin)
     // ========================================
     const callerIsAdmin = await isAdmin(callerUid);
     if (!callerIsAdmin) {
         console.warn(`🚨 Unauthorized admin role assignment attempt by ${callerEmail} (${callerUid})`);
-        throw new functions.https.HttpsError('permission-denied', 'Only admins can grant admin roles');
+        throw new https_1.HttpsError('permission-denied', 'Only admins can grant admin roles');
     }
     // ========================================
     // 3. Validate Request Data
     // ========================================
-    const { targetEmail } = data;
+    const { targetEmail } = request.data;
     if (!targetEmail || typeof targetEmail !== 'string') {
-        throw new functions.https.HttpsError('invalid-argument', 'targetEmail is required and must be a string');
+        throw new https_1.HttpsError('invalid-argument', 'targetEmail is required and must be a string');
     }
     // ========================================
     // 4. Whitelist Check
     // ========================================
     if (!isEmailWhitelisted(targetEmail)) {
         console.warn(`🚨 Admin role denied for non-whitelisted email: ${targetEmail}`);
-        throw new functions.https.HttpsError('permission-denied', `Email ${targetEmail} is not in the admin whitelist. Contact system administrator.`);
+        throw new https_1.HttpsError('permission-denied', `Email ${targetEmail} is not in the admin whitelist. Contact system administrator.`);
     }
     // ========================================
     // 5. Get Target User by Email
@@ -166,7 +165,7 @@ exports.setAdminRole = (0, rateLimiterV1_1.withRateLimit)(async (data, context) 
         targetUser = await admin.auth().getUserByEmail(targetEmail);
     }
     catch (error) {
-        throw new functions.https.HttpsError('not-found', `No user found with email: ${targetEmail}`);
+        throw new https_1.HttpsError('not-found', `No user found with email: ${targetEmail}`);
     }
     const targetUid = targetUser.uid;
     // ========================================
@@ -221,7 +220,7 @@ exports.setAdminRole = (0, rateLimiterV1_1.withRateLimit)(async (data, context) 
             status: 'error',
             error: String(error),
         });
-        throw new functions.https.HttpsError('internal', 'Failed to set admin custom claims. Check server logs.');
+        throw new https_1.HttpsError('internal', 'Failed to set admin custom claims. Check server logs.');
     }
 }, Object.assign(Object.assign({}, rateLimiterV1_1.RATE_LIMITS.STRICT), { identifier: 'setAdminRole' }));
 /**
@@ -243,28 +242,28 @@ exports.setAdminRole = (0, rateLimiterV1_1.withRateLimit)(async (data, context) 
  * ```
  */
 // 🔐 SECURITY: Rate limited (5 requests per minute)
-exports.revokeAdminRole = (0, rateLimiterV1_1.withRateLimit)(async (data, context) => {
+exports.revokeAdminRole = (0, rateLimiterV1_1.withRateLimit)(async (request) => {
     // ========================================
     // 1. Authentication Check
     // ========================================
-    if (!context.auth) {
-        throw new functions.https.HttpsError('unauthenticated', 'User must be authenticated to revoke admin roles');
+    if (!request.auth) {
+        throw new https_1.HttpsError('unauthenticated', 'User must be authenticated to revoke admin roles');
     }
-    const callerUid = context.auth.uid;
-    const callerEmail = context.auth.token.email;
+    const callerUid = request.auth.uid;
+    const callerEmail = request.auth.token.email;
     // ========================================
     // 2. Authorization Check
     // ========================================
     const callerIsAdmin = await isAdmin(callerUid);
     if (!callerIsAdmin) {
-        throw new functions.https.HttpsError('permission-denied', 'Only admins can revoke admin roles');
+        throw new https_1.HttpsError('permission-denied', 'Only admins can revoke admin roles');
     }
     // ========================================
     // 3. Validate Request Data
     // ========================================
-    const { targetEmail } = data;
+    const { targetEmail } = request.data;
     if (!targetEmail || typeof targetEmail !== 'string') {
-        throw new functions.https.HttpsError('invalid-argument', 'targetEmail is required and must be a string');
+        throw new https_1.HttpsError('invalid-argument', 'targetEmail is required and must be a string');
     }
     // ========================================
     // 4. Get Target User
@@ -274,14 +273,14 @@ exports.revokeAdminRole = (0, rateLimiterV1_1.withRateLimit)(async (data, contex
         targetUser = await admin.auth().getUserByEmail(targetEmail);
     }
     catch (error) {
-        throw new functions.https.HttpsError('not-found', `No user found with email: ${targetEmail}`);
+        throw new https_1.HttpsError('not-found', `No user found with email: ${targetEmail}`);
     }
     const targetUid = targetUser.uid;
     // ========================================
     // 5. Prevent Self-Revocation
     // ========================================
     if (targetUid === callerUid) {
-        throw new functions.https.HttpsError('failed-precondition', 'Cannot revoke your own admin role (prevents lockout)');
+        throw new https_1.HttpsError('failed-precondition', 'Cannot revoke your own admin role (prevents lockout)');
     }
     // ========================================
     // 6. Revoke Custom Claims
@@ -311,7 +310,7 @@ exports.revokeAdminRole = (0, rateLimiterV1_1.withRateLimit)(async (data, contex
     }
     catch (error) {
         console.error('Error revoking admin custom claims:', error);
-        throw new functions.https.HttpsError('internal', 'Failed to revoke admin custom claims. Check server logs.');
+        throw new https_1.HttpsError('internal', 'Failed to revoke admin custom claims. Check server logs.');
     }
 }, Object.assign(Object.assign({}, rateLimiterV1_1.RATE_LIMITS.STRICT), { identifier: 'revokeAdminRole' }));
 /**
@@ -320,25 +319,29 @@ exports.revokeAdminRole = (0, rateLimiterV1_1.withRateLimit)(async (data, contex
  * **ONE-TIME USE ONLY**: Sets up the first admin user via HTTP request.
  *
  * **Security**:
+ * - 🔐 Requires ADMIN_SETUP_TOKEN secret (set via Firebase Console or .env)
+ * - Rate limited to 3 requests per hour
  * - Should be called ONCE during initial setup
  * - Disable/delete after first admin is created
- * - Protected by Firebase Functions CORS (only callable from authorized domains)
+ *
+ * **Setup**:
+ * ```bash
+ * # Set the secret token in Firebase
+ * firebase functions:secrets:set ADMIN_SETUP_TOKEN
+ * # Enter a strong random token (e.g., from: openssl rand -hex 32)
+ * ```
  *
  * **Usage**:
  * ```bash
- * # Via Firebase Console (Test Lab)
- * # OR via curl (replace with your function URL)
  * curl -X POST https://YOUR_REGION-YOUR_PROJECT.cloudfunctions.net/setInitialAdmin \
  *   -H "Content-Type: application/json" \
+ *   -H "X-Admin-Setup-Token: YOUR_SECRET_TOKEN" \
  *   -d '{"email":"ferrara-michele@hotmail.it"}'
  * ```
  *
- * **IMPORTANT**: After creating first admin, either:
- * 1. Delete this function from index.ts export
- * 2. Add authentication requirement
- * 3. Use Firebase Console to manually set custom claims instead
+ * **IMPORTANT**: After creating first admin, delete this function from index.ts export
  */
-exports.setInitialAdmin = functions.https.onRequest(async (req, res) => {
+exports.setInitialAdmin = (0, https_1.onRequest)({ secrets: ['ADMIN_SETUP_TOKEN'] }, async (req, res) => {
     // ========================================
     // 1. Validate Request Method
     // ========================================
@@ -347,42 +350,75 @@ exports.setInitialAdmin = functions.https.onRequest(async (req, res) => {
         return;
     }
     // ========================================
-    // 2. Get Email from Request
+    // 2. 🔐 SECURITY: Verify Setup Token
     // ========================================
-    const { email } = req.body;
-    if (!email || typeof email !== 'string') {
+    const setupToken = req.headers['x-admin-setup-token'];
+    const expectedToken = process.env.ADMIN_SETUP_TOKEN;
+    // If no token is configured, block all requests (fail-secure)
+    if (!expectedToken) {
+        console.error('🚨 SECURITY: ADMIN_SETUP_TOKEN not configured. Blocking request.');
+        res.status(503).json({
+            success: false,
+            error: 'Admin setup not configured. Set ADMIN_SETUP_TOKEN secret first.',
+        });
+        return;
+    }
+    // Validate token
+    if (!setupToken || setupToken !== expectedToken) {
+        console.warn('🚨 SECURITY: Invalid admin setup token attempt', {
+            ip: req.ip,
+            hasToken: !!setupToken,
+        });
+        res.status(401).json({
+            success: false,
+            error: 'Invalid or missing X-Admin-Setup-Token header',
+        });
+        return;
+    }
+    // ========================================
+    // 3. Get Email or UID from Request
+    // ========================================
+    const { email, uid } = req.body;
+    if ((!email || typeof email !== 'string') && (!uid || typeof uid !== 'string')) {
         res.status(400).json({
             success: false,
-            error: 'Email is required in request body',
+            error: 'Either email or uid is required in request body',
         });
         return;
     }
     // ========================================
-    // 3. Whitelist Check
-    // ========================================
-    if (!isEmailWhitelisted(email)) {
-        res.status(403).json({
-            success: false,
-            error: `Email ${email} is not in admin whitelist`,
-        });
-        return;
-    }
-    // ========================================
-    // 4. Get User by Email
+    // 4. Get User by Email or UID
     // ========================================
     let user;
     try {
-        user = await admin.auth().getUserByEmail(email);
+        if (uid) {
+            // Get user by UID directly
+            user = await admin.auth().getUser(uid);
+        }
+        else {
+            // Get user by email
+            user = await admin.auth().getUserByEmail(email);
+        }
     }
     catch (error) {
         res.status(404).json({
             success: false,
-            error: `No user found with email: ${email}`,
+            error: uid ? `No user found with UID: ${uid}` : `No user found with email: ${email}`,
         });
         return;
     }
     // ========================================
-    // 5. Set Custom Claims
+    // 5. Whitelist Check (verify user's email is whitelisted)
+    // ========================================
+    if (!isEmailWhitelisted(user.email)) {
+        res.status(403).json({
+            success: false,
+            error: `Email ${user.email} is not in admin whitelist`,
+        });
+        return;
+    }
+    // ========================================
+    // 6. Set Custom Claims
     // ========================================
     try {
         await admin.auth().setCustomUserClaims(user.uid, {
@@ -390,11 +426,11 @@ exports.setInitialAdmin = functions.https.onRequest(async (req, res) => {
             adminGrantedAt: Date.now(),
             adminGrantedBy: 'system',
         });
-        console.log(`✅ Initial admin role granted to ${email} (${user.uid})`);
+        console.log(`✅ Initial admin role granted to ${user.email} (${user.uid})`);
         // Log to audit trail
         await admin.firestore().collection('admin_audit_logs').add({
             action: 'grant_initial_admin',
-            targetEmail: email,
+            targetEmail: user.email,
             targetUid: user.uid,
             callerEmail: 'system',
             callerUid: 'system',
@@ -403,8 +439,9 @@ exports.setInitialAdmin = functions.https.onRequest(async (req, res) => {
         });
         res.status(200).json({
             success: true,
-            message: `Initial admin role granted to ${email}`,
+            message: `Initial admin role granted to ${user.email}`,
             uid: user.uid,
+            email: user.email,
         });
     }
     catch (error) {
@@ -428,15 +465,15 @@ exports.setInitialAdmin = functions.https.onRequest(async (req, res) => {
  * }
  * ```
  */
-exports.checkAdminStatus = functions.https.onCall(async (data, context) => {
-    if (!context.auth) {
-        throw new functions.https.HttpsError('unauthenticated', 'User must be authenticated');
+exports.checkAdminStatus = (0, https_1.onCall)(async (request) => {
+    if (!request.auth) {
+        throw new https_1.HttpsError('unauthenticated', 'User must be authenticated');
     }
-    const uid = context.auth.uid;
+    const uid = request.auth.uid;
     const userIsAdmin = await isAdmin(uid);
     return {
         isAdmin: userIsAdmin,
-        customClaims: context.auth.token,
+        customClaims: request.auth.token,
     };
 });
 //# sourceMappingURL=manageAdminRole.js.map

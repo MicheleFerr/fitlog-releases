@@ -1,15 +1,16 @@
 /**
- * 🔐 SECURITY: Rate Limiting for Firebase Functions v1
+ * 🔐 SECURITY: Rate Limiting for Firebase Functions v2
  *
- * Wrapper for existing v1 onCall functions (backward compatible)
+ * Wrapper for onCall functions with rate limiting
  *
  * **Usage**:
  * ```typescript
  * import { withRateLimit, RATE_LIMITS } from './security/rateLimiterV1';
  *
  * export const myFunction = withRateLimit(
- *   async (data, context) => {
- *     // Your function logic here (NOT wrapped in functions.https.onCall)
+ *   async (request) => {
+ *     // Your function logic here
+ *     const { data, auth } = request;
  *   },
  *   {
  *     ...RATE_LIMITS.STRICT,
@@ -19,11 +20,11 @@
  * ```
  */
 
-import * as functions from 'firebase-functions';
+import { onCall, HttpsError, CallableRequest } from 'firebase-functions/v2/https';
 import * as admin from 'firebase-admin';
 
 /**
- * Rate limit configuration (v1 compatible)
+ * Rate limit configuration
  */
 export interface RateLimitConfig {
   /** Maximum requests allowed in time window */
@@ -63,28 +64,40 @@ export const RATE_LIMITS = {
     maxRequests: 100,
     windowMs: 60 * 1000,
   },
+
+  /** Hourly: 500 requests per hour (heavy operations) */
+  HOURLY: {
+    maxRequests: 500,
+    windowMs: 60 * 60 * 1000,
+  },
+
+  /** Daily: 1000 requests per day (bulk operations) */
+  DAILY: {
+    maxRequests: 1000,
+    windowMs: 24 * 60 * 60 * 1000,
+  },
 } as const;
 
 /**
- * Type for onCall handler function
+ * Type for onCall handler function (v2 API)
  */
 type OnCallHandler<T = any, R = any> = (
-  data: T,
-  context: functions.https.CallableContext
+  request: CallableRequest<T>
 ) => Promise<R> | R;
 
 /**
- * Wrap a Firebase Functions v1 onCall handler with rate limiting
+ * Wrap a Firebase Functions v2 onCall handler with rate limiting
  *
- * @param handler The handler function (NOT wrapped in functions.https.onCall)
+ * @param handler The handler function
  * @param config Rate limit configuration
  * @returns Wrapped CloudFunction
  *
  * @example
  * ```typescript
  * export const setAdminRole = withRateLimit(
- *   async (data, context) => {
- *     // ... your logic (NOT wrapped in functions.https.onCall)
+ *   async (request) => {
+ *     const { data, auth } = request;
+ *     // ... your logic
  *   },
  *   { ...RATE_LIMITS.STRICT, identifier: 'setAdminRole' }
  * );
@@ -93,22 +106,21 @@ type OnCallHandler<T = any, R = any> = (
 export function withRateLimit<T = any, R = any>(
   handler: OnCallHandler<T, R>,
   config: RateLimitConfig
-): functions.HttpsFunction {
-  return functions.https.onCall(async (data: T, context) => {
+) {
+  return onCall<T>(async (request) => {
     // Apply rate limiting BEFORE calling original handler
-    await rateLimiter(data, context, config);
+    await rateLimiter(request, config);
 
     // Call original handler if rate limit passed
-    return handler(data, context);
+    return handler(request);
   });
 }
 
 /**
- * Rate limiter implementation (v1 compatible)
+ * Rate limiter implementation (v2 compatible)
  */
-async function rateLimiter(
-  data: any,
-  context: functions.https.CallableContext,
+async function rateLimiter<T>(
+  request: CallableRequest<T>,
   config: RateLimitConfig
 ): Promise<void> {
   const {
@@ -120,8 +132,8 @@ async function rateLimiter(
   } = config;
 
   // Get tracking key
-  const userId = context.auth?.uid;
-  const ip = context.rawRequest.ip || 'unknown';
+  const userId = request.auth?.uid;
+  const ip = request.rawRequest?.ip || 'unknown';
 
   let trackingKey: string;
   if (trackBy === 'user' && userId) {
@@ -185,9 +197,14 @@ async function checkRateLimit(
           retryAfterSec,
         });
 
-        throw new functions.https.HttpsError(
+        throw new HttpsError(
           'resource-exhausted',
-          `${errorMessage} Retry after ${retryAfterSec} seconds.`
+          `${errorMessage} Retry after ${retryAfterSec} seconds.`,
+          {
+            retryAfter: retryAfterSec,
+            limit: maxRequests,
+            windowMs,
+          }
         );
       }
 
@@ -206,7 +223,7 @@ async function checkRateLimit(
       );
     });
   } catch (error) {
-    if (error instanceof functions.https.HttpsError) {
+    if (error instanceof HttpsError) {
       throw error;
     }
 
@@ -216,4 +233,60 @@ async function checkRateLimit(
       error: error instanceof Error ? error.message : String(error),
     });
   }
+}
+
+// ========================================
+// 🧹 Utility Functions
+// ========================================
+
+/**
+ * Clean up expired rate limit entries (for scheduled function)
+ *
+ * Run this daily to remove old rate limit data
+ *
+ * **Usage**:
+ * ```typescript
+ * export const cleanupRateLimits = onSchedule('every 24 hours', cleanupExpiredRateLimits);
+ * ```
+ */
+export async function cleanupExpiredRateLimits(): Promise<void> {
+  const db = admin.firestore();
+  const now = new Date();
+
+  const expiredDocs = await db
+    .collection('rateLimits')
+    .where('expiresAt', '<', now)
+    .limit(500) // Batch limit
+    .get();
+
+  if (expiredDocs.empty) {
+    console.log('✅ No expired rate limit entries to clean up');
+    return;
+  }
+
+  const batch = db.batch();
+  expiredDocs.docs.forEach((doc) => {
+    batch.delete(doc.ref);
+  });
+
+  await batch.commit();
+
+  console.log(`🗑️ Cleaned up ${expiredDocs.size} expired rate limit entries`);
+}
+
+/**
+ * Reset rate limit for a specific user (admin utility)
+ *
+ * Use for manual override in case of false positives
+ */
+export async function resetRateLimit(
+  userId: string,
+  identifier: string
+): Promise<void> {
+  const db = admin.firestore();
+  const rateLimitRef = db.collection('rateLimits').doc(`${identifier}_user_${userId}`);
+
+  await rateLimitRef.delete();
+
+  console.log(`✅ Rate limit reset for user ${userId.substring(0, 8)}... on ${identifier}`);
 }

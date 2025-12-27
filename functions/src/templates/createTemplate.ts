@@ -31,7 +31,7 @@
  * @see https://firebase.google.com/docs/functions/callable
  */
 
-import * as functions from 'firebase-functions';
+import { onCall, HttpsError, CallableRequest } from 'firebase-functions/v2/https';
 import * as admin from 'firebase-admin';
 import { withRateLimit, RATE_LIMITS } from '../security/rateLimiterV1';
 
@@ -77,6 +77,17 @@ interface TemplateData {
   createdAt: admin.firestore.Timestamp;
   updatedAt: admin.firestore.Timestamp;
   usageCount: number;
+}
+
+/**
+ * Template creation request data
+ */
+interface CreateTemplateData {
+  name: string;
+  description?: string;
+  exercises: unknown[];
+  tags?: string[];
+  isPublic?: boolean;
 }
 
 // ========================================
@@ -140,7 +151,7 @@ async function countUserTemplates(userId: string): Promise<{ privateCount: numbe
     };
   } catch (error) {
     console.error('Error counting user templates:', error);
-    throw new functions.https.HttpsError(
+    throw new HttpsError(
       'internal',
       'Failed to count user templates'
     );
@@ -150,7 +161,7 @@ async function countUserTemplates(userId: string): Promise<{ privateCount: numbe
 /**
  * Validate template data
  */
-function validateTemplateData(data: any): { valid: boolean; error?: string } {
+function validateTemplateData(data: CreateTemplateData): { valid: boolean; error?: string } {
   // Required fields
   if (!data.name || typeof data.name !== 'string') {
     return { valid: false, error: 'Template name is required and must be a string' };
@@ -212,30 +223,30 @@ function generateTemplateId(): string {
 /**
  * Create a new workout template with quota enforcement
  *
- * @param data - Template data (name, description, exercises, tags, isPublic)
- * @param context - Firebase callable context
+ * @param request - CallableRequest with template data (name, description, exercises, tags, isPublic)
  * @returns Created template with ID
  */
-export const createTemplate = withRateLimit(
-  async (data, context) => {
+export const createTemplate = withRateLimit<CreateTemplateData>(
+  async (request) => {
     // ========================================
     // 1. Authentication Check
     // ========================================
-    if (!context.auth) {
-      throw new functions.https.HttpsError(
+    if (!request.auth) {
+      throw new HttpsError(
         'unauthenticated',
         'User must be authenticated to create templates'
       );
     }
 
-    const userId = context.auth.uid;
+    const userId = request.auth.uid;
+    const data = request.data;
 
     // ========================================
     // 2. Validate Input Data
     // ========================================
     const validation = validateTemplateData(data);
     if (!validation.valid) {
-      throw new functions.https.HttpsError(
+      throw new HttpsError(
         'invalid-argument',
         validation.error || 'Invalid template data'
       );
@@ -265,7 +276,7 @@ export const createTemplate = withRateLimit(
       if (publicCount >= quotas.maxPublicTemplates) {
         console.warn(`🚨 Quota exceeded for user ${userId}: ${publicCount}/${quotas.maxPublicTemplates} public templates`);
 
-        throw new functions.https.HttpsError(
+        throw new HttpsError(
           'resource-exhausted',
           `Public template quota exceeded. You have ${publicCount}/${quotas.maxPublicTemplates} public templates. ` +
           (accountTier === 'free' ? 'Upgrade to Premium for more templates.' : 'Delete existing templates to create new ones.')
@@ -275,7 +286,7 @@ export const createTemplate = withRateLimit(
       if (privateCount >= quotas.maxPrivateTemplates) {
         console.warn(`🚨 Quota exceeded for user ${userId}: ${privateCount}/${quotas.maxPrivateTemplates} private templates`);
 
-        throw new functions.https.HttpsError(
+        throw new HttpsError(
           'resource-exhausted',
           `Private template quota exceeded. You have ${privateCount}/${quotas.maxPrivateTemplates} private templates. ` +
           (accountTier === 'free' ? 'Upgrade to Premium for more templates.' : 'Delete existing templates to create new ones.')
@@ -320,7 +331,7 @@ export const createTemplate = withRateLimit(
         const maxAllowed = isPublic ? quotas.maxPublicTemplates : quotas.maxPrivateTemplates;
 
         if (currentCount >= maxAllowed) {
-          throw new functions.https.HttpsError(
+          throw new HttpsError(
             'resource-exhausted',
             'Template quota exceeded (race condition prevented)'
           );
@@ -401,11 +412,11 @@ export const createTemplate = withRateLimit(
 
       console.error('Error creating template:', error);
 
-      if (error instanceof functions.https.HttpsError) {
+      if (error instanceof HttpsError) {
         throw error;
       }
 
-      throw new functions.https.HttpsError(
+      throw new HttpsError(
         'internal',
         'Failed to create template. Please try again.'
       );
@@ -421,19 +432,18 @@ export const createTemplate = withRateLimit(
 /**
  * Get user's current template quota status
  *
- * @param data - Empty object
- * @param context - Firebase callable context
+ * @param request - CallableRequest (empty data)
  * @returns Current quota status
  */
-export const getTemplateQuota = functions.https.onCall(async (data, context) => {
-  if (!context.auth) {
-    throw new functions.https.HttpsError(
+export const getTemplateQuota = onCall(async (request) => {
+  if (!request.auth) {
+    throw new HttpsError(
       'unauthenticated',
       'User must be authenticated'
     );
   }
 
-  const userId = context.auth.uid;
+  const userId = request.auth.uid;
   const accountTier = await getUserAccountTier(userId);
   const quotas = TEMPLATE_QUOTAS[accountTier];
   const { privateCount, publicCount } = await countUserTemplates(userId);

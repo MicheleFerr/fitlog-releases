@@ -1,10 +1,15 @@
 /**
  * GymBro Enterprise Notification System - Cloud Functions
  * Comprehensive notification processing with enterprise features
+ *
+ * Migrated to Firebase Functions v2 API (2025-12-27)
  */
 
-import * as functions from 'firebase-functions';
 import * as admin from 'firebase-admin';
+import { logger } from 'firebase-functions';
+import { onDocumentCreated, onDocumentUpdated } from 'firebase-functions/v2/firestore';
+import { onSchedule } from 'firebase-functions/v2/scheduler';
+import { onCall, HttpsError } from 'firebase-functions/v2/https';
 import { NotificationQueue } from './queue/NotificationQueue';
 import { NotificationAnalytics } from './analytics/NotificationAnalytics';
 import { NotificationPersonalization } from './personalization/NotificationPersonalization';
@@ -17,22 +22,26 @@ import { SystemMonitor } from './monitoring/SystemMonitor';
  * Triggers when a workout is completed
  * Generates achievement and progress notifications
  */
-export const onWorkoutCompleted = functions.firestore
-  .document('sessionWorkouts/{workoutId}')
-  .onCreate(async (snapshot, context) => {
+export const onWorkoutCompleted = onDocumentCreated(
+  'sessionWorkouts/{workoutId}',
+  async (event) => {
+    const snapshot = event.data;
+    if (!snapshot) {
+      logger.warn('No data in workout created event');
+      return;
+    }
+
     try {
       const workoutData = snapshot.data();
       const userId = workoutData.userId || workoutData.uid;
-      
+      const workoutId = event.params.workoutId;
+
       if (!userId) {
-        functions.logger.warn('Workout completed without userId', { workoutId: context.params.workoutId });
+        logger.warn('Workout completed without userId', { workoutId });
         return;
       }
 
-      functions.logger.info('Processing workout completion', { 
-        userId, 
-        workoutId: context.params.workoutId 
-      });
+      logger.info('Processing workout completion', { userId, workoutId });
 
       // Queue achievement check notification
       await NotificationQueue.enqueue({
@@ -40,8 +49,8 @@ export const onWorkoutCompleted = functions.firestore
         userId,
         title: 'Checking for new achievements...',
         message: 'We\'re analyzing your workout for new milestones!',
-        data: { 
-          workoutId: context.params.workoutId, 
+        data: {
+          workoutId,
           completedAt: workoutData.completedAt || admin.firestore.Timestamp.now(),
           exercises: workoutData.exercises || [],
           duration: workoutData.duration || 0
@@ -56,8 +65,8 @@ export const onWorkoutCompleted = functions.firestore
         userId,
         title: 'Progress Update',
         message: 'Your fitness journey continues! Check out your latest progress.',
-        data: { 
-          workoutId: context.params.workoutId,
+        data: {
+          workoutId,
           workoutType: workoutData.type || 'strength',
           volume: workoutData.totalVolume || 0
         },
@@ -67,38 +76,44 @@ export const onWorkoutCompleted = functions.firestore
       });
 
       // Record analytics
-      await NotificationAnalytics.recordTrigger('workout_completed', userId, {
-        workoutId: context.params.workoutId
-      });
+      await NotificationAnalytics.recordTrigger('workout_completed', userId, { workoutId });
 
     } catch (error) {
-      functions.logger.error('Error processing workout completion', { 
-        error: error.message,
-        workoutId: context.params.workoutId 
+      const errorMessage = error instanceof Error ? error.message : String(error);
+      logger.error('Error processing workout completion', {
+        error: errorMessage,
+        workoutId: event.params.workoutId
       });
       throw error;
     }
-  });
+  }
+);
 
 /**
  * Triggers when a personal record is achieved
  * Sends high-priority achievement notification
  */
-export const onPersonalRecord = functions.firestore
-  .document('users/{userId}/personalRecords/{recordId}')
-  .onCreate(async (snapshot, context) => {
+export const onPersonalRecord = onDocumentCreated(
+  'users/{userId}/personalRecords/{recordId}',
+  async (event) => {
+    const snapshot = event.data;
+    if (!snapshot) {
+      logger.warn('No data in personal record created event');
+      return;
+    }
+
     try {
       const recordData = snapshot.data();
-      const userId = context.params.userId;
+      const { userId, recordId } = event.params;
 
-      functions.logger.info('Processing personal record', { userId, recordId: context.params.recordId });
+      logger.info('Processing personal record', { userId, recordId });
 
       await NotificationQueue.enqueue({
         type: 'personal_record',
         userId,
         title: '🏆 New Personal Record!',
         message: `Amazing! You just hit a new PR: ${recordData.weight}kg on ${recordData.exerciseName}!`,
-        data: { 
+        data: {
           exercise: recordData.exerciseName,
           weight: recordData.weight,
           previousRecord: recordData.previousWeight || 0,
@@ -110,47 +125,51 @@ export const onPersonalRecord = functions.firestore
 
       // Record analytics with high importance
       await NotificationAnalytics.recordTrigger('personal_record', userId, {
-        recordId: context.params.recordId,
+        recordId,
         exercise: recordData.exerciseName,
         weight: recordData.weight
       });
 
     } catch (error) {
-      functions.logger.error('Error processing personal record', { 
-        error: error.message,
-        userId: context.params.userId,
-        recordId: context.params.recordId 
+      const errorMessage = error instanceof Error ? error.message : String(error);
+      logger.error('Error processing personal record', {
+        error: errorMessage,
+        userId: event.params.userId,
+        recordId: event.params.recordId
       });
       throw error;
     }
-  });
+  }
+);
 
 /**
  * Triggers when user achieves a workout streak
  * Sends motivational notifications
  */
-export const onStreakMilestone = functions.firestore
-  .document('users/{userId}')
-  .onUpdate(async (change, context) => {
+export const onStreakMilestone = onDocumentUpdated(
+  'users/{userId}',
+  async (event) => {
+    if (!event.data) {
+      logger.warn('No data in user updated event');
+      return;
+    }
+
     try {
-      const beforeData = change.before.data();
-      const afterData = change.after.data();
-      const userId = context.params.userId;
+      const beforeData = event.data.before.data();
+      const afterData = event.data.after.data();
+      const userId = event.params.userId;
 
       // Check if streak changed
       const beforeStreak = beforeData.currentStreak || 0;
       const afterStreak = afterData.currentStreak || 0;
 
       if (afterStreak > beforeStreak && afterStreak > 0) {
-        functions.logger.info('Processing streak milestone', { 
-          userId, 
-          streak: afterStreak 
-        });
+        logger.info('Processing streak milestone', { userId, streak: afterStreak });
 
-        let notificationData: any = {
+        let notificationData: Record<string, unknown> = {
           type: 'streak_milestone',
           userId,
-          data: { 
+          data: {
             streak: afterStreak,
             previousStreak: beforeStreak
           },
@@ -192,12 +211,14 @@ export const onStreakMilestone = functions.firestore
       }
 
     } catch (error) {
-      functions.logger.error('Error processing streak milestone', { 
-        error: error.message,
-        userId: context.params.userId 
+      const errorMessage = error instanceof Error ? error.message : String(error);
+      logger.error('Error processing streak milestone', {
+        error: errorMessage,
+        userId: event.params.userId
       });
     }
-  });
+  }
+);
 
 // ============= SCHEDULED FUNCTIONS =============
 
@@ -205,22 +226,21 @@ export const onStreakMilestone = functions.firestore
  * Process notification queue every minute
  * High-frequency processing for real-time notifications
  */
-export const processNotificationQueue = functions
-  .runWith({
-    timeoutSeconds: 540, // 9 minutes
-    memory: '1GB'
-  })
-  .pubsub
-  .schedule('every 1 minutes')
-  .onRun(async (context) => {
+export const processNotificationQueue = onSchedule(
+  {
+    schedule: 'every 1 minutes',
+    timeoutSeconds: 540,
+    memory: '1GiB',
+  },
+  async () => {
     try {
       const batchSize = 100;
       const processed = await NotificationQueue.processBatch(batchSize);
-      
-      functions.logger.info(`Processed notification batch`, { 
+
+      logger.info('Processed notification batch', {
         processed: processed.length,
-        successful: processed.filter(p => p.status === 'sent').length,
-        failed: processed.filter(p => p.status === 'failed').length
+        successful: processed.filter((p: { status: string }) => p.status === 'sent').length,
+        failed: processed.filter((p: { status: string }) => p.status === 'failed').length
       });
 
       // Update system health metrics
@@ -230,42 +250,40 @@ export const processNotificationQueue = functions
       });
 
     } catch (error) {
-      functions.logger.error('Error processing notification queue', { error: error.message });
-      
+      const errorMessage = error instanceof Error ? error.message : String(error);
+      logger.error('Error processing notification queue', { error: errorMessage });
+
       // Alert admin on critical errors
       await SystemMonitor.triggerAlert({
         type: 'queue_processing_error',
-        message: error.message,
+        message: errorMessage,
         severity: 'high'
       });
     }
-  });
+  }
+);
 
 /**
  * Send personalized workout reminders
  * Runs twice daily at optimal times
  */
-export const sendWorkoutReminders = functions
-  .runWith({
+export const sendWorkoutReminders = onSchedule(
+  {
+    schedule: '0 9,18 * * *',
+    timeZone: 'Europe/Rome',
     timeoutSeconds: 300,
-    memory: '512MB'
-  })
-  .pubsub
-  .schedule('0 9,18 * * *') // 9 AM and 6 PM
-  .timeZone('Europe/Rome')
-  .onRun(async (context) => {
+    memory: '512MiB',
+  },
+  async () => {
     try {
       const hour = new Date().getHours();
       const timeOfDay = hour === 9 ? 'morning' : 'evening';
-      
-      functions.logger.info(`Sending ${timeOfDay} workout reminders`);
+
+      logger.info(`Sending ${timeOfDay} workout reminders`);
 
       const remindersSent = await NotificationPersonalization.sendTimedReminders(timeOfDay);
-      
-      functions.logger.info(`Sent workout reminders`, { 
-        timeOfDay, 
-        count: remindersSent 
-      });
+
+      logger.info('Sent workout reminders', { timeOfDay, count: remindersSent });
 
       // Record analytics
       await NotificationAnalytics.recordScheduledCampaign('workout_reminders', {
@@ -274,29 +292,30 @@ export const sendWorkoutReminders = functions
       });
 
     } catch (error) {
-      functions.logger.error('Error sending workout reminders', { error: error.message });
+      const errorMessage = error instanceof Error ? error.message : String(error);
+      logger.error('Error sending workout reminders', { error: errorMessage });
     }
-  });
+  }
+);
 
 /**
  * Send weekend motivation notifications
  * Encourages users to stay active on weekends
  */
-export const sendWeekendMotivation = functions
-  .runWith({
+export const sendWeekendMotivation = onSchedule(
+  {
+    schedule: '0 10 * * 6,0',
+    timeZone: 'Europe/Rome',
     timeoutSeconds: 300,
-    memory: '512MB'
-  })
-  .pubsub
-  .schedule('0 10 * * 6,0') // 10 AM on weekends
-  .timeZone('Europe/Rome')
-  .onRun(async (context) => {
+    memory: '512MiB',
+  },
+  async () => {
     try {
-      functions.logger.info('Sending weekend motivation notifications');
+      logger.info('Sending weekend motivation notifications');
 
       const motivationsSent = await NotificationPersonalization.sendWeekendMotivation();
-      
-      functions.logger.info('Sent weekend motivations', { count: motivationsSent });
+
+      logger.info('Sent weekend motivations', { count: motivationsSent });
 
       // Record analytics
       await NotificationAnalytics.recordScheduledCampaign('weekend_motivation', {
@@ -304,29 +323,30 @@ export const sendWeekendMotivation = functions
       });
 
     } catch (error) {
-      functions.logger.error('Error sending weekend motivation', { error: error.message });
+      const errorMessage = error instanceof Error ? error.message : String(error);
+      logger.error('Error sending weekend motivation', { error: errorMessage });
     }
-  });
+  }
+);
 
 /**
  * Generate daily analytics report
  * Comprehensive analysis of notification performance
  */
-export const generateDailyAnalytics = functions
-  .runWith({
+export const generateDailyAnalytics = onSchedule(
+  {
+    schedule: '0 2 * * *',
+    timeZone: 'Europe/Rome',
     timeoutSeconds: 540,
-    memory: '1GB'
-  })
-  .pubsub
-  .schedule('0 2 * * *') // 2 AM daily
-  .timeZone('Europe/Rome')
-  .onRun(async (context) => {
+    memory: '1GiB',
+  },
+  async () => {
     try {
-      functions.logger.info('Generating daily analytics report');
+      logger.info('Generating daily analytics report');
 
       const report = await NotificationAnalytics.generateDailyReport();
-      
-      functions.logger.info('Daily analytics generated', {
+
+      logger.info('Daily analytics generated', {
         date: report.date,
         totalSent: report.metrics.sent,
         deliveryRate: report.metrics.deliveryRate,
@@ -337,64 +357,66 @@ export const generateDailyAnalytics = functions
       if (report.metrics.deliveryRate < 0.95 || report.metrics.clickThroughRate < 0.05) {
         await SystemMonitor.triggerAlert({
           type: 'poor_performance',
-          message: `Daily notification performance below threshold`,
+          message: 'Daily notification performance below threshold',
           data: report.metrics,
           severity: 'medium'
         });
       }
 
     } catch (error) {
-      functions.logger.error('Error generating daily analytics', { error: error.message });
+      const errorMessage = error instanceof Error ? error.message : String(error);
+      logger.error('Error generating daily analytics', { error: errorMessage });
     }
-  });
+  }
+);
 
 /**
  * Clean up old notifications and analytics data
  * Maintains optimal database performance
  */
-export const cleanupOldData = functions
-  .runWith({
+export const cleanupOldData = onSchedule(
+  {
+    schedule: '0 3 * * 0',
+    timeZone: 'Europe/Rome',
     timeoutSeconds: 540,
-    memory: '512MB'
-  })
-  .pubsub
-  .schedule('0 3 * * 0') // 3 AM every Sunday
-  .timeZone('Europe/Rome')
-  .onRun(async (context) => {
+    memory: '512MiB',
+  },
+  async () => {
     try {
-      functions.logger.info('Starting data cleanup');
+      logger.info('Starting data cleanup');
 
       const cleanup = await NotificationAnalytics.cleanupOldData();
-      
-      functions.logger.info('Data cleanup completed', {
+
+      logger.info('Data cleanup completed', {
         notificationsDeleted: cleanup.notifications,
         analyticsDeleted: cleanup.analytics,
         queueItemsDeleted: cleanup.queueItems
       });
 
     } catch (error) {
-      functions.logger.error('Error during data cleanup', { error: error.message });
+      const errorMessage = error instanceof Error ? error.message : String(error);
+      logger.error('Error during data cleanup', { error: errorMessage });
     }
-  });
+  }
+);
 
 /**
  * System health monitoring
  * Runs every 5 minutes to ensure system stability
  */
-export const monitorSystemHealth = functions
-  .runWith({
+export const monitorSystemHealth = onSchedule(
+  {
+    schedule: 'every 5 minutes',
     timeoutSeconds: 120,
-    memory: '256MB'
-  })
-  .pubsub
-  .schedule('every 5 minutes')
-  .onRun(async (context) => {
+    memory: '256MiB',
+  },
+  async () => {
     try {
       const healthReport = await SystemMonitor.checkSystemHealth();
-      
+
       if (healthReport.status === 'critical' || healthReport.status === 'warning') {
-        functions.logger.warn('System health issue detected', healthReport);
-        
+        logger.warn('System health issue detected', healthReport);
+
         if (healthReport.status === 'critical') {
           await SystemMonitor.triggerAlert({
             type: 'system_health',
@@ -406,16 +428,18 @@ export const monitorSystemHealth = functions
       }
 
     } catch (error) {
-      functions.logger.error('Error monitoring system health', { error: error.message });
-      
+      const errorMessage = error instanceof Error ? error.message : String(error);
+      logger.error('Error monitoring system health', { error: errorMessage });
+
       // This is critical - if monitoring fails, we need immediate attention
       await SystemMonitor.triggerAlert({
         type: 'monitoring_failure',
-        message: `System monitoring failed: ${error.message}`,
+        message: `System monitoring failed: ${errorMessage}`,
         severity: 'critical'
       });
     }
-  });
+  }
+);
 
 // ============= GDPR COMPLIANCE FUNCTIONS =============
 
@@ -423,120 +447,122 @@ export const monitorSystemHealth = functions
  * Handle user data export requests
  * GDPR Article 15 - Right of access
  */
-export const exportUserNotificationData = functions
-  .runWith({
+export const exportUserNotificationData = onCall(
+  {
     timeoutSeconds: 300,
-    memory: '512MB'
-  })
-  .https
-  .onCall(async (data, context) => {
+    memory: '512MiB',
+  },
+  async (request) => {
     try {
       // Authenticate user
-      if (!context.auth?.uid) {
-        throw new functions.https.HttpsError('unauthenticated', 'User must be authenticated');
+      if (!request.auth?.uid) {
+        throw new HttpsError('unauthenticated', 'User must be authenticated');
       }
 
-      const userId = context.auth.uid;
-      functions.logger.info('Processing data export request', { userId });
+      const userId = request.auth.uid;
+      logger.info('Processing data export request', { userId });
 
       const exportData = await NotificationPrivacy.exportUserData(userId);
-      
+
       // Log compliance action
       await NotificationPrivacy.logComplianceAction(userId, 'data_exported', {
         requestTimestamp: admin.firestore.Timestamp.now(),
         dataTypes: ['notifications', 'preferences', 'analytics']
       });
 
-      functions.logger.info('Data export completed', { 
-        userId, 
-        notificationCount: exportData.notifications.length 
+      logger.info('Data export completed', {
+        userId,
+        notificationCount: exportData.notifications.length
       });
 
       return exportData;
 
     } catch (error) {
-      functions.logger.error('Error exporting user data', { 
-        error: error.message,
-        userId: context.auth?.uid 
+      const errorMessage = error instanceof Error ? error.message : String(error);
+      logger.error('Error exporting user data', {
+        error: errorMessage,
+        userId: request.auth?.uid
       });
-      throw new functions.https.HttpsError('internal', 'Failed to export user data');
+      if (error instanceof HttpsError) throw error;
+      throw new HttpsError('internal', 'Failed to export user data');
     }
-  });
+  }
+);
 
 /**
  * Handle user data deletion requests
  * GDPR Article 17 - Right to erasure
  */
-export const deleteUserNotificationData = functions
-  .runWith({
+export const deleteUserNotificationData = onCall(
+  {
     timeoutSeconds: 300,
-    memory: '512MB'
-  })
-  .https
-  .onCall(async (data, context) => {
+    memory: '512MiB',
+  },
+  async (request) => {
     try {
       // Authenticate user
-      if (!context.auth?.uid) {
-        throw new functions.https.HttpsError('unauthenticated', 'User must be authenticated');
+      if (!request.auth?.uid) {
+        throw new HttpsError('unauthenticated', 'User must be authenticated');
       }
 
-      const userId = context.auth.uid;
-      functions.logger.info('Processing data deletion request', { userId });
+      const userId = request.auth.uid;
+      logger.info('Processing data deletion request', { userId });
 
       const deletionResult = await NotificationPrivacy.deleteUserData(userId);
-      
+
       // Log compliance action
       await NotificationPrivacy.logComplianceAction(userId, 'data_deleted', {
         requestTimestamp: admin.firestore.Timestamp.now(),
         deletionResult
       });
 
-      functions.logger.info('Data deletion completed', { 
-        userId, 
-        result: deletionResult 
-      });
+      logger.info('Data deletion completed', { userId, result: deletionResult });
 
       return { success: true, deletionResult };
 
     } catch (error) {
-      functions.logger.error('Error deleting user data', { 
-        error: error.message,
-        userId: context.auth?.uid 
+      const errorMessage = error instanceof Error ? error.message : String(error);
+      logger.error('Error deleting user data', {
+        error: errorMessage,
+        userId: request.auth?.uid
       });
-      throw new functions.https.HttpsError('internal', 'Failed to delete user data');
+      if (error instanceof HttpsError) throw error;
+      throw new HttpsError('internal', 'Failed to delete user data');
     }
-  });
+  }
+);
 
 // ============= ADMIN FUNCTIONS =============
+
+interface MarketingCampaignData {
+  campaignId: string;
+  targetSegment: string;
+  templateId: string;
+}
 
 /**
  * Send marketing campaign
  * Admin-only function for sending targeted campaigns
  */
-export const sendMarketingCampaign = functions
-  .runWith({
+export const sendMarketingCampaign = onCall<MarketingCampaignData>(
+  {
     timeoutSeconds: 540,
-    memory: '1GB'
-  })
-  .https
-  .onCall(async (data, context) => {
+    memory: '1GiB',
+  },
+  async (request) => {
     try {
       // Check admin authorization
-      if (!context.auth?.token?.admin) {
-        throw new functions.https.HttpsError('permission-denied', 'Admin access required');
+      if (!request.auth?.token?.admin) {
+        throw new HttpsError('permission-denied', 'Admin access required');
       }
 
-      const { campaignId, targetSegment, templateId } = data;
-      
+      const { campaignId, targetSegment, templateId } = request.data;
+
       if (!campaignId || !targetSegment || !templateId) {
-        throw new functions.https.HttpsError('invalid-argument', 'Missing required parameters');
+        throw new HttpsError('invalid-argument', 'Missing required parameters');
       }
 
-      functions.logger.info('Starting marketing campaign', { 
-        campaignId, 
-        targetSegment, 
-        templateId 
-      });
+      logger.info('Starting marketing campaign', { campaignId, targetSegment, templateId });
 
       const campaignResult = await NotificationPersonalization.sendMarketingCampaign(
         campaignId,
@@ -544,7 +570,7 @@ export const sendMarketingCampaign = functions
         templateId
       );
 
-      functions.logger.info('Marketing campaign completed', {
+      logger.info('Marketing campaign completed', {
         campaignId,
         sent: campaignResult.sent,
         failed: campaignResult.failed
@@ -553,41 +579,45 @@ export const sendMarketingCampaign = functions
       return campaignResult;
 
     } catch (error) {
-      functions.logger.error('Error sending marketing campaign', { 
-        error: error.message,
-        data 
+      const errorMessage = error instanceof Error ? error.message : String(error);
+      logger.error('Error sending marketing campaign', {
+        error: errorMessage,
+        data: request.data
       });
-      throw new functions.https.HttpsError('internal', 'Failed to send marketing campaign');
+      if (error instanceof HttpsError) throw error;
+      throw new HttpsError('internal', 'Failed to send marketing campaign');
     }
-  });
+  }
+);
+
+interface SystemAnalyticsData {
+  startDate?: string;
+  endDate?: string;
+  metrics?: string[];
+}
 
 /**
  * Get system analytics dashboard
  * Admin-only function for monitoring system performance
  */
-export const getSystemAnalytics = functions
-  .runWith({
+export const getSystemAnalytics = onCall<SystemAnalyticsData>(
+  {
     timeoutSeconds: 120,
-    memory: '512MB'
-  })
-  .https
-  .onCall(async (data, context) => {
+    memory: '512MiB',
+  },
+  async (request) => {
     try {
       // Check admin authorization
-      if (!context.auth?.token?.admin) {
-        throw new functions.https.HttpsError('permission-denied', 'Admin access required');
+      if (!request.auth?.token?.admin) {
+        throw new HttpsError('permission-denied', 'Admin access required');
       }
 
-      const { startDate, endDate, metrics } = data;
-      
-      functions.logger.info('Generating system analytics', { 
-        startDate, 
-        endDate, 
-        metrics 
-      });
+      const { startDate, endDate, metrics } = request.data;
+
+      logger.info('Generating system analytics', { startDate, endDate, metrics });
 
       const analytics = await NotificationAnalytics.getSystemAnalytics(
-        startDate ? new Date(startDate) : new Date(Date.now() - 7 * 24 * 60 * 60 * 1000), // Last 7 days
+        startDate ? new Date(startDate) : new Date(Date.now() - 7 * 24 * 60 * 60 * 1000),
         endDate ? new Date(endDate) : new Date(),
         metrics || ['delivery', 'engagement', 'conversion']
       );
@@ -595,15 +625,18 @@ export const getSystemAnalytics = functions
       return analytics;
 
     } catch (error) {
-      functions.logger.error('Error getting system analytics', { 
-        error: error.message,
-        data 
+      const errorMessage = error instanceof Error ? error.message : String(error);
+      logger.error('Error getting system analytics', {
+        error: errorMessage,
+        data: request.data
       });
-      throw new functions.https.HttpsError('internal', 'Failed to get system analytics');
+      if (error instanceof HttpsError) throw error;
+      throw new HttpsError('internal', 'Failed to get system analytics');
     }
-  });
+  }
+);
 
-// Export all functions
+// Export helper modules
 export * from './queue/NotificationQueue';
 export * from './analytics/NotificationAnalytics';
 export * from './personalization/NotificationPersonalization';

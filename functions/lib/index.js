@@ -27,7 +27,7 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getTemplateQuota = exports.createTemplate = exports.cleanupExpiredRateLimits = exports.rejectContribution = exports.approveContribution = exports.checkExpiredSubscriptions = exports.verifyPremiumPurchase = exports.checkAdminStatus = exports.setInitialAdmin = exports.revokeAdminRole = exports.setAdminRole = void 0;
+exports.getTemplateQuota = exports.createTemplate = exports.enforceConsentRateLimit = exports.enforceMeasurementRateLimit = exports.cleanupExpiredRateLimits = exports.rejectContribution = exports.approveContribution = exports.checkExpiredSubscriptions = exports.verifyPremiumPurchase = exports.checkAdminStatus = exports.setInitialAdmin = exports.revokeAdminRole = exports.setAdminRole = void 0;
 const admin = __importStar(require("firebase-admin"));
 // Initialize Firebase Admin
 admin.initializeApp();
@@ -62,8 +62,17 @@ Object.defineProperty(exports, "rejectContribution", { enumerable: true, get: fu
 // 🔐 SECURITY: Rate Limit Cleanup (Scheduled)
 // ========================================
 // Export rate limit cleanup (runs daily to remove expired entries)
-var rateLimiter_1 = require("./security/rateLimiter");
-Object.defineProperty(exports, "cleanupExpiredRateLimits", { enumerable: true, get: function () { return rateLimiter_1.cleanupExpiredRateLimits; } });
+var rateLimiterV1_1 = require("./security/rateLimiterV1");
+Object.defineProperty(exports, "cleanupExpiredRateLimits", { enumerable: true, get: function () { return rateLimiterV1_1.cleanupExpiredRateLimits; } });
+// ========================================
+// 🔐 SECURITY: Document Rate Limiting (Firestore Triggers)
+// ========================================
+// Enforces rate limits on document creation (2025-12-27 Security Audit)
+// - Body measurements: Max 100/day per user
+// - Consent changes: Max 10/day per user
+var documentRateLimiter_1 = require("./security/documentRateLimiter");
+Object.defineProperty(exports, "enforceMeasurementRateLimit", { enumerable: true, get: function () { return documentRateLimiter_1.enforceMeasurementRateLimit; } });
+Object.defineProperty(exports, "enforceConsentRateLimit", { enumerable: true, get: function () { return documentRateLimiter_1.enforceConsentRateLimit; } });
 // ========================================
 // 📝 TEMPLATE QUOTA MANAGEMENT (Server-Side Enforcement)
 // ========================================

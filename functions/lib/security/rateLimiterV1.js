@@ -1,16 +1,17 @@
 "use strict";
 /**
- * 🔐 SECURITY: Rate Limiting for Firebase Functions v1
+ * 🔐 SECURITY: Rate Limiting for Firebase Functions v2
  *
- * Wrapper for existing v1 onCall functions (backward compatible)
+ * Wrapper for onCall functions with rate limiting
  *
  * **Usage**:
  * ```typescript
  * import { withRateLimit, RATE_LIMITS } from './security/rateLimiterV1';
  *
  * export const myFunction = withRateLimit(
- *   async (data, context) => {
- *     // Your function logic here (NOT wrapped in functions.https.onCall)
+ *   async (request) => {
+ *     // Your function logic here
+ *     const { data, auth } = request;
  *   },
  *   {
  *     ...RATE_LIMITS.STRICT,
@@ -43,8 +44,8 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.withRateLimit = exports.RATE_LIMITS = void 0;
-const functions = __importStar(require("firebase-functions"));
+exports.resetRateLimit = exports.cleanupExpiredRateLimits = exports.withRateLimit = exports.RATE_LIMITS = void 0;
+const https_1 = require("firebase-functions/v2/https");
 const admin = __importStar(require("firebase-admin"));
 /**
  * Default rate limit configs
@@ -65,42 +66,53 @@ exports.RATE_LIMITS = {
         maxRequests: 100,
         windowMs: 60 * 1000,
     },
+    /** Hourly: 500 requests per hour (heavy operations) */
+    HOURLY: {
+        maxRequests: 500,
+        windowMs: 60 * 60 * 1000,
+    },
+    /** Daily: 1000 requests per day (bulk operations) */
+    DAILY: {
+        maxRequests: 1000,
+        windowMs: 24 * 60 * 60 * 1000,
+    },
 };
 /**
- * Wrap a Firebase Functions v1 onCall handler with rate limiting
+ * Wrap a Firebase Functions v2 onCall handler with rate limiting
  *
- * @param handler The handler function (NOT wrapped in functions.https.onCall)
+ * @param handler The handler function
  * @param config Rate limit configuration
  * @returns Wrapped CloudFunction
  *
  * @example
  * ```typescript
  * export const setAdminRole = withRateLimit(
- *   async (data, context) => {
- *     // ... your logic (NOT wrapped in functions.https.onCall)
+ *   async (request) => {
+ *     const { data, auth } = request;
+ *     // ... your logic
  *   },
  *   { ...RATE_LIMITS.STRICT, identifier: 'setAdminRole' }
  * );
  * ```
  */
 function withRateLimit(handler, config) {
-    return functions.https.onCall(async (data, context) => {
+    return (0, https_1.onCall)(async (request) => {
         // Apply rate limiting BEFORE calling original handler
-        await rateLimiter(data, context, config);
+        await rateLimiter(request, config);
         // Call original handler if rate limit passed
-        return handler(data, context);
+        return handler(request);
     });
 }
 exports.withRateLimit = withRateLimit;
 /**
- * Rate limiter implementation (v1 compatible)
+ * Rate limiter implementation (v2 compatible)
  */
-async function rateLimiter(data, context, config) {
-    var _a;
+async function rateLimiter(request, config) {
+    var _a, _b;
     const { maxRequests, windowMs = 60000, identifier, trackBy = 'user', errorMessage = 'Too many requests. Please try again later.', } = config;
     // Get tracking key
-    const userId = (_a = context.auth) === null || _a === void 0 ? void 0 : _a.uid;
-    const ip = context.rawRequest.ip || 'unknown';
+    const userId = (_a = request.auth) === null || _a === void 0 ? void 0 : _a.uid;
+    const ip = ((_b = request.rawRequest) === null || _b === void 0 ? void 0 : _b.ip) || 'unknown';
     let trackingKey;
     if (trackBy === 'user' && userId) {
         trackingKey = `user_${userId}`;
@@ -152,7 +164,11 @@ async function checkRateLimit(trackingKey, identifier, maxRequests, windowMs, er
                     windowMs,
                     retryAfterSec,
                 });
-                throw new functions.https.HttpsError('resource-exhausted', `${errorMessage} Retry after ${retryAfterSec} seconds.`);
+                throw new https_1.HttpsError('resource-exhausted', `${errorMessage} Retry after ${retryAfterSec} seconds.`, {
+                    retryAfter: retryAfterSec,
+                    limit: maxRequests,
+                    windowMs,
+                });
             }
             // Add current timestamp
             timestamps.push(now);
@@ -165,7 +181,7 @@ async function checkRateLimit(trackingKey, identifier, maxRequests, windowMs, er
         });
     }
     catch (error) {
-        if (error instanceof functions.https.HttpsError) {
+        if (error instanceof https_1.HttpsError) {
             throw error;
         }
         // Fail-open: Log error but don't block request
@@ -175,4 +191,49 @@ async function checkRateLimit(trackingKey, identifier, maxRequests, windowMs, er
         });
     }
 }
+// ========================================
+// 🧹 Utility Functions
+// ========================================
+/**
+ * Clean up expired rate limit entries (for scheduled function)
+ *
+ * Run this daily to remove old rate limit data
+ *
+ * **Usage**:
+ * ```typescript
+ * export const cleanupRateLimits = onSchedule('every 24 hours', cleanupExpiredRateLimits);
+ * ```
+ */
+async function cleanupExpiredRateLimits() {
+    const db = admin.firestore();
+    const now = new Date();
+    const expiredDocs = await db
+        .collection('rateLimits')
+        .where('expiresAt', '<', now)
+        .limit(500) // Batch limit
+        .get();
+    if (expiredDocs.empty) {
+        console.log('✅ No expired rate limit entries to clean up');
+        return;
+    }
+    const batch = db.batch();
+    expiredDocs.docs.forEach((doc) => {
+        batch.delete(doc.ref);
+    });
+    await batch.commit();
+    console.log(`🗑️ Cleaned up ${expiredDocs.size} expired rate limit entries`);
+}
+exports.cleanupExpiredRateLimits = cleanupExpiredRateLimits;
+/**
+ * Reset rate limit for a specific user (admin utility)
+ *
+ * Use for manual override in case of false positives
+ */
+async function resetRateLimit(userId, identifier) {
+    const db = admin.firestore();
+    const rateLimitRef = db.collection('rateLimits').doc(`${identifier}_user_${userId}`);
+    await rateLimitRef.delete();
+    console.log(`✅ Rate limit reset for user ${userId.substring(0, 8)}... on ${identifier}`);
+}
+exports.resetRateLimit = resetRateLimit;
 //# sourceMappingURL=rateLimiterV1.js.map
