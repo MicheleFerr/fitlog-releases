@@ -12,6 +12,7 @@ import 'package:gymbro_flutter_new/features/exercise_database/presentation/provi
 import 'package:gymbro_flutter_new/features/stress_index/domain/entities/personal_calibration.dart';
 import 'package:gymbro_flutter_new/features/stress_index/domain/entities/template_stress_analysis.dart';
 import 'package:gymbro_flutter_new/features/stress_index/domain/services/calibration_service.dart';
+import 'package:gymbro_flutter_new/features/stress_index/domain/services/prediction_service.dart';
 import 'package:gymbro_flutter_new/features/stress_index/domain/services/template_stress_analyzer.dart';
 import 'package:gymbro_flutter_new/features/stress_index/presentation/providers/stress_index_provider.dart';
 import 'package:gymbro_flutter_new/features/strength_standards/presentation/providers/strength_standards_providers.dart';
@@ -381,4 +382,87 @@ final calibrationQualityProvider =
     Provider.autoDispose<CalibrationQuality>((ref) {
   final calibration = ref.watch(personalCalibrationProvider).valueOrNull;
   return calibration?.quality ?? CalibrationQuality.poor;
+});
+
+// ============================================================================
+// STRESS INSIGHT PROVIDER
+// ============================================================================
+
+/// Provider for stress insight with predictions and recommendations
+///
+/// Combines:
+/// - Current stress from stress index calculator
+/// - Personal calibration factors
+/// - HealthKit data (sleep, HRV, resting HR)
+///
+/// **Returns**: StressInsight with predictions and recovery recommendations
+final stressInsightProvider =
+    FutureProvider.autoDispose<StressInsight>((ref) async {
+  try {
+    // Get current stress from stress index
+    final stressState = ref.watch(stressIndexNotifierProvider);
+    final currentStress =
+        stressState.valueOrNull?.latestResult?.displayScore.toDouble() ?? 0.0;
+
+    // Get personal calibration
+    final calibration = await ref.watch(personalCalibrationProvider.future);
+
+    // Get health data
+    final healthData = await ref.watch(healthDataSnapshotProvider.future);
+
+    // Get average workout stress for predictions (from history)
+    double? avgWorkoutStress;
+    final history = stressState.valueOrNull?.history ?? [];
+    if (history.isNotEmpty) {
+      final stressValues = history.map((r) => r.displayScore.toDouble()).toList();
+      avgWorkoutStress = stressValues.reduce((a, b) => a + b) / stressValues.length;
+    }
+
+    // Calculate insight
+    final insight = PredictionService.calculateInsight(
+      currentStress: currentStress,
+      calibration: calibration,
+      healthData: healthData.hasData ? healthData : null,
+      averageWorkoutStress: avgWorkoutStress,
+    );
+
+    if (kDebugMode) {
+      debugPrint('[StressInsight] Calculated:');
+      debugPrint('  - Current: ${insight.displayStress}');
+      debugPrint('  - Tomorrow (rest): ${insight.displayPredicted}');
+      debugPrint('  - Recommendation: ${insight.recommendation.name}');
+    }
+
+    return insight;
+  } catch (e, st) {
+    if (kDebugMode) {
+      debugPrint('[StressInsight] Error: $e\n$st');
+    }
+    return StressInsight.empty();
+  }
+});
+
+/// Provider for recovery recommendation only
+final recoveryRecommendationProvider =
+    Provider.autoDispose<RecoveryRecommendation>((ref) {
+  final insight = ref.watch(stressInsightProvider).valueOrNull;
+  return insight?.recommendation ?? RecoveryRecommendation.readyHard;
+});
+
+/// Provider for predicted stress tomorrow (if resting)
+final predictedStressTomorrowProvider = Provider.autoDispose<int>((ref) {
+  final insight = ref.watch(stressInsightProvider).valueOrNull;
+  return insight?.displayPredicted ?? 0;
+});
+
+/// Provider for stress rationale
+final stressRationaleProvider = Provider.autoDispose<String>((ref) {
+  final insight = ref.watch(stressInsightProvider).valueOrNull;
+  return insight?.rationale ?? '';
+});
+
+/// Provider to check if training tomorrow is advisable
+final canTrainTomorrowProvider = Provider.autoDispose<bool>((ref) {
+  final insight = ref.watch(stressInsightProvider).valueOrNull;
+  return insight?.canTrainTomorrow ?? true;
 });
