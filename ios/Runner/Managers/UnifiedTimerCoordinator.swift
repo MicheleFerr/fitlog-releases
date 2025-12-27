@@ -1,5 +1,4 @@
 import Foundation
-import Foundation
 import Flutter
 import AVFoundation
 
@@ -416,31 +415,43 @@ final class UnifiedTimerCoordinator {
         let isBackground = args["isBackground"] as? Bool ?? false
         let hasLiveActivity = args["hasLiveActivity"] as? Bool ?? false
 
-        // CRITICAL: Check if we should skip notification due to Live Activity
-        let shouldSkipNotification = hasLiveActivity
+        // ✅ FIX: ALWAYS send notification with sound
+        // Previous bugs:
+        // 1. hasLiveActivity=true → skipped notification → no sound (LA doesn't play its own sound!)
+        // 2. isBackground=true → silent notification → no sound (silent loop fails with Error 561015905)
+        //
+        // LA only displays timer countdown - it doesn't play completion sound
+        // Silent loop often fails to activate audio session in background
+        // Notification sound is the ONLY reliable way to play audio when app is backgrounded
+        //
+        // Risk: If AVAudioPlayer also plays successfully, user hears double sound
+        // But double sound is better than NO sound!
 
-        if shouldSkipNotification {
-            // Live Activity active - skip duplicate notification
-            Logger.shared.log(.info, """
-                ⏭️ [NOTIFICATION] SKIPPING completion notification:
-                - Reason: Live Activity active (hasLiveActivity=true)
-                - Live Activity will handle the notification
-                - This prevents duplicate notifications
-                """, category: .general)
+        print("📢 [NOTIFICATION-SOURCE-A] 🔷 UnifiedTimerCoordinator.sendCompletionNotification:")
+        print("   - Source: Flutter -> iOS method channel")
+        print("   - hasLiveActivity: \(hasLiveActivity)")
+        print("   - isBackground: \(isBackground)")
+        print("   - Sound: \(sound)")
+        print("   - Timestamp: \(Date())")
 
-            result("skipped_live_activity")
-            return
-        }
+        // ✅ FIX DOUBLE NOTIFICATION: Cancel any pre-scheduled notification from LiveActivityHandler
+        // LiveActivityHandler schedules a silent notification when timer starts
+        // We want to replace it with this one that has sound
+        // Use cancelAllPendingNotifications (not cancelAllTimerNotifications which sets skip flag)
+        print("🗑️ [CANCEL-BACKUP] Attempting to cancel SOURCE-B (LiveActivityHandler) backup notification...")
+        print("   - Timestamp: \(Date())")
+        DirectNotificationManager.shared.cancelAllPendingNotifications()
+        print("✅ [CANCEL-BACKUP] cancelAllPendingNotifications() called")
 
         // Use DirectNotificationManager for actual notification scheduling
-        // ✅ DOUBLE SOUND FIX: When in background, silent loop handles audio via AVAudioPlayer
-        // so notification should be silent to avoid double sound
+        // CRITICAL FIX: silentLoopHandlesAudio = false ALWAYS
+        // We need notification sound because silent loop/AVAudioPlayer often fails in background
         let notificationId = DirectNotificationManager.shared.scheduleTimerNotification(
             after: 0.1, // Immediate notification
             soundName: sound,
             title: title,
             body: body,
-            silentLoopHandlesAudio: isBackground  // Background = silent loop playing sound
+            silentLoopHandlesAudio: false  // ALWAYS play sound - silent loop may fail!
         )
 
         // Notification sent through iOS notification system

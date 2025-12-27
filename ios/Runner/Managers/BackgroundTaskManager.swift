@@ -105,23 +105,33 @@ final class BackgroundTaskManager: BackgroundTaskManaging {
             forTaskWithIdentifier: TaskIdentifier.appRefresh,
             using: nil
         ) { [weak self] task in
-            self?.handleAppRefreshTask(task as! BGAppRefreshTask)
+            guard let refreshTask = task as? BGAppRefreshTask else {
+                Logger.shared.log(.error, "❌ Invalid task type for app refresh")
+                task.setTaskCompleted(success: false)
+                return
+            }
+            self?.handleAppRefreshTask(refreshTask)
         }
-        
+
         Logger.shared.log(
             success ? .info : .error,
             "App refresh task registration: \(success ? "✅ Success" : "❌ Failed")"
         )
     }
-    
+
     private func registerProcessingTask() {
         let success = scheduler.register(
             forTaskWithIdentifier: TaskIdentifier.processing,
             using: nil
         ) { [weak self] task in
-            self?.handleProcessingTask(task as! BGProcessingTask)
+            guard let processingTask = task as? BGProcessingTask else {
+                Logger.shared.log(.error, "❌ Invalid task type for processing")
+                task.setTaskCompleted(success: false)
+                return
+            }
+            self?.handleProcessingTask(processingTask)
         }
-        
+
         Logger.shared.log(
             success ? .info : .error,
             "Processing task registration: \(success ? "✅ Success" : "❌ Failed")"

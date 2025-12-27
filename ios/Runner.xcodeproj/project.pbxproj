@@ -8,14 +8,28 @@
 
 /* Begin PBXBuildFile section */
 		1498D2341E8E89220040F4C2 /* GeneratedPluginRegistrant.m in Sources */ = {isa = PBXBuildFile; fileRef = 1498D2331E8E89220040F4C2 /* GeneratedPluginRegistrant.m */; };
+		1758016A75BB08966DB19E24 /* WorkoutSessionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = C11D3C297768B601EB17CC74 /* WorkoutSessionManager.swift */; };
+		191BBECFCB01F2029A69FDB0 /* SharedTimerState.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD5D8A317A8BFDDE38FD8406 /* SharedTimerState.swift */; };
+		19D2C33A8B3FBA8A4C175559 /* WorkoutSessionIntents.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17C30F0E38E9DB9E08279FB0 /* WorkoutSessionIntents.swift */; };
 		2B11011EECEB02790544FAE7 /* Pods_Runner.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A52504EE6C9018683B782A30 /* Pods_Runner.framework */; };
+		2D3A70F0A98C42F56CA2E53C /* WorkoutSessionLiveActivity.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B39142A882AE14ACBE3AB4 /* WorkoutSessionLiveActivity.swift */; };
 		331C808B294A63AB00263BE5 /* RunnerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 331C807B294A618700263BE5 /* RunnerTests.swift */; };
 		3B3967161E833CAA004F5970 /* AppFrameworkInfo.plist in Resources */ = {isa = PBXBuildFile; fileRef = 3B3967151E833CAA004F5970 /* AppFrameworkInfo.plist */; };
+		4B6C1987638216DCEFE3589D /* WorkoutSessionAttributes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46145500022F93830799909F /* WorkoutSessionAttributes.swift */; };
+		58CAFF603B5DDD2BA38487D4 /* GymBroTimerAttributes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 622EF15D9E96573F5D209ED8 /* GymBroTimerAttributes.swift */; };
+		6051D23547EE647FA2734AD8 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 15BAF2CEDF57590327C204A5 /* Localizable.strings */; };
+		732C9E4B3356C9CC77F0FC11 /* GymBroTimerWidgetBundle.swift in Sources */ = {isa = PBXBuildFile; fileRef = F182E9BF332D0BD1C38A7C50 /* GymBroTimerWidgetBundle.swift */; };
+		73D18C1E37D08D7597221CD0 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = ADEBD404437A08CAF43FA60B /* Localizable.strings */; };
+		89656B2FC614D60C8CB4CC53 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E27391F674A352685A3A8F7E /* Assets.xcassets */; };
 		97C146FC1CF9000F007C117D /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 97C146FA1CF9000F007C117D /* Main.storyboard */; };
 		97C146FE1CF9000F007C117D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 97C146FD1CF9000F007C117D /* Assets.xcassets */; };
 		97C147011CF9000F007C117D /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 97C146FF1CF9000F007C117D /* LaunchScreen.storyboard */; };
 		99B2A35353F7A84D78C9DA49 /* HealthKitActivityManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1760C539CEEFC322D2A4427D /* HealthKitActivityManager.swift */; };
+		9D773A5D0F3C3BF5646D7010 /* WorkoutSessionAttributes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B05711C2A68FE4BC25B6BB7 /* WorkoutSessionAttributes.swift */; };
+		9D7E0F2A78860C31C183C79C /* GymBroScheduleAttributes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 910594C0C3CD14F051272D04 /* GymBroScheduleAttributes.swift */; };
+		BF5D3AC4D383E271B0C50F43 /* GymBroTimerWidgetLiveActivity.swift in Sources */ = {isa = PBXBuildFile; fileRef = B61F8EE9828DC1F7423FD132 /* GymBroTimerWidgetLiveActivity.swift */; };
 		C328CC496915E48D88CF4884 /* Pods_RunnerTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A112024F9856EE8DC47538C8 /* Pods_RunnerTests.framework */; };
+		CF86ED4B2E7811962822D377 /* AppIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7255022CD3DA881B20320D58 /* AppIntent.swift */; };
 		D10AC5C72E4B9CAF009D8E78 /* timer_complete.caf in Resources */ = {isa = PBXBuildFile; fileRef = D10AC5C62E4B9CAF009D8E78 /* timer_complete.caf */; };
 		D10AC5CD2E4BA027009D8E78 /* BackgroundAudioManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = D10AC5CC2E4BA027009D8E78 /* BackgroundAudioManager.swift */; };
 		D10AC7342E4CD104009D8E78 /* silent_loop.wav in Resources */ = {isa = PBXBuildFile; fileRef = D10AC7332E4CD104009D8E78 /* silent_loop.wav */; };
@@ -52,6 +66,7 @@
 		D1F5514B2E4CE7B900DA47B4 /* YehBuddie.wav in Resources */ = {isa = PBXBuildFile; fileRef = D1F551492E4CE7B900DA47B4 /* YehBuddie.wav */; };
 		D1F5514C2E4CE7B900DA47B4 /* LightWeight.caf in Resources */ = {isa = PBXBuildFile; fileRef = D1F551462E4CE7B900DA47B4 /* LightWeight.caf */; };
 		D1F5514D2E4CE7B900DA47B4 /* YehBuddie.caf in Resources */ = {isa = PBXBuildFile; fileRef = D1F551482E4CE7B900DA47B4 /* YehBuddie.caf */; };
+		ECF69A032E3D259746CE078C /* WidgetLocalization.swift in Sources */ = {isa = PBXBuildFile; fileRef = 160D2347D71CBBADFA502889 /* WidgetLocalization.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -117,15 +132,22 @@
 		0B52304E61203F658EC1B877 /* Pods-Runner.profile.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Runner.profile.xcconfig"; path = "Target Support Files/Pods-Runner/Pods-Runner.profile.xcconfig"; sourceTree = "<group>"; };
 		1498D2321E8E86230040F4C2 /* GeneratedPluginRegistrant.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GeneratedPluginRegistrant.h; sourceTree = "<group>"; };
 		1498D2331E8E89220040F4C2 /* GeneratedPluginRegistrant.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GeneratedPluginRegistrant.m; sourceTree = "<group>"; };
+		15BAF2CEDF57590327C204A5 /* Localizable.strings */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.strings; name = Localizable.strings; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
+		160D2347D71CBBADFA502889 /* WidgetLocalization.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = WidgetLocalization.swift; sourceTree = "<group>"; };
 		1760C539CEEFC322D2A4427D /* HealthKitActivityManager.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = HealthKitActivityManager.swift; sourceTree = "<group>"; };
+		17C30F0E38E9DB9E08279FB0 /* WorkoutSessionIntents.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = WorkoutSessionIntents.swift; sourceTree = "<group>"; };
 		20E3F22DAFC45283D2A63558 /* Pods-RunnerTests.profile.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RunnerTests.profile.xcconfig"; path = "Target Support Files/Pods-RunnerTests/Pods-RunnerTests.profile.xcconfig"; sourceTree = "<group>"; };
 		331C807B294A618700263BE5 /* RunnerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RunnerTests.swift; sourceTree = "<group>"; };
 		331C8081294A63A400263BE5 /* RunnerTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = RunnerTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		3A89610AAEDA1C21EEDF25B2 /* Pods-RunnerTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RunnerTests.debug.xcconfig"; path = "Target Support Files/Pods-RunnerTests/Pods-RunnerTests.debug.xcconfig"; sourceTree = "<group>"; };
 		3B3967151E833CAA004F5970 /* AppFrameworkInfo.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = AppFrameworkInfo.plist; path = Flutter/AppFrameworkInfo.plist; sourceTree = "<group>"; };
+		46145500022F93830799909F /* WorkoutSessionAttributes.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = WorkoutSessionAttributes.swift; sourceTree = "<group>"; };
+		622EF15D9E96573F5D209ED8 /* GymBroTimerAttributes.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = GymBroTimerAttributes.swift; sourceTree = "<group>"; };
+		7255022CD3DA881B20320D58 /* AppIntent.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = AppIntent.swift; sourceTree = "<group>"; };
 		74858FAD1ED2DC5600515810 /* Runner-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Runner-Bridging-Header.h"; sourceTree = "<group>"; };
 		7AFA3C8E1D35360C0083082E /* Release.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; name = Release.xcconfig; path = Flutter/Release.xcconfig; sourceTree = "<group>"; };
 		8E9AD99DDE4910C32AFCBA29 /* Pods-Runner.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Runner.release.xcconfig"; path = "Target Support Files/Pods-Runner/Pods-Runner.release.xcconfig"; sourceTree = "<group>"; };
+		910594C0C3CD14F051272D04 /* GymBroScheduleAttributes.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = GymBroScheduleAttributes.swift; sourceTree = "<group>"; };
 		9740EEB21CF90195004384FC /* Debug.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = Debug.xcconfig; path = Flutter/Debug.xcconfig; sourceTree = "<group>"; };
 		9740EEB31CF90195004384FC /* Generated.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = Generated.xcconfig; path = Flutter/Generated.xcconfig; sourceTree = "<group>"; };
 		97C146EE1CF9000F007C117D /* Runner.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Runner.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -133,9 +155,15 @@
 		97C146FD1CF9000F007C117D /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		97C147001CF9000F007C117D /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		97C147021CF9000F007C117D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		9B05711C2A68FE4BC25B6BB7 /* WorkoutSessionAttributes.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = WorkoutSessionAttributes.swift; sourceTree = "<group>"; };
 		A112024F9856EE8DC47538C8 /* Pods_RunnerTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_RunnerTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		A1B39142A882AE14ACBE3AB4 /* WorkoutSessionLiveActivity.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = WorkoutSessionLiveActivity.swift; sourceTree = "<group>"; };
 		A52504EE6C9018683B782A30 /* Pods_Runner.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Runner.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		ADEBD404437A08CAF43FA60B /* Localizable.strings */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.strings; name = Localizable.strings; path = it.lproj/Localizable.strings; sourceTree = "<group>"; };
+		B61F8EE9828DC1F7423FD132 /* GymBroTimerWidgetLiveActivity.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = GymBroTimerWidgetLiveActivity.swift; sourceTree = "<group>"; };
+		BD5D8A317A8BFDDE38FD8406 /* SharedTimerState.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = SharedTimerState.swift; sourceTree = "<group>"; };
 		BE975B022A252D832E2DB936 /* Pods-RunnerTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RunnerTests.release.xcconfig"; path = "Target Support Files/Pods-RunnerTests/Pods-RunnerTests.release.xcconfig"; sourceTree = "<group>"; };
+		C11D3C297768B601EB17CC74 /* WorkoutSessionManager.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = WorkoutSessionManager.swift; sourceTree = "<group>"; };
 		CB82DD212163BB7C723A0816 /* Pods-Runner.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Runner.debug.xcconfig"; path = "Target Support Files/Pods-Runner/Pods-Runner.debug.xcconfig"; sourceTree = "<group>"; };
 		D10AC5C62E4B9CAF009D8E78 /* timer_complete.caf */ = {isa = PBXFileReference; lastKnownFileType = file; path = timer_complete.caf; sourceTree = "<group>"; };
 		D10AC5C82E4B9DE1009D8E78 /* timer_complete.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = timer_complete.wav; sourceTree = "<group>"; };
@@ -182,6 +210,8 @@
 		D1F551472E4CE7B900DA47B4 /* LightWeight.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = LightWeight.wav; sourceTree = "<group>"; };
 		D1F551482E4CE7B900DA47B4 /* YehBuddie.caf */ = {isa = PBXFileReference; lastKnownFileType = file; path = YehBuddie.caf; sourceTree = "<group>"; };
 		D1F551492E4CE7B900DA47B4 /* YehBuddie.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = YehBuddie.wav; sourceTree = "<group>"; };
+		E27391F674A352685A3A8F7E /* Assets.xcassets */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		F182E9BF332D0BD1C38A7C50 /* GymBroTimerWidgetBundle.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = GymBroTimerWidgetBundle.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -315,6 +345,7 @@
 				E95D65AAD487DC6F65112E11 /* Pods */,
 				1438DF6737B66623DBFF94F5 /* Frameworks */,
 				D15AD7D72E4B91280029B4D4 /* Recovered References */,
+				F93373C00D136FF02E5B45F0 /* GymBroTimerWidgetSources */,
 			);
 			sourceTree = "<group>";
 		};
@@ -400,6 +431,8 @@
 				D17D7A6B2E77760100480A54 /* KeyboardManager.swift */,
 				D17D7A6C2E77760100480A54 /* NetworkConfiguration.swift */,
 				1760C539CEEFC322D2A4427D /* HealthKitActivityManager.swift */,
+				C11D3C297768B601EB17CC74 /* WorkoutSessionManager.swift */,
+				46145500022F93830799909F /* WorkoutSessionAttributes.swift */,
 			);
 			path = Managers;
 			sourceTree = "<group>";
@@ -415,6 +448,27 @@
 				20E3F22DAFC45283D2A63558 /* Pods-RunnerTests.profile.xcconfig */,
 			);
 			path = Pods;
+			sourceTree = "<group>";
+		};
+		F93373C00D136FF02E5B45F0 /* GymBroTimerWidgetSources */ = {
+			isa = PBXGroup;
+			children = (
+				9B05711C2A68FE4BC25B6BB7 /* WorkoutSessionAttributes.swift */,
+				17C30F0E38E9DB9E08279FB0 /* WorkoutSessionIntents.swift */,
+				A1B39142A882AE14ACBE3AB4 /* WorkoutSessionLiveActivity.swift */,
+				F182E9BF332D0BD1C38A7C50 /* GymBroTimerWidgetBundle.swift */,
+				B61F8EE9828DC1F7423FD132 /* GymBroTimerWidgetLiveActivity.swift */,
+				622EF15D9E96573F5D209ED8 /* GymBroTimerAttributes.swift */,
+				910594C0C3CD14F051272D04 /* GymBroScheduleAttributes.swift */,
+				BD5D8A317A8BFDDE38FD8406 /* SharedTimerState.swift */,
+				160D2347D71CBBADFA502889 /* WidgetLocalization.swift */,
+				7255022CD3DA881B20320D58 /* AppIntent.swift */,
+				15BAF2CEDF57590327C204A5 /* Localizable.strings */,
+				ADEBD404437A08CAF43FA60B /* Localizable.strings */,
+				E27391F674A352685A3A8F7E /* Assets.xcassets */,
+			);
+			name = GymBroTimerWidgetSources;
+			path = GymBroTimerWidget;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -594,6 +648,9 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				6051D23547EE647FA2734AD8 /* Localizable.strings in Resources */,
+				73D18C1E37D08D7597221CD0 /* Localizable.strings in Resources */,
+				89656B2FC614D60C8CB4CC53 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -746,6 +803,8 @@
 				D10AC7762E4CD2CA009D8E78 /* NotificationPermissionHelper.swift in Sources */,
 				D10AC7722E4CD2BD009D8E78 /* BatteryOptimizationManager.swift in Sources */,
 				99B2A35353F7A84D78C9DA49 /* HealthKitActivityManager.swift in Sources */,
+				1758016A75BB08966DB19E24 /* WorkoutSessionManager.swift in Sources */,
+				4B6C1987638216DCEFE3589D /* WorkoutSessionAttributes.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -760,6 +819,16 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				9D773A5D0F3C3BF5646D7010 /* WorkoutSessionAttributes.swift in Sources */,
+				19D2C33A8B3FBA8A4C175559 /* WorkoutSessionIntents.swift in Sources */,
+				2D3A70F0A98C42F56CA2E53C /* WorkoutSessionLiveActivity.swift in Sources */,
+				732C9E4B3356C9CC77F0FC11 /* GymBroTimerWidgetBundle.swift in Sources */,
+				BF5D3AC4D383E271B0C50F43 /* GymBroTimerWidgetLiveActivity.swift in Sources */,
+				58CAFF603B5DDD2BA38487D4 /* GymBroTimerAttributes.swift in Sources */,
+				9D7E0F2A78860C31C183C79C /* GymBroScheduleAttributes.swift in Sources */,
+				191BBECFCB01F2029A69FDB0 /* SharedTimerState.swift in Sources */,
+				ECF69A032E3D259746CE078C /* WidgetLocalization.swift in Sources */,
+				CF86ED4B2E7811962822D377 /* AppIntent.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

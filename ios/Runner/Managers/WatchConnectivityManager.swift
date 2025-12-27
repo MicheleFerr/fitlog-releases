@@ -18,16 +18,127 @@ final class WatchConnectivityManager: NSObject {
     private var isSessionActivated = false
     private let stateQueue = DispatchQueue(label: "com.gymbro.watch.state", attributes: .concurrent)
 
+    // ✅ FIX: Pending critical commands queue for background handling
+    // When Flutter is in background, critical commands are saved here and processed on resume
+    private static let pendingCommandsKey = "WatchConnectivity_PendingCommands"
+
     // ✅ Cache current workout state for Watch requests
     // Updated when workout starts/updates, cleared when workout ends
-    private var currentWorkoutState: [String: Any]?
-    private var currentRestTimerState: [String: Any]?
+    // ✅ FIX: Now persisted to UserDefaults for crash recovery
+    // Using computed properties with backing stores for proper persistence
+    private var _currentWorkoutStateStorage: [String: Any]?
+    private var _currentRestTimerStateStorage: [String: Any]?
+
+    private var currentWorkoutState: [String: Any]? {
+        get { _currentWorkoutStateStorage }
+        set {
+            _currentWorkoutStateStorage = newValue
+            // Persist to UserDefaults for crash recovery
+            if let state = newValue {
+                UserDefaults.standard.set(state, forKey: "WatchConnectivity_WorkoutState")
+            } else {
+                UserDefaults.standard.removeObject(forKey: "WatchConnectivity_WorkoutState")
+            }
+        }
+    }
+    private var currentRestTimerState: [String: Any]? {
+        get { _currentRestTimerStateStorage }
+        set {
+            _currentRestTimerStateStorage = newValue
+            // Persist to UserDefaults for crash recovery
+            if let state = newValue {
+                UserDefaults.standard.set(state, forKey: "WatchConnectivity_RestTimerState")
+            } else {
+                UserDefaults.standard.removeObject(forKey: "WatchConnectivity_RestTimerState")
+            }
+        }
+    }
 
     // MARK: - Initialization
     private override init() {
         super.init()
 
+        // ✅ FIX: Restore cached state from UserDefaults for crash recovery
+        // This ensures Watch can get current workout state even after iPhone app restart
+        restoreCachedState()
+
         // WatchConnectivityManager initialized
+    }
+
+    /// Restore cached workout/timer state from UserDefaults
+    /// Called on init to recover state after app crash/kill
+    private func restoreCachedState() {
+        // Restore workout state
+        if let savedWorkoutState = UserDefaults.standard.dictionary(forKey: "WatchConnectivity_WorkoutState") {
+            // Check if workout is still active (not stale)
+            if let isActive = savedWorkoutState["isActive"] as? Bool, isActive,
+               let timestamp = savedWorkoutState["timestamp"] as? TimeInterval {
+                let age = Date().timeIntervalSince1970 - timestamp
+                let maxAge: TimeInterval = 4 * 60 * 60  // 4 hours max
+
+                if age < maxAge {
+                    // State is recent enough, restore it
+                    // Use backing store directly to avoid triggering setter (which would re-save)
+                    _currentWorkoutStateStorage = savedWorkoutState
+                    Logger.shared.log(.info, "✅ Restored workout state from cache (age: \(Int(age))s)", category: .general)
+                } else {
+                    // Stale state, clear it
+                    UserDefaults.standard.removeObject(forKey: "WatchConnectivity_WorkoutState")
+                    Logger.shared.log(.info, "🧹 Cleared stale workout state (age: \(Int(age))s)", category: .general)
+                }
+            }
+        }
+
+        // Restore rest timer state (only if workout is active)
+        if _currentWorkoutStateStorage != nil,
+           let savedTimerState = UserDefaults.standard.dictionary(forKey: "WatchConnectivity_RestTimerState") {
+            if let timestamp = savedTimerState["timestamp"] as? TimeInterval {
+                let age = Date().timeIntervalSince1970 - timestamp
+                let maxAge: TimeInterval = 10 * 60  // 10 minutes max for timer
+
+                if age < maxAge {
+                    _currentRestTimerStateStorage = savedTimerState
+                    Logger.shared.log(.info, "✅ Restored timer state from cache (age: \(Int(age))s)", category: .general)
+                } else {
+                    UserDefaults.standard.removeObject(forKey: "WatchConnectivity_RestTimerState")
+                }
+            }
+        }
+    }
+
+    // MARK: - Pending Commands Queue (Background Safety)
+
+    /// Save a critical command to pending queue for processing when Flutter resumes
+    /// Used when Watch sends commands while iPhone app is in background
+    private func savePendingCommand(_ command: [String: Any]) {
+        var pending = UserDefaults.standard.array(forKey: Self.pendingCommandsKey) as? [[String: Any]] ?? []
+        pending.append(command)
+        UserDefaults.standard.set(pending, forKey: Self.pendingCommandsKey)
+        Logger.shared.log(.info, "📥 Saved pending command: \(command["type"] ?? "unknown")", category: .general)
+    }
+
+    /// Get all pending commands (for Flutter to process on resume)
+    private func getPendingCommands() -> [[String: Any]] {
+        return UserDefaults.standard.array(forKey: Self.pendingCommandsKey) as? [[String: Any]] ?? []
+    }
+
+    /// Clear all pending commands (after Flutter has processed them)
+    private func clearPendingCommands() {
+        UserDefaults.standard.removeObject(forKey: Self.pendingCommandsKey)
+        Logger.shared.log(.info, "🧹 Cleared pending commands queue", category: .general)
+    }
+
+    /// Handle Flutter request to check pending commands
+    private func handleCheckPendingCommands(result: @escaping FlutterResult) {
+        let pending = getPendingCommands()
+        Logger.shared.log(.info, "📤 Flutter checking pending commands: \(pending.count) found", category: .general)
+        result(pending)
+    }
+
+    /// Handle Flutter request to clear pending commands
+    private func handleClearPendingCommands(result: @escaping FlutterResult) {
+        clearPendingCommands()
+        result(true)
     }
 
     // MARK: - Flutter Channel Setup
@@ -101,7 +212,7 @@ final class WatchConnectivityManager: NSObject {
             handleNotifyWorkoutStarted(call.arguments, result: result)
 
         case "notifyWorkoutEnded":
-            handleNotifyWorkoutEnded(result: result)
+            handleNotifyWorkoutEnded(call.arguments, result: result)
 
         case "sendWorkoutUpdate":
             handleSendWorkoutUpdate(call.arguments, result: result)
@@ -117,6 +228,16 @@ final class WatchConnectivityManager: NSObject {
 
         case "sendRestTimerResumed":
             handleSendRestTimerResumed(call.arguments, result: result)
+
+        case "sendRestTimerExtended":
+            handleSendRestTimerExtended(call.arguments, result: result)
+
+        // ✅ FIX: Pending commands API for background safety
+        case "checkPendingWatchCommands":
+            handleCheckPendingCommands(result: result)
+
+        case "clearPendingWatchCommands":
+            handleClearPendingCommands(result: result)
 
         default:
             result(FlutterMethodNotImplemented)
@@ -303,56 +424,67 @@ final class WatchConnectivityManager: NSObject {
 
     // MARK: - Workout Companion API (iPhone → Watch)
 
+    /// Build a workout message with consistent structure for both workoutStarted and workoutUpdate
+    /// Centralizes message construction to avoid field duplication and ensure consistency
+    /// - Parameters:
+    ///   - data: Raw data from Flutter containing workout fields
+    ///   - type: Message type ("workoutStarted" or "workoutUpdate")
+    /// - Returns: Complete message dictionary ready to send to Watch
+    private func buildWorkoutMessage(from data: [String: Any], type: String) -> [String: Any] {
+        var message: [String: Any] = ["type": type]
+
+        // Merge all data from Flutter - this ensures new fields are automatically included
+        message.merge(data) { _, new in new }
+
+        // Set required fields with defaults if not present
+        message["isActive"] = message["isActive"] ?? true
+        message["timestamp"] = Date().timeIntervalSince1970
+
+        // Ensure critical fields have defaults
+        if message["exerciseName"] == nil { message["exerciseName"] = "Workout" }
+        if message["currentSet"] == nil { message["currentSet"] = 1 }
+        if message["totalSets"] == nil { message["totalSets"] = 1 }
+        if message["targetWeight"] == nil { message["targetWeight"] = 0.0 }
+        if message["targetReps"] == nil { message["targetReps"] = 0 }
+        if message["setsCompleted"] == nil { message["setsCompleted"] = 0 }
+        if message["setsCompletedInExercise"] == nil { message["setsCompletedInExercise"] = 0 }
+        if message["lastCompletedReps"] == nil { message["lastCompletedReps"] = 0 }
+        if message["rpeTrackingEnabled"] == nil { message["rpeTrackingEnabled"] = false }
+        if message["effortScale"] == nil { message["effortScale"] = "rpe" }
+        if message["locale"] == nil { message["locale"] = "en" }
+        if message["formCues"] == nil { message["formCues"] = "" }
+        if message["tut"] == nil { message["tut"] = "" }
+        if message["workoutType"] == nil { message["workoutType"] = "strength" }
+        if message["allSets"] == nil { message["allSets"] = [] as [[String: Any]] }
+
+        return message
+    }
+
     /// Notify Watch that workout started on iPhone
     /// Uses BOTH sendMessage AND updateApplicationContext for maximum reliability
     private func handleNotifyWorkoutStarted(_ arguments: Any?, result: @escaping FlutterResult) {
-        // 🔍 DEBUG: Log entry point
-        print("⌚ [DEBUG] handleNotifyWorkoutStarted called")
-
         guard let data = arguments as? [String: Any] else {
-            print("⌚ [DEBUG] ❌ Invalid arguments: \(String(describing: arguments))")
+            Logger.shared.log(.error, "⌚ handleNotifyWorkoutStarted: Invalid arguments", category: .general)
             result(FlutterError(code: "INVALID_ARGUMENTS", message: "Expected workout data", details: nil))
             return
         }
 
-        print("⌚ [DEBUG] Data received: \(data)")
-
         guard let session = session else {
-            print("⌚ [DEBUG] ❌ WCSession is nil")
+            Logger.shared.log(.error, "⌚ handleNotifyWorkoutStarted: WCSession is nil", category: .general)
             result(FlutterError(code: "NOT_AVAILABLE", message: "WCSession not available", details: nil))
             return
         }
 
-        // 🔍 DEBUG: Log session state
-        print("⌚ [DEBUG] WCSession state:")
-        print("   - isPaired: \(session.isPaired)")
-        print("   - isWatchAppInstalled: \(session.isWatchAppInstalled)")
-        print("   - isReachable: \(session.isReachable)")
-        print("   - activationState: \(session.activationState.rawValue)")
+        // ✅ REFACTOR: Use centralized message builder to avoid field duplication
+        let message = buildWorkoutMessage(from: data, type: "workoutStarted")
 
-        let message: [String: Any] = [
-            "type": "workoutStarted",
-            "isActive": true,
-            "exerciseName": data["exerciseName"] as? String ?? "Workout",
-            "currentSet": data["currentSet"] as? Int ?? 1,
-            "totalSets": data["totalSets"] as? Int ?? 1,
-            "targetWeight": data["targetWeight"] as? Double ?? 0,
-            "targetReps": data["targetReps"] as? Int ?? 0,
-            "setsCompleted": data["setsCompleted"] as? Int ?? 0,
-            // RPE/RIR settings for effort tracking on Watch
-            "rpeTrackingEnabled": data["rpeTrackingEnabled"] as? Bool ?? false,
-            "effortScale": data["effortScale"] as? String ?? "rpe",
-            // Locale for Watch UI strings (from Flutter app)
-            "locale": data["locale"] as? String ?? "en",
-            // ⌚ BUG FIX #3: Time Under Tension (e.g., "3-1-2-0")
-            "tut": data["tut"] as? String ?? "",
-            "timestamp": Date().timeIntervalSince1970
-        ]
+        // Log allSets count for debugging
+        if let allSets = message["allSets"] as? [[String: Any]] {
+            Logger.shared.log(.debug, "⌚ Sending \(allSets.count) sets to Watch for navigation", category: .general)
+        }
 
-        // ✅ Cache workout state for Watch requests
+        // Cache workout state for Watch requests
         currentWorkoutState = message
-
-        print("⌚ [DEBUG] Message to send: \(message)")
 
         // ============================================================
         // STRATEGY: Use BOTH methods for maximum reliability
@@ -361,27 +493,24 @@ final class WatchConnectivityManager: NSObject {
         // ============================================================
 
         // ALWAYS update application context first (reliable, persistent)
-        // ✅ FIX: MERGE with existing context to preserve restTimer and other data
+        // Merge with existing context to preserve restTimer and other data
         do {
             var currentContext = session.applicationContext
             currentContext["workout"] = message
             try session.updateApplicationContext(currentContext)
-            print("⌚ [DEBUG] ✅ updateApplicationContext succeeded (guaranteed delivery)")
+            Logger.shared.log(.debug, "⌚ updateApplicationContext succeeded", category: .general)
         } catch {
-            print("⌚ [DEBUG] ❌ updateApplicationContext failed: \(error)")
+            Logger.shared.log(.error, "⌚ updateApplicationContext failed: \(error)", category: .general)
         }
 
         // ALSO try sendMessage for immediate delivery (only works if Watch app is in foreground)
         if session.isReachable {
-            print("⌚ [DEBUG] ✅ Watch IS reachable - also sending via sendMessage for immediate delivery")
-            session.sendMessage(message, replyHandler: { reply in
-                print("⌚ [DEBUG] Watch replied: \(reply)")
+            session.sendMessage(message, replyHandler: { _ in
+                Logger.shared.log(.debug, "⌚ Watch replied to workoutStarted", category: .general)
             }) { error in
-                print("⌚ [DEBUG] ⚠️ sendMessage failed (Watch app may be in background): \(error)")
-                // This is expected if Watch app is in background - context update will deliver it
+                // Expected if Watch app is in background - context update will deliver it
+                Logger.shared.log(.debug, "⌚ sendMessage failed (Watch may be in background): \(error.localizedDescription)", category: .general)
             }
-        } else {
-            print("⌚ [DEBUG] ⚠️ Watch NOT reachable - relying on applicationContext")
         }
 
         Logger.shared.log(.info, "🏋️ Notified Watch: workout started (dual delivery)", category: .general)
@@ -390,10 +519,15 @@ final class WatchConnectivityManager: NSObject {
 
     /// Notify Watch that workout ended
     /// CRITICAL: Must clear applicationContext to prevent stale state on Watch
-    private func handleNotifyWorkoutEnded(result: @escaping FlutterResult) {
+    /// - Parameter arguments: Optional dict with "save" key (default true) to indicate if HKWorkoutSession should be saved
+    private func handleNotifyWorkoutEnded(_ arguments: Any?, result: @escaping FlutterResult) {
         // ✅ Clear cached workout state
         currentWorkoutState = nil
         currentRestTimerState = nil
+
+        // ✅ FIX: Extract save parameter (default true for backwards compatibility)
+        let args = arguments as? [String: Any]
+        let shouldSave = args?["save"] as? Bool ?? true
 
         guard let session = session else {
             result(true)
@@ -403,6 +537,7 @@ final class WatchConnectivityManager: NSObject {
         let message: [String: Any] = [
             "type": "workoutEnded",
             "isActive": false,
+            "save": shouldSave,  // ✅ FIX: Pass save flag to Watch
             "timestamp": Date().timeIntervalSince1970
         ]
 
@@ -437,35 +572,15 @@ final class WatchConnectivityManager: NSObject {
             return
         }
 
-        var message: [String: Any] = ["type": "workoutUpdate"]
-        message.merge(data) { _, new in new }
-        message["timestamp"] = Date().timeIntervalSince1970
+        // ✅ REFACTOR: Use centralized message builder to avoid field duplication
+        let message = buildWorkoutMessage(from: data, type: "workoutUpdate")
 
-        // Always include RPE settings in updates (Watch needs them for set completion)
-        if message["rpeTrackingEnabled"] == nil {
-            message["rpeTrackingEnabled"] = data["rpeTrackingEnabled"] as? Bool ?? false
-        }
-        if message["effortScale"] == nil {
-            message["effortScale"] = data["effortScale"] as? String ?? "rpe"
-        }
-        // Locale for Watch UI strings (from Flutter app)
-        if message["locale"] == nil {
-            message["locale"] = data["locale"] as? String ?? "en"
-        }
-        // ⌚ BUG FIX #3: Time Under Tension (e.g., "3-1-2-0")
-        if message["tut"] == nil {
-            message["tut"] = data["tut"] as? String ?? ""
-        }
-
-        // ✅ Update cached workout state for Watch requests
+        // Update cached workout state for Watch requests
         // Merge new data into existing state to keep full context
         if var existingState = currentWorkoutState {
             existingState.merge(message) { _, new in new }
-            existingState["isActive"] = true  // Ensure active flag is set
             currentWorkoutState = existingState
         } else {
-            // No existing state, create new with isActive
-            message["isActive"] = true
             currentWorkoutState = message
         }
 
@@ -474,7 +589,7 @@ final class WatchConnectivityManager: NSObject {
             return
         }
 
-        // ✅ ALSO update applicationContext for Watch cache (ensures fast recovery on Watch reopen)
+        // Update applicationContext for Watch cache (ensures fast recovery on Watch reopen)
         do {
             var currentContext = session.applicationContext
             currentContext["workout"] = currentWorkoutState
@@ -546,27 +661,36 @@ final class WatchConnectivityManager: NSObject {
         // ✅ Clear rest timer cache when skipped
         currentRestTimerState = nil
 
-        guard let session = session, session.isReachable else {
+        guard let session = session else {
             result(true)
             return
         }
 
-        let message: [String: Any] = [
-            "type": "restTimerSkipped",
-            "timestamp": Date().timeIntervalSince1970
-        ]
+        // ✅ FIX: Also clear restTimer from applicationContext to prevent stale data
+        do {
+            var currentContext = session.applicationContext
+            currentContext.removeValue(forKey: "restTimer")
+            try session.updateApplicationContext(currentContext)
+            Logger.shared.log(.debug, "⏱️ Cleared restTimer from applicationContext", category: .general)
+        } catch {
+            Logger.shared.log(.debug, "Failed to clear restTimer from context: \(error)", category: .general)
+        }
 
-        session.sendMessage(message, replyHandler: nil, errorHandler: nil)
+        // Send immediate message if reachable
+        if session.isReachable {
+            let message: [String: Any] = [
+                "type": "restTimerSkipped",
+                "timestamp": Date().timeIntervalSince1970
+            ]
+            session.sendMessage(message, replyHandler: nil, errorHandler: nil)
+        }
+
         result(true)
     }
 
     /// Notify Watch that rest timer was paused
+    /// Uses BOTH applicationContext (reliable) and sendMessage (immediate)
     private func handleSendRestTimerPaused(_ arguments: Any?, result: @escaping FlutterResult) {
-        guard let session = session, session.isReachable else {
-            result(true)
-            return
-        }
-
         let remainingTime = (arguments as? [String: Any])?["remainingTime"] as? Int ?? 0
 
         let message: [String: Any] = [
@@ -575,18 +699,47 @@ final class WatchConnectivityManager: NSObject {
             "timestamp": Date().timeIntervalSince1970
         ]
 
-        session.sendMessage(message, replyHandler: nil, errorHandler: nil)
-        Logger.shared.log(.info, "⏸️ Sent rest timer paused to Watch: \(remainingTime)s remaining", category: .general)
-        result(true)
-    }
+        // ✅ FIX: Update cached rest timer state with pause info
+        if var timerState = currentRestTimerState {
+            timerState["isPaused"] = true
+            timerState["remainingTime"] = remainingTime
+            timerState["timestamp"] = Date().timeIntervalSince1970
+            currentRestTimerState = timerState
+        }
 
-    /// Notify Watch that rest timer was resumed
-    private func handleSendRestTimerResumed(_ arguments: Any?, result: @escaping FlutterResult) {
-        guard let session = session, session.isReachable else {
+        guard let session = session else {
             result(true)
             return
         }
 
+        // ✅ FIX: ALWAYS update applicationContext for reliable delivery
+        // This ensures Watch gets pause state even if it was in background
+        do {
+            var currentContext = session.applicationContext
+            if var restTimer = currentContext["restTimer"] as? [String: Any] {
+                restTimer["isPaused"] = true
+                restTimer["remainingTime"] = remainingTime
+                restTimer["timestamp"] = Date().timeIntervalSince1970
+                currentContext["restTimer"] = restTimer
+                try session.updateApplicationContext(currentContext)
+                Logger.shared.log(.info, "✅ Rest timer paused saved to applicationContext", category: .general)
+            }
+        } catch {
+            Logger.shared.log(.debug, "Context update failed: \(error)", category: .general)
+        }
+
+        // Also send immediate message if reachable
+        if session.isReachable {
+            session.sendMessage(message, replyHandler: nil, errorHandler: nil)
+        }
+
+        Logger.shared.log(.info, "⏸️ Sent rest timer paused to Watch: \(remainingTime)s remaining (dual delivery)", category: .general)
+        result(true)
+    }
+
+    /// Notify Watch that rest timer was resumed
+    /// Uses BOTH applicationContext (reliable) and sendMessage (immediate)
+    private func handleSendRestTimerResumed(_ arguments: Any?, result: @escaping FlutterResult) {
         let remainingTime = (arguments as? [String: Any])?["remainingTime"] as? Int ?? 0
 
         let message: [String: Any] = [
@@ -595,8 +748,99 @@ final class WatchConnectivityManager: NSObject {
             "timestamp": Date().timeIntervalSince1970
         ]
 
-        session.sendMessage(message, replyHandler: nil, errorHandler: nil)
-        Logger.shared.log(.info, "▶️ Sent rest timer resumed to Watch: \(remainingTime)s remaining", category: .general)
+        // ✅ FIX: Update cached rest timer state - clear pause flag
+        if var timerState = currentRestTimerState {
+            timerState["isPaused"] = false
+            timerState["remainingTime"] = remainingTime
+            // Update startTime for accurate elapsed calculation
+            timerState["startTime"] = Date().timeIntervalSince1970
+            timerState["duration"] = remainingTime
+            timerState["timestamp"] = Date().timeIntervalSince1970
+            currentRestTimerState = timerState
+        }
+
+        guard let session = session else {
+            result(true)
+            return
+        }
+
+        // ✅ FIX: ALWAYS update applicationContext for reliable delivery
+        // This ensures Watch can resume timer even if it was in background
+        do {
+            var currentContext = session.applicationContext
+            // Create new timer context with fresh startTime for accurate sync
+            let newTimerContext: [String: Any] = [
+                "duration": remainingTime,
+                "startTime": Date().timeIntervalSince1970,
+                "isPaused": false,
+                "timestamp": Date().timeIntervalSince1970
+            ]
+            currentContext["restTimer"] = newTimerContext
+            try session.updateApplicationContext(currentContext)
+            Logger.shared.log(.info, "✅ Rest timer resumed saved to applicationContext", category: .general)
+        } catch {
+            Logger.shared.log(.debug, "Context update failed: \(error)", category: .general)
+        }
+
+        // Also send immediate message if reachable
+        if session.isReachable {
+            session.sendMessage(message, replyHandler: nil, errorHandler: nil)
+        }
+
+        Logger.shared.log(.info, "▶️ Sent rest timer resumed to Watch: \(remainingTime)s remaining (dual delivery)", category: .general)
+        result(true)
+    }
+
+    /// Notify Watch that rest timer was extended (+30s from LA or app)
+    private func handleSendRestTimerExtended(_ arguments: Any?, result: @escaping FlutterResult) {
+        guard let data = arguments as? [String: Any],
+              let addedSeconds = data["addedSeconds"] as? Int,
+              let newDuration = data["newDuration"] as? Int else {
+            result(FlutterError(code: "INVALID_ARGUMENTS", message: "Expected addedSeconds and newDuration", details: nil))
+            return
+        }
+
+        guard let session = session else {
+            result(true)
+            return
+        }
+
+        let message: [String: Any] = [
+            "type": "restTimerExtended",
+            "addedSeconds": addedSeconds,
+            "newDuration": newDuration,
+            "timestamp": Date().timeIntervalSince1970
+        ]
+
+        // Update cached rest timer state
+        if var timerState = currentRestTimerState {
+            timerState["duration"] = newDuration
+            timerState["timestamp"] = Date().timeIntervalSince1970
+            currentRestTimerState = timerState
+        }
+
+        // Update application context for persistent delivery
+        do {
+            var currentContext = session.applicationContext
+            if var restTimer = currentContext["restTimer"] as? [String: Any] {
+                restTimer["duration"] = newDuration
+                restTimer["timestamp"] = Date().timeIntervalSince1970
+                currentContext["restTimer"] = restTimer
+            }
+            try session.updateApplicationContext(currentContext)
+            Logger.shared.log(.info, "✅ Rest timer extended saved to applicationContext", category: .general)
+        } catch {
+            Logger.shared.log(.debug, "Context update failed: \(error)", category: .general)
+        }
+
+        // Also send immediate message if reachable
+        if session.isReachable {
+            session.sendMessage(message, replyHandler: nil) { error in
+                Logger.shared.log(.debug, "Rest timer extended sendMessage failed: \(error)", category: .general)
+            }
+        }
+
+        Logger.shared.log(.info, "⏱️ Notified Watch: rest timer extended +\(addedSeconds)s (total: \(newDuration)s)", category: .general)
         result(true)
     }
 
@@ -727,6 +971,91 @@ extension WatchConnectivityManager: WCSessionDelegate {
             Logger.shared.log(.info, "⏱️ Timer extension from Watch: +\(message["seconds"] ?? 0)s", category: .general)
             notifyFlutter(event: "onExtendTimerFromWatch", data: message)
 
+        case "editCompletedSetReps":
+            // ✅ Watch wants to edit reps of a SPECIFIC completed set (by index)
+            let setIndex = message["setIndex"] as? Int ?? 0
+            let reps = message["reps"] as? Int ?? 0
+            Logger.shared.log(.info, "✏️ Edit completed set \(setIndex + 1) from Watch: \(reps) reps", category: .general)
+            notifyFlutter(event: "onEditCompletedSetRepsFromWatch", data: message)
+
+        case "uncompleteSet":
+            // ✅ Watch wants to uncomplete (undo) a completed set
+            let setIndex = message["setIndex"] as? Int ?? 0
+            Logger.shared.log(.info, "↩️ Uncomplete set \(setIndex + 1) from Watch", category: .general)
+            notifyFlutter(event: "onUncompleteSetFromWatch", data: message)
+
+        case "workoutError":
+            // ✅ FIX: Handle HKWorkoutSession errors from Watch
+            // This is sent when HKWorkoutSession fails unexpectedly on Watch
+            let errorMessage = message["message"] as? String ?? "Unknown error"
+            Logger.shared.log(.error, "⚠️ Workout error from Watch: \(errorMessage)", category: .general)
+            notifyFlutter(event: "onWorkoutErrorFromWatch", data: message)
+
+        case "supersetRoundCompleted":
+            // 🔥 SUPERSET: Handle round completion from Watch
+            // Watch completes all exercises in a round at once with single RPE
+            let roundNumber = message["roundNumber"] as? Int ?? 0
+            let effort = message["effort"] as? Int
+            let effortScale = message["effortScale"] as? String ?? "rpe"
+            if let effort = effort {
+                Logger.shared.log(.info, "🔥 Superset round \(roundNumber) completed from Watch with \(effortScale.uppercased()): \(effort)", category: .general)
+            } else {
+                Logger.shared.log(.info, "🔥 Superset round \(roundNumber) completed from Watch (no effort)", category: .general)
+            }
+            notifyFlutter(event: "onSupersetRoundCompletedFromWatch", data: message)
+
+        // 🔥 DROPSET: Handle stage and completion from Watch
+        case "dropsetStageCompleted":
+            let stageIndex = message["stageIndex"] as? Int ?? 0
+            let totalStages = message["totalStages"] as? Int ?? 0
+            let actualReps = message["actualReps"] as? Int ?? 0
+            let effort = message["effort"] as? Int
+            let effortScale = message["effortScale"] as? String ?? "rpe"
+            if let effort = effort {
+                Logger.shared.log(.info, "🔥 Dropset stage \(stageIndex + 1)/\(totalStages) completed from Watch: \(actualReps) reps, \(effortScale.uppercased()): \(effort)", category: .general)
+            } else {
+                Logger.shared.log(.info, "🔥 Dropset stage \(stageIndex + 1)/\(totalStages) completed from Watch: \(actualReps) reps", category: .general)
+            }
+            notifyFlutter(event: "onDropsetStageCompletedFromWatch", data: message)
+
+        case "dropsetCompleted":
+            let totalStages = message["totalStages"] as? Int ?? 0
+            let effort = message["effort"] as? Int
+            let effortScale = message["effortScale"] as? String ?? "rpe"
+            if let effort = effort {
+                Logger.shared.log(.info, "🔥 Dropset completed from Watch (\(totalStages) stages) with \(effortScale.uppercased()): \(effort)", category: .general)
+            } else {
+                Logger.shared.log(.info, "🔥 Dropset completed from Watch (\(totalStages) stages)", category: .general)
+            }
+            notifyFlutter(event: "onDropsetCompletedFromWatch", data: message)
+
+        // 🔥 REST-PAUSE: Handle set and completion from Watch
+        case "restPauseSetCompleted":
+            let setIndex = message["setIndex"] as? Int ?? 0
+            let totalSets = message["totalSets"] as? Int ?? 0
+            let actualReps = message["actualReps"] as? Int ?? 0
+            let weight = message["weight"] as? Double ?? 0
+            let effort = message["effort"] as? Int
+            let effortScale = message["effortScale"] as? String ?? "rpe"
+            if let effort = effort {
+                Logger.shared.log(.info, "🔥 Rest-Pause set \(setIndex + 1)/\(totalSets) completed from Watch: \(weight)kg × \(actualReps), \(effortScale.uppercased()): \(effort)", category: .general)
+            } else {
+                Logger.shared.log(.info, "🔥 Rest-Pause set \(setIndex + 1)/\(totalSets) completed from Watch: \(weight)kg × \(actualReps)", category: .general)
+            }
+            notifyFlutter(event: "onRestPauseSetCompletedFromWatch", data: message)
+
+        case "restPauseCompleted":
+            let totalSets = message["totalSets"] as? Int ?? 0
+            let weight = message["weight"] as? Double ?? 0
+            let effort = message["effort"] as? Int
+            let effortScale = message["effortScale"] as? String ?? "rpe"
+            if let effort = effort {
+                Logger.shared.log(.info, "🔥 Rest-Pause completed from Watch (\(totalSets) sets, \(weight)kg) with \(effortScale.uppercased()): \(effort)", category: .general)
+            } else {
+                Logger.shared.log(.info, "🔥 Rest-Pause completed from Watch (\(totalSets) sets, \(weight)kg)", category: .general)
+            }
+            notifyFlutter(event: "onRestPauseCompletedFromWatch", data: message)
+
         default:
             Logger.shared.log(.warning, "⚠️ Unknown message type (no reply): \(type)", category: .general)
         }
@@ -782,6 +1111,29 @@ extension WatchConnectivityManager: WCSessionDelegate {
 
         case "extendTimer":
             handleExtendTimerFromWatch(message, replyHandler: replyHandler)
+
+        case "editCompletedSetReps":
+            handleEditCompletedSetRepsFromWatch(message, replyHandler: replyHandler)
+
+        case "uncompleteSet":
+            handleUncompleteSetFromWatch(message, replyHandler: replyHandler)
+
+        case "supersetRoundCompleted":
+            handleSupersetRoundCompletedFromWatch(message, replyHandler: replyHandler)
+
+        // 🔥 DROPSET
+        case "dropsetStageCompleted":
+            handleDropsetStageCompletedFromWatch(message, replyHandler: replyHandler)
+
+        case "dropsetCompleted":
+            handleDropsetCompletedFromWatch(message, replyHandler: replyHandler)
+
+        // 🔥 REST-PAUSE
+        case "restPauseSetCompleted":
+            handleRestPauseSetCompletedFromWatch(message, replyHandler: replyHandler)
+
+        case "restPauseCompleted":
+            handleRestPauseCompletedFromWatch(message, replyHandler: replyHandler)
 
         default:
             Logger.shared.log(.warning, "⚠️ Unknown message type: \(type)", category: .general)
@@ -870,9 +1222,24 @@ extension WatchConnectivityManager: WCSessionDelegate {
             var response = workoutState
             response["timestamp"] = Date().timeIntervalSince1970
 
-            // Include rest timer if active
-            if let timerState = currentRestTimerState {
-                response["restTimer"] = timerState
+            // Include rest timer if active AND not expired
+            // ✅ FIX: Check if timer has expired to prevent sending stale timer data
+            // This fixes the bug where warmup sets received timer from previous working set
+            if let timerState = currentRestTimerState,
+               let startTime = timerState["startTime"] as? TimeInterval,
+               let duration = timerState["duration"] as? Int {
+                let now = Date().timeIntervalSince1970
+                let expirationTime = startTime + Double(duration)
+
+                if now < expirationTime {
+                    // Timer is still active
+                    response["restTimer"] = timerState
+                    Logger.shared.log(.debug, "⏱️ Including active rest timer (\(Int(expirationTime - now))s remaining)", category: .general)
+                } else {
+                    // Timer has expired - clear the stale cache
+                    currentRestTimerState = nil
+                    Logger.shared.log(.debug, "⏱️ Rest timer expired, not including in response", category: .general)
+                }
             }
 
             Logger.shared.log(.info, "✅ Sending workout state to Watch: isActive=true, exercise=\(response["exerciseName"] ?? "unknown")", category: .general)
@@ -942,14 +1309,30 @@ extension WatchConnectivityManager: WCSessionDelegate {
     }
 
     /// Handle end workout request from Watch companion
+    /// ✅ FIX: Save pending command BEFORE notifying Flutter to prevent data loss when app is in background
     private func handleEndWorkoutFromWatch(
         _ message: [String: Any],
         replyHandler: @escaping ([String: Any]) -> Void
     ) {
         Logger.shared.log(.info, "🏁 End workout requested from Watch", category: .general)
 
-        // Notify Flutter to end the workout
+        // ✅ FIX: Save as pending command FIRST (before Flutter notification)
+        // This ensures the command is persisted even if Flutter engine is suspended
+        // When Flutter resumes, it will check for pending commands and process them
+        let pendingCommand: [String: Any] = [
+            "type": "endWorkout",
+            "save": message["save"] as? Bool ?? true,
+            "timestamp": Date().timeIntervalSince1970
+        ]
+        savePendingCommand(pendingCommand)
+
+        // Notify Flutter to end the workout (may or may not be received if app is in background)
         notifyFlutter(event: "onEndWorkoutFromWatch", data: message)
+
+        // ✅ Clear workout state cache since workout is ending
+        currentWorkoutState = nil
+        currentRestTimerState = nil
+
         replyHandler(["success": true])
     }
 
@@ -979,6 +1362,33 @@ extension WatchConnectivityManager: WCSessionDelegate {
         replyHandler(["success": true])
     }
 
+    /// ✅ Handle edit SPECIFIC completed set reps from Watch (by index)
+    private func handleEditCompletedSetRepsFromWatch(
+        _ message: [String: Any],
+        replyHandler: @escaping ([String: Any]) -> Void
+    ) {
+        let setIndex = message["setIndex"] as? Int ?? 0  // 0-indexed
+        let reps = message["reps"] as? Int ?? 0
+        Logger.shared.log(.info, "✏️ Edit completed set \(setIndex + 1) from Watch: \(reps) reps", category: .general)
+
+        // Notify Flutter to update the specific completed set
+        notifyFlutter(event: "onEditCompletedSetRepsFromWatch", data: message)
+        replyHandler(["success": true])
+    }
+
+    /// Handle uncomplete set from Watch (undo a completed set)
+    private func handleUncompleteSetFromWatch(
+        _ message: [String: Any],
+        replyHandler: @escaping ([String: Any]) -> Void
+    ) {
+        let setIndex = message["setIndex"] as? Int ?? 0  // 0-indexed
+        Logger.shared.log(.info, "↩️ Uncomplete set \(setIndex + 1) from Watch", category: .general)
+
+        // Notify Flutter to uncomplete the specific set
+        notifyFlutter(event: "onUncompleteSetFromWatch", data: message)
+        replyHandler(["success": true])
+    }
+
     /// Handle timer extension from Watch (Digital Crown to add time)
     private func handleExtendTimerFromWatch(
         _ message: [String: Any],
@@ -991,59 +1401,128 @@ extension WatchConnectivityManager: WCSessionDelegate {
         notifyFlutter(event: "onExtendTimerFromWatch", data: message)
         replyHandler(["success": true])
     }
+
+    /// 🔥 SUPERSET: Handle round completion from Watch
+    /// Watch completes all exercises in a superset round at once with single RPE
+    private func handleSupersetRoundCompletedFromWatch(
+        _ message: [String: Any],
+        replyHandler: @escaping ([String: Any]) -> Void
+    ) {
+        let roundNumber = message["roundNumber"] as? Int ?? 0
+        let totalRounds = message["totalRounds"] as? Int ?? 0
+        let exercises = message["exercises"] as? [String] ?? []
+        let effort = message["effort"] as? Int
+        let effortScale = message["effortScale"] as? String ?? "rpe"
+
+        if let effort = effort {
+            Logger.shared.log(.info, "🔥 Superset round \(roundNumber)/\(totalRounds) completed from Watch with \(effortScale.uppercased()): \(effort), exercises: \(exercises.count)", category: .general)
+        } else {
+            Logger.shared.log(.info, "🔥 Superset round \(roundNumber)/\(totalRounds) completed from Watch (no effort), exercises: \(exercises.count)", category: .general)
+        }
+
+        // Notify Flutter to complete all exercises in the round
+        notifyFlutter(event: "onSupersetRoundCompletedFromWatch", data: message)
+        replyHandler(["success": true])
+    }
+
+    // MARK: - 🔥 DROPSET Handlers
+
+    /// Handle dropset stage completion from Watch
+    /// Each stage in a dropset has its own weight and reps
+    private func handleDropsetStageCompletedFromWatch(
+        _ message: [String: Any],
+        replyHandler: @escaping ([String: Any]) -> Void
+    ) {
+        let stageIndex = message["stageIndex"] as? Int ?? 0
+        let totalStages = message["totalStages"] as? Int ?? 0
+        let actualReps = message["actualReps"] as? Int ?? 0
+        let effort = message["effort"] as? Int
+        let effortScale = message["effortScale"] as? String ?? "rpe"
+
+        if let effort = effort {
+            Logger.shared.log(.info, "🔥 Dropset stage \(stageIndex + 1)/\(totalStages) completed from Watch: \(actualReps) reps, \(effortScale.uppercased()): \(effort)", category: .general)
+        } else {
+            Logger.shared.log(.info, "🔥 Dropset stage \(stageIndex + 1)/\(totalStages) completed from Watch: \(actualReps) reps", category: .general)
+        }
+
+        // Notify Flutter to complete the stage
+        notifyFlutter(event: "onDropsetStageCompletedFromWatch", data: message)
+        replyHandler(["success": true])
+    }
+
+    /// Handle entire dropset completion from Watch
+    /// Called when all stages are completed
+    private func handleDropsetCompletedFromWatch(
+        _ message: [String: Any],
+        replyHandler: @escaping ([String: Any]) -> Void
+    ) {
+        let totalStages = message["totalStages"] as? Int ?? 0
+        let effort = message["effort"] as? Int
+        let effortScale = message["effortScale"] as? String ?? "rpe"
+
+        if let effort = effort {
+            Logger.shared.log(.info, "🔥 Dropset completed from Watch (\(totalStages) stages) with \(effortScale.uppercased()): \(effort)", category: .general)
+        } else {
+            Logger.shared.log(.info, "🔥 Dropset completed from Watch (\(totalStages) stages)", category: .general)
+        }
+
+        // Notify Flutter that entire dropset is complete
+        notifyFlutter(event: "onDropsetCompletedFromWatch", data: message)
+        replyHandler(["success": true])
+    }
+
+    // MARK: - 🔥 REST-PAUSE Handlers
+
+    /// Handle rest-pause set completion from Watch
+    /// Rest-pause has multiple mini-sets with short rests between
+    private func handleRestPauseSetCompletedFromWatch(
+        _ message: [String: Any],
+        replyHandler: @escaping ([String: Any]) -> Void
+    ) {
+        let setIndex = message["setIndex"] as? Int ?? 0
+        let totalSets = message["totalSets"] as? Int ?? 0
+        let actualReps = message["actualReps"] as? Int ?? 0
+        let weight = message["weight"] as? Double ?? 0
+        let effort = message["effort"] as? Int
+        let effortScale = message["effortScale"] as? String ?? "rpe"
+
+        if let effort = effort {
+            Logger.shared.log(.info, "🔥 Rest-Pause set \(setIndex + 1)/\(totalSets) completed from Watch: \(weight)kg × \(actualReps), \(effortScale.uppercased()): \(effort)", category: .general)
+        } else {
+            Logger.shared.log(.info, "🔥 Rest-Pause set \(setIndex + 1)/\(totalSets) completed from Watch: \(weight)kg × \(actualReps)", category: .general)
+        }
+
+        // Notify Flutter to complete the rest-pause set
+        notifyFlutter(event: "onRestPauseSetCompletedFromWatch", data: message)
+        replyHandler(["success": true])
+    }
+
+    /// Handle entire rest-pause completion from Watch
+    /// Called when all rest-pause mini-sets are completed
+    private func handleRestPauseCompletedFromWatch(
+        _ message: [String: Any],
+        replyHandler: @escaping ([String: Any]) -> Void
+    ) {
+        let totalSets = message["totalSets"] as? Int ?? 0
+        let weight = message["weight"] as? Double ?? 0
+        let effort = message["effort"] as? Int
+        let effortScale = message["effortScale"] as? String ?? "rpe"
+
+        if let effort = effort {
+            Logger.shared.log(.info, "🔥 Rest-Pause completed from Watch (\(totalSets) sets, \(weight)kg) with \(effortScale.uppercased()): \(effort)", category: .general)
+        } else {
+            Logger.shared.log(.info, "🔥 Rest-Pause completed from Watch (\(totalSets) sets, \(weight)kg)", category: .general)
+        }
+
+        // Notify Flutter that entire rest-pause is complete
+        notifyFlutter(event: "onRestPauseCompletedFromWatch", data: message)
+        replyHandler(["success": true])
+    }
 }
 
 // MARK: - Public Methods
 
 extension WatchConnectivityManager {
-
-    /// Send workout data to Watch (e.g., when starting workout on iPhone)
-    func sendWorkoutToWatch(workoutData: [String: Any]) {
-        guard let session = session else {
-            Logger.shared.log(.error, "❌ WCSession not initialized", category: .general)
-            return
-        }
-
-        let data: [String: Any] = [
-            "type": "workoutStarted",
-            "workout": workoutData,
-            "timestamp": Date().timeIntervalSince1970
-        ]
-
-        if session.isReachable {
-            session.sendMessage(data, replyHandler: nil) { error in
-                Logger.shared.log(.error, "❌ Failed to send workout: \(error)", category: .general)
-            }
-        } else {
-            // Use application context for background delivery
-            // ✅ FIX: MERGE with existing context to preserve restTimer and other data
-            do {
-                var currentContext = session.applicationContext
-                currentContext["workout"] = data
-                try session.updateApplicationContext(currentContext)
-                Logger.shared.log(.info, "📤 Queued workout for Watch (background, merged)", category: .general)
-            } catch {
-                Logger.shared.log(.error, "❌ Failed to queue workout: \(error)", category: .general)
-            }
-        }
-    }
-
-    /// Send real-time workout update to Watch
-    func sendWorkoutUpdate(updateData: [String: Any]) {
-        guard let session = session, session.isReachable else {
-            return // Skip if not reachable
-        }
-
-        let data: [String: Any] = [
-            "type": "workoutUpdate",
-            "update": updateData,
-            "timestamp": Date().timeIntervalSince1970
-        ]
-
-        session.sendMessage(data, replyHandler: nil) { error in
-            Logger.shared.log(.debug, "Failed to send update: \(error)", category: .general)
-        }
-    }
 
     /// Check if watch is available for communication
     func isWatchAvailable() -> Bool {

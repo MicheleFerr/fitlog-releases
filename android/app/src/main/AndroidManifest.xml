@@ -14,13 +14,23 @@
     <!-- Internet permission for Firebase -->
     <uses-permission android:name="android.permission.INTERNET" />
 
-    <!-- Health Connect Permissions (Android 12+ / API 28+) -->
+    <!-- Health Connect Permissions (Android 14+ / API 34+) -->
     <!-- Read permissions for health data -->
     <uses-permission android:name="android.permission.health.READ_STEPS" />
     <uses-permission android:name="android.permission.health.READ_HEART_RATE" />
     <uses-permission android:name="android.permission.health.READ_ACTIVE_CALORIES_BURNED" />
     <uses-permission android:name="android.permission.health.READ_TOTAL_CALORIES_BURNED" />
     <uses-permission android:name="android.permission.health.READ_EXERCISE" />
+    <uses-permission android:name="android.permission.health.READ_WEIGHT" />
+    <uses-permission android:name="android.permission.health.READ_BODY_FAT" />
+    <uses-permission android:name="android.permission.health.READ_LEAN_BODY_MASS" />
+    <uses-permission android:name="android.permission.health.READ_SLEEP" />
+    <uses-permission android:name="android.permission.health.READ_DISTANCE" />
+
+    <!-- Write permissions for health data -->
+    <uses-permission android:name="android.permission.health.WRITE_WEIGHT" />
+    <uses-permission android:name="android.permission.health.WRITE_BODY_FAT" />
+    <uses-permission android:name="android.permission.health.WRITE_EXERCISE" />
 
     <application
         android:label="GymBro TrackLog"
@@ -47,8 +57,33 @@
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
+
+            <!-- Health Connect permissions intent filter (Android 14+) -->
+            <!-- Required for app to show in Health Connect's permissions UI -->
+            <intent-filter>
+                <action android:name="androidx.health.ACTION_SHOW_PERMISSIONS_RATIONALE" />
+            </intent-filter>
+
+            <!-- For Android 14+ (API 34+) -->
+            <intent-filter>
+                <action android:name="android.health.connect.action.MANAGE_HEALTH_PERMISSIONS" />
+            </intent-filter>
         </activity>
-        
+
+        <!-- Health Connect Privacy Policy Activity Alias -->
+        <!-- Required: Links Health Connect to app's privacy policy -->
+        <!-- When user taps "Privacy policy" in Health Connect, this opens MainActivity -->
+        <activity-alias
+            android:name="ViewPermissionUsageActivity"
+            android:exported="true"
+            android:targetActivity=".MainActivity"
+            android:permission="android.permission.START_VIEW_PERMISSION_USAGE">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW_PERMISSION_USAGE" />
+                <category android:name="android.intent.category.HEALTH_PERMISSIONS" />
+            </intent-filter>
+        </activity-alias>
+
         <!-- Firebase Messaging Service -->
         <service
             android:name="io.flutter.plugins.firebase.messaging.FlutterFirebaseMessagingService"
@@ -108,7 +143,10 @@
             <data android:mimeType="text/plain"/>
         </intent>
 
-        <!-- Health Connect package query (required for Android 14+ / API 34+) -->
+        <!-- Health Connect queries (required for Android 14+ / API 34+) -->
         <package android:name="com.google.android.apps.healthdata" />
+        <intent>
+            <action android:name="androidx.health.ACTION_SHOW_PERMISSIONS_RATIONALE" />
+        </intent>
     </queries>
 </manifest>

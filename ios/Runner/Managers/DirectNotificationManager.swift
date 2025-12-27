@@ -1,7 +1,6 @@
 import UserNotifications
 import UIKit
 import AVFoundation
-import UserNotifications
 
 /// Manager diretto per notifiche iOS che bypassa flutter_local_notifications
 /// Questo risolve il problema dei suoni custom che non funzionano in background
@@ -42,28 +41,58 @@ final class DirectNotificationManager: NSObject {
         if delay <= 0 {
             // For immediate notifications, we need to send a notification RIGHT NOW
             // This is important for when the app is in background/locked
-            print("🔔 IMMEDIATE TIMER NOTIFICATION")
+            print("🔔 ============================================")
+            print("🔔 IMMEDIATE TIMER NOTIFICATION - DIAGNOSTIC")
+            print("🔔 ============================================")
             print("   Title: \(title)")
             print("   Body: \(body)")
             print("   Sound: \(soundName)")
-            
+            print("   App State: \(UIApplication.shared.applicationState == .active ? "ACTIVE" : UIApplication.shared.applicationState == .background ? "BACKGROUND" : "INACTIVE")")
+
+            // DIAGNOSTIC: Check notification settings BEFORE sending
+            UNUserNotificationCenter.current().getNotificationSettings { settings in
+                print("📊 NOTIFICATION SETTINGS:")
+                print("   - Authorization: \(settings.authorizationStatus.rawValue) (\(self.authStatusString(settings.authorizationStatus)))")
+                print("   - Sound Setting: \(settings.soundSetting.rawValue) (\(settings.soundSetting == .enabled ? "✅ ENABLED" : "❌ DISABLED"))")
+                print("   - Alert Setting: \(settings.alertSetting.rawValue) (\(settings.alertSetting == .enabled ? "✅ ENABLED" : "❌ DISABLED"))")
+                if #available(iOS 15.0, *) {
+                    print("   - Time Sensitive: \(settings.timeSensitiveSetting.rawValue) (\(settings.timeSensitiveSetting == .enabled ? "✅ ENABLED" : "❌ DISABLED"))")
+                }
+
+                // Check audio
+                let session = AVAudioSession.sharedInstance()
+                print("📊 AUDIO STATUS:")
+                print("   - Output Volume: \(session.outputVolume) (\(session.outputVolume > 0.1 ? "✅ OK" : "⚠️ LOW"))")
+                print("   - Audio Route: \(session.currentRoute.outputs.map { $0.portType.rawValue }.joined(separator: ", "))")
+            }
+
+            // DIAGNOSTIC: Verify sound file exists
+            let soundFileName = soundName.hasSuffix(".caf") ? soundName : "\(soundName).caf"
+            let soundFileBase = soundName.replacingOccurrences(of: ".caf", with: "")
+            if let path = Bundle.main.path(forResource: soundFileBase, ofType: "caf") {
+                print("✅ Sound file FOUND: \(path)")
+                if let attrs = try? FileManager.default.attributesOfItem(atPath: path),
+                   let size = attrs[.size] as? Int64 {
+                    print("   - File size: \(size) bytes")
+                }
+            } else {
+                print("❌ Sound file NOT FOUND: \(soundFileName)")
+                print("   - Searching for: \(soundFileBase).caf")
+            }
+
             // Send immediate notification with custom sound
             let center = UNUserNotificationCenter.current()
             let content = UNMutableNotificationContent()
             content.title = title
             content.body = body
             content.categoryIdentifier = categoryIdentifier
-            
-            // CRITICAL ALERT: Bypass mute switch AND DnD
-            let soundFileName = soundName.hasSuffix(".caf") ? soundName : "\(soundName).caf"
-            if #available(iOS 12.0, *) {
-                content.sound = UNNotificationSound.criticalSoundNamed(
-                    UNNotificationSoundName(rawValue: soundFileName),
-                    withAudioVolume: 1.0
-                )
-            } else {
-                content.sound = UNNotificationSound(named: UNNotificationSoundName(rawValue: soundFileName))
-            }
+
+            // NOTIFICATION SOUND: Using regular sound (Critical Alert entitlement pending)
+            // Use regular notification sound - works without Critical Alert entitlement
+            // Sound will play if device is NOT muted
+            content.sound = UNNotificationSound(named: UNNotificationSoundName(rawValue: soundFileName))
+            print("🔊 Sound configured: \(soundFileName)")
+            print("   - Using regular notification sound (Critical Alert pending Apple approval)")
             
             // For immediate notifications on iOS 15+
             if #available(iOS 15.0, *) {
@@ -137,7 +166,11 @@ final class DirectNotificationManager: NSObject {
         let center = UNUserNotificationCenter.current()
         let identifier = UUID().uuidString
 
-        // Verbose logging removed for production
+        print("🔔 [scheduleTimerNotification] ENTRY:")
+        print("   - delay: \(seconds)s")
+        print("   - sound: \(soundName)")
+        print("   - silentLoopHandlesAudio: \(silentLoopHandlesAudio)")
+        print("   - identifier: \(identifier)")
 
         scheduleNotificationInternal(identifier: identifier, seconds: seconds, soundName: soundName, title: title, body: body, isForWatchDisplay: false, silentLoopHandlesAudio: silentLoopHandlesAudio)
 
@@ -160,6 +193,7 @@ final class DirectNotificationManager: NSObject {
         // RACE CONDITION FIX: Check if skip is in progress BEFORE scheduling
         // This prevents notifications from being scheduled right after a skip command
         let skipInProgress = trackingQueue.sync { isSkipInProgress }
+        print("🔍 [scheduleNotificationInternal] isSkipInProgress check: \(skipInProgress)")
         if skipInProgress {
             print("⛔ [RACE-FIX] Skip in progress - BLOCKING notification schedule")
             print("   - Would have scheduled: \(identifier)")
@@ -167,6 +201,7 @@ final class DirectNotificationManager: NSObject {
             print("   - This prevents the race condition where notification fires after skip")
             return
         }
+        print("✅ [scheduleNotificationInternal] Proceeding with notification scheduling")
 
         let center = UNUserNotificationCenter.current()
 
@@ -231,42 +266,36 @@ final class DirectNotificationManager: NSObject {
             }
         }
 
-        // CRITICAL ALERTS: Bypass mute switch AND Do Not Disturb
-        // Requires com.apple.developer.usernotifications.critical-alerts entitlement
-        // DOUBLE SOUND FIX: Skip sound if silent loop is handling audio
+        // NOTIFICATION SOUND CONFIGURATION
+        // NOTE: Critical Alerts require com.apple.developer.usernotifications.critical-alerts entitlement
+        // Without the entitlement, criticalSoundNamed() silently fails - NO SOUND PLAYS!
+        // WORKAROUND: Use regular notification sound until entitlement is approved
         if shouldHaveSound {
-            let criticalSoundFileName = soundName.hasSuffix(".caf") ? soundName : "\(soundName).caf"
+            let soundFileName = soundName.hasSuffix(".caf") ? soundName : "\(soundName).caf"
 
-            // CRITICAL ALERT: This bypasses BOTH mute switch AND DnD!
-            // User volume controls are still respected via withAudioVolume parameter
-            if #available(iOS 12.0, *) {
-                if verifyAudioFile(soundName) {
-                    content.sound = UNNotificationSound.criticalSoundNamed(
-                        UNNotificationSoundName(rawValue: criticalSoundFileName),
-                        withAudioVolume: 1.0  // Full volume (0.0 - 1.0)
-                    )
-                    print("🔊 [CRITICAL-ALERT] Using critical sound: \(criticalSoundFileName)")
-                    print("   - Bypasses mute switch: ✅")
-                    print("   - Bypasses Do Not Disturb: ✅")
-                    print("   - Volume: 100%")
-                } else {
-                    // Fallback to default critical sound if custom file not found
-                    content.sound = UNNotificationSound.defaultCritical
-                    print("⚠️ [CRITICAL-ALERT] Custom sound not found, using defaultCritical")
-                }
+            // TEMPORARY FIX: Use REGULAR notification sound instead of Critical Alert
+            // This ensures sound plays (respects mute switch, but at least it plays when unmuted)
+            // TODO: Re-enable Critical Alerts once Apple approves the entitlement
+            if verifyAudioFile(soundName) {
+                // Use regular notification sound (works without entitlement)
+                content.sound = UNNotificationSound(named: UNNotificationSoundName(rawValue: soundFileName))
+                print("🔊 [NOTIFICATION-SOUND] Using regular notification sound: \(soundFileName)")
+                print("   - Critical Alert entitlement: ⏳ PENDING Apple approval")
+                print("   - Fallback: Using regular sound (respects mute switch)")
+                print("   - Sound will play if device is NOT muted")
             } else {
-                // iOS 11 fallback - no critical alerts available
-                content.sound = UNNotificationSound(named: UNNotificationSoundName(rawValue: criticalSoundFileName))
-                print("⚠️ [FALLBACK] iOS 11 - critical alerts not available, using standard sound")
+                // Fallback to default sound if custom file not found
+                content.sound = .default
+                print("⚠️ [NOTIFICATION-SOUND] Custom sound not found, using system default")
             }
 
             // Add user info for tracking
             content.userInfo = [
                 "gymbro_timer_sound": soundName,
-                "is_critical_alert": true,
+                "is_critical_alert": false,  // Using regular sound (Critical Alert pending approval)
                 "scheduled_at": Date().timeIntervalSince1970
             ]
-            print("📝 [CRITICAL-ALERT] Timer notification configured with critical sound")
+            print("📝 [NOTIFICATION] Timer notification configured with regular sound (Critical Alert pending)")
         } else {
             // No sound but still add user info for tracking
             content.userInfo = [
@@ -311,8 +340,12 @@ final class DirectNotificationManager: NSObject {
             // )
 
             if let error = error {
-                print("❌ Failed to schedule notification: \(error.localizedDescription)")
+                print("❌ [scheduleNotificationInternal] Failed to schedule notification: \(error.localizedDescription)")
             } else {
+                print("✅ [scheduleNotificationInternal] Notification SUCCESSFULLY scheduled!")
+                print("   - ID: \(identifier)")
+                print("   - Sound: \(soundName)")
+                print("   - Fires in: \(seconds)s")
                 // CRITICAL FIX: Thread-safe tracking of scheduled notification
                 self?.trackingQueue.sync {
                     self?.scheduledNotifications[identifier] = (timestamp: Date(), soundName: soundName)
@@ -395,7 +428,15 @@ final class DirectNotificationManager: NSObject {
         print("🗑️ Cancelled pending notification: \(identifier)")
     }
 
-    /// Cancella tutte le notifiche timer (pending)
+    /// Cancella tutte le notifiche pending (simple version)
+    /// Use this when you're about to schedule a new notification immediately after
+    /// This does NOT set the skip flag, so new notifications can still be scheduled
+    func cancelAllPendingNotifications() {
+        UNUserNotificationCenter.current().removeAllPendingNotificationRequests()
+        print("🗑️ Cancelled all pending notifications (simple cancel, no skip flag)")
+    }
+
+    /// Cancella tutte le notifiche timer (pending) + blocks new notifications
     /// RACE CONDITION FIX: Also sets isSkipInProgress flag to prevent new notifications
     /// from being scheduled during the skip operation
     func cancelAllTimerNotifications() {
@@ -681,29 +722,22 @@ final class DirectNotificationManager: NSObject {
     
     /// Test notification immediato per debug - usa Critical Alert
     func sendTestNotification() {
-        print("🧪 [TEST] Sending immediate Critical Alert test notification")
+        print("🧪 [TEST] Sending test notification (regular sound)")
 
         let content = UNMutableNotificationContent()
-        content.title = "🧪 Critical Alert Test"
-        content.body = "If you hear this with mute ON, Critical Alerts work!"
+        content.title = "🧪 Timer Sound Test"
+        content.body = "If you hear this, notification sounds are working!"
         content.categoryIdentifier = "TIMER_TEST"
 
-        // CRITICAL ALERT: Bypasses mute switch AND DnD
-        if #available(iOS 12.0, *) {
-            content.sound = UNNotificationSound.criticalSoundNamed(
-                UNNotificationSoundName("sound.caf"),
-                withAudioVolume: 1.0
-            )
-            print("   - Using Critical Alert sound")
-            print("   - Bypasses mute: ✅")
-            print("   - Bypasses DnD: ✅")
-        } else {
-            content.sound = UNNotificationSound(named: UNNotificationSoundName("sound.caf"))
-        }
+        // Regular notification sound (Critical Alert entitlement pending)
+        content.sound = UNNotificationSound(named: UNNotificationSoundName("sound.caf"))
+        print("   - Using regular notification sound")
+        print("   - Critical Alert: ⏳ pending Apple approval")
+        print("   - Sound respects mute switch")
 
-        // iOS 15+ settings
+        // iOS 15+ settings - use timeSensitive (not critical, requires entitlement)
         if #available(iOS 15.0, *) {
-            content.interruptionLevel = .critical
+            content.interruptionLevel = .timeSensitive
             content.relevanceScore = 1.0
         }
         
@@ -753,6 +787,20 @@ final class DirectNotificationManager: NSObject {
         let cutoff = Date().addingTimeInterval(-seconds)
         return trackingQueue.sync {
             return deliveredNotifications.filter { $0.value > cutoff }.map { $0.key }
+        }
+    }
+
+    // MARK: - Helper Functions
+
+    /// Convert authorization status to readable string
+    private func authStatusString(_ status: UNAuthorizationStatus) -> String {
+        switch status {
+        case .notDetermined: return "NOT_DETERMINED"
+        case .denied: return "❌ DENIED"
+        case .authorized: return "✅ AUTHORIZED"
+        case .provisional: return "PROVISIONAL"
+        case .ephemeral: return "EPHEMERAL"
+        @unknown default: return "UNKNOWN"
         }
     }
 }

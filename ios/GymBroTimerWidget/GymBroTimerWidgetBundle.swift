@@ -10,6 +10,10 @@ import SwiftUI
               GymBroRPELiveActivity()       // ✅ Widget RPE
               GymBroScheduleLiveActivity()  // ✅ Widget Schedule Countdown
           }
+          // Unified Workout Session Live Activity (iOS 17+)
+          if #available(iOS 17.0, *) {
+              WorkoutSessionLiveActivity()  // ✅ Unified workout session
+          }
       }
   }
 

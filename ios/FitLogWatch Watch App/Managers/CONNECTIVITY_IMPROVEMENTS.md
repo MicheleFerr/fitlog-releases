@@ -134,12 +134,43 @@ All existing functionality preserved:
 - Rest timer synchronization
 - Health metrics updates
 
+## ⚠️ SIMULATOR LIMITATION
+
+**CRITICAL: `transferUserInfo` does NOT work in the watchOS/iOS Simulator**
+
+This is a known Apple limitation that affects all WatchConnectivity FIFO queue features:
+- Messages sent via `transferUserInfo()` appear to succeed (no error returned)
+- However, they are **never delivered** to the counterpart app
+- This is documented in Apple Developer Forums: https://developer.apple.com/forums/thread/697209
+
+**Impact on Testing:**
+- Critical messages (setCompleted, endWorkout, etc.) may appear lost in simulator
+- Superset round completions will not sync to iPhone in simulator
+- Only `sendMessage()` works reliably in simulator (requires both apps in foreground)
+
+**Workarounds:**
+1. **Always test on real devices** for production-quality validation
+2. **Use `sendMessage()` as primary** - we already do this (try sendMessage first, fallback to transferUserInfo)
+3. **Mock iPhone responses** in WatchApp for pure UI testing
+
+**Code Reference:**
+```swift
+// In sendToiPhone() - critical messages use BOTH methods:
+// 1. sendMessage (immediate, works in simulator)
+// 2. transferUserInfo (backup, real device only)
+if critical {
+    session.sendMessage(data, ...) // Works in simulator
+    session.transferUserInfo(data)  // Backup for real devices
+}
+```
+
 ## Testing Recommendations
 
 1. **Connection Loss Scenarios:**
    - Start workout on iPhone, turn off iPhone Bluetooth
    - Complete sets on Watch while disconnected
    - Verify messages queued and sent when reconnected
+   - **⚠️ Must test on real devices** (transferUserInfo doesn't work in simulator)
 
 2. **Session Activation:**
    - Kill Watch app while workout active

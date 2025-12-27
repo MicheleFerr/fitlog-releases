@@ -291,6 +291,13 @@ import FirebaseCore
         // Setup WatchConnectivity for Apple Watch companion app
         WatchConnectivityManager.shared.setupChannel(with: messenger)
 
+        // Setup WorkoutSession Live Activity manager (iOS 17+)
+        if #available(iOS 17.0, *) {
+            WorkoutSessionManager.shared.setupMethodChannel(with: messenger)
+        } else {
+            WorkoutSessionManagerFallback.shared.setupMethodChannel(with: messenger)
+        }
+
         Logger.shared.log(.info, "✅ Flutter integration setup completed", category: .general)
     }
 
@@ -426,53 +433,37 @@ import FirebaseCore
     }
     
     // MARK: - Legacy Implementations (for gradual migration)
-    
-    private func legacySetupAudioSession() {
+
+    /// Unified audio session configuration method
+    /// Consolidates all legacy audio methods (setup, background, foreground, reactivate)
+    /// They were all identical - now a single method with context for logging
+    private func configureAudioSession(context: String) {
         // ✅ MINIMAL audio session - only .mixWithOthers to avoid OSStatus -50
         do {
             let audioSession = AVAudioSession.sharedInstance()
             try audioSession.setCategory(.playback, mode: .default, options: [.mixWithOthers])
             try audioSession.setActive(true)
-            Logger.shared.log(.info, "Audio session configured", category: .audioSession)
+            Logger.shared.log(.info, "Audio session configured (\(context))", category: .audioSession)
         } catch {
-            Logger.shared.log(.error, "Audio session setup failed: \(error)", category: .audioSession)
+            Logger.shared.log(.error, "Audio session configuration failed (\(context)): \(error)", category: .audioSession)
         }
+    }
+
+    // Legacy wrappers for backward compatibility - all delegate to unified method
+    private func legacySetupAudioSession() {
+        configureAudioSession(context: "setup")
     }
 
     private func legacyConfigureBackgroundAudio() {
-        // ✅ MINIMAL audio session - only .mixWithOthers
-        do {
-            let audioSession = AVAudioSession.sharedInstance()
-            try audioSession.setCategory(.playback, mode: .default, options: [.mixWithOthers])
-            try audioSession.setActive(true)
-            Logger.shared.log(.info, "Background audio configured", category: .audioSession)
-        } catch {
-            Logger.shared.log(.error, "Background audio configuration failed: \(error)", category: .audioSession)
-        }
+        configureAudioSession(context: "background")
     }
 
     private func legacyConfigureForegroundAudio() {
-        // ✅ MINIMAL audio session - only .mixWithOthers
-        do {
-            let audioSession = AVAudioSession.sharedInstance()
-            try audioSession.setCategory(.playback, mode: .default, options: [.mixWithOthers])
-            try audioSession.setActive(true)
-            Logger.shared.log(.info, "Foreground audio configured", category: .audioSession)
-        } catch {
-            Logger.shared.log(.error, "Foreground audio configuration failed: \(error)", category: .audioSession)
-        }
+        configureAudioSession(context: "foreground")
     }
 
     private func legacyReactivateAudioSession() {
-        // ✅ MINIMAL audio session - only .mixWithOthers
-        do {
-            let audioSession = AVAudioSession.sharedInstance()
-            try audioSession.setCategory(.playback, mode: .default, options: [.mixWithOthers])
-            try audioSession.setActive(true)
-            Logger.shared.log(.info, "Legacy audio session reactivated", category: .audioSession)
-        } catch {
-            Logger.shared.log(.error, "Legacy audio reactivation failed: \(error)", category: .audioSession)
-        }
+        configureAudioSession(context: "reactivate")
     }
 
     private func legacyRegisterBackgroundTasks() {

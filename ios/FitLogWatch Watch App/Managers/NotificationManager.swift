@@ -80,24 +80,6 @@ final class NotificationManager {
         }
     }
 
-    /// Show notification when set is completed
-    func showSetCompletedNotification(setNumber: Int, exerciseName: String) {
-        let content = UNMutableNotificationContent()
-        content.title = "Set \(setNumber) Complete"
-        content.body = exerciseName
-        content.sound = .default
-
-        let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 0.1, repeats: false)
-
-        let request = UNNotificationRequest(
-            identifier: "set_completed_\(Date().timeIntervalSince1970)",
-            content: content,
-            trigger: trigger
-        )
-
-        UNUserNotificationCenter.current().add(request) { _ in }
-    }
-
     /// Clear all pending notifications
     func clearAllNotifications() {
         UNUserNotificationCenter.current().removeAllPendingNotificationRequests()

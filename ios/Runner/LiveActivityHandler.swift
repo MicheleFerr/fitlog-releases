@@ -230,15 +230,27 @@ class LiveActivityHandler: NSObject {
         // CRITICAL FIX: Clean up must complete BEFORE creating new activity
         // This prevents race conditions and ensures single timer guarantee
         Task {
-            await endAllActivities(keepCurrent: false)
-            
-            // Small delay to ensure cleanup is visible to user
-            try? await Task.sleep(nanoseconds: 100_000_000) // 0.1 seconds
-            
-            // Now safely create the new activity after cleanup
-            await self.createNewLiveActivity(args, result: result)
+            do {
+                await endAllActivities(keepCurrent: false)
+
+                // Small delay to ensure cleanup is visible to user
+                try await Task.sleep(nanoseconds: 100_000_000) // 0.1 seconds
+
+                // Now safely create the new activity after cleanup
+                await self.createNewLiveActivity(args, result: result)
+            } catch {
+                // ASYNC FIX: Ensure result is ALWAYS called, even on error
+                Logger.shared.log(.error, "❌ Failed during Live Activity creation: \(error)", category: .general)
+                await MainActor.run {
+                    result(FlutterError(
+                        code: "ASYNC_ERROR",
+                        message: "Failed during Live Activity setup: \(error.localizedDescription)",
+                        details: nil
+                    ))
+                }
+            }
         }
-        
+
         // Return early - creation continues in async task
         return
     }
@@ -592,14 +604,21 @@ class LiveActivityHandler: NSObject {
                     """, category: .general)
 
                 // Schedule the notification with the timer sound
-                // ✅ DOUBLE SOUND FIX: Silent loop (BackgroundAudioManager) handles audio via AVAudioPlayer
-                // so notification should be silent to avoid double sound
+                // ✅ FIX: This is now a BACKUP notification with sound
+                // Normal flow: Flutter cancels this and sends its own notification when timer completes
+                // Fallback: If Flutter fails/crashes, this notification will fire WITH SOUND
+                print("📢 [NOTIFICATION-SOURCE-B] 🔶 LiveActivityHandler BACKUP notification:")
+                print("   - Source: iOS native (scheduled at timer START)")
+                print("   - Fire in: \(remainingSeconds)s")
+                print("   - Sound: \(soundName)")
+                print("   - Timestamp: \(Date())")
+                print("   - ⚠️ This should be CANCELLED by Flutter before it fires!")
                 let notificationId = DirectNotificationManager.shared.scheduleTimerNotification(
                     after: TimeInterval(remainingSeconds),
                     soundName: soundName,
                     title: TimerNotificationStrings.timerComplete,
                     body: TimerNotificationStrings.restTimerFinished,
-                    silentLoopHandlesAudio: true  // Silent loop started above handles audio
+                    silentLoopHandlesAudio: false  // Has sound - backup if Flutter fails
                 )
                 self.scheduledNotificationId = notificationId
 

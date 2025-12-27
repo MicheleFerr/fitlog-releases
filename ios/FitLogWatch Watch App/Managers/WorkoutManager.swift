@@ -36,6 +36,21 @@ class WorkoutManager: NSObject, ObservableObject {
     /// Threshold for sending HR updates to iPhone (±5 BPM)
     private let heartRateDeltaThreshold: Double = 5.0
 
+    /// Key for persisting HealthKit authorization request status
+    private static let healthKitAuthRequestedKey = "hasRequestedHealthKitAuthorization"
+
+    /// Track if HealthKit authorization has been requested (persisted across app launches)
+    /// Prevents repeated authorization prompts
+    private var hasRequestedAuthorization: Bool {
+        get { UserDefaults.standard.bool(forKey: Self.healthKitAuthRequestedKey) }
+        set { UserDefaults.standard.set(newValue, forKey: Self.healthKitAuthRequestedKey) }
+    }
+
+    /// User's maximum heart rate for HR zone calculations
+    /// Default: 190 (assumes ~30 year old, using 220-age formula)
+    /// Can be set from iPhone or calculated from HealthKit date of birth
+    var userMaxHR: Double = 190
+
     // MARK: - Heart Rate Zones
 
     enum HeartRateZone: String, CaseIterable {
@@ -91,6 +106,13 @@ class WorkoutManager: NSObject, ObservableObject {
             return
         }
 
+        // ✅ FIX: Only recover if session is actually running or paused
+        // If session is ended/stopped, don't treat it as active
+        guard recoveredSession.state == .running || recoveredSession.state == .paused else {
+            print("⌚ [RECOVERY] Recovered session is in state \(recoveredSession.state.rawValue), not recovering")
+            return
+        }
+
         // Assign recovered session
         self.session = recoveredSession
 
@@ -132,16 +154,26 @@ class WorkoutManager: NSObject, ObservableObject {
         WKInterfaceDevice.current().play(.notification)
     }
 
-    func startWorkout(type: WorkoutType) async throws {
-        // 1. Request authorization
-        let typesToShare: Set = [HKQuantityType.workoutType()]
-        let typesToRead: Set = [
-            HKQuantityType(.heartRate),
-            HKQuantityType(.activeEnergyBurned),
-            HKQuantityType(.distanceWalkingRunning)
-        ]
+    /// Start a workout session
+    /// - Parameters:
+    ///   - type: The type of workout (strength, HIIT, functional)
+    ///   - isCompanion: If true, this session is started as companion to iPhone workout
+    ///                  (haptic feedback is skipped since ConnectivityManager already played it)
+    func startWorkout(type: WorkoutType, isCompanion: Bool = false) async throws {
+        // ✅ FIX: Always clear any stale session before starting new one
+        // This prevents "Unable to transition from Ended state" errors
+        if session != nil {
+            print("⌚ [WORKOUT] Clearing stale session before starting new one")
+            resetState()
+        }
 
-        try await healthStore.requestAuthorization(toShare: typesToShare, read: typesToRead)
+        // 1. Request authorization ONLY if not already determined
+        // This prevents the "Consenti Salute" dialog from appearing every time
+        try await requestHealthKitAuthorizationIfNeeded()
+
+        // 1b. Calculate maxHR from HealthKit date of birth (if available)
+        // This improves HR zone accuracy based on user's actual age
+        await calculateMaxHRFromHealthKit()
 
         // 2. Create workout configuration
         let configuration = HKWorkoutConfiguration()
@@ -177,8 +209,10 @@ class WorkoutManager: NSObject, ObservableObject {
         // - Elapsed time: Views use Text(workoutStartDate, style: .timer) - native, battery efficient
         // - Health metrics: Sent only when HR changes by ±5 BPM (in HKLiveWorkoutBuilderDelegate)
 
-        // Trigger haptic feedback
-        WKInterfaceDevice.current().play(.start)
+        // Trigger haptic feedback (skip for companion mode - already played by ConnectivityManager)
+        if !isCompanion {
+            WKInterfaceDevice.current().play(.start)
+        }
     }
 
     // MARK: - Computed Properties
@@ -187,6 +221,73 @@ class WorkoutManager: NSObject, ObservableObject {
     var elapsedTime: TimeInterval {
         guard let start = workoutStartDate else { return 0 }
         return Date().timeIntervalSince(start)
+    }
+
+    // MARK: - Max HR Calculation
+
+    /// Calculate user's max HR from HealthKit date of birth
+    /// Uses the standard formula: 220 - age
+    /// Falls back to default (190) if date of birth is not available
+    func calculateMaxHRFromHealthKit() async {
+        do {
+            let dateOfBirth = try await healthStore.dateOfBirthComponents()
+            guard let birthYear = dateOfBirth.year else {
+                print("⌚ [HEALTHKIT] Birth year not available, using default maxHR: \(userMaxHR)")
+                return
+            }
+
+            let currentYear = Calendar.current.component(.year, from: Date())
+            let age = currentYear - birthYear
+            let calculatedMaxHR = max(100, Double(220 - age))  // Minimum 100 for safety
+
+            userMaxHR = calculatedMaxHR
+            print("⌚ [HEALTHKIT] Calculated maxHR from birth year: \(userMaxHR) (age: \(age))")
+        } catch {
+            // Date of birth not available or not authorized - use default
+            print("⌚ [HEALTHKIT] Could not read date of birth: \(error.localizedDescription)")
+            print("⌚ [HEALTHKIT] Using default maxHR: \(userMaxHR)")
+        }
+    }
+
+    // MARK: - HealthKit Authorization
+
+    /// Request HealthKit authorization ONLY if not already determined
+    /// This prevents the "Consenti Salute" dialog from appearing every time
+    private func requestHealthKitAuthorizationIfNeeded() async throws {
+        // Skip if already requested in this session
+        guard !hasRequestedAuthorization else {
+            print("⌚ [HEALTHKIT] Authorization already requested in this session, skipping")
+            return
+        }
+
+        let typesToShare: Set = [HKQuantityType.workoutType()]
+        let typesToRead: Set<HKObjectType> = [
+            HKQuantityType(.heartRate),
+            HKQuantityType(.activeEnergyBurned),
+            HKQuantityType(.distanceWalkingRunning),
+            HKCharacteristicType(.dateOfBirth)  // ✅ For maxHR calculation
+        ]
+
+        // Check current authorization status for WRITE types only
+        // Note: For READ types (heartRate, etc.), HealthKit ALWAYS returns .notDetermined
+        // for privacy reasons, so we can only reliably check write (share) permissions
+        let workoutStatus = healthStore.authorizationStatus(for: HKObjectType.workoutType())
+
+        // If already authorized to write workouts, permissions are set up
+        // This prevents the dialog from appearing when permissions are already granted
+        if workoutStatus == .sharingAuthorized {
+            print("⌚ [HEALTHKIT] Already authorized to write workouts, skipping authorization request")
+            hasRequestedAuthorization = true
+            return
+        }
+
+        // Only request if not determined yet
+        // Note: In development builds, this may still show the dialog occasionally
+        // because Xcode reinstalls can reset permissions
+        print("⌚ [HEALTHKIT] Requesting authorization...")
+        try await healthStore.requestAuthorization(toShare: typesToShare, read: typesToRead)
+        hasRequestedAuthorization = true
+        print("⌚ [HEALTHKIT] Authorization request completed")
     }
 
     // MARK: - Private Methods
@@ -211,18 +312,13 @@ class WorkoutManager: NSObject, ObservableObject {
         ConnectivityManager.shared.updateHeartRate(heartRate)
     }
 
-    func pauseWorkout() {
-        session?.pause()
-        WKInterfaceDevice.current().play(.click)
-    }
-
-    func resumeWorkout() {
-        session?.resume()
-        WKInterfaceDevice.current().play(.start)
-    }
-
     /// End workout and SAVE to HealthKit
     func endWorkout() async throws {
+        // ✅ FIX: Mark that we're ending workout internally
+        // This prevents the delegate from notifying iPhone (we already know)
+        isEndingWorkoutInternally = true
+        defer { isEndingWorkoutInternally = false }
+
         session?.end()
 
         guard let builder = builder else {
@@ -246,6 +342,10 @@ class WorkoutManager: NSObject, ObservableObject {
 
     /// Discard workout WITHOUT saving to HealthKit
     func discardWorkout() async throws {
+        // ✅ FIX: Mark that we're ending workout internally
+        isEndingWorkoutInternally = true
+        defer { isEndingWorkoutInternally = false }
+
         session?.end()
 
         guard let builder = builder else {
@@ -272,10 +372,14 @@ class WorkoutManager: NSObject, ObservableObject {
         self.isWorkoutActive = false
     }
 
+    /// Flag to track if we initiated the workout end
+    /// Used to distinguish between our code ending workout vs external end (Health app, etc.)
+    private var isEndingWorkoutInternally = false
+
     private func calculateHeartRateZone(bpm: Double) -> HeartRateZone {
-        // Assuming max HR = 220 - age (simplified)
-        let maxHR: Double = 190 // Placeholder for 30-year-old
-        let percentage = bpm / maxHR
+        // ✅ FIX: Use configurable userMaxHR instead of hardcoded value
+        // userMaxHR can be set from iPhone or HealthKit date of birth
+        let percentage = bpm / userMaxHR
 
         switch percentage {
         case ..<0.5: return .warmup
@@ -306,6 +410,17 @@ extension WorkoutManager: HKWorkoutSessionDelegate {
                 isWorkoutActive = false
             case .ended:
                 isWorkoutActive = false
+
+                // ✅ FIX: If workout ended externally (not by our code), notify iPhone
+                // This handles cases like user ending workout via Health app
+                if !isEndingWorkoutInternally {
+                    print("⌚ [WORKOUT] Session ended EXTERNALLY (Health app or system)")
+
+                    // Request fresh state from iPhone to stay in sync
+                    // iPhone is source of truth - if it thinks workout is still active,
+                    // it will send update and we'll restart HKWorkoutSession
+                    ConnectivityManager.shared.syncWorkoutStateFromiPhone(skipCache: true)
+                }
             default:
                 break
             }
@@ -316,7 +431,25 @@ extension WorkoutManager: HKWorkoutSessionDelegate {
         _ workoutSession: HKWorkoutSession,
         didFailWithError error: Error
     ) {
-        // Session failed - could log to analytics in production
+        let nsError = error as NSError
+        print("⌚ [WORKOUT] ❌ Session failed with error: \(error.localizedDescription)")
+        print("⌚ [WORKOUT] Error domain: \(nsError.domain), code: \(nsError.code)")
+
+        Task { @MainActor in
+            // Notify user with haptic feedback
+            WKInterfaceDevice.current().play(.failure)
+
+            // Notify iPhone about the failure
+            ConnectivityManager.shared.sendWorkoutError(
+                message: "Workout session failed: \(error.localizedDescription)"
+            )
+
+            // If session is in a bad state, attempt to clean up
+            if workoutSession.state == .notStarted || workoutSession.state == .ended {
+                print("⌚ [WORKOUT] Resetting state after error")
+                self.resetState()
+            }
+        }
     }
 }
 
