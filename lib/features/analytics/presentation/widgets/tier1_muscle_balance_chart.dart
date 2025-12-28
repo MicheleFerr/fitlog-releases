@@ -148,6 +148,9 @@ class _Tier1MuscleBalanceChartState extends ConsumerState<Tier1MuscleBalanceChar
                               animation: _scaleAnimation.value,
                               showComparison: _showComparison,
                               muscleRegions: _muscleRegions,
+                              successColor: context.colors.success,
+                              warningColor: context.colors.warning,
+                              errorColor: context.colors.error,
                             ),
                             child: RadarChart(
                               RadarChartData(
@@ -169,9 +172,14 @@ class _Tier1MuscleBalanceChartState extends ConsumerState<Tier1MuscleBalanceChar
                                   final muscle = MuscleGroup.values[index];
                                   final isSelected = muscle == _selectedMuscle;
                                   final isHovered = muscle == _hoveredMuscle;
-                                  
+                                  final data = widget.muscleData[muscle];
+                                  final status = data != null
+                                      ? VolumeZone.getStatus(data.currentStrength)
+                                      : VolumeStatus.insufficient;
+                                  final statusIcon = _getStatusIcon(status);
+
                                   return RadarChartTitle(
-                                    text: _getMuscleLabel(muscle, l10n),
+                                    text: '$statusIcon ${_getMuscleLabel(muscle, l10n)}',
                                     angle: 0,
                                     positionPercentageOffset: isSelected || isHovered ? 0.35 : 0.25,
                                   );
@@ -400,6 +408,12 @@ class _Tier1MuscleBalanceChartState extends ConsumerState<Tier1MuscleBalanceChar
       ),
       child: Column(
         children: [
+          // Zone legend (new)
+          _buildZoneLegend(theme, l10n),
+          const SizedBox(height: 12),
+          const Divider(height: 1),
+          const SizedBox(height: 12),
+          // Data legend
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
@@ -437,6 +451,75 @@ class _Tier1MuscleBalanceChartState extends ConsumerState<Tier1MuscleBalanceChar
           ),
         ],
       ),
+    );
+  }
+
+  /// Build zone legend showing insufficient/optimal/excessive zones
+  Widget _buildZoneLegend(ThemeData theme, AppLocalizations l10n) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      children: [
+        _buildZoneIndicator(
+          color: context.colors.error,
+          label: l10n.insufficientVolume,
+          range: '0-40%',
+          theme: theme,
+        ),
+        _buildZoneIndicator(
+          color: context.colors.success,
+          label: l10n.optimalVolume,
+          range: '40-80%',
+          theme: theme,
+        ),
+        _buildZoneIndicator(
+          color: context.colors.warning,
+          label: l10n.excessiveVolume,
+          range: '80%+',
+          theme: theme,
+        ),
+      ],
+    );
+  }
+
+  Widget _buildZoneIndicator({
+    required Color color,
+    required String label,
+    required String range,
+    required ThemeData theme,
+  }) {
+    return Column(
+      children: [
+        Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Container(
+              width: 12,
+              height: 12,
+              decoration: BoxDecoration(
+                color: color.withValues(alpha: 0.3),
+                borderRadius: BorderRadius.circular(3),
+                border: Border.all(color: color, width: 1.5),
+              ),
+            ),
+            const SizedBox(width: 4),
+            Text(
+              label,
+              style: theme.textTheme.labelSmall?.copyWith(
+                fontWeight: FontWeight.w600,
+                color: color,
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: 2),
+        Text(
+          range,
+          style: theme.textTheme.bodySmall?.copyWith(
+            fontSize: 10,
+            color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
+          ),
+        ),
+      ],
     );
   }
   
@@ -1045,6 +1128,18 @@ class _Tier1MuscleBalanceChartState extends ConsumerState<Tier1MuscleBalanceChar
     return total / widget.muscleData.length;
   }
 
+  /// Get status icon for the zone
+  String _getStatusIcon(VolumeStatus status) {
+    switch (status) {
+      case VolumeStatus.insufficient:
+        return '⚠️'; // Warning - needs more volume
+      case VolumeStatus.optimal:
+        return '✅'; // Good - in optimal range
+      case VolumeStatus.excessive:
+        return '🔥'; // Fire - might be overtraining
+    }
+  }
+
   String _getMuscleLabel(MuscleGroup muscle, AppLocalizations l10n) {
     switch (muscle) {
       case MuscleGroup.chest:
@@ -1097,7 +1192,48 @@ class _Tier1MuscleBalanceChartState extends ConsumerState<Tier1MuscleBalanceChar
   }
 }
 
-// Enhanced custom painter for better visuals
+/// Zone thresholds for muscle balance visualization
+class VolumeZone {
+  const VolumeZone._();
+
+  /// Insufficient volume threshold (0-40%)
+  static const double insufficientMax = 0.40;
+
+  /// Optimal volume range (40-80%)
+  static const double optimalMin = 0.40;
+  static const double optimalMax = 0.80;
+
+  /// Excessive volume threshold (80%+)
+  static const double excessiveMin = 0.80;
+
+  /// Get zone status for a given strength percentage (0-100)
+  static VolumeStatus getStatus(double strengthPercent) {
+    final normalized = strengthPercent / 100;
+    if (normalized < insufficientMax) return VolumeStatus.insufficient;
+    if (normalized <= optimalMax) return VolumeStatus.optimal;
+    return VolumeStatus.excessive;
+  }
+}
+
+/// Volume status enum
+enum VolumeStatus {
+  insufficient,
+  optimal,
+  excessive;
+
+  String get labelKey {
+    switch (this) {
+      case VolumeStatus.insufficient:
+        return 'insufficient';
+      case VolumeStatus.optimal:
+        return 'optimal';
+      case VolumeStatus.excessive:
+        return 'excessive';
+    }
+  }
+}
+
+// Enhanced custom painter for better visuals with zone rings
 class _EnhancedRadarPainter extends CustomPainter {
 
   _EnhancedRadarPainter({
@@ -1108,6 +1244,9 @@ class _EnhancedRadarPainter extends CustomPainter {
     required this.animation,
     required this.showComparison,
     this.muscleRegions = const {},
+    required this.successColor,
+    required this.warningColor,
+    required this.errorColor,
   });
   final Map<MuscleGroup, MuscleStrengthData> muscleData;
   final MuscleGroup? selectedMuscle;
@@ -1116,24 +1255,34 @@ class _EnhancedRadarPainter extends CustomPainter {
   final double animation;
   final bool showComparison;
   final Map<MuscleGroup, Path> muscleRegions;
+  final Color successColor;
+  final Color warningColor;
+  final Color errorColor;
 
   @override
   void paint(Canvas canvas, Size size) {
-    // Paint debug regions to visualize touch areas
+    final center = Offset(size.width / 2, size.height / 2);
+    final maxRadius = size.width * 0.35;
+    final numPoints = MuscleGroup.values.length;
+
+    // Draw colored zone rings (from outer to inner so they layer correctly)
+    _drawZoneRings(canvas, center, maxRadius, numPoints);
+
+    // Paint touch regions
     if (muscleRegions.isNotEmpty) {
       for (final entry in muscleRegions.entries) {
         final paint = Paint()
           ..style = PaintingStyle.stroke
           ..strokeWidth = 1
           ..color = theme.colorScheme.outline.withValues(alpha: 0.2);
-        
+
         // Highlight selected or hovered region
         if (entry.key == selectedMuscle) {
           paint
             ..style = PaintingStyle.fill
             ..color = theme.colorScheme.primary.withValues(alpha: 0.15);
           canvas.drawPath(entry.value, paint);
-          
+
           paint
             ..style = PaintingStyle.stroke
             ..strokeWidth = 2
@@ -1149,11 +1298,130 @@ class _EnhancedRadarPainter extends CustomPainter {
     }
   }
 
+  /// Draw colored zone rings to indicate insufficient/optimal/excessive
+  void _drawZoneRings(Canvas canvas, Offset center, double maxRadius, int numPoints) {
+    // Zone boundaries (as percentage of max radius)
+    // 0-40% = Insufficient (red/orange)
+    // 40-80% = Optimal (green)
+    // 80-100% = Excessive (orange/yellow)
+
+    final zones = [
+      // Excessive zone (80-100%) - outer ring
+      _ZoneRing(
+        innerPercent: VolumeZone.excessiveMin,
+        outerPercent: 1.0,
+        color: warningColor.withValues(alpha: 0.15),
+        borderColor: warningColor.withValues(alpha: 0.4),
+      ),
+      // Optimal zone (40-80%) - middle ring
+      _ZoneRing(
+        innerPercent: VolumeZone.optimalMin,
+        outerPercent: VolumeZone.optimalMax,
+        color: successColor.withValues(alpha: 0.12),
+        borderColor: successColor.withValues(alpha: 0.35),
+      ),
+      // Insufficient zone (0-40%) - inner area
+      _ZoneRing(
+        innerPercent: 0,
+        outerPercent: VolumeZone.insufficientMax,
+        color: errorColor.withValues(alpha: 0.10),
+        borderColor: errorColor.withValues(alpha: 0.3),
+      ),
+    ];
+
+    for (final zone in zones) {
+      _drawPolygonRing(
+        canvas,
+        center,
+        maxRadius * zone.innerPercent * animation,
+        maxRadius * zone.outerPercent * animation,
+        numPoints,
+        zone.color,
+        zone.borderColor,
+      );
+    }
+  }
+
+  /// Draw a polygon ring (donut shape) for a zone
+  void _drawPolygonRing(
+    Canvas canvas,
+    Offset center,
+    double innerRadius,
+    double outerRadius,
+    int numPoints,
+    Color fillColor,
+    Color borderColor,
+  ) {
+    if (outerRadius <= 0) return;
+
+    final outerPath = _createPolygonPath(center, outerRadius, numPoints);
+    final innerPath = _createPolygonPath(center, innerRadius, numPoints);
+
+    // Create ring by subtracting inner from outer
+    final ringPath = Path.combine(PathOperation.difference, outerPath, innerPath);
+
+    // Fill
+    canvas.drawPath(
+      ringPath,
+      Paint()
+        ..style = PaintingStyle.fill
+        ..color = fillColor,
+    );
+
+    // Outer border only (more subtle)
+    canvas.drawPath(
+      outerPath,
+      Paint()
+        ..style = PaintingStyle.stroke
+        ..strokeWidth = 1.0
+        ..color = borderColor,
+    );
+  }
+
+  /// Create a regular polygon path
+  Path _createPolygonPath(Offset center, double radius, int numPoints) {
+    final path = Path();
+    if (radius <= 0) {
+      path.addOval(Rect.fromCenter(center: center, width: 1, height: 1));
+      return path;
+    }
+
+    for (int i = 0; i < numPoints; i++) {
+      // Start from top (-π/2) and go clockwise
+      final angle = (i * 2 * math.pi / numPoints) - math.pi / 2;
+      final x = center.dx + radius * math.cos(angle);
+      final y = center.dy + radius * math.sin(angle);
+
+      if (i == 0) {
+        path.moveTo(x, y);
+      } else {
+        path.lineTo(x, y);
+      }
+    }
+    path.close();
+    return path;
+  }
+
   @override
-  bool shouldRepaint(covariant _EnhancedRadarPainter oldDelegate) => 
+  bool shouldRepaint(covariant _EnhancedRadarPainter oldDelegate) =>
     oldDelegate.selectedMuscle != selectedMuscle ||
     oldDelegate.hoveredMuscle != hoveredMuscle ||
     oldDelegate.animation != animation;
+}
+
+/// Helper class for zone ring data
+class _ZoneRing {
+  const _ZoneRing({
+    required this.innerPercent,
+    required this.outerPercent,
+    required this.color,
+    required this.borderColor,
+  });
+
+  final double innerPercent;
+  final double outerPercent;
+  final Color color;
+  final Color borderColor;
 }
 
 // Data models

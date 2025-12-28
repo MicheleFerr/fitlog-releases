@@ -4896,6 +4896,18 @@
   "@poorBalance": {
     "description": "Poor muscle balance rating"
   },
+  "insufficientVolume": "Insufficient",
+  "@insufficientVolume": {
+    "description": "Insufficient training volume zone label"
+  },
+  "optimalVolume": "Optimal",
+  "@optimalVolume": {
+    "description": "Optimal training volume zone label"
+  },
+  "excessiveVolume": "Excessive",
+  "@excessiveVolume": {
+    "description": "Excessive training volume zone label"
+  },
   "comparePrevious": "Compare Previous",
   "@comparePrevious": {
     "description": "Compare with previous period option"

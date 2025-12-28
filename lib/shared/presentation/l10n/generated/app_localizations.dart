@@ -6863,6 +6863,24 @@ abstract class AppLocalizations {
   /// **'Poor'**
   String get poorBalance;
 
+  /// Insufficient training volume zone label
+  ///
+  /// In en, this message translates to:
+  /// **'Insufficient'**
+  String get insufficientVolume;
+
+  /// Optimal training volume zone label
+  ///
+  /// In en, this message translates to:
+  /// **'Optimal'**
+  String get optimalVolume;
+
+  /// Excessive training volume zone label
+  ///
+  /// In en, this message translates to:
+  /// **'Excessive'**
+  String get excessiveVolume;
+
   /// Compare with previous period option
   ///
   /// In en, this message translates to:

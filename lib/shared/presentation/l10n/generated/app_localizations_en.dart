@@ -3685,6 +3685,15 @@ class AppLocalizationsEn extends AppLocalizations {
   String get poorBalance => 'Poor';
 
   @override
+  String get insufficientVolume => 'Insufficient';
+
+  @override
+  String get optimalVolume => 'Optimal';
+
+  @override
+  String get excessiveVolume => 'Excessive';
+
+  @override
   String get comparePrevious => 'Compare Previous';
 
   @override
