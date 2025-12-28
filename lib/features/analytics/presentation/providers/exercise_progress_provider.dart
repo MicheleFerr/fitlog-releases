@@ -16,26 +16,36 @@ final exerciseProgressMetricsProvider = Provider<Map<String, ExerciseProgressMet
 
 /// Provider for a specific exercise's metrics
 ///
+/// 🔧 PERF FIX: Uses .select() to only rebuild when this specific exercise changes
+/// Instead of rebuilding for every change to any exercise in the map
+///
 /// Tries multiple sources:
 /// 1. First: from aggregated workout data (exerciseProgressMetricsProvider)
 /// 2. Fallback: from Firebase analytics collection (exerciseHistoryByNameProvider)
 final exerciseMetricsProvider = Provider.family<ExerciseProgressMetrics?, String>((ref, exerciseName) {
-  final allMetrics = ref.watch(exerciseProgressMetricsProvider);
-
-  // Try exact match first
-  if (allMetrics.containsKey(exerciseName)) {
-    return allMetrics[exerciseName];
-  }
-
-  // Try case-insensitive match
+  // 🔧 PERF FIX: Use select to only watch this specific exercise's metrics
+  // This prevents rebuilds when OTHER exercises are updated
   final normalizedName = exerciseName.toLowerCase().trim();
-  for (final entry in allMetrics.entries) {
-    if (entry.key.toLowerCase().trim() == normalizedName) {
-      return entry.value;
-    }
-  }
 
-  return null;
+  final metrics = ref.watch(
+    exerciseProgressMetricsProvider.select((allMetrics) {
+      // Try exact match first
+      if (allMetrics.containsKey(exerciseName)) {
+        return allMetrics[exerciseName];
+      }
+
+      // Try case-insensitive match
+      for (final entry in allMetrics.entries) {
+        if (entry.key.toLowerCase().trim() == normalizedName) {
+          return entry.value;
+        }
+      }
+
+      return null;
+    }),
+  );
+
+  return metrics;
 });
 
 /// Aggregate exercise data from all workouts

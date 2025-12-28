@@ -166,13 +166,9 @@ class _PhotoDetailModalState extends ConsumerState<PhotoDetailModal> {
           IconButton(
             onPressed: _isDeleting ? null : _confirmDelete,
             icon: _isDeleting
-                ? SizedBox(
-                    width: 20,
-                    height: 20,
-                    child: CircularProgressIndicator(
-                      strokeWidth: 2,
-                      color: context.colors.error,
-                    ),
+                ? LoadingIndicator(
+                    size: 20,
+                    color: context.colors.error,
                   )
                 : Icon(AppIcons.delete, color: context.colors.error),
             tooltip: 'Delete',
@@ -248,9 +244,9 @@ class _PhotoDetailModalState extends ConsumerState<PhotoDetailModal> {
                     Expanded(
                       child: Text(
                         widget.photo.notes!,
-                        style: const TextStyle(
+                        // Note: Colors.white used intentionally for photo overlay visibility
+                        style: context.textTheme.bodyMedium?.copyWith(
                           color: Colors.white,
-                          fontSize: 14,
                         ),
                       ),
                     ),
@@ -268,26 +264,26 @@ class _PhotoDetailModalState extends ConsumerState<PhotoDetailModal> {
                   vertical: 6,
                 ),
                 decoration: BoxDecoration(
-                  color: Colors.green.withValues(alpha: 0.2),
+                  color: context.colors.success.withValues(alpha: 0.2),
                   borderRadius: BorderRadius.circular(16),
                   border: Border.all(
-                    color: Colors.green.withValues(alpha: 0.5),
+                    color: context.colors.success.withValues(alpha: 0.5),
                   ),
                 ),
-                child: const Row(
+                child: Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Icon(
                       AppIcons.check,
                       size: 14,
-                      color: Colors.green,
+                      color: context.colors.success,
                     ),
-                    SizedBox(width: 6),
+                    const SizedBox(width: 6),
                     Text(
                       'Shared with coach',
-                      style: TextStyle(
-                        color: Colors.green,
-                        fontSize: 12,
+                      // Note: Green used for visual status indicator on photo
+                      style: context.textTheme.labelSmall?.copyWith(
+                        color: context.colors.success,
                         fontWeight: FontWeight.w500,
                       ),
                     ),
@@ -318,9 +314,9 @@ class _PhotoDetailModalState extends ConsumerState<PhotoDetailModal> {
           const SizedBox(width: 6),
           Text(
             label,
-            style: const TextStyle(
+            // Note: White used for visibility on photo overlay
+            style: context.textTheme.labelSmall?.copyWith(
               color: Colors.white,
-              fontSize: 12,
               fontWeight: FontWeight.w500,
             ),
           ),

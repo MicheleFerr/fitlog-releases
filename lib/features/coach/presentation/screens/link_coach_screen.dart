@@ -319,13 +319,9 @@ class _LinkCoachScreenState extends ConsumerState<LinkCoachScreen> {
         minimumSize: const Size(double.infinity, 56),
       ),
       child: _isLoading
-          ? SizedBox(
-              width: 24,
-              height: 24,
-              child: CircularProgressIndicator(
-                strokeWidth: 2,
-                color: context.colors.onPrimary,
-              ),
+          ? LoadingIndicator(
+              size: 24,
+              color: context.colors.onPrimary,
             )
           : Text(context.l10n.linkToCoach),
     );

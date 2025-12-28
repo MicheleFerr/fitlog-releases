@@ -40,6 +40,7 @@ class LoadingIndicator extends StatelessWidget { // Se true, copre schermo con s
     this.progress,
     this.color,
     this.size = 40,
+    this.strokeWidth,
     this.overlay = false,
   });
 
@@ -51,6 +52,7 @@ class LoadingIndicator extends StatelessWidget { // Se true, copre schermo con s
     this.color,
   })  : progress = null,
         size = 40,
+        strokeWidth = null,
         overlay = true;
 
   /// Progress bar lineare
@@ -61,6 +63,7 @@ class LoadingIndicator extends StatelessWidget { // Se true, copre schermo con s
     this.color,
   })  : style = LoadingStyle.linear,
         size = 40,
+        strokeWidth = null,
         overlay = false;
 
   /// Loading adattivo per piattaforma (iOS/Android)
@@ -71,12 +74,14 @@ class LoadingIndicator extends StatelessWidget { // Se true, copre schermo con s
     this.size = 40,
   })  : style = LoadingStyle.adaptive,
         progress = null,
+        strokeWidth = null,
         overlay = false;
   final String? message;
   final LoadingStyle style;
   final double? progress; // Per progress bar (0.0 - 1.0)
   final Color? color;
   final double size;
+  final double? strokeWidth; // Custom stroke width (default: 3 for large, 2 for small)
   final bool overlay;
 
   @override
@@ -123,6 +128,8 @@ class LoadingIndicator extends StatelessWidget { // Se true, copre schermo con s
 
   Widget _buildIndicator(BuildContext context) {
     final indicatorColor = color ?? context.colors.primary;
+    // 🔧 PERF FIX: Use thinner stroke for small sizes (buttons, icons)
+    final effectiveStrokeWidth = strokeWidth ?? (size <= 24 ? 2.0 : 3.0);
 
     switch (style) {
       case LoadingStyle.circular:
@@ -133,11 +140,11 @@ class LoadingIndicator extends StatelessWidget { // Se true, copre schermo con s
               ? CircularProgressIndicator(
                   value: progress,
                   color: indicatorColor,
-                  strokeWidth: 3,
+                  strokeWidth: effectiveStrokeWidth,
                 )
               : CircularProgressIndicator(
                   color: indicatorColor,
-                  strokeWidth: 3,
+                  strokeWidth: effectiveStrokeWidth,
                 ),
         );
 

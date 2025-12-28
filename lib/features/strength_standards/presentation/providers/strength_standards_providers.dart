@@ -60,19 +60,21 @@ final weightSuggestionServiceProvider = Provider<WeightSuggestionService>((ref) 
 // ============================================================================
 
 /// Strength standards list (async loaded, cached)
-/// 🔧 MEMORY FIX: Added autoDispose to prevent memory leaks
-/// Automatically disposes provider instances when widget is disposed
+/// 🔧 PERF FIX: Use keepAlive() for static data that doesn't change
+/// Prevents repeated loading of standards on every screen access
 final strengthStandardsProvider =
     FutureProvider.autoDispose<List<StrengthStandard>>((ref) async {
+  ref.keepAlive(); // Static data - cache until app restart
   final repository = ref.watch(strengthStandardsRepositoryProvider);
   return repository.getStrengthStandards();
 });
 
 /// Exercise mappings list (async loaded, cached)
-/// 🔧 MEMORY FIX: Added autoDispose to prevent memory leaks
-/// Automatically disposes provider instances when widget is disposed
+/// 🔧 PERF FIX: Use keepAlive() for static mapping data
+/// Prevents repeated loading of mappings on every screen access
 final exerciseMappingsProvider =
     FutureProvider.autoDispose<List<ExerciseMapping>>((ref) async {
+  ref.keepAlive(); // Static data - cache until app restart
   final repository = ref.watch(strengthStandardsRepositoryProvider);
   return repository.getExerciseMappings();
 });

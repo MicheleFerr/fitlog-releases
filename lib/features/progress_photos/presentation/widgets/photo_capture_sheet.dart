@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 
@@ -370,9 +371,8 @@ class _PhotoCaptureSheetState extends State<PhotoCaptureSheet> {
                           ),
                           child: Text(
                             'NEW',
-                            style: TextStyle(
+                            style: context.textTheme.labelSmall?.copyWith(
                               color: context.colors.onPrimary,
-                              fontSize: 10,
                               fontWeight: FontWeight.bold,
                             ),
                           ),
@@ -479,7 +479,7 @@ class _PhotoCaptureSheetState extends State<PhotoCaptureSheet> {
                 }
               },
               selectedColor: context.colors.primaryContainer,
-              labelStyle: TextStyle(
+              labelStyle: context.textTheme.labelMedium?.copyWith(
                 color: isSelected
                     ? context.colors.onPrimaryContainer
                     : context.colors.onSurface,
@@ -577,13 +577,9 @@ class _PhotoCaptureSheetState extends State<PhotoCaptureSheet> {
     return FilledButton.icon(
       onPressed: canSubmit ? _submit : null,
       icon: _isProcessing
-          ? SizedBox(
-              width: 20,
-              height: 20,
-              child: CircularProgressIndicator(
-                strokeWidth: 2,
-                color: context.colors.onPrimary,
-              ),
+          ? LoadingIndicator(
+              size: 20,
+              color: context.colors.onPrimary,
             )
           : const Icon(AppIcons.upload),
       label: Text(_isProcessing ? 'Processing...' : context.l10n.save),

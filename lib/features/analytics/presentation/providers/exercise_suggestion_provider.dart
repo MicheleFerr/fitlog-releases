@@ -70,6 +70,10 @@ class ExerciseSuggestionParams {
 final exerciseSuggestionsProvider = FutureProvider.autoDispose
     .family<List<ExerciseSuggestion>, ExerciseSuggestionParams>(
   (ref, params) async {
+    // 🔧 PERF FIX: Keep provider alive to prevent expensive recalculation
+    // This caches suggestions (1500+ exercises filtering) between screen visits
+    ref.keepAlive();
+
     // Get all exercises from real database
     final allExercises = await ref.watch(allExercisesProvider.future);
 
@@ -113,6 +117,9 @@ final exerciseSuggestionsProvider = FutureProvider.autoDispose
 final exerciseSuggestionsGroupedProvider = FutureProvider.autoDispose
     .family<Map<String, List<ExerciseSuggestion>>, ExerciseSuggestionParams>(
   (ref, params) async {
+    // 🔧 PERF FIX: Keep provider alive to prevent expensive recalculation
+    ref.keepAlive();
+
     // Get all exercises from real database
     final allExercises = await ref.watch(allExercisesProvider.future);
 
