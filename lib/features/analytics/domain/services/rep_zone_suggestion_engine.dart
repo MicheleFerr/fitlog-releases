@@ -22,6 +22,7 @@ import 'package:flutter/foundation.dart';
 import 'package:gymbro_flutter_new/features/analytics/domain/entities/exercise_history.dart';
 import 'package:gymbro_flutter_new/features/analytics/domain/entities/rep_zone_suggestion.dart';
 import 'package:gymbro_flutter_new/features/analytics/domain/services/exercise_suggestion_engine.dart';
+import 'package:gymbro_flutter_new/features/analytics/domain/services/one_rm_calculator.dart';
 import 'package:gymbro_flutter_new/features/exercise_database/domain/entities/exercise.dart';
 import 'package:gymbro_flutter_new/features/strength_standards/domain/entities/strength_standard.dart';
 import 'package:gymbro_flutter_new/features/stress_index/data/mappers/muscle_abbreviation_mapper.dart';
@@ -29,9 +30,14 @@ import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise.dar
     show ExerciseCategory;
 import 'package:gymbro_flutter_new/features/workout/domain/entities/workout_template.dart';
 
-/// Rep Zone Suggestion Engine v2
+/// Rep Zone Suggestion Engine v3
 ///
 /// Analyzes training distribution and generates suggestions with scoring.
+///
+/// **v3 Improvements**:
+/// - Weekly volume analysis per muscle group
+/// - Intensity (% 1RM) consideration for zone matching
+/// - Improved scoring with 7 criteria instead of 5
 class RepZoneSuggestionEngine {
   /// Threshold for "dominant zone" - above this triggers suggestions
   static const double dominantThreshold = 80.0;
@@ -47,6 +53,23 @@ class RepZoneSuggestionEngine {
 
   /// Maximum alternatives per suggestion
   static const int maxAlternatives = 4;
+
+  /// v3: Recommended weekly sets per muscle group (based on Schoenfeld meta-analysis)
+  /// 10-20 sets per week is optimal for hypertrophy
+  static const Map<String, int> _recommendedWeeklySets = {
+    'PET': 10, // Pectorals
+    'DOR': 10, // Back (Dorsal)
+    'SPA': 8, // Shoulders
+    'BIC': 6, // Biceps
+    'TRI': 6, // Triceps
+    'QUA': 10, // Quadriceps
+    'HAM': 8, // Hamstrings
+    'GLU': 8, // Glutes
+    'ADD': 8, // Calves
+    'COR': 6, // Core/Abs
+    'TRA': 4, // Traps
+    'AVA': 4, // Forearms
+  };
 
   /// Analyze rep zone distribution from exercise histories
   RepZoneAnalysis analyzeDistribution(List<ExerciseHistory> histories) {
@@ -157,6 +180,86 @@ class RepZoneSuggestionEngine {
     return neglected;
   }
 
+  /// v3: Calculate weekly volume per muscle group from last 7 days
+  ///
+  /// Returns map of muscle abbreviation → sets done in last 7 days
+  Map<String, int> _calculateWeeklyMuscleVolume(List<ExerciseHistory> histories) {
+    final volumeMap = <String, int>{};
+    final sevenDaysAgo = DateTime.now().subtract(const Duration(days: 7));
+
+    for (final history in histories) {
+      // Get muscle group abbreviation from history
+      final muscleAbbrev = history.muscleGroup.toUpperCase();
+      if (muscleAbbrev.isEmpty) continue;
+
+      // Count sets from last 7 days
+      for (final session in history.sessions) {
+        if (session.date.isAfter(sevenDaysAgo)) {
+          volumeMap[muscleAbbrev] = (volumeMap[muscleAbbrev] ?? 0) + session.sets.length;
+        }
+      }
+    }
+
+    return volumeMap;
+  }
+
+  /// v3: Calculate volume completion percentage for a muscle group
+  ///
+  /// Returns 0.0-1.0+ where 1.0 = 100% of recommended volume
+  double _getMuscleVolumeCompletion(String muscleAbbrev, Map<String, int> weeklyVolume) {
+    final done = weeklyVolume[muscleAbbrev] ?? 0;
+    final recommended = _recommendedWeeklySets[muscleAbbrev] ?? 8;
+    return done / recommended;
+  }
+
+  /// v3: Get typical intensity (% 1RM) for an exercise based on user history
+  ///
+  /// Uses best set from recent sessions to estimate 1RM, then calculates
+  /// what percentage they typically train at.
+  double? _getTypicalIntensity(String exerciseId, List<ExerciseHistory> histories) {
+    final history = histories.where((h) => h.exerciseId == exerciseId).firstOrNull;
+    if (history == null || history.sessions.isEmpty) return null;
+
+    // Get sessions from last 30 days
+    final thirtyDaysAgo = DateTime.now().subtract(const Duration(days: 30));
+    final recentSessions = history.sessions
+        .where((s) => s.date.isAfter(thirtyDaysAgo))
+        .toList();
+
+    if (recentSessions.isEmpty) return null;
+
+    // Estimate 1RM from best set
+    double best1RM = 0;
+    for (final session in recentSessions) {
+      for (final set in session.sets) {
+        if (set.weight > 0 && set.reps > 0) {
+          final estimated1RM = OneRMCalculator.calculateAverage(set.weight, set.reps);
+          if (estimated1RM > best1RM) {
+            best1RM = estimated1RM;
+          }
+        }
+      }
+    }
+
+    if (best1RM <= 0) return null;
+
+    // Calculate average intensity across recent sets
+    double totalIntensity = 0;
+    int setCount = 0;
+
+    for (final session in recentSessions) {
+      for (final set in session.sets) {
+        if (set.weight > 0 && set.reps > 0) {
+          final intensity = set.weight / best1RM;
+          totalIntensity += intensity;
+          setCount++;
+        }
+      }
+    }
+
+    return setCount > 0 ? (totalIntensity / setCount) : null;
+  }
+
   /// Generate suggestions to balance rep zones (v2 with scoring)
   ///
   /// [analysis] - The current rep zone analysis
@@ -187,6 +290,9 @@ class RepZoneSuggestionEngine {
     // Build muscle coverage map from templates
     final templateMuscles = _extractMusclesFromTemplates(templates);
 
+    // v3: Calculate weekly volume per muscle group
+    final weeklyMuscleVolume = _calculateWeeklyMuscleVolume(histories);
+
     // Score all exercises for each neglected zone
     final allScoredExercises = <_ScoredExercise>[];
 
@@ -200,6 +306,7 @@ class RepZoneSuggestionEngine {
         templateEquipment: templateEquipment,
         templateMuscles: templateMuscles,
         analysis: analysis,
+        weeklyMuscleVolume: weeklyMuscleVolume,
       );
       allScoredExercises.addAll(scored);
     }
@@ -282,6 +389,7 @@ class RepZoneSuggestionEngine {
     required Set<String> templateEquipment,
     required Set<String> templateMuscles,
     required RepZoneAnalysis analysis,
+    required Map<String, int> weeklyMuscleVolume,
   }) {
     final scored = <_ScoredExercise>[];
 
@@ -297,6 +405,7 @@ class RepZoneSuggestionEngine {
         templateEquipment: templateEquipment,
         templateMuscles: templateMuscles,
         histories: histories,
+        weeklyMuscleVolume: weeklyMuscleVolume,
       );
 
       // Skip very low scores
@@ -317,6 +426,15 @@ class RepZoneSuggestionEngine {
   }
 
   /// Calculate score breakdown for an exercise
+  ///
+  /// **v3 Scoring (total 110 pts)**:
+  /// - MUSCLE RELEVANCE (0-30): Fills muscle gaps
+  /// - EXERCISE TYPE (0-20): Compound/Isolation match for zone
+  /// - EQUIPMENT (0-15): Available equipment
+  /// - DIFFICULTY MATCH (0-10): Matches user level
+  /// - VARIETY (0-10): Not done recently
+  /// - WEEKLY VOLUME (0-15): Fills weekly volume gaps
+  /// - INTENSITY MATCH (0-10): % 1RM matches zone
   ScoreBreakdown _calculateScore({
     required ExerciseDefinition exercise,
     required RepZone zone,
@@ -324,6 +442,7 @@ class RepZoneSuggestionEngine {
     required Set<String> templateEquipment,
     required Set<String> templateMuscles,
     required List<ExerciseHistory> histories,
+    required Map<String, int> weeklyMuscleVolume,
   }) {
     // 1. MUSCLE RELEVANCE (0-30)
     int muscleRelevance = 0;
@@ -390,12 +509,67 @@ class RepZoneSuggestionEngine {
       variety = 2;
     }
 
+    // 6. WEEKLY VOLUME (0-15) - v3 NEW
+    // Score higher if exercise targets under-volumed muscle groups
+    int weeklyVolume = 0;
+    for (final muscle in exercise.focus) {
+      final completion = _getMuscleVolumeCompletion(muscle, weeklyMuscleVolume);
+      if (completion < 0.5) {
+        weeklyVolume = 15; // <50% of recommended - high priority
+        break;
+      } else if (completion < 0.7) {
+        weeklyVolume = weeklyVolume < 10 ? 10 : weeklyVolume;
+      } else if (completion < 0.9) {
+        weeklyVolume = weeklyVolume < 5 ? 5 : weeklyVolume;
+      }
+      // 0 if muscle is already at or above recommended volume
+    }
+
+    // 7. INTENSITY MATCH (0-10) - v3 NEW
+    // Score based on whether typical training intensity matches zone
+    int intensityMatch = 0;
+    final typicalIntensity = _getTypicalIntensity(exercise.id, histories);
+
+    if (typicalIntensity != null) {
+      // Match intensity to zone requirements
+      // Strength: 85-100% 1RM, Hypertrophy: 65-85% 1RM, Endurance: 40-65% 1RM
+      switch (zone) {
+        case RepZone.strength:
+          if (typicalIntensity >= 0.85) {
+            intensityMatch = 10;
+          } else if (typicalIntensity >= 0.75) {
+            intensityMatch = 5;
+          }
+        case RepZone.hypertrophy:
+          if (typicalIntensity >= 0.65 && typicalIntensity < 0.85) {
+            intensityMatch = 10;
+          } else if (typicalIntensity >= 0.55 || typicalIntensity < 0.90) {
+            intensityMatch = 5;
+          }
+        case RepZone.endurance:
+          if (typicalIntensity >= 0.40 && typicalIntensity < 0.65) {
+            intensityMatch = 10;
+          } else if (typicalIntensity < 0.75) {
+            intensityMatch = 5;
+          }
+      }
+    } else {
+      // No history - give neutral score based on exercise's natural rep range
+      if (_repRangeMatchesZone(exercise.rangeRipetizioni, zone)) {
+        intensityMatch = 7; // Natural rep range suggests good intensity match
+      } else {
+        intensityMatch = 3; // Unknown, give small benefit
+      }
+    }
+
     return ScoreBreakdown(
       muscleRelevance: muscleRelevance,
       exerciseType: exerciseType.clamp(0, 20),
       equipment: equipment,
       difficultyMatch: difficultyMatch,
       variety: variety,
+      weeklyVolume: weeklyVolume,
+      intensityMatch: intensityMatch,
     );
   }
 
@@ -435,6 +609,18 @@ class RepZoneSuggestionEngine {
 
     if (breakdown.equipment >= 15) {
       motivations.add('equipmentAlreadyOwned:${exercise.attrezzatura}');
+    }
+
+    // v3: Weekly volume motivations
+    if (breakdown.weeklyVolume >= 15) {
+      motivations.add('volumeGapCritical:${exercise.focus.join(", ")}');
+    } else if (breakdown.weeklyVolume >= 10) {
+      motivations.add('volumeGapModerate:${exercise.focus.join(", ")}');
+    }
+
+    // v3: Intensity match motivations
+    if (breakdown.intensityMatch >= 8) {
+      motivations.add('intensityMatchOptimal:${scored.zone.label}');
     }
 
     return motivations;
@@ -590,13 +776,12 @@ class RepZoneSuggestionEngine {
   }
 
   /// Calculate days since exercise was last performed
+  ///
+  /// **v2 FIX**: Uses exact ID matching instead of substring name matching
+  /// to avoid false positives (e.g., "Curl" matching "Leg Curl")
   int? _daysSinceLastDone(String exerciseId, List<ExerciseHistory> histories) {
-    // Find history for this exercise
-    final history = histories.where((h) {
-      // Match by name (history uses exerciseName, not ID)
-      return h.exerciseName.toLowerCase().contains(exerciseId.toLowerCase()) ||
-          exerciseId.toLowerCase().contains(h.exerciseName.toLowerCase());
-    }).firstOrNull;
+    // Find history for this exercise by exact ID match
+    final history = histories.where((h) => h.exerciseId == exerciseId).firstOrNull;
 
     if (history == null || history.sessions.isEmpty) return null;
 

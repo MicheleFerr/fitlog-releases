@@ -38,11 +38,14 @@ import 'package:gymbro_flutter_new/features/workout/domain/entities/workout.dart
 /// Data class for analytics conversion result
 class ExerciseAnalyticsData {
   const ExerciseAnalyticsData({
+    required this.exerciseId,
     required this.exerciseName,
     required this.muscleGroup,
     required this.session,
   });
 
+  /// Unique identifier for the exercise (from database)
+  final String exerciseId;
   final String exerciseName;
   final String muscleGroup;
   final ExerciseSession session;
@@ -120,6 +123,7 @@ class WorkoutToAnalyticsConverter {
       // Add to result list
       analyticsDataList.add(
         ExerciseAnalyticsData(
+          exerciseId: exercise.id,
           exerciseName: exercise.name,
           muscleGroup: exercise.category.name,
           session: session,

@@ -129,6 +129,7 @@ class ExerciseMergeService {
     final sourceHistory = exerciseHistories.firstWhere(
       (h) => h.exerciseName.toLowerCase() == sourceExerciseName.toLowerCase(),
       orElse: () => ExerciseHistory(
+        exerciseId: sourceExerciseName, // Fallback: use name as ID when not found
         exerciseName: sourceExerciseName,
         muscleGroup: '',
         sessions: [],

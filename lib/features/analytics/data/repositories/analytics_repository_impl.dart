@@ -322,6 +322,7 @@ class AnalyticsRepositoryImpl implements AnalyticsRepository {
   @override
   Future<Either<Failure, void>> updateExerciseHistory({
     required String userId,
+    required String exerciseId,
     required String exerciseName,
     required String muscleGroup,
     required ExerciseSession session,
@@ -342,6 +343,7 @@ class AnalyticsRepositoryImpl implements AnalyticsRepository {
         final model = ExerciseHistoryModel.fromFirestore(doc);
         final existingHistory = model.toDomain();
         updatedHistory = ExerciseHistory(
+          exerciseId: exerciseId,
           exerciseName: exerciseName,
           muscleGroup: muscleGroup,
           sessions: [...existingHistory.sessions, session],
@@ -349,6 +351,7 @@ class AnalyticsRepositoryImpl implements AnalyticsRepository {
       } else {
         // Create new history with first session
         updatedHistory = ExerciseHistory(
+          exerciseId: exerciseId,
           exerciseName: exerciseName,
           muscleGroup: muscleGroup,
           sessions: [session],

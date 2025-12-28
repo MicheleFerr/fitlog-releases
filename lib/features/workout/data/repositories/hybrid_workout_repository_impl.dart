@@ -995,6 +995,7 @@ class HybridWorkoutRepositoryImpl
         unawaited(
           _analyticsRepository!.updateExerciseHistory(
             userId: userId,
+            exerciseId: exercise.id,
             exerciseName: exercise.name,
             muscleGroup: exercise.category.name,
             session: session,

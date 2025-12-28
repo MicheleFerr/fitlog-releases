@@ -208,6 +208,7 @@ class BalanceTrendCalculator {
 
       // Return history with filtered sessions
       return ExerciseHistory(
+        exerciseId: history.exerciseId,
         exerciseName: history.exerciseName,
         muscleGroup: history.muscleGroup,
         sessions: filteredSessions,

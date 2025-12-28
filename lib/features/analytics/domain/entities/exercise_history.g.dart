@@ -8,6 +8,7 @@ part of 'exercise_history.dart';
 
 _ExerciseHistory _$ExerciseHistoryFromJson(Map<String, dynamic> json) =>
     _ExerciseHistory(
+      exerciseId: json['exerciseId'] as String,
       exerciseName: json['exerciseName'] as String,
       muscleGroup: json['muscleGroup'] as String,
       sessions: (json['sessions'] as List<dynamic>)
@@ -17,6 +18,7 @@ _ExerciseHistory _$ExerciseHistoryFromJson(Map<String, dynamic> json) =>
 
 Map<String, dynamic> _$ExerciseHistoryToJson(_ExerciseHistory instance) =>
     <String, dynamic>{
+      'exerciseId': instance.exerciseId,
       'exerciseName': instance.exerciseName,
       'muscleGroup': instance.muscleGroup,
       'sessions': instance.sessions.map((e) => e.toJson()).toList(),

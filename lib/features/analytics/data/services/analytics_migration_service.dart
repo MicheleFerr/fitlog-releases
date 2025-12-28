@@ -375,7 +375,9 @@ class AnalyticsMigrationService {
         totalSessions += sessions.length;
 
         // Create ExerciseHistory entity
+        // Note: exerciseId uses exerciseName as fallback for legacy migration data
         final history = ExerciseHistory(
+          exerciseId: exerciseName, // Fallback: use name as ID for legacy data
           exerciseName: exerciseName,
           muscleGroup: sessions.first.muscleGroup, // Use first session's muscle group
           sessions: sessions

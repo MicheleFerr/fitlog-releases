@@ -142,6 +142,17 @@ class RepZoneAnalysis {
 /// Score breakdown for exercise suggestion scoring system
 ///
 /// Each criterion has a max score contributing to total 0-100
+///
+/// **v3 Scoring Criteria**:
+/// - MUSCLE RELEVANCE (0-30): How well exercise targets needed muscle groups
+/// - EXERCISE TYPE (0-20): Compound vs Isolation match for zone
+/// - EQUIPMENT (0-15): Equipment already available in user's templates
+/// - DIFFICULTY MATCH (0-10): Difficulty matches user's experience level
+/// - VARIETY (0-10): Exercise variety - not done recently
+/// - WEEKLY VOLUME (0-15): Fills gaps in weekly muscle volume
+/// - INTENSITY MATCH (0-10): Exercise intensity matches target zone % 1RM
+///
+/// Total theoretical max: 110 (normalized to 0-100)
 class ScoreBreakdown {
   const ScoreBreakdown({
     this.muscleRelevance = 0,
@@ -149,6 +160,8 @@ class ScoreBreakdown {
     this.equipment = 0,
     this.difficultyMatch = 0,
     this.variety = 0,
+    this.weeklyVolume = 0,
+    this.intensityMatch = 0,
   });
 
   /// How well exercise targets needed muscle groups (0-30)
@@ -166,11 +179,35 @@ class ScoreBreakdown {
   /// Exercise variety - not done recently (0-10)
   final int variety;
 
-  /// Total score (0-85 theoretical max, normalized to 0-100)
-  int get total => muscleRelevance + exerciseType + equipment + difficultyMatch + variety;
+  /// v3: Weekly volume gap fill - exercise targets under-volumed muscles (0-15)
+  ///
+  /// Scoring:
+  /// - 15: Targets muscle group with <50% of recommended weekly sets
+  /// - 10: Targets muscle group with 50-70% of recommended weekly sets
+  /// - 5: Targets muscle group with 70-90% of recommended weekly sets
+  /// - 0: Muscle group already at or above recommended volume
+  final int weeklyVolume;
+
+  /// v3: Intensity match - typical % 1RM matches target zone (0-10)
+  ///
+  /// Based on Schoenfeld et al.:
+  /// - Strength zone: 85-100% 1RM (1-5 reps)
+  /// - Hypertrophy zone: 65-85% 1RM (6-15 reps)
+  /// - Endurance zone: 40-65% 1RM (15+ reps)
+  final int intensityMatch;
+
+  /// Total score (0-110 theoretical max, normalized to 0-100)
+  int get total =>
+      muscleRelevance +
+      exerciseType +
+      equipment +
+      difficultyMatch +
+      variety +
+      weeklyVolume +
+      intensityMatch;
 
   /// Normalized score 0-100
-  int get normalizedScore => ((total / 85) * 100).round().clamp(0, 100);
+  int get normalizedScore => ((total / 110) * 100).round().clamp(0, 100);
 }
 
 /// Alternative exercise suggestion with score and short reason

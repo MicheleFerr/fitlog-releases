@@ -175,6 +175,7 @@ abstract class AnalyticsRepository {
   ///
   /// **Parameters**:
   /// - userId: User identifier
+  /// - exerciseId: Unique database ID for the exercise
   /// - exerciseName: Name of the exercise
   /// - muscleGroup: Muscle group category (chest, back, legs, etc.)
   /// - session: New exercise session with sets
@@ -199,6 +200,7 @@ abstract class AnalyticsRepository {
   /// );
   /// await repository.updateExerciseHistory(
   ///   userId: 'user123',
+  ///   exerciseId: 'bench_press_001',
   ///   exerciseName: 'Bench Press',
   ///   muscleGroup: 'chest',
   ///   session: session,
@@ -206,6 +208,7 @@ abstract class AnalyticsRepository {
   /// ```
   Future<Either<Failure, void>> updateExerciseHistory({
     required String userId,
+    required String exerciseId,
     required String exerciseName,
     required String muscleGroup,
     required ExerciseSession session,

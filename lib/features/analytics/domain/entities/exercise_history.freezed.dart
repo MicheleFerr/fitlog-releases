@@ -15,7 +15,9 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$ExerciseHistory {
 
-/// Name of the exercise (e.g., "Bench Press", "Squat")
+/// Unique identifier for the exercise (from database)
+/// Used for exact matching in suggestion engine
+ String get exerciseId;/// Name of the exercise (e.g., "Bench Press", "Squat")
  String get exerciseName;/// Target muscle group (e.g., "chest", "back", "legs")
  String get muscleGroup;/// All sessions performed for this exercise (sorted by date)
  List<ExerciseSession> get sessions;
@@ -31,16 +33,16 @@ $ExerciseHistoryCopyWith<ExerciseHistory> get copyWith => _$ExerciseHistoryCopyW
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is ExerciseHistory&&(identical(other.exerciseName, exerciseName) || other.exerciseName == exerciseName)&&(identical(other.muscleGroup, muscleGroup) || other.muscleGroup == muscleGroup)&&const DeepCollectionEquality().equals(other.sessions, sessions));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is ExerciseHistory&&(identical(other.exerciseId, exerciseId) || other.exerciseId == exerciseId)&&(identical(other.exerciseName, exerciseName) || other.exerciseName == exerciseName)&&(identical(other.muscleGroup, muscleGroup) || other.muscleGroup == muscleGroup)&&const DeepCollectionEquality().equals(other.sessions, sessions));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,exerciseName,muscleGroup,const DeepCollectionEquality().hash(sessions));
+int get hashCode => Object.hash(runtimeType,exerciseId,exerciseName,muscleGroup,const DeepCollectionEquality().hash(sessions));
 
 @override
 String toString() {
-  return 'ExerciseHistory(exerciseName: $exerciseName, muscleGroup: $muscleGroup, sessions: $sessions)';
+  return 'ExerciseHistory(exerciseId: $exerciseId, exerciseName: $exerciseName, muscleGroup: $muscleGroup, sessions: $sessions)';
 }
 
 
@@ -51,7 +53,7 @@ abstract mixin class $ExerciseHistoryCopyWith<$Res>  {
   factory $ExerciseHistoryCopyWith(ExerciseHistory value, $Res Function(ExerciseHistory) _then) = _$ExerciseHistoryCopyWithImpl;
 @useResult
 $Res call({
- String exerciseName, String muscleGroup, List<ExerciseSession> sessions
+ String exerciseId, String exerciseName, String muscleGroup, List<ExerciseSession> sessions
 });
 
 
@@ -68,9 +70,10 @@ class _$ExerciseHistoryCopyWithImpl<$Res>
 
 /// Create a copy of ExerciseHistory
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? exerciseName = null,Object? muscleGroup = null,Object? sessions = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? exerciseId = null,Object? exerciseName = null,Object? muscleGroup = null,Object? sessions = null,}) {
   return _then(_self.copyWith(
-exerciseName: null == exerciseName ? _self.exerciseName : exerciseName // ignore: cast_nullable_to_non_nullable
+exerciseId: null == exerciseId ? _self.exerciseId : exerciseId // ignore: cast_nullable_to_non_nullable
+as String,exerciseName: null == exerciseName ? _self.exerciseName : exerciseName // ignore: cast_nullable_to_non_nullable
 as String,muscleGroup: null == muscleGroup ? _self.muscleGroup : muscleGroup // ignore: cast_nullable_to_non_nullable
 as String,sessions: null == sessions ? _self.sessions : sessions // ignore: cast_nullable_to_non_nullable
 as List<ExerciseSession>,
@@ -158,10 +161,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String exerciseName,  String muscleGroup,  List<ExerciseSession> sessions)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String exerciseId,  String exerciseName,  String muscleGroup,  List<ExerciseSession> sessions)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _ExerciseHistory() when $default != null:
-return $default(_that.exerciseName,_that.muscleGroup,_that.sessions);case _:
+return $default(_that.exerciseId,_that.exerciseName,_that.muscleGroup,_that.sessions);case _:
   return orElse();
 
 }
@@ -179,10 +182,10 @@ return $default(_that.exerciseName,_that.muscleGroup,_that.sessions);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String exerciseName,  String muscleGroup,  List<ExerciseSession> sessions)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String exerciseId,  String exerciseName,  String muscleGroup,  List<ExerciseSession> sessions)  $default,) {final _that = this;
 switch (_that) {
 case _ExerciseHistory():
-return $default(_that.exerciseName,_that.muscleGroup,_that.sessions);case _:
+return $default(_that.exerciseId,_that.exerciseName,_that.muscleGroup,_that.sessions);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -199,10 +202,10 @@ return $default(_that.exerciseName,_that.muscleGroup,_that.sessions);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String exerciseName,  String muscleGroup,  List<ExerciseSession> sessions)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String exerciseId,  String exerciseName,  String muscleGroup,  List<ExerciseSession> sessions)?  $default,) {final _that = this;
 switch (_that) {
 case _ExerciseHistory() when $default != null:
-return $default(_that.exerciseName,_that.muscleGroup,_that.sessions);case _:
+return $default(_that.exerciseId,_that.exerciseName,_that.muscleGroup,_that.sessions);case _:
   return null;
 
 }
@@ -214,9 +217,12 @@ return $default(_that.exerciseName,_that.muscleGroup,_that.sessions);case _:
 @JsonSerializable()
 
 class _ExerciseHistory extends ExerciseHistory {
-  const _ExerciseHistory({required this.exerciseName, required this.muscleGroup, required final  List<ExerciseSession> sessions}): _sessions = sessions,super._();
+  const _ExerciseHistory({required this.exerciseId, required this.exerciseName, required this.muscleGroup, required final  List<ExerciseSession> sessions}): _sessions = sessions,super._();
   factory _ExerciseHistory.fromJson(Map<String, dynamic> json) => _$ExerciseHistoryFromJson(json);
 
+/// Unique identifier for the exercise (from database)
+/// Used for exact matching in suggestion engine
+@override final  String exerciseId;
 /// Name of the exercise (e.g., "Bench Press", "Squat")
 @override final  String exerciseName;
 /// Target muscle group (e.g., "chest", "back", "legs")
@@ -244,16 +250,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _ExerciseHistory&&(identical(other.exerciseName, exerciseName) || other.exerciseName == exerciseName)&&(identical(other.muscleGroup, muscleGroup) || other.muscleGroup == muscleGroup)&&const DeepCollectionEquality().equals(other._sessions, _sessions));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _ExerciseHistory&&(identical(other.exerciseId, exerciseId) || other.exerciseId == exerciseId)&&(identical(other.exerciseName, exerciseName) || other.exerciseName == exerciseName)&&(identical(other.muscleGroup, muscleGroup) || other.muscleGroup == muscleGroup)&&const DeepCollectionEquality().equals(other._sessions, _sessions));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,exerciseName,muscleGroup,const DeepCollectionEquality().hash(_sessions));
+int get hashCode => Object.hash(runtimeType,exerciseId,exerciseName,muscleGroup,const DeepCollectionEquality().hash(_sessions));
 
 @override
 String toString() {
-  return 'ExerciseHistory(exerciseName: $exerciseName, muscleGroup: $muscleGroup, sessions: $sessions)';
+  return 'ExerciseHistory(exerciseId: $exerciseId, exerciseName: $exerciseName, muscleGroup: $muscleGroup, sessions: $sessions)';
 }
 
 
@@ -264,7 +270,7 @@ abstract mixin class _$ExerciseHistoryCopyWith<$Res> implements $ExerciseHistory
   factory _$ExerciseHistoryCopyWith(_ExerciseHistory value, $Res Function(_ExerciseHistory) _then) = __$ExerciseHistoryCopyWithImpl;
 @override @useResult
 $Res call({
- String exerciseName, String muscleGroup, List<ExerciseSession> sessions
+ String exerciseId, String exerciseName, String muscleGroup, List<ExerciseSession> sessions
 });
 
 
@@ -281,9 +287,10 @@ class __$ExerciseHistoryCopyWithImpl<$Res>
 
 /// Create a copy of ExerciseHistory
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? exerciseName = null,Object? muscleGroup = null,Object? sessions = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? exerciseId = null,Object? exerciseName = null,Object? muscleGroup = null,Object? sessions = null,}) {
   return _then(_ExerciseHistory(
-exerciseName: null == exerciseName ? _self.exerciseName : exerciseName // ignore: cast_nullable_to_non_nullable
+exerciseId: null == exerciseId ? _self.exerciseId : exerciseId // ignore: cast_nullable_to_non_nullable
+as String,exerciseName: null == exerciseName ? _self.exerciseName : exerciseName // ignore: cast_nullable_to_non_nullable
 as String,muscleGroup: null == muscleGroup ? _self.muscleGroup : muscleGroup // ignore: cast_nullable_to_non_nullable
 as String,sessions: null == sessions ? _self._sessions : sessions // ignore: cast_nullable_to_non_nullable
 as List<ExerciseSession>,

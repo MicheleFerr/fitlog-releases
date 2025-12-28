@@ -71,6 +71,9 @@ part 'exercise_history_model.freezed.dart';
 abstract class ExerciseHistoryModel with _$ExerciseHistoryModel {
 
   const factory ExerciseHistoryModel({
+    /// Unique identifier for the exercise (from database)
+    required String exerciseId,
+
     /// Name of the exercise (also the document ID)
     required String exerciseName,
 
@@ -87,6 +90,7 @@ abstract class ExerciseHistoryModel with _$ExerciseHistoryModel {
   /// Create from domain entity
   factory ExerciseHistoryModel.fromDomain(ExerciseHistory entity) {
     return ExerciseHistoryModel(
+      exerciseId: entity.exerciseId,
       exerciseName: entity.exerciseName,
       muscleGroup: entity.muscleGroup,
       sessions: entity.sessions
@@ -126,6 +130,8 @@ abstract class ExerciseHistoryModel with _$ExerciseHistoryModel {
   /// Create from Firestore JSON
   factory ExerciseHistoryModel.fromJson(Map<String, dynamic> json) {
     return ExerciseHistoryModel(
+      // Support migration: use exerciseId if present, fallback to exerciseName
+      exerciseId: (json['exerciseId'] as String?) ?? json['exerciseName'] as String,
       exerciseName: json['exerciseName'] as String,
       muscleGroup: json['muscleGroup'] as String,
       sessions: (json['sessions'] as List<dynamic>)
@@ -139,6 +145,7 @@ abstract class ExerciseHistoryModel with _$ExerciseHistoryModel {
   /// Convert to JSON for Firestore
   Map<String, dynamic> toJson() {
     return {
+      'exerciseId': exerciseId,
       'exerciseName': exerciseName,
       'muscleGroup': muscleGroup,
       'sessions': sessions.map((session) => session.toJson()).toList(),
@@ -149,6 +156,7 @@ abstract class ExerciseHistoryModel with _$ExerciseHistoryModel {
   /// Convert to domain entity
   ExerciseHistory toDomain() {
     return ExerciseHistory(
+      exerciseId: exerciseId,
       exerciseName: exerciseName,
       muscleGroup: muscleGroup,
       sessions: sessions.map((sessionModel) => sessionModel.toDomain()).toList(),

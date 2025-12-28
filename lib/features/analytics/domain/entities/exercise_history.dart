@@ -43,6 +43,10 @@ part 'exercise_history.g.dart';
 abstract class ExerciseHistory with _$ExerciseHistory {
 
   const factory ExerciseHistory({
+    /// Unique identifier for the exercise (from database)
+    /// Used for exact matching in suggestion engine
+    required String exerciseId,
+
     /// Name of the exercise (e.g., "Bench Press", "Squat")
     required String exerciseName,
 

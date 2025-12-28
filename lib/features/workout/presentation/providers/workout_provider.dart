@@ -1169,6 +1169,7 @@ class CurrentWorkoutNotifier extends Notifier<Workout?> {
             for (final data in analyticsData) {
               await analyticsRepo.updateExerciseHistory(
                 userId: effectiveUserId,
+                exerciseId: data.exerciseId,
                 exerciseName: data.exerciseName,
                 muscleGroup: data.muscleGroup,
                 session: data.session,

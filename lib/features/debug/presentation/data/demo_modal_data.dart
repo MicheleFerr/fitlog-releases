@@ -28,6 +28,7 @@ class DemoModalData {
     return [
       // Bench Press - Chest
       ExerciseHistory(
+        exerciseId: 'bench_press_demo',
         exerciseName: 'Bench Press',
         muscleGroup: 'chest',
         sessions: [
@@ -61,6 +62,7 @@ class DemoModalData {
 
       // Squat - Legs
       ExerciseHistory(
+        exerciseId: 'squat_demo',
         exerciseName: 'Squat',
         muscleGroup: 'legs',
         sessions: [
@@ -89,6 +91,7 @@ class DemoModalData {
 
       // Deadlift - Back
       ExerciseHistory(
+        exerciseId: 'deadlift_demo',
         exerciseName: 'Deadlift',
         muscleGroup: 'back',
         sessions: [
@@ -112,6 +115,7 @@ class DemoModalData {
 
       // Pull-ups - Back
       ExerciseHistory(
+        exerciseId: 'pullups_demo',
         exerciseName: 'Pull-ups',
         muscleGroup: 'back',
         sessions: [
@@ -130,6 +134,7 @@ class DemoModalData {
 
       // Shoulder Press - Shoulders
       ExerciseHistory(
+        exerciseId: 'shoulder_press_demo',
         exerciseName: 'Shoulder Press',
         muscleGroup: 'shoulders',
         sessions: [
@@ -148,6 +153,7 @@ class DemoModalData {
 
       // Bicep Curls - Arms
       ExerciseHistory(
+        exerciseId: 'bicep_curls_demo',
         exerciseName: 'Bicep Curls',
         muscleGroup: 'arms',
         sessions: [
