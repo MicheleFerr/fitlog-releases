@@ -88,6 +88,7 @@ import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator
 // Coach
 import 'package:gymbro_flutter_new/features/coach/presentation/screens/coach_dashboard_screen.dart';
 import 'package:gymbro_flutter_new/features/coach/presentation/screens/athletes_list_screen.dart';
+import 'package:gymbro_flutter_new/features/coach/presentation/screens/athlete_detail_screen.dart';
 import 'package:gymbro_flutter_new/features/coach/presentation/screens/link_coach_screen.dart';
 
 // Other routes
@@ -444,6 +445,23 @@ final appRouterProvider = Provider<GoRouter>((ref) {
                         path: 'athletes',
                         name: AppRoutes.athletesListName,
                         builder: (context, state) => const AthletesListScreen(),
+                        routes: [
+                          // Athlete detail (view single athlete's workouts)
+                          GoRoute(
+                            path: ':athleteId',
+                            name: AppRoutes.athleteDetailName,
+                            builder: (context, state) {
+                              final athleteId =
+                                  state.pathParameters['athleteId']!;
+                              final athleteName =
+                                  state.uri.queryParameters['name'] ?? '';
+                              return AthleteDetailScreen(
+                                athleteId: athleteId,
+                                athleteName: athleteName,
+                              );
+                            },
+                          ),
+                        ],
                       ),
                     ],
                   ),

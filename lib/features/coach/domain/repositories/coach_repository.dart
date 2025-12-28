@@ -62,6 +62,30 @@ abstract class CoachRepository {
   );
 
   // ============================================================
+  // ATHLETE WORKOUT ACCESS
+  // ============================================================
+
+  /// Fetch workout history for an athlete
+  ///
+  /// [coachEmail] - Coach's email (for permission check)
+  /// [athleteId] - Athlete's user ID
+  /// [limit] - Max number of workouts to fetch
+  ///
+  /// Returns list of workout history details
+  /// Throws if coach doesn't have permission
+  Future<List<AthleteWorkoutSummary>> fetchAthleteWorkouts({
+    required String coachEmail,
+    required String athleteId,
+    int limit = 20,
+  });
+
+  /// Get weekly stats for an athlete
+  Future<AthleteWeeklyStats> getAthleteWeeklyStats({
+    required String coachEmail,
+    required String athleteId,
+  });
+
+  // ============================================================
   // COACH MANAGEMENT (Athlete perspective)
   // ============================================================
 
@@ -153,4 +177,88 @@ class CoachInfo {
   final String coachName;
   final String? photoUrl;
   final int? athleteCount;
+}
+
+/// Summary of a single athlete workout (for coach view)
+class AthleteWorkoutSummary {
+  const AthleteWorkoutSummary({
+    required this.id,
+    required this.name,
+    required this.completedAt,
+    required this.durationMinutes,
+    required this.exerciseCount,
+    required this.totalSets,
+    required this.totalVolume,
+    this.exercises = const [],
+  });
+
+  final String id;
+  final String name;
+  final DateTime completedAt;
+  final int durationMinutes;
+  final int exerciseCount;
+  final int totalSets;
+  final double totalVolume;
+  final List<AthleteExerciseSummary> exercises;
+}
+
+/// Summary of exercise in workout
+class AthleteExerciseSummary {
+  const AthleteExerciseSummary({
+    required this.name,
+    required this.sets,
+  });
+
+  final String name;
+  final List<AthleteSetSummary> sets;
+
+  /// Format sets as compact string (e.g., "50kg × 8, 8, 7")
+  String get formattedSets {
+    if (sets.isEmpty) return '-';
+    final weights = sets.map((s) => s.weight).toSet();
+    if (weights.length == 1) {
+      final reps = sets.map((s) => '${s.reps}').join(', ');
+      return '${weights.first}kg × $reps';
+    }
+    return sets.map((s) => '${s.weight}kg × ${s.reps}').join(', ');
+  }
+}
+
+/// Summary of a single set
+class AthleteSetSummary {
+  const AthleteSetSummary({
+    required this.weight,
+    required this.reps,
+  });
+
+  final double weight;
+  final int reps;
+}
+
+/// Weekly stats for an athlete
+class AthleteWeeklyStats {
+  const AthleteWeeklyStats({
+    required this.totalWorkouts,
+    required this.plannedWorkouts,
+    required this.totalMinutes,
+    required this.totalVolume,
+    required this.compliancePercent,
+    this.lastWorkoutAt,
+  });
+
+  /// Create empty stats
+  const AthleteWeeklyStats.empty()
+      : totalWorkouts = 0,
+        plannedWorkouts = 4, // Default assumption
+        totalMinutes = 0,
+        totalVolume = 0,
+        compliancePercent = 0,
+        lastWorkoutAt = null;
+
+  final int totalWorkouts;
+  final int plannedWorkouts;
+  final int totalMinutes;
+  final double totalVolume;
+  final int compliancePercent;
+  final DateTime? lastWorkoutAt;
 }

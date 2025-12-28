@@ -200,6 +200,10 @@ abstract final class AppRoutes {
   static const String linkCoachPath = '/profile/link-coach';
   static const String linkCoachName = 'link-coach';
 
+  /// Athlete detail - coach view of a specific athlete
+  static const String athleteDetailPath = '/profile/coach/athletes/:athleteId';
+  static const String athleteDetailName = 'athlete-detail';
+
   // ═══════════════════════════════════════════════════════════════════════════
   // Branch Index Mapping (for StatefulShellRoute)
   // ═══════════════════════════════════════════════════════════════════════════

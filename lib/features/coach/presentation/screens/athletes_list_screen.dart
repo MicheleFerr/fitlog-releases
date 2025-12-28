@@ -10,6 +10,8 @@ library;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
+import 'package:gymbro_flutter_new/core/navigation/app_routes.dart';
 import 'package:gymbro_flutter_new/features/coach/domain/entities/coach_relationship.dart';
 import 'package:gymbro_flutter_new/features/coach/presentation/providers/coach_providers.dart';
 import 'package:gymbro_flutter_new/features/coach/presentation/widgets/athlete_card.dart';
@@ -253,8 +255,11 @@ class _AthletesListScreenState extends ConsumerState<AthletesListScreen> {
   }
 
   void _navigateToAthleteProfile(CoachRelationship athlete) {
-    // TODO: Navigate to athlete profile screen
-    // context.pushNamed(AppRoutes.athleteProfileName, pathParameters: {'id': athlete.athleteId});
+    context.pushNamed(
+      AppRoutes.athleteDetailName,
+      pathParameters: {'athleteId': athlete.athleteId},
+      queryParameters: {'name': athlete.athleteName ?? ''},
+    );
   }
 
   void _showAddAthleteSheet() {

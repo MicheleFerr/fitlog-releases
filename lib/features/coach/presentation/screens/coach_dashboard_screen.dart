@@ -224,9 +224,11 @@ class _AthletesSection extends ConsumerWidget {
   }
 
   void _navigateToAthlete(BuildContext context, CoachRelationship athlete) {
-    // TODO: Navigate to athlete detail when screen is ready
-    // For now, navigate to athletes list
-    context.pushNamed(AppRoutes.athletesListName);
+    context.pushNamed(
+      AppRoutes.athleteDetailName,
+      pathParameters: {'athleteId': athlete.athleteId},
+      queryParameters: {'name': athlete.athleteName ?? ''},
+    );
   }
 
   void _navigateToAthletesList(BuildContext context) {

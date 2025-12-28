@@ -18144,5 +18144,21 @@
   "createProfile": "Crea profilo",
   "@createProfile": {
     "description": "Pulsante per creare profilo"
+  },
+  "weeklyCompliance": "Compliance Settimanale",
+  "@weeklyCompliance": {
+    "description": "Intestazione card compliance atleta"
+  },
+  "editPermissions": "Modifica Permessi",
+  "@editPermissions": {
+    "description": "Pulsante per modificare permessi atleta"
+  },
+  "addNote": "Aggiungi Nota",
+  "@addNote": {
+    "description": "Pulsante per aggiungere nota all'atleta"
+  },
+  "removeAthlete": "Rimuovi Atleta",
+  "@removeAthlete": {
+    "description": "Pulsante per rimuovere atleta dal roster del coach"
   }
 }

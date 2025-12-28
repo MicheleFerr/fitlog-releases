@@ -24269,4 +24269,16 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get createProfile => 'Create profile';
+
+  @override
+  String get weeklyCompliance => 'Weekly Compliance';
+
+  @override
+  String get editPermissions => 'Edit Permissions';
+
+  @override
+  String get addNote => 'Add Note';
+
+  @override
+  String get removeAthlete => 'Remove Athlete';
 }

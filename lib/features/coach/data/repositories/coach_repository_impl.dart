@@ -569,6 +569,180 @@ class CoachRepositoryImpl implements CoachRepository {
   }
 
   // ============================================================
+  // ATHLETE WORKOUT ACCESS
+  // ============================================================
+
+  @override
+  Future<List<AthleteWorkoutSummary>> fetchAthleteWorkouts({
+    required String coachEmail,
+    required String athleteId,
+    int limit = 20,
+  }) async {
+    try {
+      // Verify coach has permission
+      final relationship = await _verifyCoachPermission(coachEmail, athleteId);
+      if (relationship == null || !relationship.permissions.canViewDashboard) {
+        throw Exception('No permission to view athlete workouts');
+      }
+
+      // Fetch workout history from athlete's subcollection
+      final snapshot = await _users
+          .doc(athleteId)
+          .collection('workoutHistory')
+          .orderBy('completedAt', descending: true)
+          .limit(limit)
+          .get();
+
+      return snapshot.docs.map((doc) {
+        final data = doc.data();
+        final exercises = (data['exercises'] as List<dynamic>?) ?? [];
+
+        return AthleteWorkoutSummary(
+          id: doc.id,
+          name: data['name'] ?? 'Workout',
+          completedAt: (data['completedAt'] as Timestamp?)?.toDate() ??
+              DateTime.now(),
+          durationMinutes: data['durationMinutes'] ?? 0,
+          exerciseCount: exercises.length,
+          totalSets: _countTotalSets(exercises),
+          totalVolume: _calculateTotalVolume(exercises),
+          exercises: _parseExercises(exercises),
+        );
+      }).toList();
+    } catch (e) {
+      if (kDebugMode) {
+        debugPrint('[CoachRepo] Error fetching athlete workouts: $e');
+      }
+      rethrow;
+    }
+  }
+
+  @override
+  Future<AthleteWeeklyStats> getAthleteWeeklyStats({
+    required String coachEmail,
+    required String athleteId,
+  }) async {
+    try {
+      // Verify coach has permission
+      final relationship = await _verifyCoachPermission(coachEmail, athleteId);
+      if (relationship == null || !relationship.permissions.canViewDashboard) {
+        throw Exception('No permission to view athlete stats');
+      }
+
+      // Get workouts from the last 7 days
+      final weekAgo = DateTime.now().subtract(const Duration(days: 7));
+      final snapshot = await _users
+          .doc(athleteId)
+          .collection('workoutHistory')
+          .where('completedAt', isGreaterThan: Timestamp.fromDate(weekAgo))
+          .orderBy('completedAt', descending: true)
+          .get();
+
+      final workouts = snapshot.docs;
+      if (workouts.isEmpty) {
+        return const AthleteWeeklyStats.empty();
+      }
+
+      int totalMinutes = 0;
+      double totalVolume = 0;
+      DateTime? lastWorkoutAt;
+
+      for (final doc in workouts) {
+        final data = doc.data();
+        totalMinutes += (data['durationMinutes'] as int?) ?? 0;
+        final exercises = (data['exercises'] as List<dynamic>?) ?? [];
+        totalVolume += _calculateTotalVolume(exercises);
+
+        if (lastWorkoutAt == null) {
+          lastWorkoutAt = (data['completedAt'] as Timestamp?)?.toDate();
+        }
+      }
+
+      // Assume 4 planned workouts per week (can be customized later)
+      const plannedWorkouts = 4;
+      final compliancePercent =
+          ((workouts.length / plannedWorkouts) * 100).clamp(0, 100).toInt();
+
+      return AthleteWeeklyStats(
+        totalWorkouts: workouts.length,
+        plannedWorkouts: plannedWorkouts,
+        totalMinutes: totalMinutes,
+        totalVolume: totalVolume,
+        compliancePercent: compliancePercent,
+        lastWorkoutAt: lastWorkoutAt,
+      );
+    } catch (e) {
+      if (kDebugMode) {
+        debugPrint('[CoachRepo] Error getting weekly stats: $e');
+      }
+      return const AthleteWeeklyStats.empty();
+    }
+  }
+
+  /// Verify coach has permission to view athlete data
+  Future<CoachRelationship?> _verifyCoachPermission(
+    String coachEmail,
+    String athleteId,
+  ) async {
+    // First get athlete email
+    final athleteDoc = await _users.doc(athleteId).get();
+    final athleteEmail = athleteDoc.data()?['email'] as String?;
+    if (athleteEmail == null) return null;
+
+    // Find the relationship
+    final snapshot = await _delegations
+        .where('coachEmail', isEqualTo: coachEmail)
+        .where('athleteEmail', isEqualTo: athleteEmail)
+        .where('status', isEqualTo: 'active')
+        .limit(1)
+        .get();
+
+    if (snapshot.docs.isEmpty) return null;
+    return CoachRelationship.fromFirestore(snapshot.docs.first);
+  }
+
+  int _countTotalSets(List<dynamic> exercises) {
+    int total = 0;
+    for (final exercise in exercises) {
+      final sets = (exercise as Map<String, dynamic>)['sets'] as List?;
+      total += sets?.length ?? 0;
+    }
+    return total;
+  }
+
+  double _calculateTotalVolume(List<dynamic> exercises) {
+    double total = 0;
+    for (final exercise in exercises) {
+      final sets =
+          ((exercise as Map<String, dynamic>)['sets'] as List?) ?? [];
+      for (final set in sets) {
+        final weight = ((set as Map<String, dynamic>)['weight'] ?? 0).toDouble();
+        final reps = (set['reps'] ?? 0) as int;
+        total += weight * reps;
+      }
+    }
+    return total;
+  }
+
+  List<AthleteExerciseSummary> _parseExercises(List<dynamic> exercises) {
+    return exercises.map((e) {
+      final exercise = e as Map<String, dynamic>;
+      final sets = (exercise['sets'] as List?) ?? [];
+
+      return AthleteExerciseSummary(
+        name: exercise['name'] ?? 'Exercise',
+        sets: sets.map((s) {
+          final set = s as Map<String, dynamic>;
+          return AthleteSetSummary(
+            weight: (set['weight'] ?? 0).toDouble(),
+            reps: (set['reps'] ?? 0) as int,
+          );
+        }).toList(),
+      );
+    }).toList();
+  }
+
+  // ============================================================
   // PRIVATE HELPERS
   // ============================================================
 

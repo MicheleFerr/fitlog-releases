@@ -30077,5 +30077,21 @@
   "createProfile": "Create profile",
   "@createProfile": {
     "description": "Button to create profile"
+  },
+  "weeklyCompliance": "Weekly Compliance",
+  "@weeklyCompliance": {
+    "description": "Header for athlete weekly compliance card"
+  },
+  "editPermissions": "Edit Permissions",
+  "@editPermissions": {
+    "description": "Button to edit athlete permissions"
+  },
+  "addNote": "Add Note",
+  "@addNote": {
+    "description": "Button to add note to athlete"
+  },
+  "removeAthlete": "Remove Athlete",
+  "@removeAthlete": {
+    "description": "Button to remove athlete from coach roster"
   }
 }

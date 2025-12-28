@@ -362,3 +362,40 @@ final isActivelyCoachedProvider = Provider.autoDispose<bool>((ref) {
   final coach = ref.watch(myCoachProvider).valueOrNull;
   return coach?.isActive ?? false;
 });
+
+// ============================================================
+// ATHLETE WORKOUT PROVIDERS
+// ============================================================
+
+/// Provider for athlete workout history (for coaches)
+///
+/// [athleteId] - ID of the athlete to fetch workouts for
+/// Returns list of workout summaries ordered by date (newest first)
+final athleteWorkoutsProvider = FutureProvider.autoDispose
+    .family<List<AthleteWorkoutSummary>, String>((ref, athleteId) async {
+  final user = ref.watch(firebaseUserProvider).valueOrNull;
+  if (user?.email == null) return [];
+
+  final repository = ref.watch(coachRepositoryProvider);
+  return repository.fetchAthleteWorkouts(
+    coachEmail: user!.email!,
+    athleteId: athleteId,
+    limit: 20,
+  );
+});
+
+/// Provider for athlete weekly stats (for coaches)
+///
+/// [athleteId] - ID of the athlete to fetch stats for
+/// Returns weekly stats including compliance %, volume, etc.
+final athleteWeeklyStatsProvider = FutureProvider.autoDispose
+    .family<AthleteWeeklyStats, String>((ref, athleteId) async {
+  final user = ref.watch(firebaseUserProvider).valueOrNull;
+  if (user?.email == null) return const AthleteWeeklyStats.empty();
+
+  final repository = ref.watch(coachRepositoryProvider);
+  return repository.getAthleteWeeklyStats(
+    coachEmail: user!.email!,
+    athleteId: athleteId,
+  );
+});

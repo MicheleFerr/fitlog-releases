@@ -24507,4 +24507,16 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get createProfile => 'Crea profilo';
+
+  @override
+  String get weeklyCompliance => 'Compliance Settimanale';
+
+  @override
+  String get editPermissions => 'Modifica Permessi';
+
+  @override
+  String get addNote => 'Aggiungi Nota';
+
+  @override
+  String get removeAthlete => 'Rimuovi Atleta';
 }

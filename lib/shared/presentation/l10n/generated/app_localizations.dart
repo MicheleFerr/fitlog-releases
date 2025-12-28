@@ -43333,6 +43333,30 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Create profile'**
   String get createProfile;
+
+  /// Header for athlete weekly compliance card
+  ///
+  /// In en, this message translates to:
+  /// **'Weekly Compliance'**
+  String get weeklyCompliance;
+
+  /// Button to edit athlete permissions
+  ///
+  /// In en, this message translates to:
+  /// **'Edit Permissions'**
+  String get editPermissions;
+
+  /// Button to add note to athlete
+  ///
+  /// In en, this message translates to:
+  /// **'Add Note'**
+  String get addNote;
+
+  /// Button to remove athlete from coach roster
+  ///
+  /// In en, this message translates to:
+  /// **'Remove Athlete'**
+  String get removeAthlete;
 }
 
 class _AppLocalizationsDelegate
