@@ -24,6 +24,7 @@ import 'package:gymbro_flutter_new/shared/presentation/services/modal_service.da
 import 'package:gymbro_flutter_new/shared/presentation/services/snackbar_service.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_spacing.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/draggable_action_button.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator.dart';
 
 /// Screen for creating/editing coach templates
@@ -112,75 +113,81 @@ class _CoachTemplateEditorScreenState
               ),
           ],
         ),
-        body: SingleChildScrollView(
-          padding: const EdgeInsets.all(AppSpacing.md),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // Template name
-              TextField(
-                controller: _nameController,
-                decoration: InputDecoration(
-                  labelText: context.l10n.templateNameLabel,
-                  hintText: context.l10n.templateNameHint,
-                  border: const OutlineInputBorder(),
-                ),
-                textCapitalization: TextCapitalization.words,
-                onChanged: (_) => _markAsChanged(),
+        body: Stack(
+          children: [
+            SingleChildScrollView(
+              padding: const EdgeInsets.all(AppSpacing.md),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Template name
+                  TextField(
+                    controller: _nameController,
+                    decoration: InputDecoration(
+                      labelText: context.l10n.templateNameLabel,
+                      hintText: context.l10n.templateNameHint,
+                      border: const OutlineInputBorder(),
+                    ),
+                    textCapitalization: TextCapitalization.words,
+                    onChanged: (_) => _markAsChanged(),
+                  ),
+                  const SizedBox(height: AppSpacing.md),
+
+                  // Description
+                  TextField(
+                    controller: _descriptionController,
+                    decoration: InputDecoration(
+                      labelText: context.l10n.templateDescriptionOptional,
+                      hintText: context.l10n.templateDescriptionHint,
+                      border: const OutlineInputBorder(),
+                    ),
+                    maxLines: 2,
+                    textCapitalization: TextCapitalization.sentences,
+                    onChanged: (_) => _markAsChanged(),
+                  ),
+                  const SizedBox(height: AppSpacing.lg),
+
+                  // Duration slider
+                  _buildDurationSection(),
+                  const SizedBox(height: AppSpacing.lg),
+
+                  // Difficulty selector
+                  _buildDifficultySection(),
+                  const SizedBox(height: AppSpacing.lg),
+
+                  // Tags
+                  _buildTagsSection(),
+                  const SizedBox(height: AppSpacing.lg),
+
+                  // Coach notes
+                  TextField(
+                    controller: _notesController,
+                    decoration: InputDecoration(
+                      labelText: context.l10n.coachNotes,
+                      hintText: context.l10n.coachNotesHint,
+                      border: const OutlineInputBorder(),
+                    ),
+                    maxLines: 2,
+                    onChanged: (_) => _markAsChanged(),
+                  ),
+                  const SizedBox(height: AppSpacing.xl),
+
+                  // Exercises section
+                  _buildExercisesSection(),
+
+                  // Bottom padding for FAB
+                  const SizedBox(height: 100),
+                ],
               ),
-              const SizedBox(height: AppSpacing.md),
-
-              // Description
-              TextField(
-                controller: _descriptionController,
-                decoration: InputDecoration(
-                  labelText: context.l10n.templateDescriptionOptional,
-                  hintText: context.l10n.templateDescriptionHint,
-                  border: const OutlineInputBorder(),
-                ),
-                maxLines: 2,
-                textCapitalization: TextCapitalization.sentences,
-                onChanged: (_) => _markAsChanged(),
-              ),
-              const SizedBox(height: AppSpacing.lg),
-
-              // Duration slider
-              _buildDurationSection(),
-              const SizedBox(height: AppSpacing.lg),
-
-              // Difficulty selector
-              _buildDifficultySection(),
-              const SizedBox(height: AppSpacing.lg),
-
-              // Tags
-              _buildTagsSection(),
-              const SizedBox(height: AppSpacing.lg),
-
-              // Coach notes
-              TextField(
-                controller: _notesController,
-                decoration: InputDecoration(
-                  labelText: context.l10n.coachNotes,
-                  hintText: context.l10n.coachNotesHint,
-                  border: const OutlineInputBorder(),
-                ),
-                maxLines: 2,
-                onChanged: (_) => _markAsChanged(),
-              ),
-              const SizedBox(height: AppSpacing.xl),
-
-              // Exercises section
-              _buildExercisesSection(),
-
-              // Bottom padding
-              const SizedBox(height: 100),
-            ],
-          ),
-        ),
-        floatingActionButton: FloatingActionButton.extended(
-          onPressed: _showAddExercise,
-          icon: const Icon(AppIcons.add),
-          label: Text(context.l10n.addExercise),
+            ),
+            // DraggableActionButton for consistent FAB style
+            DraggableActionButton(
+              onPressed: _showAddExercise,
+              icon: AppIcons.add,
+              label: context.l10n.addExercise,
+              positionKey: 'coach_template_editor',
+            ),
+          ],
         ),
       ),
     );

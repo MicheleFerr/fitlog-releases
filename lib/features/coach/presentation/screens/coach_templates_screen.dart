@@ -20,6 +20,7 @@ import 'package:gymbro_flutter_new/features/coach/presentation/widgets/template_
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_spacing.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/draggable_action_button.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator.dart';
 
 /// Coach templates management screen
@@ -61,17 +62,23 @@ class _CoachTemplatesScreenState extends ConsumerState<CoachTemplatesScreen>
           ],
         ),
       ),
-      body: TabBarView(
-        controller: _tabController,
-        children: const [
-          _MyTemplatesTab(),
-          _AssignedTemplatesTab(),
+      body: Stack(
+        children: [
+          TabBarView(
+            controller: _tabController,
+            children: const [
+              _MyTemplatesTab(),
+              _AssignedTemplatesTab(),
+            ],
+          ),
+          // DraggableActionButton for consistent FAB style
+          DraggableActionButton(
+            onPressed: _createNewTemplate,
+            icon: AppIcons.add,
+            label: context.l10n.newTemplate,
+            positionKey: 'coach_templates',
+          ),
         ],
-      ),
-      floatingActionButton: FloatingActionButton.extended(
-        onPressed: _createNewTemplate,
-        icon: const Icon(AppIcons.add),
-        label: Text(context.l10n.newTemplate),
       ),
     );
   }
