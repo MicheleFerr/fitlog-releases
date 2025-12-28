@@ -1026,8 +1026,15 @@ class CurrentWorkoutNotifier extends Notifier<Workout?> {
 
     final authService = ref.read(authServiceProvider);
     final currentUser = authService.currentUser;
-    if (currentUser == null) {
-      return;
+
+    // 🔧 FIX CASE 3: Don't return early if user not authenticated
+    // Instead, use a fallback userId for local save (workout won't be lost)
+    // Firebase sync will be skipped, but local save will work
+    final effectiveUserId = currentUser?.uid ?? 'anonymous_${workout.id}';
+    final isAuthenticated = currentUser != null;
+
+    if (!isAuthenticated && kDebugMode) {
+      debugLog(LogCategory.workout, '⚠️ [WorkoutProvider] User not authenticated - workout will be saved locally only');
     }
 
     // 📢 UI Feedback: Show "Saving workout..." toast
@@ -1091,7 +1098,7 @@ class CurrentWorkoutNotifier extends Notifier<Workout?> {
 
       final workoutHistoryDetail = WorkoutHistoryDetail(
         id: workout.id,
-        userId: currentUser.uid,
+        userId: effectiveUserId, // 🔧 FIX CASE 3: Use effectiveUserId for local save
         name: sanitizedWorkoutName,
         description: sanitizedWorkoutNotes,
         createdAt: workout.createdAt,
@@ -1106,12 +1113,12 @@ class CurrentWorkoutNotifier extends Notifier<Workout?> {
 
       // 2. SEMPRE salvare localmente PRIMA (BLOCKING ma veloce ~50ms)
       // Questo garantisce che i dati siano persistenti anche se cloud sync fallisce
+      // 🔧 FIX CASE 3: Now saves ALWAYS, even without authenticated user
       try {
         final hiveDataSource = ref.read(hiveWorkoutDataSourceProvider);
-        final userId = FirebaseAuth.instance.currentUser?.uid;
-        if (userId != null) {
-          final workoutModel = WorkoutModel.fromDomain(workout);
-          await hiveDataSource.saveWorkout(workoutModel, userId);
+        // Use effectiveUserId instead of FirebaseAuth check - workout ALWAYS saved locally
+        final workoutModel = WorkoutModel.fromDomain(workout);
+        await hiveDataSource.saveWorkout(workoutModel, effectiveUserId);
 
           if (kDebugMode) {
             debugLog(LogCategory.workout, '✅ [WorkoutProvider] Workout saved to Hive local storage');
@@ -1161,7 +1168,7 @@ class CurrentWorkoutNotifier extends Notifier<Workout?> {
             // Update analytics for each exercise
             for (final data in analyticsData) {
               await analyticsRepo.updateExerciseHistory(
-                userId: userId,
+                userId: effectiveUserId,
                 exerciseName: data.exerciseName,
                 muscleGroup: data.muscleGroup,
                 session: data.session,
@@ -1182,9 +1189,9 @@ class CurrentWorkoutNotifier extends Notifier<Workout?> {
           try {
             final analyticsRepo = ref.read(workoutAnalyticsRepositoryProvider);
             if (analyticsRepo is WorkoutAnalyticsRepositoryImpl) {
-              await analyticsRepo.invalidateAnalyticsCache(userId);
+              await analyticsRepo.invalidateAnalyticsCache(effectiveUserId);
               if (kDebugMode) {
-                debugLog(LogCategory.workout, '🗑️ [WorkoutProvider] Analytics cache invalidated for user: $userId');
+                debugLog(LogCategory.workout, '🗑️ [WorkoutProvider] Analytics cache invalidated for user: $effectiveUserId');
               }
             }
           } catch (cacheError) {
@@ -1255,7 +1262,7 @@ class CurrentWorkoutNotifier extends Notifier<Workout?> {
               // Convert Exercise to ExerciseActivity
               final activity = ExerciseActivity.fromExercise(
                 exercise: exercise,
-                userEmail: currentUser.email ?? userId,
+                userEmail: currentUser?.email ?? effectiveUserId,
                 workoutName: workout.name,
                 workoutDate: workout.endTime ?? DateTime.now(),
               );
@@ -1292,13 +1299,13 @@ class CurrentWorkoutNotifier extends Notifier<Workout?> {
                 );
 
                 // Record celebration to Firestore
-                await prCelebrationRepo.recordCelebration(userId, domainPR);
+                await prCelebrationRepo.recordCelebration(effectiveUserId, domainPR);
 
                 // Create PRCelebration object for UI display
                 // Note: previousValue will be fetched from repository in recordCelebration
                 final celebration = PRCelebration(
-                  id: '${userId}_${pr.id}_${DateTime.now().millisecondsSinceEpoch}',
-                  userId: userId,
+                  id: '${effectiveUserId}_${pr.id}_${DateTime.now().millisecondsSinceEpoch}',
+                  userId: effectiveUserId,
                   prId: pr.id,
                   prType: pr.type, // Already shared PRType
                   celebratedAt: DateTime.now(),
@@ -1435,7 +1442,8 @@ class CurrentWorkoutNotifier extends Notifier<Workout?> {
               debugLog(LogCategory.workout, '⚠️ [WorkoutProvider] Failed to award XP: $xpError');
             }
           }
-        }
+        // 🔧 FIX CASE 3: Removed closing brace of old `if (userId != null)` block
+        // Local save now runs unconditionally with effectiveUserId
       } catch (saveError, stackTrace) {
         if (kDebugMode) {
           debugLog(LogCategory.workout, '❌ [WorkoutProvider] CRITICAL: Failed to save workout locally: $saveError');
@@ -1477,6 +1485,19 @@ class CurrentWorkoutNotifier extends Notifier<Workout?> {
           debugLog(LogCategory.workout, '⚠️ [WorkoutProvider] Provider disposed after local save - aborting cloud sync');
         }
         return;
+      }
+
+      // 🔧 FIX CASE 3: Only run Firebase operations if user is authenticated
+      // Unauthenticated workouts are saved locally and will sync when user logs in
+      if (!isAuthenticated) {
+        if (kDebugMode) {
+          debugLog(LogCategory.workout, '⚠️ [WorkoutProvider] Skipping cloud sync - user not authenticated');
+        }
+        // Show success toast for local-only save
+        if (context != null) {
+          SyncStatusToast.showWorkoutCompletedWithMotivation(context);
+        }
+        return; // Skip all Firebase operations
       }
 
       // 3. Track entity con SnapshotSyncService per differential sync
@@ -1540,9 +1561,10 @@ class CurrentWorkoutNotifier extends Notifier<Workout?> {
       }
 
       // 5. Update user stats with transaction to prevent lost updates
+      // Note: currentUser is guaranteed non-null here because of isAuthenticated check above
       try {
         final firestore = FirebaseFirestore.instance;
-        final userRef = firestore.collection('users').doc(currentUser.uid);
+        final userRef = firestore.collection('users').doc(currentUser!.uid);
 
         // CRITICAL FIX: Use transaction to prevent lost updates from concurrent workouts
         await firestore.runTransaction((transaction) async {
