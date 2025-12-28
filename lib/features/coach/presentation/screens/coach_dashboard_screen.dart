@@ -18,6 +18,7 @@ import 'package:gymbro_flutter_new/features/coach/domain/entities/coach_relation
 import 'package:gymbro_flutter_new/features/coach/presentation/providers/coach_providers.dart';
 import 'package:gymbro_flutter_new/features/coach/presentation/widgets/athlete_card.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_spacing.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator.dart';
@@ -54,6 +55,10 @@ class CoachDashboardScreen extends ConsumerWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  // Quick actions
+                  _QuickActionsSection(),
+                  const SizedBox(height: AppSpacing.lg),
+
                   // Athletes section
                   _AthletesSection(),
                   const SizedBox(height: AppSpacing.xl),
@@ -78,6 +83,88 @@ class CoachDashboardScreen extends ConsumerWidget {
             child: SizedBox(height: 100),
           ),
         ],
+      ),
+    );
+  }
+}
+
+/// Quick actions row for coach dashboard
+class _QuickActionsSection extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        // Templates button
+        Expanded(
+          child: _QuickActionCard(
+            icon: AppIcons.template,
+            label: context.l10n.coachTemplates,
+            color: context.colors.primary,
+            onTap: () => context.pushNamed(AppRoutes.coachTemplatesName),
+          ),
+        ),
+        const SizedBox(width: AppSpacing.sm),
+
+        // Athletes button
+        Expanded(
+          child: _QuickActionCard(
+            icon: AppIcons.peopleOutline,
+            label: context.l10n.athletes,
+            color: context.colors.tertiary,
+            onTap: () => context.pushNamed(AppRoutes.athletesListName),
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+/// Individual quick action card
+class _QuickActionCard extends StatelessWidget {
+  const _QuickActionCard({
+    required this.icon,
+    required this.label,
+    required this.color,
+    required this.onTap,
+  });
+
+  final IconData icon;
+  final String label;
+  final Color color;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return Material(
+      color: color.withValues(alpha: 0.1),
+      borderRadius: BorderRadius.circular(16),
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(16),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(
+            horizontal: AppSpacing.md,
+            vertical: AppSpacing.lg,
+          ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(icon, color: color, size: AppIconSize.medium),
+              const SizedBox(width: AppSpacing.sm),
+              Flexible(
+                child: Text(
+                  label,
+                  style: context.textTheme.titleSmall?.copyWith(
+                    fontWeight: FontWeight.w600,
+                    color: color,
+                  ),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }
@@ -331,7 +418,7 @@ class _StatItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        Icon(icon, color: color, size: 24),
+        Icon(icon, color: color, size: AppIconSize.medium),
         const SizedBox(height: AppSpacing.xs),
         Text(
           value,

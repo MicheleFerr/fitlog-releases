@@ -12,8 +12,11 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/features/auth/presentation/providers/auth_provider.dart';
 import 'package:gymbro_flutter_new/features/auth/presentation/providers/consolidated_user_provider.dart';
 import 'package:gymbro_flutter_new/features/coach/data/repositories/coach_repository_impl.dart';
+import 'package:gymbro_flutter_new/features/coach/data/repositories/coach_templates_repository.dart';
 import 'package:gymbro_flutter_new/features/coach/domain/entities/account_mode.dart';
+import 'package:gymbro_flutter_new/features/coach/domain/entities/assigned_template.dart';
 import 'package:gymbro_flutter_new/features/coach/domain/entities/coach_relationship.dart';
+import 'package:gymbro_flutter_new/features/coach/domain/entities/coach_template.dart';
 import 'package:gymbro_flutter_new/features/coach/domain/repositories/coach_repository.dart';
 
 // ============================================================
@@ -398,4 +401,206 @@ final athleteWeeklyStatsProvider = FutureProvider.autoDispose
     coachEmail: user!.email!,
     athleteId: athleteId,
   );
+});
+
+// ============================================================
+// COACH TEMPLATES PROVIDERS
+// ============================================================
+
+/// Provider for CoachTemplatesRepository
+final coachTemplatesRepositoryProvider = Provider<CoachTemplatesRepository>((ref) {
+  return CoachTemplatesRepository();
+});
+
+/// Provider for all coach templates
+///
+/// Returns stream of templates owned by the current coach
+final coachTemplatesProvider =
+    StreamProvider.autoDispose<List<CoachTemplate>>((ref) {
+  final mode = ref.watch(accountModeProvider);
+  if (!mode.isCoach) return Stream.value([]);
+
+  final user = ref.watch(firebaseUserProvider).valueOrNull;
+  if (user == null) return Stream.value([]);
+
+  final repository = ref.watch(coachTemplatesRepositoryProvider);
+  return repository.watchCoachTemplates(user.uid);
+});
+
+/// Provider for templates with assignments (assigned to at least one athlete)
+final assignedCoachTemplatesProvider =
+    Provider.autoDispose<List<CoachTemplate>>((ref) {
+  final templates = ref.watch(coachTemplatesProvider).valueOrNull ?? [];
+  return templates.where((t) => t.hasAssignments).toList();
+});
+
+/// Provider for single coach template by ID
+final coachTemplateProvider = FutureProvider.autoDispose
+    .family<CoachTemplate?, String>((ref, templateId) async {
+  final repository = ref.watch(coachTemplatesRepositoryProvider);
+  return repository.getTemplate(templateId);
+});
+
+/// Provider for assignment state of a template
+///
+/// Returns map of athleteId -> isAssigned
+final templateAssignmentsProvider = Provider.autoDispose
+    .family<Map<String, bool>, String>((ref, templateId) {
+  final athletes = ref.watch(athletesListProvider).valueOrNull ?? [];
+  final templates = ref.watch(coachTemplatesProvider).valueOrNull ?? [];
+
+  final template = templates.where((t) => t.id == templateId).firstOrNull;
+  if (template == null) return {};
+
+  return {
+    for (final athlete in athletes)
+      athlete.athleteId: template.isAssignedTo(athlete.athleteId),
+  };
+});
+
+/// Coach template count
+final coachTemplateCountProvider = Provider.autoDispose<int>((ref) {
+  final templates = ref.watch(coachTemplatesProvider).valueOrNull ?? [];
+  return templates.length;
+});
+
+// ============================================================
+// ATHLETE ASSIGNED TEMPLATES PROVIDERS
+// ============================================================
+
+/// Provider for templates assigned to current athlete (from their coach)
+final assignedTemplatesProvider =
+    StreamProvider.autoDispose<List<AssignedTemplate>>((ref) {
+  final mode = ref.watch(accountModeProvider);
+  if (!mode.isCoached) return Stream.value([]);
+
+  final user = ref.watch(firebaseUserProvider).valueOrNull;
+  if (user == null) return Stream.value([]);
+
+  final repository = ref.watch(coachTemplatesRepositoryProvider);
+  return repository.watchAssignedTemplates(user.uid);
+});
+
+/// Provider for count of assigned templates
+final assignedTemplateCountProvider = Provider.autoDispose<int>((ref) {
+  final templates = ref.watch(assignedTemplatesProvider).valueOrNull ?? [];
+  return templates.length;
+});
+
+/// Provider for full template data of an assigned template
+final assignedTemplateDataProvider = FutureProvider.autoDispose
+    .family<CoachTemplate?, String>((ref, templateId) async {
+  final repository = ref.watch(coachTemplatesRepositoryProvider);
+  return repository.getAssignedTemplateData(templateId);
+});
+
+// ============================================================
+// COACH TEMPLATE ACTIONS
+// ============================================================
+
+/// Notifier for coach template actions
+class CoachTemplateActionsNotifier extends StateNotifier<AsyncValue<void>> {
+  CoachTemplateActionsNotifier(this._ref) : super(const AsyncValue.data(null));
+
+  final Ref _ref;
+
+  /// Create a new coach template
+  Future<String?> createTemplate(CoachTemplate template) async {
+    final user = _ref.read(firebaseUserProvider).valueOrNull;
+    if (user == null) return null;
+
+    state = const AsyncValue.loading();
+
+    try {
+      final repository = _ref.read(coachTemplatesRepositoryProvider);
+      final id = await repository.createTemplate(
+        template.copyWith(coachId: user.uid),
+      );
+      state = const AsyncValue.data(null);
+      return id;
+    } catch (e, st) {
+      state = AsyncValue.error(e, st);
+      return null;
+    }
+  }
+
+  /// Update an existing template
+  Future<void> updateTemplate(CoachTemplate template) async {
+    state = const AsyncValue.loading();
+
+    try {
+      final repository = _ref.read(coachTemplatesRepositoryProvider);
+      await repository.updateTemplate(template);
+      state = const AsyncValue.data(null);
+    } catch (e, st) {
+      state = AsyncValue.error(e, st);
+    }
+  }
+
+  /// Delete a template
+  Future<void> deleteTemplate(String templateId) async {
+    state = const AsyncValue.loading();
+
+    try {
+      final repository = _ref.read(coachTemplatesRepositoryProvider);
+      await repository.deleteTemplate(templateId);
+      state = const AsyncValue.data(null);
+    } catch (e, st) {
+      state = AsyncValue.error(e, st);
+    }
+  }
+
+  /// Assign template to athletes
+  Future<void> assignTemplate({
+    required String templateId,
+    required List<String> athleteIds,
+  }) async {
+    final user = _ref.read(firebaseUserProvider).valueOrNull;
+    if (user == null) return;
+
+    state = const AsyncValue.loading();
+
+    try {
+      final repository = _ref.read(coachTemplatesRepositoryProvider);
+      await repository.assignTemplate(
+        templateId: templateId,
+        athleteIds: athleteIds,
+        coachId: user.uid,
+        coachName: user.displayName ?? 'Coach',
+      );
+      state = const AsyncValue.data(null);
+    } catch (e, st) {
+      state = AsyncValue.error(e, st);
+    }
+  }
+
+  /// Update assignments (add/remove in one operation)
+  Future<void> updateAssignments({
+    required String templateId,
+    required List<String> athleteIds,
+  }) async {
+    final user = _ref.read(firebaseUserProvider).valueOrNull;
+    if (user == null) return;
+
+    state = const AsyncValue.loading();
+
+    try {
+      final repository = _ref.read(coachTemplatesRepositoryProvider);
+      await repository.updateAssignments(
+        templateId: templateId,
+        athleteIds: athleteIds,
+        coachId: user.uid,
+        coachName: user.displayName ?? 'Coach',
+      );
+      state = const AsyncValue.data(null);
+    } catch (e, st) {
+      state = AsyncValue.error(e, st);
+    }
+  }
+}
+
+/// Provider for coach template actions
+final coachTemplateActionsProvider =
+    StateNotifierProvider<CoachTemplateActionsNotifier, AsyncValue<void>>((ref) {
+  return CoachTemplateActionsNotifier(ref);
 });

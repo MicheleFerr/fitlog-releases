@@ -4841,7 +4841,7 @@ abstract class AppLocalizations {
   /// **'Create your first template!'**
   String get createFirstTemplate;
 
-  /// Create template button label
+  /// Button to create new template
   ///
   /// In en, this message translates to:
   /// **'Create Template'**
@@ -8182,6 +8182,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Discard Changes'**
   String get discardChanges;
+
+  /// Message when discarding unsaved changes
+  ///
+  /// In en, this message translates to:
+  /// **'You have unsaved changes. Are you sure you want to discard them?'**
+  String get discardChangesMessage;
+
+  /// Label for coach private notes
+  ///
+  /// In en, this message translates to:
+  /// **'Coach Notes'**
+  String get coachNotes;
+
+  /// Hint for coach notes field
+  ///
+  /// In en, this message translates to:
+  /// **'Private notes for your reference...'**
+  String get coachNotesHint;
 
   /// Confirm delete dialog title
   ///
@@ -43357,6 +43375,156 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Remove Athlete'**
   String get removeAthlete;
+
+  /// Title for coach templates screen
+  ///
+  /// In en, this message translates to:
+  /// **'Templates for Athletes'**
+  String get coachTemplates;
+
+  /// Button to assign template to athletes
+  ///
+  /// In en, this message translates to:
+  /// **'Assign'**
+  String get assignTemplate;
+
+  /// Count of athletes assigned to template
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =0{No athletes} =1{1 athlete} other{{count} athletes}}'**
+  String assignedAthletes(int count);
+
+  /// Title for assignment sheet
+  ///
+  /// In en, this message translates to:
+  /// **'Assign \"{name}\" to:'**
+  String assignTemplateToAthletes(String name);
+
+  /// Status when athlete already has template
+  ///
+  /// In en, this message translates to:
+  /// **'Already assigned'**
+  String get alreadyAssigned;
+
+  /// Status when athlete doesn't have template
+  ///
+  /// In en, this message translates to:
+  /// **'Not assigned'**
+  String get notAssigned;
+
+  /// Info about template sync behavior
+  ///
+  /// In en, this message translates to:
+  /// **'Changes to this template will automatically sync to assigned athletes'**
+  String get changesWillSync;
+
+  /// Number of athletes selected for assignment
+  ///
+  /// In en, this message translates to:
+  /// **'{count} selected'**
+  String athletesSelected(int count);
+
+  /// Button to confirm template assignment
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm assignment'**
+  String get confirmAssignment;
+
+  /// Success message after assignment
+  ///
+  /// In en, this message translates to:
+  /// **'Template assigned successfully'**
+  String get templateAssigned;
+
+  /// Success message after unassignment
+  ///
+  /// In en, this message translates to:
+  /// **'Template removed from athlete'**
+  String get templateUnassigned;
+
+  /// Tab title for assigned templates
+  ///
+  /// In en, this message translates to:
+  /// **'From Your Coach'**
+  String get fromYourCoach;
+
+  /// Shows when template was last synced
+  ///
+  /// In en, this message translates to:
+  /// **'Last updated: {date}'**
+  String lastUpdated(String date);
+
+  /// Tab for coach's own templates
+  ///
+  /// In en, this message translates to:
+  /// **'My Templates'**
+  String get myCoachTemplates;
+
+  /// Tab for templates with assignments
+  ///
+  /// In en, this message translates to:
+  /// **'Assigned'**
+  String get assignedTab;
+
+  /// Tab for browsing public templates
+  ///
+  /// In en, this message translates to:
+  /// **'Library'**
+  String get libraryTab;
+
+  /// Empty state title for coach templates
+  ///
+  /// In en, this message translates to:
+  /// **'No templates yet'**
+  String get noCoachTemplatesYet;
+
+  /// Empty state description for coach templates
+  ///
+  /// In en, this message translates to:
+  /// **'Create your first template to assign to athletes'**
+  String get createFirstCoachTemplate;
+
+  /// Empty state when no templates assigned
+  ///
+  /// In en, this message translates to:
+  /// **'No assigned templates'**
+  String get noAssignedTemplatesYet;
+
+  /// Empty state hint for assigned tab
+  ///
+  /// In en, this message translates to:
+  /// **'Assign templates to start coaching'**
+  String get assignTemplatesToAthletes;
+
+  /// Header for athlete selection
+  ///
+  /// In en, this message translates to:
+  /// **'Select Athletes'**
+  String get selectAthletes;
+
+  /// Button to save template assignments
+  ///
+  /// In en, this message translates to:
+  /// **'Save'**
+  String get saveAssignments;
+
+  /// Success message after updating assignments
+  ///
+  /// In en, this message translates to:
+  /// **'Assignments updated'**
+  String get assignmentsUpdated;
+
+  /// Message when no athletes to assign
+  ///
+  /// In en, this message translates to:
+  /// **'No active athletes'**
+  String get noActiveAthletes;
+
+  /// Hint when no athletes available
+  ///
+  /// In en, this message translates to:
+  /// **'Add athletes first to assign templates'**
+  String get addAthletesFirst;
 }
 
 class _AppLocalizationsDelegate

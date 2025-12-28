@@ -1546,6 +1546,9 @@
   "unsavedChanges": "Modifiche Non Salvate",
   "saveChanges": "Salva Modifiche",
   "discardChanges": "Scarta Modifiche",
+  "discardChangesMessage": "Hai modifiche non salvate. Sei sicuro di volerle scartare?",
+  "coachNotes": "Note Coach",
+  "coachNotesHint": "Note private per tuo riferimento...",
   "continueWithoutSaving": "Continua senza salvare",
   "goodJob": "Ottimo lavoro!",
   "keepItUp": "Continua così!",
@@ -18160,5 +18163,130 @@
   "removeAthlete": "Rimuovi Atleta",
   "@removeAthlete": {
     "description": "Pulsante per rimuovere atleta dal roster del coach"
+  },
+  "coachTemplates": "Template per Atleti",
+  "@coachTemplates": {
+    "description": "Titolo sezione template coach"
+  },
+  "assignTemplate": "Assegna",
+  "@assignTemplate": {
+    "description": "Pulsante per assegnare template"
+  },
+  "assignedAthletes": "{count, plural, =0{Nessun atleta} =1{1 atleta} other{{count} atleti}}",
+  "@assignedAthletes": {
+    "description": "Conteggio atleti assegnati a un template",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "assignTemplateToAthletes": "Assegna \"{name}\" a:",
+  "@assignTemplateToAthletes": {
+    "description": "Titolo sheet assegnazione template",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "unassignTemplate": "Rimuovi assegnazione",
+  "@unassignTemplate": {
+    "description": "Pulsante per rimuovere assegnazione template"
+  },
+  "templateAssigned": "Template assegnato con successo",
+  "@templateAssigned": {
+    "description": "Messaggio successo assegnazione template"
+  },
+  "templateUnassigned": "Assegnazione rimossa",
+  "@templateUnassigned": {
+    "description": "Messaggio successo rimozione assegnazione"
+  },
+  "noTemplatesYet": "Nessun template ancora",
+  "@noTemplatesYet": {
+    "description": "Stato vuoto template coach"
+  },
+  "createFirstTemplate": "Crea il tuo primo template per i tuoi atleti",
+  "@createFirstTemplate": {
+    "description": "Sottotitolo stato vuoto template"
+  },
+  "changesWillSync": "Le modifiche a questo template si sincronizzeranno automaticamente con gli atleti assegnati",
+  "@changesWillSync": {
+    "description": "Nota info su auto-sync template"
+  },
+  "athletesSelected": "{count} selezionati",
+  "@athletesSelected": {
+    "description": "Numero di atleti selezionati",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "confirmAssignment": "Conferma assegnazione",
+  "@confirmAssignment": {
+    "description": "Pulsante conferma assegnazione template"
+  },
+  "fromYourCoach": "Dal Tuo Coach",
+  "@fromYourCoach": {
+    "description": "Etichetta per template assegnati dal coach"
+  },
+  "myCoachTemplates": "I Miei Template",
+  "@myCoachTemplates": {
+    "description": "Titolo tab template personali del coach"
+  },
+  "assignedTab": "Assegnati",
+  "@assignedTab": {
+    "description": "Titolo tab template assegnati"
+  },
+  "libraryTab": "Libreria",
+  "@libraryTab": {
+    "description": "Titolo tab libreria template"
+  },
+  "selectAthletes": "Seleziona Atleti",
+  "@selectAthletes": {
+    "description": "Titolo dialog selezione atleti"
+  },
+  "athletesSelected": "{count, plural, =0{Nessun atleta selezionato} =1{1 atleta selezionato} other{{count} atleti selezionati}}",
+  "@athletesSelected": {
+    "description": "Conteggio atleti selezionati",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "confirmAssignment": "Conferma Assegnazione",
+  "@confirmAssignment": {
+    "description": "Pulsante conferma assegnazione"
+  },
+  "templateAlreadyAssigned": "Questo template è già assegnato a questo atleta",
+  "@templateAlreadyAssigned": {
+    "description": "Errore template già assegnato"
+  },
+  "coachNotesPlaceholder": "Aggiungi note per te stesso su questo template...",
+  "@coachNotesPlaceholder": {
+    "description": "Placeholder campo note coach"
+  },
+  "athleteNotesPlaceholder": "Le tue note personali su questo workout...",
+  "@athleteNotesPlaceholder": {
+    "description": "Placeholder campo note atleta"
+  },
+  "lastSynced": "Ultimo sync: {date}",
+  "@lastSynced": {
+    "description": "Etichetta ultimo sync template",
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "syncNow": "Sincronizza ora",
+  "@syncNow": {
+    "description": "Pulsante sync template"
+  },
+  "alreadyAssigned": "Già assegnato",
+  "@alreadyAssigned": {
+    "description": "Etichetta per atleta già assegnato a un template"
   }
 }

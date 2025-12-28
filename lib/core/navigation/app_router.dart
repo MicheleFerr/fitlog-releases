@@ -90,6 +90,9 @@ import 'package:gymbro_flutter_new/features/coach/presentation/screens/coach_das
 import 'package:gymbro_flutter_new/features/coach/presentation/screens/athletes_list_screen.dart';
 import 'package:gymbro_flutter_new/features/coach/presentation/screens/athlete_detail_screen.dart';
 import 'package:gymbro_flutter_new/features/coach/presentation/screens/link_coach_screen.dart';
+import 'package:gymbro_flutter_new/features/coach/presentation/screens/coach_templates_screen.dart';
+import 'package:gymbro_flutter_new/features/coach/presentation/screens/coach_template_editor_screen.dart';
+import 'package:gymbro_flutter_new/features/coach/domain/entities/coach_template.dart';
 
 // Other routes
 import 'package:gymbro_flutter_new/features/admin/presentation/screens/admin_analytics_dashboard_screen.dart';
@@ -459,6 +462,23 @@ final appRouterProvider = Provider<GoRouter>((ref) {
                                 athleteId: athleteId,
                                 athleteName: athleteName,
                               );
+                            },
+                          ),
+                        ],
+                      ),
+                      // Coach templates (templates for athletes)
+                      GoRoute(
+                        path: 'templates',
+                        name: AppRoutes.coachTemplatesName,
+                        builder: (context, state) => const CoachTemplatesScreen(),
+                        routes: [
+                          // Template editor (create/edit)
+                          GoRoute(
+                            path: 'editor',
+                            name: AppRoutes.coachTemplateEditorName,
+                            builder: (context, state) {
+                              final template = state.extra as CoachTemplate?;
+                              return CoachTemplateEditorScreen(template: template);
                             },
                           ),
                         ],

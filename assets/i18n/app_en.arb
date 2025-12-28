@@ -5843,6 +5843,18 @@
   "@discardChanges": {
     "description": "Button to discard changes"
   },
+  "discardChangesMessage": "You have unsaved changes. Are you sure you want to discard them?",
+  "@discardChangesMessage": {
+    "description": "Message when discarding unsaved changes"
+  },
+  "coachNotes": "Coach Notes",
+  "@coachNotes": {
+    "description": "Label for coach private notes"
+  },
+  "coachNotesHint": "Private notes for your reference...",
+  "@coachNotesHint": {
+    "description": "Hint for coach notes field"
+  },
   "confirmDelete": "Confirm Delete",
   "@confirmDelete": {
     "description": "Confirm delete dialog title"
@@ -30093,5 +30105,129 @@
   "removeAthlete": "Remove Athlete",
   "@removeAthlete": {
     "description": "Button to remove athlete from coach roster"
+  },
+  "coachTemplates": "Templates for Athletes",
+  "@coachTemplates": {
+    "description": "Title for coach templates screen"
+  },
+  "assignTemplate": "Assign",
+  "@assignTemplate": {
+    "description": "Button to assign template to athletes"
+  },
+  "assignedAthletes": "{count, plural, =0{No athletes} =1{1 athlete} other{{count} athletes}}",
+  "@assignedAthletes": {
+    "description": "Count of athletes assigned to template",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "assignTemplateToAthletes": "Assign \"{name}\" to:",
+  "@assignTemplateToAthletes": {
+    "description": "Title for assignment sheet",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "alreadyAssigned": "Already assigned",
+  "@alreadyAssigned": {
+    "description": "Status when athlete already has template"
+  },
+  "notAssigned": "Not assigned",
+  "@notAssigned": {
+    "description": "Status when athlete doesn't have template"
+  },
+  "changesWillSync": "Changes to this template will automatically sync to assigned athletes",
+  "@changesWillSync": {
+    "description": "Info about template sync behavior"
+  },
+  "athletesSelected": "{count} selected",
+  "@athletesSelected": {
+    "description": "Number of athletes selected for assignment",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "confirmAssignment": "Confirm assignment",
+  "@confirmAssignment": {
+    "description": "Button to confirm template assignment"
+  },
+  "templateAssigned": "Template assigned successfully",
+  "@templateAssigned": {
+    "description": "Success message after assignment"
+  },
+  "templateUnassigned": "Template removed from athlete",
+  "@templateUnassigned": {
+    "description": "Success message after unassignment"
+  },
+  "fromYourCoach": "From Your Coach",
+  "@fromYourCoach": {
+    "description": "Tab title for assigned templates"
+  },
+  "lastUpdated": "Last updated: {date}",
+  "@lastUpdated": {
+    "description": "Shows when template was last synced",
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "myCoachTemplates": "My Templates",
+  "@myCoachTemplates": {
+    "description": "Tab for coach's own templates"
+  },
+  "assignedTab": "Assigned",
+  "@assignedTab": {
+    "description": "Tab for templates with assignments"
+  },
+  "libraryTab": "Library",
+  "@libraryTab": {
+    "description": "Tab for browsing public templates"
+  },
+  "noCoachTemplatesYet": "No templates yet",
+  "@noCoachTemplatesYet": {
+    "description": "Empty state title for coach templates"
+  },
+  "createFirstCoachTemplate": "Create your first template to assign to athletes",
+  "@createFirstCoachTemplate": {
+    "description": "Empty state description for coach templates"
+  },
+  "createTemplate": "Create Template",
+  "@createTemplate": {
+    "description": "Button to create new template"
+  },
+  "noAssignedTemplatesYet": "No assigned templates",
+  "@noAssignedTemplatesYet": {
+    "description": "Empty state when no templates assigned"
+  },
+  "assignTemplatesToAthletes": "Assign templates to start coaching",
+  "@assignTemplatesToAthletes": {
+    "description": "Empty state hint for assigned tab"
+  },
+  "selectAthletes": "Select Athletes",
+  "@selectAthletes": {
+    "description": "Header for athlete selection"
+  },
+  "saveAssignments": "Save",
+  "@saveAssignments": {
+    "description": "Button to save template assignments"
+  },
+  "assignmentsUpdated": "Assignments updated",
+  "@assignmentsUpdated": {
+    "description": "Success message after updating assignments"
+  },
+  "noActiveAthletes": "No active athletes",
+  "@noActiveAthletes": {
+    "description": "Message when no athletes to assign"
+  },
+  "addAthletesFirst": "Add athletes first to assign templates",
+  "@addAthletesFirst": {
+    "description": "Hint when no athletes available"
   }
 }

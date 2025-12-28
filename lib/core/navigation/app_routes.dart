@@ -204,6 +204,14 @@ abstract final class AppRoutes {
   static const String athleteDetailPath = '/profile/coach/athletes/:athleteId';
   static const String athleteDetailName = 'athlete-detail';
 
+  /// Coach templates - templates for athletes
+  static const String coachTemplatesPath = '/profile/coach/templates';
+  static const String coachTemplatesName = 'coach-templates';
+
+  /// Coach template editor - create or edit a coach template
+  static const String coachTemplateEditorPath = '/profile/coach/templates/editor';
+  static const String coachTemplateEditorName = 'coach-template-editor';
+
   // ═══════════════════════════════════════════════════════════════════════════
   // Branch Index Mapping (for StatefulShellRoute)
   // ═══════════════════════════════════════════════════════════════════════════

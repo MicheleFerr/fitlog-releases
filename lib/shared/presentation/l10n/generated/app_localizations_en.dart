@@ -4425,6 +4425,16 @@ class AppLocalizationsEn extends AppLocalizations {
   String get discardChanges => 'Discard Changes';
 
   @override
+  String get discardChangesMessage =>
+      'You have unsaved changes. Are you sure you want to discard them?';
+
+  @override
+  String get coachNotes => 'Coach Notes';
+
+  @override
+  String get coachNotesHint => 'Private notes for your reference...';
+
+  @override
   String get confirmDelete => 'Confirm Delete';
 
   @override
@@ -24281,4 +24291,96 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get removeAthlete => 'Remove Athlete';
+
+  @override
+  String get coachTemplates => 'Templates for Athletes';
+
+  @override
+  String get assignTemplate => 'Assign';
+
+  @override
+  String assignedAthletes(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count athletes',
+      one: '1 athlete',
+      zero: 'No athletes',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String assignTemplateToAthletes(String name) {
+    return 'Assign \"$name\" to:';
+  }
+
+  @override
+  String get alreadyAssigned => 'Already assigned';
+
+  @override
+  String get notAssigned => 'Not assigned';
+
+  @override
+  String get changesWillSync =>
+      'Changes to this template will automatically sync to assigned athletes';
+
+  @override
+  String athletesSelected(int count) {
+    return '$count selected';
+  }
+
+  @override
+  String get confirmAssignment => 'Confirm assignment';
+
+  @override
+  String get templateAssigned => 'Template assigned successfully';
+
+  @override
+  String get templateUnassigned => 'Template removed from athlete';
+
+  @override
+  String get fromYourCoach => 'From Your Coach';
+
+  @override
+  String lastUpdated(String date) {
+    return 'Last updated: $date';
+  }
+
+  @override
+  String get myCoachTemplates => 'My Templates';
+
+  @override
+  String get assignedTab => 'Assigned';
+
+  @override
+  String get libraryTab => 'Library';
+
+  @override
+  String get noCoachTemplatesYet => 'No templates yet';
+
+  @override
+  String get createFirstCoachTemplate =>
+      'Create your first template to assign to athletes';
+
+  @override
+  String get noAssignedTemplatesYet => 'No assigned templates';
+
+  @override
+  String get assignTemplatesToAthletes => 'Assign templates to start coaching';
+
+  @override
+  String get selectAthletes => 'Select Athletes';
+
+  @override
+  String get saveAssignments => 'Save';
+
+  @override
+  String get assignmentsUpdated => 'Assignments updated';
+
+  @override
+  String get noActiveAthletes => 'No active athletes';
+
+  @override
+  String get addAthletesFirst => 'Add athletes first to assign templates';
 }
