@@ -9,9 +9,14 @@ library;
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
+import 'package:gymbro_flutter_new/core/navigation/app_routes.dart';
+import 'package:gymbro_flutter_new/features/auth/presentation/providers/auth_provider.dart';
+import 'package:gymbro_flutter_new/features/chat/presentation/providers/chat_providers.dart';
 import 'package:gymbro_flutter_new/features/coach/domain/repositories/coach_repository.dart';
 import 'package:gymbro_flutter_new/features/coach/presentation/providers/coach_providers.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/services/snackbar_service.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_spacing.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator.dart';
@@ -41,6 +46,12 @@ class AthleteDetailScreen extends ConsumerWidget {
           SliverAppBar.medium(
             title: Text(athleteName.isEmpty ? context.l10n.athlete : athleteName),
             actions: [
+              // Message button
+              IconButton(
+                icon: const Icon(AppIcons.chatBubbleOutline),
+                tooltip: context.l10n.sendMessage,
+                onPressed: () => _openChat(context, ref),
+              ),
               IconButton(
                 icon: const Icon(AppIcons.moreVert),
                 onPressed: () => _showAthleteOptions(context),
@@ -121,6 +132,39 @@ class AthleteDetailScreen extends ConsumerWidget {
         ],
       ),
     );
+  }
+
+  Future<void> _openChat(BuildContext context, WidgetRef ref) async {
+    try {
+      // Get current user (coach)
+      final currentUser = ref.read(currentUserProvider).valueOrNull;
+      if (currentUser == null) {
+        SnackBarService.showError(context, context.l10n.notAuthenticated);
+        return;
+      }
+
+      // Get or create the conversation
+      final conversation = await ref.read(
+        getOrCreateConversationProvider({
+          'coachId': currentUser.uid,
+          'athleteId': athleteId,
+          'coachName': currentUser.displayName,
+          'athleteName': athleteName.isNotEmpty ? athleteName : 'Athlete',
+        }).future,
+      );
+
+      // Navigate to chat
+      if (context.mounted) {
+        context.pushNamed(
+          AppRoutes.chatName,
+          pathParameters: {'conversationId': conversation.id},
+        );
+      }
+    } catch (e) {
+      if (context.mounted) {
+        SnackBarService.showError(context, context.l10n.errorStartingChat);
+      }
+    }
   }
 
   void _showAthleteOptions(BuildContext context) {

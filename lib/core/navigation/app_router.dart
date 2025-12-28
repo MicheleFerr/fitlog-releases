@@ -94,6 +94,10 @@ import 'package:gymbro_flutter_new/features/coach/presentation/screens/coach_tem
 import 'package:gymbro_flutter_new/features/coach/presentation/screens/coach_template_editor_screen.dart';
 import 'package:gymbro_flutter_new/features/coach/domain/entities/coach_template.dart';
 
+// Chat
+import 'package:gymbro_flutter_new/features/chat/presentation/screens/conversations_list_screen.dart';
+import 'package:gymbro_flutter_new/features/chat/presentation/screens/chat_screen.dart';
+
 // Other routes
 import 'package:gymbro_flutter_new/features/admin/presentation/screens/admin_analytics_dashboard_screen.dart';
 import 'package:gymbro_flutter_new/tools/import_exercises_screen.dart';
@@ -490,6 +494,22 @@ final appRouterProvider = Provider<GoRouter>((ref) {
                     path: 'link-coach',
                     name: AppRoutes.linkCoachName,
                     builder: (context, state) => const LinkCoachScreen(),
+                  ),
+                  // Chat/Messages routes
+                  GoRoute(
+                    path: 'messages',
+                    name: AppRoutes.conversationsName,
+                    builder: (context, state) => const ConversationsListScreen(),
+                    routes: [
+                      GoRoute(
+                        path: ':conversationId',
+                        name: AppRoutes.chatName,
+                        builder: (context, state) {
+                          final conversationId = state.pathParameters['conversationId']!;
+                          return ChatScreen(conversationId: conversationId);
+                        },
+                      ),
+                    ],
                   ),
                 ],
               ),

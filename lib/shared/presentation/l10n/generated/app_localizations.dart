@@ -5993,7 +5993,7 @@ abstract class AppLocalizations {
   /// **'Use Original Name'**
   String get useOriginalName;
 
-  /// Button to skip weight selection and use default values
+  /// Button to skip action
   ///
   /// In en, this message translates to:
   /// **'Skip'**
@@ -32184,7 +32184,7 @@ abstract class AppLocalizations {
   /// **'AI is responding...'**
   String get aiCoachRespondingHint;
 
-  /// Chat input placeholder
+  /// Placeholder for message input
   ///
   /// In en, this message translates to:
   /// **'Type a message...'**
@@ -43052,7 +43052,7 @@ abstract class AppLocalizations {
   /// **'Achievements'**
   String get exportCategoryAchievements;
 
-  /// Generic athlete label
+  /// Label for athlete role
   ///
   /// In en, this message translates to:
   /// **'Athlete'**
@@ -43525,6 +43525,162 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Add athletes first to assign templates'**
   String get addAthletesFirst;
+
+  /// Title for chat/messages screen
+  ///
+  /// In en, this message translates to:
+  /// **'Messages'**
+  String get messages;
+
+  /// Empty state for conversations list
+  ///
+  /// In en, this message translates to:
+  /// **'No conversations yet'**
+  String get noConversationsYet;
+
+  /// Empty state description for conversations
+  ///
+  /// In en, this message translates to:
+  /// **'Start chatting with your coach or athletes'**
+  String get startChattingWithCoachOrAthlete;
+
+  /// Error message when conversations fail to load
+  ///
+  /// In en, this message translates to:
+  /// **'Error loading conversations'**
+  String get errorLoadingConversations;
+
+  /// Error message when messages fail to load
+  ///
+  /// In en, this message translates to:
+  /// **'Error loading messages'**
+  String get errorLoadingMessages;
+
+  /// Prefix for messages sent by current user
+  ///
+  /// In en, this message translates to:
+  /// **'You: '**
+  String get youPrefix;
+
+  /// Placeholder when conversation has no messages
+  ///
+  /// In en, this message translates to:
+  /// **'No messages yet'**
+  String get noMessagesYet;
+
+  /// Label for coach role
+  ///
+  /// In en, this message translates to:
+  /// **'Coach'**
+  String get coach;
+
+  /// Hint to start chatting
+  ///
+  /// In en, this message translates to:
+  /// **'Send a message to start the conversation'**
+  String get startConversation;
+
+  /// Tooltip for send button
+  ///
+  /// In en, this message translates to:
+  /// **'Send message'**
+  String get sendMessage;
+
+  /// Tooltip for attachment button
+  ///
+  /// In en, this message translates to:
+  /// **'Attach file'**
+  String get attachFile;
+
+  /// Option to take a photo
+  ///
+  /// In en, this message translates to:
+  /// **'Take photo'**
+  String get takePhoto;
+
+  /// Option to pick image from gallery
+  ///
+  /// In en, this message translates to:
+  /// **'Choose from gallery'**
+  String get chooseFromGallery;
+
+  /// Option to share a workout
+  ///
+  /// In en, this message translates to:
+  /// **'Share workout'**
+  String get shareWorkout;
+
+  /// Title for caption dialog
+  ///
+  /// In en, this message translates to:
+  /// **'Add caption'**
+  String get addCaption;
+
+  /// Placeholder for optional caption
+  ///
+  /// In en, this message translates to:
+  /// **'Caption (optional)'**
+  String get captionOptional;
+
+  /// Button to send
+  ///
+  /// In en, this message translates to:
+  /// **'Send'**
+  String get send;
+
+  /// Error when message fails to send
+  ///
+  /// In en, this message translates to:
+  /// **'Error sending message'**
+  String get errorSendingMessage;
+
+  /// Error when image fails to send
+  ///
+  /// In en, this message translates to:
+  /// **'Error sending image'**
+  String get errorSendingImage;
+
+  /// Error when workout link fails to send
+  ///
+  /// In en, this message translates to:
+  /// **'Error sending workout'**
+  String get errorSendingWorkout;
+
+  /// Error when message fails to delete
+  ///
+  /// In en, this message translates to:
+  /// **'Error deleting message'**
+  String get errorDeletingMessage;
+
+  /// Title for delete confirmation
+  ///
+  /// In en, this message translates to:
+  /// **'Delete message'**
+  String get deleteMessage;
+
+  /// Confirmation text for message deletion
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to delete this message?'**
+  String get deleteMessageConfirmation;
+
+  /// Prompt to select workout
+  ///
+  /// In en, this message translates to:
+  /// **'Select a workout to share'**
+  String get selectWorkoutToShare;
+
+  /// Error when chat fails to start
+  ///
+  /// In en, this message translates to:
+  /// **'Error starting chat'**
+  String get errorStartingChat;
+
+  /// Error when user is not authenticated
+  ///
+  /// In en, this message translates to:
+  /// **'You must be logged in'**
+  String get notAuthenticated;
 }
 
 class _AppLocalizationsDelegate

@@ -30229,5 +30229,122 @@
   "addAthletesFirst": "Add athletes first to assign templates",
   "@addAthletesFirst": {
     "description": "Hint when no athletes available"
+  },
+
+  "messages": "Messages",
+  "@messages": {
+    "description": "Title for chat/messages screen"
+  },
+  "noConversationsYet": "No conversations yet",
+  "@noConversationsYet": {
+    "description": "Empty state for conversations list"
+  },
+  "startChattingWithCoachOrAthlete": "Start chatting with your coach or athletes",
+  "@startChattingWithCoachOrAthlete": {
+    "description": "Empty state description for conversations"
+  },
+  "errorLoadingConversations": "Error loading conversations",
+  "@errorLoadingConversations": {
+    "description": "Error message when conversations fail to load"
+  },
+  "errorLoadingMessages": "Error loading messages",
+  "@errorLoadingMessages": {
+    "description": "Error message when messages fail to load"
+  },
+  "youPrefix": "You: ",
+  "@youPrefix": {
+    "description": "Prefix for messages sent by current user"
+  },
+  "noMessagesYet": "No messages yet",
+  "@noMessagesYet": {
+    "description": "Placeholder when conversation has no messages"
+  },
+  "athlete": "Athlete",
+  "@athlete": {
+    "description": "Label for athlete role"
+  },
+  "coach": "Coach",
+  "@coach": {
+    "description": "Label for coach role"
+  },
+  "startConversation": "Send a message to start the conversation",
+  "@startConversation": {
+    "description": "Hint to start chatting"
+  },
+  "typeMessage": "Type a message...",
+  "@typeMessage": {
+    "description": "Placeholder for message input"
+  },
+  "sendMessage": "Send message",
+  "@sendMessage": {
+    "description": "Tooltip for send button"
+  },
+  "attachFile": "Attach file",
+  "@attachFile": {
+    "description": "Tooltip for attachment button"
+  },
+  "takePhoto": "Take photo",
+  "@takePhoto": {
+    "description": "Option to take a photo"
+  },
+  "chooseFromGallery": "Choose from gallery",
+  "@chooseFromGallery": {
+    "description": "Option to pick image from gallery"
+  },
+  "shareWorkout": "Share workout",
+  "@shareWorkout": {
+    "description": "Option to share a workout"
+  },
+  "addCaption": "Add caption",
+  "@addCaption": {
+    "description": "Title for caption dialog"
+  },
+  "captionOptional": "Caption (optional)",
+  "@captionOptional": {
+    "description": "Placeholder for optional caption"
+  },
+  "skip": "Skip",
+  "@skip": {
+    "description": "Button to skip action"
+  },
+  "send": "Send",
+  "@send": {
+    "description": "Button to send"
+  },
+  "errorSendingMessage": "Error sending message",
+  "@errorSendingMessage": {
+    "description": "Error when message fails to send"
+  },
+  "errorSendingImage": "Error sending image",
+  "@errorSendingImage": {
+    "description": "Error when image fails to send"
+  },
+  "errorSendingWorkout": "Error sending workout",
+  "@errorSendingWorkout": {
+    "description": "Error when workout link fails to send"
+  },
+  "errorDeletingMessage": "Error deleting message",
+  "@errorDeletingMessage": {
+    "description": "Error when message fails to delete"
+  },
+  "deleteMessage": "Delete message",
+  "@deleteMessage": {
+    "description": "Title for delete confirmation"
+  },
+  "deleteMessageConfirmation": "Are you sure you want to delete this message?",
+  "@deleteMessageConfirmation": {
+    "description": "Confirmation text for message deletion"
+  },
+  "selectWorkoutToShare": "Select a workout to share",
+  "@selectWorkoutToShare": {
+    "description": "Prompt to select workout"
+  },
+  "errorStartingChat": "Error starting chat",
+  "@errorStartingChat": {
+    "description": "Error when chat fails to start"
+  },
+  "notAuthenticated": "You must be logged in",
+  "@notAuthenticated": {
+    "description": "Error when user is not authenticated"
   }
 }

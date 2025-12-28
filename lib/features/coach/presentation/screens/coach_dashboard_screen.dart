@@ -14,6 +14,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:gymbro_flutter_new/core/navigation/app_routes.dart';
+import 'package:gymbro_flutter_new/features/chat/presentation/providers/chat_providers.dart';
 import 'package:gymbro_flutter_new/features/coach/domain/entities/coach_relationship.dart';
 import 'package:gymbro_flutter_new/features/coach/presentation/providers/coach_providers.dart';
 import 'package:gymbro_flutter_new/features/coach/presentation/widgets/athlete_card.dart';
@@ -89,30 +90,48 @@ class CoachDashboardScreen extends ConsumerWidget {
 }
 
 /// Quick actions row for coach dashboard
-class _QuickActionsSection extends StatelessWidget {
+class _QuickActionsSection extends ConsumerWidget {
   @override
-  Widget build(BuildContext context) {
-    return Row(
-      children: [
-        // Templates button
-        Expanded(
-          child: _QuickActionCard(
-            icon: AppIcons.template,
-            label: context.l10n.coachTemplates,
-            color: context.colors.primary,
-            onTap: () => context.pushNamed(AppRoutes.coachTemplatesName),
-          ),
-        ),
-        const SizedBox(width: AppSpacing.sm),
+  Widget build(BuildContext context, WidgetRef ref) {
+    final unreadCountAsync = ref.watch(totalUnreadCountProvider);
+    final unreadCount = unreadCountAsync.valueOrNull ?? 0;
 
-        // Athletes button
-        Expanded(
-          child: _QuickActionCard(
-            icon: AppIcons.peopleOutline,
-            label: context.l10n.athletes,
-            color: context.colors.tertiary,
-            onTap: () => context.pushNamed(AppRoutes.athletesListName),
-          ),
+    return Column(
+      children: [
+        // First row: Templates + Athletes
+        Row(
+          children: [
+            // Templates button
+            Expanded(
+              child: _QuickActionCard(
+                icon: AppIcons.template,
+                label: context.l10n.coachTemplates,
+                color: context.colors.primary,
+                onTap: () => context.pushNamed(AppRoutes.coachTemplatesName),
+              ),
+            ),
+            const SizedBox(width: AppSpacing.sm),
+
+            // Athletes button
+            Expanded(
+              child: _QuickActionCard(
+                icon: AppIcons.peopleOutline,
+                label: context.l10n.athletes,
+                color: context.colors.tertiary,
+                onTap: () => context.pushNamed(AppRoutes.athletesListName),
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: AppSpacing.sm),
+
+        // Second row: Messages (full width)
+        _QuickActionCard(
+          icon: AppIcons.chatBubbleOutline,
+          label: context.l10n.messages,
+          color: context.colors.secondary,
+          badge: unreadCount > 0 ? unreadCount : null,
+          onTap: () => context.pushNamed(AppRoutes.conversationsName),
         ),
       ],
     );
@@ -126,12 +145,14 @@ class _QuickActionCard extends StatelessWidget {
     required this.label,
     required this.color,
     required this.onTap,
+    this.badge,
   });
 
   final IconData icon;
   final String label;
   final Color color;
   final VoidCallback onTap;
+  final int? badge;
 
   @override
   Widget build(BuildContext context) {
@@ -149,7 +170,38 @@ class _QuickActionCard extends StatelessWidget {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Icon(icon, color: color, size: AppIconSize.medium),
+              // Icon with optional badge
+              Stack(
+                clipBehavior: Clip.none,
+                children: [
+                  Icon(icon, color: color, size: AppIconSize.medium),
+                  if (badge != null)
+                    Positioned(
+                      right: -8,
+                      top: -8,
+                      child: Container(
+                        padding: const EdgeInsets.all(4),
+                        decoration: BoxDecoration(
+                          color: context.colors.error,
+                          shape: BoxShape.circle,
+                        ),
+                        constraints: const BoxConstraints(
+                          minWidth: 18,
+                          minHeight: 18,
+                        ),
+                        child: Text(
+                          badge! > 99 ? '99+' : badge.toString(),
+                          style: context.textTheme.labelSmall?.copyWith(
+                            color: context.colors.onError,
+                            fontSize: 10,
+                            fontWeight: FontWeight.bold,
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
+                    ),
+                ],
+              ),
               const SizedBox(width: AppSpacing.sm),
               Flexible(
                 child: Text(

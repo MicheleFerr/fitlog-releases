@@ -24629,4 +24629,86 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get addAthletesFirst => 'Add athletes first to assign templates';
+
+  @override
+  String get messages => 'Messaggi';
+
+  @override
+  String get noConversationsYet => 'Nessuna conversazione';
+
+  @override
+  String get startChattingWithCoachOrAthlete =>
+      'Inizia a chattare con il tuo coach o i tuoi atleti';
+
+  @override
+  String get errorLoadingConversations =>
+      'Errore nel caricamento delle conversazioni';
+
+  @override
+  String get errorLoadingMessages => 'Errore nel caricamento dei messaggi';
+
+  @override
+  String get youPrefix => 'Tu: ';
+
+  @override
+  String get noMessagesYet => 'Nessun messaggio';
+
+  @override
+  String get coach => 'Coach';
+
+  @override
+  String get startConversation =>
+      'Invia un messaggio per iniziare la conversazione';
+
+  @override
+  String get sendMessage => 'Invia messaggio';
+
+  @override
+  String get attachFile => 'Allega file';
+
+  @override
+  String get takePhoto => 'Scatta foto';
+
+  @override
+  String get chooseFromGallery => 'Scegli dalla galleria';
+
+  @override
+  String get shareWorkout => 'Condividi workout';
+
+  @override
+  String get addCaption => 'Aggiungi didascalia';
+
+  @override
+  String get captionOptional => 'Didascalia (opzionale)';
+
+  @override
+  String get send => 'Invia';
+
+  @override
+  String get errorSendingMessage => 'Errore nell\'invio del messaggio';
+
+  @override
+  String get errorSendingImage => 'Errore nell\'invio dell\'immagine';
+
+  @override
+  String get errorSendingWorkout => 'Errore nell\'invio del workout';
+
+  @override
+  String get errorDeletingMessage => 'Errore nell\'eliminazione del messaggio';
+
+  @override
+  String get deleteMessage => 'Elimina messaggio';
+
+  @override
+  String get deleteMessageConfirmation =>
+      'Sei sicuro di voler eliminare questo messaggio?';
+
+  @override
+  String get selectWorkoutToShare => 'Seleziona un workout da condividere';
+
+  @override
+  String get errorStartingChat => 'Errore nell\'avvio della chat';
+
+  @override
+  String get notAuthenticated => 'Devi effettuare l\'accesso';
 }

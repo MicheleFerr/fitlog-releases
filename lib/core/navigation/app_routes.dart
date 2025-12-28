@@ -213,6 +213,18 @@ abstract final class AppRoutes {
   static const String coachTemplateEditorName = 'coach-template-editor';
 
   // ═══════════════════════════════════════════════════════════════════════════
+  // Chat Routes
+  // ═══════════════════════════════════════════════════════════════════════════
+
+  /// Conversations list - all chat conversations
+  static const String conversationsPath = '/profile/messages';
+  static const String conversationsName = 'conversations';
+
+  /// Chat screen - individual conversation
+  static const String chatPath = '/profile/messages/:conversationId';
+  static const String chatName = 'chat';
+
+  // ═══════════════════════════════════════════════════════════════════════════
   // Branch Index Mapping (for StatefulShellRoute)
   // ═══════════════════════════════════════════════════════════════════════════
 

@@ -18288,5 +18288,122 @@
   "alreadyAssigned": "Già assegnato",
   "@alreadyAssigned": {
     "description": "Etichetta per atleta già assegnato a un template"
+  },
+
+  "messages": "Messaggi",
+  "@messages": {
+    "description": "Titolo schermata chat/messaggi"
+  },
+  "noConversationsYet": "Nessuna conversazione",
+  "@noConversationsYet": {
+    "description": "Stato vuoto lista conversazioni"
+  },
+  "startChattingWithCoachOrAthlete": "Inizia a chattare con il tuo coach o i tuoi atleti",
+  "@startChattingWithCoachOrAthlete": {
+    "description": "Descrizione stato vuoto conversazioni"
+  },
+  "errorLoadingConversations": "Errore nel caricamento delle conversazioni",
+  "@errorLoadingConversations": {
+    "description": "Errore caricamento conversazioni"
+  },
+  "errorLoadingMessages": "Errore nel caricamento dei messaggi",
+  "@errorLoadingMessages": {
+    "description": "Errore caricamento messaggi"
+  },
+  "youPrefix": "Tu: ",
+  "@youPrefix": {
+    "description": "Prefisso per messaggi inviati dall'utente corrente"
+  },
+  "noMessagesYet": "Nessun messaggio",
+  "@noMessagesYet": {
+    "description": "Placeholder conversazione senza messaggi"
+  },
+  "athlete": "Atleta",
+  "@athlete": {
+    "description": "Etichetta ruolo atleta"
+  },
+  "coach": "Coach",
+  "@coach": {
+    "description": "Etichetta ruolo coach"
+  },
+  "startConversation": "Invia un messaggio per iniziare la conversazione",
+  "@startConversation": {
+    "description": "Suggerimento per iniziare chat"
+  },
+  "typeMessage": "Scrivi un messaggio...",
+  "@typeMessage": {
+    "description": "Placeholder input messaggio"
+  },
+  "sendMessage": "Invia messaggio",
+  "@sendMessage": {
+    "description": "Tooltip pulsante invio"
+  },
+  "attachFile": "Allega file",
+  "@attachFile": {
+    "description": "Tooltip pulsante allegato"
+  },
+  "takePhoto": "Scatta foto",
+  "@takePhoto": {
+    "description": "Opzione scatta foto"
+  },
+  "chooseFromGallery": "Scegli dalla galleria",
+  "@chooseFromGallery": {
+    "description": "Opzione scegli immagine dalla galleria"
+  },
+  "shareWorkout": "Condividi workout",
+  "@shareWorkout": {
+    "description": "Opzione condividi workout"
+  },
+  "addCaption": "Aggiungi didascalia",
+  "@addCaption": {
+    "description": "Titolo dialog didascalia"
+  },
+  "captionOptional": "Didascalia (opzionale)",
+  "@captionOptional": {
+    "description": "Placeholder didascalia opzionale"
+  },
+  "skip": "Salta",
+  "@skip": {
+    "description": "Pulsante salta azione"
+  },
+  "send": "Invia",
+  "@send": {
+    "description": "Pulsante invia"
+  },
+  "errorSendingMessage": "Errore nell'invio del messaggio",
+  "@errorSendingMessage": {
+    "description": "Errore invio messaggio fallito"
+  },
+  "errorSendingImage": "Errore nell'invio dell'immagine",
+  "@errorSendingImage": {
+    "description": "Errore invio immagine fallito"
+  },
+  "errorSendingWorkout": "Errore nell'invio del workout",
+  "@errorSendingWorkout": {
+    "description": "Errore invio workout fallito"
+  },
+  "errorDeletingMessage": "Errore nell'eliminazione del messaggio",
+  "@errorDeletingMessage": {
+    "description": "Errore eliminazione messaggio fallita"
+  },
+  "deleteMessage": "Elimina messaggio",
+  "@deleteMessage": {
+    "description": "Titolo conferma eliminazione"
+  },
+  "deleteMessageConfirmation": "Sei sicuro di voler eliminare questo messaggio?",
+  "@deleteMessageConfirmation": {
+    "description": "Testo conferma eliminazione messaggio"
+  },
+  "selectWorkoutToShare": "Seleziona un workout da condividere",
+  "@selectWorkoutToShare": {
+    "description": "Prompt selezione workout"
+  },
+  "errorStartingChat": "Errore nell'avvio della chat",
+  "@errorStartingChat": {
+    "description": "Errore quando la chat non si avvia"
+  },
+  "notAuthenticated": "Devi effettuare l'accesso",
+  "@notAuthenticated": {
+    "description": "Errore quando l'utente non è autenticato"
   }
 }

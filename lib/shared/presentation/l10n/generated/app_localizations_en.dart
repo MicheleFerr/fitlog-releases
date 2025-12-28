@@ -24383,4 +24383,84 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get addAthletesFirst => 'Add athletes first to assign templates';
+
+  @override
+  String get messages => 'Messages';
+
+  @override
+  String get noConversationsYet => 'No conversations yet';
+
+  @override
+  String get startChattingWithCoachOrAthlete =>
+      'Start chatting with your coach or athletes';
+
+  @override
+  String get errorLoadingConversations => 'Error loading conversations';
+
+  @override
+  String get errorLoadingMessages => 'Error loading messages';
+
+  @override
+  String get youPrefix => 'You: ';
+
+  @override
+  String get noMessagesYet => 'No messages yet';
+
+  @override
+  String get coach => 'Coach';
+
+  @override
+  String get startConversation => 'Send a message to start the conversation';
+
+  @override
+  String get sendMessage => 'Send message';
+
+  @override
+  String get attachFile => 'Attach file';
+
+  @override
+  String get takePhoto => 'Take photo';
+
+  @override
+  String get chooseFromGallery => 'Choose from gallery';
+
+  @override
+  String get shareWorkout => 'Share workout';
+
+  @override
+  String get addCaption => 'Add caption';
+
+  @override
+  String get captionOptional => 'Caption (optional)';
+
+  @override
+  String get send => 'Send';
+
+  @override
+  String get errorSendingMessage => 'Error sending message';
+
+  @override
+  String get errorSendingImage => 'Error sending image';
+
+  @override
+  String get errorSendingWorkout => 'Error sending workout';
+
+  @override
+  String get errorDeletingMessage => 'Error deleting message';
+
+  @override
+  String get deleteMessage => 'Delete message';
+
+  @override
+  String get deleteMessageConfirmation =>
+      'Are you sure you want to delete this message?';
+
+  @override
+  String get selectWorkoutToShare => 'Select a workout to share';
+
+  @override
+  String get errorStartingChat => 'Error starting chat';
+
+  @override
+  String get notAuthenticated => 'You must be logged in';
 }
