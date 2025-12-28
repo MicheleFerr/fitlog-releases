@@ -592,7 +592,11 @@ service cloud.firestore {
       allow update: if request.auth != null
         && request.auth.uid == userId
         && (!('completedMin' in request.resource.data) ||
-            request.resource.data.completedMin >= resource.data.completedMin);
+            request.resource.data.completedMin >= resource.data.completedMin)
+        // Validate accountMode if being updated (must be solo, coach, or coached)
+        && (!('preferences' in request.resource.data) ||
+            !('accountMode' in request.resource.data.preferences) ||
+            request.resource.data.preferences.accountMode in ['solo', 'coach', 'coached']);
       allow delete: if false;
 
       // ============= WORKOUTS SUBCOLLECTION (ANALYTICS) =============
