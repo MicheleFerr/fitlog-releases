@@ -123,9 +123,10 @@ class _ExerciseMergeScreenState extends ConsumerState<ExerciseMergeScreen> {
                   child: Stack(
                     alignment: Alignment.center,
                     children: [
-                      CircularProgressIndicator(
-                        value: progress.progress,
+                      LoadingIndicator(
+                        progress: progress.progress,
                         strokeWidth: 6,
+                        size: 80,
                         backgroundColor:
                             context.colors.primary.withValues(alpha: 0.2),
                       ),

@@ -37,7 +37,10 @@ final coachRepositoryProvider = Provider<CoachRepository>((ref) {
 /// Reads from UserProfile.preferences['accountMode']
 /// Defaults to AccountMode.solo if not set
 final accountModeProvider = Provider<AccountMode>((ref) {
-  final userProfile = ref.watch(userProfileProvider).valueOrNull;
+  // 🔧 PERF FIX: Use .select() to only rebuild when value changes
+  final userProfile = ref.watch(
+    userProfileProvider.select((async) => async.valueOrNull),
+  );
   if (userProfile == null) return AccountMode.solo;
 
   return userProfile.preferences.accountMode;
@@ -116,7 +119,10 @@ final coachCodeProvider = FutureProvider.autoDispose<String?>((ref) async {
   final mode = ref.watch(accountModeProvider);
   if (!mode.isCoach) return null;
 
-  final user = ref.watch(firebaseUserProvider).valueOrNull;
+  // 🔧 PERF FIX: Use .select() to only rebuild when user value changes
+  final user = ref.watch(
+    firebaseUserProvider.select((async) => async.valueOrNull),
+  );
   if (user == null) return null;
 
   final repository = ref.watch(coachRepositoryProvider);
@@ -135,7 +141,10 @@ final athletesListProvider =
   final mode = ref.watch(accountModeProvider);
   if (!mode.isCoach) return Stream.value([]);
 
-  final user = ref.watch(firebaseUserProvider).valueOrNull;
+  // 🔧 PERF FIX: Use .select() to only rebuild when user value changes
+  final user = ref.watch(
+    firebaseUserProvider.select((async) => async.valueOrNull),
+  );
   if (user?.email == null) return Stream.value([]);
 
   final repository = ref.watch(coachRepositoryProvider);
@@ -144,13 +153,19 @@ final athletesListProvider =
 
 /// Provider for active athletes count
 final activeAthletesCountProvider = Provider.autoDispose<int>((ref) {
-  final athletes = ref.watch(athletesListProvider).valueOrNull ?? [];
+  // 🔧 PERF FIX: Use .select() to only rebuild when athletes list changes
+  final athletes = ref.watch(
+    athletesListProvider.select((async) => async.valueOrNull ?? []),
+  );
   return athletes.where((a) => a.isActive).length;
 });
 
 /// Provider for pending invitations count
 final pendingInvitationsCountProvider = Provider.autoDispose<int>((ref) {
-  final athletes = ref.watch(athletesListProvider).valueOrNull ?? [];
+  // 🔧 PERF FIX: Use .select() to only rebuild when athletes list changes
+  final athletes = ref.watch(
+    athletesListProvider.select((async) => async.valueOrNull ?? []),
+  );
   return athletes.where((a) => a.isPending).length;
 });
 
@@ -166,7 +181,10 @@ final myCoachProvider =
   final mode = ref.watch(accountModeProvider);
   if (!mode.isCoached) return Stream.value(null);
 
-  final user = ref.watch(firebaseUserProvider).valueOrNull;
+  // 🔧 PERF FIX: Use .select() to only rebuild when user value changes
+  final user = ref.watch(
+    firebaseUserProvider.select((async) => async.valueOrNull),
+  );
   if (user == null) return Stream.value(null);
 
   final repository = ref.watch(coachRepositoryProvider);
@@ -175,7 +193,10 @@ final myCoachProvider =
 
 /// Provider for coach name (convenience)
 final myCoachNameProvider = Provider.autoDispose<String?>((ref) {
-  final coach = ref.watch(myCoachProvider).valueOrNull;
+  // 🔧 PERF FIX: Use .select() to only rebuild when coach value changes
+  final coach = ref.watch(
+    myCoachProvider.select((async) => async.valueOrNull),
+  );
   return coach?.coachName;
 });
 
@@ -186,7 +207,10 @@ final myCoachNameProvider = Provider.autoDispose<String?>((ref) {
 /// Provider for single athlete relationship (for coach viewing athlete)
 final athleteRelationshipProvider = FutureProvider.autoDispose
     .family<CoachRelationship?, String>((ref, athleteId) async {
-  final user = ref.watch(firebaseUserProvider).valueOrNull;
+  // 🔧 PERF FIX: Use .select() to only rebuild when user value changes
+  final user = ref.watch(
+    firebaseUserProvider.select((async) => async.valueOrNull),
+  );
   if (user == null) return null;
 
   final repository = ref.watch(coachRepositoryProvider);
@@ -344,7 +368,10 @@ final athleteActionsProvider =
 
 /// Whether user has completed coach onboarding
 final hasCompletedCoachOnboardingProvider = Provider.autoDispose<bool>((ref) {
-  final userProfile = ref.watch(userProfileProvider).valueOrNull;
+  // 🔧 PERF FIX: Use .select() to only rebuild when user value changes
+  final userProfile = ref.watch(
+    userProfileProvider.select((async) => async.valueOrNull),
+  );
   return userProfile?.preferences.hasCompletedCoachOnboarding ?? false;
 });
 
@@ -362,7 +389,10 @@ final isActivelyCoachedProvider = Provider.autoDispose<bool>((ref) {
   final mode = ref.watch(accountModeProvider);
   if (!mode.isCoached) return false;
 
-  final coach = ref.watch(myCoachProvider).valueOrNull;
+  // 🔧 PERF FIX: Use .select() to only rebuild when coach value changes
+  final coach = ref.watch(
+    myCoachProvider.select((async) => async.valueOrNull),
+  );
   return coach?.isActive ?? false;
 });
 
@@ -376,7 +406,10 @@ final isActivelyCoachedProvider = Provider.autoDispose<bool>((ref) {
 /// Returns list of workout summaries ordered by date (newest first)
 final athleteWorkoutsProvider = FutureProvider.autoDispose
     .family<List<AthleteWorkoutSummary>, String>((ref, athleteId) async {
-  final user = ref.watch(firebaseUserProvider).valueOrNull;
+  // 🔧 PERF FIX: Use .select() to only rebuild when user value changes
+  final user = ref.watch(
+    firebaseUserProvider.select((async) => async.valueOrNull),
+  );
   if (user?.email == null) return [];
 
   final repository = ref.watch(coachRepositoryProvider);
@@ -393,7 +426,10 @@ final athleteWorkoutsProvider = FutureProvider.autoDispose
 /// Returns weekly stats including compliance %, volume, etc.
 final athleteWeeklyStatsProvider = FutureProvider.autoDispose
     .family<AthleteWeeklyStats, String>((ref, athleteId) async {
-  final user = ref.watch(firebaseUserProvider).valueOrNull;
+  // 🔧 PERF FIX: Use .select() to only rebuild when user value changes
+  final user = ref.watch(
+    firebaseUserProvider.select((async) => async.valueOrNull),
+  );
   if (user?.email == null) return const AthleteWeeklyStats.empty();
 
   final repository = ref.watch(coachRepositoryProvider);
@@ -420,7 +456,10 @@ final coachTemplatesProvider =
   final mode = ref.watch(accountModeProvider);
   if (!mode.isCoach) return Stream.value([]);
 
-  final user = ref.watch(firebaseUserProvider).valueOrNull;
+  // 🔧 PERF FIX: Use .select() to only rebuild when user value changes
+  final user = ref.watch(
+    firebaseUserProvider.select((async) => async.valueOrNull),
+  );
   if (user == null) return Stream.value([]);
 
   final repository = ref.watch(coachTemplatesRepositoryProvider);
@@ -430,7 +469,10 @@ final coachTemplatesProvider =
 /// Provider for templates with assignments (assigned to at least one athlete)
 final assignedCoachTemplatesProvider =
     Provider.autoDispose<List<CoachTemplate>>((ref) {
-  final templates = ref.watch(coachTemplatesProvider).valueOrNull ?? [];
+  // 🔧 PERF FIX: Use .select() to only rebuild when templates list changes
+  final templates = ref.watch(
+    coachTemplatesProvider.select((async) => async.valueOrNull ?? []),
+  );
   return templates.where((t) => t.hasAssignments).toList();
 });
 
@@ -446,8 +488,13 @@ final coachTemplateProvider = FutureProvider.autoDispose
 /// Returns map of athleteId -> isAssigned
 final templateAssignmentsProvider = Provider.autoDispose
     .family<Map<String, bool>, String>((ref, templateId) {
-  final athletes = ref.watch(athletesListProvider).valueOrNull ?? [];
-  final templates = ref.watch(coachTemplatesProvider).valueOrNull ?? [];
+  // 🔧 PERF FIX: Use .select() to only rebuild when data changes
+  final athletes = ref.watch(
+    athletesListProvider.select((async) => async.valueOrNull ?? []),
+  );
+  final templates = ref.watch(
+    coachTemplatesProvider.select((async) => async.valueOrNull ?? []),
+  );
 
   final template = templates.where((t) => t.id == templateId).firstOrNull;
   if (template == null) return {};
@@ -460,7 +507,10 @@ final templateAssignmentsProvider = Provider.autoDispose
 
 /// Coach template count
 final coachTemplateCountProvider = Provider.autoDispose<int>((ref) {
-  final templates = ref.watch(coachTemplatesProvider).valueOrNull ?? [];
+  // 🔧 PERF FIX: Use .select() to only rebuild when templates list changes
+  final templates = ref.watch(
+    coachTemplatesProvider.select((async) => async.valueOrNull ?? []),
+  );
   return templates.length;
 });
 
@@ -474,7 +524,10 @@ final assignedTemplatesProvider =
   final mode = ref.watch(accountModeProvider);
   if (!mode.isCoached) return Stream.value([]);
 
-  final user = ref.watch(firebaseUserProvider).valueOrNull;
+  // 🔧 PERF FIX: Use .select() to only rebuild when user value changes
+  final user = ref.watch(
+    firebaseUserProvider.select((async) => async.valueOrNull),
+  );
   if (user == null) return Stream.value([]);
 
   final repository = ref.watch(coachTemplatesRepositoryProvider);
@@ -483,7 +536,10 @@ final assignedTemplatesProvider =
 
 /// Provider for count of assigned templates
 final assignedTemplateCountProvider = Provider.autoDispose<int>((ref) {
-  final templates = ref.watch(assignedTemplatesProvider).valueOrNull ?? [];
+  // 🔧 PERF FIX: Use .select() to only rebuild when templates list changes
+  final templates = ref.watch(
+    assignedTemplatesProvider.select((async) => async.valueOrNull ?? []),
+  );
   return templates.length;
 });
 

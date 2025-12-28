@@ -13,6 +13,7 @@ import 'package:gymbro_flutter_new/features/predictive_balance/presentation/prov
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator.dart';
 
 /// Inline indicator for predictive balance
 ///
@@ -275,12 +276,13 @@ class PredictiveBalanceCard extends ConsumerWidget {
                   SizedBox(
                     width: 40,
                     height: 40,
-                    child: CircularProgressIndicator(
-                      value: status.progressPercentage,
+                    child: LoadingIndicator(
+                      progress: status.progressPercentage,
                       strokeWidth: 4,
+                      size: 40,
                       backgroundColor:
                           context.colors.primary.withValues(alpha: 0.2),
-                      valueColor: AlwaysStoppedAnimation(context.colors.primary),
+                      color: context.colors.primary,
                     ),
                   ),
                 ],

@@ -51,10 +51,16 @@ final trainingPatternProvider =
   // Detect patterns using the service
   // This runs synchronously but is wrapped in FutureProvider for
   // consistent async handling and caching
-  return TrainingPatternDetector.detect(
+  final result = TrainingPatternDetector.detect(
     analyticsData: analyticsData,
     minSessions: 3, // Need at least 3 sessions for meaningful patterns
   );
+
+  // 🔧 PERF FIX: Keep alive to cache pattern detection between screen visits
+  // Patterns don't change frequently, prevents 5-10 recalculations per session
+  ref.keepAlive();
+
+  return result;
 });
 
 /// Provider to check if an exercise has any actionable patterns

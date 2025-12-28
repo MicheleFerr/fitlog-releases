@@ -39,6 +39,7 @@ class LoadingIndicator extends StatelessWidget { // Se true, copre schermo con s
     this.style = LoadingStyle.circular,
     this.progress,
     this.color,
+    this.backgroundColor,
     this.size = 40,
     this.strokeWidth,
     this.overlay = false,
@@ -51,6 +52,7 @@ class LoadingIndicator extends StatelessWidget { // Se true, copre schermo con s
     this.style = LoadingStyle.circular,
     this.color,
   })  : progress = null,
+        backgroundColor = null,
         size = 40,
         strokeWidth = null,
         overlay = true;
@@ -61,6 +63,7 @@ class LoadingIndicator extends StatelessWidget { // Se true, copre schermo con s
     this.message,
     this.progress,
     this.color,
+    this.backgroundColor,
   })  : style = LoadingStyle.linear,
         size = 40,
         strokeWidth = null,
@@ -74,12 +77,14 @@ class LoadingIndicator extends StatelessWidget { // Se true, copre schermo con s
     this.size = 40,
   })  : style = LoadingStyle.adaptive,
         progress = null,
+        backgroundColor = null,
         strokeWidth = null,
         overlay = false;
   final String? message;
   final LoadingStyle style;
   final double? progress; // Per progress bar (0.0 - 1.0)
   final Color? color;
+  final Color? backgroundColor; // Background color for progress ring
   final double size;
   final double? strokeWidth; // Custom stroke width (default: 3 for large, 2 for small)
   final bool overlay;
@@ -140,28 +145,30 @@ class LoadingIndicator extends StatelessWidget { // Se true, copre schermo con s
               ? CircularProgressIndicator(
                   value: progress,
                   color: indicatorColor,
+                  backgroundColor: backgroundColor,
                   strokeWidth: effectiveStrokeWidth,
                 )
               : CircularProgressIndicator(
                   color: indicatorColor,
+                  backgroundColor: backgroundColor,
                   strokeWidth: effectiveStrokeWidth,
                 ),
         );
 
       case LoadingStyle.linear:
+        final effectiveBg = backgroundColor ??
+            context.colors.surfaceContainerHighest.withValues(alpha: 0.3);
         return SizedBox(
           width: 200,
           child: progress != null
               ? LinearProgressIndicator(
                   value: progress,
                   color: indicatorColor,
-                  backgroundColor:
-                      context.colors.surfaceContainerHighest.withValues(alpha: 0.3),
+                  backgroundColor: effectiveBg,
                 )
               : LinearProgressIndicator(
                   color: indicatorColor,
-                  backgroundColor:
-                      context.colors.surfaceContainerHighest.withValues(alpha: 0.3),
+                  backgroundColor: effectiveBg,
                 ),
         );
 

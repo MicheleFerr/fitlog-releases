@@ -5,6 +5,8 @@
 /// which workout to do today.
 library;
 
+import 'dart:async';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/features/exercise_database/domain/entities/exercise.dart';
@@ -84,6 +86,10 @@ final healthDataSnapshotProvider =
       debugPrint('  - HRV: ${hrvMs?.toStringAsFixed(0)}ms');
       debugPrint('  - Resting HR: ${restingHr?.toStringAsFixed(0)}bpm');
     }
+
+    // 🔧 PERF FIX: Cache for 5 minutes - health data doesn't change frequently
+    final link = ref.keepAlive();
+    Timer(const Duration(minutes: 5), link.close);
 
     return HealthDataSnapshot(
       sleepHoursLastNight: sleepHours,
@@ -343,7 +349,10 @@ final templateSuggestionProvider =
 /// Returns the template with the highest optimality score, or null if none.
 final bestTemplateProvider =
     Provider.autoDispose<TemplateStressAnalysis?>((ref) {
-  final analyses = ref.watch(templateSuggestionProvider).valueOrNull;
+  // 🔧 PERF FIX: Use .select() to only rebuild when analyses change
+  final analyses = ref.watch(
+    templateSuggestionProvider.select((async) => async.valueOrNull),
+  );
 
   if (analyses == null || analyses.isEmpty) return null;
 
@@ -354,7 +363,10 @@ final bestTemplateProvider =
 /// Provider for optimal templates (those marked as optimal)
 final optimalTemplatesProvider =
     Provider.autoDispose<List<TemplateStressAnalysis>>((ref) {
-  final analyses = ref.watch(templateSuggestionProvider).valueOrNull ?? [];
+  // 🔧 PERF FIX: Use .select() to only rebuild when analyses change
+  final analyses = ref.watch(
+    templateSuggestionProvider.select((async) => async.valueOrNull ?? []),
+  );
 
   return analyses
       .where((a) => a.recommendation == TemplateRecommendation.optimal)
@@ -364,7 +376,10 @@ final optimalTemplatesProvider =
 /// Provider for templates to avoid
 final templatesToAvoidProvider =
     Provider.autoDispose<List<TemplateStressAnalysis>>((ref) {
-  final analyses = ref.watch(templateSuggestionProvider).valueOrNull ?? [];
+  // 🔧 PERF FIX: Use .select() to only rebuild when analyses change
+  final analyses = ref.watch(
+    templateSuggestionProvider.select((async) => async.valueOrNull ?? []),
+  );
 
   return analyses
       .where((a) => a.recommendation == TemplateRecommendation.avoid)
@@ -373,14 +388,20 @@ final templatesToAvoidProvider =
 
 /// Provider for checking if template suggestion data is available
 final hasTemplateSuggestionDataProvider = Provider.autoDispose<bool>((ref) {
-  final analyses = ref.watch(templateSuggestionProvider).valueOrNull;
+  // 🔧 PERF FIX: Use .select() to only rebuild when analyses change
+  final analyses = ref.watch(
+    templateSuggestionProvider.select((async) => async.valueOrNull),
+  );
   return analyses != null && analyses.isNotEmpty;
 });
 
 /// Provider for calibration quality
 final calibrationQualityProvider =
     Provider.autoDispose<CalibrationQuality>((ref) {
-  final calibration = ref.watch(personalCalibrationProvider).valueOrNull;
+  // 🔧 PERF FIX: Use .select() to only rebuild when calibration changes
+  final calibration = ref.watch(
+    personalCalibrationProvider.select((async) => async.valueOrNull),
+  );
   return calibration?.quality ?? CalibrationQuality.poor;
 });
 
@@ -445,24 +466,36 @@ final stressInsightProvider =
 /// Provider for recovery recommendation only
 final recoveryRecommendationProvider =
     Provider.autoDispose<RecoveryRecommendation>((ref) {
-  final insight = ref.watch(stressInsightProvider).valueOrNull;
+  // 🔧 PERF FIX: Use .select() to only rebuild when insight changes
+  final insight = ref.watch(
+    stressInsightProvider.select((async) => async.valueOrNull),
+  );
   return insight?.recommendation ?? RecoveryRecommendation.readyHard;
 });
 
 /// Provider for predicted stress tomorrow (if resting)
 final predictedStressTomorrowProvider = Provider.autoDispose<int>((ref) {
-  final insight = ref.watch(stressInsightProvider).valueOrNull;
+  // 🔧 PERF FIX: Use .select() to only rebuild when insight changes
+  final insight = ref.watch(
+    stressInsightProvider.select((async) => async.valueOrNull),
+  );
   return insight?.displayPredicted ?? 0;
 });
 
 /// Provider for stress rationale
 final stressRationaleProvider = Provider.autoDispose<String>((ref) {
-  final insight = ref.watch(stressInsightProvider).valueOrNull;
+  // 🔧 PERF FIX: Use .select() to only rebuild when insight changes
+  final insight = ref.watch(
+    stressInsightProvider.select((async) => async.valueOrNull),
+  );
   return insight?.rationale ?? '';
 });
 
 /// Provider to check if training tomorrow is advisable
 final canTrainTomorrowProvider = Provider.autoDispose<bool>((ref) {
-  final insight = ref.watch(stressInsightProvider).valueOrNull;
+  // 🔧 PERF FIX: Use .select() to only rebuild when insight changes
+  final insight = ref.watch(
+    stressInsightProvider.select((async) => async.valueOrNull),
+  );
   return insight?.canTrainTomorrow ?? true;
 });
