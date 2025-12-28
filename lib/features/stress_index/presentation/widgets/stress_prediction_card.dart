@@ -18,6 +18,8 @@ library;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
+import 'package:gymbro_flutter_new/core/navigation/app_routes.dart';
 import 'package:gymbro_flutter_new/features/stress_index/domain/services/prediction_service.dart';
 import 'package:gymbro_flutter_new/features/stress_index/presentation/providers/template_suggestion_provider.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
@@ -503,30 +505,45 @@ class _StressPredictionContent extends StatelessWidget {
   }
 
   Widget _buildCalibrationHint(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(12),
-      decoration: BoxDecoration(
-        color: context.colors.primaryContainer.withValues(alpha: 0.3),
+    return Material(
+      color: context.colors.primaryContainer.withValues(alpha: 0.3),
+      borderRadius: BorderRadius.circular(12),
+      child: InkWell(
+        onTap: () {
+          HapticFeedback.lightImpact();
+          // Navigate to Edit Profile screen to complete fitness questionnaire
+          context.pushNamed(AppRoutes.editProfileName);
+        },
         borderRadius: BorderRadius.circular(12),
-      ),
-      child: Row(
-        children: [
-          SemanticIcon(
-            icon: AppIcons.infoOutline,
-            semanticLabel: 'Hint',
-            color: context.colors.primary,
-            size: AppIconSize.small,
-          ),
-          const SizedBox(width: 8),
-          Expanded(
-            child: Text(
-              context.l10n.stressPredictionCalibrationHint,
-              style: context.textTheme.bodySmall?.copyWith(
+        child: Padding(
+          padding: const EdgeInsets.all(12),
+          child: Row(
+            children: [
+              SemanticIcon(
+                icon: AppIcons.infoOutline,
+                semanticLabel: 'Hint',
                 color: context.colors.primary,
+                size: AppIconSize.small,
               ),
-            ),
+              const SizedBox(width: 8),
+              Expanded(
+                child: Text(
+                  context.l10n.stressPredictionCalibrationHint,
+                  style: context.textTheme.bodySmall?.copyWith(
+                    color: context.colors.primary,
+                  ),
+                ),
+              ),
+              // Arrow icon to indicate it's tappable
+              SemanticIcon(
+                icon: AppIcons.chevronRight,
+                semanticLabel: context.l10n.editProfile,
+                color: context.colors.primary,
+                size: AppIconSize.small,
+              ),
+            ],
           ),
-        ],
+        ),
       ),
     );
   }
