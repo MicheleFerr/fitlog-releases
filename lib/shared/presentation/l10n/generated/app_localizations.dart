@@ -15188,10 +15188,10 @@ abstract class AppLocalizations {
   /// **'The system will automatically create your account\nif it\'s your first time logging in'**
   String get autoAccountCreation;
 
-  /// OR divider text between sections
+  /// Divider text between options
   ///
   /// In en, this message translates to:
-  /// **'OR'**
+  /// **'or'**
   String get orDivider;
 
   /// Full name field label
@@ -33540,7 +33540,7 @@ abstract class AppLocalizations {
   /// **'Weekly Statistics'**
   String get weeklyStatistics;
 
-  /// Label for completed workouts count
+  /// Stat label for completed workouts
   ///
   /// In en, this message translates to:
   /// **'Workouts completed'**
@@ -43033,6 +43033,306 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Achievements'**
   String get exportCategoryAchievements;
+
+  /// Generic athlete label
+  ///
+  /// In en, this message translates to:
+  /// **'Athlete'**
+  String get athlete;
+
+  /// Athletes list title
+  ///
+  /// In en, this message translates to:
+  /// **'Athletes'**
+  String get athletes;
+
+  /// Workout not started yet
+  ///
+  /// In en, this message translates to:
+  /// **'Not started'**
+  String get notStarted;
+
+  /// The 6-character coach code
+  ///
+  /// In en, this message translates to:
+  /// **'Coach Code'**
+  String get coachCode;
+
+  /// Label for coach code display
+  ///
+  /// In en, this message translates to:
+  /// **'Your coach code'**
+  String get yourCoachCode;
+
+  /// Button to share coach code
+  ///
+  /// In en, this message translates to:
+  /// **'Share Code'**
+  String get shareCode;
+
+  /// Button to copy coach code
+  ///
+  /// In en, this message translates to:
+  /// **'Copy Code'**
+  String get copyCode;
+
+  /// Confirmation message when code is copied
+  ///
+  /// In en, this message translates to:
+  /// **'Code copied to clipboard'**
+  String get codeCopied;
+
+  /// Placeholder for coach code input
+  ///
+  /// In en, this message translates to:
+  /// **'Enter coach code'**
+  String get enterCoachCode;
+
+  /// Button to link to a coach
+  ///
+  /// In en, this message translates to:
+  /// **'Link to Coach'**
+  String get linkToCoach;
+
+  /// Message when coach code is valid
+  ///
+  /// In en, this message translates to:
+  /// **'Coach found!'**
+  String get coachFound;
+
+  /// Error when coach code is not valid
+  ///
+  /// In en, this message translates to:
+  /// **'Invalid coach code'**
+  String get invalidCoachCode;
+
+  /// Button to add new athlete
+  ///
+  /// In en, this message translates to:
+  /// **'Add Athlete'**
+  String get addAthlete;
+
+  /// Search field placeholder
+  ///
+  /// In en, this message translates to:
+  /// **'Search athlete...'**
+  String get searchAthlete;
+
+  /// Filter chip for all athletes
+  ///
+  /// In en, this message translates to:
+  /// **'All'**
+  String get allAthletes;
+
+  /// Filter chip for active athletes
+  ///
+  /// In en, this message translates to:
+  /// **'Active'**
+  String get activeAthletes;
+
+  /// Filter chip for paused athletes
+  ///
+  /// In en, this message translates to:
+  /// **'Paused'**
+  String get pausedAthletes;
+
+  /// Section header for athletes currently training
+  ///
+  /// In en, this message translates to:
+  /// **'In Training'**
+  String get inTraining;
+
+  /// Section header for athletes with workout scheduled
+  ///
+  /// In en, this message translates to:
+  /// **'Workout Today'**
+  String get workoutToday;
+
+  /// Button to view all athletes
+  ///
+  /// In en, this message translates to:
+  /// **'View all ({count})'**
+  String viewAllAthletes(int count);
+
+  /// Today's stats section header
+  ///
+  /// In en, this message translates to:
+  /// **'Today'**
+  String get todayStats;
+
+  /// Stat label for athletes in training now
+  ///
+  /// In en, this message translates to:
+  /// **'Currently training'**
+  String get currentlyTraining;
+
+  /// Stat label for athletes needing program
+  ///
+  /// In en, this message translates to:
+  /// **'To plan'**
+  String get toPlan;
+
+  /// Coach todo list section
+  ///
+  /// In en, this message translates to:
+  /// **'To do'**
+  String get todoList;
+
+  /// Share dialog title
+  ///
+  /// In en, this message translates to:
+  /// **'Share your coach code'**
+  String get shareCodeVia;
+
+  /// Message when sharing coach code
+  ///
+  /// In en, this message translates to:
+  /// **'Join me on FitLog! Use my coach code: {code}'**
+  String shareCodeMessage(String code);
+
+  /// Title for coach mode screens
+  ///
+  /// In en, this message translates to:
+  /// **'Coach Mode'**
+  String get coachModeTitle;
+
+  /// Shows which coach the athlete is linked to
+  ///
+  /// In en, this message translates to:
+  /// **'Linked to: {coachName}'**
+  String linkedToCoach(String coachName);
+
+  /// Empty state message for athletes list
+  ///
+  /// In en, this message translates to:
+  /// **'No athletes yet'**
+  String get noAthletesYet;
+
+  /// Empty state hint for athletes list
+  ///
+  /// In en, this message translates to:
+  /// **'Share your coach code to add athletes'**
+  String get addYourFirstAthlete;
+
+  /// Coach dashboard title
+  ///
+  /// In en, this message translates to:
+  /// **'Dashboard'**
+  String get coachDashboard;
+
+  /// Account mode section title
+  ///
+  /// In en, this message translates to:
+  /// **'Account Mode'**
+  String get accountMode;
+
+  /// Solo account mode - training alone
+  ///
+  /// In en, this message translates to:
+  /// **'Personal'**
+  String get accountModeSolo;
+
+  /// Coach account mode - managing athletes
+  ///
+  /// In en, this message translates to:
+  /// **'Coach'**
+  String get accountModeCoach;
+
+  /// Coached account mode - training with a coach
+  ///
+  /// In en, this message translates to:
+  /// **'With Coach'**
+  String get accountModeCoached;
+
+  /// Button to enable coach mode
+  ///
+  /// In en, this message translates to:
+  /// **'Become a Coach'**
+  String get becomeCoach;
+
+  /// Button to link with a coach
+  ///
+  /// In en, this message translates to:
+  /// **'Find a Coach'**
+  String get findCoach;
+
+  /// Button to open coach dashboard
+  ///
+  /// In en, this message translates to:
+  /// **'Manage Athletes'**
+  String get manageAthletes;
+
+  /// Button to view linked coach
+  ///
+  /// In en, this message translates to:
+  /// **'View Coach'**
+  String get viewCoach;
+
+  /// Button to switch back to solo mode
+  ///
+  /// In en, this message translates to:
+  /// **'Switch to Personal'**
+  String get switchToPersonal;
+
+  /// Snackbar when coach mode is activated
+  ///
+  /// In en, this message translates to:
+  /// **'Coach mode enabled'**
+  String get coachModeEnabled;
+
+  /// Snackbar when solo mode is activated
+  ///
+  /// In en, this message translates to:
+  /// **'Personal mode enabled'**
+  String get soloModeEnabled;
+
+  /// Confirm dialog title
+  ///
+  /// In en, this message translates to:
+  /// **'Switch Account Mode?'**
+  String get confirmSwitchMode;
+
+  /// Confirm dialog message
+  ///
+  /// In en, this message translates to:
+  /// **'You are about to switch your account mode. This will change how you use the app.'**
+  String get confirmSwitchModeMessage;
+
+  /// Coach code sharing instruction
+  ///
+  /// In en, this message translates to:
+  /// **'Share this code with your athletes'**
+  String get shareCodeWithAthletes;
+
+  /// Prompt to generate coach code
+  ///
+  /// In en, this message translates to:
+  /// **'Generate your coach code'**
+  String get generateCoachCode;
+
+  /// Instructions for athlete to join
+  ///
+  /// In en, this message translates to:
+  /// **'The athlete downloads FitLog and enters your coach code'**
+  String get athleteDownloadsApp;
+
+  /// Button to create athlete profile manually
+  ///
+  /// In en, this message translates to:
+  /// **'Create manual profile'**
+  String get createManualProfile;
+
+  /// Description for manual profile creation
+  ///
+  /// In en, this message translates to:
+  /// **'For athletes who won\'t use the app independently. You\'ll record their workouts.'**
+  String get forAthletesNotUsingApp;
+
+  /// Button to create profile
+  ///
+  /// In en, this message translates to:
+  /// **'Create profile'**
+  String get createProfile;
 }
 
 class _AppLocalizationsDelegate

@@ -392,6 +392,9 @@ class AppIcons {
   /// 🔗⛔ Link off (disconnected)
   static const IconData linkOff = Icons.link_off;
 
+  /// 📱 QR Code
+  static const IconData qrCode = Icons.qr_code;
+
   /// ⌚ Apple Watch
   static const IconData watch = Icons.watch;
 

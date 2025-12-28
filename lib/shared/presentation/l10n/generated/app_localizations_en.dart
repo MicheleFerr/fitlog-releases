@@ -8474,7 +8474,7 @@ class AppLocalizationsEn extends AppLocalizations {
       'The system will automatically create your account\nif it\'s your first time logging in';
 
   @override
-  String get orDivider => 'OR';
+  String get orDivider => 'or';
 
   @override
   String get fullName => 'Full Name';
@@ -24110,4 +24110,163 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get exportCategoryAchievements => 'Achievements';
+
+  @override
+  String get athlete => 'Athlete';
+
+  @override
+  String get athletes => 'Athletes';
+
+  @override
+  String get notStarted => 'Not started';
+
+  @override
+  String get coachCode => 'Coach Code';
+
+  @override
+  String get yourCoachCode => 'Your coach code';
+
+  @override
+  String get shareCode => 'Share Code';
+
+  @override
+  String get copyCode => 'Copy Code';
+
+  @override
+  String get codeCopied => 'Code copied to clipboard';
+
+  @override
+  String get enterCoachCode => 'Enter coach code';
+
+  @override
+  String get linkToCoach => 'Link to Coach';
+
+  @override
+  String get coachFound => 'Coach found!';
+
+  @override
+  String get invalidCoachCode => 'Invalid coach code';
+
+  @override
+  String get addAthlete => 'Add Athlete';
+
+  @override
+  String get searchAthlete => 'Search athlete...';
+
+  @override
+  String get allAthletes => 'All';
+
+  @override
+  String get activeAthletes => 'Active';
+
+  @override
+  String get pausedAthletes => 'Paused';
+
+  @override
+  String get inTraining => 'In Training';
+
+  @override
+  String get workoutToday => 'Workout Today';
+
+  @override
+  String viewAllAthletes(int count) {
+    return 'View all ($count)';
+  }
+
+  @override
+  String get todayStats => 'Today';
+
+  @override
+  String get currentlyTraining => 'Currently training';
+
+  @override
+  String get toPlan => 'To plan';
+
+  @override
+  String get todoList => 'To do';
+
+  @override
+  String get shareCodeVia => 'Share your coach code';
+
+  @override
+  String shareCodeMessage(String code) {
+    return 'Join me on FitLog! Use my coach code: $code';
+  }
+
+  @override
+  String get coachModeTitle => 'Coach Mode';
+
+  @override
+  String linkedToCoach(String coachName) {
+    return 'Linked to: $coachName';
+  }
+
+  @override
+  String get noAthletesYet => 'No athletes yet';
+
+  @override
+  String get addYourFirstAthlete => 'Share your coach code to add athletes';
+
+  @override
+  String get coachDashboard => 'Dashboard';
+
+  @override
+  String get accountMode => 'Account Mode';
+
+  @override
+  String get accountModeSolo => 'Personal';
+
+  @override
+  String get accountModeCoach => 'Coach';
+
+  @override
+  String get accountModeCoached => 'With Coach';
+
+  @override
+  String get becomeCoach => 'Become a Coach';
+
+  @override
+  String get findCoach => 'Find a Coach';
+
+  @override
+  String get manageAthletes => 'Manage Athletes';
+
+  @override
+  String get viewCoach => 'View Coach';
+
+  @override
+  String get switchToPersonal => 'Switch to Personal';
+
+  @override
+  String get coachModeEnabled => 'Coach mode enabled';
+
+  @override
+  String get soloModeEnabled => 'Personal mode enabled';
+
+  @override
+  String get confirmSwitchMode => 'Switch Account Mode?';
+
+  @override
+  String get confirmSwitchModeMessage =>
+      'You are about to switch your account mode. This will change how you use the app.';
+
+  @override
+  String get shareCodeWithAthletes => 'Share this code with your athletes';
+
+  @override
+  String get generateCoachCode => 'Generate your coach code';
+
+  @override
+  String get athleteDownloadsApp =>
+      'The athlete downloads FitLog and enters your coach code';
+
+  @override
+  String get createManualProfile => 'Create manual profile';
+
+  @override
+  String get forAthletesNotUsingApp =>
+      'For athletes who won\'t use the app independently. You\'ll record their workouts.';
+
+  @override
+  String get createProfile => 'Create profile';
 }

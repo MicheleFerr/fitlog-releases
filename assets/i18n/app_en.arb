@@ -29853,5 +29853,229 @@
   "exportCategoryAchievements": "Achievements",
   "@exportCategoryAchievements": {
     "description": "Achievements export category"
+  },
+
+  "athlete": "Athlete",
+  "@athlete": {
+    "description": "Generic athlete label"
+  },
+  "athletes": "Athletes",
+  "@athletes": {
+    "description": "Athletes list title"
+  },
+  "notStarted": "Not started",
+  "@notStarted": {
+    "description": "Workout not started yet"
+  },
+  "coachCode": "Coach Code",
+  "@coachCode": {
+    "description": "The 6-character coach code"
+  },
+  "yourCoachCode": "Your coach code",
+  "@yourCoachCode": {
+    "description": "Label for coach code display"
+  },
+  "shareCode": "Share Code",
+  "@shareCode": {
+    "description": "Button to share coach code"
+  },
+  "copyCode": "Copy Code",
+  "@copyCode": {
+    "description": "Button to copy coach code"
+  },
+  "codeCopied": "Code copied to clipboard",
+  "@codeCopied": {
+    "description": "Confirmation message when code is copied"
+  },
+  "enterCoachCode": "Enter coach code",
+  "@enterCoachCode": {
+    "description": "Placeholder for coach code input"
+  },
+  "linkToCoach": "Link to Coach",
+  "@linkToCoach": {
+    "description": "Button to link to a coach"
+  },
+  "coachFound": "Coach found!",
+  "@coachFound": {
+    "description": "Message when coach code is valid"
+  },
+  "invalidCoachCode": "Invalid coach code",
+  "@invalidCoachCode": {
+    "description": "Error when coach code is not valid"
+  },
+  "addAthlete": "Add Athlete",
+  "@addAthlete": {
+    "description": "Button to add new athlete"
+  },
+  "searchAthlete": "Search athlete...",
+  "@searchAthlete": {
+    "description": "Search field placeholder"
+  },
+  "allAthletes": "All",
+  "@allAthletes": {
+    "description": "Filter chip for all athletes"
+  },
+  "activeAthletes": "Active",
+  "@activeAthletes": {
+    "description": "Filter chip for active athletes"
+  },
+  "pausedAthletes": "Paused",
+  "@pausedAthletes": {
+    "description": "Filter chip for paused athletes"
+  },
+  "inTraining": "In Training",
+  "@inTraining": {
+    "description": "Section header for athletes currently training"
+  },
+  "workoutToday": "Workout Today",
+  "@workoutToday": {
+    "description": "Section header for athletes with workout scheduled"
+  },
+  "viewAllAthletes": "View all ({count})",
+  "@viewAllAthletes": {
+    "description": "Button to view all athletes",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "todayStats": "Today",
+  "@todayStats": {
+    "description": "Today's stats section header"
+  },
+  "workoutsCompleted": "Workouts completed",
+  "@workoutsCompleted": {
+    "description": "Stat label for completed workouts"
+  },
+  "currentlyTraining": "Currently training",
+  "@currentlyTraining": {
+    "description": "Stat label for athletes in training now"
+  },
+  "toPlan": "To plan",
+  "@toPlan": {
+    "description": "Stat label for athletes needing program"
+  },
+  "todoList": "To do",
+  "@todoList": {
+    "description": "Coach todo list section"
+  },
+  "shareCodeVia": "Share your coach code",
+  "@shareCodeVia": {
+    "description": "Share dialog title"
+  },
+  "shareCodeMessage": "Join me on FitLog! Use my coach code: {code}",
+  "@shareCodeMessage": {
+    "description": "Message when sharing coach code",
+    "placeholders": {
+      "code": {
+        "type": "String"
+      }
+    }
+  },
+  "coachModeTitle": "Coach Mode",
+  "@coachModeTitle": {
+    "description": "Title for coach mode screens"
+  },
+  "linkedToCoach": "Linked to: {coachName}",
+  "@linkedToCoach": {
+    "description": "Shows which coach the athlete is linked to",
+    "placeholders": {
+      "coachName": {
+        "type": "String"
+      }
+    }
+  },
+  "noAthletesYet": "No athletes yet",
+  "@noAthletesYet": {
+    "description": "Empty state message for athletes list"
+  },
+  "addYourFirstAthlete": "Share your coach code to add athletes",
+  "@addYourFirstAthlete": {
+    "description": "Empty state hint for athletes list"
+  },
+  "coachDashboard": "Dashboard",
+  "@coachDashboard": {
+    "description": "Coach dashboard title"
+  },
+  "accountMode": "Account Mode",
+  "@accountMode": {
+    "description": "Account mode section title"
+  },
+  "accountModeSolo": "Personal",
+  "@accountModeSolo": {
+    "description": "Solo account mode - training alone"
+  },
+  "accountModeCoach": "Coach",
+  "@accountModeCoach": {
+    "description": "Coach account mode - managing athletes"
+  },
+  "accountModeCoached": "With Coach",
+  "@accountModeCoached": {
+    "description": "Coached account mode - training with a coach"
+  },
+  "becomeCoach": "Become a Coach",
+  "@becomeCoach": {
+    "description": "Button to enable coach mode"
+  },
+  "findCoach": "Find a Coach",
+  "@findCoach": {
+    "description": "Button to link with a coach"
+  },
+  "manageAthletes": "Manage Athletes",
+  "@manageAthletes": {
+    "description": "Button to open coach dashboard"
+  },
+  "viewCoach": "View Coach",
+  "@viewCoach": {
+    "description": "Button to view linked coach"
+  },
+  "switchToPersonal": "Switch to Personal",
+  "@switchToPersonal": {
+    "description": "Button to switch back to solo mode"
+  },
+  "coachModeEnabled": "Coach mode enabled",
+  "@coachModeEnabled": {
+    "description": "Snackbar when coach mode is activated"
+  },
+  "soloModeEnabled": "Personal mode enabled",
+  "@soloModeEnabled": {
+    "description": "Snackbar when solo mode is activated"
+  },
+  "confirmSwitchMode": "Switch Account Mode?",
+  "@confirmSwitchMode": {
+    "description": "Confirm dialog title"
+  },
+  "confirmSwitchModeMessage": "You are about to switch your account mode. This will change how you use the app.",
+  "@confirmSwitchModeMessage": {
+    "description": "Confirm dialog message"
+  },
+  "shareCodeWithAthletes": "Share this code with your athletes",
+  "@shareCodeWithAthletes": {
+    "description": "Coach code sharing instruction"
+  },
+  "generateCoachCode": "Generate your coach code",
+  "@generateCoachCode": {
+    "description": "Prompt to generate coach code"
+  },
+  "orDivider": "or",
+  "@orDivider": {
+    "description": "Divider text between options"
+  },
+  "athleteDownloadsApp": "The athlete downloads FitLog and enters your coach code",
+  "@athleteDownloadsApp": {
+    "description": "Instructions for athlete to join"
+  },
+  "createManualProfile": "Create manual profile",
+  "@createManualProfile": {
+    "description": "Button to create athlete profile manually"
+  },
+  "forAthletesNotUsingApp": "For athletes who won't use the app independently. You'll record their workouts.",
+  "@forAthletesNotUsingApp": {
+    "description": "Description for manual profile creation"
+  },
+  "createProfile": "Create profile",
+  "@createProfile": {
+    "description": "Button to create profile"
   }
 }

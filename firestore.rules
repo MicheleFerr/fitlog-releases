@@ -318,44 +318,52 @@ service cloud.firestore {
     // ============= COACH NOTIFICATIONS =============
     match /coachNotifications/{notificationId} {
       // Il coach può leggere le proprie notifiche usando l'email
-      allow read: if request.auth != null && 
+      allow read: if request.auth != null &&
         request.auth.token.email == resource.data.coachEmail;
-      
+
       // Permettere list/query per le proprie notifiche
-      allow list: if request.auth != null && 
+      allow list: if request.auth != null &&
         request.auth.token.email != null;
-      
-      // Qualsiasi utente autenticato può creare notifiche
-      allow create: if request.auth != null;
-      
+
+      // Solo l'atleta mittente può creare notifiche per il proprio coach
+      // Validazione: l'email del mittente deve corrispondere all'utente autenticato
+      allow create: if request.auth != null &&
+        request.resource.data.athleteEmail == request.auth.token.email &&
+        request.resource.data.coachEmail != null &&
+        request.resource.data.type != null;
+
       // Solo il coach destinatario può aggiornare (per marcare come letta)
-      allow update: if request.auth != null && 
+      allow update: if request.auth != null &&
         request.auth.token.email == resource.data.coachEmail;
-      
+
       // Solo il coach può eliminare le proprie notifiche
-      allow delete: if request.auth != null && 
+      allow delete: if request.auth != null &&
         request.auth.token.email == resource.data.coachEmail;
     }
 
     // ============= ATHLETE NOTIFICATIONS =============
     match /athleteNotifications/{notificationId} {
       // L'atleta può leggere le proprie notifiche usando l'email
-      allow read: if request.auth != null && 
+      allow read: if request.auth != null &&
         request.auth.token.email == resource.data.athleteEmail;
-      
+
       // Permettere list/query per le proprie notifiche
-      allow list: if request.auth != null && 
+      allow list: if request.auth != null &&
         request.auth.token.email != null;
-      
-      // Qualsiasi utente autenticato può creare notifiche
-      allow create: if request.auth != null;
-      
+
+      // Solo il coach mittente può creare notifiche per i propri atleti
+      // Validazione: l'email del mittente deve corrispondere all'utente autenticato
+      allow create: if request.auth != null &&
+        request.resource.data.coachEmail == request.auth.token.email &&
+        request.resource.data.athleteEmail != null &&
+        request.resource.data.type != null;
+
       // Solo l'atleta destinatario può aggiornare (per marcare come letta)
-      allow update: if request.auth != null && 
+      allow update: if request.auth != null &&
         request.auth.token.email == resource.data.athleteEmail;
-      
+
       // Solo l'atleta può eliminare le proprie notifiche
-      allow delete: if request.auth != null && 
+      allow delete: if request.auth != null &&
         request.auth.token.email == resource.data.athleteEmail;
     }
 

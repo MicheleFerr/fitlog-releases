@@ -24,6 +24,7 @@ import 'package:gymbro_flutter_new/features/profile/presentation/widgets/modern_
 import 'package:gymbro_flutter_new/features/profile/presentation/widgets/weekly_workout_calendar.dart';
 import 'package:gymbro_flutter_new/features/profile/presentation/widgets/settings_bottom_sheet.dart';
 import 'package:gymbro_flutter_new/features/profile/presentation/widgets/weekly_stats_bottom_sheet.dart';
+import 'package:gymbro_flutter_new/features/profile/presentation/widgets/account_mode_section.dart';
 import 'package:gymbro_flutter_new/features/profile/presentation/providers/user_goals_provider.dart';
 import 'package:gymbro_flutter_new/features/history/presentation/widgets/workout_detail_modal.dart';
 
@@ -75,6 +76,17 @@ class _ProfileHubContent extends ConsumerWidget {
               onSettingsTap: () => showSettingsBottomSheet(context),
               onEditTap: () => context.pushNamed(AppRoutes.editProfileName),
             ),
+          ),
+
+          // Account mode section (Solo/Coach/Coached)
+          const SliverToBoxAdapter(
+            child: SizedBox(height: 16),
+          ),
+          const SliverToBoxAdapter(
+            child: AccountModeSection(),
+          ),
+          const SliverToBoxAdapter(
+            child: SizedBox(height: 16),
           ),
 
           // Metric ring cards

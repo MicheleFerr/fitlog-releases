@@ -85,6 +85,11 @@ import 'package:gymbro_flutter_new/features/premium/presentation/screens/simple_
 import 'package:gymbro_flutter_new/features/exercise_merge/presentation/screens/exercise_merge_screen.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator.dart';
 
+// Coach
+import 'package:gymbro_flutter_new/features/coach/presentation/screens/coach_dashboard_screen.dart';
+import 'package:gymbro_flutter_new/features/coach/presentation/screens/athletes_list_screen.dart';
+import 'package:gymbro_flutter_new/features/coach/presentation/screens/link_coach_screen.dart';
+
 // Other routes
 import 'package:gymbro_flutter_new/features/admin/presentation/screens/admin_analytics_dashboard_screen.dart';
 import 'package:gymbro_flutter_new/tools/import_exercises_screen.dart';
@@ -427,6 +432,26 @@ final appRouterProvider = Provider<GoRouter>((ref) {
                     path: 'exercise-merge',
                     name: AppRoutes.exerciseMergeName,
                     builder: (context, state) => const ExerciseMergeScreen(),
+                  ),
+                  // Coach dashboard (for users in coach mode)
+                  GoRoute(
+                    path: 'coach',
+                    name: AppRoutes.coachDashboardName,
+                    builder: (context, state) => const CoachDashboardScreen(),
+                    routes: [
+                      // Athletes list
+                      GoRoute(
+                        path: 'athletes',
+                        name: AppRoutes.athletesListName,
+                        builder: (context, state) => const AthletesListScreen(),
+                      ),
+                    ],
+                  ),
+                  // Link to coach (for athletes to enter coach code)
+                  GoRoute(
+                    path: 'link-coach',
+                    name: AppRoutes.linkCoachName,
+                    builder: (context, state) => const LinkCoachScreen(),
                   ),
                 ],
               ),

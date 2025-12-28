@@ -185,6 +185,22 @@ abstract final class AppRoutes {
   static const String exerciseMergeName = 'exercise-merge';
 
   // ═══════════════════════════════════════════════════════════════════════════
+  // Coach Mode Routes
+  // ═══════════════════════════════════════════════════════════════════════════
+
+  /// Coach dashboard - main hub for coaches
+  static const String coachDashboardPath = '/profile/coach';
+  static const String coachDashboardName = 'coach-dashboard';
+
+  /// Athletes list - all athletes for a coach
+  static const String athletesListPath = '/profile/coach/athletes';
+  static const String athletesListName = 'athletes-list';
+
+  /// Link to coach - for athletes to enter coach code
+  static const String linkCoachPath = '/profile/link-coach';
+  static const String linkCoachName = 'link-coach';
+
+  // ═══════════════════════════════════════════════════════════════════════════
   // Branch Index Mapping (for StatefulShellRoute)
   // ═══════════════════════════════════════════════════════════════════════════
 
