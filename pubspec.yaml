@@ -202,7 +202,7 @@ flutter:
     - assets/data/
     - assets/data/exercises/
     - assets/data/exercises_en/
-    - .env  # 🔐 SECURITY: Environment variables (gitignored)
+    # NOTE: .env removed from assets for security - credentials loaded at build time
 
   # Enable generation of the app_localizations.dart file
   generate: true
