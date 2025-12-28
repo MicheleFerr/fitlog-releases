@@ -301,6 +301,44 @@ service cloud.firestore {
       }
     }
 
+    // ============= COACH TEMPLATES =============
+    // Templates created by coaches to assign to athletes
+    // Collection: coachTemplates/{templateId}
+    match /coachTemplates/{templateId} {
+      // Helper: Check if user is the template owner
+      function isTemplateOwner() {
+        return request.auth.uid == resource.data.coachId;
+      }
+
+      // Helper: Check if user is assigned to the template
+      function isAssignedAthlete() {
+        return request.auth.uid in resource.data.assignedTo;
+      }
+
+      // LIST: Coaches can list their own templates
+      allow list: if isAuthenticated();
+
+      // GET: Coach can read own template, athletes can read assigned templates
+      allow get: if isAuthenticated() && (
+        resource == null ||  // Document doesn't exist
+        resource.data.coachId == request.auth.uid ||  // Owner
+        (resource.data.assignedTo != null && request.auth.uid in resource.data.assignedTo)  // Assigned athlete
+      );
+
+      // CREATE: Coaches can create templates for themselves
+      allow create: if isAuthenticated()
+        && request.resource.data.coachId == request.auth.uid
+        && request.resource.data.keys().hasAll(['coachId', 'name', 'exercises', 'createdAt']);
+
+      // UPDATE: Only the coach owner can update
+      allow update: if isAuthenticated()
+        && resource.data.coachId == request.auth.uid
+        && request.resource.data.coachId == resource.data.coachId;  // Cannot change owner
+
+      // DELETE: Only the coach owner can delete
+      allow delete: if isAuthenticated() && resource.data.coachId == request.auth.uid;
+    }
+
     // ============= COACH DELEGATIONS =============
     match /coach_delegations/{delegationId} {
       allow read: if request.auth != null &&
@@ -1357,6 +1395,43 @@ service cloud.firestore {
     // HRV Readings - Heart Rate Variability health data
     match /users/{userId}/hrv_readings/{readingId} {
       allow read, write: if isAuthenticated() && isOwner(userId);
+    }
+
+    // ============= ASSIGNED TEMPLATES (COACH FEATURE) =============
+    // Templates assigned by coaches to athletes
+    // Subcollection: users/{athleteId}/assignedTemplates/{templateId}
+    // Added: 2025-12-28 - Fix for permission denied on coach template assignments
+    match /users/{userId}/assignedTemplates/{templateId} {
+      // Helper: Check if caller is the coach who assigned this template
+      function isAssigningCoach() {
+        return resource.data.coachId == request.auth.uid;
+      }
+
+      // READ: Athlete can read own assigned templates, coach can read templates they assigned
+      allow read: if isAuthenticated() && (
+        isOwner(userId) ||  // Athlete (owner of subcollection)
+        (resource.data.coachId != null && resource.data.coachId == request.auth.uid)  // Assigning coach
+      );
+
+      // LIST: Athlete can list own assigned templates
+      allow list: if isAuthenticated() && isOwner(userId);
+
+      // CREATE: Coach can assign templates to athletes they coach
+      // Validation: coachId must match caller, templateId must be provided
+      allow create: if isAuthenticated()
+        && request.resource.data.coachId == request.auth.uid
+        && request.resource.data.keys().hasAll(['coachId', 'templateId', 'assignedAt']);
+
+      // UPDATE: Coach can update assigned template details
+      allow update: if isAuthenticated()
+        && resource.data.coachId == request.auth.uid
+        && request.resource.data.coachId == resource.data.coachId;  // Cannot change coach
+
+      // DELETE: Coach can unassign, or athlete can remove from their list
+      allow delete: if isAuthenticated() && (
+        isOwner(userId) ||  // Athlete can remove
+        resource.data.coachId == request.auth.uid  // Coach can unassign
+      );
     }
 
     // ============= TOP-LEVEL COLLECTIONS WITH USERID (HIGH PRIORITY) =============
