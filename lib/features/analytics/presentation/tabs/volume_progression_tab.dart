@@ -12,6 +12,7 @@
 library;
 
 import 'dart:io';
+import 'dart:math' as math;
 import 'dart:ui' as ui;
 
 import 'package:fl_chart/fl_chart.dart';
@@ -392,55 +393,80 @@ class _VolumeProgressionTabState extends State<VolumeProgressionTab> {
         children: [
           SizedBox(
             height: 280,
-            child: RadarChart(
-              RadarChartData(
-                dataSets: radarData,
-                radarBackgroundColor: colorScheme.surface.withValues(alpha: 0),
-                borderData: FlBorderData(show: false),
-                radarBorderData: BorderSide(
-                  color: colorScheme.outline.withValues(alpha: 0.3),
-                ),
-                titlePositionPercentageOffset: 0.2,
-                titleTextStyle: context.textTheme.labelSmall?.copyWith(
-                  color: colorScheme.onSurfaceVariant,
-                  fontWeight: FontWeight.bold,
-                ),
-                getTitle: (index, angle) {
-                  final muscle = muscles[index];
-                  final sets = data.muscleVolumes[muscle] ?? 0;
-                  return RadarChartTitle(
-                    text: '${_getMuscleShortName(context, muscle)}\n$sets',
-                  );
-                },
-                tickCount: 4,
-                ticksTextStyle: context.textTheme.labelSmall?.copyWith(
-                  color: colorScheme.onSurfaceVariant.withValues(alpha: 0.5),
-                  fontSize: 8,
-                ),
-                tickBorderData: BorderSide(
-                  color: colorScheme.outline.withValues(alpha: 0.2),
-                ),
-                gridBorderData: BorderSide(
-                  color: colorScheme.outline.withValues(alpha: 0.3),
-                  width: 1,
-                ),
-                radarTouchData: RadarTouchData(
-                  enabled: true,
-                  touchCallback: (event, response) {
-                    if (response != null && response.touchedSpot != null) {
-                      setState(() {
-                        _touchedRadarIndex = response.touchedSpot!.touchedRadarEntryIndex;
-                      });
-                      // Show tooltip
-                      if (event is FlTapUpEvent) {
-                        _showMuscleTooltip(context, data, _touchedRadarIndex);
-                      }
-                    }
-                  },
-                ),
-              ),
-              duration: const Duration(milliseconds: 400),
-              curve: Curves.easeInOutCubic,
+            child: LayoutBuilder(
+              builder: (context, constraints) {
+                final size = constraints.biggest;
+                final chartSize = size.shortestSide * 0.85; // Match radar padding
+                return Stack(
+                  alignment: Alignment.center,
+                  children: [
+                    // Zone rings background
+                    CustomPaint(
+                      size: Size(chartSize, chartSize),
+                      painter: _VolumeZoneRingsPainter(
+                        numPoints: muscles.length,
+                        errorColor: colorScheme.error,
+                        tertiaryColor: colorScheme.tertiary,
+                        primaryColor: colorScheme.primary,
+                        successColor: colorScheme.success,
+                      ),
+                    ),
+                    // Actual radar chart
+                    RadarChart(
+                      RadarChartData(
+                        dataSets: radarData,
+                        radarBackgroundColor: Colors.transparent,
+                        borderData: FlBorderData(show: false),
+                        radarBorderData: BorderSide(
+                          color: colorScheme.outline.withValues(alpha: 0.3),
+                        ),
+                        titlePositionPercentageOffset: 0.2,
+                        titleTextStyle: context.textTheme.labelSmall?.copyWith(
+                          color: colorScheme.onSurfaceVariant,
+                          fontWeight: FontWeight.bold,
+                        ),
+                        getTitle: (index, angle) {
+                          final muscle = muscles[index];
+                          final sets = data.muscleVolumes[muscle] ?? 0;
+                          final zone = VolumeAnalyzer.getVolumeZone(sets, muscle);
+                          final icon = _getZoneIcon(zone);
+                          return RadarChartTitle(
+                            text: '$icon ${_getMuscleShortName(context, muscle)}\n$sets',
+                          );
+                        },
+                        tickCount: 4,
+                        ticksTextStyle: context.textTheme.labelSmall?.copyWith(
+                          color: colorScheme.onSurfaceVariant.withValues(alpha: 0.5),
+                          fontSize: 8,
+                        ),
+                        tickBorderData: BorderSide(
+                          color: colorScheme.outline.withValues(alpha: 0.2),
+                        ),
+                        gridBorderData: BorderSide(
+                          color: colorScheme.outline.withValues(alpha: 0.3),
+                          width: 1,
+                        ),
+                        radarTouchData: RadarTouchData(
+                          enabled: true,
+                          touchCallback: (event, response) {
+                            if (response != null && response.touchedSpot != null) {
+                              setState(() {
+                                _touchedRadarIndex = response.touchedSpot!.touchedRadarEntryIndex;
+                              });
+                              // Show tooltip
+                              if (event is FlTapUpEvent) {
+                                _showMuscleTooltip(context, data, _touchedRadarIndex);
+                              }
+                            }
+                          },
+                        ),
+                      ),
+                      duration: const Duration(milliseconds: 400),
+                      curve: Curves.easeInOutCubic,
+                    ),
+                  ],
+                );
+              },
             ),
           ),
           const SizedBox(height: 16),
@@ -1030,6 +1056,22 @@ class _VolumeProgressionTabState extends State<VolumeProgressionTab> {
         return colorScheme.success;
       case VolumeZone.excessive:
         return colorScheme.error;
+    }
+  }
+
+  /// Get emoji icon for volume zone status
+  String _getZoneIcon(VolumeZone zone) {
+    switch (zone) {
+      case VolumeZone.belowMaintenance:
+        return '⚠️'; // Warning - below maintenance
+      case VolumeZone.maintenance:
+        return '📉'; // Down arrow - just maintaining
+      case VolumeZone.effective:
+        return '📈'; // Up arrow - effective
+      case VolumeZone.optimal:
+        return '✅'; // Check - optimal
+      case VolumeZone.excessive:
+        return '🔥'; // Fire - excessive/overtraining
     }
   }
 
@@ -1832,4 +1874,168 @@ class _LandscapeVolumeChartState extends State<_LandscapeVolumeChart> {
       MuscleGroup.core: colorScheme.inversePrimary,
     };
   }
+}
+
+/// Custom painter for volume zone rings on radar chart
+///
+/// Draws colored polygon rings representing volume zones:
+/// - Red (0-30%): Below maintenance volume
+/// - Purple (30-45%): Maintenance volume
+/// - Blue (45-80%): Effective volume
+/// - Green (80-100%): Optimal volume
+/// - Red (100%+): Excessive volume
+class _VolumeZoneRingsPainter extends CustomPainter {
+  _VolumeZoneRingsPainter({
+    required this.numPoints,
+    required this.errorColor,
+    required this.tertiaryColor,
+    required this.primaryColor,
+    required this.successColor,
+  });
+
+  final int numPoints;
+  final Color errorColor;
+  final Color tertiaryColor;
+  final Color primaryColor;
+  final Color successColor;
+
+  // Zone thresholds based on average MV/MEV/MAV/MRV percentages
+  static const double belowMaintenanceMax = 0.30;
+  static const double maintenanceMax = 0.45;
+  static const double effectiveMax = 0.80;
+  static const double optimalMax = 1.0;
+  // Excessive is everything above 100%
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final center = Offset(size.width / 2, size.height / 2);
+    final maxRadius = size.shortestSide / 2 * 0.75; // Match radar chart radius
+
+    // Draw zones from outside to inside
+    final zones = [
+      // Excessive zone (100%+) - thin ring at edge
+      _ZoneData(
+        innerPercent: optimalMax,
+        outerPercent: 1.2, // Goes a bit beyond for overflow
+        fillColor: errorColor.withValues(alpha: 0.12),
+        borderColor: errorColor.withValues(alpha: 0.3),
+      ),
+      // Optimal zone (80-100%)
+      _ZoneData(
+        innerPercent: effectiveMax,
+        outerPercent: optimalMax,
+        fillColor: successColor.withValues(alpha: 0.12),
+        borderColor: successColor.withValues(alpha: 0.35),
+      ),
+      // Effective zone (45-80%)
+      _ZoneData(
+        innerPercent: maintenanceMax,
+        outerPercent: effectiveMax,
+        fillColor: primaryColor.withValues(alpha: 0.10),
+        borderColor: primaryColor.withValues(alpha: 0.25),
+      ),
+      // Maintenance zone (30-45%)
+      _ZoneData(
+        innerPercent: belowMaintenanceMax,
+        outerPercent: maintenanceMax,
+        fillColor: tertiaryColor.withValues(alpha: 0.10),
+        borderColor: tertiaryColor.withValues(alpha: 0.25),
+      ),
+      // Below maintenance (0-30%)
+      _ZoneData(
+        innerPercent: 0,
+        outerPercent: belowMaintenanceMax,
+        fillColor: errorColor.withValues(alpha: 0.08),
+        borderColor: errorColor.withValues(alpha: 0.2),
+      ),
+    ];
+
+    for (final zone in zones) {
+      _drawPolygonRing(
+        canvas,
+        center,
+        maxRadius * zone.innerPercent,
+        maxRadius * zone.outerPercent,
+        zone.fillColor,
+        zone.borderColor,
+      );
+    }
+  }
+
+  void _drawPolygonRing(
+    Canvas canvas,
+    Offset center,
+    double innerRadius,
+    double outerRadius,
+    Color fillColor,
+    Color borderColor,
+  ) {
+    final outerPath = _createPolygonPath(center, outerRadius);
+    final innerPath = _createPolygonPath(center, innerRadius);
+
+    // Create ring by subtracting inner from outer
+    final ringPath = Path.combine(
+      PathOperation.difference,
+      outerPath,
+      innerPath,
+    );
+
+    // Fill
+    final fillPaint = Paint()
+      ..color = fillColor
+      ..style = PaintingStyle.fill;
+    canvas.drawPath(ringPath, fillPaint);
+
+    // Border (only outer edge)
+    final borderPaint = Paint()
+      ..color = borderColor
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 1.0;
+    canvas.drawPath(outerPath, borderPaint);
+  }
+
+  Path _createPolygonPath(Offset center, double radius) {
+    final path = Path();
+    final angleStep = (2 * math.pi) / numPoints;
+    // Start from top (-90 degrees)
+    const startAngle = -math.pi / 2;
+
+    for (var i = 0; i < numPoints; i++) {
+      final angle = startAngle + (i * angleStep);
+      final x = center.dx + radius * math.cos(angle);
+      final y = center.dy + radius * math.sin(angle);
+
+      if (i == 0) {
+        path.moveTo(x, y);
+      } else {
+        path.lineTo(x, y);
+      }
+    }
+    path.close();
+    return path;
+  }
+
+  @override
+  bool shouldRepaint(covariant _VolumeZoneRingsPainter oldDelegate) {
+    return numPoints != oldDelegate.numPoints ||
+        errorColor != oldDelegate.errorColor ||
+        tertiaryColor != oldDelegate.tertiaryColor ||
+        primaryColor != oldDelegate.primaryColor ||
+        successColor != oldDelegate.successColor;
+  }
+}
+
+/// Data class for zone ring parameters
+class _ZoneData {
+  const _ZoneData({
+    required this.innerPercent,
+    required this.outerPercent,
+    required this.fillColor,
+    required this.borderColor,
+  });
+
+  final double innerPercent;
+  final double outerPercent;
+  final Color fillColor;
+  final Color borderColor;
 }
