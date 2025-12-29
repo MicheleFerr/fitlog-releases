@@ -13,6 +13,8 @@
 /// - Domain entities (for method signatures)
 library;
 
+import 'dart:async';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/paginated_result.dart';
@@ -26,36 +28,52 @@ class FirebaseWorkoutDataSource {
   final FirebaseFirestore _firestore;
 
   /// Save workout to Firestore
+  /// 🔧 FIX: Added 10s timeout to prevent infinite hanging on poor network
   Future<String> saveWorkout(WorkoutModel workout, String userId) async {
     final docRef = _firestore
         .collection('users')
         .doc(userId)
         .collection('workouts')
         .doc(workout.id);
-    
-    await docRef.set(workout.toJson());
-    
+
+    await docRef.set(workout.toJson()).timeout(
+      const Duration(seconds: 10),
+      onTimeout: () => throw TimeoutException('Firestore saveWorkout timed out'),
+    );
+
     return docRef.id;
   }
 
   /// Update existing workout
+  /// 🔧 FIX: Added 10s timeout to prevent infinite hanging on poor network
   Future<void> updateWorkout(WorkoutModel workout, String userId) async {
     await _firestore
         .collection('users')
         .doc(userId)
         .collection('workouts')
         .doc(workout.id)
-        .update(workout.toJson());
+        .update(workout.toJson())
+        .timeout(
+          const Duration(seconds: 10),
+          onTimeout: () =>
+              throw TimeoutException('Firestore updateWorkout timed out'),
+        );
   }
 
   /// Get single workout by ID
+  /// 🔧 FIX: Added 5s timeout to prevent infinite hanging on poor network
   Future<WorkoutModel?> getWorkout(String workoutId, String userId) async {
     final doc = await _firestore
         .collection('users')
         .doc(userId)
         .collection('workouts')
         .doc(workoutId)
-        .get();
+        .get()
+        .timeout(
+          const Duration(seconds: 10),
+          onTimeout: () =>
+              throw TimeoutException('Firestore getWorkout timed out'),
+        );
 
     if (!doc.exists) return null;
 
@@ -63,6 +81,7 @@ class FirebaseWorkoutDataSource {
   }
 
   /// Get workouts with filtering
+  /// 🔧 FIX: Added 10s timeout to prevent infinite hanging on poor network
   Future<List<WorkoutModel>> getWorkouts(
     String userId, {
     int? limit,
@@ -78,33 +97,43 @@ class FirebaseWorkoutDataSource {
     if (startDate != null) {
       query = query.where('createdAt', isGreaterThanOrEqualTo: startDate);
     }
-    
+
     if (endDate != null) {
       query = query.where('createdAt', isLessThanOrEqualTo: endDate);
     }
 
     // Apply ordering and limit
     query = query.orderBy('createdAt', descending: true);
-    
+
     if (limit != null) {
       query = query.limit(limit);
     }
 
-    final querySnapshot = await query.get();
-    
+    final querySnapshot = await query.get().timeout(
+      const Duration(seconds: 10),
+      onTimeout: () =>
+          throw TimeoutException('Firestore getWorkouts timed out'),
+    );
+
     return querySnapshot.docs
         .map((doc) => WorkoutModel.fromJson(doc.data() as Map<String, dynamic>))
         .toList();
   }
 
   /// Delete workout
+  /// 🔧 FIX: Added 5s timeout to prevent infinite hanging on poor network
   Future<void> deleteWorkout(String workoutId, String userId) async {
     await _firestore
         .collection('users')
         .doc(userId)
         .collection('workouts')
         .doc(workoutId)
-        .delete();
+        .delete()
+        .timeout(
+          const Duration(seconds: 10),
+          onTimeout: () =>
+              throw TimeoutException('Firestore deleteWorkout timed out'),
+        );
   }
 
   /// Save completed workout as exercise activities
@@ -127,6 +156,7 @@ class FirebaseWorkoutDataSource {
   }
 
   /// Update specific exercise set
+  /// 🔧 FIX: Added timeouts to prevent infinite hanging on poor network
   Future<void> updateExerciseSet(
     String workoutId,
     String exerciseId,
@@ -140,7 +170,11 @@ class FirebaseWorkoutDataSource {
         .doc(workoutId);
 
     // Get current workout
-    final workoutDoc = await workoutRef.get();
+    final workoutDoc = await workoutRef.get().timeout(
+      const Duration(seconds: 10),
+      onTimeout: () =>
+          throw TimeoutException('Firestore updateExerciseSet get timed out'),
+    );
     if (!workoutDoc.exists) {
       throw Exception('Workout not found');
     }
@@ -183,10 +217,15 @@ class FirebaseWorkoutDataSource {
     await workoutRef.update({
       'exercises': exercises,
       'updatedAt': FieldValue.serverTimestamp(),
-    });
+    }).timeout(
+      const Duration(seconds: 10),
+      onTimeout: () =>
+          throw TimeoutException('Firestore updateExerciseSet update timed out'),
+    );
   }
 
   /// Add exercise to existing workout
+  /// 🔧 FIX: Added 10s timeout to prevent infinite hanging on poor network
   Future<void> addExerciseToWorkout(
     String workoutId,
     Exercise exercise,
@@ -203,10 +242,15 @@ class FirebaseWorkoutDataSource {
     await workoutRef.update({
       'exercises': FieldValue.arrayUnion([exerciseModel.toJson()]),
       'updatedAt': FieldValue.serverTimestamp(),
-    });
+    }).timeout(
+      const Duration(seconds: 10),
+      onTimeout: () =>
+          throw TimeoutException('Firestore addExerciseToWorkout timed out'),
+    );
   }
 
   /// Remove exercise from workout
+  /// 🔧 FIX: Added timeouts to prevent infinite hanging on poor network
   Future<void> removeExerciseFromWorkout(
     String workoutId,
     String exerciseId,
@@ -219,7 +263,11 @@ class FirebaseWorkoutDataSource {
         .doc(workoutId);
 
     // Get current workout to find the exercise to remove
-    final workoutDoc = await workoutRef.get();
+    final workoutDoc = await workoutRef.get().timeout(
+      const Duration(seconds: 10),
+      onTimeout: () =>
+          throw TimeoutException('Firestore removeExerciseFromWorkout get timed out'),
+    );
     if (!workoutDoc.exists) {
       throw Exception('Workout not found');
     }
@@ -234,10 +282,15 @@ class FirebaseWorkoutDataSource {
     await workoutRef.update({
       'exercises': exercises,
       'updatedAt': FieldValue.serverTimestamp(),
-    });
+    }).timeout(
+      const Duration(seconds: 10),
+      onTimeout: () =>
+          throw TimeoutException('Firestore removeExerciseFromWorkout update timed out'),
+    );
   }
 
   /// Get workout statistics
+  /// 🔧 FIX: Added 15s timeout to prevent infinite hanging on poor network
   Future<WorkoutStats> getWorkoutStats(
     String userId, {
     DateTime? startDate,
@@ -252,12 +305,16 @@ class FirebaseWorkoutDataSource {
     if (startDate != null) {
       query = query.where('createdAt', isGreaterThanOrEqualTo: startDate);
     }
-    
+
     if (endDate != null) {
       query = query.where('createdAt', isLessThanOrEqualTo: endDate);
     }
 
-    final querySnapshot = await query.get();
+    final querySnapshot = await query.get().timeout(
+      const Duration(seconds: 15),
+      onTimeout: () =>
+          throw TimeoutException('Firestore getWorkoutStats timed out'),
+    );
     final workouts = querySnapshot.docs
         .map((doc) => WorkoutModel.fromJson(doc.data() as Map<String, dynamic>))
         .toList();
@@ -326,6 +383,7 @@ class FirebaseWorkoutDataSource {
   }
 
   /// Get paginated workout history
+  /// 🔧 FIX: Added timeouts to prevent infinite hanging on poor network
   Future<WorkoutHistory> getWorkoutHistory(
     String userId, {
     int page = 1,
@@ -337,7 +395,12 @@ class FirebaseWorkoutDataSource {
         .doc(userId)
         .collection('workouts')
         .count()
-        .get();
+        .get()
+        .timeout(
+          const Duration(seconds: 10),
+          onTimeout: () =>
+              throw TimeoutException('Firestore getWorkoutHistory count timed out'),
+        );
 
     final totalCount = totalQuery.count ?? 0;
 
@@ -358,14 +421,23 @@ class FirebaseWorkoutDataSource {
           .collection('workouts')
           .orderBy('createdAt', descending: true)
           .limit(skipCount)
-          .get();
+          .get()
+          .timeout(
+            const Duration(seconds: 10),
+            onTimeout: () =>
+                throw TimeoutException('Firestore getWorkoutHistory offset timed out'),
+          );
 
       if (offsetSnapshot.docs.isNotEmpty) {
         query = query.startAfterDocument(offsetSnapshot.docs.last);
       }
     }
 
-    final querySnapshot = await query.get();
+    final querySnapshot = await query.get().timeout(
+      const Duration(seconds: 10),
+      onTimeout: () =>
+          throw TimeoutException('Firestore getWorkoutHistory timed out'),
+    );
     final workouts = querySnapshot.docs
         .map((doc) => WorkoutModel.fromJson(doc.data() as Map<String, dynamic>))
         .map((model) => model.toDomain())
@@ -435,7 +507,12 @@ class FirebaseWorkoutDataSource {
     // This is more efficient than a separate count query
     query = query.limit(pageSize + 1);
 
-    final querySnapshot = await query.get();
+    // 🔧 FIX: Added 15s timeout to prevent infinite hanging on poor network
+    final querySnapshot = await query.get().timeout(
+      const Duration(seconds: 15),
+      onTimeout: () =>
+          throw TimeoutException('Firestore getWorkoutsPaginated timed out'),
+    );
     final docs = querySnapshot.docs;
 
     // Determine if there are more pages

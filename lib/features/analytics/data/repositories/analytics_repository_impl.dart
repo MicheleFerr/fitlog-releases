@@ -41,6 +41,8 @@
 /// ```
 library;
 
+import 'dart:async';
+
 import 'package:flutter/foundation.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fpdart/fpdart.dart';
@@ -170,12 +172,18 @@ class AnalyticsRepositoryImpl implements AnalyticsRepository {
       }
 
       // Fetch from Firestore
+      // 🔧 FIX: Added 5s timeout to prevent infinite hanging on poor network
       final doc = await _firestore
           .collection('users')
           .doc(userId)
           .collection('analytics')
           .doc(exerciseName)
-          .get();
+          .get()
+          .timeout(
+            const Duration(seconds: 10),
+            onTimeout: () =>
+                throw TimeoutException('Firestore getSessionsByTimeframe timed out'),
+          );
 
       if (!doc.exists) {
         return const Right([]); // No history for this exercise yet
@@ -210,6 +218,7 @@ class AnalyticsRepositoryImpl implements AnalyticsRepository {
   ///   query: 'bench', // Matches "Bench Press", "Incline Bench", etc.
   /// );
   /// ```
+  /// 🔧 FIX: Added 10s timeout to prevent infinite hanging on poor network
   @override
   Future<Either<Failure, List<ExerciseHistory>>> searchExercises({
     required String userId,
@@ -220,7 +229,12 @@ class AnalyticsRepositoryImpl implements AnalyticsRepository {
           .collection('users')
           .doc(userId)
           .collection('analytics')
-          .get();
+          .get()
+          .timeout(
+            const Duration(seconds: 10),
+            onTimeout: () =>
+                throw TimeoutException('Firestore searchExercises timed out'),
+          );
 
       final queryLower = query.toLowerCase();
       final matchingHistories = snapshot.docs
@@ -271,16 +285,22 @@ class AnalyticsRepositoryImpl implements AnalyticsRepository {
       }
 
       // Fetch from Firestore
+      // 🔧 FIX: Added 5s timeout to prevent infinite hanging on poor network
       final doc = await _firestore
           .collection('users')
           .doc(userId)
           .collection('analytics')
           .doc(exerciseName)
-          .get();
+          .get()
+          .timeout(
+            const Duration(seconds: 10),
+            onTimeout: () =>
+                throw TimeoutException('Firestore getExerciseHistoryByName timed out'),
+          );
 
       if (!doc.exists) {
         return Left(
-          CacheFailure( 'No history found for $exerciseName'),
+          CacheFailure('No history found for $exerciseName'),
         );
       }
 
@@ -319,6 +339,7 @@ class AnalyticsRepositoryImpl implements AnalyticsRepository {
   ///   ),
   /// );
   /// ```
+  /// 🔧 FIX: Added timeouts to prevent infinite hanging on poor network
   @override
   Future<Either<Failure, void>> updateExerciseHistory({
     required String userId,
@@ -335,7 +356,11 @@ class AnalyticsRepositoryImpl implements AnalyticsRepository {
           .doc(exerciseName);
 
       // Read existing document
-      final doc = await docRef.get();
+      final doc = await docRef.get().timeout(
+        const Duration(seconds: 10),
+        onTimeout: () =>
+            throw TimeoutException('Firestore updateExerciseHistory get timed out'),
+      );
 
       ExerciseHistory updatedHistory;
       if (doc.exists) {
@@ -360,7 +385,11 @@ class AnalyticsRepositoryImpl implements AnalyticsRepository {
 
       // Write back to Firestore
       final updatedModel = ExerciseHistoryModel.fromDomain(updatedHistory);
-      await docRef.set(updatedModel.toFirestore());
+      await docRef.set(updatedModel.toFirestore()).timeout(
+        const Duration(seconds: 10),
+        onTimeout: () =>
+            throw TimeoutException('Firestore updateExerciseHistory set timed out'),
+      );
 
       // Invalidate cache
       final cacheKey = _getCacheKey(userId, exerciseName);
@@ -382,6 +411,7 @@ class AnalyticsRepositoryImpl implements AnalyticsRepository {
   /// ```dart
   /// await repository.deleteAllAnalytics(userId: 'user123');
   /// ```
+  /// 🔧 FIX: Added timeouts to prevent infinite hanging on poor network
   Future<Either<Failure, void>> deleteAllAnalytics({
     required String userId,
   }) async {
@@ -390,14 +420,23 @@ class AnalyticsRepositoryImpl implements AnalyticsRepository {
           .collection('users')
           .doc(userId)
           .collection('analytics')
-          .get();
+          .get()
+          .timeout(
+            const Duration(seconds: 10),
+            onTimeout: () =>
+                throw TimeoutException('Firestore deleteAllAnalytics get timed out'),
+          );
 
       // Delete all documents in batch
       final batch = _firestore.batch();
       for (final doc in snapshot.docs) {
         batch.delete(doc.reference);
       }
-      await batch.commit();
+      await batch.commit().timeout(
+        const Duration(seconds: 15),
+        onTimeout: () =>
+            throw TimeoutException('Firestore deleteAllAnalytics commit timed out'),
+      );
 
       // Clear all cache for this user
       final cacheKeys =

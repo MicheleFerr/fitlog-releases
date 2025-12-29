@@ -144,13 +144,19 @@ class WorkoutHistoryRepositoryEnhanced {
       }
 
       // Query Firebase for workout history
+      // 🔧 FIX: Added 15s timeout to prevent infinite hanging on poor network
       final querySnapshot = await _firestore
           .collection('workouts')
           .where('userId', isEqualTo: userId)
           .where('completedAt', isGreaterThan: Timestamp.fromDate(cutoffDate))
           .orderBy('completedAt', descending: true)
           .limit(500) // Reasonable limit
-          .get();
+          .get()
+          .timeout(
+            const Duration(seconds: 15),
+            onTimeout: () =>
+                throw TimeoutException('Firestore initial sync timed out'),
+          );
 
       // Convert and save to local storage
       final workouts = <WorkoutHistoryDetail>[];
@@ -209,13 +215,19 @@ class WorkoutHistoryRepositoryEnhanced {
 
       // Query for updates since last sync
       // 🔧 PERF FIX: Add limit to prevent unbounded reads
+      // 🔧 FIX: Added 10s timeout to prevent infinite hanging on poor network
       final querySnapshot = await _firestore
           .collection('workouts')
           .where('userId', isEqualTo: userId)
           .where('updatedAt', isGreaterThan: Timestamp.fromDate(lastSync))
           .orderBy('updatedAt', descending: true)
           .limit(100) // Limit to prevent fetching thousands of documents
-          .get();
+          .get()
+          .timeout(
+            const Duration(seconds: 10),
+            onTimeout: () =>
+                throw TimeoutException('Firestore incremental sync timed out'),
+          );
 
       if (querySnapshot.docs.isNotEmpty) {
         if (kDebugMode) {
@@ -430,19 +442,31 @@ class WorkoutHistoryRepositoryEnhanced {
   }
 
   /// Update workout in Firestore
+  /// 🔧 FIX: Added 10s timeout to prevent infinite hanging on poor network
   Future<void> _updateWorkoutInFirestore(WorkoutHistoryDetail workout) async {
     await _firestore
         .collection('workouts')
         .doc(workout.id)
-        .set(workout.toFirestoreMap(), SetOptions(merge: true));
+        .set(workout.toFirestoreMap(), SetOptions(merge: true))
+        .timeout(
+          const Duration(seconds: 10),
+          onTimeout: () =>
+              throw TimeoutException('Firestore updateWorkout timed out'),
+        );
   }
 
   /// Delete workout from Firestore
+  /// 🔧 FIX: Added 5s timeout to prevent infinite hanging on poor network
   Future<void> _deleteWorkoutFromFirestore(String workoutId) async {
     await _firestore
         .collection('workouts')
         .doc(workoutId)
-        .delete();
+        .delete()
+        .timeout(
+          const Duration(seconds: 10),
+          onTimeout: () =>
+              throw TimeoutException('Firestore deleteWorkout timed out'),
+        );
   }
 
   /// Force sync

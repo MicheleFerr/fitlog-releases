@@ -8,6 +8,8 @@
 /// **Feature**: Coach
 library;
 
+import 'dart:async';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 import 'package:gymbro_flutter_new/features/coach/domain/entities/assigned_template.dart';
@@ -43,7 +45,11 @@ class CoachTemplatesRepository {
         updatedAt: DateTime.now(),
       );
 
-      await _templates.doc(id).set(newTemplate.toJson());
+      // 🔧 FIX: Added 10s timeout to prevent infinite hanging on poor network
+      await _templates.doc(id).set(newTemplate.toJson()).timeout(
+        const Duration(seconds: 10),
+        onTimeout: () => throw TimeoutException('Firestore createTemplate timed out'),
+      );
 
       if (kDebugMode) {
         debugPrint('[CoachTemplatesRepo] Created template: $id');
@@ -64,7 +70,11 @@ class CoachTemplatesRepository {
   Future<void> updateTemplate(CoachTemplate template) async {
     try {
       final updated = template.copyWith(updatedAt: DateTime.now());
-      await _templates.doc(template.id).update(updated.toJson());
+      // 🔧 FIX: Added 10s timeout to prevent infinite hanging on poor network
+      await _templates.doc(template.id).update(updated.toJson()).timeout(
+        const Duration(seconds: 10),
+        onTimeout: () => throw TimeoutException('Firestore updateTemplate timed out'),
+      );
 
       if (kDebugMode) {
         debugPrint('[CoachTemplatesRepo] Updated template: ${template.id}');
@@ -81,7 +91,11 @@ class CoachTemplatesRepository {
   Future<void> deleteTemplate(String templateId) async {
     try {
       // Get template to find assigned athletes
-      final doc = await _templates.doc(templateId).get();
+      // 🔧 FIX: Added 5s timeout to prevent infinite hanging on poor network
+      final doc = await _templates.doc(templateId).get().timeout(
+        const Duration(seconds: 10),
+        onTimeout: () => throw TimeoutException('Firestore getTemplate timed out'),
+      );
       if (!doc.exists) return;
 
       final template = CoachTemplate.fromJson(doc.data()!);
@@ -100,7 +114,11 @@ class CoachTemplatesRepository {
       // Delete the template
       batch.delete(_templates.doc(templateId));
 
-      await batch.commit();
+      // 🔧 FIX: Added 10s timeout to prevent infinite hanging on poor network
+      await batch.commit().timeout(
+        const Duration(seconds: 10),
+        onTimeout: () => throw TimeoutException('Firestore deleteTemplate timed out'),
+      );
 
       if (kDebugMode) {
         debugPrint('[CoachTemplatesRepo] Deleted template: $templateId');
@@ -116,10 +134,14 @@ class CoachTemplatesRepository {
   /// Archive a template (soft delete)
   Future<void> archiveTemplate(String templateId) async {
     try {
+      // 🔧 FIX: Added 5s timeout to prevent infinite hanging on poor network
       await _templates.doc(templateId).update({
         'isArchived': true,
         'updatedAt': DateTime.now().toIso8601String(),
-      });
+      }).timeout(
+        const Duration(seconds: 10),
+        onTimeout: () => throw TimeoutException('Firestore archiveTemplate timed out'),
+      );
 
       if (kDebugMode) {
         debugPrint('[CoachTemplatesRepo] Archived template: $templateId');
@@ -139,7 +161,11 @@ class CoachTemplatesRepository {
   /// Get a single template by ID
   Future<CoachTemplate?> getTemplate(String templateId) async {
     try {
-      final doc = await _templates.doc(templateId).get();
+      // 🔧 FIX: Added 5s timeout to prevent infinite hanging on poor network
+      final doc = await _templates.doc(templateId).get().timeout(
+        const Duration(seconds: 10),
+        onTimeout: () => throw TimeoutException('Firestore getTemplate timed out'),
+      );
       if (!doc.exists) return null;
 
       return CoachTemplate.fromJson(doc.data()!);
@@ -168,11 +194,16 @@ class CoachTemplatesRepository {
   /// Get all templates for a coach (one-time read)
   Future<List<CoachTemplate>> getCoachTemplates(String coachId) async {
     try {
+      // 🔧 FIX: Added 10s timeout to prevent infinite hanging on poor network
       final snapshot = await _templates
           .where('coachId', isEqualTo: coachId)
           .where('isArchived', isEqualTo: false)
           .orderBy('updatedAt', descending: true)
-          .get();
+          .get()
+          .timeout(
+            const Duration(seconds: 10),
+            onTimeout: () => throw TimeoutException('Firestore getCoachTemplates timed out'),
+          );
 
       return snapshot.docs
           .map((doc) => CoachTemplate.fromJson(doc.data()))
@@ -198,7 +229,11 @@ class CoachTemplatesRepository {
   }) async {
     try {
       // Get template details for denormalization
-      final templateDoc = await _templates.doc(templateId).get();
+      // 🔧 FIX: Added 5s timeout to prevent infinite hanging on poor network
+      final templateDoc = await _templates.doc(templateId).get().timeout(
+        const Duration(seconds: 10),
+        onTimeout: () => throw TimeoutException('Firestore assignTemplate get timed out'),
+      );
       if (!templateDoc.exists) {
         throw Exception('Template not found');
       }
@@ -242,7 +277,11 @@ class CoachTemplatesRepository {
         'updatedAt': now.toIso8601String(),
       });
 
-      await batch.commit();
+      // 🔧 FIX: Added 15s timeout to prevent infinite hanging on poor network
+      await batch.commit().timeout(
+        const Duration(seconds: 15),
+        onTimeout: () => throw TimeoutException('Firestore assignTemplate timed out'),
+      );
 
       if (kDebugMode) {
         debugPrint(
@@ -265,7 +304,11 @@ class CoachTemplatesRepository {
   }) async {
     try {
       // Get template to verify ownership
-      final templateDoc = await _templates.doc(templateId).get();
+      // 🔧 FIX: Added 5s timeout to prevent infinite hanging on poor network
+      final templateDoc = await _templates.doc(templateId).get().timeout(
+        const Duration(seconds: 10),
+        onTimeout: () => throw TimeoutException('Firestore unassignTemplate get timed out'),
+      );
       if (!templateDoc.exists) return;
 
       final template = CoachTemplate.fromJson(templateDoc.data()!);
@@ -296,7 +339,11 @@ class CoachTemplatesRepository {
         'updatedAt': DateTime.now().toIso8601String(),
       });
 
-      await batch.commit();
+      // 🔧 FIX: Added 10s timeout to prevent infinite hanging on poor network
+      await batch.commit().timeout(
+        const Duration(seconds: 10),
+        onTimeout: () => throw TimeoutException('Firestore unassignTemplate timed out'),
+      );
 
       if (kDebugMode) {
         debugPrint(
@@ -385,11 +432,16 @@ class CoachTemplatesRepository {
   /// Get assigned templates for an athlete (one-time read)
   Future<List<AssignedTemplate>> getAssignedTemplates(String athleteId) async {
     try {
+      // 🔧 FIX: Added 10s timeout to prevent infinite hanging on poor network
       final snapshot = await _users
           .doc(athleteId)
           .collection('assignedTemplates')
           .orderBy('assignedAt', descending: true)
-          .get();
+          .get()
+          .timeout(
+            const Duration(seconds: 10),
+            onTimeout: () => throw TimeoutException('Firestore getAssignedTemplates timed out'),
+          );
 
       return snapshot.docs
           .map((doc) => AssignedTemplate.fromJson(doc.data()))
@@ -416,13 +468,17 @@ class CoachTemplatesRepository {
     required String? notes,
   }) async {
     try {
+      // 🔧 FIX: Added 5s timeout to prevent infinite hanging on poor network
       await _users
           .doc(athleteId)
           .collection('assignedTemplates')
           .doc(templateId)
           .update({
         'athleteNotes': notes,
-      });
+      }).timeout(
+        const Duration(seconds: 10),
+        onTimeout: () => throw TimeoutException('Firestore updateAthleteNotes timed out'),
+      );
 
       if (kDebugMode) {
         debugPrint('[CoachTemplatesRepo] Updated athlete notes for $templateId');
@@ -444,6 +500,7 @@ class CoachTemplatesRepository {
       final template = await getTemplate(templateId);
       if (template == null) return;
 
+      // 🔧 FIX: Added 5s timeout to prevent infinite hanging on poor network
       await _users
           .doc(athleteId)
           .collection('assignedTemplates')
@@ -453,7 +510,10 @@ class CoachTemplatesRepository {
         'templateName': template.name,
         'exerciseCount': template.exercises.length,
         'estimatedDuration': template.estimatedDuration,
-      });
+      }).timeout(
+        const Duration(seconds: 10),
+        onTimeout: () => throw TimeoutException('Firestore syncAssignedTemplate timed out'),
+      );
 
       if (kDebugMode) {
         debugPrint('[CoachTemplatesRepo] Synced template $templateId');

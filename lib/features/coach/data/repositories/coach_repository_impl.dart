@@ -9,6 +9,7 @@
 /// **Firestore Collection**: coach_delegations, users
 library;
 
+import 'dart:async';
 import 'dart:math';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -35,11 +36,16 @@ class CoachRepositoryImpl implements CoachRepository {
   // ATHLETE MANAGEMENT (Coach perspective)
   // ============================================================
 
+  /// 🔧 FIX: Added timeouts to prevent infinite hanging on poor network
   @override
   Future<List<CoachRelationship>> getAthletes(String coachId) async {
     try {
       // First get coach email from users collection
-      final coachDoc = await _users.doc(coachId).get();
+      final coachDoc = await _users.doc(coachId).get().timeout(
+        const Duration(seconds: 10),
+        onTimeout: () =>
+            throw TimeoutException('Firestore getAthletes user lookup timed out'),
+      );
       final coachEmail = coachDoc.data()?['email'] as String?;
 
       if (coachEmail == null) {
@@ -54,7 +60,12 @@ class CoachRepositoryImpl implements CoachRepository {
           .where('coachEmail', isEqualTo: coachEmail)
           .where('status', whereIn: ['pending', 'active', 'paused'])
           .orderBy('createdAt', descending: true)
-          .get();
+          .get()
+          .timeout(
+            const Duration(seconds: 10),
+            onTimeout: () =>
+                throw TimeoutException('Firestore getAthletes query timed out'),
+          );
 
       final relationships = snapshot.docs
           .map((doc) => CoachRelationship.fromFirestore(doc))
@@ -111,6 +122,7 @@ class CoachRepositoryImpl implements CoachRepository {
     });
   }
 
+  /// 🔧 FIX: Added timeouts to prevent infinite hanging on poor network
   @override
   Future<CoachRelationship?> getAthleteRelationship(
     String coachId,
@@ -119,7 +131,11 @@ class CoachRepositoryImpl implements CoachRepository {
     try {
       // Try new format first
       final newFormatId = CoachRelationship.generateId(coachId, athleteId);
-      final doc = await _delegations.doc(newFormatId).get();
+      final doc = await _delegations.doc(newFormatId).get().timeout(
+        const Duration(seconds: 10),
+        onTimeout: () =>
+            throw TimeoutException('Firestore getAthleteRelationship doc timed out'),
+      );
 
       if (doc.exists) {
         return CoachRelationship.fromFirestore(doc);
@@ -130,7 +146,12 @@ class CoachRepositoryImpl implements CoachRepository {
           .where('coachId', isEqualTo: coachId)
           .where('athleteId', isEqualTo: athleteId)
           .limit(1)
-          .get();
+          .get()
+          .timeout(
+            const Duration(seconds: 10),
+            onTimeout: () =>
+                throw TimeoutException('Firestore getAthleteRelationship query timed out'),
+          );
 
       if (snapshot.docs.isNotEmpty) {
         return CoachRelationship.fromFirestore(snapshot.docs.first);
@@ -158,7 +179,12 @@ class CoachRepositoryImpl implements CoachRepository {
           .where('coachEmail', isEqualTo: coachEmail)
           .where('athleteEmail', isEqualTo: athleteEmail)
           .limit(1)
-          .get();
+          .get()
+          .timeout(
+            const Duration(seconds: 10),
+            onTimeout: () =>
+                throw TimeoutException('Firestore inviteAthlete check timed out'),
+          );
 
       if (existing.docs.isNotEmpty) {
         final existingStatus = existing.docs.first.data()['status'];
@@ -182,7 +208,11 @@ class CoachRepositoryImpl implements CoachRepository {
 
       // Use email-based ID for legacy compatibility
       final docId = CoachRelationship.generateLegacyId(coachEmail, athleteEmail);
-      await _delegations.doc(docId).set(relationship.toFirestore());
+      await _delegations.doc(docId).set(relationship.toFirestore()).timeout(
+        const Duration(seconds: 10),
+        onTimeout: () =>
+            throw TimeoutException('Firestore inviteAthlete set timed out'),
+      );
 
       if (kDebugMode) {
         debugPrint('[CoachRepo] Invited athlete: $athleteEmail');
@@ -205,13 +235,18 @@ class CoachRepositoryImpl implements CoachRepository {
     }
   }
 
+  /// 🔧 FIX: Added timeout to prevent infinite hanging on poor network
   @override
   Future<void> removeAthlete(String relationshipId) async {
     try {
       await _delegations.doc(relationshipId).update({
         'status': RelationshipStatus.ended.value,
         'endedAt': FieldValue.serverTimestamp(),
-      });
+      }).timeout(
+        const Duration(seconds: 10),
+        onTimeout: () =>
+            throw TimeoutException('Firestore removeAthlete timed out'),
+      );
 
       if (kDebugMode) {
         debugPrint('[CoachRepo] Removed athlete: $relationshipId');
@@ -266,11 +301,16 @@ class CoachRepositoryImpl implements CoachRepository {
   // COACH MANAGEMENT (Athlete perspective)
   // ============================================================
 
+  /// 🔧 FIX: Added timeouts to prevent infinite hanging on poor network
   @override
   Future<CoachRelationship?> getMyCoach(String athleteId) async {
     try {
       // Get athlete email
-      final athleteDoc = await _users.doc(athleteId).get();
+      final athleteDoc = await _users.doc(athleteId).get().timeout(
+        const Duration(seconds: 10),
+        onTimeout: () =>
+            throw TimeoutException('Firestore getMyCoach user lookup timed out'),
+      );
       final athleteEmail = athleteDoc.data()?['email'] as String?;
 
       if (athleteEmail == null) return null;
@@ -280,7 +320,12 @@ class CoachRepositoryImpl implements CoachRepository {
           .where('athleteId', isEqualTo: athleteId)
           .where('status', isEqualTo: 'active')
           .limit(1)
-          .get();
+          .get()
+          .timeout(
+            const Duration(seconds: 10),
+            onTimeout: () =>
+                throw TimeoutException('Firestore getMyCoach query timed out'),
+          );
 
       if (snapshot.docs.isNotEmpty) {
         return CoachRelationship.fromFirestore(snapshot.docs.first);
@@ -291,7 +336,12 @@ class CoachRepositoryImpl implements CoachRepository {
           .where('athleteEmail', isEqualTo: athleteEmail)
           .where('status', isEqualTo: 'active')
           .limit(1)
-          .get();
+          .get()
+          .timeout(
+            const Duration(seconds: 10),
+            onTimeout: () =>
+                throw TimeoutException('Firestore getMyCoach legacy query timed out'),
+          );
 
       if (snapshot.docs.isNotEmpty) {
         return CoachRelationship.fromFirestore(snapshot.docs.first);
@@ -319,6 +369,7 @@ class CoachRepositoryImpl implements CoachRepository {
     });
   }
 
+  /// 🔧 FIX: Added timeouts to prevent infinite hanging on poor network
   @override
   Future<void> acceptCoachInvitation({
     required String relationshipId,
@@ -332,10 +383,18 @@ class CoachRepositoryImpl implements CoachRepository {
         'athleteHasApp': true,
         'status': RelationshipStatus.active.value,
         'connectedAt': FieldValue.serverTimestamp(),
-      });
+      }).timeout(
+        const Duration(seconds: 10),
+        onTimeout: () =>
+            throw TimeoutException('Firestore acceptCoachInvitation update timed out'),
+      );
 
       // Notify coach
-      final doc = await _delegations.doc(relationshipId).get();
+      final doc = await _delegations.doc(relationshipId).get().timeout(
+        const Duration(seconds: 10),
+        onTimeout: () =>
+            throw TimeoutException('Firestore acceptCoachInvitation get timed out'),
+      );
       final coachEmail = doc.data()?['coachEmail'] as String?;
       final athleteEmail = doc.data()?['athleteEmail'] as String?;
       if (coachEmail != null && athleteEmail != null) {

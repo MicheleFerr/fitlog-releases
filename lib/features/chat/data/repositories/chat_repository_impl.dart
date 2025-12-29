@@ -90,7 +90,11 @@ class ChatRepositoryImpl implements ChatRepository {
     final conversationId = ChatConversation.generateId(coachId, athleteId);
 
     // Check if conversation exists
-    final doc = await _conversationsRef.doc(conversationId).get();
+    // 🔧 FIX: Added 10s timeout to prevent infinite hanging on poor network
+    final doc = await _conversationsRef.doc(conversationId).get().timeout(
+      const Duration(seconds: 10),
+      onTimeout: () => throw TimeoutException('Firestore getConversation timed out'),
+    );
 
     if (doc.exists) {
       return ChatConversation.fromFirestore(doc);
@@ -109,10 +113,14 @@ class ChatRepositoryImpl implements ChatRepository {
     );
 
     // Save with participants array for querying
+    // 🔧 FIX: Added 10s timeout to prevent infinite hanging on poor network
     await _conversationsRef.doc(conversationId).set({
       ...conversation.toFirestore(),
       'participants': [coachId, athleteId],
-    });
+    }).timeout(
+      const Duration(seconds: 10),
+      onTimeout: () => throw TimeoutException('Firestore createConversation timed out'),
+    );
 
     if (kDebugMode) {
       debugPrint('💬 [ChatRepo] Created conversation: $conversationId');
@@ -123,7 +131,11 @@ class ChatRepositoryImpl implements ChatRepository {
 
   @override
   Future<ChatConversation?> getConversation(String conversationId) async {
-    final doc = await _conversationsRef.doc(conversationId).get();
+    // 🔧 FIX: Added 10s timeout to prevent infinite hanging on poor network
+    final doc = await _conversationsRef.doc(conversationId).get().timeout(
+      const Duration(seconds: 10),
+      onTimeout: () => throw TimeoutException('Firestore getConversation timed out'),
+    );
     if (!doc.exists) return null;
     return ChatConversation.fromFirestore(doc);
   }
@@ -194,7 +206,11 @@ class ChatRepositoryImpl implements ChatRepository {
       ..._incrementUnreadCount(conversationId, userId),
     });
 
-    await batch.commit();
+    // 🔧 FIX: Added 10s timeout to prevent infinite hanging on poor network
+    await batch.commit().timeout(
+      const Duration(seconds: 10),
+      onTimeout: () => throw TimeoutException('Firestore sendTextMessage timed out'),
+    );
 
     if (kDebugMode) {
       debugPrint('💬 [ChatRepo] Sent message: $messageId');
@@ -276,7 +292,11 @@ class ChatRepositoryImpl implements ChatRepository {
         ..._incrementUnreadCount(conversationId, userId),
       });
 
-      await batch.commit();
+      // 🔧 FIX: Added 15s timeout to prevent infinite hanging on poor network
+      await batch.commit().timeout(
+        const Duration(seconds: 15),
+        onTimeout: () => throw TimeoutException('Firestore sendImageMessage timed out'),
+      );
 
       if (kDebugMode) {
         debugPrint('💬 [ChatRepo] Sent image message: $messageId');
@@ -346,7 +366,11 @@ class ChatRepositoryImpl implements ChatRepository {
       ..._incrementUnreadCount(conversationId, userId),
     });
 
-    await batch.commit();
+    // 🔧 FIX: Added 10s timeout to prevent infinite hanging on poor network
+    await batch.commit().timeout(
+      const Duration(seconds: 10),
+      onTimeout: () => throw TimeoutException('Firestore sendWorkoutLink timed out'),
+    );
 
     if (kDebugMode) {
       debugPrint('💬 [ChatRepo] Sent workout link: $messageId (${workout.name})');
@@ -403,7 +427,11 @@ class ChatRepositoryImpl implements ChatRepository {
       batch.update(_conversationsRef.doc(conversationId), {unreadField: 0});
     }
 
-    await batch.commit();
+    // 🔧 FIX: Added 10s timeout to prevent infinite hanging on poor network
+    await batch.commit().timeout(
+      const Duration(seconds: 10),
+      onTimeout: () => throw TimeoutException('Firestore markAsRead timed out'),
+    );
 
     if (kDebugMode) {
       debugPrint('💬 [ChatRepo] Marked ${messageIds.length} messages as read');
@@ -415,10 +443,15 @@ class ChatRepositoryImpl implements ChatRepository {
     final userId = _currentUserId;
 
     // Get unread messages
+    // 🔧 FIX: Added 10s timeout to prevent infinite hanging on poor network
     final snapshot = await _messagesRef(conversationId)
         .where('readAt', isNull: true)
         .where('senderId', isNotEqualTo: userId)
-        .get();
+        .get()
+        .timeout(
+          const Duration(seconds: 10),
+          onTimeout: () => throw TimeoutException('Firestore markAllAsRead timed out'),
+        );
 
     final messageIds = snapshot.docs.map((doc) => doc.id).toList();
 
@@ -461,10 +494,14 @@ class ChatRepositoryImpl implements ChatRepository {
     required String messageId,
   }) async {
     // Soft delete only
+    // 🔧 FIX: Added 10s timeout to prevent infinite hanging on poor network
     await _messagesRef(conversationId).doc(messageId).update({
       'isDeleted': true,
       'deletedAt': Timestamp.fromDate(DateTime.now()),
-    });
+    }).timeout(
+      const Duration(seconds: 10),
+      onTimeout: () => throw TimeoutException('Firestore deleteMessage timed out'),
+    );
 
     if (kDebugMode) {
       debugPrint('💬 [ChatRepo] Soft deleted message: $messageId');
