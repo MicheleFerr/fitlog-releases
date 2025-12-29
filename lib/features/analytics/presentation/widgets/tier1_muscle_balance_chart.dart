@@ -174,7 +174,7 @@ class _Tier1MuscleBalanceChartState extends ConsumerState<Tier1MuscleBalanceChar
                                   final isHovered = muscle == _hoveredMuscle;
                                   final data = widget.muscleData[muscle];
                                   final status = data != null
-                                      ? VolumeZone.getStatus(data.currentStrength)
+                                      ? VolumeZoneThresholds.getStatus(data.currentStrength)
                                       : VolumeStatus.insufficient;
                                   final statusIcon = _getStatusIcon(status);
 
@@ -1193,8 +1193,8 @@ class _Tier1MuscleBalanceChartState extends ConsumerState<Tier1MuscleBalanceChar
 }
 
 /// Zone thresholds for muscle balance visualization
-class VolumeZone {
-  const VolumeZone._();
+class VolumeZoneThresholds {
+  const VolumeZoneThresholds._();
 
   /// Insufficient volume threshold (0-40%)
   static const double insufficientMax = 0.40;
@@ -1308,22 +1308,22 @@ class _EnhancedRadarPainter extends CustomPainter {
     final zones = [
       // Excessive zone (80-100%) - outer ring
       _ZoneRing(
-        innerPercent: VolumeZone.excessiveMin,
+        innerPercent: VolumeZoneThresholds.excessiveMin,
         outerPercent: 1.0,
         color: warningColor.withValues(alpha: 0.15),
         borderColor: warningColor.withValues(alpha: 0.4),
       ),
       // Optimal zone (40-80%) - middle ring
       _ZoneRing(
-        innerPercent: VolumeZone.optimalMin,
-        outerPercent: VolumeZone.optimalMax,
+        innerPercent: VolumeZoneThresholds.optimalMin,
+        outerPercent: VolumeZoneThresholds.optimalMax,
         color: successColor.withValues(alpha: 0.12),
         borderColor: successColor.withValues(alpha: 0.35),
       ),
       // Insufficient zone (0-40%) - inner area
       _ZoneRing(
         innerPercent: 0,
-        outerPercent: VolumeZone.insufficientMax,
+        outerPercent: VolumeZoneThresholds.insufficientMax,
         color: errorColor.withValues(alpha: 0.10),
         borderColor: errorColor.withValues(alpha: 0.3),
       ),
