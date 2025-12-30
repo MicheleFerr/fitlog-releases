@@ -323,9 +323,8 @@ class _GhostOverlayCameraState extends State<GhostOverlayCamera>
                   const SizedBox(width: 8),
                   Text(
                     'Ghost: ${(_ghostOpacity * 100).round()}%',
-                    style: const TextStyle(
+                    style: context.textTheme.labelSmall?.copyWith(
                       color: Colors.white70,
-                      fontSize: 12,
                     ),
                   ),
                   const SizedBox(width: 8),
@@ -416,7 +415,7 @@ class _GhostOverlayCameraState extends State<GhostOverlayCamera>
               const SizedBox(width: 8),
               Text(
                 widget.pose.label,
-                style: TextStyle(
+                style: context.textTheme.labelMedium?.copyWith(
                   color: context.colors.onPrimaryContainer,
                   fontWeight: FontWeight.bold,
                 ),
@@ -443,7 +442,9 @@ class _GhostOverlayCameraState extends State<GhostOverlayCamera>
             const SizedBox(height: 16),
             Text(
               _errorMessage!,
-              style: const TextStyle(color: Colors.white),
+              style: context.textTheme.bodyMedium?.copyWith(
+                color: Colors.white,
+              ),
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: 16),
