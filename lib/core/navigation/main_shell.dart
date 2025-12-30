@@ -28,6 +28,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/workout.dart';
+import 'package:gymbro_flutter_new/shared/presentation/services/snackbar_service.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/providers/workout_provider.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/widgets/workout_mini_bar.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
@@ -248,12 +249,10 @@ class _MainShellState extends ConsumerState<MainShell> {
       ref.read(currentWorkoutProvider.notifier).pauseWorkout();
 
       // Show confirmation snackbar
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(context.l10n.workoutSaved),
-          duration: const Duration(seconds: 2),
-          behavior: SnackBarBehavior.floating,
-        ),
+      SnackBarService.showSuccess(
+        context,
+        context.l10n.workoutSaved,
+        duration: const Duration(seconds: 2),
       );
       return true;
     }

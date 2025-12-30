@@ -21,6 +21,7 @@ import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_spacing.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator.dart';
+import 'package:gymbro_flutter_new/shared/presentation/services/snackbar_service.dart';
 
 /// Schermata per merge esercizi
 ///
@@ -330,22 +331,18 @@ class _ExerciseMergeScreenState extends ConsumerState<ExerciseMergeScreen> {
           _selectedMatch = null;
         });
 
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(context.l10n.mergeSuccessful),
-            backgroundColor: context.colors.primary,
-          ),
+        SnackBarService.showSuccess(
+          context,
+          context.l10n.mergeSuccessful,
         );
       } else {
         // Reset on error too
         notifier.reset();
 
         final errorMessage = ref.read(mergeExecutionProvider).error;
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(errorMessage ?? context.l10n.mergeError),
-            backgroundColor: context.colors.error,
-          ),
+        SnackBarService.showError(
+          context,
+          errorMessage ?? context.l10n.mergeError,
         );
       }
     }

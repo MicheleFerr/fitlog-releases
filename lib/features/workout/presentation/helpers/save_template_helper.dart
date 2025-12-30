@@ -251,7 +251,7 @@ class SaveTemplateHelper {
                   onAction: () => context.push('/templates'),
                 );
               } catch (e) {
-                ScaffoldMessenger.of(context).clearSnackBars();
+                SnackBarService.dismiss(context);
 
                 // Check if it's a quota error
                 final errorMessage = e.toString();

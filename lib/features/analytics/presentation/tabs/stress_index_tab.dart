@@ -18,6 +18,7 @@ import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator.dart';
+import 'package:gymbro_flutter_new/shared/presentation/services/snackbar_service.dart';
 
 /// Tab widget showing stress index analytics
 class StressIndexTab extends ConsumerWidget {
@@ -127,13 +128,9 @@ class StressIndexTab extends ConsumerWidget {
             final result = await notifier.clearAndRecalculate(days: 30);
 
             if (context.mounted) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text(
-                    context.l10n.stressIndexRecalculatedSuccess(result.$2),
-                  ),
-                  behavior: SnackBarBehavior.floating,
-                ),
+              SnackBarService.showSuccess(
+                context,
+                context.l10n.stressIndexRecalculatedSuccess(result.$2),
               );
             }
           }

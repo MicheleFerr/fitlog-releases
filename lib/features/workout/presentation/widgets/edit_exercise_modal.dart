@@ -515,11 +515,9 @@ extension EditExerciseModalExtension on BuildContext {
       if (kDebugMode) {
         debugPrint('Error: Cannot show EditExerciseModal with null exercise');
       }
-      ScaffoldMessenger.of(this).showSnackBar(
-        SnackBar(
-          content: const Text('Error: Unable to edit this exercise'),
-          backgroundColor: colors.error,
-        ),
+      SnackBarService.showError(
+        this,
+        'Error: Unable to edit this exercise',
       );
       return;
     }
@@ -588,11 +586,9 @@ extension EditExerciseModalExtension on BuildContext {
       
       // Show error message to user
       if (mounted) {
-        ScaffoldMessenger.of(this).showSnackBar(
-          SnackBar(
-            content: const Text('Error opening exercise editor. Please try again.'),
-            backgroundColor: colors.error,
-          ),
+        SnackBarService.showError(
+          this,
+          'Error opening exercise editor. Please try again.',
         );
       }
     }

@@ -28,6 +28,7 @@ import 'package:gymbro_flutter_new/features/analytics/presentation/widgets/rep_z
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
+import 'package:gymbro_flutter_new/shared/presentation/services/snackbar_service.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -305,11 +306,9 @@ class _RepZoneTabState extends ConsumerState<RepZoneTab>
       if (suggestions.isEmpty) {
         debugPrint('🔍 [REP_ZONE_TAB] No suggestions - showing snackbar');
         // No suggestions available
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(context.l10n.noSuggestionsAvailable),
-            behavior: SnackBarBehavior.floating,
-          ),
+        SnackBarService.showInfo(
+          context,
+          context.l10n.noSuggestionsAvailable,
         );
         return;
       }
@@ -338,11 +337,9 @@ class _RepZoneTabState extends ConsumerState<RepZoneTab>
       if (!mounted) return;
       Navigator.of(context, rootNavigator: true).pop();
 
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(context.l10n.errorLoadingExercises),
-          behavior: SnackBarBehavior.floating,
-        ),
+      SnackBarService.showError(
+        context,
+        context.l10n.errorLoadingExercises,
       );
     }
   }

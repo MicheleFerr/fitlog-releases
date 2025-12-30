@@ -7,6 +7,7 @@ import 'package:gymbro_flutter_new/features/progress_photos/domain/entities/prog
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator.dart';
+import 'package:gymbro_flutter_new/shared/presentation/services/snackbar_service.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 
 /// GhostOverlayCamera - Camera with semi-transparent previous photo overlay
@@ -160,11 +161,9 @@ class _GhostOverlayCameraState extends State<GhostOverlayCamera>
       widget.onCapture(file);
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Failed to capture: $e'),
-            backgroundColor: context.colors.error,
-          ),
+        SnackBarService.showError(
+          context,
+          'Failed to capture: $e',
         );
       }
     } finally {
