@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_spacing.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator.dart';
 import 'package:gymbro_flutter_new/shared/presentation/services/snackbar_service.dart';
 import 'package:image_picker/image_picker.dart';
@@ -74,7 +75,7 @@ class _PhotoCaptureSheetState extends State<PhotoCaptureSheet> {
             children: [
               // Handle bar
               Container(
-                margin: const EdgeInsets.symmetric(vertical: 12),
+                margin: const EdgeInsets.symmetric(vertical: AppSpacing.sm),
                 width: 40,
                 height: 4,
                 decoration: BoxDecoration(
@@ -85,7 +86,7 @@ class _PhotoCaptureSheetState extends State<PhotoCaptureSheet> {
 
               // Header
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16),
+                padding: const EdgeInsets.symmetric(horizontal: AppSpacing.md),
                 child: Row(
                   children: [
                     Text(
@@ -109,34 +110,34 @@ class _PhotoCaptureSheetState extends State<PhotoCaptureSheet> {
               Expanded(
                 child: SingleChildScrollView(
                   controller: scrollController,
-                  padding: const EdgeInsets.all(16),
+                  padding: const EdgeInsets.all(AppSpacing.md),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
                       // Image selection area
                       _buildImageSelection(),
 
-                      const SizedBox(height: 24),
+                      const SizedBox(height: AppSpacing.xl),
 
                       // Pose selection
                       _buildPoseSelection(),
 
-                      const SizedBox(height: 24),
+                      const SizedBox(height: AppSpacing.xl),
 
                       // Date picker
                       _buildDatePicker(),
 
-                      const SizedBox(height: 16),
+                      const SizedBox(height: AppSpacing.md),
 
                       // Weight input
                       _buildWeightInput(),
 
-                      const SizedBox(height: 16),
+                      const SizedBox(height: AppSpacing.md),
 
                       // Notes input
                       _buildNotesInput(),
 
-                      const SizedBox(height: 24),
+                      const SizedBox(height: AppSpacing.xl),
 
                       // Submit button
                       _buildSubmitButton(),
@@ -194,7 +195,7 @@ class _PhotoCaptureSheetState extends State<PhotoCaptureSheet> {
                 onTap: () => _showCameraOptions(),
               ),
             ),
-            const SizedBox(width: 16),
+            const SizedBox(width: AppSpacing.md),
             Expanded(
               child: _buildImageSourceCard(
                 icon: AppIcons.photoLibrary,
@@ -206,9 +207,9 @@ class _PhotoCaptureSheetState extends State<PhotoCaptureSheet> {
         ),
         // Ghost overlay hint
         if (hasGhostPhoto) ...[
-          const SizedBox(height: 12),
+          const SizedBox(height: AppSpacing.sm),
           Container(
-            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+            padding: const EdgeInsets.symmetric(horizontal: AppSpacing.sm, vertical: AppSpacing.xs),
             decoration: BoxDecoration(
               color: context.colors.primaryContainer.withValues(alpha: 0.5),
               borderRadius: BorderRadius.circular(8),
@@ -223,7 +224,7 @@ class _PhotoCaptureSheetState extends State<PhotoCaptureSheet> {
                   size: 18,
                   color: context.colors.primary,
                 ),
-                const SizedBox(width: 8),
+                const SizedBox(width: AppSpacing.xs),
                 Expanded(
                   child: Text(
                     'Ghost Overlay available! Align with your previous ${_selectedPose.label} photo.',
@@ -255,7 +256,7 @@ class _PhotoCaptureSheetState extends State<PhotoCaptureSheet> {
       context: context,
       builder: (context) => SafeArea(
         child: Padding(
-          padding: const EdgeInsets.all(16),
+          padding: const EdgeInsets.all(AppSpacing.md),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -266,14 +267,14 @@ class _PhotoCaptureSheetState extends State<PhotoCaptureSheet> {
                   fontWeight: FontWeight.bold,
                 ),
               ),
-              const SizedBox(height: 8),
+              const SizedBox(height: AppSpacing.xs),
               Text(
                 'You have a previous ${_selectedPose.label} photo. Use Ghost Overlay to align your new photo perfectly!',
                 style: context.textTheme.bodyMedium?.copyWith(
                   color: context.colors.onSurfaceVariant,
                 ),
               ),
-              const SizedBox(height: 24),
+              const SizedBox(height: AppSpacing.xl),
               // Ghost Overlay option (recommended)
               _buildCameraOptionCard(
                 icon: AppIcons.layers,
@@ -282,7 +283,7 @@ class _PhotoCaptureSheetState extends State<PhotoCaptureSheet> {
                 isRecommended: true,
                 onTap: () => Navigator.of(context).pop(true),
               ),
-              const SizedBox(height: 12),
+              const SizedBox(height: AppSpacing.sm),
               // Standard camera option
               _buildCameraOptionCard(
                 icon: AppIcons.camera,
@@ -291,7 +292,7 @@ class _PhotoCaptureSheetState extends State<PhotoCaptureSheet> {
                 isRecommended: false,
                 onTap: () => Navigator.of(context).pop(false),
               ),
-              const SizedBox(height: 8),
+              const SizedBox(height: AppSpacing.xs),
             ],
           ),
         ),
@@ -316,7 +317,7 @@ class _PhotoCaptureSheetState extends State<PhotoCaptureSheet> {
       onTap: onTap,
       borderRadius: BorderRadius.circular(12),
       child: Container(
-        padding: const EdgeInsets.all(16),
+        padding: const EdgeInsets.all(AppSpacing.md),
         decoration: BoxDecoration(
           border: Border.all(
             color: isRecommended
@@ -332,7 +333,7 @@ class _PhotoCaptureSheetState extends State<PhotoCaptureSheet> {
         child: Row(
           children: [
             Container(
-              padding: const EdgeInsets.all(12),
+              padding: const EdgeInsets.all(AppSpacing.sm),
               decoration: BoxDecoration(
                 color: isRecommended
                     ? context.colors.primary
@@ -346,7 +347,7 @@ class _PhotoCaptureSheetState extends State<PhotoCaptureSheet> {
                     : context.colors.onSurfaceVariant,
               ),
             ),
-            const SizedBox(width: 16),
+            const SizedBox(width: AppSpacing.md),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -360,7 +361,7 @@ class _PhotoCaptureSheetState extends State<PhotoCaptureSheet> {
                         ),
                       ),
                       if (isRecommended) ...[
-                        const SizedBox(width: 8),
+                        const SizedBox(width: AppSpacing.xs),
                         Container(
                           padding: const EdgeInsets.symmetric(
                             horizontal: 6,
@@ -444,7 +445,7 @@ class _PhotoCaptureSheetState extends State<PhotoCaptureSheet> {
               size: 40,
               color: context.colors.primary,
             ),
-            const SizedBox(height: 8),
+            const SizedBox(height: AppSpacing.xs),
             Text(
               label,
               style: context.textTheme.labelLarge,
@@ -465,7 +466,7 @@ class _PhotoCaptureSheetState extends State<PhotoCaptureSheet> {
             fontWeight: FontWeight.bold,
           ),
         ),
-        const SizedBox(height: 12),
+        const SizedBox(height: AppSpacing.sm),
         Wrap(
           spacing: 8,
           runSpacing: 8,
@@ -497,7 +498,7 @@ class _PhotoCaptureSheetState extends State<PhotoCaptureSheet> {
       onTap: _pickDate,
       borderRadius: BorderRadius.circular(12),
       child: Container(
-        padding: const EdgeInsets.all(16),
+        padding: const EdgeInsets.all(AppSpacing.md),
         decoration: BoxDecoration(
           border: Border.all(color: context.colors.outline),
           borderRadius: BorderRadius.circular(12),
@@ -508,7 +509,7 @@ class _PhotoCaptureSheetState extends State<PhotoCaptureSheet> {
               AppIcons.calendar,
               color: context.colors.onSurfaceVariant,
             ),
-            const SizedBox(width: 12),
+            const SizedBox(width: AppSpacing.sm),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -562,7 +563,7 @@ class _PhotoCaptureSheetState extends State<PhotoCaptureSheet> {
         hintText: 'How are you feeling? Any changes noticed?',
         alignLabelWithHint: true,
         prefixIcon: const Padding(
-          padding: EdgeInsets.only(bottom: 48),
+          padding: EdgeInsets.only(bottom: AppSpacing.xxxl),
           child: Icon(AppIcons.note),
         ),
         border: OutlineInputBorder(

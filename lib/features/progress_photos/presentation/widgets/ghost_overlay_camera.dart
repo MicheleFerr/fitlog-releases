@@ -6,6 +6,7 @@ import 'package:flutter/services.dart';
 import 'package:gymbro_flutter_new/features/progress_photos/domain/entities/progress_photo.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_spacing.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator.dart';
 import 'package:gymbro_flutter_new/shared/presentation/services/snackbar_service.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -277,7 +278,7 @@ class _GhostOverlayCameraState extends State<GhostOverlayCamera>
               tooltip: 'Toggle ghost overlay',
             ),
 
-          const SizedBox(width: 8),
+          const SizedBox(width: AppSpacing.xs),
 
           // Switch camera
           IconButton.filled(
@@ -300,7 +301,7 @@ class _GhostOverlayCameraState extends State<GhostOverlayCamera>
       left: 0,
       right: 0,
       child: Container(
-        padding: const EdgeInsets.all(24),
+        padding: const EdgeInsets.all(AppSpacing.xl),
         decoration: BoxDecoration(
           gradient: LinearGradient(
             begin: Alignment.topCenter,
@@ -320,14 +321,14 @@ class _GhostOverlayCameraState extends State<GhostOverlayCamera>
                     color: context.colors.onPrimary.withValues(alpha: 0.7),
                     size: 20,
                   ),
-                  const SizedBox(width: 8),
+                  const SizedBox(width: AppSpacing.xs),
                   Text(
                     'Ghost: ${(_ghostOpacity * 100).round()}%',
                     style: context.textTheme.labelSmall?.copyWith(
                       color: context.colors.onPrimary.withValues(alpha: 0.7),
                     ),
                   ),
-                  const SizedBox(width: 8),
+                  const SizedBox(width: AppSpacing.xs),
                   Expanded(
                     child: SliderTheme(
                       data: SliderTheme.of(context).copyWith(
@@ -346,7 +347,7 @@ class _GhostOverlayCameraState extends State<GhostOverlayCamera>
                   ),
                 ],
               ),
-              const SizedBox(height: 16),
+              const SizedBox(height: AppSpacing.md),
             ],
 
             // Capture button
@@ -354,7 +355,7 @@ class _GhostOverlayCameraState extends State<GhostOverlayCamera>
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 // Gallery button (left placeholder)
-                const SizedBox(width: 64),
+                const SizedBox(width: AppSpacing.xxxxl),
 
                 // Capture button
                 GestureDetector(
@@ -368,7 +369,7 @@ class _GhostOverlayCameraState extends State<GhostOverlayCamera>
                       color: _isCapturing ? context.colors.outline : Colors.transparent,
                     ),
                     child: Container(
-                      margin: const EdgeInsets.all(8),
+                      margin: const EdgeInsets.all(AppSpacing.xs),
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
                         color: _isCapturing ? context.colors.outline : context.colors.onPrimary,
@@ -383,7 +384,7 @@ class _GhostOverlayCameraState extends State<GhostOverlayCamera>
                 ),
 
                 // Right placeholder
-                const SizedBox(width: 64),
+                const SizedBox(width: AppSpacing.xxxxl),
               ],
             ),
           ],
@@ -399,7 +400,7 @@ class _GhostOverlayCameraState extends State<GhostOverlayCamera>
       right: 0,
       child: Center(
         child: Container(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+          padding: const EdgeInsets.symmetric(horizontal: AppSpacing.md, vertical: AppSpacing.xs),
           decoration: BoxDecoration(
             color: context.colors.primaryContainer.withValues(alpha: 0.9),
             borderRadius: BorderRadius.circular(20),
@@ -412,7 +413,7 @@ class _GhostOverlayCameraState extends State<GhostOverlayCamera>
                 size: 16,
                 color: context.colors.onPrimaryContainer,
               ),
-              const SizedBox(width: 8),
+              const SizedBox(width: AppSpacing.xs),
               Text(
                 widget.pose.label,
                 style: context.textTheme.labelMedium?.copyWith(
@@ -430,7 +431,7 @@ class _GhostOverlayCameraState extends State<GhostOverlayCamera>
   Widget _buildErrorView() {
     return Center(
       child: Padding(
-        padding: const EdgeInsets.all(32),
+        padding: const EdgeInsets.all(AppSpacing.xxl),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
@@ -439,7 +440,7 @@ class _GhostOverlayCameraState extends State<GhostOverlayCamera>
               size: 64,
               color: context.colors.error,
             ),
-            const SizedBox(height: 16),
+            const SizedBox(height: AppSpacing.md),
             Text(
               _errorMessage!,
               style: context.textTheme.bodyMedium?.copyWith(
@@ -447,7 +448,7 @@ class _GhostOverlayCameraState extends State<GhostOverlayCamera>
               ),
               textAlign: TextAlign.center,
             ),
-            const SizedBox(height: 16),
+            const SizedBox(height: AppSpacing.md),
             FilledButton.icon(
               onPressed: _initCamera,
               icon: const Icon(AppIcons.refresh),
