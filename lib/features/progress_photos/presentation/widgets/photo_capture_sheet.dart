@@ -8,6 +8,7 @@ import 'package:gymbro_flutter_new/shared/presentation/theme/app_spacing.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
 import 'package:gymbro_flutter_new/shared/presentation/services/snackbar_service.dart';
+import 'package:gymbro_flutter_new/shared/presentation/mixins/safe_set_state_mixin.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 
@@ -43,7 +44,8 @@ class PhotoCaptureSheet extends StatefulWidget {
   State<PhotoCaptureSheet> createState() => _PhotoCaptureSheetState();
 }
 
-class _PhotoCaptureSheetState extends State<PhotoCaptureSheet> {
+class _PhotoCaptureSheetState extends State<PhotoCaptureSheet>
+    with SafeSetStateMixin {
   File? _selectedImage;
   PhotoPose _selectedPose = PhotoPose.frontRelaxed;
   DateTime _selectedDate = DateTime.now();
@@ -426,8 +428,8 @@ class _PhotoCaptureSheetState extends State<PhotoCaptureSheet> {
       ),
     );
 
-    if (capturedFile != null && mounted) {
-      setState(() {
+    if (capturedFile != null) {
+      safeSetState(() {
         _selectedImage = capturedFile;
       });
     }
@@ -622,7 +624,7 @@ class _PhotoCaptureSheetState extends State<PhotoCaptureSheet> {
       );
 
       if (pickedFile != null) {
-        setState(() {
+        safeSetState(() {
           _selectedImage = File(pickedFile.path);
         });
       }
@@ -644,24 +646,22 @@ class _PhotoCaptureSheetState extends State<PhotoCaptureSheet> {
       lastDate: DateTime.now(),
     );
 
-    if (picked != null) {
+    if (picked != null && mounted) {
       // Also pick time
-      if (mounted) {
-        final time = await showTimePicker(
-          context: context,
-          initialTime: TimeOfDay.fromDateTime(_selectedDate),
-        );
+      final time = await showTimePicker(
+        context: context,
+        initialTime: TimeOfDay.fromDateTime(_selectedDate),
+      );
 
-        setState(() {
-          _selectedDate = DateTime(
-            picked.year,
-            picked.month,
-            picked.day,
-            time?.hour ?? DateTime.now().hour,
-            time?.minute ?? DateTime.now().minute,
-          );
-        });
-      }
+      safeSetState(() {
+        _selectedDate = DateTime(
+          picked.year,
+          picked.month,
+          picked.day,
+          time?.hour ?? DateTime.now().hour,
+          time?.minute ?? DateTime.now().minute,
+        );
+      });
     }
   }
 

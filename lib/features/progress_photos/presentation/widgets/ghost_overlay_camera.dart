@@ -11,6 +11,7 @@ import 'package:gymbro_flutter_new/shared/presentation/theme/app_spacing.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator.dart';
 import 'package:gymbro_flutter_new/shared/presentation/services/snackbar_service.dart';
+import 'package:gymbro_flutter_new/shared/presentation/mixins/safe_set_state_mixin.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 
 /// GhostOverlayCamera - Camera with semi-transparent previous photo overlay
@@ -48,7 +49,7 @@ class GhostOverlayCamera extends StatefulWidget {
 }
 
 class _GhostOverlayCameraState extends State<GhostOverlayCamera>
-    with WidgetsBindingObserver {
+    with WidgetsBindingObserver, SafeSetStateMixin {
   CameraController? _controller;
   List<CameraDescription>? _cameras;
   bool _isInitialized = false;
@@ -104,7 +105,7 @@ class _GhostOverlayCameraState extends State<GhostOverlayCamera>
     try {
       _cameras = await availableCameras();
       if (_cameras == null || _cameras!.isEmpty) {
-        setState(() => _errorMessage = 'No cameras available');
+        safeSetState(() => _errorMessage = 'No cameras available');
         return;
       }
 
@@ -128,11 +129,9 @@ class _GhostOverlayCameraState extends State<GhostOverlayCamera>
 
       await _controller!.initialize();
 
-      if (mounted) {
-        setState(() => _isInitialized = true);
-      }
+      safeSetState(() => _isInitialized = true);
     } catch (e) {
-      setState(() => _errorMessage = 'Failed to initialize camera: $e');
+      safeSetState(() => _errorMessage = 'Failed to initialize camera: $e');
     }
   }
 
@@ -170,9 +169,7 @@ class _GhostOverlayCameraState extends State<GhostOverlayCamera>
         );
       }
     } finally {
-      if (mounted) {
-        setState(() => _isCapturing = false);
-      }
+      safeSetState(() => _isCapturing = false);
     }
   }
 
