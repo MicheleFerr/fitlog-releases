@@ -176,7 +176,7 @@ class _GhostOverlayCameraState extends State<GhostOverlayCamera>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.black,
+      backgroundColor: context.colors.scrim,
       body: SafeArea(
         child: Stack(
           fit: StackFit.expand,
@@ -209,7 +209,7 @@ class _GhostOverlayCameraState extends State<GhostOverlayCamera>
 
   Widget _buildCameraPreview() {
     if (!_isInitialized || _controller == null) {
-      return Container(color: Colors.black);
+      return Container(color: context.colors.scrim);
     }
 
     return Center(
@@ -257,8 +257,8 @@ class _GhostOverlayCameraState extends State<GhostOverlayCamera>
             onPressed: widget.onCancel,
             icon: const Icon(AppIcons.close),
             style: IconButton.styleFrom(
-              backgroundColor: Colors.black54,
-              foregroundColor: Colors.white,
+              backgroundColor: context.colors.scrim.withValues(alpha: 0.54),
+              foregroundColor: context.colors.onPrimary,
             ),
           ),
 
@@ -271,8 +271,8 @@ class _GhostOverlayCameraState extends State<GhostOverlayCamera>
               icon: Icon(_showGhost ? AppIcons.visibility : AppIcons.visibilityOff),
               style: IconButton.styleFrom(
                 backgroundColor:
-                    _showGhost ? context.colors.primary : Colors.black54,
-                foregroundColor: Colors.white,
+                    _showGhost ? context.colors.primary : context.colors.scrim.withValues(alpha: 0.54),
+                foregroundColor: context.colors.onPrimary,
               ),
               tooltip: 'Toggle ghost overlay',
             ),
@@ -284,8 +284,8 @@ class _GhostOverlayCameraState extends State<GhostOverlayCamera>
             onPressed: _switchCamera,
             icon: const Icon(AppIcons.cameraSwitch),
             style: IconButton.styleFrom(
-              backgroundColor: Colors.black54,
-              foregroundColor: Colors.white,
+              backgroundColor: context.colors.scrim.withValues(alpha: 0.54),
+              foregroundColor: context.colors.onPrimary,
             ),
             tooltip: 'Switch camera',
           ),
@@ -301,11 +301,11 @@ class _GhostOverlayCameraState extends State<GhostOverlayCamera>
       right: 0,
       child: Container(
         padding: const EdgeInsets.all(24),
-        decoration: const BoxDecoration(
+        decoration: BoxDecoration(
           gradient: LinearGradient(
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
-            colors: [Colors.transparent, Colors.black87],
+            colors: [Colors.transparent, context.colors.scrim.withValues(alpha: 0.87)],
           ),
         ),
         child: Column(
@@ -315,16 +315,16 @@ class _GhostOverlayCameraState extends State<GhostOverlayCamera>
             if (_showGhost && widget.previousPhoto != null) ...[
               Row(
                 children: [
-                  const Icon(
+                  Icon(
                     AppIcons.opacity,
-                    color: Colors.white70,
+                    color: context.colors.onPrimary.withValues(alpha: 0.7),
                     size: 20,
                   ),
                   const SizedBox(width: 8),
                   Text(
                     'Ghost: ${(_ghostOpacity * 100).round()}%',
                     style: context.textTheme.labelSmall?.copyWith(
-                      color: Colors.white70,
+                      color: context.colors.onPrimary.withValues(alpha: 0.7),
                     ),
                   ),
                   const SizedBox(width: 8),
@@ -332,8 +332,8 @@ class _GhostOverlayCameraState extends State<GhostOverlayCamera>
                     child: SliderTheme(
                       data: SliderTheme.of(context).copyWith(
                         activeTrackColor: context.colors.primary,
-                        inactiveTrackColor: Colors.white24,
-                        thumbColor: Colors.white,
+                        inactiveTrackColor: context.colors.onPrimary.withValues(alpha: 0.24),
+                        thumbColor: context.colors.onPrimary,
                         overlayColor: context.colors.primary.withValues(alpha: 0.2),
                       ),
                       child: Slider(
@@ -364,14 +364,14 @@ class _GhostOverlayCameraState extends State<GhostOverlayCamera>
                     height: 80,
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
-                      border: Border.all(color: Colors.white, width: 4),
-                      color: _isCapturing ? Colors.grey : Colors.transparent,
+                      border: Border.all(color: context.colors.onPrimary, width: 4),
+                      color: _isCapturing ? context.colors.outline : Colors.transparent,
                     ),
                     child: Container(
                       margin: const EdgeInsets.all(8),
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
-                        color: _isCapturing ? Colors.grey : Colors.white,
+                        color: _isCapturing ? context.colors.outline : context.colors.onPrimary,
                       ),
                       child: _isCapturing
                           ? const Center(
@@ -443,7 +443,7 @@ class _GhostOverlayCameraState extends State<GhostOverlayCamera>
             Text(
               _errorMessage!,
               style: context.textTheme.bodyMedium?.copyWith(
-                color: Colors.white,
+                color: context.colors.onPrimary,
               ),
               textAlign: TextAlign.center,
             ),
