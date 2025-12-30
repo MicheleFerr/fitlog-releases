@@ -6,7 +6,9 @@ import 'package:flutter/services.dart';
 import 'package:gymbro_flutter_new/features/progress_photos/domain/entities/progress_photo.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_spacing.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator.dart';
 import 'package:gymbro_flutter_new/shared/presentation/services/snackbar_service.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -316,10 +318,11 @@ class _GhostOverlayCameraState extends State<GhostOverlayCamera>
             if (_showGhost && widget.previousPhoto != null) ...[
               Row(
                 children: [
-                  Icon(
-                    AppIcons.opacity,
+                  SemanticIcon(
+                    icon: AppIcons.opacity,
+                    semanticLabel: 'Ghost opacity',
                     color: context.colors.onPrimary.withValues(alpha: 0.7),
-                    size: 20,
+                    size: AppIconSize.small,
                   ),
                   const SizedBox(width: AppSpacing.xs),
                   Text(
@@ -408,9 +411,10 @@ class _GhostOverlayCameraState extends State<GhostOverlayCamera>
           child: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Icon(
-                AppIcons.person,
-                size: 16,
+              SemanticIcon(
+                icon: AppIcons.person,
+                semanticLabel: 'Pose',
+                size: AppIconSize.small,
                 color: context.colors.onPrimaryContainer,
               ),
               const SizedBox(width: AppSpacing.xs),
@@ -435,9 +439,10 @@ class _GhostOverlayCameraState extends State<GhostOverlayCamera>
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(
-              AppIcons.error,
-              size: 64,
+            SemanticIcon(
+              icon: AppIcons.error,
+              semanticLabel: 'Error',
+              size: AppIconSize.xxlarge,
               color: context.colors.error,
             ),
             const SizedBox(height: AppSpacing.md),

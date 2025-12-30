@@ -3,8 +3,10 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_spacing.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
 import 'package:gymbro_flutter_new/shared/presentation/services/snackbar_service.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
@@ -191,6 +193,7 @@ class _PhotoCaptureSheetState extends State<PhotoCaptureSheet> {
             Expanded(
               child: _buildImageSourceCard(
                 icon: AppIcons.camera,
+                iconLabel: 'Camera',
                 label: context.l10n.camera,
                 onTap: () => _showCameraOptions(),
               ),
@@ -199,6 +202,7 @@ class _PhotoCaptureSheetState extends State<PhotoCaptureSheet> {
             Expanded(
               child: _buildImageSourceCard(
                 icon: AppIcons.photoLibrary,
+                iconLabel: 'Gallery',
                 label: context.l10n.gallery,
                 onTap: () => _pickImage(ImageSource.gallery),
               ),
@@ -219,9 +223,10 @@ class _PhotoCaptureSheetState extends State<PhotoCaptureSheet> {
             ),
             child: Row(
               children: [
-                Icon(
-                  AppIcons.lightbulb,
-                  size: 18,
+                SemanticIcon(
+                  icon: AppIcons.lightbulb,
+                  semanticLabel: 'Tip',
+                  size: AppIconSize.small,
                   color: context.colors.primary,
                 ),
                 const SizedBox(width: AppSpacing.xs),
@@ -278,6 +283,7 @@ class _PhotoCaptureSheetState extends State<PhotoCaptureSheet> {
               // Ghost Overlay option (recommended)
               _buildCameraOptionCard(
                 icon: AppIcons.layers,
+                iconLabel: 'Layers',
                 title: 'Ghost Overlay Camera',
                 subtitle: 'See previous photo while capturing (Recommended)',
                 isRecommended: true,
@@ -287,6 +293,7 @@ class _PhotoCaptureSheetState extends State<PhotoCaptureSheet> {
               // Standard camera option
               _buildCameraOptionCard(
                 icon: AppIcons.camera,
+                iconLabel: 'Camera',
                 title: 'Standard Camera',
                 subtitle: 'Capture without overlay',
                 isRecommended: false,
@@ -308,6 +315,7 @@ class _PhotoCaptureSheetState extends State<PhotoCaptureSheet> {
 
   Widget _buildCameraOptionCard({
     required IconData icon,
+    required String iconLabel,
     required String title,
     required String subtitle,
     required bool isRecommended,
@@ -340,8 +348,9 @@ class _PhotoCaptureSheetState extends State<PhotoCaptureSheet> {
                     : context.colors.surfaceContainer,
                 borderRadius: BorderRadius.circular(12),
               ),
-              child: Icon(
-                icon,
+              child: SemanticIcon(
+                icon: icon,
+                semanticLabel: iconLabel,
                 color: isRecommended
                     ? context.colors.onPrimary
                     : context.colors.onSurfaceVariant,
@@ -392,8 +401,9 @@ class _PhotoCaptureSheetState extends State<PhotoCaptureSheet> {
                 ],
               ),
             ),
-            Icon(
-              AppIcons.chevronRight,
+            SemanticIcon(
+              icon: AppIcons.chevronRight,
+              semanticLabel: 'Navigate',
               color: context.colors.onSurfaceVariant,
             ),
           ],
@@ -425,6 +435,7 @@ class _PhotoCaptureSheetState extends State<PhotoCaptureSheet> {
 
   Widget _buildImageSourceCard({
     required IconData icon,
+    required String iconLabel,
     required String label,
     required VoidCallback onTap,
   }) {
@@ -440,9 +451,10 @@ class _PhotoCaptureSheetState extends State<PhotoCaptureSheet> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(
-              icon,
-              size: 40,
+            SemanticIcon(
+              icon: icon,
+              semanticLabel: iconLabel,
+              size: AppIconSize.xlarge,
               color: context.colors.primary,
             ),
             const SizedBox(height: AppSpacing.xs),
@@ -505,8 +517,9 @@ class _PhotoCaptureSheetState extends State<PhotoCaptureSheet> {
         ),
         child: Row(
           children: [
-            Icon(
-              AppIcons.calendar,
+            SemanticIcon(
+              icon: AppIcons.calendar,
+              semanticLabel: 'Calendar',
               color: context.colors.onSurfaceVariant,
             ),
             const SizedBox(width: AppSpacing.sm),
@@ -527,8 +540,9 @@ class _PhotoCaptureSheetState extends State<PhotoCaptureSheet> {
               ],
             ),
             const Spacer(),
-            Icon(
-              AppIcons.chevronRight,
+            SemanticIcon(
+              icon: AppIcons.chevronRight,
+              semanticLabel: 'Navigate',
               color: context.colors.onSurfaceVariant,
             ),
           ],
@@ -562,9 +576,13 @@ class _PhotoCaptureSheetState extends State<PhotoCaptureSheet> {
         labelText: 'Notes (optional)',
         hintText: 'How are you feeling? Any changes noticed?',
         alignLabelWithHint: true,
-        prefixIcon: const Padding(
-          padding: EdgeInsets.only(bottom: AppSpacing.xxxl),
-          child: Icon(AppIcons.note),
+        prefixIcon: Padding(
+          padding: const EdgeInsets.only(bottom: AppSpacing.xxxl),
+          child: SemanticIcon(
+            icon: AppIcons.note,
+            semanticLabel: 'Notes',
+            color: context.colors.onSurfaceVariant,
+          ),
         ),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
