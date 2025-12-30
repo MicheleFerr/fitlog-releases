@@ -171,8 +171,8 @@ class _PhotoCaptureSheetState extends State<PhotoCaptureSheet> {
               onPressed: () => setState(() => _selectedImage = null),
               icon: const Icon(AppIcons.close),
               style: IconButton.styleFrom(
-                backgroundColor: Colors.black54,
-                foregroundColor: Colors.white,
+                backgroundColor: context.colors.scrim.withValues(alpha: 0.54),
+                foregroundColor: context.colors.onPrimary,
               ),
             ),
           ),
