@@ -596,8 +596,10 @@ class AppIcons {
   static const IconData trendingNeutral = Icons.trending_neutral;
   static const IconData trendingUpRounded = Icons.trending_up;
 
-  // COMMUNICATION (9 icons)
+  // COMMUNICATION (13 icons)
   static const IconData alternateEmail = Icons.alternate_email;
+  static const IconData attachFile = Icons.attach_file;
+  static const IconData chatBubbleOutline = Icons.chat_bubble_outline;
   static const IconData commentOutlined = Icons.comment_outlined;
   static const IconData commentsDisabledOutlined = Icons.comments_disabled_outlined;
   static const IconData message = Icons.message;
@@ -809,9 +811,10 @@ class AppIcons {
   // MONEY (1 icons)
   static const IconData restore = Icons.restore;
 
-  // NAVIGATION (18 icons)
+  // NAVIGATION (19 icons)
   static const IconData arrowBackIos = Icons.arrow_back_ios;
   static const IconData arrowBackIosNew = Icons.arrow_back_ios_new;
+  static const IconData arrowBackIosRounded = Icons.arrow_back_ios_rounded;
   static const IconData arrowDownward = Icons.arrow_downward;
   static const IconData arrowDropDown = Icons.arrow_drop_down;
   static const IconData arrowUpward = Icons.arrow_upward;

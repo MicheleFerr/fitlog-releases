@@ -48,8 +48,10 @@ import 'package:gymbro_flutter_new/features/auth/presentation/providers/auth_pro
 import 'package:gymbro_flutter_new/features/home/presentation/minimal_home_screen.dart';
 import 'package:gymbro_flutter_new/features/help_center/presentation/screens/help_center_screen.dart';
 import 'package:gymbro_flutter_new/features/community/presentation/screens/community_hub_screen.dart';
-import 'package:gymbro_flutter_new/features/onboarding/presentation/global_onboarding_screen.dart';
+// NOTE: GlobalOnboardingScreen removed - replaced by spotlight tutorial
+import 'package:gymbro_flutter_new/features/onboarding/presentation/screens/initial/initial_onboarding_screen.dart';
 import 'package:gymbro_flutter_new/features/workout_templates/presentation/screens/templates_home_screen.dart';
+import 'package:gymbro_flutter_new/shared/presentation/providers/app_config_provider.dart';
 
 // Workout branch
 import 'package:gymbro_flutter_new/features/workout/presentation/workout_screen.dart';
@@ -114,6 +116,7 @@ import 'package:gymbro_flutter_new/shared/domain/auth/providers/security_provide
 final appRouterProvider = Provider<GoRouter>((ref) {
   final authState = ref.watch(authStateProvider);
   final rbacService = ref.watch(rbacServiceProvider);
+  final appConfig = ref.watch(appConfigProvider);
 
   return GoRouter(
     navigatorKey: AppRoutes.rootNavigatorKey,
@@ -126,6 +129,8 @@ final appRouterProvider = Provider<GoRouter>((ref) {
       final isLoggedIn = authState == AuthState.authenticated;
       final isLoggingIn = state.fullPath == AppRoutes.loginPath ||
           state.fullPath == AppRoutes.registerPath;
+      final isOnInitialOnboarding =
+          state.fullPath == AppRoutes.initialOnboardingPath;
       final currentPath = state.fullPath ?? state.path ?? '/';
 
       // Wait for auth to initialize
@@ -145,7 +150,20 @@ final appRouterProvider = Provider<GoRouter>((ref) {
 
       // Logged in and on auth pages → redirect to home
       if (isLoggedIn && isLoggingIn) {
+        // Check if initial onboarding is completed
+        if (!appConfig.initialOnboardingCompleted) {
+          return AppRoutes.initialOnboardingPath;
+        }
         return AppRoutes.homePath;
+      }
+
+      // Logged in but initial onboarding not completed
+      // Redirect to initial onboarding (unless already there)
+      if (isLoggedIn && !appConfig.initialOnboardingCompleted && !isOnInitialOnboarding) {
+        if (kDebugMode) {
+          debugPrint('🚀 [Router] Redirecting to initial onboarding');
+        }
+        return AppRoutes.initialOnboardingPath;
       }
 
       // RBAC check
@@ -201,6 +219,16 @@ final appRouterProvider = Provider<GoRouter>((ref) {
       ),
 
       // ─────────────────────────────────────────────────────────────────────
+      // INITIAL ONBOARDING (outside shell, full-screen)
+      // ─────────────────────────────────────────────────────────────────────
+      GoRoute(
+        path: AppRoutes.initialOnboardingPath,
+        name: AppRoutes.initialOnboardingName,
+        parentNavigatorKey: AppRoutes.rootNavigatorKey,
+        builder: (context, state) => const InitialOnboardingScreen(),
+      ),
+
+      // ─────────────────────────────────────────────────────────────────────
       // MAIN SHELL (4-branch bottom navigation)
       // ─────────────────────────────────────────────────────────────────────
       StatefulShellRoute.indexedStack(
@@ -231,12 +259,8 @@ final appRouterProvider = Provider<GoRouter>((ref) {
                     name: AppRoutes.communityName,
                     builder: (context, state) => const CommunityHubScreen(),
                   ),
-                  // Onboarding
-                  GoRoute(
-                    path: 'onboarding',
-                    name: AppRoutes.onboardingName,
-                    builder: (context, state) => const GlobalOnboardingScreen(),
-                  ),
+                  // NOTE: Old slide-based onboarding removed
+                  // Replaced by spotlight tutorial in WorkoutScreen
                   // Routine placeholder
                   GoRoute(
                     path: 'routine',

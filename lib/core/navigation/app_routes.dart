@@ -144,8 +144,14 @@ abstract final class AppRoutes {
   static const String templateDetailPath = '/templates/detail';
   static const String templateDetailName = 'template-detail';
 
+  /// @deprecated Slide-based onboarding removed - replaced by spotlight tutorial
+  /// Keeping constants for reference only
   static const String onboardingPath = '/onboarding';
   static const String onboardingName = 'onboarding';
+
+  /// Initial onboarding (first-time user setup) - outside shell
+  static const String initialOnboardingPath = '/initial-onboarding';
+  static const String initialOnboardingName = 'initial-onboarding';
 
   static const String adminPath = '/admin';
   static const String adminName = 'admin';

@@ -35,8 +35,6 @@ import 'package:flutter/foundation.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_spacing.dart';
-import 'package:gymbro_flutter_new/features/onboarding/presentation/providers/onboarding_state_provider.dart';
-import 'package:gymbro_flutter_new/features/onboarding/domain/services/contextual_overlay_manager.dart';
 import 'package:gymbro_flutter_new/features/onboarding/domain/services/workout_tutorial_service.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/services/workout_template_cache_service.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
@@ -133,35 +131,28 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen> {
   // - Schedule workout forgotten notification
   // - Draft recovery on app startup
 
-  /// PHASE 2: Show welcome overlay to guide beginner through first workout
+  /// Auto-start spotlight tutorial for new users
+  ///
+  /// Shows the interactive tutorial that highlights UI elements
+  /// step by step, teaching users how to use the workout screen.
   Future<void> _showFirstWorkoutWelcomeIfNeeded() async {
     if (!mounted) return;
 
-    final onboardingState = ref.read(onboardingProvider);
+    final tutorialState = ref.read(workoutTutorialProvider);
     final currentWorkout = ref.read(currentWorkoutProvider);
 
-    // Show only if:
-    // 1. User is beginner
-    // 2. In first workout flow (hasn't completed first workout yet)
-    // 3. Workout has no exercises yet (empty state)
-    // 4. Hasn't seen this overlay before
-    if (onboardingState.isInGuidedFirstWorkout &&
-        (currentWorkout == null || currentWorkout.exercises.isEmpty) &&
-        !onboardingState.hasSeenOverlay('firstWorkoutWelcome')) {
+    // Start spotlight tutorial if:
+    // 1. Tutorial not completed yet
+    // 2. Tutorial not currently active
+    // 3. Workout has no exercises yet (empty state - good time to learn)
+    if (!tutorialState.hasCompletedTutorial &&
+        !tutorialState.isActive &&
+        (currentWorkout == null || currentWorkout.exercises.isEmpty)) {
       // Wait a bit for UI to settle
       await Future.delayed(const Duration(milliseconds: 500));
 
       if (mounted) {
-        await ContextualOverlayManager.show(
-          context: context,
-          ref: ref,
-          overlayId: 'firstWorkoutWelcome',
-          targetKey: _addExerciseFABKey,
-          message: ContextualOverlayManager
-              .commonOverlays['firstWorkoutWelcome']!.message,
-          actionLabel: ContextualOverlayManager
-              .commonOverlays['firstWorkoutWelcome']!.actionLabel,
-        );
+        _startWorkoutTutorial();
       }
     }
   }

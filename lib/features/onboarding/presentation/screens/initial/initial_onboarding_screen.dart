@@ -11,6 +11,8 @@ import 'package:gymbro_flutter_new/features/onboarding/presentation/widgets/init
 import 'package:gymbro_flutter_new/features/onboarding/presentation/widgets/initial/steps/healthkit_step.dart';
 import 'package:gymbro_flutter_new/features/onboarding/presentation/widgets/initial/steps/frequency_summary_step.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
 
 /// Main screen for initial onboarding flow.
 ///
@@ -102,10 +104,10 @@ class _InitialOnboardingScreenState
       // Trigger callback if provided
       widget.onComplete?.call();
 
-      // Navigate to Global Onboarding (app tutorial) for new users
-      // This teaches them how to use the app after profile setup
+      // Navigate to Home - spotlight tutorial will start automatically
+      // when user opens workout screen for the first time
       if (mounted) {
-        context.goNamed(AppRoutes.onboardingName);
+        context.goNamed(AppRoutes.homeName);
       }
     } catch (e) {
       notifier.setError('Errore durante il salvataggio: $e');
@@ -136,9 +138,9 @@ class _ProgressBar extends StatelessWidget {
             IconButton(
               onPressed: () => onStepTap(currentStep - 1),
               icon: Icon(
-                Icons.arrow_back_ios_rounded,
+                AppIcons.arrowBackIosRounded,
                 color: context.colors.onSurface,
-                size: 20,
+                size: AppIconSize.small,
               ),
             )
           else
@@ -191,7 +193,7 @@ class _StepIndicator extends StatelessWidget {
           color: isActive
               ? context.colors.primary
               : context.colors.onSurface.withValues(alpha: 0.2),
-          borderRadius: BorderRadius.circular(4),
+          borderRadius: BorderRadius.circular(8),
         ),
       ),
     );
