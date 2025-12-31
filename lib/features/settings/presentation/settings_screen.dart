@@ -1,4 +1,5 @@
-import 'package:flutter/foundation.dart' show kDebugMode;
+import 'dart:async' show unawaited;
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -17,7 +18,6 @@ import 'package:gymbro_flutter_new/features/analytics/presentation/widgets/migra
 import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
 import 'package:gymbro_flutter_new/features/onboarding/presentation/providers/tutorial_state_notifier.dart';
 import 'package:gymbro_flutter_new/features/onboarding/domain/registry/tutorial_registry.dart';
-import 'package:gymbro_flutter_new/features/onboarding/domain/services/workout_tutorial_service.dart';
 import 'package:gymbro_flutter_new/features/auth/presentation/providers/admin_provider.dart';
 import 'package:gymbro_flutter_new/features/auth/domain/entities/user_profile.dart';
 import 'package:gymbro_flutter_new/features/stress_index/presentation/providers/stress_index_provider.dart';
@@ -102,12 +102,6 @@ class SettingsScreen extends ConsumerWidget {
 
             // Account Actions
             _buildAccountSection(context, ref),
-
-            // Developer Tools (debug mode only)
-            if (kDebugMode) ...[
-              const SizedBox(height: 24),
-              _buildDeveloperToolsSection(context, ref),
-            ],
 
             // DEBUG: Migration tool (ferrara-michele only)
             if (currentUser.value?.email?.toString().contains('ferrara-michele') == true)
@@ -922,61 +916,6 @@ class SettingsScreen extends ConsumerWidget {
     );
   }
 
-  /// Developer Tools section - only visible in debug mode
-  Widget _buildDeveloperToolsSection(BuildContext context, WidgetRef ref) {
-    return Card(
-      color: context.colors.errorContainer.withValues(alpha: 0.3),
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              children: [
-                SemanticIcon(
-                  icon: AppIcons.code,
-                  semanticLabel: 'Developer Tools',
-                  size: AppIconSize.medium,
-                  color: context.colors.error,
-                ),
-                const SizedBox(width: 8),
-                Text(
-                  'Developer Tools',
-                  style: context.textTheme.titleMedium?.copyWith(
-                    fontWeight: FontWeight.bold,
-                    color: context.colors.error,
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 16),
-
-            // Start Workout Spotlight Tutorial
-            _buildSettingTile(
-              context,
-              title: 'Start Spotlight Tutorial',
-              subtitle: 'Reset and start the workout tutorial',
-              leading: SemanticIcon(
-                icon: AppIcons.lightbulb,
-                semanticLabel: 'Start tutorial',
-                size: AppIconSize.medium,
-                color: context.colors.warning,
-              ),
-              onTap: () {
-                // Reset and prepare tutorial
-                ref.read(workoutTutorialProvider.notifier).resetTutorial();
-                SnackBarService.showSuccess(
-                  context,
-                  'Tutorial reset! Go to Workout screen to start.',
-                );
-              },
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
   Widget _buildSettingTile(
     BuildContext context, {
     required String title,
@@ -1324,7 +1263,9 @@ class SettingsScreen extends ConsumerWidget {
             onPressed: () async {
               Navigator.pop(context);
               await ref.read(authControllerProvider.notifier).signOut();
-              context.go('/login');
+              if (context.mounted) {
+                context.go('/login');
+              }
             },
             style: FilledButton.styleFrom(backgroundColor: context.colors.error),
             child: Text(context.l10n.signOutButton),
@@ -1422,8 +1363,8 @@ class SettingsScreen extends ConsumerWidget {
 
   /// Perform the actual account deletion
   Future<void> _performAccountDeletion(BuildContext context, WidgetRef ref) async {
-    // Show loading dialog
-    showDialog(
+    // Show loading dialog (intentionally not awaited - we dismiss it later)
+    unawaited(showDialog(
       context: context,
       barrierDismissible: false,
       builder: (context) => AlertDialog(
@@ -1435,7 +1376,7 @@ class SettingsScreen extends ConsumerWidget {
           ],
         ),
       ),
-    );
+    ));
 
     try {
       final success = await ref.read(authControllerProvider.notifier).deleteAccount();

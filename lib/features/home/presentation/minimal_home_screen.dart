@@ -27,6 +27,7 @@ import 'package:gymbro_flutter_new/features/recovery_insight/presentation/widget
 import 'package:gymbro_flutter_new/features/stress_index/presentation/widgets/template_suggestion_card.dart';
 import 'package:gymbro_flutter_new/features/stress_index/presentation/widgets/stress_prediction_card.dart';
 import 'package:gymbro_flutter_new/features/exercise_merge/presentation/widgets/merge_suggestion_card.dart';
+import 'package:gymbro_flutter_new/features/onboarding/domain/services/workout_tutorial_service.dart';
 
 /// Minimal Home Screen - Clean dark premium design
 ///
@@ -51,26 +52,29 @@ class MinimalHomeScreen extends ConsumerWidget {
     // 🔧 PERF FIX: Moved isAdmin and primaryAdvice watches to Consumer widgets
     // to prevent entire screen rebuilds when these values change
 
+    // Developer FAB visible only for ferrara-michele@hotmail.it
+    final currentUser = ref.watch(currentUserProvider).valueOrNull;
+    final isDeveloper = currentUser?.email == 'ferrara-michele@hotmail.it';
+
     return Scaffold(
       backgroundColor: context.colors.surface,
-      // 🔧 PERF FIX: Isolated developer FAB in Consumer to prevent rebuilds
-      floatingActionButton: Consumer(
-        builder: (context, ref, child) {
-          final isDeveloper = ref.watch(isDeveloperProvider);
-          return isDeveloper
-              ? FloatingActionButton(
-                  onPressed: () => _showDeveloperTools(context),
-                  backgroundColor: context.colors.tertiary,
-                  child: SemanticIcon(
-                    icon: AppIcons.code,
-                    semanticLabel: 'Developer Tools',
-                    color: context.colors.onTertiary,
-                  ),
-                )
-              : const SizedBox.shrink();
-        },
-      ),
+      floatingActionButton: isDeveloper
+          ? FloatingActionButton(
+              onPressed: () => _showDeveloperTools(context),
+              backgroundColor: context.colors.tertiary,
+              child: SemanticIcon(
+                icon: AppIcons.code,
+                semanticLabel: 'Developer Tools',
+                color: context.colors.onTertiary,
+              ),
+            )
+          : null,
       body: CustomScrollView(
+        // 🔧 FIX: BouncingScrollPhysics with AlwaysScrollable for smoother iOS bounce
+        // Prevents jitter while keeping natural iOS feel
+        physics: const BouncingScrollPhysics(
+          parent: AlwaysScrollableScrollPhysics(),
+        ),
         slivers: [
           // Minimal AppBar
           // 🔧 FIX: Changed from floating:true to pinned:true to prevent
@@ -314,11 +318,11 @@ class MinimalHomeScreen extends ConsumerWidget {
 }
 
 /// Developer Tools Bottom Sheet
-class _DeveloperToolsSheet extends StatelessWidget {
+class _DeveloperToolsSheet extends ConsumerWidget {
   const _DeveloperToolsSheet();
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final safeMax = ModalService.safeMaxChildSize(context, preferredMax: 0.9);
     return DraggableScrollableSheet(
       initialChildSize: 0.6,
@@ -460,6 +464,20 @@ class _DeveloperToolsSheet extends StatelessWidget {
                         SnackBarService.showInfo(
                           context,
                           'Notification Tester coming soon',
+                        );
+                      },
+                    ),
+                    const SizedBox(height: 12),
+                    _DeveloperToolItem(
+                      icon: AppIcons.lightbulb,
+                      title: 'Start Spotlight Tutorial',
+                      subtitle: 'Reset and start workout tutorial',
+                      onTap: () {
+                        Navigator.pop(context);
+                        ref.read(workoutTutorialProvider.notifier).resetTutorial();
+                        SnackBarService.showSuccess(
+                          context,
+                          'Tutorial reset! Go to Workout screen to start.',
                         );
                       },
                     ),
