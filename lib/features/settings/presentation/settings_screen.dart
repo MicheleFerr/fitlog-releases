@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart' show kDebugMode;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -16,6 +17,7 @@ import 'package:gymbro_flutter_new/features/analytics/presentation/widgets/migra
 import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
 import 'package:gymbro_flutter_new/features/onboarding/presentation/providers/tutorial_state_notifier.dart';
 import 'package:gymbro_flutter_new/features/onboarding/domain/registry/tutorial_registry.dart';
+import 'package:gymbro_flutter_new/features/onboarding/domain/services/workout_tutorial_service.dart';
 import 'package:gymbro_flutter_new/features/auth/presentation/providers/admin_provider.dart';
 import 'package:gymbro_flutter_new/features/auth/domain/entities/user_profile.dart';
 import 'package:gymbro_flutter_new/features/stress_index/presentation/providers/stress_index_provider.dart';
@@ -100,6 +102,12 @@ class SettingsScreen extends ConsumerWidget {
 
             // Account Actions
             _buildAccountSection(context, ref),
+
+            // Developer Tools (debug mode only)
+            if (kDebugMode) ...[
+              const SizedBox(height: 24),
+              _buildDeveloperToolsSection(context, ref),
+            ],
 
             // DEBUG: Migration tool (ferrara-michele only)
             if (currentUser.value?.email?.toString().contains('ferrara-michele') == true)
@@ -892,6 +900,77 @@ class SettingsScreen extends ConsumerWidget {
               ),
               onTap: () => _showSignOutDialog(context, ref),
             ),
+
+            const Divider(),
+
+            // Delete Account (GDPR Art. 17 - Right to Erasure)
+            _buildSettingTile(
+              context,
+              title: context.l10n.deleteAccount,
+              subtitle: context.l10n.deleteAccountDesc,
+              leading: SemanticIcon(
+                icon: AppIcons.delete,
+                semanticLabel: 'Delete account',
+                size: AppIconSize.medium,
+                color: context.colors.error,
+              ),
+              onTap: () => _showDeleteAccountDialog(context, ref),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  /// Developer Tools section - only visible in debug mode
+  Widget _buildDeveloperToolsSection(BuildContext context, WidgetRef ref) {
+    return Card(
+      color: context.colors.errorContainer.withValues(alpha: 0.3),
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                SemanticIcon(
+                  icon: AppIcons.code,
+                  semanticLabel: 'Developer Tools',
+                  size: AppIconSize.medium,
+                  color: context.colors.error,
+                ),
+                const SizedBox(width: 8),
+                Text(
+                  'Developer Tools',
+                  style: context.textTheme.titleMedium?.copyWith(
+                    fontWeight: FontWeight.bold,
+                    color: context.colors.error,
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 16),
+
+            // Start Workout Spotlight Tutorial
+            _buildSettingTile(
+              context,
+              title: 'Start Spotlight Tutorial',
+              subtitle: 'Reset and start the workout tutorial',
+              leading: SemanticIcon(
+                icon: AppIcons.lightbulb,
+                semanticLabel: 'Start tutorial',
+                size: AppIconSize.medium,
+                color: context.colors.warning,
+              ),
+              onTap: () {
+                // Reset and prepare tutorial
+                ref.read(workoutTutorialProvider.notifier).resetTutorial();
+                SnackBarService.showSuccess(
+                  context,
+                  'Tutorial reset! Go to Workout screen to start.',
+                );
+              },
+            ),
           ],
         ),
       ),
@@ -1249,6 +1328,169 @@ class SettingsScreen extends ConsumerWidget {
             },
             style: FilledButton.styleFrom(backgroundColor: context.colors.error),
             child: Text(context.l10n.signOutButton),
+          ),
+        ],
+      ),
+    );
+  }
+
+  /// Show delete account confirmation dialog (GDPR Art. 17)
+  void _showDeleteAccountDialog(BuildContext context, WidgetRef ref) {
+    showDialog(
+      context: context,
+      builder: (dialogContext) => AlertDialog(
+        title: Row(
+          children: [
+            SemanticIcon(
+              icon: AppIcons.warning,
+              semanticLabel: 'Warning',
+              size: AppIconSize.medium,
+              color: context.colors.error,
+            ),
+            const SizedBox(width: 8),
+            Expanded(child: Text(context.l10n.deleteAccountTitle)),
+          ],
+        ),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              context.l10n.deleteAccountWarning,
+              style: context.textTheme.bodyMedium,
+            ),
+            const SizedBox(height: 16),
+            Container(
+              padding: const EdgeInsets.all(12),
+              decoration: BoxDecoration(
+                color: context.colors.errorContainer,
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    context.l10n.deleteAccountDataList,
+                    style: context.textTheme.bodySmall?.copyWith(
+                      color: context.colors.onErrorContainer,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  Text(
+                    '• ${context.l10n.deleteAccountDataWorkouts}\n'
+                    '• ${context.l10n.deleteAccountDataTemplates}\n'
+                    '• ${context.l10n.deleteAccountDataPhotos}\n'
+                    '• ${context.l10n.deleteAccountDataMeasurements}\n'
+                    '• ${context.l10n.deleteAccountDataSettings}',
+                    style: context.textTheme.bodySmall?.copyWith(
+                      color: context.colors.onErrorContainer,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(height: 16),
+            Text(
+              context.l10n.deleteAccountExportHint,
+              style: context.textTheme.bodySmall?.copyWith(
+                color: context.colors.onSurfaceVariant,
+                fontStyle: FontStyle.italic,
+              ),
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(dialogContext),
+            child: Text(context.l10n.cancel),
+          ),
+          FilledButton(
+            onPressed: () async {
+              Navigator.pop(dialogContext);
+              await _performAccountDeletion(context, ref);
+            },
+            style: FilledButton.styleFrom(
+              backgroundColor: context.colors.error,
+            ),
+            child: Text(context.l10n.deleteAccountConfirm),
+          ),
+        ],
+      ),
+    );
+  }
+
+  /// Perform the actual account deletion
+  Future<void> _performAccountDeletion(BuildContext context, WidgetRef ref) async {
+    // Show loading dialog
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) => AlertDialog(
+        content: Row(
+          children: [
+            const LoadingIndicator(size: 24),
+            const SizedBox(width: 16),
+            Expanded(child: Text(context.l10n.deleteAccountProgress)),
+          ],
+        ),
+      ),
+    );
+
+    try {
+      final success = await ref.read(authControllerProvider.notifier).deleteAccount();
+
+      if (!context.mounted) return;
+      Navigator.pop(context); // Close loading dialog
+
+      if (success) {
+        // Account deleted successfully
+        SnackBarService.showSuccess(
+          context,
+          context.l10n.deleteAccountSuccess,
+        );
+        context.go('/login');
+      } else {
+        // Re-authentication required
+        _showReauthenticationDialog(context, ref);
+      }
+    } catch (e) {
+      if (!context.mounted) return;
+      Navigator.pop(context); // Close loading dialog
+
+      SnackBarService.showError(
+        context,
+        context.l10n.deleteAccountError,
+      );
+    }
+  }
+
+  /// Show re-authentication dialog when required for account deletion
+  void _showReauthenticationDialog(BuildContext context, WidgetRef ref) {
+    showDialog(
+      context: context,
+      builder: (dialogContext) => AlertDialog(
+        title: Text(context.l10n.deleteAccountReauthTitle),
+        content: Text(context.l10n.deleteAccountReauthMessage),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(dialogContext),
+            child: Text(context.l10n.cancel),
+          ),
+          FilledButton(
+            onPressed: () async {
+              Navigator.pop(dialogContext);
+              // Sign out and redirect to login for re-authentication
+              await ref.read(authControllerProvider.notifier).signOut();
+              if (context.mounted) {
+                SnackBarService.showInfo(
+                  context,
+                  context.l10n.deleteAccountReauthHint,
+                );
+                context.go('/login');
+              }
+            },
+            child: Text(context.l10n.settingsSignOut),
           ),
         ],
       ),
