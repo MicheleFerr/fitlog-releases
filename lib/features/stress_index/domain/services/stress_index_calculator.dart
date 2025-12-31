@@ -585,4 +585,150 @@ class StressIndexCalculator {
 
     return legacyMap;
   }
+
+  // === SLEEP-AWARE STRESS CALCULATION ===
+
+  /// Apply sleep modifier to FFM performance
+  ///
+  /// Adjusts the FFM-calculated readiness based on sleep quality.
+  /// This provides a more complete picture of recovery by considering
+  /// both training fatigue and sleep quality.
+  ///
+  /// **Formula**:
+  /// ```
+  /// AdjustedPerformance = Baseline + (FFM_Deviation × SleepModifier × ConsecutivePenalty)
+  /// ```
+  ///
+  /// **Example**:
+  /// - FFM Performance: 89% (fatigued from training)
+  /// - Sleep: 3.5h (critical)
+  /// - SleepModifier: 0.70
+  /// - Adjusted: 100 + (89-100) × 0.70 = 100 + (-11 × 0.70) = 92.3
+  ///   → But this is wrong direction! Sleep should REDUCE readiness further.
+  ///
+  /// **Correct approach**: Sleep amplifies fatigue effect
+  /// - FFM Deviation from baseline: 89 - 100 = -11 (fatigued)
+  /// - With poor sleep, fatigue impact is worse: -11 / 0.70 = -15.7
+  /// - Adjusted: 100 + (-15.7) = 84.3 (more fatigued)
+  ///
+  /// Returns: Adjusted performance level (0-150+)
+  static double applySleepModifier({
+    required double ffmPerformance,
+    required double sleepHours,
+    required int consecutiveBadNights,
+  }) {
+    final sleepMod = _getSleepModifier(sleepHours);
+    final consecPenalty = _getConsecutivePenalty(consecutiveBadNights);
+
+    // FFM deviation from baseline (can be negative if fatigued, positive if supercompensating)
+    final deviation = ffmPerformance - StressIndexConstants.ffmBaseline;
+
+    if (deviation < 0) {
+      // Fatigued: poor sleep amplifies fatigue (divide by modifier < 1.0)
+      // Example: -11 deviation, 0.70 sleep mod → -11 / 0.70 = -15.7
+      final adjustedDeviation = deviation / (sleepMod * consecPenalty);
+      return StressIndexConstants.ffmBaseline + adjustedDeviation;
+    } else {
+      // Supercompensating or at baseline: poor sleep reduces gains
+      // Example: +5 deviation, 0.70 sleep mod → +5 * 0.70 = +3.5
+      final adjustedDeviation = deviation * sleepMod * consecPenalty;
+      return StressIndexConstants.ffmBaseline + adjustedDeviation;
+    }
+  }
+
+  /// Get sleep modifier based on hours slept
+  ///
+  /// Based on research:
+  /// - Res et al.: -22% MPS with sleep deprivation
+  /// - Knowles et al.: Reduced strength output with <6h sleep
+  /// - AASM: 7-9h recommended for adults
+  static double _getSleepModifier(double sleepHours) {
+    if (sleepHours < StressIndexConstants.sleepCriticalThreshold) {
+      return StressIndexConstants.sleepModifierCritical; // 0.70
+    } else if (sleepHours < StressIndexConstants.sleepSuboptimalThreshold) {
+      return StressIndexConstants.sleepModifierSuboptimal; // 0.85
+    } else if (sleepHours <= StressIndexConstants.sleepExcessiveThreshold) {
+      return StressIndexConstants.sleepModifierOptimal; // 1.0
+    } else {
+      return StressIndexConstants.sleepModifierExcessive; // 0.95
+    }
+  }
+
+  /// Get penalty for consecutive bad nights (<6h)
+  ///
+  /// Based on Skein et al. 2011: Cumulative decline with consecutive sleep restriction
+  static double _getConsecutivePenalty(int consecutiveBadNights) {
+    if (consecutiveBadNights >= 3) {
+      return StressIndexConstants.consecutiveBadNights3Penalty; // 0.90
+    } else if (consecutiveBadNights >= 2) {
+      return StressIndexConstants.consecutiveBadNights2Penalty; // 0.95
+    } else {
+      return 1.0; // No penalty
+    }
+  }
+
+  /// Get overall readiness with sleep adjustment
+  ///
+  /// Combines FFM readiness with sleep quality for complete picture.
+  ///
+  /// Parameters:
+  /// - [recentWorkouts]: Workout history for FFM calculation
+  /// - [sleepHours]: Last night's sleep duration (or weekly average)
+  /// - [consecutiveBadNights]: Number of consecutive nights with <6h sleep
+  ///
+  /// Returns: Sleep-adjusted readiness (0-150+)
+  static double getOverallReadinessWithSleep({
+    required List<StressIndexResult> recentWorkouts,
+    required double sleepHours,
+    required int consecutiveBadNights,
+  }) {
+    // Get base FFM readiness
+    final ffmReadiness = FitnessFatigueService.getOverallReadiness(recentWorkouts);
+
+    // Apply sleep modifier
+    return applySleepModifier(
+      ffmPerformance: ffmReadiness,
+      sleepHours: sleepHours,
+      consecutiveBadNights: consecutiveBadNights,
+    );
+  }
+
+  /// Get sleep quality category for UI display
+  static SleepQualityCategory getSleepQualityCategory(double sleepHours) {
+    if (sleepHours < StressIndexConstants.sleepCriticalThreshold) {
+      return SleepQualityCategory.critical;
+    } else if (sleepHours < StressIndexConstants.sleepSuboptimalThreshold) {
+      return SleepQualityCategory.suboptimal;
+    } else if (sleepHours <= StressIndexConstants.sleepExcessiveThreshold) {
+      return SleepQualityCategory.optimal;
+    } else {
+      return SleepQualityCategory.excessive;
+    }
+  }
+
+  /// Alias for getSleepQualityCategory (shorter name)
+  static SleepQualityCategory getSleepCategory(double sleepHours) =>
+      getSleepQualityCategory(sleepHours);
+
+  /// Get sleep modifier for UI display
+  ///
+  /// Returns the multiplier that will be applied to performance
+  /// based on sleep hours.
+  static double getSleepModifier(double sleepHours) =>
+      _getSleepModifier(sleepHours);
+}
+
+/// Sleep quality categories for UI display
+enum SleepQualityCategory {
+  /// <6h - Significant performance impact
+  critical,
+
+  /// 6-7h - Moderate impact
+  suboptimal,
+
+  /// 7-9h - Optimal (no impact)
+  optimal,
+
+  /// >9h - May indicate overtraining
+  excessive,
 }

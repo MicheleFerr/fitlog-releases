@@ -24,6 +24,21 @@ import 'package:gymbro_flutter_new/features/recovery_insight/presentation/provid
 import 'package:health/health.dart' show NumericHealthValue;
 
 // ============================================================================
+// STRESS REFRESH TRIGGER PROVIDER
+// ============================================================================
+
+/// Provider that triggers stress insight refresh every 10 minutes
+///
+/// This ensures the FFM-based stress values update over time as fatigue decays.
+/// Without this, the stress values would remain cached indefinitely.
+final stressRefreshTriggerProvider = StreamProvider.autoDispose<int>((ref) {
+  return Stream.periodic(
+    const Duration(minutes: 10),
+    (count) => count,
+  );
+});
+
+// ============================================================================
 // HEALTH DATA SNAPSHOT PROVIDER
 // ============================================================================
 
@@ -415,25 +430,49 @@ final calibrationQualityProvider =
 /// - Current stress from stress index calculator
 /// - Personal calibration factors
 /// - HealthKit data (sleep, HRV, resting HR)
+/// - **Sleep-aware stress calculation** (NEW: integrates sleep quality)
 ///
 /// **Returns**: StressInsight with predictions and recovery recommendations
 final stressInsightProvider =
     FutureProvider.autoDispose<StressInsight>((ref) async {
   try {
-    // Get current stress from stress index
+    // 🔧 FIX: Read ALL dependencies synchronously BEFORE any async work
+    // This prevents Riverpod race condition "Cannot use ref functions after dependency changed"
+    ref.watch(stressRefreshTriggerProvider);
     final stressState = ref.watch(stressIndexNotifierProvider);
-    final currentStress =
-        stressState.valueOrNull?.latestResult?.displayScore.toDouble() ?? 0.0;
+    final calibrationFuture = ref.watch(personalCalibrationProvider.future);
+    final healthDataFuture = ref.watch(healthDataSnapshotProvider.future);
+    final sleepAwareDataFuture = ref.watch(sleepAwareStressDataProvider.future);
 
-    // Get personal calibration
-    final calibration = await ref.watch(personalCalibrationProvider.future);
+    // Now await the futures (after all ref.watch calls are done)
+    final calibration = await calibrationFuture;
+    final healthData = await healthDataFuture;
+    final sleepAwareData = await sleepAwareDataFuture;
 
-    // Get health data
-    final healthData = await ref.watch(healthDataSnapshotProvider.future);
+    // Get stress history for FFM calculation
+    final history = stressState.valueOrNull?.history ?? [];
+
+    // 🔧 FIX: Use SLEEP-AWARE FFM-based calculation
+    // Combines training fatigue + sleep quality for complete recovery picture
+    // Formula: AdjustedReadiness = FFM_Readiness × SleepModifier × ConsecutivePenalty
+    final double currentStress;
+    if (history.isNotEmpty) {
+      // Use sleep-adjusted stress score (considers both training and sleep)
+      currentStress = sleepAwareData.stressScore;
+
+      if (kDebugMode && sleepAwareData.hasSleepImpact) {
+        debugPrint('[StressInsight] Sleep impact detected:');
+        debugPrint('  - Raw FFM stress: ${(100 - sleepAwareData.rawReadiness).clamp(0.0, 100.0).toStringAsFixed(1)}');
+        debugPrint('  - Sleep hours: ${sleepAwareData.sleepHours.toStringAsFixed(1)}h (${sleepAwareData.sleepCategory.name})');
+        debugPrint('  - Adjusted stress: ${currentStress.toStringAsFixed(1)}');
+        debugPrint('  - Sleep impact: +${sleepAwareData.sleepImpact.toStringAsFixed(1)} stress');
+      }
+    } else {
+      currentStress = 0.0; // No history = no stress
+    }
 
     // Get average workout stress for predictions (from history)
     double? avgWorkoutStress;
-    final history = stressState.valueOrNull?.history ?? [];
     if (history.isNotEmpty) {
       final stressValues = history.map((r) => r.displayScore.toDouble()).toList();
       avgWorkoutStress = stressValues.reduce((a, b) => a + b) / stressValues.length;
@@ -448,9 +487,15 @@ final stressInsightProvider =
     );
 
     if (kDebugMode) {
-      debugPrint('[StressInsight] Calculated:');
-      debugPrint('  - Current: ${insight.displayStress}');
+      final now = DateTime.now();
+      debugPrint('[StressInsight] Calculated at ${now.hour}:${now.minute}:${now.second}');
+      debugPrint('  - Raw FFM Readiness: ${sleepAwareData.rawReadiness.toStringAsFixed(1)}%');
+      debugPrint('  - Sleep Hours: ${sleepAwareData.sleepHours.toStringAsFixed(1)}h (${sleepAwareData.sleepCategory.name})');
+      debugPrint('  - Sleep Modifier: ${sleepAwareData.sleepModifier}x');
+      debugPrint('  - Adjusted Readiness: ${sleepAwareData.adjustedReadiness.toStringAsFixed(1)}%');
+      debugPrint('  - Current Stress: ${insight.displayStress} (sleep-aware)');
       debugPrint('  - Tomorrow (rest): ${insight.displayPredicted}');
+      debugPrint('  - Recovery rate: ${insight.recoveryRatePerHour.toStringAsFixed(2)}/h');
       debugPrint('  - Recommendation: ${insight.recommendation.name}');
     }
 

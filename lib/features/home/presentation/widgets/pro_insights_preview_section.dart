@@ -22,6 +22,8 @@ import 'package:gymbro_flutter_new/core/navigation/app_routes.dart';
 import 'package:gymbro_flutter_new/features/analytics/domain/entities/exercise_history.dart';
 import 'package:gymbro_flutter_new/features/analytics/presentation/providers/analytics_providers.dart';
 import 'package:gymbro_flutter_new/features/auth/presentation/providers/consolidated_user_provider.dart';
+import 'package:gymbro_flutter_new/features/stress_index/domain/services/stress_index_calculator.dart'
+    show SleepQualityCategory;
 import 'package:gymbro_flutter_new/features/stress_index/presentation/providers/stress_index_provider.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
@@ -620,7 +622,12 @@ class _VolumeRadarPreview extends ConsumerWidget {
   }
 }
 
-/// Stress Index Preview - Circular score indicator
+/// Stress Index Preview - Circular score indicator with sleep integration
+///
+/// Displays sleep-aware stress score that considers:
+/// - Training fatigue from FFM model
+/// - Sleep quality from HealthKit
+/// - Consecutive bad nights penalty
 class _StressIndexPreview extends ConsumerWidget {
   const _StressIndexPreview();
 
@@ -629,12 +636,14 @@ class _StressIndexPreview extends ConsumerWidget {
     final colorScheme = context.colors;
     final l10n = context.l10n;
 
-    final stressState = ref.watch(stressIndexNotifierProvider);
+    // Use sleep-aware stress provider for complete recovery picture
+    final sleepAwareDataAsync = ref.watch(sleepAwareStressDataProvider);
 
-    return stressState.when(
-      data: (state) {
-        final score = state.latestResult?.displayScore ?? 0;
+    return sleepAwareDataAsync.when(
+      data: (data) {
+        final score = data.stressScore;
         final scoreColor = _getScoreColor(score, context);
+        final hasSleepImpact = data.hasSleepImpact && data.hasSleepData;
 
         return Container(
           height: 120,
@@ -645,7 +654,7 @@ class _StressIndexPreview extends ConsumerWidget {
           ),
           child: Column(
             children: [
-              // Title
+              // Title with optional sleep impact badge
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -662,6 +671,17 @@ class _StressIndexPreview extends ConsumerWidget {
                       color: colorScheme.onSurface,
                     ),
                   ),
+                  // Sleep impact indicator
+                  if (hasSleepImpact) ...[
+                    const SizedBox(width: 4),
+                    Icon(
+                      AppIcons.bedtime,
+                      size: 12,
+                      color: data.sleepCategory == SleepQualityCategory.critical
+                          ? context.errorColor
+                          : context.warningColor,
+                    ),
+                  ],
                 ],
               ),
               const SizedBox(height: 8),

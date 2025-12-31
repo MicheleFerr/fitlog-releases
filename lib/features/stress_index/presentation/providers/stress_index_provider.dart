@@ -2,13 +2,19 @@
 ///
 /// Riverpod providers for stress index feature.
 /// Provides access to stress index calculation, storage, and state management.
+///
+/// **Sleep-Aware Stress**: Integrates sleep data from HealthKit to provide
+/// a complete picture of recovery (training fatigue + sleep quality).
 library;
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/features/exercise_database/presentation/providers/hybrid_exercise_provider.dart';
 import 'package:gymbro_flutter_new/features/history/presentation/providers/workout_history_provider.dart';
+import 'package:gymbro_flutter_new/features/recovery_insight/domain/entities/sleep_record.dart';
+import 'package:gymbro_flutter_new/features/recovery_insight/presentation/providers/recovery_insight_provider.dart';
 import 'package:gymbro_flutter_new/features/stress_index/data/repositories/stress_index_repository.dart';
+import 'package:gymbro_flutter_new/features/stress_index/domain/constants/stress_index_constants.dart';
 import 'package:gymbro_flutter_new/features/stress_index/domain/entities/stress_index_result.dart';
 import 'package:gymbro_flutter_new/features/stress_index/domain/entities/stress_index_state.dart';
 import 'package:gymbro_flutter_new/features/stress_index/domain/services/stress_index_calculator.dart';
@@ -457,4 +463,179 @@ final muscleRecoveryProvider =
 final hasStressIndexDataProvider = Provider.autoDispose<bool>((ref) {
   final state = ref.watch(stressIndexNotifierProvider);
   return state.valueOrNull?.hasData ?? false;
+});
+
+// ====================
+// SLEEP-AWARE STRESS PROVIDERS
+// ====================
+
+/// Helper function to count consecutive bad nights (<6h sleep)
+///
+/// [sleepRecords] should be sorted by date descending (most recent first)
+int _countConsecutiveBadNights(List<SleepRecord> sleepRecords) {
+  if (sleepRecords.isEmpty) return 0;
+
+  int consecutiveCount = 0;
+
+  for (final record in sleepRecords) {
+    if (record.asleepHours < StressIndexConstants.sleepCriticalThreshold) {
+      consecutiveCount++;
+    } else {
+      // First good night breaks the streak
+      break;
+    }
+  }
+
+  return consecutiveCount;
+}
+
+/// Data class for sleep-aware stress index
+///
+/// Combines FFM-based stress calculation with sleep quality data
+class SleepAwareStressData {
+  const SleepAwareStressData({
+    required this.rawReadiness,
+    required this.adjustedReadiness,
+    required this.sleepHours,
+    required this.consecutiveBadNights,
+    required this.sleepModifier,
+    required this.sleepCategory,
+    required this.hasSleepData,
+  });
+
+  /// FFM-based readiness without sleep adjustment (0-100+)
+  final double rawReadiness;
+
+  /// Sleep-adjusted readiness (0-100+)
+  final double adjustedReadiness;
+
+  /// Last night's sleep hours
+  final double sleepHours;
+
+  /// Number of consecutive nights with <6h sleep
+  final int consecutiveBadNights;
+
+  /// Sleep modifier applied (0.7-1.0)
+  final double sleepModifier;
+
+  /// Sleep quality category
+  final SleepQualityCategory sleepCategory;
+
+  /// Whether sleep data is available
+  final bool hasSleepData;
+
+  /// Stress score derived from adjusted readiness (0-100)
+  /// Higher = more stress, lower = more recovered
+  double get stressScore => (100 - adjustedReadiness).clamp(0.0, 100.0);
+
+  /// Impact of sleep on stress (positive = increased stress from poor sleep)
+  double get sleepImpact => rawReadiness - adjustedReadiness;
+
+  /// Whether sleep is significantly impacting recovery (>5% impact)
+  bool get hasSleepImpact => sleepImpact.abs() > 5;
+
+  /// Create default state when no data available
+  factory SleepAwareStressData.noData() {
+    return const SleepAwareStressData(
+      rawReadiness: 100.0,
+      adjustedReadiness: 100.0,
+      sleepHours: StressIndexConstants.defaultSleepHours,
+      consecutiveBadNights: 0,
+      sleepModifier: 1.0,
+      sleepCategory: SleepQualityCategory.optimal,
+      hasSleepData: false,
+    );
+  }
+}
+
+/// Provider for sleep-aware stress data
+///
+/// Combines:
+/// - FFM-based readiness from workout history
+/// - Sleep data from HealthKit
+/// - Consecutive bad nights penalty
+///
+/// **Formula**: `AdjustedReadiness = FFM_Readiness × SleepModifier × ConsecutivePenalty`
+final sleepAwareStressDataProvider =
+    FutureProvider.autoDispose<SleepAwareStressData>((ref) async {
+  // Get stress index history
+  final stressState = ref.watch(stressIndexNotifierProvider);
+  final history = stressState.valueOrNull?.history ?? [];
+
+  // Calculate raw FFM readiness
+  final rawReadiness = StressIndexCalculator.getOverallReadinessFFM(history);
+
+  // Get sleep records
+  List<SleepRecord> sleepRecords;
+  try {
+    sleepRecords = await ref.watch(sleepRecordsProvider.future);
+  } catch (e) {
+    if (kDebugMode) {
+      debugPrint('[SleepAwareStress] Failed to get sleep records: $e');
+    }
+    sleepRecords = [];
+  }
+
+  // If no sleep data, return raw readiness
+  if (sleepRecords.isEmpty) {
+    return SleepAwareStressData(
+      rawReadiness: rawReadiness,
+      adjustedReadiness: rawReadiness,
+      sleepHours: StressIndexConstants.defaultSleepHours,
+      consecutiveBadNights: 0,
+      sleepModifier: 1.0,
+      sleepCategory: SleepQualityCategory.optimal,
+      hasSleepData: false,
+    );
+  }
+
+  // Get last night's sleep
+  final lastNightSleep = sleepRecords.first;
+  final sleepHours = lastNightSleep.asleepHours;
+
+  // Count consecutive bad nights
+  final consecutiveBadNights = _countConsecutiveBadNights(sleepRecords);
+
+  // Calculate sleep-adjusted readiness
+  final adjustedReadiness = StressIndexCalculator.getOverallReadinessWithSleep(
+    recentWorkouts: history,
+    sleepHours: sleepHours,
+    consecutiveBadNights: consecutiveBadNights,
+  );
+
+  // Get sleep modifier for display
+  final sleepCategory = StressIndexCalculator.getSleepCategory(sleepHours);
+  final sleepModifier = StressIndexCalculator.getSleepModifier(sleepHours);
+
+  if (kDebugMode) {
+    debugPrint('[SleepAwareStress] Raw readiness: ${rawReadiness.toStringAsFixed(1)}%');
+    debugPrint('[SleepAwareStress] Sleep: ${sleepHours.toStringAsFixed(1)}h ($sleepCategory)');
+    debugPrint('[SleepAwareStress] Consecutive bad nights: $consecutiveBadNights');
+    debugPrint('[SleepAwareStress] Adjusted readiness: ${adjustedReadiness.toStringAsFixed(1)}%');
+  }
+
+  return SleepAwareStressData(
+    rawReadiness: rawReadiness,
+    adjustedReadiness: adjustedReadiness,
+    sleepHours: sleepHours,
+    consecutiveBadNights: consecutiveBadNights,
+    sleepModifier: sleepModifier,
+    sleepCategory: sleepCategory,
+    hasSleepData: true,
+  );
+});
+
+/// Provider for sleep-adjusted stress score
+///
+/// Convenience provider that returns just the stress score (0-100)
+/// Higher = more stress, lower = more recovered
+final sleepAwareStressScoreProvider = Provider.autoDispose<double>((ref) {
+  final dataAsync = ref.watch(sleepAwareStressDataProvider);
+  return dataAsync.valueOrNull?.stressScore ?? 0.0;
+});
+
+/// Provider for checking if sleep is impacting recovery
+final hasSleepImpactProvider = Provider.autoDispose<bool>((ref) {
+  final dataAsync = ref.watch(sleepAwareStressDataProvider);
+  return dataAsync.valueOrNull?.hasSleepImpact ?? false;
 });

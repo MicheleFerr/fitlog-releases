@@ -184,4 +184,43 @@ class StressIndexConstants {
   /// Critical fatigue threshold
   /// Below this, strongly recommend rest
   static const double criticalFatigue = 50.0;
+
+  // === SLEEP IMPACT MODIFIERS ===
+  // Based on:
+  // - Res et al.: -22% Muscle Protein Synthesis with sleep deprivation
+  // - Knowles et al.: Reduced strength output with <6h sleep
+  // - AASM: 7-9h recommended for adults
+  // - Skein et al. 2011: Cumulative decline with consecutive sleep restriction
+
+  /// Sleep modifier for critical sleep (<6h)
+  /// Research shows significant performance impact
+  static const double sleepModifierCritical = 0.70; // -30% performance
+
+  /// Sleep modifier for suboptimal sleep (6-7h)
+  /// Moderate impact on recovery
+  static const double sleepModifierSuboptimal = 0.85; // -15% performance
+
+  /// Sleep modifier for optimal sleep (7-9h)
+  /// No negative impact
+  static const double sleepModifierOptimal = 1.0;
+
+  /// Sleep modifier for excessive sleep (>9h)
+  /// May indicate overtraining or illness
+  static const double sleepModifierExcessive = 0.95; // -5%
+
+  /// Sleep thresholds (hours)
+  static const double sleepCriticalThreshold = 6.0;
+  static const double sleepSuboptimalThreshold = 7.0;
+  static const double sleepExcessiveThreshold = 9.0;
+
+  /// Consecutive bad nights penalty
+  /// 2 consecutive nights <6h
+  static const double consecutiveBadNights2Penalty = 0.95; // -5%
+
+  /// 3+ consecutive nights <6h
+  static const double consecutiveBadNights3Penalty = 0.90; // -10%
+
+  /// Default sleep hours when no data available
+  /// Assumes user slept normally
+  static const double defaultSleepHours = 7.5;
 }
