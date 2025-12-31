@@ -108,9 +108,9 @@ class _LanguageSelectionScreenState extends ConsumerState<LanguageSelectionScree
 
     await ref.read(appConfigProvider.notifier).setLanguage(languageCode, countryCode);
 
-    // Navigate to onboarding
+    // Navigate to initial onboarding (6-step profile setup)
     if (mounted) {
-      context.goNamed('onboarding');
+      context.goNamed('initial-onboarding');
     }
   }
 
