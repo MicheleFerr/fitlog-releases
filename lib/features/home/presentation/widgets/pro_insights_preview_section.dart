@@ -30,6 +30,7 @@ import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_spacing.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
 
 /// Pro Insights Preview Section
 ///
@@ -63,7 +64,7 @@ class ProInsightsPreviewSection extends ConsumerWidget {
             children: [
               // Section Header
               _buildSectionHeader(context, l10n, colorScheme),
-              const SizedBox(height: 12),
+              const SizedBox(height: AppSpacing.sm),
 
               // Main content card
               GestureDetector(
@@ -106,7 +107,7 @@ class ProInsightsPreviewSection extends ConsumerWidget {
                             Expanded(
                               child: _VolumeRadarPreview(histories: histories),
                             ),
-                            const SizedBox(width: 12),
+                            const SizedBox(width: AppSpacing.sm),
                             const Expanded(
                               child: _StressIndexPreview(),
                             ),
@@ -150,7 +151,10 @@ class ProInsightsPreviewSection extends ConsumerWidget {
       children: [
         // PRO badge
         Container(
-          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+          padding: const EdgeInsets.symmetric(
+            horizontal: AppSpacing.xs,
+            vertical: AppSpacing.xxs,
+          ),
           decoration: BoxDecoration(
             gradient: LinearGradient(
               colors: [
@@ -158,17 +162,18 @@ class ProInsightsPreviewSection extends ConsumerWidget {
                 colorScheme.tertiary.withValues(alpha: 0.7),
               ],
             ),
-            borderRadius: BorderRadius.circular(8),
+            borderRadius: BorderRadius.circular(AppSpacing.xs),
           ),
           child: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Icon(
-                AppIcons.premium,
+              SemanticIcon(
+                icon: AppIcons.premium,
+                semanticLabel: 'Pro',
                 size: AppIconSize.tiny,
                 color: colorScheme.onTertiary,
               ),
-              const SizedBox(width: 4),
+              const SizedBox(width: AppSpacing.xxs),
               Text(
                 'PRO',
                 style: context.textTheme.labelSmall?.copyWith(
@@ -180,7 +185,7 @@ class ProInsightsPreviewSection extends ConsumerWidget {
             ],
           ),
         ),
-        const SizedBox(width: 8),
+        const SizedBox(width: AppSpacing.xs),
         Text(
           l10n.proInsights,
           style: context.textTheme.titleMedium?.copyWith(
@@ -189,8 +194,9 @@ class ProInsightsPreviewSection extends ConsumerWidget {
           ),
         ),
         const Spacer(),
-        Icon(
-          AppIcons.chevronRight,
+        SemanticIcon(
+          icon: AppIcons.chevronRight,
+          semanticLabel: l10n.viewDetails,
           size: AppIconSize.small,
           color: colorScheme.onSurfaceVariant,
         ),
@@ -205,7 +211,10 @@ class ProInsightsPreviewSection extends ConsumerWidget {
   ) {
     return Container(
       width: double.infinity,
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+      padding: const EdgeInsets.symmetric(
+        horizontal: AppSpacing.md,
+        vertical: AppSpacing.sm,
+      ),
       decoration: BoxDecoration(
         color: colorScheme.tertiary.withValues(alpha: 0.1),
         borderRadius: const BorderRadius.vertical(
@@ -215,12 +224,13 @@ class ProInsightsPreviewSection extends ConsumerWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(
-            AppIcons.analytics,
+          SemanticIcon(
+            icon: AppIcons.analytics,
+            semanticLabel: l10n.viewDetails,
             size: AppIconSize.small,
             color: colorScheme.tertiary,
           ),
-          const SizedBox(width: 8),
+          const SizedBox(width: AppSpacing.xs),
           Text(
             l10n.viewDetails,
             style: context.textTheme.labelLarge?.copyWith(
@@ -228,9 +238,10 @@ class ProInsightsPreviewSection extends ConsumerWidget {
               fontWeight: FontWeight.w600,
             ),
           ),
-          const SizedBox(width: 4),
-          Icon(
-            AppIcons.arrowForward,
+          const SizedBox(width: AppSpacing.xxs),
+          SemanticIcon(
+            icon: AppIcons.arrowForward,
+            semanticLabel: l10n.viewDetails,
             size: AppIconSize.tiny,
             color: colorScheme.tertiary,
           ),
@@ -269,12 +280,13 @@ class _MuscleMapPreview extends ConsumerWidget {
         // Title
         Row(
           children: [
-            Icon(
-              AppIcons.accessibility,
+            SemanticIcon(
+              icon: AppIcons.accessibility,
+              semanticLabel: l10n.muscleBalance,
               size: AppIconSize.small,
               color: colorScheme.tertiary,
             ),
-            const SizedBox(width: 8),
+            const SizedBox(width: AppSpacing.xs),
             Text(
               l10n.muscleBalance,
               style: context.textTheme.titleSmall?.copyWith(
@@ -284,7 +296,7 @@ class _MuscleMapPreview extends ConsumerWidget {
             ),
           ],
         ),
-        const SizedBox(height: 12),
+        const SizedBox(height: AppSpacing.sm),
 
         // Simplified muscle indicator bars
         SizedBox(
@@ -314,7 +326,7 @@ class _MuscleMapPreview extends ConsumerWidget {
                   ],
                 ),
               ),
-              const SizedBox(width: 16),
+              const SizedBox(width: AppSpacing.md),
               // Right side - muscle group bars
               Expanded(
                 child: Column(
@@ -458,7 +470,7 @@ class _MuscleBar extends StatelessWidget {
             overflow: TextOverflow.ellipsis,
           ),
         ),
-        const SizedBox(width: 8),
+        const SizedBox(width: AppSpacing.xs),
         Expanded(
           child: ClipRRect(
             borderRadius: BorderRadius.circular(8),
@@ -494,7 +506,7 @@ class _VolumeRadarPreview extends ConsumerWidget {
 
     return Container(
       height: 120,
-      padding: const EdgeInsets.all(8),
+      padding: const EdgeInsets.all(AppSpacing.xs),
       decoration: BoxDecoration(
         color: colorScheme.surfaceContainerHighest.withValues(alpha: 0.5),
         borderRadius: BorderRadius.circular(12),
@@ -505,12 +517,13 @@ class _VolumeRadarPreview extends ConsumerWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Icon(
-                AppIcons.hexagonOutlined,
+              SemanticIcon(
+                icon: AppIcons.hexagonOutlined,
+                semanticLabel: l10n.volume,
                 size: 14,
                 color: colorScheme.tertiary,
               ),
-              const SizedBox(width: 4),
+              const SizedBox(width: AppSpacing.xxs),
               Text(
                 l10n.volume,
                 style: context.textTheme.labelSmall?.copyWith(
@@ -520,7 +533,7 @@ class _VolumeRadarPreview extends ConsumerWidget {
               ),
             ],
           ),
-          const SizedBox(height: 4),
+          const SizedBox(height: AppSpacing.xxs),
           // Radar chart
           Expanded(
             child: RadarChart(
@@ -647,7 +660,7 @@ class _StressIndexPreview extends ConsumerWidget {
 
         return Container(
           height: 120,
-          padding: const EdgeInsets.all(8),
+          padding: const EdgeInsets.all(AppSpacing.xs),
           decoration: BoxDecoration(
             color: colorScheme.surfaceContainerHighest.withValues(alpha: 0.5),
             borderRadius: BorderRadius.circular(12),
@@ -658,12 +671,13 @@ class _StressIndexPreview extends ConsumerWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Icon(
-                    AppIcons.bolt,
+                  SemanticIcon(
+                    icon: AppIcons.bolt,
+                    semanticLabel: l10n.stressIndex,
                     size: 14,
                     color: colorScheme.tertiary,
                   ),
-                  const SizedBox(width: 4),
+                  const SizedBox(width: AppSpacing.xxs),
                   Text(
                     l10n.stressIndex,
                     style: context.textTheme.labelSmall?.copyWith(
@@ -673,9 +687,10 @@ class _StressIndexPreview extends ConsumerWidget {
                   ),
                   // Sleep impact indicator
                   if (hasSleepImpact) ...[
-                    const SizedBox(width: 4),
-                    Icon(
-                      AppIcons.bedtime,
+                    const SizedBox(width: AppSpacing.xxs),
+                    SemanticIcon(
+                      icon: AppIcons.bedtime,
+                      semanticLabel: 'Sleep impact',
                       size: 12,
                       color: data.sleepCategory == SleepQualityCategory.critical
                           ? context.errorColor
@@ -684,7 +699,7 @@ class _StressIndexPreview extends ConsumerWidget {
                   ],
                 ],
               ),
-              const SizedBox(height: 8),
+              const SizedBox(height: AppSpacing.xs),
               // Score circle
               Expanded(
                 child: Center(
@@ -731,7 +746,7 @@ class _StressIndexPreview extends ConsumerWidget {
   ) {
     return Container(
       height: 120,
-      padding: const EdgeInsets.all(8),
+      padding: const EdgeInsets.all(AppSpacing.xs),
       decoration: BoxDecoration(
         color: colorScheme.surfaceContainerHighest.withValues(alpha: 0.5),
         borderRadius: BorderRadius.circular(12),
@@ -739,12 +754,13 @@ class _StressIndexPreview extends ConsumerWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(
-            AppIcons.bolt,
+          SemanticIcon(
+            icon: AppIcons.bolt,
+            semanticLabel: l10n.stressIndex,
             size: 24,
             color: colorScheme.onSurfaceVariant.withValues(alpha: 0.5),
           ),
-          const SizedBox(height: 4),
+          const SizedBox(height: AppSpacing.xxs),
           Text(
             l10n.stressIndex,
             style: context.textTheme.labelSmall?.copyWith(
@@ -784,12 +800,13 @@ class _RepZonesBarPreview extends StatelessWidget {
         // Title
         Row(
           children: [
-            Icon(
-              AppIcons.barChart,
+            SemanticIcon(
+              icon: AppIcons.barChart,
+              semanticLabel: l10n.repZones,
               size: AppIconSize.small,
               color: colorScheme.tertiary,
             ),
-            const SizedBox(width: 8),
+            const SizedBox(width: AppSpacing.xs),
             Text(
               l10n.repZones,
               style: context.textTheme.titleSmall?.copyWith(
@@ -799,7 +816,7 @@ class _RepZonesBarPreview extends StatelessWidget {
             ),
           ],
         ),
-        const SizedBox(height: 12),
+        const SizedBox(height: AppSpacing.sm),
 
         // Stacked bar
         ClipRRect(
@@ -833,7 +850,7 @@ class _RepZonesBarPreview extends StatelessWidget {
             ),
           ),
         ),
-        const SizedBox(height: 8),
+        const SizedBox(height: AppSpacing.xs),
 
         // Legend
         Row(
@@ -920,7 +937,7 @@ class _ZoneLegend extends StatelessWidget {
             shape: BoxShape.circle,
           ),
         ),
-        const SizedBox(width: 4),
+        const SizedBox(width: AppSpacing.xxs),
         Text(
           '$label $percentage%',
           style: context.textTheme.bodySmall?.copyWith(
