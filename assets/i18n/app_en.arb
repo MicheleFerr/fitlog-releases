@@ -9613,6 +9613,22 @@
   "@appSubtitle": {
     "description": "Application subtitle on login screen"
   },
+  "loginTagline": "Track. Train. Transform.",
+  "@loginTagline": {
+    "description": "Motivational tagline on login screen"
+  },
+  "loginStatsWorkouts": "Workouts",
+  "@loginStatsWorkouts": {
+    "description": "Stats preview label for workouts"
+  },
+  "loginStatsSets": "Sets",
+  "@loginStatsSets": {
+    "description": "Stats preview label for sets"
+  },
+  "loginStatsPRs": "PRs",
+  "@loginStatsPRs": {
+    "description": "Stats preview label for personal records"
+  },
   "emailLabel": "Email",
   "@emailLabel": {
     "description": "Email input field label"
@@ -9771,6 +9787,78 @@
   "signOutButton": "Sign Out",
   "@signOutButton": {
     "description": "Sign out button text"
+  },
+  "deleteAccount": "Delete Account",
+  "@deleteAccount": {
+    "description": "Delete account button text"
+  },
+  "deleteAccountDesc": "Permanently delete your account and all data",
+  "@deleteAccountDesc": {
+    "description": "Delete account button subtitle"
+  },
+  "deleteAccountTitle": "Delete Account?",
+  "@deleteAccountTitle": {
+    "description": "Delete account dialog title"
+  },
+  "deleteAccountWarning": "This action is permanent and cannot be undone. All your data will be permanently deleted.",
+  "@deleteAccountWarning": {
+    "description": "Delete account warning message"
+  },
+  "deleteAccountDataList": "The following data will be deleted:",
+  "@deleteAccountDataList": {
+    "description": "Delete account data list header"
+  },
+  "deleteAccountDataWorkouts": "All workout history",
+  "@deleteAccountDataWorkouts": {
+    "description": "Workout data deletion item"
+  },
+  "deleteAccountDataTemplates": "All workout templates",
+  "@deleteAccountDataTemplates": {
+    "description": "Template data deletion item"
+  },
+  "deleteAccountDataPhotos": "All progress photos",
+  "@deleteAccountDataPhotos": {
+    "description": "Photo data deletion item"
+  },
+  "deleteAccountDataMeasurements": "All body measurements",
+  "@deleteAccountDataMeasurements": {
+    "description": "Measurements data deletion item"
+  },
+  "deleteAccountDataSettings": "All settings and preferences",
+  "@deleteAccountDataSettings": {
+    "description": "Settings data deletion item"
+  },
+  "deleteAccountExportHint": "Tip: Export your data before deleting your account.",
+  "@deleteAccountExportHint": {
+    "description": "Hint to export data before deletion"
+  },
+  "deleteAccountConfirm": "Delete My Account",
+  "@deleteAccountConfirm": {
+    "description": "Delete account confirmation button"
+  },
+  "deleteAccountProgress": "Deleting your account...",
+  "@deleteAccountProgress": {
+    "description": "Account deletion progress message"
+  },
+  "deleteAccountSuccess": "Your account has been deleted successfully.",
+  "@deleteAccountSuccess": {
+    "description": "Account deletion success message"
+  },
+  "deleteAccountError": "Failed to delete account. Please try again.",
+  "@deleteAccountError": {
+    "description": "Account deletion error message"
+  },
+  "deleteAccountReauthTitle": "Re-authentication Required",
+  "@deleteAccountReauthTitle": {
+    "description": "Re-auth dialog title"
+  },
+  "deleteAccountReauthMessage": "For security reasons, you need to sign in again before deleting your account.",
+  "@deleteAccountReauthMessage": {
+    "description": "Re-auth dialog message"
+  },
+  "deleteAccountReauthHint": "Please sign in again to delete your account.",
+  "@deleteAccountReauthHint": {
+    "description": "Re-auth hint after sign out"
   },
   "addExerciseTitle": "Add Exercise",
   "@addExerciseTitle": {
@@ -10060,6 +10148,10 @@
   "signUpWithApple": "Sign up with Apple",
   "@signUpWithApple": {
     "description": "Apple sign up button alternative"
+  },
+  "signUpWithEmail": "Sign up with Email",
+  "@signUpWithEmail": {
+    "description": "Email sign up button alternative"
   },
   "alreadyHaveAccountPrompt": "Already have an account? ",
   "@alreadyHaveAccountPrompt": {
@@ -27381,6 +27473,42 @@
   "@stressPredictionCalibrationHint": {
     "description": "Hint to improve prediction accuracy via calibration"
   },
+  "stressWorkoutBreakdownTitle": "High Intensity Session",
+  "@stressWorkoutBreakdownTitle": {
+    "description": "Title for workout breakdown when stress is high"
+  },
+  "volumeKg": "Volume",
+  "@volumeKg": {
+    "description": "Label for volume in kilograms"
+  },
+  "stressScore": "Stress",
+  "@stressScore": {
+    "description": "Label for stress score"
+  },
+  "stressScientificBasisTitle": "Scientific Basis",
+  "@stressScientificBasisTitle": {
+    "description": "Title for scientific explanation section"
+  },
+  "stressScientificExplanation": "Training stress is calculated using the Banister Fitness-Fatigue Model (FFM). High volume and intensity create muscle damage and metabolic fatigue that requires 48-72 hours to recover. Your personal recovery rate is adjusted based on training age, sleep quality, and HRV data.",
+  "@stressScientificExplanation": {
+    "description": "Scientific explanation of stress calculation"
+  },
+  "stressReferencesTitle": "Research References",
+  "@stressReferencesTitle": {
+    "description": "Title for research references section"
+  },
+  "stressReferenceBanister": "Fitness-Fatigue Model for training load quantification",
+  "@stressReferenceBanister": {
+    "description": "Description of Banister research"
+  },
+  "stressReferenceSchoenfeld": "Dose-response relationship between training volume and muscle growth",
+  "@stressReferenceSchoenfeld": {
+    "description": "Description of Schoenfeld research"
+  },
+  "stressReferenceMorton": "Recovery time constants vary 7-14 days between individuals",
+  "@stressReferenceMorton": {
+    "description": "Description of Morton research"
+  },
   "recentHistory": "Recent History",
   "@recentHistory": {
     "description": "Section title for recent stress history"
@@ -30358,5 +30486,386 @@
   "notAuthenticated": "You must be logged in",
   "@notAuthenticated": {
     "description": "Error when user is not authenticated"
+  },
+
+  "initialOnboardingWelcomeTitle": "Welcome to FitLog Pro",
+  "@initialOnboardingWelcomeTitle": {
+    "description": "Initial onboarding welcome title"
+  },
+  "initialOnboardingWelcomeSubtitle": "Your smart workout journal that helps you reach your goals",
+  "@initialOnboardingWelcomeSubtitle": {
+    "description": "Initial onboarding welcome subtitle"
+  },
+  "initialOnboardingFeature1": "Track workouts and progress",
+  "@initialOnboardingFeature1": {
+    "description": "Feature 1 in welcome step"
+  },
+  "initialOnboardingFeature2": "Personalized weight suggestions",
+  "@initialOnboardingFeature2": {
+    "description": "Feature 2 in welcome step"
+  },
+  "initialOnboardingFeature3": "Advanced analytics",
+  "@initialOnboardingFeature3": {
+    "description": "Feature 3 in welcome step"
+  },
+  "initialOnboardingStart": "Let's go!",
+  "@initialOnboardingStart": {
+    "description": "Start button in initial onboarding"
+  },
+  "initialOnboardingContinue": "Continue",
+  "@initialOnboardingContinue": {
+    "description": "Continue button in initial onboarding"
+  },
+
+  "initialOnboardingGoalTitle": "What's your goal?",
+  "@initialOnboardingGoalTitle": {
+    "description": "Goal selection title"
+  },
+  "initialOnboardingGoalSubtitle": "We'll personalize your experience",
+  "@initialOnboardingGoalSubtitle": {
+    "description": "Goal selection subtitle"
+  },
+  "initialOnboardingGoalBuildMuscle": "Build muscle",
+  "@initialOnboardingGoalBuildMuscle": {
+    "description": "Build muscle goal option"
+  },
+  "initialOnboardingGoalBuildMuscleDesc": "Gain muscle mass",
+  "@initialOnboardingGoalBuildMuscleDesc": {
+    "description": "Build muscle goal description"
+  },
+  "initialOnboardingGoalGetStronger": "Get stronger",
+  "@initialOnboardingGoalGetStronger": {
+    "description": "Get stronger goal option"
+  },
+  "initialOnboardingGoalGetStrongerDesc": "Lift heavier weights",
+  "@initialOnboardingGoalGetStrongerDesc": {
+    "description": "Get stronger goal description"
+  },
+  "initialOnboardingGoalEndurance": "Improve endurance",
+  "@initialOnboardingGoalEndurance": {
+    "description": "Endurance goal option"
+  },
+  "initialOnboardingGoalEnduranceDesc": "More reps, more energy",
+  "@initialOnboardingGoalEnduranceDesc": {
+    "description": "Endurance goal description"
+  },
+  "initialOnboardingGoalStayFit": "Stay fit",
+  "@initialOnboardingGoalStayFit": {
+    "description": "Stay fit goal option"
+  },
+  "initialOnboardingGoalStayFitDesc": "General fitness",
+  "@initialOnboardingGoalStayFitDesc": {
+    "description": "Stay fit goal description"
+  },
+
+  "initialOnboardingBodyTitle": "Tell us about yourself",
+  "@initialOnboardingBodyTitle": {
+    "description": "Body data step title"
+  },
+  "initialOnboardingBodySubtitle": "This helps us suggest the right weights",
+  "@initialOnboardingBodySubtitle": {
+    "description": "Body data step subtitle"
+  },
+  "initialOnboardingSexLabel": "Biological sex",
+  "@initialOnboardingSexLabel": {
+    "description": "Sex selection label"
+  },
+  "initialOnboardingSexMale": "Male",
+  "@initialOnboardingSexMale": {
+    "description": "Male option"
+  },
+  "initialOnboardingSexFemale": "Female",
+  "@initialOnboardingSexFemale": {
+    "description": "Female option"
+  },
+  "initialOnboardingWeightLabel": "Body weight",
+  "@initialOnboardingWeightLabel": {
+    "description": "Weight input label"
+  },
+  "initialOnboardingImportHealthKit": "Import from Health",
+  "@initialOnboardingImportHealthKit": {
+    "description": "Import weight from HealthKit button"
+  },
+  "initialOnboardingBodyInfo": "We use this data to suggest the right weights for you",
+  "@initialOnboardingBodyInfo": {
+    "description": "Body data info text"
+  },
+  "initialOnboardingHealthKitNotAvailable": "HealthKit not available, enter manually",
+  "@initialOnboardingHealthKitNotAvailable": {
+    "description": "HealthKit not available message"
+  },
+  "initialOnboardingImporting": "Importing...",
+  "@initialOnboardingImporting": {
+    "description": "Importing from HealthKit loading text"
+  },
+  "initialOnboardingHealthKitDenied": "Permission denied. Please enable Health access in Settings.",
+  "@initialOnboardingHealthKitDenied": {
+    "description": "HealthKit permission denied message"
+  },
+  "initialOnboardingHealthKitDeniedTitle": "Permission Required",
+  "@initialOnboardingHealthKitDeniedTitle": {
+    "description": "HealthKit permission denied dialog title"
+  },
+  "initialOnboardingHealthKitDeniedMessage": "To import your weight from Health, please enable access in Settings > Privacy & Security > Health > FitLog.",
+  "@initialOnboardingHealthKitDeniedMessage": {
+    "description": "HealthKit permission denied dialog message"
+  },
+  "initialOnboardingOpenSettings": "Open Settings",
+  "@initialOnboardingOpenSettings": {
+    "description": "Button to open app settings"
+  },
+  "initialOnboardingHealthKitError": "Error reading Health data",
+  "@initialOnboardingHealthKitError": {
+    "description": "HealthKit read error message"
+  },
+  "initialOnboardingHealthKitNoWeightData": "No weight data found in Health",
+  "@initialOnboardingHealthKitNoWeightData": {
+    "description": "No weight data found in HealthKit"
+  },
+  "initialOnboardingHealthKitSuccess": "Weight imported: {weight} kg",
+  "@initialOnboardingHealthKitSuccess": {
+    "description": "HealthKit weight import success message",
+    "placeholders": {
+      "weight": {
+        "type": "String",
+        "example": "75.5"
+      }
+    }
+  },
+
+  "initialOnboardingExperienceTitle": "What's your experience?",
+  "@initialOnboardingExperienceTitle": {
+    "description": "Experience step title"
+  },
+  "initialOnboardingExperienceSubtitle": "This helps us personalize suggestions",
+  "@initialOnboardingExperienceSubtitle": {
+    "description": "Experience step subtitle"
+  },
+  "initialOnboardingExperienceBeginner": "Beginner",
+  "@initialOnboardingExperienceBeginner": {
+    "description": "Beginner experience level"
+  },
+  "initialOnboardingExperienceBeginnerDesc": "Never or rarely at the gym",
+  "@initialOnboardingExperienceBeginnerDesc": {
+    "description": "Beginner description"
+  },
+  "initialOnboardingExperienceSome": "Some experience",
+  "@initialOnboardingExperienceSome": {
+    "description": "Some experience level"
+  },
+  "initialOnboardingExperienceSomeDesc": "6 months - 2 years",
+  "@initialOnboardingExperienceSomeDesc": {
+    "description": "Some experience description"
+  },
+  "initialOnboardingExperienceExperienced": "Experienced",
+  "@initialOnboardingExperienceExperienced": {
+    "description": "Experienced level"
+  },
+  "initialOnboardingExperienceExperiencedDesc": "2+ years consistent training",
+  "@initialOnboardingExperienceExperiencedDesc": {
+    "description": "Experienced description"
+  },
+  "initialOnboardingExperienceAthlete": "Advanced athlete",
+  "@initialOnboardingExperienceAthlete": {
+    "description": "Athlete experience level"
+  },
+  "initialOnboardingExperienceAthleteDesc": "5+ years, I know my PRs",
+  "@initialOnboardingExperienceAthleteDesc": {
+    "description": "Athlete description"
+  },
+
+  "initialOnboardingHealthKitTitle": "Connect Health",
+  "@initialOnboardingHealthKitTitle": {
+    "description": "HealthKit step title"
+  },
+  "initialOnboardingHealthKitSubtitle": "Sync your data for a personalized experience",
+  "@initialOnboardingHealthKitSubtitle": {
+    "description": "HealthKit step subtitle"
+  },
+  "initialOnboardingHealthKitWorkouts": "Workouts",
+  "@initialOnboardingHealthKitWorkouts": {
+    "description": "Workouts health data type"
+  },
+  "initialOnboardingHealthKitWorkoutsDesc": "Save workouts to Health",
+  "@initialOnboardingHealthKitWorkoutsDesc": {
+    "description": "Workouts description"
+  },
+  "initialOnboardingHealthKitWeight": "Body weight",
+  "@initialOnboardingHealthKitWeight": {
+    "description": "Weight health data type"
+  },
+  "initialOnboardingHealthKitWeightDesc": "Sync weight data",
+  "@initialOnboardingHealthKitWeightDesc": {
+    "description": "Weight description"
+  },
+  "initialOnboardingHealthKitSleep": "Sleep",
+  "@initialOnboardingHealthKitSleep": {
+    "description": "Sleep health data type"
+  },
+  "initialOnboardingHealthKitSleepDesc": "For Recovery Insight",
+  "@initialOnboardingHealthKitSleepDesc": {
+    "description": "Sleep description"
+  },
+  "initialOnboardingHealthKitHrv": "HRV",
+  "@initialOnboardingHealthKitHrv": {
+    "description": "HRV health data type"
+  },
+  "initialOnboardingHealthKitHrvDesc": "For Stress Index",
+  "@initialOnboardingHealthKitHrvDesc": {
+    "description": "HRV description"
+  },
+  "initialOnboardingHealthKitPrivacy": "Your data stays on your device",
+  "@initialOnboardingHealthKitPrivacy": {
+    "description": "Privacy note"
+  },
+  "initialOnboardingHealthKitConnect": "Connect Health",
+  "@initialOnboardingHealthKitConnect": {
+    "description": "Connect HealthKit button"
+  },
+  "initialOnboardingHealthKitSkip": "Skip for now",
+  "@initialOnboardingHealthKitSkip": {
+    "description": "Skip HealthKit button"
+  },
+  "initialOnboardingQuickSelect": "Quick Select",
+  "@initialOnboardingQuickSelect": {
+    "description": "Quick weight selection button in keyboard toolbar"
+  },
+  "initialOnboardingSelectWeight": "Select Weight",
+  "@initialOnboardingSelectWeight": {
+    "description": "Title for weight presets bottom sheet"
+  },
+
+  "initialOnboardingFrequencyTitle": "How often do you train?",
+  "@initialOnboardingFrequencyTitle": {
+    "description": "Frequency step title"
+  },
+  "initialOnboardingFrequencySubtitle": "Workouts per week",
+  "@initialOnboardingFrequencySubtitle": {
+    "description": "Frequency step subtitle"
+  },
+  "initialOnboardingSummaryTitle": "Summary",
+  "@initialOnboardingSummaryTitle": {
+    "description": "Summary section title"
+  },
+  "initialOnboardingSummaryGoal": "Goal",
+  "@initialOnboardingSummaryGoal": {
+    "description": "Summary goal label"
+  },
+  "initialOnboardingSummaryWeight": "Weight",
+  "@initialOnboardingSummaryWeight": {
+    "description": "Summary weight label"
+  },
+  "initialOnboardingSummaryExperience": "Experience",
+  "@initialOnboardingSummaryExperience": {
+    "description": "Summary experience label"
+  },
+  "initialOnboardingSummaryFrequency": "Frequency",
+  "@initialOnboardingSummaryFrequency": {
+    "description": "Summary frequency label"
+  },
+  "initialOnboardingSummaryHealth": "Health",
+  "@initialOnboardingSummaryHealth": {
+    "description": "Summary health label"
+  },
+  "initialOnboardingWeek": "week",
+  "@initialOnboardingWeek": {
+    "description": "Week label"
+  },
+  "initialOnboardingConnected": "Connected",
+  "@initialOnboardingConnected": {
+    "description": "Connected status"
+  },
+  "initialOnboardingNotConnected": "Not connected",
+  "@initialOnboardingNotConnected": {
+    "description": "Not connected status"
+  },
+  "initialOnboardingComplete": "Start training!",
+  "@initialOnboardingComplete": {
+    "description": "Complete onboarding button"
+  },
+  "initialOnboardingCompleteInfo": "You can change these settings anytime",
+  "@initialOnboardingCompleteInfo": {
+    "description": "Info text below complete button"
+  }
+,
+  "tourXpProgressTitle": "Your Level",
+  "@tourXpProgressTitle": {
+    "description": "Home tour step 1 title - XP Progress"
+  },
+  "tourXpProgressDescription": "Track your progress! Earn XP by completing workouts and level up.",
+  "@tourXpProgressDescription": {
+    "description": "Home tour step 1 description - XP Progress"
+  },
+  "tourActivityRingsTitle": "Activity Rings",
+  "@tourActivityRingsTitle": {
+    "description": "Home tour step 2 title - Activity Rings"
+  },
+  "tourActivityRingsDescription": "Synced with Apple Health. See your daily activity at a glance!",
+  "@tourActivityRingsDescription": {
+    "description": "Home tour step 2 description - Activity Rings"
+  },
+  "tourProInsightsTitle": "Pro Analytics",
+  "@tourProInsightsTitle": {
+    "description": "Home tour step 3 title - Pro Insights"
+  },
+  "tourProInsightsDescription": "Advanced charts and metrics for serious athletes. Track everything!",
+  "@tourProInsightsDescription": {
+    "description": "Home tour step 3 description - Pro Insights"
+  },
+  "tourRecoveryInsightTitle": "Recovery Status",
+  "@tourRecoveryInsightTitle": {
+    "description": "Home tour step 4 title - Recovery Insight"
+  },
+  "tourRecoveryInsightDescription": "Based on your sleep and training load. Know when to push hard or rest.",
+  "@tourRecoveryInsightDescription": {
+    "description": "Home tour step 4 description - Recovery Insight"
+  },
+  "tourStressPredictionTitle": "Training Load",
+  "@tourStressPredictionTitle": {
+    "description": "Home tour step 5 title - Stress Prediction"
+  },
+  "tourStressPredictionDescription": "AI-powered predictions of your fitness and fatigue levels.",
+  "@tourStressPredictionDescription": {
+    "description": "Home tour step 5 description - Stress Prediction"
+  },
+  "tourTemplateSuggestionTitle": "Today's Suggestion",
+  "@tourTemplateSuggestionTitle": {
+    "description": "Home tour step 6 title - Template Suggestion"
+  },
+  "tourTemplateSuggestionDescription": "Smart workout recommendations based on your history and goals.",
+  "@tourTemplateSuggestionDescription": {
+    "description": "Home tour step 6 description - Template Suggestion"
+  },
+  "tourStartWorkoutTitle": "Start Workout",
+  "@tourStartWorkoutTitle": {
+    "description": "Home tour step 7 title - Start Workout"
+  },
+  "tourStartWorkoutDescription": "Tap here to begin your training session. Track every set and rep!",
+  "@tourStartWorkoutDescription": {
+    "description": "Home tour step 7 description - Start Workout"
+  },
+  "tourTemplatesCarouselTitle": "Your Templates",
+  "@tourTemplatesCarouselTitle": {
+    "description": "Home tour step 8 title - Templates Carousel"
+  },
+  "tourTemplatesCarouselDescription": "Quick access to your favorite workout templates. Swipe to browse!",
+  "@tourTemplatesCarouselDescription": {
+    "description": "Home tour step 8 description - Templates Carousel"
+  },
+  "tourExerciseWikiTitle": "Exercise Wiki",
+  "@tourExerciseWikiTitle": {
+    "description": "Home tour step 9 title - Exercise Wiki"
+  },
+  "tourExerciseWikiDescription": "Browse exercises, learn proper form, and discover new movements.",
+  "@tourExerciseWikiDescription": {
+    "description": "Home tour step 9 description - Exercise Wiki"
+  },
+  "tourSettingsTitle": "Settings",
+  "@tourSettingsTitle": {
+    "description": "Home tour step 10 title - Settings"
+  },
+  "tourSettingsDescription": "Customize the app to your needs. Adjust units, notifications, and more.",
+  "@tourSettingsDescription": {
+    "description": "Home tour step 10 description - Settings"
   }
 }

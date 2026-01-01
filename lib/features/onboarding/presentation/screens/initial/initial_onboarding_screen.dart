@@ -13,6 +13,7 @@ import 'package:gymbro_flutter_new/features/onboarding/presentation/widgets/init
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
+import 'package:gymbro_flutter_new/features/onboarding/domain/services/home_tour_service.dart';
 
 /// Main screen for initial onboarding flow.
 ///
@@ -104,8 +105,10 @@ class _InitialOnboardingScreenState
       // Trigger callback if provided
       widget.onComplete?.call();
 
-      // Navigate to Home - spotlight tutorial will start automatically
-      // when user opens workout screen for the first time
+      // Start home tour - will show automatically when Home renders
+      ref.read(homeTourProvider.notifier).startTour();
+
+      // Navigate to Home - home tour will start automatically
       if (mounted) {
         context.goNamed(AppRoutes.homeName);
       }

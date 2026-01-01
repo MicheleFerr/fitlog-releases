@@ -8205,6 +8205,18 @@ class AppLocalizationsEn extends AppLocalizations {
   String get appSubtitle => 'Track your fitness journey';
 
   @override
+  String get loginTagline => 'Track. Train. Transform.';
+
+  @override
+  String get loginStatsWorkouts => 'Workouts';
+
+  @override
+  String get loginStatsSets => 'Sets';
+
+  @override
+  String get loginStatsPRs => 'PRs';
+
+  @override
   String get emailLabel => 'Email';
 
   @override
@@ -8324,6 +8336,67 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get signOutButton => 'Sign Out';
+
+  @override
+  String get deleteAccount => 'Delete Account';
+
+  @override
+  String get deleteAccountDesc =>
+      'Permanently delete your account and all data';
+
+  @override
+  String get deleteAccountTitle => 'Delete Account?';
+
+  @override
+  String get deleteAccountWarning =>
+      'This action is permanent and cannot be undone. All your data will be permanently deleted.';
+
+  @override
+  String get deleteAccountDataList => 'The following data will be deleted:';
+
+  @override
+  String get deleteAccountDataWorkouts => 'All workout history';
+
+  @override
+  String get deleteAccountDataTemplates => 'All workout templates';
+
+  @override
+  String get deleteAccountDataPhotos => 'All progress photos';
+
+  @override
+  String get deleteAccountDataMeasurements => 'All body measurements';
+
+  @override
+  String get deleteAccountDataSettings => 'All settings and preferences';
+
+  @override
+  String get deleteAccountExportHint =>
+      'Tip: Export your data before deleting your account.';
+
+  @override
+  String get deleteAccountConfirm => 'Delete My Account';
+
+  @override
+  String get deleteAccountProgress => 'Deleting your account...';
+
+  @override
+  String get deleteAccountSuccess =>
+      'Your account has been deleted successfully.';
+
+  @override
+  String get deleteAccountError =>
+      'Failed to delete account. Please try again.';
+
+  @override
+  String get deleteAccountReauthTitle => 'Re-authentication Required';
+
+  @override
+  String get deleteAccountReauthMessage =>
+      'For security reasons, you need to sign in again before deleting your account.';
+
+  @override
+  String get deleteAccountReauthHint =>
+      'Please sign in again to delete your account.';
 
   @override
   String get addExerciseTitle => 'Add Exercise';
@@ -8533,6 +8606,9 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get signUpWithApple => 'Sign up with Apple';
+
+  @override
+  String get signUpWithEmail => 'Sign up with Email';
 
   @override
   String get alreadyHaveAccountPrompt => 'Already have an account? ';
@@ -21990,6 +22066,37 @@ class AppLocalizationsEn extends AppLocalizations {
       'Complete fitness profile for more accurate predictions';
 
   @override
+  String get stressWorkoutBreakdownTitle => 'High Intensity Session';
+
+  @override
+  String get volumeKg => 'Volume';
+
+  @override
+  String get stressScore => 'Stress';
+
+  @override
+  String get stressScientificBasisTitle => 'Scientific Basis';
+
+  @override
+  String get stressScientificExplanation =>
+      'Training stress is calculated using the Banister Fitness-Fatigue Model (FFM). High volume and intensity create muscle damage and metabolic fatigue that requires 48-72 hours to recover. Your personal recovery rate is adjusted based on training age, sleep quality, and HRV data.';
+
+  @override
+  String get stressReferencesTitle => 'Research References';
+
+  @override
+  String get stressReferenceBanister =>
+      'Fitness-Fatigue Model for training load quantification';
+
+  @override
+  String get stressReferenceSchoenfeld =>
+      'Dose-response relationship between training volume and muscle growth';
+
+  @override
+  String get stressReferenceMorton =>
+      'Recovery time constants vary 7-14 days between individuals';
+
+  @override
   String get recentHistory => 'Recent History';
 
   @override
@@ -24472,4 +24579,308 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get notAuthenticated => 'You must be logged in';
+
+  @override
+  String get initialOnboardingWelcomeTitle => 'Welcome to FitLog Pro';
+
+  @override
+  String get initialOnboardingWelcomeSubtitle =>
+      'Your smart workout journal that helps you reach your goals';
+
+  @override
+  String get initialOnboardingFeature1 => 'Track workouts and progress';
+
+  @override
+  String get initialOnboardingFeature2 => 'Personalized weight suggestions';
+
+  @override
+  String get initialOnboardingFeature3 => 'Advanced analytics';
+
+  @override
+  String get initialOnboardingStart => 'Let\'s go!';
+
+  @override
+  String get initialOnboardingContinue => 'Continue';
+
+  @override
+  String get initialOnboardingGoalTitle => 'What\'s your goal?';
+
+  @override
+  String get initialOnboardingGoalSubtitle =>
+      'We\'ll personalize your experience';
+
+  @override
+  String get initialOnboardingGoalBuildMuscle => 'Build muscle';
+
+  @override
+  String get initialOnboardingGoalBuildMuscleDesc => 'Gain muscle mass';
+
+  @override
+  String get initialOnboardingGoalGetStronger => 'Get stronger';
+
+  @override
+  String get initialOnboardingGoalGetStrongerDesc => 'Lift heavier weights';
+
+  @override
+  String get initialOnboardingGoalEndurance => 'Improve endurance';
+
+  @override
+  String get initialOnboardingGoalEnduranceDesc => 'More reps, more energy';
+
+  @override
+  String get initialOnboardingGoalStayFit => 'Stay fit';
+
+  @override
+  String get initialOnboardingGoalStayFitDesc => 'General fitness';
+
+  @override
+  String get initialOnboardingBodyTitle => 'Tell us about yourself';
+
+  @override
+  String get initialOnboardingBodySubtitle =>
+      'This helps us suggest the right weights';
+
+  @override
+  String get initialOnboardingSexLabel => 'Biological sex';
+
+  @override
+  String get initialOnboardingSexMale => 'Male';
+
+  @override
+  String get initialOnboardingSexFemale => 'Female';
+
+  @override
+  String get initialOnboardingWeightLabel => 'Body weight';
+
+  @override
+  String get initialOnboardingImportHealthKit => 'Import from Health';
+
+  @override
+  String get initialOnboardingBodyInfo =>
+      'We use this data to suggest the right weights for you';
+
+  @override
+  String get initialOnboardingHealthKitNotAvailable =>
+      'HealthKit not available, enter manually';
+
+  @override
+  String get initialOnboardingImporting => 'Importing...';
+
+  @override
+  String get initialOnboardingHealthKitDenied =>
+      'Permission denied. Please enable Health access in Settings.';
+
+  @override
+  String get initialOnboardingHealthKitDeniedTitle => 'Permission Required';
+
+  @override
+  String get initialOnboardingHealthKitDeniedMessage =>
+      'To import your weight from Health, please enable access in Settings > Privacy & Security > Health > FitLog.';
+
+  @override
+  String get initialOnboardingOpenSettings => 'Open Settings';
+
+  @override
+  String get initialOnboardingHealthKitError => 'Error reading Health data';
+
+  @override
+  String get initialOnboardingHealthKitNoWeightData =>
+      'No weight data found in Health';
+
+  @override
+  String initialOnboardingHealthKitSuccess(String weight) {
+    return 'Weight imported: $weight kg';
+  }
+
+  @override
+  String get initialOnboardingExperienceTitle => 'What\'s your experience?';
+
+  @override
+  String get initialOnboardingExperienceSubtitle =>
+      'This helps us personalize suggestions';
+
+  @override
+  String get initialOnboardingExperienceBeginner => 'Beginner';
+
+  @override
+  String get initialOnboardingExperienceBeginnerDesc =>
+      'Never or rarely at the gym';
+
+  @override
+  String get initialOnboardingExperienceSome => 'Some experience';
+
+  @override
+  String get initialOnboardingExperienceSomeDesc => '6 months - 2 years';
+
+  @override
+  String get initialOnboardingExperienceExperienced => 'Experienced';
+
+  @override
+  String get initialOnboardingExperienceExperiencedDesc =>
+      '2+ years consistent training';
+
+  @override
+  String get initialOnboardingExperienceAthlete => 'Advanced athlete';
+
+  @override
+  String get initialOnboardingExperienceAthleteDesc =>
+      '5+ years, I know my PRs';
+
+  @override
+  String get initialOnboardingHealthKitTitle => 'Connect Health';
+
+  @override
+  String get initialOnboardingHealthKitSubtitle =>
+      'Sync your data for a personalized experience';
+
+  @override
+  String get initialOnboardingHealthKitWorkouts => 'Workouts';
+
+  @override
+  String get initialOnboardingHealthKitWorkoutsDesc =>
+      'Save workouts to Health';
+
+  @override
+  String get initialOnboardingHealthKitWeight => 'Body weight';
+
+  @override
+  String get initialOnboardingHealthKitWeightDesc => 'Sync weight data';
+
+  @override
+  String get initialOnboardingHealthKitSleep => 'Sleep';
+
+  @override
+  String get initialOnboardingHealthKitSleepDesc => 'For Recovery Insight';
+
+  @override
+  String get initialOnboardingHealthKitHrv => 'HRV';
+
+  @override
+  String get initialOnboardingHealthKitHrvDesc => 'For Stress Index';
+
+  @override
+  String get initialOnboardingHealthKitPrivacy =>
+      'Your data stays on your device';
+
+  @override
+  String get initialOnboardingHealthKitConnect => 'Connect Health';
+
+  @override
+  String get initialOnboardingHealthKitSkip => 'Skip for now';
+
+  @override
+  String get initialOnboardingQuickSelect => 'Quick Select';
+
+  @override
+  String get initialOnboardingSelectWeight => 'Select Weight';
+
+  @override
+  String get initialOnboardingFrequencyTitle => 'How often do you train?';
+
+  @override
+  String get initialOnboardingFrequencySubtitle => 'Workouts per week';
+
+  @override
+  String get initialOnboardingSummaryTitle => 'Summary';
+
+  @override
+  String get initialOnboardingSummaryGoal => 'Goal';
+
+  @override
+  String get initialOnboardingSummaryWeight => 'Weight';
+
+  @override
+  String get initialOnboardingSummaryExperience => 'Experience';
+
+  @override
+  String get initialOnboardingSummaryFrequency => 'Frequency';
+
+  @override
+  String get initialOnboardingSummaryHealth => 'Health';
+
+  @override
+  String get initialOnboardingWeek => 'week';
+
+  @override
+  String get initialOnboardingConnected => 'Connected';
+
+  @override
+  String get initialOnboardingNotConnected => 'Not connected';
+
+  @override
+  String get initialOnboardingComplete => 'Start training!';
+
+  @override
+  String get initialOnboardingCompleteInfo =>
+      'You can change these settings anytime';
+
+  @override
+  String get tourXpProgressTitle => 'Your Level';
+
+  @override
+  String get tourXpProgressDescription =>
+      'Track your progress! Earn XP by completing workouts and level up.';
+
+  @override
+  String get tourActivityRingsTitle => 'Activity Rings';
+
+  @override
+  String get tourActivityRingsDescription =>
+      'Synced with Apple Health. See your daily activity at a glance!';
+
+  @override
+  String get tourProInsightsTitle => 'Pro Analytics';
+
+  @override
+  String get tourProInsightsDescription =>
+      'Advanced charts and metrics for serious athletes. Track everything!';
+
+  @override
+  String get tourRecoveryInsightTitle => 'Recovery Status';
+
+  @override
+  String get tourRecoveryInsightDescription =>
+      'Based on your sleep and training load. Know when to push hard or rest.';
+
+  @override
+  String get tourStressPredictionTitle => 'Training Load';
+
+  @override
+  String get tourStressPredictionDescription =>
+      'AI-powered predictions of your fitness and fatigue levels.';
+
+  @override
+  String get tourTemplateSuggestionTitle => 'Today\'s Suggestion';
+
+  @override
+  String get tourTemplateSuggestionDescription =>
+      'Smart workout recommendations based on your history and goals.';
+
+  @override
+  String get tourStartWorkoutTitle => 'Start Workout';
+
+  @override
+  String get tourStartWorkoutDescription =>
+      'Tap here to begin your training session. Track every set and rep!';
+
+  @override
+  String get tourTemplatesCarouselTitle => 'Your Templates';
+
+  @override
+  String get tourTemplatesCarouselDescription =>
+      'Quick access to your favorite workout templates. Swipe to browse!';
+
+  @override
+  String get tourExerciseWikiTitle => 'Exercise Wiki';
+
+  @override
+  String get tourExerciseWikiDescription =>
+      'Browse exercises, learn proper form, and discover new movements.';
+
+  @override
+  String get tourSettingsTitle => 'Settings';
+
+  @override
+  String get tourSettingsDescription =>
+      'Customize the app to your needs. Adjust units, notifications, and more.';
 }

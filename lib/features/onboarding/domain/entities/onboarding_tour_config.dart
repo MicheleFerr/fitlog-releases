@@ -2,113 +2,145 @@ import 'package:gymbro_flutter_new/features/onboarding/domain/entities/onboardin
 
 /// Configuration for the Home Screen Guided Tour
 ///
-/// Defines all 7 steps of the tour with their properties.
-/// Based on research: adaptive pacing (auto 20s for SIMPLE, user-controlled for COMPLEX)
+/// Defines all steps of the tour with their properties.
+/// Based on research: adaptive pacing (auto 15s for SIMPLE, user-controlled for COMPLEX)
 /// achieves 70% completion + 85% satisfaction.
 ///
-/// New: FAB step re-added as final step with top-positioned bottom sheet.
+/// Updated to match current MinimalHomeScreen widgets.
 class OnboardingTourConfig {
   /// Total number of steps in the tour
-  static const int totalSteps = 7;
+  static const int totalSteps = 10;
 
   /// Standard auto-advance duration for SIMPLE steps
-  static const Duration simpleStepDuration = Duration(seconds: 20);
+  static const Duration simpleStepDuration = Duration(seconds: 12);
 
   /// Quick auto-advance for brief utility steps
-  static const Duration briefStepDuration = Duration(seconds: 15);
+  static const Duration briefStepDuration = Duration(seconds: 8);
 
-  /// All tour steps in order
+  /// All tour steps in order (matching MinimalHomeScreen layout)
   static List<OnboardingTourStep> get allSteps => [
-        // Step 1: AI Coach Card (SIMPLE - 20s auto)
+        // Step 1: XP Progress Bar - Your level and experience
         const OnboardingTourStep(
-          id: 'aiCoach',
-          titleKey: 'tourAiCoachTitle',
-          descriptionKey: 'tourAiCoachDescription',
+          id: 'xpProgress',
+          titleKey: 'tourXpProgressTitle',
+          descriptionKey: 'tourXpProgressDescription',
           type: TourStepType.simple,
-          autoAdvanceDuration: simpleStepDuration,
-          targetWidgetKey: 'aiCoachCard',
+          autoAdvanceDuration: briefStepDuration,
+          targetWidgetKey: 'xpProgressBar',
           position: 0,
           totalSteps: totalSteps,
         ),
 
-        // Step 2: Smart Workout CTA (SIMPLE - 20s auto)
+        // Step 2: Activity Rings - HealthKit integration
         const OnboardingTourStep(
-          id: 'smartWorkout',
-          titleKey: 'tourSmartWorkoutTitle',
-          descriptionKey: 'tourSmartWorkoutDescription',
+          id: 'activityRings',
+          titleKey: 'tourActivityRingsTitle',
+          descriptionKey: 'tourActivityRingsDescription',
           type: TourStepType.simple,
           autoAdvanceDuration: simpleStepDuration,
-          targetWidgetKey: 'smartWorkoutCard',
+          targetWidgetKey: 'activityRings',
           position: 1,
           totalSteps: totalSteps,
         ),
 
-        // Step 3: Analytics (NEW - SIMPLE - 20s auto - bottom sheet positioned at top)
+        // Step 3: Pro Insights Preview - Analytics CTA
         const OnboardingTourStep(
-          id: 'analytics',
-          titleKey: 'tourAnalyticsTitle',
-          descriptionKey: 'tourAnalyticsDescription',
-          bulletPointKeys: [
-            'tourAnalyticsBullet1',
-            'tourAnalyticsBullet2',
-            'tourAnalyticsBullet3',
-          ],
+          id: 'proInsights',
+          titleKey: 'tourProInsightsTitle',
+          descriptionKey: 'tourProInsightsDescription',
           type: TourStepType.simple,
           autoAdvanceDuration: simpleStepDuration,
-          targetWidgetKey: 'analytics',
+          targetWidgetKey: 'proInsights',
           position: 2,
           totalSteps: totalSteps,
-          bottomSheetPosition: BottomSheetPosition.top,
         ),
 
-        // Step 4: History (NEW - SIMPLE - 20s auto - bottom sheet positioned at top)
+        // Step 4: Recovery Insight - Sleep-based recovery
         const OnboardingTourStep(
-          id: 'history',
-          titleKey: 'tourHistoryTitle',
-          descriptionKey: 'tourHistoryDescription',
+          id: 'recoveryInsight',
+          titleKey: 'tourRecoveryInsightTitle',
+          descriptionKey: 'tourRecoveryInsightDescription',
           type: TourStepType.simple,
           autoAdvanceDuration: simpleStepDuration,
-          targetWidgetKey: 'history',
+          targetWidgetKey: 'recoveryInsight',
           position: 3,
           totalSteps: totalSteps,
+        ),
+
+        // Step 5: Stress Prediction - Banister model predictions
+        const OnboardingTourStep(
+          id: 'stressPrediction',
+          titleKey: 'tourStressPredictionTitle',
+          descriptionKey: 'tourStressPredictionDescription',
+          type: TourStepType.simple,
+          autoAdvanceDuration: simpleStepDuration,
+          targetWidgetKey: 'stressPrediction',
+          position: 4,
+          totalSteps: totalSteps,
           bottomSheetPosition: BottomSheetPosition.top,
         ),
 
-        // Step 5: Community (SIMPLE - 20s auto)
+        // Step 6: Template Suggestion - AI workout recommendation
         const OnboardingTourStep(
-          id: 'community',
-          titleKey: 'tourCommunityTitle',
-          descriptionKey: 'tourCommunityDescription',
+          id: 'templateSuggestion',
+          titleKey: 'tourTemplateSuggestionTitle',
+          descriptionKey: 'tourTemplateSuggestionDescription',
           type: TourStepType.simple,
           autoAdvanceDuration: simpleStepDuration,
-          targetWidgetKey: 'communityCard',
-          position: 4,
-          totalSteps: totalSteps,
-        ),
-
-        // Step 6: Notification Hub (SIMPLE - 15s auto)
-        const OnboardingTourStep(
-          id: 'notifications',
-          titleKey: 'tourNotificationsTitle',
-          descriptionKey: 'tourNotificationsDescription',
-          type: TourStepType.simple,
-          autoAdvanceDuration: briefStepDuration,
-          targetWidgetKey: 'notifications',
+          targetWidgetKey: 'templateSuggestion',
           position: 5,
           totalSteps: totalSteps,
+          bottomSheetPosition: BottomSheetPosition.top,
         ),
 
-        // Step 7: FAB (NEW - COMPLEX - user-controlled - bottom sheet positioned at top)
-        // This is the final step - user must press button to continue to workout
+        // Step 7: Start Workout Card - Main CTA
         const OnboardingTourStep(
-          id: 'fab',
-          titleKey: 'tourFabTitle',
-          descriptionKey: 'tourFabDescription',
-          type: TourStepType.complex,
-          targetWidgetKey: 'fab',
+          id: 'startWorkout',
+          titleKey: 'tourStartWorkoutTitle',
+          descriptionKey: 'tourStartWorkoutDescription',
+          type: TourStepType.simple,
+          autoAdvanceDuration: simpleStepDuration,
+          targetWidgetKey: 'startWorkout',
           position: 6,
           totalSteps: totalSteps,
           bottomSheetPosition: BottomSheetPosition.top,
+        ),
+
+        // Step 8: Templates Carousel - Quick access templates
+        const OnboardingTourStep(
+          id: 'templatesCarousel',
+          titleKey: 'tourTemplatesCarouselTitle',
+          descriptionKey: 'tourTemplatesCarouselDescription',
+          type: TourStepType.simple,
+          autoAdvanceDuration: simpleStepDuration,
+          targetWidgetKey: 'templatesCarousel',
+          position: 7,
+          totalSteps: totalSteps,
+          bottomSheetPosition: BottomSheetPosition.top,
+        ),
+
+        // Step 9: Exercise Wiki - Community exercise database
+        const OnboardingTourStep(
+          id: 'exerciseWiki',
+          titleKey: 'tourExerciseWikiTitle',
+          descriptionKey: 'tourExerciseWikiDescription',
+          type: TourStepType.simple,
+          autoAdvanceDuration: simpleStepDuration,
+          targetWidgetKey: 'exerciseWiki',
+          position: 8,
+          totalSteps: totalSteps,
+          bottomSheetPosition: BottomSheetPosition.top,
+        ),
+
+        // Step 10: Settings - App configuration (final step)
+        const OnboardingTourStep(
+          id: 'settings',
+          titleKey: 'tourSettingsTitle',
+          descriptionKey: 'tourSettingsDescription',
+          type: TourStepType.complex,
+          targetWidgetKey: 'settingsButton',
+          position: 9,
+          totalSteps: totalSteps,
         ),
       ];
 

@@ -14687,6 +14687,30 @@ abstract class AppLocalizations {
   /// **'Track your fitness journey'**
   String get appSubtitle;
 
+  /// Motivational tagline on login screen
+  ///
+  /// In en, this message translates to:
+  /// **'Track. Train. Transform.'**
+  String get loginTagline;
+
+  /// Stats preview label for workouts
+  ///
+  /// In en, this message translates to:
+  /// **'Workouts'**
+  String get loginStatsWorkouts;
+
+  /// Stats preview label for sets
+  ///
+  /// In en, this message translates to:
+  /// **'Sets'**
+  String get loginStatsSets;
+
+  /// Stats preview label for personal records
+  ///
+  /// In en, this message translates to:
+  /// **'PRs'**
+  String get loginStatsPRs;
+
   /// Email input field label
   ///
   /// In en, this message translates to:
@@ -14920,6 +14944,114 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Sign Out'**
   String get signOutButton;
+
+  /// Delete account button text
+  ///
+  /// In en, this message translates to:
+  /// **'Delete Account'**
+  String get deleteAccount;
+
+  /// Delete account button subtitle
+  ///
+  /// In en, this message translates to:
+  /// **'Permanently delete your account and all data'**
+  String get deleteAccountDesc;
+
+  /// Delete account dialog title
+  ///
+  /// In en, this message translates to:
+  /// **'Delete Account?'**
+  String get deleteAccountTitle;
+
+  /// Delete account warning message
+  ///
+  /// In en, this message translates to:
+  /// **'This action is permanent and cannot be undone. All your data will be permanently deleted.'**
+  String get deleteAccountWarning;
+
+  /// Delete account data list header
+  ///
+  /// In en, this message translates to:
+  /// **'The following data will be deleted:'**
+  String get deleteAccountDataList;
+
+  /// Workout data deletion item
+  ///
+  /// In en, this message translates to:
+  /// **'All workout history'**
+  String get deleteAccountDataWorkouts;
+
+  /// Template data deletion item
+  ///
+  /// In en, this message translates to:
+  /// **'All workout templates'**
+  String get deleteAccountDataTemplates;
+
+  /// Photo data deletion item
+  ///
+  /// In en, this message translates to:
+  /// **'All progress photos'**
+  String get deleteAccountDataPhotos;
+
+  /// Measurements data deletion item
+  ///
+  /// In en, this message translates to:
+  /// **'All body measurements'**
+  String get deleteAccountDataMeasurements;
+
+  /// Settings data deletion item
+  ///
+  /// In en, this message translates to:
+  /// **'All settings and preferences'**
+  String get deleteAccountDataSettings;
+
+  /// Hint to export data before deletion
+  ///
+  /// In en, this message translates to:
+  /// **'Tip: Export your data before deleting your account.'**
+  String get deleteAccountExportHint;
+
+  /// Delete account confirmation button
+  ///
+  /// In en, this message translates to:
+  /// **'Delete My Account'**
+  String get deleteAccountConfirm;
+
+  /// Account deletion progress message
+  ///
+  /// In en, this message translates to:
+  /// **'Deleting your account...'**
+  String get deleteAccountProgress;
+
+  /// Account deletion success message
+  ///
+  /// In en, this message translates to:
+  /// **'Your account has been deleted successfully.'**
+  String get deleteAccountSuccess;
+
+  /// Account deletion error message
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to delete account. Please try again.'**
+  String get deleteAccountError;
+
+  /// Re-auth dialog title
+  ///
+  /// In en, this message translates to:
+  /// **'Re-authentication Required'**
+  String get deleteAccountReauthTitle;
+
+  /// Re-auth dialog message
+  ///
+  /// In en, this message translates to:
+  /// **'For security reasons, you need to sign in again before deleting your account.'**
+  String get deleteAccountReauthMessage;
+
+  /// Re-auth hint after sign out
+  ///
+  /// In en, this message translates to:
+  /// **'Please sign in again to delete your account.'**
+  String get deleteAccountReauthHint;
 
   /// Add exercise modal title
   ///
@@ -15307,6 +15439,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Sign up with Apple'**
   String get signUpWithApple;
+
+  /// Email sign up button alternative
+  ///
+  /// In en, this message translates to:
+  /// **'Sign up with Email'**
+  String get signUpWithEmail;
 
   /// Already have account prompt
   ///
@@ -39340,6 +39478,60 @@ abstract class AppLocalizations {
   /// **'Complete fitness profile for more accurate predictions'**
   String get stressPredictionCalibrationHint;
 
+  /// Title for workout breakdown when stress is high
+  ///
+  /// In en, this message translates to:
+  /// **'High Intensity Session'**
+  String get stressWorkoutBreakdownTitle;
+
+  /// Label for volume in kilograms
+  ///
+  /// In en, this message translates to:
+  /// **'Volume'**
+  String get volumeKg;
+
+  /// Label for stress score
+  ///
+  /// In en, this message translates to:
+  /// **'Stress'**
+  String get stressScore;
+
+  /// Title for scientific explanation section
+  ///
+  /// In en, this message translates to:
+  /// **'Scientific Basis'**
+  String get stressScientificBasisTitle;
+
+  /// Scientific explanation of stress calculation
+  ///
+  /// In en, this message translates to:
+  /// **'Training stress is calculated using the Banister Fitness-Fatigue Model (FFM). High volume and intensity create muscle damage and metabolic fatigue that requires 48-72 hours to recover. Your personal recovery rate is adjusted based on training age, sleep quality, and HRV data.'**
+  String get stressScientificExplanation;
+
+  /// Title for research references section
+  ///
+  /// In en, this message translates to:
+  /// **'Research References'**
+  String get stressReferencesTitle;
+
+  /// Description of Banister research
+  ///
+  /// In en, this message translates to:
+  /// **'Fitness-Fatigue Model for training load quantification'**
+  String get stressReferenceBanister;
+
+  /// Description of Schoenfeld research
+  ///
+  /// In en, this message translates to:
+  /// **'Dose-response relationship between training volume and muscle growth'**
+  String get stressReferenceSchoenfeld;
+
+  /// Description of Morton research
+  ///
+  /// In en, this message translates to:
+  /// **'Recovery time constants vary 7-14 days between individuals'**
+  String get stressReferenceMorton;
+
   /// Section title for recent stress history
   ///
   /// In en, this message translates to:
@@ -43699,6 +43891,558 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'You must be logged in'**
   String get notAuthenticated;
+
+  /// Initial onboarding welcome title
+  ///
+  /// In en, this message translates to:
+  /// **'Welcome to FitLog Pro'**
+  String get initialOnboardingWelcomeTitle;
+
+  /// Initial onboarding welcome subtitle
+  ///
+  /// In en, this message translates to:
+  /// **'Your smart workout journal that helps you reach your goals'**
+  String get initialOnboardingWelcomeSubtitle;
+
+  /// Feature 1 in welcome step
+  ///
+  /// In en, this message translates to:
+  /// **'Track workouts and progress'**
+  String get initialOnboardingFeature1;
+
+  /// Feature 2 in welcome step
+  ///
+  /// In en, this message translates to:
+  /// **'Personalized weight suggestions'**
+  String get initialOnboardingFeature2;
+
+  /// Feature 3 in welcome step
+  ///
+  /// In en, this message translates to:
+  /// **'Advanced analytics'**
+  String get initialOnboardingFeature3;
+
+  /// Start button in initial onboarding
+  ///
+  /// In en, this message translates to:
+  /// **'Let\'s go!'**
+  String get initialOnboardingStart;
+
+  /// Continue button in initial onboarding
+  ///
+  /// In en, this message translates to:
+  /// **'Continue'**
+  String get initialOnboardingContinue;
+
+  /// Goal selection title
+  ///
+  /// In en, this message translates to:
+  /// **'What\'s your goal?'**
+  String get initialOnboardingGoalTitle;
+
+  /// Goal selection subtitle
+  ///
+  /// In en, this message translates to:
+  /// **'We\'ll personalize your experience'**
+  String get initialOnboardingGoalSubtitle;
+
+  /// Build muscle goal option
+  ///
+  /// In en, this message translates to:
+  /// **'Build muscle'**
+  String get initialOnboardingGoalBuildMuscle;
+
+  /// Build muscle goal description
+  ///
+  /// In en, this message translates to:
+  /// **'Gain muscle mass'**
+  String get initialOnboardingGoalBuildMuscleDesc;
+
+  /// Get stronger goal option
+  ///
+  /// In en, this message translates to:
+  /// **'Get stronger'**
+  String get initialOnboardingGoalGetStronger;
+
+  /// Get stronger goal description
+  ///
+  /// In en, this message translates to:
+  /// **'Lift heavier weights'**
+  String get initialOnboardingGoalGetStrongerDesc;
+
+  /// Endurance goal option
+  ///
+  /// In en, this message translates to:
+  /// **'Improve endurance'**
+  String get initialOnboardingGoalEndurance;
+
+  /// Endurance goal description
+  ///
+  /// In en, this message translates to:
+  /// **'More reps, more energy'**
+  String get initialOnboardingGoalEnduranceDesc;
+
+  /// Stay fit goal option
+  ///
+  /// In en, this message translates to:
+  /// **'Stay fit'**
+  String get initialOnboardingGoalStayFit;
+
+  /// Stay fit goal description
+  ///
+  /// In en, this message translates to:
+  /// **'General fitness'**
+  String get initialOnboardingGoalStayFitDesc;
+
+  /// Body data step title
+  ///
+  /// In en, this message translates to:
+  /// **'Tell us about yourself'**
+  String get initialOnboardingBodyTitle;
+
+  /// Body data step subtitle
+  ///
+  /// In en, this message translates to:
+  /// **'This helps us suggest the right weights'**
+  String get initialOnboardingBodySubtitle;
+
+  /// Sex selection label
+  ///
+  /// In en, this message translates to:
+  /// **'Biological sex'**
+  String get initialOnboardingSexLabel;
+
+  /// Male option
+  ///
+  /// In en, this message translates to:
+  /// **'Male'**
+  String get initialOnboardingSexMale;
+
+  /// Female option
+  ///
+  /// In en, this message translates to:
+  /// **'Female'**
+  String get initialOnboardingSexFemale;
+
+  /// Weight input label
+  ///
+  /// In en, this message translates to:
+  /// **'Body weight'**
+  String get initialOnboardingWeightLabel;
+
+  /// Import weight from HealthKit button
+  ///
+  /// In en, this message translates to:
+  /// **'Import from Health'**
+  String get initialOnboardingImportHealthKit;
+
+  /// Body data info text
+  ///
+  /// In en, this message translates to:
+  /// **'We use this data to suggest the right weights for you'**
+  String get initialOnboardingBodyInfo;
+
+  /// HealthKit not available message
+  ///
+  /// In en, this message translates to:
+  /// **'HealthKit not available, enter manually'**
+  String get initialOnboardingHealthKitNotAvailable;
+
+  /// Importing from HealthKit loading text
+  ///
+  /// In en, this message translates to:
+  /// **'Importing...'**
+  String get initialOnboardingImporting;
+
+  /// HealthKit permission denied message
+  ///
+  /// In en, this message translates to:
+  /// **'Permission denied. Please enable Health access in Settings.'**
+  String get initialOnboardingHealthKitDenied;
+
+  /// HealthKit permission denied dialog title
+  ///
+  /// In en, this message translates to:
+  /// **'Permission Required'**
+  String get initialOnboardingHealthKitDeniedTitle;
+
+  /// HealthKit permission denied dialog message
+  ///
+  /// In en, this message translates to:
+  /// **'To import your weight from Health, please enable access in Settings > Privacy & Security > Health > FitLog.'**
+  String get initialOnboardingHealthKitDeniedMessage;
+
+  /// Button to open app settings
+  ///
+  /// In en, this message translates to:
+  /// **'Open Settings'**
+  String get initialOnboardingOpenSettings;
+
+  /// HealthKit read error message
+  ///
+  /// In en, this message translates to:
+  /// **'Error reading Health data'**
+  String get initialOnboardingHealthKitError;
+
+  /// No weight data found in HealthKit
+  ///
+  /// In en, this message translates to:
+  /// **'No weight data found in Health'**
+  String get initialOnboardingHealthKitNoWeightData;
+
+  /// HealthKit weight import success message
+  ///
+  /// In en, this message translates to:
+  /// **'Weight imported: {weight} kg'**
+  String initialOnboardingHealthKitSuccess(String weight);
+
+  /// Experience step title
+  ///
+  /// In en, this message translates to:
+  /// **'What\'s your experience?'**
+  String get initialOnboardingExperienceTitle;
+
+  /// Experience step subtitle
+  ///
+  /// In en, this message translates to:
+  /// **'This helps us personalize suggestions'**
+  String get initialOnboardingExperienceSubtitle;
+
+  /// Beginner experience level
+  ///
+  /// In en, this message translates to:
+  /// **'Beginner'**
+  String get initialOnboardingExperienceBeginner;
+
+  /// Beginner description
+  ///
+  /// In en, this message translates to:
+  /// **'Never or rarely at the gym'**
+  String get initialOnboardingExperienceBeginnerDesc;
+
+  /// Some experience level
+  ///
+  /// In en, this message translates to:
+  /// **'Some experience'**
+  String get initialOnboardingExperienceSome;
+
+  /// Some experience description
+  ///
+  /// In en, this message translates to:
+  /// **'6 months - 2 years'**
+  String get initialOnboardingExperienceSomeDesc;
+
+  /// Experienced level
+  ///
+  /// In en, this message translates to:
+  /// **'Experienced'**
+  String get initialOnboardingExperienceExperienced;
+
+  /// Experienced description
+  ///
+  /// In en, this message translates to:
+  /// **'2+ years consistent training'**
+  String get initialOnboardingExperienceExperiencedDesc;
+
+  /// Athlete experience level
+  ///
+  /// In en, this message translates to:
+  /// **'Advanced athlete'**
+  String get initialOnboardingExperienceAthlete;
+
+  /// Athlete description
+  ///
+  /// In en, this message translates to:
+  /// **'5+ years, I know my PRs'**
+  String get initialOnboardingExperienceAthleteDesc;
+
+  /// HealthKit step title
+  ///
+  /// In en, this message translates to:
+  /// **'Connect Health'**
+  String get initialOnboardingHealthKitTitle;
+
+  /// HealthKit step subtitle
+  ///
+  /// In en, this message translates to:
+  /// **'Sync your data for a personalized experience'**
+  String get initialOnboardingHealthKitSubtitle;
+
+  /// Workouts health data type
+  ///
+  /// In en, this message translates to:
+  /// **'Workouts'**
+  String get initialOnboardingHealthKitWorkouts;
+
+  /// Workouts description
+  ///
+  /// In en, this message translates to:
+  /// **'Save workouts to Health'**
+  String get initialOnboardingHealthKitWorkoutsDesc;
+
+  /// Weight health data type
+  ///
+  /// In en, this message translates to:
+  /// **'Body weight'**
+  String get initialOnboardingHealthKitWeight;
+
+  /// Weight description
+  ///
+  /// In en, this message translates to:
+  /// **'Sync weight data'**
+  String get initialOnboardingHealthKitWeightDesc;
+
+  /// Sleep health data type
+  ///
+  /// In en, this message translates to:
+  /// **'Sleep'**
+  String get initialOnboardingHealthKitSleep;
+
+  /// Sleep description
+  ///
+  /// In en, this message translates to:
+  /// **'For Recovery Insight'**
+  String get initialOnboardingHealthKitSleepDesc;
+
+  /// HRV health data type
+  ///
+  /// In en, this message translates to:
+  /// **'HRV'**
+  String get initialOnboardingHealthKitHrv;
+
+  /// HRV description
+  ///
+  /// In en, this message translates to:
+  /// **'For Stress Index'**
+  String get initialOnboardingHealthKitHrvDesc;
+
+  /// Privacy note
+  ///
+  /// In en, this message translates to:
+  /// **'Your data stays on your device'**
+  String get initialOnboardingHealthKitPrivacy;
+
+  /// Connect HealthKit button
+  ///
+  /// In en, this message translates to:
+  /// **'Connect Health'**
+  String get initialOnboardingHealthKitConnect;
+
+  /// Skip HealthKit button
+  ///
+  /// In en, this message translates to:
+  /// **'Skip for now'**
+  String get initialOnboardingHealthKitSkip;
+
+  /// Quick weight selection button in keyboard toolbar
+  ///
+  /// In en, this message translates to:
+  /// **'Quick Select'**
+  String get initialOnboardingQuickSelect;
+
+  /// Title for weight presets bottom sheet
+  ///
+  /// In en, this message translates to:
+  /// **'Select Weight'**
+  String get initialOnboardingSelectWeight;
+
+  /// Frequency step title
+  ///
+  /// In en, this message translates to:
+  /// **'How often do you train?'**
+  String get initialOnboardingFrequencyTitle;
+
+  /// Frequency step subtitle
+  ///
+  /// In en, this message translates to:
+  /// **'Workouts per week'**
+  String get initialOnboardingFrequencySubtitle;
+
+  /// Summary section title
+  ///
+  /// In en, this message translates to:
+  /// **'Summary'**
+  String get initialOnboardingSummaryTitle;
+
+  /// Summary goal label
+  ///
+  /// In en, this message translates to:
+  /// **'Goal'**
+  String get initialOnboardingSummaryGoal;
+
+  /// Summary weight label
+  ///
+  /// In en, this message translates to:
+  /// **'Weight'**
+  String get initialOnboardingSummaryWeight;
+
+  /// Summary experience label
+  ///
+  /// In en, this message translates to:
+  /// **'Experience'**
+  String get initialOnboardingSummaryExperience;
+
+  /// Summary frequency label
+  ///
+  /// In en, this message translates to:
+  /// **'Frequency'**
+  String get initialOnboardingSummaryFrequency;
+
+  /// Summary health label
+  ///
+  /// In en, this message translates to:
+  /// **'Health'**
+  String get initialOnboardingSummaryHealth;
+
+  /// Week label
+  ///
+  /// In en, this message translates to:
+  /// **'week'**
+  String get initialOnboardingWeek;
+
+  /// Connected status
+  ///
+  /// In en, this message translates to:
+  /// **'Connected'**
+  String get initialOnboardingConnected;
+
+  /// Not connected status
+  ///
+  /// In en, this message translates to:
+  /// **'Not connected'**
+  String get initialOnboardingNotConnected;
+
+  /// Complete onboarding button
+  ///
+  /// In en, this message translates to:
+  /// **'Start training!'**
+  String get initialOnboardingComplete;
+
+  /// Info text below complete button
+  ///
+  /// In en, this message translates to:
+  /// **'You can change these settings anytime'**
+  String get initialOnboardingCompleteInfo;
+
+  /// Home tour step 1 title - XP Progress
+  ///
+  /// In en, this message translates to:
+  /// **'Your Level'**
+  String get tourXpProgressTitle;
+
+  /// Home tour step 1 description - XP Progress
+  ///
+  /// In en, this message translates to:
+  /// **'Track your progress! Earn XP by completing workouts and level up.'**
+  String get tourXpProgressDescription;
+
+  /// Home tour step 2 title - Activity Rings
+  ///
+  /// In en, this message translates to:
+  /// **'Activity Rings'**
+  String get tourActivityRingsTitle;
+
+  /// Home tour step 2 description - Activity Rings
+  ///
+  /// In en, this message translates to:
+  /// **'Synced with Apple Health. See your daily activity at a glance!'**
+  String get tourActivityRingsDescription;
+
+  /// Home tour step 3 title - Pro Insights
+  ///
+  /// In en, this message translates to:
+  /// **'Pro Analytics'**
+  String get tourProInsightsTitle;
+
+  /// Home tour step 3 description - Pro Insights
+  ///
+  /// In en, this message translates to:
+  /// **'Advanced charts and metrics for serious athletes. Track everything!'**
+  String get tourProInsightsDescription;
+
+  /// Home tour step 4 title - Recovery Insight
+  ///
+  /// In en, this message translates to:
+  /// **'Recovery Status'**
+  String get tourRecoveryInsightTitle;
+
+  /// Home tour step 4 description - Recovery Insight
+  ///
+  /// In en, this message translates to:
+  /// **'Based on your sleep and training load. Know when to push hard or rest.'**
+  String get tourRecoveryInsightDescription;
+
+  /// Home tour step 5 title - Stress Prediction
+  ///
+  /// In en, this message translates to:
+  /// **'Training Load'**
+  String get tourStressPredictionTitle;
+
+  /// Home tour step 5 description - Stress Prediction
+  ///
+  /// In en, this message translates to:
+  /// **'AI-powered predictions of your fitness and fatigue levels.'**
+  String get tourStressPredictionDescription;
+
+  /// Home tour step 6 title - Template Suggestion
+  ///
+  /// In en, this message translates to:
+  /// **'Today\'s Suggestion'**
+  String get tourTemplateSuggestionTitle;
+
+  /// Home tour step 6 description - Template Suggestion
+  ///
+  /// In en, this message translates to:
+  /// **'Smart workout recommendations based on your history and goals.'**
+  String get tourTemplateSuggestionDescription;
+
+  /// Home tour step 7 title - Start Workout
+  ///
+  /// In en, this message translates to:
+  /// **'Start Workout'**
+  String get tourStartWorkoutTitle;
+
+  /// Home tour step 7 description - Start Workout
+  ///
+  /// In en, this message translates to:
+  /// **'Tap here to begin your training session. Track every set and rep!'**
+  String get tourStartWorkoutDescription;
+
+  /// Home tour step 8 title - Templates Carousel
+  ///
+  /// In en, this message translates to:
+  /// **'Your Templates'**
+  String get tourTemplatesCarouselTitle;
+
+  /// Home tour step 8 description - Templates Carousel
+  ///
+  /// In en, this message translates to:
+  /// **'Quick access to your favorite workout templates. Swipe to browse!'**
+  String get tourTemplatesCarouselDescription;
+
+  /// Home tour step 9 title - Exercise Wiki
+  ///
+  /// In en, this message translates to:
+  /// **'Exercise Wiki'**
+  String get tourExerciseWikiTitle;
+
+  /// Home tour step 9 description - Exercise Wiki
+  ///
+  /// In en, this message translates to:
+  /// **'Browse exercises, learn proper form, and discover new movements.'**
+  String get tourExerciseWikiDescription;
+
+  /// Home tour step 10 title - Settings
+  ///
+  /// In en, this message translates to:
+  /// **'Settings'**
+  String get tourSettingsTitle;
+
+  /// Home tour step 10 description - Settings
+  ///
+  /// In en, this message translates to:
+  /// **'Customize the app to your needs. Adjust units, notifications, and more.'**
+  String get tourSettingsDescription;
 }
 
 class _AppLocalizationsDelegate

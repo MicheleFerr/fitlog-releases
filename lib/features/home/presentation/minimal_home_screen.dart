@@ -28,6 +28,7 @@ import 'package:gymbro_flutter_new/features/stress_index/presentation/widgets/te
 import 'package:gymbro_flutter_new/features/stress_index/presentation/widgets/stress_prediction_card.dart';
 import 'package:gymbro_flutter_new/features/exercise_merge/presentation/widgets/merge_suggestion_card.dart';
 import 'package:gymbro_flutter_new/features/onboarding/domain/services/workout_tutorial_service.dart';
+import 'package:gymbro_flutter_new/features/onboarding/domain/services/home_tour_service.dart';
 
 /// Minimal Home Screen - Clean dark premium design
 ///
@@ -44,13 +45,82 @@ import 'package:gymbro_flutter_new/features/onboarding/domain/services/workout_t
 /// - TemplatesCarouselCompact: Quick access to templates
 /// - AICoachCard: AI insights (hidden if no data)
 /// - ExerciseWikiCardCompact: Exercise wiki contributions
-class MinimalHomeScreen extends ConsumerWidget {
+class MinimalHomeScreen extends ConsumerStatefulWidget {
   const MinimalHomeScreen({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<MinimalHomeScreen> createState() => _MinimalHomeScreenState();
+}
+
+class _MinimalHomeScreenState extends ConsumerState<MinimalHomeScreen> {
+  // GlobalKeys for Home Tour targets
+  final _xpProgressKey = GlobalKey();
+  final _activityRingsKey = GlobalKey();
+  final _proInsightsKey = GlobalKey();
+  final _recoveryInsightKey = GlobalKey();
+  final _stressPredictionKey = GlobalKey();
+  final _templateSuggestionKey = GlobalKey();
+  final _startWorkoutKey = GlobalKey();
+  final _templatesCarouselKey = GlobalKey();
+  final _exerciseWikiKey = GlobalKey();
+  final _settingsButtonKey = GlobalKey();
+
+  @override
+  void initState() {
+    super.initState();
+    // Check if Home Tour should auto-start after frame renders
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _checkAutoStartTour();
+    });
+  }
+
+  void _checkAutoStartTour() {
+    final tourState = ref.read(homeTourProvider);
+    // Start tour if it's active (triggered from onboarding or dev tools)
+    if (tourState.isActive) {
+      _showHomeTour();
+    }
+  }
+
+  void _showHomeTour() {
+    final tourNotifier = ref.read(homeTourProvider.notifier);
+    tourNotifier.showTour(
+      context: context,
+      targetKeys: {
+        HomeTourStep.xpProgress: _xpProgressKey,
+        HomeTourStep.activityRings: _activityRingsKey,
+        HomeTourStep.proInsights: _proInsightsKey,
+        HomeTourStep.recoveryInsight: _recoveryInsightKey,
+        HomeTourStep.stressPrediction: _stressPredictionKey,
+        HomeTourStep.templateSuggestion: _templateSuggestionKey,
+        HomeTourStep.startWorkout: _startWorkoutKey,
+        HomeTourStep.templatesCarousel: _templatesCarouselKey,
+        HomeTourStep.exerciseWiki: _exerciseWikiKey,
+        HomeTourStep.settings: _settingsButtonKey,
+      },
+      onComplete: () {
+        debugPrint('✅ [HomeTour] Tour completed!');
+      },
+      onSkip: () {
+        debugPrint('⏭️ [HomeTour] Tour skipped');
+      },
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
     // 🔧 PERF FIX: Moved isAdmin and primaryAdvice watches to Consumer widgets
     // to prevent entire screen rebuilds when these values change
+
+    // Listen for tour state changes to auto-start tour
+    ref.listen<HomeTourState>(homeTourProvider, (previous, next) {
+      if (next.isActive && (previous == null || !previous.isActive)) {
+        // Tour was just activated, show it after frame renders
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          _showHomeTour();
+        });
+      }
+    });
 
     // Developer FAB visible only for ferrara-michele@hotmail.it
     final currentUser = ref.watch(currentUserProvider).valueOrNull;
@@ -111,6 +181,7 @@ class MinimalHomeScreen extends ConsumerWidget {
             ),
             actions: [
               IconButton(
+                key: _settingsButtonKey,
                 onPressed: () => showSettingsBottomSheet(context),
                 icon: SemanticIcon(
                   icon: AppIcons.settingsOutlined,
@@ -133,33 +204,51 @@ class MinimalHomeScreen extends ConsumerWidget {
                 const SizedBox(height: 16),
 
                 // 0.5 XP Progress Bar
-                const XPProgressBar(),
+                RepaintBoundary(
+                  key: _xpProgressKey,
+                  child: const XPProgressBar(),
+                ),
                 const SizedBox(height: 20),
 
                 // 0.75 Activity Rings (HealthKit Integration)
-                const Padding(
-                  padding: EdgeInsets.symmetric(horizontal: AppSpacing.md),
-                  child: ActivityRingsWidget(),
+                RepaintBoundary(
+                  key: _activityRingsKey,
+                  child: const Padding(
+                    padding: EdgeInsets.symmetric(horizontal: AppSpacing.md),
+                    child: ActivityRingsWidget(),
+                  ),
                 ),
                 const SizedBox(height: 16),
 
                 // 0.85 Pro Insights Preview (CTA for Pro Analytics)
-                const ProInsightsPreviewSection(),
+                RepaintBoundary(
+                  key: _proInsightsKey,
+                  child: const ProInsightsPreviewSection(),
+                ),
                 const SizedBox(height: 16),
 
                 // 0.9 Recovery Insight (Sleep-based recovery analysis)
-                const Padding(
-                  padding: EdgeInsets.symmetric(horizontal: AppSpacing.md),
-                  child: RecoveryInsightCard(),
+                RepaintBoundary(
+                  key: _recoveryInsightKey,
+                  child: const Padding(
+                    padding: EdgeInsets.symmetric(horizontal: AppSpacing.md),
+                    child: RecoveryInsightCard(),
+                  ),
                 ),
                 const SizedBox(height: 16),
 
                 // 0.92 Stress Prediction (Banister FFM predictions)
-                const StressPredictionCard(),
+                RepaintBoundary(
+                  key: _stressPredictionKey,
+                  child: const StressPredictionCard(),
+                ),
                 const SizedBox(height: 20),
 
                 // 0.95 Template Suggestion (AI-powered workout recommendation)
-                const TemplateSuggestionCard(),
+                RepaintBoundary(
+                  key: _templateSuggestionKey,
+                  child: const TemplateSuggestionCard(),
+                ),
                 const SizedBox(height: 16),
 
                 // 0.96 Exercise Merge Suggestion (consolidate custom exercises)
@@ -167,11 +256,17 @@ class MinimalHomeScreen extends ConsumerWidget {
                 const SizedBox(height: 20),
 
                 // 1. Start Workout Card (Hero)
-                const StartWorkoutCard(),
+                RepaintBoundary(
+                  key: _startWorkoutKey,
+                  child: const StartWorkoutCard(),
+                ),
                 const SizedBox(height: 24),
 
                 // 2. Templates Carousel
-                const TemplatesCarouselCompact(),
+                RepaintBoundary(
+                  key: _templatesCarouselKey,
+                  child: const TemplatesCarouselCompact(),
+                ),
                 const SizedBox(height: 24),
 
                 // 3. AI Coach Card - 🔧 PERF FIX: Isolated in Consumer
@@ -199,7 +294,10 @@ class MinimalHomeScreen extends ConsumerWidget {
                 ),
 
                 // 4. Exercise Wiki Card
-                const ExerciseWikiCardCompact(),
+                RepaintBoundary(
+                  key: _exerciseWikiKey,
+                  child: const ExerciseWikiCardCompact(),
+                ),
                 const SizedBox(height: 24),
 
                 // Admin feedback card - 🔧 PERF FIX: Isolated in Consumer
@@ -470,7 +568,7 @@ class _DeveloperToolsSheet extends ConsumerWidget {
                     const SizedBox(height: 12),
                     _DeveloperToolItem(
                       icon: AppIcons.lightbulb,
-                      title: 'Start Spotlight Tutorial',
+                      title: 'Start Workout Tutorial',
                       subtitle: 'Reset and start workout tutorial',
                       onTap: () {
                         Navigator.pop(context);
@@ -479,6 +577,23 @@ class _DeveloperToolsSheet extends ConsumerWidget {
                           context,
                           'Tutorial reset! Go to Workout screen to start.',
                         );
+                      },
+                    ),
+                    const SizedBox(height: 12),
+                    _DeveloperToolItem(
+                      icon: AppIcons.home,
+                      title: 'Start Home Tour',
+                      subtitle: 'Reset and start home screen tour',
+                      onTap: () {
+                        Navigator.pop(context);
+                        // Reset and start tour
+                        ref.read(homeTourProvider.notifier).resetTour().then((_) {
+                          ref.read(homeTourProvider.notifier).startTour();
+                          SnackBarService.showSuccess(
+                            context,
+                            'Home Tour starting...',
+                          );
+                        });
                       },
                     ),
                   ],

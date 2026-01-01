@@ -3069,6 +3069,10 @@
     "description": "Istruzione per confermare o modificare manualmente il peso calcolato"
   },
   "appSubtitle": "Traccia il tuo percorso fitness",
+  "loginTagline": "Traccia. Allenati. Trasformati.",
+  "loginStatsWorkouts": "Allenamenti",
+  "loginStatsSets": "Serie",
+  "loginStatsPRs": "Record",
   "emailLabel": "Email",
   "emailHint": "Inserisci la tua email",
   "passwordLabel": "Password",
@@ -3106,6 +3110,24 @@
   "workoutCompletedSuccess": "Allenamento completato! Ottimo lavoro!",
   "workoutResumed": "Allenamento ripristinato - puoi continuare ad allenarti",
   "signOutButton": "Esci",
+  "deleteAccount": "Elimina Account",
+  "deleteAccountDesc": "Elimina permanentemente il tuo account e tutti i dati",
+  "deleteAccountTitle": "Eliminare l'Account?",
+  "deleteAccountWarning": "Questa azione è permanente e non può essere annullata. Tutti i tuoi dati saranno eliminati definitivamente.",
+  "deleteAccountDataList": "I seguenti dati saranno eliminati:",
+  "deleteAccountDataWorkouts": "Tutta la cronologia allenamenti",
+  "deleteAccountDataTemplates": "Tutti i template di allenamento",
+  "deleteAccountDataPhotos": "Tutte le foto progresso",
+  "deleteAccountDataMeasurements": "Tutte le misurazioni corporee",
+  "deleteAccountDataSettings": "Tutte le impostazioni e preferenze",
+  "deleteAccountExportHint": "Suggerimento: Esporta i tuoi dati prima di eliminare l'account.",
+  "deleteAccountConfirm": "Elimina il Mio Account",
+  "deleteAccountProgress": "Eliminazione account in corso...",
+  "deleteAccountSuccess": "Il tuo account è stato eliminato con successo.",
+  "deleteAccountError": "Impossibile eliminare l'account. Riprova.",
+  "deleteAccountReauthTitle": "Autenticazione Richiesta",
+  "deleteAccountReauthMessage": "Per motivi di sicurezza, devi accedere nuovamente prima di eliminare l'account.",
+  "deleteAccountReauthHint": "Accedi nuovamente per eliminare l'account.",
   "addExerciseTitle": "Aggiungi Esercizio",
   "addButton": "Aggiungi",
   "supersetTab": "Superset",
@@ -3167,6 +3189,7 @@
   "passwordsDoNotMatch": "Le password non corrispondono",
   "signUpWithGoogle": "Registrati con Google",
   "signUpWithApple": "Registrati con Apple",
+  "signUpWithEmail": "Registrati con Email",
   "alreadyHaveAccountPrompt": "Hai già un account? ",
   "myWorkouts": "Le Mie Schede",
   "predefinedWorkouts": "Schede Predefinite",
@@ -15988,6 +16011,24 @@
   "@stressPredictionRecoveryRate": { "description": "Label for recovery rate per hour" },
   "stressPredictionCalibrationHint": "Completa il profilo fitness per previsioni più accurate",
   "@stressPredictionCalibrationHint": { "description": "Hint to improve prediction accuracy" },
+  "stressWorkoutBreakdownTitle": "Sessione ad Alta Intensità",
+  "@stressWorkoutBreakdownTitle": { "description": "Title for workout breakdown when stress is high" },
+  "volumeKg": "Volume",
+  "@volumeKg": { "description": "Label for volume in kilograms" },
+  "stressScore": "Stress",
+  "@stressScore": { "description": "Label for stress score" },
+  "stressScientificBasisTitle": "Base Scientifica",
+  "@stressScientificBasisTitle": { "description": "Title for scientific explanation section" },
+  "stressScientificExplanation": "Lo stress da allenamento viene calcolato usando il modello Fitness-Fatica di Banister (FFM). Alto volume e intensità creano danno muscolare e fatica metabolica che richiede 48-72 ore di recupero. Il tuo tasso di recupero personale è calibrato in base all'età di allenamento, qualità del sonno e dati HRV.",
+  "@stressScientificExplanation": { "description": "Scientific explanation of stress calculation" },
+  "stressReferencesTitle": "Riferimenti Scientifici",
+  "@stressReferencesTitle": { "description": "Title for research references section" },
+  "stressReferenceBanister": "Modello Fitness-Fatica per la quantificazione del carico",
+  "@stressReferenceBanister": { "description": "Description of Banister research" },
+  "stressReferenceSchoenfeld": "Relazione dose-risposta tra volume e crescita muscolare",
+  "@stressReferenceSchoenfeld": { "description": "Description of Schoenfeld research" },
+  "stressReferenceMorton": "Le costanti di recupero variano 7-14 giorni tra individui",
+  "@stressReferenceMorton": { "description": "Description of Morton research" },
   "recentHistory": "Cronologia Recente",
   "@recentHistory": { "description": "Section title for recent stress history" },
 
@@ -18408,5 +18449,326 @@
   "notAuthenticated": "Devi effettuare l'accesso",
   "@notAuthenticated": {
     "description": "Errore quando l'utente non è autenticato"
+  },
+
+  "initialOnboardingWelcomeTitle": "Benvenuto in FitLog Pro",
+  "@initialOnboardingWelcomeTitle": {
+    "description": "Titolo benvenuto onboarding iniziale"
+  },
+  "initialOnboardingWelcomeSubtitle": "Il tuo diario di allenamento intelligente che ti aiuta a raggiungere i tuoi obiettivi",
+  "@initialOnboardingWelcomeSubtitle": {
+    "description": "Sottotitolo benvenuto onboarding iniziale"
+  },
+  "initialOnboardingFeature1": "Traccia workout e progressi",
+  "@initialOnboardingFeature1": {
+    "description": "Feature 1 nel welcome step"
+  },
+  "initialOnboardingFeature2": "Suggerimenti peso personalizzati",
+  "@initialOnboardingFeature2": {
+    "description": "Feature 2 nel welcome step"
+  },
+  "initialOnboardingFeature3": "Analisi avanzate",
+  "@initialOnboardingFeature3": {
+    "description": "Feature 3 nel welcome step"
+  },
+  "initialOnboardingStart": "Iniziamo!",
+  "@initialOnboardingStart": {
+    "description": "Pulsante inizia nell'onboarding iniziale"
+  },
+  "initialOnboardingContinue": "Continua",
+  "@initialOnboardingContinue": {
+    "description": "Pulsante continua nell'onboarding iniziale"
+  },
+
+  "initialOnboardingGoalTitle": "Qual è il tuo obiettivo?",
+  "@initialOnboardingGoalTitle": {
+    "description": "Titolo selezione obiettivo"
+  },
+  "initialOnboardingGoalSubtitle": "Personalizzeremo la tua esperienza",
+  "@initialOnboardingGoalSubtitle": {
+    "description": "Sottotitolo selezione obiettivo"
+  },
+  "initialOnboardingGoalBuildMuscle": "Aumentare i muscoli",
+  "@initialOnboardingGoalBuildMuscle": {
+    "description": "Opzione obiettivo muscoli"
+  },
+  "initialOnboardingGoalBuildMuscleDesc": "Costruire massa muscolare",
+  "@initialOnboardingGoalBuildMuscleDesc": {
+    "description": "Descrizione obiettivo muscoli"
+  },
+  "initialOnboardingGoalGetStronger": "Diventare più forte",
+  "@initialOnboardingGoalGetStronger": {
+    "description": "Opzione obiettivo forza"
+  },
+  "initialOnboardingGoalGetStrongerDesc": "Sollevare pesi maggiori",
+  "@initialOnboardingGoalGetStrongerDesc": {
+    "description": "Descrizione obiettivo forza"
+  },
+  "initialOnboardingGoalEndurance": "Migliorare la resistenza",
+  "@initialOnboardingGoalEndurance": {
+    "description": "Opzione obiettivo resistenza"
+  },
+  "initialOnboardingGoalEnduranceDesc": "Più ripetizioni, più energia",
+  "@initialOnboardingGoalEnduranceDesc": {
+    "description": "Descrizione obiettivo resistenza"
+  },
+  "initialOnboardingGoalStayFit": "Mantenermi in forma",
+  "@initialOnboardingGoalStayFit": {
+    "description": "Opzione obiettivo fitness"
+  },
+  "initialOnboardingGoalStayFitDesc": "Fitness generale",
+  "@initialOnboardingGoalStayFitDesc": {
+    "description": "Descrizione obiettivo fitness"
+  },
+
+  "initialOnboardingBodyTitle": "Parlaci di te",
+  "@initialOnboardingBodyTitle": {
+    "description": "Titolo step dati fisici"
+  },
+  "initialOnboardingBodySubtitle": "Ci aiuta a suggerirti i pesi giusti",
+  "@initialOnboardingBodySubtitle": {
+    "description": "Sottotitolo step dati fisici"
+  },
+  "initialOnboardingSexLabel": "Sesso biologico",
+  "@initialOnboardingSexLabel": {
+    "description": "Etichetta selezione sesso"
+  },
+  "initialOnboardingSexMale": "Uomo",
+  "@initialOnboardingSexMale": {
+    "description": "Opzione maschio"
+  },
+  "initialOnboardingSexFemale": "Donna",
+  "@initialOnboardingSexFemale": {
+    "description": "Opzione femmina"
+  },
+  "initialOnboardingWeightLabel": "Peso corporeo",
+  "@initialOnboardingWeightLabel": {
+    "description": "Etichetta input peso"
+  },
+  "initialOnboardingImportHealthKit": "Importa da Salute",
+  "@initialOnboardingImportHealthKit": {
+    "description": "Pulsante importa peso da HealthKit"
+  },
+  "initialOnboardingBodyInfo": "Usiamo questi dati per suggerirti i pesi corretti",
+  "@initialOnboardingBodyInfo": {
+    "description": "Testo info dati fisici"
+  },
+  "initialOnboardingHealthKitNotAvailable": "HealthKit non disponibile, inserisci manualmente",
+  "@initialOnboardingHealthKitNotAvailable": {
+    "description": "Messaggio HealthKit non disponibile"
+  },
+  "initialOnboardingImporting": "Importazione...",
+  "@initialOnboardingImporting": {
+    "description": "Testo caricamento importazione da HealthKit"
+  },
+  "initialOnboardingHealthKitDenied": "Permesso negato. Abilita l'accesso a Salute nelle Impostazioni.",
+  "@initialOnboardingHealthKitDenied": {
+    "description": "Messaggio permesso HealthKit negato"
+  },
+  "initialOnboardingHealthKitDeniedTitle": "Permesso Richiesto",
+  "@initialOnboardingHealthKitDeniedTitle": {
+    "description": "Titolo dialog permesso HealthKit negato"
+  },
+  "initialOnboardingHealthKitDeniedMessage": "Per importare il peso da Salute, abilita l'accesso in Impostazioni > Privacy e Sicurezza > Salute > FitLog.",
+  "@initialOnboardingHealthKitDeniedMessage": {
+    "description": "Messaggio dialog permesso HealthKit negato"
+  },
+  "initialOnboardingOpenSettings": "Apri Impostazioni",
+  "@initialOnboardingOpenSettings": {
+    "description": "Pulsante per aprire impostazioni app"
+  },
+  "initialOnboardingHealthKitError": "Errore nella lettura dei dati Salute",
+  "@initialOnboardingHealthKitError": {
+    "description": "Messaggio errore lettura HealthKit"
+  },
+  "initialOnboardingHealthKitNoWeightData": "Nessun dato peso trovato in Salute",
+  "@initialOnboardingHealthKitNoWeightData": {
+    "description": "Nessun dato peso trovato in HealthKit"
+  },
+  "initialOnboardingHealthKitSuccess": "Peso importato: {weight} kg",
+  "@initialOnboardingHealthKitSuccess": {
+    "description": "Messaggio successo importazione peso da HealthKit",
+    "placeholders": {
+      "weight": {
+        "type": "String",
+        "example": "75.5"
+      }
+    }
+  },
+
+  "initialOnboardingExperienceTitle": "Qual è la tua esperienza?",
+  "@initialOnboardingExperienceTitle": {
+    "description": "Titolo step esperienza"
+  },
+  "initialOnboardingExperienceSubtitle": "Ci aiuta a personalizzare i suggerimenti",
+  "@initialOnboardingExperienceSubtitle": {
+    "description": "Sottotitolo step esperienza"
+  },
+  "initialOnboardingExperienceBeginner": "Principiante",
+  "@initialOnboardingExperienceBeginner": {
+    "description": "Livello principiante"
+  },
+  "initialOnboardingExperienceBeginnerDesc": "Mai o raramente in palestra",
+  "@initialOnboardingExperienceBeginnerDesc": {
+    "description": "Descrizione principiante"
+  },
+  "initialOnboardingExperienceSome": "Qualche esperienza",
+  "@initialOnboardingExperienceSome": {
+    "description": "Livello qualche esperienza"
+  },
+  "initialOnboardingExperienceSomeDesc": "6 mesi - 2 anni",
+  "@initialOnboardingExperienceSomeDesc": {
+    "description": "Descrizione qualche esperienza"
+  },
+  "initialOnboardingExperienceExperienced": "Esperto",
+  "@initialOnboardingExperienceExperienced": {
+    "description": "Livello esperto"
+  },
+  "initialOnboardingExperienceExperiencedDesc": "2+ anni di allenamento costante",
+  "@initialOnboardingExperienceExperiencedDesc": {
+    "description": "Descrizione esperto"
+  },
+  "initialOnboardingExperienceAthlete": "Atleta avanzato",
+  "@initialOnboardingExperienceAthlete": {
+    "description": "Livello atleta"
+  },
+  "initialOnboardingExperienceAthleteDesc": "5+ anni, conosco i miei PR",
+  "@initialOnboardingExperienceAthleteDesc": {
+    "description": "Descrizione atleta"
+  },
+
+  "initialOnboardingHealthKitTitle": "Collega Salute",
+  "@initialOnboardingHealthKitTitle": {
+    "description": "Titolo step HealthKit"
+  },
+  "initialOnboardingHealthKitSubtitle": "Sincronizza i tuoi dati per un'esperienza personalizzata",
+  "@initialOnboardingHealthKitSubtitle": {
+    "description": "Sottotitolo step HealthKit"
+  },
+  "initialOnboardingHealthKitWorkouts": "Allenamenti",
+  "@initialOnboardingHealthKitWorkouts": {
+    "description": "Tipo dati allenamenti"
+  },
+  "initialOnboardingHealthKitWorkoutsDesc": "Salva workout in Salute",
+  "@initialOnboardingHealthKitWorkoutsDesc": {
+    "description": "Descrizione allenamenti"
+  },
+  "initialOnboardingHealthKitWeight": "Peso corporeo",
+  "@initialOnboardingHealthKitWeight": {
+    "description": "Tipo dati peso"
+  },
+  "initialOnboardingHealthKitWeightDesc": "Sincronizza dati peso",
+  "@initialOnboardingHealthKitWeightDesc": {
+    "description": "Descrizione peso"
+  },
+  "initialOnboardingHealthKitSleep": "Sonno",
+  "@initialOnboardingHealthKitSleep": {
+    "description": "Tipo dati sonno"
+  },
+  "initialOnboardingHealthKitSleepDesc": "Per Recovery Insight",
+  "@initialOnboardingHealthKitSleepDesc": {
+    "description": "Descrizione sonno"
+  },
+  "initialOnboardingHealthKitHrv": "HRV",
+  "@initialOnboardingHealthKitHrv": {
+    "description": "Tipo dati HRV"
+  },
+  "initialOnboardingHealthKitHrvDesc": "Per Stress Index",
+  "@initialOnboardingHealthKitHrvDesc": {
+    "description": "Descrizione HRV"
+  },
+  "initialOnboardingHealthKitPrivacy": "I tuoi dati restano sul tuo dispositivo",
+  "@initialOnboardingHealthKitPrivacy": {
+    "description": "Nota privacy"
+  },
+  "initialOnboardingHealthKitConnect": "Collega Salute",
+  "@initialOnboardingHealthKitConnect": {
+    "description": "Pulsante connetti HealthKit"
+  },
+  "initialOnboardingHealthKitSkip": "Salta per ora",
+  "@initialOnboardingHealthKitSkip": {
+    "description": "Pulsante salta HealthKit"
+  },
+  "initialOnboardingQuickSelect": "Selezione rapida",
+  "@initialOnboardingQuickSelect": {
+    "description": "Pulsante selezione peso rapida nella toolbar tastiera"
+  },
+  "initialOnboardingSelectWeight": "Seleziona peso",
+  "@initialOnboardingSelectWeight": {
+    "description": "Titolo bottom sheet preset peso"
+  },
+
+  "initialOnboardingFrequencyTitle": "Quante volte ti alleni?",
+  "@initialOnboardingFrequencyTitle": {
+    "description": "Titolo step frequenza"
+  },
+  "initialOnboardingFrequencySubtitle": "Workout a settimana",
+  "@initialOnboardingFrequencySubtitle": {
+    "description": "Sottotitolo step frequenza"
+  },
+  "initialOnboardingSummaryTitle": "Riepilogo",
+  "@initialOnboardingSummaryTitle": {
+    "description": "Titolo sezione riepilogo"
+  },
+  "initialOnboardingSummaryGoal": "Obiettivo",
+  "@initialOnboardingSummaryGoal": {
+    "description": "Etichetta obiettivo riepilogo"
+  },
+  "initialOnboardingSummaryWeight": "Peso",
+  "@initialOnboardingSummaryWeight": {
+    "description": "Etichetta peso riepilogo"
+  },
+  "initialOnboardingSummaryExperience": "Esperienza",
+  "@initialOnboardingSummaryExperience": {
+    "description": "Etichetta esperienza riepilogo"
+  },
+  "initialOnboardingSummaryFrequency": "Frequenza",
+  "@initialOnboardingSummaryFrequency": {
+    "description": "Etichetta frequenza riepilogo"
+  },
+  "initialOnboardingSummaryHealth": "Salute",
+  "@initialOnboardingSummaryHealth": {
+    "description": "Etichetta salute riepilogo"
+  },
+  "initialOnboardingWeek": "settimana",
+  "@initialOnboardingWeek": {
+    "description": "Etichetta settimana"
+  },
+  "initialOnboardingConnected": "Collegato",
+  "@initialOnboardingConnected": {
+    "description": "Stato connesso"
+  },
+  "initialOnboardingNotConnected": "Non collegato",
+  "@initialOnboardingNotConnected": {
+    "description": "Stato non connesso"
+  },
+  "initialOnboardingComplete": "Inizia ad allenarti!",
+  "@initialOnboardingComplete": {
+    "description": "Pulsante completa onboarding"
+  },
+  "initialOnboardingCompleteInfo": "Puoi modificare tutto dalle Impostazioni in qualsiasi momento",
+  "@initialOnboardingCompleteInfo": {
+    "description": "Testo info sotto pulsante completa"
   }
+,
+  "tourXpProgressTitle": "Il Tuo Livello",
+  "tourXpProgressDescription": "Traccia i tuoi progressi! Guadagna XP completando allenamenti e sali di livello.",
+  "tourActivityRingsTitle": "Anelli Attività",
+  "tourActivityRingsDescription": "Sincronizzati con Apple Health. Vedi la tua attività giornaliera a colpo d'occhio!",
+  "tourProInsightsTitle": "Analytics Pro",
+  "tourProInsightsDescription": "Grafici e metriche avanzate per atleti seri. Traccia tutto!",
+  "tourRecoveryInsightTitle": "Stato Recupero",
+  "tourRecoveryInsightDescription": "Basato sul tuo sonno e carico di allenamento. Sai quando spingere o riposare.",
+  "tourStressPredictionTitle": "Carico Allenamento",
+  "tourStressPredictionDescription": "Previsioni AI del tuo livello di fitness e fatica.",
+  "tourTemplateSuggestionTitle": "Suggerimento del Giorno",
+  "tourTemplateSuggestionDescription": "Raccomandazioni smart basate sulla tua storia e obiettivi.",
+  "tourStartWorkoutTitle": "Inizia Allenamento",
+  "tourStartWorkoutDescription": "Tocca qui per iniziare la sessione. Traccia ogni serie e ripetizione!",
+  "tourTemplatesCarouselTitle": "I Tuoi Template",
+  "tourTemplatesCarouselDescription": "Accesso rapido ai tuoi template preferiti. Scorri per sfogliare!",
+  "tourExerciseWikiTitle": "Wiki Esercizi",
+  "tourExerciseWikiDescription": "Sfoglia esercizi, impara la forma corretta e scopri nuovi movimenti.",
+  "tourSettingsTitle": "Impostazioni",
+  "tourSettingsDescription": "Personalizza l'app secondo le tue esigenze. Regola unità, notifiche e altro."
 }
