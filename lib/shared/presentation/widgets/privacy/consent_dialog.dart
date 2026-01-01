@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:gymbro_flutter_new/features/onboarding/presentation/screens/legal_document_screen.dart';
 import 'package:gymbro_flutter_new/shared/domain/privacy/consent_type.dart';
 import 'package:gymbro_flutter_new/shared/domain/privacy/privacy_manager.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
@@ -191,8 +192,8 @@ class _ConsentDialogState extends State<ConsentDialog> {
   Widget _buildPrivacyPolicyLink() {
     return InkWell(
       onTap: () {
-        // TODO: Open privacy policy URL
-        // Launch URL to privacy policy
+        // Navigate to privacy policy screen
+        LegalDocumentScreen.showPrivacyPolicy(context);
       },
       child: Padding(
         padding: const EdgeInsets.symmetric(vertical: 8),

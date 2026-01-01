@@ -26,6 +26,7 @@ import 'package:gymbro_flutter_new/features/custom_exercises/domain/repositories
 import 'package:gymbro_flutter_new/features/body_measurements/domain/repositories/measurement_repository.dart';
 import 'package:gymbro_flutter_new/features/progress_photos/domain/repositories/progress_photo_repository.dart';
 import 'package:gymbro_flutter_new/features/analytics/domain/repositories/pr_celebration_repository.dart';
+import 'package:gymbro_flutter_new/features/analytics/domain/repositories/achievement_repository.dart';
 import 'package:gymbro_flutter_new/shared/domain/privacy/privacy_manager.dart';
 
 /// Service for exporting user data (GDPR Art. 20)
@@ -37,6 +38,7 @@ class DataExportService {
     required MeasurementRepository measurementRepository,
     required ProgressPhotoRepository photoRepository,
     required PRCelebrationRepository prRepository,
+    required AchievementRepository achievementRepository,
     FirebaseAuth? auth,
   })  : _workoutRepository = workoutRepository,
         _templateRepository = templateRepository,
@@ -44,6 +46,7 @@ class DataExportService {
         _measurementRepository = measurementRepository,
         _photoRepository = photoRepository,
         _prRepository = prRepository,
+        _achievementRepository = achievementRepository,
         _auth = auth ?? FirebaseAuth.instance;
 
   final WorkoutHistoryRepositoryEnhanced _workoutRepository;
@@ -52,6 +55,7 @@ class DataExportService {
   final MeasurementRepository _measurementRepository;
   final ProgressPhotoRepository _photoRepository;
   final PRCelebrationRepository _prRepository;
+  final AchievementRepository _achievementRepository;
   final FirebaseAuth _auth;
 
   /// Export all user data based on request
@@ -196,6 +200,21 @@ class DataExportService {
         progress += progressPerCategory;
       }
 
+      // Collect achievements
+      if (request.categories.contains(ExportCategory.achievements)) {
+        yield ExportProgress(
+          status: ExportStatus.collectingRecords,
+          progress: progress,
+          currentStep: 'Collecting achievements...',
+          itemCounts: itemCounts,
+        );
+
+        final achievements = await _collectAchievements(userId);
+        updatedData = updatedData.copyWith(achievements: achievements);
+        itemCounts[ExportCategory.achievements] = achievements.length;
+        progress += progressPerCategory;
+      }
+
       // Package the export
       yield ExportProgress(
         status: ExportStatus.packaging,
@@ -335,6 +354,19 @@ class DataExportService {
     }
   }
 
+  Future<List<Map<String, dynamic>>> _collectAchievements(String userId) async {
+    try {
+      final result = await _achievementRepository.getUnlockedAchievements(userId);
+      return result.fold(
+        (failure) => <Map<String, dynamic>>[],
+        (achievements) => achievements.map((a) => a.toJson()).toList(),
+      );
+    } catch (e) {
+      if (kDebugMode) debugPrint('Error collecting achievements: $e');
+      return [];
+    }
+  }
+
   Future<String> _packageExport(
     ExportedData data,
     ExportFormat format,
@@ -446,6 +478,16 @@ class DataExportService {
       ));
     }
 
+    if (data.achievements.isNotEmpty) {
+      final achievementsJson =
+          const JsonEncoder.withIndent('  ').convert(data.achievements);
+      archive.addFile(ArchiveFile(
+        'achievements.json',
+        achievementsJson.length,
+        utf8.encode(achievementsJson),
+      ));
+    }
+
     // Add README
     final readme = _generateReadme(data);
     archive.addFile(ArchiveFile(
@@ -481,6 +523,7 @@ class DataExportService {
     buffer.writeln('Body Measurements,${data.bodyMeasurements.length}');
     buffer.writeln('Progress Photos,${data.progressPhotoUrls.length}');
     buffer.writeln('Personal Records,${data.personalRecords.length}');
+    buffer.writeln('Achievements,${data.achievements.length}');
 
     return buffer.toString();
   }
@@ -506,6 +549,7 @@ Contents:
 - body_measurements.json: Body measurements (${data.bodyMeasurements.length} entries)
 - progress_photos.json: Progress photo URLs (${data.progressPhotoUrls.length} photos)
 - personal_records.json: Personal records (${data.personalRecords.length} PRs)
+- achievements.json: Unlocked achievements (${data.achievements.length} badges)
 
 Data Format:
 ------------

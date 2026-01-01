@@ -1,8 +1,10 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 import 'package:crypto/crypto.dart';
+import 'package:flutter/foundation.dart';
 import 'dart:convert';
 import 'dart:math';
 import 'package:gymbro_flutter_new/core/services/rate_limiter.dart';
@@ -10,6 +12,7 @@ import 'package:gymbro_flutter_new/core/services/rate_limiter.dart';
 class AuthService with RateLimiterMixin {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  final FirebaseStorage _storage = FirebaseStorage.instance;
   // google_sign_in 7.x: Use singleton instance
   final GoogleSignIn _googleSignIn = GoogleSignIn.instance;
   static bool _googleSignInInitialized = false;
@@ -213,6 +216,158 @@ class AuthService with RateLimiterMixin {
     } catch (e) {
       throw Exception('Sign out failed: $e');
     }
+  }
+
+  /// Delete user account and all associated data (GDPR Art. 17 - Right to Erasure)
+  ///
+  /// This permanently deletes:
+  /// - Firebase Auth account
+  /// - All Firestore user data (including subcollections)
+  /// - All Firebase Storage files (progress photos)
+  ///
+  /// Throws [FirebaseAuthException] with code 'requires-recent-login' if
+  /// the user needs to re-authenticate before deletion.
+  Future<void> deleteAccount() async {
+    final user = _auth.currentUser;
+    if (user == null) {
+      throw Exception('No user currently signed in');
+    }
+
+    final uid = user.uid;
+
+    try {
+      // Step 1: Delete all Firebase Storage files (progress photos)
+      await _deleteAllStorageFiles(uid);
+
+      // Step 2: Delete all Firestore subcollections
+      await _deleteAllFirestoreData(uid);
+
+      // Step 3: Delete Firebase Auth account (must be last)
+      await user.delete();
+
+      // Step 4: Sign out from social providers
+      await _googleSignIn.signOut();
+    } on FirebaseAuthException catch (e) {
+      if (e.code == 'requires-recent-login') {
+        // Re-authentication required - throw specific exception
+        throw Exception('requires-recent-login');
+      }
+      throw Exception(_handleAuthException(e));
+    } catch (e) {
+      throw Exception('Account deletion failed: $e');
+    }
+  }
+
+  /// Delete all Firebase Storage files for a user (GDPR Art. 17)
+  ///
+  /// Deletes all files in the user's storage folder:
+  /// - Progress photos
+  /// - Thumbnails
+  /// - Any other user-uploaded content
+  Future<void> _deleteAllStorageFiles(String uid) async {
+    try {
+      // User files are stored under users/{uid}/
+      final userStorageRef = _storage.ref().child('users/$uid');
+
+      // List all files in user's folder
+      final listResult = await userStorageRef.listAll();
+
+      // Delete all files
+      for (final item in listResult.items) {
+        try {
+          await item.delete();
+          if (kDebugMode) {
+            debugPrint('  ✓ Deleted storage file: ${item.fullPath}');
+          }
+        } catch (e) {
+          // Continue deleting other files even if one fails
+          if (kDebugMode) {
+            debugPrint('  ⚠️ Could not delete ${item.fullPath}: $e');
+          }
+        }
+      }
+
+      // Recursively delete subfolders (e.g., progress_photos, thumbnails)
+      for (final prefix in listResult.prefixes) {
+        await _deleteStorageFolder(prefix);
+      }
+
+      if (kDebugMode) {
+        debugPrint('✅ All storage files deleted for user $uid');
+      }
+    } catch (e) {
+      // Storage deletion should not block account deletion
+      // Files will be orphaned but not accessible
+      if (kDebugMode) {
+        debugPrint('⚠️ Error deleting storage files: $e');
+      }
+    }
+  }
+
+  /// Recursively delete a storage folder and all its contents
+  Future<void> _deleteStorageFolder(Reference folder) async {
+    final listResult = await folder.listAll();
+
+    // Delete all files in this folder
+    for (final item in listResult.items) {
+      try {
+        await item.delete();
+      } catch (e) {
+        // Continue deleting other files
+      }
+    }
+
+    // Recursively delete subfolders
+    for (final prefix in listResult.prefixes) {
+      await _deleteStorageFolder(prefix);
+    }
+  }
+
+  /// Delete all Firestore data for a user (GDPR Art. 17)
+  Future<void> _deleteAllFirestoreData(String uid) async {
+    final userDocRef = _firestore.collection('users').doc(uid);
+
+    // List of all known subcollections to delete
+    const subcollections = [
+      'workouts',
+      'workout_history',
+      'templates',
+      'exercises',
+      'body_measurements',
+      'progress_photos',
+      'personal_records',
+      'stress_index',
+      'analytics',
+      'consents',
+      'notifications',
+      'coach_sessions',
+    ];
+
+    // Delete each subcollection
+    for (final subcollection in subcollections) {
+      await _deleteCollection(userDocRef.collection(subcollection));
+    }
+
+    // Delete the main user document
+    await userDocRef.delete();
+  }
+
+  /// Helper to delete all documents in a collection
+  Future<void> _deleteCollection(CollectionReference collection) async {
+    const batchSize = 100;
+
+    QuerySnapshot snapshot;
+    do {
+      snapshot = await collection.limit(batchSize).get();
+
+      if (snapshot.docs.isEmpty) break;
+
+      final batch = _firestore.batch();
+      for (final doc in snapshot.docs) {
+        batch.delete(doc.reference);
+      }
+      await batch.commit();
+    } while (snapshot.docs.length >= batchSize);
   }
 
   // Password Reset

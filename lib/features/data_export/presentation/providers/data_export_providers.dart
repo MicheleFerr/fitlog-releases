@@ -31,6 +31,7 @@ final dataExportServiceProvider = Provider<DataExportService>((ref) {
   final measurementRepo = ref.watch(measurementRepositoryProvider);
   final photoRepo = ref.watch(progressPhotoRepositoryProvider);
   final prRepo = ref.watch(prCelebrationRepositoryProvider);
+  final achievementRepo = ref.watch(achievementRepositoryProvider);
 
   return DataExportService(
     workoutRepository: workoutRepo,
@@ -39,6 +40,7 @@ final dataExportServiceProvider = Provider<DataExportService>((ref) {
     measurementRepository: measurementRepo,
     photoRepository: photoRepo,
     prRepository: prRepo,
+    achievementRepository: achievementRepo,
   );
 });
 
