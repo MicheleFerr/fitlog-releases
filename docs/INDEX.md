@@ -1,6 +1,6 @@
 # FitLog Pro - Documentation Index
 
-> **Last Updated**: 2024-12-16
+> **Last Updated**: 2025-01-01
 > **App Status**: Testing Phase (1 user)
 
 ---
@@ -47,6 +47,28 @@ FitLog Pro
 |-----------|-------------|
 | [architecture/OVERVIEW.md](architecture/OVERVIEW.md) | Architettura generale |
 | [ADR/](ADR/) | Architecture Decision Records |
+
+---
+
+## GDPR & Security
+
+| Documento | Descrizione |
+|-----------|-------------|
+| [legal/TIA_FIREBASE.md](legal/TIA_FIREBASE.md) | Transfer Impact Assessment (Schrems II) |
+| [legal/DPA/README.md](legal/DPA/README.md) | Data Processing Agreement (Google) |
+| [security/ENCRYPTION_VERIFICATION.md](security/ENCRYPTION_VERIFICATION.md) | AES-256 encryption audit |
+| [security/PENETRATION_TEST_SCHEDULE.md](security/PENETRATION_TEST_SCHEDULE.md) | Pentest Q1 2026 planning |
+
+### Cloud Functions GDPR
+
+| Funzione | Schedule | Scopo |
+|----------|----------|-------|
+| `gdprCheckInactiveUsers` | Monthly (1st) | 24-month retention check |
+| `gdprHardDeletePhotos` | Daily | Hard-delete after 30 days |
+| `gdprCleanupAuditLogs` | Monthly (15th) | Audit log 2-year retention |
+| `gdprLogAdminAccess` | Callable | Admin access logging |
+| `gdprGetAuditLog` | Callable | Art. 15 data access |
+| `gdprAuditUserData` | Trigger | User document audit |
 
 ---
 
