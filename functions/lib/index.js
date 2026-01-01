@@ -27,7 +27,7 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getTemplateQuota = exports.createTemplate = exports.enforceConsentRateLimit = exports.enforceMeasurementRateLimit = exports.cleanupExpiredRateLimits = exports.rejectContribution = exports.approveContribution = exports.checkExpiredSubscriptions = exports.verifyPremiumPurchase = exports.checkAdminStatus = exports.setInitialAdmin = exports.revokeAdminRole = exports.setAdminRole = void 0;
+exports.gdprCleanupAuditLogs = exports.gdprGetAuditLog = exports.gdprAuditUserData = exports.gdprLogAdminAccess = exports.gdprHardDeletePhotos = exports.gdprCheckInactiveUsers = exports.getTemplateQuota = exports.createTemplate = exports.enforceConsentRateLimit = exports.enforceMeasurementRateLimit = exports.cleanupExpiredRateLimits = exports.rejectContribution = exports.approveContribution = exports.checkExpiredSubscriptions = exports.verifyPremiumPurchase = exports.checkAdminStatus = exports.setInitialAdmin = exports.revokeAdminRole = exports.setAdminRole = void 0;
 const admin = __importStar(require("firebase-admin"));
 // Initialize Firebase Admin
 admin.initializeApp();
@@ -82,4 +82,26 @@ Object.defineProperty(exports, "enforceConsentRateLimit", { enumerable: true, ge
 var createTemplate_1 = require("./templates/createTemplate");
 Object.defineProperty(exports, "createTemplate", { enumerable: true, get: function () { return createTemplate_1.createTemplate; } });
 Object.defineProperty(exports, "getTemplateQuota", { enumerable: true, get: function () { return createTemplate_1.getTemplateQuota; } });
+// ========================================
+// 🔐 GDPR: Data Retention & Cleanup (Scheduled)
+// ========================================
+// Export GDPR data retention functions:
+// - checkInactiveUsers: Monthly check for 24-month retention (with 23-month warning)
+// - hardDeleteProgressPhotos: Daily cleanup of soft-deleted photos after 30 days
+var dataRetention_1 = require("./gdpr/dataRetention");
+Object.defineProperty(exports, "gdprCheckInactiveUsers", { enumerable: true, get: function () { return dataRetention_1.gdprCheckInactiveUsers; } });
+Object.defineProperty(exports, "gdprHardDeletePhotos", { enumerable: true, get: function () { return dataRetention_1.gdprHardDeletePhotos; } });
+// ========================================
+// 🔐 GDPR: Admin Access Audit Log (Art. 5(2) Accountability)
+// ========================================
+// Export admin audit log functions:
+// - logAdminAccess: Callable function for admin panel to log access
+// - auditUserDataAccess: Firestore trigger for user document changes
+// - getAuditLogForUser: Get audit log for GDPR Art. 15 requests
+// - cleanupOldAuditLogs: Monthly cleanup (2-year retention)
+var adminAuditLog_1 = require("./gdpr/adminAuditLog");
+Object.defineProperty(exports, "gdprLogAdminAccess", { enumerable: true, get: function () { return adminAuditLog_1.gdprLogAdminAccess; } });
+Object.defineProperty(exports, "gdprAuditUserData", { enumerable: true, get: function () { return adminAuditLog_1.gdprAuditUserData; } });
+Object.defineProperty(exports, "gdprGetAuditLog", { enumerable: true, get: function () { return adminAuditLog_1.gdprGetAuditLog; } });
+Object.defineProperty(exports, "gdprCleanupAuditLogs", { enumerable: true, get: function () { return adminAuditLog_1.gdprCleanupAuditLogs; } });
 //# sourceMappingURL=index.js.map

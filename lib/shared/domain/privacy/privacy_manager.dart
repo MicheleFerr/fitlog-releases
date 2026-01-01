@@ -23,7 +23,12 @@ class PrivacyManager {
   static const String _consentBoxName = 'user_consents';
   static const String _consentTimestampKey = 'consent_timestamp';
   static const String _privacyPolicyVersionKey = 'privacy_policy_version';
-  static const String _currentPrivacyPolicyVersion = 'v1.0.0';
+  static const String _currentPrivacyPolicyVersion = 'v1.1.0';
+
+  // GDPR Art. 18: Right to Restriction of Processing
+  static const String _processingRestrictedKey = 'processing_restricted';
+  static const String _restrictionReasonKey = 'restriction_reason';
+  static const String _restrictionTimestampKey = 'restriction_timestamp';
 
   /// Get the box manager (throws if not initialized)
   static HiveBoxManagerEnhanced get _manager {
@@ -241,31 +246,167 @@ class PrivacyManager {
     }
   }
 
-  /// Delete all user data (GDPR Art. 17 - Right to erasure)
+  // ========================================
+  // GDPR Article 18: Right to Restriction of Processing
+  // ========================================
+
+  /// Request restriction of processing (GDPR Art. 18)
   ///
-  /// WARNING: This deletes ALL user data including workout history
-  static Future<void> deleteAllUserData() async {
+  /// User can request restriction when:
+  /// - Accuracy of data is contested (Art. 18(1)(a))
+  /// - Processing is unlawful (Art. 18(1)(b))
+  /// - Controller no longer needs data (Art. 18(1)(c))
+  /// - User objected pending verification (Art. 18(1)(d))
+  ///
+  /// When restricted, data can only be stored, not processed.
+  static Future<void> requestProcessingRestriction(String reason) async {
     if (kDebugMode) {
-      debugPrint('🗑️ Deleting all user data (GDPR Art. 17)...');
+      debugPrint('🔐 [GDPR Art.18] Processing restriction requested: $reason');
     }
 
     try {
-      // Delete consent preferences
-      final consentBox = await _manager.openBox<dynamic>(_consentBoxName);
-      await consentBox.clear();
+      final box = await _manager.openBox<dynamic>(_consentBoxName);
 
-      // TODO: Delete all other user data boxes
-      // - Workout history
-      // - Templates
-      // - Settings
-      // - Analytics data
+      await box.put(_processingRestrictedKey, true);
+      await box.put(_restrictionReasonKey, reason);
+      await box.put(_restrictionTimestampKey, DateTime.now().toIso8601String());
 
       if (kDebugMode) {
-        debugPrint('✅ All user data deleted');
+        debugPrint('✅ [GDPR Art.18] Processing restriction activated');
       }
     } catch (e) {
       if (kDebugMode) {
-        debugPrint('❌ Error deleting user data: $e');
+        debugPrint('❌ [GDPR Art.18] Error requesting restriction: $e');
+      }
+      rethrow;
+    }
+  }
+
+  /// Lift processing restriction (GDPR Art. 18(3))
+  ///
+  /// Must inform user before lifting restriction
+  static Future<void> liftProcessingRestriction() async {
+    if (kDebugMode) {
+      debugPrint('🔐 [GDPR Art.18] Lifting processing restriction');
+    }
+
+    try {
+      final box = await _manager.openBox<dynamic>(_consentBoxName);
+
+      await box.put(_processingRestrictedKey, false);
+      await box.delete(_restrictionReasonKey);
+      await box.delete(_restrictionTimestampKey);
+
+      if (kDebugMode) {
+        debugPrint('✅ [GDPR Art.18] Processing restriction lifted');
+      }
+    } catch (e) {
+      if (kDebugMode) {
+        debugPrint('❌ [GDPR Art.18] Error lifting restriction: $e');
+      }
+      rethrow;
+    }
+  }
+
+  /// Check if processing is restricted (GDPR Art. 18)
+  ///
+  /// When true, app should only store data, not process it:
+  /// - No analytics
+  /// - No personalization
+  /// - No AI recommendations
+  /// - Data stored but not used for any purpose
+  static Future<bool> isProcessingRestricted() async {
+    try {
+      final box = await _manager.openBox<dynamic>(_consentBoxName);
+      final isRestricted = box.get(_processingRestrictedKey, defaultValue: false);
+      return isRestricted is bool ? isRestricted : false;
+    } catch (e) {
+      if (kDebugMode) {
+        debugPrint('⚠️ [GDPR Art.18] Error checking restriction: $e');
+      }
+      // Fail safe: assume restricted if error
+      return true;
+    }
+  }
+
+  /// Get restriction details (for audit/display)
+  static Future<Map<String, dynamic>?> getRestrictionDetails() async {
+    try {
+      final box = await _manager.openBox<dynamic>(_consentBoxName);
+      final isRestricted = box.get(_processingRestrictedKey, defaultValue: false);
+
+      if (isRestricted != true) return null;
+
+      return {
+        'isRestricted': true,
+        'reason': box.get(_restrictionReasonKey),
+        'timestamp': box.get(_restrictionTimestampKey),
+      };
+    } catch (e) {
+      if (kDebugMode) {
+        debugPrint('⚠️ [GDPR Art.18] Error getting restriction details: $e');
+      }
+      return null;
+    }
+  }
+
+  /// Delete all local user data (GDPR Art. 17 - Right to erasure)
+  ///
+  /// WARNING: This deletes ALL local user data including workout history.
+  /// For complete account deletion (including Firestore and Firebase Auth),
+  /// use AuthService.deleteAccount() instead.
+  ///
+  /// This method clears all Hive boxes:
+  /// - Consent preferences
+  /// - Workout history cache
+  /// - Templates cache
+  /// - User settings
+  /// - Analytics cache
+  /// - Body measurements cache
+  /// - Exercise cache
+  static Future<void> deleteAllUserData() async {
+    if (kDebugMode) {
+      debugPrint('🗑️ Deleting all local user data (GDPR Art. 17)...');
+    }
+
+    try {
+      // List of all Hive boxes to clear
+      const boxesToClear = [
+        _consentBoxName,           // user_consents
+        'workout_history',         // Cached workout history
+        'templates',               // Cached templates
+        'user_settings',           // User preferences
+        'analytics_cache',         // Analytics data cache
+        'body_measurements',       // Body measurements cache
+        'exercise_cache',          // Exercise database cache
+        'user_profile_cache',      // User profile cache
+        'stress_index_cache',      // Stress index cache
+        'personal_records',        // PR cache
+        'progress_photos_cache',   // Progress photos metadata
+      ];
+
+      // Clear each box
+      for (final boxName in boxesToClear) {
+        try {
+          final box = await _manager.openBox<dynamic>(boxName);
+          await box.clear();
+          if (kDebugMode) {
+            debugPrint('  ✓ Cleared box: $boxName');
+          }
+        } catch (e) {
+          // Box might not exist, continue
+          if (kDebugMode) {
+            debugPrint('  ⚠️ Could not clear box $boxName: $e');
+          }
+        }
+      }
+
+      if (kDebugMode) {
+        debugPrint('✅ All local user data deleted');
+      }
+    } catch (e) {
+      if (kDebugMode) {
+        debugPrint('❌ Error deleting local user data: $e');
       }
       rethrow;
     }

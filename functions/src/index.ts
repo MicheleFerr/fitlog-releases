@@ -70,3 +70,29 @@ export {
   createTemplate,
   getTemplateQuota,
 } from './templates/createTemplate';
+
+// ========================================
+// 🔐 GDPR: Data Retention & Cleanup (Scheduled)
+// ========================================
+// Export GDPR data retention functions:
+// - checkInactiveUsers: Monthly check for 24-month retention (with 23-month warning)
+// - hardDeleteProgressPhotos: Daily cleanup of soft-deleted photos after 30 days
+export {
+  gdprCheckInactiveUsers,
+  gdprHardDeletePhotos,
+} from './gdpr/dataRetention';
+
+// ========================================
+// 🔐 GDPR: Admin Access Audit Log (Art. 5(2) Accountability)
+// ========================================
+// Export admin audit log functions:
+// - logAdminAccess: Callable function for admin panel to log access
+// - auditUserDataAccess: Firestore trigger for user document changes
+// - getAuditLogForUser: Get audit log for GDPR Art. 15 requests
+// - cleanupOldAuditLogs: Monthly cleanup (2-year retention)
+export {
+  gdprLogAdminAccess,
+  gdprAuditUserData,
+  gdprGetAuditLog,
+  gdprCleanupAuditLogs,
+} from './gdpr/adminAuditLog';

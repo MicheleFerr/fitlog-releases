@@ -1,6 +1,6 @@
 # Privacy Policy for GymBro TrackLog
 
-**Last Updated: January 21, 2025**
+**Last Updated: December 31, 2025**
 
 ## 1. Introduction
 
@@ -94,9 +94,16 @@ You have the right to:
 - ✅ **Object**: Opt-out of certain data uses
 
 ### How to Exercise Your Rights:
-1. In-app: Settings → Privacy → Manage Data
-2. Email: privacy@gymbro.app
-3. Response time: Within 30 days
+
+**In-App Options:**
+- **Export Data**: Settings → Export Data (download all your data)
+- **Delete Account**: Settings → Delete Account (permanent deletion)
+- **Manage Consents**: Settings → Privacy Preferences
+- **Restrict Processing**: Settings → Privacy Preferences → Restrict Processing
+
+**Contact Us:**
+- Email: privacy@gymbro.app
+- Response time: Within 30 days (typically 24-48 hours)
 
 ## 7. Children's Privacy
 
@@ -202,6 +209,6 @@ By using GymBro TrackLog, you consent to this Privacy Policy. If you disagree wi
 
 ---
 
-**Privacy Policy Version**: 1.0.0
-**Effective Date**: January 21, 2025
+**Privacy Policy Version**: 1.1.0
+**Effective Date**: December 31, 2025
 **Language**: English (Translations available in Italian)
