@@ -21397,6 +21397,65 @@
   "@neverSynced": {
     "description": "Status when settings have never been synced"
   },
+  "syncingTemplates": "Syncing templates...",
+  "@syncingTemplates": {
+    "description": "Message shown when syncing workout templates"
+  },
+  "syncingExercises": "Syncing exercises...",
+  "@syncingExercises": {
+    "description": "Message shown when syncing custom exercises"
+  },
+  "syncingPersonalRecords": "Syncing personal records...",
+  "@syncingPersonalRecords": {
+    "description": "Message shown when syncing personal records"
+  },
+  "syncComplete": "Sync complete!",
+  "@syncComplete": {
+    "description": "Message shown when sync completes successfully"
+  },
+  "syncedJustNow": "Synced just now",
+  "@syncedJustNow": {
+    "description": "Status message for sync completed less than 1 minute ago"
+  },
+  "syncedMinutesAgo": "Synced {minutes} minutes ago",
+  "@syncedMinutesAgo": {
+    "description": "Status message for sync completed minutes ago",
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "syncedHoursAgo": "Synced {hours} hours ago",
+  "@syncedHoursAgo": {
+    "description": "Status message for sync completed hours ago",
+    "placeholders": {
+      "hours": {
+        "type": "int"
+      }
+    }
+  },
+  "syncedDaysAgo": "Synced {days} days ago",
+  "@syncedDaysAgo": {
+    "description": "Status message for sync completed days ago",
+    "placeholders": {
+      "days": {
+        "type": "int"
+      }
+    }
+  },
+  "syncingWorkoutsProgress": "Syncing workouts... ({synced}/{total})",
+  "@syncingWorkoutsProgress": {
+    "description": "Progress message showing workout sync count",
+    "placeholders": {
+      "synced": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
   "outOfSync": "Out of Sync",
   "@outOfSync": {
     "description": "Warning when local and cloud settings differ"
@@ -31523,5 +31582,135 @@
   "previewPdf": "Preview PDF",
   "@previewPdf": {
     "description": "Button to preview PDF with branding"
+  },
+  "coachSettings": "Coach Settings",
+  "@coachSettings": {
+    "description": "Title for coach settings screen"
+  },
+  "organizeFolders": "Organize template folders",
+  "@organizeFolders": {
+    "description": "Subtitle for template folders section"
+  },
+  "brandColors": "Brand Colors",
+  "@brandColors": {
+    "description": "Section header for color pickers"
+  },
+  "contactInfo": "Contact Information",
+  "@contactInfo": {
+    "description": "Section header for contact info"
+  },
+  "socialLinks": "Social Links",
+  "@socialLinks": {
+    "description": "Section header for social links"
+  },
+  "editFolder": "Edit Folder",
+  "@editFolder": {
+    "description": "Dialog title for editing folder"
+  },
+  "deleteFolder": "Delete Folder",
+  "@deleteFolder": {
+    "description": "Dialog title for deleting folder"
+  },
+  "deleteFolderConfirm": "Templates in this folder will be moved to root. Continue?",
+  "@deleteFolderConfirm": {
+    "description": "Confirmation message for folder deletion"
+  },
+  "done": "Done",
+  "@done": {
+    "description": "Button label to close dialog"
+  },
+  "noCodeSkip": "Don't have a code? Skip",
+  "reportProblem": "Report problem",
+  "reportType": "Report type",
+  "feedbackTypeBug": "Bug",
+  "feedbackTypeSuggestion": "Suggestion",
+  "feedbackTypeTypo": "Typo",
+  "feedbackTypeOther": "Other",
+  "describeProblem": "Describe the problem",
+  "describeProblemHint": "Describe the problem in detail...",
+  "exerciseFeedback": "Exercise Feedback",
+  "reducePriority": "Reduce priority",
+  "remove": "Remove",
+  "deletePhotoTitle": "Delete Photo?",
+  "deletePhotoMessage": "This photo will be moved to trash and permanently deleted after 30 days. You can restore it from trash before then.",
+  "allPoses": "All poses",
+  "retry": "Retry",
+  "clearFilter": "Clear filter",
+  "status": "Status",
+  "lastSync": "Last sync",
+  "totalTemplates": "Total templates",
+  "offlineChangesMessage": "You have offline changes that will be synced on next access.",
+  "syncCompleted": "Sync completed",
+  "syncNow": "Sync now",
+  "weightOptional": "Weight (optional)",
+  "weightHintExample": "e.g., 75.5",
+  "notesOptional": "Notes (optional)",
+  "notesHintFeeling": "How are you feeling? Any changes noticed?",
+  "setIsCompleted": "Set is completed",
+  "setIsNotCompleted": "Set is not completed",
+  "saveSet": "Save Set",
+  "selectBeforePhoto": "Select Before Photo",
+  "selectAfterPhoto": "Select After Photo",
+  "tapToSelectPhoto": "Tap a photo to select it",
+  "errorEditExercise": "Error: Unable to edit this exercise",
+  "errorOpeningExerciseEditor": "Error opening exercise editor. Please try again.",
+  "behaviorSection": "Behavior",
+  "autoRestTimerSubtitle": "Start timer after each set",
+  "autoCollapseTitle": "Collapse completed exercises",
+  "autoCollapseSubtitle": "Auto-minimize",
+  "soundVibrationTitle": "Sounds and vibrations",
+  "soundVibrationSubtitle": "Audio feedback during workout",
+  "restTimeOnCardTitle": "Rest time on card",
+  "restTimeOnCardSubtitle": "Show and edit timer per exercise",
+  "advancedTrackingTitle": "Advanced Tracking",
+  "advancedTrackingSubtitle": "RPE and auto-regulation",
+  "rpeTitle": "Rate of Perceived Exertion (RPE)",
+  "rpeSubtitle": "Track intensity after each set",
+  "suggestWeightTitle": "Suggest weight",
+  "suggestWeightSubtitle": "Based on previous set RPE",
+  "adjustRestTitle": "Adjust rest",
+  "adjustRestSubtitle": "More time if high RPE",
+  "setDurationTitle": "Set execution time",
+  "setDurationSubtitle": "Track time under tension",
+  "appearanceSection": "Appearance",
+  "appearanceSubtitle": "Customize interface",
+  "exerciseNotesTitle": "Exercise notes",
+  "exerciseNotesSubtitle": "Show notes under each exercise",
+  "progressChartsTitle": "Progress charts",
+  "progressChartsSubtitle": "Show history and trends",
+  "quickIconsTitle": "Quick icons",
+  "quickIconsSubtitle": "Info, warmup, prevention",
+  "plateCalculatorTitle": "Plate calculator",
+  "plateCalculatorSubtitle": "Show plates for weight",
+  "changesAutoSaved": "Changes are saved automatically",
+  "restTimer": "Rest Timer",
+  "roundNumber": "Round {number}",
+  "@roundNumber": {
+    "placeholders": {
+      "number": {"type": "int"}
+    }
+  },
+  "removeRound": "Remove round",
+  "addRound": "Add round",
+  "editRoundData": "Set weight and reps for this round",
+  "templateNameRequired": "Template name is required",
+  "templateSaved": "Template saved successfully",
+  "discardChangesMessage": "You have unsaved changes. Do you want to discard them?",
+  "recoverWeights": "Recover weights?",
+  "progressiveOverload": "Progressive overload",
+  "startEmpty": "Start empty",
+  "previewWeights": "Preview weights {option}",
+  "@previewWeights": {
+    "placeholders": {
+      "option": {"type": "String"}
+    }
+  },
+  "lastSessionToday": "Last session: today",
+  "lastSessionYesterday": "Last session: yesterday",
+  "exercisesAddedToWorkout": "{count} exercises added to workout!",
+  "@exercisesAddedToWorkout": {
+    "placeholders": {
+      "count": {"type": "int"}
+    }
   }
 }

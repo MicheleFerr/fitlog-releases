@@ -4103,7 +4103,7 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String get editRoundData => 'Edit round data';
+  String get editRoundData => 'Set weight and reps for this round';
 
   @override
   String get weightKg => 'Weight (kg)';
@@ -4141,7 +4141,7 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String get plateCalculatorTitle => 'Plate Calculator';
+  String get plateCalculatorTitle => 'Plate calculator';
 
   @override
   String get plateCalculatorDischi => 'Plates';
@@ -4252,7 +4252,7 @@ class AppLocalizationsEn extends AppLocalizations {
       'Add at least 2 exercises to create a superset';
 
   @override
-  String get addRound => 'Add Round';
+  String get addRound => 'Add round';
 
   @override
   String get roundsConfiguration => 'Rounds Configuration';
@@ -4438,7 +4438,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get discardChangesMessage =>
-      'You have unsaved changes. Are you sure you want to discard them?';
+      'You have unsaved changes. Do you want to discard them?';
 
   @override
   String get coachNotes => 'Coach Notes';
@@ -5055,7 +5055,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get expandDetails => 'Expand Details';
 
   @override
-  String get clearFilter => 'Clear';
+  String get clearFilter => 'Clear filter';
 
   @override
   String get timeUnderTensionExplanation =>
@@ -5551,7 +5551,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get templateNameLabel => 'Template Name *';
 
   @override
-  String get templateNameRequired => 'Name is required';
+  String get templateNameRequired => 'Template name is required';
 
   @override
   String get templateDescriptionHint => 'Brief workout description...';
@@ -5670,7 +5670,7 @@ class AppLocalizationsEn extends AppLocalizations {
       'The system will suggest progressive warmup sets based on your working weight, preparing your muscles and nervous system.';
 
   @override
-  String get autoCollapseTitle => 'Auto-Collapse Completed';
+  String get autoCollapseTitle => 'Collapse completed exercises';
 
   @override
   String get autoCollapseDescription =>
@@ -10861,7 +10861,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get feedbackOther => '❓ Other';
 
   @override
-  String get describeProblem => 'Describe the issue...';
+  String get describeProblem => 'Describe the problem';
 
   @override
   String get sendFeedback => 'Send Report';
@@ -13452,7 +13452,7 @@ class AppLocalizationsEn extends AppLocalizations {
       'Shows injury prevention advice and mobility exercises';
 
   @override
-  String get exerciseNotesTitle => 'Exercise Notes';
+  String get exerciseNotesTitle => 'Exercise notes';
 
   @override
   String get exerciseNotesDescription => 'Add notes about form and cues';
@@ -17481,7 +17481,7 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String get syncNow => 'Sync Now';
+  String get syncNow => 'Sync now';
 
   @override
   String get resetToDefaultsConfirm =>
@@ -17594,6 +17594,41 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get neverSynced => 'Never synced';
+
+  @override
+  String get syncingTemplates => 'Syncing templates...';
+
+  @override
+  String get syncingExercises => 'Syncing exercises...';
+
+  @override
+  String get syncingPersonalRecords => 'Syncing personal records...';
+
+  @override
+  String get syncComplete => 'Sync complete!';
+
+  @override
+  String get syncedJustNow => 'Synced just now';
+
+  @override
+  String syncedMinutesAgo(int minutes) {
+    return 'Synced $minutes minutes ago';
+  }
+
+  @override
+  String syncedHoursAgo(int hours) {
+    return 'Synced $hours hours ago';
+  }
+
+  @override
+  String syncedDaysAgo(int days) {
+    return 'Synced $days days ago';
+  }
+
+  @override
+  String syncingWorkoutsProgress(int synced, int total) {
+    return 'Syncing workouts... ($synced/$total)';
+  }
 
   @override
   String get outOfSync => 'Out of Sync';
@@ -23115,7 +23150,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get copyFromPrevious => 'Copy from Previous';
 
   @override
-  String get removeRound => 'Remove Round';
+  String get removeRound => 'Remove round';
 
   @override
   String get tapToConfigure => 'Tap to configure';
@@ -25385,4 +25420,216 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get previewPdf => 'Preview PDF';
+
+  @override
+  String get coachSettings => 'Coach Settings';
+
+  @override
+  String get organizeFolders => 'Organize template folders';
+
+  @override
+  String get brandColors => 'Brand Colors';
+
+  @override
+  String get contactInfo => 'Contact Information';
+
+  @override
+  String get socialLinks => 'Social Links';
+
+  @override
+  String get editFolder => 'Edit Folder';
+
+  @override
+  String get deleteFolder => 'Delete Folder';
+
+  @override
+  String get deleteFolderConfirm =>
+      'Templates in this folder will be moved to root. Continue?';
+
+  @override
+  String get noCodeSkip => 'Don\'t have a code? Skip';
+
+  @override
+  String get reportProblem => 'Report problem';
+
+  @override
+  String get reportType => 'Report type';
+
+  @override
+  String get feedbackTypeBug => 'Bug';
+
+  @override
+  String get feedbackTypeSuggestion => 'Suggestion';
+
+  @override
+  String get feedbackTypeTypo => 'Typo';
+
+  @override
+  String get feedbackTypeOther => 'Other';
+
+  @override
+  String get describeProblemHint => 'Describe the problem in detail...';
+
+  @override
+  String get reducePriority => 'Reduce priority';
+
+  @override
+  String get remove => 'Remove';
+
+  @override
+  String get deletePhotoTitle => 'Delete Photo?';
+
+  @override
+  String get deletePhotoMessage =>
+      'This photo will be moved to trash and permanently deleted after 30 days. You can restore it from trash before then.';
+
+  @override
+  String get allPoses => 'All poses';
+
+  @override
+  String get totalTemplates => 'Total templates';
+
+  @override
+  String get offlineChangesMessage =>
+      'You have offline changes that will be synced on next access.';
+
+  @override
+  String get syncCompleted => 'Sync completed';
+
+  @override
+  String get weightOptional => 'Weight (optional)';
+
+  @override
+  String get weightHintExample => 'e.g., 75.5';
+
+  @override
+  String get notesHintFeeling => 'How are you feeling? Any changes noticed?';
+
+  @override
+  String get setIsCompleted => 'Set is completed';
+
+  @override
+  String get setIsNotCompleted => 'Set is not completed';
+
+  @override
+  String get saveSet => 'Save Set';
+
+  @override
+  String get selectBeforePhoto => 'Select Before Photo';
+
+  @override
+  String get selectAfterPhoto => 'Select After Photo';
+
+  @override
+  String get tapToSelectPhoto => 'Tap a photo to select it';
+
+  @override
+  String get errorEditExercise => 'Error: Unable to edit this exercise';
+
+  @override
+  String get errorOpeningExerciseEditor =>
+      'Error opening exercise editor. Please try again.';
+
+  @override
+  String get behaviorSection => 'Behavior';
+
+  @override
+  String get autoRestTimerSubtitle => 'Start timer after each set';
+
+  @override
+  String get autoCollapseSubtitle => 'Auto-minimize';
+
+  @override
+  String get soundVibrationTitle => 'Sounds and vibrations';
+
+  @override
+  String get soundVibrationSubtitle => 'Audio feedback during workout';
+
+  @override
+  String get restTimeOnCardTitle => 'Rest time on card';
+
+  @override
+  String get restTimeOnCardSubtitle => 'Show and edit timer per exercise';
+
+  @override
+  String get advancedTrackingTitle => 'Advanced Tracking';
+
+  @override
+  String get advancedTrackingSubtitle => 'RPE and auto-regulation';
+
+  @override
+  String get rpeTitle => 'Rate of Perceived Exertion (RPE)';
+
+  @override
+  String get rpeSubtitle => 'Track intensity after each set';
+
+  @override
+  String get suggestWeightTitle => 'Suggest weight';
+
+  @override
+  String get suggestWeightSubtitle => 'Based on previous set RPE';
+
+  @override
+  String get adjustRestTitle => 'Adjust rest';
+
+  @override
+  String get adjustRestSubtitle => 'More time if high RPE';
+
+  @override
+  String get setDurationTitle => 'Set execution time';
+
+  @override
+  String get setDurationSubtitle => 'Track time under tension';
+
+  @override
+  String get appearanceSection => 'Appearance';
+
+  @override
+  String get appearanceSubtitle => 'Customize interface';
+
+  @override
+  String get exerciseNotesSubtitle => 'Show notes under each exercise';
+
+  @override
+  String get progressChartsTitle => 'Progress charts';
+
+  @override
+  String get progressChartsSubtitle => 'Show history and trends';
+
+  @override
+  String get quickIconsTitle => 'Quick icons';
+
+  @override
+  String get quickIconsSubtitle => 'Info, warmup, prevention';
+
+  @override
+  String get plateCalculatorSubtitle => 'Show plates for weight';
+
+  @override
+  String get changesAutoSaved => 'Changes are saved automatically';
+
+  @override
+  String get recoverWeights => 'Recover weights?';
+
+  @override
+  String get progressiveOverload => 'Progressive overload';
+
+  @override
+  String get startEmpty => 'Start empty';
+
+  @override
+  String previewWeights(String option) {
+    return 'Preview weights $option';
+  }
+
+  @override
+  String get lastSessionToday => 'Last session: today';
+
+  @override
+  String get lastSessionYesterday => 'Last session: yesterday';
+
+  @override
+  String exercisesAddedToWorkout(int count) {
+    return '$count exercises added to workout!';
+  }
 }

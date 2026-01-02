@@ -4133,7 +4133,7 @@ class AppLocalizationsIt extends AppLocalizations {
   }
 
   @override
-  String get editRoundData => 'Modifica dati round';
+  String get editRoundData => 'Imposta peso e ripetizioni per questo round';
 
   @override
   String get weightKg => 'Peso (kg)';
@@ -4171,7 +4171,7 @@ class AppLocalizationsIt extends AppLocalizations {
   }
 
   @override
-  String get plateCalculatorTitle => 'Calcolatore Dischi';
+  String get plateCalculatorTitle => 'Calcolatore dischi';
 
   @override
   String get plateCalculatorDischi => 'Dischi';
@@ -4282,7 +4282,7 @@ class AppLocalizationsIt extends AppLocalizations {
       'Aggiungi almeno 2 esercizi per creare un superset';
 
   @override
-  String get addRound => 'Aggiungi Round';
+  String get addRound => 'Aggiungi round';
 
   @override
   String get roundsConfiguration => 'Configurazione Round';
@@ -4470,7 +4470,7 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get discardChangesMessage =>
-      'Hai modifiche non salvate. Sei sicuro di volerle scartare?';
+      'Hai delle modifiche non salvate. Vuoi scartarle?';
 
   @override
   String get coachNotes => 'Note Coach';
@@ -5093,7 +5093,7 @@ class AppLocalizationsIt extends AppLocalizations {
   String get expandDetails => 'Espandi Dettagli';
 
   @override
-  String get clearFilter => 'Cancella';
+  String get clearFilter => 'Rimuovi filtro';
 
   @override
   String get timeUnderTensionExplanation =>
@@ -5592,7 +5592,7 @@ class AppLocalizationsIt extends AppLocalizations {
   String get templateNameLabel => 'Nome Template *';
 
   @override
-  String get templateNameRequired => 'Il nome è obbligatorio';
+  String get templateNameRequired => 'Il nome del template è obbligatorio';
 
   @override
   String get templateDescriptionHint => 'Breve descrizione del workout...';
@@ -5714,7 +5714,7 @@ class AppLocalizationsIt extends AppLocalizations {
       'Il sistema suggerirà serie di riscaldamento progressive basate sul tuo carico di lavoro, preparando muscoli e sistema nervoso.';
 
   @override
-  String get autoCollapseTitle => 'Auto-Collapse Completati';
+  String get autoCollapseTitle => 'Chiudi esercizi completati';
 
   @override
   String get autoCollapseDescription =>
@@ -8431,7 +8431,7 @@ class AppLocalizationsIt extends AppLocalizations {
       'Email di reset password inviata! Controlla la tua casella.';
 
   @override
-  String get restTimer => 'Timer Riposo';
+  String get restTimer => 'Timer Recupero';
 
   @override
   String get errorDialogTitle => 'Errore';
@@ -10970,7 +10970,7 @@ class AppLocalizationsIt extends AppLocalizations {
   String get feedbackOther => '❓ Altro';
 
   @override
-  String get describeProblem => 'Descrivi il problema...';
+  String get describeProblem => 'Descrivi il problema';
 
   @override
   String get sendFeedback => 'Invia Segnalazione';
@@ -11036,7 +11036,7 @@ class AppLocalizationsIt extends AppLocalizations {
       'Il report mensile sarà disponibile dopo la prima esecuzione';
 
   @override
-  String get exerciseFeedback => 'Feedback Esercizi';
+  String get exerciseFeedback => 'Feedback Esercizio';
 
   @override
   String get feedbackRefresh => 'Aggiorna';
@@ -13599,7 +13599,7 @@ class AppLocalizationsIt extends AppLocalizations {
       'Mostra consigli prevenzione infortuni ed esercizi mobilità';
 
   @override
-  String get exerciseNotesTitle => 'Note Esercizio';
+  String get exerciseNotesTitle => 'Note esercizio';
 
   @override
   String get exerciseNotesDescription => 'Aggiungi note su tecnica e cues';
@@ -17765,6 +17765,41 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get neverSynced => 'Mai sincronizzato';
+
+  @override
+  String get syncingTemplates => 'Sincronizzazione template...';
+
+  @override
+  String get syncingExercises => 'Sincronizzazione esercizi...';
+
+  @override
+  String get syncingPersonalRecords => 'Sincronizzazione record personali...';
+
+  @override
+  String get syncComplete => 'Sincronizzazione completata!';
+
+  @override
+  String get syncedJustNow => 'Sincronizzato proprio ora';
+
+  @override
+  String syncedMinutesAgo(int minutes) {
+    return 'Sincronizzato $minutes minuti fa';
+  }
+
+  @override
+  String syncedHoursAgo(int hours) {
+    return 'Sincronizzato $hours ore fa';
+  }
+
+  @override
+  String syncedDaysAgo(int days) {
+    return 'Sincronizzato $days giorni fa';
+  }
+
+  @override
+  String syncingWorkoutsProgress(int synced, int total) {
+    return 'Sincronizzazione allenamenti... ($synced/$total)';
+  }
 
   @override
   String get outOfSync => 'Non Sincronizzato';
@@ -23335,7 +23370,7 @@ class AppLocalizationsIt extends AppLocalizations {
   String get copyFromPrevious => 'Copia da Precedente';
 
   @override
-  String get removeRound => 'Rimuovi Round';
+  String get removeRound => 'Rimuovi round';
 
   @override
   String get tapToConfigure => 'Tocca per configurare';
@@ -25637,4 +25672,217 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get previewPdf => 'Anteprima PDF';
+
+  @override
+  String get coachSettings => 'Impostazioni Coach';
+
+  @override
+  String get organizeFolders => 'Organizza cartelle template';
+
+  @override
+  String get brandColors => 'Colori del Brand';
+
+  @override
+  String get contactInfo => 'Informazioni di Contatto';
+
+  @override
+  String get socialLinks => 'Link Social';
+
+  @override
+  String get editFolder => 'Modifica Cartella';
+
+  @override
+  String get deleteFolder => 'Elimina Cartella';
+
+  @override
+  String get deleteFolderConfirm =>
+      'I template in questa cartella verranno spostati nella root. Continuare?';
+
+  @override
+  String get noCodeSkip => 'Non hai un codice? Salta';
+
+  @override
+  String get reportProblem => 'Segnala problema';
+
+  @override
+  String get reportType => 'Tipo di segnalazione';
+
+  @override
+  String get feedbackTypeBug => 'Bug';
+
+  @override
+  String get feedbackTypeSuggestion => 'Suggerimento';
+
+  @override
+  String get feedbackTypeTypo => 'Errore di testo';
+
+  @override
+  String get feedbackTypeOther => 'Altro';
+
+  @override
+  String get describeProblemHint => 'Descrivi il problema in dettaglio...';
+
+  @override
+  String get reducePriority => 'Riduci priorità';
+
+  @override
+  String get remove => 'Rimuovi';
+
+  @override
+  String get deletePhotoTitle => 'Eliminare la foto?';
+
+  @override
+  String get deletePhotoMessage =>
+      'Questa foto verrà spostata nel cestino e eliminata permanentemente dopo 30 giorni. Puoi ripristinarla dal cestino prima di allora.';
+
+  @override
+  String get allPoses => 'Tutte le pose';
+
+  @override
+  String get totalTemplates => 'Template totali';
+
+  @override
+  String get offlineChangesMessage =>
+      'Hai modifiche offline che verranno sincronizzate al prossimo accesso.';
+
+  @override
+  String get syncCompleted => 'Sincronizzazione completata';
+
+  @override
+  String get weightOptional => 'Peso (opzionale)';
+
+  @override
+  String get weightHintExample => 'es. 75.5';
+
+  @override
+  String get notesHintFeeling => 'Come ti senti? Hai notato cambiamenti?';
+
+  @override
+  String get setIsCompleted => 'Set completato';
+
+  @override
+  String get setIsNotCompleted => 'Set non completato';
+
+  @override
+  String get saveSet => 'Salva Set';
+
+  @override
+  String get selectBeforePhoto => 'Seleziona foto Prima';
+
+  @override
+  String get selectAfterPhoto => 'Seleziona foto Dopo';
+
+  @override
+  String get tapToSelectPhoto => 'Tocca una foto per selezionarla';
+
+  @override
+  String get errorEditExercise =>
+      'Errore: Impossibile modificare questo esercizio';
+
+  @override
+  String get errorOpeningExerciseEditor =>
+      'Errore nell\'apertura dell\'editor esercizi. Riprova.';
+
+  @override
+  String get behaviorSection => 'Comportamento';
+
+  @override
+  String get autoRestTimerSubtitle => 'Avvia timer dopo ogni set';
+
+  @override
+  String get autoCollapseSubtitle => 'Minimizza automaticamente';
+
+  @override
+  String get soundVibrationTitle => 'Suoni e vibrazioni';
+
+  @override
+  String get soundVibrationSubtitle => 'Feedback audio durante workout';
+
+  @override
+  String get restTimeOnCardTitle => 'Tempo recupero su card';
+
+  @override
+  String get restTimeOnCardSubtitle => 'Mostra e modifica timer per esercizio';
+
+  @override
+  String get advancedTrackingTitle => 'Tracciamento Avanzato';
+
+  @override
+  String get advancedTrackingSubtitle => 'RPE e auto-regolazione';
+
+  @override
+  String get rpeTitle => 'Sforzo Percepito (RPE)';
+
+  @override
+  String get rpeSubtitle => 'Traccia intensità dopo ogni set';
+
+  @override
+  String get suggestWeightTitle => 'Suggerisci peso';
+
+  @override
+  String get suggestWeightSubtitle => 'Basato su RPE del set precedente';
+
+  @override
+  String get adjustRestTitle => 'Regola riposo';
+
+  @override
+  String get adjustRestSubtitle => 'Più tempo se RPE alto';
+
+  @override
+  String get setDurationTitle => 'Durata esecuzione set';
+
+  @override
+  String get setDurationSubtitle => 'Traccia tempo sotto tensione';
+
+  @override
+  String get appearanceSection => 'Aspetto';
+
+  @override
+  String get appearanceSubtitle => 'Personalizza interfaccia';
+
+  @override
+  String get exerciseNotesSubtitle => 'Mostra note sotto ogni esercizio';
+
+  @override
+  String get progressChartsTitle => 'Grafici progresso';
+
+  @override
+  String get progressChartsSubtitle => 'Mostra storico e trend';
+
+  @override
+  String get quickIconsTitle => 'Icone rapide';
+
+  @override
+  String get quickIconsSubtitle => 'Info, warmup, prevenzione';
+
+  @override
+  String get plateCalculatorSubtitle => 'Mostra dischi per peso';
+
+  @override
+  String get changesAutoSaved => 'Le modifiche sono salvate automaticamente';
+
+  @override
+  String get recoverWeights => 'Recupera i pesi?';
+
+  @override
+  String get progressiveOverload => 'Progressive overload';
+
+  @override
+  String get startEmpty => 'Inizia vuoto';
+
+  @override
+  String previewWeights(String option) {
+    return 'Anteprima carichi $option';
+  }
+
+  @override
+  String get lastSessionToday => 'Ultima sessione: oggi';
+
+  @override
+  String get lastSessionYesterday => 'Ultima sessione: ieri';
+
+  @override
+  String exercisesAddedToWorkout(int count) {
+    return '$count esercizi aggiunti alla scheda!';
+  }
 }

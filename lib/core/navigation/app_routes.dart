@@ -213,6 +213,10 @@ abstract final class AppRoutes {
   static const String coachTemplateEditorPath = '/profile/coach/templates/editor';
   static const String coachTemplateEditorName = 'coach-template-editor';
 
+  /// Coach settings - branding and folder configuration
+  static const String coachSettingsPath = '/profile/coach/settings';
+  static const String coachSettingsName = 'coach-settings';
+
   // ═══════════════════════════════════════════════════════════════════════════
   // Chat Routes
   // ═══════════════════════════════════════════════════════════════════════════

@@ -94,6 +94,7 @@ import 'package:gymbro_flutter_new/features/coach/presentation/screens/athlete_d
 import 'package:gymbro_flutter_new/features/coach/presentation/screens/link_coach_screen.dart';
 import 'package:gymbro_flutter_new/features/coach/presentation/screens/coach_templates_screen.dart';
 import 'package:gymbro_flutter_new/features/coach/presentation/screens/coach_template_editor_screen.dart';
+import 'package:gymbro_flutter_new/features/coach/presentation/screens/coach_settings_screen.dart';
 import 'package:gymbro_flutter_new/features/coach/domain/entities/coach_template.dart';
 
 // Chat
@@ -510,6 +511,12 @@ final appRouterProvider = Provider<GoRouter>((ref) {
                             },
                           ),
                         ],
+                      ),
+                      // Coach settings (branding, folders)
+                      GoRoute(
+                        path: 'settings',
+                        name: AppRoutes.coachSettingsName,
+                        builder: (context, state) => const CoachSettingsScreen(),
                       ),
                     ],
                   ),

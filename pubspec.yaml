@@ -126,12 +126,14 @@ dependencies:
   muscle_selector: ^1.0.4
   svg_path_parser: ^1.1.2
   flutter_svg: ^2.2.3
+  flutter_colorpicker: ^1.1.0
   motor: ^1.1.0
   tutorial_coach_mark: ^1.3.3
   appinio_swiper: ^2.1.1  # Tinder-style swipe cards for Rep Zone suggestions
 
   # 🚀 Native splash screen (shows logo while app initializes)
   flutter_native_splash: ^2.4.4
+  keyboard_actions: ^4.2.1
 
 dev_dependencies:
   flutter_test:
@@ -202,7 +204,10 @@ flutter:
     - assets/data/
     - assets/data/exercises/
     - assets/data/exercises_en/
-    # NOTE: .env removed from assets for security - credentials loaded at build time
+    - assets/data/default_templates/
+    # 🔐 DEV ONLY: .env in assets for Xcode builds
+    # Production: CI/CD injects via --dart-define (exclude .env from release)
+    - .env
 
   # Enable generation of the app_localizations.dart file
   generate: true

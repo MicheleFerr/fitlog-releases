@@ -608,6 +608,8 @@ class AppIcons {
   static const IconData notificationsOffOutlined = Icons.notifications_off_outlined;
   static const IconData notificationsOutlined = Icons.notifications_outlined;
   static const IconData send = Icons.send;
+  static const IconData phone = Icons.phone;
+  static const IconData business = Icons.business;
 
   // CONTENT (11 icons)
   static const IconData brokenImage = Icons.broken_image;
@@ -616,6 +618,8 @@ class AppIcons {
   static const IconData fileUploadOutlined = Icons.file_upload_outlined;
   static const IconData folder = Icons.folder;
   static const IconData folderOutlined = Icons.folder_outlined;
+  static const IconData folderOpen = Icons.folder_open;
+  static const IconData createNewFolder = Icons.create_new_folder;
   static const IconData imageNotSupported = Icons.image_not_supported;
   static const IconData photoCamera = Icons.photo_camera;
   static const IconData photoLibrary = Icons.photo_library;
@@ -712,6 +716,8 @@ class AppIcons {
   static const IconData formatListNumbered = Icons.format_list_numbered;
   static const IconData formatQuote = Icons.format_quote;
   static const IconData formatSize = Icons.format_size;
+  static const IconData shortText = Icons.short_text;
+  static const IconData palette = Icons.palette;
   static const IconData functions = Icons.functions;
   static const IconData grid4x4 = Icons.grid_4x4;
   static const IconData gridOn = Icons.grid_on;

@@ -43,7 +43,7 @@ class CoachDashboardScreen extends ConsumerWidget {
               IconButton(
                 icon: const Icon(AppIcons.settingsOutlined),
                 onPressed: () {
-                  // TODO: Navigate to coach settings
+                  context.pushNamed(AppRoutes.coachSettingsName);
                 },
               ),
             ],

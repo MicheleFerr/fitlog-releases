@@ -9853,6 +9853,65 @@
   "@neverSynced": {
     "description": "Stato quando impostazioni non sono mai state sincronizzate"
   },
+  "syncingTemplates": "Sincronizzazione template...",
+  "@syncingTemplates": {
+    "description": "Messaggio durante sincronizzazione template allenamenti"
+  },
+  "syncingExercises": "Sincronizzazione esercizi...",
+  "@syncingExercises": {
+    "description": "Messaggio durante sincronizzazione esercizi personalizzati"
+  },
+  "syncingPersonalRecords": "Sincronizzazione record personali...",
+  "@syncingPersonalRecords": {
+    "description": "Messaggio durante sincronizzazione record personali"
+  },
+  "syncComplete": "Sincronizzazione completata!",
+  "@syncComplete": {
+    "description": "Messaggio quando sincronizzazione completa con successo"
+  },
+  "syncedJustNow": "Sincronizzato proprio ora",
+  "@syncedJustNow": {
+    "description": "Messaggio di stato per sincronizzazione completata meno di 1 minuto fa"
+  },
+  "syncedMinutesAgo": "Sincronizzato {minutes} minuti fa",
+  "@syncedMinutesAgo": {
+    "description": "Messaggio di stato per sincronizzazione completata minuti fa",
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "syncedHoursAgo": "Sincronizzato {hours} ore fa",
+  "@syncedHoursAgo": {
+    "description": "Messaggio di stato per sincronizzazione completata ore fa",
+    "placeholders": {
+      "hours": {
+        "type": "int"
+      }
+    }
+  },
+  "syncedDaysAgo": "Sincronizzato {days} giorni fa",
+  "@syncedDaysAgo": {
+    "description": "Messaggio di stato per sincronizzazione completata giorni fa",
+    "placeholders": {
+      "days": {
+        "type": "int"
+      }
+    }
+  },
+  "syncingWorkoutsProgress": "Sincronizzazione allenamenti... ({synced}/{total})",
+  "@syncingWorkoutsProgress": {
+    "description": "Messaggio di progresso con conteggio sincronizzazione allenamenti",
+    "placeholders": {
+      "synced": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
   "outOfSync": "Non Sincronizzato",
   "@outOfSync": {
     "description": "Avviso quando impostazioni locali e cloud differiscono"
@@ -18980,5 +19039,108 @@
   "instagramHandle": "Profilo Instagram",
   "footerText": "Testo Piè di Pagina",
   "brandingSaved": "Branding salvato",
-  "previewPdf": "Anteprima PDF"
+  "previewPdf": "Anteprima PDF",
+  "coachSettings": "Impostazioni Coach",
+  "organizeFolders": "Organizza cartelle template",
+  "brandColors": "Colori del Brand",
+  "contactInfo": "Informazioni di Contatto",
+  "socialLinks": "Link Social",
+  "editFolder": "Modifica Cartella",
+  "deleteFolder": "Elimina Cartella",
+  "deleteFolderConfirm": "I template in questa cartella verranno spostati nella root. Continuare?",
+  "done": "Fatto",
+  "noCodeSkip": "Non hai un codice? Salta",
+  "reportProblem": "Segnala problema",
+  "reportType": "Tipo di segnalazione",
+  "feedbackTypeBug": "Bug",
+  "feedbackTypeSuggestion": "Suggerimento",
+  "feedbackTypeTypo": "Errore di testo",
+  "feedbackTypeOther": "Altro",
+  "describeProblem": "Descrivi il problema",
+  "describeProblemHint": "Descrivi il problema in dettaglio...",
+  "exerciseFeedback": "Feedback Esercizio",
+  "reducePriority": "Riduci priorità",
+  "remove": "Rimuovi",
+  "deletePhotoTitle": "Eliminare la foto?",
+  "deletePhotoMessage": "Questa foto verrà spostata nel cestino e eliminata permanentemente dopo 30 giorni. Puoi ripristinarla dal cestino prima di allora.",
+  "allPoses": "Tutte le pose",
+  "retry": "Riprova",
+  "clearFilter": "Rimuovi filtro",
+  "status": "Stato",
+  "lastSync": "Ultimo sync",
+  "totalTemplates": "Template totali",
+  "offlineChangesMessage": "Hai modifiche offline che verranno sincronizzate al prossimo accesso.",
+  "syncCompleted": "Sincronizzazione completata",
+  "syncNow": "Sincronizza ora",
+  "weightOptional": "Peso (opzionale)",
+  "weightHintExample": "es. 75.5",
+  "notesOptional": "Note (opzionale)",
+  "notesHintFeeling": "Come ti senti? Hai notato cambiamenti?",
+  "setIsCompleted": "Set completato",
+  "setIsNotCompleted": "Set non completato",
+  "saveSet": "Salva Set",
+  "selectBeforePhoto": "Seleziona foto Prima",
+  "selectAfterPhoto": "Seleziona foto Dopo",
+  "tapToSelectPhoto": "Tocca una foto per selezionarla",
+  "errorEditExercise": "Errore: Impossibile modificare questo esercizio",
+  "errorOpeningExerciseEditor": "Errore nell'apertura dell'editor esercizi. Riprova.",
+  "behaviorSection": "Comportamento",
+  "autoRestTimerSubtitle": "Avvia timer dopo ogni set",
+  "autoCollapseTitle": "Chiudi esercizi completati",
+  "autoCollapseSubtitle": "Minimizza automaticamente",
+  "soundVibrationTitle": "Suoni e vibrazioni",
+  "soundVibrationSubtitle": "Feedback audio durante workout",
+  "restTimeOnCardTitle": "Tempo recupero su card",
+  "restTimeOnCardSubtitle": "Mostra e modifica timer per esercizio",
+  "advancedTrackingTitle": "Tracciamento Avanzato",
+  "advancedTrackingSubtitle": "RPE e auto-regolazione",
+  "rpeTitle": "Sforzo Percepito (RPE)",
+  "rpeSubtitle": "Traccia intensità dopo ogni set",
+  "suggestWeightTitle": "Suggerisci peso",
+  "suggestWeightSubtitle": "Basato su RPE del set precedente",
+  "adjustRestTitle": "Regola riposo",
+  "adjustRestSubtitle": "Più tempo se RPE alto",
+  "setDurationTitle": "Durata esecuzione set",
+  "setDurationSubtitle": "Traccia tempo sotto tensione",
+  "appearanceSection": "Aspetto",
+  "appearanceSubtitle": "Personalizza interfaccia",
+  "exerciseNotesTitle": "Note esercizio",
+  "exerciseNotesSubtitle": "Mostra note sotto ogni esercizio",
+  "progressChartsTitle": "Grafici progresso",
+  "progressChartsSubtitle": "Mostra storico e trend",
+  "quickIconsTitle": "Icone rapide",
+  "quickIconsSubtitle": "Info, warmup, prevenzione",
+  "plateCalculatorTitle": "Calcolatore dischi",
+  "plateCalculatorSubtitle": "Mostra dischi per peso",
+  "changesAutoSaved": "Le modifiche sono salvate automaticamente",
+  "restTimer": "Timer Recupero",
+  "roundNumber": "Round {number}",
+  "@roundNumber": {
+    "placeholders": {
+      "number": {"type": "int"}
+    }
+  },
+  "removeRound": "Rimuovi round",
+  "addRound": "Aggiungi round",
+  "editRoundData": "Imposta peso e ripetizioni per questo round",
+  "templateNameRequired": "Il nome del template è obbligatorio",
+  "templateSaved": "Template salvato con successo",
+  "discardChangesMessage": "Hai delle modifiche non salvate. Vuoi scartarle?",
+  "recoverWeights": "Recupera i pesi?",
+  "progressiveOverload": "Progressive overload",
+  "startEmpty": "Inizia vuoto",
+  "previewWeights": "Anteprima carichi {option}",
+  "@previewWeights": {
+    "placeholders": {
+      "option": {"type": "String"}
+    }
+  },
+  "lastSessionToday": "Ultima sessione: oggi",
+  "lastSessionYesterday": "Ultima sessione: ieri",
+  "exercisesAddedToWorkout": "{count} esercizi aggiunti alla scheda!",
+  "@exercisesAddedToWorkout": {
+    "placeholders": {
+      "count": {"type": "int"}
+    }
+  }
 }

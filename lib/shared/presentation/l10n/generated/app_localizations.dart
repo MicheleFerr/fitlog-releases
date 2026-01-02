@@ -1262,7 +1262,7 @@ abstract class AppLocalizations {
   /// **'Clear'**
   String get clear;
 
-  /// Done button text
+  /// Button label to close dialog
   ///
   /// In en, this message translates to:
   /// **'Done'**
@@ -7571,7 +7571,7 @@ abstract class AppLocalizations {
   /// **'exercise'**
   String get exercise;
 
-  /// Round number label
+  /// No description provided for @roundNumber.
   ///
   /// In en, this message translates to:
   /// **'Round {number}'**
@@ -7580,7 +7580,7 @@ abstract class AppLocalizations {
   /// Edit round data subtitle
   ///
   /// In en, this message translates to:
-  /// **'Edit round data'**
+  /// **'Set weight and reps for this round'**
   String get editRoundData;
 
   /// Weight in kg table header
@@ -7652,7 +7652,7 @@ abstract class AppLocalizations {
   /// Plate calculator section title
   ///
   /// In en, this message translates to:
-  /// **'Plate Calculator'**
+  /// **'Plate calculator'**
   String get plateCalculatorTitle;
 
   /// Italian 'Dischi' button for plate calculator
@@ -7856,7 +7856,7 @@ abstract class AppLocalizations {
   /// Add round button text
   ///
   /// In en, this message translates to:
-  /// **'Add Round'**
+  /// **'Add round'**
   String get addRound;
 
   /// Rounds configuration section title
@@ -8210,7 +8210,7 @@ abstract class AppLocalizations {
   /// Message when discarding unsaved changes
   ///
   /// In en, this message translates to:
-  /// **'You have unsaved changes. Are you sure you want to discard them?'**
+  /// **'You have unsaved changes. Do you want to discard them?'**
   String get discardChangesMessage;
 
   /// Label for coach private notes
@@ -9374,7 +9374,7 @@ abstract class AppLocalizations {
   /// Clear individual filter button
   ///
   /// In en, this message translates to:
-  /// **'Clear'**
+  /// **'Clear filter'**
   String get clearFilter;
 
   /// Explanation of what Time Under Tension means
@@ -10232,7 +10232,7 @@ abstract class AppLocalizations {
   /// Template name validation error
   ///
   /// In en, this message translates to:
-  /// **'Name is required'**
+  /// **'Template name is required'**
   String get templateNameRequired;
 
   /// Template description field hint
@@ -10448,7 +10448,7 @@ abstract class AppLocalizations {
   /// Auto collapse toggle title
   ///
   /// In en, this message translates to:
-  /// **'Auto-Collapse Completed'**
+  /// **'Collapse completed exercises'**
   String get autoCollapseTitle;
 
   /// Auto collapse toggle description
@@ -19305,7 +19305,7 @@ abstract class AppLocalizations {
   /// Placeholder text for feedback message input
   ///
   /// In en, this message translates to:
-  /// **'Describe the issue...'**
+  /// **'Describe the problem'**
   String get describeProblem;
 
   /// Button label for sending feedback
@@ -23787,7 +23787,7 @@ abstract class AppLocalizations {
   /// Title for exercise notes toggle
   ///
   /// In en, this message translates to:
-  /// **'Exercise Notes'**
+  /// **'Exercise notes'**
   String get exerciseNotesTitle;
 
   /// Description for exercise notes toggle
@@ -31281,7 +31281,7 @@ abstract class AppLocalizations {
   /// Button to manually trigger sync to cloud
   ///
   /// In en, this message translates to:
-  /// **'Sync Now'**
+  /// **'Sync now'**
   String get syncNow;
 
   /// Confirmation dialog for resetting settings
@@ -31493,6 +31493,60 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Never synced'**
   String get neverSynced;
+
+  /// Message shown when syncing workout templates
+  ///
+  /// In en, this message translates to:
+  /// **'Syncing templates...'**
+  String get syncingTemplates;
+
+  /// Message shown when syncing custom exercises
+  ///
+  /// In en, this message translates to:
+  /// **'Syncing exercises...'**
+  String get syncingExercises;
+
+  /// Message shown when syncing personal records
+  ///
+  /// In en, this message translates to:
+  /// **'Syncing personal records...'**
+  String get syncingPersonalRecords;
+
+  /// Message shown when sync completes successfully
+  ///
+  /// In en, this message translates to:
+  /// **'Sync complete!'**
+  String get syncComplete;
+
+  /// Status message for sync completed less than 1 minute ago
+  ///
+  /// In en, this message translates to:
+  /// **'Synced just now'**
+  String get syncedJustNow;
+
+  /// Status message for sync completed minutes ago
+  ///
+  /// In en, this message translates to:
+  /// **'Synced {minutes} minutes ago'**
+  String syncedMinutesAgo(int minutes);
+
+  /// Status message for sync completed hours ago
+  ///
+  /// In en, this message translates to:
+  /// **'Synced {hours} hours ago'**
+  String syncedHoursAgo(int hours);
+
+  /// Status message for sync completed days ago
+  ///
+  /// In en, this message translates to:
+  /// **'Synced {days} days ago'**
+  String syncedDaysAgo(int days);
+
+  /// Progress message showing workout sync count
+  ///
+  /// In en, this message translates to:
+  /// **'Syncing workouts... ({synced}/{total})'**
+  String syncingWorkoutsProgress(int synced, int total);
 
   /// Warning when local and cloud settings differ
   ///
@@ -41322,7 +41376,7 @@ abstract class AppLocalizations {
   /// Button tooltip to remove a round from superset
   ///
   /// In en, this message translates to:
-  /// **'Remove Round'**
+  /// **'Remove round'**
   String get removeRound;
 
   /// Hint text for unconfigured exercise in superset
@@ -45373,6 +45427,414 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Preview PDF'**
   String get previewPdf;
+
+  /// Title for coach settings screen
+  ///
+  /// In en, this message translates to:
+  /// **'Coach Settings'**
+  String get coachSettings;
+
+  /// Subtitle for template folders section
+  ///
+  /// In en, this message translates to:
+  /// **'Organize template folders'**
+  String get organizeFolders;
+
+  /// Section header for color pickers
+  ///
+  /// In en, this message translates to:
+  /// **'Brand Colors'**
+  String get brandColors;
+
+  /// Section header for contact info
+  ///
+  /// In en, this message translates to:
+  /// **'Contact Information'**
+  String get contactInfo;
+
+  /// Section header for social links
+  ///
+  /// In en, this message translates to:
+  /// **'Social Links'**
+  String get socialLinks;
+
+  /// Dialog title for editing folder
+  ///
+  /// In en, this message translates to:
+  /// **'Edit Folder'**
+  String get editFolder;
+
+  /// Dialog title for deleting folder
+  ///
+  /// In en, this message translates to:
+  /// **'Delete Folder'**
+  String get deleteFolder;
+
+  /// Confirmation message for folder deletion
+  ///
+  /// In en, this message translates to:
+  /// **'Templates in this folder will be moved to root. Continue?'**
+  String get deleteFolderConfirm;
+
+  /// No description provided for @noCodeSkip.
+  ///
+  /// In en, this message translates to:
+  /// **'Don\'t have a code? Skip'**
+  String get noCodeSkip;
+
+  /// No description provided for @reportProblem.
+  ///
+  /// In en, this message translates to:
+  /// **'Report problem'**
+  String get reportProblem;
+
+  /// No description provided for @reportType.
+  ///
+  /// In en, this message translates to:
+  /// **'Report type'**
+  String get reportType;
+
+  /// No description provided for @feedbackTypeBug.
+  ///
+  /// In en, this message translates to:
+  /// **'Bug'**
+  String get feedbackTypeBug;
+
+  /// No description provided for @feedbackTypeSuggestion.
+  ///
+  /// In en, this message translates to:
+  /// **'Suggestion'**
+  String get feedbackTypeSuggestion;
+
+  /// No description provided for @feedbackTypeTypo.
+  ///
+  /// In en, this message translates to:
+  /// **'Typo'**
+  String get feedbackTypeTypo;
+
+  /// No description provided for @feedbackTypeOther.
+  ///
+  /// In en, this message translates to:
+  /// **'Other'**
+  String get feedbackTypeOther;
+
+  /// No description provided for @describeProblemHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Describe the problem in detail...'**
+  String get describeProblemHint;
+
+  /// No description provided for @reducePriority.
+  ///
+  /// In en, this message translates to:
+  /// **'Reduce priority'**
+  String get reducePriority;
+
+  /// No description provided for @remove.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove'**
+  String get remove;
+
+  /// No description provided for @deletePhotoTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete Photo?'**
+  String get deletePhotoTitle;
+
+  /// No description provided for @deletePhotoMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'This photo will be moved to trash and permanently deleted after 30 days. You can restore it from trash before then.'**
+  String get deletePhotoMessage;
+
+  /// No description provided for @allPoses.
+  ///
+  /// In en, this message translates to:
+  /// **'All poses'**
+  String get allPoses;
+
+  /// No description provided for @totalTemplates.
+  ///
+  /// In en, this message translates to:
+  /// **'Total templates'**
+  String get totalTemplates;
+
+  /// No description provided for @offlineChangesMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'You have offline changes that will be synced on next access.'**
+  String get offlineChangesMessage;
+
+  /// No description provided for @syncCompleted.
+  ///
+  /// In en, this message translates to:
+  /// **'Sync completed'**
+  String get syncCompleted;
+
+  /// No description provided for @weightOptional.
+  ///
+  /// In en, this message translates to:
+  /// **'Weight (optional)'**
+  String get weightOptional;
+
+  /// No description provided for @weightHintExample.
+  ///
+  /// In en, this message translates to:
+  /// **'e.g., 75.5'**
+  String get weightHintExample;
+
+  /// No description provided for @notesHintFeeling.
+  ///
+  /// In en, this message translates to:
+  /// **'How are you feeling? Any changes noticed?'**
+  String get notesHintFeeling;
+
+  /// No description provided for @setIsCompleted.
+  ///
+  /// In en, this message translates to:
+  /// **'Set is completed'**
+  String get setIsCompleted;
+
+  /// No description provided for @setIsNotCompleted.
+  ///
+  /// In en, this message translates to:
+  /// **'Set is not completed'**
+  String get setIsNotCompleted;
+
+  /// No description provided for @saveSet.
+  ///
+  /// In en, this message translates to:
+  /// **'Save Set'**
+  String get saveSet;
+
+  /// No description provided for @selectBeforePhoto.
+  ///
+  /// In en, this message translates to:
+  /// **'Select Before Photo'**
+  String get selectBeforePhoto;
+
+  /// No description provided for @selectAfterPhoto.
+  ///
+  /// In en, this message translates to:
+  /// **'Select After Photo'**
+  String get selectAfterPhoto;
+
+  /// No description provided for @tapToSelectPhoto.
+  ///
+  /// In en, this message translates to:
+  /// **'Tap a photo to select it'**
+  String get tapToSelectPhoto;
+
+  /// No description provided for @errorEditExercise.
+  ///
+  /// In en, this message translates to:
+  /// **'Error: Unable to edit this exercise'**
+  String get errorEditExercise;
+
+  /// No description provided for @errorOpeningExerciseEditor.
+  ///
+  /// In en, this message translates to:
+  /// **'Error opening exercise editor. Please try again.'**
+  String get errorOpeningExerciseEditor;
+
+  /// No description provided for @behaviorSection.
+  ///
+  /// In en, this message translates to:
+  /// **'Behavior'**
+  String get behaviorSection;
+
+  /// No description provided for @autoRestTimerSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Start timer after each set'**
+  String get autoRestTimerSubtitle;
+
+  /// No description provided for @autoCollapseSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Auto-minimize'**
+  String get autoCollapseSubtitle;
+
+  /// No description provided for @soundVibrationTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Sounds and vibrations'**
+  String get soundVibrationTitle;
+
+  /// No description provided for @soundVibrationSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Audio feedback during workout'**
+  String get soundVibrationSubtitle;
+
+  /// No description provided for @restTimeOnCardTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Rest time on card'**
+  String get restTimeOnCardTitle;
+
+  /// No description provided for @restTimeOnCardSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Show and edit timer per exercise'**
+  String get restTimeOnCardSubtitle;
+
+  /// No description provided for @advancedTrackingTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Advanced Tracking'**
+  String get advancedTrackingTitle;
+
+  /// No description provided for @advancedTrackingSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'RPE and auto-regulation'**
+  String get advancedTrackingSubtitle;
+
+  /// No description provided for @rpeTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Rate of Perceived Exertion (RPE)'**
+  String get rpeTitle;
+
+  /// No description provided for @rpeSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Track intensity after each set'**
+  String get rpeSubtitle;
+
+  /// No description provided for @suggestWeightTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Suggest weight'**
+  String get suggestWeightTitle;
+
+  /// No description provided for @suggestWeightSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Based on previous set RPE'**
+  String get suggestWeightSubtitle;
+
+  /// No description provided for @adjustRestTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Adjust rest'**
+  String get adjustRestTitle;
+
+  /// No description provided for @adjustRestSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'More time if high RPE'**
+  String get adjustRestSubtitle;
+
+  /// No description provided for @setDurationTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Set execution time'**
+  String get setDurationTitle;
+
+  /// No description provided for @setDurationSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Track time under tension'**
+  String get setDurationSubtitle;
+
+  /// No description provided for @appearanceSection.
+  ///
+  /// In en, this message translates to:
+  /// **'Appearance'**
+  String get appearanceSection;
+
+  /// No description provided for @appearanceSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Customize interface'**
+  String get appearanceSubtitle;
+
+  /// No description provided for @exerciseNotesSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Show notes under each exercise'**
+  String get exerciseNotesSubtitle;
+
+  /// No description provided for @progressChartsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Progress charts'**
+  String get progressChartsTitle;
+
+  /// No description provided for @progressChartsSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Show history and trends'**
+  String get progressChartsSubtitle;
+
+  /// No description provided for @quickIconsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Quick icons'**
+  String get quickIconsTitle;
+
+  /// No description provided for @quickIconsSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Info, warmup, prevention'**
+  String get quickIconsSubtitle;
+
+  /// No description provided for @plateCalculatorSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Show plates for weight'**
+  String get plateCalculatorSubtitle;
+
+  /// No description provided for @changesAutoSaved.
+  ///
+  /// In en, this message translates to:
+  /// **'Changes are saved automatically'**
+  String get changesAutoSaved;
+
+  /// No description provided for @recoverWeights.
+  ///
+  /// In en, this message translates to:
+  /// **'Recover weights?'**
+  String get recoverWeights;
+
+  /// No description provided for @progressiveOverload.
+  ///
+  /// In en, this message translates to:
+  /// **'Progressive overload'**
+  String get progressiveOverload;
+
+  /// No description provided for @startEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'Start empty'**
+  String get startEmpty;
+
+  /// No description provided for @previewWeights.
+  ///
+  /// In en, this message translates to:
+  /// **'Preview weights {option}'**
+  String previewWeights(String option);
+
+  /// No description provided for @lastSessionToday.
+  ///
+  /// In en, this message translates to:
+  /// **'Last session: today'**
+  String get lastSessionToday;
+
+  /// No description provided for @lastSessionYesterday.
+  ///
+  /// In en, this message translates to:
+  /// **'Last session: yesterday'**
+  String get lastSessionYesterday;
+
+  /// No description provided for @exercisesAddedToWorkout.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} exercises added to workout!'**
+  String exercisesAddedToWorkout(int count);
 }
 
 class _AppLocalizationsDelegate
