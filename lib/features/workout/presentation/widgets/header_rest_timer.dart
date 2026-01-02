@@ -388,22 +388,26 @@ class _CustomTimerModalState extends State<_CustomTimerModal> {
           // Pulsante Start
           SizedBox(
             width: double.infinity,
-            child: FilledButton.icon(
-              onPressed: () {
-                final totalSeconds = (_selectedMinutes * 60) + _selectedSeconds;
-                if (totalSeconds > 0) {
-                  HapticFeedback.mediumImpact();
-                  widget.onSelectDuration(totalSeconds);
-                }
-              },
-              icon: const Icon(AppIcons.play),
-              label: Text(
-                '${context.l10n.start} ${_formatDuration(_selectedMinutes, _selectedSeconds)}',
-              ),
-              style: FilledButton.styleFrom(
-                padding: const EdgeInsets.symmetric(vertical: 16),
-                textStyle: context.textTheme.titleMedium?.copyWith(
-                  fontWeight: FontWeight.bold,
+            child: Semantics(
+              label: context.l10n.a11yPlayTimer,
+              button: true,
+              child: FilledButton.icon(
+                onPressed: () {
+                  final totalSeconds = (_selectedMinutes * 60) + _selectedSeconds;
+                  if (totalSeconds > 0) {
+                    HapticFeedback.mediumImpact();
+                    widget.onSelectDuration(totalSeconds);
+                  }
+                },
+                icon: const Icon(AppIcons.play),
+                label: Text(
+                  '${context.l10n.start} ${_formatDuration(_selectedMinutes, _selectedSeconds)}',
+                ),
+                style: FilledButton.styleFrom(
+                  padding: const EdgeInsets.symmetric(vertical: 16),
+                  textStyle: context.textTheme.titleMedium?.copyWith(
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
               ),
             ),
@@ -439,10 +443,14 @@ class _CustomTimerModalState extends State<_CustomTimerModal> {
             mainAxisSize: MainAxisSize.min,
             children: [
               // Decrement
-              IconButton(
-                onPressed: value > 0 ? () => onChanged(value - 1) : null,
-                icon: const Icon(AppIcons.remove),
-                iconSize: AppIconSize.small,
+              Semantics(
+                label: context.l10n.a11yDecreaseTimer,
+                button: true,
+                child: IconButton(
+                  onPressed: value > 0 ? () => onChanged(value - 1) : null,
+                  icon: const Icon(AppIcons.remove),
+                  iconSize: AppIconSize.small,
+                ),
               ),
               // Value
               SizedBox(
@@ -457,10 +465,14 @@ class _CustomTimerModalState extends State<_CustomTimerModal> {
                 ),
               ),
               // Increment
-              IconButton(
-                onPressed: value < maxValue ? () => onChanged(value + 1) : null,
-                icon: const Icon(AppIcons.add),
-                iconSize: AppIconSize.small,
+              Semantics(
+                label: context.l10n.a11yIncreaseTimer,
+                button: true,
+                child: IconButton(
+                  onPressed: value < maxValue ? () => onChanged(value + 1) : null,
+                  icon: const Icon(AppIcons.add),
+                  iconSize: AppIconSize.small,
+                ),
               ),
             ],
           ),

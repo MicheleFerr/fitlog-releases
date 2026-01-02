@@ -2659,7 +2659,7 @@ abstract class AppLocalizations {
   /// **'Large'**
   String get fontSizeLarge;
 
-  /// Accent color setting
+  /// Label for accent color picker
   ///
   /// In en, this message translates to:
   /// **'Accent Color'**
@@ -3979,7 +3979,7 @@ abstract class AppLocalizations {
   /// **'Tap to start'**
   String get tapToStart;
 
-  /// Error message when templates fail to load
+  /// Error message when templates cannot be loaded
   ///
   /// In en, this message translates to:
   /// **'Error loading templates'**
@@ -7763,6 +7763,12 @@ abstract class AppLocalizations {
   /// **'This will permanently remove this exercise from your workout.'**
   String get deleteExerciseDescription;
 
+  /// Checkbox label to skip future confirmation dialogs
+  ///
+  /// In en, this message translates to:
+  /// **'Don\'t ask again'**
+  String get dontAskAgain;
+
   /// Delete superset dialog title
   ///
   /// In en, this message translates to:
@@ -11122,6 +11128,126 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'An unexpected error occurred. Please try again.'**
   String get errorUnexpected;
+
+  /// Error for timeout/deadline exceeded
+  ///
+  /// In en, this message translates to:
+  /// **'Connection timed out. Please try again.'**
+  String get errorTimeout;
+
+  /// Error for wrong password
+  ///
+  /// In en, this message translates to:
+  /// **'Invalid email or password.'**
+  String get errorInvalidCredentials;
+
+  /// Error when email is already in use
+  ///
+  /// In en, this message translates to:
+  /// **'This email is already registered.'**
+  String get errorEmailInUse;
+
+  /// Error when user account is disabled
+  ///
+  /// In en, this message translates to:
+  /// **'This account has been disabled.'**
+  String get errorAccountDisabled;
+
+  /// Error for permission denied
+  ///
+  /// In en, this message translates to:
+  /// **'You don\'t have permission for this action.'**
+  String get errorPermissionDenied;
+
+  /// Error for rate limiting
+  ///
+  /// In en, this message translates to:
+  /// **'Too many requests. Please wait a moment.'**
+  String get errorRateLimited;
+
+  /// Error for quota exceeded
+  ///
+  /// In en, this message translates to:
+  /// **'Storage quota exceeded. Free up space or upgrade.'**
+  String get errorQuotaExceeded;
+
+  /// Error for invalid arguments
+  ///
+  /// In en, this message translates to:
+  /// **'Invalid input. Please check your data.'**
+  String get errorInvalidInput;
+
+  /// Error for conflict/already exists
+  ///
+  /// In en, this message translates to:
+  /// **'This item already exists.'**
+  String get errorAlreadyExists;
+
+  /// Error for not found resources
+  ///
+  /// In en, this message translates to:
+  /// **'Item not found.'**
+  String get errorNotFound;
+
+  /// Error for cancelled operations
+  ///
+  /// In en, this message translates to:
+  /// **'Operation cancelled.'**
+  String get errorOperationCancelled;
+
+  /// Error for server-side issues
+  ///
+  /// In en, this message translates to:
+  /// **'Server error. Please try again later.'**
+  String get errorServerError;
+
+  /// Error for cache/local storage issues
+  ///
+  /// In en, this message translates to:
+  /// **'Local data error. Try refreshing.'**
+  String get errorCacheError;
+
+  /// Error for parse/data corruption
+  ///
+  /// In en, this message translates to:
+  /// **'Data format error. Please contact support.'**
+  String get errorDataCorrupted;
+
+  /// Error when workout is not found
+  ///
+  /// In en, this message translates to:
+  /// **'Workout not found.'**
+  String get errorWorkoutNotFound;
+
+  /// Error when exercise is not found
+  ///
+  /// In en, this message translates to:
+  /// **'Exercise not found.'**
+  String get errorExerciseNotFound;
+
+  /// Title for network error dialogs
+  ///
+  /// In en, this message translates to:
+  /// **'Connection Error'**
+  String get errorTitleNetwork;
+
+  /// Title for auth error dialogs
+  ///
+  /// In en, this message translates to:
+  /// **'Authentication Error'**
+  String get errorTitleAuth;
+
+  /// Title for permission error dialogs
+  ///
+  /// In en, this message translates to:
+  /// **'Permission Error'**
+  String get errorTitlePermission;
+
+  /// Title for validation error dialogs
+  ///
+  /// In en, this message translates to:
+  /// **'Validation Error'**
+  String get errorTitleValidation;
 
   /// Title for push/pull muscle balance ratio
   ///
@@ -14771,6 +14897,18 @@ abstract class AppLocalizations {
   /// **'Sign Up'**
   String get signUpButton;
 
+  /// Guest mode button text on login screen
+  ///
+  /// In en, this message translates to:
+  /// **'Try Without Account'**
+  String get tryWithoutAccount;
+
+  /// Disclaimer text for guest mode
+  ///
+  /// In en, this message translates to:
+  /// **'Your data stays local and will be lost if you uninstall'**
+  String get guestModeDisclaimer;
+
   /// Create account button text
   ///
   /// In en, this message translates to:
@@ -15782,7 +15920,7 @@ abstract class AppLocalizations {
   /// **'Please enter a template name'**
   String get pleaseEnterTemplateName;
 
-  /// Template save error message
+  /// Error message when template cannot be saved
   ///
   /// In en, this message translates to:
   /// **'Error saving template'**
@@ -24576,10 +24714,10 @@ abstract class AppLocalizations {
   /// **'Improvement detected'**
   String get improvementDetected;
 
-  /// Auto-generated for instagramHandle
+  /// Label for Instagram handle input
   ///
   /// In en, this message translates to:
-  /// **'Instagram handle'**
+  /// **'Instagram Handle'**
   String get instagramHandle;
 
   /// Auto-generated for instagramVerified
@@ -32358,6 +32496,12 @@ abstract class AppLocalizations {
   /// **'Recent'**
   String get recent;
 
+  /// Section header for quick access to recent/frequent exercises
+  ///
+  /// In en, this message translates to:
+  /// **'Recent Exercises'**
+  String get recentExercises;
+
   /// Button label to mark exercise as favorite
   ///
   /// In en, this message translates to:
@@ -39598,7 +39742,7 @@ abstract class AppLocalizations {
   /// **'Select a template to add this exercise to'**
   String get selectTemplateToAddExercise;
 
-  /// Empty state when no templates exist
+  /// Message when no templates match filter
   ///
   /// In en, this message translates to:
   /// **'No templates found'**
@@ -39980,6 +40124,192 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Drag this button left or right to reposition it.'**
   String get tutorialDragFabMessage;
+
+  /// Exercise search tutorial - search bar title
+  ///
+  /// In en, this message translates to:
+  /// **'Search Exercises'**
+  String get tutorialSearchBarTitle;
+
+  /// Exercise search tutorial - search bar message
+  ///
+  /// In en, this message translates to:
+  /// **'Type here to find exercises by name. Try searching for \'bench\' or \'squat\'!'**
+  String get tutorialSearchBarMessage;
+
+  /// Exercise search tutorial - filter button title
+  ///
+  /// In en, this message translates to:
+  /// **'Advanced Filters'**
+  String get tutorialFilterButtonTitle;
+
+  /// Exercise search tutorial - filter button message
+  ///
+  /// In en, this message translates to:
+  /// **'Tap here to filter by equipment, difficulty, or more specific criteria.'**
+  String get tutorialFilterButtonMessage;
+
+  /// Exercise search tutorial - quick filters title
+  ///
+  /// In en, this message translates to:
+  /// **'Quick Muscle Filters'**
+  String get tutorialQuickFiltersTitle;
+
+  /// Exercise search tutorial - quick filters message
+  ///
+  /// In en, this message translates to:
+  /// **'Tap a muscle group chip to quickly find exercises targeting that muscle.'**
+  String get tutorialQuickFiltersMessage;
+
+  /// Exercise search tutorial - exercise card title
+  ///
+  /// In en, this message translates to:
+  /// **'Exercise Details'**
+  String get tutorialExerciseCardTitle;
+
+  /// Exercise search tutorial - exercise card message
+  ///
+  /// In en, this message translates to:
+  /// **'Tap any exercise to see its details, or use the checkbox to select it.'**
+  String get tutorialExerciseCardMessage;
+
+  /// Exercise search tutorial - add button title
+  ///
+  /// In en, this message translates to:
+  /// **'Add Selected Exercise'**
+  String get tutorialAddButtonTitle;
+
+  /// Exercise search tutorial - add button message
+  ///
+  /// In en, this message translates to:
+  /// **'After selecting an exercise, tap this button to add it to your workout!'**
+  String get tutorialAddButtonMessage;
+
+  /// Timer tour - timer display title
+  ///
+  /// In en, this message translates to:
+  /// **'Your Rest Timer'**
+  String get timerTourDisplayTitle;
+
+  /// Timer tour - timer display description
+  ///
+  /// In en, this message translates to:
+  /// **'The timer starts automatically after completing a set. Stay on track with your rest periods!'**
+  String get timerTourDisplayDescription;
+
+  /// Timer tour - duration adjustment title
+  ///
+  /// In en, this message translates to:
+  /// **'Adjust Duration'**
+  String get timerTourDurationTitle;
+
+  /// Timer tour - duration adjustment description
+  ///
+  /// In en, this message translates to:
+  /// **'Long press on the timer to change your rest duration. Different exercises may need different rest times.'**
+  String get timerTourDurationDescription;
+
+  /// Timer tour - Live Activity title
+  ///
+  /// In en, this message translates to:
+  /// **'Lock Screen Timer'**
+  String get timerTourLiveActivityTitle;
+
+  /// Timer tour - Live Activity description
+  ///
+  /// In en, this message translates to:
+  /// **'On iOS, see your timer on the lock screen and Dynamic Island. No need to keep the app open!'**
+  String get timerTourLiveActivityDescription;
+
+  /// Timer tour - sound settings title
+  ///
+  /// In en, this message translates to:
+  /// **'Sound Alert'**
+  String get timerTourSoundTitle;
+
+  /// Timer tour - sound settings description
+  ///
+  /// In en, this message translates to:
+  /// **'You\'ll hear a sound when your rest is over. Tap here to adjust volume or vibration settings.'**
+  String get timerTourSoundDescription;
+
+  /// Template tutorial - name step title
+  ///
+  /// In en, this message translates to:
+  /// **'Name Your Template'**
+  String get templateTutorialNameTitle;
+
+  /// Template tutorial - name step description
+  ///
+  /// In en, this message translates to:
+  /// **'Give your template a descriptive name so you can easily find it later.'**
+  String get templateTutorialNameDescription;
+
+  /// Template tutorial - name step pro tip
+  ///
+  /// In en, this message translates to:
+  /// **'Use names like \'Push Day\' or \'Full Body A\' for easy recognition'**
+  String get templateTutorialNameTip;
+
+  /// Template tutorial - add exercises title
+  ///
+  /// In en, this message translates to:
+  /// **'Add Exercises'**
+  String get templateTutorialAddExercisesTitle;
+
+  /// Template tutorial - add exercises description
+  ///
+  /// In en, this message translates to:
+  /// **'Build your workout by adding exercises. You can reorder them by dragging.'**
+  String get templateTutorialAddExercisesDescription;
+
+  /// Template tutorial - configure defaults title
+  ///
+  /// In en, this message translates to:
+  /// **'Set Defaults'**
+  String get templateTutorialConfigureTitle;
+
+  /// Template tutorial - configure defaults description
+  ///
+  /// In en, this message translates to:
+  /// **'Configure default sets, reps, and rest time for each exercise.'**
+  String get templateTutorialConfigureDescription;
+
+  /// Template tutorial - configure defaults pro tip
+  ///
+  /// In en, this message translates to:
+  /// **'These are just starting points - you can adjust during the workout'**
+  String get templateTutorialConfigureTip;
+
+  /// Template tutorial - save step title
+  ///
+  /// In en, this message translates to:
+  /// **'Save Template'**
+  String get templateTutorialSaveTitle;
+
+  /// Template tutorial - save step description
+  ///
+  /// In en, this message translates to:
+  /// **'Tap save to store your template. It will appear in your templates list for quick access.'**
+  String get templateTutorialSaveDescription;
+
+  /// Template tutorial - use template title
+  ///
+  /// In en, this message translates to:
+  /// **'Start a Workout'**
+  String get templateTutorialUseTitle;
+
+  /// Template tutorial - use template description
+  ///
+  /// In en, this message translates to:
+  /// **'Tap any template to instantly start a workout with all exercises pre-loaded!'**
+  String get templateTutorialUseDescription;
+
+  /// Template tutorial - use template pro tip
+  ///
+  /// In en, this message translates to:
+  /// **'Templates save time - no more adding exercises one by one'**
+  String get templateTutorialUseTip;
 
   /// Count of alternative exercises found
   ///
@@ -41504,6 +41834,48 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Apple Health connected successfully'**
   String get healthKitConnected;
+
+  /// Title for HealthKit prompt dialog shown after first workout (P1-2)
+  ///
+  /// In en, this message translates to:
+  /// **'Connect Apple Health?'**
+  String get healthKitPromptTitle;
+
+  /// Description for HealthKit prompt dialog
+  ///
+  /// In en, this message translates to:
+  /// **'Great first workout! Would you like to sync your workouts with Apple Health?'**
+  String get healthKitPromptDescription;
+
+  /// HealthKit benefit: auto sync
+  ///
+  /// In en, this message translates to:
+  /// **'Sync workouts automatically'**
+  String get healthKitBenefitSync;
+
+  /// HealthKit benefit: analytics
+  ///
+  /// In en, this message translates to:
+  /// **'Track progress across apps'**
+  String get healthKitBenefitAnalytics;
+
+  /// HealthKit benefit: health
+  ///
+  /// In en, this message translates to:
+  /// **'Complete health picture'**
+  String get healthKitBenefitHealth;
+
+  /// Button to connect HealthKit
+  ///
+  /// In en, this message translates to:
+  /// **'Connect Health'**
+  String get connectHealthKit;
+
+  /// Message when user dismisses HealthKit prompt
+  ///
+  /// In en, this message translates to:
+  /// **'You can connect Apple Health later in Settings'**
+  String get healthKitConnectLater;
 
   /// Error message when HealthKit permissions are denied
   ///
@@ -44443,6 +44815,564 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Customize the app to your needs. Adjust units, notifications, and more.'**
   String get tourSettingsDescription;
+
+  /// Analytics tour step 1 title - Period selector
+  ///
+  /// In en, this message translates to:
+  /// **'Select Time Period'**
+  String get tourPeriodSelectorTitle;
+
+  /// Analytics tour step 1 description
+  ///
+  /// In en, this message translates to:
+  /// **'Switch between week, month, year, or all time to see your progress over different periods.'**
+  String get tourPeriodSelectorDescription;
+
+  /// Analytics tour step 2 title - Hero stat card
+  ///
+  /// In en, this message translates to:
+  /// **'Your Progress Summary'**
+  String get tourHeroStatCardTitle;
+
+  /// Analytics tour step 2 description
+  ///
+  /// In en, this message translates to:
+  /// **'See your total workouts and volume at a glance. This updates based on the selected period.'**
+  String get tourHeroStatCardDescription;
+
+  /// Analytics tour step 3 title - Weekly dashboard
+  ///
+  /// In en, this message translates to:
+  /// **'Weekly Dashboard'**
+  String get tourWeeklyDashboardTitle;
+
+  /// Analytics tour step 3 description
+  ///
+  /// In en, this message translates to:
+  /// **'Track your weekly workout goal and see which days you trained. Tap to adjust your target.'**
+  String get tourWeeklyDashboardDescription;
+
+  /// Analytics tour step 4 title - Muscle heatmap
+  ///
+  /// In en, this message translates to:
+  /// **'Muscle Distribution'**
+  String get tourMuscleHeatmapTitle;
+
+  /// Analytics tour step 4 description
+  ///
+  /// In en, this message translates to:
+  /// **'See which muscle groups you\'ve trained most. Identify imbalances and adjust your routine.'**
+  String get tourMuscleHeatmapDescription;
+
+  /// Analytics tour step 5 title - PR tracking
+  ///
+  /// In en, this message translates to:
+  /// **'Personal Records'**
+  String get tourPrTrackingTitle;
+
+  /// Analytics tour step 5 description
+  ///
+  /// In en, this message translates to:
+  /// **'Track your PRs for each exercise. Celebrate your progress and set new goals!'**
+  String get tourPrTrackingDescription;
+
+  /// Analytics tour step 6 title - Detailed analysis button
+  ///
+  /// In en, this message translates to:
+  /// **'Detailed Analysis'**
+  String get tourDetailedAnalysisTitle;
+
+  /// Analytics tour step 6 description
+  ///
+  /// In en, this message translates to:
+  /// **'Tap here to dive deep into exercise-specific progress with graphs and strength standards.'**
+  String get tourDetailedAnalysisDescription;
+
+  /// Label for evidence-based templates section
+  ///
+  /// In en, this message translates to:
+  /// **'Evidence-Based'**
+  String get evidenceBased;
+
+  /// Subtitle for default templates section
+  ///
+  /// In en, this message translates to:
+  /// **'Ready-made training programs based on scientific research'**
+  String get defaultTemplatesSubtitle;
+
+  /// Title for beginner workout programs section
+  ///
+  /// In en, this message translates to:
+  /// **'Beginner Programs'**
+  String get beginnerPrograms;
+
+  /// Subtitle for beginner programs
+  ///
+  /// In en, this message translates to:
+  /// **'Perfect for 0-6 months of training experience'**
+  String get beginnerProgramsSubtitle;
+
+  /// Title for intermediate workout programs section
+  ///
+  /// In en, this message translates to:
+  /// **'Intermediate Programs'**
+  String get intermediatePrograms;
+
+  /// Subtitle for intermediate programs
+  ///
+  /// In en, this message translates to:
+  /// **'For 6+ months of consistent training'**
+  String get intermediateProgramsSubtitle;
+
+  /// Category for home and bodyweight workouts
+  ///
+  /// In en, this message translates to:
+  /// **'Home & Bodyweight'**
+  String get homeWorkouts;
+
+  /// Category for dumbbell-only workouts
+  ///
+  /// In en, this message translates to:
+  /// **'Dumbbell Only'**
+  String get dumbbellOnly;
+
+  /// Category for quick express workouts
+  ///
+  /// In en, this message translates to:
+  /// **'Express'**
+  String get express;
+
+  /// Category for specialty workouts
+  ///
+  /// In en, this message translates to:
+  /// **'Specialty'**
+  String get specialty;
+
+  /// Button text to add a template to user's library
+  ///
+  /// In en, this message translates to:
+  /// **'Add to My Templates'**
+  String get addToMyTemplates;
+
+  /// Success message when template is added
+  ///
+  /// In en, this message translates to:
+  /// **'Template added to your library'**
+  String get templateAddedToLibrary;
+
+  /// Button text to use a template
+  ///
+  /// In en, this message translates to:
+  /// **'Use'**
+  String get use;
+
+  /// Title for duplicate template warning dialog
+  ///
+  /// In en, this message translates to:
+  /// **'Template Already Exists'**
+  String get duplicateTemplate;
+
+  /// Message for duplicate template warning
+  ///
+  /// In en, this message translates to:
+  /// **'You already have a template named \"{name}\". Add anyway with a different name?'**
+  String duplicateTemplateMessage(String name);
+
+  /// Button to add duplicate template anyway
+  ///
+  /// In en, this message translates to:
+  /// **'Add Anyway'**
+  String get addAnyway;
+
+  /// Warning when trying to use a template with no exercises
+  ///
+  /// In en, this message translates to:
+  /// **'This template has no exercises'**
+  String get emptyTemplate;
+
+  /// Error when user has too many duplicates of same template name
+  ///
+  /// In en, this message translates to:
+  /// **'Too many copies of this template'**
+  String get tooManyDuplicates;
+
+  /// Title for the GDPR consent dialog
+  ///
+  /// In en, this message translates to:
+  /// **'Privacy & Data Usage'**
+  String get privacyDataUsageTitle;
+
+  /// Description for the GDPR consent dialog
+  ///
+  /// In en, this message translates to:
+  /// **'We respect your privacy. Choose which data you want to share with us.'**
+  String get privacyDataUsageDescription;
+
+  /// Button to save privacy preferences
+  ///
+  /// In en, this message translates to:
+  /// **'Save Preferences'**
+  String get savePreferences;
+
+  /// Label for required consent items
+  ///
+  /// In en, this message translates to:
+  /// **'Required'**
+  String get requiredLabel;
+
+  /// Link to privacy policy
+  ///
+  /// In en, this message translates to:
+  /// **'Read our Privacy Policy'**
+  String get readPrivacyPolicy;
+
+  /// Error message when saving privacy preferences fails
+  ///
+  /// In en, this message translates to:
+  /// **'Error saving preferences: {error}'**
+  String errorSavingPreferences(String error);
+
+  /// Label for workout set row size selector
+  ///
+  /// In en, this message translates to:
+  /// **'Set row size'**
+  String get setRowSize;
+
+  /// Label for font/text size selector
+  ///
+  /// In en, this message translates to:
+  /// **'Text size'**
+  String get textSize;
+
+  /// Display mode option for spacious layout
+  ///
+  /// In en, this message translates to:
+  /// **'Comfortable'**
+  String get comfortable;
+
+  /// Button text to submit a report
+  ///
+  /// In en, this message translates to:
+  /// **'Report'**
+  String get report;
+
+  /// Accessibility label for start workout button
+  ///
+  /// In en, this message translates to:
+  /// **'Start workout'**
+  String get a11yStartWorkout;
+
+  /// Accessibility label for stop workout button
+  ///
+  /// In en, this message translates to:
+  /// **'Stop workout'**
+  String get a11yStopWorkout;
+
+  /// Accessibility label for save workout button
+  ///
+  /// In en, this message translates to:
+  /// **'Save workout'**
+  String get a11ySaveWorkout;
+
+  /// Accessibility label for add exercise button
+  ///
+  /// In en, this message translates to:
+  /// **'Add exercise'**
+  String get a11yAddExercise;
+
+  /// Accessibility label for delete exercise button
+  ///
+  /// In en, this message translates to:
+  /// **'Delete exercise'**
+  String get a11yDeleteExercise;
+
+  /// Accessibility label for add set button
+  ///
+  /// In en, this message translates to:
+  /// **'Add set'**
+  String get a11yAddSet;
+
+  /// Accessibility label for delete set button
+  ///
+  /// In en, this message translates to:
+  /// **'Delete set'**
+  String get a11yDeleteSet;
+
+  /// Accessibility label for play timer button
+  ///
+  /// In en, this message translates to:
+  /// **'Start rest timer'**
+  String get a11yPlayTimer;
+
+  /// Accessibility label for pause timer button
+  ///
+  /// In en, this message translates to:
+  /// **'Pause rest timer'**
+  String get a11yPauseTimer;
+
+  /// Accessibility label for stop timer button
+  ///
+  /// In en, this message translates to:
+  /// **'Stop rest timer'**
+  String get a11yStopTimer;
+
+  /// Accessibility label for reset timer button
+  ///
+  /// In en, this message translates to:
+  /// **'Reset rest timer'**
+  String get a11yResetTimer;
+
+  /// Accessibility label for increase timer button
+  ///
+  /// In en, this message translates to:
+  /// **'Increase timer by 30 seconds'**
+  String get a11yIncreaseTimer;
+
+  /// Accessibility label for decrease timer button
+  ///
+  /// In en, this message translates to:
+  /// **'Decrease timer by 30 seconds'**
+  String get a11yDecreaseTimer;
+
+  /// Accessibility label for menu button
+  ///
+  /// In en, this message translates to:
+  /// **'Open menu'**
+  String get a11yOpenMenu;
+
+  /// Accessibility label for close menu button
+  ///
+  /// In en, this message translates to:
+  /// **'Close menu'**
+  String get a11yCloseMenu;
+
+  /// Accessibility label for exercise search field
+  ///
+  /// In en, this message translates to:
+  /// **'Search exercises'**
+  String get a11ySearchExercises;
+
+  /// Accessibility label for exercise filter button
+  ///
+  /// In en, this message translates to:
+  /// **'Filter exercises'**
+  String get a11yFilterExercises;
+
+  /// Accessibility label for favorite toggle button
+  ///
+  /// In en, this message translates to:
+  /// **'Toggle favorite'**
+  String get a11yToggleFavorite;
+
+  /// Accessibility label for back navigation
+  ///
+  /// In en, this message translates to:
+  /// **'Go back'**
+  String get a11yNavigateBack;
+
+  /// Accessibility label for home navigation
+  ///
+  /// In en, this message translates to:
+  /// **'Go to home'**
+  String get a11yNavigateHome;
+
+  /// Accessibility label for exercise info button
+  ///
+  /// In en, this message translates to:
+  /// **'View exercise information'**
+  String get a11yExerciseInfo;
+
+  /// Accessibility announcement when set is completed
+  ///
+  /// In en, this message translates to:
+  /// **'Set completed'**
+  String get a11ySetCompleted;
+
+  /// Accessibility announcement for pending set
+  ///
+  /// In en, this message translates to:
+  /// **'Set pending'**
+  String get a11ySetPending;
+
+  /// Accessibility label for warmup set indicator
+  ///
+  /// In en, this message translates to:
+  /// **'Warmup set'**
+  String get a11yWarmupSet;
+
+  /// Accessibility label for working set
+  ///
+  /// In en, this message translates to:
+  /// **'Working set'**
+  String get a11yWorkingSet;
+
+  /// Accessibility label for dropset indicator
+  ///
+  /// In en, this message translates to:
+  /// **'Dropset'**
+  String get a11yDropset;
+
+  /// Accessibility label for rest-pause set
+  ///
+  /// In en, this message translates to:
+  /// **'Rest-pause set'**
+  String get a11yRestPause;
+
+  /// Setting for simple mode toggle
+  ///
+  /// In en, this message translates to:
+  /// **'Simple Mode'**
+  String get simpleMode;
+
+  /// Description for simple mode setting
+  ///
+  /// In en, this message translates to:
+  /// **'Larger text, simplified interface, easier to use'**
+  String get simpleModeDescription;
+
+  /// Confirmation when simple mode is turned on
+  ///
+  /// In en, this message translates to:
+  /// **'Simple Mode enabled'**
+  String get simpleModeEnabled;
+
+  /// Confirmation when simple mode is turned off
+  ///
+  /// In en, this message translates to:
+  /// **'Simple Mode disabled'**
+  String get simpleModeDisabled;
+
+  /// Title for template folders section
+  ///
+  /// In en, this message translates to:
+  /// **'Template Folders'**
+  String get templateFolders;
+
+  /// Button to create new folder
+  ///
+  /// In en, this message translates to:
+  /// **'Create Folder'**
+  String get createFolder;
+
+  /// Label for folder name input
+  ///
+  /// In en, this message translates to:
+  /// **'Folder Name'**
+  String get folderName;
+
+  /// Action to move template to folder
+  ///
+  /// In en, this message translates to:
+  /// **'Move to Folder'**
+  String get moveToFolder;
+
+  /// Action to remove template from folder
+  ///
+  /// In en, this message translates to:
+  /// **'Remove from Folder'**
+  String get removeFromFolder;
+
+  /// Empty state for folders
+  ///
+  /// In en, this message translates to:
+  /// **'No folders yet'**
+  String get noFolders;
+
+  /// Success message after folder creation
+  ///
+  /// In en, this message translates to:
+  /// **'Folder created'**
+  String get folderCreated;
+
+  /// Success message after folder deletion
+  ///
+  /// In en, this message translates to:
+  /// **'Folder deleted'**
+  String get folderDeleted;
+
+  /// Success message after moving template
+  ///
+  /// In en, this message translates to:
+  /// **'Template moved to folder'**
+  String get templateMovedToFolder;
+
+  /// Root folder label
+  ///
+  /// In en, this message translates to:
+  /// **'Root'**
+  String get rootFolder;
+
+  /// Title for PDF branding settings
+  ///
+  /// In en, this message translates to:
+  /// **'PDF Branding'**
+  String get pdfBranding;
+
+  /// Subtitle for branding customization
+  ///
+  /// In en, this message translates to:
+  /// **'Customize PDF Branding'**
+  String get customizePdfBranding;
+
+  /// Label for business name input
+  ///
+  /// In en, this message translates to:
+  /// **'Business Name'**
+  String get businessName;
+
+  /// Label for tagline input
+  ///
+  /// In en, this message translates to:
+  /// **'Tagline'**
+  String get tagline;
+
+  /// Label for primary color picker
+  ///
+  /// In en, this message translates to:
+  /// **'Primary Color'**
+  String get primaryColor;
+
+  /// Label for logo URL input
+  ///
+  /// In en, this message translates to:
+  /// **'Logo URL'**
+  String get logoUrl;
+
+  /// Label for contact email input
+  ///
+  /// In en, this message translates to:
+  /// **'Contact Email'**
+  String get contactEmail;
+
+  /// Label for contact phone input
+  ///
+  /// In en, this message translates to:
+  /// **'Contact Phone'**
+  String get contactPhone;
+
+  /// Label for website URL input
+  ///
+  /// In en, this message translates to:
+  /// **'Website URL'**
+  String get websiteUrl;
+
+  /// Label for custom footer text
+  ///
+  /// In en, this message translates to:
+  /// **'Footer Text'**
+  String get footerText;
+
+  /// Success message after saving branding
+  ///
+  /// In en, this message translates to:
+  /// **'Branding saved'**
+  String get brandingSaved;
+
+  /// Button to preview PDF with branding
+  ///
+  /// In en, this message translates to:
+  /// **'Preview PDF'**
+  String get previewPdf;
 }
 
 class _AppLocalizationsDelegate

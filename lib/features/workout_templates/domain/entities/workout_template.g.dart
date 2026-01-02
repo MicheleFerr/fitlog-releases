@@ -35,6 +35,7 @@ _CommunityWorkoutTemplate _$CommunityWorkoutTemplateFromJson(
   tags:
       (json['tags'] as List<dynamic>?)?.map((e) => e as String).toList() ??
       const [],
+  folderId: json['folderId'] as String?,
   estimatedDurationMinutes: (json['estimatedDurationMinutes'] as num?)?.toInt(),
   difficultyLevel: json['difficultyLevel'] as String?,
   requiredEquipment:
@@ -68,6 +69,7 @@ Map<String, dynamic> _$CommunityWorkoutTemplateToJson(
   'authorName': instance.authorName,
   'authorPhotoUrl': instance.authorPhotoUrl,
   'tags': instance.tags,
+  'folderId': instance.folderId,
   'estimatedDurationMinutes': instance.estimatedDurationMinutes,
   'difficultyLevel': instance.difficultyLevel,
   'requiredEquipment': instance.requiredEquipment,

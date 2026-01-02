@@ -433,6 +433,26 @@ class AppConfigNotifier extends Notifier<AppConfig> {
     }
   }
 
+  // Initial Onboarding settings
+  Future<void> setInitialOnboardingCompleted(bool completed) async {
+    try {
+      await _ensureInitialized();
+      if (_isDisposed) return;
+
+      state = state.copyWith(initialOnboardingCompleted: completed);
+      await _saveConfig();
+
+      if (kDebugMode) {
+        debugPrint('✅ [AppConfig] Initial onboarding completed set to: $completed');
+      }
+    } catch (e, stackTrace) {
+      if (kDebugMode) {
+        debugPrint('❌ [AppConfig] Error setting initial onboarding completed: $e');
+        debugPrint('📍 Stack trace: $stackTrace');
+      }
+    }
+  }
+
   // Reset to defaults
   Future<void> resetToDefaults() async {
     try {

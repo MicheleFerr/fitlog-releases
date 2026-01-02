@@ -40,6 +40,7 @@ import 'package:gymbro_flutter_new/features/workout/domain/services/workout_temp
 import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator.dart';
 import 'package:gymbro_flutter_new/features/health_sync/presentation/providers/watch_connectivity_provider.dart';
+import 'package:gymbro_flutter_new/shared/presentation/providers/app_config_provider.dart';
 
 // Sub-component imports
 import 'package:gymbro_flutter_new/features/workout/presentation/workout_screen/widgets/welcome_view.dart';
@@ -631,9 +632,138 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen> {
     }
   }
 
-  /// Delete exercise
-  void _deleteExercise(String exerciseId) {
-    ref.read(workoutScreenControllerProvider.notifier).removeExercise(exerciseId);
+  /// Delete exercise with confirmation dialog (P0-2 fix)
+  Future<void> _deleteExercise(String exerciseId) async {
+    final config = ref.read(appConfigProvider);
+
+    // Skip confirmation if user has opted out
+    if (config.skipExerciseDeleteConfirmation) {
+      ref.read(workoutScreenControllerProvider.notifier).removeExercise(exerciseId);
+      return;
+    }
+
+    // Look up exercise name from current workout
+    final workout = ref.read(currentWorkoutProvider);
+    final exercise = workout?.exercises.where((e) => e.id == exerciseId).firstOrNull;
+    final exerciseName = exercise?.name ?? 'Exercise';
+
+    // Show confirmation dialog
+    final result = await _showDeleteExerciseConfirmation(context, exerciseName);
+    if (result == null) return; // Dialog dismissed
+
+    if (result.confirmed) {
+      ref.read(workoutScreenControllerProvider.notifier).removeExercise(exerciseId);
+
+      // Save preference if "Don't ask again" was checked
+      if (result.dontAskAgain) {
+        final currentConfig = ref.read(appConfigProvider);
+        ref.read(appConfigProvider.notifier).updateConfig(
+          currentConfig.copyWith(skipExerciseDeleteConfirmation: true),
+        );
+      }
+    }
+  }
+
+  /// Show delete exercise confirmation dialog
+  /// Returns DeleteConfirmationResult with confirmed status and dontAskAgain preference
+  Future<_DeleteConfirmationResult?> _showDeleteExerciseConfirmation(
+    BuildContext context,
+    String exerciseName,
+  ) async {
+    final l10n = context.l10n;
+    bool dontAskAgain = false;
+
+    return showGeneralDialog<_DeleteConfirmationResult>(
+      context: context,
+      barrierDismissible: true,
+      barrierLabel: 'Dismiss',
+      barrierColor: context.colors.onSurface.withValues(alpha: 0.54),
+      transitionDuration: const Duration(milliseconds: 250),
+      pageBuilder: (context, animation, secondaryAnimation) => Container(),
+      transitionBuilder: (context, animation, secondaryAnimation, child) {
+        final curvedAnimation = CurvedAnimation(
+          parent: animation,
+          curve: Curves.easeOutCubic,
+          reverseCurve: Curves.easeInCubic,
+        );
+
+        return ScaleTransition(
+          scale: Tween<double>(begin: 0.8, end: 1.0).animate(curvedAnimation),
+          child: FadeTransition(
+            opacity: curvedAnimation,
+            child: StatefulBuilder(
+              builder: (context, setState) {
+                return AlertDialog(
+                  title: Text(l10n.deleteExercise),
+                  content: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      // Exercise name
+                      Text(
+                        '"$exerciseName"',
+                        style: context.textTheme.titleMedium?.copyWith(
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      const SizedBox(height: 8),
+                      // Confirmation message
+                      Text(
+                        l10n.deleteExerciseDescription,
+                        style: context.textTheme.bodyMedium,
+                      ),
+                      const SizedBox(height: 16),
+                      // "Don't ask again" checkbox
+                      Row(
+                        children: [
+                          SizedBox(
+                            width: 24,
+                            height: 24,
+                            child: Checkbox(
+                              value: dontAskAgain,
+                              onChanged: (value) {
+                                setState(() => dontAskAgain = value ?? false);
+                              },
+                            ),
+                          ),
+                          const SizedBox(width: 8),
+                          Expanded(
+                            child: GestureDetector(
+                              onTap: () => setState(() => dontAskAgain = !dontAskAgain),
+                              child: Text(
+                                l10n.dontAskAgain,
+                                style: context.textTheme.bodySmall,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                  actions: [
+                    TextButton(
+                      onPressed: () => Navigator.of(context).pop(
+                        _DeleteConfirmationResult(confirmed: false, dontAskAgain: false),
+                      ),
+                      child: Text(l10n.cancel),
+                    ),
+                    FilledButton(
+                      onPressed: () => Navigator.of(context).pop(
+                        _DeleteConfirmationResult(confirmed: true, dontAskAgain: dontAskAgain),
+                      ),
+                      style: FilledButton.styleFrom(
+                        backgroundColor: context.colors.error,
+                      ),
+                      child: Text(l10n.delete),
+                    ),
+                  ],
+                );
+              },
+            ),
+          ),
+        );
+      },
+    );
   }
 
   /// Replace exercise - swap one exercise for another at the same position
@@ -1153,4 +1283,15 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen> {
       });
     }
   }
+}
+
+/// Helper class for delete confirmation dialog result (P0-2)
+class _DeleteConfirmationResult {
+  _DeleteConfirmationResult({
+    required this.confirmed,
+    required this.dontAskAgain,
+  });
+
+  final bool confirmed;
+  final bool dontAskAgain;
 }

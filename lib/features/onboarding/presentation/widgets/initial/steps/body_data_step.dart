@@ -1,0 +1,621 @@
+import 'dart:io' show Platform;
+
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:gymbro_flutter_new/features/health_sync/domain/entities/health_data_type.dart';
+import 'package:gymbro_flutter_new/features/health_sync/domain/entities/health_permission_status.dart';
+import 'package:gymbro_flutter_new/features/health_sync/presentation/providers/health_permission_provider.dart';
+import 'package:gymbro_flutter_new/features/health_sync/presentation/providers/health_sync_provider.dart';
+import 'package:gymbro_flutter_new/features/onboarding/presentation/providers/initial/initial_onboarding_provider.dart';
+import 'package:permission_handler/permission_handler.dart';
+import 'package:gymbro_flutter_new/features/strength_standards/domain/entities/user_fitness_questionnaire.dart';
+import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator.dart';
+import 'package:gymbro_flutter_new/shared/presentation/services/snackbar_service.dart';
+import 'package:keyboard_actions/keyboard_actions.dart';
+
+/// Step 3: Body data (biological sex and weight)
+class BodyDataStep extends ConsumerStatefulWidget {
+  const BodyDataStep({super.key});
+
+  @override
+  ConsumerState<BodyDataStep> createState() => _BodyDataStepState();
+}
+
+class _BodyDataStepState extends ConsumerState<BodyDataStep> {
+  final _weightController = TextEditingController();
+  final _weightFocusNode = FocusNode();
+  bool _isImportingFromHealth = false;
+
+  @override
+  void initState() {
+    super.initState();
+    // Pre-fill weight if already set
+    final currentWeight =
+        ref.read(initialOnboardingNotifierProvider).bodyweightKg;
+    if (currentWeight != null) {
+      _weightController.text = currentWeight.toStringAsFixed(0);
+    }
+  }
+
+  @override
+  void dispose() {
+    _weightController.dispose();
+    _weightFocusNode.dispose();
+    super.dispose();
+  }
+
+  KeyboardActionsConfig _buildKeyboardActionsConfig(BuildContext context) {
+    return KeyboardActionsConfig(
+      keyboardBarColor: context.colors.surfaceContainerHighest,
+      nextFocus: false,
+      actions: [
+        KeyboardActionsItem(
+          focusNode: _weightFocusNode,
+          displayDoneButton: false,
+          toolbarButtons: [
+            // Left side: Weight presets button
+            (node) => GestureDetector(
+                  onTap: () => _showWeightPresets(context),
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Icon(
+                          AppIcons.weight,
+                          size: 20,
+                          color: context.colors.primary,
+                        ),
+                        const SizedBox(width: 4),
+                        Text(
+                          context.l10n.initialOnboardingQuickSelect,
+                          style: context.textTheme.bodyMedium?.copyWith(
+                            color: context.colors.primary,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+            // Spacer
+            (node) => const Expanded(child: SizedBox()),
+            // Right side: Done button
+            (node) => GestureDetector(
+                  onTap: () => node.unfocus(),
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    child: Text(
+                      context.l10n.done,
+                      style: context.textTheme.bodyMedium?.copyWith(
+                        color: context.colors.primary,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ),
+                ),
+          ],
+        ),
+      ],
+    );
+  }
+
+  void _showWeightPresets(BuildContext context) {
+    // Common body weights
+    final presets = [50, 55, 60, 65, 70, 75, 80, 85, 90, 95, 100, 105, 110];
+
+    showModalBottomSheet<void>(
+      context: context,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      builder: (sheetContext) => SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Handle
+              Center(
+                child: Container(
+                  width: 40,
+                  height: 4,
+                  decoration: BoxDecoration(
+                    color: context.colors.outline.withValues(alpha: 0.3),
+                    borderRadius: BorderRadius.circular(2),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 16),
+
+              // Title
+              Text(
+                context.l10n.initialOnboardingSelectWeight,
+                style: context.textTheme.titleMedium?.copyWith(
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              const SizedBox(height: 16),
+
+              // Weight grid
+              Wrap(
+                spacing: 8,
+                runSpacing: 8,
+                children: presets.map((weight) {
+                  final currentWeight =
+                      double.tryParse(_weightController.text) ?? 0;
+                  final isSelected = currentWeight.round() == weight;
+
+                  return GestureDetector(
+                    onTap: () {
+                      _weightController.text = weight.toString();
+                      ref
+                          .read(initialOnboardingNotifierProvider.notifier)
+                          .setBodyweight(weight.toDouble());
+                      Navigator.pop(sheetContext);
+                      _weightFocusNode.unfocus();
+                    },
+                    child: Container(
+                      width: 64,
+                      padding: const EdgeInsets.symmetric(
+                        vertical: 12,
+                        horizontal: 8,
+                      ),
+                      decoration: BoxDecoration(
+                        color: isSelected
+                            ? context.colors.primary
+                            : context.colors.surfaceContainerHighest,
+                        borderRadius: BorderRadius.circular(12),
+                        border: Border.all(
+                          color: isSelected
+                              ? context.colors.primary
+                              : context.colors.outline.withValues(alpha: 0.3),
+                        ),
+                      ),
+                      child: Text(
+                        '$weight',
+                        textAlign: TextAlign.center,
+                        style: context.textTheme.titleMedium?.copyWith(
+                          fontWeight: FontWeight.bold,
+                          color: isSelected
+                              ? context.colors.onPrimary
+                              : context.colors.onSurface,
+                        ),
+                      ),
+                    ),
+                  );
+                }).toList(),
+              ),
+              const SizedBox(height: 16),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final state = ref.watch(initialOnboardingNotifierProvider);
+
+    return KeyboardActions(
+      config: _buildKeyboardActionsConfig(context),
+      child: GestureDetector(
+        onTap: () => FocusScope.of(context).unfocus(),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 24),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+          const SizedBox(height: 24),
+
+          // Title
+          Text(
+            context.l10n.initialOnboardingBodyTitle,
+            style: context.textTheme.headlineSmall?.copyWith(
+              fontWeight: FontWeight.bold,
+              color: context.colors.onSurface,
+            ),
+          ),
+
+          const SizedBox(height: 8),
+
+          // Subtitle
+          Text(
+            context.l10n.initialOnboardingBodySubtitle,
+            style: context.textTheme.bodyMedium?.copyWith(
+              color: context.colors.onSurface.withValues(alpha: 0.7),
+            ),
+          ),
+
+          const SizedBox(height: 32),
+
+          // Sex selection
+          Text(
+            context.l10n.initialOnboardingSexLabel,
+            style: context.textTheme.titleMedium?.copyWith(
+              fontWeight: FontWeight.w600,
+              color: context.colors.onSurface,
+            ),
+          ),
+
+          const SizedBox(height: 12),
+
+          Row(
+            children: [
+              Expanded(
+                child: _SexOption(
+                  sex: BiologicalSex.male,
+                  emoji: '\u{1F6B9}', // 🚹
+                  label: context.l10n.initialOnboardingSexMale,
+                  isSelected: state.sex == BiologicalSex.male,
+                  onTap: () => ref
+                      .read(initialOnboardingNotifierProvider.notifier)
+                      .setSex(BiologicalSex.male),
+                ),
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: _SexOption(
+                  sex: BiologicalSex.female,
+                  emoji: '\u{1F6BA}', // 🚺
+                  label: context.l10n.initialOnboardingSexFemale,
+                  isSelected: state.sex == BiologicalSex.female,
+                  onTap: () => ref
+                      .read(initialOnboardingNotifierProvider.notifier)
+                      .setSex(BiologicalSex.female),
+                ),
+              ),
+            ],
+          ),
+
+          const SizedBox(height: 32),
+
+          // Weight input
+          Text(
+            context.l10n.initialOnboardingWeightLabel,
+            style: context.textTheme.titleMedium?.copyWith(
+              fontWeight: FontWeight.w600,
+              color: context.colors.onSurface,
+            ),
+          ),
+
+          const SizedBox(height: 12),
+
+          // Weight text field
+          TextField(
+            controller: _weightController,
+            focusNode: _weightFocusNode,
+            keyboardType: const TextInputType.numberWithOptions(decimal: true),
+            textInputAction: TextInputAction.done,
+            inputFormatters: [
+              FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d*')),
+            ],
+            decoration: InputDecoration(
+              hintText: '75',
+              suffixText: 'kg',
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(12),
+              ),
+              contentPadding: const EdgeInsets.symmetric(
+                horizontal: 16,
+                vertical: 16,
+              ),
+            ),
+            onChanged: (value) {
+              final weight = double.tryParse(value);
+              if (weight != null) {
+                ref
+                    .read(initialOnboardingNotifierProvider.notifier)
+                    .setBodyweight(weight);
+              }
+            },
+            onSubmitted: (_) => FocusScope.of(context).unfocus(),
+          ),
+
+          const SizedBox(height: 16),
+
+          // Import from HealthKit button (iOS/macOS only)
+          if (Platform.isIOS || Platform.isMacOS)
+            OutlinedButton.icon(
+              onPressed: _isImportingFromHealth ? null : _importFromHealthKit,
+              icon: _isImportingFromHealth
+                  ? SizedBox(
+                      width: 20,
+                      height: 20,
+                      child: LoadingIndicator(size: 16),
+                    )
+                  : Icon(AppIcons.healthAndSafety, size: 20),
+              label: Text(
+                _isImportingFromHealth
+                    ? context.l10n.initialOnboardingImporting
+                    : context.l10n.initialOnboardingImportHealthKit,
+              ),
+              style: OutlinedButton.styleFrom(
+                padding:
+                    const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+              ),
+            ),
+
+          const Spacer(),
+
+          // Info text
+          Container(
+            padding: const EdgeInsets.all(12),
+            decoration: BoxDecoration(
+              color: context.colors.surfaceContainerHighest,
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: Row(
+              children: [
+                Icon(
+                  AppIcons.infoOutline,
+                  size: 20,
+                  color: context.colors.onSurface.withValues(alpha: 0.7),
+                ),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: Text(
+                    context.l10n.initialOnboardingBodyInfo,
+                    style: context.textTheme.bodySmall?.copyWith(
+                      color: context.colors.onSurface.withValues(alpha: 0.7),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+
+          const SizedBox(height: 16),
+
+          // Continue button
+          SizedBox(
+            width: double.infinity,
+            child: FilledButton(
+              onPressed: state.canProceedFromStep(2)
+                  ? () => ref
+                      .read(initialOnboardingNotifierProvider.notifier)
+                      .nextStep()
+                  : null,
+              style: FilledButton.styleFrom(
+                padding: const EdgeInsets.symmetric(vertical: 16),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+              ),
+              child: Text(
+                context.l10n.initialOnboardingContinue,
+                style: const TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ),
+          ),
+
+            const SizedBox(height: 32),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Future<void> _importFromHealthKit() async {
+    if (!mounted) return;
+
+    debugPrint('[HealthKit] Starting weight import...');
+    setState(() => _isImportingFromHealth = true);
+
+    try {
+      // 1. Request ALL essential permissions (workout + bodyWeight)
+      // This way user grants everything the app needs in one dialog
+      debugPrint('[HealthKit] Requesting essential permissions (workout + bodyWeight)...');
+      final permissionController =
+          ref.read(healthPermissionControllerProvider.notifier);
+      await permissionController.requestPermissions(
+        dataTypes: [
+          HealthDataType.workout,
+          HealthDataType.bodyWeight,
+        ],
+      );
+
+      if (!mounted) return;
+
+      // 2. Check if bodyWeight permission was granted (we need this for import)
+      final permissionState = ref.read(healthPermissionControllerProvider);
+      final hasWeightPermission = permissionState.valueOrNull
+              ?.canSync(HealthDataType.bodyWeight) ??
+          false;
+      final hasWorkoutPermission = permissionState.valueOrNull
+              ?.canSync(HealthDataType.workout) ??
+          false;
+      debugPrint('[HealthKit] Permissions granted - workout: $hasWorkoutPermission, bodyWeight: $hasWeightPermission');
+
+      if (!hasWeightPermission) {
+        // Permission denied - show dialog with option to open Settings
+        debugPrint('[HealthKit] Weight permission denied, showing dialog...');
+        if (mounted) {
+          await _showPermissionDeniedDialog();
+        }
+        return;
+      }
+
+      // 3. Sync body weight from HealthKit
+      debugPrint('[HealthKit] Syncing weight data from HealthKit...');
+      final syncController = ref.read(healthSyncControllerProvider.notifier);
+      await syncController.syncBodyWeight();
+      debugPrint('[HealthKit] Sync completed');
+
+      if (!mounted) return;
+
+      // 4. Get cached measurements
+      debugPrint('[HealthKit] Fetching cached measurements (last 90 days)...');
+      final repository = ref.read(healthRepositoryProvider);
+      final result = await repository.getMeasurements(
+        dataType: HealthDataType.bodyWeight,
+        startDate: DateTime.now().subtract(const Duration(days: 90)),
+        endDate: DateTime.now(),
+      );
+
+      if (!mounted) return;
+
+      result.fold(
+        (failure) {
+          // Failed to fetch measurements
+          debugPrint('[HealthKit] ERROR: Failed to fetch - $failure');
+          SnackBarService.showError(
+            context,
+            context.l10n.initialOnboardingHealthKitError,
+          );
+        },
+        (measurements) {
+          debugPrint('[HealthKit] Found ${measurements.length} measurements');
+
+          if (measurements.isEmpty) {
+            // No weight data found in HealthKit
+            debugPrint('[HealthKit] No weight data found in HealthKit');
+            SnackBarService.showInfo(
+              context,
+              context.l10n.initialOnboardingHealthKitNoWeightData,
+            );
+            return;
+          }
+
+          // Get the most recent measurement (sorted by date, most recent first)
+          final latestWeight = measurements.first;
+          final weightKg = latestWeight.value;
+          debugPrint(
+            '[HealthKit] Latest weight: ${weightKg.toStringAsFixed(1)} kg '
+            '(recorded: ${latestWeight.recordedAt})',
+          );
+
+          // Update the text field
+          _weightController.text = weightKg.toStringAsFixed(0);
+
+          // Update the onboarding state
+          ref
+              .read(initialOnboardingNotifierProvider.notifier)
+              .setBodyweight(weightKg);
+          debugPrint('[HealthKit] Weight updated in onboarding state');
+
+          // Show success message
+          SnackBarService.showSuccess(
+            context,
+            context.l10n.initialOnboardingHealthKitSuccess(
+              weightKg.toStringAsFixed(1),
+            ),
+          );
+        },
+      );
+    } catch (e, stackTrace) {
+      // Unexpected error
+      debugPrint('[HealthKit] EXCEPTION: $e');
+      debugPrint('[HealthKit] StackTrace: $stackTrace');
+      if (mounted) {
+        SnackBarService.showError(
+          context,
+          context.l10n.initialOnboardingHealthKitError,
+        );
+      }
+    } finally {
+      debugPrint('[HealthKit] Import flow completed');
+      if (mounted) {
+        setState(() => _isImportingFromHealth = false);
+      }
+    }
+  }
+
+  /// Shows a dialog when HealthKit permission is denied,
+  /// with option to open Settings
+  Future<void> _showPermissionDeniedDialog() async {
+    await showDialog<void>(
+      context: context,
+      builder: (dialogContext) => AlertDialog(
+        icon: Icon(
+          AppIcons.healthAndSafety,
+          size: 48,
+          color: context.colors.warning,
+        ),
+        title: Text(context.l10n.initialOnboardingHealthKitDeniedTitle),
+        content: Text(context.l10n.initialOnboardingHealthKitDeniedMessage),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(dialogContext).pop(),
+            child: Text(context.l10n.cancel),
+          ),
+          FilledButton(
+            onPressed: () async {
+              Navigator.of(dialogContext).pop();
+              await openAppSettings();
+            },
+            child: Text(context.l10n.initialOnboardingOpenSettings),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+/// Sex selection option card
+class _SexOption extends StatelessWidget {
+  const _SexOption({
+    required this.sex,
+    required this.emoji,
+    required this.label,
+    required this.isSelected,
+    required this.onTap,
+  });
+
+  final BiologicalSex sex;
+  final String emoji;
+  final String label;
+  final bool isSelected;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: onTap,
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 200),
+        padding: const EdgeInsets.symmetric(vertical: 20),
+        decoration: BoxDecoration(
+          color: isSelected
+              ? context.colors.primary.withValues(alpha: 0.1)
+              : context.colors.surface,
+          border: Border.all(
+            color: isSelected
+                ? context.colors.primary
+                : context.colors.outline.withValues(alpha: 0.3),
+            width: isSelected ? 2 : 1,
+          ),
+          borderRadius: BorderRadius.circular(16),
+        ),
+        child: Column(
+          children: [
+            Text(
+              emoji,
+              style: const TextStyle(fontSize: 32),
+            ),
+            const SizedBox(height: 8),
+            Text(
+              label,
+              style: context.textTheme.titleMedium?.copyWith(
+                fontWeight: FontWeight.w600,
+                color: context.colors.onSurface,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}

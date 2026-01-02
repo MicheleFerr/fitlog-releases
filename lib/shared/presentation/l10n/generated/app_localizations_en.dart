@@ -4202,6 +4202,9 @@ class AppLocalizationsEn extends AppLocalizations {
       'This will permanently remove this exercise from your workout.';
 
   @override
+  String get dontAskAgain => 'Don\'t ask again';
+
+  @override
   String get deleteSuperset => 'Delete Superset';
 
   @override
@@ -6097,6 +6100,68 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get errorUnexpected =>
       'An unexpected error occurred. Please try again.';
+
+  @override
+  String get errorTimeout => 'Connection timed out. Please try again.';
+
+  @override
+  String get errorInvalidCredentials => 'Invalid email or password.';
+
+  @override
+  String get errorEmailInUse => 'This email is already registered.';
+
+  @override
+  String get errorAccountDisabled => 'This account has been disabled.';
+
+  @override
+  String get errorPermissionDenied =>
+      'You don\'t have permission for this action.';
+
+  @override
+  String get errorRateLimited => 'Too many requests. Please wait a moment.';
+
+  @override
+  String get errorQuotaExceeded =>
+      'Storage quota exceeded. Free up space or upgrade.';
+
+  @override
+  String get errorInvalidInput => 'Invalid input. Please check your data.';
+
+  @override
+  String get errorAlreadyExists => 'This item already exists.';
+
+  @override
+  String get errorNotFound => 'Item not found.';
+
+  @override
+  String get errorOperationCancelled => 'Operation cancelled.';
+
+  @override
+  String get errorServerError => 'Server error. Please try again later.';
+
+  @override
+  String get errorCacheError => 'Local data error. Try refreshing.';
+
+  @override
+  String get errorDataCorrupted => 'Data format error. Please contact support.';
+
+  @override
+  String get errorWorkoutNotFound => 'Workout not found.';
+
+  @override
+  String get errorExerciseNotFound => 'Exercise not found.';
+
+  @override
+  String get errorTitleNetwork => 'Connection Error';
+
+  @override
+  String get errorTitleAuth => 'Authentication Error';
+
+  @override
+  String get errorTitlePermission => 'Permission Error';
+
+  @override
+  String get errorTitleValidation => 'Validation Error';
 
   @override
   String get pushPullRatio => 'Push/Pull Ratio';
@@ -8245,6 +8310,13 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get signUpButton => 'Sign Up';
+
+  @override
+  String get tryWithoutAccount => 'Try Without Account';
+
+  @override
+  String get guestModeDisclaimer =>
+      'Your data stays local and will be lost if you uninstall';
 
   @override
   String get createAccountButton => 'Create Account';
@@ -13861,7 +13933,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get improvementDetected => 'Improvement detected';
 
   @override
-  String get instagramHandle => 'Instagram handle';
+  String get instagramHandle => 'Instagram Handle';
 
   @override
   String get instagramVerified => 'Instagram verified';
@@ -18048,6 +18120,9 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get recent => 'Recent';
+
+  @override
+  String get recentExercises => 'Recent Exercises';
 
   @override
   String get addToFavorites => 'Add to favorites';
@@ -22348,6 +22423,116 @@ class AppLocalizationsEn extends AppLocalizations {
       'Drag this button left or right to reposition it.';
 
   @override
+  String get tutorialSearchBarTitle => 'Search Exercises';
+
+  @override
+  String get tutorialSearchBarMessage =>
+      'Type here to find exercises by name. Try searching for \'bench\' or \'squat\'!';
+
+  @override
+  String get tutorialFilterButtonTitle => 'Advanced Filters';
+
+  @override
+  String get tutorialFilterButtonMessage =>
+      'Tap here to filter by equipment, difficulty, or more specific criteria.';
+
+  @override
+  String get tutorialQuickFiltersTitle => 'Quick Muscle Filters';
+
+  @override
+  String get tutorialQuickFiltersMessage =>
+      'Tap a muscle group chip to quickly find exercises targeting that muscle.';
+
+  @override
+  String get tutorialExerciseCardTitle => 'Exercise Details';
+
+  @override
+  String get tutorialExerciseCardMessage =>
+      'Tap any exercise to see its details, or use the checkbox to select it.';
+
+  @override
+  String get tutorialAddButtonTitle => 'Add Selected Exercise';
+
+  @override
+  String get tutorialAddButtonMessage =>
+      'After selecting an exercise, tap this button to add it to your workout!';
+
+  @override
+  String get timerTourDisplayTitle => 'Your Rest Timer';
+
+  @override
+  String get timerTourDisplayDescription =>
+      'The timer starts automatically after completing a set. Stay on track with your rest periods!';
+
+  @override
+  String get timerTourDurationTitle => 'Adjust Duration';
+
+  @override
+  String get timerTourDurationDescription =>
+      'Long press on the timer to change your rest duration. Different exercises may need different rest times.';
+
+  @override
+  String get timerTourLiveActivityTitle => 'Lock Screen Timer';
+
+  @override
+  String get timerTourLiveActivityDescription =>
+      'On iOS, see your timer on the lock screen and Dynamic Island. No need to keep the app open!';
+
+  @override
+  String get timerTourSoundTitle => 'Sound Alert';
+
+  @override
+  String get timerTourSoundDescription =>
+      'You\'ll hear a sound when your rest is over. Tap here to adjust volume or vibration settings.';
+
+  @override
+  String get templateTutorialNameTitle => 'Name Your Template';
+
+  @override
+  String get templateTutorialNameDescription =>
+      'Give your template a descriptive name so you can easily find it later.';
+
+  @override
+  String get templateTutorialNameTip =>
+      'Use names like \'Push Day\' or \'Full Body A\' for easy recognition';
+
+  @override
+  String get templateTutorialAddExercisesTitle => 'Add Exercises';
+
+  @override
+  String get templateTutorialAddExercisesDescription =>
+      'Build your workout by adding exercises. You can reorder them by dragging.';
+
+  @override
+  String get templateTutorialConfigureTitle => 'Set Defaults';
+
+  @override
+  String get templateTutorialConfigureDescription =>
+      'Configure default sets, reps, and rest time for each exercise.';
+
+  @override
+  String get templateTutorialConfigureTip =>
+      'These are just starting points - you can adjust during the workout';
+
+  @override
+  String get templateTutorialSaveTitle => 'Save Template';
+
+  @override
+  String get templateTutorialSaveDescription =>
+      'Tap save to store your template. It will appear in your templates list for quick access.';
+
+  @override
+  String get templateTutorialUseTitle => 'Start a Workout';
+
+  @override
+  String get templateTutorialUseDescription =>
+      'Tap any template to instantly start a workout with all exercises pre-loaded!';
+
+  @override
+  String get templateTutorialUseTip =>
+      'Templates save time - no more adding exercises one by one';
+
+  @override
   String alternativeExercisesCount(int count) {
     return '$count similar exercises';
   }
@@ -23221,6 +23406,29 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get healthKitConnected => 'Apple Health connected successfully';
+
+  @override
+  String get healthKitPromptTitle => 'Connect Apple Health?';
+
+  @override
+  String get healthKitPromptDescription =>
+      'Great first workout! Would you like to sync your workouts with Apple Health?';
+
+  @override
+  String get healthKitBenefitSync => 'Sync workouts automatically';
+
+  @override
+  String get healthKitBenefitAnalytics => 'Track progress across apps';
+
+  @override
+  String get healthKitBenefitHealth => 'Complete health picture';
+
+  @override
+  String get connectHealthKit => 'Connect Health';
+
+  @override
+  String get healthKitConnectLater =>
+      'You can connect Apple Health later in Settings';
 
   @override
   String get healthKitPermissionDenied =>
@@ -24883,4 +25091,298 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get tourSettingsDescription =>
       'Customize the app to your needs. Adjust units, notifications, and more.';
+
+  @override
+  String get tourPeriodSelectorTitle => 'Select Time Period';
+
+  @override
+  String get tourPeriodSelectorDescription =>
+      'Switch between week, month, year, or all time to see your progress over different periods.';
+
+  @override
+  String get tourHeroStatCardTitle => 'Your Progress Summary';
+
+  @override
+  String get tourHeroStatCardDescription =>
+      'See your total workouts and volume at a glance. This updates based on the selected period.';
+
+  @override
+  String get tourWeeklyDashboardTitle => 'Weekly Dashboard';
+
+  @override
+  String get tourWeeklyDashboardDescription =>
+      'Track your weekly workout goal and see which days you trained. Tap to adjust your target.';
+
+  @override
+  String get tourMuscleHeatmapTitle => 'Muscle Distribution';
+
+  @override
+  String get tourMuscleHeatmapDescription =>
+      'See which muscle groups you\'ve trained most. Identify imbalances and adjust your routine.';
+
+  @override
+  String get tourPrTrackingTitle => 'Personal Records';
+
+  @override
+  String get tourPrTrackingDescription =>
+      'Track your PRs for each exercise. Celebrate your progress and set new goals!';
+
+  @override
+  String get tourDetailedAnalysisTitle => 'Detailed Analysis';
+
+  @override
+  String get tourDetailedAnalysisDescription =>
+      'Tap here to dive deep into exercise-specific progress with graphs and strength standards.';
+
+  @override
+  String get evidenceBased => 'Evidence-Based';
+
+  @override
+  String get defaultTemplatesSubtitle =>
+      'Ready-made training programs based on scientific research';
+
+  @override
+  String get beginnerPrograms => 'Beginner Programs';
+
+  @override
+  String get beginnerProgramsSubtitle =>
+      'Perfect for 0-6 months of training experience';
+
+  @override
+  String get intermediatePrograms => 'Intermediate Programs';
+
+  @override
+  String get intermediateProgramsSubtitle =>
+      'For 6+ months of consistent training';
+
+  @override
+  String get homeWorkouts => 'Home & Bodyweight';
+
+  @override
+  String get dumbbellOnly => 'Dumbbell Only';
+
+  @override
+  String get express => 'Express';
+
+  @override
+  String get specialty => 'Specialty';
+
+  @override
+  String get addToMyTemplates => 'Add to My Templates';
+
+  @override
+  String get templateAddedToLibrary => 'Template added to your library';
+
+  @override
+  String get use => 'Use';
+
+  @override
+  String get duplicateTemplate => 'Template Already Exists';
+
+  @override
+  String duplicateTemplateMessage(String name) {
+    return 'You already have a template named \"$name\". Add anyway with a different name?';
+  }
+
+  @override
+  String get addAnyway => 'Add Anyway';
+
+  @override
+  String get emptyTemplate => 'This template has no exercises';
+
+  @override
+  String get tooManyDuplicates => 'Too many copies of this template';
+
+  @override
+  String get privacyDataUsageTitle => 'Privacy & Data Usage';
+
+  @override
+  String get privacyDataUsageDescription =>
+      'We respect your privacy. Choose which data you want to share with us.';
+
+  @override
+  String get savePreferences => 'Save Preferences';
+
+  @override
+  String get requiredLabel => 'Required';
+
+  @override
+  String get readPrivacyPolicy => 'Read our Privacy Policy';
+
+  @override
+  String errorSavingPreferences(String error) {
+    return 'Error saving preferences: $error';
+  }
+
+  @override
+  String get setRowSize => 'Set row size';
+
+  @override
+  String get textSize => 'Text size';
+
+  @override
+  String get comfortable => 'Comfortable';
+
+  @override
+  String get report => 'Report';
+
+  @override
+  String get a11yStartWorkout => 'Start workout';
+
+  @override
+  String get a11yStopWorkout => 'Stop workout';
+
+  @override
+  String get a11ySaveWorkout => 'Save workout';
+
+  @override
+  String get a11yAddExercise => 'Add exercise';
+
+  @override
+  String get a11yDeleteExercise => 'Delete exercise';
+
+  @override
+  String get a11yAddSet => 'Add set';
+
+  @override
+  String get a11yDeleteSet => 'Delete set';
+
+  @override
+  String get a11yPlayTimer => 'Start rest timer';
+
+  @override
+  String get a11yPauseTimer => 'Pause rest timer';
+
+  @override
+  String get a11yStopTimer => 'Stop rest timer';
+
+  @override
+  String get a11yResetTimer => 'Reset rest timer';
+
+  @override
+  String get a11yIncreaseTimer => 'Increase timer by 30 seconds';
+
+  @override
+  String get a11yDecreaseTimer => 'Decrease timer by 30 seconds';
+
+  @override
+  String get a11yOpenMenu => 'Open menu';
+
+  @override
+  String get a11yCloseMenu => 'Close menu';
+
+  @override
+  String get a11ySearchExercises => 'Search exercises';
+
+  @override
+  String get a11yFilterExercises => 'Filter exercises';
+
+  @override
+  String get a11yToggleFavorite => 'Toggle favorite';
+
+  @override
+  String get a11yNavigateBack => 'Go back';
+
+  @override
+  String get a11yNavigateHome => 'Go to home';
+
+  @override
+  String get a11yExerciseInfo => 'View exercise information';
+
+  @override
+  String get a11ySetCompleted => 'Set completed';
+
+  @override
+  String get a11ySetPending => 'Set pending';
+
+  @override
+  String get a11yWarmupSet => 'Warmup set';
+
+  @override
+  String get a11yWorkingSet => 'Working set';
+
+  @override
+  String get a11yDropset => 'Dropset';
+
+  @override
+  String get a11yRestPause => 'Rest-pause set';
+
+  @override
+  String get simpleMode => 'Simple Mode';
+
+  @override
+  String get simpleModeDescription =>
+      'Larger text, simplified interface, easier to use';
+
+  @override
+  String get simpleModeEnabled => 'Simple Mode enabled';
+
+  @override
+  String get simpleModeDisabled => 'Simple Mode disabled';
+
+  @override
+  String get templateFolders => 'Template Folders';
+
+  @override
+  String get createFolder => 'Create Folder';
+
+  @override
+  String get folderName => 'Folder Name';
+
+  @override
+  String get moveToFolder => 'Move to Folder';
+
+  @override
+  String get removeFromFolder => 'Remove from Folder';
+
+  @override
+  String get noFolders => 'No folders yet';
+
+  @override
+  String get folderCreated => 'Folder created';
+
+  @override
+  String get folderDeleted => 'Folder deleted';
+
+  @override
+  String get templateMovedToFolder => 'Template moved to folder';
+
+  @override
+  String get rootFolder => 'Root';
+
+  @override
+  String get pdfBranding => 'PDF Branding';
+
+  @override
+  String get customizePdfBranding => 'Customize PDF Branding';
+
+  @override
+  String get businessName => 'Business Name';
+
+  @override
+  String get tagline => 'Tagline';
+
+  @override
+  String get primaryColor => 'Primary Color';
+
+  @override
+  String get logoUrl => 'Logo URL';
+
+  @override
+  String get contactEmail => 'Contact Email';
+
+  @override
+  String get contactPhone => 'Contact Phone';
+
+  @override
+  String get websiteUrl => 'Website URL';
+
+  @override
+  String get footerText => 'Footer Text';
+
+  @override
+  String get brandingSaved => 'Branding saved';
+
+  @override
+  String get previewPdf => 'Preview PDF';
 }

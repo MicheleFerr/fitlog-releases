@@ -5531,6 +5531,10 @@
   "@deleteExerciseDescription": {
     "description": "Delete exercise confirmation message"
   },
+  "dontAskAgain": "Don't ask again",
+  "@dontAskAgain": {
+    "description": "Checkbox label to skip future confirmation dialogs"
+  },
   "deleteSuperset": "Delete Superset",
   "@deleteSuperset": {
     "description": "Delete superset dialog title"
@@ -8000,6 +8004,86 @@
   "@errorUnexpected": {
     "description": "Generic error message for unexpected errors"
   },
+  "errorTimeout": "Connection timed out. Please try again.",
+  "@errorTimeout": {
+    "description": "Error for timeout/deadline exceeded"
+  },
+  "errorInvalidCredentials": "Invalid email or password.",
+  "@errorInvalidCredentials": {
+    "description": "Error for wrong password"
+  },
+  "errorEmailInUse": "This email is already registered.",
+  "@errorEmailInUse": {
+    "description": "Error when email is already in use"
+  },
+  "errorAccountDisabled": "This account has been disabled.",
+  "@errorAccountDisabled": {
+    "description": "Error when user account is disabled"
+  },
+  "errorPermissionDenied": "You don't have permission for this action.",
+  "@errorPermissionDenied": {
+    "description": "Error for permission denied"
+  },
+  "errorRateLimited": "Too many requests. Please wait a moment.",
+  "@errorRateLimited": {
+    "description": "Error for rate limiting"
+  },
+  "errorQuotaExceeded": "Storage quota exceeded. Free up space or upgrade.",
+  "@errorQuotaExceeded": {
+    "description": "Error for quota exceeded"
+  },
+  "errorInvalidInput": "Invalid input. Please check your data.",
+  "@errorInvalidInput": {
+    "description": "Error for invalid arguments"
+  },
+  "errorAlreadyExists": "This item already exists.",
+  "@errorAlreadyExists": {
+    "description": "Error for conflict/already exists"
+  },
+  "errorNotFound": "Item not found.",
+  "@errorNotFound": {
+    "description": "Error for not found resources"
+  },
+  "errorOperationCancelled": "Operation cancelled.",
+  "@errorOperationCancelled": {
+    "description": "Error for cancelled operations"
+  },
+  "errorServerError": "Server error. Please try again later.",
+  "@errorServerError": {
+    "description": "Error for server-side issues"
+  },
+  "errorCacheError": "Local data error. Try refreshing.",
+  "@errorCacheError": {
+    "description": "Error for cache/local storage issues"
+  },
+  "errorDataCorrupted": "Data format error. Please contact support.",
+  "@errorDataCorrupted": {
+    "description": "Error for parse/data corruption"
+  },
+  "errorWorkoutNotFound": "Workout not found.",
+  "@errorWorkoutNotFound": {
+    "description": "Error when workout is not found"
+  },
+  "errorExerciseNotFound": "Exercise not found.",
+  "@errorExerciseNotFound": {
+    "description": "Error when exercise is not found"
+  },
+  "errorTitleNetwork": "Connection Error",
+  "@errorTitleNetwork": {
+    "description": "Title for network error dialogs"
+  },
+  "errorTitleAuth": "Authentication Error",
+  "@errorTitleAuth": {
+    "description": "Title for auth error dialogs"
+  },
+  "errorTitlePermission": "Permission Error",
+  "@errorTitlePermission": {
+    "description": "Title for permission error dialogs"
+  },
+  "errorTitleValidation": "Validation Error",
+  "@errorTitleValidation": {
+    "description": "Title for validation error dialogs"
+  },
   "pushPullRatio": "Push/Pull Ratio",
   "quadHamstringRatio": "Quad:Hamstring Ratio",
   "pushSetsLabel": "{count} Push sets",
@@ -9668,6 +9752,14 @@
   "signUpButton": "Sign Up",
   "@signUpButton": {
     "description": "Sign up button text"
+  },
+  "tryWithoutAccount": "Try Without Account",
+  "@tryWithoutAccount": {
+    "description": "Guest mode button text on login screen"
+  },
+  "guestModeDisclaimer": "Your data stays local and will be lost if you uninstall",
+  "@guestModeDisclaimer": {
+    "description": "Disclaimer text for guest mode"
   },
   "createAccountButton": "Create Account",
   "@createAccountButton": {
@@ -21984,6 +22076,10 @@
   "@recent": {
     "description": "Filter label for recently worked exercises"
   },
+  "recentExercises": "Recent Exercises",
+  "@recentExercises": {
+    "description": "Section header for quick access to recent/frequent exercises"
+  },
   "addToFavorites": "Add to favorites",
   "@addToFavorites": {
     "description": "Button label to mark exercise as favorite"
@@ -27842,6 +27938,130 @@
   "@tutorialDragFabMessage": {
     "description": "Tutorial drag FAB message"
   },
+  "tutorialSearchBarTitle": "Search Exercises",
+  "@tutorialSearchBarTitle": {
+    "description": "Exercise search tutorial - search bar title"
+  },
+  "tutorialSearchBarMessage": "Type here to find exercises by name. Try searching for 'bench' or 'squat'!",
+  "@tutorialSearchBarMessage": {
+    "description": "Exercise search tutorial - search bar message"
+  },
+  "tutorialFilterButtonTitle": "Advanced Filters",
+  "@tutorialFilterButtonTitle": {
+    "description": "Exercise search tutorial - filter button title"
+  },
+  "tutorialFilterButtonMessage": "Tap here to filter by equipment, difficulty, or more specific criteria.",
+  "@tutorialFilterButtonMessage": {
+    "description": "Exercise search tutorial - filter button message"
+  },
+  "tutorialQuickFiltersTitle": "Quick Muscle Filters",
+  "@tutorialQuickFiltersTitle": {
+    "description": "Exercise search tutorial - quick filters title"
+  },
+  "tutorialQuickFiltersMessage": "Tap a muscle group chip to quickly find exercises targeting that muscle.",
+  "@tutorialQuickFiltersMessage": {
+    "description": "Exercise search tutorial - quick filters message"
+  },
+  "tutorialExerciseCardTitle": "Exercise Details",
+  "@tutorialExerciseCardTitle": {
+    "description": "Exercise search tutorial - exercise card title"
+  },
+  "tutorialExerciseCardMessage": "Tap any exercise to see its details, or use the checkbox to select it.",
+  "@tutorialExerciseCardMessage": {
+    "description": "Exercise search tutorial - exercise card message"
+  },
+  "tutorialAddButtonTitle": "Add Selected Exercise",
+  "@tutorialAddButtonTitle": {
+    "description": "Exercise search tutorial - add button title"
+  },
+  "tutorialAddButtonMessage": "After selecting an exercise, tap this button to add it to your workout!",
+  "@tutorialAddButtonMessage": {
+    "description": "Exercise search tutorial - add button message"
+  },
+  "timerTourDisplayTitle": "Your Rest Timer",
+  "@timerTourDisplayTitle": {
+    "description": "Timer tour - timer display title"
+  },
+  "timerTourDisplayDescription": "The timer starts automatically after completing a set. Stay on track with your rest periods!",
+  "@timerTourDisplayDescription": {
+    "description": "Timer tour - timer display description"
+  },
+  "timerTourDurationTitle": "Adjust Duration",
+  "@timerTourDurationTitle": {
+    "description": "Timer tour - duration adjustment title"
+  },
+  "timerTourDurationDescription": "Long press on the timer to change your rest duration. Different exercises may need different rest times.",
+  "@timerTourDurationDescription": {
+    "description": "Timer tour - duration adjustment description"
+  },
+  "timerTourLiveActivityTitle": "Lock Screen Timer",
+  "@timerTourLiveActivityTitle": {
+    "description": "Timer tour - Live Activity title"
+  },
+  "timerTourLiveActivityDescription": "On iOS, see your timer on the lock screen and Dynamic Island. No need to keep the app open!",
+  "@timerTourLiveActivityDescription": {
+    "description": "Timer tour - Live Activity description"
+  },
+  "timerTourSoundTitle": "Sound Alert",
+  "@timerTourSoundTitle": {
+    "description": "Timer tour - sound settings title"
+  },
+  "timerTourSoundDescription": "You'll hear a sound when your rest is over. Tap here to adjust volume or vibration settings.",
+  "@timerTourSoundDescription": {
+    "description": "Timer tour - sound settings description"
+  },
+  "templateTutorialNameTitle": "Name Your Template",
+  "@templateTutorialNameTitle": {
+    "description": "Template tutorial - name step title"
+  },
+  "templateTutorialNameDescription": "Give your template a descriptive name so you can easily find it later.",
+  "@templateTutorialNameDescription": {
+    "description": "Template tutorial - name step description"
+  },
+  "templateTutorialNameTip": "Use names like 'Push Day' or 'Full Body A' for easy recognition",
+  "@templateTutorialNameTip": {
+    "description": "Template tutorial - name step pro tip"
+  },
+  "templateTutorialAddExercisesTitle": "Add Exercises",
+  "@templateTutorialAddExercisesTitle": {
+    "description": "Template tutorial - add exercises title"
+  },
+  "templateTutorialAddExercisesDescription": "Build your workout by adding exercises. You can reorder them by dragging.",
+  "@templateTutorialAddExercisesDescription": {
+    "description": "Template tutorial - add exercises description"
+  },
+  "templateTutorialConfigureTitle": "Set Defaults",
+  "@templateTutorialConfigureTitle": {
+    "description": "Template tutorial - configure defaults title"
+  },
+  "templateTutorialConfigureDescription": "Configure default sets, reps, and rest time for each exercise.",
+  "@templateTutorialConfigureDescription": {
+    "description": "Template tutorial - configure defaults description"
+  },
+  "templateTutorialConfigureTip": "These are just starting points - you can adjust during the workout",
+  "@templateTutorialConfigureTip": {
+    "description": "Template tutorial - configure defaults pro tip"
+  },
+  "templateTutorialSaveTitle": "Save Template",
+  "@templateTutorialSaveTitle": {
+    "description": "Template tutorial - save step title"
+  },
+  "templateTutorialSaveDescription": "Tap save to store your template. It will appear in your templates list for quick access.",
+  "@templateTutorialSaveDescription": {
+    "description": "Template tutorial - save step description"
+  },
+  "templateTutorialUseTitle": "Start a Workout",
+  "@templateTutorialUseTitle": {
+    "description": "Template tutorial - use template title"
+  },
+  "templateTutorialUseDescription": "Tap any template to instantly start a workout with all exercises pre-loaded!",
+  "@templateTutorialUseDescription": {
+    "description": "Template tutorial - use template description"
+  },
+  "templateTutorialUseTip": "Templates save time - no more adding exercises one by one",
+  "@templateTutorialUseTip": {
+    "description": "Template tutorial - use template pro tip"
+  },
   "alternativeExercisesCount": "{count} similar exercises",
   "@alternativeExercisesCount": {
     "description": "Count of alternative exercises found",
@@ -28458,6 +28678,34 @@
   "healthKitConnected": "Apple Health connected successfully",
   "@healthKitConnected": {
     "description": "Success message when HealthKit is connected"
+  },
+  "healthKitPromptTitle": "Connect Apple Health?",
+  "@healthKitPromptTitle": {
+    "description": "Title for HealthKit prompt dialog shown after first workout (P1-2)"
+  },
+  "healthKitPromptDescription": "Great first workout! Would you like to sync your workouts with Apple Health?",
+  "@healthKitPromptDescription": {
+    "description": "Description for HealthKit prompt dialog"
+  },
+  "healthKitBenefitSync": "Sync workouts automatically",
+  "@healthKitBenefitSync": {
+    "description": "HealthKit benefit: auto sync"
+  },
+  "healthKitBenefitAnalytics": "Track progress across apps",
+  "@healthKitBenefitAnalytics": {
+    "description": "HealthKit benefit: analytics"
+  },
+  "healthKitBenefitHealth": "Complete health picture",
+  "@healthKitBenefitHealth": {
+    "description": "HealthKit benefit: health"
+  },
+  "connectHealthKit": "Connect Health",
+  "@connectHealthKit": {
+    "description": "Button to connect HealthKit"
+  },
+  "healthKitConnectLater": "You can connect Apple Health later in Settings",
+  "@healthKitConnectLater": {
+    "description": "Message when user dismisses HealthKit prompt"
   },
   "healthKitPermissionDenied": "Health permissions denied. Enable in Settings > Privacy > Health",
   "@healthKitPermissionDenied": {
@@ -30867,5 +31115,413 @@
   "tourSettingsDescription": "Customize the app to your needs. Adjust units, notifications, and more.",
   "@tourSettingsDescription": {
     "description": "Home tour step 10 description - Settings"
+  },
+  "tourPeriodSelectorTitle": "Select Time Period",
+  "@tourPeriodSelectorTitle": {
+    "description": "Analytics tour step 1 title - Period selector"
+  },
+  "tourPeriodSelectorDescription": "Switch between week, month, year, or all time to see your progress over different periods.",
+  "@tourPeriodSelectorDescription": {
+    "description": "Analytics tour step 1 description"
+  },
+  "tourHeroStatCardTitle": "Your Progress Summary",
+  "@tourHeroStatCardTitle": {
+    "description": "Analytics tour step 2 title - Hero stat card"
+  },
+  "tourHeroStatCardDescription": "See your total workouts and volume at a glance. This updates based on the selected period.",
+  "@tourHeroStatCardDescription": {
+    "description": "Analytics tour step 2 description"
+  },
+  "tourWeeklyDashboardTitle": "Weekly Dashboard",
+  "@tourWeeklyDashboardTitle": {
+    "description": "Analytics tour step 3 title - Weekly dashboard"
+  },
+  "tourWeeklyDashboardDescription": "Track your weekly workout goal and see which days you trained. Tap to adjust your target.",
+  "@tourWeeklyDashboardDescription": {
+    "description": "Analytics tour step 3 description"
+  },
+  "tourMuscleHeatmapTitle": "Muscle Distribution",
+  "@tourMuscleHeatmapTitle": {
+    "description": "Analytics tour step 4 title - Muscle heatmap"
+  },
+  "tourMuscleHeatmapDescription": "See which muscle groups you've trained most. Identify imbalances and adjust your routine.",
+  "@tourMuscleHeatmapDescription": {
+    "description": "Analytics tour step 4 description"
+  },
+  "tourPrTrackingTitle": "Personal Records",
+  "@tourPrTrackingTitle": {
+    "description": "Analytics tour step 5 title - PR tracking"
+  },
+  "tourPrTrackingDescription": "Track your PRs for each exercise. Celebrate your progress and set new goals!",
+  "@tourPrTrackingDescription": {
+    "description": "Analytics tour step 5 description"
+  },
+  "tourDetailedAnalysisTitle": "Detailed Analysis",
+  "@tourDetailedAnalysisTitle": {
+    "description": "Analytics tour step 6 title - Detailed analysis button"
+  },
+  "tourDetailedAnalysisDescription": "Tap here to dive deep into exercise-specific progress with graphs and strength standards.",
+  "@tourDetailedAnalysisDescription": {
+    "description": "Analytics tour step 6 description"
+  },
+  "evidenceBased": "Evidence-Based",
+  "@evidenceBased": {
+    "description": "Label for evidence-based templates section"
+  },
+  "defaultTemplatesSubtitle": "Ready-made training programs based on scientific research",
+  "@defaultTemplatesSubtitle": {
+    "description": "Subtitle for default templates section"
+  },
+  "beginnerPrograms": "Beginner Programs",
+  "@beginnerPrograms": {
+    "description": "Title for beginner workout programs section"
+  },
+  "beginnerProgramsSubtitle": "Perfect for 0-6 months of training experience",
+  "@beginnerProgramsSubtitle": {
+    "description": "Subtitle for beginner programs"
+  },
+  "intermediatePrograms": "Intermediate Programs",
+  "@intermediatePrograms": {
+    "description": "Title for intermediate workout programs section"
+  },
+  "intermediateProgramsSubtitle": "For 6+ months of consistent training",
+  "@intermediateProgramsSubtitle": {
+    "description": "Subtitle for intermediate programs"
+  },
+  "homeWorkouts": "Home & Bodyweight",
+  "@homeWorkouts": {
+    "description": "Category for home and bodyweight workouts"
+  },
+  "dumbbellOnly": "Dumbbell Only",
+  "@dumbbellOnly": {
+    "description": "Category for dumbbell-only workouts"
+  },
+  "express": "Express",
+  "@express": {
+    "description": "Category for quick express workouts"
+  },
+  "specialty": "Specialty",
+  "@specialty": {
+    "description": "Category for specialty workouts"
+  },
+  "addToMyTemplates": "Add to My Templates",
+  "@addToMyTemplates": {
+    "description": "Button text to add a template to user's library"
+  },
+  "templateAddedToLibrary": "Template added to your library",
+  "@templateAddedToLibrary": {
+    "description": "Success message when template is added"
+  },
+  "use": "Use",
+  "@use": {
+    "description": "Button text to use a template"
+  },
+  "errorLoadingTemplates": "Error loading templates",
+  "@errorLoadingTemplates": {
+    "description": "Error message when templates cannot be loaded"
+  },
+  "noTemplatesFound": "No templates found",
+  "@noTemplatesFound": {
+    "description": "Message when no templates match filter"
+  },
+  "errorSavingTemplate": "Error saving template",
+  "@errorSavingTemplate": {
+    "description": "Error message when template cannot be saved"
+  },
+  "duplicateTemplate": "Template Already Exists",
+  "@duplicateTemplate": {
+    "description": "Title for duplicate template warning dialog"
+  },
+  "duplicateTemplateMessage": "You already have a template named \"{name}\". Add anyway with a different name?",
+  "@duplicateTemplateMessage": {
+    "description": "Message for duplicate template warning",
+    "placeholders": {
+      "name": {
+        "type": "String",
+        "example": "Full Body Workout"
+      }
+    }
+  },
+  "addAnyway": "Add Anyway",
+  "@addAnyway": {
+    "description": "Button to add duplicate template anyway"
+  },
+  "emptyTemplate": "This template has no exercises",
+  "@emptyTemplate": {
+    "description": "Warning when trying to use a template with no exercises"
+  },
+  "tooManyDuplicates": "Too many copies of this template",
+  "@tooManyDuplicates": {
+    "description": "Error when user has too many duplicates of same template name"
+  },
+  "privacyDataUsageTitle": "Privacy & Data Usage",
+  "@privacyDataUsageTitle": {
+    "description": "Title for the GDPR consent dialog"
+  },
+  "privacyDataUsageDescription": "We respect your privacy. Choose which data you want to share with us.",
+  "@privacyDataUsageDescription": {
+    "description": "Description for the GDPR consent dialog"
+  },
+  "savePreferences": "Save Preferences",
+  "@savePreferences": {
+    "description": "Button to save privacy preferences"
+  },
+  "requiredLabel": "Required",
+  "@requiredLabel": {
+    "description": "Label for required consent items"
+  },
+  "readPrivacyPolicy": "Read our Privacy Policy",
+  "@readPrivacyPolicy": {
+    "description": "Link to privacy policy"
+  },
+  "errorSavingPreferences": "Error saving preferences: {error}",
+  "@errorSavingPreferences": {
+    "description": "Error message when saving privacy preferences fails",
+    "placeholders": {
+      "error": {
+        "type": "String",
+        "example": "Network error"
+      }
+    }
+  },
+  "setRowSize": "Set row size",
+  "@setRowSize": {
+    "description": "Label for workout set row size selector"
+  },
+  "textSize": "Text size",
+  "@textSize": {
+    "description": "Label for font/text size selector"
+  },
+  "comfortable": "Comfortable",
+  "@comfortable": {
+    "description": "Display mode option for spacious layout"
+  },
+  "report": "Report",
+  "@report": {
+    "description": "Button text to submit a report"
+  },
+
+  "a11yStartWorkout": "Start workout",
+  "@a11yStartWorkout": {
+    "description": "Accessibility label for start workout button"
+  },
+  "a11yStopWorkout": "Stop workout",
+  "@a11yStopWorkout": {
+    "description": "Accessibility label for stop workout button"
+  },
+  "a11ySaveWorkout": "Save workout",
+  "@a11ySaveWorkout": {
+    "description": "Accessibility label for save workout button"
+  },
+  "a11yAddExercise": "Add exercise",
+  "@a11yAddExercise": {
+    "description": "Accessibility label for add exercise button"
+  },
+  "a11yDeleteExercise": "Delete exercise",
+  "@a11yDeleteExercise": {
+    "description": "Accessibility label for delete exercise button"
+  },
+  "a11yAddSet": "Add set",
+  "@a11yAddSet": {
+    "description": "Accessibility label for add set button"
+  },
+  "a11yDeleteSet": "Delete set",
+  "@a11yDeleteSet": {
+    "description": "Accessibility label for delete set button"
+  },
+  "a11yPlayTimer": "Start rest timer",
+  "@a11yPlayTimer": {
+    "description": "Accessibility label for play timer button"
+  },
+  "a11yPauseTimer": "Pause rest timer",
+  "@a11yPauseTimer": {
+    "description": "Accessibility label for pause timer button"
+  },
+  "a11yStopTimer": "Stop rest timer",
+  "@a11yStopTimer": {
+    "description": "Accessibility label for stop timer button"
+  },
+  "a11yResetTimer": "Reset rest timer",
+  "@a11yResetTimer": {
+    "description": "Accessibility label for reset timer button"
+  },
+  "a11yIncreaseTimer": "Increase timer by 30 seconds",
+  "@a11yIncreaseTimer": {
+    "description": "Accessibility label for increase timer button"
+  },
+  "a11yDecreaseTimer": "Decrease timer by 30 seconds",
+  "@a11yDecreaseTimer": {
+    "description": "Accessibility label for decrease timer button"
+  },
+  "a11yOpenMenu": "Open menu",
+  "@a11yOpenMenu": {
+    "description": "Accessibility label for menu button"
+  },
+  "a11yCloseMenu": "Close menu",
+  "@a11yCloseMenu": {
+    "description": "Accessibility label for close menu button"
+  },
+  "a11ySearchExercises": "Search exercises",
+  "@a11ySearchExercises": {
+    "description": "Accessibility label for exercise search field"
+  },
+  "a11yFilterExercises": "Filter exercises",
+  "@a11yFilterExercises": {
+    "description": "Accessibility label for exercise filter button"
+  },
+  "a11yToggleFavorite": "Toggle favorite",
+  "@a11yToggleFavorite": {
+    "description": "Accessibility label for favorite toggle button"
+  },
+  "a11yNavigateBack": "Go back",
+  "@a11yNavigateBack": {
+    "description": "Accessibility label for back navigation"
+  },
+  "a11yNavigateHome": "Go to home",
+  "@a11yNavigateHome": {
+    "description": "Accessibility label for home navigation"
+  },
+  "a11yExerciseInfo": "View exercise information",
+  "@a11yExerciseInfo": {
+    "description": "Accessibility label for exercise info button"
+  },
+  "a11ySetCompleted": "Set completed",
+  "@a11ySetCompleted": {
+    "description": "Accessibility announcement when set is completed"
+  },
+  "a11ySetPending": "Set pending",
+  "@a11ySetPending": {
+    "description": "Accessibility announcement for pending set"
+  },
+  "a11yWarmupSet": "Warmup set",
+  "@a11yWarmupSet": {
+    "description": "Accessibility label for warmup set indicator"
+  },
+  "a11yWorkingSet": "Working set",
+  "@a11yWorkingSet": {
+    "description": "Accessibility label for working set"
+  },
+  "a11yDropset": "Dropset",
+  "@a11yDropset": {
+    "description": "Accessibility label for dropset indicator"
+  },
+  "a11yRestPause": "Rest-pause set",
+  "@a11yRestPause": {
+    "description": "Accessibility label for rest-pause set"
+  },
+
+  "simpleMode": "Simple Mode",
+  "@simpleMode": {
+    "description": "Setting for simple mode toggle"
+  },
+  "simpleModeDescription": "Larger text, simplified interface, easier to use",
+  "@simpleModeDescription": {
+    "description": "Description for simple mode setting"
+  },
+  "simpleModeEnabled": "Simple Mode enabled",
+  "@simpleModeEnabled": {
+    "description": "Confirmation when simple mode is turned on"
+  },
+  "simpleModeDisabled": "Simple Mode disabled",
+  "@simpleModeDisabled": {
+    "description": "Confirmation when simple mode is turned off"
+  },
+
+  "templateFolders": "Template Folders",
+  "@templateFolders": {
+    "description": "Title for template folders section"
+  },
+  "createFolder": "Create Folder",
+  "@createFolder": {
+    "description": "Button to create new folder"
+  },
+  "folderName": "Folder Name",
+  "@folderName": {
+    "description": "Label for folder name input"
+  },
+  "moveToFolder": "Move to Folder",
+  "@moveToFolder": {
+    "description": "Action to move template to folder"
+  },
+  "removeFromFolder": "Remove from Folder",
+  "@removeFromFolder": {
+    "description": "Action to remove template from folder"
+  },
+  "noFolders": "No folders yet",
+  "@noFolders": {
+    "description": "Empty state for folders"
+  },
+  "folderCreated": "Folder created",
+  "@folderCreated": {
+    "description": "Success message after folder creation"
+  },
+  "folderDeleted": "Folder deleted",
+  "@folderDeleted": {
+    "description": "Success message after folder deletion"
+  },
+  "templateMovedToFolder": "Template moved to folder",
+  "@templateMovedToFolder": {
+    "description": "Success message after moving template"
+  },
+  "rootFolder": "Root",
+  "@rootFolder": {
+    "description": "Root folder label"
+  },
+
+  "pdfBranding": "PDF Branding",
+  "@pdfBranding": {
+    "description": "Title for PDF branding settings"
+  },
+  "customizePdfBranding": "Customize PDF Branding",
+  "@customizePdfBranding": {
+    "description": "Subtitle for branding customization"
+  },
+  "businessName": "Business Name",
+  "@businessName": {
+    "description": "Label for business name input"
+  },
+  "tagline": "Tagline",
+  "@tagline": {
+    "description": "Label for tagline input"
+  },
+  "primaryColor": "Primary Color",
+  "@primaryColor": {
+    "description": "Label for primary color picker"
+  },
+  "accentColor": "Accent Color",
+  "@accentColor": {
+    "description": "Label for accent color picker"
+  },
+  "logoUrl": "Logo URL",
+  "@logoUrl": {
+    "description": "Label for logo URL input"
+  },
+  "contactEmail": "Contact Email",
+  "@contactEmail": {
+    "description": "Label for contact email input"
+  },
+  "contactPhone": "Contact Phone",
+  "@contactPhone": {
+    "description": "Label for contact phone input"
+  },
+  "websiteUrl": "Website URL",
+  "@websiteUrl": {
+    "description": "Label for website URL input"
+  },
+  "instagramHandle": "Instagram Handle",
+  "@instagramHandle": {
+    "description": "Label for Instagram handle input"
+  },
+  "footerText": "Footer Text",
+  "@footerText": {
+    "description": "Label for custom footer text"
+  },
+  "brandingSaved": "Branding saved",
+  "@brandingSaved": {
+    "description": "Success message after saving branding"
+  },
+  "previewPdf": "Preview PDF",
+  "@previewPdf": {
+    "description": "Button to preview PDF with branding"
   }
 }

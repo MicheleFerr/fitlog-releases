@@ -180,7 +180,7 @@ class _ContributionDetailModalState extends ConsumerState<ContributionDetailModa
                 child: FilledButton.icon(
                   onPressed: () => _handleApprove(),
                   icon: const Icon(AppIcons.complete),
-                  label: const Text('Approva'),
+                  label: Text(context.l10n.approve),
                   style: FilledButton.styleFrom(
                     backgroundColor: Theme.of(context).colorScheme.success,
                   ),
@@ -191,7 +191,7 @@ class _ContributionDetailModalState extends ConsumerState<ContributionDetailModa
                 child: FilledButton.tonalIcon(
                   onPressed: () => _handleReject(),
                   icon: const Icon(AppIcons.cancel),
-                  label: const Text('Rifiuta'),
+                  label: Text(context.l10n.reject),
                   style: FilledButton.styleFrom(
                     backgroundColor: Theme.of(context).colorScheme.error.withValues(alpha: 0.2),
                     foregroundColor: Theme.of(context).colorScheme.error,
@@ -286,8 +286,7 @@ class _ContributionDetailModalState extends ConsumerState<ContributionDetailModa
                 backgroundColor: theme.colorScheme.primaryContainer,
                 child: Text(
                   comment.userName[0].toUpperCase(),
-                  style: TextStyle(
-                    fontSize: 12,
+                  style: theme.textTheme.labelSmall?.copyWith(
                     fontWeight: FontWeight.bold,
                     color: theme.colorScheme.primary,
                   ),
@@ -383,7 +382,7 @@ class _ContributionDetailModalState extends ConsumerState<ContributionDetailModa
       child: OutlinedButton.icon(
         onPressed: () => _showReportDialog(),
         icon: const Icon(AppIcons.flagOutlined),
-        label: const Text('Segnala contributo'),
+        label: Text(l10n.reportContribution),
         style: OutlinedButton.styleFrom(
           foregroundColor: theme.colorScheme.error,
           side: BorderSide(color: theme.colorScheme.error.withValues(alpha: 0.3)),
@@ -577,23 +576,24 @@ class _RejectDialogState extends State<_RejectDialog> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final l10n = AppLocalizations.of(context);
 
     return AlertDialog(
-      title: const Text('Rifiuta Contributo'),
+      title: Text(l10n.rejectContributionTitle),
       content: Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            'Specifica il motivo del rifiuto:',
+            l10n.rejectReasonLabel,
             style: theme.textTheme.bodyMedium,
           ),
           const SizedBox(height: 12),
           TextField(
             controller: _controller,
-            decoration: const InputDecoration(
-              hintText: 'Es: Informazioni non accurate',
-              border: OutlineInputBorder(),
+            decoration: InputDecoration(
+              hintText: l10n.rejectReasonHint,
+              border: const OutlineInputBorder(),
             ),
             maxLines: 3,
             autofocus: true,
@@ -603,7 +603,7 @@ class _RejectDialogState extends State<_RejectDialog> {
       actions: [
         TextButton(
           onPressed: () => Navigator.pop(context),
-          child: const Text('Annulla'),
+          child: Text(l10n.cancel),
         ),
         FilledButton(
           onPressed: () {
@@ -612,7 +612,7 @@ class _RejectDialogState extends State<_RejectDialog> {
           style: FilledButton.styleFrom(
             backgroundColor: Theme.of(context).colorScheme.error,
           ),
-          child: const Text('Rifiuta'),
+          child: Text(l10n.reject),
         ),
       ],
     );
@@ -627,15 +627,7 @@ class _ReportDialog extends StatefulWidget {
 
 class _ReportDialogState extends State<_ReportDialog> {
   final _controller = TextEditingController();
-  String? _selectedReason;
-
-  final _reportReasons = [
-    'Spam o pubblicità',
-    'Contenuto offensivo',
-    'Informazioni errate',
-    'Duplicato',
-    'Altro',
-  ];
+  _ReportReason? _selectedReason;
 
   @override
   void dispose() {
@@ -646,23 +638,32 @@ class _ReportDialogState extends State<_ReportDialog> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final l10n = AppLocalizations.of(context);
+
+    final reportReasons = [
+      (_ReportReason.spam, l10n.reportReasonSpam),
+      (_ReportReason.offensive, l10n.reportReasonOffensive),
+      (_ReportReason.wrongInfo, l10n.reportReasonWrongInfo),
+      (_ReportReason.duplicate, l10n.reportReasonDuplicate),
+      (_ReportReason.other, l10n.reportReasonOther),
+    ];
 
     return AlertDialog(
-      title: const Text('Segnala Contributo'),
+      title: Text(l10n.reportContributionTitle),
       content: Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            'Motivo della segnalazione:',
+            l10n.reportReasonLabel,
             style: theme.textTheme.bodyMedium?.copyWith(
               fontWeight: FontWeight.bold,
             ),
           ),
           const SizedBox(height: 12),
-          ..._reportReasons.map((reason) => RadioListTile<String>(
-                title: Text(reason),
-                value: reason,
+          ...reportReasons.map((entry) => RadioListTile<_ReportReason>(
+                title: Text(entry.$2),
+                value: entry.$1,
                 groupValue: _selectedReason,
                 onChanged: (value) {
                   setState(() => _selectedReason = value);
@@ -670,13 +671,13 @@ class _ReportDialogState extends State<_ReportDialog> {
                 contentPadding: EdgeInsets.zero,
                 dense: true,
               )),
-          if (_selectedReason == 'Altro') ...[
+          if (_selectedReason == _ReportReason.other) ...[
             const SizedBox(height: 12),
             TextField(
               controller: _controller,
-              decoration: const InputDecoration(
-                hintText: 'Specifica il motivo',
-                border: OutlineInputBorder(),
+              decoration: InputDecoration(
+                hintText: l10n.reportReasonOtherHint,
+                border: const OutlineInputBorder(),
               ),
               maxLines: 2,
             ),
@@ -686,23 +687,32 @@ class _ReportDialogState extends State<_ReportDialog> {
       actions: [
         TextButton(
           onPressed: () => Navigator.pop(context),
-          child: const Text('Annulla'),
+          child: Text(l10n.cancel),
         ),
         FilledButton(
           onPressed: _selectedReason == null
               ? null
               : () {
-                  final reason = _selectedReason == 'Altro'
+                  final reason = _selectedReason == _ReportReason.other
                       ? _controller.text
-                      : _selectedReason!;
+                      : reportReasons.firstWhere((e) => e.$1 == _selectedReason).$2;
                   Navigator.pop(context, reason);
                 },
           style: FilledButton.styleFrom(
             backgroundColor: theme.colorScheme.error,
           ),
-          child: const Text('Segnala'),
+          child: Text(l10n.report),
         ),
       ],
     );
   }
+}
+
+/// Enum for report reasons
+enum _ReportReason {
+  spam,
+  offensive,
+  wrongInfo,
+  duplicate,
+  other,
 }

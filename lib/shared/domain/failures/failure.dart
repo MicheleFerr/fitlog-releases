@@ -80,3 +80,29 @@ class PermissionDeniedFailure extends Failure {
 class UnexpectedFailure extends Failure {
   const UnexpectedFailure(super.message, {super.code});
 }
+
+// Resource not found (generic)
+class NotFoundFailure extends Failure {
+  const NotFoundFailure(super.message, {super.code});
+}
+
+// Rate limiting
+class RateLimitFailure extends Failure {
+  const RateLimitFailure(super.message, {super.code});
+}
+
+// Alias for quota failures
+typedef QuotaFailure = QuotaExceededFailure;
+
+// Alias for permission failures
+typedef PermissionFailure = PermissionDeniedFailure;
+
+// Conflict (resource already exists)
+class ConflictFailure extends Failure {
+  const ConflictFailure(super.message, {super.code});
+}
+
+// Operation cancelled
+class CancelledFailure extends Failure {
+  const CancelledFailure(super.message, {super.code});
+}

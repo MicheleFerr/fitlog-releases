@@ -15,35 +15,21 @@ import 'package:tutorial_coach_mark/tutorial_coach_mark.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
 
 /// Home tour steps in order (matching MinimalHomeScreen layout)
+/// Reduced to 5 essential steps for better UX (P0-1 fix)
 enum HomeTourStep {
-  /// Step 1: XP Progress Bar - Your level and experience
+  /// Step 1: XP Progress Bar - Your level and experience (gamification entry)
   xpProgress,
 
-  /// Step 2: Activity Rings - HealthKit integration
-  activityRings,
-
-  /// Step 3: Pro Insights - Analytics preview
-  proInsights,
-
-  /// Step 4: Recovery Insight - Sleep-based recovery
-  recoveryInsight,
-
-  /// Step 5: Stress Prediction - Training load predictions
-  stressPrediction,
-
-  /// Step 6: Template Suggestion - AI workout recommendation
-  templateSuggestion,
-
-  /// Step 7: Start Workout - Main CTA
+  /// Step 2: Start Workout - Main CTA (core action)
   startWorkout,
 
-  /// Step 8: Templates Carousel - Quick access templates
+  /// Step 3: Templates Carousel - Quick access templates (template discovery)
   templatesCarousel,
 
-  /// Step 9: Exercise Wiki - Community database
-  exerciseWiki,
+  /// Step 4: Template Suggestion - AI workout recommendation
+  templateSuggestion,
 
-  /// Step 10: Settings - App configuration
+  /// Step 5: Settings - App configuration (customization)
   settings,
 
   /// Tour completed
@@ -143,19 +129,52 @@ class HomeTourNotifier extends StateNotifier<HomeTourState> {
     );
   }
 
+  /// Scrolls to the target widget to ensure it's visible before showing spotlight
+  Future<void> _scrollToTarget(GlobalKey targetKey) async {
+    final targetContext = targetKey.currentContext;
+    if (targetContext == null) return;
+
+    try {
+      await Scrollable.ensureVisible(
+        targetContext,
+        duration: const Duration(milliseconds: 400),
+        curve: Curves.easeInOut,
+        alignment: 0.5, // Center the widget vertically
+      );
+      // Wait for scroll animation to complete
+      await Future.delayed(const Duration(milliseconds: 100));
+    } catch (e) {
+      debugPrint('⚠️ [HomeTour] Scroll to target failed: $e');
+    }
+  }
+
+  /// Gets the next step after the current one
+  HomeTourStep? _getNextStep(HomeTourStep current) {
+    const values = HomeTourStep.values;
+    final currentIndex = values.indexOf(current);
+    if (currentIndex < 0 || currentIndex >= values.length - 2) return null;
+    return values[currentIndex + 1];
+  }
+
   /// Show all tour steps as a guided sequence
-  void showTour({
+  Future<void> showTour({
     required BuildContext context,
     required Map<HomeTourStep, GlobalKey> targetKeys,
     VoidCallback? onComplete,
     VoidCallback? onSkip,
-  }) {
+  }) async {
     if (!state.isActive) return;
 
     final l10n = AppLocalizations.of(context);
     final theme = Theme.of(context);
     final colors = theme.colorScheme;
     final textTheme = theme.textTheme;
+
+    // Scroll to first target before starting tour
+    final firstKey = targetKeys[HomeTourStep.xpProgress];
+    if (firstKey != null) {
+      await _scrollToTarget(firstKey);
+    }
 
     final targets = <TargetFocus>[];
 
@@ -176,8 +195,10 @@ class HomeTourNotifier extends StateNotifier<HomeTourState> {
           identify: step.name,
           keyTarget: key,
           alignSkip: Alignment.topRight,
-          enableOverlayTab: true,
-          enableTargetTab: true,
+          // Disable tap on target/overlay to prevent triggering widget actions
+          // User must use "Next" button to advance (which handles scroll)
+          enableOverlayTab: false,
+          enableTargetTab: false,
           shape: ShapeLightFocus.RRect,
           radius: config.radius,
           contents: [
@@ -203,7 +224,7 @@ class HomeTourNotifier extends StateNotifier<HomeTourState> {
                     children: [
                       // Step indicator
                       Text(
-                        '${_getStepNumber(step)}/10',
+                        '${_getStepNumber(step)}/5',
                         style: textTheme.labelSmall?.copyWith(
                           color: colors.primary,
                           fontWeight: FontWeight.bold,
@@ -240,7 +261,17 @@ class HomeTourNotifier extends StateNotifier<HomeTourState> {
                           ),
                           const SizedBox(width: 8),
                           FilledButton(
-                            onPressed: () => controller.next(),
+                            onPressed: () async {
+                              // Scroll to next target before advancing
+                              final nextStep = _getNextStep(step);
+                              if (nextStep != null) {
+                                final nextKey = targetKeys[nextStep];
+                                if (nextKey != null) {
+                                  await _scrollToTarget(nextKey);
+                                }
+                              }
+                              controller.next();
+                            },
                             child: Text(
                               step == HomeTourStep.settings
                                   ? l10n.tutorialGotIt
@@ -274,15 +305,18 @@ class HomeTourNotifier extends StateNotifier<HomeTourState> {
         completeTour();
         onComplete?.call();
       },
-      onClickTarget: (target) {
-        debugPrint('🎯 [HomeTour] Clicked target: ${target.identify}');
-      },
       onSkip: () {
         stopTour();
         onSkip?.call();
         return true;
       },
     );
+
+    // Check if context is still valid after async scroll
+    if (!context.mounted) {
+      debugPrint('⚠️ [HomeTour] Context no longer mounted, aborting tour');
+      return;
+    }
 
     _currentTour!.show(context: context);
   }
@@ -300,41 +334,6 @@ class HomeTourNotifier extends StateNotifier<HomeTourState> {
           contentAlign: ContentAlign.bottom,
           radius: 12,
         );
-      case HomeTourStep.activityRings:
-        return _StepConfig(
-          title: l10n.tourActivityRingsTitle,
-          message: l10n.tourActivityRingsDescription,
-          contentAlign: ContentAlign.bottom,
-          radius: 16,
-        );
-      case HomeTourStep.proInsights:
-        return _StepConfig(
-          title: l10n.tourProInsightsTitle,
-          message: l10n.tourProInsightsDescription,
-          contentAlign: ContentAlign.bottom,
-          radius: 16,
-        );
-      case HomeTourStep.recoveryInsight:
-        return _StepConfig(
-          title: l10n.tourRecoveryInsightTitle,
-          message: l10n.tourRecoveryInsightDescription,
-          contentAlign: ContentAlign.bottom,
-          radius: 16,
-        );
-      case HomeTourStep.stressPrediction:
-        return _StepConfig(
-          title: l10n.tourStressPredictionTitle,
-          message: l10n.tourStressPredictionDescription,
-          contentAlign: ContentAlign.top,
-          radius: 16,
-        );
-      case HomeTourStep.templateSuggestion:
-        return _StepConfig(
-          title: l10n.tourTemplateSuggestionTitle,
-          message: l10n.tourTemplateSuggestionDescription,
-          contentAlign: ContentAlign.top,
-          radius: 16,
-        );
       case HomeTourStep.startWorkout:
         return _StepConfig(
           title: l10n.tourStartWorkoutTitle,
@@ -349,10 +348,10 @@ class HomeTourNotifier extends StateNotifier<HomeTourState> {
           contentAlign: ContentAlign.top,
           radius: 16,
         );
-      case HomeTourStep.exerciseWiki:
+      case HomeTourStep.templateSuggestion:
         return _StepConfig(
-          title: l10n.tourExerciseWikiTitle,
-          message: l10n.tourExerciseWikiDescription,
+          title: l10n.tourTemplateSuggestionTitle,
+          message: l10n.tourTemplateSuggestionDescription,
           contentAlign: ContentAlign.top,
           radius: 16,
         );

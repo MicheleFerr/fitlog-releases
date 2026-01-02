@@ -7,20 +7,26 @@ import 'package:share_plus/share_plus.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/workout_template.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/pdf_detail_level.dart';
+import 'package:gymbro_flutter_new/features/coach/domain/entities/coach_branding.dart';
 import 'package:flutter/foundation.dart';
 
 class PdfTemplateService {
   /// Genera un PDF dal template di allenamento
   /// [detailLevel] specifica il livello di dettaglio per la visualizzazione dei set
+  /// [branding] optional coach branding for customization (P2-4)
   static Future<Uint8List> generateTemplatePdf(
     WorkoutTemplate template, {
     PdfDetailLevel detailLevel = PdfDetailLevel.compact,
+    CoachBranding? branding,
   }) async {
     final pdf = pw.Document();
 
-    // Colori del tema
-    final primaryColor = PdfColor.fromHex('#2196F3');
-    final accentColor = PdfColor.fromHex('#FF9800');
+    // Use custom branding or defaults
+    final effectiveBranding = branding ?? CoachBranding.defaultBranding;
+
+    // Colori del tema (from branding or defaults)
+    final primaryColor = PdfColor.fromHex('#${effectiveBranding.primaryColor}');
+    final accentColor = PdfColor.fromHex('#${effectiveBranding.accentColor}');
     final darkColor = PdfColor.fromHex('#212121');
     final lightGray = PdfColor.fromHex('#757575');
 
@@ -31,8 +37,8 @@ class PdfTemplateService {
         margin: const pw.EdgeInsets.all(32),
         build: (pw.Context context) {
           return [
-            // Header
-            _buildHeader(primaryColor),
+            // Header with branding
+            _buildHeader(primaryColor, effectiveBranding),
             pw.SizedBox(height: 20),
 
             // Titolo Template
@@ -53,6 +59,10 @@ class PdfTemplateService {
           ];
         },
         footer: (pw.Context context) {
+          // Use custom footer text or default
+          final footerText = effectiveBranding.footerText ??
+              'Generated with ${effectiveBranding.businessName}';
+
           return pw.Container(
             margin: const pw.EdgeInsets.only(top: 20),
             padding: const pw.EdgeInsets.only(top: 10),
@@ -61,38 +71,58 @@ class PdfTemplateService {
                 top: pw.BorderSide(color: PdfColors.grey300, width: 0.5),
               ),
             ),
-            child: pw.Row(
-              mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+            child: pw.Column(
               children: [
                 pw.Row(
+                  mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
                   children: [
-                    pw.Container(
-                      padding: const pw.EdgeInsets.symmetric(
-                        horizontal: 8,
-                        vertical: 4,
-                      ),
-                      decoration: pw.BoxDecoration(
-                        color: primaryColor.shade(0.1),
-                        borderRadius: pw.BorderRadius.circular(8),
-                      ),
-                      child: pw.Text(
-                        'Generated with FitLog Pro',
-                        style: pw.TextStyle(
-                          color: primaryColor,
-                          fontSize: 9,
-                          fontWeight: pw.FontWeight.bold,
+                    pw.Row(
+                      children: [
+                        pw.Container(
+                          padding: const pw.EdgeInsets.symmetric(
+                            horizontal: 8,
+                            vertical: 4,
+                          ),
+                          decoration: pw.BoxDecoration(
+                            color: primaryColor.shade(0.1),
+                            borderRadius: pw.BorderRadius.circular(8),
+                          ),
+                          child: pw.Text(
+                            footerText,
+                            style: pw.TextStyle(
+                              color: primaryColor,
+                              fontSize: 9,
+                              fontWeight: pw.FontWeight.bold,
+                            ),
+                          ),
                         ),
+                      ],
+                    ),
+                    pw.Text(
+                      'Page ${context.pageNumber} of ${context.pagesCount}',
+                      style: pw.TextStyle(
+                        color: lightGray,
+                        fontSize: 10,
                       ),
                     ),
                   ],
                 ),
-                pw.Text(
-                  'Page ${context.pageNumber} of ${context.pagesCount}',
-                  style: pw.TextStyle(
-                    color: lightGray,
-                    fontSize: 10,
+                // Show contact/social info if available
+                if (effectiveBranding.contactLine != null ||
+                    effectiveBranding.socialLine != null)
+                  pw.Padding(
+                    padding: const pw.EdgeInsets.only(top: 6),
+                    child: pw.Text(
+                      [
+                        effectiveBranding.contactLine,
+                        effectiveBranding.socialLine,
+                      ].whereType<String>().join(' | '),
+                      style: pw.TextStyle(
+                        color: lightGray,
+                        fontSize: 8,
+                      ),
+                    ),
                   ),
-                ),
               ],
             ),
           );
@@ -103,8 +133,8 @@ class PdfTemplateService {
     return pdf.save();
   }
 
-  /// Header dell'app
-  static pw.Widget _buildHeader(PdfColor primaryColor) {
+  /// Header dell'app with branding support (P2-4)
+  static pw.Widget _buildHeader(PdfColor primaryColor, CoachBranding branding) {
     return pw.Container(
       padding: const pw.EdgeInsets.all(16),
       decoration: pw.BoxDecoration(
@@ -118,7 +148,7 @@ class PdfTemplateService {
             crossAxisAlignment: pw.CrossAxisAlignment.start,
             children: [
               pw.Text(
-                'FitLog Pro',
+                branding.businessName,
                 style: pw.TextStyle(
                   fontSize: 24,
                   fontWeight: pw.FontWeight.bold,
@@ -126,7 +156,7 @@ class PdfTemplateService {
                 ),
               ),
               pw.Text(
-                'Workout Template',
+                branding.tagline ?? 'Workout Template',
                 style: pw.TextStyle(
                   fontSize: 14,
                   color: primaryColor.shade(0.7),
@@ -462,13 +492,19 @@ class PdfTemplateService {
 
   /// Condividi il PDF del template
   /// Returns ShareResultStatus to handle dismiss/success
+  /// [branding] optional coach branding for customization (P2-4)
   static Future<ShareResultStatus> shareTemplatePdf(
     WorkoutTemplate template, {
     PdfDetailLevel detailLevel = PdfDetailLevel.compact,
+    CoachBranding? branding,
   }) async {
     File? tempFile;
     try {
-      final pdfData = await generateTemplatePdf(template, detailLevel: detailLevel);
+      final pdfData = await generateTemplatePdf(
+        template,
+        detailLevel: detailLevel,
+        branding: branding,
+      );
 
       // Save to temp file
       final tempDir = await getTemporaryDirectory();
@@ -499,12 +535,18 @@ class PdfTemplateService {
   }
 
   /// Stampa il PDF del template
+  /// [branding] optional coach branding for customization (P2-4)
   static Future<void> printTemplatePdf(
     WorkoutTemplate template, {
     PdfDetailLevel detailLevel = PdfDetailLevel.compact,
+    CoachBranding? branding,
   }) async {
     try {
-      final pdfData = await generateTemplatePdf(template, detailLevel: detailLevel);
+      final pdfData = await generateTemplatePdf(
+        template,
+        detailLevel: detailLevel,
+        branding: branding,
+      );
 
       await Printing.layoutPdf(
         onLayout: (PdfPageFormat format) async => pdfData,

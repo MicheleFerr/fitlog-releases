@@ -208,6 +208,24 @@ class AuthService with RateLimiterMixin {
     }
   }
 
+  // Sign In Anonymously (Guest Mode)
+  Future<UserCredential?> signInAnonymously() async {
+    try {
+      final userCredential = await _auth.signInAnonymously();
+
+      // Create guest user document
+      if (userCredential.user != null) {
+        await _createUserDocument(userCredential.user!, isGuest: true);
+      }
+
+      return userCredential;
+    } on FirebaseAuthException catch (e) {
+      throw Exception(_handleAuthException(e));
+    } catch (e) {
+      throw Exception('Anonymous sign in failed: $e');
+    }
+  }
+
   // Sign Out
   Future<void> signOut() async {
     try {
@@ -389,18 +407,18 @@ class AuthService with RateLimiterMixin {
   }
 
   // Create user document in Firestore
-  Future<void> _createUserDocument(User user) async {
+  Future<void> _createUserDocument(User user, {bool isGuest = false}) async {
     try {
       final userDoc = _firestore.collection('users').doc(user.uid);
-      
+
       await userDoc.set({
         'uid': user.uid,
         'email': user.email,
-        'displayName': user.displayName ?? 'GymBro User',
+        'displayName': isGuest ? 'Guest User' : (user.displayName ?? 'GymBro User'),
         'photoURL': user.photoURL,
         'createdAt': FieldValue.serverTimestamp(),
         'lastLoginAt': FieldValue.serverTimestamp(),
-        'isGuest': false,
+        'isGuest': isGuest,
         'accountTier': 'free', // Default tier
         'templateQuota': {
           'maxPrivateTemplates': 4,

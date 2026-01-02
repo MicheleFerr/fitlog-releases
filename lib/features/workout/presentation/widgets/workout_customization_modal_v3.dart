@@ -638,21 +638,21 @@ class _WorkoutCustomizationModalV3State
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Dimensione righe set',
+                  context.l10n.setRowSize,
                   style: theme.textTheme.bodyLarge?.copyWith(
                     fontWeight: FontWeight.w500,
                   ),
                 ),
                 const SizedBox(height: 8),
                 SegmentedButton<SetDisplayMode>(
-                  segments: const [
+                  segments: [
                     ButtonSegment(
                       value: SetDisplayMode.compact,
-                      label: Text('Compatto'),
+                      label: Text(context.l10n.compact),
                     ),
                     ButtonSegment(
                       value: SetDisplayMode.comfortable,
-                      label: Text('Comodo'),
+                      label: Text(context.l10n.comfortable),
                     ),
                   ],
                   selected: {displayMode},
@@ -700,25 +700,25 @@ class _WorkoutCustomizationModalV3State
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Dimensione testo',
+                  context.l10n.textSize,
                   style: theme.textTheme.bodyLarge?.copyWith(
                     fontWeight: FontWeight.w500,
                   ),
                 ),
                 const SizedBox(height: 8),
                 SegmentedButton<_FontSize>(
-                  segments: const [
+                  segments: [
                     ButtonSegment(
                       value: _FontSize.small,
-                      label: Text('Piccolo'),
+                      label: Text(context.l10n.small),
                     ),
                     ButtonSegment(
                       value: _FontSize.medium,
-                      label: Text('Medio'),
+                      label: Text(context.l10n.medium),
                     ),
                     ButtonSegment(
                       value: _FontSize.large,
-                      label: Text('Grande'),
+                      label: Text(context.l10n.large),
                     ),
                   ],
                   selected: {currentSize()},

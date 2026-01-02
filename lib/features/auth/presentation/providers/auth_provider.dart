@@ -31,9 +31,9 @@ final currentUserProvider = StreamProvider<UserModel?>((ref) async* {
             yield UserModel(
               uid: user.uid,
               email: user.email ?? '',
-              displayName: user.displayName ?? 'GymBro User',
+              displayName: user.displayName ?? (user.isAnonymous ? 'Guest User' : 'GymBro User'),
               photoURL: user.photoURL,
-              isGuest: false,
+              isGuest: user.isAnonymous,
               preferences: const UserPreferences(),
               stats: const UserStats(),
             );
@@ -44,9 +44,9 @@ final currentUserProvider = StreamProvider<UserModel?>((ref) async* {
         yield UserModel(
           uid: user.uid,
           email: user.email ?? '',
-          displayName: user.displayName ?? 'GymBro User',
+          displayName: user.displayName ?? (user.isAnonymous ? 'Guest User' : 'GymBro User'),
           photoURL: user.photoURL,
-          isGuest: false,
+          isGuest: user.isAnonymous,
           preferences: const UserPreferences(),
           stats: const UserStats(),
         );
@@ -143,6 +143,18 @@ class AuthController extends Notifier<AsyncValue<void>> {
     }
   }
 
+  // Sign In Anonymously (Guest Mode)
+  Future<void> signInAnonymously() async {
+    state = const AsyncValue.loading();
+
+    try {
+      await _authService.signInAnonymously();
+      state = const AsyncValue.data(null);
+    } catch (e, stackTrace) {
+      state = AsyncValue.error(e, stackTrace);
+    }
+  }
+
   // Sign Out
   Future<void> signOut() async {
     state = const AsyncValue.loading();
@@ -164,6 +176,28 @@ class AuthController extends Notifier<AsyncValue<void>> {
       state = const AsyncValue.data(null);
     } catch (e, stackTrace) {
       state = AsyncValue.error(e, stackTrace);
+    }
+  }
+
+  /// Delete user account and all associated data (GDPR Art. 17)
+  ///
+  /// Returns true if deletion was successful, false if re-authentication is required.
+  /// Throws an exception for other errors.
+  Future<bool> deleteAccount() async {
+    state = const AsyncValue.loading();
+
+    try {
+      await _authService.deleteAccount();
+      state = const AsyncValue.data(null);
+      return true;
+    } catch (e, stackTrace) {
+      // Check if re-authentication is required
+      if (e.toString().contains('requires-recent-login')) {
+        state = const AsyncValue.data(null);
+        return false; // Signal that re-auth is needed
+      }
+      state = AsyncValue.error(e, stackTrace);
+      rethrow;
     }
   }
 }

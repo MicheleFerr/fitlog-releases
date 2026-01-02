@@ -78,6 +78,9 @@ abstract class CommunityWorkoutTemplate with _$CommunityWorkoutTemplate {
     
     // Tags per ricerca
     @Default([]) List<String> tags,
+
+    // Folder organization (P2-3)
+    String? folderId,
     
     // Durata stimata in minuti
     int? estimatedDurationMinutes,

@@ -110,9 +110,12 @@ class SwipeableTemplateCard extends ConsumerWidget {
                 ],
               )
             : null,
+        // P0-3 FIX: Use StretchMotion for more deliberate feel + reduce extent
+        // Also add higher openThreshold to require more intentional swipe
         endActionPane: ActionPane(
-          motion: const BehindMotion(),
-          extentRatio: onView != null ? 0.80 : 0.64,
+          motion: const StretchMotion(), // More resistance than BehindMotion
+          extentRatio: onView != null ? 0.72 : 0.56, // Reduced from 0.80/0.64
+          openThreshold: 0.3, // Must swipe 30% before actions reveal (default 0.5)
           children: [
             // View action (presentation mode)
             if (onView != null)

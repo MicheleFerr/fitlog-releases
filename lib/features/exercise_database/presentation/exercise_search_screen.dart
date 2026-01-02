@@ -27,9 +27,10 @@ import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
 import 'package:gymbro_flutter_new/shared/presentation/services/snackbar_service.dart';
-import 'package:gymbro_flutter_new/features/analytics/data/repositories/exercise_preferences_repository.dart';
+import 'package:gymbro_flutter_new/shared/domain/abstractions/i_exercise_preferences.dart';
 import 'package:gymbro_flutter_new/features/exercise_database/domain/entities/exercise_counting_mode.dart';
 import 'package:gymbro_flutter_new/features/stress_index/data/mappers/muscle_abbreviation_mapper.dart';
+import 'package:gymbro_flutter_new/features/onboarding/domain/services/exercise_search_tutorial_service.dart';
 
 class ExerciseSearchScreen extends ConsumerStatefulWidget { // New: Just select and return exercise template (for DropSet/Rest-Pause)
 
@@ -51,6 +52,13 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
   final TextEditingController _searchController = TextEditingController();
   final Set<Exercise> _selectedExercises = <Exercise>{};
 
+  // Tutorial GlobalKeys
+  final GlobalKey _searchBarKey = GlobalKey();
+  final GlobalKey _filterButtonKey = GlobalKey();
+  final GlobalKey _quickFiltersKey = GlobalKey();
+  final GlobalKey _exerciseCardKey = GlobalKey();
+  final GlobalKey _addButtonKey = GlobalKey();
+
   String _searchQuery = '';
   List<String> _selectedFocus = [];
   final List<String> _selectedMuscleGroups = [];
@@ -59,7 +67,7 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
   String? _selectedType;
 
   bool _showFilters = false;
-  bool _showSearch = false; // Search bar visibility controlled by FAB
+  bool _showSearch = true; // P1-3 FIX: Show search by default for faster logging
   // Muscle groups filter removed - keeping equipment and difficulty only
   bool _showDifficultyFilter = false;
   bool _showEquipmentFilter = false;
@@ -77,9 +85,9 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
   @override
   void initState() {
     super.initState();
-    // 🔐 SECURITY: Initialize search debouncer (400ms delay)
+    // 🔐 SECURITY: Initialize search debouncer (P1-3: reduced to 200ms for faster logging)
     _searchDebouncer = Debouncer(
-      duration: const Duration(milliseconds: 400),
+      duration: const Duration(milliseconds: 200),
       onError: (error, stackTrace) {
         if (kDebugMode) {
           debugPrint('⚠️ [ExerciseSearch] Debouncer error: $error');
@@ -87,6 +95,52 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
       },
     );
     _loadUsageStats();
+
+    // Check if tutorial should auto-start
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _checkAutoStartTutorial();
+    });
+  }
+
+  void _checkAutoStartTutorial() {
+    final tutorialState = ref.read(exerciseSearchTutorialProvider);
+    // Auto-start tutorial if never completed
+    if (!tutorialState.hasCompletedTutorial && !tutorialState.isActive) {
+      ref.read(exerciseSearchTutorialProvider.notifier).startTutorial();
+      _showTutorial();
+    }
+  }
+
+  void _showTutorial() {
+    final tutorialState = ref.read(exerciseSearchTutorialProvider);
+    if (!tutorialState.isActive) return;
+
+    // Need to open filters to show quick filters
+    setState(() => _showFilters = true);
+
+    // Delay to let filters render
+    Future.delayed(const Duration(milliseconds: 300), () {
+      if (!mounted) return;
+
+      ref.read(exerciseSearchTutorialProvider.notifier).showTutorial(
+        context: context,
+        targetKeys: {
+          ExerciseSearchTutorialStep.searchBar: _searchBarKey,
+          ExerciseSearchTutorialStep.filterButton: _filterButtonKey,
+          ExerciseSearchTutorialStep.quickFilters: _quickFiltersKey,
+          ExerciseSearchTutorialStep.exerciseCard: _exerciseCardKey,
+          // Add button only visible when exercises selected, skip if not shown
+          if (_selectedExercises.isNotEmpty)
+            ExerciseSearchTutorialStep.addButton: _addButtonKey,
+        },
+        onComplete: () {
+          debugPrint('✅ [ExerciseSearchTutorial] Completed!');
+        },
+        onSkip: () {
+          debugPrint('⏭️ [ExerciseSearchTutorial] Skipped');
+        },
+      );
+    });
   }
 
   @override
@@ -400,6 +454,7 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
               tooltip: widget.multiSelectMode ? 'Select Exercises' : l10n.addToWorkout,
             ),
           IconButton(
+            key: _filterButtonKey,
             icon: Icon(_showFilters ? AppIcons.filter : AppIcons.filterListOutlined),
             onPressed: () => setState(() => _showFilters = !_showFilters),
             tooltip: l10n.filters,
@@ -480,6 +535,7 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
                   
                   // Quick Filters Row - Improved with smart categories
                   SingleChildScrollView(
+                    key: _quickFiltersKey, // Tutorial target
                     scrollDirection: Axis.horizontal,
                     child: Row(
                       children: [
@@ -556,6 +612,7 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
                       ),
                     ),
                     FilledButton.icon(
+                      key: _addButtonKey, // Tutorial target
                       onPressed: widget.multiSelectMode ? _selectExercises : _addSelectedToWorkout,
                       icon: Icon(widget.multiSelectMode ? AppIcons.check : AppIcons.add),
                       label: Text(widget.multiSelectMode ? l10n.confirm : l10n.add),
@@ -568,6 +625,7 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
 
       // FAB for search (always visible)
       floatingActionButton: FloatingActionButton(
+        key: _searchBarKey, // Tutorial target for search
         onPressed: _toggleSearch,
         tooltip: _showSearch ? l10n.close : l10n.search,
         child: Icon(_showSearch ? AppIcons.close : AppIcons.search),
@@ -602,8 +660,79 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
     // Merge: custom exercises first, then catalog
     final allExercises = [...customAsExercises, ...exercises];
 
+    // P1-3 FIX: Get recent/frequent exercises for quick access
+    final recentExercises = _searchQuery.isEmpty
+        ? allExercises.where((e) =>
+            _frequentExerciseIds.contains(e.id) || _trendingExerciseIds.contains(e.id)
+          ).take(5).toList()
+        : <Exercise>[];
+
     return Column(
       children: [
+        // P1-3 FIX: Show recent exercises for quick access (when no search)
+        if (recentExercises.isNotEmpty) ...[
+          Container(
+            width: double.infinity,
+            padding: const EdgeInsets.fromLTRB(16, 12, 16, 4),
+            child: Row(
+              children: [
+                Icon(AppIcons.history, size: 16, color: context.colors.primary),
+                const SizedBox(width: 8),
+                Text(
+                  l10n.recentExercises,
+                  style: context.textTheme.titleSmall?.copyWith(
+                    fontWeight: FontWeight.w600,
+                    color: context.colors.primary,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          SizedBox(
+            height: 52,
+            child: ListView.builder(
+              scrollDirection: Axis.horizontal,
+              padding: const EdgeInsets.symmetric(horizontal: 12),
+              itemCount: recentExercises.length,
+              itemBuilder: (context, index) {
+                final exercise = recentExercises[index];
+                final isSelected = _selectedExercises.contains(exercise);
+                return Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 4),
+                  child: ActionChip(
+                    avatar: isSelected
+                        ? Icon(AppIcons.check, size: 16, color: context.colors.onPrimary)
+                        : null,
+                    label: Text(
+                      exercise.nome,
+                      style: TextStyle(
+                        color: isSelected ? context.colors.onPrimary : null,
+                      ),
+                    ),
+                    backgroundColor: isSelected ? context.colors.primary : null,
+                    onPressed: () {
+                      // Selection mode: return and close
+                      if (widget.selectionMode) {
+                        Navigator.of(context).pop(exercise);
+                        return;
+                      }
+                      // Toggle selection
+                      setState(() {
+                        if (_selectedExercises.contains(exercise)) {
+                          _selectedExercises.remove(exercise);
+                        } else {
+                          _selectedExercises.add(exercise);
+                        }
+                      });
+                    },
+                  ),
+                );
+              },
+            ),
+          ),
+          const Divider(height: 16),
+        ],
+
         // Results count
         Container(
           width: double.infinity,
@@ -630,7 +759,13 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
               final isSelected = _selectedExercises.contains(exercise);
               final isCustom = index < customAsExercises.length;
 
-              return _buildExerciseCard(exercise, isSelected, isCustom: isCustom);
+              // Add tutorial key to first exercise card
+              return _buildExerciseCard(
+                exercise,
+                isSelected,
+                isCustom: isCustom,
+                tutorialKey: index == 0 ? _exerciseCardKey : null,
+              );
             },
           ),
         ),
@@ -696,6 +831,7 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
                 isSelected,
                 fuzzyResult.score,
                 fuzzyResult.wasAutoCorrected,
+                tutorialKey: index == 0 ? _exerciseCardKey : null,
               );
             },
           ),
@@ -1164,8 +1300,14 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
     }
   }
 
-  Widget _buildExerciseCard(Exercise exercise, bool isSelected, {bool isCustom = false}) {
+  Widget _buildExerciseCard(
+    Exercise exercise,
+    bool isSelected, {
+    bool isCustom = false,
+    GlobalKey? tutorialKey,
+  }) {
     return Card(
+      key: tutorialKey,
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
       child: Stack(
         children: [
@@ -1267,8 +1409,9 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
     Exercise exercise,
     bool isSelected,
     double matchScore,
-    bool wasAutoCorrected,
-  ) {
+    bool wasAutoCorrected, {
+    GlobalKey? tutorialKey,
+  }) {
     final matchPercentage = (matchScore * 100).toInt();
 
     // Color based on match quality
@@ -1293,6 +1436,7 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
         );
 
     return Card(
+      key: tutorialKey,
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
       elevation: wasAutoCorrected ? 3 : 1,
       shape: RoundedRectangleBorder(

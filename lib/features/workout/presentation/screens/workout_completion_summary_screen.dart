@@ -31,6 +31,8 @@ library;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:gymbro_flutter_new/features/onboarding/domain/services/onboarding_orchestrator.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/workout.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
@@ -38,17 +40,117 @@ import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart'
 import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
 
 /// Screen di riepilogo workout completato
-class WorkoutCompletionSummaryScreen extends ConsumerWidget {
-
+class WorkoutCompletionSummaryScreen extends ConsumerStatefulWidget {
   const WorkoutCompletionSummaryScreen({
     super.key,
     required this.workout,
   });
+
   /// Workout completato da mostrare
   final Workout workout;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<WorkoutCompletionSummaryScreen> createState() =>
+      _WorkoutCompletionSummaryScreenState();
+}
+
+class _WorkoutCompletionSummaryScreenState
+    extends ConsumerState<WorkoutCompletionSummaryScreen> {
+  bool _hasShownHealthKitPrompt = false;
+
+  @override
+  void initState() {
+    super.initState();
+    // Check for HealthKit prompt after frame is rendered
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _checkHealthKitPrompt();
+    });
+  }
+
+  Future<void> _checkHealthKitPrompt() async {
+    if (_hasShownHealthKitPrompt) return;
+
+    // Check if health integration tour should be shown (P1-2: after first workout)
+    final orchestrator = ref.read(onboardingOrchestratorProvider);
+    final canShow = orchestrator.canShowTour(TourType.healthIntegrationTour);
+
+    if (canShow) {
+      _hasShownHealthKitPrompt = true;
+      await _showHealthKitPromptDialog();
+    }
+  }
+
+  Future<void> _showHealthKitPromptDialog() async {
+    if (!mounted) return;
+
+    final result = await showDialog<bool>(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) => AlertDialog(
+        icon: Icon(
+          AppIcons.healthAndSafety,
+          size: 48,
+          color: context.colors.primary,
+        ),
+        title: Text(context.l10n.healthKitPromptTitle),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(
+              context.l10n.healthKitPromptDescription,
+              textAlign: TextAlign.center,
+              style: context.textTheme.bodyMedium,
+            ),
+            const SizedBox(height: 16),
+            // Benefits list
+            _HealthKitBenefit(
+              icon: AppIcons.sync,
+              text: context.l10n.healthKitBenefitSync,
+            ),
+            _HealthKitBenefit(
+              icon: AppIcons.analytics,
+              text: context.l10n.healthKitBenefitAnalytics,
+            ),
+            _HealthKitBenefit(
+              icon: AppIcons.favorite,
+              text: context.l10n.healthKitBenefitHealth,
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context, false),
+            child: Text(context.l10n.maybeLater),
+          ),
+          FilledButton.icon(
+            onPressed: () => Navigator.pop(context, true),
+            icon: const Icon(AppIcons.healthAndSafety),
+            label: Text(context.l10n.connectHealthKit),
+          ),
+        ],
+      ),
+    );
+
+    // Mark tour as completed
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool('health_integration_tour_completed', true);
+
+    if (result == true && mounted) {
+      // TODO: Navigate to health settings or request permissions
+      // For now, just show success snackbar
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(context.l10n.healthKitConnectLater),
+          behavior: SnackBarBehavior.floating,
+        ),
+      );
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final workout = widget.workout;
+
     // Calcola statistiche workout
     final totalExercises = workout.exercises.length;
     final totalSets = workout.exercises.fold<int>(
@@ -291,6 +393,42 @@ class _StatCard extends StatelessWidget {
             ),
           ],
         ),
+      ),
+    );
+  }
+}
+
+/// Benefit item for HealthKit prompt dialog (P1-2)
+class _HealthKitBenefit extends StatelessWidget {
+  const _HealthKitBenefit({
+    required this.icon,
+    required this.text,
+  });
+
+  final IconData icon;
+  final String text;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 4),
+      child: Row(
+        children: [
+          Icon(
+            icon,
+            size: 20,
+            color: context.colors.primary,
+          ),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Text(
+              text,
+              style: context.textTheme.bodySmall?.copyWith(
+                color: context.colors.onSurface,
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }

@@ -54,6 +54,9 @@ class AppConfig { // Auto-adjust rest time based on RPE feedback
     this.autoAdjustRestFromRpe,
     this.effortScale = 'rpe', // 'rpe' or 'rir' - global effort tracking preference
     this.autoPauseOnNavigateAway = true, // Auto-pause workout when navigating away from workout tab
+    this.initialOnboardingCompleted = false, // Initial onboarding not completed by default
+    this.skipExerciseDeleteConfirmation = false, // Show confirmation dialog by default (P0-2)
+    this.simpleMode = false, // Simple mode for elderly/accessibility users (P2-2)
   });
 
   factory AppConfig.fromJson(Map<String, dynamic> json) {
@@ -86,6 +89,9 @@ class AppConfig { // Auto-adjust rest time based on RPE feedback
       onboardingVersion: json['onboardingVersion'] ?? 1,
       betaModeEnabled: json['betaModeEnabled'] ?? false,
       effortScale: json['effortScale'] ?? 'rpe',
+      initialOnboardingCompleted: json['initialOnboardingCompleted'] ?? false,
+      skipExerciseDeleteConfirmation: json['skipExerciseDeleteConfirmation'] ?? false,
+      simpleMode: json['simpleMode'] ?? false,
     );
   }
   @HiveField(0)
@@ -234,6 +240,15 @@ class AppConfig { // Auto-adjust rest time based on RPE feedback
 
   // Note: HiveField(47) was useSimplifiedAnalytics, removed after analytics rollback
 
+  @HiveField(48)
+  final bool initialOnboardingCompleted; // Initial onboarding (profile/goals) completed
+
+  @HiveField(49)
+  final bool skipExerciseDeleteConfirmation; // Skip confirmation dialog when deleting exercise (P0-2)
+
+  @HiveField(50)
+  final bool simpleMode; // Simple mode for elderly/accessibility users (P2-2)
+
   Locale get locale => Locale(languageCode, countryCode);
 
   AppConfig copyWith({
@@ -284,6 +299,9 @@ class AppConfig { // Auto-adjust rest time based on RPE feedback
     bool? autoAdjustRestFromRpe,
     String? effortScale,
     bool? autoPauseOnNavigateAway,
+    bool? initialOnboardingCompleted,
+    bool? skipExerciseDeleteConfirmation,
+    bool? simpleMode,
   }) {
     return AppConfig(
       languageCode: languageCode ?? this.languageCode,
@@ -333,6 +351,9 @@ class AppConfig { // Auto-adjust rest time based on RPE feedback
       autoAdjustRestFromRpe: autoAdjustRestFromRpe ?? this.autoAdjustRestFromRpe,
       effortScale: effortScale ?? this.effortScale,
       autoPauseOnNavigateAway: autoPauseOnNavigateAway ?? this.autoPauseOnNavigateAway,
+      initialOnboardingCompleted: initialOnboardingCompleted ?? this.initialOnboardingCompleted,
+      skipExerciseDeleteConfirmation: skipExerciseDeleteConfirmation ?? this.skipExerciseDeleteConfirmation,
+      simpleMode: simpleMode ?? this.simpleMode,
     );
   }
 
@@ -360,6 +381,9 @@ class AppConfig { // Auto-adjust rest time based on RPE feedback
       'onboardingVersion': onboardingVersion,
       'betaModeEnabled': betaModeEnabled,
       'effortScale': effortScale,
+      'initialOnboardingCompleted': initialOnboardingCompleted,
+      'skipExerciseDeleteConfirmation': skipExerciseDeleteConfirmation,
+      'simpleMode': simpleMode,
     };
   }
 
@@ -445,5 +469,24 @@ class AppConfigPresets {
     autoStartTimer: true,
     showIntensityTechniques: true,
     soundEnabled: true,
+  );
+
+  /// Simple mode preset for elderly users (P2-2)
+  /// - Large font (1.3x)
+  /// - No advanced features
+  /// - Simplified animations
+  /// - Sound/vibration enabled
+  static const AppConfig simpleModeConfig = AppConfig(
+    fontSize: 1.3, // 30% larger text
+    simpleMode: true,
+    simplifiedAnimations: true,
+    showIntensityTechniques: false, // Hide dropsets, rest-pause etc
+    showAdvancedMenu: false, // Hide advanced options
+    showExerciseInsights: false, // Simplify UI
+    showTutInfo: false, // Hide time under tension
+    rpeTracking: false, // Simpler logging
+    soundEnabled: true, // Clear audio feedback
+    vibrationsEnabled: true, // Haptic feedback
+    autoStartTimer: true, // Automatic timers
   );
 }

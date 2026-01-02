@@ -1069,7 +1069,7 @@ class _QuickEditOverlayV2State extends ConsumerState<QuickEditOverlayV2>
                             ] : null,
                           ),
                           child: Text(
-                            '${weight.toStringAsFixed(weight % 1 == 0 ? 0 : 1)}',
+                            weight.toStringAsFixed(weight % 1 == 0 ? 0 : 1),
                             style: theme.textTheme.bodySmall?.copyWith(
                               fontWeight: isSelected ? FontWeight.bold : FontWeight.w600,
                               color: isSelected
@@ -1883,7 +1883,7 @@ class _QuickEditOverlayV2State extends ConsumerState<QuickEditOverlayV2>
   semanticLabel: 'Workout',
   size: AppIconSize.tiny,
 ),
-                label: const Text('Weight to All'),  // TODO: Add localization
+                label: Text(context.l10n.weightToAll),
                 style: FilledButton.styleFrom(
                   padding: const EdgeInsets.symmetric(vertical: 8),
                   backgroundColor: theme.colorScheme.primary,
@@ -1897,7 +1897,7 @@ class _QuickEditOverlayV2State extends ConsumerState<QuickEditOverlayV2>
   semanticLabel: 'Workout',
   size: AppIconSize.tiny,
 ),
-                label: const Text('Weight to All'),  // TODO: Add localization
+                label: Text(context.l10n.weightToAll),
                 style: OutlinedButton.styleFrom(
                   padding: const EdgeInsets.symmetric(vertical: 8),
                   side: BorderSide(
@@ -1918,7 +1918,7 @@ class _QuickEditOverlayV2State extends ConsumerState<QuickEditOverlayV2>
   semanticLabel: 'Repeat',
   size: AppIconSize.tiny,
 ),
-                label: const Text('Reps to All'),  // TODO: Add localization
+                label: Text(context.l10n.repsToAll),
                 style: FilledButton.styleFrom(
                   padding: const EdgeInsets.symmetric(vertical: 8),
                   backgroundColor: theme.colorScheme.secondary,
@@ -1932,7 +1932,7 @@ class _QuickEditOverlayV2State extends ConsumerState<QuickEditOverlayV2>
   semanticLabel: 'Repeat',
   size: AppIconSize.tiny,
 ),
-                label: const Text('Reps to All'),  // TODO: Add localization
+                label: Text(context.l10n.repsToAll),
                 style: OutlinedButton.styleFrom(
                   padding: const EdgeInsets.symmetric(vertical: 8),
                   side: BorderSide(
