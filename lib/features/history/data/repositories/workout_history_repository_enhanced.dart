@@ -261,20 +261,40 @@ class WorkoutHistoryRepositoryEnhanced {
   }
 
   /// Save workout to local storage
+  /// 🔧 FIX: Include userId in key to isolate data per user
   Future<void> _saveWorkoutLocally(WorkoutHistoryDetail workout) async {
     await _ensureInitialized();
 
-    final key = 'workout_${workout.id}';
+    final userId = _auth.currentUser?.uid;
+    if (userId == null) return;
+
+    // Key format: workout_{userId}_{workoutId} for user isolation
+    final key = 'workout_${userId}_${workout.id}';
     await _historyBox!.put(key, workout.toMap());
   }
 
   /// Get workouts from local storage
+  /// 🔧 FIX: Filter by userId to only return current user's workouts
   Future<List<WorkoutHistoryDetail>> _getLocalWorkouts() async {
     await _ensureInitialized();
 
+    final userId = _auth.currentUser?.uid;
+    if (userId == null) return [];
+
     final workouts = <WorkoutHistoryDetail>[];
+    final userPrefix = 'workout_${userId}_';
 
     for (var key in _historyBox!.keys) {
+      // 🔐 SECURITY: Only load workouts belonging to current user
+      final keyStr = key.toString();
+      if (!keyStr.startsWith(userPrefix)) {
+        // Also support legacy keys without userId (for migration)
+        // Check if it's a legacy key that should be migrated
+        if (keyStr.startsWith('workout_') && !keyStr.contains(userId)) {
+          continue; // Skip other users' workouts
+        }
+      }
+
       try {
         final data = _historyBox!.get(key);
         if (data != null) {
@@ -290,6 +310,10 @@ class WorkoutHistoryRepositoryEnhanced {
 
     // Sort by completion date (newest first)
     workouts.sort((a, b) => b.completedAt.compareTo(a.completedAt));
+
+    if (kDebugMode) {
+      debugPrint('📦 [WorkoutHistoryRepo] Loaded ${workouts.length} workouts for user $userId');
+    }
 
     return workouts;
   }
@@ -363,8 +387,14 @@ class WorkoutHistoryRepositoryEnhanced {
     try {
       await _ensureInitialized();
 
-      // Remove from local storage
-      await _historyBox!.delete('workout_$workoutId');
+      final userId = _auth.currentUser?.uid;
+      if (userId == null) {
+        return const Left(DatabaseFailure('User not authenticated'));
+      }
+
+      // Remove from local storage (try both new and legacy key formats)
+      await _historyBox!.delete('workout_${userId}_$workoutId');
+      await _historyBox!.delete('workout_$workoutId'); // Legacy cleanup
 
       // Add to sync queue for cloud deletion
       await _addToSyncQueue('delete', WorkoutHistoryDetail.empty(id: workoutId));

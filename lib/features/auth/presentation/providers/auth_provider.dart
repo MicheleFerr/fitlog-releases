@@ -1,7 +1,9 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/features/auth/data/auth_service.dart';
 import 'package:gymbro_flutter_new/features/auth/domain/entities/user_model.dart';
+import 'package:gymbro_flutter_new/features/history/presentation/providers/workout_history_provider.dart';
 
 // Auth Service Provider
 final authServiceProvider = Provider<AuthService>((ref) => AuthService());
@@ -156,10 +158,26 @@ class AuthController extends Notifier<AsyncValue<void>> {
   }
 
   // Sign Out
+  /// 🔧 FIX: Clear local cache on logout to prevent data leakage between users
   Future<void> signOut() async {
     state = const AsyncValue.loading();
 
     try {
+      // 🔐 SECURITY: Clear local workout history cache before sign out
+      // This prevents the next user from seeing previous user's data
+      try {
+        final historyRepo = ref.read(workoutHistoryRepositoryProvider);
+        await historyRepo.clearCache();
+        if (kDebugMode) {
+          debugPrint('🗑️ [Auth] Cleared workout history cache on logout');
+        }
+      } catch (e) {
+        // Don't block logout if cache clear fails
+        if (kDebugMode) {
+          debugPrint('⚠️ [Auth] Failed to clear cache on logout: $e');
+        }
+      }
+
       await _authService.signOut();
       state = const AsyncValue.data(null);
     } catch (e, stackTrace) {
@@ -187,6 +205,19 @@ class AuthController extends Notifier<AsyncValue<void>> {
     state = const AsyncValue.loading();
 
     try {
+      // 🔐 SECURITY: Clear local cache before account deletion
+      try {
+        final historyRepo = ref.read(workoutHistoryRepositoryProvider);
+        await historyRepo.clearCache();
+        if (kDebugMode) {
+          debugPrint('🗑️ [Auth] Cleared workout history cache on account deletion');
+        }
+      } catch (e) {
+        if (kDebugMode) {
+          debugPrint('⚠️ [Auth] Failed to clear cache on delete: $e');
+        }
+      }
+
       await _authService.deleteAccount();
       state = const AsyncValue.data(null);
       return true;
