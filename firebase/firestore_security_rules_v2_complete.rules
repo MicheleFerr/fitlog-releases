@@ -514,9 +514,8 @@ service cloud.firestore {
     match /settings/{userId} {
       allow read: if request.auth != null && (
         request.auth.uid == userId ||
-        // Permetti lettura per cercare coach tramite coachCode
-        true ||
-        (request.auth.token.email != null && 
+        // Coach può leggere settings se ha delega attiva
+        (request.auth.token.email != null &&
          resource.data.email != null &&
          exists(/databases/$(database)/documents/coach_delegations/$(request.auth.token.email + '_' + resource.data.email)))
       );

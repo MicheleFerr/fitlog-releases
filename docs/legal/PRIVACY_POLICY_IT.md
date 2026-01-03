@@ -90,6 +90,11 @@ Ai sensi del Regolamento UE 2016/679 (GDPR) e del D.Lgs. 196/2003 (Codice Privac
 | Google AdMob | Pubblicità in-app | IDFA/GAID, dati dispositivo | Consenso (Art. 6.1.a) |
 | Firebase Crashlytics | Crash reporting | Dati tecnici errore | Legittimo interesse |
 | Apple/Google (IAP) | Pagamenti subscription | Transaction ID (no dati personali) | Esecuzione contratto |
+| ExerciseDB | Immagini dimostrative esercizi | Nessuno (immagini caricate dai loro server) | Legittimo interesse |
+
+### 5.1 Immagini Dimostrative Esercizi
+
+Le immagini GIF dimostrative degli esercizi visualizzate in questa app provengono da **ExerciseDB** (https://exercisedb.io). Queste immagini vengono caricate direttamente dai server ExerciseDB per mostrare la corretta esecuzione degli esercizi. Nessun dato personale viene condiviso con ExerciseDB - viene effettuata solo la richiesta dell'immagine.
 
 **NO vendita dati a broker**, **NO condivisione con terzi non elencati**.
 

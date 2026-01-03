@@ -13746,7 +13746,7 @@ class AppLocalizationsIt extends AppLocalizations {
   String get legalDocuments => 'Documenti Legali';
 
   @override
-  String get privacyPolicy => 'Informativa sulla Privacy';
+  String get privacyPolicy => 'Privacy Policy';
 
   @override
   String get privacyPolicySubtitle =>
@@ -25885,4 +25885,46 @@ class AppLocalizationsIt extends AppLocalizations {
   String exercisesAddedToWorkout(int count) {
     return '$count esercizi aggiunti alla scheda!';
   }
+
+  @override
+  String get aboutCredits => 'Informazioni e Crediti';
+
+  @override
+  String get appVersion => 'Versione App';
+
+  @override
+  String appVersionValue(String version) {
+    return 'Versione $version';
+  }
+
+  @override
+  String get exerciseImagesCredit => 'Immagini Esercizi';
+
+  @override
+  String get exerciseImagesCreditDesc => 'Fornite da ExerciseDB';
+
+  @override
+  String get openSourceLicenses => 'Licenze Open Source';
+
+  @override
+  String get openSourceLicensesDesc => 'Visualizza licenze di terze parti';
+
+  @override
+  String get privacyPolicyDesc => 'Leggi la nostra informativa privacy';
+
+  @override
+  String get termsOfServiceDesc => 'Leggi i termini di servizio';
+
+  @override
+  String get madeWithLove => 'Fatto con amore in Italia';
+
+  @override
+  String get exerciseDbAttribution =>
+      'GIF esercizi fornite da ExerciseDB (exercisedb.io)';
+
+  @override
+  String get soundCredits => 'Effetti Sonori';
+
+  @override
+  String get soundCreditsDesc => 'Audio originale di FitLog Pro';
 }

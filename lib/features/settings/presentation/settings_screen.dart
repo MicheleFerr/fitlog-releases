@@ -102,6 +102,10 @@ class SettingsScreen extends ConsumerWidget {
 
             // Account Actions
             _buildAccountSection(context, ref),
+            const SizedBox(height: 24),
+
+            // About & Credits
+            _buildAboutCreditsSection(context),
 
             // DEBUG: Migration tool (ferrara-michele only)
             if (currentUser.value?.email?.toString().contains('ferrara-michele') == true)
@@ -912,6 +916,156 @@ class SettingsScreen extends ConsumerWidget {
             ),
           ],
         ),
+      ),
+    );
+  }
+
+  Widget _buildAboutCreditsSection(BuildContext context) {
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Header
+            Row(
+              children: [
+                SemanticIcon(
+                  icon: AppIcons.infoOutline,
+                  semanticLabel: context.l10n.aboutCredits,
+                  size: AppIconSize.medium,
+                  color: context.colors.primary,
+                ),
+                const SizedBox(width: 8),
+                Text(
+                  context.l10n.aboutCredits,
+                  style: context.textTheme.titleMedium?.copyWith(
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 16),
+
+            // Exercise Images Credit (ExerciseDB)
+            _buildSettingTile(
+              context,
+              title: context.l10n.exerciseImagesCredit,
+              subtitle: context.l10n.exerciseImagesCreditDesc,
+              leading: const SemanticIcon(
+                icon: AppIcons.workout,
+                semanticLabel: 'Exercise images',
+              ),
+              onTap: () => _showExerciseDbAttributionDialog(context),
+            ),
+
+            const Divider(),
+
+            // Privacy Policy
+            _buildSettingTile(
+              context,
+              title: context.l10n.privacyPolicy,
+              subtitle: context.l10n.privacyPolicyDesc,
+              leading: const SemanticIcon(
+                icon: AppIcons.shield,
+                semanticLabel: 'Privacy',
+              ),
+              onTap: () => context.pushNamed('privacy-policy'),
+            ),
+
+            const Divider(),
+
+            // Open Source Licenses
+            _buildSettingTile(
+              context,
+              title: context.l10n.openSourceLicenses,
+              subtitle: context.l10n.openSourceLicensesDesc,
+              leading: const SemanticIcon(
+                icon: AppIcons.code,
+                semanticLabel: 'Licenses',
+              ),
+              onTap: () => showLicensePage(
+                context: context,
+                applicationName: 'FitLog Pro',
+                applicationLegalese: context.l10n.madeWithLove,
+              ),
+            ),
+
+            const SizedBox(height: 16),
+
+            // Made with love footer
+            Center(
+              child: Text(
+                context.l10n.madeWithLove,
+                style: context.textTheme.bodySmall?.copyWith(
+                  color: context.colors.onSurfaceVariant,
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  void _showExerciseDbAttributionDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Row(
+          children: [
+            SemanticIcon(
+              icon: AppIcons.workout,
+              semanticLabel: 'ExerciseDB',
+              size: AppIconSize.medium,
+              color: context.colors.primary,
+            ),
+            const SizedBox(width: 8),
+            Text(context.l10n.exerciseImagesCredit),
+          ],
+        ),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              context.l10n.exerciseDbAttribution,
+              style: context.textTheme.bodyMedium,
+            ),
+            const SizedBox(height: 16),
+            Container(
+              padding: const EdgeInsets.all(12),
+              decoration: BoxDecoration(
+                color: context.colors.surfaceContainerHighest,
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: Row(
+                children: [
+                  SemanticIcon(
+                    icon: AppIcons.link,
+                    semanticLabel: 'Link',
+                    size: AppIconSize.small,
+                    color: context.colors.primary,
+                  ),
+                  const SizedBox(width: 8),
+                  Text(
+                    'exercisedb.io',
+                    style: context.textTheme.bodyMedium?.copyWith(
+                      color: context.colors.primary,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: Text(context.l10n.ok),
+          ),
+        ],
       ),
     );
   }

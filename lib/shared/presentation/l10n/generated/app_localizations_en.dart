@@ -25632,4 +25632,46 @@ class AppLocalizationsEn extends AppLocalizations {
   String exercisesAddedToWorkout(int count) {
     return '$count exercises added to workout!';
   }
+
+  @override
+  String get aboutCredits => 'About & Credits';
+
+  @override
+  String get appVersion => 'App Version';
+
+  @override
+  String appVersionValue(String version) {
+    return 'Version $version';
+  }
+
+  @override
+  String get exerciseImagesCredit => 'Exercise Images';
+
+  @override
+  String get exerciseImagesCreditDesc => 'Powered by ExerciseDB';
+
+  @override
+  String get openSourceLicenses => 'Open Source Licenses';
+
+  @override
+  String get openSourceLicensesDesc => 'View third-party licenses';
+
+  @override
+  String get privacyPolicyDesc => 'Read our privacy policy';
+
+  @override
+  String get termsOfServiceDesc => 'Read our terms of service';
+
+  @override
+  String get madeWithLove => 'Made with love in Italy';
+
+  @override
+  String get exerciseDbAttribution =>
+      'Exercise demonstration GIFs provided by ExerciseDB (exercisedb.io)';
+
+  @override
+  String get soundCredits => 'Sound Effects';
+
+  @override
+  String get soundCreditsDesc => 'Original audio by FitLog Pro';
 }

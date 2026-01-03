@@ -90,6 +90,11 @@ Pursuant to EU Regulation 2016/679 (GDPR) and Italian Legislative Decree 196/200
 | Google AdMob | In-app advertising | IDFA/GAID, device data | Consent (Art. 6.1.a) |
 | Firebase Crashlytics | Crash reporting | Technical error data | Legitimate interest |
 | Apple/Google (IAP) | Subscription payments | Transaction ID (no personal data) | Contract performance |
+| ExerciseDB | Exercise demonstration images | None (images loaded from their servers) | Legitimate interest |
+
+### 5.1 Exercise Demonstration Images
+
+Exercise demonstration GIF images displayed in this app are sourced from **ExerciseDB** (https://exercisedb.io). These images are loaded directly from ExerciseDB servers to show proper exercise form. No personal data is shared with ExerciseDB - only the image request is made.
 
 **NO data selling to brokers**, **NO sharing with unlisted third parties**.
 

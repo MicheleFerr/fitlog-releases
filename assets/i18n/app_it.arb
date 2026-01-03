@@ -19142,5 +19142,25 @@
     "placeholders": {
       "count": {"type": "int"}
     }
-  }
+  },
+  "aboutCredits": "Informazioni e Crediti",
+  "appVersion": "Versione App",
+  "appVersionValue": "Versione {version}",
+  "@appVersionValue": {
+    "placeholders": {
+      "version": {"type": "String"}
+    }
+  },
+  "exerciseImagesCredit": "Immagini Esercizi",
+  "exerciseImagesCreditDesc": "Fornite da ExerciseDB",
+  "openSourceLicenses": "Licenze Open Source",
+  "openSourceLicensesDesc": "Visualizza licenze di terze parti",
+  "privacyPolicy": "Privacy Policy",
+  "privacyPolicyDesc": "Leggi la nostra informativa privacy",
+  "termsOfService": "Termini di Servizio",
+  "termsOfServiceDesc": "Leggi i termini di servizio",
+  "madeWithLove": "Fatto con amore in Italia",
+  "exerciseDbAttribution": "GIF esercizi fornite da ExerciseDB (exercisedb.io)",
+  "soundCredits": "Effetti Sonori",
+  "soundCreditsDesc": "Audio originale di FitLog Pro"
 }

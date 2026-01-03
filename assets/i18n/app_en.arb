@@ -31712,5 +31712,28 @@
     "placeholders": {
       "count": {"type": "int"}
     }
-  }
+  },
+  "aboutCredits": "About & Credits",
+  "@aboutCredits": {
+    "description": "Section title for about and credits in settings"
+  },
+  "appVersion": "App Version",
+  "appVersionValue": "Version {version}",
+  "@appVersionValue": {
+    "placeholders": {
+      "version": {"type": "String"}
+    }
+  },
+  "exerciseImagesCredit": "Exercise Images",
+  "exerciseImagesCreditDesc": "Powered by ExerciseDB",
+  "openSourceLicenses": "Open Source Licenses",
+  "openSourceLicensesDesc": "View third-party licenses",
+  "privacyPolicy": "Privacy Policy",
+  "privacyPolicyDesc": "Read our privacy policy",
+  "termsOfService": "Terms of Service",
+  "termsOfServiceDesc": "Read our terms of service",
+  "madeWithLove": "Made with love in Italy",
+  "exerciseDbAttribution": "Exercise demonstration GIFs provided by ExerciseDB (exercisedb.io)",
+  "soundCredits": "Sound Effects",
+  "soundCreditsDesc": "Original audio by FitLog Pro"
 }

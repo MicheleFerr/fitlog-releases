@@ -66,6 +66,8 @@
 		<string>FitLog Pro needs permission to save photos to your library for sharing your workout progress.</string>
 		<key>NSPhotoLibraryUsageDescription</key>
 		<string>FitLog Pro needs access to your photo library to let you add photos to your workout progress and profile.</string>
+		<key>NSUserTrackingUsageDescription</key>
+		<string>FitLog Pro uses this identifier to measure ad effectiveness and provide you with more relevant ads. Your data is never sold to third parties. You can change this setting at any time.</string>
 		<key>NSSupportsLiveActivities</key>
 		<true/>
 		<key>NSSupportsLiveActivitiesFrequentUpdates</key>

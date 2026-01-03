@@ -45835,6 +45835,84 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'{count} exercises added to workout!'**
   String exercisesAddedToWorkout(int count);
+
+  /// Section title for about and credits in settings
+  ///
+  /// In en, this message translates to:
+  /// **'About & Credits'**
+  String get aboutCredits;
+
+  /// No description provided for @appVersion.
+  ///
+  /// In en, this message translates to:
+  /// **'App Version'**
+  String get appVersion;
+
+  /// No description provided for @appVersionValue.
+  ///
+  /// In en, this message translates to:
+  /// **'Version {version}'**
+  String appVersionValue(String version);
+
+  /// No description provided for @exerciseImagesCredit.
+  ///
+  /// In en, this message translates to:
+  /// **'Exercise Images'**
+  String get exerciseImagesCredit;
+
+  /// No description provided for @exerciseImagesCreditDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Powered by ExerciseDB'**
+  String get exerciseImagesCreditDesc;
+
+  /// No description provided for @openSourceLicenses.
+  ///
+  /// In en, this message translates to:
+  /// **'Open Source Licenses'**
+  String get openSourceLicenses;
+
+  /// No description provided for @openSourceLicensesDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'View third-party licenses'**
+  String get openSourceLicensesDesc;
+
+  /// No description provided for @privacyPolicyDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Read our privacy policy'**
+  String get privacyPolicyDesc;
+
+  /// No description provided for @termsOfServiceDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Read our terms of service'**
+  String get termsOfServiceDesc;
+
+  /// No description provided for @madeWithLove.
+  ///
+  /// In en, this message translates to:
+  /// **'Made with love in Italy'**
+  String get madeWithLove;
+
+  /// No description provided for @exerciseDbAttribution.
+  ///
+  /// In en, this message translates to:
+  /// **'Exercise demonstration GIFs provided by ExerciseDB (exercisedb.io)'**
+  String get exerciseDbAttribution;
+
+  /// No description provided for @soundCredits.
+  ///
+  /// In en, this message translates to:
+  /// **'Sound Effects'**
+  String get soundCredits;
+
+  /// No description provided for @soundCreditsDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Original audio by FitLog Pro'**
+  String get soundCreditsDesc;
 }
 
 class _AppLocalizationsDelegate
