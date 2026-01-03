@@ -1162,7 +1162,7 @@ class _UpgradeIconInline extends ConsumerWidget {
               children: [
                 Icon(
                   AppIcons.syncAlt,
-                  size: 14,
+                  size: 18,
                   color: context.colors.onPrimaryContainer,
                 ),
                 const SizedBox(width: 2),

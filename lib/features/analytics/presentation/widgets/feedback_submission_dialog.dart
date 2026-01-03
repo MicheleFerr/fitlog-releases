@@ -202,7 +202,7 @@ class _FeedbackSubmissionDialogState
                             SemanticIcon(
                               icon: AppIcons.close,
                               semanticLabel: 'Incorrect muscle group',
-                              size: 14,
+                              size: 18,
                               color: colors.error,
                             ),
                             const SizedBox(width: 4),
@@ -250,7 +250,7 @@ class _FeedbackSubmissionDialogState
                             SemanticIcon(
                               icon: AppIcons.check,
                               semanticLabel: 'Correct muscle group',
-                              size: 14,
+                              size: 18,
                               color: colors.primary,
                             ),
                             const SizedBox(width: 4),

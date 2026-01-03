@@ -125,7 +125,7 @@ class _ExerciseQuickEditCardState extends ConsumerState<ExerciseQuickEditCard> {
                         children: [
                           Icon(
                             AppIcons.workout,
-                            size: 14,
+                            size: 18,
                             color: context.colors.onSecondary,
                           ),
                           const SizedBox(width: 4),

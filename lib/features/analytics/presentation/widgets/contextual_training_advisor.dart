@@ -83,7 +83,7 @@ class ContextualTrainingAdvisor extends StatelessWidget {
                       Icon(
                         AppIcons.touchApp,
                         color: context.colors.surface.withValues(alpha: 0.8),
-                        size: 14,
+                        size: 18,
                       ),
                       const SizedBox(width: 4),
                       Text(

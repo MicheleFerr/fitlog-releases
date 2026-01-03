@@ -95,6 +95,8 @@ class _RepZoneSuggestionCardState extends State<RepZoneSuggestionCard>
         builder: (context, child) {
           return Container(
             margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+            // BUGFIX: Clip content to prevent overflow onto action buttons below
+            clipBehavior: Clip.antiAlias,
             decoration: BoxDecoration(
               color: colorScheme.surface,
               borderRadius: BorderRadius.circular(20),
@@ -124,12 +126,17 @@ class _RepZoneSuggestionCardState extends State<RepZoneSuggestionCard>
                 // Compact info (visible when collapsed)
                 if (!_isExpanded) _buildCompactInfo(context, zoneColor),
 
-                // Expanded content (animated)
-                SizeTransition(
-                  sizeFactor: _expandAnimation,
-                  child: FadeTransition(
-                    opacity: _fadeAnimation,
-                    child: _buildExpandedContent(context, zoneColor),
+                // Expanded content (animated) - wrapped in Flexible to prevent overflow
+                Flexible(
+                  child: SizeTransition(
+                    sizeFactor: _expandAnimation,
+                    child: FadeTransition(
+                      opacity: _fadeAnimation,
+                      child: SingleChildScrollView(
+                        physics: const ClampingScrollPhysics(),
+                        child: _buildExpandedContent(context, zoneColor),
+                      ),
+                    ),
                   ),
                 ),
 
@@ -281,7 +288,7 @@ class _RepZoneSuggestionCardState extends State<RepZoneSuggestionCard>
               const SizedBox(width: 4),
               Icon(
                 AppIcons.expandMore,
-                size: 14,
+                size: 18,
                 color: zoneColor,
               ),
             ],
@@ -783,7 +790,7 @@ class _AlternativeChip extends StatelessWidget {
                 ),
                 Icon(
                   AppIcons.swapHoriz,
-                  size: 14,
+                  size: 18,
                   color: zoneColor,
                 ),
               ],

@@ -500,7 +500,7 @@ class _ExerciseDetailScreenState extends ConsumerState<ExerciseDetailScreen> {
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(icon, size: 14, color: textColor),
+          Icon(icon, size: 18, color: textColor),
           const SizedBox(width: 4),
           Text(
             text,
