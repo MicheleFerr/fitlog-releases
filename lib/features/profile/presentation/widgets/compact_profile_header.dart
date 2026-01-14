@@ -19,6 +19,7 @@ import 'package:gymbro_flutter_new/features/home/providers/achievement_xp_provid
 import 'package:gymbro_flutter_new/features/home/providers/user_xp_provider.dart';
 import 'package:gymbro_flutter_new/features/streak/presentation/providers/streak_provider.dart';
 import 'package:gymbro_flutter_new/features/profile/presentation/widgets/level_info_modal.dart';
+import 'package:gymbro_flutter_new/shared/presentation/providers/ghost_mode_provider.dart';
 
 /// Compact profile header with horizontal layout
 ///
@@ -45,6 +46,10 @@ class CompactProfileHeader extends ConsumerWidget {
     final userXPState = ref.watch(userXPProvider);
     final achievementDataAsync = ref.watch(achievementXPProvider);
     final streakAsync = ref.watch(currentStreakProvider);
+
+    // 👻 Ghost Mode: Hide tier and streak when enabled
+    final shouldHideTier = ref.watch(shouldHideTierProvider);
+    final shouldHideStreak = ref.watch(shouldHideStreakProvider);
 
     // Get XP and tier info from central provider
     final totalXP = userXPState.totalXP;
@@ -104,10 +109,11 @@ class CompactProfileHeader extends ConsumerWidget {
             Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // Avatar with tier gradient border
+                // Avatar with tier gradient border (hidden in Ghost Mode)
                 _TierAvatar(
                   initial: userName.isNotEmpty ? userName[0].toUpperCase() : '?',
                   tier: currentTier,
+                  hideTier: shouldHideTier,
                 ),
                 const SizedBox(width: 16),
 
@@ -127,23 +133,25 @@ class CompactProfileHeader extends ConsumerWidget {
                       ),
                       const SizedBox(height: 4),
 
-                      // Streak indicator
-                      Row(
-                        children: [
-                          Text(
-                            '🔥',
-                            style: context.textTheme.bodyMedium,
-                          ),
-                          const SizedBox(width: 4),
-                          Text(
-                            context.l10n.dayStreak(streak),
-                            style: context.textTheme.bodyMedium?.copyWith(
-                              color: context.colors.onSurfaceVariant,
+                      // Streak indicator (hidden in Ghost Mode)
+                      if (!shouldHideStreak) ...[
+                        Row(
+                          children: [
+                            Text(
+                              '🔥',
+                              style: context.textTheme.bodyMedium,
                             ),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 2),
+                            const SizedBox(width: 4),
+                            Text(
+                              context.l10n.dayStreak(streak),
+                              style: context.textTheme.bodyMedium?.copyWith(
+                                color: context.colors.onSurfaceVariant,
+                              ),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 2),
+                      ],
 
                       // Total workouts
                       Row(
@@ -163,93 +171,95 @@ class CompactProfileHeader extends ConsumerWidget {
                       ),
                       const SizedBox(height: 8),
 
-                      // Tier progress bar with info button
-                      if (nextTier != null) ...[
-                        Row(
-                          children: [
-                            Expanded(
-                              child: ClipRRect(
-                                borderRadius: BorderRadius.circular(2),
-                                child: LinearProgressIndicator(
-                                  value: tierProgress,
-                                  minHeight: 4,
-                                  backgroundColor:
-                                      context.colors.surfaceContainerLow,
-                                  valueColor: AlwaysStoppedAnimation<Color>(
-                                    currentTier.color,
+                      // Tier progress bar with info button (hidden in Ghost Mode)
+                      if (!shouldHideTier) ...[
+                        if (nextTier != null) ...[
+                          Row(
+                            children: [
+                              Expanded(
+                                child: ClipRRect(
+                                  borderRadius: BorderRadius.circular(2),
+                                  child: LinearProgressIndicator(
+                                    value: tierProgress,
+                                    minHeight: 4,
+                                    backgroundColor:
+                                        context.colors.surfaceContainerLow,
+                                    valueColor: AlwaysStoppedAnimation<Color>(
+                                      currentTier.color,
+                                    ),
                                   ),
                                 ),
                               ),
-                            ),
-                            const SizedBox(width: 8),
-                            Text(
-                              context.l10n.tierProgress(
-                                currentTier.displayName,
-                                nextTier.displayName,
-                              ),
-                              style: context.textTheme.labelSmall?.copyWith(
-                                color: context.colors.onSurfaceVariant,
-                              ),
-                            ),
-                            // Info button to show level info modal
-                            GestureDetector(
-                              onTap: () {
-                                HapticFeedback.lightImpact();
-                                LevelInfoModal.show(
-                                  context: context,
-                                  currentXP: totalXP,
-                                  currentTier: currentTier,
-                                );
-                              },
-                              child: Padding(
-                                padding: const EdgeInsets.only(left: 4),
-                                child: Icon(
-                                  AppIcons.info,
-                                  size: AppIconSize.small,
+                              const SizedBox(width: 8),
+                              Text(
+                                context.l10n.tierProgress(
+                                  currentTier.displayName,
+                                  nextTier.displayName,
+                                ),
+                                style: context.textTheme.labelSmall?.copyWith(
                                   color: context.colors.onSurfaceVariant,
                                 ),
                               ),
-                            ),
-                          ],
-                        ),
-                      ] else ...[
-                        // Max tier reached
-                        Row(
-                          children: [
-                            Icon(
-                              AppIcons.achievement,
-                              size: 16,
-                              color: currentTier.color,
-                            ),
-                            const SizedBox(width: 4),
-                            Text(
-                              currentTier.displayName,
-                              style: context.textTheme.labelSmall?.copyWith(
+                              // Info button to show level info modal
+                              GestureDetector(
+                                onTap: () {
+                                  HapticFeedback.lightImpact();
+                                  LevelInfoModal.show(
+                                    context: context,
+                                    currentXP: totalXP,
+                                    currentTier: currentTier,
+                                  );
+                                },
+                                child: Padding(
+                                  padding: const EdgeInsets.only(left: 4),
+                                  child: Icon(
+                                    AppIcons.info,
+                                    size: AppIconSize.small,
+                                    color: context.colors.onSurfaceVariant,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ] else ...[
+                          // Max tier reached
+                          Row(
+                            children: [
+                              Icon(
+                                AppIcons.achievement,
+                                size: 16,
                                 color: currentTier.color,
-                                fontWeight: FontWeight.bold,
                               ),
-                            ),
-                            // Info button for max tier
-                            GestureDetector(
-                              onTap: () {
-                                HapticFeedback.lightImpact();
-                                LevelInfoModal.show(
-                                  context: context,
-                                  currentXP: totalXP,
-                                  currentTier: currentTier,
-                                );
-                              },
-                              child: Padding(
-                                padding: const EdgeInsets.only(left: 4),
-                                child: Icon(
-                                  AppIcons.info,
-                                  size: AppIconSize.small,
-                                  color: context.colors.onSurfaceVariant,
+                              const SizedBox(width: 4),
+                              Text(
+                                currentTier.displayName,
+                                style: context.textTheme.labelSmall?.copyWith(
+                                  color: currentTier.color,
+                                  fontWeight: FontWeight.bold,
                                 ),
                               ),
-                            ),
-                          ],
-                        ),
+                              // Info button for max tier
+                              GestureDetector(
+                                onTap: () {
+                                  HapticFeedback.lightImpact();
+                                  LevelInfoModal.show(
+                                    context: context,
+                                    currentXP: totalXP,
+                                    currentTier: currentTier,
+                                  );
+                                },
+                                child: Padding(
+                                  padding: const EdgeInsets.only(left: 4),
+                                  child: Icon(
+                                    AppIcons.info,
+                                    size: AppIconSize.small,
+                                    color: context.colors.onSurfaceVariant,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
                       ],
                     ],
                   ),
@@ -263,20 +273,25 @@ class CompactProfileHeader extends ConsumerWidget {
   }
 }
 
-/// Avatar with tier gradient border
+/// Avatar with tier gradient border (neutral when Ghost Mode hides tier)
 class _TierAvatar extends StatelessWidget {
   const _TierAvatar({
     required this.initial,
     required this.tier,
+    this.hideTier = false,
   });
 
   final String initial;
   final UserTier tier;
+  final bool hideTier;
 
   @override
   Widget build(BuildContext context) {
-    // Create gradient colors based on tier
-    final gradientColors = _getGradientColors(tier);
+    // Use neutral colors when tier is hidden (Ghost Mode)
+    final gradientColors = hideTier
+        ? [context.colors.outline, context.colors.outlineVariant]
+        : _getGradientColors(tier);
+    final accentColor = hideTier ? context.colors.outline : tier.color;
 
     return Container(
       width: 64,
@@ -291,13 +306,13 @@ class _TierAvatar extends StatelessWidget {
         // ✨ Material 3 2025: Subtle shadow for depth
         boxShadow: [
           BoxShadow(
-            color: tier.color.withValues(alpha: 0.2),
+            color: accentColor.withValues(alpha: 0.2),
             blurRadius: 12,
             offset: const Offset(0, 4),
           ),
         ],
       ),
-      padding: const EdgeInsets.all(3), // Thinner, more defined border
+      padding: const EdgeInsets.all(4), // Border padding (must be multiple of 4)
       child: DecoratedBox(
         decoration: BoxDecoration(
           shape: BoxShape.circle,
@@ -316,7 +331,7 @@ class _TierAvatar extends StatelessWidget {
           child: Text(
             initial,
             style: context.textTheme.headlineSmall?.copyWith(
-              color: tier.color,
+              color: accentColor,
               fontWeight: FontWeight.bold,
               fontSize: 24,
             ),

@@ -9550,10 +9550,44 @@ class AppLocalizationsIt extends AppLocalizations {
   String get settingsVibrationsDesc => 'Feedback aptico per le interazioni';
 
   @override
+  String get settingsFeedbackDisplay => 'Feedback e Display';
+
+  @override
+  String get settingsSounds => 'Suoni';
+
+  @override
+  String get settingsSoundsDesc => 'Riproduci suoni per timer e notifiche';
+
+  @override
+  String get settingsKeepScreenAwake => 'Mantieni Schermo Attivo';
+
+  @override
+  String get settingsKeepScreenAwakeDesc =>
+      'Impedisci blocco schermo durante gli allenamenti';
+
+  @override
   String get settingsTestSounds => 'Testa Suoni';
 
   @override
   String get settingsAdvancedTitle => 'Avanzate';
+
+  @override
+  String get settingsAdvancedDesc => 'Impostazioni per utenti esperti';
+
+  @override
+  String get effortScale => 'Scala Sforzo';
+
+  @override
+  String get rpeScale => 'RPE (Percezione dello Sforzo)';
+
+  @override
+  String get rirScale => 'RIR (Ripetizioni in Riserva)';
+
+  @override
+  String get resetTutorials => 'Ripristina Tutorial';
+
+  @override
+  String get resetTutorialsDesc => 'Mostra di nuovo onboarding e suggerimenti';
 
   @override
   String get settingsExportSettings => 'Esporta Impostazioni';
@@ -14527,15 +14561,6 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get years => 'Years';
-
-  @override
-  String get zenMode => 'Zen modalità';
-
-  @override
-  String get zenModeActiveDescription => 'Zen modalità active descrizione';
-
-  @override
-  String get zenModeInactiveDescription => 'Zen modalità inactive descrizione';
 
   @override
   String get zonePicker => 'Zone selettore';
@@ -23244,13 +23269,6 @@ class AppLocalizationsIt extends AppLocalizations {
       'Sì! Vai in Profilo > Impostazioni > Aspetto. Scegli: Chiaro, Scuro o Sistema (segue l\'impostazione del dispositivo). L\'app supporta anche colori dinamici sui dispositivi compatibili. La modalità scura è ottima per le sessioni in palestra al mattino presto!';
 
   @override
-  String get faqZenModeQuestion => 'Cos\'è la Modalità Zen?';
-
-  @override
-  String get faqZenModeAnswer =>
-      'La Modalità Zen semplifica l\'interfaccia allenamento per un training senza distrazioni. Nasconde informazioni secondarie, ingrandisce gli input principali e si concentra sulla serie corrente. Ottima quando vuoi tempo minimo sullo schermo. Attivala in Impostazioni o durante un allenamento.';
-
-  @override
   String get faqNotificationsQuestion => 'Come gestisco le notifiche?';
 
   @override
@@ -25927,4 +25945,42 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get soundCreditsDesc => 'Audio originale di FitLog Pro';
+
+  @override
+  String get ghostModeSection => 'Privacy e Concentrazione';
+
+  @override
+  String get ghostModeTitle => 'Modalita Fantasma';
+
+  @override
+  String get ghostModeDescription =>
+      'Nascondi elementi competitivi. Solo tu e il tuo allenamento.';
+
+  @override
+  String get ghostModeEnabled =>
+      'Modalita Fantasma attivata. Goditi il tuo percorso fitness privato!';
+
+  @override
+  String get ghostModeDisabled => 'Modalita Fantasma disattivata. Bentornato!';
+
+  @override
+  String get ghostModeCustomize => 'Personalizza cosa nascondere';
+
+  @override
+  String get ghostModeHideXP => 'Nascondi XP e progressi livello';
+
+  @override
+  String get ghostModeHideTier => 'Nascondi badge tier';
+
+  @override
+  String get ghostModeHideStreak => 'Nascondi contatore streak';
+
+  @override
+  String get ghostModeHideCommunity => 'Nascondi funzioni community';
+
+  @override
+  String get ghostModeHideComparisons => 'Nascondi confronti forza';
+
+  @override
+  String get ghostModeHideAnimations => 'Nascondi animazioni XP';
 }

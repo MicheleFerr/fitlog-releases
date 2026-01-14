@@ -9463,10 +9463,44 @@ class AppLocalizationsEn extends AppLocalizations {
   String get settingsVibrationsDesc => 'Haptic feedback for interactions';
 
   @override
+  String get settingsFeedbackDisplay => 'Feedback & Display';
+
+  @override
+  String get settingsSounds => 'Sounds';
+
+  @override
+  String get settingsSoundsDesc => 'Play sounds for timer and notifications';
+
+  @override
+  String get settingsKeepScreenAwake => 'Keep Screen Awake';
+
+  @override
+  String get settingsKeepScreenAwakeDesc =>
+      'Prevent screen lock during workouts';
+
+  @override
   String get settingsTestSounds => 'Test Sounds';
 
   @override
   String get settingsAdvancedTitle => 'Advanced';
+
+  @override
+  String get settingsAdvancedDesc => 'Settings for power users';
+
+  @override
+  String get effortScale => 'Effort Scale';
+
+  @override
+  String get rpeScale => 'RPE (Rate of Perceived Exertion)';
+
+  @override
+  String get rirScale => 'RIR (Reps In Reserve)';
+
+  @override
+  String get resetTutorials => 'Reset Tutorials';
+
+  @override
+  String get resetTutorialsDesc => 'Show onboarding and tips again';
 
   @override
   String get settingsExportSettings => 'Export Settings';
@@ -14377,15 +14411,6 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get years => 'Years';
-
-  @override
-  String get zenMode => 'Zen mode';
-
-  @override
-  String get zenModeActiveDescription => 'Zen mode active description';
-
-  @override
-  String get zenModeInactiveDescription => 'Zen mode inactive description';
 
   @override
   String get zonePicker => 'Zone picker';
@@ -23028,13 +23053,6 @@ class AppLocalizationsEn extends AppLocalizations {
       'Yes! Go to Profile > Settings > Appearance. Choose: Light, Dark, or System (follows your device setting). The app also supports dynamic colors on compatible devices. Dark mode is great for early morning gym sessions!';
 
   @override
-  String get faqZenModeQuestion => 'What is Zen Mode?';
-
-  @override
-  String get faqZenModeAnswer =>
-      'Zen Mode simplifies the workout interface for distraction-free training. It hides secondary information, enlarges key inputs, and focuses on the current set. Great for when you want minimal screen time. Toggle in Settings or during a workout.';
-
-  @override
   String get faqNotificationsQuestion => 'How do I manage notifications?';
 
   @override
@@ -25674,4 +25692,42 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get soundCreditsDesc => 'Original audio by FitLog Pro';
+
+  @override
+  String get ghostModeSection => 'Privacy & Focus';
+
+  @override
+  String get ghostModeTitle => 'Ghost Mode';
+
+  @override
+  String get ghostModeDescription =>
+      'Hide competitive elements. Just you and your workout.';
+
+  @override
+  String get ghostModeEnabled =>
+      'Ghost Mode enabled. Enjoy your private fitness journey!';
+
+  @override
+  String get ghostModeDisabled => 'Ghost Mode disabled. Welcome back!';
+
+  @override
+  String get ghostModeCustomize => 'Customize what\'s hidden';
+
+  @override
+  String get ghostModeHideXP => 'Hide XP & Level progress';
+
+  @override
+  String get ghostModeHideTier => 'Hide tier badges';
+
+  @override
+  String get ghostModeHideStreak => 'Hide streak counter';
+
+  @override
+  String get ghostModeHideCommunity => 'Hide community features';
+
+  @override
+  String get ghostModeHideComparisons => 'Hide strength comparisons';
+
+  @override
+  String get ghostModeHideAnimations => 'Hide XP animations';
 }

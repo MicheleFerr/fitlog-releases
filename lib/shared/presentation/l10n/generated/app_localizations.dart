@@ -16922,6 +16922,36 @@ abstract class AppLocalizations {
   /// **'Haptic feedback for interactions'**
   String get settingsVibrationsDesc;
 
+  /// Feedback and display settings section header
+  ///
+  /// In en, this message translates to:
+  /// **'Feedback & Display'**
+  String get settingsFeedbackDisplay;
+
+  /// Sound toggle title
+  ///
+  /// In en, this message translates to:
+  /// **'Sounds'**
+  String get settingsSounds;
+
+  /// Sound toggle description
+  ///
+  /// In en, this message translates to:
+  /// **'Play sounds for timer and notifications'**
+  String get settingsSoundsDesc;
+
+  /// Keep screen awake toggle title
+  ///
+  /// In en, this message translates to:
+  /// **'Keep Screen Awake'**
+  String get settingsKeepScreenAwake;
+
+  /// Keep screen awake toggle description
+  ///
+  /// In en, this message translates to:
+  /// **'Prevent screen lock during workouts'**
+  String get settingsKeepScreenAwakeDesc;
+
   /// Test sounds tooltip
   ///
   /// In en, this message translates to:
@@ -16933,6 +16963,42 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Advanced'**
   String get settingsAdvancedTitle;
+
+  /// Advanced section description
+  ///
+  /// In en, this message translates to:
+  /// **'Settings for power users'**
+  String get settingsAdvancedDesc;
+
+  /// Effort scale setting title
+  ///
+  /// In en, this message translates to:
+  /// **'Effort Scale'**
+  String get effortScale;
+
+  /// RPE scale option
+  ///
+  /// In en, this message translates to:
+  /// **'RPE (Rate of Perceived Exertion)'**
+  String get rpeScale;
+
+  /// RIR scale option
+  ///
+  /// In en, this message translates to:
+  /// **'RIR (Reps In Reserve)'**
+  String get rirScale;
+
+  /// Reset tutorials button
+  ///
+  /// In en, this message translates to:
+  /// **'Reset Tutorials'**
+  String get resetTutorials;
+
+  /// Reset tutorials description
+  ///
+  /// In en, this message translates to:
+  /// **'Show onboarding and tips again'**
+  String get resetTutorialsDesc;
 
   /// Export settings
   ///
@@ -25595,24 +25661,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Years'**
   String get years;
-
-  /// Auto-generated for zenMode
-  ///
-  /// In en, this message translates to:
-  /// **'Zen mode'**
-  String get zenMode;
-
-  /// Auto-generated for zenModeActiveDescription
-  ///
-  /// In en, this message translates to:
-  /// **'Zen mode active description'**
-  String get zenModeActiveDescription;
-
-  /// Auto-generated for zenModeInactiveDescription
-  ///
-  /// In en, this message translates to:
-  /// **'Zen mode inactive description'**
-  String get zenModeInactiveDescription;
 
   /// Auto-generated for zonePicker
   ///
@@ -41157,18 +41205,6 @@ abstract class AppLocalizations {
   /// **'Yes! Go to Profile > Settings > Appearance. Choose: Light, Dark, or System (follows your device setting). The app also supports dynamic colors on compatible devices. Dark mode is great for early morning gym sessions!'**
   String get faqThemeAnswer;
 
-  /// No description provided for @faqZenModeQuestion.
-  ///
-  /// In en, this message translates to:
-  /// **'What is Zen Mode?'**
-  String get faqZenModeQuestion;
-
-  /// No description provided for @faqZenModeAnswer.
-  ///
-  /// In en, this message translates to:
-  /// **'Zen Mode simplifies the workout interface for distraction-free training. It hides secondary information, enlarges key inputs, and focuses on the current set. Great for when you want minimal screen time. Toggle in Settings or during a workout.'**
-  String get faqZenModeAnswer;
-
   /// No description provided for @faqNotificationsQuestion.
   ///
   /// In en, this message translates to:
@@ -45913,6 +45949,78 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Original audio by FitLog Pro'**
   String get soundCreditsDesc;
+
+  /// Settings section title for ghost mode
+  ///
+  /// In en, this message translates to:
+  /// **'Privacy & Focus'**
+  String get ghostModeSection;
+
+  /// Ghost mode toggle title
+  ///
+  /// In en, this message translates to:
+  /// **'Ghost Mode'**
+  String get ghostModeTitle;
+
+  /// Ghost mode toggle description
+  ///
+  /// In en, this message translates to:
+  /// **'Hide competitive elements. Just you and your workout.'**
+  String get ghostModeDescription;
+
+  /// No description provided for @ghostModeEnabled.
+  ///
+  /// In en, this message translates to:
+  /// **'Ghost Mode enabled. Enjoy your private fitness journey!'**
+  String get ghostModeEnabled;
+
+  /// No description provided for @ghostModeDisabled.
+  ///
+  /// In en, this message translates to:
+  /// **'Ghost Mode disabled. Welcome back!'**
+  String get ghostModeDisabled;
+
+  /// No description provided for @ghostModeCustomize.
+  ///
+  /// In en, this message translates to:
+  /// **'Customize what\'s hidden'**
+  String get ghostModeCustomize;
+
+  /// No description provided for @ghostModeHideXP.
+  ///
+  /// In en, this message translates to:
+  /// **'Hide XP & Level progress'**
+  String get ghostModeHideXP;
+
+  /// No description provided for @ghostModeHideTier.
+  ///
+  /// In en, this message translates to:
+  /// **'Hide tier badges'**
+  String get ghostModeHideTier;
+
+  /// No description provided for @ghostModeHideStreak.
+  ///
+  /// In en, this message translates to:
+  /// **'Hide streak counter'**
+  String get ghostModeHideStreak;
+
+  /// No description provided for @ghostModeHideCommunity.
+  ///
+  /// In en, this message translates to:
+  /// **'Hide community features'**
+  String get ghostModeHideCommunity;
+
+  /// No description provided for @ghostModeHideComparisons.
+  ///
+  /// In en, this message translates to:
+  /// **'Hide strength comparisons'**
+  String get ghostModeHideComparisons;
+
+  /// No description provided for @ghostModeHideAnimations.
+  ///
+  /// In en, this message translates to:
+  /// **'Hide XP animations'**
+  String get ghostModeHideAnimations;
 }
 
 class _AppLocalizationsDelegate

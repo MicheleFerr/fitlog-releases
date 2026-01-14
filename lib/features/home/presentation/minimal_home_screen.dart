@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:gymbro_flutter_new/features/home/presentation/widgets/start_workout_card.dart';
-import 'package:gymbro_flutter_new/features/home/presentation/widgets/templates_carousel_compact.dart';
+import 'package:gymbro_flutter_new/features/home/presentation/widgets/personalized_content_card.dart';
 import 'package:gymbro_flutter_new/features/home/presentation/widgets/xp_progress_bar.dart';
 import 'package:gymbro_flutter_new/features/home/presentation/widgets/ai_coach_card.dart';
 import 'package:gymbro_flutter_new/features/home/presentation/widgets/exercise_wiki_card_compact.dart';
@@ -29,6 +30,7 @@ import 'package:gymbro_flutter_new/features/stress_index/presentation/widgets/st
 import 'package:gymbro_flutter_new/features/exercise_merge/presentation/widgets/merge_suggestion_card.dart';
 import 'package:gymbro_flutter_new/features/onboarding/domain/services/workout_tutorial_service.dart';
 import 'package:gymbro_flutter_new/features/onboarding/domain/services/home_tour_service.dart';
+import 'package:gymbro_flutter_new/shared/presentation/providers/ghost_mode_provider.dart';
 
 /// Minimal Home Screen - Clean dark premium design
 ///
@@ -42,7 +44,7 @@ import 'package:gymbro_flutter_new/features/onboarding/domain/services/home_tour
 /// - StressPredictionCard: Banister FFM stress predictions
 /// - TemplateSuggestionCard: AI-powered workout recommendation
 /// - StartWorkoutCard: Hero CTA
-/// - TemplatesCarouselCompact: Quick access to templates
+/// - PersonalizedContentCard: Access to templates + custom exercises
 /// - AICoachCard: AI insights (hidden if no data)
 /// - ExerciseWikiCardCompact: Exercise wiki contributions
 class MinimalHomeScreen extends ConsumerStatefulWidget {
@@ -53,16 +55,11 @@ class MinimalHomeScreen extends ConsumerStatefulWidget {
 }
 
 class _MinimalHomeScreenState extends ConsumerState<MinimalHomeScreen> {
-  // GlobalKeys for Home Tour targets
+  // GlobalKeys for Home Tour targets (5 essential steps - P0-1 fix)
   final _xpProgressKey = GlobalKey();
-  final _activityRingsKey = GlobalKey();
-  final _proInsightsKey = GlobalKey();
-  final _recoveryInsightKey = GlobalKey();
-  final _stressPredictionKey = GlobalKey();
-  final _templateSuggestionKey = GlobalKey();
   final _startWorkoutKey = GlobalKey();
   final _templatesCarouselKey = GlobalKey();
-  final _exerciseWikiKey = GlobalKey();
+  final _templateSuggestionKey = GlobalKey();
   final _settingsButtonKey = GlobalKey();
 
   @override
@@ -87,16 +84,9 @@ class _MinimalHomeScreenState extends ConsumerState<MinimalHomeScreen> {
     tourNotifier.showTour(
       context: context,
       targetKeys: {
+        // UX 2025: Only 2 steps - XP and AI suggestions need explanation
         HomeTourStep.xpProgress: _xpProgressKey,
-        HomeTourStep.activityRings: _activityRingsKey,
-        HomeTourStep.proInsights: _proInsightsKey,
-        HomeTourStep.recoveryInsight: _recoveryInsightKey,
-        HomeTourStep.stressPrediction: _stressPredictionKey,
         HomeTourStep.templateSuggestion: _templateSuggestionKey,
-        HomeTourStep.startWorkout: _startWorkoutKey,
-        HomeTourStep.templatesCarousel: _templatesCarouselKey,
-        HomeTourStep.exerciseWiki: _exerciseWikiKey,
-        HomeTourStep.settings: _settingsButtonKey,
       },
       onComplete: () {
         debugPrint('✅ [HomeTour] Tour completed!');
@@ -203,17 +193,18 @@ class _MinimalHomeScreenState extends ConsumerState<MinimalHomeScreen> {
                 _buildGreetingSection(context, ref),
                 const SizedBox(height: 16),
 
-                // 0.5 XP Progress Bar
-                RepaintBoundary(
-                  key: _xpProgressKey,
-                  child: const XPProgressBar(),
-                ),
-                const SizedBox(height: 20),
+                // 0.5 XP Progress Bar (Hidden in Ghost Mode)
+                if (!ref.watch(shouldHideXPProvider)) ...[
+                  RepaintBoundary(
+                    key: _xpProgressKey,
+                    child: const XPProgressBar(),
+                  ),
+                  const SizedBox(height: 20),
+                ],
 
                 // 0.75 Activity Rings (HealthKit Integration)
-                RepaintBoundary(
-                  key: _activityRingsKey,
-                  child: const Padding(
+                const RepaintBoundary(
+                  child: Padding(
                     padding: EdgeInsets.symmetric(horizontal: AppSpacing.md),
                     child: ActivityRingsWidget(),
                   ),
@@ -221,16 +212,14 @@ class _MinimalHomeScreenState extends ConsumerState<MinimalHomeScreen> {
                 const SizedBox(height: 16),
 
                 // 0.85 Pro Insights Preview (CTA for Pro Analytics)
-                RepaintBoundary(
-                  key: _proInsightsKey,
-                  child: const ProInsightsPreviewSection(),
+                const RepaintBoundary(
+                  child: ProInsightsPreviewSection(),
                 ),
                 const SizedBox(height: 16),
 
                 // 0.9 Recovery Insight (Sleep-based recovery analysis)
-                RepaintBoundary(
-                  key: _recoveryInsightKey,
-                  child: const Padding(
+                const RepaintBoundary(
+                  child: Padding(
                     padding: EdgeInsets.symmetric(horizontal: AppSpacing.md),
                     child: RecoveryInsightCard(),
                   ),
@@ -238,9 +227,8 @@ class _MinimalHomeScreenState extends ConsumerState<MinimalHomeScreen> {
                 const SizedBox(height: 16),
 
                 // 0.92 Stress Prediction (Banister FFM predictions)
-                RepaintBoundary(
-                  key: _stressPredictionKey,
-                  child: const StressPredictionCard(),
+                const RepaintBoundary(
+                  child: StressPredictionCard(),
                 ),
                 const SizedBox(height: 20),
 
@@ -262,10 +250,10 @@ class _MinimalHomeScreenState extends ConsumerState<MinimalHomeScreen> {
                 ),
                 const SizedBox(height: 24),
 
-                // 2. Templates Carousel
+                // 2. Personalized Content (Templates + Custom Exercises)
                 RepaintBoundary(
                   key: _templatesCarouselKey,
-                  child: const TemplatesCarouselCompact(),
+                  child: const PersonalizedContentCard(),
                 ),
                 const SizedBox(height: 24),
 
@@ -293,12 +281,13 @@ class _MinimalHomeScreenState extends ConsumerState<MinimalHomeScreen> {
                   },
                 ),
 
-                // 4. Exercise Wiki Card
-                RepaintBoundary(
-                  key: _exerciseWikiKey,
-                  child: const ExerciseWikiCardCompact(),
-                ),
-                const SizedBox(height: 24),
+                // 4. Exercise Wiki Card (Hidden in Ghost Mode - Community)
+                if (!ref.watch(shouldHideCommunityProvider)) ...[
+                  const RepaintBoundary(
+                    child: ExerciseWikiCardCompact(),
+                  ),
+                  const SizedBox(height: 24),
+                ],
 
                 // Admin feedback card - 🔧 PERF FIX: Isolated in Consumer
                 Consumer(
@@ -575,7 +564,7 @@ class _DeveloperToolsSheet extends ConsumerWidget {
                         ref.read(workoutTutorialProvider.notifier).resetTutorial();
                         SnackBarService.showSuccess(
                           context,
-                          'Tutorial reset! Go to Workout screen to start.',
+                          'Tutorial reset! Go to Workout screen (with empty workout) to start.',
                         );
                       },
                     ),
@@ -594,6 +583,35 @@ class _DeveloperToolsSheet extends ConsumerWidget {
                             'Home Tour starting...',
                           );
                         });
+                      },
+                    ),
+                    const SizedBox(height: 12),
+                    _DeveloperToolItem(
+                      icon: AppIcons.refresh,
+                      title: 'Reset ALL Onboarding',
+                      subtitle: 'Clear all tours & tutorials completion',
+                      onTap: () async {
+                        Navigator.pop(context);
+                        final prefs = await SharedPreferences.getInstance();
+                        // Reset all tour/tutorial completion keys
+                        await prefs.remove('home_tour_completed');
+                        await prefs.remove('workout_tutorial_completed');
+                        await prefs.remove('exercise_search_tutorial_completed');
+                        await prefs.remove('timer_tour_completed');
+                        await prefs.remove('template_tutorial_completed');
+                        await prefs.remove('analytics_tour_completed');
+                        await prefs.remove('advanced_techniques_tutorial_completed');
+                        await prefs.remove('health_integration_tour_completed');
+                        await prefs.remove('custom_exercise_tutorial_completed');
+                        // Reset providers
+                        await ref.read(workoutTutorialProvider.notifier).resetTutorial();
+                        await ref.read(homeTourProvider.notifier).resetTour();
+                        if (context.mounted) {
+                          SnackBarService.showSuccess(
+                            context,
+                            '✅ All onboarding reset! Navigate to screens to trigger tours.',
+                          );
+                        }
                       },
                     ),
                   ],

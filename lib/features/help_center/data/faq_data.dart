@@ -404,11 +404,6 @@ class FAQData {
         answerKey: 'faqThemeAnswer',
       ),
       FAQItem(
-        id: 'zen_mode',
-        questionKey: 'faqZenModeQuestion',
-        answerKey: 'faqZenModeAnswer',
-      ),
-      FAQItem(
         id: 'notifications',
         questionKey: 'faqNotificationsQuestion',
         answerKey: 'faqNotificationsAnswer',

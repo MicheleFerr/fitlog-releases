@@ -272,7 +272,6 @@ class _FAQTile extends StatelessWidget {
       'faqUnitsQuestion': l10n.faqUnitsQuestion,
       'faqLanguageQuestion': l10n.faqLanguageQuestion,
       'faqThemeQuestion': l10n.faqThemeQuestion,
-      'faqZenModeQuestion': l10n.faqZenModeQuestion,
       'faqNotificationsQuestion': l10n.faqNotificationsQuestion,
 
       // ============ HEALTH SYNC ============
@@ -366,7 +365,6 @@ class _FAQTile extends StatelessWidget {
       'faqUnitsAnswer': l10n.faqUnitsAnswer,
       'faqLanguageAnswer': l10n.faqLanguageAnswer,
       'faqThemeAnswer': l10n.faqThemeAnswer,
-      'faqZenModeAnswer': l10n.faqZenModeAnswer,
       'faqNotificationsAnswer': l10n.faqNotificationsAnswer,
 
       // ============ HEALTH SYNC ============

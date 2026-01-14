@@ -49,7 +49,6 @@ import 'package:gymbro_flutter_new/features/analytics/presentation/widgets/feedb
 import 'package:gymbro_flutter_new/features/analytics/presentation/widgets/muscle_group_correction_sheet.dart';
 
 // Modal imports - NEW LOW PRIORITY (Onboarding & Settings)
-import 'package:gymbro_flutter_new/features/workout/presentation/widgets/zen_mode_settings_dialog.dart';
 import 'package:gymbro_flutter_new/features/onboarding/presentation/widgets/tour_bottom_sheet.dart';
 
 // Modal imports - NEW LOW PRIORITY (Community)
@@ -377,11 +376,6 @@ class ModalShowcaseScreen extends ConsumerWidget {
             title: 'Onboarding & Settings (LOW)',
             icon: AppIcons.settings,
             items: [
-              _ModalItem(
-                name: 'Zen Mode Settings Dialog',
-                description: 'Configure zen mode (minimal UI)',
-                onTap: () => _showZenModeSettingsDialog(context),
-              ),
               _ModalItem(
                 name: 'Tour Bottom Sheet',
                 description: 'Guided app tour for new users',
@@ -878,13 +872,6 @@ class ModalShowcaseScreen extends ConsumerWidget {
   // ═══════════════════════════════════════════════════════════════════════════
   // LOW PRIORITY - Onboarding & Settings Modals (NEW)
   // ═══════════════════════════════════════════════════════════════════════════
-
-  void _showZenModeSettingsDialog(BuildContext context) {
-    showDialog<void>(
-      context: context,
-      builder: (context) => const ZenModeSettingsDialog(),
-    );
-  }
 
   void _showTourBottomSheet(BuildContext context) {
     showModalBottomSheet<void>(

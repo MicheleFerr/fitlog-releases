@@ -11335,6 +11335,26 @@
   "@settingsVibrationsDesc": {
     "description": "Vibrations desc"
   },
+  "settingsFeedbackDisplay": "Feedback & Display",
+  "@settingsFeedbackDisplay": {
+    "description": "Feedback and display settings section header"
+  },
+  "settingsSounds": "Sounds",
+  "@settingsSounds": {
+    "description": "Sound toggle title"
+  },
+  "settingsSoundsDesc": "Play sounds for timer and notifications",
+  "@settingsSoundsDesc": {
+    "description": "Sound toggle description"
+  },
+  "settingsKeepScreenAwake": "Keep Screen Awake",
+  "@settingsKeepScreenAwake": {
+    "description": "Keep screen awake toggle title"
+  },
+  "settingsKeepScreenAwakeDesc": "Prevent screen lock during workouts",
+  "@settingsKeepScreenAwakeDesc": {
+    "description": "Keep screen awake toggle description"
+  },
   "settingsTestSounds": "Test Sounds",
   "@settingsTestSounds": {
     "description": "Test sounds tooltip"
@@ -11342,6 +11362,30 @@
   "settingsAdvancedTitle": "Advanced",
   "@settingsAdvancedTitle": {
     "description": "Advanced section"
+  },
+  "settingsAdvancedDesc": "Settings for power users",
+  "@settingsAdvancedDesc": {
+    "description": "Advanced section description"
+  },
+  "effortScale": "Effort Scale",
+  "@effortScale": {
+    "description": "Effort scale setting title"
+  },
+  "rpeScale": "RPE (Rate of Perceived Exertion)",
+  "@rpeScale": {
+    "description": "RPE scale option"
+  },
+  "rirScale": "RIR (Reps In Reserve)",
+  "@rirScale": {
+    "description": "RIR scale option"
+  },
+  "resetTutorials": "Reset Tutorials",
+  "@resetTutorials": {
+    "description": "Reset tutorials button"
+  },
+  "resetTutorialsDesc": "Show onboarding and tips again",
+  "@resetTutorialsDesc": {
+    "description": "Reset tutorials description"
   },
   "settingsExportSettings": "Export Settings",
   "@settingsExportSettings": {
@@ -17442,18 +17486,6 @@
   "years": "Years",
   "@years": {
     "description": "Auto-generated for years"
-  },
-  "zenMode": "Zen mode",
-  "@zenMode": {
-    "description": "Auto-generated for zenMode"
-  },
-  "zenModeActiveDescription": "Zen mode active description",
-  "@zenModeActiveDescription": {
-    "description": "Auto-generated for zenModeActiveDescription"
-  },
-  "zenModeInactiveDescription": "Zen mode inactive description",
-  "@zenModeInactiveDescription": {
-    "description": "Auto-generated for zenModeInactiveDescription"
   },
   "zonePicker": "Zone picker",
   "@zonePicker": {
@@ -28331,9 +28363,6 @@
   "faqThemeQuestion": "Can I change the app theme?",
   "faqThemeAnswer": "Yes! Go to Profile > Settings > Appearance. Choose: Light, Dark, or System (follows your device setting). The app also supports dynamic colors on compatible devices. Dark mode is great for early morning gym sessions!",
 
-  "faqZenModeQuestion": "What is Zen Mode?",
-  "faqZenModeAnswer": "Zen Mode simplifies the workout interface for distraction-free training. It hides secondary information, enlarges key inputs, and focuses on the current set. Great for when you want minimal screen time. Toggle in Settings or during a workout.",
-
   "faqNotificationsQuestion": "How do I manage notifications?",
   "faqNotificationsAnswer": "Go to Settings > Notifications. Control: rest timer alerts, workout reminders, PR celebrations, weekly summaries, and more. Set reminder schedules for your preferred workout days and times. All notifications can be individually enabled or disabled.",
 
@@ -31735,5 +31764,27 @@
   "madeWithLove": "Made with love in Italy",
   "exerciseDbAttribution": "Exercise demonstration GIFs provided by ExerciseDB (exercisedb.io)",
   "soundCredits": "Sound Effects",
-  "soundCreditsDesc": "Original audio by FitLog Pro"
+  "soundCreditsDesc": "Original audio by FitLog Pro",
+
+  "ghostModeSection": "Privacy & Focus",
+  "@ghostModeSection": {
+    "description": "Settings section title for ghost mode"
+  },
+  "ghostModeTitle": "Ghost Mode",
+  "@ghostModeTitle": {
+    "description": "Ghost mode toggle title"
+  },
+  "ghostModeDescription": "Hide competitive elements. Just you and your workout.",
+  "@ghostModeDescription": {
+    "description": "Ghost mode toggle description"
+  },
+  "ghostModeEnabled": "Ghost Mode enabled. Enjoy your private fitness journey!",
+  "ghostModeDisabled": "Ghost Mode disabled. Welcome back!",
+  "ghostModeCustomize": "Customize what's hidden",
+  "ghostModeHideXP": "Hide XP & Level progress",
+  "ghostModeHideTier": "Hide tier badges",
+  "ghostModeHideStreak": "Hide streak counter",
+  "ghostModeHideCommunity": "Hide community features",
+  "ghostModeHideComparisons": "Hide strength comparisons",
+  "ghostModeHideAnimations": "Hide XP animations"
 }

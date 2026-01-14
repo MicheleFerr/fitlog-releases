@@ -17,13 +17,13 @@ import 'package:gymbro_flutter_new/features/admin/presentation/screens/database_
 import 'package:gymbro_flutter_new/features/analytics/presentation/widgets/migration_dialog.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
 import 'package:gymbro_flutter_new/features/onboarding/presentation/providers/tutorial_state_notifier.dart';
-import 'package:gymbro_flutter_new/features/onboarding/domain/registry/tutorial_registry.dart';
 import 'package:gymbro_flutter_new/features/auth/presentation/providers/admin_provider.dart';
 import 'package:gymbro_flutter_new/features/auth/domain/entities/user_profile.dart';
 import 'package:gymbro_flutter_new/features/stress_index/presentation/providers/stress_index_provider.dart';
 import 'package:gymbro_flutter_new/features/analytics/presentation/providers/workout_analytics_provider.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator.dart';
 import 'package:gymbro_flutter_new/features/data_export/presentation/widgets/data_export_sheet.dart';
+import 'package:gymbro_flutter_new/shared/presentation/providers/ghost_mode_provider.dart';
 
 class SettingsScreen extends ConsumerWidget {
   const SettingsScreen({super.key});
@@ -80,8 +80,16 @@ class SettingsScreen extends ConsumerWidget {
             _buildAppearanceSection(context, ref, config),
             const SizedBox(height: 24),
 
+            // Ghost Mode (Privacy & Focus)
+            _buildGhostModeSection(context, ref),
+            const SizedBox(height: 24),
+
             // Workout Essentials (NEW)
             _buildWorkoutEssentialsSection(context, ref, config),
+            const SizedBox(height: 24),
+
+            // Feedback & Display (Sounds, Vibrations, Screen)
+            _buildFeedbackDisplaySection(context, ref, config),
             const SizedBox(height: 24),
 
             // Data & Backup
@@ -98,6 +106,10 @@ class SettingsScreen extends ConsumerWidget {
 
             // Tutorial & Help
             _buildTutorialHelpSection(context, ref),
+            const SizedBox(height: 24),
+
+            // Advanced Settings (power users)
+            _buildAdvancedSettingsSection(context, ref, config),
             const SizedBox(height: 24),
 
             // Account Actions
@@ -379,44 +391,6 @@ class SettingsScreen extends ConsumerWidget {
 
             const Divider(),
 
-            // Theme Color (with color preview circle)
-            ListTile(
-              title: Text(context.l10n.settingsThemeColor),
-              subtitle: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Container(
-                    width: AppIconSize.small,
-                    height: AppIconSize.small,
-                    decoration: BoxDecoration(
-                      color: _getPrimaryColor(context, config.primaryColor),
-                      shape: BoxShape.circle,
-                      border: Border.all(
-                        color: context.colors.outline.withValues(alpha: 0.2),
-                        width: 1,
-                      ),
-                    ),
-                  ),
-                  const SizedBox(width: 8),
-                  Text(context.l10n.settingsThemeColorDesc),
-                ],
-              ),
-              leading: SemanticIcon(
-                icon: AppIcons.colorLens,
-                semanticLabel: 'Theme color',
-                size: AppIconSize.medium,
-                color: _getPrimaryColor(context, config.primaryColor),
-              ),
-              trailing: const SemanticIcon(
-  icon: AppIcons.chevronRight,
-  semanticLabel: 'Chevron right',
-),
-              onTap: () => _showColorDialog(context, ref, config.primaryColor),
-              contentPadding: EdgeInsets.zero,
-            ),
-
-            const Divider(),
-
             // Font Size (with live preview text)
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -468,6 +442,149 @@ class SettingsScreen extends ConsumerWidget {
     );
   }
 
+  Widget _buildGhostModeSection(BuildContext context, WidgetRef ref) {
+    final ghostState = ref.watch(ghostModeProvider);
+    final isEnabled = ghostState.isEnabled;
+    final config = ghostState.config;
+
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Header
+            Row(
+              children: [
+                SemanticIcon(
+                  icon: AppIcons.visibilityOff,
+                  semanticLabel: context.l10n.ghostModeSection,
+                  size: AppIconSize.medium,
+                  color: context.colors.primary,
+                ),
+                const SizedBox(width: 8),
+                Text(
+                  context.l10n.ghostModeSection,
+                  style: context.textTheme.titleMedium?.copyWith(
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 16),
+
+            // Ghost Mode Toggle
+            SwitchListTile(
+              title: Text(context.l10n.ghostModeTitle),
+              subtitle: Text(context.l10n.ghostModeDescription),
+              value: isEnabled,
+              onChanged: (value) async {
+                await ref.read(ghostModeProvider.notifier).setEnabled(value);
+                if (context.mounted) {
+                  SnackBarService.showInfo(
+                    context,
+                    value
+                        ? context.l10n.ghostModeEnabled
+                        : context.l10n.ghostModeDisabled,
+                  );
+                }
+              },
+              secondary: SemanticIcon(
+                icon: isEnabled ? AppIcons.visibilityOff : AppIcons.visibility,
+                semanticLabel: isEnabled ? 'Hidden' : 'Visible',
+                size: AppIconSize.medium,
+              ),
+              contentPadding: EdgeInsets.zero,
+            ),
+
+            // Customization options (only when enabled)
+            if (isEnabled) ...[
+              const Divider(),
+              ExpansionTile(
+                title: Text(context.l10n.ghostModeCustomize),
+                tilePadding: EdgeInsets.zero,
+                children: [
+                  // Hide XP Progress
+                  CheckboxListTile(
+                    title: Text(context.l10n.ghostModeHideXP),
+                    value: config.hideXPProgress,
+                    onChanged: (value) {
+                      ref.read(ghostModeProvider.notifier).updateConfigField(
+                            'hideXPProgress',
+                            value: value ?? true,
+                          );
+                    },
+                    contentPadding: EdgeInsets.zero,
+                  ),
+                  // Hide Tier Badge
+                  CheckboxListTile(
+                    title: Text(context.l10n.ghostModeHideTier),
+                    value: config.hideTierBadge,
+                    onChanged: (value) {
+                      ref.read(ghostModeProvider.notifier).updateConfigField(
+                            'hideTierBadge',
+                            value: value ?? true,
+                          );
+                    },
+                    contentPadding: EdgeInsets.zero,
+                  ),
+                  // Hide Streak
+                  CheckboxListTile(
+                    title: Text(context.l10n.ghostModeHideStreak),
+                    value: config.hideStreak,
+                    onChanged: (value) {
+                      ref.read(ghostModeProvider.notifier).updateConfigField(
+                            'hideStreak',
+                            value: value ?? false,
+                          );
+                    },
+                    contentPadding: EdgeInsets.zero,
+                  ),
+                  // Hide Community
+                  CheckboxListTile(
+                    title: Text(context.l10n.ghostModeHideCommunity),
+                    value: config.hideCommunity,
+                    onChanged: (value) {
+                      ref.read(ghostModeProvider.notifier).updateConfigField(
+                            'hideCommunity',
+                            value: value ?? true,
+                          );
+                    },
+                    contentPadding: EdgeInsets.zero,
+                  ),
+                  // Hide Comparisons
+                  CheckboxListTile(
+                    title: Text(context.l10n.ghostModeHideComparisons),
+                    value: config.hideStrengthComparisons,
+                    onChanged: (value) {
+                      ref.read(ghostModeProvider.notifier).updateConfigField(
+                            'hideStrengthComparisons',
+                            value: value ?? true,
+                          );
+                    },
+                    contentPadding: EdgeInsets.zero,
+                  ),
+                  // Hide Animations
+                  CheckboxListTile(
+                    title: Text(context.l10n.ghostModeHideAnimations),
+                    value: config.hideXPAnimations,
+                    onChanged: (value) {
+                      ref.read(ghostModeProvider.notifier).updateConfigField(
+                            'hideXPAnimations',
+                            value: value ?? true,
+                          );
+                    },
+                    contentPadding: EdgeInsets.zero,
+                  ),
+                ],
+              ),
+            ],
+          ],
+        ),
+      ),
+    );
+  }
+
   Widget _buildWorkoutEssentialsSection(BuildContext context, WidgetRef ref, AppConfig config) {
     return Card(
       child: Padding(
@@ -506,21 +623,89 @@ class SettingsScreen extends ConsumerWidget {
 ),
               onTap: () => _showRestTimeDialog(context, ref, config.defaultRestTime),
             ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildFeedbackDisplaySection(BuildContext context, WidgetRef ref, AppConfig config) {
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Header
+            Row(
+              children: [
+                SemanticIcon(
+                  icon: AppIcons.notifications,
+                  semanticLabel: 'Feedback settings',
+                  size: AppIconSize.medium,
+                  color: context.colors.primary,
+                ),
+                const SizedBox(width: 8),
+                Text(
+                  context.l10n.settingsFeedbackDisplay,
+                  style: context.textTheme.titleMedium?.copyWith(
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 16),
+
+            // Sound toggle
+            _buildSwitchTile(
+              context,
+              title: context.l10n.settingsSounds,
+              subtitle: context.l10n.settingsSoundsDesc,
+              value: config.soundEnabled,
+              onChanged: (value) {
+                ref.read(appConfigProvider.notifier).setSoundEnabled(value);
+              },
+              leading: SemanticIcon(
+                icon: config.soundEnabled ? AppIcons.volumeUp : AppIcons.volumeOff,
+                semanticLabel: 'Sound',
+                size: AppIconSize.medium,
+              ),
+            ),
 
             const Divider(),
 
-            // Day Cutoff Hour (configurable workout "today" cutoff)
-            _buildSettingTile(
+            // Vibration toggle
+            _buildSwitchTile(
               context,
-              title: context.l10n.settingsDayCutoffHour,
-              subtitle: context.l10n.settingsDayCutoffHourDesc(
-                ref.watch(userProfileProvider).valueOrNull?.dayCutoffHour ?? 4,
+              title: context.l10n.settingsVibrations,
+              subtitle: context.l10n.settingsVibrationsDesc,
+              value: config.vibrationsEnabled,
+              onChanged: (value) {
+                ref.read(appConfigProvider.notifier).setVibrationsEnabled(value);
+              },
+              leading: SemanticIcon(
+                icon: AppIcons.vibration,
+                semanticLabel: 'Vibration',
+                size: AppIconSize.medium,
               ),
+            ),
+
+            const Divider(),
+
+            // Keep screen awake toggle
+            _buildSwitchTile(
+              context,
+              title: context.l10n.settingsKeepScreenAwake,
+              subtitle: context.l10n.settingsKeepScreenAwakeDesc,
+              value: config.keepScreenAwakeDuringWorkout,
+              onChanged: (value) {
+                ref.read(appConfigProvider.notifier).setKeepScreenAwakeDuringWorkout(value);
+              },
               leading: const SemanticIcon(
-  icon: AppIcons.schedule,
-  semanticLabel: 'Schedule',
-),
-              onTap: () => _showDayCutoffDialog(context, ref),
+                icon: AppIcons.screenLockPortrait,
+                semanticLabel: 'Screen lock',
+                size: AppIconSize.medium,
+              ),
             ),
           ],
         ),
@@ -725,22 +910,6 @@ class SettingsScreen extends ConsumerWidget {
 ),
               onTap: () => _showUnitsDialog(context, ref, config.measurementUnit),
             ),
-
-            const Divider(),
-
-            // Effort Scale (RPE/RIR)
-            _buildSettingTile(
-              context,
-              title: context.l10n.effortScaleSetting,
-              subtitle: ref.watch(effortScaleProvider) == 'rpe'
-                  ? context.l10n.rpeMode
-                  : context.l10n.rirMode,
-              leading: const SemanticIcon(
-  icon: AppIcons.trending,
-  semanticLabel: 'Effort scale',
-),
-              onTap: () => _showEffortScaleDialog(context, ref, ref.read(effortScaleProvider)),
-            ),
           ],
         ),
       ),
@@ -750,8 +919,6 @@ class SettingsScreen extends ConsumerWidget {
 
   Widget _buildTutorialHelpSection(BuildContext context, WidgetRef ref) {
     final tutorialsEnabled = ref.watch(tutorialsEnabledProvider);
-    final seenCount = ref.watch(seenTutorialsCountProvider);
-    final totalCount = TutorialRegistry.allTutorials.length;
 
     return Card(
       child: Padding(
@@ -794,48 +961,6 @@ class SettingsScreen extends ConsumerWidget {
                       : context.l10n.settingsTutorialsDisabled,
                 );
               },
-            ),
-
-            const Divider(),
-
-            // Tutorials Progress Info
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 8),
-              child: Row(
-                children: [
-                  SemanticIcon(
-                    icon: AppIcons.checkCircle,
-                    semanticLabel: context.l10n.settingsTutorialsSeenCount(seenCount, totalCount),
-                    size: AppIconSize.small,
-                    color: context.colors.success,
-                  ),
-                  const SizedBox(width: 8),
-                  Expanded(
-                    child: Text(
-                      context.l10n.settingsTutorialsSeenCount(seenCount, totalCount),
-                      style: context.textTheme.bodyMedium?.copyWith(
-                        color: context.colors.onSurfaceVariant,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-
-            const Divider(),
-
-            // Reset Tutorials Button
-            _buildSettingTile(
-              context,
-              title: context.l10n.settingsResetTutorials,
-              subtitle: context.l10n.settingsResetTutorialsDesc,
-              leading: SemanticIcon(
-                icon: AppIcons.refresh,
-                semanticLabel: context.l10n.settingsResetTutorials,
-                size: AppIconSize.medium,
-                color: context.colors.warning,
-              ),
-              onTap: () => _showResetTutorialsDialog(context, ref),
             ),
 
             const Divider(),
@@ -913,6 +1038,103 @@ class SettingsScreen extends ConsumerWidget {
                 color: context.colors.error,
               ),
               onTap: () => _showDeleteAccountDialog(context, ref),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildAdvancedSettingsSection(BuildContext context, WidgetRef ref, AppConfig config) {
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Header
+            Row(
+              children: [
+                SemanticIcon(
+                  icon: AppIcons.tune,
+                  semanticLabel: 'Advanced settings',
+                  size: AppIconSize.medium,
+                  color: context.colors.primary,
+                ),
+                const SizedBox(width: 8),
+                Text(
+                  context.l10n.settingsAdvancedTitle,
+                  style: context.textTheme.titleMedium?.copyWith(
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 8),
+            Text(
+              context.l10n.settingsAdvancedDesc,
+              style: context.textTheme.bodySmall?.copyWith(
+                color: context.colors.onSurfaceVariant,
+              ),
+            ),
+            const SizedBox(height: 16),
+
+            // Day Cutoff Hour
+            _buildSettingTile(
+              context,
+              title: context.l10n.settingsDayCutoffHour,
+              subtitle: context.l10n.settingsDayCutoffHourDesc(
+                ref.watch(userProfileProvider).valueOrNull?.dayCutoffHour ?? 4,
+              ),
+              leading: const SemanticIcon(
+                icon: AppIcons.schedule,
+                semanticLabel: 'Schedule',
+              ),
+              onTap: () => _showDayCutoffDialog(context, ref),
+            ),
+
+            const Divider(),
+
+            // Effort Scale (RPE vs RIR)
+            _buildSettingTile(
+              context,
+              title: context.l10n.effortScale,
+              subtitle: config.effortScale == 'rpe'
+                  ? context.l10n.rpeScale
+                  : context.l10n.rirScale,
+              leading: const SemanticIcon(
+                icon: AppIcons.speed,
+                semanticLabel: 'Effort scale',
+              ),
+              onTap: () => _showEffortScaleDialog(context, ref, config.effortScale),
+            ),
+
+            const Divider(),
+
+            // Recalculate Stress Index
+            _buildSettingTile(
+              context,
+              title: context.l10n.recalculateStressIndex,
+              subtitle: context.l10n.recalculateStressIndexDesc,
+              leading: const SemanticIcon(
+                icon: AppIcons.refresh,
+                semanticLabel: 'Recalculate',
+              ),
+              onTap: () => _recalculateStressIndex(context, ref),
+            ),
+
+            const Divider(),
+
+            // Reset Tutorials
+            _buildSettingTile(
+              context,
+              title: context.l10n.resetTutorials,
+              subtitle: context.l10n.resetTutorialsDesc,
+              leading: const SemanticIcon(
+                icon: AppIcons.school,
+                semanticLabel: 'Reset tutorials',
+              ),
+              onTap: () => _showResetTutorialsDialog(context, ref),
             ),
           ],
         ),
@@ -1097,14 +1319,36 @@ class SettingsScreen extends ConsumerWidget {
     required String subtitle,
     required bool value,
     required ValueChanged<bool> onChanged,
+    Widget? leading,
   }) {
     return SwitchListTile(
       title: Text(title),
       subtitle: Text(subtitle),
       value: value,
       onChanged: onChanged,
+      secondary: leading,
       contentPadding: EdgeInsets.zero,
     );
+  }
+
+  // Stress Index Recalculation
+  Future<void> _recalculateStressIndex(BuildContext context, WidgetRef ref) async {
+    // Clear analytics cache (forces recalculation of all views)
+    final cacheService = ref.read(analyticsCacheServiceProvider);
+    await cacheService.clear();
+
+    // Recalculate stress index with new EMG ratios
+    // Use 365 days to recalculate all historical data
+    final result = await ref
+        .read(stressIndexNotifierProvider.notifier)
+        .clearAndRecalculate(days: 365);
+
+    if (context.mounted) {
+      SnackBarService.showSuccess(
+        context,
+        context.l10n.stressIndexRecalculatedSuccess(result.$2),
+      );
+    }
   }
 
   // Dialog Methods
@@ -1241,46 +1485,6 @@ class SettingsScreen extends ConsumerWidget {
               ),
             ],
           ),
-        ),
-      ),
-    );
-  }
-
-  void _showColorDialog(BuildContext context, WidgetRef ref, String currentColor) {
-    final colors = ['blue', 'red', 'green', 'purple', 'orange', 'teal'];
-    
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: Text(context.l10n.settingsAccentColorDialog),
-        content: Wrap(
-          spacing: 16,
-          runSpacing: 16,
-          children: colors.map((color) => GestureDetector(
-            onTap: () {
-              ref.read(appConfigProvider.notifier).setPrimaryColor(color);
-              Navigator.pop(context);
-            },
-            child: Container(
-              width: 48,
-              height: 48,
-              decoration: BoxDecoration(
-                color: _getPrimaryColor(context, color),
-                shape: BoxShape.circle,
-                border: currentColor == color
-                    ? Border.all(color: context.colors.onSurface, width: 3)
-                    : null,
-              ),
-              child: currentColor == color
-                  ? SemanticIcon(
-                      icon: AppIcons.check,
-                      semanticLabel: 'Selected',
-                      size: AppIconSize.medium,
-                      color: context.colors.surface,
-                    )
-                  : null,
-            ),
-          )).toList(),
         ),
       ),
     );
@@ -1670,24 +1874,6 @@ class SettingsScreen extends ConsumerWidget {
       case 'en':
       default:
         return 'English';
-    }
-  }
-
-  Color _getPrimaryColor(BuildContext context, String colorName) {
-    switch (colorName) {
-      case 'red':
-        return context.colors.error;
-      case 'green':
-        return context.colors.success;
-      case 'purple':
-        return context.colors.tertiary;
-      case 'orange':
-        return context.colors.warning;
-      case 'teal':
-        return context.colors.secondary;
-      case 'blue':
-      default:
-        return context.colors.primary;
     }
   }
 }
