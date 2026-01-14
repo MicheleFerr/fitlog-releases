@@ -31,6 +31,7 @@ import 'package:gymbro_flutter_new/shared/domain/abstractions/i_exercise_prefere
 import 'package:gymbro_flutter_new/features/exercise_database/domain/entities/exercise_counting_mode.dart';
 import 'package:gymbro_flutter_new/features/stress_index/data/mappers/muscle_abbreviation_mapper.dart';
 import 'package:gymbro_flutter_new/features/onboarding/domain/services/exercise_search_tutorial_service.dart';
+import 'package:gymbro_flutter_new/features/onboarding/domain/services/workout_tutorial_service.dart';
 
 class ExerciseSearchScreen extends ConsumerStatefulWidget { // New: Just select and return exercise template (for DropSet/Rest-Pause)
 
@@ -103,6 +104,16 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
   }
 
   void _checkAutoStartTutorial() {
+    // BUG FIX: Don't start this tutorial if WorkoutTutorial is already active
+    // This prevents two tutorials from running simultaneously and blocking the UI
+    final workoutTutorialState = ref.read(workoutTutorialProvider);
+    if (workoutTutorialState.isActive) {
+      if (kDebugMode) {
+        debugPrint('⏭️ [ExerciseSearchTutorial] Skipping - WorkoutTutorial is active');
+      }
+      return;
+    }
+
     final tutorialState = ref.read(exerciseSearchTutorialProvider);
     // Auto-start tutorial if never completed
     if (!tutorialState.hasCompletedTutorial && !tutorialState.isActive) {
@@ -185,15 +196,15 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
     final result = await showDialog<String>(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Row(
+        title: Row(
           children: [
-            SemanticIcon(
+            const SemanticIcon(
   icon: AppIcons.feedbackOutlined,
   semanticLabel: 'Feedback outlined',
   size: AppIconSize.medium,
 ),
-            SizedBox(width: 12),
-            Expanded(child: Text('Feedback Esercizio')),
+            const SizedBox(width: 12),
+            Expanded(child: Text(context.l10n.exerciseFeedback)),
           ],
         ),
         content: Column(
@@ -216,7 +227,7 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
         actions: [
           TextButton(
             onPressed: () => Navigator.of(context).pop(),
-            child: const Text('Annulla'),
+            child: Text(context.l10n.cancel),
           ),
           TextButton.icon(
             onPressed: () => Navigator.of(context).pop('decrement'),
@@ -225,7 +236,7 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
   semanticLabel: 'Arrow downward',
   size: AppIconSize.small,
 ),
-            label: const Text('Riduci priorità'),
+            label: Text(context.l10n.reducePriority),
           ),
           FilledButton.icon(
             onPressed: () => Navigator.of(context).pop('remove'),
@@ -234,7 +245,7 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
   semanticLabel: 'Delete outline',
   size: AppIconSize.small,
 ),
-            label: const Text('Rimuovi'),
+            label: Text(context.l10n.remove),
             style: FilledButton.styleFrom(
               backgroundColor: context.colors.errorContainer,
               foregroundColor: context.colors.onErrorContainer,
@@ -705,7 +716,7 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
                         : null,
                     label: Text(
                       exercise.nome,
-                      style: TextStyle(
+                      style: context.textTheme.labelLarge?.copyWith(
                         color: isSelected ? context.colors.onPrimary : null,
                       ),
                     ),

@@ -86,7 +86,8 @@ class WorkoutScreen extends ConsumerStatefulWidget {
   ConsumerState<WorkoutScreen> createState() => _WorkoutScreenState();
 }
 
-class _WorkoutScreenState extends ConsumerState<WorkoutScreen> {
+class _WorkoutScreenState extends ConsumerState<WorkoutScreen>
+    with WidgetsBindingObserver {
   // GlobalKeys for contextual overlays and tutorial targets
   final GlobalKey _addExerciseFABKey = GlobalKey();
   final GlobalKey _completeWorkoutButtonKey = GlobalKey();
@@ -112,13 +113,35 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen> {
     // Preload interstitial ad for workout completion
     ref.read(workoutScreenControllerProvider.notifier).preloadCompletionAd();
 
-    // NOTE: Lifecycle observer REMOVED - handled centrally by AppLifecycleManager
-    // AppLifecycleManager handles: emergency save, template cache save, draft recovery
+    // EDGE CASE FIX: Add lifecycle observer for tutorial re-show on app resume
+    // NOTE: Other lifecycle handling (emergency save, draft recovery) is in AppLifecycleManager
+    WidgetsBinding.instance.addObserver(this);
 
     // Show onboarding overlay if needed
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _showFirstWorkoutWelcomeIfNeeded();
     });
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    // EDGE CASE FIX: Re-show tutorial overlay when app returns from background
+    // This handles the "distracted user" who gets interrupted by a phone call
+    if (state == AppLifecycleState.resumed) {
+      final tutorialState = ref.read(workoutTutorialProvider);
+      if (tutorialState.isActive && mounted) {
+        // Re-show the current tutorial step after UI settles
+        Future.delayed(const Duration(milliseconds: 500), () {
+          if (mounted) _showCurrentTutorialStep();
+        });
+      }
+    }
   }
 
   // NOTE: _checkAndRecoverDraft REMOVED - handled centrally by AppLifecycleManager
@@ -588,6 +611,23 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen> {
 
   /// Show add exercise modal
   void _showAddExercise(BuildContext context) {
+    // EDGE CASE FIX: Auto-advance tutorial when FAB is tapped
+    // This handles the case where user taps FAB without clicking "Avanti" in tutorial
+    final tutorialState = ref.read(workoutTutorialProvider);
+    if (tutorialState.isActive &&
+        tutorialState.currentStep == WorkoutTutorialStep.addExercise) {
+      // Stop current tutorial overlay (user has figured out the FAB)
+      ref.read(workoutTutorialProvider.notifier).stopTutorial();
+      // Restart in tapSet-waiting state
+      ref.read(workoutTutorialProvider.notifier).startTutorial();
+      ref
+          .read(workoutTutorialProvider.notifier)
+          .advanceToStep(WorkoutTutorialStep.tapSet);
+    }
+
+    // Track if exercise was added during this modal session
+    bool exerciseWasAdded = false;
+
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
@@ -595,6 +635,7 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen> {
       builder: (context) => AddExerciseModal(
         onExerciseAdded: (exercise) {
           debugPrint('🎯 [WorkoutScreen] CALLBACK RECEIVED: name=${exercise.name}, countingMode=${exercise.countingMode}');
+          exerciseWasAdded = true;
           ref.read(workoutScreenControllerProvider.notifier).addExercise(exercise);
           // Note: Navigator.pop() is called by AddExerciseModal after this callback
           // Do NOT call pop() here - it would cause double-pop and black screen!
@@ -603,7 +644,23 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen> {
           onExerciseAdded();
         },
       ),
-    );
+    ).whenComplete(() {
+      // EDGE CASE FIX: Re-show tutorial if modal was dismissed without adding exercise
+      // This handles the "distracted user" who opens modal but dismisses it without action
+      if (!exerciseWasAdded && mounted) {
+        final tutorialState = ref.read(workoutTutorialProvider);
+        if (tutorialState.isActive) {
+          // Reset to addExercise step if we were waiting for exercise
+          if (tutorialState.currentStep == WorkoutTutorialStep.tapSet) {
+            ref.read(workoutTutorialProvider.notifier).advanceToStep(WorkoutTutorialStep.addExercise);
+          }
+          // Re-show the current tutorial step after a short delay
+          Future.delayed(const Duration(milliseconds: 300), () {
+            if (mounted) _showCurrentTutorialStep();
+          });
+        }
+      }
+    });
   }
 
   /// Show create template modal
@@ -915,7 +972,7 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen> {
         navigator.pop();
       }
       if (context.mounted) {
-        SnackBarService.showError(context, '❌ Error sharing PDF: $e');
+        SnackBarService.showError(context, l10n.errorSharingPdf);
       }
     }
   }

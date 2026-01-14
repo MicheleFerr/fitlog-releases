@@ -144,17 +144,18 @@ class WorkoutDraftRepository {
   Future<bool> hasRecoverableDraft() async {
     final draft = await getCurrentDraft();
     if (draft == null) return false;
-    
+
     // Don't recover if already recovered or too old
     if (draft.isRecovered || draft.isStale) return false;
-    
-    // Check if draft has meaningful data
+
+    // BUG FIX: Recover if workout has exercises, not just completed sets
+    // Users expect workout to be saved even before completing any sets.
+    // Previous logic required hasCompletedSets which caused data loss
+    // when user closed app before completing any sets.
     final workout = draft.toWorkout();
-    final hasCompletedSets = workout.exercises.any(
-      (exercise) => exercise.sets.any((set) => set.isCompleted)
-    );
-    
-    return hasCompletedSets;
+    final hasExercises = workout.exercises.isNotEmpty;
+
+    return hasExercises;
   }
 
   /// Recover draft and mark as recovered
