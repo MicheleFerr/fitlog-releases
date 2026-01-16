@@ -24,6 +24,7 @@ import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_colors.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_spacing.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
 import 'package:gymbro_flutter_new/shared/presentation/mixins/safe_set_state_mixin.dart';
 import 'package:gymbro_flutter_new/shared/presentation/constants/app_animations.dart';
@@ -113,7 +114,7 @@ class AnalyticsScreen extends ConsumerWidget {
                               ? context.colors.primary
                               : context.colors.onSurfaceVariant,
                         ),
-                        const SizedBox(width: 12),
+                        const SizedBox(width: AppSpacing.sm),
                         Text(context.l10n.viewModeCompact),
                       ],
                     ),
@@ -131,7 +132,7 @@ class AnalyticsScreen extends ConsumerWidget {
                               ? context.colors.primary
                               : context.colors.onSurfaceVariant,
                         ),
-                        const SizedBox(width: 12),
+                        const SizedBox(width: AppSpacing.sm),
                         Text(context.l10n.viewModeByMuscleGroup),
                       ],
                     ),
@@ -149,7 +150,7 @@ class AnalyticsScreen extends ConsumerWidget {
                               ? context.colors.primary
                               : context.colors.onSurfaceVariant,
                         ),
-                        const SizedBox(width: 12),
+                        const SizedBox(width: AppSpacing.sm),
                         Text(context.l10n.viewModeByDate),
                       ],
                     ),
@@ -380,7 +381,7 @@ class _AnalyticsContentState extends ConsumerState<_AnalyticsContent>
               curve: AppAnimations.decelerate,
               child: (_showBars && isSearchVisible)
                   ? Padding(
-                      padding: const EdgeInsets.fromLTRB(16, 0, 16, 8),
+                      padding: const EdgeInsets.fromLTRB(AppSpacing.md, 0, AppSpacing.md, AppSpacing.xs),
                       child: TextField(
                         controller: _searchController,
                         autofocus: true, // Auto-focus when appears
@@ -450,14 +451,14 @@ class _AnalyticsContentState extends ConsumerState<_AnalyticsContent>
                         size: AppIconSize.xxlarge,
                         color: context.colors.onSurfaceVariant,
                       ),
-                      const SizedBox(height: 16),
+                      const SizedBox(height: AppSpacing.md),
                       Text(
                         context.l10n.noResultsFound,
                         style: context.textTheme.titleMedium?.copyWith(
                           color: context.colors.onSurfaceVariant,
                         ),
                       ),
-                      const SizedBox(height: 8),
+                      const SizedBox(height: AppSpacing.xs),
                       Text(
                         context.l10n.tryAnotherSearch,
                         style: context.textTheme.bodyMedium?.copyWith(
@@ -516,7 +517,7 @@ class _AnalyticsContentState extends ConsumerState<_AnalyticsContent>
 
     return ListView.builder(
       controller: _scrollController,
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      padding: const EdgeInsets.symmetric(horizontal: AppSpacing.md, vertical: AppSpacing.xs),
       itemCount: grouped.length,
       itemBuilder: (context, groupIndex) {
         final muscleGroup = grouped.keys.elementAt(groupIndex);
@@ -524,7 +525,7 @@ class _AnalyticsContentState extends ConsumerState<_AnalyticsContent>
 
         return Padding(
           key: ValueKey(muscleGroup),
-          padding: const EdgeInsets.only(bottom: 8),
+          padding: const EdgeInsets.only(bottom: AppSpacing.xs),
           child: MuscleGroupExpansionTile(
             muscleGroup: muscleGroup,
             exerciseCount: exercises.length,
@@ -549,13 +550,13 @@ class _AnalyticsContentState extends ConsumerState<_AnalyticsContent>
 
     return ListView.builder(
       controller: _scrollController,
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      padding: const EdgeInsets.symmetric(horizontal: AppSpacing.md, vertical: AppSpacing.xs),
       itemCount: histories.length,
       itemBuilder: (context, index) {
         final history = histories[index];
         return Padding(
           key: ValueKey(history.exerciseName),
-          padding: const EdgeInsets.only(bottom: 8),
+          padding: const EdgeInsets.only(bottom: AppSpacing.xs),
           child: _ExerciseHistoryCard(history: history),
         );
       },
@@ -574,7 +575,7 @@ class _AnalyticsContentState extends ConsumerState<_AnalyticsContent>
 
     return ListView.builder(
       controller: _scrollController,
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      padding: const EdgeInsets.symmetric(horizontal: AppSpacing.md, vertical: AppSpacing.xs),
       itemCount: grouped.length,
       itemBuilder: (context, index) {
         final entry = grouped.entries.elementAt(index);
@@ -583,15 +584,15 @@ class _AnalyticsContentState extends ConsumerState<_AnalyticsContent>
 
         return Padding(
           key: ValueKey(periodLabel),
-          padding: const EdgeInsets.only(bottom: 8),
+          padding: const EdgeInsets.only(bottom: AppSpacing.xs),
           child: Card(
             elevation: 2,
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(12),
             ),
             child: ExpansionTile(
-              tilePadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-              childrenPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+              tilePadding: const EdgeInsets.symmetric(horizontal: AppSpacing.md, vertical: AppSpacing.xs),
+              childrenPadding: const EdgeInsets.symmetric(horizontal: AppSpacing.md, vertical: AppSpacing.xs),
               initiallyExpanded: index == 0, // Expand first section (today/most recent)
               leading: SemanticIcon(
                 icon: AppIcons.calendar,
@@ -810,8 +811,8 @@ class _QuickStatsSummary extends StatelessWidget {
     final recentPRs = _calculateRecentPRs();
 
     return Container(
-      margin: const EdgeInsets.fromLTRB(16, 8, 16, 8),
-      padding: const EdgeInsets.all(12),
+      margin: const EdgeInsets.symmetric(horizontal: AppSpacing.md, vertical: AppSpacing.xs),
+      padding: const EdgeInsets.all(AppSpacing.sm),
       decoration: BoxDecoration(
         gradient: LinearGradient(
           begin: Alignment.topLeft,
@@ -1086,7 +1087,7 @@ class _HybridStatItem extends StatelessWidget {
         onTap: onTap,
         borderRadius: BorderRadius.circular(8),
         child: Container(
-          padding: const EdgeInsets.all(8),
+          padding: const EdgeInsets.all(AppSpacing.xs),
           decoration: BoxDecoration(
             color: context.colors.surface.withValues(alpha: 0.3),
             borderRadius: BorderRadius.circular(8),
@@ -1103,7 +1104,7 @@ class _HybridStatItem extends StatelessWidget {
                 size: AppIconSize.tiny,
                 color: color.withValues(alpha: 0.7),
               ),
-              const SizedBox(width: 4),
+              const SizedBox(width: AppSpacing.xxs),
               Expanded(
                 child: Text(
                   label,
@@ -1125,7 +1126,7 @@ class _HybridStatItem extends StatelessWidget {
                 ),
             ],
           ),
-          const SizedBox(height: 4),
+          const SizedBox(height: AppSpacing.xxs),
 
           // Value + Suffix
           Row(
@@ -1219,7 +1220,7 @@ class _ExerciseHistoryCard extends ConsumerWidget{
     );
 
     return Card(
-      margin: const EdgeInsets.only(bottom: 12),
+      margin: const EdgeInsets.only(bottom: AppSpacing.sm),
       child: InkWell(
         onTap: () {
           // Navigate to Exercise Detail Screen using named route
@@ -1237,7 +1238,7 @@ class _ExerciseHistoryCard extends ConsumerWidget{
         },
         borderRadius: BorderRadius.circular(12),
         child: Padding(
-          padding: const EdgeInsets.all(16),
+          padding: const EdgeInsets.all(AppSpacing.md),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -1254,7 +1255,7 @@ class _ExerciseHistoryCard extends ConsumerWidget{
                             fontWeight: FontWeight.bold,
                           ),
                         ),
-                        const SizedBox(height: 4),
+                        const SizedBox(height: AppSpacing.xxs),
                         Text(
                           history.muscleGroup.toUpperCase(),
                           style: context.textTheme.bodySmall?.copyWith(
@@ -1296,7 +1297,7 @@ class _ExerciseHistoryCard extends ConsumerWidget{
                   ),
                 ],
               ),
-              const SizedBox(height: 16),
+              const SizedBox(height: AppSpacing.md),
 
               // Stats row
               Row(
@@ -1310,7 +1311,7 @@ class _ExerciseHistoryCard extends ConsumerWidget{
                       color: context.colors.primary,
                     ),
                   ),
-                  const SizedBox(width: 8),
+                  const SizedBox(width: AppSpacing.xs),
 
                   // Sessions count
                   Expanded(
@@ -1321,7 +1322,7 @@ class _ExerciseHistoryCard extends ConsumerWidget{
                       color: context.colors.secondary,
                     ),
                   ),
-                  const SizedBox(width: 8),
+                  const SizedBox(width: AppSpacing.xs),
 
                   // Weekly progression
                   Expanded(
@@ -1363,7 +1364,7 @@ class _StatChip extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+      padding: const EdgeInsets.all(AppSpacing.xs),
       decoration: BoxDecoration(
         color: color.withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(8),
@@ -1376,7 +1377,7 @@ class _StatChip extends StatelessWidget {
             size: AppIconSize.small,
             color: color,
           ),
-          const SizedBox(height: 4),
+          const SizedBox(height: AppSpacing.xxs),
           Text(
             value,
             style: context.textTheme.titleSmall?.copyWith(
@@ -1416,7 +1417,7 @@ class _NotAuthenticatedView extends StatelessWidget {
             size: AppIconSize.xxlarge,
             color: context.colors.onSurfaceVariant,
           ),
-          const SizedBox(height: 16),
+          const SizedBox(height: AppSpacing.md),
           Text(
             context.l10n.pleaseLoginToViewAnalytics,
             style: context.textTheme.bodyLarge?.copyWith(
@@ -1448,7 +1449,7 @@ class _SkeletonLoadingView extends StatelessWidget {
       children: [
         // Search bar skeleton
         Padding(
-          padding: EdgeInsets.all(16),
+          padding: EdgeInsets.all(AppSpacing.md),
           child: _ShimmerBox(
             width: double.infinity,
             height: 56,
@@ -1472,7 +1473,7 @@ class _SkeletonList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListView.builder(
-      padding: const EdgeInsets.symmetric(horizontal: 16),
+      padding: const EdgeInsets.symmetric(horizontal: AppSpacing.md),
       itemCount: 5, // Show 5 skeleton cards
       itemBuilder: (context, index) => const _SkeletonExerciseCard(),
     );
@@ -1486,18 +1487,18 @@ class _SkeletonExerciseCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return const Card(
-      margin: EdgeInsets.only(bottom: 12),
+      margin: EdgeInsets.only(bottom: AppSpacing.sm),
       child: Padding(
-        padding: EdgeInsets.all(16),
+        padding: EdgeInsets.all(AppSpacing.md),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             // Exercise name skeleton
             _ShimmerBox(width: 200, height: 20, borderRadius: 4),
-            SizedBox(height: 8),
+            SizedBox(height: AppSpacing.xs),
             // Muscle group skeleton
             _ShimmerBox(width: 100, height: 14, borderRadius: 4),
-            SizedBox(height: 16),
+            SizedBox(height: AppSpacing.md),
 
             // Stats row skeleton
             Row(
@@ -1509,7 +1510,7 @@ class _SkeletonExerciseCard extends StatelessWidget {
                     borderRadius: 8,
                   ),
                 ),
-                SizedBox(width: 8),
+                SizedBox(width: AppSpacing.xs),
                 Expanded(
                   child: _ShimmerBox(
                     width: double.infinity,
@@ -1517,7 +1518,7 @@ class _SkeletonExerciseCard extends StatelessWidget {
                     borderRadius: 8,
                   ),
                 ),
-                SizedBox(width: 8),
+                SizedBox(width: AppSpacing.xs),
                 Expanded(
                   child: _ShimmerBox(
                     width: double.infinity,
@@ -1622,12 +1623,12 @@ class _ErrorView extends StatelessWidget {
             size: AppIconSize.xxlarge,
             color: context.colors.error,
           ),
-          const SizedBox(height: 16),
+          const SizedBox(height: AppSpacing.md),
           Text(
             context.l10n.errorLoadingAnalytics,
             style: context.textTheme.headlineSmall,
           ),
-          const SizedBox(height: 8),
+          const SizedBox(height: AppSpacing.xs),
           Text(
             error,
             textAlign: TextAlign.center,
@@ -1656,14 +1657,14 @@ class _EmptyStateView extends StatelessWidget {
             size: AppIconSize.xxlarge,
             color: context.colors.onSurfaceVariant,
           ),
-          const SizedBox(height: 24),
+          const SizedBox(height: AppSpacing.xl),
           Text(
             context.l10n.noWorkoutDataYet,
             style: context.textTheme.headlineSmall?.copyWith(
               color: context.colors.onSurfaceVariant,
             ),
           ),
-          const SizedBox(height: 12),
+          const SizedBox(height: AppSpacing.sm),
           Text(
             context.l10n.completeWorkoutsToSeeAnalytics,
             textAlign: TextAlign.center,
@@ -1671,7 +1672,7 @@ class _EmptyStateView extends StatelessWidget {
               color: context.colors.onSurfaceVariant,
             ),
           ),
-          const SizedBox(height: 24),
+          const SizedBox(height: AppSpacing.xl),
           ElevatedButton.icon(
             onPressed: () => context.go(AppRoutes.workoutPath),
             icon: SemanticIcon.button(
@@ -1703,7 +1704,7 @@ class _SortFilterChips extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return Container(
       height: 56,
-      padding: const EdgeInsets.symmetric(horizontal: 16),
+      padding: const EdgeInsets.symmetric(horizontal: AppSpacing.md),
       decoration: BoxDecoration(
         gradient: LinearGradient(
           begin: Alignment.topCenter,
@@ -1736,7 +1737,7 @@ class _SortFilterChips extends ConsumerWidget {
                     selected: sortBy == SortBy.favorites,
                     onSelected: () => onSortChanged(SortBy.favorites),
                   ),
-                  const SizedBox(width: 8),
+                  const SizedBox(width: AppSpacing.xs),
 
                   // Most Used 🔥 filter (Task 5.1)
                   _FilterChipItem(
@@ -1746,7 +1747,7 @@ class _SortFilterChips extends ConsumerWidget {
                     selected: sortBy == SortBy.mostUsed,
                     onSelected: () => onSortChanged(SortBy.mostUsed),
                   ),
-                  const SizedBox(width: 8),
+                  const SizedBox(width: AppSpacing.xs),
 
                   // Recent 📅 filter (Task 5.1)
                   _FilterChipItem(

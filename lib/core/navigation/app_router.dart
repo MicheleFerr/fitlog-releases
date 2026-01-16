@@ -38,6 +38,7 @@ import 'package:gymbro_flutter_new/core/navigation/app_routes.dart';
 import 'package:gymbro_flutter_new/core/navigation/main_shell.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_spacing.dart';
 
 // Auth
 import 'package:gymbro_flutter_new/features/auth/presentation/login_screen.dart';
@@ -188,9 +189,9 @@ final appRouterProvider = Provider<GoRouter>((ref) {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             const Icon(AppIcons.error, size: 64),
-            const SizedBox(height: 16),
+            const SizedBox(height: AppSpacing.md),
             Text('Page not found: ${state.fullPath ?? 'Unknown'}'),
-            const SizedBox(height: 16),
+            const SizedBox(height: AppSpacing.md),
             ElevatedButton(
               onPressed: () => context.goNamed(AppRoutes.homeName),
               child: Text(context.l10n.goBack),
@@ -602,7 +603,7 @@ class _RoutineComingSoonPlaceholder extends StatelessWidget {
       ),
       body: Center(
         child: Padding(
-          padding: const EdgeInsets.all(32.0),
+          padding: const EdgeInsets.all(AppSpacing.xxl),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
@@ -611,13 +612,13 @@ class _RoutineComingSoonPlaceholder extends StatelessWidget {
                 size: 64,
                 color: context.colors.primary,
               ),
-              const SizedBox(height: 24),
+              const SizedBox(height: AppSpacing.xl),
               Text(
                 context.l10n.comingSoon,
                 style: context.textTheme.headlineMedium,
                 textAlign: TextAlign.center,
               ),
-              const SizedBox(height: 16),
+              const SizedBox(height: AppSpacing.md),
               Text(
                 'Routine feature is being rebuilt',
                 style: context.textTheme.bodyLarge?.copyWith(
@@ -782,7 +783,7 @@ class _MeasurementListWrapperState
       appBar: AppBar(title: Text(context.l10n.measurements)),
       body: Center(
         child: Padding(
-          padding: const EdgeInsets.all(32.0),
+          padding: const EdgeInsets.all(AppSpacing.xxl),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
@@ -791,7 +792,7 @@ class _MeasurementListWrapperState
                 size: 64,
                 color: context.colors.primary,
               ),
-              const SizedBox(height: 24),
+              const SizedBox(height: AppSpacing.xl),
               Text(
                 context.l10n.bodyMeasurementsConsentTitle,
                 style: context.textTheme.headlineSmall?.copyWith(
@@ -799,7 +800,7 @@ class _MeasurementListWrapperState
                 ),
                 textAlign: TextAlign.center,
               ),
-              const SizedBox(height: 16),
+              const SizedBox(height: AppSpacing.md),
               Text(
                 context.l10n.bodyMeasurementsConsentDescription,
                 style: context.textTheme.bodyLarge?.copyWith(
@@ -807,7 +808,7 @@ class _MeasurementListWrapperState
                 ),
                 textAlign: TextAlign.center,
               ),
-              const SizedBox(height: 32),
+              const SizedBox(height: AppSpacing.xxl),
               _isGrantingConsent
                   ? const LoadingIndicator()
                   : FilledButton.icon(
@@ -815,7 +816,7 @@ class _MeasurementListWrapperState
                       icon: const Icon(AppIcons.check),
                       label: Text(context.l10n.bodyMeasurementsGrantConsent),
                     ),
-              const SizedBox(height: 16),
+              const SizedBox(height: AppSpacing.md),
               TextButton(
                 onPressed: () => context.pop(),
                 child: Text(context.l10n.cancel),
