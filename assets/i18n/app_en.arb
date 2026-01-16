@@ -21896,6 +21896,10 @@
   "@newPlural": {
     "description": "New (plural form)"
   },
+  "vsLastWeek": "vs week",
+  "@vsLastWeek": {
+    "description": "Comparison label - versus last week"
+  },
   "records": "Records",
   "@records": {
     "description": "Records tab label"

@@ -865,11 +865,11 @@ class _QuickStatsSummary extends StatelessWidget {
           ),
           const SizedBox(width: 6),
 
-          // Volume
+          // Volume (vs last week comparison)
           Expanded(
             child: _HybridStatItem(
               icon: AppIcons.trendUp,
-              label: context.l10n.volume,
+              label: '${context.l10n.volume} (${context.l10n.vsLastWeek})',
               value: volumeProgression >= 0
                   ? '+${volumeProgression.toStringAsFixed(0)}'
                   : volumeProgression.toStringAsFixed(0),

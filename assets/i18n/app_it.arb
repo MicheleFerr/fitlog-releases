@@ -10361,6 +10361,10 @@
   "@newPlural": {
     "description": "Nuovi (forma plurale)"
   },
+  "vsLastWeek": "vs sett.",
+  "@vsLastWeek": {
+    "description": "Etichetta confronto - rispetto alla settimana scorsa"
+  },
   "records": "Record",
   "@records": {
     "description": "Etichetta tab record"
