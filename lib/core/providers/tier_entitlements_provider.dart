@@ -38,6 +38,12 @@ class TierEntitlements {
   /// Maximum private templates user can create
   int get maxTemplates => _tier.maxTemplates;
 
+  /// Maximum public templates user can share
+  int get maxPublicTemplates => _tier.maxPublicTemplates;
+
+  /// Maximum custom exercises user can create
+  int get maxCustomExercises => _tier.maxCustomExercises;
+
   /// Whether to show banner ads
   bool get shouldShowAds => _tier.showAds;
 
@@ -47,12 +53,26 @@ class TierEntitlements {
   /// Whether user has Cloud Sync access
   bool get hasCloudSync => _tier.hasCloudSync;
 
-  /// Check if user can save another template
+  /// Check if user can save another private template
   bool canSaveTemplate(int currentCount) => currentCount < maxTemplates;
 
-  /// Get remaining template slots
+  /// Check if user can save another public template
+  bool canSavePublicTemplate(int currentCount) => currentCount < maxPublicTemplates;
+
+  /// Check if user can create another custom exercise
+  bool canCreateCustomExercise(int currentCount) => currentCount < maxCustomExercises;
+
+  /// Get remaining private template slots
   int remainingTemplates(int currentCount) =>
       (maxTemplates - currentCount).clamp(0, maxTemplates);
+
+  /// Get remaining public template slots
+  int remainingPublicTemplates(int currentCount) =>
+      (maxPublicTemplates - currentCount).clamp(0, maxPublicTemplates);
+
+  /// Get remaining custom exercise slots
+  int remainingCustomExercises(int currentCount) =>
+      (maxCustomExercises - currentCount).clamp(0, maxCustomExercises);
 
   /// Check if feature is locked (for UI display)
   bool isFeatureLocked(TierFeature feature) {
@@ -133,5 +153,23 @@ final hasProAnalyticsProvider = Provider<bool>((ref) {
 final hasCloudSyncProvider = Provider<bool>((ref) {
   return ref.watch(
     tierEntitlementsProvider.select((e) => e.hasCloudSync),
+  );
+});
+
+/// Maximum public templates user can save
+///
+/// Use this when checking public template sharing limits.
+final maxPublicTemplatesProvider = Provider<int>((ref) {
+  return ref.watch(
+    tierEntitlementsProvider.select((e) => e.maxPublicTemplates),
+  );
+});
+
+/// Maximum custom exercises user can create
+///
+/// Use this when checking custom exercise creation limits.
+final maxCustomExercisesProvider = Provider<int>((ref) {
+  return ref.watch(
+    tierEntitlementsProvider.select((e) => e.maxCustomExercises),
   );
 });

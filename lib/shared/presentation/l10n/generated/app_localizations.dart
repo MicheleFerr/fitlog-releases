@@ -25554,10 +25554,10 @@ abstract class AppLocalizations {
   /// **'Volume settings'**
   String get volumeSettings;
 
-  /// Auto-generated for vsLastWeek
+  /// Comparison label - versus last week
   ///
   /// In en, this message translates to:
-  /// **'Vs last week'**
+  /// **'vs week'**
   String get vsLastWeek;
 
   /// Auto-generated for weeklyDistribution

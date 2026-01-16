@@ -1,0 +1,320 @@
+{
+  "version": "2.0.0",
+  "lastUpdated": "2026-01-01",
+  "description": "Default workout templates based on scientific evidence and proven training methods",
+  "totalTemplates": 30,
+  "categories": [
+    {
+      "id": "beginner",
+      "name": "Principianti",
+      "nameEn": "Beginner",
+      "description": "Programmi per chi inizia (0-6 mesi di esperienza)",
+      "descriptionEn": "Programs for beginners (0-6 months experience)",
+      "file": "beginner_templates.json",
+      "templateCount": 4,
+      "icon": "fitness_center"
+    },
+    {
+      "id": "intermediate",
+      "name": "Intermedi",
+      "nameEn": "Intermediate",
+      "description": "Split e programmi per chi ha 6+ mesi di esperienza",
+      "descriptionEn": "Split and programs for 6+ months experience",
+      "file": "intermediate_templates.json",
+      "templateCount": 5,
+      "icon": "trending_up"
+    },
+    {
+      "id": "advanced",
+      "name": "Avanzati",
+      "nameEn": "Advanced",
+      "description": "Programmi intensi per atleti con 2+ anni di esperienza",
+      "descriptionEn": "Intense programs for athletes with 2+ years experience",
+      "file": "advanced_templates.json",
+      "templateCount": 4,
+      "icon": "local_fire_department"
+    },
+    {
+      "id": "home",
+      "name": "Casa & Bodyweight",
+      "nameEn": "Home & Bodyweight",
+      "description": "Allenamenti a casa senza attrezzi",
+      "descriptionEn": "Home workouts without equipment",
+      "file": "home_bodyweight_templates.json",
+      "templateCount": 5,
+      "icon": "home"
+    },
+    {
+      "id": "dumbbell",
+      "name": "Solo Manubri",
+      "nameEn": "Dumbbell Only",
+      "description": "Allenamenti con soli manubri - casa o hotel",
+      "descriptionEn": "Workouts with dumbbells only - home or hotel",
+      "file": "dumbbell_templates.json",
+      "templateCount": 5,
+      "icon": "fitness_center"
+    },
+    {
+      "id": "express",
+      "name": "Express",
+      "nameEn": "Express",
+      "description": "Allenamenti veloci 20-25 minuti",
+      "descriptionEn": "Quick 20-25 minute workouts",
+      "file": "express_templates.json",
+      "templateCount": 3,
+      "icon": "timer"
+    },
+    {
+      "id": "specialty",
+      "name": "Specializzati",
+      "nameEn": "Specialty",
+      "description": "Programmi per obiettivi specifici (forza, ipertrofia, core)",
+      "descriptionEn": "Programs for specific goals (strength, hypertrophy, core)",
+      "file": "specialty_templates.json",
+      "templateCount": 4,
+      "icon": "star"
+    }
+  ],
+  "allTemplates": [
+    {
+      "id": "default_full_body_foundation_a",
+      "name": "Full Body Foundation A",
+      "category": "beginner",
+      "difficulty": "beginner",
+      "frequency": "3x/week",
+      "estimatedDuration": 45
+    },
+    {
+      "id": "default_full_body_foundation_b",
+      "name": "Full Body Foundation B",
+      "category": "beginner",
+      "difficulty": "beginner",
+      "frequency": "3x/week",
+      "estimatedDuration": 40
+    },
+    {
+      "id": "default_full_body_starter",
+      "name": "Full Body Starter",
+      "category": "beginner",
+      "difficulty": "beginner",
+      "frequency": "3x/week",
+      "estimatedDuration": 35
+    },
+    {
+      "id": "default_intro_strength",
+      "name": "Intro Strength",
+      "category": "beginner",
+      "difficulty": "beginner",
+      "frequency": "2x/week",
+      "estimatedDuration": 30
+    },
+    {
+      "id": "default_upper_lower_upper",
+      "name": "Upper Body A",
+      "category": "intermediate",
+      "difficulty": "intermediate",
+      "frequency": "4x/week",
+      "estimatedDuration": 55
+    },
+    {
+      "id": "default_upper_lower_lower",
+      "name": "Lower Body A",
+      "category": "intermediate",
+      "difficulty": "intermediate",
+      "frequency": "4x/week",
+      "estimatedDuration": 45
+    },
+    {
+      "id": "default_ppl_push",
+      "name": "Push Day",
+      "category": "intermediate",
+      "difficulty": "intermediate",
+      "frequency": "3-6x/week",
+      "estimatedDuration": 45
+    },
+    {
+      "id": "default_ppl_pull",
+      "name": "Pull Day",
+      "category": "intermediate",
+      "difficulty": "intermediate",
+      "frequency": "3-6x/week",
+      "estimatedDuration": 50
+    },
+    {
+      "id": "default_ppl_legs",
+      "name": "Legs Day",
+      "category": "intermediate",
+      "difficulty": "intermediate",
+      "frequency": "3-6x/week",
+      "estimatedDuration": 50
+    },
+    {
+      "id": "default_advanced_push",
+      "name": "Advanced Push",
+      "category": "advanced",
+      "difficulty": "advanced",
+      "frequency": "3-6x/week",
+      "estimatedDuration": 60
+    },
+    {
+      "id": "default_advanced_pull",
+      "name": "Advanced Pull",
+      "category": "advanced",
+      "difficulty": "advanced",
+      "frequency": "3-6x/week",
+      "estimatedDuration": 60
+    },
+    {
+      "id": "default_advanced_legs",
+      "name": "Advanced Legs",
+      "category": "advanced",
+      "difficulty": "advanced",
+      "frequency": "3-6x/week",
+      "estimatedDuration": 65
+    },
+    {
+      "id": "default_advanced_upper_lower_upper",
+      "name": "Advanced Upper A",
+      "category": "advanced",
+      "difficulty": "advanced",
+      "frequency": "4x/week",
+      "estimatedDuration": 55
+    },
+    {
+      "id": "default_home_full_body",
+      "name": "Home Full Body",
+      "category": "home",
+      "difficulty": "beginner",
+      "frequency": "3x/week",
+      "estimatedDuration": 35
+    },
+    {
+      "id": "default_home_upper_body",
+      "name": "Home Upper Body",
+      "category": "home",
+      "difficulty": "beginner",
+      "frequency": "2-3x/week",
+      "estimatedDuration": 30
+    },
+    {
+      "id": "default_home_lower_body",
+      "name": "Home Lower Body",
+      "category": "home",
+      "difficulty": "beginner",
+      "frequency": "2-3x/week",
+      "estimatedDuration": 30
+    },
+    {
+      "id": "default_home_core_hiit",
+      "name": "Home Core & HIIT",
+      "category": "home",
+      "difficulty": "intermediate",
+      "frequency": "2-3x/week",
+      "estimatedDuration": 25
+    },
+    {
+      "id": "default_home_calisthenics",
+      "name": "Home Calisthenics",
+      "category": "home",
+      "difficulty": "intermediate",
+      "frequency": "3x/week",
+      "estimatedDuration": 40
+    },
+    {
+      "id": "default_dumbbell_full_body",
+      "name": "Dumbbell Full Body",
+      "category": "dumbbell",
+      "difficulty": "beginner",
+      "frequency": "3x/week",
+      "estimatedDuration": 40
+    },
+    {
+      "id": "default_dumbbell_upper",
+      "name": "Dumbbell Upper Body",
+      "category": "dumbbell",
+      "difficulty": "intermediate",
+      "frequency": "2-3x/week",
+      "estimatedDuration": 45
+    },
+    {
+      "id": "default_dumbbell_lower",
+      "name": "Dumbbell Lower Body",
+      "category": "dumbbell",
+      "difficulty": "intermediate",
+      "frequency": "2-3x/week",
+      "estimatedDuration": 40
+    },
+    {
+      "id": "default_dumbbell_push",
+      "name": "Dumbbell Push",
+      "category": "dumbbell",
+      "difficulty": "intermediate",
+      "frequency": "2-3x/week",
+      "estimatedDuration": 40
+    },
+    {
+      "id": "default_dumbbell_pull",
+      "name": "Dumbbell Pull",
+      "category": "dumbbell",
+      "difficulty": "intermediate",
+      "frequency": "2-3x/week",
+      "estimatedDuration": 40
+    },
+    {
+      "id": "default_express_full_body",
+      "name": "Express Full Body",
+      "category": "express",
+      "difficulty": "beginner",
+      "frequency": "3x/week",
+      "estimatedDuration": 20
+    },
+    {
+      "id": "default_express_upper",
+      "name": "Express Upper",
+      "category": "express",
+      "difficulty": "beginner",
+      "frequency": "2-3x/week",
+      "estimatedDuration": 20
+    },
+    {
+      "id": "default_express_lower",
+      "name": "Express Lower",
+      "category": "express",
+      "difficulty": "beginner",
+      "frequency": "2-3x/week",
+      "estimatedDuration": 20
+    },
+    {
+      "id": "default_strength_focus",
+      "name": "Strength Focus",
+      "category": "specialty",
+      "difficulty": "intermediate",
+      "frequency": "3x/week",
+      "estimatedDuration": 55
+    },
+    {
+      "id": "default_hypertrophy_chest_back",
+      "name": "Hypertrophy Chest & Back",
+      "category": "specialty",
+      "difficulty": "intermediate",
+      "frequency": "2x/week",
+      "estimatedDuration": 50
+    },
+    {
+      "id": "default_core_strength",
+      "name": "Core Strength",
+      "category": "specialty",
+      "difficulty": "beginner",
+      "frequency": "2-3x/week",
+      "estimatedDuration": 25
+    },
+    {
+      "id": "default_conditioning",
+      "name": "Metabolic Conditioning",
+      "category": "specialty",
+      "difficulty": "intermediate",
+      "frequency": "2-3x/week",
+      "estimatedDuration": 30
+    }
+  ]
+}

@@ -2,7 +2,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/providers/workout_repository_provider.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/providers/workout_provider.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/workout.dart';
-import 'package:gymbro_flutter_new/features/auth/presentation/providers/auth_provider.dart';
+import 'package:gymbro_flutter_new/features/auth/presentation/providers/consolidated_user_provider.dart';
 import 'package:gymbro_flutter_new/features/progress/presentation/providers/progress_provider.dart';
 import 'package:gymbro_flutter_new/features/home/domain/services/ai_coach_service.dart';
 import 'package:gymbro_flutter_new/shared/presentation/providers/app_config_provider.dart';
@@ -14,9 +14,12 @@ import 'package:flutter/foundation.dart';
 export 'package:gymbro_flutter_new/features/home/domain/services/ai_coach_service.dart' show AIInsight;
 
 /// Provider for AI Coach insights
+/// 🔧 FIX BUG #6: Watch currentUserProvider to invalidate on logout/switch
+/// Previously used sync authServiceProvider which didn't react to auth changes
 final aiCoachInsightsProvider = FutureProvider.autoDispose<List<AIInsight>>((ref) async {
-  final authService = ref.watch(authServiceProvider);
-  final currentUser = authService.currentUser;
+  // Watch auth stream - provider will invalidate when user changes
+  final userAsync = ref.watch(currentUserProvider);
+  final currentUser = userAsync.value;
 
   if (currentUser?.email == null) {
     return [];

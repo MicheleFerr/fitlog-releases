@@ -18,6 +18,7 @@ library;
 import 'dart:math';
 
 import 'package:gymbro_flutter_new/features/stress_index/domain/constants/stress_index_constants.dart';
+import 'package:gymbro_flutter_new/features/stress_index/domain/entities/muscle_stress_data.dart';
 import 'package:gymbro_flutter_new/features/stress_index/domain/entities/stress_index_result.dart';
 
 /// Training impulse for FFM calculation
@@ -226,8 +227,10 @@ class FitnessFatigueService {
 
     // Scale components to percentage points
     // Typical training load of 0.7 should produce visible effects
-    final fitnessEffect = fitnessSum * 15; // Scale factor for visibility
-    final fatigueEffect = fatigueSum * 15;
+    // NOTE: Increased from 15 to 25 to make individual workouts more impactful
+    // With k₂=3.5 and scale=25, a workout with muscle stress 30 produces ~25 stress
+    final fitnessEffect = fitnessSum * 25; // Scale factor for visibility
+    final fatigueEffect = fatigueSum * 25;
 
     // Performance = Baseline + Fitness - Fatigue
     final performanceLevel =
@@ -347,6 +350,85 @@ class FitnessFatigueService {
     }
 
     return bestDay;
+  }
+
+  /// Simulate stress after a hypothetical workout using FFM
+  ///
+  /// This is the SINGLE SOURCE OF TRUTH for "if workout" predictions.
+  /// Uses the same FFM model as actual stress calculation.
+  ///
+  /// Parameters:
+  /// - [workoutHistory]: Existing workout history
+  /// - [simulatedWorkoutStress]: Expected stress of the simulated workout (0-100)
+  /// - [workoutTime]: When the simulated workout would occur (default: 12h from now)
+  /// - [evaluateAt]: When to evaluate the result (default: 24h from now)
+  ///
+  /// Returns: Predicted stress level (0-100) after the simulated workout
+  static double predictStressAfterSimulatedWorkout({
+    required List<StressIndexResult> workoutHistory,
+    required double simulatedWorkoutStress,
+    DateTime? workoutTime,
+    DateTime? evaluateAt,
+  }) {
+    final now = DateTime.now();
+    final workoutAt = workoutTime ?? now.add(const Duration(hours: 12));
+    final evalAt = evaluateAt ?? now.add(const Duration(hours: 24));
+
+    // Create a simulated workout result
+    // Distribute stress across common muscle groups (simplified)
+    final simulatedMuscleBreakdown = <String, MuscleStressData>{
+      'PETT': MuscleStressData(
+        muscleId: 'PETT',
+        displayName: 'Chest',
+        stressScore: simulatedWorkoutStress,
+        setsCount: 4,
+        totalVolume: 1000,
+        avgRpe: 8.0,
+        recoveryHours: 72,
+        estimatedRecovery: workoutAt.add(const Duration(hours: 72)),
+      ),
+      'LAT': MuscleStressData(
+        muscleId: 'LAT',
+        displayName: 'Back',
+        stressScore: simulatedWorkoutStress * 0.8,
+        setsCount: 4,
+        totalVolume: 1000,
+        avgRpe: 8.0,
+        recoveryHours: 72,
+        estimatedRecovery: workoutAt.add(const Duration(hours: 72)),
+      ),
+      'DELT_ANT': MuscleStressData(
+        muscleId: 'DELT_ANT',
+        displayName: 'Shoulders',
+        stressScore: simulatedWorkoutStress * 0.6,
+        setsCount: 3,
+        totalVolume: 500,
+        avgRpe: 8.0,
+        recoveryHours: 48,
+        estimatedRecovery: workoutAt.add(const Duration(hours: 48)),
+      ),
+    };
+
+    final simulatedWorkout = StressIndexResult(
+      workoutId: 'simulated_${workoutAt.millisecondsSinceEpoch}',
+      primaryScore: simulatedWorkoutStress,
+      fallbackScore: simulatedWorkoutStress,
+      confidence: 1.0,
+      muscleBreakdown: simulatedMuscleBreakdown,
+      totalSets: 10,
+      setsWithRpe: 10,
+      calculatedAt: workoutAt,
+      rawScore: simulatedWorkoutStress * 100, // Approximate raw score
+    );
+
+    // Combine with existing history
+    final combinedHistory = [...workoutHistory, simulatedWorkout];
+
+    // Calculate FFM readiness at evaluation time
+    final readiness = getOverallReadiness(combinedHistory, atTime: evalAt);
+
+    // Convert readiness to stress (100 - readiness, clamped)
+    return (100 - readiness).clamp(0.0, 100.0);
   }
 
   /// Get overall readiness score across all muscles

@@ -71,6 +71,33 @@ struct FitLogWatch_Watch_AppApp: App {
 
                         // ✅ UNIFIED SYNC for fast foreground recovery (race-condition safe)
                         connectivityManager.syncWorkoutStateFromiPhone()
+
+                        // ✅ BUG FIX #6: Restart HKWorkoutSession if needed
+                        // When app returns to foreground, watchOS might have killed the
+                        // HKWorkoutSession to save battery. The .onChange handler won't
+                        // fire if isWorkoutActive is already true (no change).
+                        // We need to explicitly check and restart the session.
+                        Task {
+                            // Small delay to allow sync to complete
+                            try? await Task.sleep(nanoseconds: 500_000_000)  // 0.5s
+
+                            // If iPhone says workout is active but HKWorkoutSession is not running
+                            if connectivityManager.isWorkoutActive &&
+                               workoutManager.workoutState != .running &&
+                               workoutManager.workoutState != .paused {
+                                print("⌚ [APP] 🔄 Foreground recovery: iPhone workout active but HKWorkoutSession not running")
+                                print("⌚ [APP] 🔄 Current HKWorkoutSession state: \(workoutManager.workoutState.rawValue)")
+
+                                do {
+                                    let workoutType = mapWorkoutType(connectivityManager.workoutType)
+                                    print("⌚ [APP] 🔄 Restarting HKWorkoutSession with type: \(workoutType.rawValue)")
+                                    try await workoutManager.startWorkout(type: workoutType, isCompanion: true)
+                                    print("⌚ [APP] ✅ HKWorkoutSession restarted successfully on foreground")
+                                } catch {
+                                    print("⌚ [APP] ⚠️ Failed to restart HKWorkoutSession on foreground: \(error.localizedDescription)")
+                                }
+                            }
+                        }
                     }
                 }
                 // ⌚ BUG FIX #4: Auto-start HKWorkoutSession when iPhone workout starts

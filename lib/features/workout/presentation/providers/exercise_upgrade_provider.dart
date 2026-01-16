@@ -11,6 +11,7 @@ import 'package:gymbro_flutter_new/features/workout_templates/data/repositories/
 
 /// Provider for exercise upgrade service
 final exerciseUpgradeServiceProvider = Provider<ExerciseUpgradeService>((ref) {
+  ref.keepAlive(); // FIX: previene ricreazione service
   final historyRepository = ref.watch(workoutHistoryRepositoryProvider);
   final templateRepository = ref.watch(templateRepositoryProvider);
 

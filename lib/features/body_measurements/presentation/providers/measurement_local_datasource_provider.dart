@@ -40,5 +40,6 @@ import 'package:gymbro_flutter_new/features/body_measurements/data/datasources/h
 /// ```
 final measurementLocalDatasourceProvider =
     Provider<MeasurementLocalDatasource>((ref) {
+  ref.keepAlive(); // FIX: previene ricreazione datasource con Hive box
   return HiveMeasurementDatasource();
 });

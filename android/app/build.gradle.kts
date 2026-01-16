@@ -1,9 +1,19 @@
+import java.util.Properties
+import java.io.FileInputStream
+
 plugins {
     id("com.android.application")
     id("kotlin-android")
     // The Flutter Gradle Plugin must be applied after the Android and Kotlin Gradle plugins.
     id("dev.flutter.flutter-gradle-plugin")
     id("com.google.gms.google-services")
+}
+
+// 🔐 Load keystore properties for release signing
+val keystorePropertiesFile = rootProject.file("key.properties")
+val keystoreProperties = Properties()
+if (keystorePropertiesFile.exists()) {
+    keystoreProperties.load(FileInputStream(keystorePropertiesFile))
 }
 
 android {
@@ -22,20 +32,28 @@ android {
     }
 
     defaultConfig {
-        // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
         applicationId = "com.micheleferrero93.GymProgressAppNew"
-        // You can update the following values to match your application needs.
-        // For more information, see: https://flutter.dev/to/review-gradle-config.
-        minSdk = flutter.minSdkVersion
+        minSdk = 26  // Required by health plugin (Android 8.0+)
         targetSdk = flutter.targetSdkVersion
         versionCode = flutter.versionCode
         versionName = flutter.versionName
     }
 
+    // 🔐 Signing configurations for release builds
+    signingConfigs {
+        create("release") {
+            if (keystorePropertiesFile.exists()) {
+                keyAlias = keystoreProperties["keyAlias"] as String
+                keyPassword = keystoreProperties["keyPassword"] as String
+                storeFile = file(keystoreProperties["storeFile"] as String)
+                storePassword = keystoreProperties["storePassword"] as String
+            }
+        }
+    }
+
     buildTypes {
         release {
             // ✅ SECURITY: Enable ProGuard/R8 for code obfuscation and shrinking
-            // Rimuove codice debug, offusca il codice, riduce dimensione APK
             isMinifyEnabled = true
             isShrinkResources = true
 
@@ -44,15 +62,46 @@ android {
                 "proguard-rules.pro"
             )
 
-            // TODO: Add your own signing config for the release build.
-            // Signing with the debug keys for now, so `flutter run --release` works.
-            signingConfig = signingConfigs.getByName("debug")
+            // ✅ Use release keystore for production builds
+            signingConfig = if (keystorePropertiesFile.exists()) {
+                signingConfigs.getByName("release")
+            } else {
+                signingConfigs.getByName("debug")
+            }
         }
     }
 }
 
 dependencies {
     coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.1.4")
+    // Play Feature Delivery for deferred components (required by Flutter)
+    // Using split modules instead of deprecated monolithic core library
+    implementation("com.google.android.play:feature-delivery:2.1.0")
+}
+
+// 🧪 Remove test plugins from release builds
+// These plugins (integration_test, patrol) are dev_dependencies but Flutter still
+// registers them in GeneratedPluginRegistrant.java. This task removes them for release.
+tasks.whenTaskAdded {
+    if (name.contains("compileReleaseJavaWithJavac")) {
+        doFirst {
+            val registrantFile = file("src/main/java/io/flutter/plugins/GeneratedPluginRegistrant.java")
+            if (registrantFile.exists()) {
+                var content = registrantFile.readText()
+                // Remove integration_test plugin registration
+                content = content.replace(
+                    Regex("""try \{\s*flutterEngine\.getPlugins\(\)\.add\(new dev\.flutter\.plugins\.integration_test\.IntegrationTestPlugin\(\)\);\s*\} catch \(Exception e\) \{\s*Log\.e\(TAG, "Error registering plugin integration_test, dev\.flutter\.plugins\.integration_test\.IntegrationTestPlugin", e\);\s*\}"""),
+                    "// integration_test excluded from release"
+                )
+                // Remove patrol plugin registration
+                content = content.replace(
+                    Regex("""try \{\s*flutterEngine\.getPlugins\(\)\.add\(new pl\.leancode\.patrol\.PatrolPlugin\(\)\);\s*\} catch \(Exception e\) \{\s*Log\.e\(TAG, "Error registering plugin patrol, pl\.leancode\.patrol\.PatrolPlugin", e\);\s*\}"""),
+                    "// patrol excluded from release"
+                )
+                registrantFile.writeText(content)
+            }
+        }
+    }
 }
 
 flutter {

@@ -91,8 +91,10 @@ class FirebaseTemplateNotifier extends Notifier<FirebaseTemplateState> {
 
   void _initialize() async {
     _repository = ref.read(firebaseTemplateRepositoryProvider);
-    
+
     // Ascolta cambiamenti di autenticazione
+    // ⚠️ NOTE: No debounce needed - auth state changes are rare (login/logout)
+    // Debouncing would delay critical sync operations after authentication
     ref.listen(authStateProvider, (previous, next) async {
       if (next.hasValue && next.value != null && previous?.value == null) {
         // User appena loggato - sincronizza

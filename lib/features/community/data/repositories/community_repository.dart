@@ -1,9 +1,11 @@
 import 'dart:async';
 import 'dart:convert';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:gymbro_flutter_new/core/data/mixins/firebase_error_mapper_mixin.dart';
 import 'package:gymbro_flutter_new/features/community/domain/entities/community_contribution.dart';
 import 'package:gymbro_flutter_new/features/community/domain/entities/contribution_filters.dart';
 import 'package:gymbro_flutter_new/features/auth/presentation/providers/auth_provider.dart';
@@ -56,8 +58,8 @@ abstract class CommunityRepository {
   Future<void> incrementViewCount(String contributionId);
 }
 
-class FirestoreCommunityRepository implements CommunityRepository {
-  
+class FirestoreCommunityRepository with FirebaseErrorMapperMixin implements CommunityRepository {
+
   FirestoreCommunityRepository(this._ref);
   final Ref _ref;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
@@ -218,10 +220,21 @@ class FirestoreCommunityRepository implements CommunityRepository {
     data['type'] = contribution.type.name;
     data['status'] = status.name;
 
-    // 🔧 FIX: Added 10s timeout to prevent infinite hanging on poor network
-    await docRef.set(data).timeout(
-      const Duration(seconds: 10),
-      onTimeout: () => throw TimeoutException('Firestore submitContribution timed out'),
+    final result = await handleFirebaseVoidOperation(
+      () => docRef.set(data).timeout(
+        const Duration(seconds: 10),
+        onTimeout: () => throw TimeoutException('Firestore submitContribution timed out'),
+      ),
+      operationName: 'submitContribution',
+    );
+
+    result.fold(
+      (failure) => throw Exception(failure.message),
+      (_) {
+        if (kDebugMode) {
+          debugPrint('✅ [CommunityRepo] Contribution submitted: ${docRef.id}');
+        }
+      },
     );
 
     // 🚀 CACHE INVALIDATION: Clear search cache after new contribution
@@ -296,40 +309,69 @@ class FirestoreCommunityRepository implements CommunityRepository {
   @override
   Future<void> reportContribution(String contributionId, String userId, String reason) async {
     // Create report document
-    // 🔧 FIX: Added 5s timeout to prevent infinite hanging on poor network
-    await _firestore.collection('contribution_reports').add({
-      'contributionId': contributionId,
-      'reportedBy': userId,
-      'reason': reason,
-      'createdAt': FieldValue.serverTimestamp(),
-    }).timeout(
-      const Duration(seconds: 10),
-      onTimeout: () => throw TimeoutException('Firestore reportContribution add timed out'),
+    final addResult = await handleFirebaseOperation(
+      () => _firestore.collection('contribution_reports').add({
+        'contributionId': contributionId,
+        'reportedBy': userId,
+        'reason': reason,
+        'createdAt': FieldValue.serverTimestamp(),
+      }).timeout(
+        const Duration(seconds: 10),
+        onTimeout: () => throw TimeoutException('Firestore reportContribution add timed out'),
+      ),
+      operationName: 'reportContribution_add',
+    );
+
+    addResult.fold(
+      (failure) => throw Exception(failure.message),
+      (_) {},
     );
 
     // If multiple reports, mark for review
-    // 🔧 FIX: Added 5s timeout to prevent infinite hanging on poor network
-    final reports = await _firestore
-        .collection('contribution_reports')
-        .where('contributionId', isEqualTo: contributionId)
-        .get()
-        .timeout(
-          const Duration(seconds: 10),
-          onTimeout: () => throw TimeoutException('Firestore reportContribution get timed out'),
-        );
+    final getResult = await handleFirebaseOperation(
+      () => _firestore
+          .collection('contribution_reports')
+          .where('contributionId', isEqualTo: contributionId)
+          .get()
+          .timeout(
+            const Duration(seconds: 10),
+            onTimeout: () => throw TimeoutException('Firestore reportContribution get timed out'),
+          ),
+      operationName: 'reportContribution_get',
+    );
+
+    final reports = getResult.fold(
+      (failure) => throw Exception(failure.message),
+      (snapshot) => snapshot,
+    );
 
     if (reports.docs.length >= 3) {
-      // 🔧 FIX: Added 5s timeout to prevent infinite hanging on poor network
-      await _firestore
-          .collection(_contributionsCollection)
-          .doc(contributionId)
-          .update({
-            'status': ContributionStatus.underReview.name,
-            'updatedAt': FieldValue.serverTimestamp(),
-          }).timeout(
-            const Duration(seconds: 10),
-            onTimeout: () => throw TimeoutException('Firestore reportContribution update timed out'),
-          );
+      final updateResult = await handleFirebaseVoidOperation(
+        () => _firestore
+            .collection(_contributionsCollection)
+            .doc(contributionId)
+            .update({
+              'status': ContributionStatus.underReview.name,
+              'updatedAt': FieldValue.serverTimestamp(),
+            }).timeout(
+              const Duration(seconds: 10),
+              onTimeout: () => throw TimeoutException('Firestore reportContribution update timed out'),
+            ),
+        operationName: 'reportContribution_update',
+      );
+
+      updateResult.fold(
+        (failure) {
+          if (kDebugMode) {
+            debugPrint('⚠️ [CommunityRepo] Failed to mark for review: ${failure.message}');
+          }
+        },
+        (_) {
+          if (kDebugMode) {
+            debugPrint('🚨 [CommunityRepo] Contribution marked for review: $contributionId');
+          }
+        },
+      );
     }
   }
   
@@ -373,16 +415,23 @@ class FirestoreCommunityRepository implements CommunityRepository {
     // ❌ Cache miss - fetch from Firestore
     // 🚀 FIRESTORE OPTIMIZATION: Reduced from 100 to 20 (80% reduction)
     // Savings: ~400,000 ops/day → 80,000 ops/day (~$180/day with 1000 users)
-    // 🔧 FIX: Added 10s timeout to prevent infinite hanging on poor network
-    final snapshot = await _firestore
-        .collection(_contributionsCollection)
-        .orderBy('createdAt', descending: true)
-        .limit(20)
-        .get()
-        .timeout(
-          const Duration(seconds: 10),
-          onTimeout: () => throw TimeoutException('Firestore searchContributions timed out'),
-        );
+    final result = await handleFirebaseOperation(
+      () => _firestore
+          .collection(_contributionsCollection)
+          .orderBy('createdAt', descending: true)
+          .limit(20)
+          .get()
+          .timeout(
+            const Duration(seconds: 10),
+            onTimeout: () => throw TimeoutException('Firestore searchContributions timed out'),
+          ),
+      operationName: 'searchContributions',
+    );
+
+    final snapshot = result.fold(
+      (failure) => throw Exception(failure.message),
+      (snap) => snap,
+    );
 
     final contributions = _mapSnapshotToContributions(snapshot);
 
@@ -410,16 +459,23 @@ class FirestoreCommunityRepository implements CommunityRepository {
   
   @override
   Future<UserContributionStats> calculateUserStats(String userId) async {
-    // 🔧 FIX: Added 10s timeout to prevent infinite hanging on poor network
-    final contributions = await _firestore
-        .collection(_contributionsCollection)
-        .where('userId', isEqualTo: userId)
-        .get()
-        .timeout(
-          const Duration(seconds: 10),
-          onTimeout: () => throw TimeoutException('Firestore calculateUserStats timed out'),
-        );
-    
+    final result = await handleFirebaseOperation(
+      () => _firestore
+          .collection(_contributionsCollection)
+          .where('userId', isEqualTo: userId)
+          .get()
+          .timeout(
+            const Duration(seconds: 10),
+            onTimeout: () => throw TimeoutException('Firestore calculateUserStats timed out'),
+          ),
+      operationName: 'calculateUserStats',
+    );
+
+    final contributions = result.fold(
+      (failure) => throw Exception(failure.message),
+      (snap) => snap,
+    );
+
     int approved = 0;
     int rejected = 0;
     int pending = 0;
@@ -516,47 +572,62 @@ class FirestoreCommunityRepository implements CommunityRepository {
   
   Future<void> _updateUserStats(String userId, String action) async {
     final statsRef = _firestore.collection(_userStatsCollection).doc(userId);
-    
+
     int pointsToAdd = 0;
     switch (action) {
       case 'submit':
         pointsToAdd = ContributionPoints.submitContribution;
-        break;
       case 'vote':
         pointsToAdd = ContributionPoints.voteOnContribution;
-        break;
       case 'comment':
         pointsToAdd = ContributionPoints.commentOnContribution;
-        break;
       case 'approved':
         pointsToAdd = ContributionPoints.contributionApproved;
-        break;
     }
-    
-    
+
     // Aggiorna stats con XP e livello
-    // 🔧 FIX: Added 5s timeout to prevent infinite hanging on poor network
-    final currentStats = await statsRef.get().timeout(
-      const Duration(seconds: 10),
-      onTimeout: () => throw TimeoutException('Firestore _updateUserStats get timed out'),
+    final getResult = await handleFirebaseOperation(
+      () => statsRef.get().timeout(
+        const Duration(seconds: 10),
+        onTimeout: () => throw TimeoutException('Firestore _updateUserStats get timed out'),
+      ),
+      operationName: '_updateUserStats_get',
     );
-    final currentPoints = (currentStats.data()?['totalPoints'] ?? 0) as int;
+
+    final currentStats = getResult.fold(
+      (failure) {
+        if (kDebugMode) {
+          debugPrint('⚠️ [CommunityRepo] Failed to get stats: ${failure.message}');
+        }
+        return null;
+      },
+      (snap) => snap,
+    );
+
+    final currentPoints = (currentStats?.data()?['totalPoints'] ?? 0) as int;
     final newTotalPoints = currentPoints + pointsToAdd;
     final newLevel = ContributionPoints.getLevelFromPoints(newTotalPoints);
 
-    // 🔧 FIX: Added 5s timeout to prevent infinite hanging on poor network
-    await statsRef.set({
-      'userId': userId,
-      'totalPoints': FieldValue.increment(pointsToAdd),
-      'level': newLevel,
-      'lastActivity': FieldValue.serverTimestamp(),
-      'totalContributions': action == 'submit' ? FieldValue.increment(1) : null,
-      'approvedContributions': action == 'approved' ? FieldValue.increment(1) : null,
-    }, SetOptions(merge: true)).timeout(
-      const Duration(seconds: 10),
-      onTimeout: () => throw TimeoutException('Firestore _updateUserStats set timed out'),
+    final setResult = await handleFirebaseVoidOperation(
+      () => statsRef.set({
+        'userId': userId,
+        'totalPoints': FieldValue.increment(pointsToAdd),
+        'level': newLevel,
+        'lastActivity': FieldValue.serverTimestamp(),
+        'totalContributions': action == 'submit' ? FieldValue.increment(1) : null,
+        'approvedContributions': action == 'approved' ? FieldValue.increment(1) : null,
+      }, SetOptions(merge: true)).timeout(
+        const Duration(seconds: 10),
+        onTimeout: () => throw TimeoutException('Firestore _updateUserStats set timed out'),
+      ),
+      operationName: '_updateUserStats_set',
     );
-    
+
+    setResult.mapLeft((failure) {
+      if (kDebugMode) {
+        debugPrint('⚠️ [CommunityRepo] Failed to update stats: ${failure.message}');
+      }
+    });
   }
 
   @override
@@ -593,16 +664,27 @@ class FirestoreCommunityRepository implements CommunityRepository {
   Future<void> rejectContribution(String contributionId, String adminId, String reason) async {
     final docRef = _firestore.collection(_contributionsCollection).doc(contributionId);
 
-    // 🔧 FIX: Added 5s timeout to prevent infinite hanging on poor network
-    await docRef.update({
-      'status': ContributionStatus.rejected.name,
-      'reviewedBy': adminId,
-      'reviewedAt': FieldValue.serverTimestamp(),
-      'reviewNote': reason,
-      'updatedAt': FieldValue.serverTimestamp(),
-    }).timeout(
-      const Duration(seconds: 10),
-      onTimeout: () => throw TimeoutException('Firestore rejectContribution timed out'),
+    final result = await handleFirebaseVoidOperation(
+      () => docRef.update({
+        'status': ContributionStatus.rejected.name,
+        'reviewedBy': adminId,
+        'reviewedAt': FieldValue.serverTimestamp(),
+        'reviewNote': reason,
+        'updatedAt': FieldValue.serverTimestamp(),
+      }).timeout(
+        const Duration(seconds: 10),
+        onTimeout: () => throw TimeoutException('Firestore rejectContribution timed out'),
+      ),
+      operationName: 'rejectContribution',
+    );
+
+    result.fold(
+      (failure) => throw Exception(failure.message),
+      (_) {
+        if (kDebugMode) {
+          debugPrint('❌ [CommunityRepo] Contribution rejected: $contributionId');
+        }
+      },
     );
 
     // No XP awarded for rejected contributions
@@ -720,34 +802,54 @@ class FirestoreCommunityRepository implements CommunityRepository {
 
   @override
   Future<List<String>> getSavedContributionIds(String userId) async {
-    // 🔧 FIX: Added 5s timeout to prevent infinite hanging on poor network
-    final doc = await _firestore
-        .collection('user_saved_contributions')
-        .doc(userId)
-        .get()
-        .timeout(
-          const Duration(seconds: 10),
-          onTimeout: () => throw TimeoutException('Firestore getSavedContributionIds timed out'),
-        );
+    final result = await handleFirebaseOperation(
+      () => _firestore
+          .collection('user_saved_contributions')
+          .doc(userId)
+          .get()
+          .timeout(
+            const Duration(seconds: 10),
+            onTimeout: () => throw TimeoutException('Firestore getSavedContributionIds timed out'),
+          ),
+      operationName: 'getSavedContributionIds',
+    );
 
-    if (!doc.exists || doc.data() == null) return [];
-
-    final data = doc.data()!;
-    return List<String>.from(data['contributionIds'] ?? []);
+    return result.fold(
+      (failure) {
+        if (kDebugMode) {
+          debugPrint('⚠️ [CommunityRepo] Failed to get saved IDs: ${failure.message}');
+        }
+        return <String>[];
+      },
+      (doc) {
+        if (!doc.exists || doc.data() == null) return <String>[];
+        final data = doc.data()!;
+        return List<String>.from(data['contributionIds'] ?? []);
+      },
+    );
   }
 
   @override
   Future<void> incrementViewCount(String contributionId) async {
     final docRef = _firestore.collection(_contributionsCollection).doc(contributionId);
 
-    // 🔧 FIX: Added 5s timeout to prevent infinite hanging on poor network
-    await docRef.update({
-      'viewCount': FieldValue.increment(1),
-      'lastActivityAt': FieldValue.serverTimestamp(),
-    }).timeout(
-      const Duration(seconds: 10),
-      onTimeout: () => throw TimeoutException('Firestore incrementViewCount timed out'),
+    final result = await handleFirebaseVoidOperation(
+      () => docRef.update({
+        'viewCount': FieldValue.increment(1),
+        'lastActivityAt': FieldValue.serverTimestamp(),
+      }).timeout(
+        const Duration(seconds: 10),
+        onTimeout: () => throw TimeoutException('Firestore incrementViewCount timed out'),
+      ),
+      operationName: 'incrementViewCount',
     );
+
+    // Silent failure - view count is not critical
+    result.mapLeft((failure) {
+      if (kDebugMode) {
+        debugPrint('⚠️ [CommunityRepo] Failed to increment view: ${failure.message}');
+      }
+    });
   }
 
   // ============================================================================

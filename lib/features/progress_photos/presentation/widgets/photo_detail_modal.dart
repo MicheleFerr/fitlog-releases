@@ -329,22 +329,19 @@ class _PhotoDetailModalState extends ConsumerState<PhotoDetailModal> {
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Delete Photo?'),
-        content: const Text(
-          'This photo will be moved to trash and permanently deleted after 30 days. '
-          'You can restore it from trash before then.',
-        ),
+        title: Text(context.l10n.deletePhotoTitle),
+        content: Text(context.l10n.deletePhotoMessage),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(context).pop(false),
-            child: const Text('Cancel'),
+            child: Text(context.l10n.cancel),
           ),
           FilledButton(
             onPressed: () => Navigator.of(context).pop(true),
             style: FilledButton.styleFrom(
               backgroundColor: context.colors.error,
             ),
-            child: const Text('Delete'),
+            child: Text(context.l10n.delete),
           ),
         ],
       ),

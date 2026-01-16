@@ -8,7 +8,6 @@ import 'package:gymbro_flutter_new/features/onboarding/presentation/widgets/init
 import 'package:gymbro_flutter_new/features/onboarding/presentation/widgets/initial/steps/goal_selection_step.dart';
 import 'package:gymbro_flutter_new/features/onboarding/presentation/widgets/initial/steps/body_data_step.dart';
 import 'package:gymbro_flutter_new/features/onboarding/presentation/widgets/initial/steps/experience_step.dart';
-import 'package:gymbro_flutter_new/features/onboarding/presentation/widgets/initial/steps/healthkit_step.dart';
 import 'package:gymbro_flutter_new/features/onboarding/presentation/widgets/initial/steps/frequency_summary_step.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
@@ -17,13 +16,14 @@ import 'package:gymbro_flutter_new/features/onboarding/domain/services/home_tour
 
 /// Main screen for initial onboarding flow.
 ///
-/// Uses PageView to display 6 steps:
+/// Uses PageView to display 5 steps:
 /// 1. Welcome
 /// 2. Goal selection
 /// 3. Body data (sex, weight)
 /// 4. Experience level
-/// 5. HealthKit permissions
-/// 6. Frequency + Summary
+/// 5. Frequency + Summary
+///
+/// Note: HealthKit permissions moved to post-first-workout flow (P1-2)
 class InitialOnboardingScreen extends ConsumerStatefulWidget {
   const InitialOnboardingScreen({
     super.key,
@@ -69,7 +69,6 @@ class _InitialOnboardingScreenState
                   const GoalSelectionStep(),
                   const BodyDataStep(),
                   const ExperienceStep(),
-                  const HealthKitStep(),
                   FrequencySummaryStep(
                     onComplete: _handleComplete,
                   ),

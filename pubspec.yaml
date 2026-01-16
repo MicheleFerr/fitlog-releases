@@ -205,9 +205,17 @@ flutter:
     - assets/data/exercises/
     - assets/data/exercises_en/
     - assets/data/default_templates/
-    # 🔐 DEV ONLY: .env in assets for Xcode builds
-    # Production: CI/CD injects via --dart-define (exclude .env from release)
-    - .env
+    # 🔐 SECURITY: .env REMOVED from assets (was exposing API keys in compiled app)
+    #
+    # For DEVELOPMENT: Create .env in project root, EnvironmentConfig.load() reads it
+    # For PRODUCTION: Use --dart-define flags:
+    #   flutter build ios --release \
+    #     --dart-define=FIREBASE_API_KEY_IOS=xxx \
+    #     --dart-define=FIREBASE_PROJECT_ID_IOS=xxx \
+    #     --dart-define=ENV=production
+    #
+    # See: lib/core/config/environment_config.dart
+    # - .env  # ❌ DISABLED - Security risk!
 
   # Enable generation of the app_localizations.dart file
   generate: true

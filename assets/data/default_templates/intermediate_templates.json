@@ -1,0 +1,402 @@
+{
+  "version": "1.0.0",
+  "category": "intermediate",
+  "lastUpdated": "2026-01-01",
+  "scientificBasis": {
+    "sources": [
+      "Schoenfeld et al. 2016 - Meta-analysis on training volume",
+      "Helms et al. 2014 - Recommendations for bodybuilders",
+      "Krieger 2010 - Single vs multiple sets"
+    ],
+    "principles": [
+      "12-20 sets per muscle group per week",
+      "Higher frequency (2x per week minimum)",
+      "Volume periodization",
+      "Progressive overload with rep ranges"
+    ]
+  },
+  "templates": [
+    {
+      "id": "default_upper_lower_upper",
+      "name": "Upper Body A",
+      "description": "Allenamento upper body con focus su petto e spalle. Parte del split Upper/Lower 4x/settimana.",
+      "imageUrl": null,
+      "exercises": [
+        {
+          "exerciseId": "barbell_bench_press",
+          "exerciseName": "Barbell Bench Press",
+          "category": "chest",
+          "type": "single",
+          "sets": [
+            {"setNumber": 1, "targetWeight": null, "targetReps": 6},
+            {"setNumber": 2, "targetWeight": null, "targetReps": 6},
+            {"setNumber": 3, "targetWeight": null, "targetReps": 6},
+            {"setNumber": 4, "targetWeight": null, "targetReps": 6}
+          ],
+          "notes": "Esercizio principale per il petto. Focus sulla tecnica.",
+          "restTime": 180
+        },
+        {
+          "exerciseId": "barbell_bent_over_row",
+          "exerciseName": "Barbell Bent Over Row",
+          "category": "back",
+          "type": "single",
+          "sets": [
+            {"setNumber": 1, "targetWeight": null, "targetReps": 8},
+            {"setNumber": 2, "targetWeight": null, "targetReps": 8},
+            {"setNumber": 3, "targetWeight": null, "targetReps": 8},
+            {"setNumber": 4, "targetWeight": null, "targetReps": 8}
+          ],
+          "notes": "Bilancia il push con il pull. Mantieni la schiena neutra.",
+          "restTime": 150
+        },
+        {
+          "exerciseId": "standing_military_press",
+          "exerciseName": "Standing Military Press",
+          "category": "shoulders",
+          "type": "single",
+          "sets": [
+            {"setNumber": 1, "targetWeight": null, "targetReps": 8},
+            {"setNumber": 2, "targetWeight": null, "targetReps": 8},
+            {"setNumber": 3, "targetWeight": null, "targetReps": 8}
+          ],
+          "notes": "Push verticale. Core attivo per stabilizzare.",
+          "restTime": 120
+        },
+        {
+          "exerciseId": "wide_grip_lat_pulldown",
+          "exerciseName": "Wide Grip Lat Pulldown",
+          "category": "back",
+          "type": "single",
+          "sets": [
+            {"setNumber": 1, "targetWeight": null, "targetReps": 10},
+            {"setNumber": 2, "targetWeight": null, "targetReps": 10},
+            {"setNumber": 3, "targetWeight": null, "targetReps": 10}
+          ],
+          "notes": "Pull verticale per dorsali. Senti la contrazione.",
+          "restTime": 90
+        },
+        {
+          "exerciseId": "incline_dumbbell_curl",
+          "exerciseName": "Incline Dumbbell Curl",
+          "category": "arms",
+          "type": "single",
+          "sets": [
+            {"setNumber": 1, "targetWeight": null, "targetReps": 12},
+            {"setNumber": 2, "targetWeight": null, "targetReps": 12},
+            {"setNumber": 3, "targetWeight": null, "targetReps": 12}
+          ],
+          "notes": "Stretch massimo sui bicipiti. Controlla il negativo.",
+          "restTime": 60
+        },
+        {
+          "exerciseId": "triceps_dip",
+          "exerciseName": "Triceps Dip",
+          "category": "arms",
+          "type": "single",
+          "sets": [
+            {"setNumber": 1, "targetWeight": null, "targetReps": 10},
+            {"setNumber": 2, "targetWeight": null, "targetReps": 10},
+            {"setNumber": 3, "targetWeight": null, "targetReps": 10}
+          ],
+          "notes": "Mantieni il busto verticale per focus tricipiti.",
+          "restTime": 90
+        }
+      ],
+      "estimatedDuration": 55,
+      "tags": ["intermediate", "strength", "upper-body", "upper-lower-split"],
+      "isCustom": false,
+      "isPublic": true,
+      "authorName": "FitLog Pro",
+      "difficulty": "intermediate",
+      "defaultAutoAdjustmentType": null,
+      "defaultApreProtocol": null
+    },
+    {
+      "id": "default_upper_lower_lower",
+      "name": "Lower Body A",
+      "description": "Allenamento lower body con focus su quadricipiti. Parte del split Upper/Lower 4x/settimana.",
+      "imageUrl": null,
+      "exercises": [
+        {
+          "exerciseId": "barbell_squat",
+          "exerciseName": "Barbell Squat",
+          "category": "legs",
+          "type": "single",
+          "sets": [
+            {"setNumber": 1, "targetWeight": null, "targetReps": 6},
+            {"setNumber": 2, "targetWeight": null, "targetReps": 6},
+            {"setNumber": 3, "targetWeight": null, "targetReps": 6},
+            {"setNumber": 4, "targetWeight": null, "targetReps": 6}
+          ],
+          "notes": "Re degli esercizi per le gambe. Profondità adeguata.",
+          "restTime": 180
+        },
+        {
+          "exerciseId": "romanian_deadlift",
+          "exerciseName": "Romanian Deadlift",
+          "category": "legs",
+          "type": "single",
+          "sets": [
+            {"setNumber": 1, "targetWeight": null, "targetReps": 10},
+            {"setNumber": 2, "targetWeight": null, "targetReps": 10},
+            {"setNumber": 3, "targetWeight": null, "targetReps": 10}
+          ],
+          "notes": "Focus su femorali e glutei. Senti lo stretch.",
+          "restTime": 120
+        },
+        {
+          "exerciseId": "sled_45_45deg__leg_press",
+          "exerciseName": "Leg Press",
+          "category": "legs",
+          "type": "single",
+          "sets": [
+            {"setNumber": 1, "targetWeight": null, "targetReps": 12},
+            {"setNumber": 2, "targetWeight": null, "targetReps": 12},
+            {"setNumber": 3, "targetWeight": null, "targetReps": 12}
+          ],
+          "notes": "Volume aggiuntivo per quadricipiti. Non bloccare le ginocchia.",
+          "restTime": 90
+        },
+        {
+          "exerciseId": "plank",
+          "exerciseName": "Plank",
+          "category": "abs",
+          "type": "single",
+          "sets": [
+            {"setNumber": 1, "targetWeight": null, "targetReps": 45},
+            {"setNumber": 2, "targetWeight": null, "targetReps": 45},
+            {"setNumber": 3, "targetWeight": null, "targetReps": 45}
+          ],
+          "notes": "Mantieni la posizione per i secondi indicati. Core attivo.",
+          "restTime": 60
+        }
+      ],
+      "estimatedDuration": 45,
+      "tags": ["intermediate", "strength", "lower-body", "upper-lower-split"],
+      "isCustom": false,
+      "isPublic": true,
+      "authorName": "FitLog Pro",
+      "difficulty": "intermediate",
+      "defaultAutoAdjustmentType": null,
+      "defaultApreProtocol": null
+    },
+    {
+      "id": "default_ppl_push",
+      "name": "Push Day",
+      "description": "Allenamento push: petto, spalle, tricipiti. Parte del split PPL 6x/settimana o 3x/settimana.",
+      "imageUrl": null,
+      "exercises": [
+        {
+          "exerciseId": "barbell_bench_press",
+          "exerciseName": "Barbell Bench Press",
+          "category": "chest",
+          "type": "single",
+          "sets": [
+            {"setNumber": 1, "targetWeight": null, "targetReps": 5},
+            {"setNumber": 2, "targetWeight": null, "targetReps": 5},
+            {"setNumber": 3, "targetWeight": null, "targetReps": 5}
+          ],
+          "notes": "Compound principale. Focus sulla progressione.",
+          "restTime": 180
+        },
+        {
+          "exerciseId": "standing_military_press",
+          "exerciseName": "Standing Military Press",
+          "category": "shoulders",
+          "type": "single",
+          "sets": [
+            {"setNumber": 1, "targetWeight": null, "targetReps": 8},
+            {"setNumber": 2, "targetWeight": null, "targetReps": 8},
+            {"setNumber": 3, "targetWeight": null, "targetReps": 8}
+          ],
+          "notes": "Secondo compound. Costruisce deltoidi anteriori.",
+          "restTime": 150
+        },
+        {
+          "exerciseId": "barbell_incline_bench_press",
+          "exerciseName": "Incline Barbell Bench Press",
+          "category": "chest",
+          "type": "single",
+          "sets": [
+            {"setNumber": 1, "targetWeight": null, "targetReps": 10},
+            {"setNumber": 2, "targetWeight": null, "targetReps": 10},
+            {"setNumber": 3, "targetWeight": null, "targetReps": 10}
+          ],
+          "notes": "Focus su petto alto. Inclinazione 30-45 gradi.",
+          "restTime": 90
+        },
+        {
+          "exerciseId": "triceps_dip",
+          "exerciseName": "Triceps Dip",
+          "category": "arms",
+          "type": "single",
+          "sets": [
+            {"setNumber": 1, "targetWeight": null, "targetReps": 10},
+            {"setNumber": 2, "targetWeight": null, "targetReps": 10},
+            {"setNumber": 3, "targetWeight": null, "targetReps": 10}
+          ],
+          "notes": "Bodyweight o con zavorra. Busto verticale per tricipiti.",
+          "restTime": 90
+        }
+      ],
+      "estimatedDuration": 45,
+      "tags": ["intermediate", "hypertrophy", "push", "ppl-split"],
+      "isCustom": false,
+      "isPublic": true,
+      "authorName": "FitLog Pro",
+      "difficulty": "intermediate",
+      "defaultAutoAdjustmentType": null,
+      "defaultApreProtocol": null
+    },
+    {
+      "id": "default_ppl_pull",
+      "name": "Pull Day",
+      "description": "Allenamento pull: dorsali, trapezi, bicipiti. Parte del split PPL.",
+      "imageUrl": null,
+      "exercises": [
+        {
+          "exerciseId": "barbell_deadlift",
+          "exerciseName": "Barbell Deadlift",
+          "category": "legs",
+          "type": "single",
+          "sets": [
+            {"setNumber": 1, "targetWeight": null, "targetReps": 5},
+            {"setNumber": 2, "targetWeight": null, "targetReps": 5},
+            {"setNumber": 3, "targetWeight": null, "targetReps": 5}
+          ],
+          "notes": "Compound totale. Tecnica prima di tutto.",
+          "restTime": 180
+        },
+        {
+          "exerciseId": "barbell_bent_over_row",
+          "exerciseName": "Barbell Bent Over Row",
+          "category": "back",
+          "type": "single",
+          "sets": [
+            {"setNumber": 1, "targetWeight": null, "targetReps": 8},
+            {"setNumber": 2, "targetWeight": null, "targetReps": 8},
+            {"setNumber": 3, "targetWeight": null, "targetReps": 8}
+          ],
+          "notes": "Pull orizzontale. Tira verso l'ombelico.",
+          "restTime": 120
+        },
+        {
+          "exerciseId": "wide_grip_lat_pulldown",
+          "exerciseName": "Wide Grip Lat Pulldown",
+          "category": "back",
+          "type": "single",
+          "sets": [
+            {"setNumber": 1, "targetWeight": null, "targetReps": 10},
+            {"setNumber": 2, "targetWeight": null, "targetReps": 10},
+            {"setNumber": 3, "targetWeight": null, "targetReps": 10}
+          ],
+          "notes": "Pull verticale. Senti i dorsali.",
+          "restTime": 90
+        },
+        {
+          "exerciseId": "one_arm_dumbbell_row",
+          "exerciseName": "One Arm Dumbbell Row",
+          "category": "back",
+          "type": "single",
+          "sets": [
+            {"setNumber": 1, "targetWeight": null, "targetReps": 12},
+            {"setNumber": 2, "targetWeight": null, "targetReps": 12},
+            {"setNumber": 3, "targetWeight": null, "targetReps": 12}
+          ],
+          "notes": "Unilaterale per bilanciare. ROM completo.",
+          "restTime": 60
+        },
+        {
+          "exerciseId": "incline_dumbbell_curl",
+          "exerciseName": "Incline Dumbbell Curl",
+          "category": "arms",
+          "type": "single",
+          "sets": [
+            {"setNumber": 1, "targetWeight": null, "targetReps": 12},
+            {"setNumber": 2, "targetWeight": null, "targetReps": 12},
+            {"setNumber": 3, "targetWeight": null, "targetReps": 12}
+          ],
+          "notes": "Stretch sui bicipiti. Controlla il negativo.",
+          "restTime": 60
+        }
+      ],
+      "estimatedDuration": 50,
+      "tags": ["intermediate", "hypertrophy", "pull", "ppl-split"],
+      "isCustom": false,
+      "isPublic": true,
+      "authorName": "FitLog Pro",
+      "difficulty": "intermediate",
+      "defaultAutoAdjustmentType": null,
+      "defaultApreProtocol": null
+    },
+    {
+      "id": "default_ppl_legs",
+      "name": "Legs Day",
+      "description": "Allenamento gambe completo: quadricipiti, femorali, glutei, polpacci. Parte del split PPL.",
+      "imageUrl": null,
+      "exercises": [
+        {
+          "exerciseId": "barbell_squat",
+          "exerciseName": "Barbell Squat",
+          "category": "legs",
+          "type": "single",
+          "sets": [
+            {"setNumber": 1, "targetWeight": null, "targetReps": 5},
+            {"setNumber": 2, "targetWeight": null, "targetReps": 5},
+            {"setNumber": 3, "targetWeight": null, "targetReps": 5}
+          ],
+          "notes": "Esercizio principale. Profondità e tecnica.",
+          "restTime": 180
+        },
+        {
+          "exerciseId": "romanian_deadlift",
+          "exerciseName": "Romanian Deadlift",
+          "category": "legs",
+          "type": "single",
+          "sets": [
+            {"setNumber": 1, "targetWeight": null, "targetReps": 10},
+            {"setNumber": 2, "targetWeight": null, "targetReps": 10},
+            {"setNumber": 3, "targetWeight": null, "targetReps": 10}
+          ],
+          "notes": "Focus femorali. Senti lo stretch.",
+          "restTime": 120
+        },
+        {
+          "exerciseId": "sled_45_45deg__leg_press",
+          "exerciseName": "Leg Press",
+          "category": "legs",
+          "type": "single",
+          "sets": [
+            {"setNumber": 1, "targetWeight": null, "targetReps": 12},
+            {"setNumber": 2, "targetWeight": null, "targetReps": 12},
+            {"setNumber": 3, "targetWeight": null, "targetReps": 12}
+          ],
+          "notes": "Volume per quadricipiti.",
+          "restTime": 90
+        },
+        {
+          "exerciseId": "dumbbell_bulgarian_split_squat",
+          "exerciseName": "Bulgarian Split Squat",
+          "category": "legs",
+          "type": "single",
+          "sets": [
+            {"setNumber": 1, "targetWeight": null, "targetReps": 10},
+            {"setNumber": 2, "targetWeight": null, "targetReps": 10},
+            {"setNumber": 3, "targetWeight": null, "targetReps": 10}
+          ],
+          "notes": "Unilaterale per glutei e stabilita. 10 rep per gamba.",
+          "restTime": 60
+        }
+      ],
+      "estimatedDuration": 50,
+      "tags": ["intermediate", "hypertrophy", "legs", "ppl-split"],
+      "isCustom": false,
+      "isPublic": true,
+      "authorName": "FitLog Pro",
+      "difficulty": "intermediate",
+      "defaultAutoAdjustmentType": null,
+      "defaultApreProtocol": null
+    }
+  ]
+}

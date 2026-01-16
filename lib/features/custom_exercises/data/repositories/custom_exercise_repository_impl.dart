@@ -37,6 +37,7 @@ import 'package:gymbro_flutter_new/features/custom_exercises/domain/entities/cus
 import 'package:gymbro_flutter_new/features/custom_exercises/data/datasources/custom_exercise_local_datasource.dart';
 import 'package:gymbro_flutter_new/shared/domain/failures/failure.dart';
 import 'package:gymbro_flutter_new/features/auth/domain/entities/user_profile.dart';
+import 'package:gymbro_flutter_new/core/data/mixins/firebase_error_mapper_mixin.dart';
 
 // Fix for unawaited futures
 // ignore_for_file: unawaited_futures
@@ -45,7 +46,9 @@ import 'package:gymbro_flutter_new/features/auth/domain/entities/user_profile.da
 ///
 /// Implements CustomExerciseRepository with local Hive storage and
 /// optional Firestore sync for Premium users.
-class CustomExerciseRepositoryImpl implements CustomExerciseRepository {
+class CustomExerciseRepositoryImpl
+    with FirebaseErrorMapperMixin
+    implements CustomExerciseRepository {
   CustomExerciseRepositoryImpl({
     required CustomExerciseLocalDatasource localDatasource,
     FirebaseFirestore? firestore,
@@ -71,32 +74,38 @@ class CustomExerciseRepositoryImpl implements CustomExerciseRepository {
 
   /// Check if current user is Premium
   Future<bool> _isPremiumUser() async {
-    try {
-      final userId = _currentUserId;
-      if (userId == null) return false;
+    final userId = _currentUserId;
+    if (userId == null) return false;
 
-      // Check cache first
-      if (_cachedUserProfile != null &&
-          _profileCacheTime != null &&
-          DateTime.now().difference(_profileCacheTime!) < _cacheValidity) {
-        return _cachedUserProfile!.isPremium;
-      }
-
-      // Fetch from Firestore
-      final doc = await _firestore.collection('users').doc(userId).get();
-      if (!doc.exists) return false;
-
-      final data = doc.data();
-      if (data == null) return false;
-
-      _cachedUserProfile = UserProfile.fromJson(data);
-      _profileCacheTime = DateTime.now();
-
+    // Check cache first
+    if (_cachedUserProfile != null &&
+        _profileCacheTime != null &&
+        DateTime.now().difference(_profileCacheTime!) < _cacheValidity) {
       return _cachedUserProfile!.isPremium;
-    } catch (e) {
-      debugPrint('❌ Error checking Premium status: $e');
-      return false;
     }
+
+    // Fetch from Firestore using error mapper
+    final result = await handleFirebaseOperation(
+      () async {
+        final doc = await _firestore.collection('users').doc(userId).get();
+        if (!doc.exists) return false;
+
+        final data = doc.data();
+        if (data == null) return false;
+
+        _cachedUserProfile = UserProfile.fromJson(data);
+        _profileCacheTime = DateTime.now();
+
+        return _cachedUserProfile!.isPremium;
+      },
+      operationName: 'Check Premium status',
+    );
+
+    // Return false on error (fallback to free tier)
+    return result.fold(
+      (failure) => false,
+      (isPremium) => isPremium,
+    );
   }
 
   // ============================================================
@@ -406,94 +415,90 @@ class CustomExerciseRepositoryImpl implements CustomExerciseRepository {
 
   @override
   Future<Either<Failure, void>> syncToCloud() async {
-    try {
-      final userId = _currentUserId;
-      if (userId == null) {
-        return left(const AuthenticationFailure('User not authenticated'));
-      }
-
-      final isPremium = await _isPremiumUser();
-      if (!isPremium) {
-        return left(
-          const PermissionDeniedFailure(
-            'Cloud sync requires Premium subscription',
-            code: 'NOT_PREMIUM',
-          ),
-        );
-      }
-
-      // Get all local exercises
-      final exercisesResult = await getAll();
-      final exercises = exercisesResult.fold(
-        (failure) => <CustomExercise>[],
-        (list) => list,
-      );
-
-      // Sync each to Firestore
-      final batch = _firestore.batch();
-      for (final exercise in exercises) {
-        final docRef = _firestore
-            .collection(_firestoreCollection)
-            .doc(userId)
-            .collection('exercises')
-            .doc(exercise.id);
-
-        batch.set(docRef, exercise.toJson());
-      }
-
-      await batch.commit();
-      debugPrint('✅ Synced ${exercises.length} custom exercises to cloud');
-
-      return right(null);
-    } catch (e) {
-      debugPrint('❌ Failed to sync to cloud: $e');
-      return left(ServerFailure(e.toString()));
+    final userId = _currentUserId;
+    if (userId == null) {
+      return left(const AuthenticationFailure('User not authenticated'));
     }
+
+    final isPremium = await _isPremiumUser();
+    if (!isPremium) {
+      return left(
+        const PermissionDeniedFailure(
+          'Cloud sync requires Premium subscription',
+          code: 'NOT_PREMIUM',
+        ),
+      );
+    }
+
+    // Get all local exercises
+    final exercisesResult = await getAll();
+    final exercises = exercisesResult.fold(
+      (failure) => <CustomExercise>[],
+      (list) => list,
+    );
+
+    // Sync to Firestore using error mapper
+    return handleFirebaseVoidOperation(
+      () async {
+        final batch = _firestore.batch();
+        for (final exercise in exercises) {
+          final docRef = _firestore
+              .collection(_firestoreCollection)
+              .doc(userId)
+              .collection('exercises')
+              .doc(exercise.id);
+
+          batch.set(docRef, exercise.toJson());
+        }
+
+        await batch.commit();
+        debugPrint('✅ Synced ${exercises.length} custom exercises to cloud');
+      },
+      operationName: 'Sync custom exercises to cloud',
+    );
   }
 
   @override
   Future<Either<Failure, void>> refreshFromCloud() async {
-    try {
-      final userId = _currentUserId;
-      if (userId == null) {
-        return left(const AuthenticationFailure('User not authenticated'));
-      }
-
-      final isPremium = await _isPremiumUser();
-      if (!isPremium) {
-        return left(
-          const PermissionDeniedFailure(
-            'Cloud sync requires Premium subscription',
-            code: 'NOT_PREMIUM',
-          ),
-        );
-      }
-
-      // Fetch from Firestore
-      final snapshot = await _firestore
-          .collection(_firestoreCollection)
-          .doc(userId)
-          .collection('exercises')
-          .get();
-
-      // Save each to local storage (server wins)
-      for (final doc in snapshot.docs) {
-        try {
-          final data = doc.data();
-          final exercise = CustomExercise.fromJson(data);
-          await _localDatasource.save(exercise);
-        } catch (e) {
-          debugPrint('⚠️ Failed to parse exercise ${doc.id}: $e');
-        }
-      }
-
-      debugPrint('✅ Refreshed ${snapshot.docs.length} custom exercises from cloud');
-
-      return right(null);
-    } catch (e) {
-      debugPrint('❌ Failed to refresh from cloud: $e');
-      return left(ServerFailure(e.toString()));
+    final userId = _currentUserId;
+    if (userId == null) {
+      return left(const AuthenticationFailure('User not authenticated'));
     }
+
+    final isPremium = await _isPremiumUser();
+    if (!isPremium) {
+      return left(
+        const PermissionDeniedFailure(
+          'Cloud sync requires Premium subscription',
+          code: 'NOT_PREMIUM',
+        ),
+      );
+    }
+
+    // Refresh from Firestore using error mapper
+    return handleFirebaseVoidOperation(
+      () async {
+        final snapshot = await _firestore
+            .collection(_firestoreCollection)
+            .doc(userId)
+            .collection('exercises')
+            .get();
+
+        // Save each to local storage (server wins)
+        for (final doc in snapshot.docs) {
+          try {
+            final data = doc.data();
+            final exercise = CustomExercise.fromJson(data);
+            await _localDatasource.save(exercise);
+          } catch (e) {
+            debugPrint('⚠️ Failed to parse exercise ${doc.id}: $e');
+          }
+        }
+
+        debugPrint('✅ Refreshed ${snapshot.docs.length} custom exercises from cloud');
+      },
+      operationName: 'Refresh custom exercises from cloud',
+    );
   }
 
   // ============================================================
@@ -502,33 +507,47 @@ class CustomExerciseRepositoryImpl implements CustomExerciseRepository {
 
   /// Background sync to Firestore (fire and forget)
   Future<void> _syncToCloudBackground(CustomExercise exercise, String userId) async {
-    try {
-      await _firestore
-          .collection(_firestoreCollection)
-          .doc(userId)
-          .collection('exercises')
-          .doc(exercise.id)
-          .set(exercise.toJson());
+    final result = await handleFirebaseVoidOperation(
+      () async {
+        await _firestore
+            .collection(_firestoreCollection)
+            .doc(userId)
+            .collection('exercises')
+            .doc(exercise.id)
+            .set(exercise.toJson());
 
-      debugPrint('☁️ Synced custom exercise "${exercise.nome}" to cloud');
-    } catch (e) {
-      debugPrint('❌ Background sync failed: $e');
-    }
+        debugPrint('☁️ Synced custom exercise "${exercise.nome}" to cloud');
+      },
+      operationName: 'Background sync custom exercise',
+    );
+
+    // Log failure if any (fire and forget, no error propagation)
+    result.fold(
+      (failure) => debugPrint('❌ Background sync failed: $failure'),
+      (_) => null,
+    );
   }
 
   /// Background delete from Firestore (fire and forget)
   Future<void> _deleteFromCloudBackground(String exerciseId, String userId) async {
-    try {
-      await _firestore
-          .collection(_firestoreCollection)
-          .doc(userId)
-          .collection('exercises')
-          .doc(exerciseId)
-          .delete();
+    final result = await handleFirebaseVoidOperation(
+      () async {
+        await _firestore
+            .collection(_firestoreCollection)
+            .doc(userId)
+            .collection('exercises')
+            .doc(exerciseId)
+            .delete();
 
-      debugPrint('☁️ Deleted custom exercise $exerciseId from cloud');
-    } catch (e) {
-      debugPrint('❌ Background delete failed: $e');
-    }
+        debugPrint('☁️ Deleted custom exercise $exerciseId from cloud');
+      },
+      operationName: 'Background delete custom exercise',
+    );
+
+    // Log failure if any (fire and forget, no error propagation)
+    result.fold(
+      (failure) => debugPrint('❌ Background delete failed: $failure'),
+      (_) => null,
+    );
   }
 }

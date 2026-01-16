@@ -42,8 +42,9 @@ class ConnectivityManager: NSObject, ObservableObject {
     @Published var workoutType: String = "strength"  // ✅ FIX: Workout type for HKWorkoutSession
 
     // ✅ FIX: All sets' targets for current exercise (for navigation between sets)
-    // Each element: (weight: Double, reps: Int) indexed by setNumber - 1
-    @Published var allSetsTargets: [(weight: Double, reps: Int)] = []
+    // Each element: (weight, reps, actualReps?, isCompleted) indexed by setNumber - 1
+    // actualReps is nil if set not completed, or the actual reps performed
+    @Published var allSetsTargets: [(weight: Double, reps: Int, actualReps: Int?, isCompleted: Bool)] = []
 
     // MARK: - 🔥 SUPERSET State (synced from iPhone)
     @Published var isSuperset = false
@@ -1133,7 +1134,7 @@ class ConnectivityManager: NSObject, ObservableObject {
         }
 
         // ✅ FIX: Parse all sets' targets for navigation between sets
-        // Format: [[weight: Double, reps: Int], ...]
+        // Format: [[weight: Double, reps: Int, actualReps: Int?, isCompleted: Bool], ...]
         // Note: Flutter int/double may arrive as NSNumber, so we use flexible casting
         if let setsArray = data["allSets"] as? [[String: Any]] {
             allSetsTargets = setsArray.compactMap { setData in
@@ -1159,9 +1160,28 @@ class ConnectivityManager: NSObject, ObservableObject {
                     return nil
                 }
 
-                return (weight: weight, reps: reps)
+                // ✅ NEW: Parse actualReps (nil if not completed)
+                let actualReps: Int?
+                if let ar = setData["actualReps"] as? Int {
+                    actualReps = ar
+                } else if let ar = setData["actualReps"] as? NSNumber {
+                    actualReps = ar.intValue
+                } else {
+                    actualReps = nil  // Set not completed yet
+                }
+
+                // ✅ NEW: Parse isCompleted
+                let isCompleted: Bool
+                if let ic = setData["isCompleted"] as? Bool {
+                    isCompleted = ic
+                } else {
+                    isCompleted = false
+                }
+
+                return (weight: weight, reps: reps, actualReps: actualReps, isCompleted: isCompleted)
             }
-            print("⌚ [WATCH] Parsed \(allSetsTargets.count) sets targets: \(allSetsTargets.map { "\($0.weight)kg×\($0.reps)" }.joined(separator: ", "))")
+            let completedCount = allSetsTargets.filter { $0.isCompleted }.count
+            print("⌚ [WATCH] Parsed \(allSetsTargets.count) sets (\(completedCount) completed): \(allSetsTargets.map { "\($0.weight)kg×\($0.actualReps ?? $0.reps)\($0.isCompleted ? "✓" : "")" }.joined(separator: ", "))")
         } else if data["allSets"] != nil {
             // Debug: allSets exists but couldn't be parsed
             print("⌚ [WATCH] ⚠️ allSets exists but couldn't parse: \(String(describing: data["allSets"]))")

@@ -123,6 +123,7 @@ final allFeedbackProvider = StreamProvider.autoDispose<List<ExerciseFeedback>>((
 /// ✅ DERIVED PROVIDER: Filter all feedback in-memory (no Firestore query)
 /// Returns aggregated statistics from master stream
 final feedbackStatsProvider = Provider<FeedbackStats>((ref) {
+  ref.keepAlive(); // FIX: previene ricreazione provider con aggregazioni
   final allFeedbackAsync = ref.watch(allFeedbackProvider);
 
   return allFeedbackAsync.when(
@@ -190,6 +191,7 @@ final feedbackStatsProvider = Provider<FeedbackStats>((ref) {
 /// ✅ DERIVED PROVIDER: Filter by exercise (no Firestore query)
 final exerciseFeedbackProvider =
     Provider.family<List<ExerciseFeedback>, String>((ref, exerciseId) {
+  ref.keepAlive(); // FIX: previene ricreazione provider family
   final allFeedbackAsync = ref.watch(allFeedbackProvider);
 
   return allFeedbackAsync.whenData((allFeedback) {
@@ -202,6 +204,7 @@ final exerciseFeedbackProvider =
 /// ✅ DERIVED PROVIDER: Filter by status (no Firestore query)
 final feedbackByStatusProvider = Provider.family<List<ExerciseFeedback>, String>(
   (ref, status) {
+    ref.keepAlive(); // FIX: previene ricreazione provider family
     final allFeedbackAsync = ref.watch(allFeedbackProvider);
 
     return allFeedbackAsync.whenData((allFeedback) {
@@ -215,6 +218,7 @@ final feedbackByStatusProvider = Provider.family<List<ExerciseFeedback>, String>
 /// ✅ DERIVED PROVIDER: Filter critical feedback (severity >= 4, OPEN status)
 /// No Firestore query! Filtered and sorted in-memory
 final criticalFeedbackProvider = Provider<List<ExerciseFeedback>>((ref) {
+  ref.keepAlive(); // FIX: previene ricreazione provider con filtraggio
   final allFeedbackAsync = ref.watch(allFeedbackProvider);
 
   return allFeedbackAsync.whenData((allFeedback) {
@@ -264,6 +268,7 @@ final updateFeedbackNotesProvider =
 
 /// ✅ DERIVED PROVIDER: Count unread feedback (no Firestore query)
 final unreadFeedbackCountProvider = Provider<int>((ref) {
+  ref.keepAlive(); // FIX: previene ricreazione provider contatore
   final allFeedbackAsync = ref.watch(allFeedbackProvider);
 
   return allFeedbackAsync.whenData((allFeedback) {
@@ -276,6 +281,7 @@ final unreadFeedbackCountProvider = Provider<int>((ref) {
 /// ✅ DERIVED PROVIDER: Top exercises with most feedback
 final topFeedbackExercisesProvider =
     Provider<List<(String exerciseId, int count)>>((ref) {
+  ref.keepAlive(); // FIX: previene ricreazione provider con sorting
   final stats = ref.watch(feedbackStatsProvider);
 
   // Sort by count descending and take top 10

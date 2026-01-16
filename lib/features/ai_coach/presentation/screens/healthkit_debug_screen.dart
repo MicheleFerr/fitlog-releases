@@ -104,6 +104,10 @@ class _HealthKitDebugScreenState extends State<HealthKitDebugScreen> {
     _addLog('🚀 Starting HealthKit Diagnostic Tests');
     _addLog('════════════════════════════════════════');
 
+    // ⚠️ NOTE: Sequential awaits are INTENTIONAL here (not a performance issue)
+    // Each test validates a specific step and must complete before the next one.
+    // Delays between tests allow UI to update and user to observe results.
+
     // Test 1: Platform Check
     await _test1PlatformCheck();
     await Future.delayed(const Duration(milliseconds: 500));

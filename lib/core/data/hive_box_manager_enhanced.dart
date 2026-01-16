@@ -168,11 +168,8 @@ class HiveBoxManagerEnhanced {
       );
     }
 
-    // Return existing box if already open
+    // Return existing box if already open (no logging - too verbose in loops)
     if (_openBoxes.containsKey(name)) {
-      if (kDebugMode) {
-        debugPrint('📦 [HiveBoxManagerEnhanced] Box "$name" already open (reusing)');
-      }
       return _openBoxes[name] as Box<E>;
     }
 
@@ -295,11 +292,8 @@ class HiveBoxManagerEnhanced {
       );
     }
 
-    // Return existing lazy box if already open
+    // Return existing lazy box if already open (no logging - too verbose in loops)
     if (_openLazyBoxes.containsKey(name)) {
-      if (kDebugMode) {
-        debugPrint('📦 [HiveBoxManagerEnhanced] Lazy box "$name" already open (reusing)');
-      }
       return _openLazyBoxes[name] as LazyBox<E>;
     }
 

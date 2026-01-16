@@ -8,7 +8,9 @@ import 'package:gymbro_flutter_new/features/workout/presentation/providers/worko
 import 'package:gymbro_flutter_new/shared/domain/services/request_throttler.dart';
 
 /// Provider for the draft repository
+/// FIX: keepAlive() previene disposal/ricreazione che causava 5x init all'avvio
 final workoutDraftRepositoryProvider = Provider<WorkoutDraftRepository>((ref) {
+  ref.keepAlive(); // Previene ricreazione su hot reload o dispose
   return WorkoutDraftRepository(ref.watch(hiveBoxManagerProvider));
 });
 

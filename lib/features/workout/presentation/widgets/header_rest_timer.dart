@@ -88,15 +88,16 @@ class _HeaderRestTimerState extends ConsumerState<HeaderRestTimer> {
         }
       },
       // Long press to skip timer
+      // NOTE: Previously wrapped in Tooltip, but Tooltip intercepts long-press
+      // on mobile to show its message, preventing our onLongPress from firing.
+      // Removed Tooltip - haptic feedback + visual reset is sufficient UX.
       onLongPress: () {
         if (!isIdle) {
           HapticFeedback.heavyImpact();
           ref.read(unifiedTimerProvider.notifier).skipTimer();
         }
       },
-      child: Tooltip(
-        message: isIdle ? '' : context.l10n.longPressToSkip,
-        child: AnimatedContainer(
+      child: AnimatedContainer(
         duration: const Duration(milliseconds: 200),
         padding: EdgeInsets.symmetric(
           horizontal: widget.compact ? 8 : 10,
@@ -133,7 +134,6 @@ class _HeaderRestTimerState extends ConsumerState<HeaderRestTimer> {
             else
               _buildCountdown(context, remainingSeconds, remainingProgress, isRunning, isPaused),
           ],
-        ),
         ),
       ),
     );

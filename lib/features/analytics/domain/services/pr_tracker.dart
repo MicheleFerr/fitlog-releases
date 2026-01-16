@@ -103,35 +103,39 @@ class PRTracker {
   final FirebaseFirestore _firestore;
 
   /// Check and update PRs for a completed exercise
+  ///
+  /// [userId] should be the Firebase Auth UID, not email. Required for
+  /// Firestore security rules that check request.resource.data.userId == request.auth.uid
   Future<List<PersonalRecord>> checkAndUpdatePRs(
-    ExerciseActivity activity,
-  ) async {
+    ExerciseActivity activity, {
+    required String userId,
+  }) async {
     final newPRs = <PersonalRecord>[];
-    
-    // Get existing PRs for this exercise
+
+    // Get existing PRs for this exercise (use userId, not email)
     final existingPRs = await getExercisePRs(
-      activity.email,
+      userId,
       activity.exerciseId,
     );
     
-    // Check weight PR
-    final weightPR = await _checkWeightPR(activity, existingPRs);
+    // Check weight PR (pass userId for correct Firestore permissions)
+    final weightPR = await _checkWeightPR(activity, existingPRs, userId);
     if (weightPR != null) newPRs.add(weightPR);
-    
+
     // Check reps PR
-    final repsPR = await _checkRepsPR(activity, existingPRs);
+    final repsPR = await _checkRepsPR(activity, existingPRs, userId);
     if (repsPR != null) newPRs.add(repsPR);
-    
+
     // Check volume PR
-    final volumePR = await _checkVolumePR(activity, existingPRs);
+    final volumePR = await _checkVolumePR(activity, existingPRs, userId);
     if (volumePR != null) newPRs.add(volumePR);
-    
+
     // Check 1RM PR
-    final oneRMPR = await _checkOneRMPR(activity, existingPRs);
+    final oneRMPR = await _checkOneRMPR(activity, existingPRs, userId);
     if (oneRMPR != null) newPRs.add(oneRMPR);
-    
+
     // Check total sets PR
-    final setsPR = await _checkSetsPR(activity, existingPRs);
+    final setsPR = await _checkSetsPR(activity, existingPRs, userId);
     if (setsPR != null) newPRs.add(setsPR);
     
     // Save all new PRs
@@ -289,6 +293,7 @@ class PRTracker {
   Future<PersonalRecord?> _checkWeightPR(
     ExerciseActivity activity,
     Map<PRType, PersonalRecord> existingPRs,
+    String userId,
   ) async {
     final maxWeight = activity.sets
         .where((s) => s.done && !s.isWarmup)
@@ -296,15 +301,15 @@ class PRTracker {
       final weight = double.tryParse(set.weight) ?? 0;
       return weight > max ? weight : max;
     });
-    
+
     if (maxWeight <= 0) return null;
-    
+
     final existing = existingPRs[PRType.weight];
     if (existing != null && maxWeight <= existing.value) return null;
-    
+
     return PersonalRecord(
       id: '',
-      userId: activity.email,
+      userId: userId, // ✅ FIX: Use Firebase UID, not email
       exerciseId: activity.exerciseId,
       exerciseName: activity.exerciseName,
       type: PRType.weight,
@@ -323,42 +328,43 @@ class PRTracker {
   Future<PersonalRecord?> _checkRepsPR(
     ExerciseActivity activity,
     Map<PRType, PersonalRecord> existingPRs,
+    String userId,
   ) async {
     // Find the set with most reps at highest weight
     ExerciseActivitySet? bestSet;
     double bestScore = 0;
-    
+
     for (final set in activity.sets.where((s) => s.done && !s.isWarmup)) {
       final weight = double.tryParse(set.weight) ?? 0;
       final reps = int.tryParse(set.actualReps ?? set.reps) ?? 0;
       final score = weight * reps; // Score combines weight and reps
-      
+
       if (score > bestScore) {
         bestScore = score;
         bestSet = set;
       }
     }
-    
+
     if (bestSet == null) return null;
-    
+
     final reps = int.tryParse(bestSet.actualReps ?? bestSet.reps) ?? 0;
     final weight = double.tryParse(bestSet.weight) ?? 0;
-    
+
     // Check if this is a PR for this weight
     final existing = existingPRs[PRType.reps];
     if (existing != null) {
       final existingWeight = existing.metadata['weight'] as double? ?? 0;
       final existingReps = existing.value;
-      
+
       // Only PR if more reps at same or higher weight
       if (weight < existingWeight || (weight == existingWeight && reps <= existingReps)) {
         return null;
       }
     }
-    
+
     return PersonalRecord(
       id: '',
-      userId: activity.email,
+      userId: userId, // ✅ FIX: Use Firebase UID, not email
       exerciseId: activity.exerciseId,
       exerciseName: activity.exerciseName,
       type: PRType.reps,
@@ -375,17 +381,18 @@ class PRTracker {
   Future<PersonalRecord?> _checkVolumePR(
     ExerciseActivity activity,
     Map<PRType, PersonalRecord> existingPRs,
+    String userId,
   ) async {
     final volume = VolumeCalculator.calculateTotalVolume(activity.sets);
-    
+
     if (volume <= 0) return null;
-    
+
     final existing = existingPRs[PRType.volume];
     if (existing != null && volume <= existing.value) return null;
-    
+
     return PersonalRecord(
       id: '',
-      userId: activity.email,
+      userId: userId, // ✅ FIX: Use Firebase UID, not email
       exerciseId: activity.exerciseId,
       exerciseName: activity.exerciseName,
       type: PRType.volume,
@@ -402,17 +409,18 @@ class PRTracker {
   Future<PersonalRecord?> _checkOneRMPR(
     ExerciseActivity activity,
     Map<PRType, PersonalRecord> existingPRs,
+    String userId,
   ) async {
     double maxEstimated1RM = 0;
     Map<String, dynamic>? bestSetData;
-    
+
     for (final set in activity.sets.where((s) => s.done && !s.isWarmup)) {
       final weight = double.tryParse(set.weight) ?? 0;
       final reps = int.tryParse(set.actualReps ?? set.reps) ?? 0;
-      
+
       if (weight > 0 && reps > 0) {
         final estimated1RM = OneRMCalculator.calculateAverage(weight, reps);
-        
+
         if (estimated1RM > maxEstimated1RM) {
           maxEstimated1RM = estimated1RM;
           bestSetData = {
@@ -422,15 +430,15 @@ class PRTracker {
         }
       }
     }
-    
+
     if (maxEstimated1RM <= 0) return null;
-    
+
     final existing = existingPRs[PRType.oneRM];
     if (existing != null && maxEstimated1RM <= existing.value) return null;
-    
+
     return PersonalRecord(
       id: '',
-      userId: activity.email,
+      userId: userId, // ✅ FIX: Use Firebase UID, not email
       exerciseId: activity.exerciseId,
       exerciseName: activity.exerciseName,
       type: PRType.oneRM,
@@ -447,17 +455,18 @@ class PRTracker {
   Future<PersonalRecord?> _checkSetsPR(
     ExerciseActivity activity,
     Map<PRType, PersonalRecord> existingPRs,
+    String userId,
   ) async {
     final completedSets = activity.sets.where((s) => s.done && !s.isWarmup).length;
-    
+
     if (completedSets <= 0) return null;
-    
+
     final existing = existingPRs[PRType.totalSets];
     if (existing != null && completedSets <= existing.value) return null;
-    
+
     return PersonalRecord(
       id: '',
-      userId: activity.email,
+      userId: userId, // ✅ FIX: Use Firebase UID, not email
       exerciseId: activity.exerciseId,
       exerciseName: activity.exerciseName,
       type: PRType.totalSets,

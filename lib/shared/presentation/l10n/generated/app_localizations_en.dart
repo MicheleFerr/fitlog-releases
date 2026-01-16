@@ -14359,7 +14359,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get volumeSettings => 'Volume settings';
 
   @override
-  String get vsLastWeek => 'Vs last week';
+  String get vsLastWeek => 'vs week';
 
   @override
   String get weeklyDistribution => 'Weekly distribution';

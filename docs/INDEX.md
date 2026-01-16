@@ -10,6 +10,7 @@
 | Documento | Descrizione |
 |-----------|-------------|
 | [CLAUDE.md](../CLAUDE.md) | Istruzioni per Claude Code |
+| [USER_PERSONAS.md](USER_PERSONAS.md) | **12 User Personas** - framework decisionale |
 | [DEVELOPMENT_RULES.md](DEVELOPMENT_RULES.md) | Regole sviluppo e convenzioni |
 | [CODE_PATTERNS.md](CODE_PATTERNS.md) | Pattern di codice da seguire |
 | [DESIGN_GUIDELINES.md](DESIGN_GUIDELINES.md) | Design system e UI guidelines |

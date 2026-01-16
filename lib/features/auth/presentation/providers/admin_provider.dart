@@ -44,6 +44,15 @@ final isAdminProvider = StreamProvider<bool>((ref) {
 
     if (user == null) return false;
 
+    // 🔧 FIX BUG #8: Anonymous users are never admin - skip getIdTokenResult() call
+    // Anonymous users don't have JWT tokens with custom claims
+    if (user.isAnonymous) {
+      if (kDebugMode) {
+        debugPrint('🔐 Anonymous user detected - not admin (skipping token check)');
+      }
+      return false;
+    }
+
     try {
       // Ottieni token con custom claims
       final token = await user.getIdTokenResult();

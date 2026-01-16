@@ -1,0 +1,274 @@
+{
+  "version": "1.0.0",
+  "category": "beginner",
+  "lastUpdated": "2026-01-01",
+  "scientificBasis": {
+    "sources": [
+      "Schoenfeld et al. 2016 - Meta-analysis on training volume",
+      "Schoenfeld et al. 2022 - Frequency and hypertrophy",
+      "Rhea et al. 2003 - Dose-response for strength training"
+    ],
+    "principles": [
+      "10-20 sets per muscle group per week for hypertrophy",
+      "2x frequency per muscle group minimum",
+      "Progressive overload as primary driver",
+      "Compound movements for efficiency"
+    ]
+  },
+  "templates": [
+    {
+      "id": "default_full_body_foundation_a",
+      "name": "Full Body Foundation A",
+      "description": "Programma full body basato su StrongLifts 5x5. Ideale per principianti che vogliono costruire forza con i fondamentali. Allenamento A del ciclo A/B.",
+      "imageUrl": null,
+      "exercises": [
+        {
+          "exerciseId": "barbell_squat",
+          "exerciseName": "Barbell Squat",
+          "category": "legs",
+          "type": "single",
+          "sets": [
+            {"setNumber": 1, "targetWeight": null, "targetReps": 5},
+            {"setNumber": 2, "targetWeight": null, "targetReps": 5},
+            {"setNumber": 3, "targetWeight": null, "targetReps": 5},
+            {"setNumber": 4, "targetWeight": null, "targetReps": 5},
+            {"setNumber": 5, "targetWeight": null, "targetReps": 5}
+          ],
+          "notes": "Scendi almeno fino al parallelo. Mantieni il core attivo.",
+          "restTime": 180
+        },
+        {
+          "exerciseId": "barbell_bench_press",
+          "exerciseName": "Barbell Bench Press",
+          "category": "chest",
+          "type": "single",
+          "sets": [
+            {"setNumber": 1, "targetWeight": null, "targetReps": 5},
+            {"setNumber": 2, "targetWeight": null, "targetReps": 5},
+            {"setNumber": 3, "targetWeight": null, "targetReps": 5},
+            {"setNumber": 4, "targetWeight": null, "targetReps": 5},
+            {"setNumber": 5, "targetWeight": null, "targetReps": 5}
+          ],
+          "notes": "Scapole retratte, arco lombare naturale. Tocca il petto ad ogni rep.",
+          "restTime": 180
+        },
+        {
+          "exerciseId": "barbell_bent_over_row",
+          "exerciseName": "Barbell Bent Over Row",
+          "category": "back",
+          "type": "single",
+          "sets": [
+            {"setNumber": 1, "targetWeight": null, "targetReps": 5},
+            {"setNumber": 2, "targetWeight": null, "targetReps": 5},
+            {"setNumber": 3, "targetWeight": null, "targetReps": 5},
+            {"setNumber": 4, "targetWeight": null, "targetReps": 5},
+            {"setNumber": 5, "targetWeight": null, "targetReps": 5}
+          ],
+          "notes": "Busto a 45°, tira verso l'ombelico. Controlla la discesa.",
+          "restTime": 180
+        }
+      ],
+      "estimatedDuration": 45,
+      "tags": ["beginner", "strength", "full-body", "compound", "5x5"],
+      "isCustom": false,
+      "isPublic": true,
+      "authorName": "FitLog Pro",
+      "difficulty": "beginner",
+      "defaultAutoAdjustmentType": null,
+      "defaultApreProtocol": null
+    },
+    {
+      "id": "default_full_body_foundation_b",
+      "name": "Full Body Foundation B",
+      "description": "Programma full body basato su StrongLifts 5x5. Allenamento B del ciclo A/B - include stacco e military press.",
+      "imageUrl": null,
+      "exercises": [
+        {
+          "exerciseId": "barbell_squat",
+          "exerciseName": "Barbell Squat",
+          "category": "legs",
+          "type": "single",
+          "sets": [
+            {"setNumber": 1, "targetWeight": null, "targetReps": 5},
+            {"setNumber": 2, "targetWeight": null, "targetReps": 5},
+            {"setNumber": 3, "targetWeight": null, "targetReps": 5},
+            {"setNumber": 4, "targetWeight": null, "targetReps": 5},
+            {"setNumber": 5, "targetWeight": null, "targetReps": 5}
+          ],
+          "notes": "Scendi almeno fino al parallelo. Mantieni il core attivo.",
+          "restTime": 180
+        },
+        {
+          "exerciseId": "standing_military_press",
+          "exerciseName": "Standing Military Press",
+          "category": "shoulders",
+          "type": "single",
+          "sets": [
+            {"setNumber": 1, "targetWeight": null, "targetReps": 5},
+            {"setNumber": 2, "targetWeight": null, "targetReps": 5},
+            {"setNumber": 3, "targetWeight": null, "targetReps": 5},
+            {"setNumber": 4, "targetWeight": null, "targetReps": 5},
+            {"setNumber": 5, "targetWeight": null, "targetReps": 5}
+          ],
+          "notes": "Core attivo, spingi verticalmente. Evita l'iperestensione lombare.",
+          "restTime": 180
+        },
+        {
+          "exerciseId": "barbell_deadlift",
+          "exerciseName": "Barbell Deadlift",
+          "category": "legs",
+          "type": "single",
+          "sets": [
+            {"setNumber": 1, "targetWeight": null, "targetReps": 5}
+          ],
+          "notes": "1x5 è sufficiente per lo stacco. Schiena neutra, spingi con le gambe.",
+          "restTime": 180
+        }
+      ],
+      "estimatedDuration": 40,
+      "tags": ["beginner", "strength", "full-body", "compound", "5x5"],
+      "isCustom": false,
+      "isPublic": true,
+      "authorName": "FitLog Pro",
+      "difficulty": "beginner",
+      "defaultAutoAdjustmentType": null,
+      "defaultApreProtocol": null
+    },
+    {
+      "id": "default_full_body_starter",
+      "name": "Full Body Starter",
+      "description": "Versione semplificata per chi inizia. 3 esercizi fondamentali, 3 serie ciascuno. Perfetto per imparare i movimenti.",
+      "imageUrl": null,
+      "exercises": [
+        {
+          "exerciseId": "dumbbell_goblet_squat",
+          "exerciseName": "Dumbbell Goblet Squat",
+          "category": "legs",
+          "type": "single",
+          "sets": [
+            {"setNumber": 1, "targetWeight": null, "targetReps": 10},
+            {"setNumber": 2, "targetWeight": null, "targetReps": 10},
+            {"setNumber": 3, "targetWeight": null, "targetReps": 10}
+          ],
+          "notes": "Ottimo per imparare lo squat pattern. Mantieni i gomiti tra le ginocchia.",
+          "restTime": 90
+        },
+        {
+          "exerciseId": "barbell_bench_press",
+          "exerciseName": "Barbell Bench Press",
+          "category": "chest",
+          "type": "single",
+          "sets": [
+            {"setNumber": 1, "targetWeight": null, "targetReps": 10},
+            {"setNumber": 2, "targetWeight": null, "targetReps": 10},
+            {"setNumber": 3, "targetWeight": null, "targetReps": 10}
+          ],
+          "notes": "Inizia leggero per imparare la tecnica. Chiedi aiuto per lo spotting.",
+          "restTime": 90
+        },
+        {
+          "exerciseId": "wide_grip_lat_pulldown",
+          "exerciseName": "Wide Grip Lat Pulldown",
+          "category": "back",
+          "type": "single",
+          "sets": [
+            {"setNumber": 1, "targetWeight": null, "targetReps": 10},
+            {"setNumber": 2, "targetWeight": null, "targetReps": 10},
+            {"setNumber": 3, "targetWeight": null, "targetReps": 10}
+          ],
+          "notes": "Tira verso il petto, non dietro la nuca. Controlla il movimento.",
+          "restTime": 90
+        },
+        {
+          "exerciseId": "dumbbell_shoulder_press",
+          "exerciseName": "Dumbbell Shoulder Press",
+          "category": "shoulders",
+          "type": "single",
+          "sets": [
+            {"setNumber": 1, "targetWeight": null, "targetReps": 10},
+            {"setNumber": 2, "targetWeight": null, "targetReps": 10},
+            {"setNumber": 3, "targetWeight": null, "targetReps": 10}
+          ],
+          "notes": "Seduto o in piedi. Spingi verticalmente senza inarcare la schiena.",
+          "restTime": 90
+        }
+      ],
+      "estimatedDuration": 35,
+      "tags": ["beginner", "strength", "full-body", "machine-friendly"],
+      "isCustom": false,
+      "isPublic": true,
+      "authorName": "FitLog Pro",
+      "difficulty": "beginner",
+      "defaultAutoAdjustmentType": null,
+      "defaultApreProtocol": null
+    },
+    {
+      "id": "default_intro_strength",
+      "name": "Intro Strength",
+      "description": "Programma minimalista 2x/settimana. Massimi risultati con minimo impegno temporale. Ideale per chi ha poco tempo.",
+      "imageUrl": null,
+      "exercises": [
+        {
+          "exerciseId": "barbell_squat",
+          "exerciseName": "Barbell Squat",
+          "category": "legs",
+          "type": "single",
+          "sets": [
+            {"setNumber": 1, "targetWeight": null, "targetReps": 8},
+            {"setNumber": 2, "targetWeight": null, "targetReps": 8},
+            {"setNumber": 3, "targetWeight": null, "targetReps": 8}
+          ],
+          "notes": "Movimento fondamentale per gambe e core.",
+          "restTime": 120
+        },
+        {
+          "exerciseId": "barbell_bench_press",
+          "exerciseName": "Barbell Bench Press",
+          "category": "chest",
+          "type": "single",
+          "sets": [
+            {"setNumber": 1, "targetWeight": null, "targetReps": 8},
+            {"setNumber": 2, "targetWeight": null, "targetReps": 8},
+            {"setNumber": 3, "targetWeight": null, "targetReps": 8}
+          ],
+          "notes": "Push orizzontale principale.",
+          "restTime": 120
+        },
+        {
+          "exerciseId": "barbell_bent_over_row",
+          "exerciseName": "Barbell Bent Over Row",
+          "category": "back",
+          "type": "single",
+          "sets": [
+            {"setNumber": 1, "targetWeight": null, "targetReps": 8},
+            {"setNumber": 2, "targetWeight": null, "targetReps": 8},
+            {"setNumber": 3, "targetWeight": null, "targetReps": 8}
+          ],
+          "notes": "Pull orizzontale principale.",
+          "restTime": 120
+        },
+        {
+          "exerciseId": "romanian_deadlift",
+          "exerciseName": "Romanian Deadlift",
+          "category": "legs",
+          "type": "single",
+          "sets": [
+            {"setNumber": 1, "targetWeight": null, "targetReps": 10},
+            {"setNumber": 2, "targetWeight": null, "targetReps": 10},
+            {"setNumber": 3, "targetWeight": null, "targetReps": 10}
+          ],
+          "notes": "Ottimo per posterior chain. Mantieni le ginocchia leggermente flesse.",
+          "restTime": 90
+        }
+      ],
+      "estimatedDuration": 30,
+      "tags": ["beginner", "strength", "full-body", "minimalist", "time-efficient"],
+      "isCustom": false,
+      "isPublic": true,
+      "authorName": "FitLog Pro",
+      "difficulty": "beginner",
+      "defaultAutoAdjustmentType": null,
+      "defaultApreProtocol": null
+    }
+  ]
+}

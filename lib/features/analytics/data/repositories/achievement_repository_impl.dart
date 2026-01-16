@@ -4,13 +4,15 @@ import 'package:gymbro_flutter_new/shared/domain/failures/failure.dart';
 import 'package:gymbro_flutter_new/features/analytics/domain/entities/achievement.dart';
 import 'package:gymbro_flutter_new/features/analytics/domain/entities/workout_metrics.dart';
 import 'package:gymbro_flutter_new/features/analytics/domain/repositories/achievement_repository.dart';
+import 'package:gymbro_flutter_new/core/data/mixins/firebase_error_mapper_mixin.dart';
 import 'package:hive_ce_flutter/hive_flutter.dart';
 
 /// Achievement repository implementation with Firestore + Hive caching
 ///
 /// Uses cache-first strategy with 1h TTL for performance and offline support.
 /// Follows HybridAnalyticsService pattern for dual storage.
-class AchievementRepositoryImpl implements AchievementRepository {
+class AchievementRepositoryImpl with FirebaseErrorMapperMixin
+    implements AchievementRepository {
   AchievementRepositoryImpl({
     FirebaseFirestore? firestore,
     required this.cacheBoxName,
@@ -35,86 +37,87 @@ class AchievementRepositoryImpl implements AchievementRepository {
     BadgeType badgeType, {
     Map<String, dynamic>? evidence,
   }) async {
-    try {
-      // Check if already unlocked
-      final isUnlockedResult = await isAchievementUnlocked(userId, badgeType);
-      final isUnlocked = isUnlockedResult.fold(
-        (l) => false,
-        (r) => r,
-      );
-
-      if (isUnlocked) {
-        return fpdart.Left(
-          ValidationFailure('Achievement ${badgeType.name} already unlocked'),
+    return handleFirebaseOperation(
+      () async {
+        // Check if already unlocked
+        final isUnlockedResult = await isAchievementUnlocked(userId, badgeType);
+        final isUnlocked = isUnlockedResult.fold(
+          (l) => false,
+          (r) => r,
         );
-      }
 
-      // Create achievement
-      final achievement = Achievement(
-        id: '${userId}_${badgeType.name}_${DateTime.now().millisecondsSinceEpoch}',
-        userId: userId,
-        badgeType: badgeType,
-        unlockedAt: DateTime.now(),
-        evidence: evidence ?? {},
-      );
+        if (isUnlocked) {
+          throw ValidationFailure('Achievement ${badgeType.name} already unlocked');
+        }
 
-      // Save to Firestore
-      await _firestore
-          .collection('users')
-          .doc(userId)
-          .collection('achievements')
-          .doc(badgeType.name)
-          .set(achievement.toJson());
+        // Create achievement
+        final achievement = Achievement(
+          id: '${userId}_${badgeType.name}_${DateTime.now().millisecondsSinceEpoch}',
+          userId: userId,
+          badgeType: badgeType,
+          unlockedAt: DateTime.now(),
+          evidence: evidence ?? {},
+        );
 
-      // Update cache
-      await _updateCache(userId, [achievement], append: true);
+        // Save to Firestore
+        await _firestore
+            .collection('users')
+            .doc(userId)
+            .collection('achievements')
+            .doc(badgeType.name)
+            .set(achievement.toJson());
 
-      return fpdart.Right(achievement);
-    } on FirebaseException catch (e) {
-      return fpdart.Left(ServerFailure('Firebase error: ${e.message}'));
-    } catch (e) {
-      return fpdart.Left(UnexpectedFailure('Failed to unlock achievement: $e'));
-    }
+        // Update cache
+        await _updateCache(userId, [achievement], append: true);
+
+        return achievement;
+      },
+      operationName: 'unlockAchievement',
+    );
   }
 
   @override
   Future<fpdart.Either<Failure, List<Achievement>>> getUnlockedAchievements(
     String userId,
   ) async {
-    try {
-      // Try cache first
-      final cached = await _getCachedAchievements(userId);
-      if (cached != null && !_isCacheExpired(cached.timestamp)) {
-        return fpdart.Right(cached.achievements);
-      }
-
-      // Fetch from Firestore
-      final snapshot = await _firestore
-          .collection('users')
-          .doc(userId)
-          .collection('achievements')
-          .get();
-
-      final achievements = snapshot.docs
-          .map((doc) => Achievement.fromJson(doc.data()))
-          .toList();
-
-      // Update cache
-      await _updateCache(userId, achievements);
-
-      return fpdart.Right(achievements);
-    } on FirebaseException catch (e) {
-      // Return cached data if available (offline support)
-      final cached = await _getCachedAchievements(userId);
-      if (cached != null) {
-        return fpdart.Right(cached.achievements);
-      }
-      return fpdart.Left(ServerFailure('Firebase error: ${e.message}'));
-    } catch (e) {
-      return fpdart.Left(
-        UnexpectedFailure('Failed to fetch achievements: $e'),
-      );
+    // Try cache first
+    final cached = await _getCachedAchievements(userId);
+    if (cached != null && !_isCacheExpired(cached.timestamp)) {
+      return fpdart.Right(cached.achievements);
     }
+
+    final result = await handleFirebaseOperation(
+      () async {
+        // Fetch from Firestore
+        final snapshot = await _firestore
+            .collection('users')
+            .doc(userId)
+            .collection('achievements')
+            .get();
+
+        final achievements = snapshot.docs
+            .map((doc) => Achievement.fromJson(doc.data()))
+            .toList();
+
+        // Update cache
+        await _updateCache(userId, achievements);
+
+        return achievements;
+      },
+      operationName: 'getUnlockedAchievements',
+    );
+
+    // Offline support: return cached data if Firebase fails
+    return result.fold(
+      (failure) async {
+        final cachedFallback = await _getCachedAchievements(userId);
+        if (cachedFallback != null) {
+          return fpdart.Right(cachedFallback.achievements);
+        }
+        return fpdart.Left(failure);
+      },
+      (achievements) => fpdart.Right(achievements),
+    );
   }
 
   @override
@@ -132,20 +135,19 @@ class AchievementRepositoryImpl implements AchievementRepository {
     String userId,
     BadgeType badgeType,
   ) async {
-    try {
-      final doc = await _firestore
-          .collection('users')
-          .doc(userId)
-          .collection('achievements')
-          .doc(badgeType.name)
-          .get();
+    return handleFirebaseOperation(
+      () async {
+        final doc = await _firestore
+            .collection('users')
+            .doc(userId)
+            .collection('achievements')
+            .doc(badgeType.name)
+            .get();
 
-      return fpdart.Right(doc.exists);
-    } on FirebaseException catch (e) {
-      return fpdart.Left(ServerFailure('Firebase error: ${e.message}'));
-    } catch (e) {
-      return fpdart.Left(UnexpectedFailure('Failed to check achievement: $e'));
-    }
+        return doc.exists;
+      },
+      operationName: 'isAchievementUnlocked',
+    );
   }
 
   @override
@@ -153,27 +155,24 @@ class AchievementRepositoryImpl implements AchievementRepository {
     String userId, {
     int limit = 10,
   }) async {
-    try {
-      final snapshot = await _firestore
-          .collection('users')
-          .doc(userId)
-          .collection('achievements')
-          .orderBy('unlockedAt', descending: true)
-          .limit(limit)
-          .get();
+    return handleFirebaseOperation(
+      () async {
+        final snapshot = await _firestore
+            .collection('users')
+            .doc(userId)
+            .collection('achievements')
+            .orderBy('unlockedAt', descending: true)
+            .limit(limit)
+            .get();
 
-      final achievements = snapshot.docs
-          .map((doc) => Achievement.fromJson(doc.data()))
-          .toList();
+        final achievements = snapshot.docs
+            .map((doc) => Achievement.fromJson(doc.data()))
+            .toList();
 
-      return fpdart.Right(achievements);
-    } on FirebaseException catch (e) {
-      return fpdart.Left(ServerFailure('Firebase error: ${e.message}'));
-    } catch (e) {
-      return fpdart.Left(
-        UnexpectedFailure('Failed to fetch recent achievements: $e'),
-      );
-    }
+        return achievements;
+      },
+      operationName: 'getRecentAchievements',
+    );
   }
 
   /// Get cached achievements

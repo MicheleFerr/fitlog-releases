@@ -546,9 +546,13 @@ abstract class BaseHybridRepository<T> with FirestoreCacheFirstMixin {
   }
 
   /// Clear all local data
+  ///
+  /// ⚡ OPTIMIZED: Parallel clear operations with Future.wait()
   Future<void> clearLocalData() async {
-    await _localBox.clear();
-    await _syncQueueBox.clear();
+    await Future.wait([
+      _localBox.clear(),
+      _syncQueueBox.clear(),
+    ]);
   }
 
   /// Dispose resources (synchronous entry point)

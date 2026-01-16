@@ -560,7 +560,7 @@ class _WeeklyDashboardWidgetState extends State<WeeklyDashboardWidget>
           if (_currentWeekData != null) {
             HapticFeedback.lightImpact();
             widget.onDataSync?.call(_currentWeekData!);
-            SnackBarService.showSuccess(context, 'Data synced to cloud');
+            SnackBarService.showSuccess(context, context.l10n.dataSyncedToCloud);
           }
         },
         icon: const Icon(AppIcons.cloudUpload),

@@ -398,10 +398,12 @@ class CurrentWorkoutNotifier extends Notifier<Workout?> {
         // ⌚ Use actual TUT or generate default (same logic as UI)
         final effectiveTut = firstExercise.tut ?? _getDefaultTut(firstExercise);
 
-        // ✅ FIX: Build allSets list for Watch navigation
+        // ✅ FIX: Build allSets list for Watch navigation (include actualReps for edit mode)
         final allSets = firstExercise.sets.map((s) => {
           'weight': s.weight?.toDouble() ?? 0.0,
           'reps': s.reps ?? 0,
+          'actualReps': s.actualReps,  // ✅ Reps effettive (null se non completato)
+          'isCompleted': s.isCompleted, // ✅ Stato completamento
         }).toList();
 
         _getFormCuesAndNotifyWatch(
@@ -665,10 +667,12 @@ class CurrentWorkoutNotifier extends Notifier<Workout?> {
       }
     }
 
-    // ✅ FIX: Build allSets list for Watch navigation
+    // ✅ FIX: Build allSets list for Watch navigation (include actualReps for edit mode)
     final allSets = currentExercise.sets.map((s) => {
       'weight': s.weight?.toDouble() ?? 0.0,
       'reps': s.reps ?? 0,
+      'actualReps': s.actualReps,  // ✅ Reps effettive (null se non completato)
+      'isCompleted': s.isCompleted, // ✅ Stato completamento
     }).toList();
 
     // 📝 Use async helper to fetch Form Cues and send update
@@ -1269,7 +1273,8 @@ class CurrentWorkoutNotifier extends Notifier<Workout?> {
               );
 
               // Check for PRs in this exercise
-              final exercisePRs = await prTracker.checkAndUpdatePRs(activity);
+              // ✅ FIX: Pass Firebase UID for correct Firestore permissions
+              final exercisePRs = await prTracker.checkAndUpdatePRs(activity, userId: effectiveUserId);
               allNewPRs.addAll(exercisePRs);
             }
 

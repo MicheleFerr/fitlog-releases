@@ -15,22 +15,18 @@ import 'package:tutorial_coach_mark/tutorial_coach_mark.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
 
 /// Home tour steps in order (matching MinimalHomeScreen layout)
-/// Reduced to 5 essential steps for better UX (P0-1 fix)
+/// UX 2025: Reduced to 2 essential steps - others are intuitive standard patterns
 enum HomeTourStep {
-  /// Step 1: XP Progress Bar - Your level and experience (gamification entry)
+  /// Step 1: XP Progress Bar - gamification needs explanation
   xpProgress,
 
-  /// Step 2: Start Workout - Main CTA (core action)
-  startWorkout,
-
-  /// Step 3: Templates Carousel - Quick access templates (template discovery)
-  templatesCarousel,
-
-  /// Step 4: Template Suggestion - AI workout recommendation
+  /// Step 2: Template Suggestion - AI recommendation not obvious
   templateSuggestion,
 
-  /// Step 5: Settings - App configuration (customization)
-  settings,
+  // REMOVED - intuitive standard patterns:
+  // - startWorkout: FAB is universal mobile pattern
+  // - templatesCarousel: cards are self-explanatory
+  // - settings: gear icon is universal
 
   /// Tour completed
   completed,
@@ -224,7 +220,7 @@ class HomeTourNotifier extends StateNotifier<HomeTourState> {
                     children: [
                       // Step indicator
                       Text(
-                        '${_getStepNumber(step)}/5',
+                        '${_getStepNumber(step)}/2',
                         style: textTheme.labelSmall?.copyWith(
                           color: colors.primary,
                           fontWeight: FontWeight.bold,
@@ -273,7 +269,7 @@ class HomeTourNotifier extends StateNotifier<HomeTourState> {
                               controller.next();
                             },
                             child: Text(
-                              step == HomeTourStep.settings
+                              step == HomeTourStep.templateSuggestion
                                   ? l10n.tutorialGotIt
                                   : l10n.tutorialNext,
                             ),
@@ -334,33 +330,12 @@ class HomeTourNotifier extends StateNotifier<HomeTourState> {
           contentAlign: ContentAlign.bottom,
           radius: 12,
         );
-      case HomeTourStep.startWorkout:
-        return _StepConfig(
-          title: l10n.tourStartWorkoutTitle,
-          message: l10n.tourStartWorkoutDescription,
-          contentAlign: ContentAlign.top,
-          radius: 20,
-        );
-      case HomeTourStep.templatesCarousel:
-        return _StepConfig(
-          title: l10n.tourTemplatesCarouselTitle,
-          message: l10n.tourTemplatesCarouselDescription,
-          contentAlign: ContentAlign.top,
-          radius: 16,
-        );
       case HomeTourStep.templateSuggestion:
         return _StepConfig(
           title: l10n.tourTemplateSuggestionTitle,
           message: l10n.tourTemplateSuggestionDescription,
           contentAlign: ContentAlign.top,
           radius: 16,
-        );
-      case HomeTourStep.settings:
-        return _StepConfig(
-          title: l10n.tourSettingsTitle,
-          message: l10n.tourSettingsDescription,
-          contentAlign: ContentAlign.bottom,
-          radius: 24,
         );
       case HomeTourStep.completed:
         return const _StepConfig(

@@ -75,6 +75,7 @@ class HybridWorkoutRepositoryImpl
 
   // 🔄 SYNC QUEUE: Timer and connectivity for background sync
   Timer? _syncQueueTimer;
+  Timer? _syncDebounceTimer; // ⚡ PERFORMANCE: Debounce rapid sync calls
   StreamSubscription? _connectivitySubscription;
   bool _isSyncInProgress = false;
 
@@ -127,12 +128,19 @@ class HybridWorkoutRepositoryImpl
   }
 
   /// Schedule sync queue processing (debounced)
+  ///
+  /// PERFORMANCE FIX (Jan 2025): Added proper debouncing to coalesce
+  /// rapid calls (e.g., auth + connectivity changes at startup).
   void _scheduleSyncQueueProcessing() {
     if (_isDisposed || _isSyncInProgress) return;
 
-    // Run in background without blocking
-    Future(() async {
-      await processSyncQueue();
+    // ⚡ DEBOUNCE: Cancel previous scheduled sync, only run once after 100ms
+    _syncDebounceTimer?.cancel();
+    _syncDebounceTimer = Timer(const Duration(milliseconds: 100), () {
+      if (_isDisposed || _isSyncInProgress) return;
+      Future(() async {
+        await processSyncQueue();
+      });
     });
   }
 
@@ -789,32 +797,44 @@ class HybridWorkoutRepositoryImpl
 
   /// ⚡ OPTIMIZED: Update local cache with new workouts
   /// Only saves if workout is new or has been updated (checks updatedAt timestamp)
+  ///
+  /// PERFORMANCE FIX (Jan 2025): Now uses batch operations instead of per-workout
+  /// openBox() calls. Reduced from ~N openBox() calls to just 1-2.
   Future<void> _updateLocalCache(
     List<WorkoutModel> workouts,
     String userId,
   ) async {
-    for (final workout in workouts) {
-      // ✅ CHECK: Only save if workout is new or updated
-      final existingWorkout = await _localDataSource.getWorkout(workout.id, userId);
+    if (workouts.isEmpty) return;
 
-      if (existingWorkout == null) {
-        // New workout - save it
-        await _localDataSource.saveWorkout(workout, userId);
-        if (kDebugMode) {
-          debugPrint('💾 [CACHE-NEW] Saved new workout to Hive: ${workout.id}');
-        }
-      } else if (workout.updatedAt.isAfter(existingWorkout.updatedAt)) {
-        // Updated workout - save it
-        await _localDataSource.saveWorkout(workout, userId);
-        if (kDebugMode) {
-          debugPrint('🔄 [CACHE-UPDATE] Updated workout in Hive: ${workout.id}');
-        }
+    // ⚡ BATCH: Get all existing timestamps in ONE operation (1 openBox call)
+    final existingTimestamps = await _localDataSource.getExistingWorkoutTimestamps(userId);
+
+    // Separate workouts into new/updated vs unchanged
+    final workoutsToSave = <WorkoutModel>[];
+    int skippedCount = 0;
+
+    for (final workout in workouts) {
+      final existingTime = existingTimestamps[workout.id];
+
+      if (existingTime == null) {
+        // New workout
+        workoutsToSave.add(workout);
+      } else if (workout.updatedAt.isAfter(existingTime)) {
+        // Updated workout
+        workoutsToSave.add(workout);
       } else {
-        // Workout already exists and is up-to-date - skip save
-        if (kDebugMode) {
-          debugPrint('⏩ [CACHE-SKIP] Workout already up-to-date in Hive: ${workout.id}');
-        }
+        // Already up-to-date - skip
+        skippedCount++;
       }
+    }
+
+    // ⚡ BATCH: Save all changed workouts in ONE operation
+    if (workoutsToSave.isNotEmpty) {
+      await _localDataSource.batchSaveWorkouts(workoutsToSave, userId);
+    }
+
+    if (kDebugMode) {
+      debugPrint('⚡ [CACHE] Batch update: ${workoutsToSave.length} saved, $skippedCount skipped');
     }
   }
 
@@ -1028,9 +1048,11 @@ class HybridWorkoutRepositoryImpl
     _userProfileSubscription?.cancel();
     _userProfileSubscription = null;
 
-    // 3. Cancel sync queue timer
+    // 3. Cancel sync queue timer and debounce timer
     _syncQueueTimer?.cancel();
     _syncQueueTimer = null;
+    _syncDebounceTimer?.cancel();
+    _syncDebounceTimer = null;
 
     // 4. Cancel connectivity subscription
     _connectivitySubscription?.cancel();
@@ -1041,9 +1063,6 @@ class HybridWorkoutRepositoryImpl
 
     if (kDebugMode) {
       debugPrint('✅ HybridWorkoutRepositoryImpl disposed');
-      debugPrint('   - Auth state subscription cancelled');
-      debugPrint('   - Sync queue timer cancelled');
-      debugPrint('   - Connectivity subscription cancelled');
     }
   }
 
@@ -1280,15 +1299,19 @@ class HybridWorkoutRepositoryImpl
   }
 
   /// Cache workouts locally in background (fire and forget)
+  ///
+  /// PERFORMANCE FIX (Jan 2025): Now uses batchSaveWorkouts() instead of
+  /// individual saveWorkout() calls. Reduced from N openBox() calls to 1.
   void _cacheWorkoutsInBackground(List<WorkoutModel> workouts, String userId) {
+    if (workouts.isEmpty) return;
+
     Future(() async {
       try {
-        for (final workout in workouts) {
-          await _localDataSource.saveWorkout(workout, userId);
-        }
+        // ⚡ BATCH: Save all workouts in ONE operation
+        await _localDataSource.batchSaveWorkouts(workouts, userId);
         if (kDebugMode) {
           debugPrint(
-            '✅ [HybridRepo] Cached ${workouts.length} workouts locally',
+            '✅ [HybridRepo] Batch cached ${workouts.length} workouts locally',
           );
         }
       } catch (e) {

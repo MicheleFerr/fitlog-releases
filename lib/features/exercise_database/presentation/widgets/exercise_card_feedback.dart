@@ -56,7 +56,7 @@ class ExerciseFeedbackButton extends ConsumerStatefulWidget {
       context: context,
       builder: (dialogContext) => StatefulBuilder(
         builder: (context, setState) => AlertDialog(
-          title: const Text('Segnala problema'),
+          title: Text(context.l10n.reportProblem),
           content: SingleChildScrollView(
             child: Column(
               mainAxisSize: MainAxisSize.min,
@@ -92,7 +92,7 @@ class ExerciseFeedbackButton extends ConsumerStatefulWidget {
 
                 // Tipo di segnalazione
                 Text(
-                  'Tipo di segnalazione',
+                  context.l10n.reportType,
                   style: Theme.of(context).textTheme.labelMedium?.copyWith(
                     fontWeight: FontWeight.bold,
                   ),
@@ -109,11 +109,11 @@ class ExerciseFeedbackButton extends ConsumerStatefulWidget {
                       vertical: 12,
                     ),
                   ),
-                  items: const [
-                    DropdownMenuItem(value: 'BUG', child: Text('🐛 Bug')),
-                    DropdownMenuItem(value: 'SUGGESTION', child: Text('💡 Suggerimento')),
-                    DropdownMenuItem(value: 'TYPO', child: Text('📝 Errore di testo')),
-                    DropdownMenuItem(value: 'OTHER', child: Text('❓ Altro')),
+                  items: [
+                    DropdownMenuItem(value: 'BUG', child: Text('🐛 ${context.l10n.feedbackTypeBug}')),
+                    DropdownMenuItem(value: 'SUGGESTION', child: Text('💡 ${context.l10n.feedbackTypeSuggestion}')),
+                    DropdownMenuItem(value: 'TYPO', child: Text('📝 ${context.l10n.feedbackTypeTypo}')),
+                    DropdownMenuItem(value: 'OTHER', child: Text('❓ ${context.l10n.feedbackTypeOther}')),
                   ],
                   onChanged: (value) {
                     setState(() {
@@ -125,7 +125,7 @@ class ExerciseFeedbackButton extends ConsumerStatefulWidget {
 
                 // Messaggio
                 Text(
-                  'Descrivi il problema',
+                  context.l10n.describeProblem,
                   style: Theme.of(context).textTheme.labelMedium?.copyWith(
                     fontWeight: FontWeight.bold,
                   ),
@@ -136,7 +136,7 @@ class ExerciseFeedbackButton extends ConsumerStatefulWidget {
                   maxLines: 4,
                   minLines: 3,
                   decoration: InputDecoration(
-                    hintText: 'Descrivi il problema in dettaglio...',
+                    hintText: context.l10n.describeProblemHint,
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(8),
                     ),
@@ -153,7 +153,7 @@ class ExerciseFeedbackButton extends ConsumerStatefulWidget {
                 Navigator.of(context).pop();
                 messageController.dispose();
               },
-              child: const Text('Annulla'),
+              child: Text(context.l10n.cancel),
             ),
             ElevatedButton.icon(
               onPressed: isSubmitting ? null : () async {
@@ -230,7 +230,7 @@ class ExerciseFeedbackButton extends ConsumerStatefulWidget {
   icon: AppIcons.send,
   semanticLabel: 'Send',
 ),
-              label: const Text('Invia'),
+              label: Text(context.l10n.send),
             ),
           ],
         ),

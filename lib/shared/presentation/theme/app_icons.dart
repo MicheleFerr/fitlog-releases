@@ -767,6 +767,7 @@ class AppIcons {
   static const IconData reportProblemOutlined = Icons.report_problem_outlined;
   static const IconData rowing = Icons.rowing;
   static const IconData scale = Icons.scale;
+  static const IconData screenLockPortrait = Icons.screen_lock_portrait;
   static const IconData schoolOutlined = Icons.school_outlined;
   static const IconData selectAll = Icons.select_all;
   static const IconData shuffle = Icons.shuffle;

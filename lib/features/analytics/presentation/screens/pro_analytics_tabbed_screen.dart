@@ -19,6 +19,7 @@ import 'package:gymbro_flutter_new/features/analytics/presentation/tabs/rep_zone
 import 'package:gymbro_flutter_new/features/analytics/presentation/tabs/volume_progression_tab.dart';
 import 'package:gymbro_flutter_new/features/analytics/presentation/tabs/muscle_balance_tab.dart';
 import 'package:gymbro_flutter_new/features/analytics/presentation/tabs/stress_index_tab.dart';
+import 'package:gymbro_flutter_new/features/analytics/presentation/tabs/plateau_detection_tab.dart';
 import 'package:gymbro_flutter_new/features/auth/presentation/providers/consolidated_user_provider.dart';
 import 'package:gymbro_flutter_new/features/stress_index/presentation/providers/stress_index_provider.dart';
 import 'package:gymbro_flutter_new/features/analytics/presentation/providers/workout_analytics_provider.dart';
@@ -49,7 +50,7 @@ class _ProAnalyticsTabbedScreenState
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: 4, vsync: this);
+    _tabController = TabController(length: 5, vsync: this);
   }
 
   @override
@@ -208,6 +209,10 @@ class _ProAnalyticsTabbedScreenState
                   icon: AppIcons.bolt,
                   label: l10n.stressIndex,
                 ),
+                _buildPremiumTab(
+                  icon: AppIcons.warning,
+                  label: l10n.analyticsTrendPlateau,
+                ),
               ],
             ),
           ),
@@ -244,6 +249,9 @@ class _ProAnalyticsTabbedScreenState
 
               // Tab 4: Stress Index
               const StressIndexTab(),
+
+              // Tab 5: Plateau Detection
+              const PlateauDetectionTab(),
             ],
           );
         },

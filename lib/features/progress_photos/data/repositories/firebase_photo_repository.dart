@@ -7,9 +7,11 @@ import 'package:fpdart/fpdart.dart';
 import 'package:intl/intl.dart';
 import 'package:uuid/uuid.dart';
 
+import 'package:gymbro_flutter_new/core/data/mixins/firebase_error_mapper_mixin.dart';
 import 'package:gymbro_flutter_new/features/progress_photos/domain/entities/progress_photo.dart';
 import 'package:gymbro_flutter_new/features/progress_photos/domain/repositories/progress_photo_repository.dart';
 import 'package:gymbro_flutter_new/features/progress_photos/domain/services/photo_compression_service.dart';
+import 'package:gymbro_flutter_new/shared/domain/failures/failure.dart' as base;
 
 /// FirebasePhotoRepository - Firebase implementation of photo storage
 ///
@@ -24,7 +26,17 @@ import 'package:gymbro_flutter_new/features/progress_photos/domain/services/phot
 /// └── users/{userId}/progress_photos/{photoId}
 ///     └── { ...ProgressPhoto metadata }
 /// ```
-class FirebasePhotoRepository implements ProgressPhotoRepository {
+class FirebasePhotoRepository
+    with FirebaseErrorMapperMixin
+    implements ProgressPhotoRepository {
+  FirebasePhotoRepository({
+    FirebaseFirestore? firestore,
+    FirebaseStorage? storage,
+    PhotoCompressionService? compressionService,
+  })  : _firestore = firestore ?? FirebaseFirestore.instance,
+        _storage = storage ?? FirebaseStorage.instance,
+        _compressionService = compressionService ?? PhotoCompressionService();
+
   final FirebaseFirestore _firestore;
   final FirebaseStorage _storage;
   final PhotoCompressionService _compressionService;
@@ -33,14 +45,6 @@ class FirebasePhotoRepository implements ProgressPhotoRepository {
   /// Stream controllers for upload progress
   final _uploadProgressControllers =
       <String, StreamController<PhotoUploadProgress>>{};
-
-  FirebasePhotoRepository({
-    FirebaseFirestore? firestore,
-    FirebaseStorage? storage,
-    PhotoCompressionService? compressionService,
-  })  : _firestore = firestore ?? FirebaseFirestore.instance,
-        _storage = storage ?? FirebaseStorage.instance,
-        _compressionService = compressionService ?? PhotoCompressionService();
 
   /// Get Firestore collection reference for user's photos
   CollectionReference<Map<String, dynamic>> _photosCollection(String userId) =>
@@ -52,6 +56,29 @@ class FirebasePhotoRepository implements ProgressPhotoRepository {
   /// Get Storage reference for user's photos
   Reference _storageRef(String userId) =>
       _storage.ref().child('users').child(userId).child('progress_photos');
+
+  /// Map base Failure to PhotoRepositoryFailure
+  PhotoRepositoryFailure _mapToPhotoFailure(base.Failure failure) {
+    if (failure is base.PermissionFailure) {
+      return const PermissionDeniedFailure();
+    } else if (failure is base.NotFoundFailure) {
+      return NotFoundFailure(failure.message);
+    } else if (failure is base.NetworkFailure) {
+      return NetworkFailure(failure.message);
+    } else if (failure is base.QuotaFailure) {
+      return const QuotaExceededFailure(0, 0);
+    } else if (failure is base.ValidationFailure) {
+      return DatabaseFailure(failure.message);
+    } else if (failure is base.ServerFailure) {
+      // Storage errors come through as ServerFailure
+      if (failure.code?.startsWith('storage/') ?? false) {
+        return StorageFailure(failure.message, code: failure.code);
+      }
+      return DatabaseFailure(failure.message);
+    } else {
+      return UnknownFailure(failure.message, error: failure);
+    }
+  }
 
   @override
   Future<Either<PhotoRepositoryFailure, ProgressPhoto>> uploadPhoto({
@@ -74,7 +101,7 @@ class FirebasePhotoRepository implements ProgressPhotoRepository {
         status: UploadStatus.compressing,
       ));
 
-      // Step 1: Compress image
+      // Step 1: Compress image (may throw CompressionException)
       final compressed =
           await _compressionService.compressAndSaveToTemp(imageFile);
 
@@ -85,115 +112,120 @@ class FirebasePhotoRepository implements ProgressPhotoRepository {
         totalBytes: compressed.totalSize,
       ));
 
-      // Step 2: Generate storage paths
-      final dateStr = DateFormat('yyyy-MM-dd').format(takenAt ?? DateTime.now());
-      final poseName = pose.name;
-      final fullPhotoPath = '$dateStr/${photoId}_$poseName.webp';
-      final thumbPath = '$dateStr/${photoId}_${poseName}_thumb.webp';
+      // Step 2-5: Handle all Firebase operations through mixin
+      final result = await handleFirebaseOperation<ProgressPhoto>(
+        () async {
+          // Step 2: Generate storage paths
+          final dateStr =
+              DateFormat('yyyy-MM-dd').format(takenAt ?? DateTime.now());
+          final poseName = pose.name;
+          final fullPhotoPath = '$dateStr/${photoId}_$poseName.webp';
+          final thumbPath = '$dateStr/${photoId}_${poseName}_thumb.webp';
 
-      // Step 3: Upload full photo
-      final fullPhotoRef = _storageRef(userId).child(fullPhotoPath);
-      final fullUploadTask = fullPhotoRef.putData(
-        compressed.fullPhotoBytes,
-        SettableMetadata(
-          contentType: 'image/webp',
-          customMetadata: {
-            'userId': userId,
-            'photoId': photoId,
-            'pose': poseName,
-            'originalSize': compressed.originalSize.toString(),
-          },
-        ),
+          // Step 3: Upload full photo
+          final fullPhotoRef = _storageRef(userId).child(fullPhotoPath);
+          final fullUploadTask = fullPhotoRef.putData(
+            compressed.fullPhotoBytes,
+            SettableMetadata(
+              contentType: 'image/webp',
+              customMetadata: {
+                'userId': userId,
+                'photoId': photoId,
+                'pose': poseName,
+                'originalSize': compressed.originalSize.toString(),
+              },
+            ),
+          );
+
+          // Track upload progress
+          fullUploadTask.snapshotEvents.listen((snapshot) {
+            final progress =
+                0.2 + (snapshot.bytesTransferred / snapshot.totalBytes) * 0.5;
+            controller.add(PhotoUploadProgress(
+              photoId: photoId,
+              progress: progress,
+              status: UploadStatus.uploading,
+              bytesUploaded: snapshot.bytesTransferred,
+              totalBytes: compressed.totalSize,
+            ));
+          });
+
+          await fullUploadTask;
+          final fullPhotoUrl = await fullPhotoRef.getDownloadURL();
+
+          // Step 4: Upload thumbnail
+          controller.add(PhotoUploadProgress(
+            photoId: photoId,
+            progress: 0.7,
+            status: UploadStatus.uploading,
+            bytesUploaded: compressed.compressedSize,
+            totalBytes: compressed.totalSize,
+          ));
+
+          final thumbRef = _storageRef(userId).child(thumbPath);
+          await thumbRef.putData(
+            compressed.thumbnailBytes,
+            SettableMetadata(contentType: 'image/webp'),
+          );
+          final thumbUrl = await thumbRef.getDownloadURL();
+
+          // Step 5: Create Firestore document
+          controller.add(PhotoUploadProgress(
+            photoId: photoId,
+            progress: 0.9,
+            status: UploadStatus.uploading,
+          ));
+
+          final now = DateTime.now();
+          final photo = ProgressPhoto(
+            id: photoId,
+            userId: userId,
+            photoUrl: fullPhotoUrl,
+            thumbnailUrl: thumbUrl,
+            storagePath: fullPhotoPath,
+            thumbnailStoragePath: thumbPath,
+            pose: pose,
+            takenAt: takenAt ?? now,
+            fileSizeBytes: compressed.compressedSize,
+            originalFileSizeBytes: compressed.originalSize,
+            notes: notes,
+            weightKg: weightKg,
+            createdAt: now,
+            updatedAt: now,
+            syncStatus: SyncStatus.synced,
+          );
+
+          await _photosCollection(userId).doc(photoId).set(photo.toJson());
+
+          // Cleanup temp files
+          await compressed.cleanup();
+
+          // Emit completion
+          controller.add(PhotoUploadProgress(
+            photoId: photoId,
+            progress: 1.0,
+            status: UploadStatus.completed,
+          ));
+
+          return photo;
+        },
+        operationName: 'uploadPhoto',
       );
 
-      // Track upload progress
-      fullUploadTask.snapshotEvents.listen((snapshot) {
-        final progress =
-            0.2 + (snapshot.bytesTransferred / snapshot.totalBytes) * 0.5;
-        controller.add(PhotoUploadProgress(
-          photoId: photoId,
-          progress: progress,
-          status: UploadStatus.uploading,
-          bytesUploaded: snapshot.bytesTransferred,
-          totalBytes: compressed.totalSize,
-        ));
-      });
-
-      await fullUploadTask;
-      final fullPhotoUrl = await fullPhotoRef.getDownloadURL();
-
-      // Step 4: Upload thumbnail
-      controller.add(PhotoUploadProgress(
-        photoId: photoId,
-        progress: 0.7,
-        status: UploadStatus.uploading,
-        bytesUploaded: compressed.compressedSize,
-        totalBytes: compressed.totalSize,
-      ));
-
-      final thumbRef = _storageRef(userId).child(thumbPath);
-      await thumbRef.putData(
-        compressed.thumbnailBytes,
-        SettableMetadata(contentType: 'image/webp'),
+      return result.fold(
+        (failure) {
+          controller.add(PhotoUploadProgress(
+            photoId: photoId,
+            progress: 0,
+            status: UploadStatus.failed,
+            errorMessage: failure.message,
+          ));
+          return left(_mapToPhotoFailure(failure));
+        },
+        (photo) => right(photo),
       );
-      final thumbUrl = await thumbRef.getDownloadURL();
-
-      // Step 5: Create Firestore document
-      controller.add(PhotoUploadProgress(
-        photoId: photoId,
-        progress: 0.9,
-        status: UploadStatus.uploading,
-      ));
-
-      final now = DateTime.now();
-      final photo = ProgressPhoto(
-        id: photoId,
-        userId: userId,
-        photoUrl: fullPhotoUrl,
-        thumbnailUrl: thumbUrl,
-        storagePath: fullPhotoPath,
-        thumbnailStoragePath: thumbPath,
-        pose: pose,
-        takenAt: takenAt ?? now,
-        fileSizeBytes: compressed.compressedSize,
-        originalFileSizeBytes: compressed.originalSize,
-        notes: notes,
-        weightKg: weightKg,
-        createdAt: now,
-        updatedAt: now,
-        syncStatus: SyncStatus.synced,
-      );
-
-      await _photosCollection(userId).doc(photoId).set(photo.toJson());
-
-      // Cleanup temp files
-      await compressed.cleanup();
-
-      // Emit completion
-      controller.add(PhotoUploadProgress(
-        photoId: photoId,
-        progress: 1.0,
-        status: UploadStatus.completed,
-      ));
-
-      return right(photo);
-    } on FirebaseException catch (e) {
-      controller.add(PhotoUploadProgress(
-        photoId: photoId,
-        progress: 0,
-        status: UploadStatus.failed,
-        errorMessage: e.message,
-      ));
-
-      if (e.code == 'storage/unauthorized') {
-        return left(const PermissionDeniedFailure());
-      }
-      if (e.code == 'storage/quota-exceeded') {
-        return left(const QuotaExceededFailure(0, 0));
-      }
-      return left(StorageFailure(e.message ?? 'Unknown storage error',
-          code: e.code));
     } on CompressionException catch (e) {
+      // CompressionException is not a Firebase error, handle separately
       controller.add(PhotoUploadProgress(
         photoId: photoId,
         progress: 0,
@@ -202,6 +234,7 @@ class FirebasePhotoRepository implements ProgressPhotoRepository {
       ));
       return left(CompressionFailure(e.message));
     } catch (e) {
+      // Fallback for any other unexpected errors
       controller.add(PhotoUploadProgress(
         photoId: photoId,
         progress: 0,
@@ -233,24 +266,27 @@ class FirebasePhotoRepository implements ProgressPhotoRepository {
     required String userId,
     bool includeDeleted = false,
   }) async {
-    try {
-      var query = _photosCollection(userId).orderBy('takenAt', descending: true);
+    final result = await handleFirebaseOperation<List<ProgressPhoto>>(
+      () async {
+        var query =
+            _photosCollection(userId).orderBy('takenAt', descending: true);
 
-      if (!includeDeleted) {
-        query = query.where('isDeleted', isEqualTo: false);
-      }
+        if (!includeDeleted) {
+          query = query.where('isDeleted', isEqualTo: false);
+        }
 
-      final snapshot = await query.get();
-      final photos = snapshot.docs
-          .map((doc) => ProgressPhoto.fromJson(doc.data()))
-          .toList();
+        final snapshot = await query.get();
+        return snapshot.docs
+            .map((doc) => ProgressPhoto.fromJson(doc.data()))
+            .toList();
+      },
+      operationName: 'getPhotos',
+    );
 
-      return right(photos);
-    } on FirebaseException catch (e) {
-      return left(DatabaseFailure(e.message ?? 'Database error'));
-    } catch (e) {
-      return left(UnknownFailure(e.toString(), error: e));
-    }
+    return result.fold(
+      (failure) => left(_mapToPhotoFailure(failure)),
+      (photos) => right(photos),
+    );
   }
 
   @override
@@ -273,23 +309,25 @@ class FirebasePhotoRepository implements ProgressPhotoRepository {
     required String userId,
     required PhotoPose pose,
   }) async {
-    try {
-      final snapshot = await _photosCollection(userId)
-          .where('pose', isEqualTo: pose.name)
-          .where('isDeleted', isEqualTo: false)
-          .orderBy('takenAt', descending: true)
-          .get();
+    final result = await handleFirebaseOperation<List<ProgressPhoto>>(
+      () async {
+        final snapshot = await _photosCollection(userId)
+            .where('pose', isEqualTo: pose.name)
+            .where('isDeleted', isEqualTo: false)
+            .orderBy('takenAt', descending: true)
+            .get();
 
-      final photos = snapshot.docs
-          .map((doc) => ProgressPhoto.fromJson(doc.data()))
-          .toList();
+        return snapshot.docs
+            .map((doc) => ProgressPhoto.fromJson(doc.data()))
+            .toList();
+      },
+      operationName: 'getPhotosByPose',
+    );
 
-      return right(photos);
-    } on FirebaseException catch (e) {
-      return left(DatabaseFailure(e.message ?? 'Database error'));
-    } catch (e) {
-      return left(UnknownFailure(e.toString(), error: e));
-    }
+    return result.fold(
+      (failure) => left(_mapToPhotoFailure(failure)),
+      (photos) => right(photos),
+    );
   }
 
   @override
@@ -298,24 +336,27 @@ class FirebasePhotoRepository implements ProgressPhotoRepository {
     required DateTime startDate,
     required DateTime endDate,
   }) async {
-    try {
-      final snapshot = await _photosCollection(userId)
-          .where('takenAt', isGreaterThanOrEqualTo: startDate.toIso8601String())
-          .where('takenAt', isLessThanOrEqualTo: endDate.toIso8601String())
-          .where('isDeleted', isEqualTo: false)
-          .orderBy('takenAt', descending: true)
-          .get();
+    final result = await handleFirebaseOperation<List<ProgressPhoto>>(
+      () async {
+        final snapshot = await _photosCollection(userId)
+            .where('takenAt',
+                isGreaterThanOrEqualTo: startDate.toIso8601String())
+            .where('takenAt', isLessThanOrEqualTo: endDate.toIso8601String())
+            .where('isDeleted', isEqualTo: false)
+            .orderBy('takenAt', descending: true)
+            .get();
 
-      final photos = snapshot.docs
-          .map((doc) => ProgressPhoto.fromJson(doc.data()))
-          .toList();
+        return snapshot.docs
+            .map((doc) => ProgressPhoto.fromJson(doc.data()))
+            .toList();
+      },
+      operationName: 'getPhotosInRange',
+    );
 
-      return right(photos);
-    } on FirebaseException catch (e) {
-      return left(DatabaseFailure(e.message ?? 'Database error'));
-    } catch (e) {
-      return left(UnknownFailure(e.toString(), error: e));
-    }
+    return result.fold(
+      (failure) => left(_mapToPhotoFailure(failure)),
+      (photos) => right(photos),
+    );
   }
 
   @override
@@ -323,19 +364,23 @@ class FirebasePhotoRepository implements ProgressPhotoRepository {
     required String userId,
     required String photoId,
   }) async {
-    try {
-      final doc = await _photosCollection(userId).doc(photoId).get();
+    final result = await handleFirebaseOperation<ProgressPhoto>(
+      () async {
+        final doc = await _photosCollection(userId).doc(photoId).get();
 
-      if (!doc.exists) {
-        return left(NotFoundFailure(photoId));
-      }
+        if (!doc.exists) {
+          throw base.NotFoundFailure('Photo not found: $photoId');
+        }
 
-      return right(ProgressPhoto.fromJson(doc.data()!));
-    } on FirebaseException catch (e) {
-      return left(DatabaseFailure(e.message ?? 'Database error'));
-    } catch (e) {
-      return left(UnknownFailure(e.toString(), error: e));
-    }
+        return ProgressPhoto.fromJson(doc.data()!);
+      },
+      operationName: 'getPhoto',
+    );
+
+    return result.fold(
+      (failure) => left(_mapToPhotoFailure(failure)),
+      (photo) => right(photo),
+    );
   }
 
   @override
@@ -346,23 +391,32 @@ class FirebasePhotoRepository implements ProgressPhotoRepository {
     double? weightKg,
     PhotoPose? pose,
   }) async {
-    try {
-      final updates = <String, dynamic>{
-        'updatedAt': DateTime.now().toIso8601String(),
-      };
+    final result = await handleFirebaseOperation<ProgressPhoto>(
+      () async {
+        final updates = <String, dynamic>{
+          'updatedAt': DateTime.now().toIso8601String(),
+        };
 
-      if (notes != null) updates['notes'] = notes;
-      if (weightKg != null) updates['weightKg'] = weightKg;
-      if (pose != null) updates['pose'] = pose.name;
+        if (notes != null) updates['notes'] = notes;
+        if (weightKg != null) updates['weightKg'] = weightKg;
+        if (pose != null) updates['pose'] = pose.name;
 
-      await _photosCollection(userId).doc(photoId).update(updates);
+        await _photosCollection(userId).doc(photoId).update(updates);
 
-      return getPhoto(userId: userId, photoId: photoId);
-    } on FirebaseException catch (e) {
-      return left(DatabaseFailure(e.message ?? 'Database error'));
-    } catch (e) {
-      return left(UnknownFailure(e.toString(), error: e));
-    }
+        // Get updated photo
+        final getResult = await getPhoto(userId: userId, photoId: photoId);
+        return getResult.fold(
+          (failure) => throw base.ServerFailure(failure.toString()),
+          (photo) => photo,
+        );
+      },
+      operationName: 'updatePhoto',
+    );
+
+    return result.fold(
+      (failure) => left(_mapToPhotoFailure(failure)),
+      (photo) => right(photo),
+    );
   }
 
   @override
@@ -370,19 +424,21 @@ class FirebasePhotoRepository implements ProgressPhotoRepository {
     required String userId,
     required String photoId,
   }) async {
-    try {
-      await _photosCollection(userId).doc(photoId).update({
-        'isDeleted': true,
-        'deletedAt': DateTime.now().toIso8601String(),
-        'updatedAt': DateTime.now().toIso8601String(),
-      });
+    final result = await handleFirebaseVoidOperation(
+      () async {
+        await _photosCollection(userId).doc(photoId).update({
+          'isDeleted': true,
+          'deletedAt': DateTime.now().toIso8601String(),
+          'updatedAt': DateTime.now().toIso8601String(),
+        });
+      },
+      operationName: 'softDeletePhoto',
+    );
 
-      return right(unit);
-    } on FirebaseException catch (e) {
-      return left(DatabaseFailure(e.message ?? 'Database error'));
-    } catch (e) {
-      return left(UnknownFailure(e.toString(), error: e));
-    }
+    return result.fold(
+      (failure) => left(_mapToPhotoFailure(failure)),
+      (unit) => right(unit),
+    );
   }
 
   @override
@@ -390,32 +446,36 @@ class FirebasePhotoRepository implements ProgressPhotoRepository {
     required String userId,
     required String photoId,
   }) async {
-    try {
-      // Get photo to find storage paths
-      final photoResult = await getPhoto(userId: userId, photoId: photoId);
+    final result = await handleFirebaseVoidOperation(
+      () async {
+        // Get photo to find storage paths
+        final photoResult = await getPhoto(userId: userId, photoId: photoId);
 
-      return photoResult.fold(
-        (failure) => left(failure),
-        (photo) async {
-          // Delete from Storage
-          try {
-            await _storageRef(userId).child(photo.storagePath).delete();
-            await _storageRef(userId).child(photo.thumbnailStoragePath).delete();
-          } catch (_) {
-            // Ignore storage errors (file might already be deleted)
-          }
+        await photoResult.fold(
+          (failure) => throw base.ServerFailure(failure.toString()),
+          (photo) async {
+            // Delete from Storage
+            try {
+              await _storageRef(userId).child(photo.storagePath).delete();
+              await _storageRef(userId)
+                  .child(photo.thumbnailStoragePath)
+                  .delete();
+            } catch (_) {
+              // Ignore storage errors (file might already be deleted)
+            }
 
-          // Delete from Firestore
-          await _photosCollection(userId).doc(photoId).delete();
+            // Delete from Firestore
+            await _photosCollection(userId).doc(photoId).delete();
+          },
+        );
+      },
+      operationName: 'permanentlyDeletePhoto',
+    );
 
-          return right(unit);
-        },
-      );
-    } on FirebaseException catch (e) {
-      return left(DatabaseFailure(e.message ?? 'Database error'));
-    } catch (e) {
-      return left(UnknownFailure(e.toString(), error: e));
-    }
+    return result.fold(
+      (failure) => left(_mapToPhotoFailure(failure)),
+      (unit) => right(unit),
+    );
   }
 
   @override
@@ -423,60 +483,73 @@ class FirebasePhotoRepository implements ProgressPhotoRepository {
     required String userId,
     required String photoId,
   }) async {
-    try {
-      await _photosCollection(userId).doc(photoId).update({
-        'isDeleted': false,
-        'deletedAt': null,
-        'updatedAt': DateTime.now().toIso8601String(),
-      });
+    final result = await handleFirebaseOperation<ProgressPhoto>(
+      () async {
+        await _photosCollection(userId).doc(photoId).update({
+          'isDeleted': false,
+          'deletedAt': null,
+          'updatedAt': DateTime.now().toIso8601String(),
+        });
 
-      return getPhoto(userId: userId, photoId: photoId);
-    } on FirebaseException catch (e) {
-      return left(DatabaseFailure(e.message ?? 'Database error'));
-    } catch (e) {
-      return left(UnknownFailure(e.toString(), error: e));
-    }
+        // Get restored photo
+        final getResult = await getPhoto(userId: userId, photoId: photoId);
+        return getResult.fold(
+          (failure) => throw base.ServerFailure(failure.toString()),
+          (photo) => photo,
+        );
+      },
+      operationName: 'restorePhoto',
+    );
+
+    return result.fold(
+      (failure) => left(_mapToPhotoFailure(failure)),
+      (photo) => right(photo),
+    );
   }
 
   @override
   Future<Either<PhotoRepositoryFailure, int>> deleteAllPhotos({
     required String userId,
   }) async {
-    try {
-      // Get all photos
-      final photosResult =
-          await getPhotos(userId: userId, includeDeleted: true);
+    final result = await handleFirebaseOperation<int>(
+      () async {
+        // Get all photos
+        final photosResult =
+            await getPhotos(userId: userId, includeDeleted: true);
 
-      return photosResult.fold(
-        (failure) => left(failure),
-        (photos) async {
-          // Delete all storage files
-          for (final photo in photos) {
-            try {
-              await _storageRef(userId).child(photo.storagePath).delete();
-              await _storageRef(userId)
-                  .child(photo.thumbnailStoragePath)
-                  .delete();
-            } catch (_) {
-              // Continue even if some files fail
+        return await photosResult.fold(
+          (failure) => throw base.ServerFailure(failure.toString()),
+          (photos) async {
+            // Delete all storage files
+            for (final photo in photos) {
+              try {
+                await _storageRef(userId).child(photo.storagePath).delete();
+                await _storageRef(userId)
+                    .child(photo.thumbnailStoragePath)
+                    .delete();
+              } catch (_) {
+                // Continue even if some files fail
+              }
             }
-          }
 
-          // Delete all Firestore documents
-          final batch = _firestore.batch();
-          for (final photo in photos) {
-            batch.delete(_photosCollection(userId).doc(photo.id));
-          }
-          await batch.commit();
+            // Delete all Firestore documents
+            final batch = _firestore.batch();
+            for (final photo in photos) {
+              batch.delete(_photosCollection(userId).doc(photo.id));
+            }
+            await batch.commit();
 
-          return right(photos.length);
-        },
-      );
-    } on FirebaseException catch (e) {
-      return left(DatabaseFailure(e.message ?? 'Database error'));
-    } catch (e) {
-      return left(UnknownFailure(e.toString(), error: e));
-    }
+            return photos.length;
+          },
+        );
+      },
+      operationName: 'deleteAllPhotos',
+    );
+
+    return result.fold(
+      (failure) => left(_mapToPhotoFailure(failure)),
+      (deletedCount) => right(deletedCount),
+    );
   }
 
   @override
@@ -485,20 +558,29 @@ class FirebasePhotoRepository implements ProgressPhotoRepository {
     required String photoId,
     required String coachId,
   }) async {
-    try {
-      await _photosCollection(userId).doc(photoId).update({
-        'isSharedWithCoach': true,
-        'sharedWithCoachId': coachId,
-        'sharedAt': DateTime.now().toIso8601String(),
-        'updatedAt': DateTime.now().toIso8601String(),
-      });
+    final result = await handleFirebaseOperation<ProgressPhoto>(
+      () async {
+        await _photosCollection(userId).doc(photoId).update({
+          'isSharedWithCoach': true,
+          'sharedWithCoachId': coachId,
+          'sharedAt': DateTime.now().toIso8601String(),
+          'updatedAt': DateTime.now().toIso8601String(),
+        });
 
-      return getPhoto(userId: userId, photoId: photoId);
-    } on FirebaseException catch (e) {
-      return left(DatabaseFailure(e.message ?? 'Database error'));
-    } catch (e) {
-      return left(UnknownFailure(e.toString(), error: e));
-    }
+        // Get updated photo
+        final getResult = await getPhoto(userId: userId, photoId: photoId);
+        return getResult.fold(
+          (failure) => throw base.ServerFailure(failure.toString()),
+          (photo) => photo,
+        );
+      },
+      operationName: 'shareWithCoach',
+    );
+
+    return result.fold(
+      (failure) => left(_mapToPhotoFailure(failure)),
+      (photo) => right(photo),
+    );
   }
 
   @override
@@ -506,20 +588,29 @@ class FirebasePhotoRepository implements ProgressPhotoRepository {
     required String userId,
     required String photoId,
   }) async {
-    try {
-      await _photosCollection(userId).doc(photoId).update({
-        'isSharedWithCoach': false,
-        'sharedWithCoachId': null,
-        'sharedAt': null,
-        'updatedAt': DateTime.now().toIso8601String(),
-      });
+    final result = await handleFirebaseOperation<ProgressPhoto>(
+      () async {
+        await _photosCollection(userId).doc(photoId).update({
+          'isSharedWithCoach': false,
+          'sharedWithCoachId': null,
+          'sharedAt': null,
+          'updatedAt': DateTime.now().toIso8601String(),
+        });
 
-      return getPhoto(userId: userId, photoId: photoId);
-    } on FirebaseException catch (e) {
-      return left(DatabaseFailure(e.message ?? 'Database error'));
-    } catch (e) {
-      return left(UnknownFailure(e.toString(), error: e));
-    }
+        // Get updated photo
+        final getResult = await getPhoto(userId: userId, photoId: photoId);
+        return getResult.fold(
+          (failure) => throw base.ServerFailure(failure.toString()),
+          (photo) => photo,
+        );
+      },
+      operationName: 'revokeCoachSharing',
+    );
+
+    return result.fold(
+      (failure) => left(_mapToPhotoFailure(failure)),
+      (photo) => right(photo),
+    );
   }
 
   @override
@@ -528,55 +619,55 @@ class FirebasePhotoRepository implements ProgressPhotoRepository {
     required String coachId,
     required String athleteId,
   }) async {
-    try {
-      final snapshot = await _photosCollection(athleteId)
-          .where('isSharedWithCoach', isEqualTo: true)
-          .where('sharedWithCoachId', isEqualTo: coachId)
-          .where('isDeleted', isEqualTo: false)
-          .orderBy('takenAt', descending: true)
-          .get();
+    final result = await handleFirebaseOperation<List<ProgressPhoto>>(
+      () async {
+        final snapshot = await _photosCollection(athleteId)
+            .where('isSharedWithCoach', isEqualTo: true)
+            .where('sharedWithCoachId', isEqualTo: coachId)
+            .where('isDeleted', isEqualTo: false)
+            .orderBy('takenAt', descending: true)
+            .get();
 
-      final photos = snapshot.docs
-          .map((doc) => ProgressPhoto.fromJson(doc.data()))
-          .toList();
+        return snapshot.docs
+            .map((doc) => ProgressPhoto.fromJson(doc.data()))
+            .toList();
+      },
+      operationName: 'getSharedPhotosForCoach',
+    );
 
-      return right(photos);
-    } on FirebaseException catch (e) {
-      return left(DatabaseFailure(e.message ?? 'Database error'));
-    } catch (e) {
-      return left(UnknownFailure(e.toString(), error: e));
-    }
+    return result.fold(
+      (failure) => left(_mapToPhotoFailure(failure)),
+      (photos) => right(photos),
+    );
   }
 
   @override
   Future<Either<PhotoRepositoryFailure, PhotoStorageStats>> getStorageStats({
     required String userId,
   }) async {
-    try {
-      final photosResult = await getPhotos(userId: userId);
+    // getPhotos already uses handleFirebaseOperation, so we just need
+    // to handle the stats calculation
+    final photosResult = await getPhotos(userId: userId);
 
-      return photosResult.fold(
-        (failure) => left(failure),
-        (photos) {
-          int totalBytes = 0;
-          int thumbnailBytes = 0;
+    return photosResult.fold(
+      (failure) => left(failure),
+      (photos) {
+        int totalBytes = 0;
+        int thumbnailBytes = 0;
 
-          for (final photo in photos) {
-            totalBytes += photo.fileSizeBytes;
-            // Estimate thumbnail size as ~10% of full photo
-            thumbnailBytes += (photo.fileSizeBytes * 0.1).round();
-          }
+        for (final photo in photos) {
+          totalBytes += photo.fileSizeBytes;
+          // Estimate thumbnail size as ~10% of full photo
+          thumbnailBytes += (photo.fileSizeBytes * 0.1).round();
+        }
 
-          return right(PhotoStorageStats(
-            totalPhotos: photos.length,
-            totalBytes: totalBytes + thumbnailBytes,
-            thumbnailBytes: thumbnailBytes,
-            fullPhotoBytes: totalBytes,
-          ));
-        },
-      );
-    } catch (e) {
-      return left(UnknownFailure(e.toString(), error: e));
-    }
+        return right(PhotoStorageStats(
+          totalPhotos: photos.length,
+          totalBytes: totalBytes + thumbnailBytes,
+          thumbnailBytes: thumbnailBytes,
+          fullPhotoBytes: totalBytes,
+        ));
+      },
+    );
   }
 }

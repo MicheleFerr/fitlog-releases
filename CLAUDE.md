@@ -70,6 +70,21 @@ lib/features/{name}/
 
 ## ⚡ PERFORMANCE RULES (MANDATORY)
 
+### 🤖 CLAUDE - AUTOMATIC CHECK BEFORE CODING
+
+**BEFORE writing ANY provider/service/repository code, Claude MUST:**
+
+```bash
+# 1. Check performance patterns in CLAUDE.md (questo file)
+# 2. Use template from line 99-116 for services with resources
+# 3. After editing, run:
+.claude/scripts/performance-check.sh lib/features/<feature>/
+```
+
+**Git hook attivo**: Pre-commit blocca se trova anti-pattern.
+
+---
+
 ### Loop & I/O
 
 | Pattern | Sbagliato | Corretto |

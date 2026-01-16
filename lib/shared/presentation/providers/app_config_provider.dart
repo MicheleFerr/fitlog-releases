@@ -346,6 +346,44 @@ class AppConfigNotifier extends Notifier<AppConfig> {
     }
   }
 
+  Future<void> setVibrationsEnabled(bool enabled) async {
+    try {
+      await _ensureInitialized();
+      if (_isDisposed) return;
+
+      state = state.copyWith(vibrationsEnabled: enabled);
+      await _saveConfig();
+
+      if (kDebugMode) {
+        debugPrint('✅ [AppConfig] Vibrations enabled set to: $enabled');
+      }
+    } catch (e, stackTrace) {
+      if (kDebugMode) {
+        debugPrint('❌ [AppConfig] Error setting vibrations enabled: $e');
+        debugPrint('📍 Stack trace: $stackTrace');
+      }
+    }
+  }
+
+  Future<void> setKeepScreenAwakeDuringWorkout(bool enabled) async {
+    try {
+      await _ensureInitialized();
+      if (_isDisposed) return;
+
+      state = state.copyWith(keepScreenAwakeDuringWorkout: enabled);
+      await _saveConfig();
+
+      if (kDebugMode) {
+        debugPrint('✅ [AppConfig] Keep screen awake set to: $enabled');
+      }
+    } catch (e, stackTrace) {
+      if (kDebugMode) {
+        debugPrint('❌ [AppConfig] Error setting keep screen awake: $e');
+        debugPrint('📍 Stack trace: $stackTrace');
+      }
+    }
+  }
+
   // Workout settings
   Future<void> setDefaultRestTime(int seconds) async {
     try {
@@ -428,6 +466,49 @@ class AppConfigNotifier extends Notifier<AppConfig> {
     } catch (e, stackTrace) {
       if (kDebugMode) {
         debugPrint('❌ [AppConfig] Error setting beta mode: $e');
+        debugPrint('📍 Stack trace: $stackTrace');
+      }
+    }
+  }
+
+  /// 🌱 PERSONA-DRIVEN: Apply beginner-friendly defaults
+  ///
+  /// Called during onboarding completion when user selects "beginner" experience.
+  /// Based on persona analysis (Marco - principiante intimidito):
+  /// - Notes ON: Promemoria su come fare esercizi
+  /// - QuickIcons ON: Accesso rapido a info esercizio
+  /// - RPE OFF: Troppo complesso per principianti
+  /// - PlateCalculator ON: Non deve calcolare i dischi
+  Future<void> applyBeginnerDefaults() async {
+    try {
+      await _ensureInitialized();
+      if (_isDisposed) return;
+
+      state = state.copyWith(
+        // 📝 Notes: Help beginners understand exercises
+        showExerciseNotes: true,
+        // 🔘 Quick icons: Easy access to exercise info, warmup tips
+        showQuickInfoIcon: true,
+        showWarmupIcon: true,
+        showPreventionIcon: true,
+        // ❌ RPE: Too complex for beginners (cos'è RPE??)
+        rpeTracking: false,
+        autoAdjustWeightFromRpe: false,
+        autoAdjustRestFromRpe: false,
+        // ✅ Plate calculator: Essential for everyone
+        plateCalculator: true,
+        // 🔊 Sound feedback: Clear audio cues
+        soundEnabled: true,
+        vibrationsEnabled: true,
+      );
+      await _saveConfig();
+
+      if (kDebugMode) {
+        debugPrint('🌱 [AppConfig] Beginner defaults applied (persona: Marco)');
+      }
+    } catch (e, stackTrace) {
+      if (kDebugMode) {
+        debugPrint('❌ [AppConfig] Error applying beginner defaults: $e');
         debugPrint('📍 Stack trace: $stackTrace');
       }
     }
@@ -731,6 +812,16 @@ final useRirModeProvider = Provider<bool>((ref) {
 // Beta mode provider
 final betaModeEnabledProvider = Provider<bool>((ref) {
   return ref.watch(appConfigProvider.select((c) => c.betaModeEnabled ?? false));
+});
+
+// Vibrations enabled provider
+final vibrationsEnabledProvider = Provider<bool>((ref) {
+  return ref.watch(appConfigProvider.select((c) => c.vibrationsEnabled));
+});
+
+// Keep screen awake during workout provider
+final keepScreenAwakeProvider = Provider<bool>((ref) {
+  return ref.watch(appConfigProvider.select((c) => c.keepScreenAwakeDuringWorkout));
 });
 
 // Utility functions

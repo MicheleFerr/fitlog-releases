@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:gymbro_flutter_new/features/auth/presentation/providers/consolidated_user_provider.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/workout_template.dart'
     show WorkoutTemplate, ExerciseTemplate;
 import 'package:gymbro_flutter_new/features/workout/domain/entities/template_stats.dart';
@@ -955,8 +956,12 @@ class _WorkoutData {
 ///   error: (e, _) => Text('Error: $e'),
 /// );
 /// ```
+/// 🔧 FIX BUG #5: Watch currentUserProvider to invalidate on logout/switch
+/// Previously used FirebaseAuth.instance.currentUser directly which didn't react to auth changes
 final templateQuotaProvider = FutureProvider.autoDispose<TemplateQuotaInfo>((ref) async {
-  final user = FirebaseAuth.instance.currentUser;
+  // Watch auth stream - provider will invalidate when user changes
+  final userAsync = ref.watch(currentUserProvider);
+  final user = userAsync.value;
 
   if (user == null) {
     // Not authenticated - return default free quota

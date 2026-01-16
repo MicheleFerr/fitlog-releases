@@ -238,6 +238,7 @@ class UserProfileNotifier extends Notifier<AsyncValue<UserProfile?>> {
   @override
   AsyncValue<UserProfile?> build() {
     // Listen to the userProfileProvider stream
+    // ⚠️ NOTE: No debounce needed - this is simple state passthrough from stream to notifier
     ref.listen(userProfileProvider, (previous, next) {
       state = next;
     });

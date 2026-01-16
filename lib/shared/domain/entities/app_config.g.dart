@@ -73,13 +73,16 @@ class AppConfigAdapter extends TypeAdapter<AppConfig> {
           ? false
           : fields[49] as bool,
       simpleMode: fields[50] == null ? false : fields[50] as bool,
+      keepScreenAwakeDuringWorkout: fields[51] == null
+          ? true
+          : fields[51] as bool,
     );
   }
 
   @override
   void write(BinaryWriter writer, AppConfig obj) {
     writer
-      ..writeByte(50)
+      ..writeByte(51)
       ..writeByte(0)
       ..write(obj.languageCode)
       ..writeByte(1)
@@ -179,7 +182,9 @@ class AppConfigAdapter extends TypeAdapter<AppConfig> {
       ..writeByte(49)
       ..write(obj.skipExerciseDeleteConfirmation)
       ..writeByte(50)
-      ..write(obj.simpleMode);
+      ..write(obj.simpleMode)
+      ..writeByte(51)
+      ..write(obj.keepScreenAwakeDuringWorkout);
   }
 
   @override

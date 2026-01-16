@@ -16,8 +16,24 @@ import 'package:gymbro_flutter_new/features/exercise_database/data/models/exerci
 import 'package:gymbro_flutter_new/core/data/hive_box_manager_enhanced.dart';
 
 class ExerciseCacheManager {
-  ExerciseCacheManager([HiveBoxManagerEnhanced? boxManager])
-      : _boxManager = boxManager ?? HiveBoxManagerEnhanced();
+  /// Singleton pattern per evitare inizializzazioni multiple all'avvio
+  /// FIX: Ogni nuova istanza apriva 3 box Hive ridondanti (visto 4x all'avvio)
+  static ExerciseCacheManager? _instance;
+  static bool _staticInitialized = false;
+
+  factory ExerciseCacheManager([HiveBoxManagerEnhanced? boxManager]) {
+    _instance ??= ExerciseCacheManager._internal(boxManager ?? HiveBoxManagerEnhanced());
+    return _instance!;
+  }
+
+  ExerciseCacheManager._internal(this._boxManager);
+
+  /// Reset singleton (solo per test)
+  @visibleForTesting
+  static void resetInstance() {
+    _instance = null;
+    _staticInitialized = false;
+  }
 
   static const String _exercisesBoxName = 'exercises_cache';
   static const String _metadataBoxName = 'exercises_metadata';
@@ -28,7 +44,8 @@ class ExerciseCacheManager {
   /// v2: Added countingMode to all exercises (2025-12-14)
   /// v3: Major database update - 737 new exercises translated, total 2282 (2025-12-17)
   /// v4: Deep quality fix - 7 rounds of text corrections, 90% error reduction (2025-12-17)
-  static const int _cacheSchemaVersion = 4;
+  /// v5: Auto-detect countingMode for exercises_it.json (bodyweight→reps, isometric→time) (2025-12-29)
+  static const int _cacheSchemaVersion = 5;
 
   final HiveBoxManagerEnhanced _boxManager;
   late Box<Map> _exercisesBox;
@@ -36,10 +53,24 @@ class ExerciseCacheManager {
   late Box<Map> _syncQueueBox;
 
   bool _initialized = false;
+  /// ⚡ PERFORMANCE: Completer to prevent parallel init race condition (was causing 4x init)
+  static Completer<void>? _initCompleter;
 
   /// Inizializza le Hive boxes
+  /// FIX: Usa flag statico per prevenire inizializzazioni multiple anche con istanze diverse
+  /// FIX2: Completer previene race condition quando initialize() è chiamato in parallelo
   Future<void> initialize() async {
-    if (_initialized) return;
+    // Check globale statico - previene init da qualsiasi istanza
+    if (_staticInitialized && _initialized) return;
+
+    // ⚡ RACE CONDITION FIX: Se init è già in corso, aspetta che finisca
+    if (_initCompleter != null && !_initCompleter!.isCompleted) {
+      await _initCompleter!.future;
+      _initialized = true; // Set instance flag after waiting
+      return;
+    }
+
+    _initCompleter = Completer<void>();
 
     try {
       _exercisesBox = await _boxManager.openBox<Map>(_exercisesBoxName);
@@ -50,12 +81,17 @@ class ExerciseCacheManager {
       await _checkAndMigrateSchema();
 
       _initialized = true;
+      _staticInitialized = true;
       debugPrint('✅ ExerciseCacheManager initialized');
 
       // Log statistiche cache
       await _logCacheStats();
+
+      _initCompleter!.complete();
     } catch (e) {
       debugPrint('❌ Failed to initialize ExerciseCacheManager: $e');
+      _initCompleter!.completeError(e);
+      _initCompleter = null; // Reset so it can be retried
       rethrow;
     }
   }

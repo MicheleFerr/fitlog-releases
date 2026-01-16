@@ -46,6 +46,7 @@
 		D15AD7FE2E4B91F00029B4D4 /* AudioSessionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = D15AD7F52E4B91F00029B4D4 /* AudioSessionManager.swift */; };
 		D15AD7FF2E4B91F00029B4D4 /* FeatureFlags.swift in Sources */ = {isa = PBXBuildFile; fileRef = D15AD7F32E4B91F00029B4D4 /* FeatureFlags.swift */; };
 		D17D7A432E7727F300480A54 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = D17D7A422E7727F300480A54 /* GoogleService-Info.plist */; };
+		D1PRIVACY022E0000000000002 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = D1PRIVACY012E0000000000001 /* PrivacyInfo.xcprivacy */; };
 		D17D7A452E772F5400480A54 /* AdSupport.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D17D7A442E772F5400480A54 /* AdSupport.framework */; };
 		D17D7A472E772F5E00480A54 /* AppTrackingTransparency.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D17D7A462E772F5E00480A54 /* AppTrackingTransparency.framework */; };
 		D17D7A6D2E77760100480A54 /* AdSupportManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = D17D7A6A2E77760100480A54 /* AdSupportManager.swift */; };
@@ -183,6 +184,7 @@
 		D15AD7F92E4B91F00029B4D4 /* PermissionManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PermissionManager.swift; sourceTree = "<group>"; };
 		D16E13262E3B178300E651DB /* Runner.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Runner.entitlements; sourceTree = "<group>"; };
 		D16E13272E3B179800E651DB /* GymBroTimerWidgetExtension.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = GymBroTimerWidgetExtension.entitlements; sourceTree = "<group>"; };
+		D1PRIVACY012E0000000000001 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
 		D17D7A422E7727F300480A54 /* GoogleService-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		D17D7A442E772F5400480A54 /* AdSupport.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AdSupport.framework; path = System/Library/Frameworks/AdSupport.framework; sourceTree = SDKROOT; };
 		D17D7A462E772F5E00480A54 /* AppTrackingTransparency.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppTrackingTransparency.framework; path = System/Library/Frameworks/AppTrackingTransparency.framework; sourceTree = SDKROOT; };
@@ -365,6 +367,7 @@
 			children = (
 				D17D7A422E7727F300480A54 /* GoogleService-Info.plist */,
 				D16E13262E3B178300E651DB /* Runner.entitlements */,
+				D1PRIVACY012E0000000000001 /* PrivacyInfo.xcprivacy */,
 				D10AC5C62E4B9CAF009D8E78 /* timer_complete.caf */,
 				D1F551462E4CE7B900DA47B4 /* LightWeight.caf */,
 				D1F551472E4CE7B900DA47B4 /* LightWeight.wav */,
@@ -622,6 +625,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				D17D7A432E7727F300480A54 /* GoogleService-Info.plist in Resources */,
+				D1PRIVACY022E0000000000002 /* PrivacyInfo.xcprivacy in Resources */,
 				97C147011CF9000F007C117D /* LaunchScreen.storyboard in Resources */,
 				3B3967161E833CAA004F5970 /* AppFrameworkInfo.plist in Resources */,
 				97C146FE1CF9000F007C117D /* Assets.xcassets in Resources */,

@@ -32,6 +32,7 @@ final localNotificationDatasourceProvider = Provider<LocalNotificationDatasource
 
 /// Provider for the notification repository
 final notificationRepositoryProvider = Provider<NotificationRepository>((ref) {
+  ref.keepAlive(); // FIX: previene ricreazione repository
   final localDatasource = ref.watch(localNotificationDatasourceProvider);
   final storageDatasource = ref.watch(notificationStorageDatasourceProvider);
 
@@ -43,6 +44,7 @@ final notificationRepositoryProvider = Provider<NotificationRepository>((ref) {
 
 /// Provider for the notification scheduler
 final notificationSchedulerProvider = Provider<NotificationScheduler>((ref) {
+  ref.keepAlive(); // FIX: previene ricreazione scheduler con stato
   final repository = ref.watch(notificationRepositoryProvider);
   final messagePool = ref.watch(notificationMessagePoolProvider);
 

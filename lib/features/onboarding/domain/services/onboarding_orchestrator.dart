@@ -36,7 +36,7 @@ enum TourPriority {
 enum TourType {
   homeTour,
   workoutTutorial,
-  exerciseSearchTutorial,
+  // exerciseSearchTutorial - REMOVED: search UI is standard pattern
   analyticsTour,
   timerTour,
   templateTutorial,
@@ -99,7 +99,7 @@ class TourConfig {
       priority: TourPriority.important,
       prefsKey: 'home_tour_completed',
       phase: LearningPhase.core,
-      stepCount: 5, // Reduced from 10 (P0-1)
+      stepCount: 2, // UX 2025: Only XP bar + template suggestions (others are intuitive)
       cooldownMinutes: 0, // Show immediately
     ),
     TourType.workoutTutorial: TourConfig(
@@ -112,20 +112,14 @@ class TourConfig {
     ),
 
     // DISCOVERY PHASE: Day 1-3 (show as user discovers features)
-    TourType.exerciseSearchTutorial: TourConfig(
-      type: TourType.exerciseSearchTutorial,
-      priority: TourPriority.important,
-      prefsKey: 'exercise_search_tutorial_completed',
-      phase: LearningPhase.discovery,
-      stepCount: 4,
-      cooldownMinutes: 30, // Wait 30min between tours
-    ),
+    // NOTE: Exercise Search Tutorial REMOVED - search UI is standard pattern (UX analysis 2025)
+    // Users intuitively understand searchbars and filters
     TourType.timerTour: TourConfig(
       type: TourType.timerTour,
       priority: TourPriority.useful,
       prefsKey: 'timer_tour_completed',
       phase: LearningPhase.discovery,
-      stepCount: 3,
+      stepCount: 1, // Reduced: only auto-start explanation needed
       cooldownMinutes: 60,
     ),
     TourType.templateTutorial: TourConfig(
@@ -161,7 +155,7 @@ class TourConfig {
     // CORE PHASE: HealthKit after first workout (P1-2 fix)
     TourType.healthIntegrationTour: TourConfig(
       type: TourType.healthIntegrationTour,
-      priority: TourPriority.high,
+      priority: TourPriority.important,
       prefsKey: 'health_integration_tour_completed',
       phase: LearningPhase.core,
       minWorkoutsRequired: 1,  // Shows after first workout

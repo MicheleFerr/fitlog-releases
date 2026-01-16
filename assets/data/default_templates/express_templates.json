@@ -1,0 +1,118 @@
+{
+  "category": "express",
+  "difficulty": "all",
+  "description": "Allenamenti veloci 20-25 minuti per chi ha poco tempo",
+  "templates": [
+    {
+      "id": "default_express_full_body",
+      "name": "Express Full Body",
+      "description": "Allenamento completo in 20 minuti. Massima efficienza per chi ha poco tempo.",
+      "difficulty": "beginner",
+      "category": "express",
+      "estimatedDuration": 20,
+      "exercises": [
+        {
+          "exerciseId": "barbell_squat",
+          "sets": [
+            {"type": "normal", "targetReps": 10, "restSeconds": 60},
+            {"type": "normal", "targetReps": 10, "restSeconds": 60},
+            {"type": "normal", "targetReps": 10, "restSeconds": 90}
+          ],
+          "notes": "Composto principale. Peso moderato, tecnica pulita."
+        },
+        {
+          "exerciseId": "barbell_bench_press",
+          "sets": [
+            {"type": "normal", "targetReps": 10, "restSeconds": 60},
+            {"type": "normal", "targetReps": 10, "restSeconds": 60},
+            {"type": "normal", "targetReps": 10, "restSeconds": 90}
+          ],
+          "notes": "Push principale. Full ROM."
+        },
+        {
+          "exerciseId": "barbell_bent_over_row",
+          "sets": [
+            {"type": "normal", "targetReps": 10, "restSeconds": 60},
+            {"type": "normal", "targetReps": 10, "restSeconds": 60},
+            {"type": "normal", "targetReps": 10, "restSeconds": 90}
+          ],
+          "notes": "Pull principale. Bilancia il push."
+        }
+      ]
+    },
+    {
+      "id": "default_express_upper",
+      "name": "Express Upper",
+      "description": "Upper body in 20 minuti. Solo esercizi essenziali.",
+      "difficulty": "beginner",
+      "category": "express",
+      "estimatedDuration": 20,
+      "exercises": [
+        {
+          "exerciseId": "dumbbell_bench_press",
+          "sets": [
+            {"type": "normal", "targetReps": 10, "restSeconds": 60},
+            {"type": "normal", "targetReps": 10, "restSeconds": 60},
+            {"type": "normal", "targetReps": 10, "restSeconds": 90}
+          ],
+          "notes": "Push orizzontale. Gomiti a 45 gradi."
+        },
+        {
+          "exerciseId": "one_arm_dumbbell_row",
+          "sets": [
+            {"type": "normal", "targetReps": 10, "restSeconds": 45},
+            {"type": "normal", "targetReps": 10, "restSeconds": 45},
+            {"type": "normal", "targetReps": 10, "restSeconds": 60}
+          ],
+          "notes": "Pull orizzontale. 10 per braccio senza pausa."
+        },
+        {
+          "exerciseId": "dumbbell_shoulder_press",
+          "sets": [
+            {"type": "normal", "targetReps": 10, "restSeconds": 60},
+            {"type": "normal", "targetReps": 10, "restSeconds": 60},
+            {"type": "normal", "targetReps": 10, "restSeconds": 90}
+          ],
+          "notes": "Push verticale. Completa l'upper body."
+        }
+      ]
+    },
+    {
+      "id": "default_express_lower",
+      "name": "Express Lower",
+      "description": "Gambe in 20 minuti. Massimo risultato, minimo tempo.",
+      "difficulty": "beginner",
+      "category": "express",
+      "estimatedDuration": 20,
+      "exercises": [
+        {
+          "exerciseId": "dumbbell_goblet_squat",
+          "sets": [
+            {"type": "normal", "targetReps": 12, "restSeconds": 60},
+            {"type": "normal", "targetReps": 12, "restSeconds": 60},
+            {"type": "normal", "targetReps": 12, "restSeconds": 90}
+          ],
+          "notes": "Quadricipiti e glutei. Profondita completa."
+        },
+        {
+          "exerciseId": "dumbbell_romanian_deadlift",
+          "sets": [
+            {"type": "normal", "targetReps": 12, "restSeconds": 60},
+            {"type": "normal", "targetReps": 12, "restSeconds": 60},
+            {"type": "normal", "targetReps": 12, "restSeconds": 90}
+          ],
+          "notes": "Ischiocrurali e glutei. Schiena dritta."
+        },
+        {
+          "exerciseId": "dumbbell_lunge",
+          "sets": [
+            {"type": "normal", "targetReps": 10, "restSeconds": 60},
+            {"type": "normal", "targetReps": 10, "restSeconds": 60},
+            {"type": "normal", "targetReps": 10, "restSeconds": 90}
+          ],
+          "notes": "10 per gamba. Stabilita e coordinazione."
+        }
+      ]
+    }
+  ]
+}

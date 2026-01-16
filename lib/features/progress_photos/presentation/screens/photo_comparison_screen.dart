@@ -73,7 +73,7 @@ class _PhotoComparisonScreenState extends ConsumerState<PhotoComparisonScreen> {
               tooltip: 'Filter by pose',
               onSelected: (pose) => setState(() => _filterPose = pose),
               itemBuilder: (context) => [
-                const PopupMenuItem(value: null, child: Text('All poses')),
+                PopupMenuItem(value: null, child: Text(context.l10n.allPoses)),
                 const PopupMenuDivider(),
                 ...PhotoPose.values.map(
                   (pose) => PopupMenuItem(value: pose, child: Text(pose.label)),
@@ -143,7 +143,7 @@ class _PhotoComparisonScreenState extends ConsumerState<PhotoComparisonScreen> {
             FilledButton.icon(
               onPressed: () => _startSelection(isSelectingBefore: true),
               icon: const Icon(AppIcons.add),
-              label: const Text('Select Before Photo'),
+              label: Text(context.l10n.selectBeforePhoto),
             ),
           ],
         ),
@@ -528,7 +528,7 @@ class _PhotoComparisonScreenState extends ConsumerState<PhotoComparisonScreen> {
                   const SizedBox(height: 8),
                   TextButton(
                     onPressed: () => setState(() => _filterPose = null),
-                    child: const Text('Clear filter'),
+                    child: Text(context.l10n.clearFilter),
                   ),
                 ],
               ],
@@ -558,7 +558,7 @@ class _PhotoComparisonScreenState extends ConsumerState<PhotoComparisonScreen> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          'Select ${_isSelectingBefore ? "Before" : "After"} Photo',
+                          _isSelectingBefore ? context.l10n.selectBeforePhoto : context.l10n.selectAfterPhoto,
                           style: context.textTheme.titleSmall?.copyWith(
                             fontWeight: FontWeight.bold,
                             color: _isSelectingBefore
@@ -567,7 +567,7 @@ class _PhotoComparisonScreenState extends ConsumerState<PhotoComparisonScreen> {
                           ),
                         ),
                         Text(
-                          'Tap a photo to select it',
+                          context.l10n.tapToSelectPhoto,
                           style: context.textTheme.bodySmall?.copyWith(
                             color: (_isSelectingBefore
                                     ? context.colors.onPrimaryContainer
@@ -580,7 +580,7 @@ class _PhotoComparisonScreenState extends ConsumerState<PhotoComparisonScreen> {
                   ),
                   TextButton(
                     onPressed: () => setState(() => _selectionMode = false),
-                    child: const Text('Cancel'),
+                    child: Text(context.l10n.cancel),
                   ),
                 ],
               ),

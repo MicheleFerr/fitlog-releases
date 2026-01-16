@@ -69,6 +69,69 @@ class WorkoutAnalyticsRepositoryImpl
     _syncProgressCallback = callback;
   }
 
+  /// ⚡ HELPER: Normalize cached workout data for Workout.fromJson()
+  /// Converts DateTime objects to ISO strings (Hive stores DateTime, Workout.fromJson expects String)
+  Map<String, dynamic> _normalizeWorkoutData(Map<String, dynamic> data) {
+    final normalized = Map<String, dynamic>.from(data);
+
+    // Date fields that Workout.fromJson expects as String
+    for (final key in ['createdAt', 'updatedAt', 'startTime', 'endTime', 'preloadExpiry']) {
+      final value = normalized[key];
+      if (value is DateTime) {
+        normalized[key] = value.toIso8601String();
+      } else if (value is Timestamp) {
+        normalized[key] = value.toDate().toIso8601String();
+      }
+    }
+
+    // Also normalize exercises if present
+    if (normalized['exercises'] is List) {
+      normalized['exercises'] = (normalized['exercises'] as List).map((e) {
+        if (e is Map) {
+          return _normalizeExerciseData(Map<String, dynamic>.from(e));
+        }
+        return e;
+      }).toList();
+    }
+
+    return normalized;
+  }
+
+  /// ⚡ HELPER: Normalize exercise data
+  Map<String, dynamic> _normalizeExerciseData(Map<String, dynamic> data) {
+    final normalized = Map<String, dynamic>.from(data);
+
+    for (final key in ['createdAt', 'updatedAt', 'completedAt']) {
+      final value = normalized[key];
+      if (value is DateTime) {
+        normalized[key] = value.toIso8601String();
+      } else if (value is Timestamp) {
+        normalized[key] = value.toDate().toIso8601String();
+      }
+    }
+
+    // Normalize sets if present
+    if (normalized['sets'] is List) {
+      normalized['sets'] = (normalized['sets'] as List).map((s) {
+        if (s is Map) {
+          final setData = Map<String, dynamic>.from(s);
+          for (final key in ['completedAt', 'setStartedAt']) {
+            final value = setData[key];
+            if (value is DateTime) {
+              setData[key] = value.toIso8601String();
+            } else if (value is Timestamp) {
+              setData[key] = value.toDate().toIso8601String();
+            }
+          }
+          return setData;
+        }
+        return s;
+      }).toList();
+    }
+
+    return normalized;
+  }
+
   @override
   Future<List<Workout>> getHistoricalWorkouts(
     String userId, {
@@ -82,9 +145,12 @@ class WorkoutAnalyticsRepositoryImpl
         limit: limit,
         since: since,
       );
+      // ⚡ PERFORMANCE: Use .map() instead of .cast() for Hive nested maps
       final cached = await _cacheService.get<List<Map<String, dynamic>>>(
         cacheKey,
-        (json) => (json['workouts'] as List).cast<Map<String, dynamic>>(),
+        (json) => (json['workouts'] as List)
+            .map((e) => Map<String, dynamic>.from(e as Map))
+            .toList(),
       );
 
       if (cached != null) {
@@ -94,10 +160,11 @@ class WorkoutAnalyticsRepositoryImpl
           );
         }
         // Convert cached data to Workout entities
+        // ⚡ Use _normalizeWorkoutData to convert DateTime→String for Workout.fromJson
         return cached
             .map((workoutMap) {
               try {
-                return Workout.fromJson(workoutMap);
+                return Workout.fromJson(_normalizeWorkoutData(workoutMap));
               } catch (e) {
                 if (kDebugMode) {
                   debugPrint(
@@ -254,14 +321,42 @@ class WorkoutAnalyticsRepositoryImpl
     });
   }
 
+  /// Cached local workouts to prevent double reading from Hive
+  /// Key: userId, Value: (timestamp, workouts)
+  final Map<String, (DateTime, List<WorkoutModel>)> _localWorkoutsCache = {};
+
+  /// Cache TTL for local workouts (30 seconds - just to prevent double reads in same flow)
+  static const _localCacheTTL = Duration(seconds: 30);
+
+  /// Get all local workouts with in-memory caching
+  /// This prevents double Hive reads in the same getHistoricalWorkouts() call
+  Future<List<WorkoutModel>> _getCachedLocalWorkouts(String userId) async {
+    // Check in-memory cache
+    final cached = _localWorkoutsCache[userId];
+    if (cached != null) {
+      final (timestamp, workouts) = cached;
+      if (DateTime.now().difference(timestamp) < _localCacheTTL) {
+        return workouts;
+      }
+    }
+
+    // Read from Hive once
+    final workoutModels = await _hiveWorkoutDataSource.getWorkoutsForAnalytics(
+      userId,
+      limit: null, // Get all
+    );
+
+    // Cache for subsequent calls
+    _localWorkoutsCache[userId] = (DateTime.now(), workoutModels);
+
+    return workoutModels;
+  }
+
   /// Get count of workouts in local Hive storage
+  /// Uses in-memory cache to prevent double reads
   Future<int> _getHiveWorkoutCount(String userId) async {
     try {
-      final workoutModels = await _hiveWorkoutDataSource
-          .getWorkoutsForAnalytics(
-            userId,
-            limit: null, // Get all to count
-          );
+      final workoutModels = await _getCachedLocalWorkouts(userId);
 
       // Count only completed workouts
       final completedCount = workoutModels
@@ -401,6 +496,7 @@ class WorkoutAnalyticsRepositoryImpl
   }
 
   /// Get workouts from local Hive storage via HiveWorkoutDataSource
+  /// Uses in-memory cache to prevent double reads in the same flow
   Future<List<Workout>> _getLocalWorkouts(
     String userId, {
     int? limit,
@@ -409,27 +505,25 @@ class WorkoutAnalyticsRepositoryImpl
     try {
       if (kDebugMode) {
         debugPrint(
-          '📊 [Analytics] Attempting to get local workouts via HiveWorkoutDataSource for user: $userId',
+          '📊 [Analytics] Getting local workouts for user: $userId (using cache)',
         );
       }
 
-      // ✅ HiveBoxManagerEnhanced handles initialization automatically
+      // 🚀 PERFORMANCE: Use cached workouts to prevent double Hive reads
+      final workoutModels = await _getCachedLocalWorkouts(userId);
 
-      // 🔧 CRITICAL FIX: Use HiveWorkoutDataSource directly for consistency
-      final workoutModels = await _hiveWorkoutDataSource
-          .getWorkoutsForAnalytics(userId, limit: limit, since: since);
-
-      if (kDebugMode) {
-        debugPrint(
-          '📊 [Analytics] Retrieved ${workoutModels.length} workout models from HiveWorkoutDataSource',
-        );
-      }
-
-      // Convert to domain entities and filter by completion status
-      final workouts = workoutModels
+      // Convert to domain entities and filter by completion status and date
+      var workouts = workoutModels
           .map((model) => model.toDomain())
           .where((workout) => workout.status == WorkoutStatus.completed)
           .toList();
+
+      // Apply date filter if specified
+      if (since != null) {
+        workouts = workouts
+            .where((w) => (w.endTime ?? w.updatedAt).isAfter(since))
+            .toList();
+      }
 
       if (kDebugMode) {
         debugPrint(
@@ -443,56 +537,24 @@ class WorkoutAnalyticsRepositoryImpl
             (b.endTime ?? b.updatedAt).compareTo(a.endTime ?? a.updatedAt),
       );
 
+      // Apply limit if specified
+      if (limit != null && workouts.length > limit) {
+        workouts = workouts.take(limit).toList();
+      }
+
       if (kDebugMode) {
         debugPrint(
-          '✅ [Analytics] Returning ${workouts.length} local workouts via HiveWorkoutDataSource',
+          '✅ [Analytics] Returning ${workouts.length} local workouts',
         );
       }
       return workouts;
     } catch (e, stackTrace) {
       if (kDebugMode) {
         debugPrint(
-          '❌ [Analytics] CRITICAL ERROR fetching local workouts via HiveWorkoutDataSource: $e',
+          '❌ [Analytics] Error fetching local workouts: $e',
         );
         debugPrint('📍 [Analytics] Stack trace: $stackTrace');
       }
-
-      // Check if it's a Hive box error
-      if (e.toString().contains('Box not found') ||
-          e.toString().contains('HiveError')) {
-        if (kDebugMode) {
-          debugPrint('🔧 [Analytics] Hive box error detected. Retrying...');
-        }
-        try {
-          // ✅ HiveBoxManagerEnhanced handles box lifecycle, just retry
-
-          // Retry operation
-          final workoutModels = await _hiveWorkoutDataSource
-              .getWorkoutsForAnalytics(userId, limit: limit, since: since);
-
-          final workouts = workoutModels
-              .map((model) => model.toDomain())
-              .where((workout) => workout.status == WorkoutStatus.completed)
-              .toList();
-
-          workouts.sort(
-            (a, b) =>
-                (b.endTime ?? b.updatedAt).compareTo(a.endTime ?? a.updatedAt),
-          );
-
-          if (kDebugMode) {
-            debugPrint(
-              '✅ [Analytics] Retry successful! Returning ${workouts.length} workouts',
-            );
-          }
-          return workouts;
-        } catch (retryError) {
-          if (kDebugMode) {
-            debugPrint('❌ [Analytics] Retry failed: $retryError');
-          }
-        }
-      }
-
       return [];
     }
   }
@@ -840,6 +902,9 @@ class WorkoutAnalyticsRepositoryImpl
       _updateControllers.values.map((controller) => controller.close()),
     );
     _updateControllers.clear();
+
+    // Clear in-memory workout cache
+    _localWorkoutsCache.clear();
 
     // Print final cache statistics
     if (kDebugMode) {

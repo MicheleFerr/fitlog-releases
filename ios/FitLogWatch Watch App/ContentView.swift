@@ -1153,6 +1153,8 @@ struct ExerciseControlView: View {
                 setsCompleted: connectivity.setsCompletedInExercise,
                 // ✅ FIX: Use actual reps of last completed set (not target reps)
                 initialReps: connectivity.lastCompletedReps > 0 ? connectivity.lastCompletedReps : connectivity.targetReps,
+                // ✅ NEW: Pass actual reps for each set (for navigation between sets)
+                setsActualReps: connectivity.allSetsTargets.map { $0.actualReps },
                 locale: connectivity.appLocale,
                 onConfirm: { setIndex, newReps in
                     showingEditReps = false
@@ -1907,7 +1909,8 @@ struct FormCuesSheetView: View {
 
 struct EditRepsSheetView: View {
     let setsCompleted: Int           // Total sets completed so far
-    let initialReps: Int             // Target reps (starting value)
+    let initialReps: Int             // Target reps (starting value for last set)
+    let setsActualReps: [Int?]       // ✅ NEW: Actual reps for each completed set (nil = use target)
     let locale: String
     let onConfirm: (Int, Int) -> Void  // (setIndex, newReps) - 0-indexed
     let onCancel: () -> Void
@@ -1925,16 +1928,30 @@ struct EditRepsSheetView: View {
     private var cancelText: String { isItalian ? "Annulla" : "Cancel" }
     private var repsText: String { isItalian ? "rip" : "reps" }
 
-    init(setsCompleted: Int, initialReps: Int, locale: String, onConfirm: @escaping (Int, Int) -> Void, onCancel: @escaping () -> Void) {
+    /// Get actual reps for a specific set index (0-indexed)
+    private func repsForSet(_ index: Int) -> Int {
+        // If we have actualReps for this set, use it
+        if index < setsActualReps.count, let actualReps = setsActualReps[index] {
+            return actualReps
+        }
+        // Fallback to initialReps (target)
+        return initialReps
+    }
+
+    init(setsCompleted: Int, initialReps: Int, setsActualReps: [Int?], locale: String, onConfirm: @escaping (Int, Int) -> Void, onCancel: @escaping () -> Void) {
         self.setsCompleted = max(1, setsCompleted)
         self.initialReps = initialReps
+        self.setsActualReps = setsActualReps
         self.locale = locale
         self.onConfirm = onConfirm
         self.onCancel = onCancel
         // Default to editing the LAST completed set (most recent)
-        _selectedSetIndex = State(initialValue: max(0, setsCompleted - 1))
-        _editedReps = State(initialValue: max(1, initialReps))
-        _crownValue = State(initialValue: Double(max(1, initialReps)))
+        let lastSetIndex = max(0, setsCompleted - 1)
+        _selectedSetIndex = State(initialValue: lastSetIndex)
+        // ✅ FIX: Use actual reps of the last set (if available)
+        let lastSetReps = lastSetIndex < setsActualReps.count ? (setsActualReps[lastSetIndex] ?? initialReps) : initialReps
+        _editedReps = State(initialValue: max(1, lastSetReps))
+        _crownValue = State(initialValue: Double(max(1, lastSetReps)))
     }
 
     var body: some View {
@@ -2043,6 +2060,12 @@ struct EditRepsSheetView: View {
             if newReps != editedReps && newReps >= 1 && newReps <= 99 {
                 editedReps = newReps
             }
+        }
+        // ✅ NEW: Update reps when user changes selected set
+        .onChange(of: selectedSetIndex) { _, newIndex in
+            let newReps = repsForSet(newIndex)
+            editedReps = max(1, newReps)
+            crownValue = Double(editedReps)
         }
         .onAppear {
             isFocused = true

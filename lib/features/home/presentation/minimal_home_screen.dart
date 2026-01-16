@@ -5,9 +5,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:gymbro_flutter_new/features/home/presentation/widgets/start_workout_card.dart';
 import 'package:gymbro_flutter_new/features/home/presentation/widgets/personalized_content_card.dart';
 import 'package:gymbro_flutter_new/features/home/presentation/widgets/xp_progress_bar.dart';
-import 'package:gymbro_flutter_new/features/home/presentation/widgets/ai_coach_card.dart';
 import 'package:gymbro_flutter_new/features/home/presentation/widgets/exercise_wiki_card_compact.dart';
-import 'package:gymbro_flutter_new/features/home/presentation/providers/ai_coach_provider.dart';
 import 'package:gymbro_flutter_new/features/home/presentation/providers/motivational_quote_provider.dart';
 import 'package:gymbro_flutter_new/features/auth/presentation/providers/admin_provider.dart';
 import 'package:gymbro_flutter_new/features/auth/presentation/providers/consolidated_user_provider.dart';
@@ -45,7 +43,6 @@ import 'package:gymbro_flutter_new/shared/presentation/providers/ghost_mode_prov
 /// - TemplateSuggestionCard: AI-powered workout recommendation
 /// - StartWorkoutCard: Hero CTA
 /// - PersonalizedContentCard: Access to templates + custom exercises
-/// - AICoachCard: AI insights (hidden if no data)
 /// - ExerciseWikiCardCompact: Exercise wiki contributions
 class MinimalHomeScreen extends ConsumerStatefulWidget {
   const MinimalHomeScreen({super.key});
@@ -257,31 +254,7 @@ class _MinimalHomeScreenState extends ConsumerState<MinimalHomeScreen> {
                 ),
                 const SizedBox(height: 24),
 
-                // 3. AI Coach Card - 🔧 PERF FIX: Isolated in Consumer
-                Consumer(
-                  builder: (context, ref, child) {
-                    final primaryAdviceAsync = ref.watch(primaryAIAdviceProvider);
-                    return primaryAdviceAsync.when(
-                      data: (advice) {
-                        if (advice != null) {
-                          return const Padding(
-                            padding: EdgeInsets.only(
-                              left: AppSpacing.md,
-                              right: AppSpacing.md,
-                              bottom: AppSpacing.xl,
-                            ),
-                            child: AICoachCard(),
-                          );
-                        }
-                        return const SizedBox.shrink();
-                      },
-                      loading: () => const SizedBox.shrink(),
-                      error: (_, __) => const SizedBox.shrink(),
-                    );
-                  },
-                ),
-
-                // 4. Exercise Wiki Card (Hidden in Ghost Mode - Community)
+                // 3. Exercise Wiki Card (Hidden in Ghost Mode - Community)
                 if (!ref.watch(shouldHideCommunityProvider)) ...[
                   const RepaintBoundary(
                     child: ExerciseWikiCardCompact(),

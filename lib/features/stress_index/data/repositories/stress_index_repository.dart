@@ -2,6 +2,8 @@
 ///
 /// Handles persistence of stress index results.
 /// Uses local-first storage with optional cloud sync.
+///
+/// Uses [FirebaseErrorMapperMixin] for standardized error handling.
 library;
 
 import 'dart:async';
@@ -12,6 +14,7 @@ import 'package:flutter/foundation.dart';
 import 'package:hive_ce_flutter/hive_flutter.dart';
 import 'package:gymbro_flutter_new/core/data/hive_box_manager_enhanced.dart';
 import 'package:gymbro_flutter_new/core/data/hive_box_names.dart';
+import 'package:gymbro_flutter_new/core/data/mixins/firebase_error_mapper_mixin.dart';
 import 'package:gymbro_flutter_new/features/stress_index/domain/entities/stress_index_result.dart';
 
 /// Repository interface for stress index data
@@ -41,7 +44,10 @@ abstract class StressIndexRepositoryInterface {
 /// Implementation of stress index repository
 ///
 /// Uses Hive for local storage with optional Firestore sync.
-class StressIndexRepository implements StressIndexRepositoryInterface {
+/// Uses [FirebaseErrorMapperMixin] for standardized error handling.
+class StressIndexRepository
+    with FirebaseErrorMapperMixin
+    implements StressIndexRepositoryInterface {
   StressIndexRepository({
     HiveBoxManagerEnhanced? boxManager,
     FirebaseFirestore? firestore,
@@ -254,34 +260,42 @@ class StressIndexRepository implements StressIndexRepositoryInterface {
   }
 
   /// Clear all stress index data from Firestore
+  ///
+  /// Uses [FirebaseErrorMapperMixin] for standardized error handling.
   Future<void> _clearCloudData() async {
     final userId = _auth.currentUser?.uid;
     if (userId == null) return;
 
-    try {
-      final collection = _firestore
-          .collection('users')
-          .doc(userId)
-          .collection(_collectionName);
+    final clearResult = await handleFirebaseVoidOperation(
+      () async {
+        final collection = _firestore
+            .collection('users')
+            .doc(userId)
+            .collection(_collectionName);
 
-      // Get all documents and delete them
-      final snapshot = await collection.get();
-      final batch = _firestore.batch();
+        // Get all documents and delete them
+        final snapshot = await collection.get();
+        final batch = _firestore.batch();
 
-      for (final doc in snapshot.docs) {
-        batch.delete(doc.reference);
-      }
+        for (final doc in snapshot.docs) {
+          batch.delete(doc.reference);
+        }
 
-      await batch.commit();
+        await batch.commit();
 
+        if (kDebugMode) {
+          debugPrint('[StressIndexRepository] Cleared ${snapshot.docs.length} entries from cloud');
+        }
+      },
+      operationName: 'clearCloudData',
+    );
+
+    // Log failure but don't throw (local clear succeeded)
+    clearResult.mapLeft((failure) {
       if (kDebugMode) {
-        debugPrint('[StressIndexRepository] Cleared ${snapshot.docs.length} entries from cloud');
+        debugPrint('[StressIndexRepository] Cloud clear failed: ${failure.message}');
       }
-    } catch (e) {
-      if (kDebugMode) {
-        debugPrint('[StressIndexRepository] Failed to clear cloud data: $e');
-      }
-    }
+    });
   }
 
   /// Emit update to recent stream
@@ -295,46 +309,64 @@ class StressIndexRepository implements StressIndexRepositoryInterface {
   }
 
   /// Sync result to Firestore
+  ///
+  /// Uses [FirebaseErrorMapperMixin] for standardized error handling.
   Future<void> _syncToCloud(StressIndexResult result) async {
     final userId = _auth.currentUser?.uid;
     if (userId == null) return;
 
-    try {
-      await _firestore
-          .collection('users')
-          .doc(userId)
-          .collection(_collectionName)
-          .doc(result.workoutId)
-          .set(result.toJson());
+    final syncResult = await handleFirebaseVoidOperation(
+      () async {
+        await _firestore
+            .collection('users')
+            .doc(userId)
+            .collection(_collectionName)
+            .doc(result.workoutId)
+            .set(result.toJson());
+      },
+      operationName: 'syncToCloud',
+    );
 
-      if (kDebugMode) {
-        debugPrint('[StressIndexRepository] Synced to cloud: ${result.workoutId}');
-      }
-    } catch (e) {
-      if (kDebugMode) {
-        debugPrint('[StressIndexRepository] Failed to sync to cloud: $e');
-      }
-      // Don't throw - local save succeeded
-    }
+    syncResult.fold(
+      (failure) {
+        // Don't throw - local save succeeded
+        if (kDebugMode) {
+          debugPrint('[StressIndexRepository] Sync failed: ${failure.message}');
+        }
+      },
+      (_) {
+        if (kDebugMode) {
+          debugPrint('[StressIndexRepository] Synced to cloud: ${result.workoutId}');
+        }
+      },
+    );
   }
 
   /// Delete from Firestore
+  ///
+  /// Uses [FirebaseErrorMapperMixin] for standardized error handling.
   Future<void> _deleteFromCloud(String workoutId) async {
     final userId = _auth.currentUser?.uid;
     if (userId == null) return;
 
-    try {
-      await _firestore
-          .collection('users')
-          .doc(userId)
-          .collection(_collectionName)
-          .doc(workoutId)
-          .delete();
-    } catch (e) {
+    final deleteResult = await handleFirebaseVoidOperation(
+      () async {
+        await _firestore
+            .collection('users')
+            .doc(userId)
+            .collection(_collectionName)
+            .doc(workoutId)
+            .delete();
+      },
+      operationName: 'deleteFromCloud',
+    );
+
+    // Log failure but don't throw (local delete succeeded)
+    deleteResult.mapLeft((failure) {
       if (kDebugMode) {
-        debugPrint('[StressIndexRepository] Failed to delete from cloud: $e');
+        debugPrint('[StressIndexRepository] Cloud delete failed: ${failure.message}');
       }
-    }
+    });
   }
 
   @override

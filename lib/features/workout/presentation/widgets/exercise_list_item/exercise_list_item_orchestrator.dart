@@ -51,6 +51,7 @@ import 'package:gymbro_flutter_new/features/analytics/data/repositories/exercise
 import 'package:gymbro_flutter_new/features/exercise_merge/domain/entities/merge_candidate.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/widgets/quick_upgrade_modal.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/providers/exercise_upgrade_provider.dart';
+import 'package:gymbro_flutter_new/features/workout/domain/services/rpe_autoregulation_service.dart';
 
 /// Orchestrator widget that coordinates ExerciseListItemHeader and ExerciseListItemSets
 ///
@@ -1317,9 +1318,36 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem>
     // Start rest timer using tier1 timer actions (includes UI + sound preference)
     // BUG FIX: Use set.restTime → exercise.restTime → 90s fallback chain
     // Previously only used set.restTime ?? 90, ignoring exercise-level custom timer
+    final config = ref.read(appConfigProvider);
+    final baseRestSeconds = set.restTime ?? widget.exercise.restTime ?? 90;
+
+    // 🔄 RPE-based rest time adjustment (when enabled)
+    // If user completed set with RPE and autoAdjustRestFromRpe is enabled,
+    // adjust rest time based on perceived exertion:
+    // - High RPE (9-10): +30-60s more rest for recovery
+    // - Moderate RPE (7-8): standard rest
+    // - Low RPE (<7): -15-30s less rest (not as fatigued)
+    int adjustedRestSeconds = baseRestSeconds;
+
+    if ((config.autoAdjustRestFromRpe ?? false) && set.rpe != null) {
+      final adjustment = RPEAutoregulationService.calculateRestTimeAdjustment(
+        baseRestSeconds: baseRestSeconds,
+        actualRPE: set.rpe!.toDouble(),
+      );
+
+      adjustedRestSeconds = adjustment.adjustedRestSeconds;
+
+      if (kDebugMode && adjustment.hasAdjustment) {
+        debugPrint(
+          '🔄 [RPE Rest Adjustment] ${adjustment.reason} '
+          '(${baseRestSeconds}s → ${adjustedRestSeconds}s)',
+        );
+      }
+    }
+
     final timerActions = ref.read(tier1TimerActionsProvider);
     timerActions.startExerciseRest(
-      seconds: set.restTime ?? widget.exercise.restTime ?? 90,
+      seconds: adjustedRestSeconds,
       exerciseName: widget.exercise.name,
       exerciseId: widget.exercise.id,
       currentSet: set.setNumber,

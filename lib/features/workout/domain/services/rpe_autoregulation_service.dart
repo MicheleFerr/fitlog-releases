@@ -184,6 +184,84 @@ class RPEAutoregulationService {
   static double _roundWeight(double weight) {
     return (weight / 2.5).round() * 2.5;
   }
+
+  /// 🔄 Calculate rest time adjustment based on RPE
+  ///
+  /// Scientific basis: Higher perceived exertion requires more recovery
+  /// Based on research showing fatigue correlates with rest requirements
+  ///
+  /// Algorithm:
+  /// - RPE 9.5-10: +60s (very high fatigue, needs full recovery)
+  /// - RPE 8.5-9: +30s (high fatigue)
+  /// - RPE 7-8: 0s (moderate fatigue, standard rest)
+  /// - RPE 5-6.5: -15s (low fatigue, can reduce rest)
+  /// - RPE < 5: -30s (very low fatigue)
+  ///
+  /// Returns adjustment in seconds (positive = more rest, negative = less rest)
+  static RestTimeAdjustment calculateRestTimeAdjustment({
+    required int baseRestSeconds,
+    required double actualRPE,
+  }) {
+    int adjustmentSeconds = 0;
+    String reason = '';
+
+    if (actualRPE >= 9.5) {
+      // Very high fatigue - significant extra rest
+      adjustmentSeconds = 60;
+      reason = 'RPE very high ($actualRPE) - adding 60s for full recovery';
+    } else if (actualRPE >= 8.5) {
+      // High fatigue - moderate extra rest
+      adjustmentSeconds = 30;
+      reason = 'RPE high ($actualRPE) - adding 30s for recovery';
+    } else if (actualRPE >= 7) {
+      // Moderate fatigue - standard rest
+      adjustmentSeconds = 0;
+      reason = 'RPE moderate ($actualRPE) - using standard rest time';
+    } else if (actualRPE >= 5) {
+      // Low fatigue - slightly reduced rest
+      adjustmentSeconds = -15;
+      reason = 'RPE low ($actualRPE) - reducing rest by 15s';
+    } else {
+      // Very low fatigue - can reduce rest more
+      adjustmentSeconds = -30;
+      reason = 'RPE very low ($actualRPE) - reducing rest by 30s';
+    }
+
+    // Ensure minimum rest of 30 seconds
+    final adjustedRest = (baseRestSeconds + adjustmentSeconds).clamp(30, 600);
+
+    // Recalculate actual adjustment (may be capped)
+    final actualAdjustment = adjustedRest - baseRestSeconds;
+
+    return RestTimeAdjustment(
+      baseRestSeconds: baseRestSeconds,
+      adjustedRestSeconds: adjustedRest,
+      adjustmentSeconds: actualAdjustment,
+      reason: reason,
+      actualRPE: actualRPE,
+    );
+  }
+}
+
+/// Rest time adjustment result
+class RestTimeAdjustment {
+  const RestTimeAdjustment({
+    required this.baseRestSeconds,
+    required this.adjustedRestSeconds,
+    required this.adjustmentSeconds,
+    required this.reason,
+    required this.actualRPE,
+  });
+
+  final int baseRestSeconds;
+  final int adjustedRestSeconds;
+  final int adjustmentSeconds;
+  final String reason;
+  final double actualRPE;
+
+  bool get hasAdjustment => adjustmentSeconds != 0;
+  bool get needsMoreRest => adjustmentSeconds > 0;
+  bool get needsLessRest => adjustmentSeconds < 0;
 }
 
 /// Weight adjustment result

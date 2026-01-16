@@ -14,8 +14,9 @@
 library;
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:gymbro_flutter_new/core/domain/entities/user_tier.dart';
 
-/// Account tier levels
+/// Account tier levels (subscription-based)
 enum AccountTier {
   free,
   premium,
@@ -24,15 +25,29 @@ enum AccountTier {
 
 /// Template quota information
 class TemplateQuota {
-  
+
   const TemplateQuota({
     required this.maxPrivateTemplates,
     required this.maxPublicTemplates,
     this.usedPrivateTemplates = 0,
     this.usedPublicTemplates = 0,
   });
-  
-  /// Get quota based on tier
+
+  /// Get quota based on XP tier (primary source of truth)
+  factory TemplateQuota.forUserTier(UserTier tier, {
+    int usedPrivate = 0,
+    int usedPublic = 0,
+  }) {
+    return TemplateQuota(
+      maxPrivateTemplates: tier.maxTemplates,
+      maxPublicTemplates: tier.maxPublicTemplates,
+      usedPrivateTemplates: usedPrivate,
+      usedPublicTemplates: usedPublic,
+    );
+  }
+
+  /// Get quota based on account tier (for premium subscribers)
+  /// Premium/Pro subscribers get bonus slots on top of their XP tier
   factory TemplateQuota.forTier(AccountTier tier, {
     int usedPrivate = 0,
     int usedPublic = 0,
@@ -60,6 +75,30 @@ class TemplateQuota {
           usedPublicTemplates: usedPublic,
         );
     }
+  }
+
+  /// Get consolidated quota taking max of XP tier and account tier
+  /// This ensures paying users always get at least what their subscription provides,
+  /// while XP progression can give additional slots
+  factory TemplateQuota.consolidated({
+    required UserTier userTier,
+    required AccountTier accountTier,
+    int usedPrivate = 0,
+    int usedPublic = 0,
+  }) {
+    final xpQuota = TemplateQuota.forUserTier(userTier);
+    final accountQuota = TemplateQuota.forTier(accountTier);
+
+    return TemplateQuota(
+      maxPrivateTemplates: xpQuota.maxPrivateTemplates > accountQuota.maxPrivateTemplates
+          ? xpQuota.maxPrivateTemplates
+          : accountQuota.maxPrivateTemplates,
+      maxPublicTemplates: xpQuota.maxPublicTemplates > accountQuota.maxPublicTemplates
+          ? xpQuota.maxPublicTemplates
+          : accountQuota.maxPublicTemplates,
+      usedPrivateTemplates: usedPrivate,
+      usedPublicTemplates: usedPublic,
+    );
   }
   
   factory TemplateQuota.fromJson(Map<String, dynamic> json) {

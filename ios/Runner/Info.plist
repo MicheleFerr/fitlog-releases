@@ -62,6 +62,10 @@
 		<string>FitLog Pro writes your completed workouts to Apple Health so you can track all your fitness activity in one place. You can disable this at any time in Settings.</string>
 		<key>NSLocalNetworkUsageDescription</key>
 		<string>FitLog Pro needs access to your local network for wireless debugging and development. This permission is only used during app development.</string>
+		<key>NSMicrophoneUsageDescription</key>
+		<string>FitLog Pro may use the microphone for voice input features in future updates. This permission is not currently used.</string>
+		<key>NSSpeechRecognitionUsageDescription</key>
+		<string>FitLog Pro may use speech recognition for voice commands in future updates. This permission is not currently used.</string>
 		<key>NSPhotoLibraryAddUsageDescription</key>
 		<string>FitLog Pro needs permission to save photos to your library for sharing your workout progress.</string>
 		<key>NSPhotoLibraryUsageDescription</key>

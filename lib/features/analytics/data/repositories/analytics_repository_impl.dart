@@ -46,6 +46,7 @@ import 'dart:async';
 import 'package:flutter/foundation.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fpdart/fpdart.dart';
+import 'package:gymbro_flutter_new/core/data/mixins/firebase_error_mapper_mixin.dart';
 import 'package:gymbro_flutter_new/features/analytics/data/models/exercise_history_model.dart';
 import 'package:gymbro_flutter_new/features/analytics/domain/entities/exercise_history.dart';
 import 'package:gymbro_flutter_new/features/analytics/domain/entities/exercise_session.dart';
@@ -54,7 +55,9 @@ import 'package:gymbro_flutter_new/shared/domain/failures/failure.dart';
 import 'package:hive_ce_flutter/hive_flutter.dart';
 
 /// Analytics repository implementation with Firestore + Hive cache
-class AnalyticsRepositoryImpl implements AnalyticsRepository {
+class AnalyticsRepositoryImpl
+    with FirebaseErrorMapperMixin
+    implements AnalyticsRepository {
 
   AnalyticsRepositoryImpl({
     required FirebaseFirestore firestore,
@@ -161,46 +164,41 @@ class AnalyticsRepositoryImpl implements AnalyticsRepository {
     required DateTime start,
     required DateTime end,
   }) async {
-    try {
-      // Check cache first
-      final cacheKey = _getCacheKey(userId, exerciseName);
-      final cached = _getFromCache(cacheKey);
-      if (cached != null) {
-        // Filter sessions by timeframe
-        final filteredSessions = cached.getSessionsByTimeframe(start, end);
-        return Right(filteredSessions);
-      }
-
-      // Fetch from Firestore
-      // 🔧 FIX: Added 5s timeout to prevent infinite hanging on poor network
-      final doc = await _firestore
-          .collection('users')
-          .doc(userId)
-          .collection('analytics')
-          .doc(exerciseName)
-          .get()
-          .timeout(
-            const Duration(seconds: 10),
-            onTimeout: () =>
-                throw TimeoutException('Firestore getSessionsByTimeframe timed out'),
-          );
-
-      if (!doc.exists) {
-        return const Right([]); // No history for this exercise yet
-      }
-
-      final model = ExerciseHistoryModel.fromFirestore(doc);
-      final history = model.toDomain();
-
-      // Cache for future reads
-      _saveToCache(cacheKey, history);
-
+    // Check cache first
+    final cacheKey = _getCacheKey(userId, exerciseName);
+    final cached = _getFromCache(cacheKey);
+    if (cached != null) {
       // Filter sessions by timeframe
-      final filteredSessions = history.getSessionsByTimeframe(start, end);
+      final filteredSessions = cached.getSessionsByTimeframe(start, end);
       return Right(filteredSessions);
-    } catch (e) {
-      return Left(ServerFailure( 'Failed to fetch sessions: $e'));
     }
+
+    // Fetch from Firestore using mixin
+    return handleFirebaseOperation(
+      () async {
+        final doc = await _firestore
+            .collection('users')
+            .doc(userId)
+            .collection('analytics')
+            .doc(exerciseName)
+            .get()
+            .timeout(const Duration(seconds: 10));
+
+        if (!doc.exists) {
+          return <ExerciseSession>[]; // No history for this exercise yet
+        }
+
+        final model = ExerciseHistoryModel.fromFirestore(doc);
+        final history = model.toDomain();
+
+        // Cache for future reads
+        _saveToCache(cacheKey, history);
+
+        // Filter sessions by timeframe
+        return history.getSessionsByTimeframe(start, end);
+      },
+      operationName: 'getSessionsByTimeframe',
+    );
   }
 
   /// Search exercises by name (fuzzy search)
@@ -218,44 +216,40 @@ class AnalyticsRepositoryImpl implements AnalyticsRepository {
   ///   query: 'bench', // Matches "Bench Press", "Incline Bench", etc.
   /// );
   /// ```
-  /// 🔧 FIX: Added 10s timeout to prevent infinite hanging on poor network
   @override
   Future<Either<Failure, List<ExerciseHistory>>> searchExercises({
     required String userId,
     required String query,
   }) async {
-    try {
-      final snapshot = await _firestore
-          .collection('users')
-          .doc(userId)
-          .collection('analytics')
-          .get()
-          .timeout(
-            const Duration(seconds: 10),
-            onTimeout: () =>
-                throw TimeoutException('Firestore searchExercises timed out'),
-          );
+    return handleFirebaseOperation(
+      () async {
+        final snapshot = await _firestore
+            .collection('users')
+            .doc(userId)
+            .collection('analytics')
+            .get()
+            .timeout(const Duration(seconds: 10));
 
-      final queryLower = query.toLowerCase();
-      final matchingHistories = snapshot.docs
-          .map((doc) => ExerciseHistoryModel.fromFirestore(doc).toDomain())
-          .where((history) =>
-              history.exerciseName.toLowerCase().contains(queryLower))
-          .toList();
+        final queryLower = query.toLowerCase();
+        final matchingHistories = snapshot.docs
+            .map((doc) => ExerciseHistoryModel.fromFirestore(doc).toDomain())
+            .where((history) =>
+                history.exerciseName.toLowerCase().contains(queryLower))
+            .toList();
 
-      // Sort by relevance (exact match first, then alphabetically)
-      matchingHistories.sort((a, b) {
-        final aExact = a.exerciseName.toLowerCase() == queryLower;
-        final bExact = b.exerciseName.toLowerCase() == queryLower;
-        if (aExact && !bExact) return -1;
-        if (!aExact && bExact) return 1;
-        return a.exerciseName.compareTo(b.exerciseName);
-      });
+        // Sort by relevance (exact match first, then alphabetically)
+        matchingHistories.sort((a, b) {
+          final aExact = a.exerciseName.toLowerCase() == queryLower;
+          final bExact = b.exerciseName.toLowerCase() == queryLower;
+          if (aExact && !bExact) return -1;
+          if (!aExact && bExact) return 1;
+          return a.exerciseName.compareTo(b.exerciseName);
+        });
 
-      return Right(matchingHistories);
-    } catch (e) {
-      return Left(ServerFailure( 'Failed to search exercises: $e'));
-    }
+        return matchingHistories;
+      },
+      operationName: 'searchExercises',
+    );
   }
 
   /// Get exercise history for a specific exercise
@@ -276,44 +270,38 @@ class AnalyticsRepositoryImpl implements AnalyticsRepository {
     required String userId,
     required String exerciseName,
   }) async {
-    try {
-      // Check cache first
-      final cacheKey = _getCacheKey(userId, exerciseName);
-      final cached = _getFromCache(cacheKey);
-      if (cached != null) {
-        return Right(cached);
-      }
-
-      // Fetch from Firestore
-      // 🔧 FIX: Added 5s timeout to prevent infinite hanging on poor network
-      final doc = await _firestore
-          .collection('users')
-          .doc(userId)
-          .collection('analytics')
-          .doc(exerciseName)
-          .get()
-          .timeout(
-            const Duration(seconds: 10),
-            onTimeout: () =>
-                throw TimeoutException('Firestore getExerciseHistoryByName timed out'),
-          );
-
-      if (!doc.exists) {
-        return Left(
-          CacheFailure('No history found for $exerciseName'),
-        );
-      }
-
-      final model = ExerciseHistoryModel.fromFirestore(doc);
-      final history = model.toDomain();
-
-      // Cache for future reads
-      _saveToCache(cacheKey, history);
-
-      return Right(history);
-    } catch (e) {
-      return Left(ServerFailure( 'Failed to fetch history: $e'));
+    // Check cache first
+    final cacheKey = _getCacheKey(userId, exerciseName);
+    final cached = _getFromCache(cacheKey);
+    if (cached != null) {
+      return Right(cached);
     }
+
+    // Fetch from Firestore using mixin
+    return handleFirebaseOperation(
+      () async {
+        final doc = await _firestore
+            .collection('users')
+            .doc(userId)
+            .collection('analytics')
+            .doc(exerciseName)
+            .get()
+            .timeout(const Duration(seconds: 10));
+
+        if (!doc.exists) {
+          throw NotFoundFailure('No history found for $exerciseName');
+        }
+
+        final model = ExerciseHistoryModel.fromFirestore(doc);
+        final history = model.toDomain();
+
+        // Cache for future reads
+        _saveToCache(cacheKey, history);
+
+        return history;
+      },
+      operationName: 'getExerciseHistoryByName',
+    );
   }
 
   /// Update exercise history (write-through to analytics collection)
@@ -339,7 +327,6 @@ class AnalyticsRepositoryImpl implements AnalyticsRepository {
   ///   ),
   /// );
   /// ```
-  /// 🔧 FIX: Added timeouts to prevent infinite hanging on poor network
   @override
   Future<Either<Failure, void>> updateExerciseHistory({
     required String userId,
@@ -348,57 +335,56 @@ class AnalyticsRepositoryImpl implements AnalyticsRepository {
     required String muscleGroup,
     required ExerciseSession session,
   }) async {
-    try {
-      final docRef = _firestore
-          .collection('users')
-          .doc(userId)
-          .collection('analytics')
-          .doc(exerciseName);
+    final result = await handleFirebaseVoidOperation(
+      () async {
+        final docRef = _firestore
+            .collection('users')
+            .doc(userId)
+            .collection('analytics')
+            .doc(exerciseName);
 
-      // Read existing document
-      final doc = await docRef.get().timeout(
-        const Duration(seconds: 10),
-        onTimeout: () =>
-            throw TimeoutException('Firestore updateExerciseHistory get timed out'),
-      );
+        // Read existing document
+        final doc = await docRef.get().timeout(const Duration(seconds: 10));
 
-      ExerciseHistory updatedHistory;
-      if (doc.exists) {
-        // Append session to existing history
-        final model = ExerciseHistoryModel.fromFirestore(doc);
-        final existingHistory = model.toDomain();
-        updatedHistory = ExerciseHistory(
-          exerciseId: exerciseId,
-          exerciseName: exerciseName,
-          muscleGroup: muscleGroup,
-          sessions: [...existingHistory.sessions, session],
-        );
-      } else {
-        // Create new history with first session
-        updatedHistory = ExerciseHistory(
-          exerciseId: exerciseId,
-          exerciseName: exerciseName,
-          muscleGroup: muscleGroup,
-          sessions: [session],
-        );
-      }
+        ExerciseHistory updatedHistory;
+        if (doc.exists) {
+          // Append session to existing history
+          final model = ExerciseHistoryModel.fromFirestore(doc);
+          final existingHistory = model.toDomain();
+          updatedHistory = ExerciseHistory(
+            exerciseId: exerciseId,
+            exerciseName: exerciseName,
+            muscleGroup: muscleGroup,
+            sessions: [...existingHistory.sessions, session],
+          );
+        } else {
+          // Create new history with first session
+          updatedHistory = ExerciseHistory(
+            exerciseId: exerciseId,
+            exerciseName: exerciseName,
+            muscleGroup: muscleGroup,
+            sessions: [session],
+          );
+        }
 
-      // Write back to Firestore
-      final updatedModel = ExerciseHistoryModel.fromDomain(updatedHistory);
-      await docRef.set(updatedModel.toFirestore()).timeout(
-        const Duration(seconds: 10),
-        onTimeout: () =>
-            throw TimeoutException('Firestore updateExerciseHistory set timed out'),
-      );
+        // Write back to Firestore
+        final updatedModel = ExerciseHistoryModel.fromDomain(updatedHistory);
+        await docRef.set(updatedModel.toFirestore()).timeout(
+              const Duration(seconds: 10),
+            );
 
-      // Invalidate cache
-      final cacheKey = _getCacheKey(userId, exerciseName);
-      await _cacheBox.delete(cacheKey);
+        // Invalidate cache
+        final cacheKey = _getCacheKey(userId, exerciseName);
+        await _cacheBox.delete(cacheKey);
+      },
+      operationName: 'updateExerciseHistory',
+    );
 
-      return const Right(null);
-    } catch (e) {
-      return Left(ServerFailure( 'Failed to update analytics: $e'));
-    }
+    // Convert Either<Failure, Unit> to Either<Failure, void> for backward compatibility
+    return result.fold(
+      (failure) => Left(failure),
+      (_) => const Right(null),
+    );
   }
 
   /// Delete all analytics for a user (for testing/cleanup)
@@ -411,44 +397,40 @@ class AnalyticsRepositoryImpl implements AnalyticsRepository {
   /// ```dart
   /// await repository.deleteAllAnalytics(userId: 'user123');
   /// ```
-  /// 🔧 FIX: Added timeouts to prevent infinite hanging on poor network
   Future<Either<Failure, void>> deleteAllAnalytics({
     required String userId,
   }) async {
-    try {
-      final snapshot = await _firestore
-          .collection('users')
-          .doc(userId)
-          .collection('analytics')
-          .get()
-          .timeout(
-            const Duration(seconds: 10),
-            onTimeout: () =>
-                throw TimeoutException('Firestore deleteAllAnalytics get timed out'),
-          );
+    final result = await handleFirebaseVoidOperation(
+      () async {
+        final snapshot = await _firestore
+            .collection('users')
+            .doc(userId)
+            .collection('analytics')
+            .get()
+            .timeout(const Duration(seconds: 10));
 
-      // Delete all documents in batch
-      final batch = _firestore.batch();
-      for (final doc in snapshot.docs) {
-        batch.delete(doc.reference);
-      }
-      await batch.commit().timeout(
-        const Duration(seconds: 15),
-        onTimeout: () =>
-            throw TimeoutException('Firestore deleteAllAnalytics commit timed out'),
-      );
+        // Delete all documents in batch
+        final batch = _firestore.batch();
+        for (final doc in snapshot.docs) {
+          batch.delete(doc.reference);
+        }
+        await batch.commit().timeout(const Duration(seconds: 15));
 
-      // Clear all cache for this user
-      final cacheKeys =
-          _cacheBox.keys.where((key) => key.toString().contains(userId));
-      for (final key in cacheKeys) {
-        await _cacheBox.delete(key);
-      }
+        // Clear all cache for this user
+        final cacheKeys =
+            _cacheBox.keys.where((key) => key.toString().contains(userId));
+        for (final key in cacheKeys) {
+          await _cacheBox.delete(key);
+        }
+      },
+      operationName: 'deleteAllAnalytics',
+    );
 
-      return const Right(null);
-    } catch (e) {
-      return Left(ServerFailure( 'Failed to delete analytics: $e'));
-    }
+    // Convert Either<Failure, Unit> to Either<Failure, void> for backward compatibility
+    return result.fold(
+      (failure) => Left(failure),
+      (_) => const Right(null),
+    );
   }
 
   // ============================================================================

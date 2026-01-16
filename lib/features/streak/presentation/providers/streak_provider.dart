@@ -9,6 +9,7 @@ import 'package:gymbro_flutter_new/features/workout/presentation/providers/worko
 ///
 /// Creates StreakRepositoryImpl with WorkoutRepository dependency
 final streakRepositoryProvider = Provider<StreakRepository>((ref) {
+  ref.keepAlive(); // FIX: previene ricreazione repository
   final workoutRepository = ref.watch(workoutRepositoryProvider);
   return StreakRepositoryImpl(workoutRepository);
 });

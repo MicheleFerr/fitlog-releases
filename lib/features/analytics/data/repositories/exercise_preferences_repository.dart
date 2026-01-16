@@ -44,9 +44,13 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/features/analytics/data/models/exercise_preferences_model.dart';
 import 'package:gymbro_flutter_new/features/auth/presentation/providers/auth_provider.dart';
+import 'package:gymbro_flutter_new/shared/domain/abstractions/i_exercise_preferences.dart';
 
 /// Repository for exercise preferences with Firestore cost optimization
-class ExercisePreferencesRepository {
+///
+/// Implements [IExercisePreferencesRepository] to allow features to depend
+/// on the interface instead of this concrete implementation.
+class ExercisePreferencesRepository implements IExercisePreferencesRepository {
   ExercisePreferencesRepository({
     required FirebaseFirestore firestore,
     required String userId,
@@ -95,6 +99,15 @@ class ExercisePreferencesRepository {
     }
   }
 
+  /// Get all favorites as a Set
+  ///
+  /// Implements [IExercisePreferencesRepository.getFavorites]
+  @override
+  Future<Set<String>> getFavorites() async {
+    final prefs = await getPreferences();
+    return prefs?.favoritesSet ?? {};
+  }
+
   /// Watch preferences stream (real-time updates)
   ///
   /// **Firestore Cost**: 1 read on initial load + 1 read per update
@@ -125,6 +138,7 @@ class ExercisePreferencesRepository {
   ///
   /// **Parameters**:
   /// - favorites: Complete set of favorite exercise names
+  @override
   Future<void> setFavorites(Set<String> favorites) async {
     // Cancel previous debounce timer
     _debounceTimer?.cancel();
@@ -161,6 +175,7 @@ class ExercisePreferencesRepository {
   /// instead of this method.
   ///
   /// **Firestore Cost**: 1 read + 1 write (debounced)
+  @override
   Future<void> toggleFavorite(String exerciseName) async {
     // Get current favorites
     final current = await getPreferences();
@@ -187,6 +202,7 @@ class ExercisePreferencesRepository {
   /// - countingMode: The preferred counting mode ('weighted', 'reps', 'time')
   ///
   /// **Firestore Cost**: 1 read + 1 write (debounced)
+  @override
   Future<void> setCountingModeOverride(
     String exerciseId,
     String countingMode,
@@ -212,6 +228,7 @@ class ExercisePreferencesRepository {
   /// - exerciseId: The unique ID of the exercise
   ///
   /// **Firestore Cost**: 1 read + 1 write (debounced)
+  @override
   Future<void> removeCountingModeOverride(String exerciseId) async {
     final current = await getPreferences();
     final currentOverrides =
@@ -232,9 +249,19 @@ class ExercisePreferencesRepository {
   /// Returns null if no override exists
   ///
   /// **Firestore Cost**: 1 read (cached after first call)
+  @override
   Future<String?> getCountingModeOverride(String exerciseId) async {
     final prefs = await getPreferences();
     return prefs?.getCountingModeOverride(exerciseId);
+  }
+
+  /// Get all counting mode overrides
+  ///
+  /// **Firestore Cost**: 1 read (cached after first call)
+  @override
+  Future<Map<String, String>> getAllCountingModeOverrides() async {
+    final prefs = await getPreferences();
+    return prefs?.countingModeOverrides ?? {};
   }
 
   /// Internal helper to save preferences with both favorites and overrides
@@ -264,6 +291,7 @@ class ExercisePreferencesRepository {
   /// Dispose resources
   ///
   /// Call this when provider is disposed to cancel pending debounce timers
+  @override
   void dispose() {
     _debounceTimer?.cancel();
   }

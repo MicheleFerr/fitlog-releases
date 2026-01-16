@@ -1146,7 +1146,7 @@ class _WorkoutHistoryScreenState extends ConsumerState<WorkoutHistoryScreen>
 
       deleteResult.fold(
         (failure) {
-          SnackBarService.showError(context, 'Error: ${failure.message}');
+          SnackBarService.showError(context, l10n.errorWithMessage(failure.message));
         },
         (_) {
           SnackBarService.showInfo(context, l10n.workoutDeletedSuccessfully);
@@ -1852,7 +1852,7 @@ class _WorkoutHistoryScreenState extends ConsumerState<WorkoutHistoryScreen>
 
       result.fold(
         (failure) {
-          SnackBarService.showError(context, 'Error: ${failure.message}');
+          SnackBarService.showError(context, l10n.errorWithMessage(failure.message));
         },
         (_) {
           SnackBarService.showSuccess(context, l10n.workoutUpdatedSuccessfully);
@@ -1883,7 +1883,7 @@ class _WorkoutHistoryScreenState extends ConsumerState<WorkoutHistoryScreen>
                   .deleteWorkout(workout.id);
 
               result.fold(
-                (failure) => SnackBarService.showError(context, 'Errore: ${failure.message}'),
+                (failure) => SnackBarService.showError(context, l10n.errorWithMessage(failure.message)),
                 (_) => SnackBarService.showInfo(context, l10n.workoutDeletedSuccessfully),
               );
             },

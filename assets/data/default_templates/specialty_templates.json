@@ -1,0 +1,214 @@
+{
+  "category": "specialty",
+  "difficulty": "all",
+  "description": "Programmi specializzati per obiettivi specifici",
+  "templates": [
+    {
+      "id": "default_strength_focus",
+      "name": "Strength Focus",
+      "description": "Programma forza pura. Rep basse, pesi alti, riposo lungo. Stile powerlifting.",
+      "difficulty": "intermediate",
+      "category": "specialty",
+      "estimatedDuration": 55,
+      "exercises": [
+        {
+          "exerciseId": "barbell_squat",
+          "sets": [
+            {"type": "normal", "targetReps": 5, "restSeconds": 180},
+            {"type": "normal", "targetReps": 5, "restSeconds": 180},
+            {"type": "normal", "targetReps": 5, "restSeconds": 180},
+            {"type": "normal", "targetReps": 5, "restSeconds": 180},
+            {"type": "normal", "targetReps": 5, "restSeconds": 180}
+          ],
+          "notes": "5x5 classico. Peso che permette tutte le reps con tecnica perfetta."
+        },
+        {
+          "exerciseId": "barbell_bench_press",
+          "sets": [
+            {"type": "normal", "targetReps": 5, "restSeconds": 180},
+            {"type": "normal", "targetReps": 5, "restSeconds": 180},
+            {"type": "normal", "targetReps": 5, "restSeconds": 180},
+            {"type": "normal", "targetReps": 5, "restSeconds": 180},
+            {"type": "normal", "targetReps": 5, "restSeconds": 180}
+          ],
+          "notes": "5x5 forza. Aggiungi 2.5kg quando completi tutte le serie."
+        },
+        {
+          "exerciseId": "barbell_deadlift",
+          "sets": [
+            {"type": "normal", "targetReps": 5, "restSeconds": 180},
+            {"type": "normal", "targetReps": 5, "restSeconds": 180},
+            {"type": "normal", "targetReps": 5, "restSeconds": 180}
+          ],
+          "notes": "3x5 per gestire il carico sul sistema nervoso. Massima intensita."
+        }
+      ]
+    },
+    {
+      "id": "default_hypertrophy_chest_back",
+      "name": "Hypertrophy Chest & Back",
+      "description": "Volume alto per ipertrofia. Petto e schiena nella stessa sessione.",
+      "difficulty": "intermediate",
+      "category": "specialty",
+      "estimatedDuration": 50,
+      "exercises": [
+        {
+          "exerciseId": "barbell_bench_press",
+          "sets": [
+            {"type": "normal", "targetReps": 10, "restSeconds": 90},
+            {"type": "normal", "targetReps": 10, "restSeconds": 90},
+            {"type": "normal", "targetReps": 10, "restSeconds": 90},
+            {"type": "normal", "targetReps": 10, "restSeconds": 120}
+          ],
+          "notes": "4 serie per volume. Tensione costante."
+        },
+        {
+          "exerciseId": "wide_grip_lat_pulldown",
+          "sets": [
+            {"type": "normal", "targetReps": 12, "restSeconds": 90},
+            {"type": "normal", "targetReps": 12, "restSeconds": 90},
+            {"type": "normal", "targetReps": 12, "restSeconds": 90}
+          ],
+          "notes": "Tira al petto. Squeeze sui dorsali."
+        },
+        {
+          "exerciseId": "dumbbell_incline_bench_press",
+          "sets": [
+            {"type": "normal", "targetReps": 12, "restSeconds": 90},
+            {"type": "normal", "targetReps": 12, "restSeconds": 90},
+            {"type": "normal", "targetReps": 12, "restSeconds": 90}
+          ],
+          "notes": "Focus sul petto alto. Stretch profondo."
+        },
+        {
+          "exerciseId": "one_arm_dumbbell_row",
+          "sets": [
+            {"type": "normal", "targetReps": 12, "restSeconds": 60},
+            {"type": "normal", "targetReps": 12, "restSeconds": 60},
+            {"type": "normal", "targetReps": 12, "restSeconds": 90}
+          ],
+          "notes": "12 per braccio. Contrai la scapola in alto."
+        },
+        {
+          "exerciseId": "dumbbell_fly",
+          "sets": [
+            {"type": "normal", "targetReps": 15, "restSeconds": 60},
+            {"type": "normal", "targetReps": 15, "restSeconds": 60},
+            {"type": "normal", "targetReps": 15, "restSeconds": 90}
+          ],
+          "notes": "Finisher petto. Peso leggero, stretch massimo."
+        }
+      ]
+    },
+    {
+      "id": "default_core_strength",
+      "name": "Core Strength",
+      "description": "Allenamento completo del core. Addominali, obliqui e stabilita.",
+      "difficulty": "beginner",
+      "category": "specialty",
+      "estimatedDuration": 25,
+      "exercises": [
+        {
+          "exerciseId": "plank",
+          "sets": [
+            {"type": "normal", "targetReps": 1, "restSeconds": 60},
+            {"type": "normal", "targetReps": 1, "restSeconds": 60},
+            {"type": "normal", "targetReps": 1, "restSeconds": 60}
+          ],
+          "notes": "45-60 secondi per serie. Corpo in linea retta."
+        },
+        {
+          "exerciseId": "reverse_crunch",
+          "sets": [
+            {"type": "normal", "targetReps": 15, "restSeconds": 45},
+            {"type": "normal", "targetReps": 15, "restSeconds": 45},
+            {"type": "normal", "targetReps": 15, "restSeconds": 60}
+          ],
+          "notes": "Solleva il bacino, non solo le gambe."
+        },
+        {
+          "exerciseId": "hanging_leg_raise",
+          "sets": [
+            {"type": "normal", "targetReps": 10, "restSeconds": 60},
+            {"type": "normal", "targetReps": 10, "restSeconds": 60},
+            {"type": "normal", "targetReps": 10, "restSeconds": 60}
+          ],
+          "notes": "Se troppo difficile, piega le ginocchia."
+        },
+        {
+          "exerciseId": "oblique_crunches_floor",
+          "sets": [
+            {"type": "normal", "targetReps": 15, "restSeconds": 45},
+            {"type": "normal", "targetReps": 15, "restSeconds": 45},
+            {"type": "normal", "targetReps": 15, "restSeconds": 60}
+          ],
+          "notes": "15 per lato. Focus sugli obliqui."
+        },
+        {
+          "exerciseId": "mountain_climber",
+          "sets": [
+            {"type": "normal", "targetReps": 20, "restSeconds": 45},
+            {"type": "normal", "targetReps": 20, "restSeconds": 45},
+            {"type": "normal", "targetReps": 20, "restSeconds": 60}
+          ],
+          "notes": "20 totali. Core attivo, movimento veloce."
+        }
+      ]
+    },
+    {
+      "id": "default_conditioning",
+      "name": "Metabolic Conditioning",
+      "description": "Circuito metabolico. Brucia calorie e migliora la resistenza.",
+      "difficulty": "intermediate",
+      "category": "specialty",
+      "estimatedDuration": 30,
+      "exercises": [
+        {
+          "exerciseId": "burpee",
+          "sets": [
+            {"type": "normal", "targetReps": 10, "restSeconds": 30},
+            {"type": "normal", "targetReps": 10, "restSeconds": 30},
+            {"type": "normal", "targetReps": 10, "restSeconds": 45}
+          ],
+          "notes": "Movimento esplosivo. Mantieni il ritmo."
+        },
+        {
+          "exerciseId": "dumbbell_goblet_squat",
+          "sets": [
+            {"type": "normal", "targetReps": 15, "restSeconds": 30},
+            {"type": "normal", "targetReps": 15, "restSeconds": 30},
+            {"type": "normal", "targetReps": 15, "restSeconds": 45}
+          ],
+          "notes": "Peso moderato. Mantieni il ritmo cardiaco alto."
+        },
+        {
+          "exerciseId": "push_up",
+          "sets": [
+            {"type": "normal", "targetReps": 15, "restSeconds": 30},
+            {"type": "normal", "targetReps": 15, "restSeconds": 30},
+            {"type": "normal", "targetReps": 15, "restSeconds": 45}
+          ],
+          "notes": "Ritmo costante. Non fermarti."
+        },
+        {
+          "exerciseId": "mountain_climber",
+          "sets": [
+            {"type": "normal", "targetReps": 30, "restSeconds": 30},
+            {"type": "normal", "targetReps": 30, "restSeconds": 30},
+            {"type": "normal", "targetReps": 30, "restSeconds": 45}
+          ],
+          "notes": "30 totali. Velocita massima."
+        },
+        {
+          "exerciseId": "bodyweight_walking_lunge",
+          "sets": [
+            {"type": "normal", "targetReps": 20, "restSeconds": 30},
+            {"type": "normal", "targetReps": 20, "restSeconds": 30},
+            {"type": "normal", "targetReps": 20, "restSeconds": 45}
+          ],
+          "notes": "20 passi totali. Mantieni il ritmo."
+        }
+      ]
+    }
+  ]
+}

@@ -29,6 +29,7 @@ import 'package:gymbro_flutter_new/core/providers/firebase_providers.dart';
 /// Unified feedback repository provider (singleton)
 final unifiedFeedbackRepositoryProvider =
     Provider<IUnifiedFeedbackRepository>((ref) {
+  ref.keepAlive(); // FIX: previene ricreazione repository con Firestore
   final firestore = ref.watch(firestoreProvider);
   return UnifiedFeedbackRepositoryImpl(firestore: firestore);
 });

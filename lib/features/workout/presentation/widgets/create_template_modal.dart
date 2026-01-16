@@ -151,6 +151,10 @@ class _CreateTemplateModalState extends ConsumerState<CreateTemplateModal> {
         top: 16,
         bottom: MediaQuery.of(context).viewInsets.bottom + 16,
       ),
+      decoration: BoxDecoration(
+        color: context.colors.surface,
+        borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
+      ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -553,7 +557,16 @@ class _CreateTemplateModalState extends ConsumerState<CreateTemplateModal> {
       if (mounted) {
         Navigator.of(context).pop();
 
-        SnackBarService.showSuccess(context, 'Template "$templateName" creato!');
+        // Show appropriate message based on whether template has exercises
+        final isEmptyTemplate = exerciseTemplates.isEmpty;
+        if (isEmptyTemplate) {
+          SnackBarService.showInfo(
+            context,
+            'Template "$templateName" creato. Modifica per aggiungere esercizi.',
+          );
+        } else {
+          SnackBarService.showSuccess(context, 'Template "$templateName" creato!');
+        }
       }
     } catch (e) {
       setState(() => _isLoading = false);

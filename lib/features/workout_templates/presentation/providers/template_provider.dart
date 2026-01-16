@@ -64,6 +64,11 @@ class TemplateNotifier extends Notifier<TemplateState> {
   @override
   TemplateState build() {
     _repository = ref.watch(templateRepositoryProvider);
+
+    // 🔧 FIX BUG #7: Watch currentUserProvider to rebuild on user change
+    // This ensures templates are reloaded when user logs out/in
+    ref.watch(currentUserProvider);
+
     // Load user templates on initialization
     Future.microtask(() => loadUserTemplates());
     return TemplateState();

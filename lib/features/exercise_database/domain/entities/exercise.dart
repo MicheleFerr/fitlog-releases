@@ -61,15 +61,24 @@ class ExerciseDefinition extends Equatable {
 
   // Factory constructor per creare da JSON
   factory ExerciseDefinition.fromJson(Map<String, dynamic> json) {
+    final nome = json['nome'] as String? ?? '';
+    final attrezzatura = json['attrezzatura'] as String? ?? '';
+    final tipoEsercizio = json['tipoEsercizio'] as String? ?? '';
+
+    // Auto-detect counting mode if not specified in JSON
+    final countingMode = json['countingMode'] != null
+        ? ExerciseCountingMode.fromString(json['countingMode'] as String?)
+        : _autoDetectCountingMode(nome, attrezzatura, tipoEsercizio);
+
     return ExerciseDefinition(
       id: json['id'] ?? '',
-      nome: json['nome'] ?? '',
+      nome: nome,
       focus: _parseCommaSeparated(json['focus']),
       imageUrl: json['imageUrl']?.isEmpty == true ? null : json['imageUrl'],
       muscoliSecondari: _parseCommaSeparated(json['muscoliSecondari']),
       difficolta: json['difficolta'] ?? '',
-      tipoEsercizio: json['tipoEsercizio'] ?? '',
-      attrezzatura: json['attrezzatura'] ?? '',
+      tipoEsercizio: tipoEsercizio,
+      attrezzatura: attrezzatura,
       patternMovimento: json['patternMovimento'] ?? '',
       rangeRipetizioni: json['rangeRipetizioni'] ?? '',
       noteTecniche: json['noteTecniche']?.isEmpty == true ? null : json['noteTecniche'],
@@ -80,11 +89,63 @@ class ExerciseDefinition extends Equatable {
       warmupSuggestions: (json['warmupSuggestions'] as List<dynamic>?)
           ?.map((e) => WarmupSuggestion.fromJson(e as Map<String, dynamic>))
           .toList(),
-      // Counting mode (defaults to weighted if not present)
-      countingMode: ExerciseCountingMode.fromString(json['countingMode'] as String?),
+      // Counting mode (auto-detected if not present)
+      countingMode: countingMode,
       // TUT (Time Under Tension)
       tempoEsecuzione: json['tempoEsecuzione']?.isEmpty == true ? null : json['tempoEsecuzione'] as String?,
     );
+  }
+
+  /// Auto-detect counting mode based on exercise characteristics
+  /// Used when JSON doesn't have explicit countingMode field
+  static ExerciseCountingMode _autoDetectCountingMode(
+    String nome,
+    String attrezzatura,
+    String tipoEsercizio,
+  ) {
+    final nomeLower = nome.toLowerCase();
+    final attrezzaturaLower = attrezzatura.toLowerCase();
+
+    // 1. Check for time-based (isometric) exercises by name
+    final isometricKeywords = [
+      'plank',
+      'hold',
+      'tenuta',
+      'hollow',
+      'isometri',
+      'wall sit',
+      'l-sit',
+      'hang',
+      'dead hang',
+    ];
+
+    for (final keyword in isometricKeywords) {
+      if (nomeLower.contains(keyword)) {
+        return ExerciseCountingMode.time;
+      }
+    }
+
+    // 2. Check for stretching exercises (usually time-based)
+    if (tipoEsercizio.toLowerCase() == 'stretching') {
+      return ExerciseCountingMode.time;
+    }
+
+    // 3. Check for bodyweight exercises (reps only, no weight)
+    final bodyweightEquipment = [
+      'corpo libero',
+      'bodyweight',
+      'nessuno',
+      'none',
+    ];
+
+    for (final equipment in bodyweightEquipment) {
+      if (attrezzaturaLower.contains(equipment)) {
+        return ExerciseCountingMode.reps;
+      }
+    }
+
+    // 4. Default to weighted for exercises with equipment
+    return ExerciseCountingMode.weighted;
   }
   @HiveField(0)
   final String id;

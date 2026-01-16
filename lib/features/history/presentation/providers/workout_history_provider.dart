@@ -21,6 +21,7 @@ import 'package:gymbro_flutter_new/core/data/providers/hive_box_manager_provider
 
 /// Provider for the enhanced workout history repository
 final workoutHistoryRepositoryProvider = Provider<WorkoutHistoryRepositoryEnhanced>((ref) {
+  ref.keepAlive(); // FIX: previene ricreazione repository con stato Hive
   final boxManager = ref.watch(hiveBoxManagerProvider);
   return WorkoutHistoryRepositoryEnhanced(boxManager: boxManager);
 });

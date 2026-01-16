@@ -4,6 +4,7 @@ import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hive_ce_flutter/hive_flutter.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_analytics/firebase_analytics.dart'; // 🔐 GDPR: Analytics consent
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -73,8 +74,7 @@ void main() async {
       debugPrint('   Error: $e');
       debugPrint('   Make sure .env exists (copy from .env.example)');
     }
-    // For now, we'll let it continue but Firebase will fail if keys are missing
-    // In production, you might want to show an error screen
+    rethrow; // Cannot continue without environment config
   }
 
   // ========================================
@@ -94,6 +94,17 @@ void main() async {
     if (!e.toString().contains('duplicate-app')) {
       rethrow; // Re-throw if it's a different error
     }
+  }
+
+  // ========================================
+  // 🔐 GDPR FIX (A2): Disable Analytics IMMEDIATELY after Firebase init
+  // ========================================
+  // Analytics collection must be OFF by default until consent is verified.
+  // This prevents any data collection before user grants consent.
+  // Re-enabled later in PrivacySafeAnalytics.initialize() if consent exists.
+  await FirebaseAnalytics.instance.setAnalyticsCollectionEnabled(false);
+  if (kDebugMode) {
+    debugPrint('🔐 GDPR: Firebase Analytics disabled (pending consent)');
   }
 
   // ========================================

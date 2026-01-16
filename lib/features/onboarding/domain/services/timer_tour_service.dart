@@ -19,19 +19,16 @@ import 'package:tutorial_coach_mark/tutorial_coach_mark.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
-/// Timer tour steps - compact, 4 steps max (best practice)
+/// Timer tour steps - UX 2025: reduced to 1 essential step
+/// Only explain auto-start behavior (not obvious), rest is intuitive
 enum TimerTourStep {
-  /// Step 1: Timer display - shows current countdown
+  /// Step 1: Timer auto-starts after set - this is the key non-obvious behavior
   timerDisplay,
 
-  /// Step 2: Duration adjustment - long press to change
-  durationAdjust,
-
-  /// Step 3: Live Activity indicator (iOS) - lock screen feature
-  liveActivity,
-
-  /// Step 4: Sound/vibration settings
-  soundSettings,
+  // REMOVED - intuitive patterns:
+  // - durationAdjust: users naturally try tapping/long-pressing
+  // - liveActivity: iOS handles this UI, self-explanatory
+  // - soundSettings: standard settings icon
 
   /// Tour completed
   completed,
@@ -227,7 +224,7 @@ class TimerTourNotifier extends StateNotifier<TimerTourState> {
                     children: [
                       // Step indicator
                       Text(
-                        '${_getStepNumber(step)}/4',
+                        '${_getStepNumber(step)}/1',
                         style: textTheme.labelSmall?.copyWith(
                           color: colors.primary,
                           fontWeight: FontWeight.bold,
@@ -278,9 +275,8 @@ class TimerTourNotifier extends StateNotifier<TimerTourState> {
                           FilledButton(
                             onPressed: () => controller.next(),
                             child: Text(
-                              step == TimerTourStep.soundSettings
-                                  ? l10n.tutorialGotIt
-                                  : l10n.tutorialNext,
+                              // With only 1 step, always show "Got it"
+                              l10n.tutorialGotIt,
                             ),
                           ),
                         ],
@@ -338,33 +334,6 @@ class TimerTourNotifier extends StateNotifier<TimerTourState> {
           icon: AppIcons.timerOutlined,
           shape: ShapeLightFocus.RRect,
           radius: 16,
-          contentAlign: ContentAlign.bottom,
-        );
-      case TimerTourStep.durationAdjust:
-        return _StepConfig(
-          title: l10n.timerTourDurationTitle,
-          message: l10n.timerTourDurationDescription,
-          icon: AppIcons.tune,
-          shape: ShapeLightFocus.RRect,
-          radius: 12,
-          contentAlign: ContentAlign.bottom,
-        );
-      case TimerTourStep.liveActivity:
-        return _StepConfig(
-          title: l10n.timerTourLiveActivityTitle,
-          message: l10n.timerTourLiveActivityDescription,
-          icon: AppIcons.lockClock,
-          shape: ShapeLightFocus.RRect,
-          radius: 12,
-          contentAlign: ContentAlign.bottom,
-        );
-      case TimerTourStep.soundSettings:
-        return _StepConfig(
-          title: l10n.timerTourSoundTitle,
-          message: l10n.timerTourSoundDescription,
-          icon: AppIcons.volumeUp,
-          shape: ShapeLightFocus.Circle,
-          radius: 8,
           contentAlign: ContentAlign.bottom,
         );
       case TimerTourStep.completed:

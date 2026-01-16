@@ -454,7 +454,7 @@ class _GhostOverlayCameraState extends State<GhostOverlayCamera>
             FilledButton.icon(
               onPressed: _initCamera,
               icon: const Icon(AppIcons.refresh),
-              label: const Text('Retry'),
+              label: Text(context.l10n.retry),
             ),
           ],
         ),

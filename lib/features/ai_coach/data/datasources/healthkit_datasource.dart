@@ -30,6 +30,22 @@ import 'package:flutter/foundation.dart';
 import 'package:health/health.dart';
 import 'package:gymbro_flutter_new/features/ai_coach/data/errors/healthkit_errors.dart';
 
+/// Extension to safely extract numeric values from HealthDataPoint
+/// FIX: Health package returns NumericHealthValue, not raw num
+/// This caused: "type 'NumericHealthValue' is not a subtype of type 'num'"
+extension HealthDataPointNumericValue on HealthDataPoint {
+  /// Safely extract numeric value from health data point
+  /// Handles NumericHealthValue wrapper from health package
+  double get numericValue {
+    final v = value;
+    if (v is NumericHealthValue) {
+      return v.numericValue.toDouble();
+    }
+    // Fallback: try to parse string representation (shouldn't happen for numeric data)
+    return double.tryParse(v.toString()) ?? 0.0;
+  }
+}
+
 /// HealthKit datasource for Apple Health integration
 ///
 /// **Architecture**: Data layer datasource following Clean Architecture
@@ -57,6 +73,11 @@ class HealthKitDatasource {
   }) : _health = healthFactory ?? Health();
 
   final Health _health;
+
+  /// FIX: Cache per dati sleep per evitare fetch duplicati durante l'avvio
+  /// Cache TTL: 2 minuti (i dati sleep non cambiano frequentemente)
+  static const Duration _sleepCacheTtl = Duration(minutes: 2);
+  final Map<String, _CachedData<List<HealthDataPoint>>> _sleepCache = {};
 
   /// Is HealthKit available on this device (iOS only)
   bool get isAvailable => Platform.isIOS;
@@ -346,7 +367,8 @@ class HealthKitDatasource {
     }
 
     // Calculate statistics
-    final values = hrvData.map((p) => (p.value as num).toDouble()).toList();
+    // FIX: Usa extension numericValue per evitare crash con NumericHealthValue
+    final values = hrvData.map((p) => p.numericValue).toList();
     final avgHrv = values.reduce((a, b) => a + b) / values.length;
     final minHrv = values.reduce((a, b) => a < b ? a : b);
     final maxHrv = values.reduce((a, b) => a > b ? a : b);
@@ -359,9 +381,8 @@ class HealthKitDatasource {
 
     // Get today's HRV
     final todayHrv = await getHrvToday();
-    final currentHrv = todayHrv != null
-        ? (todayHrv.value as num).toDouble()
-        : null;
+    // FIX: Usa extension numericValue per evitare crash con NumericHealthValue
+    final currentHrv = todayHrv?.numericValue;
 
     // Calculate ratio to baseline
     double? ratioToBaseline;
@@ -525,10 +546,21 @@ class HealthKitDatasource {
   /// Fetch all sleep data points for a time range
   ///
   /// Combines all sleep types (ASLEEP, DEEP, REM, LIGHT) into one list
+  /// FIX: Implementato caching per evitare fetch duplicati durante l'avvio
   Future<List<HealthDataPoint>> _getAllSleepData({
     required DateTime startTime,
     required DateTime endTime,
   }) async {
+    // FIX: Check cache first to avoid duplicate HealthKit queries
+    final cacheKey = '${startTime.millisecondsSinceEpoch}_${endTime.millisecondsSinceEpoch}';
+    final cached = _sleepCache[cacheKey];
+    if (cached != null && !cached.isExpired) {
+      if (kDebugMode) {
+        debugPrint('⚡ [_getAllSleepData] CACHE HIT - returning ${cached.data.length} cached points');
+      }
+      return cached.data;
+    }
+
     if (kDebugMode) {
       debugPrint('🔍 [_getAllSleepData] START');
       debugPrint('   📅 Range: ${startTime.toIso8601String()} → ${endTime.toIso8601String()}');
@@ -580,6 +612,12 @@ class HealthKitDatasource {
       debugPrint(
         '📊 [HealthKitDatasource] Total sleep records: ${allSleepData.length}',
       );
+    }
+
+    // FIX: Store in cache to avoid duplicate HealthKit queries
+    _sleepCache[cacheKey] = _CachedData(allSleepData, _sleepCacheTtl);
+    if (kDebugMode) {
+      debugPrint('💾 [_getAllSleepData] Cached ${allSleepData.length} points (TTL: ${_sleepCacheTtl.inMinutes}min)');
     }
 
     return allSleepData;
@@ -728,7 +766,8 @@ class HealthKitDatasource {
         point.dateTo.month,
         point.dateTo.day,
       );
-      final minutes = (point.value as num).toDouble();
+      // FIX: Usa extension numericValue per evitare crash con NumericHealthValue
+      final minutes = point.numericValue;
       nightlySleep[nightKey] = (nightlySleep[nightKey] ?? 0) + minutes;
     }
 
@@ -756,7 +795,8 @@ class HealthKitDatasource {
           point.dateTo.month,
           point.dateTo.day,
         );
-        final minutes = (point.value as num).toDouble();
+        // FIX: Usa extension numericValue per evitare crash con NumericHealthValue
+        final minutes = point.numericValue;
         nightlyInBed[nightKey] = (nightlyInBed[nightKey] ?? 0) + minutes;
       }
 
@@ -957,9 +997,10 @@ class HealthKitDatasource {
   HealthDataPoint? _sumDataPoints(List<HealthDataPoint> dataPoints) {
     if (dataPoints.isEmpty) return null;
 
+    // FIX: Usa extension numericValue per evitare crash con NumericHealthValue
     final total = dataPoints.fold<num>(
       0,
-      (sum, point) => sum + (point.value as num),
+      (sum, point) => sum + point.numericValue,
     );
 
     // Return synthetic data point with sum
@@ -982,9 +1023,10 @@ class HealthKitDatasource {
   HealthDataPoint? _averageDataPoints(List<HealthDataPoint> dataPoints) {
     if (dataPoints.isEmpty) return null;
 
+    // FIX: Usa extension numericValue per evitare crash con NumericHealthValue
     final sum = dataPoints.fold<num>(
       0,
-      (sum, point) => sum + (point.value as num),
+      (sum, point) => sum + point.numericValue,
     );
     final average = sum / dataPoints.length;
 
@@ -1003,4 +1045,15 @@ class HealthKitDatasource {
       recordingMethod: RecordingMethod.unknown,
     );
   }
+}
+
+/// Helper class for time-based caching
+/// FIX: Evita fetch duplicati di HealthKit durante l'avvio app
+class _CachedData<T> {
+  _CachedData(this.data, Duration ttl) : _expiry = DateTime.now().add(ttl);
+
+  final T data;
+  final DateTime _expiry;
+
+  bool get isExpired => DateTime.now().isAfter(_expiry);
 }

@@ -22,6 +22,10 @@ import 'package:gymbro_flutter_new/core/data/hive_box_manager_enhanced.dart';
 /// When the app terminates or user logs out, all boxes are automatically
 /// closed via ref.onDispose().
 final hiveBoxManagerProvider = Provider<HiveBoxManagerEnhanced>((ref) {
+  // FIX: keepAlive() previene disposal/ricreazione del manager Hive
+  // che gestirebbe male la chiusura dei box aperti
+  ref.keepAlive();
+
   final manager = HiveBoxManagerEnhanced();
 
   // ✅ CRITICAL: Close all boxes when provider is disposed

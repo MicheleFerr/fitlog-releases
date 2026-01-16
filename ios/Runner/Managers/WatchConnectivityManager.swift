@@ -35,7 +35,9 @@ final class WatchConnectivityManager: NSObject {
             _currentWorkoutStateStorage = newValue
             // Persist to UserDefaults for crash recovery
             if let state = newValue {
-                UserDefaults.standard.set(state, forKey: "WatchConnectivity_WorkoutState")
+                // ✅ FIX: Sanitize to remove null values (not valid for property lists)
+                let sanitized = sanitizeForPropertyList(state)
+                UserDefaults.standard.set(sanitized, forKey: "WatchConnectivity_WorkoutState")
             } else {
                 UserDefaults.standard.removeObject(forKey: "WatchConnectivity_WorkoutState")
             }
@@ -47,11 +49,42 @@ final class WatchConnectivityManager: NSObject {
             _currentRestTimerStateStorage = newValue
             // Persist to UserDefaults for crash recovery
             if let state = newValue {
-                UserDefaults.standard.set(state, forKey: "WatchConnectivity_RestTimerState")
+                // ✅ FIX: Sanitize to remove null values (not valid for property lists)
+                let sanitized = sanitizeForPropertyList(state)
+                UserDefaults.standard.set(sanitized, forKey: "WatchConnectivity_RestTimerState")
             } else {
                 UserDefaults.standard.removeObject(forKey: "WatchConnectivity_RestTimerState")
             }
         }
+    }
+
+    /// Sanitize a dictionary for property list storage
+    /// Removes NSNull values and recursively sanitizes nested structures
+    private func sanitizeForPropertyList(_ dict: [String: Any]) -> [String: Any] {
+        var result = [String: Any]()
+        for (key, value) in dict {
+            if value is NSNull {
+                // Skip null values - not valid for property lists
+                continue
+            } else if let nestedDict = value as? [String: Any] {
+                result[key] = sanitizeForPropertyList(nestedDict)
+            } else if let array = value as? [[String: Any]] {
+                // Array of dictionaries (like allSets)
+                result[key] = array.map { sanitizeForPropertyList($0) }
+            } else if let array = value as? [Any] {
+                // Generic array - filter out NSNull
+                result[key] = array.compactMap { item -> Any? in
+                    if item is NSNull { return nil }
+                    if let dict = item as? [String: Any] {
+                        return sanitizeForPropertyList(dict)
+                    }
+                    return item
+                }
+            } else {
+                result[key] = value
+            }
+        }
+        return result
     }
 
     // MARK: - Initialization
@@ -375,16 +408,20 @@ final class WatchConnectivityManager: NSObject {
             return
         }
 
+        // ✅ FIX: Sanitize data to remove NSNull values before sending
+        // This prevents WCErrorCodePayloadUnsupportedTypes errors
+        let sanitizedData = sanitizeForPropertyList(data)
+
         guard let session = session, session.isReachable else {
             Logger.shared.log(.warning, "Watch not reachable, using background transfer", category: .general)
 
             // Use background transfer if not reachable
-            session?.transferUserInfo(data)
+            session?.transferUserInfo(sanitizedData)
             result(["queued": true])
             return
         }
 
-        session.sendMessage(data, replyHandler: { response in
+        session.sendMessage(sanitizedData, replyHandler: { response in
             Logger.shared.log(.info, "✅ Watch replied: \(response)", category: .general)
             result(response)
         }, errorHandler: { error in
@@ -409,7 +446,10 @@ final class WatchConnectivityManager: NSObject {
         }
 
         do {
-            try session?.updateApplicationContext(data)
+            // ✅ FIX: Sanitize data to remove NSNull values before sending
+            // This prevents WCErrorCodePayloadUnsupportedTypes errors
+            let sanitizedData = sanitizeForPropertyList(data)
+            try session?.updateApplicationContext(sanitizedData)
             Logger.shared.log(.info, "✅ Updated application context", category: .general)
             result(true)
         } catch {
@@ -429,12 +469,16 @@ final class WatchConnectivityManager: NSObject {
     /// - Parameters:
     ///   - data: Raw data from Flutter containing workout fields
     ///   - type: Message type ("workoutStarted" or "workoutUpdate")
-    /// - Returns: Complete message dictionary ready to send to Watch
+    /// - Returns: Complete message dictionary ready to send to Watch (sanitized for property list)
     private func buildWorkoutMessage(from data: [String: Any], type: String) -> [String: Any] {
         var message: [String: Any] = ["type": type]
 
-        // Merge all data from Flutter - this ensures new fields are automatically included
-        message.merge(data) { _, new in new }
+        // ✅ FIX: Sanitize input data from Flutter to remove NSNull values
+        // This prevents WCErrorCodePayloadUnsupportedTypes errors
+        let sanitizedData = sanitizeForPropertyList(data)
+
+        // Merge sanitized data from Flutter - this ensures new fields are automatically included
+        message.merge(sanitizedData) { _, new in new }
 
         // Set required fields with defaults if not present
         message["isActive"] = message["isActive"] ?? true

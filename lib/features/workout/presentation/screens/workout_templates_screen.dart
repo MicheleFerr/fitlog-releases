@@ -788,7 +788,7 @@ class _WorkoutTemplatesScreenState extends ConsumerState<WorkoutTemplatesScreen>
               }
             },
             style: FilledButton.styleFrom(backgroundColor: dialogContext.colors.error),
-            child: const Text('Elimina'),
+            child: Text(context.l10n.delete),
           ),
         ],
       ),
@@ -817,17 +817,17 @@ class _WorkoutTemplatesScreenState extends ConsumerState<WorkoutTemplatesScreen>
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text('Status: $syncStatus'),
+                Text('${context.l10n.status}: $syncStatus'),
                 const SizedBox(height: 8),
                 if (firebaseState.lastSyncTime != null) ...[
-                  Text('Ultimo sync: ${_formatDateTime(firebaseState.lastSyncTime!)}'),
+                  Text('${context.l10n.lastSync}: ${_formatDateTime(firebaseState.lastSyncTime!)}'),
                   const SizedBox(height: 8),
                 ],
-                Text('Template totali: ${firebaseState.templates.length}'),
+                Text('${context.l10n.totalTemplates}: ${firebaseState.templates.length}'),
                 if (firebaseState.hasOfflineChanges) ...[
                   const SizedBox(height: 8),
                   Text(
-                    'Hai modifiche offline che verranno sincronizzate al prossimo accesso.',
+                    context.l10n.offlineChangesMessage,
                     style: context.textTheme.bodyMedium?.copyWith(color: context.colors.secondary),
                   ),
                 ],
@@ -836,7 +836,7 @@ class _WorkoutTemplatesScreenState extends ConsumerState<WorkoutTemplatesScreen>
             actions: [
               TextButton(
                 onPressed: () => Navigator.of(context).pop(),
-                child: const Text('Chiudi'),
+                child: Text(context.l10n.close),
               ),
               if (FirebaseAuth.instance.currentUser != null && !firebaseState.isSyncing)
                 FilledButton(
@@ -846,10 +846,10 @@ class _WorkoutTemplatesScreenState extends ConsumerState<WorkoutTemplatesScreen>
 
                     SnackBarService.showSuccess(
                       context,
-                      '✅ Sincronizzazione completata',
+                      context.l10n.syncCompleted,
                     );
                   },
-                  child: const Text('Sincronizza Ora'),
+                  child: Text(context.l10n.syncNow),
                 ),
             ],
           );

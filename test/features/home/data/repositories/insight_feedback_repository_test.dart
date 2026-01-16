@@ -12,6 +12,7 @@ library;
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:fpdart/fpdart.dart';
 import 'package:gymbro_flutter_new/features/home/data/repositories/insight_feedback_repository.dart';
 import 'package:gymbro_flutter_new/features/home/domain/entities/insight_feedback.dart';
 import 'package:mocktail/mocktail.dart';
@@ -127,18 +128,18 @@ void main() {
       verify(() => mockDocRef.set(any(), any())).called(1);
     });
 
-    test('throws exception on save error', () async {
+    test('returns failure on save error', () async {
       // Arrange
       final testFeedback = createTestFeedback();
       when(() => mockCollection.doc(testFeedback.id)).thenReturn(mockDocRef);
       when(() => mockDocRef.set(any(), any()))
           .thenThrow(Exception('Firestore error'));
 
-      // Act & Assert
-      expect(
-        () => repository.saveFeedback(testFeedback),
-        throwsA(isA<Exception>()),
-      );
+      // Act
+      final result = await repository.saveFeedback(testFeedback);
+
+      // Assert - result is Left (failure)
+      expect(result.isLeft(), isTrue);
     });
   });
 
@@ -156,9 +157,11 @@ void main() {
       // Act
       final result = await repository.getFeedback(feedbackId);
 
-      // Assert
-      expect(result, isNotNull);
-      expect(result!.id, testFeedback.id);
+      // Assert - result is now Either<Failure, InsightFeedback?>
+      expect(result.isRight(), isTrue);
+      final feedback = result.getOrElse((_) => null);
+      expect(feedback, isNotNull);
+      expect(feedback!.id, testFeedback.id);
     });
 
     test('returns null when feedback does not exist', () async {
@@ -170,20 +173,22 @@ void main() {
       // Act
       final result = await repository.getFeedback(feedbackId);
 
-      // Assert
-      expect(result, isNull);
+      // Assert - result is Either with null value (not found)
+      expect(result.isRight(), isTrue);
+      final feedback = result.getOrElse((_) => null);
+      expect(feedback, isNull);
     });
 
-    test('throws exception on get error', () async {
+    test('returns failure on get error', () async {
       // Arrange
       when(() => mockCollection.doc(feedbackId)).thenReturn(mockDocRef);
       when(() => mockDocRef.get()).thenThrow(Exception('Firestore error'));
 
-      // Act & Assert
-      expect(
-        () => repository.getFeedback(feedbackId),
-        throwsA(isA<Exception>()),
-      );
+      // Act
+      final result = await repository.getFeedback(feedbackId);
+
+      // Assert - result is Left (failure)
+      expect(result.isLeft(), isTrue);
     });
   });
 
@@ -212,10 +217,12 @@ void main() {
       // Act
       final result = await repository.getUserFeedback(userId);
 
-      // Assert
-      expect(result, hasLength(2));
-      expect(result[0].userId, userId);
-      expect(result[1].userId, userId);
+      // Assert - result is Either<Failure, List<InsightFeedback>>
+      expect(result.isRight(), isTrue);
+      final feedbackList = result.getOrElse((_) => []);
+      expect(feedbackList, hasLength(2));
+      expect(feedbackList[0].userId, userId);
+      expect(feedbackList[1].userId, userId);
     });
 
     test('returns empty list when no feedback', () async {
@@ -230,11 +237,13 @@ void main() {
       // Act
       final result = await repository.getUserFeedback(userId);
 
-      // Assert
-      expect(result, isEmpty);
+      // Assert - result is Either<Failure, List<InsightFeedback>>
+      expect(result.isRight(), isTrue);
+      final feedbackList = result.getOrElse((_) => []);
+      expect(feedbackList, isEmpty);
     });
 
-    test('throws exception on query error', () async {
+    test('returns failure on query error', () async {
       // Arrange
       when(() => mockCollection.where('userId', isEqualTo: userId))
           .thenReturn(mockQuery);
@@ -242,11 +251,11 @@ void main() {
           .thenReturn(mockQuery);
       when(() => mockQuery.get()).thenThrow(Exception('Query error'));
 
-      // Act & Assert
-      expect(
-        () => repository.getUserFeedback(userId),
-        throwsA(isA<Exception>()),
-      );
+      // Act
+      final result = await repository.getUserFeedback(userId);
+
+      // Assert - result is Left (failure)
+      expect(result.isLeft(), isTrue);
     });
   });
 
@@ -276,10 +285,12 @@ void main() {
         insightHash: insightHash,
       );
 
-      // Assert
-      expect(result, isNotNull);
-      expect(result!.userId, userId);
-      expect(result.insightHash, insightHash);
+      // Assert - result is Either<Failure, InsightFeedback?>
+      expect(result.isRight(), isTrue);
+      final feedback = result.getOrElse((_) => null);
+      expect(feedback, isNotNull);
+      expect(feedback!.userId, userId);
+      expect(feedback.insightHash, insightHash);
     });
 
     test('returns null when no feedback for hash', () async {
@@ -298,11 +309,13 @@ void main() {
         insightHash: insightHash,
       );
 
-      // Assert
-      expect(result, isNull);
+      // Assert - result is Either<Failure, InsightFeedback?>
+      expect(result.isRight(), isTrue);
+      final feedback = result.getOrElse((_) => null);
+      expect(feedback, isNull);
     });
 
-    test('throws exception on query error', () async {
+    test('returns failure on query error', () async {
       // Arrange
       when(() => mockCollection.where('userId', isEqualTo: userId))
           .thenReturn(mockQuery);
@@ -311,14 +324,14 @@ void main() {
       when(() => mockQuery.limit(1)).thenReturn(mockQuery);
       when(() => mockQuery.get()).thenThrow(Exception('Query error'));
 
-      // Act & Assert
-      expect(
-        () => repository.getFeedbackByHash(
-          userId: userId,
-          insightHash: insightHash,
-        ),
-        throwsA(isA<Exception>()),
+      // Act
+      final result = await repository.getFeedbackByHash(
+        userId: userId,
+        insightHash: insightHash,
       );
+
+      // Assert - result is Left (failure)
+      expect(result.isLeft(), isTrue);
     });
   });
 
@@ -337,16 +350,16 @@ void main() {
       verify(() => mockDocRef.delete()).called(1);
     });
 
-    test('throws exception on delete error', () async {
+    test('returns failure on delete error', () async {
       // Arrange
       when(() => mockCollection.doc(feedbackId)).thenReturn(mockDocRef);
       when(() => mockDocRef.delete()).thenThrow(Exception('Delete error'));
 
-      // Act & Assert
-      expect(
-        () => repository.deleteFeedback(feedbackId),
-        throwsA(isA<Exception>()),
-      );
+      // Act
+      final result = await repository.deleteFeedback(feedbackId);
+
+      // Assert - result is Left (failure)
+      expect(result.isLeft(), isTrue);
     });
   });
 
@@ -384,11 +397,13 @@ void main() {
       // Act
       final result = await repository.getFeedbackStats(insightType);
 
-      // Assert
-      expect(result['total'], 3);
-      expect(result['helpful'], 2);
-      expect(result['notHelpful'], 1);
-      expect(result['helpfulPercentage'], closeTo(66.67, 0.01));
+      // Assert - result is Either<Failure, Map<String, dynamic>>
+      expect(result.isRight(), isTrue);
+      final stats = result.getOrElse((_) => <String, dynamic>{});
+      expect(stats['total'], 3);
+      expect(stats['helpful'], 2);
+      expect(stats['notHelpful'], 1);
+      expect(stats['helpfulPercentage'], closeTo(66.67, 0.01));
     });
 
     test('returns zero stats when no feedback', () async {
@@ -401,24 +416,26 @@ void main() {
       // Act
       final result = await repository.getFeedbackStats(insightType);
 
-      // Assert
-      expect(result['total'], 0);
-      expect(result['helpful'], 0);
-      expect(result['notHelpful'], 0);
-      expect(result['helpfulPercentage'], 0.0);
+      // Assert - result is Either<Failure, Map<String, dynamic>>
+      expect(result.isRight(), isTrue);
+      final stats = result.getOrElse((_) => <String, dynamic>{});
+      expect(stats['total'], 0);
+      expect(stats['helpful'], 0);
+      expect(stats['notHelpful'], 0);
+      expect(stats['helpfulPercentage'], 0.0);
     });
 
-    test('throws exception on stats query error', () async {
+    test('returns failure on stats query error', () async {
       // Arrange
       when(() => mockCollection.where('insightType', isEqualTo: insightType))
           .thenReturn(mockQuery);
       when(() => mockQuery.get()).thenThrow(Exception('Query error'));
 
-      // Act & Assert
-      expect(
-        () => repository.getFeedbackStats(insightType),
-        throwsA(isA<Exception>()),
-      );
+      // Act
+      final result = await repository.getFeedbackStats(insightType);
+
+      // Assert - result is Left (failure)
+      expect(result.isLeft(), isTrue);
     });
   });
 
@@ -443,8 +460,10 @@ void main() {
       // Act
       final result = await repository.getAllFeedback();
 
-      // Assert
-      expect(result, hasLength(2));
+      // Assert - result is Either<Failure, List<InsightFeedback>>
+      expect(result.isRight(), isTrue);
+      final feedbackList = result.getOrElse((_) => []);
+      expect(feedbackList, hasLength(2));
     });
 
     test('applies limit when specified', () async {
@@ -462,17 +481,17 @@ void main() {
       verify(() => mockQuery.limit(10)).called(1);
     });
 
-    test('throws exception on query error', () async {
+    test('returns failure on query error', () async {
       // Arrange
       when(() => mockCollection.orderBy('timestamp', descending: true))
           .thenReturn(mockQuery);
       when(() => mockQuery.get()).thenThrow(Exception('Query error'));
 
-      // Act & Assert
-      expect(
-        () => repository.getAllFeedback(),
-        throwsA(isA<Exception>()),
-      );
+      // Act
+      final result = await repository.getAllFeedback();
+
+      // Assert - result is Left (failure)
+      expect(result.isLeft(), isTrue);
     });
   });
 
@@ -509,14 +528,16 @@ void main() {
       // Act
       final result = await repository.getOverallStats();
 
-      // Assert
-      expect(result['totalFeedback'], 3);
-      expect(result['totalHelpful'], 2);
-      expect(result['totalNotHelpful'], 1);
-      expect(result['helpfulPercentage'], closeTo(66.67, 0.01));
-      expect(result['uniqueUsers'], 2);
+      // Assert - result is Either<Failure, Map<String, dynamic>>
+      expect(result.isRight(), isTrue);
+      final stats = result.getOrElse((_) => <String, dynamic>{});
+      expect(stats['totalFeedback'], 3);
+      expect(stats['totalHelpful'], 2);
+      expect(stats['totalNotHelpful'], 1);
+      expect(stats['helpfulPercentage'], closeTo(66.67, 0.01));
+      expect(stats['uniqueUsers'], 2);
 
-      final byType = result['byType'] as Map<String, dynamic>;
+      final byType = stats['byType'] as Map<String, dynamic>;
       expect(byType.containsKey('workout_streak'), true);
       expect(byType.containsKey('rest_day'), true);
     });
@@ -529,23 +550,25 @@ void main() {
       // Act
       final result = await repository.getOverallStats();
 
-      // Assert
-      expect(result['totalFeedback'], 0);
-      expect(result['totalHelpful'], 0);
-      expect(result['totalNotHelpful'], 0);
-      expect(result['helpfulPercentage'], 0.0);
-      expect(result['uniqueUsers'], 0);
+      // Assert - result is Either<Failure, Map<String, dynamic>>
+      expect(result.isRight(), isTrue);
+      final stats = result.getOrElse((_) => <String, dynamic>{});
+      expect(stats['totalFeedback'], 0);
+      expect(stats['totalHelpful'], 0);
+      expect(stats['totalNotHelpful'], 0);
+      expect(stats['helpfulPercentage'], 0.0);
+      expect(stats['uniqueUsers'], 0);
     });
 
-    test('throws exception on stats query error', () async {
+    test('returns failure on stats query error', () async {
       // Arrange
       when(() => mockCollection.get()).thenThrow(Exception('Query error'));
 
-      // Act & Assert
-      expect(
-        () => repository.getOverallStats(),
-        throwsA(isA<Exception>()),
-      );
+      // Act
+      final result = await repository.getOverallStats();
+
+      // Assert - result is Left (failure)
+      expect(result.isLeft(), isTrue);
     });
   });
 }

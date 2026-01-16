@@ -1,0 +1,264 @@
+{
+  "category": "home",
+  "difficulty": "all",
+  "description": "Allenamenti a casa senza attrezzi - solo peso corporeo",
+  "templates": [
+    {
+      "id": "default_home_full_body",
+      "name": "Home Full Body",
+      "description": "Allenamento completo a casa senza attrezzi. Perfetto per mantenersi in forma ovunque.",
+      "difficulty": "beginner",
+      "category": "home",
+      "estimatedDuration": 35,
+      "exercises": [
+        {
+          "exerciseId": "push_up",
+          "sets": [
+            {"type": "normal", "targetReps": 10, "restSeconds": 60},
+            {"type": "normal", "targetReps": 10, "restSeconds": 60},
+            {"type": "normal", "targetReps": 10, "restSeconds": 90}
+          ],
+          "notes": "Mantieni il core contratto. Se troppo difficile, fai sulle ginocchia."
+        },
+        {
+          "exerciseId": "inverted_row",
+          "sets": [
+            {"type": "normal", "targetReps": 8, "restSeconds": 60},
+            {"type": "normal", "targetReps": 8, "restSeconds": 60},
+            {"type": "normal", "targetReps": 8, "restSeconds": 90}
+          ],
+          "notes": "Usa un tavolo robusto o barra bassa. Tira il petto verso la barra."
+        },
+        {
+          "exerciseId": "bodyweight_walking_lunge",
+          "sets": [
+            {"type": "normal", "targetReps": 12, "restSeconds": 60},
+            {"type": "normal", "targetReps": 12, "restSeconds": 60},
+            {"type": "normal", "targetReps": 12, "restSeconds": 90}
+          ],
+          "notes": "12 ripetizioni per gamba. Ginocchio posteriore sfiora il pavimento."
+        },
+        {
+          "exerciseId": "single_leg_glute_bridge",
+          "sets": [
+            {"type": "normal", "targetReps": 10, "restSeconds": 45},
+            {"type": "normal", "targetReps": 10, "restSeconds": 45},
+            {"type": "normal", "targetReps": 10, "restSeconds": 60}
+          ],
+          "notes": "10 ripetizioni per gamba. Spingi con il tallone."
+        },
+        {
+          "exerciseId": "plank",
+          "sets": [
+            {"type": "normal", "targetReps": 1, "restSeconds": 60},
+            {"type": "normal", "targetReps": 1, "restSeconds": 60},
+            {"type": "normal", "targetReps": 1, "restSeconds": 0}
+          ],
+          "notes": "Tieni 30-60 secondi per serie. Non lasciare cadere i fianchi."
+        }
+      ]
+    },
+    {
+      "id": "default_home_upper_body",
+      "name": "Home Upper Body",
+      "description": "Allenamento upper body a casa. Focus su petto, spalle, schiena e braccia.",
+      "difficulty": "beginner",
+      "category": "home",
+      "estimatedDuration": 30,
+      "exercises": [
+        {
+          "exerciseId": "push_up",
+          "sets": [
+            {"type": "normal", "targetReps": 12, "restSeconds": 60},
+            {"type": "normal", "targetReps": 12, "restSeconds": 60},
+            {"type": "normal", "targetReps": 12, "restSeconds": 90}
+          ],
+          "notes": "Petto che sfiora il pavimento ad ogni ripetizione."
+        },
+        {
+          "exerciseId": "diamond_push_up",
+          "sets": [
+            {"type": "normal", "targetReps": 8, "restSeconds": 60},
+            {"type": "normal", "targetReps": 8, "restSeconds": 60},
+            {"type": "normal", "targetReps": 8, "restSeconds": 90}
+          ],
+          "notes": "Mani a diamante sotto il petto. Focus sui tricipiti."
+        },
+        {
+          "exerciseId": "inverted_row",
+          "sets": [
+            {"type": "normal", "targetReps": 10, "restSeconds": 60},
+            {"type": "normal", "targetReps": 10, "restSeconds": 60},
+            {"type": "normal", "targetReps": 10, "restSeconds": 90}
+          ],
+          "notes": "Stringi le scapole in alto. Corpo in linea retta."
+        },
+        {
+          "exerciseId": "triceps_dip_bench_leg",
+          "sets": [
+            {"type": "normal", "targetReps": 12, "restSeconds": 60},
+            {"type": "normal", "targetReps": 12, "restSeconds": 60},
+            {"type": "normal", "targetReps": 12, "restSeconds": 90}
+          ],
+          "notes": "Usa una sedia o panca stabile. Gomiti stretti al corpo."
+        }
+      ]
+    },
+    {
+      "id": "default_home_lower_body",
+      "name": "Home Lower Body",
+      "description": "Allenamento gambe e glutei a casa senza attrezzi.",
+      "difficulty": "beginner",
+      "category": "home",
+      "estimatedDuration": 30,
+      "exercises": [
+        {
+          "exerciseId": "bodyweight_walking_lunge",
+          "sets": [
+            {"type": "normal", "targetReps": 12, "restSeconds": 60},
+            {"type": "normal", "targetReps": 12, "restSeconds": 60},
+            {"type": "normal", "targetReps": 12, "restSeconds": 90}
+          ],
+          "notes": "12 passi per gamba. Passo lungo, ginocchio posteriore quasi a terra."
+        },
+        {
+          "exerciseId": "single_leg_glute_bridge",
+          "sets": [
+            {"type": "normal", "targetReps": 12, "restSeconds": 45},
+            {"type": "normal", "targetReps": 12, "restSeconds": 45},
+            {"type": "normal", "targetReps": 12, "restSeconds": 60}
+          ],
+          "notes": "Contrai i glutei in alto. Pausa di 1 secondo al picco."
+        },
+        {
+          "exerciseId": "forward_lunge_male",
+          "sets": [
+            {"type": "normal", "targetReps": 10, "restSeconds": 60},
+            {"type": "normal", "targetReps": 10, "restSeconds": 60},
+            {"type": "normal", "targetReps": 10, "restSeconds": 90}
+          ],
+          "notes": "10 per gamba. Mantieni il busto eretto."
+        },
+        {
+          "exerciseId": "glute_bridge_march",
+          "sets": [
+            {"type": "normal", "targetReps": 16, "restSeconds": 60},
+            {"type": "normal", "targetReps": 16, "restSeconds": 60},
+            {"type": "normal", "targetReps": 16, "restSeconds": 90}
+          ],
+          "notes": "8 per gamba alternando. Mantieni i fianchi alti e stabili."
+        }
+      ]
+    },
+    {
+      "id": "default_home_core_hiit",
+      "name": "Home Core & HIIT",
+      "description": "Circuito cardio e core ad alta intensita. Brucia calorie e rafforza il centro.",
+      "difficulty": "intermediate",
+      "category": "home",
+      "estimatedDuration": 25,
+      "exercises": [
+        {
+          "exerciseId": "burpee",
+          "sets": [
+            {"type": "normal", "targetReps": 10, "restSeconds": 45},
+            {"type": "normal", "targetReps": 10, "restSeconds": 45},
+            {"type": "normal", "targetReps": 10, "restSeconds": 60}
+          ],
+          "notes": "Movimento esplosivo. Modifica saltando indietro invece che tuffandoti."
+        },
+        {
+          "exerciseId": "mountain_climber",
+          "sets": [
+            {"type": "normal", "targetReps": 20, "restSeconds": 30},
+            {"type": "normal", "targetReps": 20, "restSeconds": 30},
+            {"type": "normal", "targetReps": 20, "restSeconds": 45}
+          ],
+          "notes": "20 totali (10 per gamba). Mantieni i fianchi bassi."
+        },
+        {
+          "exerciseId": "plank",
+          "sets": [
+            {"type": "normal", "targetReps": 1, "restSeconds": 30},
+            {"type": "normal", "targetReps": 1, "restSeconds": 30},
+            {"type": "normal", "targetReps": 1, "restSeconds": 45}
+          ],
+          "notes": "45-60 secondi per serie. Core sempre attivo."
+        },
+        {
+          "exerciseId": "reverse_crunch",
+          "sets": [
+            {"type": "normal", "targetReps": 15, "restSeconds": 45},
+            {"type": "normal", "targetReps": 15, "restSeconds": 45},
+            {"type": "normal", "targetReps": 15, "restSeconds": 60}
+          ],
+          "notes": "Solleva il bacino, non solo le gambe. Movimento controllato."
+        },
+        {
+          "exerciseId": "push_up",
+          "sets": [
+            {"type": "normal", "targetReps": 15, "restSeconds": 45},
+            {"type": "normal", "targetReps": 15, "restSeconds": 45},
+            {"type": "normal", "targetReps": 15, "restSeconds": 0}
+          ],
+          "notes": "Mantieni ritmo costante. Respira regolarmente."
+        }
+      ]
+    },
+    {
+      "id": "default_home_calisthenics",
+      "name": "Home Calisthenics",
+      "description": "Allenamento calistenico intermedio. Forza funzionale con il peso corporeo.",
+      "difficulty": "intermediate",
+      "category": "home",
+      "estimatedDuration": 40,
+      "exercises": [
+        {
+          "exerciseId": "archer_push_up",
+          "sets": [
+            {"type": "normal", "targetReps": 6, "restSeconds": 90},
+            {"type": "normal", "targetReps": 6, "restSeconds": 90},
+            {"type": "normal", "targetReps": 6, "restSeconds": 120}
+          ],
+          "notes": "6 per lato. Sposta il peso su un braccio alla volta."
+        },
+        {
+          "exerciseId": "pull_up",
+          "sets": [
+            {"type": "normal", "targetReps": 6, "restSeconds": 90},
+            {"type": "normal", "targetReps": 6, "restSeconds": 90},
+            {"type": "normal", "targetReps": 6, "restSeconds": 120}
+          ],
+          "notes": "Se non hai la sbarra, usa le inverted rows con piedi elevati."
+        },
+        {
+          "exerciseId": "triceps_dip",
+          "sets": [
+            {"type": "normal", "targetReps": 10, "restSeconds": 90},
+            {"type": "normal", "targetReps": 10, "restSeconds": 90},
+            {"type": "normal", "targetReps": 10, "restSeconds": 120}
+          ],
+          "notes": "Su parallele o tra due sedie stabili."
+        },
+        {
+          "exerciseId": "elevated_back_lunge",
+          "sets": [
+            {"type": "normal", "targetReps": 10, "restSeconds": 60},
+            {"type": "normal", "targetReps": 10, "restSeconds": 60},
+            {"type": "normal", "targetReps": 10, "restSeconds": 90}
+          ],
+          "notes": "10 per gamba. Piede posteriore su gradino o sedia."
+        },
+        {
+          "exerciseId": "hanging_leg_raise",
+          "sets": [
+            {"type": "normal", "targetReps": 10, "restSeconds": 60},
+            {"type": "normal", "targetReps": 10, "restSeconds": 60},
+            {"type": "normal", "targetReps": 10, "restSeconds": 90}
+          ],
+          "notes": "Se troppo difficile, piega le ginocchia."
+        }
+      ]
+    }
+  ]
+}

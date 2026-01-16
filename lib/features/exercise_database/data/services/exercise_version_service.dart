@@ -15,12 +15,31 @@ import 'package:package_info_plus/package_info_plus.dart';
 import 'package:gymbro_flutter_new/core/data/hive_box_manager_enhanced.dart';
 
 class ExerciseVersionService {
+  /// Singleton pattern per evitare inizializzazioni multiple all'avvio
+  /// FIX: Ogni nuova istanza apriva 1 box Hive ridondante (visto 4x all'avvio)
+  static ExerciseVersionService? _instance;
+  static bool _staticInitialized = false;
 
-  ExerciseVersionService({
+  factory ExerciseVersionService({
     FirebaseFirestore? firestore,
     HiveBoxManagerEnhanced? boxManager,
-  }) : _firestore = firestore ?? FirebaseFirestore.instance,
-       _boxManager = boxManager ?? HiveBoxManagerEnhanced();
+  }) {
+    _instance ??= ExerciseVersionService._internal(
+      firestore ?? FirebaseFirestore.instance,
+      boxManager ?? HiveBoxManagerEnhanced(),
+    );
+    return _instance!;
+  }
+
+  ExerciseVersionService._internal(this._firestore, this._boxManager);
+
+  /// Reset singleton (solo per test)
+  @visibleForTesting
+  static void resetInstance() {
+    _instance = null;
+    _staticInitialized = false;
+  }
+
   final FirebaseFirestore _firestore;
   final HiveBoxManagerEnhanced _boxManager;
   static const String _metadataCollection = 'exercises_metadata';
@@ -29,17 +48,34 @@ class ExerciseVersionService {
 
   late Box<Map> _cacheBox;
   bool _initialized = false;
+  /// ⚡ PERFORMANCE: Completer to prevent parallel init race condition (was causing 4x init)
+  static Completer<void>? _initCompleter;
 
   /// Inizializza il servizio
+  /// FIX: Usa flag statico per prevenire inizializzazioni multiple anche con istanze diverse
+  /// FIX2: Completer previene race condition quando initialize() è chiamato in parallelo
   Future<void> initialize() async {
-    if (_initialized) return;
+    if (_staticInitialized && _initialized) return;
+
+    // ⚡ RACE CONDITION FIX: Se init è già in corso, aspetta che finisca
+    if (_initCompleter != null && !_initCompleter!.isCompleted) {
+      await _initCompleter!.future;
+      _initialized = true;
+      return;
+    }
+
+    _initCompleter = Completer<void>();
 
     try {
       _cacheBox = await _boxManager.openBox<Map>(_cacheBoxName);
       _initialized = true;
+      _staticInitialized = true;
       debugPrint('✅ ExerciseVersionService initialized');
+      _initCompleter!.complete();
     } catch (e) {
       debugPrint('❌ Failed to initialize ExerciseVersionService: $e');
+      _initCompleter!.completeError(e);
+      _initCompleter = null;
       rethrow;
     }
   }

@@ -23,6 +23,16 @@
     "almostReady",
     "recovering",
     "fatiguedMuscle",
-    "exhaustedMuscle"
+    "exhaustedMuscle",
+    "notAssigned",
+    "lastUpdated",
+    "noCoachTemplatesYet",
+    "createFirstCoachTemplate",
+    "noAssignedTemplatesYet",
+    "assignTemplatesToAthletes",
+    "saveAssignments",
+    "assignmentsUpdated",
+    "noActiveAthletes",
+    "addAthletesFirst"
   ]
 }

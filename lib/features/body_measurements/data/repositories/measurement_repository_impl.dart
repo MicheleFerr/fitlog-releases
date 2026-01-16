@@ -11,6 +11,8 @@ import 'package:gymbro_flutter_new/features/body_measurements/domain/repositorie
 import 'package:gymbro_flutter_new/features/body_measurements/domain/repositories/consent_repository.dart';
 import 'package:gymbro_flutter_new/features/body_measurements/data/datasources/measurement_local_datasource.dart';
 import 'package:gymbro_flutter_new/features/body_measurements/data/services/encryption_key_manager.dart';
+import 'package:gymbro_flutter_new/core/data/mixins/firebase_error_mapper_mixin.dart';
+import 'package:gymbro_flutter_new/shared/domain/failures/failure.dart' as shared;
 
 /// MeasurementRepositoryImpl - Firestore + Hive implementation of MeasurementRepository
 ///
@@ -82,7 +84,7 @@ import 'package:gymbro_flutter_new/features/body_measurements/data/services/encr
 ///   hasConsent: true,
 /// );
 /// ```
-class MeasurementRepositoryImpl implements MeasurementRepository {
+class MeasurementRepositoryImpl with FirebaseErrorMapperMixin implements MeasurementRepository {
   final FirebaseFirestore _firestore;
   final ConsentRepository _consentRepo;
   final MeasurementLocalDatasource _localDatasource;
@@ -122,62 +124,55 @@ class MeasurementRepositoryImpl implements MeasurementRepository {
     Measurement measurement, {
     required bool hasConsent,
   }) async {
-    try {
-      // GDPR: Enforce consent
-      if (!hasConsent) {
-        return left(ConsentRequiredFailure(measurement.metricType));
-      }
+    // GDPR: Enforce consent
+    if (!hasConsent) {
+      return left(ConsentRequiredFailure(measurement.metricType));
+    }
 
-      // Get encryption key
-      final keyResult = await _keyManager.getKey(measurement.userId);
-      if (keyResult.isLeft()) {
-        return left(const StorageFailure(
-          message: 'Failed to get encryption key',
-        ));
-      }
-
-      final encryptionKey = keyResult.getOrElse((_) => '');
-
-      // Encrypt measurement
-      final encryptedMeasurement = await _encryptMeasurement(
-        measurement,
-        encryptionKey,
-      );
-
-      // Save to local storage (Hive) - offline backup
-      final localResult = await _localDatasource.saveMeasurement(
-        encryptedMeasurement,
-      );
-      if (localResult.isLeft()) {
-        // Log error but don't fail (local storage is backup)
-        // TODO: Add audit log entry (Task 2.9)
-      }
-
-      // Save to Firestore (cloud)
-      await _getMeasurementsCollection(measurement.userId)
-          .doc(measurement.id)
-          .set(encryptedMeasurement.toJson());
-
-      // TODO: Create audit log entry (Task 2.9)
-      // await _auditLogger.log(
-      //   userId: measurement.userId,
-      //   action: AuditAction.measurementAdded,
-      //   metricType: measurement.metricType,
-      //   timestamp: DateTime.now(),
-      // );
-
-      return right(null);
-    } on FirebaseException catch (e) {
-      return left(StorageFailure(
-        message: e.message ?? 'Failed to add measurement',
-        error: e,
-      ));
-    } catch (e) {
-      return left(StorageFailure(
-        message: 'Unexpected error adding measurement: $e',
-        error: e,
+    // Get encryption key
+    final keyResult = await _keyManager.getKey(measurement.userId);
+    if (keyResult.isLeft()) {
+      return left(const StorageFailure(
+        message: 'Failed to get encryption key',
       ));
     }
+
+    final encryptionKey = keyResult.getOrElse((_) => '');
+
+    // Encrypt measurement
+    final encryptedMeasurement = await _encryptMeasurement(
+      measurement,
+      encryptionKey,
+    );
+
+    // Save to local storage (Hive) - offline backup
+    final localResult = await _localDatasource.saveMeasurement(
+      encryptedMeasurement,
+    );
+    if (localResult.isLeft()) {
+      // Log error but don't fail (local storage is backup)
+      // TODO: Add audit log entry (Task 2.9)
+    }
+
+    // Save to Firestore (cloud) using mixin
+    final result = await handleFirebaseVoidOperation(
+      () async {
+        await _getMeasurementsCollection(measurement.userId)
+            .doc(measurement.id)
+            .set(encryptedMeasurement.toJson());
+      },
+      operationName: 'addMeasurement',
+    );
+
+    // TODO: Create audit log entry (Task 2.9)
+    // await _auditLogger.log(
+    //   userId: measurement.userId,
+    //   action: AuditAction.measurementAdded,
+    //   metricType: measurement.metricType,
+    //   timestamp: DateTime.now(),
+    // );
+
+    return result.mapLeft(_mapToMeasurementFailure);
   }
 
   @override
@@ -187,48 +182,35 @@ class MeasurementRepositoryImpl implements MeasurementRepository {
     DateTime? dateFrom,
     DateTime? dateTo,
   }) async {
-    try {
-      List<EncryptedMeasurement> encryptedMeasurements = [];
+    // Build query based on filters
+    if (filterByType == null && dateFrom == null && dateTo == null) {
+      // No filters - get all from local storage first (faster)
+      final localResult = await _localDatasource.getAllMeasurements(userId);
 
-      // Build query based on filters
-      if (filterByType == null && dateFrom == null && dateTo == null) {
-        // No filters - get all from local storage first (faster)
-        final localResult = await _localDatasource.getAllMeasurements(userId);
-
-        if (localResult.isRight()) {
-          encryptedMeasurements = localResult.getOrElse((_) => []);
-        } else {
-          // Fallback to Firestore
-          final snapshot = await _getMeasurementsCollection(userId)
-              .orderBy('timestamp', descending: true)
-              .get();
-
-          encryptedMeasurements = snapshot.docs
-              .map((doc) => EncryptedMeasurement.fromJson(doc.data()))
-              .toList();
-        }
+      List<EncryptedMeasurement> encryptedMeasurements;
+      if (localResult.isRight()) {
+        encryptedMeasurements = localResult.getOrElse((_) => []);
       } else {
-        // Has filters - query Firestore directly
-        Query<Map<String, dynamic>> query =
-            _getMeasurementsCollection(userId);
+        // Fallback to Firestore using mixin
+        final firestoreResult = await handleFirebaseOperation<List<EncryptedMeasurement>>(
+          () async {
+            final snapshot = await _getMeasurementsCollection(userId)
+                .orderBy('timestamp', descending: true)
+                .get();
 
-        if (filterByType != null) {
-          query = query.where('metricType', isEqualTo: filterByType.name);
+            return snapshot.docs
+                .map((doc) => EncryptedMeasurement.fromJson(doc.data()))
+                .toList();
+          },
+          operationName: 'getMeasurements_noFilters',
+        );
+
+        // Handle error case
+        final mappedResult = firestoreResult.mapLeft(_mapToMeasurementFailure);
+        if (mappedResult.isLeft()) {
+          return mappedResult.map((_) => <Measurement>[]);
         }
-
-        if (dateFrom != null) {
-          query = query.where('timestamp', isGreaterThanOrEqualTo: dateFrom);
-        }
-
-        if (dateTo != null) {
-          query = query.where('timestamp', isLessThanOrEqualTo: dateTo);
-        }
-
-        final snapshot = await query.orderBy('timestamp', descending: true).get();
-
-        encryptedMeasurements = snapshot.docs
-            .map((doc) => EncryptedMeasurement.fromJson(doc.data()))
-            .toList();
+        encryptedMeasurements = firestoreResult.getOrElse((_) => []);
       }
 
       // Decrypt measurements
@@ -241,16 +223,52 @@ class MeasurementRepositoryImpl implements MeasurementRepository {
       final consentedMeasurements = await _filterByConsent(userId, measurements);
 
       return right(consentedMeasurements);
-    } on FirebaseException catch (e) {
-      return left(StorageFailure(
-        message: e.message ?? 'Failed to get measurements',
-        error: e,
-      ));
-    } catch (e) {
-      return left(StorageFailure(
-        message: 'Unexpected error getting measurements: $e',
-        error: e,
-      ));
+    } else {
+      // Has filters - query Firestore directly using mixin
+      final result = await handleFirebaseOperation<List<EncryptedMeasurement>>(
+        () async {
+          Query<Map<String, dynamic>> query =
+              _getMeasurementsCollection(userId);
+
+          if (filterByType != null) {
+            query = query.where('metricType', isEqualTo: filterByType.name);
+          }
+
+          if (dateFrom != null) {
+            query = query.where('timestamp', isGreaterThanOrEqualTo: dateFrom);
+          }
+
+          if (dateTo != null) {
+            query = query.where('timestamp', isLessThanOrEqualTo: dateTo);
+          }
+
+          final snapshot = await query.orderBy('timestamp', descending: true).get();
+
+          return snapshot.docs
+              .map((doc) => EncryptedMeasurement.fromJson(doc.data()))
+              .toList();
+        },
+        operationName: 'getMeasurements_withFilters',
+      );
+
+      // Handle error case
+      final mappedResult = result.mapLeft(_mapToMeasurementFailure);
+      if (mappedResult.isLeft()) {
+        return mappedResult.map((_) => <Measurement>[]);
+      }
+
+      final encryptedMeasurements = result.getOrElse((_) => []);
+
+      // Decrypt measurements
+      final measurements = await _decryptMeasurements(
+        encryptedMeasurements,
+        userId,
+      );
+
+      // Filter by consent (GDPR: only return consented metrics)
+      final consentedMeasurements = await _filterByConsent(userId, measurements);
+
+      return right(consentedMeasurements);
     }
   }
 
@@ -258,55 +276,48 @@ class MeasurementRepositoryImpl implements MeasurementRepository {
   Future<Either<MeasurementFailure, void>> updateMeasurement(
     Measurement measurement,
   ) async {
-    try {
-      // Check consent
-      final consentResult = await _consentRepo.hasConsentFor(
-        measurement.userId,
-        measurement.metricType,
-      );
+    // Check consent
+    final consentResult = await _consentRepo.hasConsentFor(
+      measurement.userId,
+      measurement.metricType,
+    );
 
-      if (consentResult.isLeft() || !(consentResult.getOrElse((_) => false))) {
-        return left(ConsentRequiredFailure(measurement.metricType));
-      }
+    if (consentResult.isLeft() || !(consentResult.getOrElse((_) => false))) {
+      return left(ConsentRequiredFailure(measurement.metricType));
+    }
 
-      // Get encryption key
-      final keyResult = await _keyManager.getKey(measurement.userId);
-      if (keyResult.isLeft()) {
-        return left(const StorageFailure(
-          message: 'Failed to get encryption key',
-        ));
-      }
-
-      final encryptionKey = keyResult.getOrElse((_) => '');
-
-      // Encrypt measurement
-      final encryptedMeasurement = await _encryptMeasurement(
-        measurement,
-        encryptionKey,
-      );
-
-      // Update local storage
-      await _localDatasource.updateMeasurement(encryptedMeasurement);
-
-      // Update Firestore
-      await _getMeasurementsCollection(measurement.userId)
-          .doc(measurement.id)
-          .update(encryptedMeasurement.toJson());
-
-      // TODO: Create audit log entry (Task 2.9)
-
-      return right(null);
-    } on FirebaseException catch (e) {
-      return left(StorageFailure(
-        message: e.message ?? 'Failed to update measurement',
-        error: e,
-      ));
-    } catch (e) {
-      return left(StorageFailure(
-        message: 'Unexpected error updating measurement: $e',
-        error: e,
+    // Get encryption key
+    final keyResult = await _keyManager.getKey(measurement.userId);
+    if (keyResult.isLeft()) {
+      return left(const StorageFailure(
+        message: 'Failed to get encryption key',
       ));
     }
+
+    final encryptionKey = keyResult.getOrElse((_) => '');
+
+    // Encrypt measurement
+    final encryptedMeasurement = await _encryptMeasurement(
+      measurement,
+      encryptionKey,
+    );
+
+    // Update local storage
+    await _localDatasource.updateMeasurement(encryptedMeasurement);
+
+    // Update Firestore using mixin
+    final result = await handleFirebaseVoidOperation(
+      () async {
+        await _getMeasurementsCollection(measurement.userId)
+            .doc(measurement.id)
+            .update(encryptedMeasurement.toJson());
+      },
+      operationName: 'updateMeasurement',
+    );
+
+    // TODO: Create audit log entry (Task 2.9)
+
+    return result.mapLeft(_mapToMeasurementFailure);
   }
 
   @override
@@ -314,34 +325,27 @@ class MeasurementRepositoryImpl implements MeasurementRepository {
     required String measurementId,
     required String userId,
   }) async {
-    try {
-      // Soft-delete: Mark as deleted with 30-day retention
-      // TODO: Implement soft-delete with scheduledDeletion field (Task 2.8)
+    // Soft-delete: Mark as deleted with 30-day retention
+    // TODO: Implement soft-delete with scheduledDeletion field (Task 2.8)
 
-      // For now, hard delete (TODO: Change to soft-delete in Task 2.8)
-      // Delete from local storage
-      await _localDatasource.deleteMeasurement(
-        userId: userId,
-        measurementId: measurementId,
-      );
+    // For now, hard delete (TODO: Change to soft-delete in Task 2.8)
+    // Delete from local storage
+    await _localDatasource.deleteMeasurement(
+      userId: userId,
+      measurementId: measurementId,
+    );
 
-      // Delete from Firestore
-      await _getMeasurementsCollection(userId).doc(measurementId).delete();
+    // Delete from Firestore using mixin
+    final result = await handleFirebaseVoidOperation(
+      () async {
+        await _getMeasurementsCollection(userId).doc(measurementId).delete();
+      },
+      operationName: 'deleteMeasurement',
+    );
 
-      // TODO: Create audit log entry (Task 2.9)
+    // TODO: Create audit log entry (Task 2.9)
 
-      return right(null);
-    } on FirebaseException catch (e) {
-      return left(StorageFailure(
-        message: e.message ?? 'Failed to delete measurement',
-        error: e,
-      ));
-    } catch (e) {
-      return left(StorageFailure(
-        message: 'Unexpected error deleting measurement: $e',
-        error: e,
-      ));
-    }
+    return result.mapLeft(_mapToMeasurementFailure);
   }
 
   @override
@@ -430,6 +434,22 @@ class MeasurementRepositoryImpl implements MeasurementRepository {
   }
 
   // ========== Private Helper Methods ==========
+
+  /// Map shared Failure to MeasurementFailure
+  MeasurementFailure _mapToMeasurementFailure(shared.Failure failure) {
+    if (failure is shared.NotFoundFailure) {
+      // Extract measurement ID from message if possible, otherwise use generic message
+      return StorageFailure(message: failure.message, error: failure);
+    } else if (failure is shared.ValidationFailure) {
+      return ValidationFailure(failure.message);
+    } else {
+      // Map all other failures to StorageFailure
+      return StorageFailure(
+        message: failure.message,
+        error: failure,
+      );
+    }
+  }
 
   /// Encrypt measurement using AES-256-GCM
   ///

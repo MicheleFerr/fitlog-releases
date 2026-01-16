@@ -145,8 +145,8 @@ class _EditSetModalState extends ConsumerState<EditSetModal> {
           // Completion toggle
           Card(
             child: SwitchListTile(
-              title: const Text('Mark as Completed'),
-              subtitle: Text(_isCompleted ? 'This set is completed' : 'This set is not completed'),
+              title: Text(context.l10n.markAsCompleted),
+              subtitle: Text(_isCompleted ? context.l10n.setIsCompleted : context.l10n.setIsNotCompleted),
               value: _isCompleted,
               onChanged: (value) {
                 setState(() {
@@ -320,14 +320,14 @@ class _EditSetModalState extends ConsumerState<EditSetModal> {
               Expanded(
                 child: OutlinedButton(
                   onPressed: () => Navigator.pop(context),
-                  child: const Text('Cancel'),
+                  child: Text(context.l10n.cancel),
                 ),
               ),
               const SizedBox(width: 16),
               Expanded(
                 child: FilledButton(
                   onPressed: _saveSet,
-                  child: const Text('Save Set'),
+                  child: Text(context.l10n.saveSet),
                 ),
               ),
             ],

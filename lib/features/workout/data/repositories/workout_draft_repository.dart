@@ -21,9 +21,14 @@ class WorkoutDraftRepository {
 
   /// Flag to track if init failed (prevents repeated failing attempts)
   bool _initFailed = false;
+  /// Flag to track if already initialized successfully
+  bool _initialized = false;
 
   /// Initialize the draft storage with corruption recovery
   Future<void> init() async {
+    // ⚡ PERFORMANCE: Skip if already initialized (prevents 5x init messages)
+    if (_initialized) return;
+
     // Skip if init already failed to prevent repeated errors
     if (_initFailed) {
       if (kDebugMode) {
@@ -46,6 +51,7 @@ class WorkoutDraftRepository {
         _recoveredBox = Hive.box('recovered_drafts');
       }
 
+      _initialized = true; // ⚡ Mark as initialized to prevent repeated init
       if (kDebugMode) {
         debugPrint('✅ [WorkoutDraftRepository] Initialized successfully');
       }

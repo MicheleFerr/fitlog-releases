@@ -85,9 +85,9 @@ class _MyPhotosScreenState extends ConsumerState<MyPhotosScreen> {
               ref.read(photoFilterPoseProvider.notifier).state = pose;
             },
             itemBuilder: (context) => [
-              const PopupMenuItem(
+              PopupMenuItem(
                 value: null,
-                child: Text('All poses'),
+                child: Text(context.l10n.allPoses),
               ),
               const PopupMenuDivider(),
               ...PhotoPose.values.map(
@@ -140,7 +140,7 @@ class _MyPhotosScreenState extends ConsumerState<MyPhotosScreen> {
                       onPressed: () => ref.invalidate(
                           userPhotosStreamProvider(widget.userId)),
                       icon: const Icon(AppIcons.refresh),
-                      label: const Text('Retry'),
+                      label: Text(context.l10n.retry),
                     ),
                   ],
                 ),
@@ -246,7 +246,7 @@ class _MyPhotosScreenState extends ConsumerState<MyPhotosScreen> {
                 onPressed: () {
                   ref.read(photoFilterPoseProvider.notifier).state = null;
                 },
-                child: const Text('Clear filter'),
+                child: Text(context.l10n.clearFilter),
               ),
             ],
           ],

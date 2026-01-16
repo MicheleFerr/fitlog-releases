@@ -340,15 +340,25 @@ service cloud.firestore {
 
     // ============= COACH DELEGATIONS =============
     match /coach_delegations/{delegationId} {
+      // Read: athlete (userId or athleteId) or coach (email)
       allow read: if request.auth != null &&
         (resource.data.userId == request.auth.uid ||
+         resource.data.athleteId == request.auth.uid ||
          resource.data.coachEmail == request.auth.token.email);
+      // Create: athlete or coach can create
       allow create: if request.auth != null &&
-        request.auth.uid == request.resource.data.userId;
+        (request.auth.uid == request.resource.data.userId ||
+         request.auth.uid == request.resource.data.athleteId ||
+         request.auth.token.email == request.resource.data.coachEmail);
+      // Update: athlete or coach
       allow update: if request.auth != null &&
-        request.auth.uid == resource.data.userId;
+        (request.auth.uid == resource.data.userId ||
+         request.auth.uid == resource.data.athleteId ||
+         request.auth.token.email == resource.data.coachEmail);
+      // Delete: athlete or coach
       allow delete: if request.auth != null &&
         (resource.data.userId == request.auth.uid ||
+         resource.data.athleteId == request.auth.uid ||
          resource.data.coachEmail == request.auth.token.email);
     }
 

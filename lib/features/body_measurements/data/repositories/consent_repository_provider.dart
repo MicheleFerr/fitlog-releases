@@ -50,6 +50,7 @@ import 'package:gymbro_flutter_new/features/body_measurements/data/repositories/
 /// **Note**: Constructor matches ConsentRepositoryImpl signature:
 /// `ConsentRepositoryImpl(FirebaseFirestore, {Uuid? uuid})`
 final consentRepositoryProvider = Provider<ConsentRepositoryImpl>((ref) {
+  ref.keepAlive(); // FIX: previene ricreazione repository con Firestore+Hive
   return ConsentRepositoryImpl(
     FirebaseFirestore.instance,
     // uuid parameter is optional, uses default Uuid() if not provided

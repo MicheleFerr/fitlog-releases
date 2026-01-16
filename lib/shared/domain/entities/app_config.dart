@@ -57,6 +57,7 @@ class AppConfig { // Auto-adjust rest time based on RPE feedback
     this.initialOnboardingCompleted = false, // Initial onboarding not completed by default
     this.skipExerciseDeleteConfirmation = false, // Show confirmation dialog by default (P0-2)
     this.simpleMode = false, // Simple mode for elderly/accessibility users (P2-2)
+    this.keepScreenAwakeDuringWorkout = true, // Keep screen on during workout by default
   });
 
   factory AppConfig.fromJson(Map<String, dynamic> json) {
@@ -92,6 +93,7 @@ class AppConfig { // Auto-adjust rest time based on RPE feedback
       initialOnboardingCompleted: json['initialOnboardingCompleted'] ?? false,
       skipExerciseDeleteConfirmation: json['skipExerciseDeleteConfirmation'] ?? false,
       simpleMode: json['simpleMode'] ?? false,
+      keepScreenAwakeDuringWorkout: json['keepScreenAwakeDuringWorkout'] ?? true,
     );
   }
   @HiveField(0)
@@ -249,6 +251,9 @@ class AppConfig { // Auto-adjust rest time based on RPE feedback
   @HiveField(50)
   final bool simpleMode; // Simple mode for elderly/accessibility users (P2-2)
 
+  @HiveField(51)
+  final bool keepScreenAwakeDuringWorkout; // Prevent auto-lock during active workout
+
   Locale get locale => Locale(languageCode, countryCode);
 
   AppConfig copyWith({
@@ -302,6 +307,7 @@ class AppConfig { // Auto-adjust rest time based on RPE feedback
     bool? initialOnboardingCompleted,
     bool? skipExerciseDeleteConfirmation,
     bool? simpleMode,
+    bool? keepScreenAwakeDuringWorkout,
   }) {
     return AppConfig(
       languageCode: languageCode ?? this.languageCode,
@@ -354,6 +360,7 @@ class AppConfig { // Auto-adjust rest time based on RPE feedback
       initialOnboardingCompleted: initialOnboardingCompleted ?? this.initialOnboardingCompleted,
       skipExerciseDeleteConfirmation: skipExerciseDeleteConfirmation ?? this.skipExerciseDeleteConfirmation,
       simpleMode: simpleMode ?? this.simpleMode,
+      keepScreenAwakeDuringWorkout: keepScreenAwakeDuringWorkout ?? this.keepScreenAwakeDuringWorkout,
     );
   }
 
@@ -384,6 +391,7 @@ class AppConfig { // Auto-adjust rest time based on RPE feedback
       'initialOnboardingCompleted': initialOnboardingCompleted,
       'skipExerciseDeleteConfirmation': skipExerciseDeleteConfirmation,
       'simpleMode': simpleMode,
+      'keepScreenAwakeDuringWorkout': keepScreenAwakeDuringWorkout,
     };
   }
 

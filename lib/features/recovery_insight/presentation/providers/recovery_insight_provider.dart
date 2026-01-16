@@ -24,7 +24,9 @@ import 'package:gymbro_flutter_new/features/recovery_insight/domain/services/sle
 // ==========================================
 
 /// Provider for HealthKitDatasource
+/// FIX: keepAlive() previene ricreazione che causava fetch duplicati di sleep data
 final healthKitDatasourceProvider = Provider<HealthKitDatasource>((ref) {
+  ref.keepAlive(); // Previene ricreazione e mantiene cache interna
   return HealthKitDatasource();
 });
 

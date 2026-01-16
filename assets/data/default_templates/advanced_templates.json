@@ -1,0 +1,259 @@
+{
+  "category": "advanced",
+  "difficulty": "advanced",
+  "description": "Programmi avanzati per atleti con 2+ anni di esperienza",
+  "templates": [
+    {
+      "id": "default_advanced_push",
+      "name": "Advanced Push",
+      "description": "Push day avanzato con volume e intensita elevati. Per atleti esperti.",
+      "difficulty": "advanced",
+      "category": "advanced",
+      "estimatedDuration": 60,
+      "exercises": [
+        {
+          "exerciseId": "barbell_bench_press",
+          "sets": [
+            {"type": "normal", "targetReps": 5, "restSeconds": 180},
+            {"type": "normal", "targetReps": 5, "restSeconds": 180},
+            {"type": "normal", "targetReps": 5, "restSeconds": 180},
+            {"type": "normal", "targetReps": 5, "restSeconds": 180}
+          ],
+          "notes": "Serie pesanti. RPE 8-9. Focus sulla tecnica perfetta."
+        },
+        {
+          "exerciseId": "dumbbell_incline_bench_press",
+          "sets": [
+            {"type": "normal", "targetReps": 8, "restSeconds": 120},
+            {"type": "normal", "targetReps": 8, "restSeconds": 120},
+            {"type": "normal", "targetReps": 8, "restSeconds": 120}
+          ],
+          "notes": "Panca a 30 gradi. Stretch profondo in basso."
+        },
+        {
+          "exerciseId": "standing_military_press",
+          "sets": [
+            {"type": "normal", "targetReps": 6, "restSeconds": 150},
+            {"type": "normal", "targetReps": 6, "restSeconds": 150},
+            {"type": "normal", "targetReps": 6, "restSeconds": 150}
+          ],
+          "notes": "In piedi, core contratto. Movimento esplosivo."
+        },
+        {
+          "exerciseId": "dumbbell_lateral_raise",
+          "sets": [
+            {"type": "normal", "targetReps": 12, "restSeconds": 60},
+            {"type": "normal", "targetReps": 12, "restSeconds": 60},
+            {"type": "normal", "targetReps": 12, "restSeconds": 60},
+            {"type": "normal", "targetReps": 12, "restSeconds": 90}
+          ],
+          "notes": "4 serie per volume sui deltoidi laterali."
+        },
+        {
+          "exerciseId": "triceps_dip",
+          "sets": [
+            {"type": "normal", "targetReps": 10, "restSeconds": 90},
+            {"type": "normal", "targetReps": 10, "restSeconds": 90},
+            {"type": "normal", "targetReps": 10, "restSeconds": 120}
+          ],
+          "notes": "Aggiungi peso se necessario. Full ROM."
+        },
+        {
+          "exerciseId": "rope_pushdown",
+          "sets": [
+            {"type": "normal", "targetReps": 15, "restSeconds": 60},
+            {"type": "normal", "targetReps": 15, "restSeconds": 60},
+            {"type": "normal", "targetReps": 15, "restSeconds": 90}
+          ],
+          "notes": "Finisher per i tricipiti. Contrai al massimo in basso."
+        }
+      ]
+    },
+    {
+      "id": "default_advanced_pull",
+      "name": "Advanced Pull",
+      "description": "Pull day avanzato. Schiena spessa e bicipiti forti.",
+      "difficulty": "advanced",
+      "category": "advanced",
+      "estimatedDuration": 60,
+      "exercises": [
+        {
+          "exerciseId": "barbell_deadlift",
+          "sets": [
+            {"type": "normal", "targetReps": 5, "restSeconds": 180},
+            {"type": "normal", "targetReps": 5, "restSeconds": 180},
+            {"type": "normal", "targetReps": 5, "restSeconds": 180}
+          ],
+          "notes": "Serie pesanti. Reset completo tra le reps. RPE 8."
+        },
+        {
+          "exerciseId": "barbell_bent_over_row",
+          "sets": [
+            {"type": "normal", "targetReps": 8, "restSeconds": 120},
+            {"type": "normal", "targetReps": 8, "restSeconds": 120},
+            {"type": "normal", "targetReps": 8, "restSeconds": 120},
+            {"type": "normal", "targetReps": 8, "restSeconds": 150}
+          ],
+          "notes": "Busto a 45 gradi. Tira verso l'ombelico."
+        },
+        {
+          "exerciseId": "pull_up",
+          "sets": [
+            {"type": "normal", "targetReps": 8, "restSeconds": 90},
+            {"type": "normal", "targetReps": 8, "restSeconds": 90},
+            {"type": "normal", "targetReps": 8, "restSeconds": 120}
+          ],
+          "notes": "Aggiungi peso se fai piu di 12 reps."
+        },
+        {
+          "exerciseId": "wide_grip_lat_pulldown",
+          "sets": [
+            {"type": "normal", "targetReps": 10, "restSeconds": 90},
+            {"type": "normal", "targetReps": 10, "restSeconds": 90},
+            {"type": "normal", "targetReps": 10, "restSeconds": 90}
+          ],
+          "notes": "Tira verso il petto alto. Stringi i dorsali."
+        },
+        {
+          "exerciseId": "dumbbell_bicep_curl",
+          "sets": [
+            {"type": "normal", "targetReps": 10, "restSeconds": 60},
+            {"type": "normal", "targetReps": 10, "restSeconds": 60},
+            {"type": "normal", "targetReps": 10, "restSeconds": 90}
+          ],
+          "notes": "Supina completamente. Negativa lenta."
+        },
+        {
+          "exerciseId": "barbell_curl",
+          "sets": [
+            {"type": "normal", "targetReps": 10, "restSeconds": 60},
+            {"type": "normal", "targetReps": 10, "restSeconds": 60},
+            {"type": "normal", "targetReps": 10, "restSeconds": 90}
+          ],
+          "notes": "Barra dritta o EZ. Gomiti fissi."
+        }
+      ]
+    },
+    {
+      "id": "default_advanced_legs",
+      "name": "Advanced Legs",
+      "description": "Leg day avanzato. Costruisci gambe potenti.",
+      "difficulty": "advanced",
+      "category": "advanced",
+      "estimatedDuration": 65,
+      "exercises": [
+        {
+          "exerciseId": "barbell_squat",
+          "sets": [
+            {"type": "normal", "targetReps": 5, "restSeconds": 180},
+            {"type": "normal", "targetReps": 5, "restSeconds": 180},
+            {"type": "normal", "targetReps": 5, "restSeconds": 180},
+            {"type": "normal", "targetReps": 5, "restSeconds": 180}
+          ],
+          "notes": "Sotto il parallelo. Core solido, schiena neutra."
+        },
+        {
+          "exerciseId": "romanian_deadlift",
+          "sets": [
+            {"type": "normal", "targetReps": 8, "restSeconds": 120},
+            {"type": "normal", "targetReps": 8, "restSeconds": 120},
+            {"type": "normal", "targetReps": 8, "restSeconds": 120}
+          ],
+          "notes": "Senti lo stretch negli ischiocrurali. Non arrotondare la schiena."
+        },
+        {
+          "exerciseId": "leg_press",
+          "sets": [
+            {"type": "normal", "targetReps": 12, "restSeconds": 120},
+            {"type": "normal", "targetReps": 12, "restSeconds": 120},
+            {"type": "normal", "targetReps": 12, "restSeconds": 120}
+          ],
+          "notes": "Piedi alti sulla piattaforma per piu glutei."
+        },
+        {
+          "exerciseId": "dumbbell_bulgarian_split_squat",
+          "sets": [
+            {"type": "normal", "targetReps": 10, "restSeconds": 90},
+            {"type": "normal", "targetReps": 10, "restSeconds": 90},
+            {"type": "normal", "targetReps": 10, "restSeconds": 90}
+          ],
+          "notes": "10 per gamba. Mantieni il busto eretto."
+        },
+        {
+          "exerciseId": "lying_leg_curls",
+          "sets": [
+            {"type": "normal", "targetReps": 12, "restSeconds": 60},
+            {"type": "normal", "targetReps": 12, "restSeconds": 60},
+            {"type": "normal", "targetReps": 12, "restSeconds": 90}
+          ],
+          "notes": "Contrai completamente. Negativa controllata."
+        },
+        {
+          "exerciseId": "standing_calf_raises",
+          "sets": [
+            {"type": "normal", "targetReps": 15, "restSeconds": 45},
+            {"type": "normal", "targetReps": 15, "restSeconds": 45},
+            {"type": "normal", "targetReps": 15, "restSeconds": 45},
+            {"type": "normal", "targetReps": 15, "restSeconds": 60}
+          ],
+          "notes": "Pausa di 2 secondi in alto. Full stretch in basso."
+        }
+      ]
+    },
+    {
+      "id": "default_advanced_upper_lower_upper",
+      "name": "Advanced Upper A",
+      "description": "Upper body avanzato con focus su forza e ipertrofia.",
+      "difficulty": "advanced",
+      "category": "advanced",
+      "estimatedDuration": 55,
+      "exercises": [
+        {
+          "exerciseId": "barbell_bench_press",
+          "sets": [
+            {"type": "normal", "targetReps": 6, "restSeconds": 180},
+            {"type": "normal", "targetReps": 6, "restSeconds": 180},
+            {"type": "normal", "targetReps": 6, "restSeconds": 180}
+          ],
+          "notes": "Serie pesanti di forza. RPE 8."
+        },
+        {
+          "exerciseId": "barbell_bent_over_row",
+          "sets": [
+            {"type": "normal", "targetReps": 8, "restSeconds": 120},
+            {"type": "normal", "targetReps": 8, "restSeconds": 120},
+            {"type": "normal", "targetReps": 8, "restSeconds": 120}
+          ],
+          "notes": "Match the push volume. Schiena spessa."
+        },
+        {
+          "exerciseId": "standing_military_press",
+          "sets": [
+            {"type": "normal", "targetReps": 8, "restSeconds": 120},
+            {"type": "normal", "targetReps": 8, "restSeconds": 120},
+            {"type": "normal", "targetReps": 8, "restSeconds": 120}
+          ],
+          "notes": "Forza delle spalle. Core sempre contratto."
+        },
+        {
+          "exerciseId": "pull_up",
+          "sets": [
+            {"type": "normal", "targetReps": 10, "restSeconds": 90},
+            {"type": "normal", "targetReps": 10, "restSeconds": 90},
+            {"type": "normal", "targetReps": 10, "restSeconds": 120}
+          ],
+          "notes": "Ampiezza dorsali. Full ROM."
+        },
+        {
+          "exerciseId": "dumbbell_fly",
+          "sets": [
+            {"type": "normal", "targetReps": 12, "restSeconds": 60},
+            {"type": "normal", "targetReps": 12, "restSeconds": 60},
+            {"type": "normal", "targetReps": 12, "restSeconds": 90}
+          ],
+          "notes": "Stretch profondo. Non pesante, focus sul muscolo."
+        }
+      ]
+    }
+  ]
+}

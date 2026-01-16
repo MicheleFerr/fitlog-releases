@@ -5,6 +5,7 @@ import 'package:gymbro_flutter_new/features/workout/domain/entities/workout.dart
 
 /// Provider that aggregates exercise data from all completed workouts
 final exerciseProgressMetricsProvider = Provider<Map<String, ExerciseProgressMetrics>>((ref) {
+  ref.keepAlive(); // FIX: previene ricreazione provider con aggregazioni workout
   final workoutsAsync = ref.watch(historicalWorkoutsProvider);
 
   return workoutsAsync.when(
@@ -23,6 +24,7 @@ final exerciseProgressMetricsProvider = Provider<Map<String, ExerciseProgressMet
 /// 1. First: from aggregated workout data (exerciseProgressMetricsProvider)
 /// 2. Fallback: from Firebase analytics collection (exerciseHistoryByNameProvider)
 final exerciseMetricsProvider = Provider.family<ExerciseProgressMetrics?, String>((ref, exerciseName) {
+  ref.keepAlive(); // FIX: previene ricreazione provider family con select
   // 🔧 PERF FIX: Use select to only watch this specific exercise's metrics
   // This prevents rebuilds when OTHER exercises are updated
   final normalizedName = exerciseName.toLowerCase().trim();

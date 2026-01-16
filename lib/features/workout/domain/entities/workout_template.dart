@@ -25,6 +25,7 @@ class WorkoutTemplate { // 3, 6, o 10
     this.averageRating = 0.0,
     this.reviewCount = 0,
     this.difficulty,
+    this.category,
     this.defaultAutoAdjustmentType,
     this.defaultApreProtocol,
   })  : id = id ?? const Uuid().v4(),
@@ -86,6 +87,7 @@ class WorkoutTemplate { // 3, 6, o 10
       averageRating: json['averageRating'] is num ? json['averageRating'].toDouble() : 0.0,
       reviewCount: json['reviewCount'] is int ? json['reviewCount'] : 0,
       difficulty: json['difficulty']?.toString(),
+      category: json['category']?.toString(),
       defaultAutoAdjustmentType: defaultAutoAdjustmentType,
       defaultApreProtocol: json['defaultApreProtocol'] is int ? json['defaultApreProtocol'] : null,
     );
@@ -110,12 +112,14 @@ class WorkoutTemplate { // 3, 6, o 10
   final double averageRating; // Rating medio (1-5)
   final int reviewCount; // Numero di recensioni
   final String? difficulty; // beginner, intermediate, advanced, expert
+  final String? category; // beginner, intermediate, advanced, home, dumbbell, express, specialty
 
   // Auto-regolazione predefinita
   final AutoAdjustmentType? defaultAutoAdjustmentType; // APRE o RPE
   final int? defaultApreProtocol;
 
   WorkoutTemplate copyWith({
+    String? id,
     String? name,
     String? description,
     String? imageUrl,
@@ -132,11 +136,12 @@ class WorkoutTemplate { // 3, 6, o 10
     double? averageRating,
     int? reviewCount,
     String? difficulty,
+    String? category,
     AutoAdjustmentType? defaultAutoAdjustmentType,
     int? defaultApreProtocol,
   }) {
     return WorkoutTemplate(
-      id: id,
+      id: id ?? this.id,
       name: name ?? this.name,
       description: description ?? this.description,
       imageUrl: imageUrl ?? this.imageUrl,
@@ -154,6 +159,7 @@ class WorkoutTemplate { // 3, 6, o 10
       averageRating: averageRating ?? this.averageRating,
       reviewCount: reviewCount ?? this.reviewCount,
       difficulty: difficulty ?? this.difficulty,
+      category: category ?? this.category,
       defaultAutoAdjustmentType: defaultAutoAdjustmentType ?? this.defaultAutoAdjustmentType,
       defaultApreProtocol: defaultApreProtocol ?? this.defaultApreProtocol,
     );
@@ -187,6 +193,7 @@ class WorkoutTemplate { // 3, 6, o 10
       'averageRating': averageRating,
       'reviewCount': reviewCount,
       'difficulty': difficulty,
+      'category': category,
       'defaultAutoAdjustmentType': defaultAutoAdjustmentType?.name,
       'defaultApreProtocol': defaultApreProtocol,
     };

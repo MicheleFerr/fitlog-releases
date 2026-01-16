@@ -1,4 +1,5 @@
 import 'package:flutter/foundation.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:gymbro_flutter_new/shared/domain/privacy/privacy_manager.dart';
 import 'package:gymbro_flutter_new/shared/domain/privacy/consent_type.dart';
 
@@ -57,17 +58,23 @@ class PrivacySafeAnalytics {
     // Check if user has consented to analytics
     final hasConsent = await PrivacyManager.hasConsent(ConsentType.analytics);
     if (!hasConsent) {
+      // 🔐 GDPR: Ensure Firebase Analytics stays disabled
+      await FirebaseAnalytics.instance.setAnalyticsCollectionEnabled(false);
       if (kDebugMode) {
         debugPrint('ℹ️ Analytics consent not granted - tracking disabled');
       }
       return;
     }
 
+    // 🔐 GDPR FIX (A2): Enable Firebase Analytics ONLY after consent verified
+    await FirebaseAnalytics.instance.setAnalyticsCollectionEnabled(true);
+
     // TODO: Initialize actual Plausible client here
     _initialized = true;
 
     if (kDebugMode) {
       debugPrint('✅ Privacy-Safe Analytics initialized (GDPR-compliant, consent-based)');
+      debugPrint('   Firebase Analytics: ENABLED (consent granted)');
       debugPrint('   Domain: $_domain');
       debugPrint('   Server: $_serverUrl');
     }
@@ -115,8 +122,12 @@ class PrivacySafeAnalytics {
   static Future<void> stop() async {
     _initialized = false;
 
+    // 🔐 GDPR: Disable Firebase Analytics when consent withdrawn
+    await FirebaseAnalytics.instance.setAnalyticsCollectionEnabled(false);
+
     if (kDebugMode) {
       debugPrint('🛑 Privacy-Safe Analytics stopped');
+      debugPrint('   Firebase Analytics: DISABLED (consent withdrawn)');
     }
   }
 

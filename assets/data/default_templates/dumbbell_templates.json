@@ -1,0 +1,302 @@
+{
+  "category": "dumbbell",
+  "difficulty": "all",
+  "description": "Allenamenti con soli manubri - perfetti per casa o hotel",
+  "templates": [
+    {
+      "id": "default_dumbbell_full_body",
+      "name": "Dumbbell Full Body",
+      "description": "Allenamento completo con soli manubri. Ideale per home gym o viaggi.",
+      "difficulty": "beginner",
+      "category": "dumbbell",
+      "estimatedDuration": 40,
+      "exercises": [
+        {
+          "exerciseId": "dumbbell_goblet_squat",
+          "sets": [
+            {"type": "normal", "targetReps": 12, "restSeconds": 60},
+            {"type": "normal", "targetReps": 12, "restSeconds": 60},
+            {"type": "normal", "targetReps": 12, "restSeconds": 90}
+          ],
+          "notes": "Tieni il manubrio al petto. Scendi fino a parallelo."
+        },
+        {
+          "exerciseId": "dumbbell_bench_press",
+          "sets": [
+            {"type": "normal", "targetReps": 10, "restSeconds": 60},
+            {"type": "normal", "targetReps": 10, "restSeconds": 60},
+            {"type": "normal", "targetReps": 10, "restSeconds": 90}
+          ],
+          "notes": "Su panca o pavimento. Gomiti a 45 gradi."
+        },
+        {
+          "exerciseId": "one_arm_dumbbell_row",
+          "sets": [
+            {"type": "normal", "targetReps": 10, "restSeconds": 60},
+            {"type": "normal", "targetReps": 10, "restSeconds": 60},
+            {"type": "normal", "targetReps": 10, "restSeconds": 90}
+          ],
+          "notes": "10 per braccio. Tira verso il fianco, non verso il petto."
+        },
+        {
+          "exerciseId": "dumbbell_shoulder_press",
+          "sets": [
+            {"type": "normal", "targetReps": 10, "restSeconds": 60},
+            {"type": "normal", "targetReps": 10, "restSeconds": 60},
+            {"type": "normal", "targetReps": 10, "restSeconds": 90}
+          ],
+          "notes": "Seduto o in piedi. Non inarcare la schiena."
+        },
+        {
+          "exerciseId": "dumbbell_romanian_deadlift",
+          "sets": [
+            {"type": "normal", "targetReps": 12, "restSeconds": 60},
+            {"type": "normal", "targetReps": 12, "restSeconds": 60},
+            {"type": "normal", "targetReps": 12, "restSeconds": 90}
+          ],
+          "notes": "Schiena dritta, manubri lungo le gambe. Senti gli ischiocrurali."
+        }
+      ]
+    },
+    {
+      "id": "default_dumbbell_upper",
+      "name": "Dumbbell Upper Body",
+      "description": "Upper body completo con manubri. Petto, schiena, spalle e braccia.",
+      "difficulty": "intermediate",
+      "category": "dumbbell",
+      "estimatedDuration": 45,
+      "exercises": [
+        {
+          "exerciseId": "dumbbell_bench_press",
+          "sets": [
+            {"type": "normal", "targetReps": 10, "restSeconds": 90},
+            {"type": "normal", "targetReps": 10, "restSeconds": 90},
+            {"type": "normal", "targetReps": 10, "restSeconds": 90},
+            {"type": "normal", "targetReps": 10, "restSeconds": 120}
+          ],
+          "notes": "Movimento controllato. Scendi fino a sentire lo stretch nel petto."
+        },
+        {
+          "exerciseId": "one_arm_dumbbell_row",
+          "sets": [
+            {"type": "normal", "targetReps": 10, "restSeconds": 60},
+            {"type": "normal", "targetReps": 10, "restSeconds": 60},
+            {"type": "normal", "targetReps": 10, "restSeconds": 90}
+          ],
+          "notes": "Stringi le scapole in alto. Pausa di 1 secondo."
+        },
+        {
+          "exerciseId": "dumbbell_shoulder_press",
+          "sets": [
+            {"type": "normal", "targetReps": 10, "restSeconds": 90},
+            {"type": "normal", "targetReps": 10, "restSeconds": 90},
+            {"type": "normal", "targetReps": 10, "restSeconds": 90}
+          ],
+          "notes": "Spingi verticalmente. Gomiti sotto i polsi."
+        },
+        {
+          "exerciseId": "dumbbell_lateral_raise",
+          "sets": [
+            {"type": "normal", "targetReps": 12, "restSeconds": 60},
+            {"type": "normal", "targetReps": 12, "restSeconds": 60},
+            {"type": "normal", "targetReps": 12, "restSeconds": 90}
+          ],
+          "notes": "Leggera flessione ai gomiti. Solleva fino a parallelo."
+        },
+        {
+          "exerciseId": "dumbbell_bicep_curl",
+          "sets": [
+            {"type": "normal", "targetReps": 12, "restSeconds": 60},
+            {"type": "normal", "targetReps": 12, "restSeconds": 60},
+            {"type": "normal", "targetReps": 12, "restSeconds": 90}
+          ],
+          "notes": "Gomiti fissi ai fianchi. Contrai in alto."
+        },
+        {
+          "exerciseId": "dumbbell_overhead_tricep_extension",
+          "sets": [
+            {"type": "normal", "targetReps": 12, "restSeconds": 60},
+            {"type": "normal", "targetReps": 12, "restSeconds": 60},
+            {"type": "normal", "targetReps": 12, "restSeconds": 90}
+          ],
+          "notes": "Gomiti fissi vicino alla testa. Estendi completamente."
+        }
+      ]
+    },
+    {
+      "id": "default_dumbbell_lower",
+      "name": "Dumbbell Lower Body",
+      "description": "Gambe e glutei con manubri. Costruisci forza nella parte inferiore.",
+      "difficulty": "intermediate",
+      "category": "dumbbell",
+      "estimatedDuration": 40,
+      "exercises": [
+        {
+          "exerciseId": "dumbbell_goblet_squat",
+          "sets": [
+            {"type": "normal", "targetReps": 12, "restSeconds": 90},
+            {"type": "normal", "targetReps": 12, "restSeconds": 90},
+            {"type": "normal", "targetReps": 12, "restSeconds": 90},
+            {"type": "normal", "targetReps": 12, "restSeconds": 120}
+          ],
+          "notes": "Profondita completa. Busto eretto."
+        },
+        {
+          "exerciseId": "dumbbell_romanian_deadlift",
+          "sets": [
+            {"type": "normal", "targetReps": 10, "restSeconds": 90},
+            {"type": "normal", "targetReps": 10, "restSeconds": 90},
+            {"type": "normal", "targetReps": 10, "restSeconds": 90}
+          ],
+          "notes": "Mantieni la curva lombare. Scendi finche senti tensione."
+        },
+        {
+          "exerciseId": "dumbbell_lunge",
+          "sets": [
+            {"type": "normal", "targetReps": 10, "restSeconds": 60},
+            {"type": "normal", "targetReps": 10, "restSeconds": 60},
+            {"type": "normal", "targetReps": 10, "restSeconds": 90}
+          ],
+          "notes": "10 per gamba. Passo lungo, ginocchio non oltre la punta."
+        },
+        {
+          "exerciseId": "dumbbell_bulgarian_split_squat",
+          "sets": [
+            {"type": "normal", "targetReps": 8, "restSeconds": 60},
+            {"type": "normal", "targetReps": 8, "restSeconds": 60},
+            {"type": "normal", "targetReps": 8, "restSeconds": 90}
+          ],
+          "notes": "8 per gamba. Piede posteriore su panca. Scendi controllato."
+        },
+        {
+          "exerciseId": "dumbbell_standing_calf_raise",
+          "sets": [
+            {"type": "normal", "targetReps": 15, "restSeconds": 45},
+            {"type": "normal", "targetReps": 15, "restSeconds": 45},
+            {"type": "normal", "targetReps": 15, "restSeconds": 60}
+          ],
+          "notes": "Su un gradino per maggiore range. Pausa in alto."
+        }
+      ]
+    },
+    {
+      "id": "default_dumbbell_push",
+      "name": "Dumbbell Push",
+      "description": "Push day con manubri. Petto, spalle e tricipiti.",
+      "difficulty": "intermediate",
+      "category": "dumbbell",
+      "estimatedDuration": 40,
+      "exercises": [
+        {
+          "exerciseId": "dumbbell_bench_press",
+          "sets": [
+            {"type": "normal", "targetReps": 10, "restSeconds": 90},
+            {"type": "normal", "targetReps": 10, "restSeconds": 90},
+            {"type": "normal", "targetReps": 10, "restSeconds": 120}
+          ],
+          "notes": "Movimento controllato. Full ROM."
+        },
+        {
+          "exerciseId": "dumbbell_incline_bench_press",
+          "sets": [
+            {"type": "normal", "targetReps": 10, "restSeconds": 90},
+            {"type": "normal", "targetReps": 10, "restSeconds": 90},
+            {"type": "normal", "targetReps": 10, "restSeconds": 120}
+          ],
+          "notes": "Panca a 30-45 gradi. Focus sul petto alto."
+        },
+        {
+          "exerciseId": "dumbbell_shoulder_press",
+          "sets": [
+            {"type": "normal", "targetReps": 10, "restSeconds": 90},
+            {"type": "normal", "targetReps": 10, "restSeconds": 90},
+            {"type": "normal", "targetReps": 10, "restSeconds": 120}
+          ],
+          "notes": "Spingi verticalmente. Core contratto."
+        },
+        {
+          "exerciseId": "dumbbell_lateral_raise",
+          "sets": [
+            {"type": "normal", "targetReps": 15, "restSeconds": 60},
+            {"type": "normal", "targetReps": 15, "restSeconds": 60},
+            {"type": "normal", "targetReps": 15, "restSeconds": 90}
+          ],
+          "notes": "Peso leggero, focus sulla connessione mente-muscolo."
+        },
+        {
+          "exerciseId": "dumbbell_overhead_tricep_extension",
+          "sets": [
+            {"type": "normal", "targetReps": 12, "restSeconds": 60},
+            {"type": "normal", "targetReps": 12, "restSeconds": 60},
+            {"type": "normal", "targetReps": 12, "restSeconds": 90}
+          ],
+          "notes": "Gomiti fissi. Stretch completo in basso."
+        }
+      ]
+    },
+    {
+      "id": "default_dumbbell_pull",
+      "name": "Dumbbell Pull",
+      "description": "Pull day con manubri. Schiena e bicipiti.",
+      "difficulty": "intermediate",
+      "category": "dumbbell",
+      "estimatedDuration": 40,
+      "exercises": [
+        {
+          "exerciseId": "one_arm_dumbbell_row",
+          "sets": [
+            {"type": "normal", "targetReps": 10, "restSeconds": 60},
+            {"type": "normal", "targetReps": 10, "restSeconds": 60},
+            {"type": "normal", "targetReps": 10, "restSeconds": 90}
+          ],
+          "notes": "Tira verso il fianco. Stringi la scapola in alto."
+        },
+        {
+          "exerciseId": "dumbbell_bent_over_row",
+          "sets": [
+            {"type": "normal", "targetReps": 10, "restSeconds": 90},
+            {"type": "normal", "targetReps": 10, "restSeconds": 90},
+            {"type": "normal", "targetReps": 10, "restSeconds": 120}
+          ],
+          "notes": "Busto a 45 gradi. Tira entrambi i manubri insieme."
+        },
+        {
+          "exerciseId": "dumbbell_rear_delt_fly",
+          "sets": [
+            {"type": "normal", "targetReps": 15, "restSeconds": 60},
+            {"type": "normal", "targetReps": 15, "restSeconds": 60},
+            {"type": "normal", "targetReps": 15, "restSeconds": 90}
+          ],
+          "notes": "Busto piegato. Leggera flessione ai gomiti."
+        },
+        {
+          "exerciseId": "dumbbell_shrug",
+          "sets": [
+            {"type": "normal", "targetReps": 12, "restSeconds": 60},
+            {"type": "normal", "targetReps": 12, "restSeconds": 60},
+            {"type": "normal", "targetReps": 12, "restSeconds": 90}
+          ],
+          "notes": "Solleva le spalle verso le orecchie. Pausa in alto."
+        },
+        {
+          "exerciseId": "dumbbell_bicep_curl",
+          "sets": [
+            {"type": "normal", "targetReps": 12, "restSeconds": 60},
+            {"type": "normal", "targetReps": 12, "restSeconds": 60},
+            {"type": "normal", "targetReps": 12, "restSeconds": 90}
+          ],
+          "notes": "Supina in alto. Controllato nella discesa."
+        },
+        {
+          "exerciseId": "dumbbell_hammer_curl",
+          "sets": [
+            {"type": "normal", "targetReps": 12, "restSeconds": 60},
+            {"type": "normal", "targetReps": 12, "restSeconds": 60},
+            {"type": "normal", "targetReps": 12, "restSeconds": 90}
+          ],
+          "notes": "Presa neutra. Lavora brachiale e avambracci."
+        }
+      ]
+    }
+  ]
+}

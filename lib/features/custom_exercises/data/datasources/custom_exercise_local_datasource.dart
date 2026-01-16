@@ -131,18 +131,35 @@ class CustomExerciseLocalDatasource {
   ///
   /// Returns only active exercises (not expired).
   /// Sorted by creation date (newest first).
+  ///
+  /// 🔒 USER ISOLATION: Only returns exercises for current user
   Future<List<CustomExercise>> getAll() async {
     try {
       await init();
       if (_box == null || _initFailed) return [];
 
+      final currentUserId = userCacheKeys.currentUserId;
+      if (currentUserId == null) {
+        if (kDebugMode) {
+          debugPrint('⚠️ [CustomExerciseLocalDatasource] No user logged in');
+        }
+        return [];
+      }
+
       final exercises = <CustomExercise>[];
 
-      // LazyBox requires iterating through keys
+      // 🔒 FIX: Only iterate keys belonging to current user
+      final userPrefix = 'custom_exercise_';
+      final userSuffix = '_$currentUserId';
+
       for (final key in _box!.keys) {
-        final exercise = await _box?.get(key);
-        if (exercise != null && exercise.isActive) {
-          exercises.add(exercise);
+        final keyStr = key.toString();
+        // Only process keys that belong to current user
+        if (keyStr.startsWith(userPrefix) && keyStr.endsWith(userSuffix)) {
+          final exercise = await _box?.get(key);
+          if (exercise != null && exercise.isActive) {
+            exercises.add(exercise);
+          }
         }
       }
 
@@ -292,17 +309,35 @@ class CustomExerciseLocalDatasource {
   /// Get all expired custom exercises (for cleanup)
   ///
   /// Returns list of custom exercises that have passed their unlock deadline.
+  ///
+  /// 🔒 USER ISOLATION: Only returns exercises for current user
   Future<List<CustomExercise>> getExpired() async {
     try {
       await init();
       if (_box == null || _initFailed) return [];
 
+      final currentUserId = userCacheKeys.currentUserId;
+      if (currentUserId == null) {
+        if (kDebugMode) {
+          debugPrint('⚠️ [CustomExerciseLocalDatasource] No user logged in');
+        }
+        return [];
+      }
+
       final expired = <CustomExercise>[];
 
+      // 🔒 FIX: Only iterate keys belonging to current user
+      final userPrefix = 'custom_exercise_';
+      final userSuffix = '_$currentUserId';
+
       for (final key in _box!.keys) {
-        final exercise = await _box?.get(key);
-        if (exercise != null && exercise.isExpired) {
-          expired.add(exercise);
+        final keyStr = key.toString();
+        // Only process keys that belong to current user
+        if (keyStr.startsWith(userPrefix) && keyStr.endsWith(userSuffix)) {
+          final exercise = await _box?.get(key);
+          if (exercise != null && exercise.isExpired) {
+            expired.add(exercise);
+          }
         }
       }
 
@@ -318,19 +353,37 @@ class CustomExerciseLocalDatasource {
   /// Get custom exercises based on base exercise ID
   ///
   /// Returns all variants created from a specific base exercise.
+  ///
+  /// 🔒 USER ISOLATION: Only returns exercises for current user
   Future<List<CustomExercise>> getVariantsOf(String baseExerciseId) async {
     try {
       await init();
       if (_box == null || _initFailed) return [];
 
+      final currentUserId = userCacheKeys.currentUserId;
+      if (currentUserId == null) {
+        if (kDebugMode) {
+          debugPrint('⚠️ [CustomExerciseLocalDatasource] No user logged in');
+        }
+        return [];
+      }
+
       final variants = <CustomExercise>[];
 
+      // 🔒 FIX: Only iterate keys belonging to current user
+      final userPrefix = 'custom_exercise_';
+      final userSuffix = '_$currentUserId';
+
       for (final key in _box!.keys) {
-        final exercise = await _box?.get(key);
-        if (exercise != null &&
-            exercise.isActive &&
-            exercise.baseExerciseId == baseExerciseId) {
-          variants.add(exercise);
+        final keyStr = key.toString();
+        // Only process keys that belong to current user
+        if (keyStr.startsWith(userPrefix) && keyStr.endsWith(userSuffix)) {
+          final exercise = await _box?.get(key);
+          if (exercise != null &&
+              exercise.isActive &&
+              exercise.baseExerciseId == baseExerciseId) {
+            variants.add(exercise);
+          }
         }
       }
 

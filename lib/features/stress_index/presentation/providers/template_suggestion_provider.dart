@@ -14,6 +14,7 @@ import 'package:gymbro_flutter_new/features/exercise_database/presentation/provi
 import 'package:gymbro_flutter_new/features/stress_index/domain/entities/personal_calibration.dart';
 import 'package:gymbro_flutter_new/features/stress_index/domain/entities/template_stress_analysis.dart';
 import 'package:gymbro_flutter_new/features/stress_index/domain/services/calibration_service.dart';
+import 'package:gymbro_flutter_new/features/stress_index/domain/services/fitness_fatigue_service.dart';
 import 'package:gymbro_flutter_new/features/stress_index/domain/services/prediction_service.dart';
 import 'package:gymbro_flutter_new/features/stress_index/domain/services/template_stress_analyzer.dart';
 import 'package:gymbro_flutter_new/features/stress_index/presentation/providers/stress_index_provider.dart';
@@ -472,18 +473,40 @@ final stressInsightProvider =
     }
 
     // Get average workout stress for predictions (from history)
-    double? avgWorkoutStress;
+    double avgWorkoutStress = 40.0; // Default
     if (history.isNotEmpty) {
-      final stressValues = history.map((r) => r.displayScore.toDouble()).toList();
+      final stressValues = history.map((r) => r.displayScore).toList();
       avgWorkoutStress = stressValues.reduce((a, b) => a + b) / stressValues.length;
     }
 
-    // Calculate insight
-    final insight = PredictionService.calculateInsight(
+    // Calculate insight using SINGLE SOURCE OF TRUTH (FFM)
+    // First get base prediction from PredictionService
+    final baseInsight = PredictionService.calculateInsight(
       currentStress: currentStress,
       calibration: calibration,
       healthData: healthData.hasData ? healthData : null,
       averageWorkoutStress: avgWorkoutStress,
+    );
+
+    // Override predictedIfWorkout with FFM-based simulation
+    // This ensures consistency between actual stress and predictions
+    final ffmPredictedIfWorkout = history.isNotEmpty
+        ? FitnessFatigueService.predictStressAfterSimulatedWorkout(
+            workoutHistory: history,
+            simulatedWorkoutStress: avgWorkoutStress,
+          )
+        : avgWorkoutStress; // No history = just use average
+
+    // Create updated insight with FFM prediction
+    final insight = StressInsight(
+      currentStress: baseInsight.currentStress,
+      predictedTomorrow: baseInsight.predictedTomorrow,
+      predictedIfWorkout: ffmPredictedIfWorkout,
+      recommendation: baseInsight.recommendation,
+      rationale: baseInsight.rationale,
+      factors: baseInsight.factors,
+      calibrationQuality: baseInsight.calibrationQuality,
+      calculatedAt: DateTime.now(),
     );
 
     if (kDebugMode) {
@@ -495,6 +518,7 @@ final stressInsightProvider =
       debugPrint('  - Adjusted Readiness: ${sleepAwareData.adjustedReadiness.toStringAsFixed(1)}%');
       debugPrint('  - Current Stress: ${insight.displayStress} (sleep-aware)');
       debugPrint('  - Tomorrow (rest): ${insight.displayPredicted}');
+      debugPrint('  - If Workout (FFM): ${insight.predictedIfWorkout.toStringAsFixed(1)} (avg stress: ${avgWorkoutStress.toStringAsFixed(1)})');
       debugPrint('  - Recovery rate: ${insight.recoveryRatePerHour.toStringAsFixed(2)}/h');
       debugPrint('  - Recommendation: ${insight.recommendation.name}');
     }

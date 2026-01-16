@@ -22,22 +22,31 @@ import 'package:gymbro_flutter_new/shared/domain/entities/sync_status.dart';
 // ====================
 
 /// Provider per ExerciseCacheManager
+/// FIX: keepAlive() previene disposal/ricreazione che causava 4x init all'avvio
 final exerciseCacheManagerProvider = Provider<ExerciseCacheManager>((ref) {
+  ref.keepAlive(); // Previene ricreazione su hot reload o dispose
   final boxManager = ref.watch(hiveBoxManagerProvider);
   return ExerciseCacheManager(boxManager);
 });
 
 /// Provider per ExerciseVersionService
+/// FIX: keepAlive() previene disposal/ricreazione che causava 4x init all'avvio
 final exerciseVersionServiceProvider = Provider<ExerciseVersionService>((ref) {
+  ref.keepAlive(); // Previene ricreazione su hot reload o dispose
   return ExerciseVersionService();
 });
 
 /// Provider principale per HybridExerciseRepository
+/// FIX: keepAlive() + rimosso watch su localeProvider che causava rebuild a cascata
 final hybridExerciseRepositoryProvider = Provider<HybridExerciseRepository>((ref) {
+  ref.keepAlive(); // Previene ricreazione su hot reload o dispose
   final boxManager = ref.watch(hiveBoxManagerProvider);
-  final cacheManager = ref.read(exerciseCacheManagerProvider);
-  final versionService = ref.read(exerciseVersionServiceProvider);
-  final locale = ref.watch(localeProvider);
+  // FIX: usa watch invece di read per corretta dependency tracking
+  final cacheManager = ref.watch(exerciseCacheManagerProvider);
+  final versionService = ref.watch(exerciseVersionServiceProvider);
+  // FIX: read invece di watch - locale viene passato ai metodi, non al costruttore
+  // Questo evita la ricreazione del repository al cambio lingua
+  final locale = ref.read(localeProvider);
 
   return HybridExerciseRepository(
     boxManager: boxManager,

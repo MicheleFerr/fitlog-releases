@@ -572,7 +572,7 @@ class _ExerciseCustomizationScreenState extends ConsumerState<ExerciseCustomizat
       }
     }
     
-    SnackBarService.showSuccess(context, '${_customizations.length} esercizi aggiunti alla scheda!');
+    SnackBarService.showSuccess(context, context.l10n.exercisesAddedToWorkout(_customizations.length));
     
     // Go back - different behavior based on context
     if (widget.onExerciseAdded != null) {

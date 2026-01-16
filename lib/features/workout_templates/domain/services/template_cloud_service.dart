@@ -230,10 +230,16 @@ class TemplateCloudService {
       final exercisesJson = exercises.map((e) => _exerciseToJson(e)).toList();
 
       // 🔐 SECURITY: Call Cloud Function with rate limit handling
+      // 🔧 FIX: Add 30s timeout to prevent infinite hanging on network issues
       final result = await _rateLimitHandler.executeWithRetry<
           HttpsCallableResult<Map<String, dynamic>>>(
         () => FirebaseFunctions.instance
-            .httpsCallable('createTemplate')
+            .httpsCallable(
+              'createTemplate',
+              options: HttpsCallableOptions(
+                timeout: const Duration(seconds: 30),
+              ),
+            )
             .call<Map<String, dynamic>>({
           'name': name,
           'description': description ?? '',
@@ -307,8 +313,14 @@ class TemplateCloudService {
         tag: 'TemplateCloudService',
       );
 
+      // 🔧 FIX: Add 15s timeout to prevent infinite hanging on network issues
       final result = await FirebaseFunctions.instance
-          .httpsCallable('getTemplateQuota')
+          .httpsCallable(
+            'getTemplateQuota',
+            options: HttpsCallableOptions(
+              timeout: const Duration(seconds: 15),
+            ),
+          )
           .call<Map<String, dynamic>>();
 
       final quota = TemplateQuotaInfo.fromResponse(result.data);

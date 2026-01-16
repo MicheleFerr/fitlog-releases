@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -7,11 +6,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:gymbro_flutter_new/core/navigation/app_routes.dart';
 import 'package:gymbro_flutter_new/features/analytics/presentation/providers/analytics_providers.dart';
-import 'package:gymbro_flutter_new/features/analytics/presentation/providers/exercise_view_mode_provider.dart';
 import 'package:gymbro_flutter_new/features/analytics/presentation/providers/favorite_exercises_notifier.dart';
 import 'package:gymbro_flutter_new/features/analytics/domain/entities/exercise_history.dart';
-import 'package:gymbro_flutter_new/features/analytics/domain/enums/exercise_view_mode.dart';
-import 'package:gymbro_flutter_new/features/analytics/presentation/widgets/muscle_group_expansion_tile.dart';
 import 'package:gymbro_flutter_new/features/analytics/presentation/widgets/muscle_group_correction_sheet.dart';
 import 'package:gymbro_flutter_new/features/analytics/presentation/widgets/feedback_submission_dialog.dart';
 import 'package:gymbro_flutter_new/features/analytics/presentation/widgets/streak_modal.dart';
@@ -83,79 +79,6 @@ class AnalyticsScreen extends ConsumerWidget {
                   // Haptic feedback
                   HapticFeedback.lightImpact();
                 },
-              );
-            },
-          ),
-          // View mode selector
-          Consumer(
-            builder: (context, ref, child) {
-              final currentMode = ref.watch(exerciseViewModeProvider);
-
-              return PopupMenuButton<ExerciseViewMode>(
-                icon: SemanticIcon.button(
-                  icon: AppIcons.viewList,
-                  semanticLabel: context.l10n.viewMode,
-                ),
-                tooltip: context.l10n.viewMode,
-                onSelected: (ExerciseViewMode mode) {
-                  ref.read(exerciseViewModeProvider.notifier).state = mode;
-                },
-                itemBuilder: (BuildContext context) => [
-                  PopupMenuItem(
-                    value: ExerciseViewMode.compact,
-                    child: Row(
-                      children: [
-                        Icon(
-                          currentMode == ExerciseViewMode.compact
-                              ? AppIcons.checkCircle
-                              : AppIcons.radioButtonUnchecked,
-                          size: AppIconSize.small,
-                          color: currentMode == ExerciseViewMode.compact
-                              ? context.colors.primary
-                              : context.colors.onSurfaceVariant,
-                        ),
-                        const SizedBox(width: AppSpacing.sm),
-                        Text(context.l10n.viewModeCompact),
-                      ],
-                    ),
-                  ),
-                  PopupMenuItem(
-                    value: ExerciseViewMode.byMuscleGroup,
-                    child: Row(
-                      children: [
-                        Icon(
-                          currentMode == ExerciseViewMode.byMuscleGroup
-                              ? AppIcons.checkCircle
-                              : AppIcons.radioButtonUnchecked,
-                          size: AppIconSize.small,
-                          color: currentMode == ExerciseViewMode.byMuscleGroup
-                              ? context.colors.primary
-                              : context.colors.onSurfaceVariant,
-                        ),
-                        const SizedBox(width: AppSpacing.sm),
-                        Text(context.l10n.viewModeByMuscleGroup),
-                      ],
-                    ),
-                  ),
-                  PopupMenuItem(
-                    value: ExerciseViewMode.byDate,
-                    child: Row(
-                      children: [
-                        Icon(
-                          currentMode == ExerciseViewMode.byDate
-                              ? AppIcons.checkCircle
-                              : AppIcons.radioButtonUnchecked,
-                          size: AppIconSize.small,
-                          color: currentMode == ExerciseViewMode.byDate
-                              ? context.colors.primary
-                              : context.colors.onSurfaceVariant,
-                        ),
-                        const SizedBox(width: AppSpacing.sm),
-                        Text(context.l10n.viewModeByDate),
-                      ],
-                    ),
-                  ),
-                ],
               );
             },
           ),
@@ -329,23 +252,6 @@ class _AnalyticsContentState extends ConsumerState<_AnalyticsContent>
     return filtered;
   }
 
-  /// Group exercises by muscle group
-  Map<String, List<ExerciseHistory>> _getGroupedHistories(List<ExerciseHistory> histories) {
-    final grouped = <String, List<ExerciseHistory>>{};
-
-    for (final history in histories) {
-      final muscleGroup = history.muscleGroup;
-      if (!grouped.containsKey(muscleGroup)) {
-        grouped[muscleGroup] = [];
-      }
-      grouped[muscleGroup]!.add(history);
-    }
-
-    // Sort muscle groups alphabetically
-    final sortedKeys = grouped.keys.toList()..sort();
-    return {for (var key in sortedKeys) key: grouped[key]!};
-  }
-
   @override
   Widget build(BuildContext context) {
     if (widget.exerciseHistories.isEmpty) {
@@ -475,24 +381,8 @@ class _AnalyticsContentState extends ConsumerState<_AnalyticsContent>
                     // Wait for new data to be available
                     await ref.read(exerciseHistoryStreamProvider(widget.userId).future);
                   },
-                  child: Consumer(
-                    builder: (context, ref, child) {
-                      final viewMode = ref.watch(exerciseViewModeProvider);
-
-                      switch (viewMode) {
-                        case ExerciseViewMode.detailed:
-                          return _buildFlatList(filteredHistories);
-                        case ExerciseViewMode.compact:
-                          return _buildFlatList(filteredHistories);
-                        case ExerciseViewMode.byMuscleGroup:
-                          return _buildAccordionList(filteredHistories);
-                        case ExerciseViewMode.byDate:
-                          return _buildTimelineList(filteredHistories);
-                        case ExerciseViewMode.byMajorWorkouts:
-                          return _buildFlatList(filteredHistories); // Filter to major workouts only
-                      }
-                    },
-                  ),
+                  // Use compact flat list - simplified UX (removed view mode toggle)
+                  child: _buildFlatList(filteredHistories),
                 ),
         ),
               ],
@@ -504,39 +394,6 @@ class _AnalyticsContentState extends ConsumerState<_AnalyticsContent>
     ); // Close Stack
   }
 
-
-  /// Build accordion list of exercises grouped by muscle group
-  ///
-  /// Uses MuscleGroupExpansionTile for expand/collapse functionality
-  Widget _buildAccordionList(List<ExerciseHistory> filteredHistories) {
-    final grouped = _getGroupedHistories(filteredHistories);
-
-    if (grouped.isEmpty) {
-      return const SizedBox.shrink();
-    }
-
-    return ListView.builder(
-      controller: _scrollController,
-      padding: const EdgeInsets.symmetric(horizontal: AppSpacing.md, vertical: AppSpacing.xs),
-      itemCount: grouped.length,
-      itemBuilder: (context, groupIndex) {
-        final muscleGroup = grouped.keys.elementAt(groupIndex);
-        final exercises = grouped[muscleGroup]!;
-
-        return Padding(
-          key: ValueKey(muscleGroup),
-          padding: const EdgeInsets.only(bottom: AppSpacing.xs),
-          child: MuscleGroupExpansionTile(
-            muscleGroup: muscleGroup,
-            exerciseCount: exercises.length,
-            children: exercises
-                .map((history) => _ExerciseHistoryCard(history: history))
-                .toList(),
-          ),
-        );
-      },
-    );
-  }
 
   /// Build flat list of exercises (compact view)
   ///
@@ -561,109 +418,6 @@ class _AnalyticsContentState extends ConsumerState<_AnalyticsContent>
         );
       },
     );
-  }
-
-  /// Build timeline list of exercises grouped by date periods
-  ///
-  /// Groups exercises by date periods (Today, Yesterday, This Week, This Month, Older)
-  Widget _buildTimelineList(List<ExerciseHistory> filteredHistories) {
-    final grouped = _groupByDatePeriod(filteredHistories);
-
-    if (grouped.isEmpty) {
-      return const SizedBox.shrink();
-    }
-
-    return ListView.builder(
-      controller: _scrollController,
-      padding: const EdgeInsets.symmetric(horizontal: AppSpacing.md, vertical: AppSpacing.xs),
-      itemCount: grouped.length,
-      itemBuilder: (context, index) {
-        final entry = grouped.entries.elementAt(index);
-        final periodLabel = entry.key;
-        final exercises = entry.value;
-
-        return Padding(
-          key: ValueKey(periodLabel),
-          padding: const EdgeInsets.only(bottom: AppSpacing.xs),
-          child: Card(
-            elevation: 2,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(12),
-            ),
-            child: ExpansionTile(
-              tilePadding: const EdgeInsets.symmetric(horizontal: AppSpacing.md, vertical: AppSpacing.xs),
-              childrenPadding: const EdgeInsets.symmetric(horizontal: AppSpacing.md, vertical: AppSpacing.xs),
-              initiallyExpanded: index == 0, // Expand first section (today/most recent)
-              leading: SemanticIcon(
-                icon: AppIcons.calendar,
-                semanticLabel: periodLabel,
-                size: AppIconSize.medium,
-                color: context.colors.primary,
-              ),
-              title: Text(
-                periodLabel,
-                style: context.textTheme.titleMedium?.copyWith(
-                  fontWeight: FontWeight.bold,
-                  color: context.colors.onSurface,
-                ),
-              ),
-              subtitle: Text(
-                '${exercises.length} ${exercises.length == 1 ? context.l10n.exercise : context.l10n.exercises}',
-                style: context.textTheme.bodySmall?.copyWith(
-                  color: context.colors.onSurfaceVariant,
-                ),
-              ),
-              children: exercises
-                  .map((history) => _ExerciseHistoryCard(history: history))
-                  .toList(),
-            ),
-          ),
-        );
-      },
-    );
-  }
-
-  /// Group exercises by date period
-  Map<String, List<ExerciseHistory>> _groupByDatePeriod(
-      List<ExerciseHistory> histories) {
-    final now = DateTime.now();
-    final today = DateTime(now.year, now.month, now.day);
-    final yesterday = today.subtract(const Duration(days: 1));
-    final weekAgo = today.subtract(const Duration(days: 7));
-    final monthAgo = today.subtract(const Duration(days: 30));
-
-    final grouped = <String, List<ExerciseHistory>>{
-      context.l10n.today: [],
-      context.l10n.yesterday: [],
-      context.l10n.thisWeek: [],
-      context.l10n.thisMonth: [],
-      context.l10n.older: [],
-    };
-
-    for (final history in histories) {
-      // Get most recent session date
-      if (history.sessionsSortedByDate.isEmpty) continue;
-      final lastSessionDate = history.sessionsSortedByDate.first.date;
-      final sessionDay =
-          DateTime(lastSessionDate.year, lastSessionDate.month, lastSessionDate.day);
-
-      if (sessionDay == today) {
-        grouped[context.l10n.today]!.add(history);
-      } else if (sessionDay == yesterday) {
-        grouped[context.l10n.yesterday]!.add(history);
-      } else if (sessionDay.isAfter(weekAgo)) {
-        grouped[context.l10n.thisWeek]!.add(history);
-      } else if (sessionDay.isAfter(monthAgo)) {
-        grouped[context.l10n.thisMonth]!.add(history);
-      } else {
-        grouped[context.l10n.older]!.add(history);
-      }
-    }
-
-    // Remove empty sections
-    grouped.removeWhere((key, value) => value.isEmpty);
-
-    return grouped;
   }
 }
 
@@ -1220,8 +974,16 @@ class _ExerciseHistoryCard extends ConsumerWidget{
       ),
     );
 
+    // Determine progression color and icon
+    final progressionColor = weeklyProgression >= 0
+        ? context.colors.success
+        : context.colors.error;
+    final progressionIcon = weeklyProgression >= 0
+        ? AppIcons.trendingUp
+        : AppIcons.trendingDown;
+
     return Card(
-      margin: const EdgeInsets.only(bottom: AppSpacing.sm),
+      margin: const EdgeInsets.only(bottom: AppSpacing.xs),
       child: InkWell(
         onTap: () {
           // Navigate to Exercise Detail Screen using named route
@@ -1237,166 +999,104 @@ class _ExerciseHistoryCard extends ConsumerWidget{
           HapticFeedback.mediumImpact();
           _showCorrectionSheet(context);
         },
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(8),
         child: Padding(
-          padding: const EdgeInsets.all(AppSpacing.md),
+          padding: const EdgeInsets.symmetric(
+            horizontal: AppSpacing.sm,
+            vertical: AppSpacing.xs,
+          ),
           child: Column(
+            mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Exercise name + muscle group + favorite toggle (Task 5.2)
+              // Row 1: Exercise name + stats inline
               Row(
                 children: [
+                  // Exercise name (flexible width)
                   Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          history.exerciseName,
-                          style: context.textTheme.titleMedium?.copyWith(
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        const SizedBox(height: AppSpacing.xxs),
-                        Text(
-                          history.muscleGroup.toUpperCase(),
-                          style: context.textTheme.bodySmall?.copyWith(
-                            color: context.colors.onSurfaceVariant,
-                            letterSpacing: 0.5,
-                          ),
-                        ),
-                      ],
+                    child: Text(
+                      history.exerciseName,
+                      style: context.textTheme.titleSmall?.copyWith(
+                        fontWeight: FontWeight.w600,
+                      ),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
                     ),
                   ),
-                  // Favorite star icon toggle (Task 5.2)
-                  IconButton(
-                    icon: SemanticIcon.button(
-                      icon: isFavorite
-                          ? AppIcons.star
-                          : AppIcons.starOutline,
-                      semanticLabel: isFavorite
-                          ? context.l10n.removeFromFavorites
-                          : context.l10n.addToFavorites,
-                    ),
-                    color: isFavorite
-                        ? context.iconWarning  // Yellow/warning color for favorites
-                        : context.colors.onSurfaceVariant,
-                    onPressed: () {
+                  const SizedBox(width: AppSpacing.xs),
+                  // Favorite star (compact)
+                  GestureDetector(
+                    onTap: () {
                       HapticFeedback.lightImpact();
                       ref
                           .read(favoriteExercisesNotifierProvider.notifier)
                           .toggleFavorite(history.exerciseName);
                     },
-                    tooltip: isFavorite
-                        ? context.l10n.removeFromFavorites
-                        : context.l10n.addToFavorites,
+                    child: SemanticIcon(
+                      icon: isFavorite ? AppIcons.star : AppIcons.starOutline,
+                      semanticLabel: isFavorite
+                          ? context.l10n.removeFromFavorites
+                          : context.l10n.addToFavorites,
+                      size: AppIconSize.small,
+                      color: isFavorite
+                          ? context.iconWarning
+                          : context.colors.onSurfaceVariant.withValues(alpha: 0.5),
+                    ),
                   ),
-                  SemanticIcon(
-                    icon: AppIcons.chevronRight,
-                    semanticLabel: context.l10n.viewDetails,
-                    size: AppIconSize.medium,
-                    color: context.colors.onSurfaceVariant,
-                  ),
-                ],
-              ),
-              const SizedBox(height: AppSpacing.md),
-
-              // Stats row
-              Row(
-                children: [
-                  // PR
-                  Expanded(
-                    child: _StatChip(
-                      icon: AppIcons.achievement,
-                      label: 'PR', // Short for Personal Record
-                      value: '${pr.toStringAsFixed(1)} kg',
+                  const SizedBox(width: AppSpacing.sm),
+                  // PR value (compact, bold)
+                  Text(
+                    '${pr.toStringAsFixed(0)}kg',
+                    style: context.textTheme.labelLarge?.copyWith(
+                      fontWeight: FontWeight.bold,
                       color: context.colors.primary,
                     ),
                   ),
-                  const SizedBox(width: AppSpacing.xs),
-
-                  // Sessions count
-                  Expanded(
-                    child: _StatChip(
-                      icon: AppIcons.calendar,
-                      label: context.l10n.workouts, // Using existing key
-                      value: '$sessionsCount',
-                      color: context.colors.secondary,
-                    ),
+                  const SizedBox(width: AppSpacing.sm),
+                  // Progression with icon
+                  Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text(
+                        '${weeklyProgression >= 0 ? '+' : ''}${weeklyProgression.toStringAsFixed(0)}%',
+                        style: context.textTheme.labelMedium?.copyWith(
+                          fontWeight: FontWeight.w600,
+                          color: progressionColor,
+                        ),
+                      ),
+                      const SizedBox(width: 2),
+                      SemanticIcon(
+                        icon: progressionIcon,
+                        semanticLabel: weeklyProgression >= 0
+                            ? context.l10n.trendImproving
+                            : context.l10n.trendDeclining,
+                        size: AppIconSize.tiny,
+                        color: progressionColor,
+                      ),
+                    ],
                   ),
                   const SizedBox(width: AppSpacing.xs),
-
-                  // Weekly progression
-                  Expanded(
-                    child: _StatChip(
-                      icon: weeklyProgression >= 0
-                          ? AppIcons.trendingUp
-                          : AppIcons.trendingDown,
-                      label: context.l10n.progress, // Using existing key
-                      value: '${weeklyProgression.toStringAsFixed(1)}%',
-                      color: weeklyProgression >= 0
-                          ? context.colors.success
-                          : context.colors.error,
-                    ),
+                  // Chevron
+                  SemanticIcon(
+                    icon: AppIcons.chevronRight,
+                    semanticLabel: context.l10n.viewDetails,
+                    size: AppIconSize.small,
+                    color: context.colors.onSurfaceVariant.withValues(alpha: 0.5),
                   ),
                 ],
+              ),
+              const SizedBox(height: 2),
+              // Row 2: Muscle group + sessions count
+              Text(
+                '${history.muscleGroup.toUpperCase()} · $sessionsCount ${context.l10n.sessions}',
+                style: context.textTheme.bodySmall?.copyWith(
+                  color: context.colors.onSurfaceVariant,
+                  fontSize: 11,
+                ),
               ),
             ],
           ),
         ),
-      ),
-    );
-  }
-}
-
-/// Stat chip widget - small colored box with icon and value
-class _StatChip extends StatelessWidget {
-  const _StatChip({
-    required this.icon,
-    required this.label,
-    required this.value,
-    required this.color,
-  });
-
-  final IconData icon;
-  final String label;
-  final String value;
-  final Color color;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(AppSpacing.xs),
-      decoration: BoxDecoration(
-        color: color.withValues(alpha: 0.1),
-        borderRadius: BorderRadius.circular(8),
-      ),
-      child: Column(
-        children: [
-          SemanticIcon(
-            icon: icon,
-            semanticLabel: '$label: $value',
-            size: AppIconSize.small,
-            color: color,
-          ),
-          const SizedBox(height: AppSpacing.xxs),
-          Text(
-            value,
-            style: context.textTheme.titleSmall?.copyWith(
-              color: color,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          Text(
-            label,
-            style: context.textTheme.bodySmall?.copyWith(
-              color: context.colors.onSurfaceVariant,
-              fontSize: 10,
-            ),
-            textAlign: TextAlign.center,
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
-          ),
-        ],
       ),
     );
   }

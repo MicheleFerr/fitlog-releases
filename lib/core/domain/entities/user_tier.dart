@@ -22,6 +22,8 @@ import 'package:flutter/material.dart';
 /// | Feature           | Starter | Bronze | Silver | Gold | Platinum |
 /// |-------------------|---------|--------|--------|------|----------|
 /// | Private Templates | 4       | 4      | 5      | 5    | 7        |
+/// | Public Templates  | 2       | 2      | 3      | 3    | 5        |
+/// | Custom Exercises  | 3       | 5      | 7      | 10   | 999      |
 /// | Banner Ads        | Yes     | Yes    | Yes    | Yes  | No       |
 /// | Pro Analytics     | No      | No     | No     | No   | Yes      |
 /// | Cloud Sync        | No      | No     | No     | No   | Yes      |
@@ -31,6 +33,8 @@ enum UserTier {
     displayName: 'Starter',
     color: Color(0xFF9E9E9E),
     maxTemplates: 4,
+    maxPublicTemplates: 2,
+    maxCustomExercises: 3,
     showAds: true,
     hasProAnalytics: false,
     hasCloudSync: false,
@@ -40,6 +44,8 @@ enum UserTier {
     displayName: 'Bronze',
     color: Color(0xFFCD7F32),
     maxTemplates: 4,
+    maxPublicTemplates: 2,
+    maxCustomExercises: 5,
     showAds: true,
     hasProAnalytics: false,
     hasCloudSync: false,
@@ -49,6 +55,8 @@ enum UserTier {
     displayName: 'Silver',
     color: Color(0xFFC0C0C0),
     maxTemplates: 5,
+    maxPublicTemplates: 3,
+    maxCustomExercises: 7,
     showAds: true,
     hasProAnalytics: false,
     hasCloudSync: false,
@@ -58,6 +66,8 @@ enum UserTier {
     displayName: 'Gold',
     color: Color(0xFFFFD700),
     maxTemplates: 5,
+    maxPublicTemplates: 3,
+    maxCustomExercises: 10,
     showAds: true,
     hasProAnalytics: false,
     hasCloudSync: false,
@@ -67,6 +77,8 @@ enum UserTier {
     displayName: 'Platinum',
     color: Color(0xFFE5E4E2),
     maxTemplates: 7,
+    maxPublicTemplates: 5,
+    maxCustomExercises: 999,
     showAds: false,
     hasProAnalytics: true,
     hasCloudSync: true,
@@ -77,6 +89,8 @@ enum UserTier {
     required this.displayName,
     required this.color,
     required this.maxTemplates,
+    required this.maxPublicTemplates,
+    required this.maxCustomExercises,
     required this.showAds,
     required this.hasProAnalytics,
     required this.hasCloudSync,
@@ -97,6 +111,12 @@ enum UserTier {
 
   /// Maximum number of private templates user can create
   final int maxTemplates;
+
+  /// Maximum number of public templates user can share
+  final int maxPublicTemplates;
+
+  /// Maximum number of custom exercises user can create
+  final int maxCustomExercises;
 
   /// Whether to show banner ads
   final bool showAds;

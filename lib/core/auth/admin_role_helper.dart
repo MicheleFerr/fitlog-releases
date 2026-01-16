@@ -74,6 +74,12 @@ class AdminRoleHelper {
         return false;
       }
 
+      // 🔧 FIX BUG #8: Anonymous users are never admin
+      // Anonymous users don't have JWT tokens with custom claims
+      if (user.isAnonymous) {
+        return false;
+      }
+
       // Get ID token result (includes custom claims)
       final idTokenResult = await user.getIdTokenResult();
 
@@ -98,8 +104,14 @@ class AdminRoleHelper {
   /// **Returns**: `true` if user is admin, `false` otherwise
   static Future<bool> isUserAdmin(String uid) async {
     try {
+      // 🔧 FIX: Add 15s timeout to prevent infinite hanging
       final result = await FirebaseFunctions.instance
-          .httpsCallable('checkAdminStatus')
+          .httpsCallable(
+            'checkAdminStatus',
+            options: HttpsCallableOptions(
+              timeout: const Duration(seconds: 15),
+            ),
+          )
           .call<Map<String, dynamic>>();
 
       return result.data['isAdmin'] == true;
@@ -143,10 +155,16 @@ class AdminRoleHelper {
   static Future<String> grantAdminRole(String targetEmail) async {
     try {
       // 🔐 SECURITY: Wrap with rate limit handler (auto-retry on 429)
+      // 🔧 FIX: Add 30s timeout to prevent infinite hanging
       final result = await _rateLimitHandler.executeWithRetry<
           HttpsCallableResult<Map<String, dynamic>>>(
         () => FirebaseFunctions.instance
-            .httpsCallable('setAdminRole')
+            .httpsCallable(
+              'setAdminRole',
+              options: HttpsCallableOptions(
+                timeout: const Duration(seconds: 30),
+              ),
+            )
             .call<Map<String, dynamic>>({
           'targetEmail': targetEmail,
         }),
@@ -202,10 +220,16 @@ class AdminRoleHelper {
   static Future<String> revokeAdminRole(String targetEmail) async {
     try {
       // 🔐 SECURITY: Wrap with rate limit handler (auto-retry on 429)
+      // 🔧 FIX: Add 30s timeout to prevent infinite hanging
       final result = await _rateLimitHandler.executeWithRetry<
           HttpsCallableResult<Map<String, dynamic>>>(
         () => FirebaseFunctions.instance
-            .httpsCallable('revokeAdminRole')
+            .httpsCallable(
+              'revokeAdminRole',
+              options: HttpsCallableOptions(
+                timeout: const Duration(seconds: 30),
+              ),
+            )
             .call<Map<String, dynamic>>({
           'targetEmail': targetEmail,
         }),

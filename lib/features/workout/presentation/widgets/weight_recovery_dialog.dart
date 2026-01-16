@@ -97,7 +97,7 @@ class _WeightRecoveryDialogState extends ConsumerState<WeightRecoveryDialog> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'Recupera i pesi?',
+                      l10n.recoverWeights,
                       style: theme.textTheme.titleLarge?.copyWith(
                         fontWeight: FontWeight.bold,
                       ),
@@ -164,22 +164,25 @@ class _WeightRecoveryDialogState extends ConsumerState<WeightRecoveryDialog> {
             children: [
               _buildOptionCard(
                 theme,
+                l10n,
                 icon: AppIcons.trendUp,
                 label: 'Si +2.5%',
-                subtitle: 'Progressive overload',
+                subtitle: l10n.progressiveOverload,
                 color: context.colors.success,
                 option: WeightRecoveryOption.increase,
               ),
               _buildOptionCard(
                 theme,
+                l10n,
                 icon: AppIcons.complete,
                 label: 'Si (esatti)',
-                subtitle: 'Stessi pesi',
+                subtitle: l10n.sameWeights,
                 color: theme.colorScheme.primary,
                 option: WeightRecoveryOption.exact,
               ),
               _buildOptionCard(
                 theme,
+                l10n,
                 icon: AppIcons.trendDown,
                 label: 'Si -2.5%',
                 subtitle: 'Deload',
@@ -188,9 +191,10 @@ class _WeightRecoveryDialogState extends ConsumerState<WeightRecoveryDialog> {
               ),
               _buildOptionCard(
                 theme,
+                l10n,
                 icon: AppIcons.close,
                 label: 'No',
-                subtitle: 'Inizia vuoto',
+                subtitle: l10n.startEmpty,
                 color: theme.colorScheme.outline,
                 option: WeightRecoveryOption.none,
               ),
@@ -202,7 +206,8 @@ class _WeightRecoveryDialogState extends ConsumerState<WeightRecoveryDialog> {
   }
 
   Widget _buildOptionCard(
-    ThemeData theme, {
+    ThemeData theme,
+    AppLocalizations l10n, {
     required IconData icon,
     required String label,
     required String subtitle,
@@ -309,7 +314,7 @@ class _WeightRecoveryDialogState extends ConsumerState<WeightRecoveryDialog> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'Anteprima carichi ${_getOptionLabel(_selectedOption!)}',
+                      l10n.previewWeights(_getOptionLabel(_selectedOption!)),
                       style: theme.textTheme.titleMedium?.copyWith(
                         fontWeight: FontWeight.bold,
                       ),
@@ -356,7 +361,7 @@ class _WeightRecoveryDialogState extends ConsumerState<WeightRecoveryDialog> {
                       _selectedOption = null;
                     });
                   },
-                  child: const Text('Indietro'),
+                  child: Text(context.l10n.back),
                 ),
               ),
               const SizedBox(width: 12),
@@ -368,7 +373,7 @@ class _WeightRecoveryDialogState extends ConsumerState<WeightRecoveryDialog> {
                     Navigator.of(context).pop(_selectedOption);
                   },
                   icon: const Icon(AppIcons.check),
-                  label: const Text('Conferma'),
+                  label: Text(context.l10n.confirm),
                 ),
               ),
             ],
@@ -453,10 +458,12 @@ class _WeightRecoveryDialogState extends ConsumerState<WeightRecoveryDialog> {
   }
 
   String _getLastSessionText() {
+    final l10n = AppLocalizations.of(context)!;
+
     if (widget.daysSinceLastSession == 0) {
-      return 'Ultima sessione: oggi';
+      return l10n.lastSessionToday;
     } else if (widget.daysSinceLastSession == 1) {
-      return 'Ultima sessione: ieri';
+      return l10n.lastSessionYesterday;
     } else if (widget.daysSinceLastSession < 7) {
       return 'Ultima sessione: ${widget.daysSinceLastSession} giorni fa';
     } else {

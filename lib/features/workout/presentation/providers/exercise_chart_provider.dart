@@ -22,6 +22,7 @@ import 'package:gymbro_flutter_new/features/workout/data/repositories/exercise_c
 ///
 /// Dependency Injection: Inietta repository
 final getExerciseChartDataProvider = Provider<GetExerciseChartData>((ref) {
+  ref.keepAlive(); // FIX: previene ricreazione use case
   final repository = ref.watch(exerciseChartRepositoryProvider);
   return GetExerciseChartData(repository);
 });

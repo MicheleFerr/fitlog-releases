@@ -26,15 +26,15 @@ final insightFeedbackProvider =
 
   final repository = ref.watch(insightFeedbackRepositoryProvider);
 
-  try {
-    return await repository.getFeedbackByHash(
-      userId: userId,
-      insightHash: insightHash,
-    );
-  } catch (e) {
-    // Return null if feedback doesn't exist or error occurs
-    return null;
-  }
+  final result = await repository.getFeedbackByHash(
+    userId: userId,
+    insightHash: insightHash,
+  );
+
+  return result.fold(
+    (failure) => null, // Return null if feedback doesn't exist or error occurs
+    (feedback) => feedback,
+  );
 });
 
 /// Provider for all user feedback
@@ -49,11 +49,12 @@ final userFeedbackListProvider =
 
   final repository = ref.watch(insightFeedbackRepositoryProvider);
 
-  try {
-    return await repository.getUserFeedback(userId);
-  } catch (e) {
-    return [];
-  }
+  final result = await repository.getUserFeedback(userId);
+
+  return result.fold(
+    (failure) => [], // Return empty list on error
+    (feedbackList) => feedbackList,
+  );
 });
 
 /// Notifier for submitting feedback
@@ -80,52 +81,67 @@ class InsightFeedbackNotifier extends AutoDisposeNotifier<AsyncValue<void>> {
 
     state = const AsyncValue.loading();
 
-    try {
-      final insightHash = insight.generateHash();
-      final repository = ref.read(insightFeedbackRepositoryProvider);
+    final insightHash = insight.generateHash();
+    final repository = ref.read(insightFeedbackRepositoryProvider);
 
-      // Check if feedback already exists
-      final existingFeedback = await repository.getFeedbackByHash(
-        userId: userId,
-        insightHash: insightHash,
-      );
+    // Check if feedback already exists
+    final existingResult = await repository.getFeedbackByHash(
+      userId: userId,
+      insightHash: insightHash,
+    );
 
-      final feedback = InsightFeedback(
-        id: existingFeedback?.id ?? '${userId}_$insightHash',
-        userId: userId,
-        insightType: insight.type.toString(),
-        insightHash: insightHash,
-        isHelpful: isHelpful,
-        comment: comment,
-        timestamp: DateTime.now(),
-      );
+    final existingFeedback = existingResult.fold(
+      (failure) => null,
+      (feedback) => feedback,
+    );
 
-      await repository.saveFeedback(feedback);
+    final feedback = InsightFeedback(
+      id: existingFeedback?.id ?? '${userId}_$insightHash',
+      userId: userId,
+      insightType: insight.type.toString(),
+      insightHash: insightHash,
+      isHelpful: isHelpful,
+      comment: comment,
+      timestamp: DateTime.now(),
+    );
 
-      // Invalidate the feedback provider to refresh UI
-      ref.invalidate(insightFeedbackProvider(insightHash));
+    final result = await repository.saveFeedback(feedback);
 
-      state = const AsyncValue.data(null);
-    } catch (e, stackTrace) {
-      state = AsyncValue.error(e, stackTrace);
-    }
+    result.fold(
+      (failure) {
+        state = AsyncValue.error(
+          Exception('Failed to save feedback: ${failure.message}'),
+          StackTrace.current,
+        );
+      },
+      (_) {
+        // Invalidate the feedback provider to refresh UI
+        ref.invalidate(insightFeedbackProvider(insightHash));
+        state = const AsyncValue.data(null);
+      },
+    );
   }
 
   /// Delete feedback for an insight
   Future<void> deleteFeedback(String feedbackId, String insightHash) async {
     state = const AsyncValue.loading();
 
-    try {
-      final repository = ref.read(insightFeedbackRepositoryProvider);
-      await repository.deleteFeedback(feedbackId);
+    final repository = ref.read(insightFeedbackRepositoryProvider);
+    final result = await repository.deleteFeedback(feedbackId);
 
-      // Invalidate the feedback provider to refresh UI
-      ref.invalidate(insightFeedbackProvider(insightHash));
-
-      state = const AsyncValue.data(null);
-    } catch (e, stackTrace) {
-      state = AsyncValue.error(e, stackTrace);
-    }
+    result.fold(
+      (failure) {
+        state = AsyncValue.error(
+          Exception('Failed to delete feedback: ${failure.message}'),
+          StackTrace.current,
+        );
+      },
+      (_) {
+        // Invalidate the feedback provider to refresh UI
+        ref.invalidate(insightFeedbackProvider(insightHash));
+        state = const AsyncValue.data(null);
+      },
+    );
   }
 }
 
@@ -138,16 +154,17 @@ final insightFeedbackStatsProvider =
     FutureProvider.autoDispose.family<Map<String, dynamic>, String>((ref, insightType) async {
   final repository = ref.watch(insightFeedbackRepositoryProvider);
 
-  try {
-    return await repository.getFeedbackStats(insightType);
-  } catch (e) {
-    return {
+  final result = await repository.getFeedbackStats(insightType);
+
+  return result.fold(
+    (failure) => {
       'total': 0,
       'helpful': 0,
       'notHelpful': 0,
       'helpfulPercentage': 0.0,
-    };
-  }
+    },
+    (stats) => stats,
+  );
 });
 
 // ========================================
@@ -160,11 +177,12 @@ final adminAllFeedbackProvider =
     FutureProvider.autoDispose.family<List<InsightFeedback>, int?>((ref, limit) async {
   final repository = ref.watch(insightFeedbackRepositoryProvider);
 
-  try {
-    return await repository.getAllFeedback(limit: limit ?? 50);
-  } catch (e) {
-    return [];
-  }
+  final result = await repository.getAllFeedback(limit: limit ?? 50);
+
+  return result.fold(
+    (failure) => [], // Return empty list on error
+    (feedbackList) => feedbackList,
+  );
 });
 
 /// Provider for overall feedback statistics (Admin only)
@@ -172,16 +190,17 @@ final adminFeedbackStatsProvider =
     FutureProvider.autoDispose<Map<String, dynamic>>((ref) async {
   final repository = ref.watch(insightFeedbackRepositoryProvider);
 
-  try {
-    return await repository.getOverallStats();
-  } catch (e) {
-    return {
+  final result = await repository.getOverallStats();
+
+  return result.fold(
+    (failure) => {
       'totalFeedback': 0,
       'totalHelpful': 0,
       'totalNotHelpful': 0,
       'helpfulPercentage': 0.0,
       'uniqueUsers': 0,
       'byType': <String, dynamic>{},
-    };
-  }
+    },
+    (stats) => stats,
+  );
 });

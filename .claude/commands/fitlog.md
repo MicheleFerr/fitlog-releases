@@ -25,6 +25,8 @@ Analizza la richiesta e suggerisci i migliori strumenti (agenti e/o comandi) per
 
 | Comando | Quando usarlo |
 |---------|---------------|
+| `/brainstorm [sezione]` | Analisi + idee miglioramento con personas |
+| `/persona-check [feature]` | Analisi impatto singola feature |
 | `/bug-detective` | Debugging sistematico step-by-step |
 | `/optimize` | Analisi performance generale |
 | `/audit` | Security audit del codice |
@@ -38,7 +40,7 @@ Analizza la richiesta e suggerisci i migliori strumenti (agenti e/o comandi) per
 1. **Analizza** la richiesta dell'utente
 2. **Identifica** la categoria del problema:
    - Bug/errore → debugger, bug-detective
-   - Nuova feature → architect, analyze-codebase
+   - **Nuova feature → PRIMA /persona-check, POI architect**
    - Performance → performance-optimizer, optimize
    - iOS specifico → ios-specialist, timer-specialist
    - Database/sync → firebase-expert
@@ -46,6 +48,8 @@ Analizza la richiesta e suggerisci i migliori strumenti (agenti e/o comandi) per
    - Test → test-engineer
    - Sicurezza → audit
    - Non chiaro → chiedi chiarimenti
+
+   **IMPORTANTE**: Per OGNI nuova feature, SEMPRE suggerire prima /persona-check
 
 3. **Suggerisci** 1-3 strumenti in ordine di rilevanza:
 
@@ -72,7 +76,7 @@ Vuoi che proceda con [strumento consigliato]?
 **Output**: Suggerisci timer-live-activity-specialist poi ios-specialist
 
 **Input**: "voglio aggiungere le statistiche settimanali"
-**Output**: Suggerisci flutter-architect poi firebase-expert
+**Output**: Suggerisci PRIMA /persona-check, poi flutter-architect, infine firebase-expert
 
 **Input**: "l'app è lenta quando scrollo la lista esercizi"
 **Output**: Suggerisci performance-optimizer poi flutter-debugger

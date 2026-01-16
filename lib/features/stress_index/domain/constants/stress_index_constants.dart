@@ -133,8 +133,9 @@ class StressIndexConstants {
   /// Fatigue gain multiplier k₂
   /// How much each unit of training contributes to fatigue
   /// k₂ > k₁ means initial dip in performance after training
-  /// Typical range: 1.5-3.0
-  static const double fatigueGainK2 = 2.0;
+  /// Typical range: 1.5-3.5
+  /// NOTE: Increased from 2.0 to 3.5 to make workouts have more visible impact
+  static const double fatigueGainK2 = 3.5;
 
   /// Muscle-specific τ₂ modifiers (fatigue decay)
   /// Large muscles fatigue longer, small muscles recover faster

@@ -43,7 +43,11 @@ class WorkoutManager: NSObject, ObservableObject {
     /// Prevents repeated authorization prompts
     private var hasRequestedAuthorization: Bool {
         get { UserDefaults.standard.bool(forKey: Self.healthKitAuthRequestedKey) }
-        set { UserDefaults.standard.set(newValue, forKey: Self.healthKitAuthRequestedKey) }
+        set {
+            UserDefaults.standard.set(newValue, forKey: Self.healthKitAuthRequestedKey)
+            // ✅ Force immediate persistence (important for watchOS which may terminate app)
+            UserDefaults.standard.synchronize()
+        }
     }
 
     /// User's maximum heart rate for HR zone calculations
@@ -254,11 +258,36 @@ class WorkoutManager: NSObject, ObservableObject {
     /// Request HealthKit authorization ONLY if not already determined
     /// This prevents the "Consenti Salute" dialog from appearing every time
     private func requestHealthKitAuthorizationIfNeeded() async throws {
-        // Skip if already requested in this session
-        guard !hasRequestedAuthorization else {
-            print("⌚ [HEALTHKIT] Authorization already requested in this session, skipping")
+        // Log current state for debugging
+        let workoutStatus = healthStore.authorizationStatus(for: HKObjectType.workoutType())
+        print("⌚ [HEALTHKIT] Authorization check - UserDefaults: \(hasRequestedAuthorization), workoutStatus: \(workoutStatus.rawValue)")
+
+        // Skip if already requested AND already authorized
+        // This double-check prevents dialog from showing even if UserDefaults was reset
+        if hasRequestedAuthorization && workoutStatus == .sharingAuthorized {
+            print("⌚ [HEALTHKIT] ✅ Already fully authorized, skipping")
             return
         }
+
+        // If already authorized to write workouts (even if UserDefaults was reset)
+        // Skip dialog - permissions are already granted
+        if workoutStatus == .sharingAuthorized {
+            print("⌚ [HEALTHKIT] ✅ Workout write authorized (persisting to UserDefaults)")
+            hasRequestedAuthorization = true
+            return
+        }
+
+        // If UserDefaults says we requested before, but status is denied
+        // Don't keep asking - user made their choice
+        if hasRequestedAuthorization && workoutStatus == .sharingDenied {
+            print("⌚ [HEALTHKIT] ⚠️ Authorization was denied, not asking again")
+            return
+        }
+
+        // Only request if truly not determined yet
+        // Note: In development builds, this may still show the dialog occasionally
+        // because Xcode reinstalls can reset permissions
+        print("⌚ [HEALTHKIT] 📋 Requesting authorization (status: \(workoutStatus.rawValue))...")
 
         let typesToShare: Set = [HKQuantityType.workoutType()]
         let typesToRead: Set<HKObjectType> = [
@@ -268,26 +297,9 @@ class WorkoutManager: NSObject, ObservableObject {
             HKCharacteristicType(.dateOfBirth)  // ✅ For maxHR calculation
         ]
 
-        // Check current authorization status for WRITE types only
-        // Note: For READ types (heartRate, etc.), HealthKit ALWAYS returns .notDetermined
-        // for privacy reasons, so we can only reliably check write (share) permissions
-        let workoutStatus = healthStore.authorizationStatus(for: HKObjectType.workoutType())
-
-        // If already authorized to write workouts, permissions are set up
-        // This prevents the dialog from appearing when permissions are already granted
-        if workoutStatus == .sharingAuthorized {
-            print("⌚ [HEALTHKIT] Already authorized to write workouts, skipping authorization request")
-            hasRequestedAuthorization = true
-            return
-        }
-
-        // Only request if not determined yet
-        // Note: In development builds, this may still show the dialog occasionally
-        // because Xcode reinstalls can reset permissions
-        print("⌚ [HEALTHKIT] Requesting authorization...")
         try await healthStore.requestAuthorization(toShare: typesToShare, read: typesToRead)
         hasRequestedAuthorization = true
-        print("⌚ [HEALTHKIT] Authorization request completed")
+        print("⌚ [HEALTHKIT] ✅ Authorization request completed")
     }
 
     // MARK: - Private Methods

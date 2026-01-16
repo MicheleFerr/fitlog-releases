@@ -90,17 +90,34 @@ class AnalyticsCacheService {
   /// Whether the service has been initialized
   bool _isInitialized = false;
 
+  /// Initialization future to prevent concurrent initialization
+  Future<void>? _initializationFuture;
+
   /// Initialize cache service
   ///
   /// Opens the Hive box and starts the cleanup timer.
   /// Must be called before using other methods.
+  /// Uses a lock pattern to prevent double initialization.
   Future<void> initialize() async {
+    // Already initialized - quick return
     if (_isInitialized) {
-      if (kDebugMode) {
-        debugPrint('💾 [AnalyticsCache] Already initialized');
-      }
       return;
     }
+
+    // If initialization is in progress, wait for it
+    if (_initializationFuture != null) {
+      await _initializationFuture;
+      return;
+    }
+
+    // Start initialization with lock
+    _initializationFuture = _doInitialize();
+    await _initializationFuture;
+  }
+
+  /// Internal initialization logic
+  Future<void> _doInitialize() async {
+    if (_isInitialized) return;
 
     try {
       _cacheBox = await _boxManager.openBox<Map<dynamic, dynamic>>(_boxName);
@@ -118,9 +135,9 @@ class AnalyticsCacheService {
       // Calculate initial statistics
       await _updateStatistics();
 
-      if (kDebugMode) {
-        debugPrint('💾 [AnalyticsCache] Initialized with ${_cacheBox!.length} entries');
-        debugPrint('📊 [AnalyticsCache] Statistics: $_statistics');
+      // Log only if there are entries (reduces noise)
+      if (kDebugMode && _cacheBox!.length > 0) {
+        debugPrint('💾 [AnalyticsCache] Ready with ${_cacheBox!.length} cached entries');
       }
     } catch (e) {
       if (kDebugMode) {

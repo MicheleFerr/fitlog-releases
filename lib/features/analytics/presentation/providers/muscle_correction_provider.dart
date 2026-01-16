@@ -27,6 +27,7 @@ import 'package:gymbro_flutter_new/features/analytics/domain/repositories/muscle
 /// - FirebaseFirestore (singleton)
 final muscleCorrectionRepositoryProvider =
     Provider<MuscleCorrectionRepository>((ref) {
+  ref.keepAlive(); // FIX: previene ricreazione repository con Hive+Firestore
   return MuscleCorrectionRepositoryImpl(
     hiveBoxManager: HiveBoxManagerEnhanced(),
     firestore: FirebaseFirestore.instance,
@@ -58,6 +59,7 @@ final localCorrectionsProvider = FutureProvider.autoDispose<List<MuscleCorrectio
 /// **Returns**: StreamProvider with FeedbackStatus
 final feedbackStatusProvider = StreamProvider.family<FeedbackStatus, String>(
   (ref, correctionId) {
+    ref.keepAlive(); // FIX: previene ricreazione stream listener
     final repository = ref.watch(muscleCorrectionRepositoryProvider);
 
     return repository.watchFeedbackStatus(correctionId).map((either) {

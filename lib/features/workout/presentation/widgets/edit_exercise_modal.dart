@@ -517,7 +517,7 @@ extension EditExerciseModalExtension on BuildContext {
       }
       SnackBarService.showError(
         this,
-        'Error: Unable to edit this exercise',
+        l10n.errorEditExercise,
       );
       return;
     }
@@ -588,7 +588,7 @@ extension EditExerciseModalExtension on BuildContext {
       if (mounted) {
         SnackBarService.showError(
           this,
-          'Error opening exercise editor. Please try again.',
+          l10n.errorOpeningExerciseEditor,
         );
       }
     }

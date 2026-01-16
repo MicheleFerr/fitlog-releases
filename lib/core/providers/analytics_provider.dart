@@ -44,6 +44,10 @@ import 'package:gymbro_flutter_new/core/services/analytics/hybrid_analytics_serv
 /// }
 /// ```
 final analyticsServiceProvider = Provider<IAnalyticsService>((ref) {
+  // FIX: keepAlive() previene ricreazione del servizio analytics
+  // che gestirebbe male l'inizializzazione Firebase duplicata
+  ref.keepAlive();
+
   // Use HybridAnalyticsService for both debug and production
   // This sends events to Firebase AND stores them locally for in-app dashboard
   final service = HybridAnalyticsService();

@@ -651,7 +651,7 @@ class _TemplateShareSheetContentState
       }
     } catch (e) {
       if (mounted) {
-        SnackBarService.showError(context, 'Error sharing: $e');
+        SnackBarService.showError(context, AppLocalizations.of(context).errorSharing);
       }
     }
   }

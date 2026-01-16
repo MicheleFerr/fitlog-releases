@@ -1,0 +1,310 @@
+# ARCHITECTURE VIOLATIONS - FitLog
+# Generated: 2026-01-02
+# Priority: 🔴 CRITICAL | 🟡 MODERATE | 🟢 LOW
+
+================================================================================
+🔴 CRITICAL: Domain → Presentation Imports (20+ violations)
+================================================================================
+
+analytics/domain/utils/muscle_group_mapper.dart
+  ❌ import 'features/analytics/presentation/widgets/tier1_muscle_balance_chart.dart'
+  → FIX: Move MuscleGroup enum to domain/entities/muscle_group.dart
+
+analytics/domain/usecases/normalize_metrics_usecase.dart
+  ❌ import 'features/analytics/presentation/providers/landscape_metrics_provider.dart'
+  → FIX: Inject provider values as use case parameters
+
+analytics/domain/services/volume_analyzer.dart
+  ❌ import 'features/analytics/presentation/widgets/tier1_muscle_balance_chart.dart'
+  ❌ import 'features/stress_index/presentation/providers/stress_index_provider.dart'
+  → FIX: Move shared types to domain, inject provider dependencies
+
+analytics/domain/services/template_aware_balance_service.dart
+  ❌ import 'features/stress_index/presentation/providers/stress_index_provider.dart'
+  → FIX: Inject stress index data as service parameter
+
+analytics/domain/services/muscle_balance_calculator.dart
+  ❌ import 'features/stress_index/presentation/providers/stress_index_provider.dart'
+  → FIX: Create domain service for stress index, inject via constructor
+
+analytics/domain/services/balance_trend_calculator.dart
+  ❌ import 'features/stress_index/presentation/providers/stress_index_provider.dart'
+  → FIX: Pass stress data as method parameter
+
+community/domain/entities/contribution_filters.dart
+  ❌ import 'shared/presentation/extensions/build_context_extensions.dart'
+  → FIX: Domain entities should be pure data classes, remove UI dependencies
+
+home/domain/services/ai_coach_service.dart
+  ❌ import 'shared/presentation/l10n/generated/app_localizations.dart'
+  → FIX: Use hardcoded strings in domain, localize in presentation layer
+
+notifications/domain/services/notification_message_pool.dart
+  ❌ import 'shared/presentation/l10n/generated/app_localizations.dart'
+  → FIX: Return message keys, translate in presentation
+
+notifications/domain/services/notification_scheduler.dart
+  ❌ import 'shared/presentation/l10n/generated/app_localizations.dart'
+  → FIX: Same as above
+
+onboarding/domain/services/analytics_tour_service.dart
+  ❌ import 'shared/presentation/l10n/generated/app_localizations.dart'
+  → FIX: Return tour step keys, localize in UI layer
+
+onboarding/domain/services/onboarding_tour_manager.dart
+  ❌ import 'shared/presentation/extensions/build_context_extensions.dart'
+  → FIX: Remove BuildContext dependency from domain service
+
+onboarding/domain/services/template_tutorial_service.dart
+  ❌ import 'shared/presentation/l10n/generated/app_localizations.dart'
+  → FIX: Use message keys instead of localized strings
+
+onboarding/domain/services/initial/initial_onboarding_completion_service.dart
+  ❌ import 'features/profile/presentation/providers/user_goals_provider.dart'
+  ❌ import 'shared/presentation/providers/app_config_provider.dart'
+  ❌ import 'features/auth/presentation/providers/auth_provider.dart'
+  → FIX: Create domain repositories, inject via constructor
+
+onboarding/domain/services/contextual_overlay_manager.dart
+  ❌ import 'features/onboarding/presentation/providers/onboarding_state_provider.dart'
+  ❌ import 'features/onboarding/presentation/widgets/contextual_overlay.dart'
+  → FIX: Move overlay logic to presentation, domain should handle state only
+
+onboarding/domain/services/workout_tutorial_service.dart
+  ❌ import 'shared/presentation/l10n/generated/app_localizations.dart'
+  → FIX: Return tutorial keys
+
+================================================================================
+🔴 CRITICAL: Domain → Data Layer Imports (10+ violations)
+================================================================================
+
+analytics/domain/utils/muscle_group_mapper.dart
+  ❌ import 'features/stress_index/data/mappers/muscle_abbreviation_mapper.dart'
+  → FIX: Move to shared/domain/utils/muscle_mapper.dart
+
+analytics/domain/services/balance_recommendation_service.dart
+  ❌ import 'features/stress_index/data/mappers/muscle_abbreviation_mapper.dart'
+  → FIX: Same as above
+
+analytics/domain/services/rep_zone_suggestion_engine.dart
+  ❌ import 'features/stress_index/data/mappers/muscle_abbreviation_mapper.dart'
+  → FIX: Same as above
+
+analytics/domain/services/volume_calculator.dart
+  ❌ import 'features/stress_index/data/mappers/muscle_abbreviation_mapper.dart'
+  → FIX: Same as above
+
+analytics/domain/services/exercise_suggestion_engine.dart
+  ❌ import 'features/stress_index/data/mappers/muscle_abbreviation_mapper.dart'
+  → FIX: Same as above
+
+analytics/domain/services/insights_engine.dart
+  ❌ import 'features/stress_index/data/mappers/muscle_abbreviation_mapper.dart'
+  → FIX: Same as above
+
+analytics/domain/services/scientific_metrics_service.dart
+  ❌ import 'features/stress_index/data/mappers/muscle_abbreviation_mapper.dart'
+  → FIX: Same as above
+
+analytics/domain/services/muscle_balance_analyzer.dart
+  ❌ import 'features/stress_index/data/mappers/muscle_abbreviation_mapper.dart'
+  → FIX: Same as above
+
+exercise_database/domain/repositories/i_exercise_usage_repository.dart
+  ❌ import 'features/exercise_database/data/models/exercise_usage_model.dart'
+  → FIX: Create domain entity ExerciseUsage, repository returns domain entity
+
+exercise_database/domain/services/exercise_search_service.dart
+  ❌ import 'features/exercise_database/data/utils/exercise_json_loader.dart'
+  → FIX: Inject loader through constructor as domain interface
+
+exercise_database/domain/services/exercise_usage_tracker.dart
+  ❌ import 'features/exercise_database/data/models/exercise_usage_model.dart'
+  ❌ import 'core/data/hive_box_manager_enhanced.dart'
+  → FIX: Use domain entity, inject box manager as repository dependency
+
+================================================================================
+🟡 MODERATE: Data → Presentation Imports (6 violations)
+================================================================================
+
+analytics/data/repositories/exercise_preferences_repository.dart
+  ❌ import presentation layer
+  → FIX: Remove presentation dependency
+
+body_measurements/data/repositories/measurement_repository_provider.dart
+  ❌ import presentation layer
+  → FIX: Move provider to presentation/providers
+
+community/data/repositories/community_repository.dart
+  ❌ import presentation layer
+  → FIX: Remove presentation dependency
+
+exercise_database/data/repositories/json_exercise_repository.dart
+  ❌ import presentation layer
+  → FIX: Remove presentation dependency
+
+help_center/data/faq_data.dart
+  ❌ import presentation layer (likely for localization)
+  → FIX: FAQ data should be raw strings, localize in presentation
+
+workout/data/repositories/exercise_chart_repository_impl.dart
+  ❌ import presentation layer
+  → FIX: Remove presentation dependency
+
+================================================================================
+🟡 MODERATE: Missing BaseHybridRepository (35/38 repositories)
+================================================================================
+
+Only 3 repositories currently use BaseHybridRepository:
+  ✅ exercise_database/data/repositories/hybrid_exercise_repository.dart
+  ✅ workout/data/repositories/hybrid_workout_repository_impl.dart
+  ✅ workout/data/repositories/hybrid_exercise_activity_repository.dart
+
+Should migrate to BaseHybridRepository:
+  🔄 analytics/data/repositories/analytics_repository_impl.dart (HIGH PRIORITY - frequent reads)
+  🔄 analytics/data/repositories/achievement_repository_impl.dart
+  🔄 analytics/data/repositories/workout_analytics_repository_impl.dart
+  🔄 body_measurements/data/repositories/measurement_repository_impl.dart
+  🔄 chat/data/repositories/chat_repository_impl.dart (cache messages)
+  🔄 custom_exercises/data/repositories/custom_exercise_repository_impl.dart
+  🔄 progress_photos/data/repositories/firebase_photo_repository.dart
+  🔄 scheduling/data/repositories/* (workout schedules need offline support)
+  🔄 streak/data/repositories/* (streak data critical for offline)
+  🔄 stress_index/data/repositories/stress_index_repository.dart
+  🔄 workout_templates/data/repositories/* (templates used frequently)
+
+Exceptions (document in ADR):
+  ⚠️ coach/data/repositories/coach_repository_impl.dart
+     → Shared data between users, complex Firestore queries
+  ⚠️ community/data/repositories/community_repository.dart
+     → Read-only public data, no user-specific cache needed
+
+================================================================================
+🟡 MODERATE: Missing DataSource Layer (27/38 features)
+================================================================================
+
+Features WITH DataSources (✅ Good examples):
+  ✅ ai_coach/data/datasources/
+  ✅ body_measurements/data/datasources/
+  ✅ chat/data/datasources/
+  ✅ coach/data/datasources/
+  ✅ custom_exercises/data/datasources/
+  ✅ health_sync/data/datasources/
+  ✅ notifications/data/datasources/
+  ✅ scheduling/data/datasources/
+  ✅ strength_standards/data/datasources/
+  ✅ workout_templates/data/datasources/
+  ✅ workout/data/datasources/
+
+Features MISSING DataSources (should add):
+  🔄 analytics (HIGH PRIORITY - complex caching needs)
+  🔄 auth (security-critical, needs proper separation)
+  🔄 exercise_database (frequent reads, needs cache layer)
+  🔄 progress_photos (file upload, needs separate remote/local)
+  🔄 stress_index (calculations, cache results)
+  🔄 workout_templates (high read frequency)
+
+Features MAYBE skip DataSource (simple CRUD):
+  ⚠️ community (mostly read-only)
+  ⚠️ feedback (simple write operations)
+  ⚠️ history (wrapper around workout data)
+  ⚠️ import (one-time operations)
+  ⚠️ streak (simple calculations)
+
+================================================================================
+🟡 MODERATE: Incomplete Feature Structures (12 features)
+================================================================================
+
+PRESENTATION ONLY (no business logic):
+  ⚠️ debug/presentation (debug UI screens)
+  ⚠️ premium/presentation (payment UI - logic likely in separate service)
+  ⚠️ profile/presentation (likely uses auth feature)
+  ⚠️ settings/presentation (UI preferences only)
+  ⚠️ splash/presentation (loading screen)
+
+MISSING DOMAIN LAYER:
+  🔄 admin/data + admin/presentation
+     → FIX: Add domain layer with admin entities, use cases
+
+MISSING DATA LAYER:
+  🔄 predictive_balance/domain + predictive_balance/presentation
+     → FIX: Add data layer or document as calculated feature
+  🔄 progress/domain + progress/presentation
+     → FIX: Add data layer for progress tracking
+  🔄 progression/domain + progression/presentation
+     → FIX: Add data layer for progression history
+  🔄 recovery_insight/domain + recovery_insight/presentation
+     → FIX: Add data layer for recovery metrics
+  🔄 timer/domain + timer/presentation
+     → SPECIAL: iOS native integration via platform channels
+     → DOCUMENT: ADR explaining native timer architecture
+
+UNUSUAL STRUCTURE:
+  ⚠️ debug/presentation/data (data inside presentation?)
+     → FIX: Move to debug/data or remove if not needed
+
+================================================================================
+🟢 GOOD: Riverpod Patterns (No violations found)
+================================================================================
+
+✅ Proper provider hierarchy (Provider → NotifierProvider)
+✅ Family providers for parameterized data
+✅ AutoDispose to prevent memory leaks
+✅ .select() for performance optimization
+✅ Provider composition pattern
+
+================================================================================
+🟢 GOOD: FirebaseErrorMapperMixin (30+ repositories)
+================================================================================
+
+✅ Consistent error handling across all repositories
+✅ Centralized Firebase exception → Failure mapping
+✅ Type-safe error propagation with Either<Failure, T>
+
+================================================================================
+QUICK FIX CHECKLIST
+================================================================================
+
+Priority 1 (This Sprint):
+  [ ] Move MuscleGroup to domain/entities
+  [ ] Create ExerciseUsage domain entity
+  [ ] Move muscle_abbreviation_mapper to shared/domain/utils
+  [ ] Remove AppLocalizations from domain services
+  [ ] Document simplified features in CLAUDE.md
+
+Priority 2 (Next Sprint):
+  [ ] Migrate analytics_repository_impl to BaseHybridRepository
+  [ ] Add DataSource layer to analytics feature
+  [ ] Add DataSource layer to auth feature
+  [ ] Create ADR for repository exceptions
+  [ ] Add admin domain layer
+
+Priority 3 (Backlog):
+  [ ] Migrate remaining repositories to BaseHybridRepository
+  [ ] Add architecture tests (layer dependency checks)
+  [ ] Add CI checks for violations
+  [ ] Create feature template generator
+  [ ] Update architecture documentation
+
+================================================================================
+VERIFICATION COMMANDS
+================================================================================
+
+# Check domain purity (should return 0 results)
+grep -r "import.*presentation" lib/features/*/domain --include="*.dart" | grep -v "test"
+
+# Check domain importing data (should return 0 results)
+grep -r "import.*data/models\|import.*data/repositories\|import.*data/datasources" lib/features/*/domain --include="*.dart"
+
+# Count BaseHybridRepository usage (target: 30+)
+grep -r "extends.*BaseHybridRepository" lib/features --include="*.dart" | wc -l
+
+# Count DataSource directories (target: 25+)
+find lib/features/*/data/datasources -type d 2>/dev/null | wc -l
+
+# Find direct Firestore in repositories (target: <5)
+grep -r "final FirebaseFirestore" lib/features/*/data/repositories --include="*.dart" | wc -l
+
+================================================================================
+END OF VIOLATION REPORT
+================================================================================

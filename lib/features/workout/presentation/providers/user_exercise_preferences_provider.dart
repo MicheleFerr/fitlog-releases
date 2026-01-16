@@ -4,6 +4,7 @@ import 'package:gymbro_flutter_new/features/workout/data/repositories/user_exerc
 
 /// Provider for the user exercise preferences repository
 final userExercisePreferencesRepositoryProvider = Provider<UserExercisePreferencesRepository>((ref) {
+  ref.keepAlive(); // FIX: previene ricreazione repository con Hive box
   return UserExercisePreferencesRepository(ref.watch(hiveBoxManagerProvider));
 });
 

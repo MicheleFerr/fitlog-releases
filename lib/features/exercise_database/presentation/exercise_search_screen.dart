@@ -30,8 +30,7 @@ import 'package:gymbro_flutter_new/shared/presentation/services/snackbar_service
 import 'package:gymbro_flutter_new/shared/domain/abstractions/i_exercise_preferences.dart';
 import 'package:gymbro_flutter_new/features/exercise_database/domain/entities/exercise_counting_mode.dart';
 import 'package:gymbro_flutter_new/features/stress_index/data/mappers/muscle_abbreviation_mapper.dart';
-import 'package:gymbro_flutter_new/features/onboarding/domain/services/exercise_search_tutorial_service.dart';
-import 'package:gymbro_flutter_new/features/onboarding/domain/services/workout_tutorial_service.dart';
+// Exercise search tutorial REMOVED - UX 2025 analysis: search UI is standard pattern
 
 class ExerciseSearchScreen extends ConsumerStatefulWidget { // New: Just select and return exercise template (for DropSet/Rest-Pause)
 
@@ -53,7 +52,7 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
   final TextEditingController _searchController = TextEditingController();
   final Set<Exercise> _selectedExercises = <Exercise>{};
 
-  // Tutorial GlobalKeys
+  // Widget keys (used for widget identification)
   final GlobalKey _searchBarKey = GlobalKey();
   final GlobalKey _filterButtonKey = GlobalKey();
   final GlobalKey _quickFiltersKey = GlobalKey();
@@ -96,62 +95,7 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
       },
     );
     _loadUsageStats();
-
-    // Check if tutorial should auto-start
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      _checkAutoStartTutorial();
-    });
-  }
-
-  void _checkAutoStartTutorial() {
-    // BUG FIX: Don't start this tutorial if WorkoutTutorial is already active
-    // This prevents two tutorials from running simultaneously and blocking the UI
-    final workoutTutorialState = ref.read(workoutTutorialProvider);
-    if (workoutTutorialState.isActive) {
-      if (kDebugMode) {
-        debugPrint('⏭️ [ExerciseSearchTutorial] Skipping - WorkoutTutorial is active');
-      }
-      return;
-    }
-
-    final tutorialState = ref.read(exerciseSearchTutorialProvider);
-    // Auto-start tutorial if never completed
-    if (!tutorialState.hasCompletedTutorial && !tutorialState.isActive) {
-      ref.read(exerciseSearchTutorialProvider.notifier).startTutorial();
-      _showTutorial();
-    }
-  }
-
-  void _showTutorial() {
-    final tutorialState = ref.read(exerciseSearchTutorialProvider);
-    if (!tutorialState.isActive) return;
-
-    // Need to open filters to show quick filters
-    setState(() => _showFilters = true);
-
-    // Delay to let filters render
-    Future.delayed(const Duration(milliseconds: 300), () {
-      if (!mounted) return;
-
-      ref.read(exerciseSearchTutorialProvider.notifier).showTutorial(
-        context: context,
-        targetKeys: {
-          ExerciseSearchTutorialStep.searchBar: _searchBarKey,
-          ExerciseSearchTutorialStep.filterButton: _filterButtonKey,
-          ExerciseSearchTutorialStep.quickFilters: _quickFiltersKey,
-          ExerciseSearchTutorialStep.exerciseCard: _exerciseCardKey,
-          // Add button only visible when exercises selected, skip if not shown
-          if (_selectedExercises.isNotEmpty)
-            ExerciseSearchTutorialStep.addButton: _addButtonKey,
-        },
-        onComplete: () {
-          debugPrint('✅ [ExerciseSearchTutorial] Completed!');
-        },
-        onSkip: () {
-          debugPrint('⏭️ [ExerciseSearchTutorial] Skipped');
-        },
-      );
-    });
+    // Exercise search tutorial removed - UX 2025: search UI is intuitive standard pattern
   }
 
   @override

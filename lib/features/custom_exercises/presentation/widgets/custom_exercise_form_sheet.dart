@@ -1,22 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/features/custom_exercises/domain/entities/custom_exercise.dart';
+import 'package:gymbro_flutter_new/features/custom_exercises/presentation/widgets/equipment_selector.dart';
 import 'package:gymbro_flutter_new/features/custom_exercises/presentation/widgets/muscle_chip_selector.dart';
 import 'package:gymbro_flutter_new/features/custom_exercises/presentation/widgets/pattern_selector.dart';
 import 'package:gymbro_flutter_new/features/exercise_database/domain/entities/exercise.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_spacing.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
 import 'package:gymbro_flutter_new/shared/presentation/services/snackbar_service.dart';
-
-/// Equipment types for custom exercises
-const List<String> equipmentTypes = [
-  'Bilanciere', // Barbell
-  'Manubri', // Dumbbells
-  'Cavi', // Cables
-  'Macchina', // Machine
-  'Corpo Libero', // Bodyweight
-];
 
 /// Main form for creating/editing custom exercises with progressive disclosure.
 ///
@@ -99,7 +92,6 @@ class _CustomExerciseFormSheetState
 
   // UI state
   bool _showSecondaryMuscles = false;
-  bool _showEquipment = false;
 
   @override
   void initState() {
@@ -133,7 +125,6 @@ class _CustomExerciseFormSheetState
 
       // Expand sections if they have values
       _showSecondaryMuscles = _muscoliSecondari.isNotEmpty;
-      _showEquipment = true;
     } else if (widget.baseExercise != null) {
       // Creating variant from base exercise
       final base = widget.baseExercise!;
@@ -259,18 +250,23 @@ class _CustomExerciseFormSheetState
                   key: _formKey,
                   child: SingleChildScrollView(
                     controller: scrollController,
-                    padding: const EdgeInsets.fromLTRB(20, 16, 20, 32),
+                    padding: const EdgeInsets.fromLTRB(
+                      AppSpacing.lg,
+                      AppSpacing.md,
+                      AppSpacing.lg,
+                      AppSpacing.md,
+                    ),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         // Name field
                         _buildNameField(),
-                        const SizedBox(height: 20),
+                        const SizedBox(height: AppSpacing.lg),
 
                         // Base exercise info (if variant)
                         if (isVariant) ...[
                           _buildBaseExerciseInfo(),
-                          const SizedBox(height: 24),
+                          const SizedBox(height: AppSpacing.xl),
                         ],
 
                         // Categorization section
@@ -278,19 +274,20 @@ class _CustomExerciseFormSheetState
 
                         // Warning about categorization changes
                         if (_hasModifiedCategorization) ...[
-                          const SizedBox(height: 16),
+                          const SizedBox(height: AppSpacing.md),
                           _buildCategorizationWarning(),
                         ],
 
-                        const SizedBox(height: 32),
-
-                        // Save button
-                        _buildSaveButton(),
+                        // Bottom padding for safe area
+                        const SizedBox(height: AppSpacing.md),
                       ],
                     ),
                   ),
                 ),
               ),
+
+              // Sticky Save button at bottom
+              _buildStickyActionBar(),
             ],
           ),
         );
@@ -305,30 +302,33 @@ class _CustomExerciseFormSheetState
         borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
       ),
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
-      child: Row(
-        children: [
-          Expanded(
-            child: Text(
-              isEditing
-                  ? context.l10n.editCustomExercise
-                  : (isVariant
-                      ? context.l10n.createVariant
-                      : context.l10n.createCustomExercise),
-              style: context.textTheme.titleLarge?.copyWith(
-                fontWeight: FontWeight.bold,
+        padding: const EdgeInsets.symmetric(
+          horizontal: AppSpacing.lg,
+          vertical: AppSpacing.md,
+        ),
+        child: Row(
+          children: [
+            Expanded(
+              child: Text(
+                isEditing
+                    ? context.l10n.editCustomExercise
+                    : (isVariant
+                        ? context.l10n.createVariant
+                        : context.l10n.createCustomExercise),
+                style: context.textTheme.titleLarge?.copyWith(
+                  fontWeight: FontWeight.bold,
+                ),
               ),
             ),
-          ),
-          IconButton(
-            icon: SemanticIcon(
-              icon: AppIcons.close,
-              semanticLabel: context.l10n.close,
+            IconButton(
+              icon: SemanticIcon(
+                icon: AppIcons.close,
+                semanticLabel: context.l10n.close,
+              ),
+              onPressed: () => Navigator.pop(context),
             ),
-            onPressed: () => Navigator.pop(context),
-          ),
-        ],
-      ),
+          ],
+        ),
       ),
     );
   }
@@ -355,10 +355,10 @@ class _CustomExerciseFormSheetState
 
   Widget _buildBaseExerciseInfo() {
     return Container(
-      padding: const EdgeInsets.all(12),
+      padding: const EdgeInsets.all(AppSpacing.sm),
       decoration: BoxDecoration(
         color: context.colors.surfaceContainerHighest,
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(AppSpacing.sm),
       ),
       child: Row(
         children: [
@@ -367,7 +367,7 @@ class _CustomExerciseFormSheetState
             color: context.colors.primary,
             semanticLabel: 'Info',
           ),
-          const SizedBox(width: 12),
+          const SizedBox(width: AppSpacing.sm),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -378,7 +378,7 @@ class _CustomExerciseFormSheetState
                     color: context.colors.onSurfaceVariant,
                   ),
                 ),
-                const SizedBox(height: 2),
+                const SizedBox(height: AppSpacing.xxs / 2),
                 Text(
                   widget.baseExercise!.nome,
                   style: context.textTheme.bodyMedium?.copyWith(
@@ -406,7 +406,7 @@ class _CustomExerciseFormSheetState
               color: context.colors.primary,
               semanticLabel: 'Category',
             ),
-            const SizedBox(width: 8),
+            const SizedBox(width: AppSpacing.xs),
             Text(
               context.l10n.categorization,
               style: context.textTheme.titleMedium?.copyWith(
@@ -415,7 +415,7 @@ class _CustomExerciseFormSheetState
             ),
           ],
         ),
-        const SizedBox(height: 16),
+        const SizedBox(height: AppSpacing.md),
 
         // Primary muscles
         MuscleChipSelector(
@@ -427,7 +427,7 @@ class _CustomExerciseFormSheetState
           },
           label: context.l10n.primaryMuscles,
         ),
-        const SizedBox(height: 20),
+        const SizedBox(height: AppSpacing.lg),
 
         // Secondary muscles (expandable)
         _buildExpandableSection(
@@ -447,7 +447,10 @@ class _CustomExerciseFormSheetState
             },
           ),
         ),
-        const SizedBox(height: 20),
+
+        const SizedBox(height: AppSpacing.lg),
+        const Divider(height: 1),
+        const SizedBox(height: AppSpacing.lg),
 
         // Exercise type (Compound/Isolation)
         Text(
@@ -456,7 +459,7 @@ class _CustomExerciseFormSheetState
             fontWeight: FontWeight.w600,
           ),
         ),
-        const SizedBox(height: 8),
+        const SizedBox(height: AppSpacing.xs),
         SegmentedButton<String>(
           segments: [
             ButtonSegment<String>(
@@ -475,7 +478,7 @@ class _CustomExerciseFormSheetState
             });
           },
         ),
-        const SizedBox(height: 20),
+        const SizedBox(height: AppSpacing.lg),
 
         // Movement pattern
         PatternSelector(
@@ -487,37 +490,20 @@ class _CustomExerciseFormSheetState
           },
           label: context.l10n.movementPattern,
         ),
-        const SizedBox(height: 20),
 
-        // Equipment (expandable)
-        _buildExpandableSection(
-          title: context.l10n.equipment,
-          isExpanded: _showEquipment,
-          onToggle: () {
+        const SizedBox(height: AppSpacing.lg),
+        const Divider(height: 1),
+        const SizedBox(height: AppSpacing.lg),
+
+        // Equipment with chips
+        EquipmentSelector(
+          selectedEquipment: _attrezzatura,
+          onEquipmentChanged: (equipment) {
             setState(() {
-              _showEquipment = !_showEquipment;
+              _attrezzatura = equipment;
             });
           },
-          child: DropdownButtonFormField<String>(
-            decoration: const InputDecoration(
-              border: OutlineInputBorder(),
-              filled: true,
-            ),
-            initialValue: _attrezzatura,
-            items: equipmentTypes.map((equipment) {
-              return DropdownMenuItem(
-                value: equipment,
-                child: Text(equipment),
-              );
-            }).toList(),
-            onChanged: (value) {
-              if (value != null) {
-                setState(() {
-                  _attrezzatura = value;
-                });
-              }
-            },
-          ),
+          label: context.l10n.equipment,
         ),
       ],
     );
@@ -534,9 +520,9 @@ class _CustomExerciseFormSheetState
       children: [
         InkWell(
           onTap: onToggle,
-          borderRadius: BorderRadius.circular(8),
+          borderRadius: BorderRadius.circular(AppSpacing.xs),
           child: Padding(
-            padding: const EdgeInsets.symmetric(vertical: 8),
+            padding: const EdgeInsets.symmetric(vertical: AppSpacing.xs),
             child: Row(
               children: [
                 Expanded(
@@ -558,7 +544,7 @@ class _CustomExerciseFormSheetState
           ),
         ),
         if (isExpanded) ...[
-          const SizedBox(height: 8),
+          const SizedBox(height: AppSpacing.xs),
           child,
         ],
       ],
@@ -567,14 +553,14 @@ class _CustomExerciseFormSheetState
 
   Widget _buildCategorizationWarning() {
     return Container(
-      padding: const EdgeInsets.all(12),
+      padding: const EdgeInsets.all(AppSpacing.sm),
       decoration: BoxDecoration(
         color: context.colors.warning.withValues(alpha: 0.1),
         border: Border.all(
           color: context.colors.warning.withValues(alpha: 0.3),
           width: 1,
         ),
-        borderRadius: BorderRadius.circular(8),
+        borderRadius: BorderRadius.circular(AppSpacing.xs),
       ),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -585,7 +571,7 @@ class _CustomExerciseFormSheetState
             size: 20,
             semanticLabel: 'Warning',
           ),
-          const SizedBox(width: 12),
+          const SizedBox(width: AppSpacing.sm),
           Expanded(
             child: Text(
               context.l10n.categorizationWarning,
@@ -599,19 +585,49 @@ class _CustomExerciseFormSheetState
     );
   }
 
-  Widget _buildSaveButton() {
-    return SizedBox(
-      width: double.infinity,
-      child: FilledButton.icon(
-        onPressed: _handleSave,
-        icon: SemanticIcon(
-          icon: AppIcons.save,
-          color: context.colors.onPrimary,
-          semanticLabel: 'Save',
+  /// Sticky action bar at bottom with Save button
+  Widget _buildStickyActionBar() {
+    final bottomPadding = MediaQuery.of(context).viewPadding.bottom;
+
+    return Container(
+      decoration: BoxDecoration(
+        color: context.colors.surface,
+        border: Border(
+          top: BorderSide(
+            color: context.colors.outlineVariant,
+            width: 1,
+          ),
         ),
-        label: Text(context.l10n.save),
-        style: FilledButton.styleFrom(
-          padding: const EdgeInsets.symmetric(vertical: 16),
+        boxShadow: [
+          BoxShadow(
+            color: context.colors.shadow.withValues(alpha: 0.08),
+            blurRadius: 8,
+            offset: const Offset(0, -2),
+          ),
+        ],
+      ),
+      padding: EdgeInsets.fromLTRB(
+        AppSpacing.lg,
+        AppSpacing.md,
+        AppSpacing.lg,
+        AppSpacing.md + bottomPadding,
+      ),
+      child: SizedBox(
+        width: double.infinity,
+        height: 48, // Material Design 3 minimum touch target
+        child: FilledButton.icon(
+          onPressed: _handleSave,
+          icon: SemanticIcon(
+            icon: AppIcons.save,
+            color: context.colors.onPrimary,
+            semanticLabel: 'Save',
+          ),
+          label: Text(context.l10n.save),
+          style: FilledButton.styleFrom(
+            padding: const EdgeInsets.symmetric(
+              horizontal: AppSpacing.lg,
+            ),
+          ),
         ),
       ),
     );

@@ -352,7 +352,8 @@ class AnalyticsNotifier extends Notifier<AnalyticsState> {
     if (userId == null) return [];
 
     try {
-      final newPRs = await _prTracker.checkAndUpdatePRs(activity);
+      // ✅ FIX: Pass Firebase UID for correct Firestore permissions
+      final newPRs = await _prTracker.checkAndUpdatePRs(activity, userId: userId);
 
       if (newPRs.isNotEmpty) {
         // Reload PRs to update state

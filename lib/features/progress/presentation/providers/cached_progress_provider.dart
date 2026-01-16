@@ -633,6 +633,7 @@ class ProgressCacheRepository {
 final progressCacheRepositoryProvider = Provider<ProgressCacheRepository>((
   ref,
 ) {
+  ref.keepAlive(); // FIX: previene ricreazione repository con stato/cache
   _CacheLogger.step('PROVIDER_INIT', 'Initializing ProgressCacheRepository...');
 
   final prefs = ref.watch(sharedPreferencesProvider);
@@ -920,6 +921,7 @@ class WorkoutStatsCalculator {
 
 /// Provider for stats calculator
 final workoutStatsCalculatorProvider = Provider<WorkoutStatsCalculator>((ref) {
+  ref.keepAlive(); // FIX: previene ricreazione calculator service
   return WorkoutStatsCalculator();
 });
 

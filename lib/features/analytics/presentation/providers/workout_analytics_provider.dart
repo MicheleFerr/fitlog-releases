@@ -43,15 +43,22 @@ final workoutMetricsCacheProvider = Provider<Box<Map>>((ref) {
   return Hive.box<Map>('workoutMetrics');
 });
 
-/// Analytics cache service provider
+/// Analytics cache service provider (singleton with keepAlive)
+///
+/// Uses keepAlive() to maintain cache across widget rebuilds,
+/// preventing repeated initialization and cache loss.
 final analyticsCacheServiceProvider = Provider<AnalyticsCacheService>((ref) {
+  // Keep alive to prevent cache loss on widget disposal
+  ref.keepAlive();
+
   final boxManager = ref.watch(hiveBoxManagerProvider);
   final cacheService = AnalyticsCacheService(boxManager);
 
-  // Initialize cache service
+  // Initialize cache service (async but fire-and-forget is OK here
+  // because the service handles re-initialization internally)
   cacheService.initialize();
 
-  // Dispose on provider disposal
+  // Dispose on provider disposal (app termination)
   ref.onDispose(() {
     cacheService.dispose();
   });

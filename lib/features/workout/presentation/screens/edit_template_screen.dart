@@ -109,18 +109,18 @@ class _EditTemplateScreenState extends ConsumerState<EditTemplateScreen> {
                 children: [
                   TextField(
                     controller: _nameController,
-                    decoration: const InputDecoration(
-                      labelText: 'Nome Template',
-                      border: OutlineInputBorder(),
+                    decoration: InputDecoration(
+                      labelText: context.l10n.templateName,
+                      border: const OutlineInputBorder(),
                     ),
                     onChanged: (_) => _markAsChanged(),
                   ),
                   const SizedBox(height: 12),
                   TextField(
                     controller: _descriptionController,
-                    decoration: const InputDecoration(
-                      labelText: 'Descrizione',
-                      border: OutlineInputBorder(),
+                    decoration: InputDecoration(
+                      labelText: context.l10n.description,
+                      border: const OutlineInputBorder(),
                     ),
                     maxLines: 2,
                     onChanged: (_) => _markAsChanged(),
@@ -424,7 +424,7 @@ class _EditTemplateScreenState extends ConsumerState<EditTemplateScreen> {
   semanticLabel: 'Timer',
 ),
                         iconSize: 20,
-                        tooltip: 'Timer Recupero',
+                        tooltip: context.l10n.restTimer,
                       ),
                       const SizedBox(width: 8),
                       // Expand/collapse icon
@@ -564,14 +564,14 @@ class _EditTemplateScreenState extends ConsumerState<EditTemplateScreen> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  'Round ${set.setNumber}',
+                                  context.l10n.roundNumber(set.setNumber),
                                   style: context.textTheme.titleSmall?.copyWith(
                                     fontWeight: FontWeight.bold,
                                   ),
                                 ),
                                 const SizedBox(height: 2),
                                 Text(
-                                  '${exerciseTemplate.subExercises!.length} esercizi',
+                                  '${exerciseTemplate.subExercises!.length} ${context.l10n.exercises}',
                                   style: context.textTheme.bodySmall?.copyWith(
                                     color: context.colors.onSurface.withValues(alpha: 0.7),
                                   ),
@@ -596,7 +596,7 @@ class _EditTemplateScreenState extends ConsumerState<EditTemplateScreen> {
                               ),
                               color: context.colors.error,
                               iconSize: 20,
-                              tooltip: 'Rimuovi round',
+                              tooltip: context.l10n.removeRound,
                             ),
                         ],
                       ),
@@ -701,7 +701,7 @@ class _EditTemplateScreenState extends ConsumerState<EditTemplateScreen> {
   semanticLabel: 'Add',
 ),
               label: Text(
-                isSupersetWithSubExercises ? 'Aggiungi round' : context.l10n.addSet,
+                isSupersetWithSubExercises ? context.l10n.addRound : context.l10n.addSet,
               ),
               style: OutlinedButton.styleFrom(
                 minimumSize: const Size(double.infinity, 40),
@@ -843,7 +843,7 @@ class _EditTemplateScreenState extends ConsumerState<EditTemplateScreen> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        'Round ${round.setNumber}',
+                        context.l10n.roundNumber(round.setNumber),
                         style: context.textTheme.headlineSmall?.copyWith(
                           fontWeight: FontWeight.bold,
                         ),
@@ -859,7 +859,7 @@ class _EditTemplateScreenState extends ConsumerState<EditTemplateScreen> {
                   ),
                   const SizedBox(height: 4),
                   Text(
-                    'Imposta peso e ripetizioni per questo round',
+                    context.l10n.editRoundData,
                     style: context.textTheme.bodyMedium?.copyWith(
                       color: context.colors.onSurface.withValues(alpha: 0.7),
                     ),
@@ -875,7 +875,7 @@ class _EditTemplateScreenState extends ConsumerState<EditTemplateScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'Esercizi in questo round:',
+                    context.l10n.exercises,
                     style: context.textTheme.titleSmall?.copyWith(
                       fontWeight: FontWeight.bold,
                     ),
@@ -1028,7 +1028,7 @@ class _EditTemplateScreenState extends ConsumerState<EditTemplateScreen> {
 
   Future<void> _saveTemplate() async {
     if (_nameController.text.trim().isEmpty) {
-      SnackBarService.showError(context, 'Il nome del template è obbligatorio');
+      SnackBarService.showError(context, context.l10n.templateNameRequired);
       return;
     }
 
@@ -1055,7 +1055,7 @@ class _EditTemplateScreenState extends ConsumerState<EditTemplateScreen> {
       });
 
       if (mounted) {
-        SnackBarService.showSuccess(context, 'Template salvato con successo');
+        SnackBarService.showSuccess(context, context.l10n.templateSaved);
         context.pop();
       }
     } catch (e) {
@@ -1070,8 +1070,8 @@ class _EditTemplateScreenState extends ConsumerState<EditTemplateScreen> {
   Future<void> _showDiscardChangesDialog() async {
     final confirmed = await ModalService.showConfirmDialog(
       context,
-      title: 'Modifiche non salvate',
-      message: 'Hai delle modifiche non salvate. Vuoi scartarle?',
+      title: context.l10n.unsavedChanges,
+      message: context.l10n.discardChangesMessage,
       isDangerous: true,
     );
 

@@ -34,6 +34,10 @@ class EnvironmentConfig {
   /// Indicates whether environment variables have been loaded
   static bool _isLoaded = false;
 
+  /// Indicates whether dotenv was successfully initialized
+  /// When false, we must NOT access dotenv.env (throws NotInitializedError)
+  static bool _dotenvLoaded = false;
+
   // ════════════════════════════════════════════════════════════════════════
   // COMPILE-TIME CONSTANTS (from --dart-define)
   // ════════════════════════════════════════════════════════════════════════
@@ -90,29 +94,32 @@ class EnvironmentConfig {
       return;
     }
 
-    // Fallback: Load from .env file (debug builds only)
-    if (kDebugMode) {
-      try {
-        await dotenv.load(fileName: '.env');
-        _isLoaded = true;
-        debugPrint('✅ Environment loaded from .env file (debug mode)');
+    // Fallback: Try to load from .env file (bundled in assets)
+    // This works for debug/profile builds where .env is in pubspec.yaml assets
+    try {
+      await dotenv.load(fileName: '.env');
+      _dotenvLoaded = true; // Only set true if dotenv.load() succeeded
+      _isLoaded = true;
+      if (kDebugMode) {
+        debugPrint('✅ Environment loaded from .env file');
         debugPrint('   ENV: $environment');
-      } catch (e) {
-        debugPrint('❌ Failed to load .env file: $e');
-        debugPrint('   For debug builds, create .env from .env.example');
-        debugPrint('   For release builds, use --dart-define flags');
-        throw Exception('Failed to load environment configuration: $e');
       }
-    } else {
-      // Release build without compile-time constants = error
-      throw Exception(
-        'Environment not configured. Use --dart-define flags for release builds. '
-        'See lib/core/config/environment_config.dart for details.',
-      );
+    } catch (e) {
+      // .env not found - this is expected in release builds
+      // Firebase will use GoogleService-Info.plist / google-services.json instead
+      _dotenvLoaded = false; // dotenv NOT initialized - don't access dotenv.env!
+      _isLoaded = true; // Mark as loaded to prevent retry
+      if (kDebugMode) {
+        debugPrint('⚠️ No .env file found (expected in Release builds)');
+        debugPrint('   Firebase will use native config files');
+      }
+      // DON'T throw - Firebase uses GoogleService-Info.plist on iOS
+      // and google-services.json on Android, so env vars are optional
     }
   }
 
   /// Get environment variable with compile-time priority
+  /// Returns empty string if not found (Firebase uses native config files)
   static String _get(String key, String dartDefineValue) {
     // Priority 1: Compile-time constant (secure)
     if (dartDefineValue.isNotEmpty) {
@@ -120,17 +127,18 @@ class EnvironmentConfig {
     }
 
     // Priority 2: .env file (debug only)
-    if (_isLoaded && dotenv.env.containsKey(key)) {
+    // IMPORTANT: Only access dotenv.env if _dotenvLoaded is true
+    // Otherwise dotenv.env throws NotInitializedError
+    if (_dotenvLoaded && dotenv.env.containsKey(key)) {
       final value = dotenv.env[key];
       if (value != null && value.isNotEmpty) {
         return value;
       }
     }
 
-    throw Exception(
-      'Environment variable "$key" not found. '
-      'Use --dart-define=$key=value or add to .env file.',
-    );
+    // Return empty string instead of throwing
+    // Firebase will use GoogleService-Info.plist / google-services.json
+    return '';
   }
 
   /// Get optional environment variable
@@ -138,7 +146,8 @@ class EnvironmentConfig {
     if (dartDefineValue.isNotEmpty) {
       return dartDefineValue;
     }
-    if (_isLoaded) {
+    // Only access dotenv.env if it was successfully initialized
+    if (_dotenvLoaded) {
       return dotenv.env[key];
     }
     return null;

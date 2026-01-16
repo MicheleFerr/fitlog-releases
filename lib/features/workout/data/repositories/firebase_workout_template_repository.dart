@@ -8,6 +8,7 @@ import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise.dar
 import 'package:flutter/foundation.dart';
 import 'package:gymbro_flutter_new/shared/data/repositories/rate_limited_firestore_mixin.dart';
 import 'package:gymbro_flutter_new/core/cache/user_cache_key_manager.dart';
+import 'package:gymbro_flutter_new/core/data/mixins/firebase_error_mapper_mixin.dart';
 import 'package:gymbro_flutter_new/features/workout_templates/domain/services/template_cloud_service.dart';
 
 /// 🔒 RATE LIMITING: All Firestore operations are rate-limited to prevent quota exhaustion
@@ -15,7 +16,10 @@ import 'package:gymbro_flutter_new/features/workout_templates/domain/services/te
 ///
 /// 🔐 USER ISOLATION: Cache keys are now user-scoped to prevent data leakage
 /// when switching between accounts. Uses UserCacheKeyManager for key generation.
-class FirebaseWorkoutTemplateRepository with RateLimitedFirestoreMixin {
+///
+/// Uses [FirebaseErrorMapperMixin] for standardized Firebase error handling.
+class FirebaseWorkoutTemplateRepository
+    with RateLimitedFirestoreMixin, FirebaseErrorMapperMixin {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
@@ -50,22 +54,35 @@ class FirebaseWorkoutTemplateRepository with RateLimitedFirestoreMixin {
   }
   
   /// Ottiene i template pubblici (rate-limited)
+  ///
+  /// Uses [FirebaseErrorMapperMixin] for standardized error handling.
   Future<List<WorkoutTemplate>> getPublicTemplates() async {
     return await rateLimitedQuery(() async {
-      try {
-        final querySnapshot = await _firestore
-            .collection(_templatesCollection)
-            .where('isPublic', isEqualTo: true)
-            .orderBy('downloadCount', descending: true)
-            .limit(50)
-            .get();
+      final result = await handleFirebaseOperation(
+        () async {
+          final querySnapshot = await _firestore
+              .collection(_templatesCollection)
+              .where('isPublic', isEqualTo: true)
+              .orderBy('downloadCount', descending: true)
+              .limit(50)
+              .get();
 
-        return querySnapshot.docs
-            .map((doc) => WorkoutTemplate.fromJson(doc.data()))
-            .toList();
-      } catch (e) {
-        return <WorkoutTemplate>[];
-      }
+          return querySnapshot.docs
+              .map((doc) => WorkoutTemplate.fromJson(doc.data()))
+              .toList();
+        },
+        operationName: 'getPublicTemplates',
+      );
+
+      return result.fold(
+        (failure) {
+          if (kDebugMode) {
+            debugPrint('❌ getPublicTemplates failed: ${failure.message}');
+          }
+          return <WorkoutTemplate>[];
+        },
+        (templates) => templates,
+      );
     });
   }
 
@@ -276,7 +293,10 @@ class FirebaseWorkoutTemplateRepository with RateLimitedFirestoreMixin {
     }
 
     // Validate exercises presence and integrity
-    if (template.exercises.isEmpty) {
+    // Empty templates are allowed but will only be saved locally (not synced to cloud)
+    final isEmptyTemplate = template.exercises.isEmpty;
+    if (isEmptyTemplate && kDebugMode) {
+      debugPrint('📝 Empty template "${template.name}" will be saved locally only');
     }
 
     for (int i = 0; i < template.exercises.length; i++) {
@@ -302,6 +322,14 @@ class FirebaseWorkoutTemplateRepository with RateLimitedFirestoreMixin {
 
     // Salva sempre in locale per sync rapido
     await _saveTemplateLocally(template);
+
+    // Skip cloud sync for empty templates - they'll sync when exercises are added
+    if (isEmptyTemplate) {
+      if (kDebugMode) {
+        debugPrint('⏭️ Skipping cloud sync for empty template - save locally only');
+      }
+      return;
+    }
 
     // Prova a salvare nel cloud se utente autenticato
     if (_auth.currentUser != null) {
@@ -387,81 +415,131 @@ class FirebaseWorkoutTemplateRepository with RateLimitedFirestoreMixin {
   }
 
   /// Elimina un template
+  ///
+  /// Uses [FirebaseErrorMapperMixin] for standardized error handling.
   Future<void> deleteTemplate(String templateId) async {
     // Get template info before deletion for quota update
     bool isPublic = false;
     if (_auth.currentUser != null) {
-      try {
-        final doc = await _firestore
-            .collection(_templatesCollection)
-            .doc(templateId)
-            .get();
-        if (doc.exists) {
-          isPublic = doc.data()?['isPublic'] ?? false;
-        }
-      } catch (e) {
-      }
+      final getResult = await handleFirebaseOperation(
+        () async {
+          final doc = await _firestore
+              .collection(_templatesCollection)
+              .doc(templateId)
+              .get();
+          if (doc.exists) {
+            return doc.data()?['isPublic'] ?? false;
+          }
+          return false;
+        },
+        operationName: 'getTemplateForDeletion',
+      );
+
+      getResult.fold(
+        (failure) {
+          if (kDebugMode) {
+            debugPrint('⚠️ Failed to get template info: ${failure.message}');
+          }
+        },
+        (value) => isPublic = value as bool,
+      );
     }
-    
+
     // Elimina localmente
     await _deleteTemplateLocally(templateId);
-    
+
     // Elimina dal cloud se disponibile
     if (_auth.currentUser != null) {
-      try {
-        await _deleteTemplateFromCloud(templateId);
-        // Decrement quota after successful deletion
-        await _decrementQuota(isPublic);
-      } catch (e) {
-        // Agenda per sync futuro
-        await _markForDeletion(templateId);
-      }
+      final deleteResult = await handleFirebaseVoidOperation(
+        () async {
+          await _deleteTemplateFromCloud(templateId);
+          // Decrement quota after successful deletion
+          await _decrementQuota(isPublic);
+        },
+        operationName: 'deleteTemplateFromCloud',
+      );
+
+      deleteResult.fold(
+        (failure) {
+          if (kDebugMode) {
+            debugPrint('⚠️ Cloud delete failed: ${failure.message}');
+          }
+          // Agenda per sync futuro
+          _markForDeletion(templateId);
+        },
+        (_) {
+          if (kDebugMode) {
+            debugPrint('✅ Template deleted from cloud: $templateId');
+          }
+        },
+      );
     }
   }
 
   /// Incrementa contatore utilizzo
+  ///
+  /// Uses [FirebaseErrorMapperMixin] for standardized error handling.
   Future<void> incrementUsage(String templateId) async {
     // Aggiorna localmente
     final templates = await _getTemplatesFromCache();
     final templateIndex = templates.indexWhere((t) => t.id == templateId);
-    
+
     if (templateIndex != -1) {
       final updatedTemplate = templates[templateIndex].incrementUsage();
       templates[templateIndex] = updatedTemplate;
       await _cacheTemplates(templates);
-      
+
       // Aggiorna anche nel cloud se possibile
       if (_auth.currentUser != null) {
-        try {
-          await _saveTemplateToCloud(updatedTemplate);
-        } catch (e) {
-        }
+        final result = await handleFirebaseVoidOperation(
+          () => _saveTemplateToCloud(updatedTemplate),
+          operationName: 'incrementUsage',
+        );
+
+        result.mapLeft((failure) {
+          if (kDebugMode) {
+            debugPrint('⚠️ Failed to sync usage: ${failure.message}');
+          }
+        });
       }
     }
   }
 
   /// Sincronizza template locali con cloud
+  ///
+  /// Uses [FirebaseErrorMapperMixin] for standardized error handling.
   Future<void> syncWithCloud() async {
     if (_auth.currentUser == null) return;
-    
-    try {
-      // 1. Carica template dal cloud
-      final cloudTemplates = await _getTemplatesFromCloud();
-      final localTemplates = await _getTemplatesFromCache();
-      
-      // 2. Merge intelligente
-      final mergedTemplates = _mergeTemplates(localTemplates, cloudTemplates);
-      
-      // 3. Salva risultato in cache
-      await _cacheTemplates(mergedTemplates);
-      
-      // 4. Aggiorna timestamp sync
-      final prefs = await SharedPreferences.getInstance();
-      await prefs.setInt(_lastSyncKey, DateTime.now().millisecondsSinceEpoch);
-      
-    } catch (e) {
-      rethrow;
-    }
+
+    final result = await handleFirebaseVoidOperation(
+      () async {
+        // 1. Carica template dal cloud
+        final cloudTemplates = await _getTemplatesFromCloud();
+        final localTemplates = await _getTemplatesFromCache();
+
+        // 2. Merge intelligente
+        final mergedTemplates = _mergeTemplates(localTemplates, cloudTemplates);
+
+        // 3. Salva risultato in cache
+        await _cacheTemplates(mergedTemplates);
+
+        // 4. Aggiorna timestamp sync
+        final prefs = await SharedPreferences.getInstance();
+        await prefs.setInt(_lastSyncKey, DateTime.now().millisecondsSinceEpoch);
+
+        if (kDebugMode) {
+          debugPrint('✅ syncWithCloud completed: ${mergedTemplates.length} templates');
+        }
+      },
+      operationName: 'syncWithCloud',
+    );
+
+    result.mapLeft((failure) {
+      if (kDebugMode) {
+        debugPrint('❌ syncWithCloud failed: ${failure.message}');
+      }
+      throw failure; // Rethrow for caller to handle
+    });
   }
 
   /// Verifica se è necessario un sync
@@ -594,19 +672,31 @@ class FirebaseWorkoutTemplateRepository with RateLimitedFirestoreMixin {
       } else {
       }
 
+      // 🔧 FIX: Add 10s timeout to prevent infinite hanging on network issues
       await _firestore
           .collection(_templatesCollection)
           .doc(template.id)
-          .set(data, SetOptions(merge: true));
+          .set(data, SetOptions(merge: true))
+          .timeout(
+            const Duration(seconds: 10),
+            onTimeout: () {
+              if (kDebugMode) {
+                debugPrint('⏱️ Firebase: Template save timed out after 10s');
+              }
+              throw TimeoutException('Firestore save timed out');
+            },
+          );
 
 
       // POST-SAVE VALIDATION - Verify data was saved correctly
       try {
         // Attempt to read back the saved template to verify integrity
+        // 🔧 FIX: Add 5s timeout for validation read
         final savedDoc = await _firestore
             .collection(_templatesCollection)
             .doc(template.id)
-            .get();
+            .get()
+            .timeout(const Duration(seconds: 5));
 
         if (savedDoc.exists) {
           final savedData = savedDoc.data()!;
@@ -796,6 +886,8 @@ class FirebaseWorkoutTemplateRepository with RateLimitedFirestoreMixin {
 
   /// Processare sync in sospeso
   /// 🔐 Uses user-scoped keys for pending sync/deletion
+  ///
+  /// Uses [FirebaseErrorMapperMixin] for standardized error handling.
   Future<void> processPendingSync() async {
     if (_auth.currentUser == null) return;
 
@@ -806,12 +898,20 @@ class FirebaseWorkoutTemplateRepository with RateLimitedFirestoreMixin {
     // Sync template pendenti
     final pendingSync = prefs.getStringList(syncKey) ?? [];
     for (final templateId in pendingSync) {
-      try {
-        final templates = await _getTemplatesFromCache();
-        final template = templates.firstWhere((t) => t.id == templateId);
-        await _saveTemplateToCloud(template);
-      } catch (e) {
-        // Template not found or sync failed
+      final templates = await _getTemplatesFromCache();
+      final templateOpt = templates.where((t) => t.id == templateId).firstOrNull;
+
+      if (templateOpt != null) {
+        final result = await handleFirebaseVoidOperation(
+          () => _saveTemplateToCloud(templateOpt),
+          operationName: 'processPendingSync',
+        );
+
+        result.mapLeft((failure) {
+          if (kDebugMode) {
+            debugPrint('⚠️ Pending sync failed for $templateId: ${failure.message}');
+          }
+        });
       }
     }
     await prefs.remove(syncKey);
@@ -819,11 +919,16 @@ class FirebaseWorkoutTemplateRepository with RateLimitedFirestoreMixin {
     // Eliminazioni pendenti
     final pendingDeletion = prefs.getStringList(deletionKey) ?? [];
     for (final templateId in pendingDeletion) {
-      try {
-        await _deleteTemplateFromCloud(templateId);
-      } catch (e) {
-        // Deletion failed
-      }
+      final result = await handleFirebaseVoidOperation(
+        () => _deleteTemplateFromCloud(templateId),
+        operationName: 'processPendingDeletion',
+      );
+
+      result.mapLeft((failure) {
+        if (kDebugMode) {
+          debugPrint('⚠️ Pending deletion failed for $templateId: ${failure.message}');
+        }
+      });
     }
     await prefs.remove(deletionKey);
   }
@@ -844,38 +949,64 @@ class FirebaseWorkoutTemplateRepository with RateLimitedFirestoreMixin {
   }
 
   /// Decrement quota when deleting a template (rate-limited)
+  ///
+  /// Uses [FirebaseErrorMapperMixin] for standardized error handling.
   Future<void> _decrementQuota(bool isPublic) async {
     final userId = _auth.currentUser?.uid;
     if (userId == null) return;
 
-    try {
-      // Get user document (rate-limited read)
-      final userDoc = await rateLimitedRead(() async {
-        final doc = await _firestore.collection('users').doc(userId).get();
-        if (!doc.exists) return null;
-        return doc;
-      });
-
-      if (userDoc == null) return;
-
-      final userData = userDoc.data()!;
-      final quotaData = userData['templateQuota'] as Map<String, dynamic>?;
-      if (quotaData == null) return;
-
-      final usedPrivate = quotaData['usedPrivateTemplates'] ?? 0;
-      final usedPublic = quotaData['usedPublicTemplates'] ?? 0;
-
-      // Update quota (rate-limited write)
-      await rateLimitedWrite(() async {
-        await _firestore.collection('users').doc(userId).update({
-          'templateQuota.usedPrivateTemplates': isPublic ? usedPrivate : (usedPrivate - 1).clamp(0, 999),
-          'templateQuota.usedPublicTemplates': isPublic ? (usedPublic - 1).clamp(0, 999) : usedPublic,
+    // Get user document (rate-limited read)
+    final getResult = await handleFirebaseOperation(
+      () async {
+        return await rateLimitedRead(() async {
+          final doc = await _firestore.collection('users').doc(userId).get();
+          if (!doc.exists) return null;
+          return doc;
         });
-      });
+      },
+      operationName: 'getQuotaForDecrement',
+    );
 
-    } catch (e) {
+    final userDoc = getResult.fold(
+      (failure) {
+        if (kDebugMode) {
+          debugPrint('⚠️ Failed to get quota: ${failure.message}');
+        }
+        return null;
+      },
+      (doc) => doc,
+    );
+
+    if (userDoc == null) return;
+
+    final userData = userDoc.data()!;
+    final quotaData = userData['templateQuota'] as Map<String, dynamic>?;
+    if (quotaData == null) return;
+
+    final usedPrivate = quotaData['usedPrivateTemplates'] ?? 0;
+    final usedPublic = quotaData['usedPublicTemplates'] ?? 0;
+
+    // Update quota (rate-limited write)
+    final updateResult = await handleFirebaseVoidOperation(
+      () async {
+        await rateLimitedWrite(() async {
+          await _firestore.collection('users').doc(userId).update({
+            'templateQuota.usedPrivateTemplates':
+                isPublic ? usedPrivate : (usedPrivate - 1).clamp(0, 999),
+            'templateQuota.usedPublicTemplates':
+                isPublic ? (usedPublic - 1).clamp(0, 999) : usedPublic,
+          });
+        });
+      },
+      operationName: 'decrementQuota',
+    );
+
+    updateResult.mapLeft((failure) {
       // Don't throw - deletion is more important
-    }
+      if (kDebugMode) {
+        debugPrint('⚠️ Failed to decrement quota: ${failure.message}');
+      }
+    });
   }
 
   /// Crea template predefiniti

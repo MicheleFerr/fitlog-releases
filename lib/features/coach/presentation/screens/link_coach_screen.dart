@@ -103,7 +103,7 @@ class _LinkCoachScreenState extends ConsumerState<LinkCoachScreen> {
               // Skip option
               TextButton(
                 onPressed: _skip,
-                child: const Text('Non hai un codice? Salta'),
+                child: Text(context.l10n.noCodeSkip),
               ),
             ],
           ),

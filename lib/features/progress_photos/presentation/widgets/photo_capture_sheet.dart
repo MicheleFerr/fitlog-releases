@@ -558,8 +558,8 @@ class _PhotoCaptureSheetState extends State<PhotoCaptureSheet>
       controller: _weightController,
       keyboardType: const TextInputType.numberWithOptions(decimal: true),
       decoration: InputDecoration(
-        labelText: 'Weight (optional)',
-        hintText: 'e.g., 75.5',
+        labelText: context.l10n.weightOptional,
+        hintText: context.l10n.weightHintExample,
         suffixText: 'kg',
         prefixIcon: const Icon(AppIcons.scale),
         border: OutlineInputBorder(
@@ -575,8 +575,8 @@ class _PhotoCaptureSheetState extends State<PhotoCaptureSheet>
       maxLines: 3,
       maxLength: 200,
       decoration: InputDecoration(
-        labelText: 'Notes (optional)',
-        hintText: 'How are you feeling? Any changes noticed?',
+        labelText: context.l10n.notesOptional,
+        hintText: context.l10n.notesHintFeeling,
         alignLabelWithHint: true,
         prefixIcon: Padding(
           padding: const EdgeInsets.only(bottom: AppSpacing.xxxl),

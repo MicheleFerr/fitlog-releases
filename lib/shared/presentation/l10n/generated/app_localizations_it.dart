@@ -14508,7 +14508,7 @@ class AppLocalizationsIt extends AppLocalizations {
   String get volumeSettings => 'Volume settings';
 
   @override
-  String get vsLastWeek => 'Vs ultimo week';
+  String get vsLastWeek => 'vs sett.';
 
   @override
   String get weeklyDistribution => 'Weekly distribution';

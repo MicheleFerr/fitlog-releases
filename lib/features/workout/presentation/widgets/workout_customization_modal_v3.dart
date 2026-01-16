@@ -219,14 +219,14 @@ class _WorkoutCustomizationModalV3State
                   _buildSectionCard(
                     context,
                     icon: AppIcons.playCircle,
-                    title: 'Comportamento',
+                    title: context.l10n.behaviorSection,
                     color: context.colors.primary,
                     children: [
                       _buildToggleRow(
                         context,
                         icon: AppIcons.timer,
                         title: context.l10n.autoRestTimerTitle,
-                        subtitle: 'Avvia timer dopo ogni set',
+                        subtitle: context.l10n.autoRestTimerSubtitle,
                         value: _autoRestTimer,
                         onChanged: (v) {
                           setState(() => _autoRestTimer = v);
@@ -237,8 +237,8 @@ class _WorkoutCustomizationModalV3State
                       _buildToggleRow(
                         context,
                         icon: AppIcons.unfoldLess,
-                        title: 'Chiudi esercizi completati',
-                        subtitle: 'Minimizza automaticamente',
+                        title: context.l10n.autoCollapseTitle,
+                        subtitle: context.l10n.autoCollapseSubtitle,
                         value: _autoCollapseCompleted,
                         onChanged: (v) {
                           setState(() => _autoCollapseCompleted = v);
@@ -251,8 +251,8 @@ class _WorkoutCustomizationModalV3State
                         icon: _soundEnabled
                             ? AppIcons.volumeUp
                             : AppIcons.volumeOff,
-                        title: 'Suoni e vibrazioni',
-                        subtitle: 'Feedback audio durante workout',
+                        title: context.l10n.soundVibrationTitle,
+                        subtitle: context.l10n.soundVibrationSubtitle,
                         value: _soundEnabled,
                         onChanged: (v) {
                           setState(() => _soundEnabled = v);
@@ -263,8 +263,8 @@ class _WorkoutCustomizationModalV3State
                       _buildToggleRow(
                         context,
                         icon: AppIcons.hourglassEmpty,
-                        title: 'Tempo recupero su card',
-                        subtitle: 'Mostra e modifica timer per esercizio',
+                        title: context.l10n.restTimeOnCardTitle,
+                        subtitle: context.l10n.restTimeOnCardSubtitle,
                         value: _showCustomTimers,
                         onChanged: (v) {
                           setState(() => _showCustomTimers = v);
@@ -280,16 +280,16 @@ class _WorkoutCustomizationModalV3State
                   _buildExpandableSection(
                     context,
                     icon: AppIcons.speed,
-                    title: 'Tracciamento Avanzato',
-                    subtitle: 'RPE e auto-regolazione',
+                    title: context.l10n.advancedTrackingTitle,
+                    subtitle: context.l10n.advancedTrackingSubtitle,
                     color: context.colors.tertiary,
                     initiallyExpanded: _rpeTracking,
                     children: [
                       _buildToggleRow(
                         context,
                         icon: AppIcons.speed,
-                        title: 'Sforzo Percepito (RPE)',
-                        subtitle: 'Traccia intensità dopo ogni set',
+                        title: context.l10n.rpeTitle,
+                        subtitle: context.l10n.rpeSubtitle,
                         value: _rpeTracking,
                         onChanged: (v) {
                           setState(() {
@@ -310,8 +310,8 @@ class _WorkoutCustomizationModalV3State
                           child: _buildToggleRow(
                             context,
                             icon: AppIcons.workout,
-                            title: 'Suggerisci peso',
-                            subtitle: 'Basato su RPE del set precedente',
+                            title: context.l10n.suggestWeightTitle,
+                            subtitle: context.l10n.suggestWeightSubtitle,
                             value: _autoAdjustWeightFromRpe,
                             onChanged: (v) {
                               setState(() => _autoAdjustWeightFromRpe = v);
@@ -326,8 +326,8 @@ class _WorkoutCustomizationModalV3State
                           child: _buildToggleRow(
                             context,
                             icon: AppIcons.timer,
-                            title: 'Regola riposo',
-                            subtitle: 'Più tempo se RPE alto',
+                            title: context.l10n.adjustRestTitle,
+                            subtitle: context.l10n.adjustRestSubtitle,
                             value: _autoAdjustRestFromRpe,
                             onChanged: (v) {
                               setState(() => _autoAdjustRestFromRpe = v);
@@ -341,8 +341,8 @@ class _WorkoutCustomizationModalV3State
                       _buildToggleRow(
                         context,
                         icon: AppIcons.schedule,
-                        title: 'Durata esecuzione set',
-                        subtitle: 'Traccia tempo sotto tensione',
+                        title: context.l10n.setDurationTitle,
+                        subtitle: context.l10n.setDurationSubtitle,
                         value: _setDurationTracking,
                         onChanged: (v) {
                           setState(() => _setDurationTracking = v);
@@ -358,8 +358,8 @@ class _WorkoutCustomizationModalV3State
                   _buildExpandableSection(
                     context,
                     icon: AppIcons.colorLens,
-                    title: 'Aspetto',
-                    subtitle: 'Personalizza interfaccia',
+                    title: context.l10n.appearanceSection,
+                    subtitle: context.l10n.appearanceSubtitle,
                     color: context.colors.secondary,
                     initiallyExpanded: false,
                     children: [
@@ -369,8 +369,8 @@ class _WorkoutCustomizationModalV3State
                       _buildToggleRow(
                         context,
                         icon: AppIcons.noteAlt,
-                        title: 'Note esercizio',
-                        subtitle: 'Mostra note sotto ogni esercizio',
+                        title: context.l10n.exerciseNotesTitle,
+                        subtitle: context.l10n.exerciseNotesSubtitle,
                         value: _showExerciseNotes,
                         onChanged: (v) {
                           setState(() => _showExerciseNotes = v);
@@ -381,8 +381,8 @@ class _WorkoutCustomizationModalV3State
                       _buildToggleRow(
                         context,
                         icon: AppIcons.insights,
-                        title: 'Grafici progresso',
-                        subtitle: 'Mostra storico e trend',
+                        title: context.l10n.progressChartsTitle,
+                        subtitle: context.l10n.progressChartsSubtitle,
                         value: _showExerciseInsights,
                         onChanged: (v) {
                           setState(() => _showExerciseInsights = v);
@@ -393,8 +393,8 @@ class _WorkoutCustomizationModalV3State
                       _buildToggleRow(
                         context,
                         icon: AppIcons.touchApp,
-                        title: 'Icone rapide',
-                        subtitle: 'Info, warmup, prevenzione',
+                        title: context.l10n.quickIconsTitle,
+                        subtitle: context.l10n.quickIconsSubtitle,
                         value: _showQuickIcons,
                         onChanged: (v) {
                           setState(() => _showQuickIcons = v);
@@ -405,8 +405,8 @@ class _WorkoutCustomizationModalV3State
                       _buildToggleRow(
                         context,
                         icon: AppIcons.weight,
-                        title: 'Calcolatore dischi',
-                        subtitle: 'Mostra dischi per peso',
+                        title: context.l10n.plateCalculatorTitle,
+                        subtitle: context.l10n.plateCalculatorSubtitle,
                         value: _plateCalculator,
                         onChanged: (v) {
                           setState(() => _plateCalculator = v);
@@ -437,7 +437,7 @@ class _WorkoutCustomizationModalV3State
                         ),
                         const SizedBox(width: 8),
                         Text(
-                          'Le modifiche sono salvate automaticamente',
+                          context.l10n.changesAutoSaved,
                           style: theme.textTheme.bodySmall?.copyWith(
                             color: theme.colorScheme.onSurfaceVariant,
                           ),

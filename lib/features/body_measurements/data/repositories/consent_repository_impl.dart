@@ -1,9 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fpdart/fpdart.dart' hide State;
 import 'package:uuid/uuid.dart';
+import 'package:gymbro_flutter_new/core/data/mixins/firebase_error_mapper_mixin.dart';
 import 'package:gymbro_flutter_new/features/body_measurements/domain/entities/user_consent.dart';
 import 'package:gymbro_flutter_new/features/body_measurements/domain/entities/metric_type.dart';
 import 'package:gymbro_flutter_new/features/body_measurements/domain/repositories/consent_repository.dart';
+import 'package:gymbro_flutter_new/shared/domain/failures/failure.dart';
 
 /// ConsentRepositoryImpl - Firestore implementation of ConsentRepository
 ///
@@ -60,10 +62,7 @@ import 'package:gymbro_flutter_new/features/body_measurements/domain/repositorie
 ///   ipAddress: '192.168.1.100',
 /// );
 /// ```
-class ConsentRepositoryImpl implements ConsentRepository {
-  final FirebaseFirestore _firestore;
-  final Uuid _uuid;
-
+class ConsentRepositoryImpl with FirebaseErrorMapperMixin implements ConsentRepository {
   /// Collection name in Firestore
   static const String _collectionName = 'userConsents';
 
@@ -71,6 +70,9 @@ class ConsentRepositoryImpl implements ConsentRepository {
   /// **IMPORTANT**: Increment this when privacy policy is updated
   /// to trigger re-consent flow for all users
   static const int _currentPolicyVersion = 1;
+
+  final FirebaseFirestore _firestore;
+  final Uuid _uuid;
 
   ConsentRepositoryImpl(
     this._firestore, {
@@ -82,36 +84,51 @@ class ConsentRepositoryImpl implements ConsentRepository {
     return _firestore.collection(_collectionName).doc(userId);
   }
 
+  /// Convert shared Failure to ConsentFailure
+  ConsentFailure _mapFailureToConsentFailure(Failure failure) {
+    // Map specific failure types to appropriate ConsentFailure types
+    if (failure is NotFoundFailure) {
+      return const ConsentNotFoundFailure();
+    } else if (failure is RateLimitFailure) {
+      return const RateLimitExceededFailure(
+        limitPerDay: 10,
+        currentCount: 10,
+      );
+    } else {
+      // Default to FirebaseConsentFailure for all other failures
+      return FirebaseConsentFailure(
+        message: failure.message,
+        code: failure.code,
+      );
+    }
+  }
+
   @override
   Future<Either<ConsentFailure, UserConsent>> getConsent(
     String userId,
   ) async {
-    try {
-      final doc = await _getConsentDoc(userId).get();
+    final result = await handleFirebaseOperation(
+      () async {
+        final doc = await _getConsentDoc(userId).get();
 
-      if (!doc.exists) {
-        return left(const ConsentNotFoundFailure());
-      }
+        if (!doc.exists || doc.data() == null) {
+          // Return null to indicate not found - will be handled below
+          return null;
+        }
 
-      final data = doc.data();
-      if (data == null) {
-        return left(const ConsentNotFoundFailure());
-      }
+        // Parse Firestore data to UserConsent entity
+        // Convert Firestore Timestamps back to ISO8601 strings for fromJson
+        return UserConsent.fromJson(_fromFirestoreData(doc.data()!));
+      },
+      operationName: 'getConsent',
+    );
 
-      // Parse Firestore data to UserConsent entity
-      // Convert Firestore Timestamps back to ISO8601 strings for fromJson
-      final consent = UserConsent.fromJson(_fromFirestoreData(data));
-      return right(consent);
-    } on FirebaseException catch (e) {
-      return left(FirebaseConsentFailure(
-        message: e.message ?? 'Failed to get consent',
-        code: e.code,
-      ));
-    } catch (e) {
-      return left(FirebaseConsentFailure(
-        message: 'Unexpected error getting consent: $e',
-      ));
-    }
+    return result.fold(
+      (failure) => left(_mapFailureToConsentFailure(failure)),
+      (consent) => consent == null
+          ? left(const ConsentNotFoundFailure())
+          : right(consent),
+    );
   }
 
   @override
@@ -120,56 +137,55 @@ class ConsentRepositoryImpl implements ConsentRepository {
     required String ipAddress,
     String? userAgent,
   }) async {
-    try {
-      // Check if consent already exists
-      final existingConsent = await getConsent(userId);
-      if (existingConsent.isRight()) {
-        return left(const ConsentAlreadyExistsFailure());
-      }
-
-      // Create initial consent with all groups set to 'notAsked'
-      final now = DateTime.now();
-      final consentId = _uuid.v4();
-
-      final consent = UserConsent(
-        id: consentId,
-        userId: userId,
-        groupConsents: {
-          MetricGroup.essential: ConsentState.notAsked,
-          MetricGroup.measurements: ConsentState.notAsked,
-          MetricGroup.vitals: ConsentState.notAsked,
-        },
-        consentVersion: _currentPolicyVersion,
-        acceptedAt: now,
-        ipAddress: _maskIpAddress(ipAddress),
-        createdAt: now,
-        updatedAt: now,
-        userAgent: userAgent,
-      );
-
-      // Save to Firestore (uses userId as document ID for easy lookup)
-      // Convert to JSON and transform DateTime strings to Firestore Timestamps
-      await _getConsentDoc(userId).set(_toFirestoreData(consent.toJson()));
-
-      // TODO: Create audit log entry (Task 2.9)
-      // await _auditLogger.log(
-      //   userId: userId,
-      //   action: AuditAction.privacyPolicyAccepted,
-      //   timestamp: now,
-      //   ipAddress: ipAddress,
-      // );
-
-      return right(consent);
-    } on FirebaseException catch (e) {
-      return left(FirebaseConsentFailure(
-        message: e.message ?? 'Failed to create consent',
-        code: e.code,
-      ));
-    } catch (e) {
-      return left(FirebaseConsentFailure(
-        message: 'Unexpected error creating consent: $e',
-      ));
+    // Check if consent already exists
+    final existingConsent = await getConsent(userId);
+    if (existingConsent.isRight()) {
+      return left(const ConsentAlreadyExistsFailure());
     }
+
+    // Create initial consent with all groups set to 'notAsked'
+    final now = DateTime.now();
+    final consentId = _uuid.v4();
+
+    final consent = UserConsent(
+      id: consentId,
+      userId: userId,
+      groupConsents: {
+        MetricGroup.essential: ConsentState.notAsked,
+        MetricGroup.measurements: ConsentState.notAsked,
+        MetricGroup.vitals: ConsentState.notAsked,
+      },
+      consentVersion: _currentPolicyVersion,
+      acceptedAt: now,
+      ipAddress: _maskIpAddress(ipAddress),
+      createdAt: now,
+      updatedAt: now,
+      userAgent: userAgent,
+    );
+
+    final result = await handleFirebaseOperation(
+      () async {
+        // Save to Firestore (uses userId as document ID for easy lookup)
+        // Convert to JSON and transform DateTime strings to Firestore Timestamps
+        await _getConsentDoc(userId).set(_toFirestoreData(consent.toJson()));
+
+        // TODO: Create audit log entry (Task 2.9)
+        // await _auditLogger.log(
+        //   userId: userId,
+        //   action: AuditAction.privacyPolicyAccepted,
+        //   timestamp: now,
+        //   ipAddress: ipAddress,
+        // );
+
+        return consent;
+      },
+      operationName: 'createInitialConsent',
+    );
+
+    return result.fold(
+      (failure) => left(_mapFailureToConsentFailure(failure)),
+      (consent) => right(consent),
+    );
   }
 
   @override
@@ -179,48 +195,47 @@ class ConsentRepositoryImpl implements ConsentRepository {
     required String ipAddress,
     String? userAgent,
   }) async {
-    try {
-      // Get existing consent
-      final consentResult = await getConsent(userId);
-      if (consentResult.isLeft()) {
-        return consentResult; // Return failure (ConsentNotFoundFailure)
-      }
-
-      final existingConsent = consentResult.getRight().getOrElse(() {
-        throw Exception('Unreachable: getConsent returned Right but null');
-      });
-
-      // Grant consent for the specified group
-      final updatedConsent = existingConsent.grantConsentFor(group);
-
-      // Update userAgent if provided
-      final consentWithAgent = userAgent != null
-          ? updatedConsent.copyWith(userAgent: userAgent)
-          : updatedConsent;
-
-      // Save to Firestore - convert DateTime strings to Timestamps
-      await _getConsentDoc(userId).update(_toFirestoreData(consentWithAgent.toJson()));
-
-      // TODO: Create audit log entry (Task 2.9)
-      // await _auditLogger.log(
-      //   userId: userId,
-      //   action: AuditAction.consentChange,
-      //   timestamp: DateTime.now(),
-      //   ipAddress: ipAddress,
-      //   actionDetails: 'Granted consent for ${group.name}',
-      // );
-
-      return right(consentWithAgent);
-    } on FirebaseException catch (e) {
-      return left(FirebaseConsentFailure(
-        message: e.message ?? 'Failed to grant consent',
-        code: e.code,
-      ));
-    } catch (e) {
-      return left(FirebaseConsentFailure(
-        message: 'Unexpected error granting consent: $e',
-      ));
+    // Get existing consent
+    final consentResult = await getConsent(userId);
+    if (consentResult.isLeft()) {
+      return consentResult; // Return failure (ConsentNotFoundFailure)
     }
+
+    final existingConsent = consentResult.getRight().getOrElse(() {
+      throw Exception('Unreachable: getConsent returned Right but null');
+    });
+
+    // Grant consent for the specified group
+    final updatedConsent = existingConsent.grantConsentFor(group);
+
+    // Update userAgent if provided
+    final consentWithAgent = userAgent != null
+        ? updatedConsent.copyWith(userAgent: userAgent)
+        : updatedConsent;
+
+    final result = await handleFirebaseOperation(
+      () async {
+        // Save to Firestore - convert DateTime strings to Timestamps
+        await _getConsentDoc(userId).update(_toFirestoreData(consentWithAgent.toJson()));
+
+        // TODO: Create audit log entry (Task 2.9)
+        // await _auditLogger.log(
+        //   userId: userId,
+        //   action: AuditAction.consentChange,
+        //   timestamp: DateTime.now(),
+        //   ipAddress: ipAddress,
+        //   actionDetails: 'Granted consent for ${group.name}',
+        // );
+
+        return consentWithAgent;
+      },
+      operationName: 'grantConsent',
+    );
+
+    return result.fold(
+      (failure) => left(_mapFailureToConsentFailure(failure)),
+      (consent) => right(consent),
+    );
   }
 
   @override
@@ -230,55 +245,54 @@ class ConsentRepositoryImpl implements ConsentRepository {
     required String ipAddress,
     String? userAgent,
   }) async {
-    try {
-      // Get existing consent
-      final consentResult = await getConsent(userId);
-      if (consentResult.isLeft()) {
-        return consentResult; // Return failure (ConsentNotFoundFailure)
-      }
-
-      final existingConsent = consentResult.getRight().getOrElse(() {
-        throw Exception('Unreachable: getConsent returned Right but null');
-      });
-
-      // Revoke consent for the specified group
-      final updatedConsent = existingConsent.revokeConsentFor(group);
-
-      // Update userAgent if provided
-      final consentWithAgent = userAgent != null
-          ? updatedConsent.copyWith(userAgent: userAgent)
-          : updatedConsent;
-
-      // Save to Firestore - convert DateTime strings to Timestamps
-      await _getConsentDoc(userId).update(_toFirestoreData(consentWithAgent.toJson()));
-
-      // TODO: Create audit log entry (Task 2.9)
-      // await _auditLogger.log(
-      //   userId: userId,
-      //   action: AuditAction.consentChange,
-      //   timestamp: DateTime.now(),
-      //   ipAddress: ipAddress,
-      //   actionDetails: 'Revoked consent for ${group.name}',
-      // );
-
-      // TODO: Schedule measurements for deletion after 30 days (Task 2.8)
-      // await _deletionService.scheduleMeasurementDeletion(
-      //   userId: userId,
-      //   metricGroup: group,
-      //   deleteAfter: Duration(days: 30),
-      // );
-
-      return right(consentWithAgent);
-    } on FirebaseException catch (e) {
-      return left(FirebaseConsentFailure(
-        message: e.message ?? 'Failed to revoke consent',
-        code: e.code,
-      ));
-    } catch (e) {
-      return left(FirebaseConsentFailure(
-        message: 'Unexpected error revoking consent: $e',
-      ));
+    // Get existing consent
+    final consentResult = await getConsent(userId);
+    if (consentResult.isLeft()) {
+      return consentResult; // Return failure (ConsentNotFoundFailure)
     }
+
+    final existingConsent = consentResult.getRight().getOrElse(() {
+      throw Exception('Unreachable: getConsent returned Right but null');
+    });
+
+    // Revoke consent for the specified group
+    final updatedConsent = existingConsent.revokeConsentFor(group);
+
+    // Update userAgent if provided
+    final consentWithAgent = userAgent != null
+        ? updatedConsent.copyWith(userAgent: userAgent)
+        : updatedConsent;
+
+    final result = await handleFirebaseOperation(
+      () async {
+        // Save to Firestore - convert DateTime strings to Timestamps
+        await _getConsentDoc(userId).update(_toFirestoreData(consentWithAgent.toJson()));
+
+        // TODO: Create audit log entry (Task 2.9)
+        // await _auditLogger.log(
+        //   userId: userId,
+        //   action: AuditAction.consentChange,
+        //   timestamp: DateTime.now(),
+        //   ipAddress: ipAddress,
+        //   actionDetails: 'Revoked consent for ${group.name}',
+        // );
+
+        // TODO: Schedule measurements for deletion after 30 days (Task 2.8)
+        // await _deletionService.scheduleMeasurementDeletion(
+        //   userId: userId,
+        //   metricGroup: group,
+        //   deleteAfter: Duration(days: 30),
+        // );
+
+        return consentWithAgent;
+      },
+      operationName: 'revokeConsent',
+    );
+
+    return result.fold(
+      (failure) => left(_mapFailureToConsentFailure(failure)),
+      (consent) => right(consent),
+    );
   }
 
   @override
@@ -286,30 +300,19 @@ class ConsentRepositoryImpl implements ConsentRepository {
     String userId,
     MetricType metric,
   ) async {
-    try {
-      final consentResult = await getConsent(userId);
-      if (consentResult.isLeft()) {
-        // No consent record = no consent granted
-        return right(false);
-      }
-
-      final consent = consentResult.getRight().getOrElse(() {
-        throw Exception('Unreachable: getConsent returned Right but null');
-      });
-
-      // Check if consent is granted for metric's group
-      final hasConsent = consent.hasConsentFor(metric);
-      return right(hasConsent);
-    } on FirebaseException catch (e) {
-      return left(FirebaseConsentFailure(
-        message: e.message ?? 'Failed to check consent',
-        code: e.code,
-      ));
-    } catch (e) {
-      return left(FirebaseConsentFailure(
-        message: 'Unexpected error checking consent: $e',
-      ));
+    final consentResult = await getConsent(userId);
+    if (consentResult.isLeft()) {
+      // No consent record = no consent granted
+      return right(false);
     }
+
+    final consent = consentResult.getRight().getOrElse(() {
+      throw Exception('Unreachable: getConsent returned Right but null');
+    });
+
+    // Check if consent is granted for metric's group
+    final hasConsent = consent.hasConsentFor(metric);
+    return right(hasConsent);
   }
 
   @override
@@ -319,121 +322,106 @@ class ConsentRepositoryImpl implements ConsentRepository {
     required String ipAddress,
     String? userAgent,
   }) async {
-    try {
-      // Get existing consent
-      final consentResult = await getConsent(userId);
-      if (consentResult.isLeft()) {
-        return consentResult; // Return failure (ConsentNotFoundFailure)
-      }
+    // Get existing consent
+    final consentResult = await getConsent(userId);
+    if (consentResult.isLeft()) {
+      return consentResult; // Return failure (ConsentNotFoundFailure)
+    }
 
-      final existingConsent = consentResult.getRight().getOrElse(() {
-        throw Exception('Unreachable: getConsent returned Right but null');
-      });
+    final existingConsent = consentResult.getRight().getOrElse(() {
+      throw Exception('Unreachable: getConsent returned Right but null');
+    });
 
-      // Validate version upgrade (no downgrades allowed)
-      if (newVersion <= existingConsent.consentVersion) {
-        return left(InvalidVersionFailure(
-          currentVersion: existingConsent.consentVersion,
-          attemptedVersion: newVersion,
-        ));
-      }
-
-      // Update consent version and timestamp
-      final now = DateTime.now();
-      final updatedConsent = existingConsent.copyWith(
-        consentVersion: newVersion,
-        acceptedAt: now,
-        updatedAt: now,
-        userAgent: userAgent,
-      );
-
-      // Save to Firestore - convert DateTime strings to Timestamps
-      await _getConsentDoc(userId).update(_toFirestoreData(updatedConsent.toJson()));
-
-      // TODO: Create audit log entry (Task 2.9)
-      // await _auditLogger.log(
-      //   userId: userId,
-      //   action: AuditAction.privacyPolicyAccepted,
-      //   timestamp: now,
-      //   ipAddress: ipAddress,
-      //   actionDetails: 'Updated consent version: $newVersion',
-      // );
-
-      return right(updatedConsent);
-    } on FirebaseException catch (e) {
-      return left(FirebaseConsentFailure(
-        message: e.message ?? 'Failed to update consent version',
-        code: e.code,
-      ));
-    } catch (e) {
-      return left(FirebaseConsentFailure(
-        message: 'Unexpected error updating consent version: $e',
+    // Validate version upgrade (no downgrades allowed)
+    if (newVersion <= existingConsent.consentVersion) {
+      return left(InvalidVersionFailure(
+        currentVersion: existingConsent.consentVersion,
+        attemptedVersion: newVersion,
       ));
     }
+
+    // Update consent version and timestamp
+    final now = DateTime.now();
+    final updatedConsent = existingConsent.copyWith(
+      consentVersion: newVersion,
+      acceptedAt: now,
+      updatedAt: now,
+      userAgent: userAgent,
+    );
+
+    final result = await handleFirebaseOperation(
+      () async {
+        // Save to Firestore - convert DateTime strings to Timestamps
+        await _getConsentDoc(userId).update(_toFirestoreData(updatedConsent.toJson()));
+
+        // TODO: Create audit log entry (Task 2.9)
+        // await _auditLogger.log(
+        //   userId: userId,
+        //   action: AuditAction.privacyPolicyAccepted,
+        //   timestamp: now,
+        //   ipAddress: ipAddress,
+        //   actionDetails: 'Updated consent version: $newVersion',
+        // );
+
+        return updatedConsent;
+      },
+      operationName: 'updateConsentVersion',
+    );
+
+    return result.fold(
+      (failure) => left(_mapFailureToConsentFailure(failure)),
+      (consent) => right(consent),
+    );
   }
 
   @override
   Future<Either<ConsentFailure, void>> deleteConsent(String userId) async {
-    try {
-      // Check if consent exists
-      final consentResult = await getConsent(userId);
-      if (consentResult.isLeft()) {
-        return left(const ConsentNotFoundFailure());
-      }
-
-      // TODO: Create audit log entry BEFORE deletion (Task 2.9)
-      // await _auditLogger.log(
-      //   userId: userId,
-      //   action: AuditAction.dataDelete,
-      //   timestamp: DateTime.now(),
-      //   ipAddress: '0.0.0.0', // No IP (automated deletion)
-      //   actionDetails: 'Consent record deleted (account deletion)',
-      // );
-
-      // Delete consent document
-      await _getConsentDoc(userId).delete();
-
-      return right(null);
-    } on FirebaseException catch (e) {
-      return left(FirebaseConsentFailure(
-        message: e.message ?? 'Failed to delete consent',
-        code: e.code,
-      ));
-    } catch (e) {
-      return left(FirebaseConsentFailure(
-        message: 'Unexpected error deleting consent: $e',
-      ));
+    // Check if consent exists
+    final consentResult = await getConsent(userId);
+    if (consentResult.isLeft()) {
+      return left(const ConsentNotFoundFailure());
     }
+
+    final result = await handleFirebaseVoidOperation(
+      () async {
+        // TODO: Create audit log entry BEFORE deletion (Task 2.9)
+        // await _auditLogger.log(
+        //   userId: userId,
+        //   action: AuditAction.dataDelete,
+        //   timestamp: DateTime.now(),
+        //   ipAddress: '0.0.0.0', // No IP (automated deletion)
+        //   actionDetails: 'Consent record deleted (account deletion)',
+        // );
+
+        // Delete consent document
+        await _getConsentDoc(userId).delete();
+      },
+      operationName: 'deleteConsent',
+    );
+
+    return result.fold(
+      (failure) => left(_mapFailureToConsentFailure(failure)),
+      (_) => right(null),
+    );
   }
 
   @override
   Future<Either<ConsentFailure, List<MetricType>>> getConsentedMetrics(
     String userId,
   ) async {
-    try {
-      final consentResult = await getConsent(userId);
-      if (consentResult.isLeft()) {
-        return consentResult
-            .map((consent) => <MetricType>[]); // Return empty list
-      }
-
-      final consent = consentResult.getRight().getOrElse(() {
-        throw Exception('Unreachable: getConsent returned Right but null');
-      });
-
-      // Get list of consented metrics using extension method
-      final consentedMetrics = consent.consentedMetrics;
-      return right(consentedMetrics);
-    } on FirebaseException catch (e) {
-      return left(FirebaseConsentFailure(
-        message: e.message ?? 'Failed to get consented metrics',
-        code: e.code,
-      ));
-    } catch (e) {
-      return left(FirebaseConsentFailure(
-        message: 'Unexpected error getting consented metrics: $e',
-      ));
+    final consentResult = await getConsent(userId);
+    if (consentResult.isLeft()) {
+      return consentResult
+          .map((consent) => <MetricType>[]); // Return empty list
     }
+
+    final consent = consentResult.getRight().getOrElse(() {
+      throw Exception('Unreachable: getConsent returned Right but null');
+    });
+
+    // Get list of consented metrics using extension method
+    final consentedMetrics = consent.consentedMetrics;
+    return right(consentedMetrics);
   }
 
   @override
@@ -441,30 +429,19 @@ class ConsentRepositoryImpl implements ConsentRepository {
     required String userId,
     required int currentPolicyVersion,
   }) async {
-    try {
-      final consentResult = await getConsent(userId);
-      if (consentResult.isLeft()) {
-        // No consent record = needs to consent for the first time
-        return right(true);
-      }
-
-      final consent = consentResult.getRight().getOrElse(() {
-        throw Exception('Unreachable: getConsent returned Right but null');
-      });
-
-      // Check if user's consent version is outdated
-      final needsReConsent = consent.consentVersion < currentPolicyVersion;
-      return right(needsReConsent);
-    } on FirebaseException catch (e) {
-      return left(FirebaseConsentFailure(
-        message: e.message ?? 'Failed to check re-consent requirement',
-        code: e.code,
-      ));
-    } catch (e) {
-      return left(FirebaseConsentFailure(
-        message: 'Unexpected error checking re-consent: $e',
-      ));
+    final consentResult = await getConsent(userId);
+    if (consentResult.isLeft()) {
+      // No consent record = needs to consent for the first time
+      return right(true);
     }
+
+    final consent = consentResult.getRight().getOrElse(() {
+      throw Exception('Unreachable: getConsent returned Right but null');
+    });
+
+    // Check if user's consent version is outdated
+    final needsReConsent = consent.consentVersion < currentPolicyVersion;
+    return right(needsReConsent);
   }
 
   /// Mask IP address for privacy (GDPR Article 32 - Pseudonymization)

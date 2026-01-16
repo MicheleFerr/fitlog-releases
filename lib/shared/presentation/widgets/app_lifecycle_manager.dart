@@ -56,7 +56,6 @@ import 'package:firebase_auth/firebase_auth.dart' show User;
 import 'package:gymbro_flutter_new/features/settings/presentation/providers/cloud_sync_provider.dart';
 import 'package:gymbro_flutter_new/features/auth/presentation/providers/auth_provider.dart';
 import 'package:gymbro_flutter_new/features/progress/presentation/providers/progress_provider.dart';
-import 'package:gymbro_flutter_new/features/home/presentation/providers/ai_coach_provider.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/providers/workout_session_la_provider.dart';
 import 'package:gymbro_flutter_new/features/health_sync/presentation/providers/watch_connectivity_provider.dart';
 
@@ -642,8 +641,6 @@ class _AppLifecycleManagerState extends ConsumerState<AppLifecycleManager>
         ref.invalidate(completedWorkoutsCountProvider);
         ref.invalidate(currentStreakProvider);
         ref.invalidate(weeklyFrequencyProvider);
-        ref.invalidate(aiCoachInsightsProvider);
-        ref.invalidate(primaryAIAdviceProvider);
 
         if (kDebugMode) {
           debugPrint('✅ [AppLifecycle] Progress providers invalidated - UI will refresh');

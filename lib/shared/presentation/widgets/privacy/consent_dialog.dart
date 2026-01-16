@@ -60,7 +60,7 @@ class _ConsentDialogState extends State<ConsentDialog> {
       if (mounted) {
         SnackBarService.showError(
           context,
-          'Error saving preferences: $e',
+          context.l10n.errorSavingPreferences(e.toString()),
         );
       }
     } finally {
@@ -74,7 +74,7 @@ class _ConsentDialogState extends State<ConsentDialog> {
   Widget build(BuildContext context) {
     return AlertDialog(
       title: Text(
-        'Privacy & Data Usage',
+        context.l10n.privacyDataUsageTitle,
         style: context.textTheme.titleLarge,
       ),
       content: SingleChildScrollView(
@@ -83,7 +83,7 @@ class _ConsentDialogState extends State<ConsentDialog> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'We respect your privacy. Choose which data you want to share with us.',
+              context.l10n.privacyDataUsageDescription,
               style: context.textTheme.bodyMedium?.copyWith(
                 color: context.colors.onSurface.withValues(alpha: 0.7),
               ),
@@ -99,7 +99,7 @@ class _ConsentDialogState extends State<ConsentDialog> {
         TextButton(
           onPressed: _isLoading ? null : () => Navigator.of(context).pop(false),
           child: Text(
-            'Cancel',
+            context.l10n.cancel,
             style: context.textTheme.labelLarge?.copyWith(
               color: context.colors.onSurface.withValues(alpha: 0.6),
             ),
@@ -112,7 +112,7 @@ class _ConsentDialogState extends State<ConsentDialog> {
                   size: 16,
                   color: context.colors.onPrimary,
                 )
-              : const Text('Save Preferences'),
+              : Text(context.l10n.savePreferences),
         ),
       ],
     );
@@ -152,7 +152,7 @@ class _ConsentDialogState extends State<ConsentDialog> {
                               borderRadius: BorderRadius.circular(8),
                             ),
                             child: Text(
-                              'Required',
+                              context.l10n.requiredLabel,
                               style: context.textTheme.labelSmall?.copyWith(
                                 color: context.colors.primary,
                                 fontWeight: FontWeight.bold,
@@ -207,7 +207,7 @@ class _ConsentDialogState extends State<ConsentDialog> {
 ),
             const SizedBox(width: 8),
             Text(
-              'Read our Privacy Policy',
+              context.l10n.readPrivacyPolicy,
               style: context.textTheme.bodySmall?.copyWith(
                 color: context.colors.primary,
                 decoration: TextDecoration.underline,

@@ -179,6 +179,15 @@ class RateLimitExceededException implements Exception {
   String toString() => 'RateLimitExceededException($operation): $message';
 }
 
+/// Shared rate limiter for Firestore extension methods
+///
+/// Uses the same singleton as the mixin to prevent multiple rate limiters.
+final _sharedExtensionLimiter = RateLimiterManager()
+  ..registerEndpoint('firestore_read', RateLimitPresets.firebaseOptimized())
+  ..registerEndpoint('firestore_write', RateLimitPresets.moderate())
+  ..registerEndpoint('firestore_query', RateLimitPresets.firebaseOptimized())
+  ..registerEndpoint('firestore_delete', RateLimitPresets.moderate());
+
 /// Helper methods for common Firestore operations with rate limiting
 extension RateLimitedFirestore on FirebaseFirestore {
   /// Get document with rate limiting
@@ -187,10 +196,7 @@ extension RateLimitedFirestore on FirebaseFirestore {
     String docId, {
     int maxRetries = 3,
   }) async {
-    final limiter = RateLimiterManager()
-      ..registerEndpoint('firestore_read', RateLimitPresets.firebaseOptimized());
-
-    final success = await limiter.consumeWithBackoff(
+    final success = await _sharedExtensionLimiter.consumeWithBackoff(
       'firestore_read',
       maxAttempts: maxRetries,
     );
@@ -211,10 +217,7 @@ extension RateLimitedFirestore on FirebaseFirestore {
     List<QueryFilter>? filters,
     int maxRetries = 3,
   }) async {
-    final limiter = RateLimiterManager()
-      ..registerEndpoint('firestore_query', RateLimitPresets.firebaseOptimized());
-
-    final success = await limiter.consumeWithBackoff(
+    final success = await _sharedExtensionLimiter.consumeWithBackoff(
       'firestore_query',
       maxAttempts: maxRetries,
     );
@@ -244,10 +247,7 @@ extension RateLimitedFirestore on FirebaseFirestore {
     Map<String, dynamic> data, {
     int maxRetries = 3,
   }) async {
-    final limiter = RateLimiterManager()
-      ..registerEndpoint('firestore_write', RateLimitPresets.moderate());
-
-    final success = await limiter.consumeWithBackoff(
+    final success = await _sharedExtensionLimiter.consumeWithBackoff(
       'firestore_write',
       maxAttempts: maxRetries,
     );
@@ -269,10 +269,7 @@ extension RateLimitedFirestore on FirebaseFirestore {
     Map<String, dynamic> data, {
     int maxRetries = 3,
   }) async {
-    final limiter = RateLimiterManager()
-      ..registerEndpoint('firestore_write', RateLimitPresets.moderate());
-
-    final success = await limiter.consumeWithBackoff(
+    final success = await _sharedExtensionLimiter.consumeWithBackoff(
       'firestore_write',
       maxAttempts: maxRetries,
     );
@@ -293,10 +290,7 @@ extension RateLimitedFirestore on FirebaseFirestore {
     String docId, {
     int maxRetries = 3,
   }) async {
-    final limiter = RateLimiterManager()
-      ..registerEndpoint('firestore_delete', RateLimitPresets.moderate());
-
-    final success = await limiter.consumeWithBackoff(
+    final success = await _sharedExtensionLimiter.consumeWithBackoff(
       'firestore_delete',
       maxAttempts: maxRetries,
     );

@@ -93,6 +93,73 @@ class HiveWorkoutDataSource {
     return await _boxManager.openBox<Map>(HiveBoxNames.getSyncQueueName('workouts'));
   }
 
+  /// ⚡ PERFORMANCE: Get workouts box directly for batch operations
+  /// Use this when you need to perform multiple operations on the same box
+  /// to avoid repeated openBox() calls
+  Future<Box<Map>> getWorkoutsBoxDirect() async {
+    return await _getWorkoutsBox();
+  }
+
+  /// ⚡ PERFORMANCE: Get existing workout timestamps for a user
+  /// Returns a map of workoutId -> updatedAt timestamp
+  /// Used for efficient cache comparison without loading full workout data
+  Future<Map<String, DateTime>> getExistingWorkoutTimestamps(String userId) async {
+    final box = await _getWorkoutsBox();
+    final timestamps = <String, DateTime>{};
+
+    for (final key in box.keys) {
+      if (!key.toString().startsWith('${userId}_')) continue;
+
+      final data = box.get(key);
+      if (data == null) continue;
+
+      final workoutId = key.toString().split('_').last;
+      // ⚡ Handle both DateTime and String formats (toJson outputs DateTime)
+      final updatedAtValue = data['updatedAt'];
+      DateTime? parsedTime;
+
+      if (updatedAtValue is DateTime) {
+        parsedTime = updatedAtValue;
+      } else if (updatedAtValue is String) {
+        try {
+          parsedTime = DateTime.parse(updatedAtValue);
+        } catch (_) {
+          // Skip invalid timestamps
+        }
+      }
+
+      if (parsedTime != null) {
+        timestamps[workoutId] = parsedTime;
+      }
+    }
+
+    return timestamps;
+  }
+
+  /// ⚡ PERFORMANCE: Batch save multiple workouts in a single operation
+  /// Much faster than calling saveWorkout() in a loop
+  Future<void> batchSaveWorkouts(List<WorkoutModel> workouts, String userId) async {
+    if (workouts.isEmpty) return;
+
+    final box = await _getWorkoutsBox();
+    final entries = <String, Map<String, dynamic>>{};
+
+    for (final workout in workouts) {
+      final key = '${userId}_${workout.id}';
+      final data = workout.toJson();
+      data['userId'] = userId;
+      data['localLastModified'] = DateTime.now().toIso8601String();
+      data['syncStatus'] = 'synced'; // These are from cloud, already synced
+      entries[key] = Map<String, dynamic>.from(data);
+    }
+
+    await box.putAll(entries);
+
+    if (kDebugMode) {
+      debugPrint('⚡ [Hive] Batch saved ${workouts.length} workouts');
+    }
+  }
+
   /// Save workout locally
   Future<String> saveWorkout(WorkoutModel workout, String userId) async {
     final box = await _getWorkoutsBox();
@@ -169,8 +236,9 @@ class HiveWorkoutDataSource {
   }) async {
     final box = await _getWorkoutsBox();
     
-    debugPrint('📦 Reading workouts from Hive for user: $userId');
-    debugPrint('📦 Total keys in box: ${box.keys.length}');
+    // Verbose logging only in extreme debug scenarios
+    // debugPrint('📦 Reading workouts from Hive for user: $userId');
+    // debugPrint('📦 Total keys in box: ${box.keys.length}');
     
     // Get all workouts for this user
     final userWorkouts = box.keys
@@ -200,7 +268,8 @@ class HiveWorkoutDataSource {
         .cast<WorkoutModel>()
         .toList();
     
-    debugPrint('📦 Successfully parsed ${userWorkouts.length} workouts for user');
+    // Verbose logging only in extreme debug scenarios
+    // debugPrint('📦 Successfully parsed ${userWorkouts.length} workouts for user');
     
     // Apply filters
     var filtered = userWorkouts;
@@ -615,31 +684,56 @@ class HiveWorkoutDataSource {
   }
 
   /// Import data from backup
+  ///
+  /// PERFORMANCE FIX (Jan 2025): Uses putAll() batch operations instead of
+  /// individual put() calls in loops.
   Future<void> importData(Map<String, dynamic> data, String userId) async {
-    final workoutsBox = await _getWorkoutsBox();
-    
-    // Import workouts
+    // Import workouts using batch operation
     if (data['workouts'] != null) {
+      final workoutsBox = await _getWorkoutsBox();
+      final workoutEntries = <String, Map<String, dynamic>>{};
+
       for (final workoutData in data['workouts']) {
-        final workout = WorkoutModel.fromJson(workoutData);
+        final workout = WorkoutModel.fromJson(Map<String, dynamic>.from(workoutData));
         final key = '${userId}_${workout.id}';
-        await workoutsBox.put(key, workoutData);
+        workoutEntries[key] = Map<String, dynamic>.from(workoutData);
+      }
+
+      await workoutsBox.putAll(workoutEntries);
+      if (kDebugMode) {
+        debugPrint('⚡ [Import] Batch imported ${workoutEntries.length} workouts');
       }
     }
-    
-    // Import activities if present
+
+    // Import activities using batch operation
     if (data['activities'] != null) {
       final activitiesBox = await _getActivitiesBox();
+      final activityEntries = <String, Map<String, dynamic>>{};
+
       for (final activity in data['activities']) {
-        await activitiesBox.put(activity['id'], activity);
+        final activityMap = Map<String, dynamic>.from(activity);
+        activityEntries[activityMap['id'] as String] = activityMap;
+      }
+
+      await activitiesBox.putAll(activityEntries);
+      if (kDebugMode) {
+        debugPrint('⚡ [Import] Batch imported ${activityEntries.length} activities');
       }
     }
-    
-    // Import summaries if present
+
+    // Import summaries using batch operation
     if (data['summaries'] != null) {
       final summariesBox = await _getSummariesBox();
+      final summaryEntries = <String, Map<String, dynamic>>{};
+
       for (final summary in data['summaries']) {
-        await summariesBox.put(summary['id'], summary);
+        final summaryMap = Map<String, dynamic>.from(summary);
+        summaryEntries[summaryMap['id'] as String] = summaryMap;
+      }
+
+      await summariesBox.putAll(summaryEntries);
+      if (kDebugMode) {
+        debugPrint('⚡ [Import] Batch imported ${summaryEntries.length} summaries');
       }
     }
   }
