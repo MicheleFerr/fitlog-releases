@@ -112,6 +112,10 @@ class WorkoutTutorialNotifier extends StateNotifier<WorkoutTutorialState> {
 
   /// Mark tutorial as completed
   Future<void> completeTutorial() async {
+    // Close any open tutorial overlay
+    _currentTutorial?.finish();
+    _currentTutorial = null;
+
     final prefs = await SharedPreferences.getInstance();
     await prefs.setBool(_completedKey, true);
     state = state.copyWith(
@@ -154,11 +158,18 @@ class WorkoutTutorialNotifier extends StateNotifier<WorkoutTutorialState> {
     final stepConfig = _getStepConfig(state.currentStep, l10n);
     if (stepConfig == null) return;
 
+    // For addExercise step, allow tapping the FAB to open the exercise picker
+    // This is required because the next step (tapSet) needs an exercise to exist
+    final isAddExerciseStep = state.currentStep == WorkoutTutorialStep.addExercise;
+
     final target = TargetFocus(
       identify: state.currentStep.name,
       keyTarget: targetKey,
       alignSkip: Alignment.topRight,
-      enableOverlayTab: true,
+      // Enable target tap only for addExercise step (user needs to tap FAB)
+      // For other steps, disable to prevent accidental widget activation
+      enableTargetTab: isAddExerciseStep,
+      enableOverlayTab: false,
       shape: stepConfig.shape,
       radius: stepConfig.radius,
       paddingFocus: 10,
@@ -172,8 +183,9 @@ class WorkoutTutorialNotifier extends StateNotifier<WorkoutTutorialState> {
             stepNumber: state.currentStep.index + 1,
             totalSteps: WorkoutTutorialStep.values.length - 1, // exclude 'completed'
             onNext: () {
+              // Only call controller.next() - onFinish callback handles onComplete
+              // to avoid double-calling when tutorial finishes
               controller.next();
-              onComplete?.call();
             },
             onSkip: () {
               controller.skip();
