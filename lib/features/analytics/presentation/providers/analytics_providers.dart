@@ -351,3 +351,20 @@ final cachedMuscleBalanceProvider =
 
   return metrics;
 });
+
+// ============================================================================
+// USER PREFERENCES PROVIDERS
+// ============================================================================
+
+/// Weekly workout goal provider
+///
+/// **Default**: 5 workouts per week
+///
+/// **Used by**:
+/// - QuickStatsSummary (Stats tab)
+/// - WeeklyModal (detailed weekly view)
+/// - AnalyticsOverviewTab (Pro analytics)
+///
+/// **Persistence**: In-memory only (resets on app restart)
+/// TODO: Persist to user preferences/Firestore for cross-device sync
+final weeklyWorkoutGoalProvider = StateProvider<int>((ref) => 5);

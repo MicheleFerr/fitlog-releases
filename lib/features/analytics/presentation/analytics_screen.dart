@@ -669,7 +669,7 @@ class _AnalyticsContentState extends ConsumerState<_AnalyticsContent>
 
 /// Hybrid Motivator Card - Combines gamification + analytics
 /// Shows: Streak, Weekly Goal, Volume Trend, Recent PRs
-class _QuickStatsSummary extends StatelessWidget {
+class _QuickStatsSummary extends ConsumerWidget {
   const _QuickStatsSummary({required this.exerciseHistories});
 
   final List<ExerciseHistory> exerciseHistories;
@@ -804,11 +804,12 @@ class _QuickStatsSummary extends StatelessWidget {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final streak = _calculateStreak();
     final weeklyWorkouts = _calculateWeeklyWorkouts();
     final volumeProgression = _calculateVolumeProgression();
     final recentPRs = _calculateRecentPRs();
+    final weeklyGoal = ref.watch(weeklyWorkoutGoalProvider);
 
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: AppSpacing.md, vertical: AppSpacing.xs),
@@ -903,13 +904,13 @@ class _QuickStatsSummary extends StatelessWidget {
           ),
           const SizedBox(width: 6),
 
-          // Weekly
+          // Weekly (configurable goal)
           Expanded(
             child: _HybridStatItem(
               icon: AppIcons.calendar,
               label: context.l10n.weekly,
               value: '$weeklyWorkouts',
-              suffix: '/5 ${context.l10n.workouts.toLowerCase()}',
+              suffix: '/$weeklyGoal ${context.l10n.workouts.toLowerCase()}',
               color: context.colors.onPrimaryContainer,
               trend: null,
               onTap: () {

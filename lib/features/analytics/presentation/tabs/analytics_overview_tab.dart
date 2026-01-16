@@ -21,9 +21,7 @@ import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_
 import 'package:gymbro_flutter_new/shared/presentation/services/modal_service.dart';
 import 'package:gymbro_flutter_new/shared/presentation/services/snackbar_service.dart';
 import 'package:gymbro_flutter_new/features/stress_index/data/mappers/muscle_abbreviation_mapper.dart';
-
-/// Provider for weekly workout goal (default: 5 workouts per week)
-final weeklyWorkoutGoalProvider = StateProvider<int>((ref) => 5);
+import 'package:gymbro_flutter_new/features/analytics/presentation/providers/analytics_providers.dart';
 
 class AnalyticsOverviewTab extends ConsumerStatefulWidget {
 
@@ -411,6 +409,7 @@ class _AnalyticsOverviewTabState extends ConsumerState<AnalyticsOverviewTab> {
 
   /// Preview content for Rep Range Analysis (visible when locked with blur)
   Widget _buildRepRangePreview(BuildContext context, ThemeData theme) {
+    final l10n = AppLocalizations.of(context);
     return Padding(
       padding: const EdgeInsets.all(16),
       child: Row(
@@ -418,21 +417,21 @@ class _AnalyticsOverviewTabState extends ConsumerState<AnalyticsOverviewTab> {
         children: [
           _buildRepZoneBar(
             context,
-            'Strength',
+            l10n.strengthGoal,
             '1-5',
             0.3,
             theme.colorScheme.error,
           ),
           _buildRepZoneBar(
             context,
-            'Hypertrophy',
+            l10n.hypertrophyGoal,
             '8-12',
             0.5,
             theme.colorScheme.primary,
           ),
           _buildRepZoneBar(
             context,
-            'Endurance',
+            l10n.enduranceGoal,
             '15+',
             0.2,
             theme.colorScheme.tertiary,
@@ -605,7 +604,7 @@ class _AnalyticsOverviewTabState extends ConsumerState<AnalyticsOverviewTab> {
               children: [
                 SemanticIcon(
   icon: AppIcons.workout,
-  semanticLabel: 'Workout',
+  semanticLabel: l10n.workout,
   size: AppIconSize.xxlarge,
   color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.5,
 ),
@@ -1050,9 +1049,9 @@ class _AnalyticsOverviewTabState extends ConsumerState<AnalyticsOverviewTab> {
             onPressed: () {
               Navigator.pushNamed(context, '/workout');
             },
-            icon: const SemanticIcon(
+            icon: SemanticIcon(
   icon: AppIcons.add,
-  semanticLabel: 'Add',
+  semanticLabel: l10n.add,
 ),
             label: Text(l10n.startWorkout),
             style: FilledButton.styleFrom(
@@ -1069,9 +1068,9 @@ class _AnalyticsOverviewTabState extends ConsumerState<AnalyticsOverviewTab> {
             onPressed: () {
               // Navigate to detailed stats
             },
-            icon: const SemanticIcon(
+            icon: SemanticIcon(
   icon: AppIcons.barChart,
-  semanticLabel: 'Chart',
+  semanticLabel: l10n.viewStats,
 ),
             label: Text(l10n.viewStats),
             style: OutlinedButton.styleFrom(
@@ -1088,6 +1087,7 @@ class _AnalyticsOverviewTabState extends ConsumerState<AnalyticsOverviewTab> {
   
   
   void _showAllWorkouts(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     if (kDebugMode) {
       debugPrint('🔍 [Analytics] _showAllWorkouts called');
     }
@@ -1184,7 +1184,7 @@ class _AnalyticsOverviewTabState extends ConsumerState<AnalyticsOverviewTab> {
         debugPrint('   - Exercises with no completed sets');
       }
 
-      SnackBarService.showError(context, 'No completed exercises found in your workouts');
+      SnackBarService.showError(context, l10n.errorLoadingData);
       return;
     }
 
@@ -1244,7 +1244,7 @@ class _AnalyticsOverviewTabState extends ConsumerState<AnalyticsOverviewTab> {
       if (kDebugMode) {
         debugPrint('❌ [Analytics] ERROR: syntheticActivities is EMPTY after processing!');
       }
-      SnackBarService.showError(context, 'Unable to load exercise activities');
+      SnackBarService.showError(context, l10n.errorLoadingData);
       return;
     }
 
@@ -1425,9 +1425,9 @@ class _AllActivitiesModalState extends State<_AllActivitiesModal> {
                     ),
                     IconButton(
                       onPressed: () => Navigator.of(context).pop(),
-                      icon: const SemanticIcon(
+                      icon: SemanticIcon(
   icon: AppIcons.close,
-  semanticLabel: 'Close',
+  semanticLabel: l10n.close,
 ),
                     ),
                   ],
@@ -1510,7 +1510,7 @@ class _AllActivitiesModalState extends State<_AllActivitiesModal> {
                               children: [
                                 SemanticIcon(
   icon: AppIcons.workout,
-  semanticLabel: 'Workout',
+  semanticLabel: l10n.workout,
   size: AppIconSize.xxlarge,
   color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.5,
 ),
@@ -1624,6 +1624,7 @@ class _AllActivitiesModalState extends State<_AllActivitiesModal> {
   
   Widget _buildDetailedActivityCard(BuildContext context, ExerciseActivity activity, List<String> muscleGroups) {
     final theme = Theme.of(context);
+    final l10n = AppLocalizations.of(context);
     final volume = _calculateExerciseVolume(activity);
     final dateStr = DateFormat('MMM d, yyyy • h:mm a').format(activity.createdAt);
 
@@ -1751,7 +1752,7 @@ class _AllActivitiesModalState extends State<_AllActivitiesModal> {
                                   children: [
                                     SemanticIcon(
   icon: AppIcons.workout,
-  semanticLabel: 'Workout',
+  semanticLabel: l10n.weightLabel,
   size: AppIconSize.tiny,
   color: theme.colorScheme.onSurfaceVariant,
 ),
@@ -1765,7 +1766,7 @@ class _AllActivitiesModalState extends State<_AllActivitiesModal> {
                                     const SizedBox(width: 8),
                                     SemanticIcon(
   icon: AppIcons.repeat,
-  semanticLabel: 'Repeat',
+  semanticLabel: l10n.repsLabel,
   size: AppIconSize.tiny,
   color: theme.colorScheme.onSurfaceVariant,
 ),
@@ -1800,7 +1801,7 @@ class _AllActivitiesModalState extends State<_AllActivitiesModal> {
                                         children: [
                                           SemanticIcon(
   icon: AppIcons.speed,
-  semanticLabel: 'Speed',
+  semanticLabel: l10n.effort,
   size: AppIconSize.medium,
   color: theme.colorScheme.onSecondaryContainer,
 ),
