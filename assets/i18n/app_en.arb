@@ -12800,6 +12800,63 @@
   "@exerciseStats": {
     "description": "Exercise statistics section title"
   },
+  "quickAnswerImproving": "You're improving!",
+  "@quickAnswerImproving": {
+    "description": "Quick answer banner title when user is improving"
+  },
+  "quickAnswerStable": "Maintaining strength",
+  "@quickAnswerStable": {
+    "description": "Quick answer banner title when user is stable"
+  },
+  "quickAnswerDeclining": "Time to refocus",
+  "@quickAnswerDeclining": {
+    "description": "Quick answer banner title when user is declining"
+  },
+  "quickAnswerWeightUp": "+{percent}% weight in {period}",
+  "@quickAnswerWeightUp": {
+    "description": "Quick answer weight improvement message",
+    "placeholders": {
+      "percent": {"type": "String"},
+      "period": {"type": "String"}
+    }
+  },
+  "quickAnswerWeightDown": "{percent}% weight drop in {period}",
+  "@quickAnswerWeightDown": {
+    "description": "Quick answer weight decline message",
+    "placeholders": {
+      "percent": {"type": "String"},
+      "period": {"type": "String"}
+    }
+  },
+  "quickAnswerStableMessage": "Consistent performance over {period}",
+  "@quickAnswerStableMessage": {
+    "description": "Quick answer stable performance message",
+    "placeholders": {
+      "period": {"type": "String"}
+    }
+  },
+  "quickAnswerNextGoal": "Current PR: {current}kg → Next goal: {goal}kg",
+  "@quickAnswerNextGoal": {
+    "description": "Quick answer next goal suggestion",
+    "placeholders": {
+      "current": {"type": "String"},
+      "goal": {"type": "String"}
+    }
+  },
+  "periodWeeks": "{count} weeks",
+  "@periodWeeks": {
+    "description": "Period in weeks",
+    "placeholders": {
+      "count": {"type": "int"}
+    }
+  },
+  "periodMonths": "{count} months",
+  "@periodMonths": {
+    "description": "Period in months",
+    "placeholders": {
+      "count": {"type": "int"}
+    }
+  },
   "progressionCharts": "Progression Charts",
   "@progressionCharts": {
     "description": "Progression charts section title"

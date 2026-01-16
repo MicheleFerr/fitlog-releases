@@ -4224,6 +4224,63 @@
   "@exerciseStats": {
     "description": "Exercise statistics section title"
   },
+  "quickAnswerImproving": "Stai migliorando!",
+  "@quickAnswerImproving": {
+    "description": "Quick answer banner title when user is improving"
+  },
+  "quickAnswerStable": "Mantieni la forza",
+  "@quickAnswerStable": {
+    "description": "Quick answer banner title when user is stable"
+  },
+  "quickAnswerDeclining": "È ora di rimettersi in carreggiata",
+  "@quickAnswerDeclining": {
+    "description": "Quick answer banner title when user is declining"
+  },
+  "quickAnswerWeightUp": "+{percent}% peso in {period}",
+  "@quickAnswerWeightUp": {
+    "description": "Quick answer weight improvement message",
+    "placeholders": {
+      "percent": {"type": "String"},
+      "period": {"type": "String"}
+    }
+  },
+  "quickAnswerWeightDown": "{percent}% calo peso in {period}",
+  "@quickAnswerWeightDown": {
+    "description": "Quick answer weight decline message",
+    "placeholders": {
+      "percent": {"type": "String"},
+      "period": {"type": "String"}
+    }
+  },
+  "quickAnswerStableMessage": "Performance costante nelle ultime {period}",
+  "@quickAnswerStableMessage": {
+    "description": "Quick answer stable performance message",
+    "placeholders": {
+      "period": {"type": "String"}
+    }
+  },
+  "quickAnswerNextGoal": "PR attuale: {current}kg → Prossimo obiettivo: {goal}kg",
+  "@quickAnswerNextGoal": {
+    "description": "Quick answer next goal suggestion",
+    "placeholders": {
+      "current": {"type": "String"},
+      "goal": {"type": "String"}
+    }
+  },
+  "periodWeeks": "{count} settimane",
+  "@periodWeeks": {
+    "description": "Period in weeks",
+    "placeholders": {
+      "count": {"type": "int"}
+    }
+  },
+  "periodMonths": "{count} mesi",
+  "@periodMonths": {
+    "description": "Period in months",
+    "placeholders": {
+      "count": {"type": "int"}
+    }
+  },
   "progressionCharts": "Grafici Progressione",
   "@progressionCharts": {
     "description": "Progression charts section title"

@@ -10653,6 +10653,45 @@ class AppLocalizationsEn extends AppLocalizations {
   String get exerciseStats => 'Exercise Statistics';
 
   @override
+  String get quickAnswerImproving => 'You\'re improving!';
+
+  @override
+  String get quickAnswerStable => 'Maintaining strength';
+
+  @override
+  String get quickAnswerDeclining => 'Time to refocus';
+
+  @override
+  String quickAnswerWeightUp(String percent, String period) {
+    return '+$percent% weight in $period';
+  }
+
+  @override
+  String quickAnswerWeightDown(String percent, String period) {
+    return '$percent% weight drop in $period';
+  }
+
+  @override
+  String quickAnswerStableMessage(String period) {
+    return 'Consistent performance over $period';
+  }
+
+  @override
+  String quickAnswerNextGoal(String current, String goal) {
+    return 'Current PR: ${current}kg → Next goal: ${goal}kg';
+  }
+
+  @override
+  String periodWeeks(int count) {
+    return '$count weeks';
+  }
+
+  @override
+  String periodMonths(int count) {
+    return '$count months';
+  }
+
+  @override
   String get progressionCharts => 'Progression Charts';
 
   @override

@@ -292,6 +292,10 @@ class _ExerciseDetailScreenState extends ConsumerState<ExerciseDetailScreen> {
                   _buildPeriodSelector(),
                   const SizedBox(height: 16),
 
+                  // Quick Answer Banner - "Am I improving?"
+                  // Gives Chiara an immediate answer without analyzing charts
+                  _buildQuickAnswerBanner(filteredSets),
+
                   // Stats summary
                   _buildStatsSummary(metrics, filteredSets),
                   const SizedBox(height: 12),
@@ -1500,6 +1504,158 @@ class _ExerciseDetailScreenState extends ConsumerState<ExerciseDetailScreen> {
       },
       loading: () => const SizedBox.shrink(), // Don't show loading indicator
       error: (_, __) => const SizedBox.shrink(), // Fail silently
+    );
+  }
+
+  /// Build Quick Answer Banner - "Am I improving?"
+  ///
+  /// Provides an immediate, Chiara-friendly answer without needing to
+  /// analyze charts. Shows status, trend, and next goal suggestion.
+  Widget _buildQuickAnswerBanner(List<ExerciseSetData> sets) {
+    if (sets.length < 3) return const SizedBox.shrink();
+
+    // Calculate trend (same logic as _calculateTrendData for weight)
+    final midpoint = sets.length ~/ 2;
+    final firstHalf = sets.sublist(0, midpoint);
+    final secondHalf = sets.sublist(midpoint);
+
+    final firstAvg = firstHalf.fold<double>(0, (sum, s) => sum + s.weight) / firstHalf.length;
+    final secondAvg = secondHalf.fold<double>(0, (sum, s) => sum + s.weight) / secondHalf.length;
+
+    if (firstAvg == 0) return const SizedBox.shrink();
+
+    final percentChange = ((secondAvg - firstAvg) / firstAvg) * 100;
+    final absChange = percentChange.abs();
+    final isImproving = percentChange > 2.0;
+    final isStable = absChange <= 2.0;
+
+    // Get period label
+    final daysDiff = sets.last.date.difference(sets.first.date).inDays;
+    String periodLabel;
+    if (daysDiff <= 14) {
+      periodLabel = context.l10n.periodWeeks(2);
+    } else if (daysDiff <= 30) {
+      periodLabel = context.l10n.periodWeeks(4);
+    } else if (daysDiff <= 60) {
+      periodLabel = context.l10n.periodMonths(2);
+    } else {
+      periodLabel = context.l10n.periodMonths(3);
+    }
+
+    // Get current PR and suggested next goal
+    final currentPR = sets.fold<double>(0, (max, s) => s.weight > max ? s.weight : max);
+    // Suggest 2.5kg increment (standard plate)
+    final nextGoal = (currentPR + 2.5).ceilToDouble();
+
+    // Determine status
+    String title;
+    String subtitle;
+    IconData icon;
+    Color bgColor;
+    Color iconColor;
+
+    if (isImproving) {
+      title = context.l10n.quickAnswerImproving;
+      subtitle = context.l10n.quickAnswerWeightUp(absChange.toStringAsFixed(0), periodLabel);
+      icon = AppIcons.trendUp;
+      bgColor = context.colors.success.withValues(alpha: 0.12);
+      iconColor = context.colors.success;
+    } else if (isStable) {
+      title = context.l10n.quickAnswerStable;
+      subtitle = context.l10n.quickAnswerStableMessage(periodLabel);
+      icon = AppIcons.trendFlat;
+      bgColor = context.colors.primary.withValues(alpha: 0.1);
+      iconColor = context.colors.primary;
+    } else {
+      title = context.l10n.quickAnswerDeclining;
+      subtitle = context.l10n.quickAnswerWeightDown(absChange.toStringAsFixed(0), periodLabel);
+      icon = AppIcons.trendDown;
+      bgColor = context.colors.warning.withValues(alpha: 0.12);
+      iconColor = context.colors.warning;
+    }
+
+    return Container(
+      margin: const EdgeInsets.only(bottom: 12),
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: bgColor,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(
+          color: iconColor.withValues(alpha: 0.3),
+          width: 1.5,
+        ),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Title row with icon
+          Row(
+            children: [
+              Container(
+                padding: const EdgeInsets.all(8),
+                decoration: BoxDecoration(
+                  color: iconColor.withValues(alpha: 0.15),
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: Icon(icon, color: iconColor, size: AppIconSize.medium),
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      title,
+                      style: context.textTheme.titleMedium?.copyWith(
+                        fontWeight: FontWeight.bold,
+                        color: iconColor,
+                      ),
+                    ),
+                    const SizedBox(height: 2),
+                    Text(
+                      subtitle,
+                      style: context.textTheme.bodyMedium?.copyWith(
+                        color: context.colors.onSurface.withValues(alpha: 0.8),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 12),
+          // Next goal suggestion
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+            decoration: BoxDecoration(
+              color: context.colors.surface,
+              borderRadius: BorderRadius.circular(8),
+            ),
+            child: Row(
+              children: [
+                Icon(
+                  AppIcons.flagCircle,
+                  size: AppIconSize.small,
+                  color: context.colors.primary,
+                ),
+                const SizedBox(width: 8),
+                Expanded(
+                  child: Text(
+                    context.l10n.quickAnswerNextGoal(
+                      currentPR.toStringAsFixed(1),
+                      nextGoal.toStringAsFixed(1),
+                    ),
+                    style: context.textTheme.bodySmall?.copyWith(
+                      color: context.colors.onSurface.withValues(alpha: 0.7),
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

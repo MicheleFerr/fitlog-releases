@@ -18900,6 +18900,60 @@ abstract class AppLocalizations {
   /// **'Exercise Statistics'**
   String get exerciseStats;
 
+  /// Quick answer banner title when user is improving
+  ///
+  /// In en, this message translates to:
+  /// **'You\'re improving!'**
+  String get quickAnswerImproving;
+
+  /// Quick answer banner title when user is stable
+  ///
+  /// In en, this message translates to:
+  /// **'Maintaining strength'**
+  String get quickAnswerStable;
+
+  /// Quick answer banner title when user is declining
+  ///
+  /// In en, this message translates to:
+  /// **'Time to refocus'**
+  String get quickAnswerDeclining;
+
+  /// Quick answer weight improvement message
+  ///
+  /// In en, this message translates to:
+  /// **'+{percent}% weight in {period}'**
+  String quickAnswerWeightUp(String percent, String period);
+
+  /// Quick answer weight decline message
+  ///
+  /// In en, this message translates to:
+  /// **'{percent}% weight drop in {period}'**
+  String quickAnswerWeightDown(String percent, String period);
+
+  /// Quick answer stable performance message
+  ///
+  /// In en, this message translates to:
+  /// **'Consistent performance over {period}'**
+  String quickAnswerStableMessage(String period);
+
+  /// Quick answer next goal suggestion
+  ///
+  /// In en, this message translates to:
+  /// **'Current PR: {current}kg → Next goal: {goal}kg'**
+  String quickAnswerNextGoal(String current, String goal);
+
+  /// Period in weeks
+  ///
+  /// In en, this message translates to:
+  /// **'{count} weeks'**
+  String periodWeeks(int count);
+
+  /// Period in months
+  ///
+  /// In en, this message translates to:
+  /// **'{count} months'**
+  String periodMonths(int count);
+
   /// Progression charts section title
   ///
   /// In en, this message translates to:
