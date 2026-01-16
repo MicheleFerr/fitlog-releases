@@ -32,7 +32,11 @@ abstract final class AppRoutes {
   static final GlobalKey<NavigatorState> workoutNavigatorKey =
       GlobalKey<NavigatorState>(debugLabel: 'workout');
 
-  /// Navigator key for Profile branch (replaces Analytics + Settings tabs)
+  /// Navigator key for Stats branch
+  static final GlobalKey<NavigatorState> statsNavigatorKey =
+      GlobalKey<NavigatorState>(debugLabel: 'stats');
+
+  /// Navigator key for Profile branch
   static final GlobalKey<NavigatorState> profileNavigatorKey =
       GlobalKey<NavigatorState>(debugLabel: 'profile');
 
@@ -62,13 +66,16 @@ abstract final class AppRoutes {
   static const String workoutPath = '/workout';
   static const String workoutName = 'workout';
 
+  /// Stats tab - analytics and statistics
+  static const String statsPath = '/stats';
+  static const String statsName = 'stats';
+
   /// Profile tab - user hub with quick actions
   static const String profilePath = '/profile';
   static const String profileName = 'profile';
 
-  // Note: Analytics and Settings are now pushed routes from Profile hub
-  /// Analytics screen - pushed from Profile > Statistiche
-  static const String analyticsPath = '/profile/analytics';
+  /// Analytics screen - pushed from Stats tab
+  static const String analyticsPath = '/stats/analytics';
   static const String analyticsName = 'analytics';
 
   /// Settings screen - pushed from Profile > ⚙️ icon
@@ -93,23 +100,23 @@ abstract final class AppRoutes {
   static const String workoutHistoryName = 'workout-history';
 
   // ═══════════════════════════════════════════════════════════════════════════
-  // Analytics Sub-Routes (under /profile/analytics)
+  // Analytics Sub-Routes (under /stats)
   // ═══════════════════════════════════════════════════════════════════════════
 
-  static const String analyticsOverviewPath = '/profile/analytics/overview';
+  static const String analyticsOverviewPath = '/stats/analytics/overview';
   static const String analyticsOverviewName = 'analytics-overview';
 
   static const String analyticsExerciseDetailPath =
-      '/profile/analytics/exercise/:exerciseName';
+      '/stats/analytics/exercise/:exerciseName';
   static const String analyticsExerciseDetailName = 'analytics-exercise-detail';
 
-  static const String exerciseProgressPath = '/profile/analytics/exercise-progress';
+  static const String exerciseProgressPath = '/stats/analytics/exercise-progress';
   static const String exerciseProgressName = 'exercise-progress';
 
-  static const String exerciseProgressDetailPath = '/profile/analytics/exercise-progress/detail';
+  static const String exerciseProgressDetailPath = '/stats/analytics/exercise-progress/detail';
   static const String exerciseProgressDetailName = 'exercise-progress-detail';
 
-  static const String proAnalyticsPath = '/profile/analytics/pro';
+  static const String proAnalyticsPath = '/stats/analytics/pro';
   static const String proAnalyticsName = 'pro-analytics';
 
   // ═══════════════════════════════════════════════════════════════════════════
@@ -233,10 +240,11 @@ abstract final class AppRoutes {
   // Branch Index Mapping (for StatefulShellRoute)
   // ═══════════════════════════════════════════════════════════════════════════
 
-  /// Branch index for each main tab (3 tabs: Home, Workout, Profile)
+  /// Branch index for each main tab (4 tabs: Home, Workout, Stats, Profile)
   static const int homeBranchIndex = 0;
   static const int workoutBranchIndex = 1;
-  static const int profileBranchIndex = 2;
+  static const int statsBranchIndex = 2;
+  static const int profileBranchIndex = 3;
 
   /// Get branch index from route path
   static int? getBranchIndex(String path) {
@@ -245,6 +253,9 @@ abstract final class AppRoutes {
     }
     if (path.startsWith(workoutPath)) {
       return workoutBranchIndex;
+    }
+    if (path.startsWith(statsPath)) {
+      return statsBranchIndex;
     }
     if (path.startsWith(profilePath)) {
       return profileBranchIndex;

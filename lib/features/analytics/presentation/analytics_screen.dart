@@ -60,21 +60,9 @@ class AnalyticsScreen extends ConsumerWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('📊 ${context.l10n.analytics}'),
+        title: Text(context.l10n.statistics),
         backgroundColor: Theme.of(context).colorScheme.surfaceContainerHighest,
-        leading: IconButton(
-          icon: SemanticIcon.button(
-            icon: AppIcons.back,
-            semanticLabel: context.l10n.back,
-          ),
-          onPressed: () {
-            if (Navigator.of(context).canPop()) {
-              Navigator.of(context).pop();
-            } else {
-              context.go(AppRoutes.homePath);
-            }
-          },
-        ),
+        // No leading back button - this is a tab root
         actions: [
           // Search toggle button (Task: New UX)
           Consumer(
@@ -848,9 +836,9 @@ class _QuickStatsSummary extends StatelessWidget {
           Expanded(
             child: _HybridStatItem(
               icon: AppIcons.streak,
-              label: 'Streak',
+              label: context.l10n.streak,
               value: '$streak',
-              suffix: streak == 1 ? 'giorno' : 'giorni',
+              suffix: streak == 1 ? context.l10n.day : context.l10n.days,
               color: context.colors.onPrimaryContainer,
               trend: null,
               onTap: () {
@@ -880,7 +868,7 @@ class _QuickStatsSummary extends StatelessWidget {
           Expanded(
             child: _HybridStatItem(
               icon: AppIcons.trendUp,
-              label: 'Volume',
+              label: context.l10n.volume,
               value: volumeProgression >= 0
                   ? '+${volumeProgression.toStringAsFixed(0)}'
                   : volumeProgression.toStringAsFixed(0),
@@ -914,13 +902,13 @@ class _QuickStatsSummary extends StatelessWidget {
           ),
           const SizedBox(width: 6),
 
-          // Settimana
+          // Weekly
           Expanded(
             child: _HybridStatItem(
               icon: AppIcons.calendar,
-              label: 'Settimana',
+              label: context.l10n.weekly,
               value: '$weeklyWorkouts',
-              suffix: '/5 allenamenti',
+              suffix: '/5 ${context.l10n.workouts.toLowerCase()}',
               color: context.colors.onPrimaryContainer,
               trend: null,
               onTap: () {
@@ -951,9 +939,9 @@ class _QuickStatsSummary extends StatelessWidget {
           Expanded(
             child: _HybridStatItem(
               icon: AppIcons.achievement,
-              label: 'PR (7 giorni)',
+              label: '${context.l10n.pr} (7 ${context.l10n.days})',
               value: '$recentPRs',
-              suffix: recentPRs == 1 ? 'nuovo' : 'nuovi',
+              suffix: recentPRs == 1 ? context.l10n.newSingular : context.l10n.newPlural,
               color: context.colors.onPrimaryContainer,
               trend: null,
               onTap: () {

@@ -101,7 +101,7 @@ class _ProfileHubContent extends ConsumerWidget {
           // Quick action chips
           SliverToBoxAdapter(
             child: ProfileQuickActions(
-              onStatsTap: () => context.pushNamed(AppRoutes.analyticsName),
+              onStatsTap: () => context.go(AppRoutes.statsPath),
               onHistoryTap: () => context.pushNamed(AppRoutes.workoutHistoryName),
               onMeasuresTap: () => context.pushNamed(AppRoutes.bodyMeasurementsName),
               onCalendarTap: () => context.pushNamed(AppRoutes.streakCalendarName),

@@ -261,8 +261,8 @@ class _MainShellState extends ConsumerState<MainShell> {
   }
 }
 
-/// Material 3 NavigationBar with 3 destinations
-/// Redesigned: Home, Workout, Profile (Analytics/Settings moved to Profile hub)
+/// Material 3 NavigationBar with 4 destinations
+/// Home, Workout, Stats, Profile
 class _BottomNavigationBar extends StatelessWidget {
   const _BottomNavigationBar({
     required this.currentIndex,
@@ -331,6 +331,21 @@ class _BottomNavigationBar extends StatelessWidget {
             ),
             label: context.l10n.workout,
             tooltip: context.l10n.workout,
+          ),
+          // Stats - outlined icon, color change on selection
+          NavigationDestination(
+            icon: Icon(
+              AppIcons.analyticsOutlined,
+              size: AppIconSize.medium,
+              color: context.colors.onSurfaceVariant,
+            ),
+            selectedIcon: Icon(
+              AppIcons.analyticsOutlined,
+              size: AppIconSize.medium,
+              color: context.colors.primary,
+            ),
+            label: context.l10n.statistics,
+            tooltip: context.l10n.statistics,
           ),
           // Profile - outlined icon, color change on selection
           NavigationDestination(

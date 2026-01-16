@@ -6017,25 +6017,25 @@
   "@confirmMigrationDescription": {
     "description": "Description for migration confirmation dialog"
   },
-  "firebaseInitialization": "Firebase Initialization",
+  "firebaseInitialization": "Cloud Initialization",
   "@firebaseInitialization": {
-    "description": "Title for Firebase initialization section"
+    "description": "Title for Cloud initialization section"
   },
   "currentStatus": "Current Status",
   "@currentStatus": {
     "description": "Title for current status section"
   },
-  "firebaseStatus": "Firebase Status",
+  "firebaseStatus": "Cloud Status",
   "@firebaseStatus": {
-    "description": "Label for Firebase status"
+    "description": "Label for Cloud status"
   },
   "initialized": "Initialized",
   "@initialized": {
-    "description": "Status when Firebase is initialized"
+    "description": "Status when Cloud is initialized"
   },
   "notInitialized": "Not Initialized",
   "@notInitialized": {
-    "description": "Status when Firebase is not initialized"
+    "description": "Status when Cloud is not initialized"
   },
   "checking": "Checking...",
   "@checking": {
@@ -6114,7 +6114,7 @@
   "@details": {
     "description": "Details tab label"
   },
-  "initializeDescription": "This will load all exercises from the local JSON file into Firebase. This operation may take several minutes.",
+  "initializeDescription": "This will load all exercises from the local JSON file into Cloud. This operation may take several minutes.",
   "@initializeDescription": {
     "description": "Description for initialize operation"
   },
@@ -6122,7 +6122,7 @@
   "@overwriteExisting": {
     "description": "Checkbox label to overwrite existing data"
   },
-  "overwriteExistingDescription": "Warning: This will delete all existing exercise data in Firebase",
+  "overwriteExistingDescription": "Warning: This will delete all existing exercise data in Cloud",
   "@overwriteExistingDescription": {
     "description": "Warning description for overwrite option"
   },
@@ -6268,9 +6268,9 @@
   "@systemStatistics": {
     "description": "System stats section title"
   },
-  "firebaseDatabase": "Firebase Database",
+  "firebaseDatabase": "Cloud Database",
   "@firebaseDatabase": {
-    "description": "Firebase database section title"
+    "description": "Cloud database section title"
   },
   "communityActivity": "Community Activity",
   "@communityActivity": {
@@ -6332,9 +6332,9 @@
   "@systemOverview": {
     "description": "System overview section title"
   },
-  "firebaseManagement": "Firebase Management",
+  "firebaseManagement": "Cloud Management",
   "@firebaseManagement": {
-    "description": "Firebase management section title"
+    "description": "Cloud management section title"
   },
   "adminInfoDescription": "Admin panel for system management and community oversight",
   "@adminInfoDescription": {
@@ -9833,7 +9833,7 @@
   "@saveTemplateComingSoon": {
     "description": "Info message about upcoming template save feature"
   },
-  "saveToFirebase": "Save to Firebase for reuse",
+  "saveToFirebase": "Save to Cloud for reuse",
   "@saveToFirebase": {
     "description": "Save as template subtitle"
   },
@@ -10367,7 +10367,7 @@
   "@descriptionHint": {
     "description": "Description field hint"
   },
-  "templateSyncInfo": "The template will be saved to Firebase and available on all your devices",
+  "templateSyncInfo": "The template will be saved to Cloud and available on all your devices",
   "@templateSyncInfo": {
     "description": "Template sync information"
   },
@@ -10375,9 +10375,9 @@
   "@enterTemplateName": {
     "description": "Hint text for template name input"
   },
-  "savingToFirebase": "Saving to Firebase...",
+  "savingToFirebase": "Saving to Cloud...",
   "@savingToFirebase": {
-    "description": "Saving to Firebase loading message"
+    "description": "Saving to Cloud loading message"
   },
   "templateSavedSuccess": "Template \"{name}\" saved successfully!",
   "@templateSavedSuccess": {
@@ -10996,7 +10996,7 @@
   "@startWorkoutDescription": {
     "description": "Start workout description"
   },
-  "templateSyncInformation": "The template will be saved to Firebase and available on all your devices",
+  "templateSyncInformation": "The template will be saved to Cloud and available on all your devices",
   "@templateSyncInformation": {
     "description": "Template sync information"
   },
@@ -17211,7 +17211,7 @@
   "@rpeTimerAndMore": {
     "description": "Auto-generated for rpeTimerAndMore"
   },
-  "saveToFirebaseForReuse": "Save to firebase for reuse",
+  "saveToFirebaseForReuse": "Save to cloud for reuse",
   "@saveToFirebaseForReuse": {
     "description": "Auto-generated for saveToFirebaseForReuse"
   },
@@ -17319,7 +17319,7 @@
   "@templateLimitSuggestion": {
     "description": "Auto-generated for templateLimitSuggestion"
   },
-  "templateSyncDescription": "The template will be saved to Firebase and available on all your devices",
+  "templateSyncDescription": "The template will be saved to Cloud and available on all your devices",
   "@templateSyncDescription": {
     "description": "Explanation that template will sync across devices"
   },
@@ -19681,10 +19681,10 @@
     "description": "From quick wins migration - 3 occurrences",
     "context": "Found in: Text(\n                'Elimina un template esistente o passa a Premium per avere più spazio.',\n                style: TextStyle(fontSize: 14),, String get deleteOrUpgrade =>\n      'Elimina un template esistente o passa a Premium per avere più spazio.';"
   },
-  "ilTemplateVerrSalvatoSuFirebaseESarDispo": "Il template verrà salvato su Firebase e sarà disponibile su tutti i tuoi dispositivi",
+  "ilTemplateVerrSalvatoSuFirebaseESarDispo": "Il template verrà salvato su Cloud e sarà disponibile su tutti i tuoi dispositivi",
   "@ilTemplateVerrSalvatoSuFirebaseESarDispo": {
     "description": "From quick wins migration - 3 occurrences",
-    "context": "Found in: child: Text(\n                        'Il template verrà salvato su Firebase e sarà disponibile su tutti i tuoi dispositivi',\n                        style: TextStyle(, String get templateSyncInfo =>\n      'Il template verrà salvato su Firebase e sarà disponibile su tutti i tuoi dispositivi';"
+    "context": "Found in: child: Text(\n                        'Il template verrà salvato su Cloud e sarà disponibile su tutti i tuoi dispositivi',\n                        style: TextStyle(, String get templateSyncInfo =>\n      'Il template verrà salvato su Cloud e sarà disponibile su tutti i tuoi dispositivi';"
   },
   "templatePersonalizzato": "Template personalizzato",
   "@templatePersonalizzato": {
@@ -20404,7 +20404,7 @@
   "failedToUnarchive": "Failed to restore routine",
   "failedToLoadTemplate": "Failed to load template",
   "alternativesComingSoon": "Alternatives coming soon",
-  "checkFirebasePermissions": "Please check Firebase permissions or contact support",
+  "checkFirebasePermissions": "Please check Cloud permissions or contact support",
   "errorLoadingRoutines": "Error loading routines",
   "suggestionLevel": "Suggestion level",
   "noExercises": "No exercises",
@@ -21888,6 +21888,14 @@
   "@pr": {
     "description": "Semantic label for PR icon"
   },
+  "newSingular": "new",
+  "@newSingular": {
+    "description": "New (singular form)"
+  },
+  "newPlural": "new",
+  "@newPlural": {
+    "description": "New (plural form)"
+  },
   "records": "Records",
   "@records": {
     "description": "Records tab label"
@@ -23193,9 +23201,9 @@
   "@importExercisesReady": {
     "description": "Initial status message on import exercises screen"
   },
-  "firebaseExerciseImporter": "Firebase Exercise Importer",
+  "firebaseExerciseImporter": "Cloud Exercise Importer",
   "@firebaseExerciseImporter": {
-    "description": "Screen title for Firebase exercise import tool"
+    "description": "Screen title for Cloud exercise import tool"
   },
   "testSingleExercise": "🧪 Test Single Exercise",
   "@testSingleExercise": {
@@ -23205,7 +23213,7 @@
   "@importAllExercises": {
     "description": "Button label to import all exercises from JSON"
   },
-  "importExercisesDescription": "This will import all exercises from the exercise database to Firebase Firestore.",
+  "importExercisesDescription": "This will import all exercises from the exercise database to Cloud Firestore.",
   "@importExercisesDescription": {
     "description": "Description text explaining import functionality"
   },
@@ -23237,7 +23245,7 @@
   "@importStarting": {
     "description": "Status message when import process begins"
   },
-  "importSuccess": "✅ Import completed successfully! All exercises imported to Firebase.",
+  "importSuccess": "✅ Import completed successfully! All exercises imported to Cloud.",
   "@importSuccess": {
     "description": "Success message after import completion"
   },
@@ -23245,7 +23253,7 @@
   "@importSuccessTitle": {
     "description": "Dialog title for successful import"
   },
-  "importExercisesSuccessMessage": "All exercises have been imported to Firebase. You can now use them in the app!",
+  "importExercisesSuccessMessage": "All exercises have been imported to Cloud. You can now use them in the app!",
   "@importExercisesSuccessMessage": {
     "description": "Success dialog message after exercise import"
   },

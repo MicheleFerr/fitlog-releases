@@ -4559,13 +4559,13 @@ class AppLocalizationsEn extends AppLocalizations {
       'Are you sure you want to start the migration? This process cannot be undone.';
 
   @override
-  String get firebaseInitialization => 'Firebase Initialization';
+  String get firebaseInitialization => 'Cloud Initialization';
 
   @override
   String get currentStatus => 'Current Status';
 
   @override
-  String get firebaseStatus => 'Firebase Status';
+  String get firebaseStatus => 'Cloud Status';
 
   @override
   String get initialized => 'Initialized';
@@ -4631,14 +4631,14 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get initializeDescription =>
-      'This will load all exercises from the local JSON file into Firebase. This operation may take several minutes.';
+      'This will load all exercises from the local JSON file into Cloud. This operation may take several minutes.';
 
   @override
   String get overwriteExisting => 'Overwrite Existing Data';
 
   @override
   String get overwriteExistingDescription =>
-      'Warning: This will delete all existing exercise data in Firebase';
+      'Warning: This will delete all existing exercise data in Cloud';
 
   @override
   String get versionOptional => 'Version (Optional)';
@@ -4747,7 +4747,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get systemStatistics => 'System Statistics';
 
   @override
-  String get firebaseDatabase => 'Firebase Database';
+  String get firebaseDatabase => 'Cloud Database';
 
   @override
   String get communityActivity => 'Community Activity';
@@ -4795,7 +4795,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get systemOverview => 'System Overview';
 
   @override
-  String get firebaseManagement => 'Firebase Management';
+  String get firebaseManagement => 'Cloud Management';
 
   @override
   String get adminInfoDescription =>
@@ -8374,7 +8374,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get saveTemplateComingSoon => 'Save template feature coming soon!';
 
   @override
-  String get saveToFirebase => 'Save to Firebase for reuse';
+  String get saveToFirebase => 'Save to Cloud for reuse';
 
   @override
   String get useTemplateScreenForImport =>
@@ -8776,13 +8776,13 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get templateSyncInfo =>
-      'The template will be saved to Firebase and available on all your devices';
+      'The template will be saved to Cloud and available on all your devices';
 
   @override
   String get enterTemplateName => 'Enter template name';
 
   @override
-  String get savingToFirebase => 'Saving to Firebase...';
+  String get savingToFirebase => 'Saving to Cloud...';
 
   @override
   String templateSavedSuccess(String name) {
@@ -9209,7 +9209,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get templateSyncInformation =>
-      'The template will be saved to Firebase and available on all your devices';
+      'The template will be saved to Cloud and available on all your devices';
 
   @override
   String get tabSingle => 'Single';
@@ -14205,7 +14205,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get rpeTimerAndMore => 'Rpe timer and more';
 
   @override
-  String get saveToFirebaseForReuse => 'Save to firebase for reuse';
+  String get saveToFirebaseForReuse => 'Save to cloud for reuse';
 
   @override
   String get screenWontTurnOff => 'Screen wont turn off';
@@ -14287,7 +14287,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get templateSyncDescription =>
-      'The template will be saved to Firebase and available on all your devices';
+      'The template will be saved to Cloud and available on all your devices';
 
   @override
   String get thisMonth => 'This month';
@@ -15847,7 +15847,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get ilTemplateVerrSalvatoSuFirebaseESarDispo =>
-      'Il template verrà salvato su Firebase e sarà disponibile su tutti i tuoi dispositivi';
+      'Il template verrà salvato su Cloud e sarà disponibile su tutti i tuoi dispositivi';
 
   @override
   String get templatePersonalizzato => 'Template personalizzato';
@@ -16509,7 +16509,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get checkFirebasePermissions =>
-      'Please check Firebase permissions or contact support';
+      'Please check Cloud permissions or contact support';
 
   @override
   String get errorLoadingRoutines => 'Error loading routines';
@@ -17964,6 +17964,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get pr => 'PR';
 
   @override
+  String get newSingular => 'new';
+
+  @override
+  String get newPlural => 'new';
+
+  @override
   String get records => 'Records';
 
   @override
@@ -18974,7 +18980,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get importExercisesReady => 'Ready to import exercises';
 
   @override
-  String get firebaseExerciseImporter => 'Firebase Exercise Importer';
+  String get firebaseExerciseImporter => 'Cloud Exercise Importer';
 
   @override
   String get testSingleExercise => '🧪 Test Single Exercise';
@@ -18984,7 +18990,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get importExercisesDescription =>
-      'This will import all exercises from the exercise database to Firebase Firestore.';
+      'This will import all exercises from the exercise database to Cloud Firestore.';
 
   @override
   String get testingExercise => '🧪 Testing single exercise conversion...';
@@ -19011,14 +19017,14 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get importSuccess =>
-      '✅ Import completed successfully! All exercises imported to Firebase.';
+      '✅ Import completed successfully! All exercises imported to Cloud.';
 
   @override
   String get importSuccessTitle => 'Import Successful';
 
   @override
   String get importExercisesSuccessMessage =>
-      'All exercises have been imported to Firebase. You can now use them in the app!';
+      'All exercises have been imported to Cloud. You can now use them in the app!';
 
   @override
   String get importFailedTitle => 'Import Failed';

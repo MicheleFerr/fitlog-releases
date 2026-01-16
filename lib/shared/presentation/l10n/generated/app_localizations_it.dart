@@ -4592,13 +4592,13 @@ class AppLocalizationsIt extends AppLocalizations {
       'Sei sicuro di voler avviare la migrazione? Questo processo non può essere annullato.';
 
   @override
-  String get firebaseInitialization => 'Inizializzazione Firebase';
+  String get firebaseInitialization => 'Inizializzazione Cloud';
 
   @override
   String get currentStatus => 'Stato Attuale';
 
   @override
-  String get firebaseStatus => 'Stato Firebase';
+  String get firebaseStatus => 'Stato Cloud';
 
   @override
   String get initialized => 'Inizializzato';
@@ -4664,14 +4664,14 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get initializeDescription =>
-      'Questo caricherà tutti gli esercizi dal file JSON locale in Firebase. L\'operazione può richiedere diversi minuti.';
+      'Questo caricherà tutti gli esercizi dal file JSON locale in Cloud. L\'operazione può richiedere diversi minuti.';
 
   @override
   String get overwriteExisting => 'Sovrascrivi Dati Esistenti';
 
   @override
   String get overwriteExistingDescription =>
-      'Attenzione: Questo eliminerà tutti i dati degli esercizi esistenti in Firebase';
+      'Attenzione: Questo eliminerà tutti i dati degli esercizi esistenti in Cloud';
 
   @override
   String get versionOptional => 'Versione (Opzionale)';
@@ -4784,7 +4784,7 @@ class AppLocalizationsIt extends AppLocalizations {
   String get systemStatistics => 'Statistiche Sistema';
 
   @override
-  String get firebaseDatabase => 'Database Firebase';
+  String get firebaseDatabase => 'Database Cloud';
 
   @override
   String get communityActivity => 'Attività Community';
@@ -4832,7 +4832,7 @@ class AppLocalizationsIt extends AppLocalizations {
   String get systemOverview => 'Panoramica Sistema';
 
   @override
-  String get firebaseManagement => 'Gestione Firebase';
+  String get firebaseManagement => 'Gestione Cloud';
 
   @override
   String get adminInfoDescription =>
@@ -8450,7 +8450,7 @@ class AppLocalizationsIt extends AppLocalizations {
   String get saveTemplateComingSoon => 'Funzione salva template in arrivo!';
 
   @override
-  String get saveToFirebase => 'Salva su Firebase per riutilizzarlo';
+  String get saveToFirebase => 'Salva su Cloud per riutilizzarlo';
 
   @override
   String get useTemplateScreenForImport =>
@@ -8857,13 +8857,13 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get templateSyncInfo =>
-      'Il template verrà salvato su Firebase e sarà disponibile su tutti i tuoi dispositivi';
+      'Il template verrà salvato su Cloud e sarà disponibile su tutti i tuoi dispositivi';
 
   @override
   String get enterTemplateName => 'Inserisci nome template';
 
   @override
-  String get savingToFirebase => 'Salvataggio su Firebase...';
+  String get savingToFirebase => 'Salvataggio su Cloud...';
 
   @override
   String templateSavedSuccess(String name) {
@@ -9290,7 +9290,7 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get templateSyncInformation =>
-      'Il template verrà salvato su Firebase e sarà disponibile su tutti i tuoi dispositivi';
+      'Il template verrà salvato su Cloud e sarà disponibile su tutti i tuoi dispositivi';
 
   @override
   String get tabSingle => 'Singolo';
@@ -14354,7 +14354,7 @@ class AppLocalizationsIt extends AppLocalizations {
   String get rpeTimerAndMore => 'Rpe timer and più';
 
   @override
-  String get saveToFirebaseForReuse => 'Salva a firebase per reuse';
+  String get saveToFirebaseForReuse => 'Salva a cloud per reuse';
 
   @override
   String get screenWontTurnOff => 'Screen wont turn off';
@@ -14436,7 +14436,7 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get templateSyncDescription =>
-      'Il template verrà salvato su Firebase e sarà disponibile su tutti i tuoi dispositivi';
+      'Il template verrà salvato su Cloud e sarà disponibile su tutti i tuoi dispositivi';
 
   @override
   String get thisMonth => 'This month';
@@ -16001,7 +16001,7 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get ilTemplateVerrSalvatoSuFirebaseESarDispo =>
-      'Il template verrà salvato su Firebase e sarà disponibile su tutti i tuoi dispositivi';
+      'Il template verrà salvato su Cloud e sarà disponibile su tutti i tuoi dispositivi';
 
   @override
   String get templatePersonalizzato => 'Template personalizzato';
@@ -16673,7 +16673,7 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get checkFirebasePermissions =>
-      'Controlla i permessi Firebase o contatta il supporto';
+      'Controlla i permessi Cloud o contatta il supporto';
 
   @override
   String get errorLoadingRoutines => 'Errore caricamento routine';
@@ -18137,6 +18137,12 @@ class AppLocalizationsIt extends AppLocalizations {
   String get pr => 'PR';
 
   @override
+  String get newSingular => 'nuovo';
+
+  @override
+  String get newPlural => 'nuovi';
+
+  @override
   String get records => 'Record';
 
   @override
@@ -19154,7 +19160,7 @@ class AppLocalizationsIt extends AppLocalizations {
   String get importExercisesReady => 'Pronto per importare gli esercizi';
 
   @override
-  String get firebaseExerciseImporter => 'Importatore Esercizi Firebase';
+  String get firebaseExerciseImporter => 'Importatore Esercizi Cloud';
 
   @override
   String get testSingleExercise => '🧪 Testa Singolo Esercizio';
@@ -19164,7 +19170,7 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get importExercisesDescription =>
-      'Questo importerà tutti gli esercizi dal database esercizi a Firebase Firestore.';
+      'Questo importerà tutti gli esercizi dal database esercizi a Cloud Firestore.';
 
   @override
   String get testingExercise => '🧪 Test conversione singolo esercizio...';
@@ -19191,14 +19197,14 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get importSuccess =>
-      '✅ Importazione completata con successo! Tutti gli esercizi importati su Firebase.';
+      '✅ Importazione completata con successo! Tutti gli esercizi importati su Cloud.';
 
   @override
   String get importSuccessTitle => 'Importazione Riuscita';
 
   @override
   String get importExercisesSuccessMessage =>
-      'Tutti gli esercizi sono stati importati su Firebase. Ora puoi usarli nell\'app!';
+      'Tutti gli esercizi sono stati importati su Cloud. Ora puoi usarli nell\'app!';
 
   @override
   String get importFailedTitle => 'Importazione Fallita';

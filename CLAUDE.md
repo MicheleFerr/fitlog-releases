@@ -68,15 +68,73 @@ lib/features/{name}/
 
 ---
 
-## ⚡ CHECKLIST RAPIDA
+## ⚡ PERFORMANCE RULES (MANDATORY)
 
+### Loop & I/O
+
+| Pattern | Sbagliato | Corretto |
+|---------|-----------|----------|
+| **Risorse in loop** | `for (x) { await openBox() }` | `box = await openBox(); for (x) { box.get() }` |
+| **Batch ops** | `for (x) { await box.put() }` | `await box.putAll(entries)` |
+| **Log in loop** | `for (x) { debugPrint(x) }` | `debugPrint('${items.length} items')` |
+
+### Provider & Service
+
+| Pattern | Sbagliato | Corretto |
+|---------|-----------|----------|
+| **Manager/Limiter** | `RateLimiter()` ogni chiamata | `static final _limiter = RateLimiter()` |
+| **Async init** | `service.init()` fire-and-forget | Lock interno + `ref.onDispose()` |
+| **Risorse costose** | Provider senza `keepAlive` | `ref.keepAlive()` se Hive/Firebase |
+
+### Async & Cache
+
+| Pattern | Sbagliato | Corretto |
+|---------|-----------|----------|
+| **Sequenziale** | `await a(); await b();` | `await Future.wait([a(), b()])` |
+| **Letture duplicate** | `getCount()` + `getAll()` stesso dato | `final all = await getAll(); all.length` |
+| **Eventi rapidi** | Handler diretto | `Timer` debounce 100ms |
+
+### Template Service Singleton
+
+```dart
+class MyService {
+  static MyService? _instance;
+  factory MyService() => _instance ??= MyService._();
+  MyService._();
+
+  bool _initialized = false;
+  final _initLock = Lock();
+
+  Future<void> initialize() async {
+    await _initLock.synchronized(() async {
+      if (_initialized) return;
+      // ... init ...
+      _initialized = true;
+    });
+  }
+}
+```
+
+---
+
+## ✅ CHECKLIST RAPIDA
+
+**UI/Styling:**
 - [ ] `AppIcons.*` (no `Icons.*`)
 - [ ] `context.l10n.*` (no hardcoded)
 - [ ] `context.colors.*` (no `Colors.*`)
-- [ ] `flutter gen-l10n` se nuove traduzioni
-- [ ] `flutter analyze` passa
-- [ ] Testato dark/light mode
 - [ ] NO `const` con `context.l10n`
+
+**Performance:**
+- [ ] No `openBox()`/I/O dentro loop
+- [ ] Batch ops (`putAll`) invece di loop `put()`
+- [ ] Manager/Limiter sono singleton
+- [ ] `Future.wait()` per async indipendenti
+- [ ] Debounce su event handlers rapidi
+
+**Build:**
+- [ ] `flutter analyze` passa
+- [ ] `flutter gen-l10n` se nuove traduzioni
 
 ---
 
@@ -128,7 +186,49 @@ flutter analyze               # Check errori
 ./scripts/checkpoint.sh       # Auto-commit checkpoint
 .claude/scripts/health-check.sh  # Check file zombie
 .claude/scripts/gather-context.sh # Carica contesto
+.claude/scripts/performance-check.sh [path]  # Check anti-pattern performance
 ```
+
+### Post-Feature Checklist (OBBLIGATORIO per Claude)
+
+Dopo OGNI modifica significativa o nuova feature, Claude DEVE eseguire:
+
+```bash
+.claude/scripts/performance-check.sh lib/features/<feature_modificata>/
+```
+
+Se vengono trovati warning, valutare e fixare prima di considerare la task completa.
+
+---
+
+## 👥 USER PERSONAS (MANDATORY Decision Framework)
+
+**OBBLIGO**: Per OGNI decisione su feature/UX, eseguire Persona Impact Analysis.
+
+| Persona | Profilo | Core Need |
+|---------|---------|-----------|
+| **Marco** | Principiante intimidito | Semplicità, guida |
+| **Chiara** | Mamma multitasking | Velocità, zero friction |
+| **Luca** | Powerlifter serio | Dati dettagliati |
+| **Sofia** | Estetica-driven | Progressi visibili |
+| **Roberto** | Professionista busy | Efficienza massima |
+
+### Workflow Automatico
+
+```
+┌─────────────────────────────────────────────────┐
+│ Prima di OGNI feature/decisione UX:            │
+│                                                 │
+│ 1. Identifica impatto per ogni persona (+/0/-) │
+│ 2. BLOCCA se persona primaria ha "--"          │
+│ 3. RIVEDI se 3+ personas hanno "-"             │
+│ 4. Proponi mitigazioni per impatti negativi    │
+└─────────────────────────────────────────────────┘
+```
+
+**Comando**: `/persona-check [feature]` per analisi completa
+
+**Docs**: [`docs/USER_PERSONAS.md`](docs/USER_PERSONAS.md) | [`.claude/commands/persona-check.md`](.claude/commands/persona-check.md)
 
 ---
 
@@ -137,6 +237,7 @@ flutter analyze               # Check errori
 | Argomento | File |
 |-----------|------|
 | Entry point | [`docs/INDEX.md`](docs/INDEX.md) |
+| User Personas | [`docs/USER_PERSONAS.md`](docs/USER_PERSONAS.md) |
 | Architettura | [`docs/architecture/OVERVIEW.md`](docs/architecture/OVERVIEW.md) |
 | Regole sviluppo | [`docs/DEVELOPMENT_RULES.md`](docs/DEVELOPMENT_RULES.md) |
 | Pattern codice | [`docs/CODE_PATTERNS.md`](docs/CODE_PATTERNS.md) |

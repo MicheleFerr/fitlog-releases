@@ -8435,10 +8435,10 @@ abstract class AppLocalizations {
   /// **'Are you sure you want to start the migration? This process cannot be undone.'**
   String get confirmMigrationDescription;
 
-  /// Title for Firebase initialization section
+  /// Title for Cloud initialization section
   ///
   /// In en, this message translates to:
-  /// **'Firebase Initialization'**
+  /// **'Cloud Initialization'**
   String get firebaseInitialization;
 
   /// Title for current status section
@@ -8447,19 +8447,19 @@ abstract class AppLocalizations {
   /// **'Current Status'**
   String get currentStatus;
 
-  /// Label for Firebase status
+  /// Label for Cloud status
   ///
   /// In en, this message translates to:
-  /// **'Firebase Status'**
+  /// **'Cloud Status'**
   String get firebaseStatus;
 
-  /// Status when Firebase is initialized
+  /// Status when Cloud is initialized
   ///
   /// In en, this message translates to:
   /// **'Initialized'**
   String get initialized;
 
-  /// Status when Firebase is not initialized
+  /// Status when Cloud is not initialized
   ///
   /// In en, this message translates to:
   /// **'Not Initialized'**
@@ -8576,7 +8576,7 @@ abstract class AppLocalizations {
   /// Description for initialize operation
   ///
   /// In en, this message translates to:
-  /// **'This will load all exercises from the local JSON file into Firebase. This operation may take several minutes.'**
+  /// **'This will load all exercises from the local JSON file into Cloud. This operation may take several minutes.'**
   String get initializeDescription;
 
   /// Checkbox label to overwrite existing data
@@ -8588,7 +8588,7 @@ abstract class AppLocalizations {
   /// Warning description for overwrite option
   ///
   /// In en, this message translates to:
-  /// **'Warning: This will delete all existing exercise data in Firebase'**
+  /// **'Warning: This will delete all existing exercise data in Cloud'**
   String get overwriteExistingDescription;
 
   /// Label for optional version field
@@ -8789,10 +8789,10 @@ abstract class AppLocalizations {
   /// **'System Statistics'**
   String get systemStatistics;
 
-  /// Firebase database section title
+  /// Cloud database section title
   ///
   /// In en, this message translates to:
-  /// **'Firebase Database'**
+  /// **'Cloud Database'**
   String get firebaseDatabase;
 
   /// Community activity section title
@@ -8885,10 +8885,10 @@ abstract class AppLocalizations {
   /// **'System Overview'**
   String get systemOverview;
 
-  /// Firebase management section title
+  /// Cloud management section title
   ///
   /// In en, this message translates to:
-  /// **'Firebase Management'**
+  /// **'Cloud Management'**
   String get firebaseManagement;
 
   /// Admin info description text
@@ -15020,7 +15020,7 @@ abstract class AppLocalizations {
   /// Save as template subtitle
   ///
   /// In en, this message translates to:
-  /// **'Save to Firebase for reuse'**
+  /// **'Save to Cloud for reuse'**
   String get saveToFirebase;
 
   /// Instructions to use template import
@@ -15755,7 +15755,7 @@ abstract class AppLocalizations {
   /// Template sync information
   ///
   /// In en, this message translates to:
-  /// **'The template will be saved to Firebase and available on all your devices'**
+  /// **'The template will be saved to Cloud and available on all your devices'**
   String get templateSyncInfo;
 
   /// Hint text for template name input
@@ -15764,10 +15764,10 @@ abstract class AppLocalizations {
   /// **'Enter template name'**
   String get enterTemplateName;
 
-  /// Saving to Firebase loading message
+  /// Saving to Cloud loading message
   ///
   /// In en, this message translates to:
-  /// **'Saving to Firebase...'**
+  /// **'Saving to Cloud...'**
   String get savingToFirebase;
 
   /// Template saved success message
@@ -16463,7 +16463,7 @@ abstract class AppLocalizations {
   /// Template sync information
   ///
   /// In en, this message translates to:
-  /// **'The template will be saved to Firebase and available on all your devices'**
+  /// **'The template will be saved to Cloud and available on all your devices'**
   String get templateSyncInformation;
 
   /// Single exercise tab label
@@ -25251,7 +25251,7 @@ abstract class AppLocalizations {
   /// Auto-generated for saveToFirebaseForReuse
   ///
   /// In en, this message translates to:
-  /// **'Save to firebase for reuse'**
+  /// **'Save to cloud for reuse'**
   String get saveToFirebaseForReuse;
 
   /// Auto-generated for screenWontTurnOff
@@ -25413,7 +25413,7 @@ abstract class AppLocalizations {
   /// Explanation that template will sync across devices
   ///
   /// In en, this message translates to:
-  /// **'The template will be saved to Firebase and available on all your devices'**
+  /// **'The template will be saved to Cloud and available on all your devices'**
   String get templateSyncDescription;
 
   /// Auto-generated for thisMonth
@@ -28299,7 +28299,7 @@ abstract class AppLocalizations {
   /// From quick wins migration - 3 occurrences
   ///
   /// In en, this message translates to:
-  /// **'Il template verrà salvato su Firebase e sarà disponibile su tutti i tuoi dispositivi'**
+  /// **'Il template verrà salvato su Cloud e sarà disponibile su tutti i tuoi dispositivi'**
   String get ilTemplateVerrSalvatoSuFirebaseESarDispo;
 
   /// From quick wins migration - 3 occurrences
@@ -29535,7 +29535,7 @@ abstract class AppLocalizations {
   /// No description provided for @checkFirebasePermissions.
   ///
   /// In en, this message translates to:
-  /// **'Please check Firebase permissions or contact support'**
+  /// **'Please check Cloud permissions or contact support'**
   String get checkFirebasePermissions;
 
   /// Error message when routines fail to load
@@ -32184,6 +32184,18 @@ abstract class AppLocalizations {
   /// **'PR'**
   String get pr;
 
+  /// New (singular form)
+  ///
+  /// In en, this message translates to:
+  /// **'new'**
+  String get newSingular;
+
+  /// New (plural form)
+  ///
+  /// In en, this message translates to:
+  /// **'new'**
+  String get newPlural;
+
   /// Records tab label
   ///
   /// In en, this message translates to:
@@ -34056,10 +34068,10 @@ abstract class AppLocalizations {
   /// **'Ready to import exercises'**
   String get importExercisesReady;
 
-  /// Screen title for Firebase exercise import tool
+  /// Screen title for Cloud exercise import tool
   ///
   /// In en, this message translates to:
-  /// **'Firebase Exercise Importer'**
+  /// **'Cloud Exercise Importer'**
   String get firebaseExerciseImporter;
 
   /// Button label to test single exercise conversion
@@ -34077,7 +34089,7 @@ abstract class AppLocalizations {
   /// Description text explaining import functionality
   ///
   /// In en, this message translates to:
-  /// **'This will import all exercises from the exercise database to Firebase Firestore.'**
+  /// **'This will import all exercises from the exercise database to Cloud Firestore.'**
   String get importExercisesDescription;
 
   /// Status message while testing exercise conversion
@@ -34125,7 +34137,7 @@ abstract class AppLocalizations {
   /// Success message after import completion
   ///
   /// In en, this message translates to:
-  /// **'✅ Import completed successfully! All exercises imported to Firebase.'**
+  /// **'✅ Import completed successfully! All exercises imported to Cloud.'**
   String get importSuccess;
 
   /// Dialog title for successful import
@@ -34137,7 +34149,7 @@ abstract class AppLocalizations {
   /// Success dialog message after exercise import
   ///
   /// In en, this message translates to:
-  /// **'All exercises have been imported to Firebase. You can now use them in the app!'**
+  /// **'All exercises have been imported to Cloud. You can now use them in the app!'**
   String get importExercisesSuccessMessage;
 
   /// Dialog title when import fails

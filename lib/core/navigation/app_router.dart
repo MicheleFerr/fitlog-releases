@@ -342,21 +342,21 @@ final appRouterProvider = Provider<GoRouter>((ref) {
           ),
 
           // ═════════════════════════════════════════════════════════════════
-          // BRANCH 2: PROFILE (replaces Analytics + Settings tabs)
+          // BRANCH 2: STATS
           // ═════════════════════════════════════════════════════════════════
           StatefulShellBranch(
-            navigatorKey: AppRoutes.profileNavigatorKey,
+            navigatorKey: AppRoutes.statsNavigatorKey,
             routes: [
               GoRoute(
-                path: AppRoutes.profilePath,
-                name: AppRoutes.profileName,
-                builder: (context, state) => const ProfileHubScreen(),
+                path: AppRoutes.statsPath,
+                name: AppRoutes.statsName,
+                builder: (context, state) => const AnalyticsScreen(),
                 routes: [
-                  // Analytics (pushed from Statistiche quick action)
+                  // Analytics (nested under stats)
                   GoRoute(
                     path: 'analytics',
                     name: AppRoutes.analyticsName,
-                    builder: (context, state) => const AnalyticsScreen(),
+                    builder: (context, state) => const TabbedAnalyticsScreen(),
                     routes: [
                       // Analytics overview (tabbed)
                       GoRoute(
@@ -402,6 +402,22 @@ final appRouterProvider = Provider<GoRouter>((ref) {
                       ),
                     ],
                   ),
+                ],
+              ),
+            ],
+          ),
+
+          // ═════════════════════════════════════════════════════════════════
+          // BRANCH 3: PROFILE
+          // ═════════════════════════════════════════════════════════════════
+          StatefulShellBranch(
+            navigatorKey: AppRoutes.profileNavigatorKey,
+            routes: [
+              GoRoute(
+                path: AppRoutes.profilePath,
+                name: AppRoutes.profileName,
+                builder: (context, state) => const ProfileHubScreen(),
+                routes: [
                   // Settings (pushed from ⚙️ icon)
                   GoRoute(
                     path: 'settings',
