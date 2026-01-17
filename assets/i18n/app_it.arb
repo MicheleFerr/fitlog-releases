@@ -19249,5 +19249,17 @@
   "ghostModeHideStreak": "Nascondi contatore streak",
   "ghostModeHideCommunity": "Nascondi funzioni community",
   "ghostModeHideComparisons": "Nascondi confronti forza",
-  "ghostModeHideAnimations": "Nascondi animazioni XP"
+  "ghostModeHideAnimations": "Nascondi animazioni XP",
+
+  "tooltipPR": "Record Personale",
+  "tooltipPRExplanation": "Il tuo miglior sollevamento di sempre per questo esercizio. Più peso riesci a sollevare con buona tecnica, più sei diventato forte!",
+  "tooltipRPE": "Scala dello Sforzo Percepito",
+  "tooltipRPEExplanation": "Una scala da 1-10 su quanto dura ti è sembrata una serie. 6 = moderata, 8 = impegnativa, 10 = sforzo massimo. Aiuta a gestire la fatica senza sovrallenarsi.",
+  "tooltipVolume": "Volume di Allenamento",
+  "tooltipVolumeExplanation": "Lavoro totale = Peso × Ripetizioni. Un volume maggiore nel tempo porta alla crescita muscolare. Esempio: 50kg × 10 reps = 500kg di volume.",
+  "tooltipReps": "Ripetizioni",
+  "tooltipRepsExplanation": "Quante volte sollevi il peso in una serie. Meno reps (1-5) costruiscono forza, più reps (8-15) costruiscono massa muscolare.",
+  "tooltipAvg": "Media",
+  "tooltipAvgExplanation": "Il valore tipico tra tutte le tue serie. Utile per vedere la tua performance normale, ignorando i valori estremi.",
+  "tapForInfo": "Tocca per info"
 }

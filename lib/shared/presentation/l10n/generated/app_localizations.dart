@@ -46087,6 +46087,72 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Hide XP animations'**
   String get ghostModeHideAnimations;
+
+  /// Tooltip title for PR
+  ///
+  /// In en, this message translates to:
+  /// **'Personal Record'**
+  String get tooltipPR;
+
+  /// Tooltip explanation for PR
+  ///
+  /// In en, this message translates to:
+  /// **'Your best lift ever for this exercise. The heavier the weight you can lift with good form, the stronger you\'ve become!'**
+  String get tooltipPRExplanation;
+
+  /// Tooltip title for RPE
+  ///
+  /// In en, this message translates to:
+  /// **'Rate of Perceived Exertion'**
+  String get tooltipRPE;
+
+  /// Tooltip explanation for RPE
+  ///
+  /// In en, this message translates to:
+  /// **'A 1-10 scale for how hard a set felt. 6 = moderate, 8 = challenging, 10 = maximum effort. Helps track fatigue without overtraining.'**
+  String get tooltipRPEExplanation;
+
+  /// Tooltip title for Volume
+  ///
+  /// In en, this message translates to:
+  /// **'Training Volume'**
+  String get tooltipVolume;
+
+  /// Tooltip explanation for Volume
+  ///
+  /// In en, this message translates to:
+  /// **'Total work done = Weight × Reps. Higher volume over time leads to muscle growth. Example: 50kg × 10 reps = 500kg volume.'**
+  String get tooltipVolumeExplanation;
+
+  /// Tooltip title for Reps
+  ///
+  /// In en, this message translates to:
+  /// **'Repetitions'**
+  String get tooltipReps;
+
+  /// Tooltip explanation for Reps
+  ///
+  /// In en, this message translates to:
+  /// **'How many times you lift the weight in one set. Fewer reps (1-5) build strength, more reps (8-15) build muscle size.'**
+  String get tooltipRepsExplanation;
+
+  /// Tooltip title for Average
+  ///
+  /// In en, this message translates to:
+  /// **'Average'**
+  String get tooltipAvg;
+
+  /// Tooltip explanation for Average
+  ///
+  /// In en, this message translates to:
+  /// **'The typical value across all your sets. Useful to see your normal performance, ignoring outliers.'**
+  String get tooltipAvgExplanation;
+
+  /// Hint text for tappable terminology
+  ///
+  /// In en, this message translates to:
+  /// **'Tap for info'**
+  String get tapForInfo;
 }
 
 class _AppLocalizationsDelegate

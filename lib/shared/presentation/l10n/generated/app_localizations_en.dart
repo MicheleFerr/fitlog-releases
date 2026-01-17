@@ -25775,4 +25775,42 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get ghostModeHideAnimations => 'Hide XP animations';
+
+  @override
+  String get tooltipPR => 'Personal Record';
+
+  @override
+  String get tooltipPRExplanation =>
+      'Your best lift ever for this exercise. The heavier the weight you can lift with good form, the stronger you\'ve become!';
+
+  @override
+  String get tooltipRPE => 'Rate of Perceived Exertion';
+
+  @override
+  String get tooltipRPEExplanation =>
+      'A 1-10 scale for how hard a set felt. 6 = moderate, 8 = challenging, 10 = maximum effort. Helps track fatigue without overtraining.';
+
+  @override
+  String get tooltipVolume => 'Training Volume';
+
+  @override
+  String get tooltipVolumeExplanation =>
+      'Total work done = Weight × Reps. Higher volume over time leads to muscle growth. Example: 50kg × 10 reps = 500kg volume.';
+
+  @override
+  String get tooltipReps => 'Repetitions';
+
+  @override
+  String get tooltipRepsExplanation =>
+      'How many times you lift the weight in one set. Fewer reps (1-5) build strength, more reps (8-15) build muscle size.';
+
+  @override
+  String get tooltipAvg => 'Average';
+
+  @override
+  String get tooltipAvgExplanation =>
+      'The typical value across all your sets. Useful to see your normal performance, ignoring outliers.';
+
+  @override
+  String get tapForInfo => 'Tap for info';
 }

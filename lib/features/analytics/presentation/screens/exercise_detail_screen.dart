@@ -16,6 +16,7 @@ import 'package:gymbro_flutter_new/features/analytics/presentation/widgets/exerc
 import 'package:gymbro_flutter_new/features/analytics/presentation/widgets/training_pattern_card.dart';
 import 'package:gymbro_flutter_new/features/analytics/presentation/providers/training_pattern_provider.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/providers/user_exercise_preferences_provider.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/terminology_tooltip.dart';
 
 class ExerciseDetailScreen extends ConsumerStatefulWidget {
   const ExerciseDetailScreen({
@@ -709,18 +710,21 @@ class _ExerciseDetailScreenState extends ConsumerState<ExerciseDetailScreen> {
                 '${periodMaxWeight.toStringAsFixed(1)} kg',
                 AppIcons.achievement,
                 context.colors.warning,
+                tooltipType: TerminologyType.pr,
               ),
               _buildStatItem(
                 context.l10n.averageWeight,
                 '${periodAvgWeight.toStringAsFixed(1)} kg',
                 AppIcons.workout,
                 context.colors.primary,
+                tooltipType: TerminologyType.avg,
               ),
               _buildStatItem(
                 context.l10n.avgReps,
                 periodAvgReps.toStringAsFixed(0),
                 AppIcons.repeat,
                 context.colors.success,
+                tooltipType: TerminologyType.reps,
               ),
               if (periodAvgRPE > 0)
                 _buildStatItem(
@@ -728,6 +732,7 @@ class _ExerciseDetailScreenState extends ConsumerState<ExerciseDetailScreen> {
                   periodAvgRPE.toStringAsFixed(1),
                   AppIcons.speed,
                   context.colors.secondary,
+                  tooltipType: TerminologyType.rpe,
                 ),
             ],
           ),
@@ -736,8 +741,14 @@ class _ExerciseDetailScreenState extends ConsumerState<ExerciseDetailScreen> {
     );
   }
 
-  Widget _buildStatItem(String label, String value, IconData icon, Color color) {
-    return Column(
+  Widget _buildStatItem(
+    String label,
+    String value,
+    IconData icon,
+    Color color, {
+    TerminologyType? tooltipType,
+  }) {
+    final content = Column(
       children: [
         Icon(icon, color: color, size: AppIconSize.medium),
         const SizedBox(height: 4),
@@ -748,15 +759,131 @@ class _ExerciseDetailScreenState extends ConsumerState<ExerciseDetailScreen> {
             color: color,
           ),
         ),
-        Text(
-          label,
-          style: context.textTheme.bodySmall?.copyWith(
-            color: context.colors.onSurfaceVariant,
-            fontSize: 10,
-          ),
-          textAlign: TextAlign.center,
+        Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(
+              label,
+              style: context.textTheme.bodySmall?.copyWith(
+                color: context.colors.onSurfaceVariant,
+                fontSize: 10,
+              ),
+              textAlign: TextAlign.center,
+            ),
+            if (tooltipType != null) ...[
+              const SizedBox(width: 2),
+              Icon(
+                AppIcons.helpOutline,
+                size: 10,
+                color: context.colors.primary.withValues(alpha: 0.5),
+              ),
+            ],
+          ],
         ),
       ],
+    );
+
+    if (tooltipType != null) {
+      return GestureDetector(
+        onTap: () => _showTerminologyExplanation(tooltipType),
+        child: content,
+      );
+    }
+
+    return content;
+  }
+
+  /// Show terminology explanation bottom sheet
+  void _showTerminologyExplanation(TerminologyType type) {
+    final (term, explanation) = switch (type) {
+      TerminologyType.pr => (context.l10n.tooltipPR, context.l10n.tooltipPRExplanation),
+      TerminologyType.rpe => (context.l10n.tooltipRPE, context.l10n.tooltipRPEExplanation),
+      TerminologyType.volume => (context.l10n.tooltipVolume, context.l10n.tooltipVolumeExplanation),
+      TerminologyType.reps => (context.l10n.tooltipReps, context.l10n.tooltipRepsExplanation),
+      TerminologyType.avg => (context.l10n.tooltipAvg, context.l10n.tooltipAvgExplanation),
+    };
+
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: context.colors.surface,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      builder: (ctx) => Padding(
+        padding: EdgeInsets.only(
+          left: 24,
+          right: 24,
+          top: 16,
+          bottom: MediaQuery.of(ctx).viewInsets.bottom + 24,
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Drag handle
+            Center(
+              child: Container(
+                width: 40,
+                height: 4,
+                decoration: BoxDecoration(
+                  color: context.colors.onSurfaceVariant.withValues(alpha: 0.4),
+                  borderRadius: BorderRadius.circular(2),
+                ),
+              ),
+            ),
+            const SizedBox(height: 20),
+
+            // Icon and title
+            Row(
+              children: [
+                Container(
+                  padding: const EdgeInsets.all(10),
+                  decoration: BoxDecoration(
+                    color: context.colors.primaryContainer,
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: Icon(
+                    AppIcons.lightbulb,
+                    color: context.colors.primary,
+                    size: AppIconSize.medium,
+                  ),
+                ),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: Text(
+                    term,
+                    style: context.textTheme.titleLarge?.copyWith(
+                      fontWeight: FontWeight.bold,
+                      color: context.colors.onSurface,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 16),
+
+            // Explanation
+            Text(
+              explanation,
+              style: context.textTheme.bodyLarge?.copyWith(
+                color: context.colors.onSurface.withValues(alpha: 0.85),
+                height: 1.6,
+              ),
+            ),
+            const SizedBox(height: 24),
+
+            // Close button
+            SizedBox(
+              width: double.infinity,
+              child: FilledButton(
+                onPressed: () => Navigator.of(ctx).pop(),
+                child: Text(context.l10n.ok),
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 

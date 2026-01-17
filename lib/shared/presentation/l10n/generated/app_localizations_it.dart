@@ -26028,4 +26028,42 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get ghostModeHideAnimations => 'Nascondi animazioni XP';
+
+  @override
+  String get tooltipPR => 'Record Personale';
+
+  @override
+  String get tooltipPRExplanation =>
+      'Il tuo miglior sollevamento di sempre per questo esercizio. Più peso riesci a sollevare con buona tecnica, più sei diventato forte!';
+
+  @override
+  String get tooltipRPE => 'Scala dello Sforzo Percepito';
+
+  @override
+  String get tooltipRPEExplanation =>
+      'Una scala da 1-10 su quanto dura ti è sembrata una serie. 6 = moderata, 8 = impegnativa, 10 = sforzo massimo. Aiuta a gestire la fatica senza sovrallenarsi.';
+
+  @override
+  String get tooltipVolume => 'Volume di Allenamento';
+
+  @override
+  String get tooltipVolumeExplanation =>
+      'Lavoro totale = Peso × Ripetizioni. Un volume maggiore nel tempo porta alla crescita muscolare. Esempio: 50kg × 10 reps = 500kg di volume.';
+
+  @override
+  String get tooltipReps => 'Ripetizioni';
+
+  @override
+  String get tooltipRepsExplanation =>
+      'Quante volte sollevi il peso in una serie. Meno reps (1-5) costruiscono forza, più reps (8-15) costruiscono massa muscolare.';
+
+  @override
+  String get tooltipAvg => 'Media';
+
+  @override
+  String get tooltipAvgExplanation =>
+      'Il valore tipico tra tutte le tue serie. Utile per vedere la tua performance normale, ignorando i valori estremi.';
+
+  @override
+  String get tapForInfo => 'Tocca per info';
 }

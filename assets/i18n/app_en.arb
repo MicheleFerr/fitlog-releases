@@ -31855,5 +31855,50 @@
   "ghostModeHideStreak": "Hide streak counter",
   "ghostModeHideCommunity": "Hide community features",
   "ghostModeHideComparisons": "Hide strength comparisons",
-  "ghostModeHideAnimations": "Hide XP animations"
+  "ghostModeHideAnimations": "Hide XP animations",
+
+  "tooltipPR": "Personal Record",
+  "@tooltipPR": {
+    "description": "Tooltip title for PR"
+  },
+  "tooltipPRExplanation": "Your best lift ever for this exercise. The heavier the weight you can lift with good form, the stronger you've become!",
+  "@tooltipPRExplanation": {
+    "description": "Tooltip explanation for PR"
+  },
+  "tooltipRPE": "Rate of Perceived Exertion",
+  "@tooltipRPE": {
+    "description": "Tooltip title for RPE"
+  },
+  "tooltipRPEExplanation": "A 1-10 scale for how hard a set felt. 6 = moderate, 8 = challenging, 10 = maximum effort. Helps track fatigue without overtraining.",
+  "@tooltipRPEExplanation": {
+    "description": "Tooltip explanation for RPE"
+  },
+  "tooltipVolume": "Training Volume",
+  "@tooltipVolume": {
+    "description": "Tooltip title for Volume"
+  },
+  "tooltipVolumeExplanation": "Total work done = Weight × Reps. Higher volume over time leads to muscle growth. Example: 50kg × 10 reps = 500kg volume.",
+  "@tooltipVolumeExplanation": {
+    "description": "Tooltip explanation for Volume"
+  },
+  "tooltipReps": "Repetitions",
+  "@tooltipReps": {
+    "description": "Tooltip title for Reps"
+  },
+  "tooltipRepsExplanation": "How many times you lift the weight in one set. Fewer reps (1-5) build strength, more reps (8-15) build muscle size.",
+  "@tooltipRepsExplanation": {
+    "description": "Tooltip explanation for Reps"
+  },
+  "tooltipAvg": "Average",
+  "@tooltipAvg": {
+    "description": "Tooltip title for Average"
+  },
+  "tooltipAvgExplanation": "The typical value across all your sets. Useful to see your normal performance, ignoring outliers.",
+  "@tooltipAvgExplanation": {
+    "description": "Tooltip explanation for Average"
+  },
+  "tapForInfo": "Tap for info",
+  "@tapForInfo": {
+    "description": "Hint text for tappable terminology"
+  }
 }
