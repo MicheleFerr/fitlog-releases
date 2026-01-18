@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:fl_chart/fl_chart.dart';
 import 'package:intl/intl.dart';
 import 'package:gymbro_flutter_new/features/analytics/domain/entities/exercise_progress_metrics.dart';
 import 'package:gymbro_flutter_new/features/analytics/presentation/providers/exercise_progress_provider.dart';
@@ -17,6 +16,11 @@ import 'package:gymbro_flutter_new/features/analytics/presentation/widgets/train
 import 'package:gymbro_flutter_new/features/analytics/presentation/providers/training_pattern_provider.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/providers/user_exercise_preferences_provider.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/terminology_tooltip.dart';
+// Syncfusion charts (2026-01-18 redesign)
+import 'package:gymbro_flutter_new/features/analytics/presentation/widgets/charts/weight_line_chart.dart';
+import 'package:gymbro_flutter_new/features/analytics/presentation/widgets/charts/volume_bar_chart.dart';
+import 'package:gymbro_flutter_new/features/analytics/presentation/widgets/charts/reps_line_chart.dart';
+import 'package:gymbro_flutter_new/features/analytics/presentation/widgets/charts/rpe_gauge_widget.dart';
 
 class ExerciseDetailScreen extends ConsumerStatefulWidget {
   const ExerciseDetailScreen({
@@ -553,6 +557,7 @@ class _ExerciseDetailScreenState extends ConsumerState<ExerciseDetailScreen> {
   }
 
   /// Get chart data (title, icon, color, widget) for a chart type
+  /// Updated 2026-01-18: Using new Syncfusion charts based on UX research
   (String, IconData, Color, Widget) _getChartData(ChartType type, List<ExerciseSetData> sets) {
     switch (type) {
       case ChartType.weight:
@@ -560,28 +565,32 @@ class _ExerciseDetailScreenState extends ConsumerState<ExerciseDetailScreen> {
           context.l10n.weightProgression,
           AppIcons.workout,
           context.colors.primary,
-          _buildWeightChart(sets),
+          // Line chart - best for showing progression trends
+          WeightLineChart(sets: sets),
         );
       case ChartType.volume:
         return (
           context.l10n.volumeProgression,
           AppIcons.analytics,
           context.colors.warning,
-          _buildVolumeChart(sets),
+          // Bar chart - more intuitive for "quantity/amount"
+          VolumeBarChart(sets: sets),
         );
       case ChartType.reps:
         return (
           context.l10n.repsProgression,
           AppIcons.repeat,
           context.colors.success,
-          _buildRepsChart(sets),
+          // Line chart with average overlay
+          RepsLineChart(sets: sets),
         );
       case ChartType.rpe:
         return (
           context.l10n.effortProgression,
           AppIcons.speed,
           context.colors.error,
-          _buildRPEChart(sets),
+          // Gauge widget - more intuitive for effort/RPE
+          RpeGaugeWidget(sets: sets),
         );
     }
   }
@@ -629,34 +638,6 @@ class _ExerciseDetailScreenState extends ConsumerState<ExerciseDetailScreen> {
         ),
       ),
     );
-  }
-
-  /// Helper to format date for X-axis labels based on data range
-  String _formatDateLabel(DateTime date, Duration range) {
-    if (range.inDays > 180) {
-      // More than 6 months: show month/year
-      return DateFormat('MMM yy').format(date);
-    } else if (range.inDays > 30) {
-      // More than a month: show day/month
-      return DateFormat('d MMM').format(date);
-    } else {
-      // Less than a month: show day
-      return DateFormat('d').format(date);
-    }
-  }
-
-  /// Get date range from sets
-  Duration _getDateRange(List<ExerciseSetData> sets) {
-    if (sets.isEmpty) return Duration.zero;
-    return sets.last.date.difference(sets.first.date);
-  }
-
-  /// Calculate X-axis interval based on number of data points
-  int _calculateLabelInterval(int dataLength) {
-    if (dataLength <= 5) return 1;
-    if (dataLength <= 10) return 2;
-    if (dataLength <= 20) return 4;
-    return (dataLength / 5).ceil();
   }
 
   Widget _buildStatsSummary(ExerciseProgressMetrics metrics, List<ExerciseSetData> sets) {
@@ -749,6 +730,7 @@ class _ExerciseDetailScreenState extends ConsumerState<ExerciseDetailScreen> {
     TerminologyType? tooltipType,
   }) {
     final content = Column(
+      mainAxisSize: MainAxisSize.min,
       children: [
         Icon(icon, color: color, size: AppIconSize.medium),
         const SizedBox(height: 4),
@@ -783,10 +765,22 @@ class _ExerciseDetailScreenState extends ConsumerState<ExerciseDetailScreen> {
       ],
     );
 
+    // Wrap entire stat card in large tappable area with visual feedback
     if (tooltipType != null) {
-      return GestureDetector(
-        onTap: () => _showTerminologyExplanation(tooltipType),
-        child: content,
+      return Material(
+        color: context.colors.surface.withValues(alpha: 0),
+        child: InkWell(
+          onTap: () => _showTerminologyExplanation(tooltipType),
+          borderRadius: BorderRadius.circular(12),
+          splashColor: color.withValues(alpha: 0.15),
+          highlightColor: color.withValues(alpha: 0.08),
+          child: Container(
+            // Generous padding for easy tapping
+            padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 8),
+            constraints: const BoxConstraints(minWidth: 70, minHeight: 70),
+            child: content,
+          ),
+        ),
       );
     }
 
@@ -882,626 +876,6 @@ class _ExerciseDetailScreenState extends ConsumerState<ExerciseDetailScreen> {
               ),
             ),
           ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildWeightChart(List<ExerciseSetData> sets) {
-    if (sets.isEmpty) {
-      return SizedBox(
-        height: 200,
-        child: Center(child: Text(context.l10n.noDataForChart)),
-      );
-    }
-
-    final spots = <FlSpot>[];
-    for (int i = 0; i < sets.length; i++) {
-      spots.add(FlSpot(i.toDouble(), sets[i].weight));
-    }
-
-    final maxWeight = sets.map((s) => s.weight).reduce((a, b) => a > b ? a : b);
-    final minWeight = sets.map((s) => s.weight).reduce((a, b) => a < b ? a : b);
-    final dateRange = _getDateRange(sets);
-    final labelInterval = _calculateLabelInterval(sets.length);
-
-    return SizedBox(
-      height: 220,
-      child: LineChart(
-        LineChartData(
-          minY: (minWeight * 0.9).floorToDouble(),
-          maxY: (maxWeight * 1.1).ceilToDouble(),
-          gridData: FlGridData(
-            show: true,
-            drawVerticalLine: false,
-            horizontalInterval: ((maxWeight - minWeight) / 4).clamp(5, 50),
-            getDrawingHorizontalLine: (value) => FlLine(
-              color: context.colors.outline.withValues(alpha: 0.15),
-              strokeWidth: 1,
-              dashArray: [4, 4],
-            ),
-          ),
-          titlesData: FlTitlesData(
-            leftTitles: AxisTitles(
-              sideTitles: SideTitles(
-                showTitles: true,
-                reservedSize: 45,
-                getTitlesWidget: (value, meta) {
-                  if (value == meta.min || value == meta.max) {
-                    return const SizedBox.shrink();
-                  }
-                  return Padding(
-                    padding: const EdgeInsets.only(right: 4),
-                    child: Text(
-                      '${value.toInt()} kg',
-                      style: context.textTheme.bodySmall?.copyWith(
-                        fontSize: 10,
-                        color: context.colors.onSurface.withValues(alpha: 0.7),
-                      ),
-                    ),
-                  );
-                },
-              ),
-            ),
-            rightTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
-            topTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
-            bottomTitles: AxisTitles(
-              sideTitles: SideTitles(
-                showTitles: true,
-                interval: labelInterval.toDouble(),
-                reservedSize: 28,
-                getTitlesWidget: (value, meta) {
-                  final index = value.toInt();
-                  if (index < 0 || index >= sets.length) return const SizedBox.shrink();
-                  return Padding(
-                    padding: const EdgeInsets.only(top: 6),
-                    child: Text(
-                      _formatDateLabel(sets[index].date, dateRange),
-                      style: context.textTheme.bodySmall?.copyWith(
-                        fontSize: 9,
-                        color: context.colors.onSurface.withValues(alpha: 0.6),
-                      ),
-                    ),
-                  );
-                },
-              ),
-            ),
-          ),
-          borderData: FlBorderData(show: false),
-          lineTouchData: LineTouchData(
-            enabled: true,
-            touchTooltipData: LineTouchTooltipData(
-              tooltipMargin: 50,
-              showOnTopOfTheChartBoxArea: true,
-              fitInsideHorizontally: true,
-              fitInsideVertically: true,
-              getTooltipItems: (spots) {
-                return spots.map((spot) {
-                  final index = spot.x.toInt();
-                  final date = index < sets.length
-                      ? DateFormat('d MMM').format(sets[index].date)
-                      : '';
-                  return LineTooltipItem(
-                    '$date\n${spot.y.toStringAsFixed(1)} kg',
-                    context.textTheme.labelSmall!.copyWith(
-                      color: context.colors.onPrimary,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  );
-                }).toList();
-              },
-            ),
-          ),
-          lineBarsData: [
-            LineChartBarData(
-              spots: spots,
-              isCurved: true,
-              curveSmoothness: 0.3,
-              preventCurveOverShooting: true,
-              color: context.colors.primary,
-              barWidth: 3,
-              isStrokeCapRound: true,
-              dotData: FlDotData(
-                show: true,
-                getDotPainter: (spot, percent, barData, index) => FlDotCirclePainter(
-                  radius: 4,
-                  color: context.colors.primary,
-                  strokeWidth: 2,
-                  strokeColor: context.colors.surface,
-                ),
-              ),
-              belowBarData: BarAreaData(
-                show: true,
-                gradient: LinearGradient(
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
-                  colors: [
-                    context.colors.primary.withValues(alpha: 0.3),
-                    context.colors.primary.withValues(alpha: 0.0),
-                  ],
-                ),
-              ),
-            ),
-          ],
-        ),
-        transformationConfig: const FlTransformationConfig(
-          scaleAxis: FlScaleAxis.horizontal,
-          minScale: 1.0,
-          maxScale: 5.0,
-          panEnabled: true,
-          scaleEnabled: true,
-        ),
-      ),
-    );
-  }
-
-  Widget _buildVolumeChart(List<ExerciseSetData> sets) {
-    if (sets.isEmpty) {
-      return SizedBox(
-        height: 200,
-        child: Center(child: Text(context.l10n.noDataForChart)),
-      );
-    }
-
-    final spots = <FlSpot>[];
-    for (int i = 0; i < sets.length; i++) {
-      spots.add(FlSpot(i.toDouble(), sets[i].volume));
-    }
-
-    final maxVolume = sets.map((s) => s.volume).reduce((a, b) => a > b ? a : b);
-    final minVolume = sets.map((s) => s.volume).reduce((a, b) => a < b ? a : b);
-    final dateRange = _getDateRange(sets);
-    final labelInterval = _calculateLabelInterval(sets.length);
-
-    // Format volume (e.g., 1500 -> 1.5k)
-    String formatVolume(double value) {
-      if (value >= 1000) {
-        return '${(value / 1000).toStringAsFixed(1)}k';
-      }
-      return value.toInt().toString();
-    }
-
-    return SizedBox(
-      height: 220,
-      child: LineChart(
-        LineChartData(
-          minY: (minVolume * 0.9).floorToDouble(),
-          maxY: (maxVolume * 1.1).ceilToDouble(),
-          gridData: FlGridData(
-            show: true,
-            drawVerticalLine: false,
-            horizontalInterval: ((maxVolume - minVolume) / 4).clamp(100, 5000),
-            getDrawingHorizontalLine: (value) => FlLine(
-              color: context.colors.outline.withValues(alpha: 0.15),
-              strokeWidth: 1,
-              dashArray: [4, 4],
-            ),
-          ),
-          titlesData: FlTitlesData(
-            leftTitles: AxisTitles(
-              sideTitles: SideTitles(
-                showTitles: true,
-                reservedSize: 45,
-                getTitlesWidget: (value, meta) {
-                  if (value == meta.min || value == meta.max) {
-                    return const SizedBox.shrink();
-                  }
-                  return Padding(
-                    padding: const EdgeInsets.only(right: 4),
-                    child: Text(
-                      formatVolume(value),
-                      style: context.textTheme.bodySmall?.copyWith(
-                        fontSize: 10,
-                        color: context.colors.onSurface.withValues(alpha: 0.7),
-                      ),
-                    ),
-                  );
-                },
-              ),
-            ),
-            rightTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
-            topTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
-            bottomTitles: AxisTitles(
-              sideTitles: SideTitles(
-                showTitles: true,
-                interval: labelInterval.toDouble(),
-                reservedSize: 28,
-                getTitlesWidget: (value, meta) {
-                  final index = value.toInt();
-                  if (index < 0 || index >= sets.length) return const SizedBox.shrink();
-                  return Padding(
-                    padding: const EdgeInsets.only(top: 6),
-                    child: Text(
-                      _formatDateLabel(sets[index].date, dateRange),
-                      style: context.textTheme.bodySmall?.copyWith(
-                        fontSize: 9,
-                        color: context.colors.onSurface.withValues(alpha: 0.6),
-                      ),
-                    ),
-                  );
-                },
-              ),
-            ),
-          ),
-          borderData: FlBorderData(show: false),
-          lineTouchData: LineTouchData(
-            enabled: true,
-            touchTooltipData: LineTouchTooltipData(
-              tooltipMargin: 50,
-              showOnTopOfTheChartBoxArea: true,
-              fitInsideHorizontally: true,
-              fitInsideVertically: true,
-              getTooltipItems: (spots) {
-                return spots.map((spot) {
-                  final index = spot.x.toInt();
-                  final date = index < sets.length
-                      ? DateFormat('d MMM').format(sets[index].date)
-                      : '';
-                  return LineTooltipItem(
-                    '$date\n${formatVolume(spot.y)}',
-                    context.textTheme.labelSmall!.copyWith(
-                      color: context.colors.onSecondary,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  );
-                }).toList();
-              },
-            ),
-          ),
-          lineBarsData: [
-            LineChartBarData(
-              spots: spots,
-              isCurved: true,
-              curveSmoothness: 0.3,
-              preventCurveOverShooting: true,
-              color: context.colors.secondary,
-              barWidth: 3,
-              isStrokeCapRound: true,
-              dotData: FlDotData(
-                show: true,
-                getDotPainter: (spot, percent, barData, index) => FlDotCirclePainter(
-                  radius: 4,
-                  color: context.colors.secondary,
-                  strokeWidth: 2,
-                  strokeColor: context.colors.surface,
-                ),
-              ),
-              belowBarData: BarAreaData(
-                show: true,
-                gradient: LinearGradient(
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
-                  colors: [
-                    context.colors.secondary.withValues(alpha: 0.3),
-                    context.colors.secondary.withValues(alpha: 0.0),
-                  ],
-                ),
-              ),
-            ),
-          ],
-        ),
-        transformationConfig: const FlTransformationConfig(
-          scaleAxis: FlScaleAxis.horizontal,
-          minScale: 1.0,
-          maxScale: 5.0,
-          panEnabled: true,
-          scaleEnabled: true,
-        ),
-      ),
-    );
-  }
-
-  Widget _buildRepsChart(List<ExerciseSetData> sets) {
-    if (sets.isEmpty) {
-      return SizedBox(
-        height: 200,
-        child: Center(child: Text(context.l10n.noDataForChart)),
-      );
-    }
-
-    final spots = <FlSpot>[];
-    for (int i = 0; i < sets.length; i++) {
-      spots.add(FlSpot(i.toDouble(), sets[i].reps.toDouble()));
-    }
-
-    final maxReps = sets.map((s) => s.reps.toDouble()).reduce((a, b) => a > b ? a : b);
-    final minReps = sets.map((s) => s.reps.toDouble()).reduce((a, b) => a < b ? a : b);
-    final dateRange = _getDateRange(sets);
-    final labelInterval = _calculateLabelInterval(sets.length);
-
-    return SizedBox(
-      height: 220,
-      child: LineChart(
-        LineChartData(
-          minY: (minReps - 2).clamp(0, double.infinity),
-          maxY: maxReps + 2,
-          gridData: FlGridData(
-            show: true,
-            drawVerticalLine: false,
-            horizontalInterval: ((maxReps - minReps) / 4).clamp(1, 10),
-            getDrawingHorizontalLine: (value) => FlLine(
-              color: context.colors.outline.withValues(alpha: 0.15),
-              strokeWidth: 1,
-              dashArray: [4, 4],
-            ),
-          ),
-          titlesData: FlTitlesData(
-            leftTitles: AxisTitles(
-              sideTitles: SideTitles(
-                showTitles: true,
-                reservedSize: 35,
-                getTitlesWidget: (value, meta) {
-                  if (value == meta.min || value == meta.max) {
-                    return const SizedBox.shrink();
-                  }
-                  return Padding(
-                    padding: const EdgeInsets.only(right: 4),
-                    child: Text(
-                      '${value.toInt()}',
-                      style: context.textTheme.bodySmall?.copyWith(
-                        fontSize: 10,
-                        color: context.colors.onSurface.withValues(alpha: 0.7),
-                      ),
-                    ),
-                  );
-                },
-              ),
-            ),
-            rightTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
-            topTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
-            bottomTitles: AxisTitles(
-              sideTitles: SideTitles(
-                showTitles: true,
-                interval: labelInterval.toDouble(),
-                reservedSize: 28,
-                getTitlesWidget: (value, meta) {
-                  final index = value.toInt();
-                  if (index < 0 || index >= sets.length) return const SizedBox.shrink();
-                  return Padding(
-                    padding: const EdgeInsets.only(top: 6),
-                    child: Text(
-                      _formatDateLabel(sets[index].date, dateRange),
-                      style: context.textTheme.bodySmall?.copyWith(
-                        fontSize: 9,
-                        color: context.colors.onSurface.withValues(alpha: 0.6),
-                      ),
-                    ),
-                  );
-                },
-              ),
-            ),
-          ),
-          borderData: FlBorderData(show: false),
-          lineTouchData: LineTouchData(
-            enabled: true,
-            touchTooltipData: LineTouchTooltipData(
-              tooltipMargin: 50,
-              showOnTopOfTheChartBoxArea: true,
-              fitInsideHorizontally: true,
-              fitInsideVertically: true,
-              getTooltipItems: (spots) {
-                return spots.map((spot) {
-                  final index = spot.x.toInt();
-                  final date = index < sets.length
-                      ? DateFormat('d MMM').format(sets[index].date)
-                      : '';
-                  return LineTooltipItem(
-                    '$date\n${spot.y.toInt()} reps',
-                    context.textTheme.labelSmall!.copyWith(
-                      color: context.colors.onPrimary,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  );
-                }).toList();
-              },
-            ),
-          ),
-          lineBarsData: [
-            LineChartBarData(
-              spots: spots,
-              isCurved: true,
-              curveSmoothness: 0.3,
-              preventCurveOverShooting: true,
-              color: context.colors.success,
-              barWidth: 3,
-              isStrokeCapRound: true,
-              dotData: FlDotData(
-                show: true,
-                getDotPainter: (spot, percent, barData, index) => FlDotCirclePainter(
-                  radius: 4,
-                  color: context.colors.success,
-                  strokeWidth: 2,
-                  strokeColor: context.colors.surface,
-                ),
-              ),
-              belowBarData: BarAreaData(
-                show: true,
-                gradient: LinearGradient(
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
-                  colors: [
-                    context.colors.success.withValues(alpha: 0.3),
-                    context.colors.success.withValues(alpha: 0.0),
-                  ],
-                ),
-              ),
-            ),
-          ],
-        ),
-        transformationConfig: const FlTransformationConfig(
-          scaleAxis: FlScaleAxis.horizontal,
-          minScale: 1.0,
-          maxScale: 5.0,
-          panEnabled: true,
-          scaleEnabled: true,
-        ),
-      ),
-    );
-  }
-
-  Widget _buildRPEChart(List<ExerciseSetData> sets) {
-    final setsWithRPE = sets.where((s) => s.rpe != null).toList();
-
-    if (setsWithRPE.isEmpty) {
-      return SizedBox(
-        height: 200,
-        child: Center(child: Text(context.l10n.noDataForChart)),
-      );
-    }
-
-    final spots = <FlSpot>[];
-    for (int i = 0; i < setsWithRPE.length; i++) {
-      spots.add(FlSpot(i.toDouble(), setsWithRPE[i].rpe!.toDouble()));
-    }
-
-    final dateRange = _getDateRange(setsWithRPE);
-    final labelInterval = _calculateLabelInterval(setsWithRPE.length);
-
-    // Get RPE label based on value
-    String getRpeLabel(int rpe) {
-      if (rpe >= 10) return 'Max';
-      if (rpe >= 9) return 'Hard';
-      if (rpe >= 7) return 'Mod';
-      return 'Easy';
-    }
-
-    return SizedBox(
-      height: 220,
-      child: LineChart(
-        LineChartData(
-          minY: 0,
-          maxY: 10,
-          gridData: FlGridData(
-            show: true,
-            drawVerticalLine: false,
-            horizontalInterval: 2,
-            getDrawingHorizontalLine: (value) => FlLine(
-              color: context.colors.outline.withValues(alpha: 0.15),
-              strokeWidth: 1,
-              dashArray: [4, 4],
-            ),
-          ),
-          titlesData: FlTitlesData(
-            leftTitles: AxisTitles(
-              sideTitles: SideTitles(
-                showTitles: true,
-                interval: 2,
-                reservedSize: 30,
-                getTitlesWidget: (value, meta) {
-                  if (value == 0 || value == 10) {
-                    return const SizedBox.shrink();
-                  }
-                  return Padding(
-                    padding: const EdgeInsets.only(right: 4),
-                    child: Text(
-                      value.toInt().toString(),
-                      style: context.textTheme.bodySmall?.copyWith(
-                        fontSize: 10,
-                        color: context.colors.onSurface.withValues(alpha: 0.7),
-                      ),
-                    ),
-                  );
-                },
-              ),
-            ),
-            rightTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
-            topTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
-            bottomTitles: AxisTitles(
-              sideTitles: SideTitles(
-                showTitles: true,
-                interval: labelInterval.toDouble(),
-                reservedSize: 28,
-                getTitlesWidget: (value, meta) {
-                  final index = value.toInt();
-                  if (index < 0 || index >= setsWithRPE.length) return const SizedBox.shrink();
-                  return Padding(
-                    padding: const EdgeInsets.only(top: 6),
-                    child: Text(
-                      _formatDateLabel(setsWithRPE[index].date, dateRange),
-                      style: context.textTheme.bodySmall?.copyWith(
-                        fontSize: 9,
-                        color: context.colors.onSurface.withValues(alpha: 0.6),
-                      ),
-                    ),
-                  );
-                },
-              ),
-            ),
-          ),
-          borderData: FlBorderData(show: false),
-          lineTouchData: LineTouchData(
-            enabled: true,
-            touchTooltipData: LineTouchTooltipData(
-              tooltipMargin: 50,
-              showOnTopOfTheChartBoxArea: true,
-              fitInsideHorizontally: true,
-              fitInsideVertically: true,
-              getTooltipItems: (spots) {
-                return spots.map((spot) {
-                  final index = spot.x.toInt();
-                  final date = index < setsWithRPE.length
-                      ? DateFormat('d MMM').format(setsWithRPE[index].date)
-                      : '';
-                  final rpeValue = spot.y.toInt();
-                  return LineTooltipItem(
-                    '$date\nRPE $rpeValue (${getRpeLabel(rpeValue)})',
-                    context.textTheme.labelSmall!.copyWith(
-                      color: context.colors.onPrimary,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  );
-                }).toList();
-              },
-            ),
-          ),
-          lineBarsData: [
-            LineChartBarData(
-              spots: spots,
-              isCurved: true,
-              curveSmoothness: 0.3,
-              preventCurveOverShooting: true,
-              gradient: LinearGradient(
-                colors: [context.colors.success, context.colors.secondary, context.colors.error],
-              ),
-              barWidth: 3,
-              isStrokeCapRound: true,
-              dotData: FlDotData(
-                show: true,
-                getDotPainter: (spot, percent, barData, index) {
-                  final rpe = spot.y;
-                  final color = rpe >= 9
-                      ? context.colors.error
-                      : rpe >= 7
-                          ? context.colors.secondary
-                          : context.colors.success;
-                  return FlDotCirclePainter(
-                    radius: 4,
-                    color: color,
-                    strokeWidth: 2,
-                    strokeColor: context.colors.surface,
-                  );
-                },
-              ),
-              belowBarData: BarAreaData(
-                show: true,
-                gradient: LinearGradient(
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
-                  colors: [
-                    context.colors.tertiary.withValues(alpha: 0.2),
-                    context.colors.tertiary.withValues(alpha: 0.0),
-                  ],
-                ),
-              ),
-            ),
-          ],
-        ),
-        transformationConfig: const FlTransformationConfig(
-          scaleAxis: FlScaleAxis.horizontal,
-          minScale: 1.0,
-          maxScale: 5.0,
-          panEnabled: true,
-          scaleEnabled: true,
         ),
       ),
     );

@@ -9,13 +9,14 @@
 /// **Purpose**: Display up to 4 metrics on a single chart with 0-100 normalization
 ///
 /// **Features**:
-/// - Multi-line chart (fl_chart LineChart)
+/// - Multi-line chart (Syncfusion SfCartesianChart)
 /// - 0-100 normalized Y-axis (all metrics comparable)
 /// - Date-based X-axis (timeline)
 /// - 4 color-coded metrics (volume, weight, 1RM, weight×reps)
 /// - Interactive tooltips (show original values)
-/// - Smooth curved lines
+/// - Smooth spline lines
 /// - Dot markers for data points
+/// - Zoom and pan support
 ///
 /// **Color Mapping**:
 /// - Volume: Blue (primary)
@@ -32,14 +33,14 @@
 /// ```
 library;
 
-import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
+import 'package:syncfusion_flutter_charts/charts.dart';
 import 'package:gymbro_flutter_new/features/analytics/domain/entities/exercise_history.dart';
 import 'package:gymbro_flutter_new/features/analytics/domain/usecases/normalize_metrics_usecase.dart';
 import 'package:gymbro_flutter_new/features/analytics/domain/usecases/optimize_chart_data_usecase.dart';
 import 'package:gymbro_flutter_new/features/analytics/presentation/providers/landscape_metrics_provider.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
-import 'package:intl/intl.dart';
 
 /// Multi-line chart widget for normalized exercise metrics
 ///
@@ -101,182 +102,132 @@ class LandscapeChartWidget extends StatelessWidget {
 
     return Padding(
       padding: const EdgeInsets.all(16),
-      child: LineChart(
-        _buildChartData(context, optimizedData),
-        duration: const Duration(milliseconds: 250),
-        curve: Curves.easeInOut,
-      ),
-    );
-  }
-
-  /// Build LineChartData from normalized metrics
-  ///
-  /// **Returns**: Configured LineChartData with all settings
-  LineChartData _buildChartData(
-    BuildContext context,
-    Map<MetricType, List<NormalizedDataPoint>> normalizedData,
-  ) {
-    final colors = context.colors;
-
-    return LineChartData(
-      // Multi-line data
-      lineBarsData: _buildLineBars(context, normalizedData),
-
-      // Chart boundaries
-      minY: 0,
-      maxY: 100,
-
-      // Grid styling
-      gridData: FlGridData(
-        show: true,
-        drawVerticalLine: true,
-        horizontalInterval: 20, // Lines at 0, 20, 40, 60, 80, 100
-        verticalInterval: 1,
-        getDrawingHorizontalLine: (value) {
-          return FlLine(
-            color: colors.outline.withValues(alpha: 0.2),
-            strokeWidth: 1,
-          );
-        },
-        getDrawingVerticalLine: (value) {
-          return FlLine(
-            color: colors.outline.withValues(alpha: 0.1),
-            strokeWidth: 1,
-          );
-        },
-      ),
-
-      // Titles (axes labels)
-      titlesData: FlTitlesData(
-        // Y-axis (0-100)
-        leftTitles: AxisTitles(
-          sideTitles: SideTitles(
-            showTitles: true,
-            reservedSize: 40,
-            interval: 20,
-            getTitlesWidget: (value, meta) {
-              return Text(
-                value.toInt().toString(),
-                style: context.textTheme.bodySmall?.copyWith(
-                  color: colors.onSurfaceVariant,
-                ),
-              );
-            },
+      child: SfCartesianChart(
+        plotAreaBorderWidth: 0,
+        margin: const EdgeInsets.only(top: 10, right: 10),
+        // X-axis: Date-based
+        primaryXAxis: DateTimeAxis(
+          majorGridLines: MajorGridLines(
+            color: context.colors.outline.withValues(alpha: 0.1),
+            width: 1,
           ),
+          axisLine: const AxisLine(width: 0),
+          labelStyle: context.textTheme.bodySmall?.copyWith(
+            color: context.colors.onSurfaceVariant,
+            fontSize: 10,
+          ),
+          dateFormat: DateFormat('MMM d'),
+          majorTickLines: const MajorTickLines(size: 0),
         ),
-
-        // X-axis (dates)
-        bottomTitles: AxisTitles(
-          sideTitles: SideTitles(
-            showTitles: true,
-            reservedSize: 32,
-            interval: 1,
-            getTitlesWidget: (value, meta) {
-              // Get first metric's data to extract dates
-              final firstMetricData = normalizedData.values.first;
-              if (value.toInt() >= firstMetricData.length ||
-                  value.toInt() < 0) {
-                return const SizedBox.shrink();
-              }
-
-              final date = firstMetricData[value.toInt()].date;
-              final formatter = DateFormat('MMM d');
-
-              return Padding(
-                padding: const EdgeInsets.only(top: 8),
-                child: Text(
-                  formatter.format(date),
-                  style: context.textTheme.bodySmall?.copyWith(
-                    color: colors.onSurfaceVariant,
-                    fontSize: 10,
+        // Y-axis: 0-100 normalized
+        primaryYAxis: NumericAxis(
+          minimum: 0,
+          maximum: 100,
+          interval: 20,
+          majorGridLines: MajorGridLines(
+            color: context.colors.outline.withValues(alpha: 0.2),
+            width: 1,
+          ),
+          axisLine: const AxisLine(width: 0),
+          labelStyle: context.textTheme.bodySmall?.copyWith(
+            color: context.colors.onSurfaceVariant,
+            fontSize: 10,
+          ),
+          majorTickLines: const MajorTickLines(size: 0),
+        ),
+        // Tooltip behavior
+        tooltipBehavior: TooltipBehavior(
+          enable: true,
+          color: context.colors.inverseSurface,
+          builder: (data, point, series, pointIndex, seriesIndex) {
+            final chartData = data as _ChartDataPoint;
+            return Container(
+              padding: const EdgeInsets.all(8),
+              decoration: BoxDecoration(
+                color: context.colors.inverseSurface,
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    DateFormat('d MMM').format(chartData.date),
+                    style: context.textTheme.labelSmall?.copyWith(
+                      color: context.colors.onInverseSurface.withValues(alpha: 0.7),
+                    ),
                   ),
-                ),
-              );
-            },
-          ),
-        ),
-
-        // Hide top and right titles
-        topTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
-        rightTitles:
-            const AxisTitles(sideTitles: SideTitles(showTitles: false)),
-      ),
-
-      // Border styling
-      borderData: FlBorderData(
-        show: true,
-        border: Border.all(
-          color: colors.outline.withValues(alpha: 0.3),
-          width: 1,
-        ),
-      ),
-
-      // Touch/tooltip behavior
-      lineTouchData: LineTouchData(
-        enabled: true,
-        touchTooltipData: LineTouchTooltipData(
-          getTooltipItems: (touchedSpots) {
-            return touchedSpots.map((spot) {
-              final metric =
-                  selectedMetrics.elementAt(spot.barIndex); // Get metric type
-              final dataPoint = normalizedData[metric]![spot.x.toInt()];
-
-              // Format original value for tooltip
-              final originalValue = dataPoint.originalValue.toStringAsFixed(1);
-              final metricLabel = _getMetricLabel(context, metric);
-
-              return LineTooltipItem(
-                '$metricLabel: $originalValue',
-                context.textTheme.labelSmall!.copyWith(
-                  color: colors.onSurface,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 12,
-                ),
-              );
-            }).toList();
-          },
-        ),
-      ),
-    );
-  }
-
-  /// Build line bars for each selected metric
-  ///
-  /// **Returns**: List of LineChartBarData (one per metric)
-  List<LineChartBarData> _buildLineBars(
-    BuildContext context,
-    Map<MetricType, List<NormalizedDataPoint>> normalizedData,
-  ) {
-    return normalizedData.entries.map((entry) {
-      final metric = entry.key;
-      final data = entry.value;
-
-      return LineChartBarData(
-        spots: data.asMap().entries.map((point) {
-          return FlSpot(
-            point.key.toDouble(), // X: index (represents date)
-            point.value.normalizedValue, // Y: 0-100 normalized value
-          );
-        }).toList(),
-        isCurved: true,
-        curveSmoothness: 0.3,
-        color: _getMetricColor(context, metric),
-        barWidth: 3,
-        isStrokeCapRound: true,
-        dotData: FlDotData(
-          show: true,
-          getDotPainter: (spot, percent, barData, index) {
-            return FlDotCirclePainter(
-              radius: 4,
-              color: _getMetricColor(context, metric),
-              strokeWidth: 2,
-              strokeColor: context.colors.surface,
+                  Text(
+                    '${chartData.metricLabel}: ${chartData.originalValue.toStringAsFixed(1)}',
+                    style: context.textTheme.titleSmall?.copyWith(
+                      color: context.colors.onInverseSurface,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ],
+              ),
             );
           },
         ),
-        belowBarData: BarAreaData(show: false),
+        // Zoom and pan
+        zoomPanBehavior: ZoomPanBehavior(
+          enablePinching: true,
+          enablePanning: true,
+          zoomMode: ZoomMode.x,
+        ),
+        // Legend
+        legend: const Legend(isVisible: false), // We have custom legend
+        // Series: one SplineSeries per metric
+        series: _buildSeries(context, optimizedData),
+      ),
+    );
+  }
+
+  /// Build series list for each selected metric
+  List<CartesianSeries<_ChartDataPoint, DateTime>> _buildSeries(
+    BuildContext context,
+    Map<MetricType, List<NormalizedDataPoint>> normalizedData,
+  ) {
+    final seriesList = <CartesianSeries<_ChartDataPoint, DateTime>>[];
+
+    for (final entry in normalizedData.entries) {
+      final metric = entry.key;
+      final data = entry.value;
+      final color = _getMetricColor(context, metric);
+      final label = _getMetricLabel(context, metric);
+
+      // Convert to chart data points
+      final chartData = data.map((point) => _ChartDataPoint(
+        date: point.date,
+        normalizedValue: point.normalizedValue,
+        originalValue: point.originalValue,
+        metricLabel: label,
+      )).toList();
+
+      // Add spline series with area fill
+      seriesList.add(
+        SplineSeries<_ChartDataPoint, DateTime>(
+          dataSource: chartData,
+          xValueMapper: (data, _) => data.date,
+          yValueMapper: (data, _) => data.normalizedValue,
+          name: label,
+          color: color,
+          width: 3,
+          splineType: SplineType.monotonic,
+          markerSettings: MarkerSettings(
+            isVisible: chartData.length <= 20,
+            height: 6,
+            width: 6,
+            borderWidth: 2,
+            borderColor: context.colors.surface,
+            color: color,
+          ),
+          animationDuration: 1500,
+        ),
       );
-    }).toList();
+    }
+
+    return seriesList;
   }
 
   /// Get color for metric type
@@ -297,7 +248,7 @@ class LandscapeChartWidget extends StatelessWidget {
       case MetricType.oneRmEstimated:
         return colors.tertiary; // Purple
       case MetricType.weightTimesReps:
-        return const Color(0xFF4CAF50); // Green (Material success color)
+        return colors.success; // Green (theme-aware)
     }
   }
 
@@ -320,6 +271,21 @@ class LandscapeChartWidget extends StatelessWidget {
         return context.l10n.weightTimesReps;
     }
   }
+}
+
+/// Internal data point class for Syncfusion chart
+class _ChartDataPoint {
+  _ChartDataPoint({
+    required this.date,
+    required this.normalizedValue,
+    required this.originalValue,
+    required this.metricLabel,
+  });
+
+  final DateTime date;
+  final double normalizedValue;
+  final double originalValue;
+  final String metricLabel;
 }
 
 /// Empty chart placeholder for no data / no metrics selected

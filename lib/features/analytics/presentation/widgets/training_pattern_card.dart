@@ -627,7 +627,8 @@ class TrainingPatternsList extends StatelessWidget {
       children: patternsToShow
           .map((pattern) => TrainingPatternCard(
                 pattern: pattern,
-                initiallyExpanded: patternsToShow.length == 1,
+                // Always start collapsed - user can tap to expand
+                initiallyExpanded: false,
               ))
           .toList(),
     );
