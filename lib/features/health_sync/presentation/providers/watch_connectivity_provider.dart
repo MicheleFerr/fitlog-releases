@@ -175,6 +175,26 @@ typedef OnUncompleteSetFromWatch = void Function(int setIndex);
 /// Note: iOS native layer responds directly, this is informational for Flutter
 typedef OnWorkoutStateRequested = void Function();
 
+/// Callback for when Watch requests to jump to a specific exercise
+/// - exerciseIndex: 0-indexed position of the exercise to navigate to
+typedef OnJumpToExerciseFromWatch = void Function(int exerciseIndex);
+
+/// Callback for when Watch requests to jump to a specific set
+/// - setNumber: 1-indexed set number to navigate to
+typedef OnJumpToSetFromWatch = void Function(int setNumber);
+
+/// Callback for when Watch requests to copy weight/reps to all sets
+/// - weight: Weight value to apply to all sets
+/// - reps: Reps value to apply to all sets
+typedef OnCopyToAllSetsFromWatch = void Function(double weight, int reps);
+
+/// Callback for when Watch requests to copy from previous set
+typedef OnCopyFromPreviousSetFromWatch = void Function();
+
+/// Callback for when Watch requests to start a new timer with specific duration
+/// - duration: Timer duration in seconds
+typedef OnStartNewTimerFromWatch = void Function(int duration);
+
 /// 🔥 SUPERSET: Callback for when Watch completes an entire superset round
 /// - roundNumber: 1-indexed round number completed
 /// - totalRounds: Total rounds in the superset
@@ -266,6 +286,12 @@ class WatchConnectivityNotifier extends StateNotifier<WatchConnectivityData> {
   OnUncompleteSetFromWatch? onUncompleteSetFromWatch;
   OnWorkoutStateRequested? onWorkoutStateRequested;
   OnSupersetRoundCompletedFromWatch? onSupersetRoundCompletedFromWatch;
+  // 🔄 Navigation & Copy callbacks (from Watch)
+  OnJumpToExerciseFromWatch? onJumpToExerciseFromWatch;
+  OnJumpToSetFromWatch? onJumpToSetFromWatch;
+  OnCopyToAllSetsFromWatch? onCopyToAllSetsFromWatch;
+  OnCopyFromPreviousSetFromWatch? onCopyFromPreviousSetFromWatch;
+  OnStartNewTimerFromWatch? onStartNewTimerFromWatch;
   // 🔥 DROPSET callbacks
   OnDropsetStageCompletedFromWatch? onDropsetStageCompletedFromWatch;
   OnDropsetCompletedFromWatch? onDropsetCompletedFromWatch;
@@ -559,6 +585,49 @@ class WatchConnectivityNotifier extends StateNotifier<WatchConnectivityData> {
         }
         return true;
 
+      // 🔄 Navigation & Copy actions from Watch
+      case 'onJumpToExerciseFromWatch':
+        final args = call.arguments as Map<dynamic, dynamic>?;
+        if (args != null) {
+          final exerciseIndex = (args['exerciseIndex'] as num?)?.toInt() ?? 0;
+          debugPrint('⌚ [FLUTTER] ↔️ Jump to exercise $exerciseIndex from Watch');
+          onJumpToExerciseFromWatch?.call(exerciseIndex);
+        }
+        return true;
+
+      case 'onJumpToSetFromWatch':
+        final args = call.arguments as Map<dynamic, dynamic>?;
+        if (args != null) {
+          final setNumber = (args['setNumber'] as num?)?.toInt() ?? 1;
+          debugPrint('⌚ [FLUTTER] ↕️ Jump to set $setNumber from Watch');
+          onJumpToSetFromWatch?.call(setNumber);
+        }
+        return true;
+
+      case 'onCopyToAllSetsFromWatch':
+        final args = call.arguments as Map<dynamic, dynamic>?;
+        if (args != null) {
+          final weight = (args['weight'] as num?)?.toDouble() ?? 0;
+          final reps = (args['reps'] as num?)?.toInt() ?? 0;
+          debugPrint('⌚ [FLUTTER] 📄 Copy to all sets from Watch: ${weight}kg × $reps');
+          onCopyToAllSetsFromWatch?.call(weight, reps);
+        }
+        return true;
+
+      case 'onCopyFromPreviousSetFromWatch':
+        debugPrint('⌚ [FLUTTER] 📋 Copy from previous set from Watch');
+        onCopyFromPreviousSetFromWatch?.call();
+        return true;
+
+      case 'onStartNewTimerFromWatch':
+        final args = call.arguments as Map<dynamic, dynamic>?;
+        if (args != null) {
+          final duration = (args['duration'] as num?)?.toInt() ?? 60;
+          debugPrint('⌚ [FLUTTER] ⏱️ Start new timer from Watch: ${duration}s');
+          onStartNewTimerFromWatch?.call(duration);
+        }
+        return true;
+
       default:
         debugPrint('⌚ [FLUTTER] Unknown method: ${call.method}');
         return null;
@@ -742,6 +811,9 @@ class WatchConnectivityNotifier extends StateNotifier<WatchConnectivityData> {
     String? formCues,
     String? tut, // ⌚ BUG FIX #3: Time Under Tension
     List<Map<String, dynamic>>? allSets, // ✅ FIX: All sets for navigation
+    // 🔄 Exercise navigation support
+    List<String>? exerciseNames, // All exercise names in workout
+    int currentExerciseIndex = 0, // 0-indexed current exercise position
     // 🔥 SUPERSET SUPPORT
     bool isSuperset = false,
     String? supersetName,
@@ -785,6 +857,9 @@ class WatchConnectivityNotifier extends StateNotifier<WatchConnectivityData> {
         'formCues': formCues ?? '',
         'tut': tut ?? '', // ⌚ BUG FIX #3: Time Under Tension
         'allSets': allSets ?? [], // ✅ FIX: All sets for Watch navigation
+        // 🔄 Exercise navigation support
+        'exerciseNames': exerciseNames ?? [],
+        'currentExerciseIndex': currentExerciseIndex,
         // 🔥 SUPERSET SUPPORT
         'isSuperset': isSuperset,
         'supersetName': supersetName ?? '',
@@ -855,6 +930,9 @@ class WatchConnectivityNotifier extends StateNotifier<WatchConnectivityData> {
     String? formCues,
     String? tut, // ⌚ BUG FIX #3: Time Under Tension
     List<Map<String, dynamic>>? allSets, // ✅ FIX: All sets for navigation
+    // 🔄 Exercise navigation support
+    List<String>? exerciseNames, // All exercise names in workout
+    int currentExerciseIndex = 0, // 0-indexed current exercise position
     // 🔥 SUPERSET SUPPORT
     bool isSuperset = false,
     String? supersetName,
@@ -884,6 +962,9 @@ class WatchConnectivityNotifier extends StateNotifier<WatchConnectivityData> {
         'formCues': formCues ?? '',
         'tut': tut ?? '', // ⌚ BUG FIX #3: Time Under Tension
         'allSets': allSets ?? [], // ✅ FIX: All sets for Watch navigation
+        // 🔄 Exercise navigation support
+        'exerciseNames': exerciseNames ?? [],
+        'currentExerciseIndex': currentExerciseIndex,
         // 🔥 SUPERSET SUPPORT
         'isSuperset': isSuperset,
         'supersetName': supersetName ?? '',
@@ -896,7 +977,7 @@ class WatchConnectivityNotifier extends StateNotifier<WatchConnectivityData> {
       if (isSuperset) {
         debugPrint('⌚ Sent SUPERSET update: $supersetName - $exerciseName (Ex $currentExerciseInSuperset/$totalExercisesInSuperset, Round $supersetRound/$totalSupersetRounds)');
       } else {
-        debugPrint('⌚ Sent workout update: $exerciseName Set $currentSet/$totalSets (TUT: ${tut ?? "none"}, allSets: ${allSets?.length ?? 0})');
+        debugPrint('⌚ Sent workout update: $exerciseName Set $currentSet/$totalSets (TUT: ${tut ?? "none"}, allSets: ${allSets?.length ?? 0}, exercises: ${exerciseNames?.length ?? 0})');
       }
     } on PlatformException catch (e) {
       if (kDebugMode) {

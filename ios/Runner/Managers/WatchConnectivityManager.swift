@@ -501,6 +501,10 @@ final class WatchConnectivityManager: NSObject {
         if message["workoutType"] == nil { message["workoutType"] = "strength" }
         if message["allSets"] == nil { message["allSets"] = [] as [[String: Any]] }
 
+        // 🔄 Exercise navigation support for Watch
+        if message["exerciseNames"] == nil { message["exerciseNames"] = [] as [String] }
+        if message["currentExerciseIndex"] == nil { message["currentExerciseIndex"] = 0 }
+
         return message
     }
 
@@ -525,6 +529,12 @@ final class WatchConnectivityManager: NSObject {
         // Log allSets count for debugging
         if let allSets = message["allSets"] as? [[String: Any]] {
             Logger.shared.log(.debug, "⌚ Sending \(allSets.count) sets to Watch for navigation", category: .general)
+        }
+
+        // 🔄 Log exercise navigation data
+        if let exerciseNames = message["exerciseNames"] as? [String], !exerciseNames.isEmpty {
+            let currentIdx = message["currentExerciseIndex"] as? Int ?? 0
+            Logger.shared.log(.debug, "⌚ Sending \(exerciseNames.count) exercises to Watch, current index: \(currentIdx)", category: .general)
         }
 
         // Cache workout state for Watch requests
@@ -1100,6 +1110,33 @@ extension WatchConnectivityManager: WCSessionDelegate {
             }
             notifyFlutter(event: "onRestPauseCompletedFromWatch", data: message)
 
+        // MARK: - Navigation & Copy Actions from Watch
+        case "jumpToExercise":
+            let exerciseIndex = message["exerciseIndex"] as? Int ?? 0
+            Logger.shared.log(.info, "↔️ Jump to exercise \(exerciseIndex) from Watch", category: .general)
+            notifyFlutter(event: "onJumpToExerciseFromWatch", data: message)
+
+        case "jumpToSet":
+            let setNumber = message["setNumber"] as? Int ?? 1
+            Logger.shared.log(.info, "↕️ Jump to set \(setNumber) from Watch", category: .general)
+            notifyFlutter(event: "onJumpToSetFromWatch", data: message)
+
+        case "copyToAllSets":
+            let weight = message["weight"] as? Double ?? 0
+            let reps = message["reps"] as? Int ?? 0
+            Logger.shared.log(.info, "📄 Copy to all sets from Watch: \(weight)kg × \(reps)", category: .general)
+            notifyFlutter(event: "onCopyToAllSetsFromWatch", data: message)
+
+        case "copyFromPreviousSet":
+            let currentSetNumber = message["currentSetNumber"] as? Int ?? 1
+            Logger.shared.log(.info, "📋 Copy from previous set (current: \(currentSetNumber)) from Watch", category: .general)
+            notifyFlutter(event: "onCopyFromPreviousSetFromWatch", data: message)
+
+        case "startNewTimer":
+            let duration = message["duration"] as? Int ?? 60
+            Logger.shared.log(.info, "⏱️ Start new timer from Watch: \(duration)s", category: .general)
+            notifyFlutter(event: "onStartNewTimerFromWatch", data: message)
+
         default:
             Logger.shared.log(.warning, "⚠️ Unknown message type (no reply): \(type)", category: .general)
         }
@@ -1178,6 +1215,10 @@ extension WatchConnectivityManager: WCSessionDelegate {
 
         case "restPauseCompleted":
             handleRestPauseCompletedFromWatch(message, replyHandler: replyHandler)
+
+        // ⏱️ Timer from Watch
+        case "startNewTimer":
+            handleStartNewTimerFromWatch(message, replyHandler: replyHandler)
 
         default:
             Logger.shared.log(.warning, "⚠️ Unknown message type: \(type)", category: .general)
@@ -1443,6 +1484,19 @@ extension WatchConnectivityManager: WCSessionDelegate {
 
         // Notify Flutter to extend the rest timer
         notifyFlutter(event: "onExtendTimerFromWatch", data: message)
+        replyHandler(["success": true])
+    }
+
+    /// Handle start new timer request from Watch (when timer shows 00:00)
+    private func handleStartNewTimerFromWatch(
+        _ message: [String: Any],
+        replyHandler: @escaping ([String: Any]) -> Void
+    ) {
+        let duration = message["duration"] as? Int ?? 60
+        Logger.shared.log(.info, "⏱️ Start new timer from Watch: \(duration)s", category: .general)
+
+        // Notify Flutter to start a new rest timer
+        notifyFlutter(event: "onStartNewTimerFromWatch", data: message)
         replyHandler(["success": true])
     }
 

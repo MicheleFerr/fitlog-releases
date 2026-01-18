@@ -110,27 +110,37 @@ struct WaitingView: View {
 struct WorkoutCompanionView: View {
     @EnvironmentObject var connectivity: ConnectivityManager
     @EnvironmentObject var workoutManager: WorkoutManager
-    @State private var selectedTab = 0  // 0 = Exercise, 1 = Timer, 2 = Stats
+    // 🆕 NEW 4-TAB STRUCTURE:
+    // Tab 0: AdvancedInfoView (TUT, HR zone, form cues, exercise details)
+    // Tab 1: SimplifiedSetView (DEFAULT - simple set logging for beginners)
+    // Tab 2: RestTimerView (rest timer with Quick Add Time)
+    // Tab 3: StatsView (HR, calories, duration, end workout)
+    @State private var selectedTab = 1  // DEFAULT: SimplifiedSetView (Tab 1)
     @State private var tabSwitchTask: Task<Void, Never>?
 
     var body: some View {
         TabView(selection: $selectedTab) {
-            // Tab 0: Current Exercise & Set Logging
-            ExerciseControlView()
+            // Tab 0: Advanced Info (TUT, HR zone, form cues) - for power users
+            AdvancedInfoView()
                 .environmentObject(connectivity)
                 .environmentObject(workoutManager)
                 .tag(0)
 
-            // Tab 1: Rest Timer (mirrors Live Activity)
-            RestTimerView()
+            // Tab 1: Simplified Set View (DEFAULT) - for beginners
+            SimplifiedSetView()
                 .environmentObject(connectivity)
                 .tag(1)
 
-            // Tab 2: Heart Rate & Stats
+            // Tab 2: Rest Timer (mirrors Live Activity)
+            RestTimerView()
+                .environmentObject(connectivity)
+                .tag(2)
+
+            // Tab 3: Heart Rate & Stats
             StatsView()
                 .environmentObject(connectivity)
                 .environmentObject(workoutManager)
-                .tag(2)
+                .tag(3)
         }
         .tabViewStyle(.verticalPage)
         .onAppear {
@@ -140,9 +150,9 @@ struct WorkoutCompanionView: View {
             // See BUG FIX #4 in FitLogWatchApp.swift
 
             // Check if timer should be showing on appear
-            if connectivity.shouldShowTimer && selectedTab != 1 {
+            if connectivity.shouldShowTimer && selectedTab != 2 {
                 withAnimation {
-                    selectedTab = 1
+                    selectedTab = 2  // Timer is now Tab 2
                 }
                 resetTimerFlagTask()
             }
@@ -158,26 +168,26 @@ struct WorkoutCompanionView: View {
         }
         // Auto-navigate to timer tab when timer starts
         .onChange(of: connectivity.shouldShowTimer) { _, shouldShow in
-            if shouldShow && selectedTab != 1 {
+            if shouldShow && selectedTab != 2 {
                 withAnimation {
-                    selectedTab = 1
+                    selectedTab = 2  // Timer is now Tab 2
                 }
                 resetTimerFlagTask()
             }
         }
         // Also monitor restTimeRemaining directly for more reliable navigation
         .onChange(of: connectivity.restTimeRemaining) { oldValue, newValue in
-            if oldValue == 0 && newValue > 0 && selectedTab != 1 {
+            if oldValue == 0 && newValue > 0 && selectedTab != 2 {
                 withAnimation {
-                    selectedTab = 1
+                    selectedTab = 2  // Timer is now Tab 2
                 }
             }
         }
-        // Auto-navigate to exercise tab when timer ends
+        // Auto-navigate to simplified set view when timer ends
         .onChange(of: connectivity.shouldNavigateToExercise) { _, shouldNavigate in
-            if shouldNavigate && selectedTab != 0 {
+            if shouldNavigate && selectedTab != 1 {
                 withAnimation {
-                    selectedTab = 0
+                    selectedTab = 1  // SimplifiedSetView is Tab 1 (DEFAULT)
                 }
                 resetExerciseFlagTask()
             }
@@ -1494,6 +1504,692 @@ struct ExerciseControlView: View {
     }
 }
 
+// MARK: - Simplified Set View (Tab 1 - DEFAULT for beginners)
+// 🎯 Persona: Marco (principiante), Roberto (busy professional)
+// Minimal UI: Exercise name, Set X/Y, Weight×Reps, Complete button
+
+struct SimplifiedSetView: View {
+    @EnvironmentObject var connectivity: ConnectivityManager
+    @EnvironmentObject var workoutManager: WorkoutManager
+    @State private var showingEffortPicker = false
+    @State private var showingConfirmation = false
+    @State private var confirmationTask: Task<Void, Never>?
+    @State private var showingQuickEdit = false  // 🆕 Tap-to-edit
+
+    // Localized strings
+    private var isItalian: Bool { connectivity.appLocale == "it" }
+    private var setText: String { isItalian ? "Serie" : "Set" }
+    private var doneText: String { isItalian ? "Fatto!" : "Done!" }
+    private var tapToEditText: String { isItalian ? "tocca per modificare" : "tap to edit" }
+
+    var body: some View {
+        VStack(spacing: 6) {
+            // Top bar: HR on left, exercise name always visible
+            HStack {
+                // Heart rate badge (top left)
+                HStack(spacing: 3) {
+                    Image(systemName: "heart.fill")
+                        .font(.system(size: 10))
+                        .foregroundColor(.red)
+                    Text("\(Int(workoutManager.heartRate))")
+                        .font(.system(size: 12, weight: .bold))
+                        .monospacedDigit()
+                }
+                .accessibilityElement(children: .combine)
+                .accessibilityLabel(isItalian ? "Frequenza cardiaca \(Int(workoutManager.heartRate))" : "Heart rate \(Int(workoutManager.heartRate))")
+
+                Spacer()
+            }
+            .padding(.horizontal, 4)
+            .padding(.top, 2)
+
+            // Exercise name (always visible, compact)
+            Text(connectivity.currentExerciseName)
+                .font(.system(size: 14, weight: .semibold))
+                .lineLimit(2)
+                .multilineTextAlignment(.center)
+                .foregroundColor(.primary)
+                .accessibilityAddTraits(.isHeader)
+
+            // Set indicator: "Set 2/4"
+            Text("\(setText) \(connectivity.currentSetNumber)/\(connectivity.totalSets)")
+                .font(.system(size: 11, weight: .medium))
+                .foregroundColor(.secondary)
+
+            // Weight × Reps (LARGE, TAPPABLE to edit)
+            VStack(spacing: 2) {
+                HStack(spacing: 4) {
+                    Text(formatWeight(connectivity.targetWeight))
+                        .font(.system(size: 36, weight: .bold))
+                    Text("×")
+                        .font(.system(size: 20, weight: .medium))
+                        .foregroundColor(.secondary)
+                    Text("\(connectivity.targetReps)")
+                        .font(.system(size: 36, weight: .bold))
+                }
+
+                // Hint text
+                Text(tapToEditText)
+                    .font(.system(size: 9))
+                    .foregroundColor(.secondary)
+            }
+            .onTapGesture {
+                WKInterfaceDevice.current().play(.click)
+                showingQuickEdit = true
+            }
+            .accessibilityElement(children: .combine)
+            .accessibilityLabel(isItalian ? "\(formatWeight(connectivity.targetWeight)) chili per \(connectivity.targetReps) ripetizioni" : "\(formatWeight(connectivity.targetWeight)) kg for \(connectivity.targetReps) reps")
+            .accessibilityHint(isItalian ? "Tocca per modificare peso e ripetizioni" : "Tap to edit weight and reps")
+
+            Spacer()
+
+            // Complete set button (large, prominent)
+            if showingConfirmation {
+                // Confirmation state
+                HStack(spacing: 8) {
+                    Image(systemName: "checkmark.circle.fill")
+                        .font(.system(size: 28))
+                    Text(doneText)
+                        .font(.system(size: 18, weight: .bold))
+                }
+                .foregroundColor(.green)
+                .accessibilityLabel(isItalian ? "Serie completata" : "Set completed")
+            } else {
+                Button(action: {
+                    if connectivity.rpeTrackingEnabled {
+                        showingEffortPicker = true
+                    } else {
+                        completeSet(effort: nil)
+                    }
+                }) {
+                    Image(systemName: "checkmark.circle.fill")
+                        .font(.system(size: 48))
+                        .foregroundColor(.green)
+                }
+                .buttonStyle(.plain)
+                .accessibilityLabel(isItalian ? "Completa serie" : "Complete set")
+                .accessibilityHint(isItalian ? "Tocca due volte per completare la serie corrente" : "Double tap to complete current set")
+            }
+
+            Spacer()
+                .frame(height: 8)
+        }
+        .padding(.horizontal, 8)
+        .sheet(isPresented: $showingEffortPicker) {
+            EffortPickerView(
+                effortScale: connectivity.effortScale,
+                locale: connectivity.appLocale,
+                onSelect: { effort in
+                    showingEffortPicker = false
+                    completeSet(effort: effort)
+                },
+                onSkip: {
+                    showingEffortPicker = false
+                    completeSet(effort: nil)
+                }
+            )
+        }
+        .sheet(isPresented: $showingQuickEdit) {
+            QuickEditSheetView()
+                .environmentObject(connectivity)
+        }
+    }
+
+    // MARK: - Helper Methods
+
+    private func completeSet(effort: Int?) {
+        showConfirmation()
+        connectivity.sendSetCompleted(effort: effort)
+    }
+
+    private func showConfirmation() {
+        confirmationTask?.cancel()
+        showingConfirmation = true
+        WKInterfaceDevice.current().play(.success)
+
+        confirmationTask = Task {
+            try? await Task.sleep(nanoseconds: 1_500_000_000)  // 1.5 seconds
+            if !Task.isCancelled {
+                showingConfirmation = false
+            }
+        }
+    }
+
+    private func formatWeight(_ weight: Double) -> String {
+        if weight.truncatingRemainder(dividingBy: 1) == 0 {
+            return String(format: "%.0f", weight)
+        } else {
+            return String(format: "%.1f", weight)
+        }
+    }
+}
+
+// MARK: - Advanced Info View (Tab 0 - For power users)
+// 🎯 Persona: Luca (powerlifter), users who want detailed info
+// Shows: TUT, HR zone, form cues, exercise details with Quick Edit
+
+struct AdvancedInfoView: View {
+    @EnvironmentObject var connectivity: ConnectivityManager
+    @State private var showingQuickEdit = false
+    @State private var showingFormCues = false
+    @State private var selectedSetIndex: Int = 0
+    @State private var showingSetPicker = false
+    @State private var showingExercisePicker = false
+
+    // Localized strings
+    private var isItalian: Bool { connectivity.appLocale == "it" }
+    private var tutLabel: String { "TUT" }
+    private var noTutText: String { "-" }
+    private var setText: String { isItalian ? "Serie" : "Set" }
+    private var quickEditText: String { isItalian ? "Modifica" : "Edit" }
+    private var selectSetText: String { isItalian ? "Seleziona Serie" : "Select Set" }
+    private var changeExerciseText: String { isItalian ? "Cambia esercizio" : "Change exercise" }
+
+    // Can change exercise only if we have the list
+    private var canChangeExercise: Bool { connectivity.exerciseNames.count > 1 }
+
+    var body: some View {
+        ScrollView {
+            VStack(spacing: 10) {
+                // Top bar: TUT on left, Info icon on right
+                HStack {
+                    // TUT Badge (top left)
+                    HStack(spacing: 3) {
+                        Image(systemName: "timer")
+                            .font(.system(size: 10))
+                        if let tut = connectivity.tut, !tut.isEmpty {
+                            Text(tut)
+                                .font(.system(size: 11, weight: .bold))
+                        } else {
+                            Text(noTutText)
+                                .font(.system(size: 11, weight: .medium))
+                                .foregroundColor(.secondary)
+                        }
+                    }
+                    .foregroundColor(.blue)
+                    .accessibilityLabel(isItalian ? "Tempo sotto tensione: \(connectivity.tut ?? noTutText)" : "Time under tension: \(connectivity.tut ?? noTutText)")
+
+                    Spacer()
+
+                    // Info icon (top right) for notes
+                    Button(action: {
+                        if connectivity.formCues != nil {
+                            WKInterfaceDevice.current().play(.click)
+                            showingFormCues = true
+                        }
+                    }) {
+                        Image(systemName: connectivity.formCues != nil ? "info.circle.fill" : "info.circle")
+                            .font(.system(size: 18))
+                            .foregroundColor(connectivity.formCues != nil ? .yellow : .secondary)
+                    }
+                    .buttonStyle(.plain)
+                    .disabled(connectivity.formCues == nil)
+                    .accessibilityLabel(isItalian ? "Note forma" : "Form notes")
+                    .accessibilityHint(connectivity.formCues != nil ? (isItalian ? "Tocca per vedere le note" : "Tap to view notes") : (isItalian ? "Nessuna nota disponibile" : "No notes available"))
+                }
+                .padding(.horizontal, 4)
+                .padding(.top, 4)
+
+                Divider()
+
+                // Current Exercise Card (tappable to select set)
+                Button(action: {
+                    WKInterfaceDevice.current().play(.click)
+                    showingSetPicker = true
+                }) {
+                    VStack(spacing: 6) {
+                        // Exercise name
+                        Text(connectivity.currentExerciseName)
+                            .font(.system(size: 14, weight: .bold))
+                            .lineLimit(2)
+                            .multilineTextAlignment(.center)
+                            .foregroundColor(.primary)
+
+                        // Set progress
+                        Text("\(setText) \(connectivity.currentSetNumber)/\(connectivity.totalSets)")
+                            .font(.system(size: 12, weight: .medium))
+                            .foregroundColor(.secondary)
+
+                        // Weight × Reps
+                        HStack(spacing: 4) {
+                            Text(formatWeight(connectivity.targetWeight))
+                                .font(.system(size: 20, weight: .bold))
+                                .foregroundColor(.primary)
+                            Text("×")
+                                .font(.system(size: 14))
+                                .foregroundColor(.secondary)
+                            Text("\(connectivity.targetReps)")
+                                .font(.system(size: 20, weight: .bold))
+                                .foregroundColor(.primary)
+                        }
+
+                        // Hint to tap
+                        Text(isItalian ? "tocca per selezionare serie" : "tap to select set")
+                            .font(.system(size: 9))
+                            .foregroundColor(.secondary)
+                    }
+                    .padding(10)
+                    .frame(maxWidth: .infinity)
+                    .background(
+                        RoundedRectangle(cornerRadius: 12)
+                            .fill(Color.gray.opacity(0.1))
+                    )
+                }
+                .buttonStyle(.plain)
+                .accessibilityLabel(isItalian ? "Esercizio: \(connectivity.currentExerciseName), Serie \(connectivity.currentSetNumber) di \(connectivity.totalSets)" : "Exercise: \(connectivity.currentExerciseName), Set \(connectivity.currentSetNumber) of \(connectivity.totalSets)")
+                .accessibilityHint(isItalian ? "Tocca per selezionare una serie da modificare" : "Tap to select a set to edit")
+
+                // Quick Edit Button
+                Button(action: {
+                    WKInterfaceDevice.current().play(.click)
+                    showingQuickEdit = true
+                }) {
+                    HStack(spacing: 4) {
+                        Image(systemName: "slider.horizontal.3")
+                            .font(.system(size: 12))
+                        Text(quickEditText)
+                            .font(.system(size: 13, weight: .medium))
+                    }
+                    .frame(maxWidth: .infinity)
+                    .frame(height: 36)
+                }
+                .buttonStyle(.bordered)
+                .tint(.blue)
+                .accessibilityLabel(quickEditText)
+                .accessibilityHint(isItalian ? "Modifica peso e ripetizioni" : "Edit weight and reps")
+
+                // Change Exercise Button (only if we have multiple exercises)
+                if canChangeExercise {
+                    Button(action: {
+                        WKInterfaceDevice.current().play(.click)
+                        showingExercisePicker = true
+                    }) {
+                        HStack(spacing: 4) {
+                            Image(systemName: "arrow.left.arrow.right")
+                                .font(.system(size: 11))
+                            Text(changeExerciseText)
+                                .font(.system(size: 12, weight: .medium))
+                            Spacer()
+                            Text("\(connectivity.currentExerciseIndex + 1)/\(connectivity.totalExercises)")
+                                .font(.system(size: 10, weight: .medium))
+                                .foregroundColor(.secondary)
+                        }
+                        .frame(maxWidth: .infinity)
+                        .frame(height: 32)
+                    }
+                    .buttonStyle(.bordered)
+                    .tint(.green)
+                    .accessibilityLabel(changeExerciseText)
+                    .accessibilityHint(isItalian ? "Vai a un altro esercizio" : "Go to another exercise")
+                }
+            }
+            .padding(.horizontal, 8)
+            .padding(.vertical, 4)
+        }
+        .sheet(isPresented: $showingFormCues) {
+            FormCuesSheetView(
+                exerciseName: connectivity.currentExerciseName,
+                formCues: connectivity.formCues ?? "",
+                locale: connectivity.appLocale,
+                onDismiss: { showingFormCues = false }
+            )
+        }
+        .sheet(isPresented: $showingQuickEdit) {
+            QuickEditSheetView()
+                .environmentObject(connectivity)
+        }
+        .sheet(isPresented: $showingSetPicker) {
+            SetPickerSheetView(
+                totalSets: connectivity.totalSets,
+                currentSet: connectivity.currentSetNumber,
+                locale: connectivity.appLocale,
+                onSelect: { setNumber in
+                    showingSetPicker = false
+                    connectivity.jumpToSet(setNumber)
+                },
+                onCancel: {
+                    showingSetPicker = false
+                }
+            )
+        }
+        .sheet(isPresented: $showingExercisePicker) {
+            ExercisePickerSheetView(
+                exerciseNames: connectivity.exerciseNames,
+                currentIndex: connectivity.currentExerciseIndex,
+                locale: connectivity.appLocale,
+                onSelect: { exerciseIndex in
+                    showingExercisePicker = false
+                    connectivity.jumpToExercise(exerciseIndex)
+                },
+                onCancel: {
+                    showingExercisePicker = false
+                }
+            )
+        }
+    }
+
+    private func formatWeight(_ weight: Double) -> String {
+        if weight.truncatingRemainder(dividingBy: 1) == 0 {
+            return String(format: "%.0f", weight)
+        } else {
+            return String(format: "%.1f", weight)
+        }
+    }
+}
+
+// MARK: - Set Picker Sheet View
+
+struct SetPickerSheetView: View {
+    let totalSets: Int
+    let currentSet: Int
+    let locale: String
+    let onSelect: (Int) -> Void
+    let onCancel: () -> Void
+
+    @State private var selectedSet: Int = 1
+
+    private var isItalian: Bool { locale == "it" }
+    private var titleText: String { isItalian ? "Seleziona Serie" : "Select Set" }
+    private var selectText: String { isItalian ? "Vai" : "Go" }
+    private var cancelText: String { isItalian ? "Annulla" : "Cancel" }
+
+    var body: some View {
+        VStack(spacing: 10) {
+            Text(titleText)
+                .font(.system(size: 14, weight: .semibold))
+                .foregroundColor(.primary)
+
+            // Set picker with Crown
+            Picker(titleText, selection: $selectedSet) {
+                ForEach(1...totalSets, id: \.self) { setNum in
+                    Text("\(isItalian ? "Serie" : "Set") \(setNum)")
+                        .tag(setNum)
+                }
+            }
+            .pickerStyle(.wheel)
+            .frame(height: 80)
+
+            HStack(spacing: 12) {
+                Button(action: onCancel) {
+                    Text(cancelText)
+                        .font(.system(size: 12, weight: .medium))
+                }
+                .buttonStyle(.bordered)
+                .tint(.gray)
+
+                Button(action: {
+                    WKInterfaceDevice.current().play(.click)
+                    onSelect(selectedSet)
+                }) {
+                    Text(selectText)
+                        .font(.system(size: 12, weight: .bold))
+                }
+                .buttonStyle(.borderedProminent)
+                .tint(.blue)
+            }
+        }
+        .padding()
+        .onAppear {
+            selectedSet = currentSet
+        }
+    }
+}
+
+// MARK: - Exercise Picker Sheet View
+
+struct ExercisePickerSheetView: View {
+    let exerciseNames: [String]
+    let currentIndex: Int
+    let locale: String
+    let onSelect: (Int) -> Void
+    let onCancel: () -> Void
+
+    @State private var selectedIndex: Int = 0
+
+    private var isItalian: Bool { locale == "it" }
+    private var titleText: String { isItalian ? "Vai a Esercizio" : "Go to Exercise" }
+    private var selectText: String { isItalian ? "Vai" : "Go" }
+    private var cancelText: String { isItalian ? "Annulla" : "Cancel" }
+
+    var body: some View {
+        VStack(spacing: 8) {
+            Text(titleText)
+                .font(.system(size: 13, weight: .semibold))
+                .foregroundColor(.primary)
+
+            // Exercise picker with Crown
+            Picker(titleText, selection: $selectedIndex) {
+                ForEach(0..<exerciseNames.count, id: \.self) { index in
+                    Text(exerciseNames[index])
+                        .font(.system(size: 11))
+                        .lineLimit(2)
+                        .tag(index)
+                }
+            }
+            .pickerStyle(.wheel)
+            .frame(height: 90)
+
+            // Current position indicator
+            Text("\(selectedIndex + 1)/\(exerciseNames.count)")
+                .font(.system(size: 10))
+                .foregroundColor(.secondary)
+
+            HStack(spacing: 12) {
+                Button(action: onCancel) {
+                    Text(cancelText)
+                        .font(.system(size: 11, weight: .medium))
+                }
+                .buttonStyle(.bordered)
+                .tint(.gray)
+
+                Button(action: {
+                    WKInterfaceDevice.current().play(.click)
+                    onSelect(selectedIndex)
+                }) {
+                    Text(selectText)
+                        .font(.system(size: 11, weight: .bold))
+                }
+                .buttonStyle(.borderedProminent)
+                .tint(.green)
+            }
+        }
+        .padding(.horizontal, 8)
+        .padding(.vertical, 4)
+        .onAppear {
+            selectedIndex = currentIndex
+        }
+    }
+}
+
+// MARK: - Quick Edit Sheet View (for AdvancedInfoView)
+
+struct QuickEditSheetView: View {
+    @EnvironmentObject var connectivity: ConnectivityManager
+    @Environment(\.dismiss) var dismiss
+
+    @State private var editingWeight: Double = 0
+    @State private var editingReps: Int = 1
+    @State private var editingField: EditField = .weight
+    @State private var crownValue: Double = 0
+    @FocusState private var isFocused: Bool
+
+    enum EditField {
+        case weight
+        case reps
+    }
+
+    private var isItalian: Bool { connectivity.appLocale == "it" }
+    private var weightLabel: String { isItalian ? "Peso" : "Weight" }
+    private var repsLabel: String { isItalian ? "Reps" : "Reps" }
+    private var saveText: String { isItalian ? "Salva" : "Save" }
+    private var cancelText: String { isItalian ? "Annulla" : "Cancel" }
+    private var copyAllText: String { isItalian ? "Copia in tutti" : "Copy to all" }
+    private var copyPrevText: String { isItalian ? "Copia precedente" : "Copy previous" }
+
+    // Can copy from previous only if not on first set
+    private var canCopyFromPrevious: Bool { connectivity.currentSetNumber > 1 }
+
+    var body: some View {
+        ScrollView {
+            VStack(spacing: 10) {
+                // Weight and Reps in compact row
+                HStack(spacing: 12) {
+                    // Weight section
+                    VStack(spacing: 2) {
+                        Text(weightLabel)
+                            .font(.system(size: 9, weight: .medium))
+                            .foregroundColor(.secondary)
+
+                        Button(action: {
+                            editingField = .weight
+                            crownValue = editingWeight
+                        }) {
+                            Text("\(formatWeight(editingWeight))")
+                                .font(.system(size: 22, weight: .bold))
+                                .foregroundColor(editingField == .weight ? .blue : .primary)
+                                .frame(maxWidth: .infinity)
+                                .padding(.vertical, 6)
+                                .background(
+                                    RoundedRectangle(cornerRadius: 8)
+                                        .fill(editingField == .weight ? Color.blue.opacity(0.15) : Color.gray.opacity(0.1))
+                                )
+                        }
+                        .buttonStyle(.plain)
+                    }
+
+                    // Reps section
+                    VStack(spacing: 2) {
+                        Text(repsLabel)
+                            .font(.system(size: 9, weight: .medium))
+                            .foregroundColor(.secondary)
+
+                        Button(action: {
+                            editingField = .reps
+                            crownValue = Double(editingReps)
+                        }) {
+                            Text("\(editingReps)")
+                                .font(.system(size: 22, weight: .bold))
+                                .foregroundColor(editingField == .reps ? .blue : .primary)
+                                .frame(maxWidth: .infinity)
+                                .padding(.vertical, 6)
+                                .background(
+                                    RoundedRectangle(cornerRadius: 8)
+                                        .fill(editingField == .reps ? Color.blue.opacity(0.15) : Color.gray.opacity(0.1))
+                                )
+                        }
+                        .buttonStyle(.plain)
+                    }
+                }
+
+                // Crown instructions
+                Text(isItalian ? "🔄 Corona per regolare" : "🔄 Crown to adjust")
+                    .font(.system(size: 8))
+                    .foregroundColor(.secondary)
+
+                Divider()
+
+                // Copy buttons
+                VStack(spacing: 6) {
+                    // Copy to all sets
+                    Button(action: {
+                        WKInterfaceDevice.current().play(.click)
+                        connectivity.copyToAllSets(weight: editingWeight, reps: editingReps)
+                        WKInterfaceDevice.current().play(.success)
+                        dismiss()
+                    }) {
+                        HStack(spacing: 4) {
+                            Image(systemName: "doc.on.doc")
+                                .font(.system(size: 10))
+                            Text(copyAllText)
+                                .font(.system(size: 11, weight: .medium))
+                        }
+                        .frame(maxWidth: .infinity)
+                        .frame(height: 30)
+                    }
+                    .buttonStyle(.bordered)
+                    .tint(.orange)
+
+                    // Copy from previous (only if not first set)
+                    if canCopyFromPrevious {
+                        Button(action: {
+                            WKInterfaceDevice.current().play(.click)
+                            connectivity.copyFromPreviousSet()
+                            WKInterfaceDevice.current().play(.success)
+                            dismiss()
+                        }) {
+                            HStack(spacing: 4) {
+                                Image(systemName: "arrow.left.doc")
+                                    .font(.system(size: 10))
+                                Text(copyPrevText)
+                                    .font(.system(size: 11, weight: .medium))
+                            }
+                            .frame(maxWidth: .infinity)
+                            .frame(height: 30)
+                        }
+                        .buttonStyle(.bordered)
+                        .tint(.purple)
+                    }
+                }
+
+                Divider()
+
+                // Save/Cancel buttons
+                HStack(spacing: 8) {
+                    Button(cancelText) {
+                        dismiss()
+                    }
+                    .buttonStyle(.bordered)
+                    .tint(.secondary)
+                    .font(.system(size: 11))
+
+                    Button(saveText) {
+                        connectivity.sendUpdateSetTarget(weight: editingWeight, reps: editingReps)
+                        WKInterfaceDevice.current().play(.success)
+                        dismiss()
+                    }
+                    .buttonStyle(.borderedProminent)
+                    .tint(.blue)
+                    .font(.system(size: 11, weight: .bold))
+                }
+            }
+            .padding(.horizontal, 8)
+            .padding(.vertical, 4)
+        }
+        .focusable()
+        .focused($isFocused)
+        .digitalCrownRotation(
+            $crownValue,
+            from: editingField == .weight ? 0 : 1,
+            through: editingField == .weight ? 500 : 100,
+            by: editingField == .weight ? 0.5 : 1,
+            sensitivity: .medium,
+            isContinuous: false,
+            isHapticFeedbackEnabled: true
+        )
+        .onAppear {
+            editingWeight = connectivity.targetWeight
+            editingReps = connectivity.targetReps
+            crownValue = editingWeight
+            isFocused = true
+        }
+        .onChange(of: crownValue) { _, newValue in
+            if editingField == .weight {
+                editingWeight = max(0, newValue)
+            } else {
+                editingReps = max(1, Int(newValue))
+            }
+        }
+    }
+
+    private func formatWeight(_ weight: Double) -> String {
+        if weight.truncatingRemainder(dividingBy: 1) == 0 {
+            return String(format: "%.0f", weight)
+        } else {
+            return String(format: "%.1f", weight)
+        }
+    }
+}
+
 // MARK: - Effort Picker View (Hybrid: Tappable Circles + Digital Crown)
 
 struct EffortPickerView: View {
@@ -2137,8 +2833,93 @@ struct EditRepsSheetView: View {
 
 // MARK: - Rest Timer View - Coherent Design with Flutter App
 
+// MARK: - Quick Add Time Picker View (for RestTimerView when timer is 00:00)
+// 🎯 Allows user to start a new timer with Crown selection
+
+struct QuickAddTimePickerView: View {
+    @Binding var isPresented: Bool
+    @EnvironmentObject var connectivity: ConnectivityManager
+
+    // Time options in seconds (common rest periods)
+    let timeOptions = [15, 30, 45, 60, 75, 90, 120, 150, 180, 240, 300]
+    @State private var selectedIndex = 3  // Default: 60s
+    @State private var crownValue: Double = 3
+    @FocusState private var isFocused: Bool
+
+    private var isItalian: Bool { connectivity.appLocale == "it" }
+    private var titleText: String { isItalian ? "Aggiungi Tempo" : "Add Time" }
+    private var startText: String { isItalian ? "Avvia" : "Start" }
+    private var cancelText: String { isItalian ? "Annulla" : "Cancel" }
+
+    var body: some View {
+        VStack(spacing: 12) {
+            Text(titleText)
+                .font(.system(size: 14, weight: .semibold))
+
+            // Time display (large)
+            Text(formatTime(timeOptions[selectedIndex]))
+                .font(.system(size: 36, weight: .bold, design: .monospaced))
+                .foregroundColor(.blue)
+                .accessibilityLabel(isItalian ? "\(timeOptions[selectedIndex]) secondi" : "\(timeOptions[selectedIndex]) seconds")
+
+            // Crown hint
+            Text(isItalian ? "Usa Corona per regolare" : "Use Crown to adjust")
+                .font(.system(size: 9))
+                .foregroundColor(.secondary)
+
+            // Action buttons
+            HStack(spacing: 12) {
+                Button(cancelText) {
+                    isPresented = false
+                }
+                .buttonStyle(.bordered)
+                .tint(.secondary)
+
+                Button(startText) {
+                    connectivity.startNewTimer(duration: timeOptions[selectedIndex])
+                    WKInterfaceDevice.current().play(.start)
+                    isPresented = false
+                }
+                .buttonStyle(.borderedProminent)
+                .tint(.green)
+            }
+        }
+        .padding()
+        .focusable()
+        .focused($isFocused)
+        .digitalCrownRotation(
+            $crownValue,
+            from: 0,
+            through: Double(timeOptions.count - 1),
+            by: 1,
+            sensitivity: .medium,
+            isContinuous: false,
+            isHapticFeedbackEnabled: true
+        )
+        .onAppear {
+            isFocused = true
+        }
+        .onChange(of: crownValue) { _, newValue in
+            selectedIndex = min(timeOptions.count - 1, max(0, Int(newValue.rounded())))
+        }
+    }
+
+    private func formatTime(_ seconds: Int) -> String {
+        if seconds < 60 {
+            return "+\(seconds)s"
+        } else {
+            let min = seconds / 60
+            let sec = seconds % 60
+            return sec > 0 ? "+\(min)m\(sec)s" : "+\(min)m"
+        }
+    }
+}
+
+// MARK: - Rest Timer View (Tab 2)
+
 struct RestTimerView: View {
     @EnvironmentObject var connectivity: ConnectivityManager
+    @State private var showQuickAddTime = false
 
     // Localized strings (from Flutter app)
     private var isItalian: Bool { connectivity.appLocale == "it" }
@@ -2147,6 +2928,7 @@ struct RestTimerView: View {
     private var restText: String { isItalian ? "Riposo" : "Rest" }
     private var nextSetText: String { isItalian ? "Prossima serie" : "Next set" }
     private var repsText: String { isItalian ? "rip" : "reps" }
+    private var tapToAddTimeText: String { isItalian ? "Tocca per aggiungere tempo" : "Tap to add time" }
 
     var body: some View {
         VStack(spacing: 8) {
@@ -2234,15 +3016,28 @@ struct RestTimerView: View {
                 .accessibilityLabel(isItalian ? "Salta riposo" : "Skip rest")
                 .accessibilityHint(isItalian ? "Tocca due volte per terminare il riposo e iniziare la serie successiva" : "Double tap to end rest and start next set")
             } else if connectivity.restTimeRemaining == 0 {
-                HStack(spacing: 8) {
-                    Image(systemName: "checkmark.circle.fill")
-                        .font(.system(size: 20))
-                        .accessibilityHidden(true)
-                    Text(readyText)
-                        .font(.system(size: 18, weight: .bold))
+                // 🆕 Tappable "Ready!" area to add more time
+                VStack(spacing: 6) {
+                    HStack(spacing: 8) {
+                        Image(systemName: "checkmark.circle.fill")
+                            .font(.system(size: 20))
+                            .accessibilityHidden(true)
+                        Text(readyText)
+                            .font(.system(size: 18, weight: .bold))
+                    }
+                    .foregroundColor(.green)
+
+                    // Hint text for tap to add time
+                    Text(tapToAddTimeText)
+                        .font(.system(size: 10))
+                        .foregroundColor(.secondary)
                 }
-                .foregroundColor(.green)
+                .onTapGesture {
+                    WKInterfaceDevice.current().play(.click)
+                    showQuickAddTime = true
+                }
                 .accessibilityLabel(isItalian ? "Pronto per la prossima serie" : "Ready for next set")
+                .accessibilityHint(isItalian ? "Tocca per aggiungere altro tempo di riposo" : "Tap to add more rest time")
             }
 
             Spacer()
@@ -2254,6 +3049,10 @@ struct RestTimerView: View {
             if newValue == 0 {
                 WKInterfaceDevice.current().play(.success)
             }
+        }
+        .sheet(isPresented: $showQuickAddTime) {
+            QuickAddTimePickerView(isPresented: $showQuickAddTime)
+                .environmentObject(connectivity)
         }
     }
 

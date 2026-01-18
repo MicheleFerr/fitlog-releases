@@ -41,6 +41,11 @@ class ConnectivityManager: NSObject, ObservableObject {
     @Published var tut: String? = nil  // ⌚ BUG FIX #3: Time Under Tension (e.g., "3-1-2-0")
     @Published var workoutType: String = "strength"  // ✅ FIX: Workout type for HKWorkoutSession
 
+    // MARK: - Exercise Navigation (for jumping between exercises)
+    @Published var exerciseNames: [String] = []  // All exercises in the workout
+    @Published var currentExerciseIndex: Int = 0  // 0-indexed
+    @Published var totalExercises: Int = 0
+
     // ✅ FIX: All sets' targets for current exercise (for navigation between sets)
     // Each element: (weight, reps, actualReps?, isCompleted) indexed by setNumber - 1
     // actualReps is nil if set not completed, or the actual reps performed
@@ -865,6 +870,101 @@ class ConnectivityManager: NSObject, ObservableObject {
         WKInterfaceDevice.current().play(.click)
     }
 
+    /// Start a new rest timer from Watch
+    /// 🆕 Used by QuickAddTimePickerView when timer shows 00:00 and user wants more rest
+    /// - Parameter duration: Timer duration in seconds
+    func startNewTimer(duration: Int) {
+        let data: [String: Any] = [
+            "type": "startNewTimer",
+            "duration": duration,
+            "timestamp": Date().timeIntervalSince1970
+        ]
+
+        // Starting a timer is user-initiated, immediate delivery
+        sendToiPhone(data, critical: false, forceImmediate: true)
+
+        // Start local timer immediately for responsive UI
+        // This mirrors the timer that will be started on iPhone
+        startRestTimer(duration: duration)
+        shouldShowTimer = true
+
+        print("⌚ [TIMER] Started new timer from Watch: \(duration)s")
+    }
+
+    /// Jump to a specific set number
+    /// Sends request to iPhone to change the current set
+    func jumpToSet(_ setNumber: Int) {
+        let data: [String: Any] = [
+            "type": "jumpToSet",
+            "setNumber": setNumber,
+            "timestamp": Date().timeIntervalSince1970
+        ]
+
+        // User-initiated action, immediate delivery
+        sendToiPhone(data, critical: false, forceImmediate: true)
+
+        // Update local state immediately for responsive UI
+        currentSetNumber = setNumber
+
+        print("⌚ [SET] Jumped to set \(setNumber) from Watch")
+    }
+
+    /// Copy weight and reps to all sets of current exercise
+    /// Sends request to iPhone to apply the same values to all sets
+    func copyToAllSets(weight: Double, reps: Int) {
+        let data: [String: Any] = [
+            "type": "copyToAllSets",
+            "weight": weight,
+            "reps": reps,
+            "timestamp": Date().timeIntervalSince1970
+        ]
+
+        // User-initiated action, immediate delivery
+        sendToiPhone(data, critical: false, forceImmediate: true)
+
+        // Update local target for responsive UI
+        targetWeight = weight
+        targetReps = reps
+
+        print("⌚ [SET] Copied weight \(weight) and reps \(reps) to all sets")
+    }
+
+    /// Copy weight and reps from the previous set
+    /// Sends request to iPhone to copy values from set N-1
+    func copyFromPreviousSet() {
+        let data: [String: Any] = [
+            "type": "copyFromPreviousSet",
+            "currentSetNumber": currentSetNumber,
+            "timestamp": Date().timeIntervalSince1970
+        ]
+
+        // User-initiated action, immediate delivery
+        sendToiPhone(data, critical: false, forceImmediate: true)
+
+        print("⌚ [SET] Requested copy from previous set (current: \(currentSetNumber))")
+    }
+
+    /// Jump to a specific exercise by index
+    /// Sends request to iPhone to navigate to a different exercise
+    func jumpToExercise(_ exerciseIndex: Int) {
+        let data: [String: Any] = [
+            "type": "jumpToExercise",
+            "exerciseIndex": exerciseIndex,
+            "timestamp": Date().timeIntervalSince1970
+        ]
+
+        // User-initiated action, immediate delivery
+        sendToiPhone(data, critical: false, forceImmediate: true)
+
+        // Update local state for responsive UI
+        currentExerciseIndex = exerciseIndex
+        if exerciseIndex < exerciseNames.count {
+            currentExerciseName = exerciseNames[exerciseIndex]
+        }
+
+        print("⌚ [EXERCISE] Jumped to exercise \(exerciseIndex) from Watch")
+    }
+
     /// Send workout error notification to iPhone
     /// Used when HKWorkoutSession fails unexpectedly
     func sendWorkoutError(message: String) {
@@ -1131,6 +1231,18 @@ class ConnectivityManager: NSObject, ObservableObject {
         // ✅ FIX: Workout type for HKWorkoutSession (strength, hiit, functional)
         if let type = data["workoutType"] as? String {
             workoutType = type
+        }
+
+        // Exercise navigation data
+        if let names = data["exerciseNames"] as? [String] {
+            exerciseNames = names
+            totalExercises = names.count
+        }
+        if let index = data["currentExerciseIndex"] as? Int {
+            currentExerciseIndex = index
+        }
+        if let total = data["totalExercises"] as? Int {
+            totalExercises = total
         }
 
         // ✅ FIX: Parse all sets' targets for navigation between sets
