@@ -2,12 +2,16 @@
 ///
 /// Beautiful line chart for weight progression with gradient fill.
 /// Based on UX research: line charts are universally understood for trends.
+///
+/// **Data Aggregation**: Sets are aggregated by session (day) to prevent
+/// overlapping data points when multiple sets occur on the same day.
 library;
 
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 import 'package:gymbro_flutter_new/features/analytics/domain/entities/exercise_progress_metrics.dart';
+import 'package:gymbro_flutter_new/features/analytics/domain/usecases/aggregate_sets_by_session.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 
 class WeightLineChart extends StatelessWidget {
@@ -40,8 +44,32 @@ class WeightLineChart extends StatelessWidget {
       );
     }
 
-    final maxWeight = sets.map((s) => s.weight).reduce((a, b) => a > b ? a : b);
-    final minWeight = sets.map((s) => s.weight).reduce((a, b) => a < b ? a : b);
+    // Aggregate sets by session to prevent overlapping points
+    final sessions = aggregateSetsBySession(sets);
+
+    if (sessions.isEmpty) {
+      return SizedBox(
+        height: height,
+        child: Center(
+          child: Text(
+            context.l10n.noDataForChart,
+            style: context.textTheme.bodyMedium?.copyWith(
+              color: context.colors.onSurfaceVariant,
+            ),
+          ),
+        ),
+      );
+    }
+
+    // Use max weight per session for the chart
+    final maxWeight = sessions.fold<double>(
+      0,
+      (max, s) => s.maxWeight > max ? s.maxWeight : max,
+    );
+    final minWeight = sessions.fold<double>(
+      double.infinity,
+      (min, s) => s.maxWeight < min ? s.maxWeight : min,
+    );
     final padding = (maxWeight - minWeight) * 0.1;
 
     return SizedBox(
@@ -56,8 +84,8 @@ class WeightLineChart extends StatelessWidget {
             color: context.colors.onSurfaceVariant,
             fontSize: 10,
           ),
-          dateFormat: _getDateFormat(),
-          intervalType: _getIntervalType(),
+          dateFormat: _getDateFormat(sessions),
+          intervalType: _getIntervalType(sessions),
           majorTickLines: const MajorTickLines(size: 0),
         ),
         primaryYAxis: NumericAxis(
@@ -83,7 +111,7 @@ class WeightLineChart extends StatelessWidget {
                   color: context.colors.onInverseSurface,
                 ),
                 builder: (data, point, series, pointIndex, seriesIndex) {
-                  final setData = data as ExerciseSetData;
+                  final session = data as SessionDataPoint;
                   return Container(
                     padding: const EdgeInsets.all(8),
                     decoration: BoxDecoration(
@@ -95,16 +123,24 @@ class WeightLineChart extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          DateFormat('d MMM').format(setData.date),
+                          DateFormat('d MMM').format(session.date),
                           style: context.textTheme.labelSmall?.copyWith(
-                            color: context.colors.onInverseSurface.withValues(alpha: 0.7),
+                            color: context.colors.onInverseSurface
+                                .withValues(alpha: 0.7),
                           ),
                         ),
                         Text(
-                          '${setData.weight.toStringAsFixed(1)} kg',
+                          '${session.maxWeight.toStringAsFixed(1)} kg',
                           style: context.textTheme.titleSmall?.copyWith(
                             color: context.colors.onInverseSurface,
                             fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        Text(
+                          '${session.setCount} sets',
+                          style: context.textTheme.labelSmall?.copyWith(
+                            color: context.colors.onInverseSurface
+                                .withValues(alpha: 0.7),
                           ),
                         ),
                       ],
@@ -118,11 +154,11 @@ class WeightLineChart extends StatelessWidget {
           enablePanning: true,
           zoomMode: ZoomMode.x,
         ),
-        series: <CartesianSeries<ExerciseSetData, DateTime>>[
-          SplineAreaSeries<ExerciseSetData, DateTime>(
-            dataSource: sets,
+        series: <CartesianSeries<SessionDataPoint, DateTime>>[
+          SplineAreaSeries<SessionDataPoint, DateTime>(
+            dataSource: sessions,
             xValueMapper: (data, _) => data.date,
-            yValueMapper: (data, _) => data.weight,
+            yValueMapper: (data, _) => data.maxWeight,
             splineType: SplineType.natural,
             gradient: LinearGradient(
               begin: Alignment.topCenter,
@@ -136,15 +172,15 @@ class WeightLineChart extends StatelessWidget {
             borderWidth: 3,
             animationDuration: animate ? 1500 : 0,
           ),
-          SplineSeries<ExerciseSetData, DateTime>(
-            dataSource: sets,
+          SplineSeries<SessionDataPoint, DateTime>(
+            dataSource: sessions,
             xValueMapper: (data, _) => data.date,
-            yValueMapper: (data, _) => data.weight,
+            yValueMapper: (data, _) => data.maxWeight,
             splineType: SplineType.natural,
             color: context.colors.primary,
             width: 3,
             markerSettings: MarkerSettings(
-              isVisible: sets.length <= 15,
+              isVisible: sessions.length <= 15,
               height: 8,
               width: 8,
               borderWidth: 2,
@@ -158,17 +194,17 @@ class WeightLineChart extends StatelessWidget {
     );
   }
 
-  DateFormat _getDateFormat() {
-    if (sets.length <= 1) return DateFormat('d MMM');
-    final range = sets.last.date.difference(sets.first.date);
+  DateFormat _getDateFormat(List<SessionDataPoint> sessions) {
+    if (sessions.length <= 1) return DateFormat('d MMM');
+    final range = sessions.last.date.difference(sessions.first.date);
     if (range.inDays > 180) return DateFormat('MMM yy');
     if (range.inDays > 30) return DateFormat('d MMM');
     return DateFormat('d');
   }
 
-  DateTimeIntervalType _getIntervalType() {
-    if (sets.length <= 1) return DateTimeIntervalType.days;
-    final range = sets.last.date.difference(sets.first.date);
+  DateTimeIntervalType _getIntervalType(List<SessionDataPoint> sessions) {
+    if (sessions.length <= 1) return DateTimeIntervalType.days;
+    final range = sessions.last.date.difference(sessions.first.date);
     if (range.inDays > 365) return DateTimeIntervalType.months;
     if (range.inDays > 60) return DateTimeIntervalType.days;
     return DateTimeIntervalType.auto;
