@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:gymbro_flutter_new/core/navigation/app_routes.dart';
 import 'package:gymbro_flutter_new/features/exercise_database/domain/entities/exercise.dart';
 import 'package:gymbro_flutter_new/features/exercise_database/domain/entities/exercise_counting_mode.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise.dart' as WorkoutExercise;
@@ -581,7 +582,7 @@ class _ExerciseCustomizationScreenState extends ConsumerState<ExerciseCustomizat
       Navigator.of(context).pop(); // Pop search screen -> back to template editor
     } else {
       // We're in normal workout mode, go back to workout screen
-      Navigator.of(context).popUntil((route) => route.settings.name == '/workout' || route.isFirst);
+      Navigator.of(context).popUntil((route) => route.settings.name == AppRoutes.workoutName || route.isFirst);
     }
   }
 

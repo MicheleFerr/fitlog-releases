@@ -44,9 +44,9 @@ final hybridExerciseRepositoryProvider = Provider<HybridExerciseRepository>((ref
   // FIX: usa watch invece di read per corretta dependency tracking
   final cacheManager = ref.watch(exerciseCacheManagerProvider);
   final versionService = ref.watch(exerciseVersionServiceProvider);
-  // FIX: read invece di watch - locale viene passato ai metodi, non al costruttore
-  // Questo evita la ricreazione del repository al cambio lingua
-  final locale = ref.read(localeProvider);
+  // FIX: watch per far ricreare il repository al cambio lingua
+  // Questo permette di caricare gli esercizi nella lingua corretta (exercises_it, exercises_en, etc.)
+  final locale = ref.watch(localeProvider);
 
   return HybridExerciseRepository(
     boxManager: boxManager,
@@ -58,6 +58,7 @@ final hybridExerciseRepositoryProvider = Provider<HybridExerciseRepository>((ref
 
 /// Provider per ExerciseSyncService
 final exerciseSyncServiceProvider = Provider<ExerciseSyncService>((ref) {
+  ref.keepAlive(); // Previene ricreazione
   final repository = ref.read(hybridExerciseRepositoryProvider);
   final versionService = ref.read(exerciseVersionServiceProvider);
 
@@ -65,6 +66,25 @@ final exerciseSyncServiceProvider = Provider<ExerciseSyncService>((ref) {
     repository: repository,
     versionService: versionService,
   );
+});
+
+/// Provider per inizializzare ExerciseSyncService
+/// DEVE essere watchato nell'app per avviare la sincronizzazione automatica
+final exerciseSyncInitProvider = FutureProvider<void>((ref) async {
+  // ignore: avoid_print
+  print('🔄 [SYNC] Starting ExerciseSyncService initialization...');
+  try {
+    final syncService = ref.read(exerciseSyncServiceProvider);
+    await syncService.initialize();
+    // ignore: avoid_print
+    print('✅ [SYNC] ExerciseSyncService initialized successfully');
+  } catch (e, stack) {
+    // ignore: avoid_print
+    print('❌ [SYNC] ExerciseSyncService initialization failed: $e');
+    // ignore: avoid_print
+    print('Stack: $stack');
+    rethrow;
+  }
 });
 
 // ====================
@@ -337,6 +357,12 @@ class ExerciseSyncActions {
   /// Controlla se serve sincronizzazione
   Future<bool> needsSync() async {
     return await syncService.needsSync();
+  }
+
+  /// 🧪 TESTING: Reset completo - cancella cache E versione
+  /// Dopo questo, il prossimo sync scaricherà tutto da Firebase
+  Future<void> resetForTesting() async {
+    await repository.resetForTesting();
   }
 }
 
