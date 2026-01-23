@@ -29,7 +29,7 @@
 /// - Navigator key separation (independent back stacks)
 library;
 
-import 'package:flutter/foundation.dart' show kDebugMode, debugPrint;
+import 'package:flutter/foundation.dart' show kDebugMode, kIsWeb, debugPrint;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -108,6 +108,10 @@ import 'package:gymbro_flutter_new/tools/import_exercises_screen.dart';
 import 'package:gymbro_flutter_new/shared/presentation/screens/unauthorized_screen.dart';
 import 'package:gymbro_flutter_new/shared/domain/auth/providers/security_providers.dart';
 
+// Web landing & mobile guard
+import 'package:gymbro_flutter_new/features/landing/presentation/web_landing_page.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/mobile_web_guard.dart';
+
 /// Main router provider using StatefulShellRoute
 ///
 /// Provides:
@@ -118,7 +122,12 @@ import 'package:gymbro_flutter_new/shared/domain/auth/providers/security_provide
 final appRouterProvider = Provider<GoRouter>((ref) {
   final authState = ref.watch(authStateProvider);
   final rbacService = ref.watch(rbacServiceProvider);
-  final appConfig = ref.watch(appConfigProvider);
+  // 🔧 PERF FIX: Watch ONLY initialOnboardingCompleted field
+  // Before: ANY appConfig change → router recreated → navigation state lost → blank screen
+  // After: ONLY onboarding completion changes → router recreated
+  final initialOnboardingCompleted = ref.watch(
+    appConfigProvider.select((c) => c.initialOnboardingCompleted),
+  );
 
   return GoRouter(
     navigatorKey: AppRoutes.rootNavigatorKey,
@@ -153,7 +162,7 @@ final appRouterProvider = Provider<GoRouter>((ref) {
       // Logged in and on auth pages → redirect to home
       if (isLoggedIn && isLoggingIn) {
         // Check if initial onboarding is completed
-        if (!appConfig.initialOnboardingCompleted) {
+        if (!initialOnboardingCompleted) {
           return AppRoutes.initialOnboardingPath;
         }
         return AppRoutes.homePath;
@@ -161,7 +170,7 @@ final appRouterProvider = Provider<GoRouter>((ref) {
 
       // Logged in but initial onboarding not completed
       // Redirect to initial onboarding (unless already there)
-      if (isLoggedIn && !appConfig.initialOnboardingCompleted && !isOnInitialOnboarding) {
+      if (isLoggedIn && !initialOnboardingCompleted && !isOnInitialOnboarding) {
         if (kDebugMode) {
           debugPrint('🚀 [Router] Redirecting to initial onboarding');
         }
@@ -175,6 +184,22 @@ final appRouterProvider = Provider<GoRouter>((ref) {
               '🚨 [RBAC] Access denied to $currentPath for role: ${rbacService.currentRole}');
         }
         return AppRoutes.unauthorizedPath;
+      }
+
+      // ═══════════════════════════════════════════════════════════════════════
+      // MOBILE WEB CHECK
+      // Redirect mobile web users to landing page (only allowed page)
+      // ═══════════════════════════════════════════════════════════════════════
+      if (kIsWeb) {
+        final isOnLandingPage = currentPath == AppRoutes.webLandingPath;
+        final isOnAuthPage = isLoggingIn;
+
+        // Allow auth pages and landing page on mobile web
+        if (!isOnLandingPage && !isOnAuthPage && isLoggedIn) {
+          // Note: Actual mobile detection happens in MobileWebGuard widget
+          // Router redirect is stateless, can't access MediaQuery here
+          // The MobileWebGuard widget wraps MainShell and handles the redirect
+        }
       }
 
       return null;
@@ -232,10 +257,11 @@ final appRouterProvider = Provider<GoRouter>((ref) {
 
       // ─────────────────────────────────────────────────────────────────────
       // MAIN SHELL (4-branch bottom navigation)
+      // Wrapped with MobileWebGuard for mobile web detection
       // ─────────────────────────────────────────────────────────────────────
       StatefulShellRoute.indexedStack(
         builder: (context, state, navigationShell) {
-          return MainShell(navigationShell: navigationShell);
+          return MainShell(navigationShell: navigationShell).withMobileWebGuard();
         },
         branches: [
           // ═════════════════════════════════════════════════════════════════
@@ -586,6 +612,13 @@ final appRouterProvider = Provider<GoRouter>((ref) {
         name: AppRoutes.unauthorizedName,
         parentNavigatorKey: AppRoutes.rootNavigatorKey,
         builder: (context, state) => const UnauthorizedScreen(),
+      ),
+      // Web landing page (accessible from mobile web)
+      GoRoute(
+        path: AppRoutes.webLandingPath,
+        name: AppRoutes.webLandingName,
+        parentNavigatorKey: AppRoutes.rootNavigatorKey,
+        builder: (context, state) => const WebLandingPage(),
       ),
     ],
   );
