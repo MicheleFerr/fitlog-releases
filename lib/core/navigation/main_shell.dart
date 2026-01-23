@@ -35,6 +35,7 @@ import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_
 import 'package:gymbro_flutter_new/shared/presentation/providers/app_config_provider.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
+import 'package:gymbro_flutter_new/features/exercise_database/presentation/widgets/exercise_sync_listener.dart';
 
 /// Main shell widget containing bottom navigation and branch content
 ///
@@ -102,26 +103,34 @@ class _MainShellState extends ConsumerState<MainShell> {
     return Scaffold(
       // ✨ Material 3 2025: Subtle background veil instead of pure white
       backgroundColor: context.colors.surfaceContainer,
-      body: Stack(
-        children: [
-          // Main content
-          widget.navigationShell,
-
-          // Floating mini-bar positioned just above nav bar
-          // showMiniBar already checks workout != null
-          if (showMiniBar)
-            Positioned(
-              left: 0,
-              right: 0,
-              bottom: 4, // Body ends at top of nav bar, so 4px gap is enough
-              child: WorkoutMiniBar(
-                // ignore: unnecessary_non_null_assertion
-                workout: workout!, // Safe: showMiniBar condition ensures workout != null
-                onDiscard: () => _showDiscardConfirmation(context),
-                onSave: () => _showSaveConfirmation(context),
+      body: ExerciseSyncListener(
+        child: Stack(
+          children: [
+            // Main content with bottom padding when mini bar is visible
+            // This prevents content from being covered by the floating mini bar
+            Padding(
+              padding: EdgeInsets.only(
+                bottom: showMiniBar ? 68 : 0, // 60px mini bar height + 8px gap
               ),
+              child: widget.navigationShell,
             ),
-        ],
+
+            // Floating mini-bar positioned just above nav bar
+            // showMiniBar already checks workout != null
+            if (showMiniBar)
+              Positioned(
+                left: 0,
+                right: 0,
+                bottom: 4, // Body ends at top of nav bar, so 4px gap is enough
+                child: WorkoutMiniBar(
+                  // ignore: unnecessary_non_null_assertion
+                  workout: workout!, // Safe: showMiniBar condition ensures workout != null
+                  onDiscard: () => _showDiscardConfirmation(context),
+                  onSave: () => _showSaveConfirmation(context),
+                ),
+              ),
+          ],
+        ),
       ),
       bottomNavigationBar: _BottomNavigationBar(
         currentIndex: currentIndex,
