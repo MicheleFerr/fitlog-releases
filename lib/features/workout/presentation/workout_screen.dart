@@ -135,7 +135,11 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen>
     // This handles the "distracted user" who gets interrupted by a phone call
     if (state == AppLifecycleState.resumed) {
       final tutorialState = ref.read(workoutTutorialProvider);
-      if (tutorialState.isActive && mounted) {
+      // BUG FIX: Don't re-show tutorial if user has already completed it
+      // This prevents tutorial from appearing during active workouts
+      if (tutorialState.isActive &&
+          !tutorialState.hasCompletedTutorial &&
+          mounted) {
         // Re-show the current tutorial step after UI settles
         Future.delayed(const Duration(milliseconds: 500), () {
           if (mounted) _showCurrentTutorialStep();
@@ -166,17 +170,19 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen>
     final currentWorkout = ref.read(currentWorkoutProvider);
 
     // Start spotlight tutorial if:
-    // 1. Tutorial not completed yet
+    // 1. Tutorial not started yet (first time)
     // 2. Tutorial not currently active
     // 3. Workout has no exercises yet (empty state - good time to learn)
-    if (!tutorialState.hasCompletedTutorial &&
+    // Note: Once tutorial is started, it won't auto-show again even if dismissed
+    // User can manually restart it from settings menu
+    if (!tutorialState.hasStartedTutorial &&
         !tutorialState.isActive &&
         (currentWorkout == null || currentWorkout.exercises.isEmpty)) {
       // Wait a bit for UI to settle
       await Future.delayed(const Duration(milliseconds: 500));
 
       if (mounted) {
-        _startWorkoutTutorial();
+        await _startWorkoutTutorial();
       }
     }
   }
@@ -1252,9 +1258,9 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen>
   }
 
   /// Start the workout tutorial from the beginning
-  void _startWorkoutTutorial() {
+  Future<void> _startWorkoutTutorial() async {
     // Start the interactive tutorial
-    ref.read(workoutTutorialProvider.notifier).startTutorial();
+    await ref.read(workoutTutorialProvider.notifier).startTutorial();
 
     // Show the first step after a short delay to let the UI settle
     WidgetsBinding.instance.addPostFrameCallback((_) {
