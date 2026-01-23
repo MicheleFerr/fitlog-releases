@@ -15,6 +15,7 @@ import 'package:gymbro_flutter_new/shared/domain/auth/providers/session_timeout_
 import 'package:gymbro_flutter_new/shared/domain/auth/session_timeout_service.dart';
 import 'package:gymbro_flutter_new/features/timer/presentation/providers/unified_timer_provider.dart';
 import 'package:gymbro_flutter_new/features/notifications/presentation/providers/notification_provider.dart';
+import 'package:gymbro_flutter_new/features/exercise_database/presentation/providers/hybrid_exercise_provider.dart';
 import 'package:gymbro_flutter_new/core/navigation/app_router.dart';
 import 'package:gymbro_flutter_new/features/splash/presentation/screens/animated_splash_screen.dart';
 
@@ -54,7 +55,12 @@ class FitLogApp extends ConsumerWidget {
 
     // Use new StatefulShellRoute-based router
     final router = ref.watch(appRouterProvider);
-    final config = ref.watch(appConfigProvider);
+    // 🔧 PERF FIX: Use .select() to watch ONLY specific fields needed by MaterialApp
+    // This prevents full app rebuild when unrelated settings change (e.g., soundEnabled, vibrationsEnabled)
+    // Before: ANY config change → full MaterialApp rebuild → blank screen flash
+    // After: ONLY fontSize/primaryColor changes → rebuild
+    final fontSize = ref.watch(appConfigProvider.select((c) => c.fontSize));
+    final primaryColor = ref.watch(appConfigProvider.select((c) => c.primaryColor));
     final locale = ref.watch(localeProvider);
     final themeMode = ref.watch(themeModeProvider);
 
@@ -88,6 +94,16 @@ class FitLogApp extends ConsumerWidget {
     // This prevents the 10+ second delay on first timer use
     // ✅ FIX: Watch the provider to ensure it's initialized
     ref.watch(unifiedTimerProvider);
+
+    // 🏋️ EXERCISE SYNC: Initialize sync service for auto-updates
+    // This enables automatic exercise database updates when new version is available
+    ref.watch(exerciseSyncInitProvider).whenOrNull(
+      error: (error, stack) {
+        if (kDebugMode) {
+          debugPrint('⚠️ [APP] Exercise sync initialization failed: $error');
+        }
+      },
+    );
 
     // 🔔 NOTIFICATIONS: Initialize notification system for retention reminders
     // This enables workout forgotten, inactivity, and insight notifications
@@ -125,8 +141,8 @@ class FitLogApp extends ConsumerWidget {
     if (authState == AuthState.loading) {
       return MaterialApp(
         debugShowCheckedModeBanner: false,
-        theme: _buildThemeWithFontSize(AppTheme.buildLightTheme(config.primaryColor), config.fontSize),
-        darkTheme: _buildThemeWithFontSize(AppTheme.buildDarkTheme(config.primaryColor), config.fontSize),
+        theme: _buildThemeWithFontSize(AppTheme.buildLightTheme(primaryColor), fontSize),
+        darkTheme: _buildThemeWithFontSize(AppTheme.buildDarkTheme(primaryColor), fontSize),
         themeMode: themeMode,
         home: Scaffold(
           body: Center(
@@ -156,8 +172,8 @@ class FitLogApp extends ConsumerWidget {
     try {
       return MaterialApp.router(
         title: 'FitLog Pro',
-        theme: _buildThemeWithFontSize(AppTheme.buildLightTheme(config.primaryColor), config.fontSize),
-        darkTheme: _buildThemeWithFontSize(AppTheme.buildDarkTheme(config.primaryColor), config.fontSize),
+        theme: _buildThemeWithFontSize(AppTheme.buildLightTheme(primaryColor), fontSize),
+        darkTheme: _buildThemeWithFontSize(AppTheme.buildDarkTheme(primaryColor), fontSize),
         themeMode: themeMode,
         locale: locale,
         localizationsDelegates: const [
@@ -182,8 +198,8 @@ class FitLogApp extends ConsumerWidget {
 
       return MaterialApp(
         debugShowCheckedModeBanner: false,
-        theme: _buildThemeWithFontSize(AppTheme.buildLightTheme(config.primaryColor), config.fontSize),
-        darkTheme: _buildThemeWithFontSize(AppTheme.buildDarkTheme(config.primaryColor), config.fontSize),
+        theme: _buildThemeWithFontSize(AppTheme.buildLightTheme(primaryColor), fontSize),
+        darkTheme: _buildThemeWithFontSize(AppTheme.buildDarkTheme(primaryColor), fontSize),
         themeMode: themeMode,
         home: Scaffold(
           body: Center(
