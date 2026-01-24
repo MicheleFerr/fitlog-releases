@@ -444,18 +444,19 @@ final class UnifiedTimerCoordinator {
         print("✅ [CANCEL-BACKUP] cancelAllPendingNotifications() called")
 
         // Use DirectNotificationManager for actual notification scheduling
-        // CRITICAL FIX: silentLoopHandlesAudio = false ALWAYS
-        // We need notification sound because silent loop/AVAudioPlayer often fails in background
-        // 🔧 BUG FIX: Use delay=0 instead of 0.1 to trigger immediate notification path
-        // The immediate path (delay <= 0) uses trigger:nil which ALWAYS delivers
-        // The scheduled path (delay > 0) uses TimeIntervalTrigger which may fail
-        let notificationId = DirectNotificationManager.shared.scheduleTimerNotification(
-            after: 0, // ✅ FIXED: 0 triggers immediate delivery (trigger:nil)
-            soundName: sound,
+        // CRITICAL FIX: Use sendTimerNotification instead of scheduleTimerNotification
+        // sendTimerNotification has the delay <= 0 check for immediate delivery (trigger:nil)
+        // scheduleTimerNotification always uses UNTimeIntervalTrigger which requires delay > 0
+        DirectNotificationManager.shared.sendTimerNotification(
             title: title,
             body: body,
-            silentLoopHandlesAudio: false  // ALWAYS play sound - silent loop may fail!
+            soundName: sound,
+            categoryIdentifier: "TIMER_COMPLETE",
+            delay: 0  // trigger:nil for immediate delivery
         )
+
+        // Return a dummy ID (sendTimerNotification doesn't return ID)
+        let notificationId = "immediate_\(UUID().uuidString)"
 
         // Notification sent through iOS notification system
         Logger.shared.log(.info, """
