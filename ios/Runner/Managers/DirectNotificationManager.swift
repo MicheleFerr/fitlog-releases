@@ -119,16 +119,15 @@ final class DirectNotificationManager: NSObject {
             center.add(request) { error in
                 if let error = error {
                     print("❌ Failed to send immediate notification: \(error)")
+                    // ONLY play backup if notification fails
+                    print("🔊 [BACKUP] Notification failed - using AVAudioPlayer as fallback")
+                    TimerSoundFix.shared.playTimerCompletionSound(preferredSound: soundName)
                 } else {
                     print("✅ Immediate notification sent with sound: \(soundFileName)")
+                    print("   - trigger: nil ensures delivery")
+                    print("   - Backup AVAudioPlayer NOT needed (notification handles audio)")
                 }
             }
-            
-            // CRITICAL FIX: ALWAYS try to play sound with AVAudioPlayer as backup
-            // This ensures audio plays even if notification sound fails
-            // AVAudioPlayer bypasses notification system issues
-            print("🔊 [BACKUP] Playing sound with AVAudioPlayer as additional guarantee")
-            TimerSoundFix.shared.playTimerCompletionSound(preferredSound: soundName)
         } else {
             // Schedule for future - this is the correct way for timer notifications
             _ = scheduleTimerNotification(
