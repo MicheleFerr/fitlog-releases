@@ -89,7 +89,7 @@ struct FitLogWatch_Watch_AppApp: App {
                                 print("⌚ [APP] 🔄 Current HKWorkoutSession state: \(workoutManager.workoutState.rawValue)")
 
                                 // 🧹 Clean up stale session if exists
-                                if workoutManager.session != nil {
+                                if workoutManager.hasSessionInstance {
                                     print("⌚ [APP] 🧹 Cleaning stale session before foreground restart")
                                     await workoutManager.forceResetSession()
                                 }
@@ -127,7 +127,7 @@ struct FitLogWatch_Watch_AppApp: App {
                             // 🧹 CRITICAL FIX: Force cleanup of stale sessions before starting new one
                             // This prevents "Unable to transition from Ended state" errors
                             // that occur when previous workout didn't clean up properly
-                            if workoutManager.session != nil {
+                            if workoutManager.hasSessionInstance {
                                 print("⌚ [APP] 🧹 Detected stale HKWorkoutSession (state: \(workoutManager.workoutState.rawValue))")
                                 print("⌚ [APP] 🧹 Cleaning up before starting new session...")
                                 await workoutManager.forceResetSession()

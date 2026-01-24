@@ -237,6 +237,12 @@ class WorkoutManager: NSObject, ObservableObject {
 
     // MARK: - Computed Properties
 
+    /// Check if there's a session instance (active, paused, or ended)
+    /// Used to detect stale sessions that need cleanup before starting new workout
+    var hasSessionInstance: Bool {
+        session != nil
+    }
+
     /// Elapsed time since workout started (for non-UI calculations)
     var elapsedTime: TimeInterval {
         guard let start = workoutStartDate else { return 0 }
