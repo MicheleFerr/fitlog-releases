@@ -19,6 +19,13 @@ void main() {
     setUp(() async {
       // Initialize SharedPreferences with empty state
       SharedPreferences.setMockInitialValues({});
+
+      // ✅ CRITICAL: Clear static cache before each test
+      // Create temporary container just to reset the cache
+      final tempContainer = ProviderContainer();
+      await tempContainer.read(workoutTutorialProvider.notifier).resetTutorial();
+      tempContainer.dispose();
+
       container = ProviderContainer();
     });
 
@@ -88,29 +95,29 @@ void main() {
               'Tutorial SHOULD re-show if user started but did not complete');
     });
 
-    test('Tutorial state persists across provider reloads', () async {
+    test('Tutorial state persists across provider reloads (STATIC CACHE)', () async {
       // Arrange: Complete tutorial in first container
       final notifier1 = container.read(workoutTutorialProvider.notifier);
       await notifier1.startTutorial();
       await notifier1.completeTutorial();
 
-      // Act: Create new container (simulates provider reload)
+      final initialState = container.read(workoutTutorialProvider);
+      expect(initialState.hasCompletedTutorial, true);
+
+      // Act: Create new container (simulates provider rebuild)
       final newContainer = ProviderContainer();
-      final notifier2 = newContainer.read(workoutTutorialProvider.notifier);
 
-      // Wait for state to load from SharedPreferences (async initialization)
-      await Future.delayed(const Duration(milliseconds: 200));
-
-      // Force read to ensure state is loaded
+      // ✅ FIX VERIFICATION: Static cache should provide state IMMEDIATELY
+      // No need to wait for async SharedPreferences load!
       final state2 = newContainer.read(workoutTutorialProvider);
 
-      // Assert: hasCompletedTutorial persists (saved in SharedPreferences)
-      // NOTE: This test may fail if SharedPreferences mock doesn't work across containers
-      // The CRITICAL test is the first one (re-show prevention), which passes ✅
+      // Assert: State is available immediately from static cache
       expect(state2.hasCompletedTutorial, isTrue,
-          reason: 'hasCompletedTutorial should persist across reloads');
+          reason: 'Static cache should preserve hasCompletedTutorial immediately');
+      expect(state2.hasStartedTutorial, isTrue,
+          reason: 'Static cache should preserve hasStartedTutorial immediately');
       expect(state2.isActive, false,
-          reason: 'isActive should default to false on reload');
+          reason: 'isActive should be false after completion');
 
       newContainer.dispose();
     });
@@ -155,6 +162,48 @@ void main() {
       expect(shouldReshow, false,
           reason:
               'Tutorial should not re-show if stopped (even if not completed)');
+    });
+
+    test('CRITICAL: Skip → Background → Foreground should NOT re-show tutorial',
+        () async {
+      // This is the EXACT bug scenario reported by the user!
+      // "se faccio salta cosa succede? mi riappare ogni volta? sembra che si resetti ogni volta"
+
+      // Arrange: User starts tutorial
+      final notifier = container.read(workoutTutorialProvider.notifier);
+      await notifier.startTutorial();
+
+      final stateAfterStart = container.read(workoutTutorialProvider);
+      expect(stateAfterStart.hasStartedTutorial, true,
+          reason: 'Tutorial marked as started');
+
+      // Act 1: User clicks "Salta" (skip)
+      notifier.stopTutorial();
+
+      // Act 2: Simulate provider rebuild (app background → foreground)
+      final newContainer = ProviderContainer();
+
+      // ✅ CRITICAL CHECK: Static cache should preserve hasStartedTutorial
+      final stateAfterReload = newContainer.read(workoutTutorialProvider);
+
+      // Assert: Tutorial should NOT auto-show again
+      // Because hasStartedTutorial = true prevents auto-start in _showFirstWorkoutWelcomeIfNeeded()
+      expect(stateAfterReload.hasStartedTutorial, true,
+          reason:
+              'Static cache must preserve hasStartedTutorial across rebuilds');
+      expect(stateAfterReload.isActive, false,
+          reason: 'Tutorial should not be active after skip');
+
+      // Verify auto-show logic would NOT trigger
+      // (from workout_screen.dart:178-180)
+      final wouldAutoShow = !stateAfterReload.hasStartedTutorial &&
+          !stateAfterReload.isActive;
+
+      expect(wouldAutoShow, false,
+          reason:
+              'Tutorial should NOT auto-show because hasStartedTutorial=true');
+
+      newContainer.dispose();
     });
   });
 

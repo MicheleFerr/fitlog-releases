@@ -45,6 +45,7 @@ class WorkoutTutorialState {
     required this.isActive,
     required this.currentStep,
     required this.hasCompletedTutorial,
+    required this.hasStartedTutorial,
   });
 
   /// Whether the tutorial is currently running
@@ -56,45 +57,75 @@ class WorkoutTutorialState {
   /// Whether user has completed the full tutorial before
   final bool hasCompletedTutorial;
 
+  /// Whether user has started the tutorial at least once (even if not completed)
+  /// This prevents the tutorial from auto-showing repeatedly if user dismisses it
+  final bool hasStartedTutorial;
+
   WorkoutTutorialState copyWith({
     bool? isActive,
     WorkoutTutorialStep? currentStep,
     bool? hasCompletedTutorial,
+    bool? hasStartedTutorial,
   }) {
     return WorkoutTutorialState(
       isActive: isActive ?? this.isActive,
       currentStep: currentStep ?? this.currentStep,
       hasCompletedTutorial: hasCompletedTutorial ?? this.hasCompletedTutorial,
+      hasStartedTutorial: hasStartedTutorial ?? this.hasStartedTutorial,
     );
   }
 }
 
 /// Notifier for managing interactive tutorial state
 class WorkoutTutorialNotifier extends StateNotifier<WorkoutTutorialState> {
+  // ✅ FIX: Static cache to survive provider rebuilds (background/foreground transitions)
+  // This prevents tutorial from restarting when app resumes
+  static WorkoutTutorialState? _cachedState;
+
   WorkoutTutorialNotifier()
-      : super(const WorkoutTutorialState(
+      : super(_cachedState ?? const WorkoutTutorialState(
           isActive: false,
           currentStep: WorkoutTutorialStep.addExercise,
           hasCompletedTutorial: false,
+          hasStartedTutorial: false,
         )) {
-    _loadState();
+    // Load from SharedPreferences if no cache available
+    if (_cachedState == null) {
+      _loadState();
+    }
   }
 
   static const String _completedKey = 'workout_tutorial_completed';
+  static const String _startedKey = 'workout_tutorial_started';
   TutorialCoachMark? _currentTutorial;
 
   Future<void> _loadState() async {
     final prefs = await SharedPreferences.getInstance();
     final completed = prefs.getBool(_completedKey) ?? false;
-    state = state.copyWith(hasCompletedTutorial: completed);
+    final started = prefs.getBool(_startedKey) ?? false;
+    state = state.copyWith(
+      hasCompletedTutorial: completed,
+      hasStartedTutorial: started,
+    );
+    // ✅ FIX: Update cache after loading from SharedPreferences
+    _cachedState = state;
   }
 
   /// Start the interactive tutorial
-  void startTutorial() {
+  Future<void> startTutorial() async {
+    // Mark tutorial as started (prevents auto-showing again)
+    if (!state.hasStartedTutorial) {
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setBool(_startedKey, true);
+    }
+
     state = state.copyWith(
       isActive: true,
       currentStep: WorkoutTutorialStep.addExercise,
+      hasStartedTutorial: true,
     );
+    // ✅ FIX: Update cache after state change
+    _cachedState = state;
   }
 
   /// Stop/cancel the tutorial
@@ -102,18 +133,23 @@ class WorkoutTutorialNotifier extends StateNotifier<WorkoutTutorialState> {
     _currentTutorial?.finish();
     _currentTutorial = null;
     state = state.copyWith(isActive: false);
+    // ✅ FIX: Update cache after state change
+    _cachedState = state;
   }
 
   /// Move to the next step
   void advanceToStep(WorkoutTutorialStep step) {
     if (!state.isActive) return;
     state = state.copyWith(currentStep: step);
+    // ✅ FIX: Update cache after state change
+    _cachedState = state;
   }
 
   /// Mark tutorial as completed
   Future<void> completeTutorial() async {
-    // Close any open tutorial overlay
-    _currentTutorial?.finish();
+    // NOTE: Do NOT call _currentTutorial?.finish() here!
+    // This would trigger onFinish callback again, causing infinite loop.
+    // The tutorial is already finished when this method is called from onComplete callback.
     _currentTutorial = null;
 
     final prefs = await SharedPreferences.getInstance();
@@ -123,17 +159,23 @@ class WorkoutTutorialNotifier extends StateNotifier<WorkoutTutorialState> {
       hasCompletedTutorial: true,
       currentStep: WorkoutTutorialStep.completed,
     );
+    // ✅ FIX: Update cache after state change
+    _cachedState = state;
   }
 
   /// Reset tutorial (for testing)
   Future<void> resetTutorial() async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.remove(_completedKey);
+    await prefs.remove(_startedKey);
     state = state.copyWith(
       isActive: false,
       hasCompletedTutorial: false,
+      hasStartedTutorial: false,
       currentStep: WorkoutTutorialStep.addExercise,
     );
+    // ✅ FIX: Update cache after state change
+    _cachedState = state;
   }
 
   /// Show the current step's overlay

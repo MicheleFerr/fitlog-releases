@@ -516,7 +516,7 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen>
 
     return DraggableActionButton(
       key: _addExerciseFABKey,
-      onPressed: () => _showAddExercise(context),
+      onPressed: () => _showAddExercise(context), // Tap normale: modal standard
       icon: AppIcons.add,
       label: l10n.addExercise,
       positionKey: 'workout_screen_fab',
@@ -524,6 +524,24 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen>
         // Navigate to workout history
         context.pushNamed('workoutHistory');
       },
+      // ✅ NEW: Advanced set options for long-press menu dropdown
+      additionalOptions: [
+        DraggableActionOption(
+          icon: AppIcons.link,
+          label: l10n.tabSuperset,
+          onTap: () => _showAddExerciseAdvanced(context, advancedTab: 0),
+        ),
+        DraggableActionOption(
+          icon: AppIcons.trendingDown,
+          label: l10n.tabDropSet,
+          onTap: () => _showAddExerciseAdvanced(context, advancedTab: 1),
+        ),
+        DraggableActionOption(
+          icon: AppIcons.pause,
+          label: l10n.tabRestPause,
+          onTap: () => _showAddExerciseAdvanced(context, advancedTab: 2),
+        ),
+      ],
     );
   }
 
@@ -615,8 +633,26 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen>
     );
   }
 
-  /// Show add exercise modal
+  /// Show add exercise modal (standard Single tab)
   void _showAddExercise(BuildContext context) {
+    _showAddExerciseInternal(context, initialTab: 0);
+  }
+
+  /// Show add exercise modal on Advanced tab with specific sub-tab
+  void _showAddExerciseAdvanced(BuildContext context, {required int advancedTab}) {
+    _showAddExerciseInternal(
+      context,
+      initialTab: 1, // Advanced tab
+      initialAdvancedTab: advancedTab,
+    );
+  }
+
+  /// Internal helper for showing add exercise modal with tab selection
+  void _showAddExerciseInternal(
+    BuildContext context, {
+    int initialTab = 0,
+    int initialAdvancedTab = 0,
+  }) {
     // EDGE CASE FIX: Auto-advance tutorial when FAB is tapped
     // This handles the case where user taps FAB without clicking "Avanti" in tutorial
     final tutorialState = ref.read(workoutTutorialProvider);
@@ -634,22 +670,20 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen>
     // Track if exercise was added during this modal session
     bool exerciseWasAdded = false;
 
-    showModalBottomSheet(
-      context: context,
-      isScrollControlled: true,
-      backgroundColor: context.colors.surface.withValues(alpha: 0),
-      builder: (context) => AddExerciseModal(
-        onExerciseAdded: (exercise) {
-          debugPrint('🎯 [WorkoutScreen] CALLBACK RECEIVED: name=${exercise.name}, countingMode=${exercise.countingMode}');
-          exerciseWasAdded = true;
-          ref.read(workoutScreenControllerProvider.notifier).addExercise(exercise);
-          // Note: Navigator.pop() is called by AddExerciseModal after this callback
-          // Do NOT call pop() here - it would cause double-pop and black screen!
+    AddExerciseModal.show(
+      context,
+      initialTab: initialTab,
+      initialAdvancedTab: initialAdvancedTab,
+      onExerciseAdded: (exercise) {
+        debugPrint('🎯 [WorkoutScreen] CALLBACK RECEIVED: name=${exercise.name}, countingMode=${exercise.countingMode}');
+        exerciseWasAdded = true;
+        ref.read(workoutScreenControllerProvider.notifier).addExercise(exercise);
+        // Note: Navigator.pop() is called by AddExerciseModal after this callback
+        // Do NOT call pop() here - it would cause double-pop and black screen!
 
-          // Trigger tutorial step if active
-          onExerciseAdded();
-        },
-      ),
+        // Trigger tutorial step if active
+        onExerciseAdded();
+      },
     ).whenComplete(() {
       // EDGE CASE FIX: Re-show tutorial if modal was dismissed without adding exercise
       // This handles the "distracted user" who opens modal but dismisses it without action
