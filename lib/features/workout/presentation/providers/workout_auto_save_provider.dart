@@ -64,7 +64,9 @@ class WorkoutAutoSaveNotifier extends Notifier<WorkoutAutoSaveState> {
 
   @override
   WorkoutAutoSaveState build() {
-    _repository = ref.watch(workoutDraftRepositoryProvider);
+    // FIX: Use ref.read() to avoid re-initialization on rebuild
+    // Repository doesn't change, so we don't need to watch it
+    _repository = ref.read(workoutDraftRepositoryProvider);
 
     // Setup disposal on provider cleanup
     ref.onDispose(() {

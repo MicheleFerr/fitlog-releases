@@ -1,0 +1,157 @@
+{
+  "timestamp": "2026-01-19T15:56:17.370407+00:00",
+  "zombie_collections": [
+    {
+      "name": "exerciseActivities",
+      "document_count": 579,
+      "priority": "MEDIA",
+      "description": "Probabilmente obsoleto (ora solo cache Hive)"
+    },
+    {
+      "name": "timings",
+      "document_count": 283,
+      "priority": "ALTA",
+      "description": "Timer - forse non più usato"
+    },
+    {
+      "name": "supersetsActivity",
+      "document_count": 152,
+      "priority": "MEDIA",
+      "description": "Superset activity"
+    },
+    {
+      "name": "sessionWorkouts",
+      "document_count": 97,
+      "priority": "MEDIA",
+      "description": "Sessioni workout"
+    },
+    {
+      "name": "schede",
+      "document_count": 42,
+      "priority": "MEDIA",
+      "description": "Schede allenamento legacy?"
+    },
+    {
+      "name": "cardioSessions",
+      "document_count": 38,
+      "priority": "MEDIA",
+      "description": "Sessioni cardio"
+    },
+    {
+      "name": "template_audit_logs",
+      "document_count": 12,
+      "priority": "BASSA",
+      "description": "Audit logs"
+    },
+    {
+      "name": "missing_exercise_requests",
+      "document_count": 11,
+      "priority": "BASSA",
+      "description": "Richieste esercizi"
+    },
+    {
+      "name": "restPauseActivity",
+      "document_count": 10,
+      "priority": "ALTA",
+      "description": "Rest-pause deprecato?"
+    },
+    {
+      "name": "settings",
+      "document_count": 10,
+      "priority": "MEDIA",
+      "description": "Settings globali deprecati?"
+    },
+    {
+      "name": "userSettings",
+      "document_count": 6,
+      "priority": "MEDIA",
+      "description": "Settings utente deprecati?"
+    },
+    {
+      "name": "userPreferences",
+      "document_count": 4,
+      "priority": "MEDIA",
+      "description": "Preferenze deprecate?"
+    },
+    {
+      "name": "programDownloads",
+      "document_count": 3,
+      "priority": "BASSA",
+      "description": "Download programmi"
+    },
+    {
+      "name": "communityPrograms",
+      "document_count": 2,
+      "priority": "MEDIA",
+      "description": "Programmi community"
+    },
+    {
+      "name": "supersetActivity",
+      "document_count": 2,
+      "priority": "ALTA",
+      "description": "Duplicato supersetsActivity?"
+    },
+    {
+      "name": "userConsents",
+      "document_count": 2,
+      "priority": "BASSA",
+      "description": "Consensi privacy"
+    },
+    {
+      "name": "weeklyCheckIns",
+      "document_count": 2,
+      "priority": "BASSA",
+      "description": "Check-in settimanali"
+    },
+    {
+      "name": "chat_threads",
+      "document_count": 1,
+      "priority": "ALTA",
+      "description": "Chat non implementata"
+    },
+    {
+      "name": "customTemplates",
+      "document_count": 1,
+      "priority": "MEDIA",
+      "description": "Template custom deprecati?"
+    },
+    {
+      "name": "equipmentProfiles",
+      "document_count": 1,
+      "priority": "BASSA",
+      "description": "Profili attrezzatura"
+    },
+    {
+      "name": "exercises_metadata",
+      "document_count": 1,
+      "priority": "BASSA",
+      "description": "Metadata esercizi"
+    },
+    {
+      "name": "flexibleRoutines",
+      "document_count": 1,
+      "priority": "MEDIA",
+      "description": "Routine flessibili"
+    },
+    {
+      "name": "muscle_group_feedback",
+      "document_count": 1,
+      "priority": "BASSA",
+      "description": "Feedback gruppi"
+    },
+    {
+      "name": "rateLimits",
+      "document_count": 1,
+      "priority": "BASSA",
+      "description": "Rate limiting"
+    },
+    {
+      "name": "userFeedbackStats",
+      "document_count": 1,
+      "priority": "BASSA",
+      "description": "Stats feedback"
+    }
+  ],
+  "total_zombie_documents": 1263,
+  "estimated_monthly_cost": "1-5 EUR"
+}

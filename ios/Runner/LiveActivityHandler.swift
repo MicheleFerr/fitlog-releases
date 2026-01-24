@@ -420,11 +420,55 @@ class LiveActivityHandler: NSObject {
             Logger.shared.debug( "✅ Live Activity created successfully with ID: \(activity.id)", category: .general)
             
         } catch {
-            Logger.shared.log(.error, "❌ Failed to create Live Activity: \(error)", category: .general)
+            // ✅ Enhanced error handling with diagnostic information
+            let nsError = error as NSError
+            let errorDescription = error.localizedDescription
+
+            // Check for specific error conditions
+            var errorCode = "START_FAILED"
+            var errorMessage = "Failed to start Live Activity: \(errorDescription)"
+
+            // ✅ Handle "visibility" error specifically (iOS 17+)
+            // This error occurs when:
+            // - The app hasn't been used recently (iOS requires recent app interaction)
+            // - Live Activities are rate-limited
+            // - The user has restricted Live Activity permissions in Settings
+            if errorDescription.lowercased().contains("visibility") {
+                errorCode = "VISIBILITY_RESTRICTED"
+                errorMessage = """
+                    Live Activity creation failed due to visibility restrictions.
+                    This can happen when:
+                    - The app hasn't been used recently
+                    - iOS is rate-limiting Live Activities
+                    - User has restricted permissions
+                    Original error: \(errorDescription)
+                    """
+
+                Logger.shared.log(.warning, """
+                    ⚠️ [VISIBILITY-ERROR] Live Activity visibility restriction detected:
+                    - Error: \(errorDescription)
+                    - NSError Code: \(nsError.code)
+                    - NSError Domain: \(nsError.domain)
+                    - This is often a temporary iOS restriction
+                    - Timer will work but without Live Activity display
+                    """, category: .general)
+            } else {
+                Logger.shared.log(.error, """
+                    ❌ Failed to create Live Activity:
+                    - Error: \(errorDescription)
+                    - NSError Code: \(nsError.code)
+                    - NSError Domain: \(nsError.domain)
+                    """, category: .general)
+            }
+
             result(FlutterError(
-                code: "START_FAILED",
-                message: "Failed to start Live Activity: \(error.localizedDescription)",
-                details: nil
+                code: errorCode,
+                message: errorMessage,
+                details: [
+                    "nsErrorCode": nsError.code,
+                    "nsErrorDomain": nsError.domain,
+                    "areActivitiesEnabled": ActivityAuthorizationInfo().areActivitiesEnabled
+                ]
             ))
         }
     }
@@ -1001,14 +1045,29 @@ class LiveActivityHandler: NSObject {
             result(activity.id)
             
         } catch {
+            // ✅ Enhanced error handling for RPE Live Activity
+            let nsError = error as NSError
+            let errorDescription = error.localizedDescription
+            var errorCode = "RPE_START_FAILED"
+
+            if errorDescription.lowercased().contains("visibility") {
+                errorCode = "RPE_VISIBILITY_RESTRICTED"
+                Logger.shared.log(.warning, "⚠️ [VISIBILITY-ERROR] RPE Live Activity visibility restriction: \(errorDescription)", category: .general)
+            } else {
+                Logger.shared.log(.error, "❌ Failed to start RPE Live Activity: \(errorDescription)", category: .general)
+            }
+
             result(FlutterError(
-                code: "RPE_START_FAILED",
-                message: "Failed to start RPE Live Activity: \(error.localizedDescription)",
-                details: nil
+                code: errorCode,
+                message: "Failed to start RPE Live Activity: \(errorDescription)",
+                details: [
+                    "nsErrorCode": nsError.code,
+                    "nsErrorDomain": nsError.domain
+                ]
             ))
         }
     }
-    
+
     private func updateRPEInterface(_ arguments: [String: Any]?, result: @escaping FlutterResult) {
         guard let args = arguments,
               let activityId = args["activityId"] as? String else {
@@ -1444,11 +1503,25 @@ class LiveActivityHandler: NSObject {
                 result(activity.id)
 
             } catch {
-                Logger.shared.log(.error, "❌ Failed to create Schedule Live Activity: \(error)", category: .general)
+                // ✅ Enhanced error handling for Schedule Live Activity
+                let nsError = error as NSError
+                let errorDescription = error.localizedDescription
+                var errorCode = "SCHEDULE_LA_START_FAILED"
+
+                if errorDescription.lowercased().contains("visibility") {
+                    errorCode = "SCHEDULE_VISIBILITY_RESTRICTED"
+                    Logger.shared.log(.warning, "⚠️ [VISIBILITY-ERROR] Schedule Live Activity visibility restriction: \(errorDescription)", category: .general)
+                } else {
+                    Logger.shared.log(.error, "❌ Failed to create Schedule Live Activity: \(errorDescription)", category: .general)
+                }
+
                 result(FlutterError(
-                    code: "SCHEDULE_LA_START_FAILED",
-                    message: "Failed to start Schedule Live Activity: \(error.localizedDescription)",
-                    details: nil
+                    code: errorCode,
+                    message: "Failed to start Schedule Live Activity: \(errorDescription)",
+                    details: [
+                        "nsErrorCode": nsError.code,
+                        "nsErrorDomain": nsError.domain
+                    ]
                 ))
             }
         }

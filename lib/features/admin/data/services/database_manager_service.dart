@@ -227,7 +227,7 @@ class DatabaseManagerService {
       final batch = _firestore.batch();
 
       for (final id in exerciseIds) {
-        final docRef = _firestore.collection('exercises').doc(id);
+        final docRef = _firestore.collection('exercises_it').doc(id); // FIX: was 'exercises'
         batch.update(docRef, {
           fieldName: value,
           'lastModified': FieldValue.serverTimestamp(),
@@ -264,7 +264,7 @@ class DatabaseManagerService {
       final data = exercise.toJson();
       data['lastModified'] = FieldValue.serverTimestamp();
 
-      await _firestore.collection('exercises').doc(exercise.id).set(data);
+      await _firestore.collection('exercises_it').doc(exercise.id).set(data); // FIX: was 'exercises'
       _invalidateCache();
 
       return DatabaseOperationResult(
@@ -295,7 +295,7 @@ class DatabaseManagerService {
       data['createdAt'] = FieldValue.serverTimestamp();
       data['lastModified'] = FieldValue.serverTimestamp();
 
-      await _firestore.collection('exercises').add(data);
+      await _firestore.collection('exercises_it').add(data); // FIX: was 'exercises'
       _invalidateCache();
 
       return DatabaseOperationResult(
@@ -322,7 +322,7 @@ class DatabaseManagerService {
         debugPrint('🗑️ Deleting exercise: $exerciseId');
       }
 
-      await _firestore.collection('exercises').doc(exerciseId).delete();
+      await _firestore.collection('exercises_it').doc(exerciseId).delete(); // FIX: was 'exercises'
       _invalidateCache();
 
       return DatabaseOperationResult(
@@ -352,7 +352,7 @@ class DatabaseManagerService {
       final batch = _firestore.batch();
 
       for (final id in exerciseIds) {
-        final docRef = _firestore.collection('exercises').doc(id);
+        final docRef = _firestore.collection('exercises_it').doc(id); // FIX: was 'exercises'
         batch.delete(docRef);
       }
 
@@ -389,7 +389,7 @@ class DatabaseManagerService {
         // Export solo selezionati
         exercises = [];
         for (final id in exerciseIds) {
-          final doc = await _firestore.collection('exercises').doc(id).get();
+          final doc = await _firestore.collection('exercises_it').doc(id).get(); // FIX: was 'exercises'
           if (doc.exists) {
             final data = doc.data()!;
             data['id'] = doc.id;
@@ -443,7 +443,7 @@ class DatabaseManagerService {
 
       for (final exerciseJson in exercisesList) {
         final exercise = Exercise.fromJson(exerciseJson as Map<String, dynamic>);
-        final docRef = _firestore.collection('exercises').doc(exercise.id);
+        final docRef = _firestore.collection('exercises_it').doc(exercise.id); // FIX: was 'exercises'
         batch.set(docRef, exercise.toJson(), SetOptions(merge: true));
         importCount++;
 

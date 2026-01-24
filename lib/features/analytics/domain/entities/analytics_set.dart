@@ -57,11 +57,16 @@ abstract class AnalyticsSet with _$AnalyticsSet {
   factory AnalyticsSet.fromJson(Map<String, dynamic> json) =>
       _$AnalyticsSetFromJson(json);
 
-  /// Total volume for this set (weight × reps)
+  /// Total volume for this set
   ///
-  /// Example:
-  /// - weight: 100 kg, reps: 8 → volume: 800 kg
-  double get volume => weight * reps;
+  /// **Calculation**:
+  /// - Weighted exercises (weight > 0): volume = weight × reps
+  /// - Bodyweight exercises (weight = 0): volume = reps (rep count as proxy)
+  ///
+  /// **Examples**:
+  /// - Bench Press: 100 kg × 8 reps → volume: 800
+  /// - Push-ups: 0 kg × 20 reps → volume: 20
+  double get volume => weight > 0 ? weight * reps : reps.toDouble();
 
   /// Estimated One Rep Maximum using Epley formula
   ///

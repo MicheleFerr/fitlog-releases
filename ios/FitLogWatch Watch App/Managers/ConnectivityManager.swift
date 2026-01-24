@@ -88,6 +88,7 @@ class ConnectivityManager: NSObject, ObservableObject {
     @Published var shouldNavigateToExercise = false
     private var restTimer: Timer?
     private var restTimerStartTime: TimeInterval = 0
+    private var lastTimerExtendTimestamp: TimeInterval?  // ✅ Dedupe timer extensions
     private var isTimerSkipped = false
     @Published var isTimerPaused = false
 
@@ -682,6 +683,21 @@ class ConnectivityManager: NSObject, ObservableObject {
         targetWeight = weight
         targetReps = reps
 
+        // ✅ FIX: Also update allSetsTargets for views that use it (e.g., ExerciseControlView)
+        // This ensures all screens show the updated values immediately, not just screens
+        // that read targetWeight/targetReps directly
+        let setIndex = currentSetNumber - 1 // 0-indexed
+        if setIndex >= 0 && setIndex < allSetsTargets.count {
+            let currentTarget = allSetsTargets[setIndex]
+            allSetsTargets[setIndex] = (
+                weight: weight,
+                reps: reps,
+                actualReps: currentTarget.actualReps,
+                isCompleted: currentTarget.isCompleted
+            )
+            print("⌚ [WATCH] Updated allSetsTargets[\(setIndex)]: \(weight) kg × \(reps) reps")
+        }
+
         print("⌚ [WATCH] Sent target update: \(weight) kg × \(reps) reps for set \(currentSetNumber)")
     }
 
@@ -906,7 +922,16 @@ class ConnectivityManager: NSObject, ObservableObject {
         // Update local state immediately for responsive UI
         currentSetNumber = setNumber
 
-        print("⌚ [SET] Jumped to set \(setNumber) from Watch")
+        // ✅ FIX: Also update targetWeight/targetReps from allSetsTargets for immediate UI feedback
+        let setIndex = setNumber - 1  // Convert 1-indexed to 0-indexed
+        if setIndex >= 0 && setIndex < allSetsTargets.count {
+            let setData = allSetsTargets[setIndex]
+            targetWeight = setData.weight
+            targetReps = setData.reps
+            print("⌚ [SET] Jumped to set \(setNumber): \(setData.weight)kg × \(setData.reps) reps")
+        } else {
+            print("⌚ [SET] Jumped to set \(setNumber) (no local target data available)")
+        }
     }
 
     /// Copy weight and reps to all sets of current exercise
@@ -926,7 +951,18 @@ class ConnectivityManager: NSObject, ObservableObject {
         targetWeight = weight
         targetReps = reps
 
-        print("⌚ [SET] Copied weight \(weight) and reps \(reps) to all sets")
+        // ✅ FIX: Update ALL sets in allSetsTargets for immediate sync across screens
+        for i in 0..<allSetsTargets.count {
+            let currentTarget = allSetsTargets[i]
+            allSetsTargets[i] = (
+                weight: weight,
+                reps: reps,
+                actualReps: currentTarget.actualReps,
+                isCompleted: currentTarget.isCompleted
+            )
+        }
+
+        print("⌚ [SET] Copied weight \(weight) and reps \(reps) to all \(allSetsTargets.count) sets")
     }
 
     /// Copy weight and reps from the previous set
@@ -941,7 +977,28 @@ class ConnectivityManager: NSObject, ObservableObject {
         // User-initiated action, immediate delivery
         sendToiPhone(data, critical: false, forceImmediate: true)
 
-        print("⌚ [SET] Requested copy from previous set (current: \(currentSetNumber))")
+        // ✅ FIX: Optimistic local update - copy from previous set in allSetsTargets
+        let previousSetIndex = currentSetNumber - 2  // 0-indexed: current is N-1, previous is N-2
+        let currentSetIndex = currentSetNumber - 1   // 0-indexed
+        if previousSetIndex >= 0 && previousSetIndex < allSetsTargets.count {
+            let previousSet = allSetsTargets[previousSetIndex]
+            targetWeight = previousSet.weight
+            targetReps = previousSet.reps
+
+            // Also update current set in allSetsTargets
+            if currentSetIndex >= 0 && currentSetIndex < allSetsTargets.count {
+                let currentTarget = allSetsTargets[currentSetIndex]
+                allSetsTargets[currentSetIndex] = (
+                    weight: previousSet.weight,
+                    reps: previousSet.reps,
+                    actualReps: currentTarget.actualReps,
+                    isCompleted: currentTarget.isCompleted
+                )
+            }
+            print("⌚ [SET] Copied from previous set: \(previousSet.weight)kg × \(previousSet.reps) reps")
+        } else {
+            print("⌚ [SET] Requested copy from previous set (current: \(currentSetNumber)) - no local data")
+        }
     }
 
     /// Jump to a specific exercise by index
@@ -1624,13 +1681,26 @@ extension ConnectivityManager: WCSessionDelegate {
 
             case "restTimerExtended":
                 // Handle +30s (or other) extension from Live Activity or app
+                // ✅ FIX: Use ABSOLUTE newDuration from iPhone instead of relative addition
+                // This prevents desync due to timing differences and double processing
                 let addedSeconds = message["addedSeconds"] as? Int ?? 30
-                let newDuration = message["newDuration"] as? Int ?? (restTimeRemaining + addedSeconds)
+                let timestamp = message["timestamp"] as? TimeInterval ?? Date().timeIntervalSince1970
 
-                print("⌚ [WATCH] Rest timer extended: +\(addedSeconds)s, new total: \(newDuration)s")
+                // Dedupe: Skip if we already processed this extension (within 2s window)
+                if let lastExtend = lastTimerExtendTimestamp, abs(timestamp - lastExtend) < 2.0 {
+                    print("⌚ [WATCH] Skipping duplicate timer extension (timestamp match)")
+                    break
+                }
+                lastTimerExtendTimestamp = timestamp
 
-                // Update remaining time
-                restTimeRemaining = restTimeRemaining + addedSeconds
+                // Use iPhone's calculated remaining time for accuracy
+                let newRemainingFromIPhone = message["newDuration"] as? Int ?? (restTimeRemaining + addedSeconds)
+                let oldRemaining = restTimeRemaining
+
+                print("⌚ [WATCH] Rest timer extended: +\(addedSeconds)s (was \(oldRemaining)s, now \(newRemainingFromIPhone)s)")
+
+                // Use iPhone's authoritative remaining time
+                restTimeRemaining = newRemainingFromIPhone
 
                 // Restart the timer with the extended duration if timer is running
                 // (not paused and not skipped)

@@ -35,7 +35,7 @@
     "focus": "LAT",
     "imageUrl": "https://static.exercisedb.dev/media/JbC2iaV.gif",
     "muscoliSecondari": [
-      "FEMOR",
+      "FEMO",
       "GLUT",
       "TRAP"
     ],
@@ -66,7 +66,7 @@
     "focus": "LAT",
     "imageUrl": "https://static.exercisedb.dev/media/isofgzg.gif",
     "muscoliSecondari": [
-      "FEMOR",
+      "FEMO",
       "GLUT",
       "TRAP"
     ],
@@ -345,7 +345,7 @@
   {
     "id": "side_wrist_pull_stretch",
     "nome": "Allungamento Polso Laterale a Trazione",
-    "focus": "AVAMB",
+    "focus": "AVA",
     "imageUrl": "https://static.exercisedb.dev/media/UtmIqcI.gif",
     "difficolta": "Principiante",
     "tipoEsercizio": "Compound",
@@ -458,7 +458,7 @@
   {
     "id": "kettlebell_alternating_hang_clean",
     "nome": "Alternato Hang Clean con Kettlebell",
-    "focus": "AVAMB",
+    "focus": "AVA",
     "imageUrl": "https://static.exercisedb.dev/media/I4tibZG.gif",
     "muscoliSecondari": [
       "CORE",
@@ -577,7 +577,7 @@
   {
     "id": "seated_biceps",
     "nome": "Bicipiti Seduti",
-    "focus": "BIC",
+    "focus": "BICI",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Seated_Biceps/0.jpg",
     "muscoliSecondari": [
       "PETT",
@@ -632,7 +632,7 @@
   {
     "id": "wrist_circles",
     "nome": "Cerchi con i Polsi",
-    "focus": "AVAMB",
+    "focus": "AVA",
     "difficolta": "Principiante",
     "tipoEsercizio": "Stretching",
     "attrezzatura": "Corpo Libero",
@@ -651,12 +651,12 @@
   {
     "id": "side_to_side_chins",
     "nome": "Chin-Up Laterali da Sidone",
-    "focus": "DORSO",
+    "focus": "LAT",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Side_To_Side_Chins/0.jpg",
     "muscoliSecondari": [
-      "BIC",
-      "AVAMB",
-      "DORSO",
+      "BICI",
+      "AVA",
+      "LAT",
       "DELT"
     ],
     "difficolta": "Intermedio",
@@ -678,11 +678,11 @@
   {
     "id": "gironda_sternum_chins",
     "nome": "Chiusura del Petto con Cavo Alternato",
-    "focus": "DORSO",
+    "focus": "LAT",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Gironda_Sternum_Chins/0.jpg",
     "muscoliSecondari": [
-      "BIC",
-      "DORSO"
+      "BICI",
+      "LAT"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Compound",
@@ -720,7 +720,7 @@
     ],
     "countingMode": "weighted",
     "muscoliSecondari": [
-      "AVAMB"
+      "AVA"
     ],
     "version": "1.0.2",
     "versionHistory": [
@@ -735,7 +735,7 @@
     "focus": "BICI",
     "imageUrl": "https://static.exercisedb.dev/media/Mz6lLcW.gif",
     "muscoliSecondari": [
-      "AVAMB"
+      "AVA"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Compound",
@@ -765,7 +765,7 @@
     "focus": "BICI",
     "imageUrl": "https://static.exercisedb.dev/media/1VpF8db.gif",
     "muscoliSecondari": [
-      "AVAMB"
+      "AVA"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Compound",
@@ -809,7 +809,7 @@
     ],
     "countingMode": "weighted",
     "muscoliSecondari": [
-      "AVAMB"
+      "AVA"
     ],
     "version": "1.0.2",
     "versionHistory": [
@@ -821,10 +821,10 @@
   {
     "id": "dumbbell_alternate_bicep_curl",
     "nome": "Curl Alternati al Bicipite con Manubri",
-    "focus": "BIC",
+    "focus": "BICI",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Dumbbell_Alternate_Bicep_Curl/0.jpg",
     "muscoliSecondari": [
-      "AVAMB"
+      "AVA"
     ],
     "difficolta": "Principiante",
     "tipoEsercizio": "Isolation",
@@ -848,7 +848,7 @@
     "focus": "BICI",
     "imageUrl": "https://static.exercisedb.dev/media/CfKsRbG.gif",
     "muscoliSecondari": [
-      "AVAMB"
+      "AVA"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Isolation",
@@ -878,7 +878,7 @@
     "focus": "BICI",
     "imageUrl": "https://static.exercisedb.dev/media/Zwiw7XR.gif",
     "muscoliSecondari": [
-      "AVAMB"
+      "AVA"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Isolation",
@@ -908,7 +908,7 @@
     "focus": "BICI",
     "imageUrl": "https://static.exercisedb.dev/media/Yza7XrQ.gif",
     "muscoliSecondari": [
-      "AVAMB"
+      "AVA"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Isolation",
@@ -937,7 +937,7 @@
     "focus": "BICI",
     "imageUrl": "https://static.exercisedb.dev/media/3omWx6P.gif",
     "muscoliSecondari": [
-      "AVAMB"
+      "AVA"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Isolation",
@@ -967,7 +967,7 @@
     "focus": "BICI",
     "imageUrl": "https://static.exercisedb.dev/media/BU15nH4.gif",
     "muscoliSecondari": [
-      "AVAMB"
+      "AVA"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Isolation",
@@ -997,7 +997,7 @@
     "focus": "BICI",
     "imageUrl": "https://static.exercisedb.dev/media/fy7Tgy4.gif",
     "muscoliSecondari": [
-      "AVAMB"
+      "AVA"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Isolation",
@@ -1026,7 +1026,7 @@
     "focus": "BICI",
     "imageUrl": "https://static.exercisedb.dev/media/NlfIbzq.gif",
     "muscoliSecondari": [
-      "AVAMB"
+      "AVA"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Isolation",
@@ -1052,10 +1052,10 @@
   {
     "id": "alternate_hammer_curl",
     "nome": "Curl Alternato al Martello",
-    "focus": "BIC",
+    "focus": "BICI",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Alternate_Hammer_Curl/0.jpg",
     "muscoliSecondari": [
-      "AVAMB"
+      "AVA"
     ],
     "difficolta": "Principiante",
     "tipoEsercizio": "Isolation",
@@ -1076,10 +1076,10 @@
   {
     "id": "alternate_incline_dumbbell_curl",
     "nome": "Curl Alternato con Manubri Inclinati",
-    "focus": "BIC",
+    "focus": "BICI",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Alternate_Incline_Dumbbell_Curl/0.jpg",
     "muscoliSecondari": [
-      "AVAMB"
+      "AVA"
     ],
     "difficolta": "Principiante",
     "tipoEsercizio": "Isolation",
@@ -1103,7 +1103,7 @@
     "focus": "BICI",
     "imageUrl": "https://static.exercisedb.dev/media/qAmNMJY.gif",
     "muscoliSecondari": [
-      "AVAMB"
+      "AVA"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Isolation",
@@ -1132,7 +1132,7 @@
     "focus": "BICI",
     "imageUrl": "https://static.exercisedb.dev/media/q6y3OhV.gif",
     "muscoliSecondari": [
-      "AVAMB"
+      "AVA"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Isolation",
@@ -1163,7 +1163,7 @@
     "focus": "BICI",
     "imageUrl": "https://static.exercisedb.dev/media/sJFIDIp.gif",
     "muscoliSecondari": [
-      "AVAMB"
+      "AVA"
     ],
     "difficolta": "Principiante",
     "tipoEsercizio": "Isolation",
@@ -1192,7 +1192,7 @@
     "focus": "BICI",
     "imageUrl": "https://static.exercisedb.dev/media/LCtQPn8.gif",
     "muscoliSecondari": [
-      "AVAMB"
+      "AVA"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Isolation",
@@ -1222,7 +1222,7 @@
     "focus": "BICI",
     "imageUrl": "https://static.exercisedb.dev/media/nFc4FyV.gif",
     "muscoliSecondari": [
-      "AVAMB"
+      "AVA"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Isolation",
@@ -1252,7 +1252,7 @@
     "focus": "BICI",
     "imageUrl": "https://static.exercisedb.dev/media/H1XAdpk.gif",
     "muscoliSecondari": [
-      "AVAMB"
+      "AVA"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Isolation",
@@ -1284,7 +1284,7 @@
     "focus": "BICI",
     "imageUrl": "https://static.exercisedb.dev/media/zILLZ98.gif",
     "muscoliSecondari": [
-      "AVAMB"
+      "AVA"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Isolation",
@@ -1313,7 +1313,7 @@
     "focus": "BICI",
     "imageUrl": "https://static.exercisedb.dev/media/nlJsbkW.gif",
     "muscoliSecondari": [
-      "AVAMB"
+      "AVA"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Isolation",
@@ -1343,7 +1343,7 @@
     "focus": "BICI",
     "imageUrl": "https://static.exercisedb.dev/media/aee2Fcj.gif",
     "muscoliSecondari": [
-      "AVAMB"
+      "AVA"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Isolation",
@@ -1372,7 +1372,7 @@
     "focus": "BICI",
     "imageUrl": "https://static.exercisedb.dev/media/tJ5nYqo.gif",
     "muscoliSecondari": [
-      "AVAMB"
+      "AVA"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Isolation",
@@ -1401,7 +1401,7 @@
     "focus": "BICI",
     "imageUrl": "https://static.exercisedb.dev/media/NbVPDMW.gif",
     "muscoliSecondari": [
-      "AVAMB"
+      "AVA"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Isolation",
@@ -1432,7 +1432,7 @@
     "focus": "BICI",
     "imageUrl": "https://static.exercisedb.dev/media/uSkDMYl.gif",
     "muscoliSecondari": [
-      "AVAMB"
+      "AVA"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Isolation",
@@ -1462,7 +1462,7 @@
     "focus": "BICI",
     "imageUrl": "https://static.exercisedb.dev/media/2JCuFTU.gif",
     "muscoliSecondari": [
-      "AVAMB"
+      "AVA"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Isolation",
@@ -1492,7 +1492,7 @@
     "focus": "BICI",
     "imageUrl": "https://static.exercisedb.dev/media/2NImIAG.gif",
     "muscoliSecondari": [
-      "AVAMB"
+      "AVA"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Isolation",
@@ -1522,7 +1522,7 @@
     "focus": "BICI",
     "imageUrl": "https://static.exercisedb.dev/media/F3xgbjF.gif",
     "muscoliSecondari": [
-      "AVAMB"
+      "AVA"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Isolation",
@@ -1567,7 +1567,7 @@
     "countingMode": "weighted",
     "tempoEsecuzione": "2-1-2-0",
     "muscoliSecondari": [
-      "AVAMB"
+      "AVA"
     ],
     "version": "1.0.2",
     "versionHistory": [
@@ -1582,7 +1582,7 @@
     "focus": "BICI",
     "imageUrl": "https://static.exercisedb.dev/media/PcPe0P5.gif",
     "muscoliSecondari": [
-      "AVAMB"
+      "AVA"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Isolation",
@@ -1611,7 +1611,7 @@
     "focus": "BICI",
     "imageUrl": "https://static.exercisedb.dev/media/HDYiZcY.gif",
     "muscoliSecondari": [
-      "AVAMB"
+      "AVA"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Isolation",
@@ -1637,7 +1637,7 @@
   {
     "id": "dumbbell_finger_curls",
     "nome": "Curl Dita con Manubri",
-    "focus": "AVAMB",
+    "focus": "AVA",
     "imageUrl": "https://static.exercisedb.dev/media/mtXengz.gif",
     "difficolta": "Intermedio",
     "tipoEsercizio": "Isolation",
@@ -1669,7 +1669,7 @@
     "focus": "BICI",
     "imageUrl": "https://static.exercisedb.dev/media/dXz8zjF.gif",
     "muscoliSecondari": [
-      "AVAMB"
+      "AVA"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Isolation",
@@ -1698,7 +1698,7 @@
     "focus": "BICI",
     "imageUrl": "https://static.exercisedb.dev/media/IENzBdA.gif",
     "muscoliSecondari": [
-      "AVAMB"
+      "AVA"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Isolation",
@@ -1723,7 +1723,7 @@
   {
     "id": "finger_curls",
     "nome": "Curl Finger S",
-    "focus": "AVAMB",
+    "focus": "AVA",
     "imageUrl": "https://static.exercisedb.dev/media/awG04cF.gif",
     "difficolta": "Intermedio",
     "tipoEsercizio": "Isolation",
@@ -1754,7 +1754,7 @@
     "focus": "BICI",
     "imageUrl": "https://static.exercisedb.dev/media/GNhAeJ0.gif",
     "muscoliSecondari": [
-      "AVAMB"
+      "AVA"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Isolation",
@@ -1783,7 +1783,7 @@
     "focus": "BICI",
     "imageUrl": "https://static.exercisedb.dev/media/F1KxjBa.gif",
     "muscoliSecondari": [
-      "AVAMB"
+      "AVA"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Isolation",
@@ -1812,7 +1812,7 @@
     "focus": "BICI",
     "imageUrl": "https://static.exercisedb.dev/media/Qyk5J3p.gif",
     "muscoliSecondari": [
-      "AVAMB"
+      "AVA"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Isolation",
@@ -1841,7 +1841,7 @@
     "focus": "BICI",
     "imageUrl": "https://static.exercisedb.dev/media/2NpxjC1.gif",
     "muscoliSecondari": [
-      "AVAMB"
+      "AVA"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Isolation",
@@ -1870,7 +1870,7 @@
     "focus": "BICI",
     "imageUrl": "https://static.exercisedb.dev/media/o1ntciW.gif",
     "muscoliSecondari": [
-      "AVAMB"
+      "AVA"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Isolation",
@@ -1898,7 +1898,7 @@
     "focus": "BICI",
     "imageUrl": "https://static.exercisedb.dev/media/HPlPoQA.gif",
     "muscoliSecondari": [
-      "AVAMB"
+      "AVA"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Isolation",
@@ -1927,7 +1927,7 @@
     "focus": "BICI",
     "imageUrl": "https://static.exercisedb.dev/media/slDvUAU.gif",
     "muscoliSecondari": [
-      "AVAMB"
+      "AVA"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Isolation",
@@ -1956,7 +1956,7 @@
     "focus": "BICI",
     "imageUrl": "https://static.exercisedb.dev/media/79AmJsI.gif",
     "muscoliSecondari": [
-      "AVAMB"
+      "AVA"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Isolation",
@@ -1985,7 +1985,7 @@
     "focus": "BICI",
     "imageUrl": "https://static.exercisedb.dev/media/fY68AyX.gif",
     "muscoliSecondari": [
-      "AVAMB"
+      "AVA"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Isolation",
@@ -2014,7 +2014,7 @@
     "focus": "BICI",
     "imageUrl": "https://static.exercisedb.dev/media/cWemPG8.gif",
     "muscoliSecondari": [
-      "AVAMB"
+      "AVA"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Isolation",
@@ -2043,7 +2043,7 @@
     "focus": "BICI",
     "imageUrl": "https://static.exercisedb.dev/media/ByX0WxV.gif",
     "muscoliSecondari": [
-      "AVAMB"
+      "AVA"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Isolation",
@@ -2072,7 +2072,7 @@
     "focus": "BICI",
     "imageUrl": "https://static.exercisedb.dev/media/EqHIIjJ.gif",
     "muscoliSecondari": [
-      "AVAMB"
+      "AVA"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Isolation",
@@ -2100,7 +2100,7 @@
     "focus": "BICI",
     "imageUrl": "https://static.exercisedb.dev/media/WLvTAv5.gif",
     "muscoliSecondari": [
-      "AVAMB"
+      "AVA"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Isolation",
@@ -2128,7 +2128,7 @@
     "focus": "BICI",
     "imageUrl": "https://static.exercisedb.dev/media/Um8xUAc.gif",
     "muscoliSecondari": [
-      "AVAMB"
+      "AVA"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Isolation",
@@ -2156,7 +2156,7 @@
     "focus": "BICI",
     "imageUrl": "https://static.exercisedb.dev/media/mwpPcr1.gif",
     "muscoliSecondari": [
-      "AVAMB"
+      "AVA"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Isolation",
@@ -2185,7 +2185,7 @@
     "focus": "BICI",
     "imageUrl": "https://static.exercisedb.dev/media/RaflbWD.gif",
     "muscoliSecondari": [
-      "AVAMB"
+      "AVA"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Isolation",
@@ -2214,7 +2214,7 @@
     "focus": "BICI",
     "imageUrl": "https://static.exercisedb.dev/media/ae9UoXQ.gif",
     "muscoliSecondari": [
-      "AVAMB"
+      "AVA"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Isolation",
@@ -2240,7 +2240,7 @@
   {
     "id": "incline_inner_biceps_curl",
     "nome": "Curl Interno Panca Inclinata",
-    "focus": "BIC",
+    "focus": "BICI",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Incline_Inner_Biceps_Curl/0.jpg",
     "muscoliSecondari": [],
     "difficolta": "Principiante",
@@ -2262,7 +2262,7 @@
   {
     "id": "seated_dumbbell_inner_biceps_curl",
     "nome": "Curl Interno del Bicipite Seduto con Manubri",
-    "focus": "BIC",
+    "focus": "BICI",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Seated_Dumbbell_Inner_Biceps_Curl/0.jpg",
     "muscoliSecondari": [],
     "difficolta": "Principiante",
@@ -2284,7 +2284,7 @@
   {
     "id": "standing_inner_biceps_curl",
     "nome": "Curl Interno in Posizione In piedi",
-    "focus": "BIC",
+    "focus": "BICI",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Standing_Inner-Biceps_Curl/0.jpg",
     "muscoliSecondari": [],
     "difficolta": "Intermedio",
@@ -2309,7 +2309,7 @@
     "focus": "BICI",
     "imageUrl": "https://static.exercisedb.dev/media/O8Aq69u.gif",
     "muscoliSecondari": [
-      "AVAMB"
+      "AVA"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Isolation",
@@ -2338,7 +2338,7 @@
     "focus": "BICI",
     "imageUrl": "https://static.exercisedb.dev/media/eOG0r6v.gif",
     "muscoliSecondari": [
-      "AVAMB"
+      "AVA"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Isolation",
@@ -2364,10 +2364,10 @@
   {
     "id": "standing_dumbbell_reverse_curl",
     "nome": "Curl Inversio con Manubri in Poso Verticale",
-    "focus": "BIC",
+    "focus": "BICI",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Standing_Dumbbell_Reverse_Curl/0.jpg",
     "muscoliSecondari": [
-      "AVAMB"
+      "AVA"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Isolation",
@@ -2391,7 +2391,7 @@
     "focus": "BICI",
     "imageUrl": "https://static.exercisedb.dev/media/xNrS20v.gif",
     "muscoliSecondari": [
-      "AVAMB"
+      "AVA"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Isolation",
@@ -2420,7 +2420,7 @@
     "focus": "BICI",
     "imageUrl": "https://static.exercisedb.dev/media/QTXKWPh.gif",
     "muscoliSecondari": [
-      "AVAMB"
+      "AVA"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Compound",
@@ -2447,7 +2447,7 @@
   {
     "id": "lying_supine_dumbbell_curl",
     "nome": "Curl Lievi con Manubri",
-    "focus": "BIC",
+    "focus": "BICI",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Lying_Supine_Dumbbell_Curl/0.jpg",
     "muscoliSecondari": [],
     "difficolta": "Principiante",
@@ -2469,7 +2469,7 @@
   {
     "id": "hammer_curls",
     "nome": "Curl Martello",
-    "focus": "BIC",
+    "focus": "BICI",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Hammer_Curls/0.jpg",
     "muscoliSecondari": [],
     "difficolta": "Principiante",
@@ -2491,7 +2491,7 @@
   {
     "id": "barbell_revers_wrist_curl_v_2",
     "nome": "Curl Polsi Inverso V. 2 con Bilanciere",
-    "focus": "AVAMB",
+    "focus": "AVA",
     "imageUrl": "https://static.exercisedb.dev/media/qDnGfDb.gif",
     "difficolta": "Intermedio",
     "tipoEsercizio": "Isolation",
@@ -2520,7 +2520,7 @@
   {
     "id": "barbell_reverse_wrist_curl_prone_variation",
     "nome": "Curl Polsi Inverso Variazione Prona con Bilanciere",
-    "focus": "AVAMB",
+    "focus": "AVA",
     "imageUrl": "https://static.exercisedb.dev/media/YA2HKGz.gif",
     "difficolta": "Intermedio",
     "tipoEsercizio": "Isolation",
@@ -2549,7 +2549,7 @@
   {
     "id": "cable_reverse_wrist_curl",
     "nome": "Curl Polsi Inverso ai Cavi",
-    "focus": "AVAMB",
+    "focus": "AVA",
     "imageUrl": "https://static.exercisedb.dev/media/eYmsEPR.gif",
     "difficolta": "Intermedio",
     "tipoEsercizio": "Isolation",
@@ -2578,7 +2578,7 @@
   {
     "id": "barbell_reverse_wrist_curl",
     "nome": "Curl Polsi Inverso con Bilanciere",
-    "focus": "AVAMB",
+    "focus": "AVA",
     "imageUrl": "https://static.exercisedb.dev/media/LsZkfU6.gif",
     "difficolta": "Intermedio",
     "tipoEsercizio": "Isolation",
@@ -2607,7 +2607,7 @@
   {
     "id": "band_reverse_wrist_curl",
     "nome": "Curl Polsi Inverso con Elastico",
-    "focus": "AVAMB",
+    "focus": "AVA",
     "imageUrl": "https://static.exercisedb.dev/media/Ezpnw9d.gif",
     "difficolta": "Intermedio",
     "tipoEsercizio": "Isolation",
@@ -2636,7 +2636,7 @@
   {
     "id": "dumbbell_reverse_wrist_curl",
     "nome": "Curl Polsi Inverso con Manubri",
-    "focus": "AVAMB",
+    "focus": "AVA",
     "imageUrl": "https://static.exercisedb.dev/media/BLCvwr2.gif",
     "difficolta": "Intermedio",
     "tipoEsercizio": "Isolation",
@@ -2665,7 +2665,7 @@
   {
     "id": "dumbbell_over_bench_revers_wrist_curl",
     "nome": "Curl Polsi Inverso su Panca con Manubri",
-    "focus": "AVAMB",
+    "focus": "AVA",
     "imageUrl": "https://static.exercisedb.dev/media/3tAXPQ6.gif",
     "difficolta": "Intermedio",
     "tipoEsercizio": "Isolation",
@@ -2694,7 +2694,7 @@
   {
     "id": "barbell_palms_down_wrist_curl_over_a_bench",
     "nome": "Curl Polsi Palmi Giù su Panca con Bilanciere",
-    "focus": "AVAMB",
+    "focus": "AVA",
     "imageUrl": "https://static.exercisedb.dev/media/yzYH9pI.gif",
     "difficolta": "Intermedio",
     "tipoEsercizio": "Isolation",
@@ -2723,7 +2723,7 @@
   {
     "id": "barbell_palms_up_wrist_curl_over_a_bench",
     "nome": "Curl Polsi Palmi su su Panca con Bilanciere",
-    "focus": "AVAMB",
+    "focus": "AVA",
     "imageUrl": "https://static.exercisedb.dev/media/SJAA2IQ.gif",
     "muscoliSecondari": [
       "DELT"
@@ -2752,7 +2752,7 @@
   {
     "id": "barbell_wrist_curl_v_2",
     "nome": "Curl Polsi V. 2 con Bilanciere",
-    "focus": "AVAMB",
+    "focus": "AVA",
     "imageUrl": "https://static.exercisedb.dev/media/6kSxYnw.gif",
     "difficolta": "Intermedio",
     "tipoEsercizio": "Isolation",
@@ -2781,7 +2781,7 @@
   {
     "id": "cable_wrist_curl",
     "nome": "Curl Polsi ai Cavi",
-    "focus": "AVAMB",
+    "focus": "AVA",
     "imageUrl": "https://static.exercisedb.dev/media/LrV4s90.gif",
     "difficolta": "Intermedio",
     "tipoEsercizio": "Isolation",
@@ -2811,7 +2811,7 @@
   {
     "id": "barbell_wrist_curl",
     "nome": "Curl Polsi con Bilanciere",
-    "focus": "AVAMB",
+    "focus": "AVA",
     "imageUrl": "https://static.exercisedb.dev/media/82LxxkW.gif",
     "difficolta": "Intermedio",
     "tipoEsercizio": "Isolation",
@@ -2840,7 +2840,7 @@
   {
     "id": "band_wrist_curl",
     "nome": "Curl Polsi con Elastico",
-    "focus": "AVAMB",
+    "focus": "AVA",
     "imageUrl": "https://static.exercisedb.dev/media/vUTfFHw.gif",
     "difficolta": "Intermedio",
     "tipoEsercizio": "Isolation",
@@ -2869,7 +2869,7 @@
   {
     "id": "dumbbell_over_bench_wrist_curl",
     "nome": "Curl Polsi su Panca con Manubri",
-    "focus": "AVAMB",
+    "focus": "AVA",
     "imageUrl": "https://static.exercisedb.dev/media/D1xYJAU.gif",
     "difficolta": "Intermedio",
     "tipoEsercizio": "Isolation",
@@ -2898,7 +2898,7 @@
   {
     "id": "dumbbell_over_bench_neutral_wrist_curl",
     "nome": "Curl Polso Neutro su Panca con Manubri",
-    "focus": "AVAMB",
+    "focus": "AVA",
     "imageUrl": "https://static.exercisedb.dev/media/BKa8dmT.gif",
     "muscoliSecondari": [],
     "difficolta": "Intermedio",
@@ -2928,7 +2928,7 @@
     "focus": "BICI",
     "imageUrl": "https://static.exercisedb.dev/media/b6hQYMb.gif",
     "muscoliSecondari": [
-      "AVAMB"
+      "AVA"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Isolation",
@@ -2957,7 +2957,7 @@
     "focus": "BICI",
     "imageUrl": "https://static.exercisedb.dev/media/ye84CTU.gif",
     "muscoliSecondari": [
-      "AVAMB"
+      "AVA"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Isolation",
@@ -2986,7 +2986,7 @@
     "focus": "BICI",
     "imageUrl": "https://static.exercisedb.dev/media/IwX5NqK.gif",
     "muscoliSecondari": [
-      "AVAMB"
+      "AVA"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Isolation",
@@ -3015,7 +3015,7 @@
     "focus": "BICI",
     "imageUrl": "https://static.exercisedb.dev/media/4LIG9xr.gif",
     "muscoliSecondari": [
-      "AVAMB"
+      "AVA"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Isolation",
@@ -3043,7 +3043,7 @@
     "focus": "BICI",
     "imageUrl": "https://static.exercisedb.dev/media/7y9JIMj.gif",
     "muscoliSecondari": [
-      "AVAMB"
+      "AVA"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Isolation",
@@ -3071,7 +3071,7 @@
     "focus": "BICI",
     "imageUrl": "https://static.exercisedb.dev/media/qOgPVf6.gif",
     "muscoliSecondari": [
-      "AVAMB"
+      "AVA"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Isolation",
@@ -3099,7 +3099,7 @@
     "focus": "BICI",
     "imageUrl": "https://static.exercisedb.dev/media/jivWf8n.gif",
     "muscoliSecondari": [
-      "AVAMB"
+      "AVA"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Isolation",
@@ -3128,7 +3128,7 @@
     "focus": "BICI",
     "imageUrl": "https://static.exercisedb.dev/media/vBNyir7.gif",
     "muscoliSecondari": [
-      "AVAMB"
+      "AVA"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Isolation",
@@ -3156,7 +3156,7 @@
     "focus": "BICI",
     "imageUrl": "https://static.exercisedb.dev/media/OAguZoG.gif",
     "muscoliSecondari": [
-      "AVAMB"
+      "AVA"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Isolation",
@@ -3185,7 +3185,7 @@
     "focus": "BICI",
     "imageUrl": "https://static.exercisedb.dev/media/QQwxa8g.gif",
     "muscoliSecondari": [
-      "AVAMB"
+      "AVA"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Isolation",
@@ -3214,7 +3214,7 @@
     "focus": "BICI",
     "imageUrl": "https://static.exercisedb.dev/media/hwygydB.gif",
     "muscoliSecondari": [
-      "AVAMB"
+      "AVA"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Isolation",
@@ -3358,7 +3358,7 @@
     "focus": "BICI",
     "imageUrl": "https://static.exercisedb.dev/media/kj3hy6W.gif",
     "muscoliSecondari": [
-      "AVAMB"
+      "AVA"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Isolation",
@@ -3386,7 +3386,7 @@
     "focus": "BICI",
     "imageUrl": "https://static.exercisedb.dev/media/e4ojVhP.gif",
     "muscoliSecondari": [
-      "AVAMB"
+      "AVA"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Isolation",
@@ -3416,7 +3416,7 @@
     "focus": "BICI",
     "imageUrl": "https://static.exercisedb.dev/media/otqIxU4.gif",
     "muscoliSecondari": [
-      "AVAMB"
+      "AVA"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Isolation",
@@ -3445,7 +3445,7 @@
     "focus": "BICI",
     "imageUrl": "https://static.exercisedb.dev/media/XVzF3iZ.gif",
     "muscoliSecondari": [
-      "AVAMB"
+      "AVA"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Isolation",
@@ -3475,7 +3475,7 @@
     "focus": "BICI",
     "imageUrl": "https://static.exercisedb.dev/media/gscGLOU.gif",
     "muscoliSecondari": [
-      "AVAMB"
+      "AVA"
     ],
     "difficolta": "Principiante",
     "tipoEsercizio": "Isolation",
@@ -3505,7 +3505,7 @@
     "focus": "BICI",
     "imageUrl": "https://static.exercisedb.dev/media/qm9veZw.gif",
     "muscoliSecondari": [
-      "AVAMB"
+      "AVA"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Isolation",
@@ -3534,7 +3534,7 @@
     "focus": "BICI",
     "imageUrl": "https://static.exercisedb.dev/media/SYJ4Bkt.gif",
     "muscoliSecondari": [
-      "AVAMB"
+      "AVA"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Isolation",
@@ -3591,7 +3591,7 @@
     "focus": "BICI",
     "imageUrl": "https://static.exercisedb.dev/media/KUaZst7.gif",
     "muscoliSecondari": [
-      "AVAMB"
+      "AVA"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Isolation",
@@ -3620,7 +3620,7 @@
     "focus": "BICI",
     "imageUrl": "https://static.exercisedb.dev/media/xmWQIlT.gif",
     "muscoliSecondari": [
-      "AVAMB"
+      "AVA"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Isolation",
@@ -3650,7 +3650,7 @@
     "focus": "BICI",
     "imageUrl": "https://static.exercisedb.dev/media/J74XlNf.gif",
     "muscoliSecondari": [
-      "AVAMB"
+      "AVA"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Isolation",
@@ -3680,7 +3680,7 @@
     "focus": "BICI",
     "imageUrl": "https://static.exercisedb.dev/media/6em2Dxj.gif",
     "muscoliSecondari": [
-      "AVAMB"
+      "AVA"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Isolation",
@@ -3709,7 +3709,7 @@
     "focus": "BICI",
     "imageUrl": "https://static.exercisedb.dev/media/QLRmNeT.gif",
     "muscoliSecondari": [
-      "AVAMB"
+      "AVA"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Isolation",
@@ -3738,7 +3738,7 @@
     "focus": "BICI",
     "imageUrl": "https://static.exercisedb.dev/media/KXyoEtA.gif",
     "muscoliSecondari": [
-      "AVAMB"
+      "AVA"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Isolation",
@@ -3768,7 +3768,7 @@
     "focus": "BICI",
     "imageUrl": "https://static.exercisedb.dev/media/OeL23VY.gif",
     "muscoliSecondari": [
-      "AVAMB"
+      "AVA"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Isolation",
@@ -3798,7 +3798,7 @@
     "focus": "BICI",
     "imageUrl": "https://static.exercisedb.dev/media/XFc3vpY.gif",
     "muscoliSecondari": [
-      "AVAMB"
+      "AVA"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Isolation",
@@ -3828,7 +3828,7 @@
     "focus": "BICI",
     "imageUrl": "https://static.exercisedb.dev/media/xiA6lRr.gif",
     "muscoliSecondari": [
-      "AVAMB"
+      "AVA"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Isolation",
@@ -3858,7 +3858,7 @@
     "focus": "BICI",
     "imageUrl": "https://static.exercisedb.dev/media/b4b6afT.gif",
     "muscoliSecondari": [
-      "AVAMB"
+      "AVA"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Isolation",
@@ -3887,7 +3887,7 @@
     "focus": "BICI",
     "imageUrl": "https://static.exercisedb.dev/media/IGtBdNT.gif",
     "muscoliSecondari": [
-      "AVAMB"
+      "AVA"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Isolation",
@@ -3916,7 +3916,7 @@
     "focus": "BICI",
     "imageUrl": "https://static.exercisedb.dev/media/lyKCLmK.gif",
     "muscoliSecondari": [
-      "AVAMB"
+      "AVA"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Isolation",
@@ -3942,7 +3942,7 @@
   {
     "id": "dumbbell_seated_palms_up_wrist_curl",
     "nome": "Curl Seduto Polsi Palmi su con Manubri",
-    "focus": "AVAMB",
+    "focus": "AVA",
     "imageUrl": "https://static.exercisedb.dev/media/2dImyQ8.gif",
     "muscoliSecondari": [
       "DELT"
@@ -3971,7 +3971,7 @@
   {
     "id": "dumbbell_seated_neutral_wrist_curl",
     "nome": "Curl Seduto Polso Neutro con Manubri",
-    "focus": "AVAMB",
+    "focus": "AVA",
     "imageUrl": "https://static.exercisedb.dev/media/uJmK7Z1.gif",
     "muscoliSecondari": [],
     "difficolta": "Intermedio",
@@ -4001,7 +4001,7 @@
     "focus": "BICI",
     "imageUrl": "https://static.exercisedb.dev/media/7D5bgLT.gif",
     "muscoliSecondari": [
-      "AVAMB"
+      "AVA"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Isolation",
@@ -4083,7 +4083,7 @@
   {
     "id": "smith_seated_wrist_curl",
     "nome": "Curl Seduto Smith Wrist",
-    "focus": "AVAMB",
+    "focus": "AVA",
     "imageUrl": "https://static.exercisedb.dev/media/B6dAO1t.gif",
     "difficolta": "Intermedio",
     "tipoEsercizio": "Isolation",
@@ -4114,7 +4114,7 @@
     "focus": "BICI",
     "imageUrl": "https://static.exercisedb.dev/media/DpWMFP5.gif",
     "muscoliSecondari": [
-      "AVAMB"
+      "AVA"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Isolation",
@@ -4143,7 +4143,7 @@
     "focus": "BICI",
     "imageUrl": "https://static.exercisedb.dev/media/s999Hdo.gif",
     "muscoliSecondari": [
-      "AVAMB"
+      "AVA"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Isolation",
@@ -4173,7 +4173,7 @@
     "focus": "BICI",
     "imageUrl": "https://static.exercisedb.dev/media/84sESNy.gif",
     "muscoliSecondari": [
-      "AVAMB"
+      "AVA"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Isolation",
@@ -4203,7 +4203,7 @@
     "focus": "BICI",
     "imageUrl": "https://static.exercisedb.dev/media/jK2hZ6n.gif",
     "muscoliSecondari": [
-      "AVAMB"
+      "AVA"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Isolation",
@@ -4229,7 +4229,7 @@
   {
     "id": "dumbbell_one_arm_seated_neutral_wrist_curl",
     "nome": "Curl Seduto Un Braccio Polsi Neutro",
-    "focus": "AVAMB",
+    "focus": "AVA",
     "imageUrl": "https://static.exercisedb.dev/media/YtaCTYl.gif",
     "difficolta": "Intermedio",
     "tipoEsercizio": "Isolation",
@@ -4261,7 +4261,7 @@
     "focus": "BICI",
     "imageUrl": "https://static.exercisedb.dev/media/rZ80Gbp.gif",
     "muscoliSecondari": [
-      "AVAMB"
+      "AVA"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Isolation",
@@ -4290,7 +4290,7 @@
     "focus": "BICI",
     "imageUrl": "https://static.exercisedb.dev/media/8oYqOt9.gif",
     "muscoliSecondari": [
-      "AVAMB"
+      "AVA"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Isolation",
@@ -4319,7 +4319,7 @@
     "focus": "BICI",
     "imageUrl": "https://static.exercisedb.dev/media/jtFKbt5.gif",
     "muscoliSecondari": [
-      "AVAMB"
+      "AVA"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Isolation",
@@ -4347,7 +4347,7 @@
     "focus": "BICI",
     "imageUrl": "https://static.exercisedb.dev/media/TiaZTxx.gif",
     "muscoliSecondari": [
-      "AVAMB"
+      "AVA"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Isolation",
@@ -4376,7 +4376,7 @@
     "focus": "BICI",
     "imageUrl": "https://static.exercisedb.dev/media/ioTf098.gif",
     "muscoliSecondari": [
-      "AVAMB"
+      "AVA"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Isolation",
@@ -4405,7 +4405,7 @@
     "focus": "BICI",
     "imageUrl": "https://static.exercisedb.dev/media/wDUqY2u.gif",
     "muscoliSecondari": [
-      "AVAMB"
+      "AVA"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Isolation",
@@ -4434,7 +4434,7 @@
     "focus": "BICI",
     "imageUrl": "https://static.exercisedb.dev/media/6sMAmNv.gif",
     "muscoliSecondari": [
-      "AVAMB"
+      "AVA"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Isolation",
@@ -4463,7 +4463,7 @@
     "focus": "BICI",
     "imageUrl": "https://static.exercisedb.dev/media/2kattbR.gif",
     "muscoliSecondari": [
-      "AVAMB"
+      "AVA"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Isolation",
@@ -4491,7 +4491,7 @@
     "focus": "BICI",
     "imageUrl": "https://static.exercisedb.dev/media/LeaZOIz.gif",
     "muscoliSecondari": [
-      "AVAMB"
+      "AVA"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Isolation",
@@ -4520,7 +4520,7 @@
     "focus": "BICI",
     "imageUrl": "https://static.exercisedb.dev/media/76vfTdU.gif",
     "muscoliSecondari": [
-      "AVAMB"
+      "AVA"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Compound",
@@ -4550,7 +4550,7 @@
     "focus": "BICI",
     "imageUrl": "https://static.exercisedb.dev/media/XE93sQZ.gif",
     "muscoliSecondari": [
-      "AVAMB"
+      "AVA"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Compound",
@@ -4582,7 +4582,7 @@
     "focus": "BICI",
     "imageUrl": "https://static.exercisedb.dev/media/XqYQ9JA.gif",
     "muscoliSecondari": [
-      "AVAMB"
+      "AVA"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Isolation",
@@ -4613,7 +4613,7 @@
     "focus": "BICI",
     "imageUrl": "https://static.exercisedb.dev/media/LIGZSTA.gif",
     "muscoliSecondari": [
-      "AVAMB"
+      "AVA"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Isolation",
@@ -4642,7 +4642,7 @@
     "focus": "BICI",
     "imageUrl": "https://static.exercisedb.dev/media/ZXnjcOQ.gif",
     "muscoliSecondari": [
-      "AVAMB"
+      "AVA"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Isolation",
@@ -4671,7 +4671,7 @@
     "focus": "BICI",
     "imageUrl": "https://static.exercisedb.dev/media/gVlnLIJ.gif",
     "muscoliSecondari": [
-      "AVAMB"
+      "AVA"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Isolation",
@@ -4697,7 +4697,7 @@
   {
     "id": "dumbbell_over_bench_one_arm_reverse_wrist_curl",
     "nome": "Curl Un Braccio Over Panca Inversa Wrist",
-    "focus": "AVAMB",
+    "focus": "AVA",
     "imageUrl": "https://static.exercisedb.dev/media/4Jc36XM.gif",
     "difficolta": "Intermedio",
     "tipoEsercizio": "Isolation",
@@ -4726,7 +4726,7 @@
   {
     "id": "dumbbell_one_arm_reverse_wrist_curl",
     "nome": "Curl Un Braccio Polsi Inverso con Manubri",
-    "focus": "AVAMB",
+    "focus": "AVA",
     "imageUrl": "https://static.exercisedb.dev/media/BwSNDGt.gif",
     "difficolta": "Intermedio",
     "tipoEsercizio": "Isolation",
@@ -4755,7 +4755,7 @@
   {
     "id": "dumbbell_over_bench_one_arm_wrist_curl_strength_variation",
     "nome": "Curl Un Braccio Polsi Panca o Variazione Forza",
-    "focus": "AVAMB",
+    "focus": "AVA",
     "imageUrl": "https://static.exercisedb.dev/media/7AnZtSv.gif",
     "muscoliSecondari": [
       "DELT"
@@ -4784,7 +4784,7 @@
   {
     "id": "dumbbell_one_arm_wrist_curl",
     "nome": "Curl Un Braccio Polsi con Manubri",
-    "focus": "AVAMB",
+    "focus": "AVA",
     "imageUrl": "https://static.exercisedb.dev/media/q8aHNoF.gif",
     "difficolta": "Intermedio",
     "tipoEsercizio": "Isolation",
@@ -4813,7 +4813,7 @@
   {
     "id": "dumbbell_over_bench_one_arm_wrist_curl",
     "nome": "Curl Un Braccio Polsi su Panca con Manubri",
-    "focus": "AVAMB",
+    "focus": "AVA",
     "imageUrl": "https://static.exercisedb.dev/media/KI1DjNN.gif",
     "muscoliSecondari": [
       "DELT"
@@ -4842,7 +4842,7 @@
   {
     "id": "dumbbell_over_bench_one_arm_neutral_wrist_curl",
     "nome": "Curl Un Braccio Polso Neutro su Panca con Manubri",
-    "focus": "AVAMB",
+    "focus": "AVA",
     "imageUrl": "https://static.exercisedb.dev/media/IvV6C9M.gif",
     "muscoliSecondari": [],
     "difficolta": "Intermedio",
@@ -4872,7 +4872,7 @@
     "focus": "BICI",
     "imageUrl": "https://static.exercisedb.dev/media/4hATdoB.gif",
     "muscoliSecondari": [
-      "AVAMB"
+      "AVA"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Isolation",
@@ -4901,7 +4901,7 @@
     "focus": "BICI",
     "imageUrl": "https://static.exercisedb.dev/media/4dF3maG.gif",
     "muscoliSecondari": [
-      "AVAMB"
+      "AVA"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Isolation",
@@ -4930,7 +4930,7 @@
     "focus": "BICI",
     "imageUrl": "https://static.exercisedb.dev/media/bWxq4op.gif",
     "muscoliSecondari": [
-      "AVAMB"
+      "AVA"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Isolation",
@@ -4959,7 +4959,7 @@
     "focus": "BICI",
     "imageUrl": "https://static.exercisedb.dev/media/sxY5Biu.gif",
     "muscoliSecondari": [
-      "AVAMB"
+      "AVA"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Isolation",
@@ -4988,7 +4988,7 @@
     "focus": "BICI",
     "imageUrl": "https://static.exercisedb.dev/media/eHBlPsa.gif",
     "muscoliSecondari": [
-      "AVAMB"
+      "AVA"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Isolation",
@@ -5017,7 +5017,7 @@
     "focus": "BICI",
     "imageUrl": "https://static.exercisedb.dev/media/JWjujiY.gif",
     "muscoliSecondari": [
-      "AVAMB"
+      "AVA"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Isolation",
@@ -5046,7 +5046,7 @@
     "focus": "BICI",
     "imageUrl": "https://static.exercisedb.dev/media/UNAB8ak.gif",
     "muscoliSecondari": [
-      "AVAMB"
+      "AVA"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Isolation",
@@ -5076,7 +5076,7 @@
     "focus": "BICI",
     "imageUrl": "https://static.exercisedb.dev/media/VdLZ3nB.gif",
     "muscoliSecondari": [
-      "AVAMB"
+      "AVA"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Isolation",
@@ -5105,7 +5105,7 @@
     "focus": "BICI",
     "imageUrl": "https://static.exercisedb.dev/media/YTur5nR.gif",
     "muscoliSecondari": [
-      "AVAMB"
+      "AVA"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Isolation",
@@ -5134,7 +5134,7 @@
     "focus": "BICI",
     "imageUrl": "https://static.exercisedb.dev/media/k5IpyHg.gif",
     "muscoliSecondari": [
-      "AVAMB"
+      "AVA"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Isolation",
@@ -5163,7 +5163,7 @@
     "focus": "BICI",
     "imageUrl": "https://static.exercisedb.dev/media/KOpzGBL.gif",
     "muscoliSecondari": [
-      "AVAMB"
+      "AVA"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Isolation",
@@ -5190,10 +5190,10 @@
   {
     "id": "zottman_curl",
     "nome": "Curl Zottman",
-    "focus": "BIC",
+    "focus": "BICI",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Zottman_Curl/0.jpg",
     "muscoliSecondari": [
-      "AVAMB"
+      "AVA"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Isolation",
@@ -5217,7 +5217,7 @@
     "focus": "BICI",
     "imageUrl": "https://static.exercisedb.dev/media/y5U5B9Y.gif",
     "muscoliSecondari": [
-      "AVAMB"
+      "AVA"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Isolation",
@@ -5246,7 +5246,7 @@
     "focus": "BICI",
     "imageUrl": "https://static.exercisedb.dev/media/kXaIn5A.gif",
     "muscoliSecondari": [
-      "AVAMB"
+      "AVA"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Isolation",
@@ -5272,7 +5272,7 @@
   {
     "id": "lying_cable_curl",
     "nome": "Curl a Corda Prendendo Lievi",
-    "focus": "BIC",
+    "focus": "BICI",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Lying_Cable_Curl/0.jpg",
     "muscoliSecondari": [],
     "difficolta": "Intermedio",
@@ -5297,7 +5297,7 @@
     "focus": "BICI",
     "imageUrl": "https://static.exercisedb.dev/media/H9y3Dkr.gif",
     "muscoliSecondari": [
-      "AVAMB"
+      "AVA"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Isolation",
@@ -5323,10 +5323,10 @@
   {
     "id": "cross_body_hammer_curl",
     "nome": "Curl a Martello a Braccio Cross",
-    "focus": "BIC",
+    "focus": "BICI",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Cross_Body_Hammer_Curl/0.jpg",
     "muscoliSecondari": [
-      "AVAMB"
+      "AVA"
     ],
     "difficolta": "Principiante",
     "tipoEsercizio": "Isolation",
@@ -5347,7 +5347,7 @@
   {
     "id": "incline_hammer_curls",
     "nome": "Curl a Martello in Posizione Inclinata",
-    "focus": "BIC",
+    "focus": "BICI",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Incline_Hammer_Curls/0.jpg",
     "muscoliSecondari": [],
     "difficolta": "Principiante",
@@ -5372,7 +5372,7 @@
     "focus": "BICI",
     "imageUrl": "https://static.exercisedb.dev/media/G08RZcQ.gif",
     "muscoliSecondari": [
-      "AVAMB"
+      "AVA"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Isolation",
@@ -5397,7 +5397,7 @@
   {
     "id": "lying_close_grip_bar_curl_on_high_pulley",
     "nome": "Curl al Bar con Gancio Presso ad Alto Cavo",
-    "focus": "BIC",
+    "focus": "BICI",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Lying_Close-Grip_Bar_Curl_On_High_Pulley/0.jpg",
     "muscoliSecondari": [],
     "difficolta": "Principiante",
@@ -5419,7 +5419,7 @@
   {
     "id": "standing_biceps_cable_curl",
     "nome": "Curl al Bicipite in Posizione Eretta",
-    "focus": "BIC",
+    "focus": "BICI",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Standing_Biceps_Cable_Curl/0.jpg",
     "muscoliSecondari": [],
     "difficolta": "Principiante",
@@ -5441,7 +5441,7 @@
   {
     "id": "high_cable_curls",
     "nome": "Curl al Cavo Alto",
-    "focus": "BIC",
+    "focus": "BICI",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/High_Cable_Curls/0.jpg",
     "muscoliSecondari": [],
     "difficolta": "Intermedio",
@@ -5463,10 +5463,10 @@
   {
     "id": "reverse_cable_curl",
     "nome": "Curl al Cavo Inverso",
-    "focus": "BIC",
+    "focus": "BICI",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Reverse_Cable_Curl/0.jpg",
     "muscoliSecondari": [
-      "AVAMB"
+      "AVA"
     ],
     "difficolta": "Principiante",
     "tipoEsercizio": "Isolation",
@@ -5487,7 +5487,7 @@
   {
     "id": "cable_hammer_curls___rope_attachment",
     "nome": "Curl al Cavo con Attacco a corda",
-    "focus": "BIC",
+    "focus": "BICI",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Cable_Hammer_Curls_-_Rope_Attachment/0.jpg",
     "muscoliSecondari": [],
     "difficolta": "Principiante",
@@ -5509,10 +5509,10 @@
   {
     "id": "preacher_hammer_dumbbell_curl",
     "nome": "Curl al Martello con Manubri per il Preachere",
-    "focus": "BIC",
+    "focus": "BICI",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Preacher_Hammer_Dumbbell_Curl/0.jpg",
     "muscoliSecondari": [
-      "AVAMB"
+      "AVA"
     ],
     "difficolta": "Principiante",
     "tipoEsercizio": "Isolation",
@@ -5533,7 +5533,7 @@
   {
     "id": "seated_palms_down_barbell_wrist_curl",
     "nome": "Curl al Polso con Barra con Palmi In Giù",
-    "focus": "AVAMB",
+    "focus": "AVA",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Seated_Palms-Down_Barbell_Wrist_Curl/0.jpg",
     "muscoliSecondari": [],
     "difficolta": "Principiante",
@@ -5555,7 +5555,7 @@
   {
     "id": "seated_palm_up_barbell_wrist_curl",
     "nome": "Curl al Polso con Bilanciere Seduto",
-    "focus": "AVAMB",
+    "focus": "AVA",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Seated_Palm-Up_Barbell_Wrist_Curl/0.jpg",
     "muscoliSecondari": [],
     "difficolta": "Principiante",
@@ -5577,7 +5577,7 @@
   {
     "id": "palms_up_barbell_wrist_curl_over_a_bench",
     "nome": "Curl al Polso con Bilanciere sopra una Panca",
-    "focus": "AVAMB",
+    "focus": "AVA",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Palms-Up_Barbell_Wrist_Curl_Over_A_Bench/0.jpg",
     "muscoliSecondari": [],
     "difficolta": "Principiante",
@@ -5599,7 +5599,7 @@
   {
     "id": "flexor_incline_dumbbell_curls",
     "nome": "Curl al Polso con Manubri",
-    "focus": "BIC",
+    "focus": "BICI",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Flexor_Incline_Dumbbell_Curls/0.jpg",
     "muscoliSecondari": [],
     "difficolta": "Principiante",
@@ -5621,7 +5621,7 @@
   {
     "id": "palms_down_dumbbell_wrist_curl_over_a_bench",
     "nome": "Curl al Polso con Manubri a Testa In giù su una Panca",
-    "focus": "AVAMB",
+    "focus": "AVA",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Palms-Down_Dumbbell_Wrist_Curl_Over_A_Bench/0.jpg",
     "muscoliSecondari": [],
     "difficolta": "Principiante",
@@ -5643,7 +5643,7 @@
   {
     "id": "palms_up_dumbbell_wrist_curl_over_a_bench",
     "nome": "Curl al Polso con Manubri su una Panca",
-    "focus": "AVAMB",
+    "focus": "AVA",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Palms-Up_Dumbbell_Wrist_Curl_Over_A_Bench/0.jpg",
     "muscoliSecondari": [],
     "difficolta": "Principiante",
@@ -5665,7 +5665,7 @@
   {
     "id": "palms_down_wrist_curl_over_a_bench",
     "nome": "Curl al Polso con le Palme verso il Basso su una Panca",
-    "focus": "AVAMB",
+    "focus": "AVA",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Palms-Down_Wrist_Curl_Over_A_Bench/0.jpg",
     "muscoliSecondari": [],
     "difficolta": "Principiante",
@@ -5687,7 +5687,7 @@
   {
     "id": "seated_one_arm_dumbbell_palms_up_wrist_curl",
     "nome": "Curl al Polso con un manubrio, Seduto, con un Braccio",
-    "focus": "AVAMB",
+    "focus": "AVA",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Seated_One-Arm_Dumbbell_Palms-Up_Wrist_Curl/0.jpg",
     "muscoliSecondari": [],
     "difficolta": "Principiante",
@@ -5709,7 +5709,7 @@
   {
     "id": "seated_one_arm_dumbbell_palms_down_wrist_curl",
     "nome": "Curl al Polso con un manubrio, Seduto, con una Sola Braccia",
-    "focus": "AVAMB",
+    "focus": "AVA",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Seated_One-Arm_Dumbbell_Palms-Down_Wrist_Curl/0.jpg",
     "muscoliSecondari": [],
     "difficolta": "Intermedio",
@@ -5731,10 +5731,10 @@
   {
     "id": "reverse_barbell_preacher_curls",
     "nome": "Curl al Predicatore con Bilanciere Invertito",
-    "focus": "BIC",
+    "focus": "BICI",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Reverse_Barbell_Preacher_Curls/0.jpg",
     "muscoliSecondari": [
-      "AVAMB"
+      "AVA"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Isolation",
@@ -5755,10 +5755,10 @@
   {
     "id": "drag_curl",
     "nome": "Curl al Traino",
-    "focus": "BIC",
+    "focus": "BICI",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Drag_Curl/0.jpg",
     "muscoliSecondari": [
-      "AVAMB"
+      "AVA"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Compound",
@@ -5779,10 +5779,10 @@
   {
     "id": "reverse_barbell_curl",
     "nome": "Curl alla Vice con la Panca",
-    "focus": "BIC",
+    "focus": "BICI",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Reverse_Barbell_Curl/0.jpg",
     "muscoliSecondari": [
-      "AVAMB"
+      "AVA"
     ],
     "difficolta": "Principiante",
     "tipoEsercizio": "Isolation",
@@ -5806,7 +5806,7 @@
     "focus": "BICI",
     "imageUrl": "https://static.exercisedb.dev/media/25GPyDY.gif",
     "muscoliSecondari": [
-      "AVAMB"
+      "AVA"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Isolation",
@@ -5835,7 +5835,7 @@
     "focus": "BICI",
     "imageUrl": "https://static.exercisedb.dev/media/6TG6x2w.gif",
     "muscoliSecondari": [
-      "AVAMB"
+      "AVA"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Isolation",
@@ -5861,7 +5861,7 @@
   {
     "id": "barbell_curls_lying_against_an_incline",
     "nome": "Curl con Bilanciere Prendendo Dimora su una Panca Inclinata",
-    "focus": "BIC",
+    "focus": "BICI",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Barbell_Curls_Lying_Against_An_Incline/0.jpg",
     "muscoliSecondari": [],
     "difficolta": "Principiante",
@@ -5883,7 +5883,7 @@
   {
     "id": "wide_grip_standing_barbell_curl",
     "nome": "Curl con Bilanciere in Posizione Inclinata",
-    "focus": "BIC",
+    "focus": "BICI",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Wide-Grip_Standing_Barbell_Curl/0.jpg",
     "muscoliSecondari": [],
     "difficolta": "Principiante",
@@ -5905,10 +5905,10 @@
   {
     "id": "close_grip_standing_barbell_curl",
     "nome": "Curl con Bilanciere in Posizione Inclinata da Piede",
-    "focus": "BIC",
+    "focus": "BICI",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Close-Grip_Standing_Barbell_Curl/0.jpg",
     "muscoliSecondari": [
-      "AVAMB"
+      "AVA"
     ],
     "difficolta": "Principiante",
     "tipoEsercizio": "Isolation",
@@ -5929,7 +5929,7 @@
   {
     "id": "overhead_cable_curl",
     "nome": "Curl con Cavo sopra la testa",
-    "focus": "BIC",
+    "focus": "BICI",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Overhead_Cable_Curl/0.jpg",
     "muscoliSecondari": [],
     "difficolta": "Intermedio",
@@ -5951,7 +5951,7 @@
   {
     "id": "two_arm_dumbbell_preacher_curl",
     "nome": "Curl con Due Manubri per il Preacher",
-    "focus": "BIC",
+    "focus": "BICI",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Two-Arm_Dumbbell_Preacher_Curl/0.jpg",
     "muscoliSecondari": [],
     "difficolta": "Principiante",
@@ -5973,7 +5973,7 @@
   {
     "id": "seated_dumbbell_curl",
     "nome": "Curl con Manubri Seduti",
-    "focus": "BIC",
+    "focus": "BICI",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Seated_Dumbbell_Curl/0.jpg",
     "muscoliSecondari": [],
     "difficolta": "Principiante",
@@ -5995,7 +5995,7 @@
   {
     "id": "incline_dumbbell_curl",
     "nome": "Curl con Manubri in Posizione Inclinata",
-    "focus": "BIC",
+    "focus": "BICI",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Incline_Dumbbell_Curl/0.jpg",
     "muscoliSecondari": [],
     "difficolta": "Principiante",
@@ -6017,7 +6017,7 @@
   {
     "id": "seated_close_grip_concentration_barbell_curl",
     "nome": "Curl con Manubrio Concentrato Seduto con Raggio Ridotto",
-    "focus": "BIC",
+    "focus": "BICI",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Seated_Close-Grip_Concentration_Barbell_Curl/0.jpg",
     "muscoliSecondari": [],
     "difficolta": "Intermedio",
@@ -6039,10 +6039,10 @@
   {
     "id": "close_grip_ez_bar_curl",
     "nome": "Curl con Manubrio a Costo Minimo",
-    "focus": "BIC",
+    "focus": "BICI",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Close-Grip_EZ_Bar_Curl/0.jpg",
     "muscoliSecondari": [
-      "AVAMB"
+      "AVA"
     ],
     "difficolta": "Principiante",
     "tipoEsercizio": "Isolation",
@@ -6063,7 +6063,7 @@
   {
     "id": "standing_palms_up_barbell_behind_the_back_wrist_curl",
     "nome": "Curl con Manubrio a Lato con Panca Inclinata",
-    "focus": "AVAMB",
+    "focus": "AVA",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Standing_Palms-Up_Barbell_Behind_The_Back_Wrist_Curl/0.jpg",
     "muscoliSecondari": [],
     "difficolta": "Principiante",
@@ -6085,10 +6085,10 @@
   {
     "id": "close_grip_ez_bar_curl_with_band",
     "nome": "Curl con Manubrio a Morsa stretta e Band",
-    "focus": "BIC",
+    "focus": "BICI",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Close-Grip_EZ-Bar_Curl_with_Band/0.jpg",
     "muscoliSecondari": [
-      "AVAMB"
+      "AVA"
     ],
     "difficolta": "Principiante",
     "tipoEsercizio": "Isolation",
@@ -6109,10 +6109,10 @@
   {
     "id": "reverse_plate_curls",
     "nome": "Curl con Piattaforma Inversa",
-    "focus": "BIC",
+    "focus": "BICI",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Reverse_Plate_Curls/0.jpg",
     "muscoliSecondari": [
-      "AVAMB"
+      "AVA"
     ],
     "difficolta": "Principiante",
     "tipoEsercizio": "Isolation",
@@ -6136,7 +6136,7 @@
     "focus": "BICI",
     "imageUrl": "https://static.exercisedb.dev/media/Y5X65IB.gif",
     "muscoliSecondari": [
-      "AVAMB"
+      "AVA"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Isolation",
@@ -6161,7 +6161,7 @@
   {
     "id": "ez_bar_curl",
     "nome": "Curl con la barra EZ",
-    "focus": "BIC",
+    "focus": "BICI",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/EZ-Bar_Curl/0.jpg",
     "muscoliSecondari": [],
     "difficolta": "Principiante",
@@ -6183,7 +6183,7 @@
   {
     "id": "standing_one_arm_dumbbell_curl_over_incline_bench",
     "nome": "Curl con un manubrio in Piega Inclinata",
-    "focus": "BIC",
+    "focus": "BICI",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Standing_One-Arm_Dumbbell_Curl_Over_Incline_Bench/0.jpg",
     "muscoliSecondari": [],
     "difficolta": "Principiante",
@@ -6205,7 +6205,7 @@
   {
     "id": "one_arm_dumbbell_preacher_curl",
     "nome": "Curl con un Solo Manubrio per la Preghiera",
-    "focus": "BIC",
+    "focus": "BICI",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/One_Arm_Dumbbell_Preacher_Curl/0.jpg",
     "muscoliSecondari": [],
     "difficolta": "Principiante",
@@ -6227,7 +6227,7 @@
   {
     "id": "standing_one_arm_cable_curl",
     "nome": "Curl con una Manopola in Posizione Ergo",
-    "focus": "BIC",
+    "focus": "BICI",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Standing_One-Arm_Cable_Curl/0.jpg",
     "muscoliSecondari": [],
     "difficolta": "Intermedio",
@@ -6249,7 +6249,7 @@
   {
     "id": "lying_high_bench_barbell_curl",
     "nome": "Curl da Panca Alta con Bilanciere",
-    "focus": "BIC",
+    "focus": "BICI",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Lying_High_Bench_Barbell_Curl/0.jpg",
     "muscoliSecondari": [],
     "difficolta": "Intermedio",
@@ -6271,10 +6271,10 @@
   {
     "id": "dumbbell_bicep_curl",
     "nome": "Curl del Bicipite con Manubri",
-    "focus": "BIC",
+    "focus": "BICI",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Dumbbell_Bicep_Curl/0.jpg",
     "muscoliSecondari": [
-      "AVAMB"
+      "AVA"
     ],
     "difficolta": "Principiante",
     "tipoEsercizio": "Isolation",
@@ -6295,7 +6295,7 @@
   {
     "id": "seated_dumbbell_palms_up_wrist_curl",
     "nome": "Curl del Polso con Manubri Seduti",
-    "focus": "AVAMB",
+    "focus": "AVA",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Seated_Dumbbell_Palms-Up_Wrist_Curl/0.jpg",
     "muscoliSecondari": [],
     "difficolta": "Principiante",
@@ -6317,7 +6317,7 @@
   {
     "id": "seated_dumbbell_palms_down_wrist_curl",
     "nome": "Curl del Polso con Manubri in Posizione \"Palmi In Giù\" Seduto",
-    "focus": "AVAMB",
+    "focus": "AVA",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Seated_Dumbbell_Palms-Down_Wrist_Curl/0.jpg",
     "muscoliSecondari": [],
     "difficolta": "Principiante",
@@ -6339,10 +6339,10 @@
   {
     "id": "zottman_preacher_curl",
     "nome": "Curl del Preachere Zottman",
-    "focus": "BIC",
+    "focus": "BICI",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Zottman_Preacher_Curl/0.jpg",
     "muscoliSecondari": [
-      "AVAMB"
+      "AVA"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Isolation",
@@ -6363,7 +6363,7 @@
   {
     "id": "preacher_curl",
     "nome": "Curl del Predicatore",
-    "focus": "BIC",
+    "focus": "BICI",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Preacher_Curl/0.jpg",
     "muscoliSecondari": [],
     "difficolta": "Principiante",
@@ -6385,7 +6385,7 @@
   {
     "id": "machine_preacher_curls",
     "nome": "Curl della Macchina Preacher",
-    "focus": "BIC",
+    "focus": "BICI",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Machine_Preacher_Curls/0.jpg",
     "muscoliSecondari": [],
     "difficolta": "Principiante",
@@ -6407,7 +6407,7 @@
   {
     "id": "spider_curl",
     "nome": "Curl della Taranta",
-    "focus": "BIC",
+    "focus": "BICI",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Spider_Curl/0.jpg",
     "muscoliSecondari": [],
     "difficolta": "Principiante",
@@ -6429,7 +6429,7 @@
   {
     "id": "seated_two_arm_palms_up_low_pulley_wrist_curl",
     "nome": "Curl delle Wrist con Cavo e Manubri Seduti",
-    "focus": "AVAMB",
+    "focus": "AVA",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Seated_Two-Arm_Palms-Up_Low-Pulley_Wrist_Curl/0.jpg",
     "muscoliSecondari": [],
     "difficolta": "Principiante",
@@ -6451,10 +6451,10 @@
   {
     "id": "concentration_curls",
     "nome": "Curl di Concentrazione",
-    "focus": "BIC",
+    "focus": "BICI",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Concentration_Curls/0.jpg",
     "muscoliSecondari": [
-      "AVAMB"
+      "AVA"
     ],
     "difficolta": "Principiante",
     "tipoEsercizio": "Isolation",
@@ -6478,7 +6478,7 @@
     "focus": "BICI",
     "imageUrl": "https://static.exercisedb.dev/media/8yBgwBS.gif",
     "muscoliSecondari": [
-      "AVAMB"
+      "AVA"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Isolation",
@@ -6507,7 +6507,7 @@
     "focus": "BICI",
     "imageUrl": "https://static.exercisedb.dev/media/NvfE43H.gif",
     "muscoliSecondari": [
-      "AVAMB"
+      "AVA"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Isolation",
@@ -6536,7 +6536,7 @@
     "focus": "BICI",
     "imageUrl": "https://static.exercisedb.dev/media/kmVVAfu.gif",
     "muscoliSecondari": [
-      "AVAMB"
+      "AVA"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Isolation",
@@ -6565,7 +6565,7 @@
     "focus": "BICI",
     "imageUrl": "https://static.exercisedb.dev/media/gvsWLQw.gif",
     "muscoliSecondari": [
-      "AVAMB"
+      "AVA"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Isolation",
@@ -6591,10 +6591,10 @@
   {
     "id": "standing_concentration_curl",
     "nome": "Curl di Concentrazione in Posizione Eretta",
-    "focus": "BIC",
+    "focus": "BICI",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Standing_Concentration_Curl/0.jpg",
     "muscoliSecondari": [
-      "AVAMB"
+      "AVA"
     ],
     "difficolta": "Principiante",
     "tipoEsercizio": "Isolation",
@@ -6618,7 +6618,7 @@
     "focus": "BICI",
     "imageUrl": "https://static.exercisedb.dev/media/vKilzz3.gif",
     "muscoliSecondari": [
-      "AVAMB"
+      "AVA"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Isolation",
@@ -6648,7 +6648,7 @@
     "focus": "BICI",
     "imageUrl": "https://static.exercisedb.dev/media/3s4NnTh.gif",
     "muscoliSecondari": [
-      "AVAMB"
+      "AVA"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Isolation",
@@ -6678,7 +6678,7 @@
     "focus": "BICI",
     "imageUrl": "https://static.exercisedb.dev/media/7inpWch.gif",
     "muscoliSecondari": [
-      "AVAMB"
+      "AVA"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Isolation",
@@ -6707,7 +6707,7 @@
     "focus": "BICI",
     "imageUrl": "https://static.exercisedb.dev/media/YwnI4ja.gif",
     "muscoliSecondari": [
-      "AVAMB"
+      "AVA"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Isolation",
@@ -6736,7 +6736,7 @@
     "focus": "BICI",
     "imageUrl": "https://static.exercisedb.dev/media/0IgNjSM.gif",
     "muscoliSecondari": [
-      "AVAMB"
+      "AVA"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Isolation",
@@ -6762,7 +6762,7 @@
   {
     "id": "smith_standing_back_wrist_curl",
     "nome": "Curl in Piedi Polsi Posteriore Macchina Alla Smith",
-    "focus": "AVAMB",
+    "focus": "AVA",
     "imageUrl": "https://static.exercisedb.dev/media/hfmQ0Tz.gif",
     "difficolta": "Intermedio",
     "tipoEsercizio": "Isolation",
@@ -6790,7 +6790,7 @@
   {
     "id": "cable_standing_back_wrist_curl",
     "nome": "Curl in Piedi Polsi Posteriore ai Cavi",
-    "focus": "AVAMB",
+    "focus": "AVA",
     "imageUrl": "https://static.exercisedb.dev/media/VhX2JdE.gif",
     "difficolta": "Intermedio",
     "tipoEsercizio": "Isolation",
@@ -6819,7 +6819,7 @@
   {
     "id": "barbell_standing_back_wrist_curl",
     "nome": "Curl in Piedi Polsi Posteriore con Bilanciere",
-    "focus": "AVAMB",
+    "focus": "AVA",
     "imageUrl": "https://static.exercisedb.dev/media/2qTvJAZ.gif",
     "muscoliSecondari": [
       "DELT"
@@ -6851,7 +6851,7 @@
     "focus": "BICI",
     "imageUrl": "https://static.exercisedb.dev/media/hq2hyDH.gif",
     "muscoliSecondari": [
-      "AVAMB"
+      "AVA"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Isolation",
@@ -6880,7 +6880,7 @@
     "focus": "BICI",
     "imageUrl": "https://static.exercisedb.dev/media/AdxxqfF.gif",
     "muscoliSecondari": [
-      "AVAMB"
+      "AVA"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Isolation",
@@ -6908,7 +6908,7 @@
     "focus": "BICI",
     "imageUrl": "https://static.exercisedb.dev/media/OVTZ65k.gif",
     "muscoliSecondari": [
-      "AVAMB"
+      "AVA"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Isolation",
@@ -6937,7 +6937,7 @@
     "focus": "BICI",
     "imageUrl": "https://static.exercisedb.dev/media/faHKVkK.gif",
     "muscoliSecondari": [
-      "AVAMB"
+      "AVA"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Isolation",
@@ -6967,7 +6967,7 @@
     "focus": "BICI",
     "imageUrl": "https://static.exercisedb.dev/media/NdIb5Z1.gif",
     "muscoliSecondari": [
-      "AVAMB"
+      "AVA"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Isolation",
@@ -7023,7 +7023,7 @@
     "focus": "BICI",
     "imageUrl": "https://static.exercisedb.dev/media/8fgqP5a.gif",
     "muscoliSecondari": [
-      "AVAMB"
+      "AVA"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Isolation",
@@ -7052,7 +7052,7 @@
     "focus": "BICI",
     "imageUrl": "https://static.exercisedb.dev/media/2sQGZ5b.gif",
     "muscoliSecondari": [
-      "AVAMB"
+      "AVA"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Isolation",
@@ -7081,7 +7081,7 @@
     "focus": "BICI",
     "imageUrl": "https://static.exercisedb.dev/media/DU5Kkj2.gif",
     "muscoliSecondari": [
-      "AVAMB"
+      "AVA"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Isolation",
@@ -7110,7 +7110,7 @@
     "focus": "BICI",
     "imageUrl": "https://static.exercisedb.dev/media/ffQsyBj.gif",
     "muscoliSecondari": [
-      "AVAMB"
+      "AVA"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Isolation",
@@ -7139,7 +7139,7 @@
     "focus": "BICI",
     "imageUrl": "https://static.exercisedb.dev/media/BIb1tGo.gif",
     "muscoliSecondari": [
-      "AVAMB"
+      "AVA"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Isolation",
@@ -7168,7 +7168,7 @@
     "focus": "BICI",
     "imageUrl": "https://static.exercisedb.dev/media/P2nRiUa.gif",
     "muscoliSecondari": [
-      "AVAMB"
+      "AVA"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Isolation",
@@ -7197,7 +7197,7 @@
     "focus": "BICI",
     "imageUrl": "https://static.exercisedb.dev/media/M5Y7GPg.gif",
     "muscoliSecondari": [
-      "AVAMB"
+      "AVA"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Isolation",
@@ -7225,7 +7225,7 @@
     "focus": "BICI",
     "imageUrl": "https://static.exercisedb.dev/media/LWuA3aZ.gif",
     "muscoliSecondari": [
-      "AVAMB"
+      "AVA"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Isolation",
@@ -7253,7 +7253,7 @@
     "focus": "BICI",
     "imageUrl": "https://static.exercisedb.dev/media/vsMcDi9.gif",
     "muscoliSecondari": [
-      "AVAMB"
+      "AVA"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Isolation",
@@ -7278,7 +7278,7 @@
   {
     "id": "brachialis_smr",
     "nome": "Curl per Bicipiti con Cavo",
-    "focus": "BIC",
+    "focus": "BICI",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Brachialis-SMR/0.jpg",
     "muscoliSecondari": [],
     "difficolta": "Intermedio",
@@ -7300,7 +7300,7 @@
   {
     "id": "machine_bicep_curl",
     "nome": "Curl per Bicipiti con Macchina",
-    "focus": "BIC",
+    "focus": "BICI",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Machine_Bicep_Curl/0.jpg",
     "muscoliSecondari": [],
     "difficolta": "Principiante",
@@ -7339,7 +7339,7 @@
     ],
     "countingMode": "weighted",
     "muscoliSecondari": [
-      "AVAMB"
+      "AVA"
     ],
     "version": "1.0.2",
     "versionHistory": [
@@ -7412,7 +7412,7 @@
     "focus": "LAT",
     "imageUrl": "https://static.exercisedb.dev/media/qLpO4vV.gif",
     "muscoliSecondari": [
-      "FEMOR",
+      "FEMO",
       "GLUT",
       "TRAP"
     ],
@@ -7443,7 +7443,7 @@
     "focus": "LAT",
     "imageUrl": "https://static.exercisedb.dev/media/WVD66ff.gif",
     "muscoliSecondari": [
-      "FEMOR",
+      "FEMO",
       "GLUT",
       "TRAP"
     ],
@@ -7474,7 +7474,7 @@
     "focus": "TRAP",
     "imageUrl": "https://static.exercisedb.dev/media/qPEzJjA.gif",
     "muscoliSecondari": [
-      "AVAMB",
+      "AVA",
       "POLP",
       "CORE"
     ],
@@ -7591,7 +7591,7 @@
   {
     "id": "weighted_standing_hand_squeeze",
     "nome": "In Piedi Stretta Mani con Pesi",
-    "focus": "AVAMB",
+    "focus": "AVA",
     "imageUrl": "https://static.exercisedb.dev/media/bjqbauy.gif",
     "difficolta": "Intermedio",
     "tipoEsercizio": "Compound",
@@ -7620,11 +7620,11 @@
   {
     "id": "full_range_of_motion_lat_pulldown",
     "nome": "Intervallo Completo di Movimento Rematore su Panca",
-    "focus": "DORSO",
+    "focus": "LAT",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Full_Range-Of-Motion_Lat_Pulldown/0.jpg",
     "muscoliSecondari": [
-      "BIC",
-      "DORSO",
+      "BICI",
+      "LAT",
       "DELT"
     ],
     "difficolta": "Intermedio",
@@ -8454,11 +8454,11 @@
   {
     "id": "wide_grip_lat_pulldown",
     "nome": "Lat Pulldown con Gancio Larga",
-    "focus": "DORSO",
+    "focus": "LAT",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Wide-Grip_Lat_Pulldown/0.jpg",
     "muscoliSecondari": [
-      "BIC",
-      "DORSO",
+      "BICI",
+      "LAT",
       "DELT"
     ],
     "difficolta": "Principiante",
@@ -8480,7 +8480,7 @@
   {
     "id": "overhead_lat",
     "nome": "Lat di Testa",
-    "focus": "DORSO",
+    "focus": "LAT",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Overhead_Lat/0.jpg",
     "muscoliSecondari": [
       "TRIC"
@@ -8831,11 +8831,11 @@
   {
     "id": "straight_bar_bench_mid_rows",
     "nome": "Panca Dritta con Barra per Raggiata a Metà Corpo",
-    "focus": "DORSO",
+    "focus": "LAT",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Straight_Bar_Bench_Mid_Rows/0.jpg",
     "muscoliSecondari": [
-      "BIC",
-      "DORSO"
+      "BICI",
+      "LAT"
     ],
     "difficolta": "Principiante",
     "tipoEsercizio": "Compound",
@@ -8856,7 +8856,7 @@
   {
     "id": "modified_push_up_to_lower_arms",
     "nome": "Piegamenti Modificato Verso Avambracci",
-    "focus": "AVAMB",
+    "focus": "AVA",
     "imageUrl": "https://static.exercisedb.dev/media/arvaszz.gif",
     "muscoliSecondari": [
       "DELT",
@@ -8886,7 +8886,7 @@
   {
     "id": "plate_pinch",
     "nome": "Pinza per Panca",
-    "focus": "AVAMB",
+    "focus": "AVA",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Plate_Pinch/0.jpg",
     "muscoliSecondari": [],
     "difficolta": "Intermedio",
@@ -8908,12 +8908,12 @@
   {
     "id": "london_bridges",
     "nome": "Ponte di Londra",
-    "focus": "DORSO",
+    "focus": "LAT",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/London_Bridges/0.jpg",
     "muscoliSecondari": [
-      "BIC",
-      "AVAMB",
-      "DORSO"
+      "BICI",
+      "AVA",
+      "LAT"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Compound",
@@ -8934,7 +8934,7 @@
   {
     "id": "lever_gripper_hands",
     "nome": "Presa Mani Alla Macchina",
-    "focus": "AVAMB",
+    "focus": "AVA",
     "imageUrl": "https://static.exercisedb.dev/media/mKwcrHn.gif",
     "difficolta": "Intermedio",
     "tipoEsercizio": "Compound",
@@ -9082,10 +9082,10 @@
   {
     "id": "fondos_up_clean_from_the_hang_position",
     "nome": "Bottoms Up Clean from Hang",
-    "focus": "AVAMB",
+    "focus": "AVA",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Bottoms-Up_Clean_From_The_Hang_Position/0.jpg",
     "muscoliSecondari": [
-      "BIC",
+      "BICI",
       "DELT"
     ],
     "difficolta": "Intermedio",
@@ -9107,10 +9107,10 @@
   {
     "id": "incline_bench_pull",
     "nome": "Pull Inclinato su Panca",
-    "focus": "DORSO",
+    "focus": "LAT",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Incline_Bench_Pull/0.jpg",
     "muscoliSecondari": [
-      "DORSO",
+      "LAT",
       "DELT"
     ],
     "difficolta": "Principiante",
@@ -9454,11 +9454,11 @@
   {
     "id": "bent_over_two_dumbbell_row_with_palms_in",
     "nome": "Raggiungere con le mani in",
-    "focus": "DORSO",
+    "focus": "LAT",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Bent_Over_Two-Dumbbell_Row_With_Palms_In/0.jpg",
     "muscoliSecondari": [
-      "BIC",
-      "DORSO"
+      "BICI",
+      "LAT"
     ],
     "difficolta": "Principiante",
     "tipoEsercizio": "Compound",
@@ -9479,11 +9479,11 @@
   {
     "id": "sled_row",
     "nome": "Remada con la Slitta",
-    "focus": "DORSO",
+    "focus": "LAT",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Sled_Row/0.jpg",
     "muscoliSecondari": [
-      "BIC",
-      "DORSO"
+      "BICI",
+      "LAT"
     ],
     "difficolta": "Principiante",
     "tipoEsercizio": "Compound",
@@ -9504,7 +9504,7 @@
   {
     "id": "rope_straight_arm_pulldown",
     "nome": "Remata con Braccia Dritte e Cavo",
-    "focus": "DORSO",
+    "focus": "LAT",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Rope_Straight-Arm_Pulldown/0.jpg",
     "muscoliSecondari": [],
     "difficolta": "Principiante",
@@ -9526,11 +9526,11 @@
   {
     "id": "reverse_grip_bent_over_rows",
     "nome": "Remate con presa inversa piegati in avanti",
-    "focus": "DORSO",
+    "focus": "LAT",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Reverse_Grip_Bent-Over_Rows/0.jpg",
     "muscoliSecondari": [
-      "BIC",
-      "DORSO",
+      "BICI",
+      "LAT",
       "DELT"
     ],
     "difficolta": "Intermedio",
@@ -9643,11 +9643,11 @@
   {
     "id": "alternating_kettlebell_row",
     "nome": "Rematore Alternato con kettlebell",
-    "focus": "DORSO",
+    "focus": "LAT",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Alternating_Kettlebell_Row/0.jpg",
     "muscoliSecondari": [
-      "BIC",
-      "DORSO"
+      "BICI",
+      "LAT"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Isolation",
@@ -10091,11 +10091,11 @@
   {
     "id": "leverage_iso_row",
     "nome": "Rematore Isometrico con Cavo",
-    "focus": "DORSO",
+    "focus": "LAT",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Leverage_Iso_Row/0.jpg",
     "muscoliSecondari": [
-      "BIC",
-      "DORSO"
+      "BICI",
+      "LAT"
     ],
     "difficolta": "Principiante",
     "tipoEsercizio": "Compound",
@@ -11723,11 +11723,11 @@
   {
     "id": "lying_t_bar_row",
     "nome": "Rematore a T Liegi",
-    "focus": "DORSO",
+    "focus": "LAT",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Lying_T-Bar_Row/0.jpg",
     "muscoliSecondari": [
-      "BIC",
-      "DORSO"
+      "BICI",
+      "LAT"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Compound",
@@ -11779,11 +11779,11 @@
   {
     "id": "kneeling_single_arm_high_pulley_row",
     "nome": "Rematore a Un Braccio in Posizione Inclinata",
-    "focus": "DORSO",
+    "focus": "LAT",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Kneeling_Single-Arm_High_Pulley_Row/0.jpg",
     "muscoliSecondari": [
-      "BIC",
-      "DORSO"
+      "BICI",
+      "LAT"
     ],
     "difficolta": "Principiante",
     "tipoEsercizio": "Compound",
@@ -11804,11 +11804,11 @@
   {
     "id": "kneeling_high_pulley_row",
     "nome": "Rematore ad Alta Polso in Ginocchia",
-    "focus": "DORSO",
+    "focus": "LAT",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Kneeling_High_Pulley_Row/0.jpg",
     "muscoliSecondari": [
-      "BIC",
-      "DORSO"
+      "BICI",
+      "LAT"
     ],
     "difficolta": "Principiante",
     "tipoEsercizio": "Compound",
@@ -11829,10 +11829,10 @@
   {
     "id": "leverage_high_row",
     "nome": "Rematore ad Alto Aggio",
-    "focus": "DORSO",
+    "focus": "LAT",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Leverage_High_Row/0.jpg",
     "muscoliSecondari": [
-      "DORSO"
+      "LAT"
     ],
     "difficolta": "Principiante",
     "tipoEsercizio": "Compound",
@@ -12013,11 +12013,11 @@
   {
     "id": "bent_arm_barbell_pullover",
     "nome": "Rematore con Bilanciere con Braccia Piegate",
-    "focus": "DORSO",
+    "focus": "LAT",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Bent-Arm_Barbell_Pullover/0.jpg",
     "muscoliSecondari": [
       "PETT",
-      "DORSO",
+      "LAT",
       "DELT",
       "TRIC"
     ],
@@ -12095,11 +12095,11 @@
   {
     "id": "wide_grip_pulldown_behind_the_neck",
     "nome": "Rematore con Impugnatura Ampia e Manubrio Dietro la testa",
-    "focus": "DORSO",
+    "focus": "LAT",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Wide-Grip_Pulldown_Behind_The_Neck/0.jpg",
     "muscoliSecondari": [
-      "BIC",
-      "DORSO",
+      "BICI",
+      "LAT",
       "DELT"
     ],
     "difficolta": "Intermedio",
@@ -12121,11 +12121,11 @@
   {
     "id": "t_bar_row_with_handle",
     "nome": "Rematore con manico T",
-    "focus": "DORSO",
+    "focus": "LAT",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/T-Bar_Row_with_Handle/0.jpg",
     "muscoliSecondari": [
-      "BIC",
-      "DORSO"
+      "BICI",
+      "LAT"
     ],
     "difficolta": "Principiante",
     "tipoEsercizio": "Compound",
@@ -12180,7 +12180,7 @@
     "focus": "TRAP",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Standing_Dumbbell_Upright_Row/0.jpg",
     "muscoliSecondari": [
-      "BIC",
+      "BICI",
       "DELT"
     ],
     "difficolta": "Principiante",
@@ -12264,11 +12264,11 @@
   {
     "id": "lying_cambered_barbell_row",
     "nome": "Rematore con Stangetta Lieging",
-    "focus": "DORSO",
+    "focus": "LAT",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Lying_Cambered_Barbell_Row/0.jpg",
     "muscoliSecondari": [
-      "BIC",
-      "DORSO",
+      "BICI",
+      "LAT",
       "TRAP"
     ],
     "difficolta": "Principiante",
@@ -12350,11 +12350,11 @@
   {
     "id": "bodyweight_mid_row",
     "nome": "Rematore con il Peso del Corpo",
-    "focus": "DORSO",
+    "focus": "LAT",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Bodyweight_Mid_Row/0.jpg",
     "muscoliSecondari": [
-      "BIC",
-      "DORSO"
+      "BICI",
+      "LAT"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Compound",
@@ -12375,11 +12375,11 @@
   {
     "id": "smith_machine_bent_over_row",
     "nome": "Rematore con la Macchina Smith",
-    "focus": "DORSO",
+    "focus": "LAT",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Smith_Machine_Bent_Over_Row/0.jpg",
     "muscoliSecondari": [
-      "BIC",
-      "DORSO",
+      "BICI",
+      "LAT",
       "DELT"
     ],
     "difficolta": "Principiante",
@@ -12401,11 +12401,11 @@
   {
     "id": "close_grip_front_lat_pulldown",
     "nome": "Rematore con presa stretta e movimento anteriore",
-    "focus": "DORSO",
+    "focus": "LAT",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Close-Grip_Front_Lat_Pulldown/0.jpg",
     "muscoliSecondari": [
-      "BIC",
-      "DORSO",
+      "BICI",
+      "LAT",
       "DELT"
     ],
     "difficolta": "Principiante",
@@ -12427,11 +12427,11 @@
   {
     "id": "one_arm_dumbbell_row",
     "nome": "Rematore con un manubrio a Una Mano",
-    "focus": "DORSO",
+    "focus": "LAT",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/One-Arm_Dumbbell_Row/0.jpg",
     "muscoliSecondari": [
-      "BIC",
-      "DORSO",
+      "BICI",
+      "LAT",
       "DELT"
     ],
     "difficolta": "Principiante",
@@ -12453,11 +12453,11 @@
   {
     "id": "one_arm_long_bar_row",
     "nome": "Rematore con una Braccia Lungo la Barra",
-    "focus": "DORSO",
+    "focus": "LAT",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/One-Arm_Long_Bar_Row/0.jpg",
     "muscoliSecondari": [
-      "BIC",
-      "DORSO"
+      "BICI",
+      "LAT"
     ],
     "difficolta": "Principiante",
     "tipoEsercizio": "Compound",
@@ -12478,11 +12478,11 @@
   {
     "id": "one_arm_lat_pulldown",
     "nome": "Rematore con una Braccia con Manubrio",
-    "focus": "DORSO",
+    "focus": "LAT",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/One_Arm_Lat_Pulldown/0.jpg",
     "muscoliSecondari": [
-      "BIC",
-      "DORSO"
+      "BICI",
+      "LAT"
     ],
     "difficolta": "Principiante",
     "tipoEsercizio": "Compound",
@@ -12503,12 +12503,12 @@
   {
     "id": "bent_over_one_arm_long_bar_row",
     "nome": "Rematore con una Tazza Singola a Lungo Raggio",
-    "focus": "DORSO",
+    "focus": "LAT",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Bent_Over_One-Arm_Long_Bar_Row/0.jpg",
     "muscoliSecondari": [
-      "BIC",
-      "DORSO",
-      "LOM",
+      "BICI",
+      "LAT",
+      "LOMB",
       "TRAP"
     ],
     "difficolta": "Principiante",
@@ -12776,8 +12776,8 @@
     "focus": "TRAP",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Smith_Machine_Upright_Row/0.jpg",
     "muscoliSecondari": [
-      "BIC",
-      "DORSO",
+      "BICI",
+      "LAT",
       "DELT"
     ],
     "difficolta": "Principiante",
@@ -12923,10 +12923,10 @@
   {
     "id": "elevated_cable_rows",
     "nome": "Rematori con Cavi Alti",
-    "focus": "DORSO",
+    "focus": "LAT",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Elevated_Cable_Rows/0.jpg",
     "muscoliSecondari": [
-      "DORSO",
+      "LAT",
       "TRAP"
     ],
     "difficolta": "Intermedio",
@@ -12948,11 +12948,11 @@
   {
     "id": "seated_one_arm_cable_pulley_rows",
     "nome": "Rematori con Cavo Uniforme a Seduta",
-    "focus": "DORSO",
+    "focus": "LAT",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Seated_One-arm_Cable_Pulley_Rows/0.jpg",
     "muscoliSecondari": [
-      "BIC",
-      "DORSO",
+      "BICI",
+      "LAT",
       "TRAP"
     ],
     "difficolta": "Intermedio",
@@ -12974,11 +12974,11 @@
   {
     "id": "seated_cable_rows",
     "nome": "Rematori con Cavo in Posizione Seduta",
-    "focus": "DORSO",
+    "focus": "LAT",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Seated_Cable_Rows/0.jpg",
     "muscoliSecondari": [
-      "BIC",
-      "DORSO",
+      "BICI",
+      "LAT",
       "DELT"
     ],
     "difficolta": "Principiante",
@@ -13000,11 +13000,11 @@
   {
     "id": "shotgun_row",
     "nome": "Remo a Scoppiettamento",
-    "focus": "DORSO",
+    "focus": "LAT",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Shotgun_Row/0.jpg",
     "muscoliSecondari": [
-      "BIC",
-      "DORSO"
+      "BICI",
+      "LAT"
     ],
     "difficolta": "Principiante",
     "tipoEsercizio": "Compound",
@@ -13025,11 +13025,11 @@
   {
     "id": "v_bar_pulldown",
     "nome": "Remo con Barra V",
-    "focus": "DORSO",
+    "focus": "LAT",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/V-Bar_Pulldown/0.jpg",
     "muscoliSecondari": [
-      "BIC",
-      "DORSO",
+      "BICI",
+      "LAT",
       "DELT"
     ],
     "difficolta": "Intermedio",
@@ -13051,11 +13051,11 @@
   {
     "id": "bent_over_barbell_row",
     "nome": "Remo con Bilanciere in Posizione Accovacciata",
-    "focus": "DORSO",
+    "focus": "LAT",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Bent_Over_Barbell_Row/0.jpg",
     "muscoliSecondari": [
-      "BIC",
-      "DORSO",
+      "BICI",
+      "LAT",
       "DELT"
     ],
     "difficolta": "Principiante",
@@ -13077,11 +13077,11 @@
   {
     "id": "two_arm_kettlebell_row",
     "nome": "Remo con Due Braccia a Kettlebell",
-    "focus": "DORSO",
+    "focus": "LAT",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Two-Arm_Kettlebell_Row/0.jpg",
     "muscoliSecondari": [
-      "BIC",
-      "DORSO"
+      "BICI",
+      "LAT"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Compound",
@@ -13102,11 +13102,11 @@
   {
     "id": "one_arm_kettlebell_row",
     "nome": "Remo con Manubrio Singolo",
-    "focus": "DORSO",
+    "focus": "LAT",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/One-Arm_Kettlebell_Row/0.jpg",
     "muscoliSecondari": [
-      "BIC",
-      "DORSO"
+      "BICI",
+      "LAT"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Compound",
@@ -13127,7 +13127,7 @@
   {
     "id": "rhomboids_smr",
     "nome": "Rhomboid Smith",
-    "focus": "DORSO",
+    "focus": "LAT",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Rhomboids-SMR/0.jpg",
     "muscoliSecondari": [
       "TRAP"
@@ -13151,7 +13151,7 @@
   {
     "id": "middle_back_shrug",
     "nome": "Riscatto alla Spalla Centrale",
-    "focus": "DORSO",
+    "focus": "LAT",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Middle_Back_Shrug/0.jpg",
     "muscoliSecondari": [],
     "difficolta": "Intermedio",
@@ -13173,13 +13173,13 @@
   {
     "id": "alternating_renegade_row",
     "nome": "Rodeo Rinnegato Alternato",
-    "focus": "DORSO",
+    "focus": "LAT",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Alternating_Renegade_Row/0.jpg",
     "muscoliSecondari": [
-      "ADDOM",
-      "BIC",
+      "CORE",
+      "BICI",
       "PETT",
-      "DORSO",
+      "LAT",
       "TRIC"
     ],
     "difficolta": "Avanzato",
@@ -13201,7 +13201,7 @@
   {
     "id": "wrist_rollerer",
     "nome": "Roller Polsi",
-    "focus": "AVAMB",
+    "focus": "AVA",
     "imageUrl": "https://static.exercisedb.dev/media/bd5b860.gif",
     "difficolta": "Intermedio",
     "tipoEsercizio": "Isolation",
@@ -13229,7 +13229,7 @@
   {
     "id": "controlled_wrist_rollerer",
     "nome": "Roller Polsi Controllato",
-    "focus": "AVAMB",
+    "focus": "AVA",
     "imageUrl": "https://static.exercisedb.dev/media/MqNdIbe.gif",
     "difficolta": "Intermedio",
     "tipoEsercizio": "Isolation",
@@ -13258,7 +13258,7 @@
   {
     "id": "wrist_roller",
     "nome": "Roller per Polsi",
-    "focus": "AVAMB",
+    "focus": "AVA",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Wrist_Roller/0.jpg",
     "muscoliSecondari": [
       "DELT"
@@ -13282,7 +13282,7 @@
   {
     "id": "wrist_rotations_with_straight_bar",
     "nome": "Rotazioni del Polso con Barra Dritta",
-    "focus": "AVAMB",
+    "focus": "AVA",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Wrist_Rotations_with_Straight_Bar/0.jpg",
     "muscoliSecondari": [],
     "difficolta": "Principiante",
@@ -13304,11 +13304,11 @@
   {
     "id": "bent_over_two_dumbbell_row",
     "nome": "Rowing con Due Manubri Mesi In Bending",
-    "focus": "DORSO",
+    "focus": "LAT",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Bent_Over_Two-Dumbbell_Row/0.jpg",
     "muscoliSecondari": [
-      "BIC",
-      "DORSO",
+      "BICI",
+      "LAT",
       "DELT"
     ],
     "difficolta": "Principiante",
@@ -13330,11 +13330,11 @@
   {
     "id": "bent_over_two_arm_long_bar_row",
     "nome": "Rowing con una lunga barra a due braccia piegati",
-    "focus": "DORSO",
+    "focus": "LAT",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Bent_Over_Two-Arm_Long_Bar_Row/0.jpg",
     "muscoliSecondari": [
-      "BIC",
-      "DORSO"
+      "BICI",
+      "LAT"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Compound",
@@ -13358,7 +13358,7 @@
     "focus": "TRAP",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Leverage_Shrug/0.jpg",
     "muscoliSecondari": [
-      "AVAMB"
+      "AVA"
     ],
     "difficolta": "Principiante",
     "tipoEsercizio": "Isolation",
@@ -13379,10 +13379,10 @@
   {
     "id": "standing_olympic_plate_hand_squeeze",
     "nome": "Schiaccialetti Olimpici in Piedi",
-    "focus": "AVAMB",
+    "focus": "AVA",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Standing_Olympic_Plate_Hand_Squeeze/0.jpg",
     "muscoliSecondari": [
-      "BIC"
+      "BICI"
     ],
     "difficolta": "Principiante",
     "tipoEsercizio": "Isolation",
@@ -13775,7 +13775,7 @@
   {
     "id": "dumbbell_lying_pronation_on_floor",
     "nome": "Sdraiato Pronazione a Terra con Manubri",
-    "focus": "AVAMB",
+    "focus": "AVA",
     "imageUrl": "https://static.exercisedb.dev/media/7RWNjiB.gif",
     "difficolta": "Intermedio",
     "tipoEsercizio": "Compound",
@@ -13803,7 +13803,7 @@
   {
     "id": "dumbbell_lying_pronation",
     "nome": "Sdraiato Pronazione con Manubri",
-    "focus": "AVAMB",
+    "focus": "AVA",
     "imageUrl": "https://static.exercisedb.dev/media/mym4hJo.gif",
     "muscoliSecondari": [
       "DELT"
@@ -13831,7 +13831,7 @@
   {
     "id": "dumbbell_lying_supination_on_floor",
     "nome": "Sdraiato Supinazione a Terra con Manubri",
-    "focus": "AVAMB",
+    "focus": "AVA",
     "imageUrl": "https://static.exercisedb.dev/media/rEhi2o5.gif",
     "muscoliSecondari": [
       "DELT"
@@ -13859,7 +13859,7 @@
   {
     "id": "dumbbell_lying_supination",
     "nome": "Sdraiato Supinazione con Manubri",
-    "focus": "AVAMB",
+    "focus": "AVA",
     "imageUrl": "https://static.exercisedb.dev/media/M2Pm3zj.gif",
     "muscoliSecondari": [
       "DELT"
@@ -13917,7 +13917,7 @@
   {
     "id": "dumbbell_seated_one_arm_ruota",
     "nome": "Seduto Un Braccio Rotate con Manubri",
-    "focus": "AVAMB",
+    "focus": "AVA",
     "imageUrl": "https://static.exercisedb.dev/media/7f2jsqP.gif",
     "muscoliSecondari": [
       "DELT"
@@ -13998,7 +13998,7 @@
   {
     "id": "latissimus_dorsi_smr",
     "nome": "Smr Latissimus Dorsi",
-    "focus": "DORSO",
+    "focus": "LAT",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Latissimus_Dorsi-SMR/0.jpg",
     "muscoliSecondari": [],
     "difficolta": "Principiante",
@@ -14110,10 +14110,10 @@
   {
     "id": "one_handed_hang",
     "nome": "Sospensione a una Mano",
-    "focus": "DORSO",
+    "focus": "LAT",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/One_Handed_Hang/0.jpg",
     "muscoliSecondari": [
-      "BIC"
+      "BICI"
     ],
     "difficolta": "Principiante",
     "tipoEsercizio": "Compound",
@@ -14151,7 +14151,7 @@
     ],
     "countingMode": "weighted",
     "muscoliSecondari": [
-      "AVAMB"
+      "AVA"
     ],
     "version": "1.0.2",
     "versionHistory": [
@@ -14166,7 +14166,7 @@
     "focus": "BICI",
     "imageUrl": "https://static.exercisedb.dev/media/niXESDw.gif",
     "muscoliSecondari": [
-      "AVAMB"
+      "AVA"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Compound",
@@ -14197,7 +14197,7 @@
     "focus": "BICI",
     "imageUrl": "https://static.exercisedb.dev/media/3XFdb1Z.gif",
     "muscoliSecondari": [
-      "AVAMB"
+      "AVA"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Compound",
@@ -14352,7 +14352,7 @@
   {
     "id": "dynamic_back_stretch",
     "nome": "Stretching Dinamico della schiena",
-    "focus": "DORSO",
+    "focus": "LAT",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Dynamic_Back_Stretch/0.jpg",
     "muscoliSecondari": [],
     "difficolta": "Principiante",
@@ -14407,7 +14407,7 @@
   {
     "id": "kneeling_forearm_stretch",
     "nome": "Stretching con il Ginocchio e la Gambe",
-    "focus": "AVAMB",
+    "focus": "AVA",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Kneeling_Forearm_Stretch/0.jpg",
     "muscoliSecondari": [],
     "difficolta": "Principiante",
@@ -14429,7 +14429,7 @@
   {
     "id": "standing_biceps_stretch",
     "nome": "Stretching del Bicipite in Posizione In piedi",
-    "focus": "BIC",
+    "focus": "BICI",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Standing_Biceps_Stretch/0.jpg",
     "muscoliSecondari": [
       "PETT",
@@ -14454,12 +14454,12 @@
   {
     "id": "spinal_stretch",
     "nome": "Stretching della schiena",
-    "focus": "DORSO",
+    "focus": "LAT",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Spinal_Stretch/0.jpg",
     "muscoliSecondari": [
-      "DORSO",
-      "LOM",
-      "COLLO",
+      "LAT",
+      "LOMB",
+      "COLL",
       "TRAP"
     ],
     "difficolta": "Principiante",
@@ -14481,10 +14481,10 @@
   {
     "id": "chair_lower_back_stretch",
     "nome": "Stretching della schiena Bassa su Sedia",
-    "focus": "DORSO",
+    "focus": "LAT",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Chair_Lower_Back_Stretch/0.jpg",
     "muscoliSecondari": [
-      "LOM"
+      "LOMB"
     ],
     "difficolta": "Principiante",
     "tipoEsercizio": "Isolation",
@@ -14505,12 +14505,12 @@
   {
     "id": "middle_back_stretch",
     "nome": "Stretching della schiena Media",
-    "focus": "DORSO",
+    "focus": "LAT",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Middle_Back_Stretch/0.jpg",
     "muscoliSecondari": [
-      "ADDOM",
-      "DORSO",
-      "LOM"
+      "CORE",
+      "LAT",
+      "LOMB"
     ],
     "difficolta": "Principiante",
     "tipoEsercizio": "Isolation",
@@ -14619,11 +14619,11 @@
   {
     "id": "mixed_grip_chin",
     "nome": "Tiro al Collo con Impugnatura Mista",
-    "focus": "DORSO",
+    "focus": "LAT",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Mixed_Grip_Chin/0.jpg",
     "muscoliSecondari": [
-      "BIC",
-      "DORSO"
+      "BICI",
+      "LAT"
     ],
     "difficolta": "Avanzato",
     "tipoEsercizio": "Compound",
@@ -14730,7 +14730,7 @@
   {
     "id": "straight_arm_pulldown",
     "nome": "Trazione a Braccia Dritte",
-    "focus": "DORSO",
+    "focus": "LAT",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Straight-Arm_Pulldown/0.jpg",
     "muscoliSecondari": [],
     "difficolta": "Principiante",
@@ -14752,11 +14752,11 @@
   {
     "id": "v_bar_pullup",
     "nome": "Trazione al V con le Noci",
-    "focus": "DORSO",
+    "focus": "LAT",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/V-Bar_Pullup/0.jpg",
     "muscoliSecondari": [
-      "BIC",
-      "DORSO",
+      "BICI",
+      "LAT",
       "DELT"
     ],
     "difficolta": "Principiante",
@@ -14841,7 +14841,7 @@
     "focus": "BICI",
     "imageUrl": "https://static.exercisedb.dev/media/guT8YnS.gif",
     "muscoliSecondari": [
-      "AVAMB"
+      "AVA"
     ],
     "difficolta": "Principiante",
     "tipoEsercizio": "Compound",
@@ -15229,7 +15229,7 @@
     "focus": "BICI",
     "imageUrl": "https://static.exercisedb.dev/media/50BETrz.gif",
     "muscoliSecondari": [
-      "AVAMB"
+      "AVA"
     ],
     "difficolta": "Principiante",
     "tipoEsercizio": "Compound",
@@ -15672,11 +15672,11 @@
   {
     "id": "weighted_pull_ups",
     "nome": "Trazioni a Corpo Libero con Pesa Nuca",
-    "focus": "DORSO",
+    "focus": "LAT",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Weighted_Pull_Ups/0.jpg",
     "muscoliSecondari": [
-      "BIC",
-      "DORSO"
+      "BICI",
+      "LAT"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Compound",
@@ -15727,11 +15727,11 @@
   {
     "id": "underhand_cable_pulldowns",
     "nome": "Trazioni al Cavo a Mano Sospesa",
-    "focus": "DORSO",
+    "focus": "LAT",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Underhand_Cable_Pulldowns/0.jpg",
     "muscoliSecondari": [
-      "BIC",
-      "DORSO",
+      "BICI",
+      "LAT",
       "DELT"
     ],
     "difficolta": "Principiante",
@@ -15753,11 +15753,11 @@
   {
     "id": "rocky_pull_ups_pulldowns",
     "nome": "Trazioni alla Rocky/Rematore",
-    "focus": "DORSO",
+    "focus": "LAT",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Rocky_Pull-Ups_Pulldowns/0.jpg",
     "muscoliSecondari": [
-      "BIC",
-      "DORSO",
+      "BICI",
+      "LAT",
       "DELT"
     ],
     "difficolta": "Intermedio",
@@ -15810,11 +15810,11 @@
   {
     "id": "pullups",
     "nome": "Trazioni",
-    "focus": "DORSO",
+    "focus": "LAT",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Pullups/0.jpg",
     "muscoliSecondari": [
-      "BIC",
-      "DORSO"
+      "BICI",
+      "LAT"
     ],
     "difficolta": "Principiante",
     "tipoEsercizio": "Compound",
@@ -16008,8 +16008,8 @@
     "focus": "TRAP",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Barbell_Shrug_Behind_The_Back/0.jpg",
     "muscoliSecondari": [
-      "AVAMB",
-      "DORSO"
+      "AVA",
+      "LAT"
     ],
     "difficolta": "Principiante",
     "tipoEsercizio": "Isolation",
@@ -16033,7 +16033,7 @@
     "focus": "BICI",
     "imageUrl": "https://static.exercisedb.dev/media/zottmancurl.gif",
     "muscoliSecondari": [
-      "AVAMB"
+      "AVA"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Isolation",

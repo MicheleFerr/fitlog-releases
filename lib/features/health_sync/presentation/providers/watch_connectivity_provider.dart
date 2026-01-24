@@ -150,11 +150,13 @@ typedef OnEndWorkoutFromWatch = void Function({bool save});
 /// Callback for when Watch requests to pause the workout
 typedef OnPauseWorkoutFromWatch = void Function();
 
-/// Callback for when Watch modifies next set (weight/reps)
+/// Callback for when Watch modifies a set (weight/reps)
+/// [setNumber] is 1-indexed set number being modified
 /// [exerciseIndexInSuperset] is 0-indexed, only provided for superset exercises
 typedef OnSetModificationFromWatch = void Function(
   double weight,
   int reps, {
+  required int setNumber,
   bool isSuperset,
   int? exerciseIndexInSuperset,
 });
@@ -411,13 +413,16 @@ class WatchConnectivityNotifier extends StateNotifier<WatchConnectivityData> {
         if (args != null) {
           final weight = (args['weight'] as num?)?.toDouble() ?? 0;
           final reps = (args['reps'] as num?)?.toInt() ?? 0;
+          // ✅ FIX: Extract setNumber to modify the correct set (1-indexed)
+          final setNumber = (args['setNumber'] as num?)?.toInt() ?? 1;
           // 🔥 SUPERSET: Extract superset context if present
           final isSuperset = args['isSuperset'] as bool? ?? false;
           final exerciseIndexInSuperset = args['exerciseIndexInSuperset'] as int?;
-          debugPrint('⌚ [FLUTTER] ✏️ Set modification from Watch: ${weight}kg × $reps reps (superset: $isSuperset, exerciseIndex: $exerciseIndexInSuperset)');
+          debugPrint('⌚ [FLUTTER] ✏️ Set modification from Watch: Set #$setNumber → ${weight}kg × $reps reps (superset: $isSuperset, exerciseIndex: $exerciseIndexInSuperset)');
           onSetModificationFromWatch?.call(
             weight,
             reps,
+            setNumber: setNumber,
             isSuperset: isSuperset,
             exerciseIndexInSuperset: exerciseIndexInSuperset,
           );

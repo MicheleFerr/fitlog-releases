@@ -7,7 +7,6 @@
 
 import WidgetKit
 import AppIntents
-import UIKit
 import ActivityKit
 import Foundation
 
@@ -33,14 +32,32 @@ struct AddTimeIntent: LiveActivityIntent {
             let currentState = activity.content.state
             let newRemainingSeconds = currentState.remainingSeconds + 30
             let newTotalSeconds = max(currentState.totalSeconds, newRemainingSeconds)
-            
+
+            // ✅ CRITICAL FIX: Recalculate startDate and endDate for native iOS timer
+            let now = Date()
+            let newEndDate: Date?
+            let newStartDate: Date?
+
+            if currentState.isRunning {
+                // Timer is running - calculate new end time from now
+                newEndDate = now.addingTimeInterval(TimeInterval(newRemainingSeconds))
+                // Calculate when timer originally started (adjusted for new total)
+                newStartDate = now.addingTimeInterval(-TimeInterval(newTotalSeconds - newRemainingSeconds))
+            } else {
+                // Timer is paused - keep dates nil
+                newEndDate = nil
+                newStartDate = nil
+            }
+
             let updatedState = GymBroTimerAttributes.ContentState(
                 remainingSeconds: newRemainingSeconds,
                 totalSeconds: newTotalSeconds,
                 isRunning: currentState.isRunning,
                 currentSet: currentState.currentSet,
                 totalSets: currentState.totalSets,
-                lastUpdated: Date()
+                lastUpdated: Date(),
+                endDate: newEndDate,
+                startDate: newStartDate
             )
             
             // Update Live Activity
@@ -80,14 +97,32 @@ struct PauseResumeIntent: LiveActivityIntent {
         if let activity = Activity<GymBroTimerAttributes>.activities.first {
             let currentState = activity.content.state
             let newIsRunning = !currentState.isRunning
-            
+
+            // ✅ CRITICAL FIX: Recalculate startDate and endDate when toggling pause/resume
+            let now = Date()
+            let newEndDate: Date?
+            let newStartDate: Date?
+
+            if newIsRunning {
+                // Resuming timer - calculate new end time from now
+                newEndDate = now.addingTimeInterval(TimeInterval(currentState.remainingSeconds))
+                // Calculate when timer started (for progress calculation)
+                newStartDate = now.addingTimeInterval(-TimeInterval(currentState.totalSeconds - currentState.remainingSeconds))
+            } else {
+                // Pausing timer - clear dates to stop native iOS countdown
+                newEndDate = nil
+                newStartDate = nil
+            }
+
             let updatedState = GymBroTimerAttributes.ContentState(
                 remainingSeconds: currentState.remainingSeconds,
                 totalSeconds: currentState.totalSeconds,
                 isRunning: newIsRunning,
                 currentSet: currentState.currentSet,
                 totalSets: currentState.totalSets,
-                lastUpdated: Date()
+                lastUpdated: Date(),
+                endDate: newEndDate,
+                startDate: newStartDate
             )
             
             await activity.update(
@@ -134,7 +169,9 @@ struct SkipTimerIntent: LiveActivityIntent {
                 isRunning: false,
                 currentSet: currentState.currentSet,
                 totalSets: currentState.totalSets,
-                lastUpdated: Date()
+                lastUpdated: Date(),
+                endDate: nil,  // ✅ Clear timer dates when skipped
+                startDate: nil
             )
 
             await activity.update(
@@ -182,7 +219,9 @@ struct CompleteSetIntent: LiveActivityIntent {
                 isRunning: currentState.isRunning,
                 currentSet: nextSet,
                 totalSets: currentState.totalSets,
-                lastUpdated: Date()
+                lastUpdated: Date(),
+                endDate: currentState.endDate,  // ✅ Preserve timer dates when advancing set
+                startDate: currentState.startDate
             )
             
             await activity.update(

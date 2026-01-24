@@ -23,6 +23,7 @@ import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator
 import 'package:gymbro_flutter_new/features/strength_standards/presentation/providers/strength_standards_providers.dart';
 import 'package:gymbro_flutter_new/features/strength_standards/domain/entities/user_fitness_questionnaire.dart';
 import 'package:gymbro_flutter_new/features/strength_standards/domain/entities/strength_standard.dart';
+import 'package:gymbro_flutter_new/features/profile/presentation/providers/weight_update_nudge_provider.dart';
 
 /// Edit profile screen for managing personal data
 class EditProfileScreen extends ConsumerStatefulWidget {
@@ -190,6 +191,9 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
     // Update state and save to Hive
     notifier.updateQuestionnaire(questionnaire);
     await notifier.saveQuestionnaire();
+
+    // Mark weight as updated to reset the nudge timer
+    await ref.read(weightUpdateNudgeProvider.notifier).markWeightUpdated();
   }
 
   @override

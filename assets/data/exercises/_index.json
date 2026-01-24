@@ -3872,7 +3872,7 @@
   "seated_biceps": {
     "file": "upper_pull.json",
     "nome": "Bicipiti Seduti",
-    "focus": "BIC"
+    "focus": "BICI"
   },
   "body_up": {
     "file": "upper_pull.json",
@@ -3887,12 +3887,12 @@
   "side_to_side_chins": {
     "file": "upper_pull.json",
     "nome": "Chin-Up Laterali da Sidone",
-    "focus": "DORSO"
+    "focus": "LAT"
   },
   "gironda_sternum_chins": {
     "file": "upper_pull.json",
     "nome": "Chiusura del Petto con Cavo Alternato",
-    "focus": "DORSO"
+    "focus": "LAT"
   },
   "barbell_curl_21s": {
     "file": "upper_pull.json",
@@ -3917,7 +3917,7 @@
   "dumbbell_alternate_bicep_curl": {
     "file": "upper_pull.json",
     "nome": "Curl Alternati al Bicipite con Manubri",
-    "focus": "BIC"
+    "focus": "BICI"
   },
   "dumbbell_alternate_biceps_curl_with_arm_blaster": {
     "file": "upper_pull.json",
@@ -3957,12 +3957,12 @@
   "alternate_hammer_curl": {
     "file": "upper_pull.json",
     "nome": "Curl Alternato al Martello",
-    "focus": "BIC"
+    "focus": "BICI"
   },
   "alternate_incline_dumbbell_curl": {
     "file": "upper_pull.json",
     "nome": "Curl Alternato con Manubri Inclinati",
-    "focus": "BIC"
+    "focus": "BICI"
   },
   "dumbbell_high_curl": {
     "file": "upper_pull.json",
@@ -4162,17 +4162,17 @@
   "incline_inner_biceps_curl": {
     "file": "upper_pull.json",
     "nome": "Curl Interno Panca Inclinata",
-    "focus": "BIC"
+    "focus": "BICI"
   },
   "seated_dumbbell_inner_biceps_curl": {
     "file": "upper_pull.json",
     "nome": "Curl Interno del Bicipite Seduto con Manubri",
-    "focus": "BIC"
+    "focus": "BICI"
   },
   "standing_inner_biceps_curl": {
     "file": "upper_pull.json",
     "nome": "Curl Interno in Posizione In piedi",
-    "focus": "BIC"
+    "focus": "BICI"
   },
   "dumbbell_reverse_preacher_curl": {
     "file": "upper_pull.json",
@@ -4187,7 +4187,7 @@
   "standing_dumbbell_reverse_curl": {
     "file": "upper_pull.json",
     "nome": "Curl Inversio con Manubri in Poso Verticale",
-    "focus": "BIC"
+    "focus": "BICI"
   },
   "barbell_reverse_curl": {
     "file": "upper_pull.json",
@@ -4202,12 +4202,12 @@
   "lying_supine_dumbbell_curl": {
     "file": "upper_pull.json",
     "nome": "Curl Lievi con Manubri",
-    "focus": "BIC"
+    "focus": "BICI"
   },
   "hammer_curls": {
     "file": "upper_pull.json",
     "nome": "Curl Martello",
-    "focus": "BIC"
+    "focus": "BICI"
   },
   "barbell_revers_wrist_curl_v_2": {
     "file": "upper_pull.json",
@@ -4677,7 +4677,7 @@
   "zottman_curl": {
     "file": "upper_pull.json",
     "nome": "Curl Zottman",
-    "focus": "BIC"
+    "focus": "BICI"
   },
   "dumbbell_zottman_preacher_curl": {
     "file": "upper_pull.json",
@@ -4692,7 +4692,7 @@
   "lying_cable_curl": {
     "file": "upper_pull.json",
     "nome": "Curl a Corda Prendendo Lievi",
-    "focus": "BIC"
+    "focus": "BICI"
   },
   "cable_two_arm_curl_on_incline_bench": {
     "file": "upper_pull.json",
@@ -4702,12 +4702,12 @@
   "cross_body_hammer_curl": {
     "file": "upper_pull.json",
     "nome": "Curl a Martello a Braccio Cross",
-    "focus": "BIC"
+    "focus": "BICI"
   },
   "incline_hammer_curls": {
     "file": "upper_pull.json",
     "nome": "Curl a Martello in Posizione Inclinata",
-    "focus": "BIC"
+    "focus": "BICI"
   },
   "cable_curl": {
     "file": "upper_pull.json",
@@ -4717,92 +4717,92 @@
   "lying_close_grip_bar_curl_on_high_pulley": {
     "file": "upper_pull.json",
     "nome": "Curl al Bar con Gancio Presso ad Alto Cavo",
-    "focus": "BIC"
+    "focus": "BICI"
   },
   "standing_biceps_cable_curl": {
     "file": "upper_pull.json",
     "nome": "Curl al Bicipite in Posizione Eretta",
-    "focus": "BIC"
+    "focus": "BICI"
   },
   "high_cable_curls": {
     "file": "upper_pull.json",
     "nome": "Curl al Cavo Alto",
-    "focus": "BIC"
+    "focus": "BICI"
   },
   "reverse_cable_curl": {
     "file": "upper_pull.json",
     "nome": "Curl al Cavo Inverso",
-    "focus": "BIC"
+    "focus": "BICI"
   },
   "cable_hammer_curls___rope_attachment": {
     "file": "upper_pull.json",
     "nome": "Curl al Cavo con Attacco a corda",
-    "focus": "BIC"
+    "focus": "BICI"
   },
   "preacher_hammer_dumbbell_curl": {
     "file": "upper_pull.json",
     "nome": "Curl al Martello con Manubri per il Preachere",
-    "focus": "BIC"
+    "focus": "BICI"
   },
   "seated_palms_down_barbell_wrist_curl": {
     "file": "upper_pull.json",
     "nome": "Curl al Polso con Barra con Palmi In Giù",
-    "focus": "AVAMB"
+    "focus": "AVA"
   },
   "seated_palm_up_barbell_wrist_curl": {
     "file": "upper_pull.json",
     "nome": "Curl al Polso con Bilanciere Seduto",
-    "focus": "AVAMB"
+    "focus": "AVA"
   },
   "palms_up_barbell_wrist_curl_over_a_bench": {
     "file": "upper_pull.json",
     "nome": "Curl al Polso con Bilanciere sopra una Panca",
-    "focus": "AVAMB"
+    "focus": "AVA"
   },
   "flexor_incline_dumbbell_curls": {
     "file": "upper_pull.json",
     "nome": "Curl al Polso con Manubri",
-    "focus": "BIC"
+    "focus": "BICI"
   },
   "palms_down_dumbbell_wrist_curl_over_a_bench": {
     "file": "upper_pull.json",
     "nome": "Curl al Polso con Manubri a Testa In giù su una Panca",
-    "focus": "AVAMB"
+    "focus": "AVA"
   },
   "palms_up_dumbbell_wrist_curl_over_a_bench": {
     "file": "upper_pull.json",
     "nome": "Curl al Polso con Manubri su una Panca",
-    "focus": "AVAMB"
+    "focus": "AVA"
   },
   "palms_down_wrist_curl_over_a_bench": {
     "file": "upper_pull.json",
     "nome": "Curl al Polso con le Palme verso il Basso su una Panca",
-    "focus": "AVAMB"
+    "focus": "AVA"
   },
   "seated_one_arm_dumbbell_palms_up_wrist_curl": {
     "file": "upper_pull.json",
     "nome": "Curl al Polso con un manubrio, Seduto, con un Braccio",
-    "focus": "AVAMB"
+    "focus": "AVA"
   },
   "seated_one_arm_dumbbell_palms_down_wrist_curl": {
     "file": "upper_pull.json",
     "nome": "Curl al Polso con un manubrio, Seduto, con una Sola Braccia",
-    "focus": "AVAMB"
+    "focus": "AVA"
   },
   "reverse_barbell_preacher_curls": {
     "file": "upper_pull.json",
     "nome": "Curl al Predicatore con Bilanciere Invertito",
-    "focus": "BIC"
+    "focus": "BICI"
   },
   "drag_curl": {
     "file": "upper_pull.json",
     "nome": "Curl al Traino",
-    "focus": "BIC"
+    "focus": "BICI"
   },
   "reverse_barbell_curl": {
     "file": "upper_pull.json",
     "nome": "Curl alla Vice con la Panca",
-    "focus": "BIC"
+    "focus": "BICI"
   },
   "barbell_curl": {
     "file": "upper_pull.json",
@@ -4817,62 +4817,62 @@
   "barbell_curls_lying_against_an_incline": {
     "file": "upper_pull.json",
     "nome": "Curl con Bilanciere Prendendo Dimora su una Panca Inclinata",
-    "focus": "BIC"
+    "focus": "BICI"
   },
   "wide_grip_standing_barbell_curl": {
     "file": "upper_pull.json",
     "nome": "Curl con Bilanciere in Posizione Inclinata",
-    "focus": "BIC"
+    "focus": "BICI"
   },
   "close_grip_standing_barbell_curl": {
     "file": "upper_pull.json",
     "nome": "Curl con Bilanciere in Posizione Inclinata da Piede",
-    "focus": "BIC"
+    "focus": "BICI"
   },
   "overhead_cable_curl": {
     "file": "upper_pull.json",
     "nome": "Curl con Cavo sopra la testa",
-    "focus": "BIC"
+    "focus": "BICI"
   },
   "two_arm_dumbbell_preacher_curl": {
     "file": "upper_pull.json",
     "nome": "Curl con Due Manubri per il Preacher",
-    "focus": "BIC"
+    "focus": "BICI"
   },
   "seated_dumbbell_curl": {
     "file": "upper_pull.json",
     "nome": "Curl con Manubri Seduti",
-    "focus": "BIC"
+    "focus": "BICI"
   },
   "incline_dumbbell_curl": {
     "file": "upper_pull.json",
     "nome": "Curl con Manubri in Posizione Inclinata",
-    "focus": "BIC"
+    "focus": "BICI"
   },
   "seated_close_grip_concentration_barbell_curl": {
     "file": "upper_pull.json",
     "nome": "Curl con Manubrio Concentrato Seduto con Raggio Ridotto",
-    "focus": "BIC"
+    "focus": "BICI"
   },
   "close_grip_ez_bar_curl": {
     "file": "upper_pull.json",
     "nome": "Curl con Manubrio a Costo Minimo",
-    "focus": "BIC"
+    "focus": "BICI"
   },
   "standing_palms_up_barbell_behind_the_back_wrist_curl": {
     "file": "upper_pull.json",
     "nome": "Curl con Manubrio a Lato con Panca Inclinata",
-    "focus": "AVAMB"
+    "focus": "AVA"
   },
   "close_grip_ez_bar_curl_with_band": {
     "file": "upper_pull.json",
     "nome": "Curl con Manubrio a Morsa stretta e Band",
-    "focus": "BIC"
+    "focus": "BICI"
   },
   "reverse_plate_curls": {
     "file": "upper_pull.json",
     "nome": "Curl con Piattaforma Inversa",
-    "focus": "BIC"
+    "focus": "BICI"
   },
   "ez_barbell_reverse_grip_curl": {
     "file": "upper_pull.json",
@@ -4882,72 +4882,72 @@
   "ez_bar_curl": {
     "file": "upper_pull.json",
     "nome": "Curl con la barra EZ",
-    "focus": "BIC"
+    "focus": "BICI"
   },
   "standing_one_arm_dumbbell_curl_over_incline_bench": {
     "file": "upper_pull.json",
     "nome": "Curl con un manubrio in Piega Inclinata",
-    "focus": "BIC"
+    "focus": "BICI"
   },
   "one_arm_dumbbell_preacher_curl": {
     "file": "upper_pull.json",
     "nome": "Curl con un Solo Manubrio per la Preghiera",
-    "focus": "BIC"
+    "focus": "BICI"
   },
   "standing_one_arm_cable_curl": {
     "file": "upper_pull.json",
     "nome": "Curl con una Manopola in Posizione Ergo",
-    "focus": "BIC"
+    "focus": "BICI"
   },
   "lying_high_bench_barbell_curl": {
     "file": "upper_pull.json",
     "nome": "Curl da Panca Alta con Bilanciere",
-    "focus": "BIC"
+    "focus": "BICI"
   },
   "dumbbell_bicep_curl": {
     "file": "upper_pull.json",
     "nome": "Curl del Bicipite con Manubri",
-    "focus": "BIC"
+    "focus": "BICI"
   },
   "seated_dumbbell_palms_up_wrist_curl": {
     "file": "upper_pull.json",
     "nome": "Curl del Polso con Manubri Seduti",
-    "focus": "AVAMB"
+    "focus": "AVA"
   },
   "seated_dumbbell_palms_down_wrist_curl": {
     "file": "upper_pull.json",
     "nome": "Curl del Polso con Manubri in Posizione \"Palmi In Giù\" Seduto",
-    "focus": "AVAMB"
+    "focus": "AVA"
   },
   "zottman_preacher_curl": {
     "file": "upper_pull.json",
     "nome": "Curl del Preachere Zottman",
-    "focus": "BIC"
+    "focus": "BICI"
   },
   "preacher_curl": {
     "file": "upper_pull.json",
     "nome": "Curl del Predicatore",
-    "focus": "BIC"
+    "focus": "BICI"
   },
   "machine_preacher_curls": {
     "file": "upper_pull.json",
     "nome": "Curl della Macchina Preacher",
-    "focus": "BIC"
+    "focus": "BICI"
   },
   "spider_curl": {
     "file": "upper_pull.json",
     "nome": "Curl della Taranta",
-    "focus": "BIC"
+    "focus": "BICI"
   },
   "seated_two_arm_palms_up_low_pulley_wrist_curl": {
     "file": "upper_pull.json",
     "nome": "Curl delle Wrist con Cavo e Manubri Seduti",
-    "focus": "AVAMB"
+    "focus": "AVA"
   },
   "concentration_curls": {
     "file": "upper_pull.json",
     "nome": "Curl di Concentrazione",
-    "focus": "BIC"
+    "focus": "BICI"
   },
   "cable_concentration_curl_tempo": {
     "file": "upper_pull.json",
@@ -4972,7 +4972,7 @@
   "standing_concentration_curl": {
     "file": "upper_pull.json",
     "nome": "Curl di Concentrazione in Posizione Eretta",
-    "focus": "BIC"
+    "focus": "BICI"
   },
   "dumbbell_standing_inner_biceps_curl_v_2": {
     "file": "upper_pull.json",
@@ -5092,12 +5092,12 @@
   "brachialis_smr": {
     "file": "upper_pull.json",
     "nome": "Curl per Bicipiti con Cavo",
-    "focus": "BIC"
+    "focus": "BICI"
   },
   "machine_bicep_curl": {
     "file": "upper_pull.json",
     "nome": "Curl per Bicipiti con Macchina",
-    "focus": "BIC"
+    "focus": "BICI"
   },
   "dumbbell_preacher_curl_bilateral": {
     "file": "upper_pull.json",
@@ -5152,7 +5152,7 @@
   "full_range_of_motion_lat_pulldown": {
     "file": "upper_pull.json",
     "nome": "Intervallo Completo di Movimento Rematore su Panca",
-    "focus": "DORSO"
+    "focus": "LAT"
   },
   "dumbbell_kroc_row": {
     "file": "upper_pull.json",
@@ -5292,12 +5292,12 @@
   "wide_grip_lat_pulldown": {
     "file": "upper_pull.json",
     "nome": "Lat Pulldown con Gancio Larga",
-    "focus": "DORSO"
+    "focus": "LAT"
   },
   "overhead_lat": {
     "file": "upper_pull.json",
     "nome": "Lat di Testa",
-    "focus": "DORSO"
+    "focus": "LAT"
   },
   "back_lever": {
     "file": "upper_pull.json",
@@ -5357,7 +5357,7 @@
   "straight_bar_bench_mid_rows": {
     "file": "upper_pull.json",
     "nome": "Panca Dritta con Barra per Raggiata a Metà Corpo",
-    "focus": "DORSO"
+    "focus": "LAT"
   },
   "modified_push_up_to_lower_arms": {
     "file": "upper_pull.json",
@@ -5367,12 +5367,12 @@
   "plate_pinch": {
     "file": "upper_pull.json",
     "nome": "Pinza per Panca",
-    "focus": "AVAMB"
+    "focus": "AVA"
   },
   "london_bridges": {
     "file": "upper_pull.json",
     "nome": "Ponte di Londra",
-    "focus": "DORSO"
+    "focus": "LAT"
   },
   "lever_gripper_hands": {
     "file": "upper_pull.json",
@@ -5402,12 +5402,12 @@
   "bottoms_up_clean_from_the_hang_position": {
     "file": "upper_pull.json",
     "nome": "Pulito dal Posizione Appesa dal Basso",
-    "focus": "AVAMB"
+    "focus": "AVA"
   },
   "incline_bench_pull": {
     "file": "upper_pull.json",
     "nome": "Pull Inclinato su Panca",
-    "focus": "DORSO"
+    "focus": "LAT"
   },
   "barbell_bent_arm_pullover_powerful_variation": {
     "file": "upper_pull.json",
@@ -5467,22 +5467,22 @@
   "bent_over_two_dumbbell_row_with_palms_in": {
     "file": "upper_pull.json",
     "nome": "Raggiungere con le mani in",
-    "focus": "DORSO"
+    "focus": "LAT"
   },
   "sled_row": {
     "file": "upper_pull.json",
     "nome": "Remada con la Slitta",
-    "focus": "DORSO"
+    "focus": "LAT"
   },
   "rope_straight_arm_pulldown": {
     "file": "upper_pull.json",
     "nome": "Remata con Braccia Dritte e Cavo",
-    "focus": "DORSO"
+    "focus": "LAT"
   },
   "reverse_grip_bent_over_rows": {
     "file": "upper_pull.json",
     "nome": "Remate con presa inversa piegati in avanti",
-    "focus": "DORSO"
+    "focus": "LAT"
   },
   "lever_alternating_narrow_grip_seated_row": {
     "file": "upper_pull.json",
@@ -5502,7 +5502,7 @@
   "alternating_kettlebell_row": {
     "file": "upper_pull.json",
     "nome": "Rematore Alternato con kettlebell",
-    "focus": "DORSO"
+    "focus": "LAT"
   },
   "side_cable_high_row_kneeling": {
     "file": "upper_pull.json",
@@ -5577,7 +5577,7 @@
   "leverage_iso_row": {
     "file": "upper_pull.json",
     "nome": "Rematore Isometrico con Cavo",
-    "focus": "DORSO"
+    "focus": "LAT"
   },
   "barbell_pendlay_row": {
     "file": "upper_pull.json",
@@ -5842,7 +5842,7 @@
   "lying_t_bar_row": {
     "file": "upper_pull.json",
     "nome": "Rematore a T Liegi",
-    "focus": "DORSO"
+    "focus": "LAT"
   },
   "cable_floor_seated_wide_grip_row": {
     "file": "upper_pull.json",
@@ -5852,17 +5852,17 @@
   "kneeling_single_arm_high_pulley_row": {
     "file": "upper_pull.json",
     "nome": "Rematore a Un Braccio in Posizione Inclinata",
-    "focus": "DORSO"
+    "focus": "LAT"
   },
   "kneeling_high_pulley_row": {
     "file": "upper_pull.json",
     "nome": "Rematore ad Alta Polso in Ginocchia",
-    "focus": "DORSO"
+    "focus": "LAT"
   },
   "leverage_high_row": {
     "file": "upper_pull.json",
     "nome": "Rematore ad Alto Aggio",
-    "focus": "DORSO"
+    "focus": "LAT"
   },
   "smith_bent_over_row": {
     "file": "upper_pull.json",
@@ -5892,7 +5892,7 @@
   "bent_arm_barbell_pullover": {
     "file": "upper_pull.json",
     "nome": "Rematore con Bilanciere con Braccia Piegate",
-    "focus": "DORSO"
+    "focus": "LAT"
   },
   "upright_cable_row": {
     "file": "upper_pull.json",
@@ -5907,12 +5907,12 @@
   "wide_grip_pulldown_behind_the_neck": {
     "file": "upper_pull.json",
     "nome": "Rematore con Impugnatura Ampia e Manubrio Dietro la testa",
-    "focus": "DORSO"
+    "focus": "LAT"
   },
   "t_bar_row_with_handle": {
     "file": "upper_pull.json",
     "nome": "Rematore con manico T",
-    "focus": "DORSO"
+    "focus": "LAT"
   },
   "dumbbell_bent_over_row": {
     "file": "upper_pull.json",
@@ -5937,7 +5937,7 @@
   "lying_cambered_barbell_row": {
     "file": "upper_pull.json",
     "nome": "Rematore con Stangetta Lieging",
-    "focus": "DORSO"
+    "focus": "LAT"
   },
   "chest_supported_dumbbell_row": {
     "file": "upper_pull.json",
@@ -5952,37 +5952,37 @@
   "bodyweight_mid_row": {
     "file": "upper_pull.json",
     "nome": "Rematore con il Peso del Corpo",
-    "focus": "DORSO"
+    "focus": "LAT"
   },
   "smith_machine_bent_over_row": {
     "file": "upper_pull.json",
     "nome": "Rematore con la Macchina Smith",
-    "focus": "DORSO"
+    "focus": "LAT"
   },
   "close_grip_front_lat_pulldown": {
     "file": "upper_pull.json",
     "nome": "Rematore con presa stretta e movimento anteriore",
-    "focus": "DORSO"
+    "focus": "LAT"
   },
   "one_arm_dumbbell_row": {
     "file": "upper_pull.json",
     "nome": "Rematore con un manubrio a Una Mano",
-    "focus": "DORSO"
+    "focus": "LAT"
   },
   "one_arm_long_bar_row": {
     "file": "upper_pull.json",
     "nome": "Rematore con una Braccia Lungo la Barra",
-    "focus": "DORSO"
+    "focus": "LAT"
   },
   "one_arm_lat_pulldown": {
     "file": "upper_pull.json",
     "nome": "Rematore con una Braccia con Manubrio",
-    "focus": "DORSO"
+    "focus": "LAT"
   },
   "bent_over_one_arm_long_bar_row": {
     "file": "upper_pull.json",
     "nome": "Rematore con una Tazza Singola a Lungo Raggio",
-    "focus": "DORSO"
+    "focus": "LAT"
   },
   "bodyweight_standing_close_grip_row": {
     "file": "upper_pull.json",
@@ -6052,57 +6052,57 @@
   "elevated_cable_rows": {
     "file": "upper_pull.json",
     "nome": "Rematori con Cavi Alti",
-    "focus": "DORSO"
+    "focus": "LAT"
   },
   "seated_one_arm_cable_pulley_rows": {
     "file": "upper_pull.json",
     "nome": "Rematori con Cavo Uniforme a Seduta",
-    "focus": "DORSO"
+    "focus": "LAT"
   },
   "seated_cable_rows": {
     "file": "upper_pull.json",
     "nome": "Rematori con Cavo in Posizione Seduta",
-    "focus": "DORSO"
+    "focus": "LAT"
   },
   "shotgun_row": {
     "file": "upper_pull.json",
     "nome": "Remo a Scoppiettamento",
-    "focus": "DORSO"
+    "focus": "LAT"
   },
   "v_bar_pulldown": {
     "file": "upper_pull.json",
     "nome": "Remo con Barra V",
-    "focus": "DORSO"
+    "focus": "LAT"
   },
   "bent_over_barbell_row": {
     "file": "upper_pull.json",
     "nome": "Remo con Bilanciere in Posizione Accovacciata",
-    "focus": "DORSO"
+    "focus": "LAT"
   },
   "two_arm_kettlebell_row": {
     "file": "upper_pull.json",
     "nome": "Remo con Due Braccia a Kettlebell",
-    "focus": "DORSO"
+    "focus": "LAT"
   },
   "one_arm_kettlebell_row": {
     "file": "upper_pull.json",
     "nome": "Remo con Manubrio Singolo",
-    "focus": "DORSO"
+    "focus": "LAT"
   },
   "rhomboids_smr": {
     "file": "upper_pull.json",
     "nome": "Rhomboid Smith",
-    "focus": "DORSO"
+    "focus": "LAT"
   },
   "middle_back_shrug": {
     "file": "upper_pull.json",
     "nome": "Riscatto alla Spalla Centrale",
-    "focus": "DORSO"
+    "focus": "LAT"
   },
   "alternating_renegade_row": {
     "file": "upper_pull.json",
     "nome": "Rodeo Rinnegato Alternato",
-    "focus": "DORSO"
+    "focus": "LAT"
   },
   "wrist_rollerer": {
     "file": "upper_pull.json",
@@ -6117,22 +6117,22 @@
   "wrist_roller": {
     "file": "upper_pull.json",
     "nome": "Roller per Polsi",
-    "focus": "AVAMB"
+    "focus": "AVA"
   },
   "wrist_rotations_with_straight_bar": {
     "file": "upper_pull.json",
     "nome": "Rotazioni del Polso con Barra Dritta",
-    "focus": "AVAMB"
+    "focus": "AVA"
   },
   "bent_over_two_dumbbell_row": {
     "file": "upper_pull.json",
     "nome": "Rowing con Due Manubri Mesi In Bending",
-    "focus": "DORSO"
+    "focus": "LAT"
   },
   "bent_over_two_arm_long_bar_row": {
     "file": "upper_pull.json",
     "nome": "Rowing con una lunga barra a due braccia piegati",
-    "focus": "DORSO"
+    "focus": "LAT"
   },
   "leverage_shrug": {
     "file": "upper_pull.json",
@@ -6142,7 +6142,7 @@
   "standing_olympic_plate_hand_squeeze": {
     "file": "upper_pull.json",
     "nome": "Schiaccialetti Olimpici in Piedi",
-    "focus": "AVAMB"
+    "focus": "AVA"
   },
   "dumbbell_decline_shrug_rigid_variation": {
     "file": "upper_pull.json",
@@ -6252,7 +6252,7 @@
   "latissimus_dorsi_smr": {
     "file": "upper_pull.json",
     "nome": "Smr Latissimus Dorsi",
-    "focus": "DORSO"
+    "focus": "LAT"
   },
   "exercise_ball_alternating_arm_ups": {
     "file": "upper_pull.json",
@@ -6272,7 +6272,7 @@
   "one_handed_hang": {
     "file": "upper_pull.json",
     "nome": "Sospensione a una Mano",
-    "focus": "DORSO"
+    "focus": "LAT"
   },
   "barbell_spider_curl": {
     "file": "upper_pull.json",
@@ -6312,7 +6312,7 @@
   "dynamic_back_stretch": {
     "file": "upper_pull.json",
     "nome": "Stretching Dinamico della schiena",
-    "focus": "DORSO"
+    "focus": "LAT"
   },
   "upper_back_stretch": {
     "file": "upper_pull.json",
@@ -6322,27 +6322,27 @@
   "kneeling_forearm_stretch": {
     "file": "upper_pull.json",
     "nome": "Stretching con il Ginocchio e la Gambe",
-    "focus": "AVAMB"
+    "focus": "AVA"
   },
   "standing_biceps_stretch": {
     "file": "upper_pull.json",
     "nome": "Stretching del Bicipite in Posizione In piedi",
-    "focus": "BIC"
+    "focus": "BICI"
   },
   "spinal_stretch": {
     "file": "upper_pull.json",
     "nome": "Stretching della schiena",
-    "focus": "DORSO"
+    "focus": "LAT"
   },
   "chair_lower_back_stretch": {
     "file": "upper_pull.json",
     "nome": "Stretching della schiena Bassa su Sedia",
-    "focus": "DORSO"
+    "focus": "LAT"
   },
   "middle_back_stretch": {
     "file": "upper_pull.json",
     "nome": "Stretching della schiena Media",
-    "focus": "DORSO"
+    "focus": "LAT"
   },
   "cable_twisting_pull_with_intensified": {
     "file": "upper_pull.json",
@@ -6362,7 +6362,7 @@
   "mixed_grip_chin": {
     "file": "upper_pull.json",
     "nome": "Tiro al Collo con Impugnatura Mista",
-    "focus": "DORSO"
+    "focus": "LAT"
   },
   "assisted_standing_chin_up": {
     "file": "upper_pull.json",
@@ -6382,12 +6382,12 @@
   "straight_arm_pulldown": {
     "file": "upper_pull.json",
     "nome": "Trazione a Braccia Dritte",
-    "focus": "DORSO"
+    "focus": "LAT"
   },
   "v_bar_pullup": {
     "file": "upper_pull.json",
     "nome": "Trazione al V con le Noci",
-    "focus": "DORSO"
+    "focus": "LAT"
   },
   "assisted_pull_up": {
     "file": "upper_pull.json",
@@ -6542,7 +6542,7 @@
   "weighted_pull_ups": {
     "file": "upper_pull.json",
     "nome": "Trazioni a Corpo Libero con Pesa Nuca",
-    "focus": "DORSO"
+    "focus": "LAT"
   },
   "l_pull_up": {
     "file": "upper_pull.json",
@@ -6552,12 +6552,12 @@
   "underhand_cable_pulldowns": {
     "file": "upper_pull.json",
     "nome": "Trazioni al Cavo a Mano Sospesa",
-    "focus": "DORSO"
+    "focus": "LAT"
   },
   "rocky_pull_ups_pulldowns": {
     "file": "upper_pull.json",
     "nome": "Trazioni alla Rocky/Rematore",
-    "focus": "DORSO"
+    "focus": "LAT"
   },
   "pull_up": {
     "file": "upper_pull.json",
@@ -6567,7 +6567,7 @@
   "pullups": {
     "file": "upper_pull.json",
     "nome": "Trazioni alla sbarra",
-    "focus": "DORSO"
+    "focus": "LAT"
   },
   "weighted_pull_up": {
     "file": "upper_pull.json",
@@ -6637,12 +6637,12 @@
   "adductor": {
     "file": "lower.json",
     "nome": "Adduttore",
-    "focus": "ADDUT"
+    "focus": "ADD"
   },
   "thigh_adductor": {
     "file": "lower.json",
     "nome": "Adduttore Fogliari",
-    "focus": "ADDUT"
+    "focus": "ADD"
   },
   "cable_hip_adduction": {
     "file": "lower.json",
@@ -6652,12 +6652,12 @@
   "band_hip_adductions": {
     "file": "lower.json",
     "nome": "Adduzioni alle Anche con Fascia Elastica",
-    "focus": "ADDUT"
+    "focus": "ADD"
   },
   "adductor_groin": {
     "file": "lower.json",
     "nome": "Aduttore/Groin",
-    "focus": "ADDUT"
+    "focus": "ADD"
   },
   "sit_squats": {
     "file": "lower.json",
@@ -6677,7 +6677,7 @@
   "standing_calf_raises": {
     "file": "lower.json",
     "nome": "Affondi in piedi",
-    "focus": "POLL"
+    "focus": "POLP"
   },
   "bodyweight_bulgarian_split_squat": {
     "file": "lower.json",
@@ -6802,7 +6802,7 @@
   "leg_up_hamstring_stretch": {
     "file": "lower.json",
     "nome": "Allungamento Femorali Gamba Alzata",
-    "focus": "FEMOR"
+    "focus": "FEMO"
   },
   "intermediate_hip_flexor_and_quad_stretch": {
     "file": "lower.json",
@@ -6822,12 +6822,12 @@
   "chair_leg_extended_stretch_with_modified": {
     "file": "lower.json",
     "nome": "Allungamento Gamba Estesa su Sedia con Modifica",
-    "focus": "FEMOR"
+    "focus": "FEMO"
   },
   "chair_leg_extended_stretch": {
     "file": "lower.json",
     "nome": "Allungamento Gambe su Sedia",
-    "focus": "FEMOR"
+    "focus": "FEMO"
   },
   "assisted_lying_glutes_stretch": {
     "file": "lower.json",
@@ -6842,7 +6842,7 @@
   "world_greatest_stretch": {
     "file": "lower.json",
     "nome": "Allungamento Più Completo Al Mondo",
-    "focus": "FEMOR"
+    "focus": "FEMO"
   },
   "assisted_lying_calves_stretch": {
     "file": "lower.json",
@@ -6887,7 +6887,7 @@
   "thigh_abductor": {
     "file": "lower.json",
     "nome": "Apri le gambe e posiziona i piedi su una macchina per l'esercizio, quindi spingi i talloni verso l'esterno mentre isoli i muscoli delle cosce.",
-    "focus": "ABDUT"
+    "focus": "ABDU"
   },
   "front_leg_raises": {
     "file": "lower.json",
@@ -7102,17 +7102,17 @@
   "knee_circles": {
     "file": "lower.json",
     "nome": "Cerchi alle Ginocchia",
-    "focus": "POLL"
+    "focus": "POLP"
   },
   "hip_circles_prone": {
     "file": "lower.json",
     "nome": "Cerchi delle Anche (Prone)",
-    "focus": "ABDUT"
+    "focus": "ABDU"
   },
   "standing_hip_circles": {
     "file": "lower.json",
     "nome": "Circoli delle anche in piedi",
-    "focus": "ABDUT"
+    "focus": "ABDU"
   },
   "clamshell": {
     "file": "lower.json",
@@ -7152,7 +7152,7 @@
   "lying_crossover": {
     "file": "lower.json",
     "nome": "Croci a Lievo",
-    "focus": "ABDUT"
+    "focus": "ABDU"
   },
   "iron_crosses_stretch": {
     "file": "lower.json",
@@ -7167,27 +7167,27 @@
   "assisted_prone_hamstring": {
     "file": "lower.json",
     "nome": "Curl Femorali",
-    "focus": "FEMOR"
+    "focus": "FEMO"
   },
   "exercise_ball_one_legged_diagonal_kick_hamstring_curl": {
     "file": "lower.json",
     "nome": "Curl Femorali Diagonale Gamba su Fitball",
-    "focus": "FEMOR"
+    "focus": "FEMO"
   },
   "lever_lying_leg_curl": {
     "file": "lower.json",
     "nome": "Curl Sdraiato Leg Alla Macchina",
-    "focus": "FEMOR"
+    "focus": "FEMO"
   },
   "lever_lying_two_one_leg_curl": {
     "file": "lower.json",
     "nome": "Curl Sdraiato Leg Due-una Gamba Alla Macchina",
-    "focus": "FEMOR"
+    "focus": "FEMO"
   },
   "lever_seated_leg_curl": {
     "file": "lower.json",
     "nome": "Curl Seduto Leg Alla Macchina",
-    "focus": "FEMOR"
+    "focus": "FEMO"
   },
   "lying_leg_curls": {
     "file": "lower.json",
@@ -7212,7 +7212,7 @@
   "standing_single_leg_curl": {
     "file": "lower.json",
     "nome": "Curl in Piedi Leg a Una Gamba",
-    "focus": "FEMOR"
+    "focus": "FEMO"
   },
   "ball_leg_curl": {
     "file": "lower.json",
@@ -7307,12 +7307,12 @@
   "hamstring_stretch": {
     "file": "lower.json",
     "nome": "Femorali Allungamento",
-    "focus": "FEMOR"
+    "focus": "FEMO"
   },
   "flexible_assisted_prone_hamstring": {
     "file": "lower.json",
     "nome": "Femorali Proni Assistiti Flessibili",
-    "focus": "FEMOR"
+    "focus": "FEMO"
   },
   "fire_hydrant": {
     "file": "lower.json",
@@ -7382,7 +7382,7 @@
   "glute_ham_raise": {
     "file": "lower.json",
     "nome": "Gluteo-ham Raise",
-    "focus": "FEMOR"
+    "focus": "FEMO"
   },
   "piriformis_smr": {
     "file": "lower.json",
@@ -7407,7 +7407,7 @@
   "barbell_good_morning": {
     "file": "lower.json",
     "nome": "Good Morning con Bilanciere",
-    "focus": "FEMOR"
+    "focus": "FEMO"
   },
   "looking_at_ceiling": {
     "file": "lower.json",
@@ -7442,7 +7442,7 @@
   "kettlebell_hang_clean": {
     "file": "lower.json",
     "nome": "Hang Clean con Kettlebell",
-    "focus": "FEMOR"
+    "focus": "FEMO"
   },
   "high_knee_against_wall": {
     "file": "lower.json",
@@ -7467,7 +7467,7 @@
   "standing_hamstring_and_calf_stretch_with_strap": {
     "file": "lower.json",
     "nome": "In Piedi Allungamento Femorali e Polpacci",
-    "focus": "FEMOR"
+    "focus": "FEMO"
   },
   "lever_standing_calf_raise": {
     "file": "lower.json",
@@ -7582,7 +7582,7 @@
   "kick_out_sit": {
     "file": "lower.json",
     "nome": "Kick Out Sit",
-    "focus": "FEMOR"
+    "focus": "FEMO"
   },
   "glute_kickback": {
     "file": "lower.json",
@@ -7602,27 +7602,27 @@
   "self_assisted_inverse_leg_curl": {
     "file": "lower.json",
     "nome": "Leg Curl Inverso Auto-assistito",
-    "focus": "FEMOR"
+    "focus": "FEMO"
   },
   "self_assisted_inverse_leg_curl_on_floor": {
     "file": "lower.json",
     "nome": "Leg Curl Inverso Auto-assistito a Terra",
-    "focus": "FEMOR"
+    "focus": "FEMO"
   },
   "cable_assisted_inverse_leg_curl": {
     "file": "lower.json",
     "nome": "Leg Curl Inverso ai Cavi",
-    "focus": "FEMOR"
+    "focus": "FEMO"
   },
   "inverse_leg_curl_bench_support": {
     "file": "lower.json",
     "nome": "Leg Curl Inverso con Supporto Panca",
-    "focus": "FEMOR"
+    "focus": "FEMO"
   },
   "lever_kneeling_leg_curl": {
     "file": "lower.json",
     "nome": "Leg Curl in Ginocchio Alla Macchina",
-    "focus": "FEMOR"
+    "focus": "FEMO"
   },
   "lever_leg_extension": {
     "file": "lower.json",
@@ -7732,22 +7732,22 @@
   "windmills": {
     "file": "lower.json",
     "nome": "Molino a Vento",
-    "focus": "ABDUT"
+    "focus": "ABDU"
   },
   "anterior_tibialis_smr": {
     "file": "lower.json",
     "nome": "Muscolo Tibiale Anteriore",
-    "focus": "POLL"
+    "focus": "POLP"
   },
   "groiners": {
     "file": "lower.json",
     "nome": "Non sono sicuro di aver capito la tua richiesta. Potresti fornire maggiori dettagli o contesto?",
-    "focus": "ADDUT"
+    "focus": "ADD"
   },
   "bodyweight_nordic_curl": {
     "file": "lower.json",
     "nome": "Nordic Femorale Curl a Corpo Libero",
-    "focus": "FEMOR"
+    "focus": "FEMO"
   },
   "barbell_overhead_squat": {
     "file": "lower.json",
@@ -7802,7 +7802,7 @@
   "lying_bent_leg_groin": {
     "file": "lower.json",
     "nome": "Piegamento delle gambe Prono con Gambe Piegate",
-    "focus": "ADDUT"
+    "focus": "ADD"
   },
   "pike_to_cobra_push_up": {
     "file": "lower.json",
@@ -7827,7 +7827,7 @@
   "calves_smr": {
     "file": "lower.json",
     "nome": "Polpacci",
-    "focus": "POLL"
+    "focus": "POLP"
   },
   "wide_stance_barbell_squat": {
     "file": "lower.json",
@@ -7867,7 +7867,7 @@
   "reclining_big_toe_pose_with_rope": {
     "file": "lower.json",
     "nome": "Posizione Alluce Reclinata con Corda",
-    "focus": "FEMOR"
+    "focus": "FEMO"
   },
   "butterfly_yoga_pose": {
     "file": "lower.json",
@@ -7882,7 +7882,7 @@
   "power_clean": {
     "file": "lower.json",
     "nome": "Power Clean",
-    "focus": "FEMOR"
+    "focus": "FEMO"
   },
   "upper_back_leg_grab": {
     "file": "lower.json",
@@ -7892,7 +7892,7 @@
   "calf_press": {
     "file": "lower.json",
     "nome": "Pressa Gambe",
-    "focus": "POLL"
+    "focus": "POLP"
   },
   "leg_press": {
     "file": "lower.json",
@@ -7907,7 +7907,7 @@
   "calf_press_on_the_leg_press_machine": {
     "file": "lower.json",
     "nome": "Pressa alle gambe su Macchina",
-    "focus": "POLL"
+    "focus": "POLP"
   },
   "narrow_stance_leg_press": {
     "file": "lower.json",
@@ -7967,27 +7967,27 @@
   "smith_machine_reverse_calf_raises": {
     "file": "lower.json",
     "nome": "Rialza le gambe alla Smith Machine con Retrospetto",
-    "focus": "POLL"
+    "focus": "POLP"
   },
   "donkey_calf_raises": {
     "file": "lower.json",
     "nome": "Rialzate i tacchi",
-    "focus": "POLL"
+    "focus": "POLP"
   },
   "calf_raises___with_bands": {
     "file": "lower.json",
     "nome": "Rialzate le gambe con le fasce",
-    "focus": "POLL"
+    "focus": "POLP"
   },
   "smith_machine_calf_raise": {
     "file": "lower.json",
     "nome": "Rialzo Calvi con la Macchina Smith",
-    "focus": "POLL"
+    "focus": "POLP"
   },
   "side_leg_raises": {
     "file": "lower.json",
     "nome": "Rialzo Laterale delle gambe",
-    "focus": "ADDUT"
+    "focus": "ADD"
   },
   "natural_glute_ham_raise": {
     "file": "lower.json",
@@ -7997,22 +7997,22 @@
   "standing_barbell_calf_raise": {
     "file": "lower.json",
     "nome": "Rialzo dei Calvi in Posizione In piedi con Bilanciere",
-    "focus": "POLL"
+    "focus": "POLP"
   },
   "rocking_standing_calf_raise": {
     "file": "lower.json",
     "nome": "Rialzo dei Calvi in Posizione Prona",
-    "focus": "POLL"
+    "focus": "POLP"
   },
   "calf_raise_on_a_dumbbell": {
     "file": "lower.json",
     "nome": "Rialzo delle Calci con Manubri",
-    "focus": "POLL"
+    "focus": "POLP"
   },
   "seated_calf_raise": {
     "file": "lower.json",
     "nome": "Rialzo delle gambe Seduto",
-    "focus": "POLL"
+    "focus": "POLP"
   },
   "rear_leg_raises": {
     "file": "lower.json",
@@ -8022,7 +8022,7 @@
   "standing_dumbbell_calf_raise": {
     "file": "lower.json",
     "nome": "Rialzo sui Tacchi con Manubri in Piede",
-    "focus": "POLL"
+    "focus": "POLP"
   },
   "tire_flip": {
     "file": "lower.json",
@@ -8047,7 +8047,7 @@
   "runners_stretch": {
     "file": "lower.json",
     "nome": "Runners Allungamento",
-    "focus": "FEMOR"
+    "focus": "FEMO"
   },
   "step_up_with_knee_raise": {
     "file": "lower.json",
@@ -8082,7 +8082,7 @@
   "single_leg_platform_slide": {
     "file": "lower.json",
     "nome": "Scivolamento Piattaforma a Una Gamba",
-    "focus": "FEMOR"
+    "focus": "FEMO"
   },
   "side_lying_hip_adduction_male": {
     "file": "lower.json",
@@ -8097,7 +8097,7 @@
   "dumbbell_lying_femoral": {
     "file": "lower.json",
     "nome": "Sdraiato Femoral con Manubri",
-    "focus": "FEMOR"
+    "focus": "FEMO"
   },
   "barbell_lying_lifting_on_hip": {
     "file": "lower.json",
@@ -8137,7 +8137,7 @@
   "exercise_ball_seated_hamstring_stretch": {
     "file": "lower.json",
     "nome": "Seduto Allungamento Femorali su Fitball",
-    "focus": "FEMOR"
+    "focus": "FEMO"
   },
   "seated_glute_stretch": {
     "file": "lower.json",
@@ -8212,7 +8212,7 @@
   "seated_wide_angle_pose_sequence": {
     "file": "lower.json",
     "nome": "Sequenza Posizione Seduta Ad Angolo Largo",
-    "focus": "FEMOR"
+    "focus": "FEMO"
   },
   "sissy_squat_isolation": {
     "file": "lower.json",
@@ -8252,7 +8252,7 @@
   "foot_smr": {
     "file": "lower.json",
     "nome": "Smr del Piede",
-    "focus": "POLL"
+    "focus": "POLP"
   },
   "rough_band_hip_lift": {
     "file": "lower.json",
@@ -8802,7 +8802,7 @@
   "intense_barbell_straight_leg_deadlift": {
     "file": "lower.json",
     "nome": "Stacco Gambe Tese Intenso con Bilanciere",
-    "focus": "FEMOR"
+    "focus": "FEMO"
   },
   "controlled_band_straight_back_stiff_leg_deadlift": {
     "file": "lower.json",
@@ -8812,12 +8812,12 @@
   "fast_band_straight_leg_deadlift": {
     "file": "lower.json",
     "nome": "Stacco Gambe Tese Veloce con Elastico",
-    "focus": "FEMOR"
+    "focus": "FEMO"
   },
   "barbell_straight_leg_deadlift": {
     "file": "lower.json",
     "nome": "Stacco Gambe Tese con Bilanciere",
-    "focus": "FEMOR"
+    "focus": "FEMO"
   },
   "band_straight_leg_deadlift": {
     "file": "lower.json",
@@ -9002,17 +9002,17 @@
   "calf_stretch_elbows_against_wall": {
     "file": "lower.json",
     "nome": "Stretching Calf con Gomiti Contro il Muro",
-    "focus": "POLL"
+    "focus": "POLP"
   },
   "calf_stretch_hands_against_wall": {
     "file": "lower.json",
     "nome": "Stretching Calf con le mani contro il Muro",
-    "focus": "POLL"
+    "focus": "POLP"
   },
   "standing_gastrocnemius_calf_stretch": {
     "file": "lower.json",
     "nome": "Stretching Gambe Posteriori in Posizione Eretta",
-    "focus": "POLL"
+    "focus": "POLP"
   },
   "standing_hamstring_and_calf_stretch": {
     "file": "lower.json",
@@ -9092,12 +9092,12 @@
   "groin_and_back_stretch": {
     "file": "lower.json",
     "nome": "Stretching dei Piegamenti sulle gambe e sulla schiena",
-    "focus": "ADDUT"
+    "focus": "ADD"
   },
   "side_lying_groin_stretch": {
     "file": "lower.json",
     "nome": "Stretching del Piegamento Laterale con la Posizione a Lievo laterle",
-    "focus": "ADDUT"
+    "focus": "ADD"
   },
   "intermediate_groin_stretch": {
     "file": "lower.json",
@@ -9107,17 +9107,17 @@
   "standing_soleus_and_achilles_stretch": {
     "file": "lower.json",
     "nome": "Stretching del Solco e dell'Achilleo del Polpaccio in Posizione Eretta",
-    "focus": "POLL"
+    "focus": "POLP"
   },
   "it_band_and_glute_stretch": {
     "file": "lower.json",
     "nome": "Stretching dell'Ita Band e dei Glute",
-    "focus": "ABDUT"
+    "focus": "ABDU"
   },
   "seated_calf_stretch": {
     "file": "lower.json",
     "nome": "Stretching delle gambe Seduto",
-    "focus": "POLL"
+    "focus": "POLP"
   },
   "worlds_greatest_stretch": {
     "file": "lower.json",
@@ -9142,7 +9142,7 @@
   "peroneals_smr": {
     "file": "lower.json",
     "nome": "Sviluppo dei Peroneali",
-    "focus": "POLL"
+    "focus": "POLP"
   },
   "kettlebell_swing": {
     "file": "lower.json",
@@ -9187,7 +9187,7 @@
   "iliotibial_tract_smr": {
     "file": "lower.json",
     "nome": "Tratto Iliotibiale di Smr",
-    "focus": "ABDUT"
+    "focus": "ABDU"
   },
   "cable_pull_through_with_rope": {
     "file": "lower.json",
@@ -9197,12 +9197,12 @@
   "inverted_style_inverse_leg_curl_on_pull_up_cable_machine": {
     "file": "lower.json",
     "nome": "Trazioni Leg Curl Inverso Stile Invertito su Macch",
-    "focus": "FEMOR"
+    "focus": "FEMO"
   },
   "inverse_leg_curl_on_pull_up_cable_machine": {
     "file": "lower.json",
     "nome": "Trazioni Leg Curl Inverso su Macchina ai Cavi",
-    "focus": "FEMOR"
+    "focus": "FEMO"
   },
   "pull_through": {
     "file": "lower.json",
@@ -9297,7 +9297,7 @@
   "knee_hip_raise_on_parallel_bars": {
     "file": "core.json",
     "nome": "Alzata Ginocchia/Fianco sulle parallele",
-    "focus": "ADDOM"
+    "focus": "CORE"
   },
   "hip_raise_bent_knee": {
     "file": "core.json",
@@ -9397,7 +9397,7 @@
   "suspended_fallout": {
     "file": "core.json",
     "nome": "Caduta Suspenda",
-    "focus": "ADDOM"
+    "focus": "CORE"
   },
   "upward_facing_dog": {
     "file": "core.json",
@@ -9412,7 +9412,7 @@
   "one_arm_high_pulley_cable_side_bends": {
     "file": "core.json",
     "nome": "Cavi Laterali con Una Sola Braccia in Alto",
-    "focus": "ADDOM"
+    "focus": "CORE"
   },
   "cocoons": {
     "file": "core.json",
@@ -9427,7 +9427,7 @@
   "one_arm_medicine_ball_slam": {
     "file": "core.json",
     "nome": "Colpo della Palla da Medicina con una Sola Braccia",
-    "focus": "ADDOM"
+    "focus": "CORE"
   },
   "kettlebell_double_windmill": {
     "file": "core.json",
@@ -9437,7 +9437,7 @@
   "spider_crawl": {
     "file": "core.json",
     "nome": "Cracco della Ragno",
-    "focus": "ADDOM"
+    "focus": "CORE"
   },
   "cross_body_crunch": {
     "file": "core.json",
@@ -9452,22 +9452,22 @@
   "gorilla_chin_crunch": {
     "file": "core.json",
     "nome": "Crollo del Gorilla/Crunk",
-    "focus": "ADDOM"
+    "focus": "CORE"
   },
   "bosu_ball_cable_crunch_with_side_bends": {
     "file": "core.json",
     "nome": "Crouch con la palla da bosu e piegamenti su cavo con curve laterali",
-    "focus": "ADDOM"
+    "focus": "CORE"
   },
   "kneeling_cable_crunch_with_alternating_oblique_twists": {
     "file": "core.json",
     "nome": "Crouching Cable Crunch con Alternating Oblique Twists",
-    "focus": "ADDOM"
+    "focus": "CORE"
   },
   "crunches": {
     "file": "core.json",
     "nome": "Crunch",
-    "focus": "ADDOM"
+    "focus": "CORE"
   },
   "band_bicycle_crunch": {
     "file": "core.json",
@@ -9487,7 +9487,7 @@
   "crunch___legs_on_exercise_ball": {
     "file": "core.json",
     "nome": "Crunch Gambe su Palla da Esercizio",
-    "focus": "ADDOM"
+    "focus": "CORE"
   },
   "reverse_crunch": {
     "file": "core.json",
@@ -9522,12 +9522,12 @@
   "oblique_crunches": {
     "file": "core.json",
     "nome": "Crunch Obliqui",
-    "focus": "ADDOM"
+    "focus": "CORE"
   },
   "oblique_crunches___on_the_floor": {
     "file": "core.json",
     "nome": "Crunch Obliqui a Terra",
-    "focus": "ADDOM"
+    "focus": "CORE"
   },
   "oblique_crunch_v_2": {
     "file": "core.json",
@@ -9547,7 +9547,7 @@
   "standing_rope_crunch": {
     "file": "core.json",
     "nome": "Crunch alla Corda in Posizione Inclusa",
-    "focus": "ADDOM"
+    "focus": "CORE"
   },
   "crunch_hands_overhead": {
     "file": "core.json",
@@ -9557,7 +9557,7 @@
   "weighted_crunches": {
     "file": "core.json",
     "nome": "Crunch con Pesa",
-    "focus": "ADDOM"
+    "focus": "CORE"
   },
   "weighted_crunch": {
     "file": "core.json",
@@ -9577,7 +9577,7 @@
   "rope_crunch": {
     "file": "core.json",
     "nome": "Crunch con la corda",
-    "focus": "ADDOM"
+    "focus": "CORE"
   },
   "cable_kneeling_crunch_gentle_variation": {
     "file": "core.json",
@@ -9602,12 +9602,12 @@
   "exercise_ball_crunch": {
     "file": "core.json",
     "nome": "Crunch su Palla da Esercizio",
-    "focus": "ADDOM"
+    "focus": "CORE"
   },
   "cable_crunch": {
     "file": "core.json",
     "nome": "Crusio al Cavo",
-    "focus": "ADDOM"
+    "focus": "CORE"
   },
   "curl_up": {
     "file": "core.json",
@@ -9647,7 +9647,7 @@
   "decline_reverse_crunch": {
     "file": "core.json",
     "nome": "Decrescente Crunch Inversione",
-    "focus": "ADDOM"
+    "focus": "CORE"
   },
   "bodyweight_dragon_flag": {
     "file": "core.json",
@@ -9767,7 +9767,7 @@
   "landmine_180s": {
     "file": "core.json",
     "nome": "I 180° Landmine",
-    "focus": "ADDOM"
+    "focus": "CORE"
   },
   "cable_standing_crunch_with_rope_attachment": {
     "file": "core.json",
@@ -9872,7 +9872,7 @@
   "side_jackknife": {
     "file": "core.json",
     "nome": "Jackknife laterali",
-    "focus": "ADDOM"
+    "focus": "CORE"
   },
   "cable_judo_flip_with_static": {
     "file": "core.json",
@@ -9892,7 +9892,7 @@
   "weighted_ball_side_bend": {
     "file": "core.json",
     "nome": "Lancio Laterale con Palla Pesante",
-    "focus": "ADDOM"
+    "focus": "CORE"
   },
   "landmine_180": {
     "file": "core.json",
@@ -9912,7 +9912,7 @@
   "ab_crunch_machine": {
     "file": "core.json",
     "nome": "Macchina per Crunch Abdominali",
-    "focus": "ADDOM"
+    "focus": "CORE"
   },
   "full_maltese": {
     "file": "core.json",
@@ -9937,7 +9937,7 @@
   "scissor_kick": {
     "file": "core.json",
     "nome": "Mossa Scissore",
-    "focus": "ADDOM"
+    "focus": "CORE"
   },
   "mountain_climber": {
     "file": "core.json",
@@ -9957,7 +9957,7 @@
   "decline_oblique_crunch": {
     "file": "core.json",
     "nome": "Obliquo Declino Crunch",
-    "focus": "ADDOM"
+    "focus": "CORE"
   },
   "otis_up": {
     "file": "core.json",
@@ -9967,12 +9967,12 @@
   "bent_press": {
     "file": "core.json",
     "nome": "Panca Piegata",
-    "focus": "ADDOM"
+    "focus": "CORE"
   },
   "kettlebell_pass_between_the_legs": {
     "file": "core.json",
     "nome": "Passa il Kettlebell tra le gambe",
-    "focus": "ADDOM"
+    "focus": "CORE"
   },
   "posterior_step_to_overhead_reach": {
     "file": "core.json",
@@ -9987,7 +9987,7 @@
   "press_sit_up": {
     "file": "core.json",
     "nome": "Piegamenti su Panca",
-    "focus": "ADDOM"
+    "focus": "CORE"
   },
   "cable_side_bend": {
     "file": "core.json",
@@ -10027,7 +10027,7 @@
   "plank": {
     "file": "core.json",
     "nome": "Planca",
-    "focus": "ADDOM"
+    "focus": "CORE"
   },
   "lean_planche": {
     "file": "core.json",
@@ -10077,7 +10077,7 @@
   "side_bridge": {
     "file": "core.json",
     "nome": "Ponte laterale",
-    "focus": "ADDOM"
+    "focus": "CORE"
   },
   "childs_pose": {
     "file": "core.json",
@@ -10097,12 +10097,12 @@
   "pallof_press_with_rotation": {
     "file": "core.json",
     "nome": "Pressa con Rotazione",
-    "focus": "ADDOM"
+    "focus": "CORE"
   },
   "pallof_press": {
     "file": "core.json",
     "nome": "Pressa con le Pallle",
-    "focus": "ADDOM"
+    "focus": "CORE"
   },
   "quarter_sit_up": {
     "file": "core.json",
@@ -10117,32 +10117,32 @@
   "flat_bench_lying_leg_raise": {
     "file": "core.json",
     "nome": "Rialzati su una panca piana, con le gambe distese e i piedi piatti sul pavimento.",
-    "focus": "ADDOM"
+    "focus": "CORE"
   },
   "smith_machine_hip_raise": {
     "file": "core.json",
     "nome": "Rialzo delle gambe alla Macchina Smith",
-    "focus": "ADDOM"
+    "focus": "CORE"
   },
   "barbell_ab_rollout": {
     "file": "core.json",
     "nome": "Roll Out con Barbell per gli Addominali",
-    "focus": "ADDOM"
+    "focus": "CORE"
   },
   "barbell_rollout_from_bench": {
     "file": "core.json",
     "nome": "Roll Out con Bilanciere da Panca",
-    "focus": "ADDOM"
+    "focus": "CORE"
   },
   "barbell_ab_rollout___on_knees": {
     "file": "core.json",
     "nome": "Roll Out sulle Ginocchia con Bilanciere",
-    "focus": "ADDOM"
+    "focus": "CORE"
   },
   "ab_roller": {
     "file": "core.json",
     "nome": "Roller per Addome Ab Roll",
-    "focus": "ADDOM"
+    "focus": "CORE"
   },
   "band_assisted_wheel_rollerout": {
     "file": "core.json",
@@ -10162,7 +10162,7 @@
   "torso_rotation": {
     "file": "core.json",
     "nome": "Rotazione del Torso",
-    "focus": "ADDOM"
+    "focus": "CORE"
   },
   "torso_rotations": {
     "file": "core.json",
@@ -10202,7 +10202,7 @@
   "frog_sit_ups": {
     "file": "core.json",
     "nome": "Schiaccianoci con Gambe Piegate",
-    "focus": "ADDOM"
+    "focus": "CORE"
   },
   "lower_back_smr": {
     "file": "core.json",
@@ -10212,12 +10212,12 @@
   "standing_cable_wood_chop": {
     "file": "core.json",
     "nome": "Scivolata in Legno da Stanca con Cavo",
-    "focus": "ADDOM"
+    "focus": "CORE"
   },
   "sit_up": {
     "file": "core.json",
     "nome": "Sdraiati su un tappetino o una panca, con le gambe distese e le braccia piegate. Solleva le spalle dal pavimento, contraendo gli addominali, e abbassa lentamente le spalle di nuovo sul pavimento.",
-    "focus": "ADDOM"
+    "focus": "CORE"
   },
   "lying_elbow_to_knee": {
     "file": "core.json",
@@ -10297,7 +10297,7 @@
   "barbell_side_bend": {
     "file": "core.json",
     "nome": "Side Bend con Bilanciere",
-    "focus": "ADDOM"
+    "focus": "CORE"
   },
   "assisted_sit_up": {
     "file": "core.json",
@@ -10332,7 +10332,7 @@
   "weighted_sit_ups___with_bands": {
     "file": "core.json",
     "nome": "Sit-up Pesanti con Fasce",
-    "focus": "ADDOM"
+    "focus": "CORE"
   },
   "sit_up_v_2": {
     "file": "core.json",
@@ -10457,12 +10457,12 @@
   "standing_cable_lift": {
     "file": "core.json",
     "nome": "Sollevamento con Cavo in Posizione Inclinata",
-    "focus": "ADDOM"
+    "focus": "CORE"
   },
   "bent_knee_hip_raise": {
     "file": "core.json",
     "nome": "Sollevamento delle gambe con Ginocchia piegate",
-    "focus": "ADDOM"
+    "focus": "CORE"
   },
   "shoulder_tap": {
     "file": "core.json",
@@ -10517,12 +10517,12 @@
   "overhead_stretch": {
     "file": "core.json",
     "nome": "Stretching a Capo Fermo",
-    "focus": "ADDOM"
+    "focus": "CORE"
   },
   "seated_overhead_stretch": {
     "file": "core.json",
     "nome": "Stretching a Capo Fisso Seduto",
-    "focus": "ADDOM"
+    "focus": "CORE"
   },
   "cat_stretch": {
     "file": "core.json",
@@ -10547,7 +10547,7 @@
   "seated_leg_tucks": {
     "file": "core.json",
     "nome": "Tacchi alle gambe Seduti",
-    "focus": "ADDOM"
+    "focus": "CORE"
   },
   "rack_pull_with_bands": {
     "file": "core.json",
@@ -10582,7 +10582,7 @@
   "toe_touchers": {
     "file": "core.json",
     "nome": "Toe Toucher",
-    "focus": "ADDOM"
+    "focus": "CORE"
   },
   "cable_twist_up_down": {
     "file": "core.json",
@@ -10647,17 +10647,17 @@
   "seated_flat_bench_leg_pull_in": {
     "file": "core.json",
     "nome": "Trattamento Piegamenti con Gambe Piatte",
-    "focus": "ADDOM"
+    "focus": "CORE"
   },
   "flat_bench_leg_pull_in": {
     "file": "core.json",
     "nome": "Trazione a Gambe Piana",
-    "focus": "ADDOM"
+    "focus": "CORE"
   },
   "exercise_ball_pull_in": {
     "file": "core.json",
     "nome": "Trazione con Palla da Esercizio",
-    "focus": "ADDOM"
+    "focus": "CORE"
   },
   "gorilla_chin": {
     "file": "core.json",
@@ -10672,7 +10672,7 @@
   "leg_pull_in": {
     "file": "core.json",
     "nome": "Trazioni alla Leg",
-    "focus": "ADDOM"
+    "focus": "CORE"
   },
   "tuck_crunch": {
     "file": "core.json",
@@ -10692,17 +10692,17 @@
   "seated_barbell_twist": {
     "file": "core.json",
     "nome": "Twist alla Panca con Bilanciere Seduto",
-    "focus": "ADDOM"
+    "focus": "CORE"
   },
   "plate_twist": {
     "file": "core.json",
     "nome": "Twist della Panca",
-    "focus": "ADDOM"
+    "focus": "CORE"
   },
   "cable_russian_twists": {
     "file": "core.json",
     "nome": "Twisti Russiani al Cavo",
-    "focus": "ADDOM"
+    "focus": "CORE"
   },
   "one_arm_slam_with_medicine_ball": {
     "file": "core.json",
@@ -10722,17 +10722,17 @@
   "stomach_vacuum": {
     "file": "core.json",
     "nome": "Vacuo Addominale",
-    "focus": "ADDOM"
+    "focus": "CORE"
   },
   "advanced_kettlebell_windmill": {
     "file": "core.json",
     "nome": "Vento Avanzato con Manubrio in Kayak",
-    "focus": "ADDOM"
+    "focus": "CORE"
   },
   "double_kettlebell_windmill": {
     "file": "core.json",
     "nome": "Vento Doppio con Manubri da Cuffia",
-    "focus": "ADDOM"
+    "focus": "CORE"
   },
   "wheel_rollerout": {
     "file": "core.json",
@@ -10752,7 +10752,7 @@
   "box_jump_multiple_response": {
     "file": "other.json",
     "nome": "Box Jump (Multiple Response)",
-    "focus": "FEMOR"
+    "focus": "FEMO"
   },
   "atlas_stone_trainer": {
     "file": "other.json",
@@ -10797,7 +10797,7 @@
   "lateral_box_jump": {
     "file": "other.json",
     "nome": "Box Jump Lateral",
-    "focus": "ADDUT"
+    "focus": "ADD"
   },
   "double_leg_butt_kick": {
     "file": "other.json",
@@ -10837,7 +10837,7 @@
   "carioca_quick_step": {
     "file": "other.json",
     "nome": "Carioca Passo Veloce",
-    "focus": "ADDUT"
+    "focus": "ADD"
   },
   "bicycling": {
     "file": "other.json",
@@ -10892,12 +10892,12 @@
   "isometric_neck_exercise___sides": {
     "file": "other.json",
     "nome": "Esercizio Isometrico per il Collo - Lato",
-    "focus": "COLLO"
+    "focus": "COLL"
   },
   "isometric_neck_exercise___front_and_back": {
     "file": "other.json",
     "nome": "Esercizio Isometrico per il Collo Anteriore e Posteriore",
-    "focus": "COLLO"
+    "focus": "COLL"
   },
   "split_jerk": {
     "file": "other.json",
@@ -10917,12 +10917,12 @@
   "supine_two_arm_overhead_throw": {
     "file": "other.json",
     "nome": "Lancio Sopra la testa a Due Braccia in Posizione Prona",
-    "focus": "ADDOM"
+    "focus": "CORE"
   },
   "supine_one_arm_overhead_throw": {
     "file": "other.json",
     "nome": "Lancio Sopra la testa con un Braccio Sollevato in Posizione Supina",
-    "focus": "ADDOM"
+    "focus": "CORE"
   },
   "supine_chest_throw": {
     "file": "other.json",
@@ -10957,12 +10957,12 @@
   "neck_smr": {
     "file": "other.json",
     "nome": "Massaggio del Collo",
-    "focus": "COLLO"
+    "focus": "COLL"
   },
   "medicine_ball_full_twist": {
     "file": "other.json",
     "nome": "Medicina Palla Ruota Completa",
-    "focus": "ADDOM"
+    "focus": "CORE"
   },
   "mountain_climbers": {
     "file": "other.json",
@@ -10977,12 +10977,12 @@
   "lying_face_down_plate_neck_resistance": {
     "file": "other.json",
     "nome": "Panciera Pressa con Piattaforma e Resistenza al Collo",
-    "focus": "COLLO"
+    "focus": "COLL"
   },
   "lying_face_up_plate_neck_resistance": {
     "file": "other.json",
     "nome": "Panciera Pressa con Piattaforma per il Collo",
-    "focus": "COLLO"
+    "focus": "COLL"
   },
   "hang_clean___below_the_knees": {
     "file": "other.json",
@@ -11002,7 +11002,7 @@
   "rickshaw_carry": {
     "file": "other.json",
     "nome": "Portare la Bicicletta Rickshaw",
-    "focus": "AVAMB"
+    "focus": "AVA"
   },
   "wide_stance_stiff_legs": {
     "file": "other.json",
@@ -11012,7 +11012,7 @@
   "catch_and_overhead_throw": {
     "file": "other.json",
     "nome": "Prendi e Lancia in Arremo Sopra la testa",
-    "focus": "DORSO"
+    "focus": "LAT"
   },
   "single_leg_hop_progression": {
     "file": "other.json",
@@ -11077,7 +11077,7 @@
   "seated_head_harness_neck_resistance": {
     "file": "other.json",
     "nome": "Resistenza al Nodo del Collo in Posizione Seduta",
-    "focus": "COLLO"
+    "focus": "COLL"
   },
   "return_push_from_stance": {
     "file": "other.json",
@@ -11107,7 +11107,7 @@
   "lateral_cone_hops": {
     "file": "other.json",
     "nome": "Salti a Cono Laterale",
-    "focus": "ADDUT"
+    "focus": "ADD"
   },
   "hurdle_hops": {
     "file": "other.json",
@@ -11117,7 +11117,7 @@
   "lateral_bound": {
     "file": "other.json",
     "nome": "Salto Laterale",
-    "focus": "ADDUT"
+    "focus": "ADD"
   },
   "single_leg_lateral_hop": {
     "file": "other.json",
@@ -11212,7 +11212,7 @@
   "overhead_slam": {
     "file": "other.json",
     "nome": "Slam Sopra la testa",
-    "focus": "DORSO"
+    "focus": "LAT"
   },
   "hang_snatch___below_knees": {
     "file": "other.json",
@@ -11342,12 +11342,12 @@
   "chin_to_chest_stretch": {
     "file": "other.json",
     "nome": "Stiramento Chin-a-Chest",
-    "focus": "COLLO"
+    "focus": "COLL"
   },
   "side_neck_stretch": {
     "file": "other.json",
     "nome": "Stretching laterale del collo",
-    "focus": "COLLO"
+    "focus": "COLL"
   },
   "stride_jump_crossover": {
     "file": "other.json",
@@ -11362,7 +11362,7 @@
   "sledgehammer_swings": {
     "file": "other.json",
     "nome": "Swings con il Martello da Slitta",
-    "focus": "ADDOM"
+    "focus": "CORE"
   },
   "step_mill": {
     "file": "other.json",

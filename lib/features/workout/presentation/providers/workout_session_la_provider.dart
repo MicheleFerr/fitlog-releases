@@ -74,6 +74,10 @@ class WorkoutSessionLANotifier extends Notifier<WorkoutSessionLAState> {
   /// This prevents race condition where timer state changes fire twice
   bool _isTransitioningToExercise = false;
 
+  /// ✅ FIX: Debounce timer to prevent race condition with REST→EXERCISE transition
+  /// Gives iOS native side time to complete the transitionToRest before we call transitionToExercise
+  Timer? _transitionDebounceTimer;
+
   @override
   WorkoutSessionLAState build() {
     // Only setup on iOS
@@ -97,6 +101,7 @@ class WorkoutSessionLANotifier extends Notifier<WorkoutSessionLAState> {
     ref.onDispose(() {
       debugPrint('[WorkoutSessionLA] 🗑️ Provider being disposed - cleaning up');
       _eventSubscription?.cancel();
+      _transitionDebounceTimer?.cancel();
     });
 
     return const WorkoutSessionLAState();
@@ -121,8 +126,17 @@ class WorkoutSessionLANotifier extends Notifier<WorkoutSessionLAState> {
       }
       _isTransitioningToExercise = true;
 
-      debugPrint('[WorkoutSessionLA] ⏰ Timer completed - transitioning LA to EXERCISE mode');
-      _transitionToExerciseAfterRest();
+      // ✅ FIX: Cancel any pending transition to prevent race condition
+      _transitionDebounceTimer?.cancel();
+
+      // ✅ FIX: Add 500ms delay to let iOS complete the transitionToRest first
+      // This prevents "MODE STILL rest - UPDATE FAILED!" error caused by
+      // transitionToExercise being called before iOS has processed transitionToRest
+      debugPrint('[WorkoutSessionLA] ⏰ Timer completed - scheduling EXERCISE transition with 500ms delay');
+      _transitionDebounceTimer = Timer(const Duration(milliseconds: 500), () {
+        debugPrint('[WorkoutSessionLA] ⏰ Debounce complete - now transitioning LA to EXERCISE mode');
+        _transitionToExerciseAfterRest();
+      });
     }
 
     // Track if we're entering rest mode

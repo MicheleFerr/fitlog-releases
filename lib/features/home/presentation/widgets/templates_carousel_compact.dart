@@ -43,39 +43,19 @@ class TemplatesCarouselCompact extends ConsumerWidget {
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: AppSpacing.md),
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(24),
-        gradient: LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          colors: [
-            colorScheme.secondaryContainer.withValues(alpha: 0.6),
-            colorScheme.surfaceContainerHighest.withValues(alpha: 0.9),
-            colorScheme.surfaceContainerHigh.withValues(alpha: 0.8),
-          ],
-          stops: const [0.0, 0.5, 1.0],
-        ),
-        boxShadow: [
-          BoxShadow(
-            color: colorScheme.secondary.withValues(alpha: 0.1),
-            blurRadius: 16,
-            offset: const Offset(0, 6),
-            spreadRadius: 1,
-          ),
-        ],
+        color: colorScheme.surfaceContainerHighest,
+        borderRadius: BorderRadius.circular(AppSpacing.md),
         border: Border.all(
-          color: colorScheme.surface.withValues(alpha: 0.3),
+          color: colorScheme.outlineVariant.withValues(alpha: 0.3),
           width: 1,
         ),
       ),
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(24),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            _buildHeader(context),
-            child,
-          ],
-        ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          _buildHeader(context),
+          child,
+        ],
       ),
     );
   }
@@ -87,31 +67,19 @@ class TemplatesCarouselCompact extends ConsumerWidget {
       padding: const EdgeInsets.fromLTRB(20, 20, 12, 12),
       child: Row(
         children: [
-          // Icon container with gradient
+          // Icon container
           Container(
             width: 36,
             height: 36,
             decoration: BoxDecoration(
-              gradient: RadialGradient(
-                colors: [
-                  colorScheme.secondary.withValues(alpha: 0.8),
-                  colorScheme.secondary.withValues(alpha: 0.5),
-                ],
-              ),
-              borderRadius: BorderRadius.circular(16),
-              boxShadow: [
-                BoxShadow(
-                  color: colorScheme.secondary.withValues(alpha: 0.2),
-                  blurRadius: 6,
-                  spreadRadius: 1,
-                ),
-              ],
+              color: colorScheme.secondary,
+              borderRadius: BorderRadius.circular(12),
             ),
             child: SemanticIcon(
               icon: AppIcons.listAlt,
               semanticLabel: context.l10n.templates,
               size: AppIconSize.small,
-              color: colorScheme.surface,
+              color: colorScheme.onSecondary,
             ),
           ),
           const SizedBox(width: 12),
@@ -196,32 +164,18 @@ class _TemplateCard extends ConsumerWidget {
       width: 150,
       child: DecoratedBox(
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(16),
-          gradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: [
-              colorScheme.surface,
-              colorScheme.surfaceContainerLow.withValues(alpha: 0.9),
-            ],
-          ),
-          boxShadow: [
-            BoxShadow(
-              color: colorScheme.shadow.withValues(alpha: 0.08),
-              blurRadius: 8,
-              offset: const Offset(0, 4),
-            ),
-          ],
+          color: colorScheme.surface,
+          borderRadius: BorderRadius.circular(12),
           border: Border.all(
-            color: colorScheme.outlineVariant.withValues(alpha: 0.2),
+            color: colorScheme.outlineVariant.withValues(alpha: 0.3),
             width: 1,
           ),
         ),
         child: Material(
-          color: colorScheme.surface.withValues(alpha: 0),
+          color: Colors.transparent,
           child: InkWell(
             onTap: () => _startWorkoutFromTemplate(context, ref),
-            borderRadius: BorderRadius.circular(16),
+            borderRadius: BorderRadius.circular(12),
             child: Padding(
               padding: const EdgeInsets.all(12),
               child: Column(
@@ -240,59 +194,39 @@ class _TemplateCard extends ConsumerWidget {
 
                   const Spacer(),
 
-                  // Stats row with pill backgrounds
-                  Container(
-                    padding: const EdgeInsets.symmetric(horizontal: AppSpacing.xs, vertical: AppSpacing.xxs),
-                    decoration: BoxDecoration(
-                      color: colorScheme.secondary.withValues(alpha: 0.1),
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        SemanticIcon(
-                          icon: AppIcons.workout,
-                          semanticLabel: context.l10n.exercises,
-                          size: AppIconSize.tiny,
-                          color: colorScheme.secondary,
+                  // Stats row
+                  Row(
+                    children: [
+                      SemanticIcon(
+                        icon: AppIcons.workout,
+                        semanticLabel: context.l10n.exercises,
+                        size: AppIconSize.tiny,
+                        color: colorScheme.onSurfaceVariant,
+                      ),
+                      const SizedBox(width: 4),
+                      Text(
+                        '$exerciseCount',
+                        style: context.textTheme.labelSmall?.copyWith(
+                          color: colorScheme.onSurfaceVariant,
+                          fontWeight: FontWeight.w500,
                         ),
-                        const SizedBox(width: AppSpacing.xxs),
-                        Text(
-                          '$exerciseCount',
-                          style: context.textTheme.labelSmall?.copyWith(
-                            color: colorScheme.secondary,
-                            fontWeight: FontWeight.w600,
-                          ),
+                      ),
+                      const SizedBox(width: 12),
+                      SemanticIcon(
+                        icon: AppIcons.timer,
+                        semanticLabel: context.l10n.duration,
+                        size: AppIconSize.tiny,
+                        color: colorScheme.onSurfaceVariant,
+                      ),
+                      const SizedBox(width: 4),
+                      Text(
+                        '${estimatedDuration}m',
+                        style: context.textTheme.labelSmall?.copyWith(
+                          color: colorScheme.onSurfaceVariant,
+                          fontWeight: FontWeight.w500,
                         ),
-                      ],
-                    ),
-                  ),
-                  const SizedBox(height: AppSpacing.xxs),
-                  Container(
-                    padding: const EdgeInsets.symmetric(horizontal: AppSpacing.xs, vertical: AppSpacing.xxs),
-                    decoration: BoxDecoration(
-                      color: colorScheme.tertiary.withValues(alpha: 0.1),
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        SemanticIcon(
-                          icon: AppIcons.timer,
-                          semanticLabel: context.l10n.duration,
-                          size: AppIconSize.tiny,
-                          color: colorScheme.tertiary,
-                        ),
-                        const SizedBox(width: AppSpacing.xxs),
-                        Text(
-                          '${estimatedDuration}m',
-                          style: context.textTheme.labelSmall?.copyWith(
-                            color: colorScheme.tertiary,
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
                 ],
               ),

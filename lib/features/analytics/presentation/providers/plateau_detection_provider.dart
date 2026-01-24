@@ -115,12 +115,24 @@ List<PlateauData> _detectPlateaus(List<ExerciseActivity> activities) {
 }
 
 /// Calculate total volume for an activity
+///
+/// For weighted exercises: volume = weight × reps
+/// For bodyweight exercises (weight = 0): volume = reps only
+/// This ensures bodyweight exercises like push-ups, pull-ups, dips
+/// are properly tracked for plateau detection.
 double _calculateActivityVolume(ExerciseActivity activity) {
   double volume = 0;
   for (final set in activity.sets) {
     final weight = double.tryParse(set.weight) ?? 0;
     final reps = int.tryParse(set.reps) ?? 0;
-    volume += weight * reps;
+
+    if (weight > 0) {
+      // Weighted exercise: use traditional volume calculation
+      volume += weight * reps;
+    } else if (reps > 0) {
+      // Bodyweight exercise: use reps as volume proxy
+      volume += reps.toDouble();
+    }
   }
   return volume;
 }

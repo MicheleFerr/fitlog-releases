@@ -30,6 +30,8 @@ library;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:gymbro_flutter_new/features/analytics/domain/entities/exercise_history.dart';
+import 'package:gymbro_flutter_new/features/analytics/presentation/screens/volume_fullscreen_screen.dart';
+import 'package:gymbro_flutter_new/features/analytics/presentation/widgets/volume_export_sheet.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
@@ -81,9 +83,9 @@ class _VolumeModalState extends State<VolumeModal> {
           if (!dateOnly.isBefore(weekStart) && !dateOnly.isAfter(weekEnd)) {
             workoutDates.add(dateOnly);
 
-            // Calculate volume for this session (weight × reps × sets)
+            // Calculate volume for this session (AnalyticsSet has non-nullable weight/reps)
             for (final set in session.sets) {
-              totalVolume += (set.weight ?? 0.0) * (set.reps ?? 0);
+              totalVolume += set.weight * set.reps;
             }
           }
         }
@@ -148,7 +150,7 @@ class _VolumeModalState extends State<VolumeModal> {
     );
   }
 
-  /// Header with title and close button
+  /// Header with title, export, fullscreen, and close buttons
   Widget _buildHeader(BuildContext context) {
     return Row(
       children: [
@@ -160,6 +162,29 @@ class _VolumeModalState extends State<VolumeModal> {
             ),
           ),
         ),
+        // Export button
+        IconButton(
+          onPressed: () => _openExport(context),
+          tooltip: context.l10n.export,
+          icon: SemanticIcon(
+            icon: AppIcons.download,
+            semanticLabel: context.l10n.export,
+            size: AppIconSize.medium,
+            color: context.colors.primary,
+          ),
+        ),
+        // Fullscreen button
+        IconButton(
+          onPressed: () => _openFullscreen(context),
+          tooltip: context.l10n.fullscreen,
+          icon: SemanticIcon(
+            icon: AppIcons.fullscreen,
+            semanticLabel: context.l10n.fullscreen,
+            size: AppIconSize.medium,
+            color: context.colors.primary,
+          ),
+        ),
+        // Close button
         IconButton(
           onPressed: () => Navigator.pop(context),
           icon: SemanticIcon(
@@ -169,6 +194,30 @@ class _VolumeModalState extends State<VolumeModal> {
           ),
         ),
       ],
+    );
+  }
+
+  /// Open fullscreen volume chart
+  void _openFullscreen(BuildContext context) {
+    HapticFeedback.lightImpact();
+    Navigator.pop(context); // Close modal first
+    Navigator.push(
+      context,
+      MaterialPageRoute<void>(
+        builder: (_) => VolumeFullscreenScreen(
+          exerciseHistories: widget.exerciseHistories,
+        ),
+      ),
+    );
+  }
+
+  /// Open export sheet
+  void _openExport(BuildContext context) {
+    HapticFeedback.lightImpact();
+    Navigator.pop(context); // Close modal first
+    showVolumeExportSheet(
+      context: context,
+      exerciseHistories: widget.exerciseHistories,
     );
   }
 

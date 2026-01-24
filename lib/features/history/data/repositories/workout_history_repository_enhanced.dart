@@ -275,6 +275,7 @@ class WorkoutHistoryRepositoryEnhanced {
 
   /// Get workouts from local storage
   /// 🔧 FIX: Filter by userId to only return current user's workouts
+  /// Supports both new format (workout_{userId}_{id}) and legacy format (workout_{id})
   Future<List<WorkoutHistoryDetail>> _getLocalWorkouts() async {
     await _ensureInitialized();
 
@@ -283,24 +284,35 @@ class WorkoutHistoryRepositoryEnhanced {
 
     final workouts = <WorkoutHistoryDetail>[];
     final userPrefix = 'workout_${userId}_';
+    final legacyKeysToMigrate = <String, WorkoutHistoryDetail>{};
 
     for (var key in _historyBox!.keys) {
-      // 🔐 SECURITY: Only load workouts belonging to current user
       final keyStr = key.toString();
-      if (!keyStr.startsWith(userPrefix)) {
-        // Also support legacy keys without userId (for migration)
-        // Check if it's a legacy key that should be migrated
-        if (keyStr.startsWith('workout_') && !keyStr.contains(userId)) {
-          continue; // Skip other users' workouts
-        }
-      }
+
+      // Skip non-workout keys
+      if (!keyStr.startsWith('workout_')) continue;
 
       try {
         final data = _historyBox!.get(key);
-        if (data != null) {
-          final workout = WorkoutHistoryDetail.fromMap(data);
+        if (data == null) continue;
+
+        final workout = WorkoutHistoryDetail.fromMap(data);
+
+        // 🔐 SECURITY: Only include workouts belonging to current user
+        // Case 1: New format key (workout_{userId}_{workoutId})
+        if (keyStr.startsWith(userPrefix)) {
           workouts.add(workout);
+          continue;
         }
+
+        // Case 2: Legacy format key (workout_{workoutId}) - check userId in content
+        // Legacy keys don't have userId in key, so verify via workout.userId field
+        if (workout.userId == userId || workout.userId.isEmpty) {
+          workouts.add(workout);
+          // Queue for migration to new key format
+          legacyKeysToMigrate[keyStr] = workout;
+        }
+        // Case 3: Different user's workout - skip silently
       } catch (e) {
         if (kDebugMode) {
           debugPrint('⚠️ Error loading workout $key: $e');
@@ -308,14 +320,45 @@ class WorkoutHistoryRepositoryEnhanced {
       }
     }
 
+    // 🔄 Migrate legacy keys to new format (background, non-blocking)
+    if (legacyKeysToMigrate.isNotEmpty) {
+      _migrateLegacyKeys(legacyKeysToMigrate, userId);
+    }
+
     // Sort by completion date (newest first)
     workouts.sort((a, b) => b.completedAt.compareTo(a.completedAt));
 
     if (kDebugMode) {
-      debugPrint('📦 [WorkoutHistoryRepo] Loaded ${workouts.length} workouts for user $userId');
+      debugPrint('📦 [WorkoutHistoryRepo] Loaded ${workouts.length} workouts for user $userId'
+          '${legacyKeysToMigrate.isNotEmpty ? ' (migrating ${legacyKeysToMigrate.length} legacy keys)' : ''}');
     }
 
     return workouts;
+  }
+
+  /// Migrate legacy keys to new format with userId
+  /// Runs in background to avoid blocking the main read operation
+  Future<void> _migrateLegacyKeys(Map<String, WorkoutHistoryDetail> legacyWorkouts, String userId) async {
+    for (final entry in legacyWorkouts.entries) {
+      try {
+        final oldKey = entry.key;
+        final workout = entry.value;
+        final newKey = 'workout_${userId}_${workout.id}';
+
+        // Save with new key format
+        await _historyBox!.put(newKey, workout.toMap());
+        // Delete old key
+        await _historyBox!.delete(oldKey);
+
+        if (kDebugMode) {
+          debugPrint('🔄 [WorkoutHistoryRepo] Migrated key: $oldKey → $newKey');
+        }
+      } catch (e) {
+        if (kDebugMode) {
+          debugPrint('⚠️ [WorkoutHistoryRepo] Failed to migrate key ${entry.key}: $e');
+        }
+      }
+    }
   }
 
   /// Get all workouts (local-first approach)

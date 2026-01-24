@@ -20,14 +20,20 @@ class AddExerciseModal extends ConsumerStatefulWidget {
   const AddExerciseModal({
     super.key,
     this.onExerciseAdded,
+    this.initialTab = 0,
+    this.initialAdvancedTab = 0,
   });
   final Function(Exercise)? onExerciseAdded;
+  final int initialTab;
+  final int initialAdvancedTab;
 
   /// ✅ UX: Show modal with proper sizing (80% initial, expandable to ~95%)
   /// This is the recommended way to show the AddExerciseModal
   static Future<void> show(
     BuildContext context, {
     Function(Exercise)? onExerciseAdded,
+    int initialTab = 0,
+    int initialAdvancedTab = 0,
   }) {
     // ✅ FIX: Calculate safe max size to avoid notch/Dynamic Island
     final screenHeight = MediaQuery.of(context).size.height;
@@ -51,6 +57,8 @@ class AddExerciseModal extends ConsumerStatefulWidget {
         snapSizes: [0.80, safeMaxSize], // Snap to 80% or max safe
         builder: (context, scrollController) => AddExerciseModal(
           onExerciseAdded: onExerciseAdded,
+          initialTab: initialTab,
+          initialAdvancedTab: initialAdvancedTab,
         ),
       ),
     );
@@ -91,8 +99,16 @@ class _AddExerciseModalState extends ConsumerState<AddExerciseModal> with Ticker
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: 2, vsync: this); // Simplified to 2 tabs
-    _advancedTabController = TabController(length: 3, vsync: this); // 3 advanced tabs
+    _tabController = TabController(
+      length: 2,
+      vsync: this,
+      initialIndex: widget.initialTab, // ✅ Use parameter for initial tab
+    );
+    _advancedTabController = TabController(
+      length: 3,
+      vsync: this,
+      initialIndex: widget.initialAdvancedTab, // ✅ Use parameter for advanced tab
+    );
 
     // ✅ UX: Auto-compact main toggle after 600ms
     Future.delayed(const Duration(milliseconds: 600), () {
@@ -159,6 +175,9 @@ class _AddExerciseModalState extends ConsumerState<AddExerciseModal> with Ticker
 
   @override
   Widget build(BuildContext context) {
+    // ✅ FIX: Hide main toggle when deep-linking to specific tab
+    final isDeepLink = widget.initialTab != 0;
+
     return DecoratedBox(
       decoration: BoxDecoration(
         color: context.colors.surface,
@@ -199,17 +218,24 @@ class _AddExerciseModalState extends ConsumerState<AddExerciseModal> with Ticker
           ),
 
           // ✅ UX: Compactable Exercise Type Toggle (Singolo / Avanzati)
-          _buildCompactableMainToggle(),
+          // ✅ FIX: Hide when deep-linking to specific tab
+          if (!isDeepLink) _buildCompactableMainToggle(),
 
           // Content
           Expanded(
-            child: TabBarView(
-              controller: _tabController,
-              children: [
-                _buildSingleExerciseTab(),
-                _buildAdvancedTab(), // New tab for advanced options
-              ],
-            ),
+            child: isDeepLink
+                // ✅ FIX: Show only selected tab when deep-linking
+                ? widget.initialTab == 0
+                    ? _buildSingleExerciseTab()
+                    : _buildAdvancedTab()
+                // Original behavior with TabBarView
+                : TabBarView(
+                    controller: _tabController,
+                    children: [
+                      _buildSingleExerciseTab(),
+                      _buildAdvancedTab(), // New tab for advanced options
+                    ],
+                  ),
           ),
         ],
       ),
@@ -880,6 +906,7 @@ class _AddExerciseModalState extends ConsumerState<AddExerciseModal> with Ticker
                   MaterialPageRoute(
                     builder: (context) => const ExerciseSearchScreen(
                       selectionMode: true,
+                      showSupersetTemplates: false, // ✅ FIX: No templates for single selection
                     ),
                   ),
                 );
@@ -893,6 +920,7 @@ class _AddExerciseModalState extends ConsumerState<AddExerciseModal> with Ticker
                   MaterialPageRoute(
                     builder: (context) => ExerciseSearchScreen(
                       onExerciseAdded: widget.onExerciseAdded,
+                      showSupersetTemplates: false, // ✅ FIX: No templates for single exercise
                     ),
                   ),
                 );
@@ -998,6 +1026,7 @@ class _AddExerciseModalState extends ConsumerState<AddExerciseModal> with Ticker
             MaterialPageRoute(
               builder: (context) => const ExerciseSearchScreen(
                 selectionMode: true,
+                showSupersetTemplates: false, // ✅ FIX: No templates for DropSet/RestPause
               ),
             ),
           );

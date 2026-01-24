@@ -26,11 +26,53 @@ import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dar
 /// Shows a simple entry point to manage:
 /// - Custom workout templates
 /// - Custom exercises/variants
-class PersonalizedContentCard extends ConsumerWidget {
+///
+/// Design: Elevated Card pattern following DESIGN_GUIDELINES.md
+/// - Radial gradient (primaryContainer → secondaryContainer)
+/// - Double shadow (primary tint + black)
+/// - Border with white overlay
+/// - Standard press feedback (0.98 scale, 150ms, light haptic)
+class PersonalizedContentCard extends ConsumerStatefulWidget {
   const PersonalizedContentCard({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<PersonalizedContentCard> createState() =>
+      _PersonalizedContentCardState();
+}
+
+class _PersonalizedContentCardState
+    extends ConsumerState<PersonalizedContentCard>
+    with SingleTickerProviderStateMixin {
+  late AnimationController _scaleController;
+  late Animation<double> _scaleAnimation;
+
+  @override
+  void initState() {
+    super.initState();
+    // Standard feedback: 0.98 scale, 150ms (DESIGN_GUIDELINES.md)
+    _scaleController = AnimationController(
+      duration: const Duration(milliseconds: 150),
+      vsync: this,
+    );
+    _scaleAnimation = Tween<double>(
+      begin: 1.0,
+      end: 0.98,
+    ).animate(
+      CurvedAnimation(
+        parent: _scaleController,
+        curve: Curves.easeOut,
+      ),
+    );
+  }
+
+  @override
+  void dispose() {
+    _scaleController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final colorScheme = context.colors;
 
     // Watch counts for display
@@ -41,123 +83,150 @@ class PersonalizedContentCard extends ConsumerWidget {
     final templateCount = templatesAsync.valueOrNull?.length ?? 0;
     final exerciseCount = customExercisesAsync.valueOrNull?.length ?? 0;
 
-    return Container(
-      margin: const EdgeInsets.symmetric(horizontal: AppSpacing.md),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(20),
-        gradient: LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          colors: [
-            colorScheme.secondaryContainer.withValues(alpha: 0.7),
-            colorScheme.surfaceContainerHighest.withValues(alpha: 0.9),
-          ],
-        ),
-        boxShadow: [
-          BoxShadow(
-            color: colorScheme.secondary.withValues(alpha: 0.1),
-            blurRadius: 12,
-            offset: const Offset(0, 4),
-          ),
-        ],
-        border: Border.all(
-          color: colorScheme.outlineVariant.withValues(alpha: 0.2),
-          width: 1,
-        ),
-      ),
-      child: Material(
-        color: colorScheme.surface.withValues(alpha: 0),
-        borderRadius: BorderRadius.circular(20),
-        child: InkWell(
-          onTap: () => _openPersonalizedContent(context),
-          borderRadius: BorderRadius.circular(20),
-          child: Padding(
-            padding: const EdgeInsets.all(20),
-            child: Row(
-              children: [
-                // Icon with gradient background
-                Container(
-                  width: 48,
-                  height: 48,
-                  decoration: BoxDecoration(
-                    gradient: RadialGradient(
-                      colors: [
-                        colorScheme.secondary.withValues(alpha: 0.8),
-                        colorScheme.secondary.withValues(alpha: 0.5),
-                      ],
-                    ),
-                    borderRadius: BorderRadius.circular(16),
-                    boxShadow: [
-                      BoxShadow(
-                        color: colorScheme.secondary.withValues(alpha: 0.2),
-                        blurRadius: 8,
-                        spreadRadius: 1,
-                      ),
-                    ],
-                  ),
-                  child: SemanticIcon(
-                    icon: AppIcons.dashboard,
-                    semanticLabel: context.l10n.myTemplates,
-                    size: AppIconSize.medium,
-                    color: colorScheme.surface,
-                  ),
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: AppSpacing.md),
+      child: GestureDetector(
+        onTapDown: (_) {
+          // Light haptic feedback - standard tier (DESIGN_GUIDELINES.md)
+          HapticFeedback.lightImpact();
+          _scaleController.forward();
+        },
+        onTapUp: (_) {
+          _scaleController.reverse();
+          _openPersonalizedContent(context);
+        },
+        onTapCancel: () => _scaleController.reverse(),
+        child: AnimatedBuilder(
+          animation: _scaleAnimation,
+          builder: (context, child) {
+            return Transform.scale(
+              scale: _scaleAnimation.value,
+              child: Container(
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(24),
+              gradient: RadialGradient(
+                center: const Alignment(-0.3, -0.4),
+                radius: 1.5,
+                colors: [
+                  colorScheme.primaryContainer,
+                  colorScheme.secondaryContainer.withValues(alpha: 0.9),
+                ],
+              ),
+              boxShadow: [
+                BoxShadow(
+                  color: colorScheme.primary.withValues(alpha: 0.1),
+                  blurRadius: 20,
+                  offset: const Offset(0, 8),
+                  spreadRadius: 2,
                 ),
-                const SizedBox(width: 16),
-
-                // Text content
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        context.l10n.myTemplates,
-                        style: context.textTheme.titleMedium?.copyWith(
-                          fontWeight: FontWeight.bold,
-                          color: colorScheme.onSurface,
-                        ),
-                      ),
-                      const SizedBox(height: 4),
-                      // Stats row
-                      Row(
-                        children: [
-                          _StatChip(
-                            icon: AppIcons.listAlt,
-                            count: templateCount,
-                            max: entitlements.maxTemplates,
-                            label: context.l10n.templates,
-                            color: colorScheme.secondary,
-                          ),
-                          const SizedBox(width: 12),
-                          _StatChip(
-                            icon: AppIcons.workout,
-                            count: exerciseCount,
-                            max: entitlements.maxCustomExercises,
-                            label: context.l10n.exercises,
-                            color: colorScheme.tertiary,
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                ),
-
-                // Arrow indicator
-                SemanticIcon(
-                  icon: AppIcons.chevronRight,
-                  semanticLabel: context.l10n.view,
-                  size: AppIconSize.small,
-                  color: colorScheme.onSurfaceVariant,
+                BoxShadow(
+                  color: Colors.black.withValues(alpha: 0.05),
+                  blurRadius: 10,
+                  offset: const Offset(0, 4),
                 ),
               ],
             ),
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(24),
+              child: Container(
+                decoration: BoxDecoration(
+                  border: Border.all(
+                    color: Colors.white.withValues(alpha: 0.2),
+                    width: 1,
+                  ),
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.all(24),
+                  child: Row(
+                    children: [
+                      // Icon with gradient background
+                      Container(
+                        width: 48,
+                        height: 48,
+                        decoration: BoxDecoration(
+                          gradient: RadialGradient(
+                            colors: [
+                              colorScheme.secondary.withValues(alpha: 0.9),
+                              colorScheme.secondary.withValues(alpha: 0.6),
+                            ],
+                          ),
+                          borderRadius: BorderRadius.circular(16),
+                          boxShadow: [
+                            BoxShadow(
+                              color: colorScheme.secondary.withValues(alpha: 0.3),
+                              blurRadius: 8,
+                              spreadRadius: 1,
+                            ),
+                          ],
+                        ),
+                        child: SemanticIcon(
+                          icon: AppIcons.dashboard,
+                          semanticLabel: context.l10n.myTemplates,
+                          size: AppIconSize.medium,
+                          color: colorScheme.surface,
+                        ),
+                      ),
+                      const SizedBox(width: 16),
+
+                      // Text content
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              context.l10n.myTemplates,
+                              style: context.textTheme.titleMedium?.copyWith(
+                                fontWeight: FontWeight.bold,
+                                color: colorScheme.onSurface,
+                              ),
+                            ),
+                            const SizedBox(height: 4),
+                            // Stats row
+                            Row(
+                              children: [
+                                _StatChip(
+                                  icon: AppIcons.listAlt,
+                                  count: templateCount,
+                                  max: entitlements.maxTemplates,
+                                  label: context.l10n.templates,
+                                  color: colorScheme.secondary,
+                                ),
+                                const SizedBox(width: 12),
+                                _StatChip(
+                                  icon: AppIcons.workout,
+                                  count: exerciseCount,
+                                  max: entitlements.maxCustomExercises,
+                                  label: context.l10n.exercises,
+                                  color: colorScheme.tertiary,
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
+
+                      // Arrow indicator
+                      SemanticIcon(
+                        icon: AppIcons.chevronRight,
+                        semanticLabel: context.l10n.view,
+                        size: AppIconSize.small,
+                        color: colorScheme.onSurfaceVariant,
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
           ),
+        );
+          },
         ),
       ),
     );
   }
 
   void _openPersonalizedContent(BuildContext context) {
-    HapticFeedback.lightImpact();
+    // Haptic feedback gestito da InteractiveElement (FeedbackTier.standard → light haptic)
     context.push('/templates');
   }
 }
@@ -180,7 +249,6 @@ class _StatChip extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colorScheme = context.colors;
     final isUnlimited = max >= 999;
 
     return Container(

@@ -446,8 +446,11 @@ final class UnifiedTimerCoordinator {
         // Use DirectNotificationManager for actual notification scheduling
         // CRITICAL FIX: silentLoopHandlesAudio = false ALWAYS
         // We need notification sound because silent loop/AVAudioPlayer often fails in background
+        // 🔧 BUG FIX: Use delay=0 instead of 0.1 to trigger immediate notification path
+        // The immediate path (delay <= 0) uses trigger:nil which ALWAYS delivers
+        // The scheduled path (delay > 0) uses TimeIntervalTrigger which may fail
         let notificationId = DirectNotificationManager.shared.scheduleTimerNotification(
-            after: 0.1, // Immediate notification
+            after: 0, // ✅ FIXED: 0 triggers immediate delivery (trigger:nil)
             soundName: sound,
             title: title,
             body: body,

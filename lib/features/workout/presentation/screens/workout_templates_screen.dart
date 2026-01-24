@@ -27,6 +27,14 @@ import 'package:gymbro_flutter_new/shared/domain/services/secure_logger.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
+import 'package:gymbro_flutter_new/features/workout/presentation/providers/superset_template_provider.dart';
+import 'package:gymbro_flutter_new/features/workout/domain/entities/superset_template.dart';
+import 'package:gymbro_flutter_new/features/workout/presentation/widgets/superset_template_card.dart';
+import 'package:gymbro_flutter_new/features/workout/presentation/widgets/superset_template_preview_sheet.dart';
+import 'package:gymbro_flutter_new/features/workout/presentation/widgets/superset_template_card.dart';
+import 'package:gymbro_flutter_new/features/workout/presentation/widgets/superset_template_preview_sheet.dart';
+import 'package:gymbro_flutter_new/core/analytics/trackers/superset_template_event_tracker.dart';
+import 'package:gymbro_flutter_new/core/providers/analytics_provider.dart';
 
 class WorkoutTemplatesScreen extends ConsumerStatefulWidget {
   const WorkoutTemplatesScreen({super.key});
@@ -48,7 +56,22 @@ class _WorkoutTemplatesScreenState extends ConsumerState<WorkoutTemplatesScreen>
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: 3, vsync: this);
+    _tabController = TabController(length: 4, vsync: this);
+
+    // Track tab changes for Superset tab
+    _tabController.addListener(() {
+      if (_tabController.indexIsChanging || !_tabController.previousIndex.isFinite) {
+        return;
+      }
+
+      // Track when Superset tab (index 1) is opened
+      if (_tabController.index == 1) {
+        final analytics = ref.read(analyticsServiceProvider);
+        final tracker = SupersetTemplateEventTracker(analytics);
+        tracker.trackSupersetTabOpened(source: 'tab');
+      }
+    });
+
     _checkAndShowConsentDialog();
   }
 
@@ -187,6 +210,10 @@ class _WorkoutTemplatesScreenState extends ConsumerState<WorkoutTemplatesScreen>
   icon: AppIcons.list,
   semanticLabel: 'List',
 )),
+            Tab(text: 'Superset', icon: const SemanticIcon(
+  icon: AppIcons.link,
+  semanticLabel: 'Link',
+)),
             Tab(text: l10n.popularTemplates, icon: const SemanticIcon(
   icon: AppIcons.trendUp,
   semanticLabel: 'Trend up',
@@ -240,6 +267,7 @@ class _WorkoutTemplatesScreenState extends ConsumerState<WorkoutTemplatesScreen>
               controller: _tabController,
               children: [
                 _buildAllTemplatesTab(),
+                _buildSupersetTemplatesTab(),
                 _buildPopularTemplatesTab(),
                 _buildMyTemplatesTab(),
               ],
@@ -384,6 +412,152 @@ class _WorkoutTemplatesScreenState extends ConsumerState<WorkoutTemplatesScreen>
         }
         
         return _buildTemplatesList(templates);
+      },
+    );
+  }
+
+  Widget _buildSupersetTemplatesTab() {
+    return ListView(
+      padding: const EdgeInsets.symmetric(vertical: 16),
+      children: [
+        // Recommended for You section
+        _buildSupersetSection(
+          title: context.l10n.recommendedForYou,
+          icon: AppIcons.star,
+          provider: recommendedSupersetTemplatesProvider,
+        ),
+
+        const SizedBox(height: 24),
+
+        // Evidence-Based section
+        _buildSupersetSection(
+          title: context.l10n.evidenceBased,
+          icon: AppIcons.science,
+          provider: evidenceBasedSupersetTemplatesProvider,
+        ),
+
+        const SizedBox(height: 24),
+
+        // Time-Efficient section
+        _buildSupersetSection(
+          title: context.l10n.timeEfficient,
+          icon: AppIcons.timer,
+          provider: timeEfficientSupersetTemplatesProvider,
+        ),
+
+        const SizedBox(height: 24),
+
+        // Beginner-Friendly section
+        _buildSupersetSection(
+          title: context.l10n.beginnerFriendly,
+          icon: AppIcons.school,
+          provider: beginnerSupersetTemplatesProvider,
+        ),
+
+        const SizedBox(height: 24),
+
+        // Advanced section
+        _buildSupersetSection(
+          title: context.l10n.advanced,
+          icon: AppIcons.trophy,
+          provider: advancedSupersetTemplatesProvider,
+        ),
+
+        const SizedBox(height: 24),
+
+        // All Templates section
+        _buildSupersetSection(
+          title: context.l10n.allTemplates,
+          icon: AppIcons.list,
+          provider: allSupersetTemplatesProvider,
+        ),
+
+        const SizedBox(height: 16),
+      ],
+    );
+  }
+
+  Widget _buildSupersetSection({
+    required String title,
+    required IconData icon,
+    required AutoDisposeFutureProvider<List<SupersetTemplate>> provider,
+  }) {
+    final templatesAsync = ref.watch(provider);
+
+    return templatesAsync.when(
+      loading: () => const SizedBox.shrink(),
+      error: (_, __) => const SizedBox.shrink(),
+      data: (templates) {
+        if (templates.isEmpty) return const SizedBox.shrink();
+
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Section header
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              child: Row(
+                children: [
+                  Icon(
+                    icon,
+                    size: AppIconSize.medium,
+                    color: context.colors.primary,
+                  ),
+                  const SizedBox(width: 8),
+                  Text(
+                    title,
+                    style: context.textTheme.titleMedium?.copyWith(
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                  const Spacer(),
+                  Text(
+                    '${templates.length}',
+                    style: context.textTheme.bodyMedium?.copyWith(
+                      color: context.colors.onSurfaceVariant,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+
+            const SizedBox(height: 12),
+
+            // Horizontal scroll
+            SizedBox(
+              height: 168, // Card height 160 + padding
+              child: ListView.builder(
+                scrollDirection: Axis.horizontal,
+                padding: const EdgeInsets.symmetric(horizontal: 12),
+                itemCount: templates.length,
+                itemBuilder: (context, index) {
+                  final template = templates[index];
+                  return Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 4),
+                    child: SupersetTemplateCard(
+                      template: template,
+                      onTap: () {
+                        SupersetTemplatePreviewSheet.show(
+                          context,
+                          ref: ref,
+                          template: template,
+                          source: 'workout_templates',
+                          onUseTemplate: () {
+                            // TODO: Implement use template action
+                            SnackBarService.showInfo(
+                              context,
+                              'Template "${template.name}" selected',
+                            );
+                          },
+                        );
+                      },
+                    ),
+                  );
+                },
+              ),
+            ),
+          ],
+        );
       },
     );
   }

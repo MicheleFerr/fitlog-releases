@@ -79,7 +79,7 @@
     "focus": "PETT",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Alternating_Floor_Press/0.jpg",
     "muscoliSecondari": [
-      "ADDOM",
+      "CORE",
       "DELT",
       "TRIC"
     ],
@@ -130,7 +130,7 @@
     "focus": "DELT_ANT",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Anti-Gravity_Press/0.jpg",
     "muscoliSecondari": [
-      "DORSO",
+      "LAT",
       "TRAP",
       "TRIC",
       "DELT_LAT"
@@ -431,7 +431,7 @@
     "focus": "DELT_POST",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Back_Flyes_-_With_Bands/0.jpg",
     "muscoliSecondari": [
-      "DORSO",
+      "LAT",
       "TRIC"
     ],
     "difficolta": "Principiante",
@@ -621,7 +621,7 @@
     "focus": "DELT",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Band_Pull_Apart/0.jpg",
     "muscoliSecondari": [
-      "DORSO",
+      "LAT",
       "TRAP"
     ],
     "difficolta": "Principiante",
@@ -887,7 +887,7 @@
     "nome": "Barbell Clean and Press",
     "imageUrl": "https://static.exercisedb.dev/media/SGY8Zui.gif",
     "muscoliSecondari": [
-      "FEMOR",
+      "FEMO",
       "GLUT",
       "DELT_LAT"
     ],
@@ -2170,7 +2170,7 @@
     "imageUrl": "https://static.exercisedb.dev/media/f7Y9eDZ.gif",
     "muscoliSecondari": [
       "CORE",
-      "FEMOR",
+      "FEMO",
       "GLUT",
       "QUAD"
     ],
@@ -2531,8 +2531,8 @@
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Bench_Press_-_Powerlifting/0.jpg",
     "muscoliSecondari": [
       "PETT",
-      "AVAMB",
-      "DORSO",
+      "AVA",
+      "LAT",
       "DELT"
     ],
     "difficolta": "Intermedio",
@@ -2583,7 +2583,7 @@
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Bench_Press_with_Chains/0.jpg",
     "muscoliSecondari": [
       "PETT",
-      "DORSO",
+      "LAT",
       "DELT"
     ],
     "difficolta": "Avanzato",
@@ -2608,7 +2608,7 @@
     "focus": "PETT",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Bent-Arm_Dumbbell_Pullover/0.jpg",
     "muscoliSecondari": [
-      "DORSO",
+      "LAT",
       "DELT",
       "TRIC"
     ],
@@ -2657,7 +2657,7 @@
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Bent_Over_Low-Pulley_Side_Lateral/0.jpg",
     "muscoliSecondari": [
       "LOMB",
-      "DORSO",
+      "LAT",
       "TRAP"
     ],
     "difficolta": "Principiante",
@@ -2683,8 +2683,8 @@
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Board_Press/0.jpg",
     "muscoliSecondari": [
       "PETT",
-      "AVAMB",
-      "DORSO",
+      "AVA",
+      "LAT",
       "DELT"
     ],
     "difficolta": "Intermedio",
@@ -2731,7 +2731,7 @@
     "focus": "PETT",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Bodyweight_Flyes/0.jpg",
     "muscoliSecondari": [
-      "ADDOM",
+      "CORE",
       "DELT",
       "TRIC"
     ],
@@ -4312,8 +4312,8 @@
     "focus": "DELT_POST",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Cable_Rope_Rear-Delt_Rows/0.jpg",
     "muscoliSecondari": [
-      "BIC",
-      "DORSO"
+      "BICI",
+      "LAT"
     ],
     "difficolta": "Principiante",
     "tipoEsercizio": "Compound",
@@ -4364,7 +4364,7 @@
     "focus": "DELT_LAT",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Cable_Seated_Lateral_Raise/0.jpg",
     "muscoliSecondari": [
-      "DORSO",
+      "LAT",
       "TRAP"
     ],
     "difficolta": "Principiante",
@@ -4828,7 +4828,7 @@
     "focus": "DELT",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Car_Drivers/0.jpg",
     "muscoliSecondari": [
-      "AVAMB"
+      "AVA"
     ],
     "difficolta": "Principiante",
     "tipoEsercizio": "Isolation",
@@ -4899,7 +4899,7 @@
     "focus": "DELT",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Chair_Upper_Body_Stretch/0.jpg",
     "muscoliSecondari": [
-      "BIC",
+      "BICI",
       "PETT"
     ],
     "difficolta": "Principiante",
@@ -5201,12 +5201,12 @@
     "focus": "DELT_ANT",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Clean_and_Press/0.jpg",
     "muscoliSecondari": [
-      "ADDOM",
-      "POLL",
+      "CORE",
+      "POLP",
       "GLUT",
       "FEMO",
       "LOMB",
-      "DORSO",
+      "LAT",
       "QUAD",
       "DELT",
       "TRAP",
@@ -5370,7 +5370,7 @@
     "focus": "TRIC",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Close-Grip_Push-Up_off_of_a_Dumbbell/0.jpg",
     "muscoliSecondari": [
-      "ADDOM",
+      "CORE",
       "PETT",
       "DELT"
     ],
@@ -5535,7 +5535,7 @@
     "focus": "PETT",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Cross_Over_-_With_Bands/0.jpg",
     "muscoliSecondari": [
-      "BIC",
+      "BICI",
       "DELT"
     ],
     "difficolta": "Principiante",
@@ -5939,7 +5939,7 @@
     "focus": "DELT",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Double_Kettlebell_Jerk/0.jpg",
     "muscoliSecondari": [
-      "POLL",
+      "POLP",
       "QUAD",
       "TRIC"
     ],
@@ -5965,7 +5965,7 @@
     "focus": "DELT_ANT",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Double_Kettlebell_Push_Press/0.jpg",
     "muscoliSecondari": [
-      "POLL",
+      "POLP",
       "QUAD",
       "TRIC",
       "DELT_LAT"
@@ -10271,7 +10271,7 @@
     "focus": "PETT",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Dynamic_Chest_Stretch/0.jpg",
     "muscoliSecondari": [
-      "DORSO"
+      "LAT"
     ],
     "difficolta": "Principiante",
     "tipoEsercizio": "Compound",
@@ -10766,7 +10766,7 @@
     "focus": "TRIC",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/EZ-Bar_Skullcrusher/0.jpg",
     "muscoliSecondari": [
-      "AVAMB"
+      "AVA"
     ],
     "difficolta": "Principiante",
     "tipoEsercizio": "Isolation",
@@ -11041,7 +11041,7 @@
     "focus": "DELT_POST",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Face_Pull/0.jpg",
     "muscoliSecondari": [
-      "DORSO"
+      "LAT"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Compound",
@@ -11310,7 +11310,7 @@
     "focus": "PETT",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Front_Raise_And_Pullover/0.jpg",
     "muscoliSecondari": [
-      "DORSO",
+      "LAT",
       "DELT",
       "TRIC"
     ],
@@ -11663,7 +11663,7 @@
     "focus": "TRIC",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Incline_Barbell_Triceps_Extension/0.jpg",
     "muscoliSecondari": [
-      "AVAMB"
+      "AVA"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Isolation",
@@ -11944,7 +11944,7 @@
     "focus": "PETT",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Incline_Push-Up_Medium/0.jpg",
     "muscoliSecondari": [
-      "ADDOM",
+      "CORE",
       "DELT",
       "TRIC"
     ],
@@ -11970,7 +11970,7 @@
     "focus": "PETT",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Incline_Push-Up_Reverse_Grip/0.jpg",
     "muscoliSecondari": [
-      "ADDOM",
+      "CORE",
       "DELT",
       "TRIC"
     ],
@@ -11996,7 +11996,7 @@
     "focus": "PETT",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Incline_Push-Up_Wide/0.jpg",
     "muscoliSecondari": [
-      "ADDOM",
+      "CORE",
       "DELT",
       "TRIC"
     ],
@@ -12816,7 +12816,7 @@
     "focus": "DELT",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Kettlebell_Pirate_Ships/0.jpg",
     "muscoliSecondari": [
-      "ADDOM"
+      "CORE"
     ],
     "difficolta": "Principiante",
     "tipoEsercizio": "Compound",
@@ -13039,7 +13039,7 @@
     "focus": "DELT",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Kettlebell_Turkish_Get-Up_Lunge_style/0.jpg",
     "muscoliSecondari": [
-      "ADDOM",
+      "CORE",
       "FEMO",
       "QUAD",
       "TRIC"
@@ -13229,8 +13229,8 @@
     "focus": "DELT",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Landmine_Linear_Jammer/0.jpg",
     "muscoliSecondari": [
-      "ADDOM",
-      "POLL",
+      "CORE",
+      "POLP",
       "PETT",
       "FEMO",
       "QUAD",
@@ -14003,8 +14003,8 @@
     "focus": "DELT",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Low_Pulley_Row_To_Neck/0.jpg",
     "muscoliSecondari": [
-      "BIC",
-      "DORSO",
+      "BICI",
+      "LAT",
       "TRAP"
     ],
     "difficolta": "Principiante",
@@ -14764,7 +14764,7 @@
     "focus": "DELT",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/One-Arm_Kettlebell_Jerk/0.jpg",
     "muscoliSecondari": [
-      "POLL",
+      "POLP",
       "QUAD",
       "TRIC"
     ],
@@ -14840,7 +14840,7 @@
     "focus": "DELT_ANT",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/One-Arm_Kettlebell_Push_Press/0.jpg",
     "muscoliSecondari": [
-      "POLL",
+      "POLP",
       "QUAD",
       "TRIC",
       "DELT_LAT"
@@ -14867,7 +14867,7 @@
     "focus": "DELT",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/One-Arm_Kettlebell_Snatch/0.jpg",
     "muscoliSecondari": [
-      "POLL",
+      "POLP",
       "GLUT",
       "FEMO",
       "LOMB",
@@ -15014,7 +15014,7 @@
     "focus": "TRIC",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Overhead_Triceps/0.jpg",
     "muscoliSecondari": [
-      "DORSO"
+      "LAT"
     ],
     "difficolta": "Avanzato",
     "tipoEsercizio": "Compound",
@@ -15091,9 +15091,9 @@
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Pin_Presses/0.jpg",
     "muscoliSecondari": [
       "PETT",
-      "AVAMB",
-      "DORSO",
-      "DORSO",
+      "AVA",
+      "LAT",
+      "LAT",
       "DELT"
     ],
     "difficolta": "Intermedio",
@@ -15247,7 +15247,7 @@
     "focus": "PETT",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Push-Up_Wide/0.jpg",
     "muscoliSecondari": [
-      "ADDOM",
+      "CORE",
       "DELT",
       "TRIC"
     ],
@@ -15945,9 +15945,9 @@
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Reverse_Band_Bench_Press/0.jpg",
     "muscoliSecondari": [
       "PETT",
-      "AVAMB",
-      "DORSO",
-      "DORSO",
+      "AVA",
+      "LAT",
+      "LAT",
       "DELT"
     ],
     "difficolta": "Intermedio",
@@ -16282,7 +16282,7 @@
     "focus": "DELT",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Round_The_World_Shoulder_Stretch/0.jpg",
     "muscoliSecondari": [
-      "BIC",
+      "BICI",
       "PETT"
     ],
     "difficolta": "Principiante",
@@ -16545,7 +16545,7 @@
     "focus": "DELT_ANT",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/See-Saw_Press_Alternating_Side_Press/0.jpg",
     "muscoliSecondari": [
-      "ADDOM",
+      "CORE",
       "TRIC",
       "DELT_LAT"
     ],
@@ -16620,7 +16620,7 @@
     "focus": "DELT_LAT",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Shoulder_Raise/0.jpg",
     "muscoliSecondari": [
-      "DORSO"
+      "LAT"
     ],
     "difficolta": "Principiante",
     "tipoEsercizio": "Compound",
@@ -16771,8 +16771,8 @@
     "focus": "DELT",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Side_Wrist_Pull/0.jpg",
     "muscoliSecondari": [
-      "AVAMB",
-      "DORSO"
+      "AVA",
+      "LAT"
     ],
     "difficolta": "Principiante",
     "tipoEsercizio": "Isolation",
@@ -16873,7 +16873,7 @@
     "focus": "DELT_LAT",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Single_Dumbbell_Raise/0.jpg",
     "muscoliSecondari": [
-      "AVAMB",
+      "AVA",
       "TRAP"
     ],
     "difficolta": "Principiante",
@@ -16951,8 +16951,8 @@
     "focus": "DELT",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Sled_Overhead_Backward_Walk/0.jpg",
     "muscoliSecondari": [
-      "POLL",
-      "DORSO",
+      "POLP",
+      "LAT",
       "QUAD"
     ],
     "difficolta": "Principiante",
@@ -17457,7 +17457,7 @@
     "focus": "DELT_LAT",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Smith_Machine_One-Arm_Upright_Row/0.jpg",
     "muscoliSecondari": [
-      "BIC",
+      "BICI",
       "TRAP"
     ],
     "difficolta": "Principiante",
@@ -17787,7 +17787,7 @@
     "nome": "Snatch Pull",
     "imageUrl": "https://static.exercisedb.dev/media/dG5Smob.gif",
     "muscoliSecondari": [
-      "FEMOR",
+      "FEMO",
       "GLUT",
       "POLP"
     ],
@@ -18132,7 +18132,7 @@
     "focus": "DELT_LAT",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Standing_Low-Pulley_Deltoid_Raise/0.jpg",
     "muscoliSecondari": [
-      "AVAMB"
+      "AVA"
     ],
     "difficolta": "Principiante",
     "tipoEsercizio": "Isolation",
@@ -18327,7 +18327,7 @@
     "focus": "PETT",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Straight-Arm_Dumbbell_Pullover/0.jpg",
     "muscoliSecondari": [
-      "DORSO",
+      "LAT",
       "DELT",
       "TRIC"
     ],
@@ -18467,7 +18467,7 @@
     "focus": "PETT",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Svend_Press/0.jpg",
     "muscoliSecondari": [
-      "AVAMB",
+      "AVA",
       "DELT",
       "TRIC"
     ],
@@ -18966,7 +18966,7 @@
     "focus": "DELT",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Two-Arm_Kettlebell_Clean/0.jpg",
     "muscoliSecondari": [
-      "POLL",
+      "POLP",
       "GLUT",
       "FEMO",
       "LOMB",
@@ -18994,7 +18994,7 @@
     "focus": "DELT",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Two-Arm_Kettlebell_Jerk/0.jpg",
     "muscoliSecondari": [
-      "POLL",
+      "POLP",
       "QUAD",
       "TRIC"
     ],
@@ -19098,7 +19098,7 @@
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Upward_Stretch/0.jpg",
     "muscoliSecondari": [
       "PETT",
-      "DORSO"
+      "LAT"
     ],
     "difficolta": "Principiante",
     "tipoEsercizio": "Compound",

@@ -874,11 +874,31 @@ final class WatchConnectivityManager: NSObject {
         }
 
         // Update application context for persistent delivery
+        // ✅ FIX: Update startTime to NOW with the NEW remaining duration
+        // This ensures Watch calculates correct remaining time even if it receives context late
         do {
             var currentContext = session.applicationContext
             if var restTimer = currentContext["restTimer"] as? [String: Any] {
-                restTimer["duration"] = newDuration
-                restTimer["timestamp"] = Date().timeIntervalSince1970
+                let now = Date().timeIntervalSince1970
+
+                // Calculate actual remaining time at this moment
+                if let oldStartTime = restTimer["startTime"] as? TimeInterval,
+                   let oldDuration = restTimer["duration"] as? Int {
+                    let elapsed = Int(now - oldStartTime)
+                    let oldRemaining = max(0, oldDuration - elapsed)
+                    let newRemaining = oldRemaining + addedSeconds
+
+                    // Reset timer base: startTime = NOW, duration = actual remaining
+                    restTimer["startTime"] = now
+                    restTimer["duration"] = newRemaining
+                    Logger.shared.log(.debug, "⏱️ Timer extended: was \(oldRemaining)s + \(addedSeconds)s = \(newRemaining)s remaining", category: .general)
+                } else {
+                    // Fallback: just use newDuration with fresh startTime
+                    restTimer["startTime"] = now
+                    restTimer["duration"] = newDuration
+                }
+
+                restTimer["timestamp"] = now
                 currentContext["restTimer"] = restTimer
             }
             try session.updateApplicationContext(currentContext)

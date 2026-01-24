@@ -1,0 +1,3940 @@
+{
+  "timestamp": "2026-01-19T15:37:59.780714+00:00",
+  "project_id": "gymprogressapp-184bc",
+  "collections": {
+    "achievements": {
+      "name": "achievements",
+      "document_count": 0,
+      "fields_usage": {},
+      "field_types": {},
+      "subcollections": [],
+      "sample_doc_ids": [],
+      "empty_fields": {},
+      "timestamps": {
+        "oldest": null,
+        "newest": null,
+        "has_timestamp": 0,
+        "missing_timestamp": 0
+      }
+    },
+    "cardioSessions": {
+      "name": "cardioSessions",
+      "document_count": 38,
+      "fields_usage": {
+        "notes": 20,
+        "timestamp": 6,
+        "distance": 17,
+        "uid": 38,
+        "mode": 38,
+        "email": 32,
+        "duration": 38,
+        "type": 38,
+        "calories": 25,
+        "date": 28,
+        "createdAt": 27,
+        "work": 17,
+        "rest": 17,
+        "rounds": 17,
+        "pace": 5
+      },
+      "field_types": {
+        "notes": [
+          "str"
+        ],
+        "timestamp": [
+          "DatetimeWithNanoseconds"
+        ],
+        "distance": [
+          "float",
+          "int"
+        ],
+        "uid": [
+          "str"
+        ],
+        "mode": [
+          "str"
+        ],
+        "email": [
+          "str"
+        ],
+        "duration": [
+          "int"
+        ],
+        "type": [
+          "str"
+        ],
+        "calories": [
+          "int"
+        ],
+        "date": [
+          "DatetimeWithNanoseconds"
+        ],
+        "createdAt": [
+          "DatetimeWithNanoseconds"
+        ],
+        "work": [
+          "int"
+        ],
+        "rest": [
+          "int"
+        ],
+        "rounds": [
+          "int"
+        ],
+        "pace": [
+          "NoneType",
+          "int"
+        ]
+      },
+      "subcollections": [],
+      "sample_doc_ids": [
+        "3ywXdb6fYUD6tN2J6AQb",
+        "4KQpQepqkZKVRLA3Teom",
+        "6TE6cAn8mpXyOHfZzR6N",
+        "7M6PjMKx7aEuuc6jHks2",
+        "7trelaYZw1EtUobHf3qX"
+      ],
+      "empty_fields": {
+        "notes": 10,
+        "pace": 2
+      },
+      "timestamps": {
+        "oldest": "2025-05-11T13:23:12.449000+00:00",
+        "newest": "2025-06-21T21:08:33.211000+00:00",
+        "has_timestamp": 61,
+        "missing_timestamp": 0
+      }
+    },
+    "chat_threads": {
+      "name": "chat_threads",
+      "document_count": 1,
+      "fields_usage": {
+        "coachId": 1,
+        "unreadCount": 1,
+        "id": 1,
+        "updatedAt": 1,
+        "athleteId": 1,
+        "coachEmail": 1,
+        "athleteName": 1,
+        "coachName": 1,
+        "createdAt": 1,
+        "athleteEmail": 1
+      },
+      "field_types": {
+        "coachId": [
+          "str"
+        ],
+        "unreadCount": [
+          "int"
+        ],
+        "id": [
+          "str"
+        ],
+        "updatedAt": [
+          "DatetimeWithNanoseconds"
+        ],
+        "athleteId": [
+          "str"
+        ],
+        "coachEmail": [
+          "str"
+        ],
+        "athleteName": [
+          "str"
+        ],
+        "coachName": [
+          "str"
+        ],
+        "createdAt": [
+          "DatetimeWithNanoseconds"
+        ],
+        "athleteEmail": [
+          "str"
+        ]
+      },
+      "subcollections": [],
+      "sample_doc_ids": [
+        "ferrara-michele@hotmail.it_michele-napoli98@hotmail.it"
+      ],
+      "empty_fields": {},
+      "timestamps": {
+        "oldest": "2025-07-15T12:38:58.281000+00:00",
+        "newest": "2025-07-15T12:38:58.526000+00:00",
+        "has_timestamp": 2,
+        "missing_timestamp": 0
+      }
+    },
+    "coachNotifications": {
+      "name": "coachNotifications",
+      "document_count": 3,
+      "fields_usage": {
+        "coachEmail": 3,
+        "createdAt": 3,
+        "data": 3,
+        "title": 3,
+        "type": 3,
+        "body": 3,
+        "read": 3
+      },
+      "field_types": {
+        "coachEmail": [
+          "str"
+        ],
+        "createdAt": [
+          "DatetimeWithNanoseconds"
+        ],
+        "data": [
+          "dict"
+        ],
+        "title": [
+          "str"
+        ],
+        "type": [
+          "str"
+        ],
+        "body": [
+          "str"
+        ],
+        "read": [
+          "bool"
+        ]
+      },
+      "subcollections": [],
+      "sample_doc_ids": [
+        "1752482117136_finalcash26@gmail.com",
+        "1752485367677_ferrara-michele@hotmail.it",
+        "1752492323903_finalcash26@gmail.com"
+      ],
+      "empty_fields": {},
+      "timestamps": {
+        "oldest": "2025-07-14T08:35:17.230000+00:00",
+        "newest": "2025-07-14T11:25:24.069000+00:00",
+        "has_timestamp": 3,
+        "missing_timestamp": 0
+      }
+    },
+    "coach_delegations": {
+      "name": "coach_delegations",
+      "document_count": 2,
+      "fields_usage": {
+        "coachEmail": 2,
+        "updatedAt": 2,
+        "permissions": 2,
+        "userName": 2,
+        "createdAt": 2,
+        "userId": 2,
+        "userEmail": 2,
+        "coachCode": 1
+      },
+      "field_types": {
+        "coachEmail": [
+          "str"
+        ],
+        "updatedAt": [
+          "DatetimeWithNanoseconds"
+        ],
+        "permissions": [
+          "dict"
+        ],
+        "userName": [
+          "str"
+        ],
+        "createdAt": [
+          "DatetimeWithNanoseconds"
+        ],
+        "userId": [
+          "str"
+        ],
+        "userEmail": [
+          "str"
+        ],
+        "coachCode": [
+          "str"
+        ]
+      },
+      "subcollections": [],
+      "sample_doc_ids": [
+        "ferrara-michele@hotmail.it_michele-napoli98@hotmail.it",
+        "finalcash26@gmail.com_finalcash26@gmail.com"
+      ],
+      "empty_fields": {},
+      "timestamps": {
+        "oldest": "2025-06-24T15:49:17.803000+00:00",
+        "newest": "2025-07-14T08:35:16.756000+00:00",
+        "has_timestamp": 4,
+        "missing_timestamp": 0
+      }
+    },
+    "communityPrograms": {
+      "name": "communityPrograms",
+      "document_count": 2,
+      "fields_usage": {
+        "authorId": 2,
+        "tags": 2,
+        "difficulty": 2,
+        "updatedAt": 2,
+        "daysPerWeek": 2,
+        "description": 2,
+        "authorEmail": 2,
+        "title": 2,
+        "category": 2,
+        "giorni": 2,
+        "isPublic": 2,
+        "duration": 2,
+        "stats": 2,
+        "createdAt": 2,
+        "authorName": 2
+      },
+      "field_types": {
+        "authorId": [
+          "str"
+        ],
+        "tags": [
+          "list"
+        ],
+        "difficulty": [
+          "str"
+        ],
+        "updatedAt": [
+          "DatetimeWithNanoseconds"
+        ],
+        "daysPerWeek": [
+          "int"
+        ],
+        "description": [
+          "str"
+        ],
+        "authorEmail": [
+          "str"
+        ],
+        "title": [
+          "str"
+        ],
+        "category": [
+          "str"
+        ],
+        "giorni": [
+          "list"
+        ],
+        "isPublic": [
+          "bool"
+        ],
+        "duration": [
+          "int"
+        ],
+        "stats": [
+          "dict"
+        ],
+        "createdAt": [
+          "DatetimeWithNanoseconds"
+        ],
+        "authorName": [
+          "str"
+        ]
+      },
+      "subcollections": [],
+      "sample_doc_ids": [
+        "55mwtE1ELaufufc5luuM",
+        "VaZXbQjsHOeN9SEDb6LB"
+      ],
+      "empty_fields": {
+        "tags": 2
+      },
+      "timestamps": {
+        "oldest": "2025-07-08T12:41:10.209000+00:00",
+        "newest": "2025-07-08T13:24:35.006000+00:00",
+        "has_timestamp": 4,
+        "missing_timestamp": 0
+      }
+    },
+    "community_contributions": {
+      "name": "community_contributions",
+      "document_count": 4,
+      "fields_usage": {
+        "exerciseId": 4,
+        "upvotes": 4,
+        "comments": 4,
+        "id": 4,
+        "userName": 4,
+        "updatedAt": 4,
+        "upvotedBy": 4,
+        "suggestedValue": 3,
+        "description": 4,
+        "reviewedAt": 3,
+        "exerciseName": 4,
+        "isFeatured": 3,
+        "status": 4,
+        "metadata": 3,
+        "trustScore": 3,
+        "originalValue": 3,
+        "reviewedBy": 3,
+        "downvotes": 4,
+        "userAvatar": 3,
+        "reviewNote": 3,
+        "downvotedBy": 4,
+        "createdAt": 4,
+        "type": 4,
+        "userId": 4,
+        "title": 4
+      },
+      "field_types": {
+        "exerciseId": [
+          "str"
+        ],
+        "upvotes": [
+          "int"
+        ],
+        "comments": [
+          "list"
+        ],
+        "id": [
+          "str"
+        ],
+        "userName": [
+          "str"
+        ],
+        "updatedAt": [
+          "NoneType",
+          "DatetimeWithNanoseconds"
+        ],
+        "upvotedBy": [
+          "list"
+        ],
+        "suggestedValue": [
+          "NoneType"
+        ],
+        "description": [
+          "str"
+        ],
+        "reviewedAt": [
+          "NoneType"
+        ],
+        "exerciseName": [
+          "str"
+        ],
+        "isFeatured": [
+          "bool"
+        ],
+        "status": [
+          "str"
+        ],
+        "metadata": [
+          "NoneType"
+        ],
+        "trustScore": [
+          "int"
+        ],
+        "originalValue": [
+          "NoneType"
+        ],
+        "reviewedBy": [
+          "NoneType"
+        ],
+        "downvotes": [
+          "int"
+        ],
+        "userAvatar": [
+          "NoneType"
+        ],
+        "reviewNote": [
+          "NoneType"
+        ],
+        "downvotedBy": [
+          "list"
+        ],
+        "createdAt": [
+          "str",
+          "DatetimeWithNanoseconds"
+        ],
+        "type": [
+          "str"
+        ],
+        "userId": [
+          "str"
+        ],
+        "title": [
+          "str"
+        ]
+      },
+      "subcollections": [],
+      "sample_doc_ids": [
+        "WeUwHPHGEM1ezfdIDhPk",
+        "jC7T30KU6yXXAw0ENlX5",
+        "placeholder",
+        "sloLPq5ZcdU02IX9nz6s"
+      ],
+      "empty_fields": {
+        "comments": 4,
+        "updatedAt": 3,
+        "upvotedBy": 4,
+        "suggestedValue": 3,
+        "reviewedAt": 3,
+        "metadata": 3,
+        "originalValue": 3,
+        "reviewedBy": 3,
+        "userAvatar": 3,
+        "reviewNote": 3,
+        "downvotedBy": 4
+      },
+      "timestamps": {
+        "oldest": "2025-10-05T20:42:38.487071",
+        "newest": "2025-10-05T22:45:08.563327",
+        "has_timestamp": 8,
+        "missing_timestamp": 0
+      }
+    },
+    "customTemplates": {
+      "name": "customTemplates",
+      "document_count": 1,
+      "fields_usage": {
+        "notes": 1,
+        "routineId": 1,
+        "targetMuscles": 1,
+        "tags": 1,
+        "id": 1,
+        "createdInRoutine": 1,
+        "updatedAt": 1,
+        "difficultyLevel": 1,
+        "description": 1,
+        "exercises": 1,
+        "isFavorite": 1,
+        "name": 1,
+        "requiredEquipment": 1,
+        "estimatedDurationMinutes": 1,
+        "usageCount": 1,
+        "createdAt": 1,
+        "equipmentProfileId": 1,
+        "userId": 1
+      },
+      "field_types": {
+        "notes": [
+          "NoneType"
+        ],
+        "routineId": [
+          "NoneType"
+        ],
+        "targetMuscles": [
+          "list"
+        ],
+        "tags": [
+          "list"
+        ],
+        "id": [
+          "str"
+        ],
+        "createdInRoutine": [
+          "bool"
+        ],
+        "updatedAt": [
+          "NoneType"
+        ],
+        "difficultyLevel": [
+          "NoneType"
+        ],
+        "description": [
+          "NoneType"
+        ],
+        "exercises": [
+          "list"
+        ],
+        "isFavorite": [
+          "bool"
+        ],
+        "name": [
+          "str"
+        ],
+        "requiredEquipment": [
+          "list"
+        ],
+        "estimatedDurationMinutes": [
+          "NoneType"
+        ],
+        "usageCount": [
+          "int"
+        ],
+        "createdAt": [
+          "str"
+        ],
+        "equipmentProfileId": [
+          "NoneType"
+        ],
+        "userId": [
+          "str"
+        ]
+      },
+      "subcollections": [],
+      "sample_doc_ids": [
+        "hNS0PdwJn8MlggyTOihd"
+      ],
+      "empty_fields": {
+        "notes": 1,
+        "routineId": 1,
+        "targetMuscles": 1,
+        "tags": 1,
+        "updatedAt": 1,
+        "difficultyLevel": 1,
+        "description": 1,
+        "requiredEquipment": 1,
+        "estimatedDurationMinutes": 1,
+        "equipmentProfileId": 1
+      },
+      "timestamps": {
+        "oldest": "2025-10-25T03:38:00.683876",
+        "newest": "2025-10-25T03:38:00.683876",
+        "has_timestamp": 2,
+        "missing_timestamp": 0
+      }
+    },
+    "dropSetActivity": {
+      "name": "dropSetActivity",
+      "document_count": 4,
+      "fields_usage": {
+        "exerciseId": 4,
+        "dropSets": 4,
+        "settimana": 4,
+        "giornoId": 4,
+        "volume": 3,
+        "email": 4,
+        "exerciseName": 4,
+        "createdAt": 4,
+        "sessionId": 4,
+        "userId": 4,
+        "lastModified": 4,
+        "timestamp": 2
+      },
+      "field_types": {
+        "exerciseId": [
+          "str"
+        ],
+        "dropSets": [
+          "list"
+        ],
+        "settimana": [
+          "int"
+        ],
+        "giornoId": [
+          "str"
+        ],
+        "volume": [
+          "int"
+        ],
+        "email": [
+          "str"
+        ],
+        "exerciseName": [
+          "str"
+        ],
+        "createdAt": [
+          "DatetimeWithNanoseconds"
+        ],
+        "sessionId": [
+          "str"
+        ],
+        "userId": [
+          "str"
+        ],
+        "lastModified": [
+          "DatetimeWithNanoseconds"
+        ],
+        "timestamp": [
+          "int"
+        ]
+      },
+      "subcollections": [],
+      "sample_doc_ids": [
+        "Ae1inMMKgBh5P0iapD7Z",
+        "ZAfugjJtYWqalOn05qA4",
+        "bYeOPb0fUqAPpd0nfxRZ",
+        "fZNrIUHYge8xI81DlPfd"
+      ],
+      "empty_fields": {},
+      "timestamps": {
+        "oldest": "2025-06-22T15:15:23.178000+00:00",
+        "newest": "2025-06-24T04:55:42.628000+00:00",
+        "has_timestamp": 6,
+        "missing_timestamp": 0
+      }
+    },
+    "equipmentProfiles": {
+      "name": "equipmentProfiles",
+      "document_count": 1,
+      "fields_usage": {
+        "name": 1,
+        "isDefault": 1,
+        "createdAt": 1,
+        "availableEquipment": 1,
+        "userId": 1,
+        "updatedAt": 1
+      },
+      "field_types": {
+        "name": [
+          "str"
+        ],
+        "isDefault": [
+          "bool"
+        ],
+        "createdAt": [
+          "DatetimeWithNanoseconds"
+        ],
+        "availableEquipment": [
+          "list"
+        ],
+        "userId": [
+          "str"
+        ],
+        "updatedAt": [
+          "DatetimeWithNanoseconds"
+        ]
+      },
+      "subcollections": [],
+      "sample_doc_ids": [
+        "ZVQH6JtDAdJCWPojFd7A"
+      ],
+      "empty_fields": {},
+      "timestamps": {
+        "oldest": "2025-10-26T08:11:01.487309+00:00",
+        "newest": "2025-10-26T08:11:03.421031+00:00",
+        "has_timestamp": 2,
+        "missing_timestamp": 0
+      }
+    },
+    "esercizi": {
+      "name": "esercizi",
+      "document_count": 1492,
+      "fields_usage": {
+        "focus": 1404,
+        "difficolta": 1492,
+        "patternMovimento": 1492,
+        "nome": 1492,
+        "id": 1492,
+        "tipoEsercizio": 1492,
+        "noteTecniche": 1492,
+        "rangeRipetizioni": 1492,
+        "attrezzatura": 1492,
+        "imageUrl": 1492,
+        "muscoliSecondari": 857
+      },
+      "field_types": {
+        "focus": [
+          "str"
+        ],
+        "difficolta": [
+          "str"
+        ],
+        "patternMovimento": [
+          "str"
+        ],
+        "nome": [
+          "str"
+        ],
+        "id": [
+          "str"
+        ],
+        "tipoEsercizio": [
+          "str"
+        ],
+        "noteTecniche": [
+          "str"
+        ],
+        "rangeRipetizioni": [
+          "str"
+        ],
+        "attrezzatura": [
+          "str"
+        ],
+        "imageUrl": [
+          "str"
+        ],
+        "muscoliSecondari": [
+          "str"
+        ]
+      },
+      "subcollections": [],
+      "sample_doc_ids": [
+        "3_4_sit_up",
+        "45°_side_bend",
+        "active_style_cable_pushdown",
+        "advanced_dumbbell_stiff_leg_deadlift",
+        "air_bike"
+      ],
+      "empty_fields": {},
+      "timestamps": {
+        "oldest": null,
+        "newest": null,
+        "has_timestamp": 0,
+        "missing_timestamp": 0
+      }
+    },
+    "exerciseActivities": {
+      "name": "exerciseActivities",
+      "document_count": 579,
+      "fields_usage": {
+        "exerciseId": 579,
+        "sets": 579,
+        "schedaName": 575,
+        "email": 579,
+        "exerciseName": 579,
+        "createdAt": 579,
+        "exerciseImage": 567,
+        "lastModified": 579,
+        "settimana": 89,
+        "giornoId": 89,
+        "sessionId": 89,
+        "userId": 67,
+        "deletedAt": 8,
+        "deleted": 8,
+        "image": 12,
+        "volume": 12,
+        "type": 2,
+        "id": 2,
+        "timestamp": 1
+      },
+      "field_types": {
+        "exerciseId": [
+          "str"
+        ],
+        "sets": [
+          "list"
+        ],
+        "schedaName": [
+          "str"
+        ],
+        "email": [
+          "str"
+        ],
+        "exerciseName": [
+          "str"
+        ],
+        "createdAt": [
+          "DatetimeWithNanoseconds"
+        ],
+        "exerciseImage": [
+          "str"
+        ],
+        "lastModified": [
+          "DatetimeWithNanoseconds"
+        ],
+        "settimana": [
+          "int"
+        ],
+        "giornoId": [
+          "str"
+        ],
+        "sessionId": [
+          "str"
+        ],
+        "userId": [
+          "str"
+        ],
+        "deletedAt": [
+          "DatetimeWithNanoseconds"
+        ],
+        "deleted": [
+          "bool"
+        ],
+        "image": [
+          "NoneType",
+          "str"
+        ],
+        "volume": [
+          "int"
+        ],
+        "type": [
+          "str"
+        ],
+        "id": [
+          "str"
+        ],
+        "timestamp": [
+          "int"
+        ]
+      },
+      "subcollections": [],
+      "sample_doc_ids": [
+        "02KOZ1CPVkNO2yTmeDDF",
+        "038EfMRJNz9wWLZgbSV7",
+        "03Vdsp5dc4yNagG04jXt",
+        "0BTHvqpByuT5YLUFqX4l",
+        "0J8GOE04RQoYLSJR0iJg"
+      ],
+      "empty_fields": {
+        "schedaName": 198,
+        "image": 3
+      },
+      "timestamps": {
+        "oldest": "2025-03-11T00:10:12.911000+00:00",
+        "newest": "2025-09-16T15:24:14.669729+00:00",
+        "has_timestamp": 580,
+        "missing_timestamp": 0
+      }
+    },
+    "exerciseActivities_backup_1758371900039": {
+      "name": "exerciseActivities_backup_1758371900039",
+      "document_count": 537,
+      "fields_usage": {
+        "exerciseId": 537,
+        "sets": 537,
+        "schedaName": 537,
+        "email": 537,
+        "exerciseName": 537,
+        "createdAt": 537,
+        "exerciseImage": 537,
+        "lastModified": 537
+      },
+      "field_types": {
+        "exerciseId": [
+          "str"
+        ],
+        "sets": [
+          "list"
+        ],
+        "schedaName": [
+          "str"
+        ],
+        "email": [
+          "str"
+        ],
+        "exerciseName": [
+          "str"
+        ],
+        "createdAt": [
+          "DatetimeWithNanoseconds"
+        ],
+        "exerciseImage": [
+          "NoneType",
+          "str"
+        ],
+        "lastModified": [
+          "DatetimeWithNanoseconds"
+        ]
+      },
+      "subcollections": [],
+      "sample_doc_ids": [
+        "02KOZ1CPVkNO2yTmeDDF",
+        "038EfMRJNz9wWLZgbSV7",
+        "03Vdsp5dc4yNagG04jXt",
+        "0BTHvqpByuT5YLUFqX4l",
+        "0J8GOE04RQoYLSJR0iJg"
+      ],
+      "empty_fields": {
+        "schedaName": 160,
+        "exerciseImage": 10
+      },
+      "timestamps": {
+        "oldest": "2025-03-11T00:10:12.911000+00:00",
+        "newest": "2025-09-16T15:24:14.669729+00:00",
+        "has_timestamp": 537,
+        "missing_timestamp": 0
+      }
+    },
+    "exercise_feedback": {
+      "name": "exercise_feedback",
+      "document_count": 3,
+      "fields_usage": {
+        "exerciseId": 3,
+        "status": 3,
+        "message": 3,
+        "adminNotes": 3,
+        "feedbackType": 3,
+        "severity": 3,
+        "version": 3,
+        "exerciseName": 3,
+        "createdAt": 3,
+        "userId": 3,
+        "userEmail": 3
+      },
+      "field_types": {
+        "exerciseId": [
+          "str"
+        ],
+        "status": [
+          "str"
+        ],
+        "message": [
+          "str"
+        ],
+        "adminNotes": [
+          "NoneType"
+        ],
+        "feedbackType": [
+          "str"
+        ],
+        "severity": [
+          "int"
+        ],
+        "version": [
+          "str"
+        ],
+        "exerciseName": [
+          "str"
+        ],
+        "createdAt": [
+          "DatetimeWithNanoseconds"
+        ],
+        "userId": [
+          "str"
+        ],
+        "userEmail": [
+          "str"
+        ]
+      },
+      "subcollections": [],
+      "sample_doc_ids": [
+        "1nBdum4OnqWewdTemaxa",
+        "LG6nZwky5wWlV2CIng2D",
+        "QJovxdMGg9MijzuwKZfl"
+      ],
+      "empty_fields": {
+        "adminNotes": 3
+      },
+      "timestamps": {
+        "oldest": "2025-10-17T18:23:06.070000+00:00",
+        "newest": "2025-10-18T10:26:20.248000+00:00",
+        "has_timestamp": 3,
+        "missing_timestamp": 0
+      }
+    },
+    "exercises_en": {
+      "name": "exercises_en",
+      "document_count": 1493,
+      "fields_usage": {
+        "mobilitaPre": 1493,
+        "difficolta": 1493,
+        "patternMovimento": 1493,
+        "warmupSets": 1493,
+        "id": 1493,
+        "tempoWarmup": 1493,
+        "tipoEsercizio": 1493,
+        "rangeRipetizioni": 1493,
+        "muscoliSecondari": 1493,
+        "drillTecnico": 1493,
+        "imageUrl": 1493,
+        "spiegazioneTermini": 1493,
+        "focus": 1493,
+        "tempoNote": 1493,
+        "cooldownConsigliato": 1493,
+        "tempoEsecuzione": 1493,
+        "nome": 1493,
+        "attivazionePre": 1493,
+        "noteTecniche": 1493,
+        "attrezzatura": 1493,
+        "prevenzioneInfortuni": 1493,
+        "aliases": 1493
+      },
+      "field_types": {
+        "mobilitaPre": [
+          "str"
+        ],
+        "difficolta": [
+          "str"
+        ],
+        "patternMovimento": [
+          "str"
+        ],
+        "warmupSets": [
+          "NoneType",
+          "str"
+        ],
+        "id": [
+          "str"
+        ],
+        "tempoWarmup": [
+          "NoneType",
+          "str"
+        ],
+        "tipoEsercizio": [
+          "str"
+        ],
+        "rangeRipetizioni": [
+          "str"
+        ],
+        "muscoliSecondari": [
+          "NoneType",
+          "str"
+        ],
+        "drillTecnico": [
+          "NoneType",
+          "str"
+        ],
+        "imageUrl": [
+          "str"
+        ],
+        "spiegazioneTermini": [
+          "NoneType",
+          "str"
+        ],
+        "focus": [
+          "NoneType",
+          "str"
+        ],
+        "tempoNote": [
+          "NoneType",
+          "str"
+        ],
+        "cooldownConsigliato": [
+          "NoneType",
+          "str"
+        ],
+        "tempoEsecuzione": [
+          "NoneType",
+          "str"
+        ],
+        "nome": [
+          "str"
+        ],
+        "attivazionePre": [
+          "str"
+        ],
+        "noteTecniche": [
+          "str"
+        ],
+        "attrezzatura": [
+          "str"
+        ],
+        "prevenzioneInfortuni": [
+          "NoneType",
+          "str"
+        ],
+        "aliases": [
+          "list"
+        ]
+      },
+      "subcollections": [],
+      "sample_doc_ids": [
+        "3_4_sit_up",
+        "45°_side_bend",
+        "active_style_cable_pushdown",
+        "advanced_dumbbell_stiff_leg_deadlift",
+        "air_bike"
+      ],
+      "empty_fields": {
+        "warmupSets": 1492,
+        "tempoWarmup": 1492,
+        "muscoliSecondari": 635,
+        "drillTecnico": 1492,
+        "spiegazioneTermini": 1492,
+        "tempoNote": 1492,
+        "cooldownConsigliato": 1492,
+        "tempoEsecuzione": 1492,
+        "prevenzioneInfortuni": 1492,
+        "focus": 88,
+        "aliases": 10
+      },
+      "timestamps": {
+        "oldest": null,
+        "newest": null,
+        "has_timestamp": 0,
+        "missing_timestamp": 0
+      }
+    },
+    "exercises_it": {
+      "name": "exercises_it",
+      "document_count": 1550,
+      "fields_usage": {
+        "focus": 1550,
+        "mobilitaPre": 1550,
+        "difficolta": 1550,
+        "patternMovimento": 1550,
+        "nome": 1550,
+        "attivazionePre": 1550,
+        "id": 1550,
+        "noteTecniche": 1550,
+        "tipoEsercizio": 1550,
+        "rangeRipetizioni": 1550,
+        "attrezzatura": 1550,
+        "muscoliSecondari": 1550,
+        "aliases": 1550,
+        "imageUrl": 1550,
+        "warmupSets": 704,
+        "tempoWarmup": 704,
+        "drillTecnico": 704,
+        "spiegazioneTermini": 704,
+        "tempoNote": 704,
+        "cooldownConsigliato": 704,
+        "tempoEsecuzione": 704,
+        "prevenzioneInfortuni": 704
+      },
+      "field_types": {
+        "focus": [
+          "NoneType",
+          "str"
+        ],
+        "mobilitaPre": [
+          "str"
+        ],
+        "difficolta": [
+          "str"
+        ],
+        "patternMovimento": [
+          "str"
+        ],
+        "nome": [
+          "str"
+        ],
+        "attivazionePre": [
+          "str"
+        ],
+        "id": [
+          "str"
+        ],
+        "noteTecniche": [
+          "str"
+        ],
+        "tipoEsercizio": [
+          "str"
+        ],
+        "rangeRipetizioni": [
+          "str"
+        ],
+        "attrezzatura": [
+          "str"
+        ],
+        "muscoliSecondari": [
+          "NoneType",
+          "str"
+        ],
+        "aliases": [
+          "list"
+        ],
+        "imageUrl": [
+          "str"
+        ],
+        "warmupSets": [
+          "NoneType",
+          "str"
+        ],
+        "tempoWarmup": [
+          "NoneType",
+          "str"
+        ],
+        "drillTecnico": [
+          "NoneType",
+          "str"
+        ],
+        "spiegazioneTermini": [
+          "NoneType",
+          "str"
+        ],
+        "tempoNote": [
+          "NoneType",
+          "str"
+        ],
+        "cooldownConsigliato": [
+          "NoneType",
+          "str"
+        ],
+        "tempoEsecuzione": [
+          "NoneType",
+          "str"
+        ],
+        "prevenzioneInfortuni": [
+          "NoneType",
+          "str"
+        ]
+      },
+      "subcollections": [],
+      "sample_doc_ids": [
+        "3_4_sit_up",
+        "45°_side_bend",
+        "active_style_cable_pushdown",
+        "advanced_dumbbell_stiff_leg_deadlift",
+        "air_bike"
+      ],
+      "empty_fields": {
+        "muscoliSecondari": 672,
+        "warmupSets": 703,
+        "tempoWarmup": 703,
+        "drillTecnico": 703,
+        "spiegazioneTermini": 703,
+        "tempoNote": 703,
+        "cooldownConsigliato": 703,
+        "tempoEsecuzione": 703,
+        "prevenzioneInfortuni": 703,
+        "focus": 88
+      },
+      "timestamps": {
+        "oldest": null,
+        "newest": null,
+        "has_timestamp": 0,
+        "missing_timestamp": 0
+      }
+    },
+    "exercises_metadata": {
+      "name": "exercises_metadata",
+      "document_count": 1,
+      "fields_usage": {
+        "status": 1,
+        "bundle_size_mb_it": 1,
+        "bundle_size_mb_en": 1,
+        "changelog": 1,
+        "total_exercises_it": 1,
+        "total_exercises_en": 1,
+        "current_version": 1,
+        "last_updated": 1
+      },
+      "field_types": {
+        "status": [
+          "str"
+        ],
+        "bundle_size_mb_it": [
+          "float"
+        ],
+        "bundle_size_mb_en": [
+          "float"
+        ],
+        "changelog": [
+          "list"
+        ],
+        "total_exercises_it": [
+          "int"
+        ],
+        "total_exercises_en": [
+          "int"
+        ],
+        "current_version": [
+          "str"
+        ],
+        "last_updated": [
+          "DatetimeWithNanoseconds"
+        ]
+      },
+      "subcollections": [],
+      "sample_doc_ids": [
+        "version_info"
+      ],
+      "empty_fields": {},
+      "timestamps": {
+        "oldest": "2025-11-02T23:46:37.647000+00:00",
+        "newest": "2025-11-02T23:46:37.647000+00:00",
+        "has_timestamp": 1,
+        "missing_timestamp": 0
+      }
+    },
+    "flexibleRoutines": {
+      "name": "flexibleRoutines",
+      "document_count": 1,
+      "fields_usage": {
+        "endDate": 1,
+        "startDate": 1,
+        "lastWorkoutDate": 1,
+        "id": 1,
+        "completedDays": 1,
+        "updatedAt": 1,
+        "description": 1,
+        "isSyncPending": 1,
+        "skipTracker": 1,
+        "totalWorkoutDays": 1,
+        "isArchived": 1,
+        "schedule": 1,
+        "name": 1,
+        "recoverySettings": 1,
+        "isActive": 1,
+        "pattern": 1,
+        "isCompleted": 1,
+        "type": 1,
+        "userId": 1,
+        "createdAt": 1
+      },
+      "field_types": {
+        "endDate": [
+          "str"
+        ],
+        "startDate": [
+          "str"
+        ],
+        "lastWorkoutDate": [
+          "str"
+        ],
+        "id": [
+          "str"
+        ],
+        "completedDays": [
+          "int"
+        ],
+        "updatedAt": [
+          "str"
+        ],
+        "description": [
+          "str"
+        ],
+        "isSyncPending": [
+          "bool"
+        ],
+        "skipTracker": [
+          "dict"
+        ],
+        "totalWorkoutDays": [
+          "int"
+        ],
+        "isArchived": [
+          "bool"
+        ],
+        "schedule": [
+          "dict"
+        ],
+        "name": [
+          "str"
+        ],
+        "recoverySettings": [
+          "dict"
+        ],
+        "isActive": [
+          "bool"
+        ],
+        "pattern": [
+          "dict"
+        ],
+        "isCompleted": [
+          "bool"
+        ],
+        "type": [
+          "str"
+        ],
+        "userId": [
+          "str"
+        ],
+        "createdAt": [
+          "str"
+        ]
+      },
+      "subcollections": [],
+      "sample_doc_ids": [
+        "b3dc4be4-61ab-41c9-8f07-32f78b3ba7ad"
+      ],
+      "empty_fields": {
+        "description": 1
+      },
+      "timestamps": {
+        "oldest": "2025-11-15T13:48:00.419410",
+        "newest": "2026-01-14T13:48:00.419410",
+        "has_timestamp": 5,
+        "missing_timestamp": 0
+      }
+    },
+    "insight_feedback": {
+      "name": "insight_feedback",
+      "document_count": 5,
+      "fields_usage": {
+        "userId": 5,
+        "insightHash": 5,
+        "isHelpful": 5,
+        "id": 5,
+        "timestamp": 5,
+        "comment": 5,
+        "insightType": 5
+      },
+      "field_types": {
+        "userId": [
+          "str"
+        ],
+        "insightHash": [
+          "str"
+        ],
+        "isHelpful": [
+          "bool"
+        ],
+        "id": [
+          "str"
+        ],
+        "timestamp": [
+          "DatetimeWithNanoseconds"
+        ],
+        "comment": [
+          "NoneType"
+        ],
+        "insightType": [
+          "str"
+        ]
+      },
+      "subcollections": [],
+      "sample_doc_ids": [
+        "vg66yjt5yPh4bCusRhW0ZPan6TC3_050e3fbe6b3f39058ec203a5eb2451da",
+        "vg66yjt5yPh4bCusRhW0ZPan6TC3_1d4fe383004f97375f676bf627a46d12",
+        "vg66yjt5yPh4bCusRhW0ZPan6TC3_63fc8a44750fd5edc5333925c13e1b3d",
+        "vg66yjt5yPh4bCusRhW0ZPan6TC3_6ec5ecdcfd1b802226a6f27c4d53c6e5",
+        "vg66yjt5yPh4bCusRhW0ZPan6TC3_b166fc84ea5da46496815f81a5367a7e"
+      ],
+      "empty_fields": {
+        "comment": 5
+      },
+      "timestamps": {
+        "oldest": "2025-10-12T16:22:01.751375+00:00",
+        "newest": "2025-11-02T19:32:36.553846+00:00",
+        "has_timestamp": 5,
+        "missing_timestamp": 0
+      }
+    },
+    "missing_exercise_requests": {
+      "name": "missing_exercise_requests",
+      "document_count": 11,
+      "fields_usage": {
+        "exerciseId": 11,
+        "status": 11,
+        "id": 11,
+        "adminNotes": 11,
+        "reviewedBy": 11,
+        "exerciseName": 11,
+        "reviewedAt": 11,
+        "requestedAt": 11,
+        "userId": 11
+      },
+      "field_types": {
+        "exerciseId": [
+          "str"
+        ],
+        "status": [
+          "str"
+        ],
+        "id": [
+          "str"
+        ],
+        "adminNotes": [
+          "NoneType"
+        ],
+        "reviewedBy": [
+          "NoneType"
+        ],
+        "exerciseName": [
+          "str"
+        ],
+        "reviewedAt": [
+          "NoneType"
+        ],
+        "requestedAt": [
+          "DatetimeWithNanoseconds"
+        ],
+        "userId": [
+          "str"
+        ]
+      },
+      "subcollections": [],
+      "sample_doc_ids": [
+        "2E88FbwjhZB23f2H0T26",
+        "3buVEDJsZwxeQe6b5j7g",
+        "BgUHlYRLJhnbV3uzkjjM",
+        "IwMESlCXdJG5aQjEkDnO",
+        "J6Z6zBOU19thp37ag2Wb"
+      ],
+      "empty_fields": {
+        "id": 6,
+        "adminNotes": 11,
+        "reviewedBy": 11,
+        "reviewedAt": 11
+      },
+      "timestamps": {
+        "oldest": null,
+        "newest": null,
+        "has_timestamp": 0,
+        "missing_timestamp": 0
+      }
+    },
+    "muscle_group_feedback": {
+      "name": "muscle_group_feedback",
+      "document_count": 1,
+      "fields_usage": {
+        "notificationShown": 1,
+        "status": 1,
+        "timestamp": 1,
+        "pushSent": 1,
+        "exerciseName": 1,
+        "oldGroup": 1,
+        "newGroup": 1,
+        "userId": 1
+      },
+      "field_types": {
+        "notificationShown": [
+          "bool"
+        ],
+        "status": [
+          "str"
+        ],
+        "timestamp": [
+          "DatetimeWithNanoseconds"
+        ],
+        "pushSent": [
+          "bool"
+        ],
+        "exerciseName": [
+          "str"
+        ],
+        "oldGroup": [
+          "str"
+        ],
+        "newGroup": [
+          "str"
+        ],
+        "userId": [
+          "str"
+        ]
+      },
+      "subcollections": [],
+      "sample_doc_ids": [
+        "eSfQBqRho0GFL2wnZPAZ"
+      ],
+      "empty_fields": {},
+      "timestamps": {
+        "oldest": "2026-01-18T14:58:27.637000+00:00",
+        "newest": "2026-01-18T14:58:27.637000+00:00",
+        "has_timestamp": 1,
+        "missing_timestamp": 0
+      }
+    },
+    "personalRecords": {
+      "name": "personalRecords",
+      "document_count": 99,
+      "fields_usage": {
+        "exerciseId": 99,
+        "achievedAt": 99,
+        "metadata": 99,
+        "value": 99,
+        "exerciseName": 99,
+        "previousValue": 99,
+        "userId": 99,
+        "type": 99
+      },
+      "field_types": {
+        "exerciseId": [
+          "str"
+        ],
+        "achievedAt": [
+          "DatetimeWithNanoseconds"
+        ],
+        "metadata": [
+          "dict"
+        ],
+        "value": [
+          "float"
+        ],
+        "exerciseName": [
+          "str"
+        ],
+        "previousValue": [
+          "NoneType",
+          "float"
+        ],
+        "userId": [
+          "str"
+        ],
+        "type": [
+          "str"
+        ]
+      },
+      "subcollections": [],
+      "sample_doc_ids": [
+        "1G0TTEg758wMb5Y8Pruz",
+        "1ZfuUUrJ6ckjxQjzOAVm",
+        "1dwfsiHQTj1WomO9Sua0",
+        "2DlGYztoz0nsC0b4iZQE",
+        "2zSSXzbmDCCotxAuQbaK"
+      ],
+      "empty_fields": {
+        "previousValue": 86
+      },
+      "timestamps": {
+        "oldest": null,
+        "newest": null,
+        "has_timestamp": 0,
+        "missing_timestamp": 0
+      }
+    },
+    "programDownloads": {
+      "name": "programDownloads",
+      "document_count": 3,
+      "fields_usage": {
+        "downloadedAt": 3,
+        "programId": 3,
+        "programTitle": 3,
+        "userName": 3,
+        "appliedToScheda": 3,
+        "authorName": 3,
+        "userId": 3,
+        "review": 1,
+        "rating": 1,
+        "reviewedAt": 1
+      },
+      "field_types": {
+        "downloadedAt": [
+          "DatetimeWithNanoseconds"
+        ],
+        "programId": [
+          "str"
+        ],
+        "programTitle": [
+          "str"
+        ],
+        "userName": [
+          "str"
+        ],
+        "appliedToScheda": [
+          "bool"
+        ],
+        "authorName": [
+          "str"
+        ],
+        "userId": [
+          "str"
+        ],
+        "review": [
+          "str"
+        ],
+        "rating": [
+          "int"
+        ],
+        "reviewedAt": [
+          "DatetimeWithNanoseconds"
+        ]
+      },
+      "subcollections": [],
+      "sample_doc_ids": [
+        "GVzg4K7oJrRFKp8oN9X6",
+        "PFIi5S0vgTJvocCQGNKI",
+        "lvZdjiFx7rRhA3mNmcY3"
+      ],
+      "empty_fields": {},
+      "timestamps": {
+        "oldest": null,
+        "newest": null,
+        "has_timestamp": 0,
+        "missing_timestamp": 0
+      }
+    },
+    "rateLimits": {
+      "name": "rateLimits",
+      "document_count": 1,
+      "fields_usage": {
+        "expiresAt": 1,
+        "timestamps": 1,
+        "lastUpdated": 1
+      },
+      "field_types": {
+        "expiresAt": [
+          "DatetimeWithNanoseconds"
+        ],
+        "timestamps": [
+          "list"
+        ],
+        "lastUpdated": [
+          "DatetimeWithNanoseconds"
+        ]
+      },
+      "subcollections": [],
+      "sample_doc_ids": [
+        "createTemplate_user_vg66yjt5yPh4bCusRhW0ZPan6TC3"
+      ],
+      "empty_fields": {},
+      "timestamps": {
+        "oldest": "2025-12-23T12:33:01.651000+00:00",
+        "newest": "2025-12-23T12:33:01.651000+00:00",
+        "has_timestamp": 2,
+        "missing_timestamp": 0
+      }
+    },
+    "restPauseActivity": {
+      "name": "restPauseActivity",
+      "document_count": 10,
+      "fields_usage": {
+        "exerciseId": 10,
+        "restPauses": 10,
+        "email": 10,
+        "exerciseName": 10,
+        "createdAt": 10,
+        "lastModified": 10,
+        "settimana": 4,
+        "giornoId": 4,
+        "timestamp": 2,
+        "sessionId": 4,
+        "userId": 4,
+        "volume": 3
+      },
+      "field_types": {
+        "exerciseId": [
+          "str"
+        ],
+        "restPauses": [
+          "list"
+        ],
+        "email": [
+          "str"
+        ],
+        "exerciseName": [
+          "str"
+        ],
+        "createdAt": [
+          "DatetimeWithNanoseconds"
+        ],
+        "lastModified": [
+          "DatetimeWithNanoseconds"
+        ],
+        "settimana": [
+          "int"
+        ],
+        "giornoId": [
+          "str"
+        ],
+        "timestamp": [
+          "int"
+        ],
+        "sessionId": [
+          "str"
+        ],
+        "userId": [
+          "str"
+        ],
+        "volume": [
+          "int"
+        ]
+      },
+      "subcollections": [],
+      "sample_doc_ids": [
+        "0ALeMIp4u2MUS9VShj6K",
+        "5Pq6jAuGrkuDDkHWdf2q",
+        "DzuMv2Jq3ZR78Vln8CK4",
+        "IyNwZ4pOsDJMeUOCLcPZ",
+        "JNQ6hp7UxkS66GiLoKmy"
+      ],
+      "empty_fields": {},
+      "timestamps": {
+        "oldest": "2025-04-29T07:52:02.866000+00:00",
+        "newest": "2025-06-24T04:55:42.671000+00:00",
+        "has_timestamp": 12,
+        "missing_timestamp": 0
+      }
+    },
+    "schede": {
+      "name": "schede",
+      "document_count": 42,
+      "fields_usage": {
+        "updatedAt": 6,
+        "programmazione": 6,
+        "lastModifiedAt": 2,
+        "giorni": 42,
+        "lastModifiedByRole": 2,
+        "lastModifiedBy": 2,
+        "utente": 42,
+        "nome": 6,
+        "userId": 7,
+        "id": 1,
+        "archivedAt": 1,
+        "archivedReason": 1,
+        "restoredAt": 1,
+        "active": 1
+      },
+      "field_types": {
+        "updatedAt": [
+          "str"
+        ],
+        "programmazione": [
+          "NoneType",
+          "dict"
+        ],
+        "lastModifiedAt": [
+          "str"
+        ],
+        "giorni": [
+          "list"
+        ],
+        "lastModifiedByRole": [
+          "str"
+        ],
+        "lastModifiedBy": [
+          "str"
+        ],
+        "utente": [
+          "str"
+        ],
+        "nome": [
+          "str"
+        ],
+        "userId": [
+          "str"
+        ],
+        "id": [
+          "str"
+        ],
+        "archivedAt": [
+          "NoneType"
+        ],
+        "archivedReason": [
+          "NoneType"
+        ],
+        "restoredAt": [
+          "DatetimeWithNanoseconds"
+        ],
+        "active": [
+          "bool"
+        ]
+      },
+      "subcollections": [],
+      "sample_doc_ids": [
+        "1YAjFadngcOTKe7MiJsI",
+        "26QFAVNqBLcy1kj2QLpt",
+        "5THxUh9WdYZPbFs1LjMy",
+        "5Y9A59dReNgSLjCQMSaX",
+        "61kA8RDBFRImmR7fuFa1"
+      ],
+      "empty_fields": {
+        "programmazione": 5,
+        "archivedAt": 1,
+        "archivedReason": 1
+      },
+      "timestamps": {
+        "oldest": "2025-06-13T06:43:20.147000+00:00",
+        "newest": "2025-07-30T17:36:15.974000+00:00",
+        "has_timestamp": 6,
+        "missing_timestamp": 0
+      }
+    },
+    "sessionWorkouts": {
+      "name": "sessionWorkouts",
+      "document_count": 97,
+      "fields_usage": {
+        "email": 97,
+        "date": 97,
+        "tss": 89,
+        "durationMs": 97,
+        "userId": 97,
+        "timestamp": 97,
+        "notes": 57,
+        "lastModified": 57,
+        "programmazioneAttiva": 61,
+        "programmazioneSettimana": 61,
+        "uid": 57,
+        "giornoIndex": 59,
+        "intensita": 61,
+        "schedaNome": 57,
+        "giornoId": 61,
+        "settimana": 61,
+        "giornoNome": 61,
+        "version": 57,
+        "createdAt": 57,
+        "schedaId": 59,
+        "exerciseTimings": 23,
+        "workoutMetrics": 23
+      },
+      "field_types": {
+        "email": [
+          "str"
+        ],
+        "date": [
+          "DatetimeWithNanoseconds",
+          "dict"
+        ],
+        "tss": [
+          "float",
+          "int"
+        ],
+        "durationMs": [
+          "float",
+          "int"
+        ],
+        "userId": [
+          "str"
+        ],
+        "timestamp": [
+          "int"
+        ],
+        "notes": [
+          "str"
+        ],
+        "lastModified": [
+          "DatetimeWithNanoseconds",
+          "dict"
+        ],
+        "programmazioneAttiva": [
+          "bool"
+        ],
+        "programmazioneSettimana": [
+          "int"
+        ],
+        "uid": [
+          "str"
+        ],
+        "giornoIndex": [
+          "int"
+        ],
+        "intensita": [
+          "int"
+        ],
+        "schedaNome": [
+          "NoneType"
+        ],
+        "giornoId": [
+          "str"
+        ],
+        "settimana": [
+          "int"
+        ],
+        "giornoNome": [
+          "str"
+        ],
+        "version": [
+          "int"
+        ],
+        "createdAt": [
+          "DatetimeWithNanoseconds",
+          "dict"
+        ],
+        "schedaId": [
+          "str"
+        ],
+        "exerciseTimings": [
+          "NoneType",
+          "list"
+        ],
+        "workoutMetrics": [
+          "dict"
+        ]
+      },
+      "subcollections": [],
+      "sample_doc_ids": [
+        "0jggwdNbAmi0651vK3sT",
+        "0kC0LrjPBQHpBmcwqWV4",
+        "1eRmGoIH3of72z57BlY8",
+        "1h5X4w0WBl7EMj7Aqfu2",
+        "2GqhDgK2DT580LE8Vsq7"
+      ],
+      "empty_fields": {
+        "notes": 57,
+        "schedaNome": 57,
+        "exerciseTimings": 8
+      },
+      "timestamps": {
+        "oldest": "2025-05-22T11:04:46.690000+00:00",
+        "newest": "2025-07-31T16:33:36.104000+00:00",
+        "has_timestamp": 251,
+        "missing_timestamp": 0
+      }
+    },
+    "settings": {
+      "name": "settings",
+      "document_count": 10,
+      "fields_usage": {
+        "age": 9,
+        "bmi": 9,
+        "height": 9,
+        "gender": 9,
+        "bmiCategory": 9,
+        "weight": 9,
+        "cardioMin": 9,
+        "stressReminderTime": 3,
+        "weeklyTrainingTarget": 3,
+        "weightReminderDays": 3,
+        "primaryGoal": 3,
+        "weightReminderEnabled": 3,
+        "sleepReminderEnabled": 3,
+        "coachSettings": 3,
+        "weightReminderTime": 3,
+        "email": 3,
+        "avgSleepHours": 3,
+        "sleepReminderTime": 3,
+        "trainingYears": 3,
+        "usesCreatine": 3,
+        "stressLevel": 3,
+        "trainingLevel": 3,
+        "sleepReminderDays": 3,
+        "updatedAt": 3,
+        "stressReminderDays": 3,
+        "notifications": 3,
+        "stressReminderEnabled": 3,
+        "theme": 2,
+        "displayName": 2,
+        "coachCode": 2,
+        "coachModeEnabled": 2,
+        "gymEquipment": 2,
+        "healthKitPermissionsGranted": 2,
+        "isCoach": 2,
+        "count": 1,
+        "month": 1,
+        "lastReset": 1,
+        "pushNotif": 1,
+        "weightGoal": 1,
+        "reminderDays": 1,
+        "notificationIds": 1,
+        "reminderTime": 1
+      },
+      "field_types": {
+        "age": [
+          "int"
+        ],
+        "bmi": [
+          "NoneType",
+          "float",
+          "int"
+        ],
+        "height": [
+          "int"
+        ],
+        "gender": [
+          "str"
+        ],
+        "bmiCategory": [
+          "str"
+        ],
+        "weight": [
+          "float",
+          "int"
+        ],
+        "cardioMin": [
+          "int"
+        ],
+        "stressReminderTime": [
+          "str"
+        ],
+        "weeklyTrainingTarget": [
+          "int"
+        ],
+        "weightReminderDays": [
+          "list"
+        ],
+        "primaryGoal": [
+          "str"
+        ],
+        "weightReminderEnabled": [
+          "bool"
+        ],
+        "sleepReminderEnabled": [
+          "bool"
+        ],
+        "coachSettings": [
+          "dict"
+        ],
+        "weightReminderTime": [
+          "str"
+        ],
+        "email": [
+          "str"
+        ],
+        "avgSleepHours": [
+          "float",
+          "int"
+        ],
+        "sleepReminderTime": [
+          "str"
+        ],
+        "trainingYears": [
+          "int"
+        ],
+        "usesCreatine": [
+          "bool"
+        ],
+        "stressLevel": [
+          "int"
+        ],
+        "trainingLevel": [
+          "str"
+        ],
+        "sleepReminderDays": [
+          "list"
+        ],
+        "updatedAt": [
+          "DatetimeWithNanoseconds"
+        ],
+        "stressReminderDays": [
+          "list"
+        ],
+        "notifications": [
+          "bool"
+        ],
+        "stressReminderEnabled": [
+          "bool"
+        ],
+        "theme": [
+          "str"
+        ],
+        "displayName": [
+          "str"
+        ],
+        "coachCode": [
+          "str"
+        ],
+        "coachModeEnabled": [
+          "bool"
+        ],
+        "gymEquipment": [
+          "dict"
+        ],
+        "healthKitPermissionsGranted": [
+          "bool"
+        ],
+        "isCoach": [
+          "bool"
+        ],
+        "count": [
+          "int"
+        ],
+        "month": [
+          "str"
+        ],
+        "lastReset": [
+          "DatetimeWithNanoseconds"
+        ],
+        "pushNotif": [
+          "bool"
+        ],
+        "weightGoal": [
+          "int"
+        ],
+        "reminderDays": [
+          "list"
+        ],
+        "notificationIds": [
+          "dict"
+        ],
+        "reminderTime": [
+          "str"
+        ]
+      },
+      "subcollections": [
+        "weightGoalHistory",
+        "userSettings",
+        "weightHistory"
+      ],
+      "sample_doc_ids": [
+        "1Ijyxa0dN8UBzgBXmtLyuYqnA8p1",
+        "CLlHZohUBsgSWIB2VWRafAq9fjX2",
+        "Dk4ujc2QEuWyT6KWf1pTOEMhOKo2",
+        "MNEMcm3qQOTwL0IJKkkLReBuYb22",
+        "O6PM1UvGg1OlfzLaclZH6bK5bGm2"
+      ],
+      "empty_fields": {
+        "weightReminderDays": 2,
+        "sleepReminderDays": 2,
+        "stressReminderDays": 2,
+        "bmiCategory": 1,
+        "bmi": 1
+      },
+      "timestamps": {
+        "oldest": "2025-06-24T15:49:17.949000+00:00",
+        "newest": "2025-07-25T12:59:39.846000+00:00",
+        "has_timestamp": 3,
+        "missing_timestamp": 0
+      }
+    },
+    "supersetActivity": {
+      "name": "supersetActivity",
+      "document_count": 2,
+      "fields_usage": {
+        "sets": 2,
+        "settimana": 2,
+        "giornoId": 2,
+        "exerciseNames": 1,
+        "exerciseIds": 1,
+        "volume": 2,
+        "email": 2,
+        "supersetName": 2,
+        "createdAt": 2,
+        "sessionId": 2,
+        "userId": 2,
+        "lastModified": 2,
+        "supersetId": 1,
+        "timestamp": 1
+      },
+      "field_types": {
+        "sets": [
+          "list"
+        ],
+        "settimana": [
+          "int"
+        ],
+        "giornoId": [
+          "str"
+        ],
+        "exerciseNames": [
+          "list"
+        ],
+        "exerciseIds": [
+          "list"
+        ],
+        "volume": [
+          "int"
+        ],
+        "email": [
+          "str"
+        ],
+        "supersetName": [
+          "str"
+        ],
+        "createdAt": [
+          "DatetimeWithNanoseconds"
+        ],
+        "sessionId": [
+          "str"
+        ],
+        "userId": [
+          "str"
+        ],
+        "lastModified": [
+          "DatetimeWithNanoseconds"
+        ],
+        "supersetId": [
+          "str"
+        ],
+        "timestamp": [
+          "int"
+        ]
+      },
+      "subcollections": [],
+      "sample_doc_ids": [
+        "pJSA47Bo8J9ecewfu2dR",
+        "vHZ5gjxHm2Uj5NKm9MUX"
+      ],
+      "empty_fields": {
+        "exerciseNames": 1,
+        "exerciseIds": 1
+      },
+      "timestamps": {
+        "oldest": "2025-06-22T15:43:36.115000+00:00",
+        "newest": "2025-06-29T15:18:11.047000+00:00",
+        "has_timestamp": 3,
+        "missing_timestamp": 0
+      }
+    },
+    "supersetsActivity": {
+      "name": "supersetsActivity",
+      "document_count": 152,
+      "fields_usage": {
+        "supersetId": 152,
+        "email": 152,
+        "supersetName": 152,
+        "sets": 152,
+        "volume": 152,
+        "lastModified": 56,
+        "createdAt": 54,
+        "date": 98
+      },
+      "field_types": {
+        "supersetId": [
+          "str"
+        ],
+        "email": [
+          "str"
+        ],
+        "supersetName": [
+          "str"
+        ],
+        "sets": [
+          "list"
+        ],
+        "volume": [
+          "int"
+        ],
+        "lastModified": [
+          "DatetimeWithNanoseconds"
+        ],
+        "createdAt": [
+          "DatetimeWithNanoseconds"
+        ],
+        "date": [
+          "DatetimeWithNanoseconds"
+        ]
+      },
+      "subcollections": [],
+      "sample_doc_ids": [
+        "01DTg2XbfHZ3uPuwOf0L",
+        "0lJ2vk63CDCWX6bhIXbI",
+        "0n5Ukt6JhYv6ICTyy4oS",
+        "1RjCWnKtgvtpNCYRypnT",
+        "2R5vLzK17xiwKA0PSszM"
+      ],
+      "empty_fields": {},
+      "timestamps": {
+        "oldest": "2025-03-11T00:08:44.606000+00:00",
+        "newest": "2025-05-23T12:03:58.699000+00:00",
+        "has_timestamp": 152,
+        "missing_timestamp": 0
+      }
+    },
+    "template_audit_logs": {
+      "name": "template_audit_logs",
+      "document_count": 12,
+      "fields_usage": {
+        "quotaMax": 12,
+        "status": 12,
+        "quotaUsed": 12,
+        "templateName": 12,
+        "timestamp": 12,
+        "accountTier": 12,
+        "action": 12,
+        "isPublic": 12,
+        "templateId": 12,
+        "userId": 12
+      },
+      "field_types": {
+        "quotaMax": [
+          "int"
+        ],
+        "status": [
+          "str"
+        ],
+        "quotaUsed": [
+          "int"
+        ],
+        "templateName": [
+          "str"
+        ],
+        "timestamp": [
+          "DatetimeWithNanoseconds"
+        ],
+        "accountTier": [
+          "str"
+        ],
+        "action": [
+          "str"
+        ],
+        "isPublic": [
+          "bool"
+        ],
+        "templateId": [
+          "str"
+        ],
+        "userId": [
+          "str"
+        ]
+      },
+      "subcollections": [],
+      "sample_doc_ids": [
+        "6qODJ8b81e0eWSto9jlg",
+        "D7ukgWW0wqyJlq5jFgrZ",
+        "EZAOwjwk4foLoc1sAotc",
+        "NIf6JAXiQ14GLTVfm5Xq",
+        "ZlCpQvRDm4dowA3469Tl"
+      ],
+      "empty_fields": {},
+      "timestamps": {
+        "oldest": "2025-11-30T14:50:32.513000+00:00",
+        "newest": "2025-12-23T12:33:02.606000+00:00",
+        "has_timestamp": 12,
+        "missing_timestamp": 0
+      }
+    },
+    "timings": {
+      "name": "timings",
+      "document_count": 283,
+      "fields_usage": {
+        "exerciseId": 125,
+        "confirmationMs": 125,
+        "localTimestamp": 125,
+        "category": 125,
+        "timestamp": 283,
+        "reps": 125,
+        "uid": 125,
+        "setNumber": 125,
+        "exerciseName": 125,
+        "effort": 125,
+        "weight": 271,
+        "userEmail": 283,
+        "duration": 158,
+        "exercise": 158
+      },
+      "field_types": {
+        "exerciseId": [
+          "str"
+        ],
+        "confirmationMs": [
+          "int"
+        ],
+        "localTimestamp": [
+          "str"
+        ],
+        "category": [
+          "str"
+        ],
+        "timestamp": [
+          "DatetimeWithNanoseconds"
+        ],
+        "reps": [
+          "int"
+        ],
+        "uid": [
+          "str"
+        ],
+        "setNumber": [
+          "int"
+        ],
+        "exerciseName": [
+          "str"
+        ],
+        "effort": [
+          "int"
+        ],
+        "weight": [
+          "str",
+          "int"
+        ],
+        "userEmail": [
+          "str"
+        ],
+        "duration": [
+          "int"
+        ],
+        "exercise": [
+          "str"
+        ]
+      },
+      "subcollections": [],
+      "sample_doc_ids": [
+        "0987M3876LrKqC1FgmQg",
+        "0ynVQ3hfIlhr9FgFzmZW",
+        "13avLL7WmxCQvB9B8Ric",
+        "14AS9Q9HnbqSOfPfQhxS",
+        "1UseC0gfO0GcWK2Vsamc"
+      ],
+      "empty_fields": {
+        "weight": 1
+      },
+      "timestamps": {
+        "oldest": "2025-05-21T12:22:51.808000+00:00",
+        "newest": "2025-06-27T13:26:40.924000+00:00",
+        "has_timestamp": 408,
+        "missing_timestamp": 0
+      }
+    },
+    "userConsents": {
+      "name": "userConsents",
+      "document_count": 2,
+      "fields_usage": {
+        "acceptedAt": 2,
+        "groupConsents": 2,
+        "vitalsGrantedAt": 2,
+        "id": 2,
+        "measurementsGrantedAt": 2,
+        "ipAddress": 2,
+        "updatedAt": 2,
+        "essentialGrantedAt": 2,
+        "revokedAt": 2,
+        "isRevoked": 2,
+        "consentVersion": 2,
+        "createdAt": 2,
+        "userId": 2,
+        "userAgent": 2
+      },
+      "field_types": {
+        "acceptedAt": [
+          "DatetimeWithNanoseconds"
+        ],
+        "groupConsents": [
+          "dict"
+        ],
+        "vitalsGrantedAt": [
+          "NoneType"
+        ],
+        "id": [
+          "str"
+        ],
+        "measurementsGrantedAt": [
+          "DatetimeWithNanoseconds"
+        ],
+        "ipAddress": [
+          "str"
+        ],
+        "updatedAt": [
+          "DatetimeWithNanoseconds"
+        ],
+        "essentialGrantedAt": [
+          "DatetimeWithNanoseconds"
+        ],
+        "revokedAt": [
+          "NoneType"
+        ],
+        "isRevoked": [
+          "bool"
+        ],
+        "consentVersion": [
+          "int"
+        ],
+        "createdAt": [
+          "DatetimeWithNanoseconds"
+        ],
+        "userId": [
+          "str"
+        ],
+        "userAgent": [
+          "NoneType"
+        ]
+      },
+      "subcollections": [],
+      "sample_doc_ids": [
+        "UfIst5h1RhRfMpn542WGCOB1tWs1",
+        "vg66yjt5yPh4bCusRhW0ZPan6TC3"
+      ],
+      "empty_fields": {
+        "vitalsGrantedAt": 2,
+        "revokedAt": 2,
+        "userAgent": 2
+      },
+      "timestamps": {
+        "oldest": "2025-12-13T11:22:43.770408+00:00",
+        "newest": "2026-01-03T18:15:12.781874+00:00",
+        "has_timestamp": 4,
+        "missing_timestamp": 0
+      }
+    },
+    "userExercisePreferences": {
+      "name": "userExercisePreferences",
+      "document_count": 1,
+      "fields_usage": {
+        "favorites": 1,
+        "countingModeOverrides": 1,
+        "lastUpdated": 1
+      },
+      "field_types": {
+        "favorites": [
+          "list"
+        ],
+        "countingModeOverrides": [
+          "dict"
+        ],
+        "lastUpdated": [
+          "DatetimeWithNanoseconds"
+        ]
+      },
+      "subcollections": [],
+      "sample_doc_ids": [
+        "vg66yjt5yPh4bCusRhW0ZPan6TC3"
+      ],
+      "empty_fields": {},
+      "timestamps": {
+        "oldest": "2026-01-18T11:52:49.039763+00:00",
+        "newest": "2026-01-18T11:52:49.039763+00:00",
+        "has_timestamp": 1,
+        "missing_timestamp": 0
+      }
+    },
+    "userFeedbackStats": {
+      "name": "userFeedbackStats",
+      "document_count": 1,
+      "fields_usage": {
+        "reportsToday": 1,
+        "approvedReports": 1,
+        "lastReportDate": 1,
+        "totalReports": 1,
+        "rejectedReports": 1,
+        "userId": 1,
+        "accountCreatedAt": 1
+      },
+      "field_types": {
+        "reportsToday": [
+          "int"
+        ],
+        "approvedReports": [
+          "int"
+        ],
+        "lastReportDate": [
+          "DatetimeWithNanoseconds"
+        ],
+        "totalReports": [
+          "int"
+        ],
+        "rejectedReports": [
+          "int"
+        ],
+        "userId": [
+          "str"
+        ],
+        "accountCreatedAt": [
+          "str"
+        ]
+      },
+      "subcollections": [],
+      "sample_doc_ids": [
+        "T22NhhamG7Hbv6wdEeLd"
+      ],
+      "empty_fields": {},
+      "timestamps": {
+        "oldest": "2025-06-26T13:50:56.556000+00:00",
+        "newest": "2025-06-26T13:50:56.556000+00:00",
+        "has_timestamp": 1,
+        "missing_timestamp": 0
+      }
+    },
+    "userMassimali": {
+      "name": "userMassimali",
+      "document_count": 0,
+      "fields_usage": {},
+      "field_types": {},
+      "subcollections": [],
+      "sample_doc_ids": [],
+      "empty_fields": {},
+      "timestamps": {
+        "oldest": null,
+        "newest": null,
+        "has_timestamp": 0,
+        "missing_timestamp": 0
+      }
+    },
+    "userPreferences": {
+      "name": "userPreferences",
+      "document_count": 4,
+      "fields_usage": {
+        "showOptimization": 4,
+        "showNotes": 4,
+        "showPercentRM": 4,
+        "createdAt": 4,
+        "updatedAt": 2,
+        "showRPE": 2,
+        "templates": 1,
+        "display": 1,
+        "lastSync": 1,
+        "timer": 1,
+        "workout": 1,
+        "version": 1,
+        "deviceId": 1,
+        "accessibility": 1,
+        "notifications": 1
+      },
+      "field_types": {
+        "showOptimization": [
+          "bool"
+        ],
+        "showNotes": [
+          "bool"
+        ],
+        "showPercentRM": [
+          "bool"
+        ],
+        "createdAt": [
+          "str"
+        ],
+        "updatedAt": [
+          "str"
+        ],
+        "showRPE": [
+          "bool"
+        ],
+        "templates": [
+          "list"
+        ],
+        "display": [
+          "dict"
+        ],
+        "lastSync": [
+          "int"
+        ],
+        "timer": [
+          "dict"
+        ],
+        "workout": [
+          "dict"
+        ],
+        "version": [
+          "int"
+        ],
+        "deviceId": [
+          "NoneType"
+        ],
+        "accessibility": [
+          "dict"
+        ],
+        "notifications": [
+          "dict"
+        ]
+      },
+      "subcollections": [],
+      "sample_doc_ids": [
+        "CLlHZohUBsgSWIB2VWRafAq9fjX2",
+        "UfIst5h1RhRfMpn542WGCOB1tWs1",
+        "vg66yjt5yPh4bCusRhW0ZPan6TC3",
+        "yBgdqDDAE3exADv9gradSaqYcKn2"
+      ],
+      "empty_fields": {
+        "templates": 1,
+        "deviceId": 1
+      },
+      "timestamps": {
+        "oldest": "2025-06-17T12:46:53.689000+00:00",
+        "newest": "2025-07-31T15:29:40.658000+00:00",
+        "has_timestamp": 6,
+        "missing_timestamp": 0
+      }
+    },
+    "userSettings": {
+      "name": "userSettings",
+      "document_count": 6,
+      "fields_usage": {
+        "progression": 6,
+        "theme": 4,
+        "updatedAt": 4,
+        "language": 4,
+        "week": 6,
+        "defaultRestTime": 4,
+        "autoStartTimer": 4,
+        "autoNextExercise": 4,
+        "vibrateOnTimerEnd": 4,
+        "cuePoint2": 4,
+        "alwaysOn": 4,
+        "cuePoint1": 4,
+        "confirmFinishWorkout": 4,
+        "soundEnabled": 4,
+        "weightUnit": 4,
+        "reminderTime": 4,
+        "keepScreenOnTimer": 4,
+        "notificationsEnabled": 4,
+        "firstDayOfWeek": 4,
+        "vibrationEnabled": 4,
+        "workoutReminders": 4,
+        "userId": 4,
+        "earlyCuesEnabled": 1,
+        "alwaysOnDismissed": 1,
+        "autoRecoveryEnabled": 1,
+        "popupsEnabled": 1
+      },
+      "field_types": {
+        "progression": [
+          "int"
+        ],
+        "theme": [
+          "str"
+        ],
+        "updatedAt": [
+          "DatetimeWithNanoseconds"
+        ],
+        "language": [
+          "str"
+        ],
+        "week": [
+          "int"
+        ],
+        "defaultRestTime": [
+          "int"
+        ],
+        "autoStartTimer": [
+          "bool"
+        ],
+        "autoNextExercise": [
+          "bool"
+        ],
+        "vibrateOnTimerEnd": [
+          "bool"
+        ],
+        "cuePoint2": [
+          "str"
+        ],
+        "alwaysOn": [
+          "bool"
+        ],
+        "cuePoint1": [
+          "str"
+        ],
+        "confirmFinishWorkout": [
+          "bool"
+        ],
+        "soundEnabled": [
+          "bool"
+        ],
+        "weightUnit": [
+          "str"
+        ],
+        "reminderTime": [
+          "NoneType"
+        ],
+        "keepScreenOnTimer": [
+          "bool"
+        ],
+        "notificationsEnabled": [
+          "bool"
+        ],
+        "firstDayOfWeek": [
+          "int"
+        ],
+        "vibrationEnabled": [
+          "bool"
+        ],
+        "workoutReminders": [
+          "bool"
+        ],
+        "userId": [
+          "str"
+        ],
+        "earlyCuesEnabled": [
+          "bool"
+        ],
+        "alwaysOnDismissed": [
+          "bool"
+        ],
+        "autoRecoveryEnabled": [
+          "bool"
+        ],
+        "popupsEnabled": [
+          "bool"
+        ]
+      },
+      "subcollections": [],
+      "sample_doc_ids": [
+        "CLlHZohUBsgSWIB2VWRafAq9fjX2",
+        "MNEMcm3qQOTwL0IJKkkLReBuYb22",
+        "UfIst5h1RhRfMpn542WGCOB1tWs1",
+        "hQvg8I1q9nbgBlXYO8YMhFAXWG53",
+        "nNMlV1YLoxdtoAM43sxcc6ZuFpK2"
+      ],
+      "empty_fields": {
+        "reminderTime": 4
+      },
+      "timestamps": {
+        "oldest": "2025-06-13T06:45:41.933000+00:00",
+        "newest": "2025-06-27T20:07:32.760000+00:00",
+        "has_timestamp": 4,
+        "missing_timestamp": 0
+      }
+    },
+    "user_achievements": {
+      "name": "user_achievements",
+      "document_count": 1,
+      "fields_usage": {
+        "achievements": 1
+      },
+      "field_types": {
+        "achievements": [
+          "dict"
+        ]
+      },
+      "subcollections": [],
+      "sample_doc_ids": [
+        "vg66yjt5yPh4bCusRhW0ZPan6TC3"
+      ],
+      "empty_fields": {},
+      "timestamps": {
+        "oldest": null,
+        "newest": null,
+        "has_timestamp": 0,
+        "missing_timestamp": 0
+      }
+    },
+    "user_contribution_stats": {
+      "name": "user_contribution_stats",
+      "document_count": 1,
+      "fields_usage": {
+        "userId": 1,
+        "totalPoints": 1,
+        "totalContributions": 1,
+        "lastActivity": 1,
+        "approvedContributions": 1,
+        "level": 1
+      },
+      "field_types": {
+        "userId": [
+          "str"
+        ],
+        "totalPoints": [
+          "int"
+        ],
+        "totalContributions": [
+          "int"
+        ],
+        "lastActivity": [
+          "DatetimeWithNanoseconds"
+        ],
+        "approvedContributions": [
+          "NoneType"
+        ],
+        "level": [
+          "str"
+        ]
+      },
+      "subcollections": [],
+      "sample_doc_ids": [
+        "vg66yjt5yPh4bCusRhW0ZPan6TC3"
+      ],
+      "empty_fields": {
+        "approvedContributions": 1
+      },
+      "timestamps": {
+        "oldest": null,
+        "newest": null,
+        "has_timestamp": 0,
+        "missing_timestamp": 0
+      }
+    },
+    "user_xp": {
+      "name": "user_xp",
+      "document_count": 1,
+      "fields_usage": {
+        "lastWorkoutId": 1,
+        "lastWorkoutXP": 1,
+        "workoutXP": 1,
+        "lastUpdated": 1
+      },
+      "field_types": {
+        "lastWorkoutId": [
+          "str"
+        ],
+        "lastWorkoutXP": [
+          "int"
+        ],
+        "workoutXP": [
+          "int"
+        ],
+        "lastUpdated": [
+          "DatetimeWithNanoseconds"
+        ]
+      },
+      "subcollections": [],
+      "sample_doc_ids": [
+        "vg66yjt5yPh4bCusRhW0ZPan6TC3"
+      ],
+      "empty_fields": {},
+      "timestamps": {
+        "oldest": "2026-01-16T17:29:21.871000+00:00",
+        "newest": "2026-01-16T17:29:21.871000+00:00",
+        "has_timestamp": 1,
+        "missing_timestamp": 0
+      }
+    },
+    "users": {
+      "name": "users",
+      "document_count": 6,
+      "fields_usage": {
+        "notificationPreferences": 2,
+        "templateQuota": 5,
+        "accountTier": 5,
+        "displayName": 5,
+        "lastLoginAt": 4,
+        "fcmTokenUpdatedAt": 3,
+        "fcmToken": 3,
+        "platform": 3,
+        "uid": 4,
+        "preferences": 4,
+        "email": 5,
+        "stats": 4,
+        "createdAt": 5,
+        "isGuest": 4,
+        "photoURL": 4,
+        "lastLogin": 1,
+        "provider": 1
+      },
+      "field_types": {
+        "notificationPreferences": [
+          "dict"
+        ],
+        "templateQuota": [
+          "dict"
+        ],
+        "accountTier": [
+          "str"
+        ],
+        "displayName": [
+          "NoneType",
+          "str"
+        ],
+        "lastLoginAt": [
+          "DatetimeWithNanoseconds"
+        ],
+        "fcmTokenUpdatedAt": [
+          "DatetimeWithNanoseconds"
+        ],
+        "fcmToken": [
+          "str"
+        ],
+        "platform": [
+          "str"
+        ],
+        "uid": [
+          "str"
+        ],
+        "preferences": [
+          "dict"
+        ],
+        "email": [
+          "str"
+        ],
+        "stats": [
+          "dict"
+        ],
+        "createdAt": [
+          "DatetimeWithNanoseconds",
+          "str"
+        ],
+        "isGuest": [
+          "bool"
+        ],
+        "photoURL": [
+          "NoneType"
+        ],
+        "lastLogin": [
+          "DatetimeWithNanoseconds"
+        ],
+        "provider": [
+          "str"
+        ]
+      },
+      "subcollections": [
+        "notifications",
+        "stress_index",
+        "analytics",
+        "pr_celebrations",
+        "settings",
+        "ocr_usage",
+        "bodyMeasurements",
+        "workouts"
+      ],
+      "sample_doc_ids": [
+        "UfIst5h1RhRfMpn542WGCOB1tWs1",
+        "pcn5OI0zt8ge9EmtCQkqeklMJXS2",
+        "she71AL6HQO4sMEofOZR2Zmb8IC2",
+        "vg66yjt5yPh4bCusRhW0ZPan6TC3",
+        "y76D98kH2yWRCxy5guKPrwGzAPV2"
+      ],
+      "empty_fields": {
+        "photoURL": 4,
+        "displayName": 1
+      },
+      "timestamps": {
+        "oldest": "2025-06-26T13:51:25.690000+00:00",
+        "newest": "2025-11-29T17:37:41.842000+00:00",
+        "has_timestamp": 8,
+        "missing_timestamp": 0
+      }
+    },
+    "weeklyCheckIns": {
+      "name": "weeklyCheckIns",
+      "document_count": 2,
+      "fields_usage": {
+        "notes": 2,
+        "schedaId": 2,
+        "userId": 2,
+        "nutritionAdherence": 2,
+        "injuryDetails": 2,
+        "sleepQuality": 2,
+        "week": 2,
+        "weekRating": 2,
+        "fatigueLevel": 2,
+        "motivationLevel": 2,
+        "stressLevel": 2,
+        "timestamp": 2,
+        "createdAt": 2,
+        "injuryPain": 2,
+        "recommendations": 2
+      },
+      "field_types": {
+        "notes": [
+          "str"
+        ],
+        "schedaId": [
+          "str"
+        ],
+        "userId": [
+          "str"
+        ],
+        "nutritionAdherence": [
+          "int"
+        ],
+        "injuryDetails": [
+          "str"
+        ],
+        "sleepQuality": [
+          "int"
+        ],
+        "week": [
+          "int"
+        ],
+        "weekRating": [
+          "int"
+        ],
+        "fatigueLevel": [
+          "int"
+        ],
+        "motivationLevel": [
+          "int"
+        ],
+        "stressLevel": [
+          "int"
+        ],
+        "timestamp": [
+          "DatetimeWithNanoseconds"
+        ],
+        "createdAt": [
+          "str"
+        ],
+        "injuryPain": [
+          "bool"
+        ],
+        "recommendations": [
+          "list"
+        ]
+      },
+      "subcollections": [],
+      "sample_doc_ids": [
+        "FiJJVSdhiP4NBqIzIxo8",
+        "jvyrQli873WlPttSvP8f"
+      ],
+      "empty_fields": {
+        "notes": 2,
+        "injuryDetails": 2
+      },
+      "timestamps": {
+        "oldest": "2025-06-24T13:13:43.034000+00:00",
+        "newest": "2025-06-24T14:11:49.838000+00:00",
+        "has_timestamp": 4,
+        "missing_timestamp": 0
+      }
+    },
+    "workoutHistory": {
+      "name": "workoutHistory",
+      "document_count": 18,
+      "fields_usage": {
+        "exerciseId": 18,
+        "exerciseImage": 18,
+        "originalCollection": 18,
+        "action": 18,
+        "email": 18,
+        "exerciseName": 18,
+        "modifiedAt": 18,
+        "originalId": 18,
+        "sets": 18,
+        "settimana": 18,
+        "schedaName": 18,
+        "giornoId": 18,
+        "createdAt": 18,
+        "sessionId": 18,
+        "lastModified": 18,
+        "userId": 8,
+        "deletedAt": 6,
+        "deleted": 6,
+        "type": 1,
+        "id": 1
+      },
+      "field_types": {
+        "exerciseId": [
+          "str"
+        ],
+        "exerciseImage": [
+          "str"
+        ],
+        "originalCollection": [
+          "str"
+        ],
+        "action": [
+          "str"
+        ],
+        "email": [
+          "str"
+        ],
+        "exerciseName": [
+          "str"
+        ],
+        "modifiedAt": [
+          "DatetimeWithNanoseconds"
+        ],
+        "originalId": [
+          "str"
+        ],
+        "sets": [
+          "list"
+        ],
+        "settimana": [
+          "int"
+        ],
+        "schedaName": [
+          "str"
+        ],
+        "giornoId": [
+          "str"
+        ],
+        "createdAt": [
+          "DatetimeWithNanoseconds"
+        ],
+        "sessionId": [
+          "str"
+        ],
+        "lastModified": [
+          "DatetimeWithNanoseconds"
+        ],
+        "userId": [
+          "str"
+        ],
+        "deletedAt": [
+          "DatetimeWithNanoseconds"
+        ],
+        "deleted": [
+          "bool"
+        ],
+        "type": [
+          "str"
+        ],
+        "id": [
+          "str"
+        ]
+      },
+      "subcollections": [],
+      "sample_doc_ids": [
+        "4SXaan7xwBf2Yzv4JhKa",
+        "5jSjNfRMWlfzHyFKToM3",
+        "8apb3PzfBmGmdUaEWQOo",
+        "AEYhgGD448yZF0SSXNlr",
+        "G4x8yuhpDADUZ7VFV4YV"
+      ],
+      "empty_fields": {
+        "schedaName": 15
+      },
+      "timestamps": {
+        "oldest": "2025-06-04T22:10:00.449000+00:00",
+        "newest": "2025-07-02T22:01:41.208000+00:00",
+        "has_timestamp": 18,
+        "missing_timestamp": 0
+      }
+    },
+    "workoutTemplates": {
+      "name": "workoutTemplates",
+      "document_count": 4,
+      "fields_usage": {
+        "tags": 4,
+        "defaultApreProtocol": 4,
+        "difficulty": 4,
+        "isCustom": 4,
+        "updatedAt": 4,
+        "id": 4,
+        "averageRating": 4,
+        "description": 4,
+        "exercises": 4,
+        "serverTimestamp": 4,
+        "defaultAutoAdjustmentType": 4,
+        "imageUrl": 4,
+        "estimatedDuration": 4,
+        "reviewCount": 4,
+        "downloadCount": 4,
+        "name": 4,
+        "isPublic": 4,
+        "usageCount": 4,
+        "createdAt": 4,
+        "authorName": 4,
+        "userId": 4,
+        "category": 2
+      },
+      "field_types": {
+        "tags": [
+          "list"
+        ],
+        "defaultApreProtocol": [
+          "NoneType"
+        ],
+        "difficulty": [
+          "NoneType"
+        ],
+        "isCustom": [
+          "bool"
+        ],
+        "updatedAt": [
+          "str"
+        ],
+        "id": [
+          "str"
+        ],
+        "averageRating": [
+          "float"
+        ],
+        "description": [
+          "str"
+        ],
+        "exercises": [
+          "list"
+        ],
+        "serverTimestamp": [
+          "DatetimeWithNanoseconds"
+        ],
+        "defaultAutoAdjustmentType": [
+          "NoneType"
+        ],
+        "imageUrl": [
+          "NoneType"
+        ],
+        "estimatedDuration": [
+          "int"
+        ],
+        "reviewCount": [
+          "int"
+        ],
+        "downloadCount": [
+          "int"
+        ],
+        "name": [
+          "str"
+        ],
+        "isPublic": [
+          "bool"
+        ],
+        "usageCount": [
+          "int"
+        ],
+        "createdAt": [
+          "str"
+        ],
+        "authorName": [
+          "NoneType"
+        ],
+        "userId": [
+          "str"
+        ],
+        "category": [
+          "NoneType"
+        ]
+      },
+      "subcollections": [],
+      "sample_doc_ids": [
+        "28cbdd32-0d3c-4fb2-a6e8-145b3f04fdd9",
+        "854f2d60-e3ad-4d6c-8822-b89a1e728956",
+        "a8897f3e-5011-46ea-b9a0-37980b2b5dd6",
+        "jSLsyaCER8KRbi3n4vRD"
+      ],
+      "empty_fields": {
+        "tags": 4,
+        "defaultApreProtocol": 4,
+        "difficulty": 4,
+        "defaultAutoAdjustmentType": 4,
+        "imageUrl": 4,
+        "authorName": 4,
+        "description": 2,
+        "category": 2
+      },
+      "timestamps": {
+        "oldest": "2025-11-10T16:03:41.150744",
+        "newest": "2026-01-16T18:29:02.130259",
+        "has_timestamp": 12,
+        "missing_timestamp": 0
+      }
+    },
+    "workouts": {
+      "name": "workouts",
+      "document_count": 123,
+      "fields_usage": {
+        "userId": 123,
+        "name": 123,
+        "metadata": 123,
+        "completedAt": 123,
+        "updatedAt": 123,
+        "exercises": 123,
+        "description": 123,
+        "createdAt": 123,
+        "durationMinutes": 123,
+        "startedAt": 123,
+        "templateId": 32
+      },
+      "field_types": {
+        "userId": [
+          "str"
+        ],
+        "name": [
+          "str"
+        ],
+        "metadata": [
+          "dict"
+        ],
+        "completedAt": [
+          "DatetimeWithNanoseconds"
+        ],
+        "updatedAt": [
+          "DatetimeWithNanoseconds"
+        ],
+        "exercises": [
+          "list"
+        ],
+        "description": [
+          "str"
+        ],
+        "createdAt": [
+          "DatetimeWithNanoseconds"
+        ],
+        "durationMinutes": [
+          "int"
+        ],
+        "startedAt": [
+          "DatetimeWithNanoseconds"
+        ],
+        "templateId": [
+          "NoneType",
+          "str"
+        ]
+      },
+      "subcollections": [],
+      "sample_doc_ids": [
+        "0100e3b1-0827-404e-8d63-0fd15781aa45",
+        "09517603-b85c-420f-9bd6-7cc9afbba537",
+        "0dfd6c63-a160-41e0-ac40-3149f31c47da",
+        "0f85ac5b-d401-4614-8fcd-576749f2595f",
+        "161a72f7-e8a8-448b-a529-6dabd1c24f21"
+      ],
+      "empty_fields": {
+        "description": 41,
+        "templateId": 12,
+        "exercises": 1,
+        "name": 32
+      },
+      "timestamps": {
+        "oldest": "2025-03-23T18:26:34.856000+00:00",
+        "newest": "2026-01-16T17:29:21.940179+00:00",
+        "has_timestamp": 246,
+        "missing_timestamp": 0
+      }
+    }
+  },
+  "cleanup_suggestions": [
+    {
+      "priority": "HIGH",
+      "type": "EMPTY_COLLECTION",
+      "collection": "achievements",
+      "reason": "Collezione completamente vuota",
+      "action": "Eliminare collezione achievements",
+      "impact": "Nessun dato perso"
+    },
+    {
+      "priority": "HIGH",
+      "type": "EMPTY_COLLECTION",
+      "collection": "userMassimali",
+      "reason": "Collezione completamente vuota",
+      "action": "Eliminare collezione userMassimali",
+      "impact": "Nessun dato perso"
+    },
+    {
+      "priority": "MEDIUM",
+      "type": "LOW_USAGE_COLLECTION",
+      "collection": "chat_threads",
+      "reason": "Solo 1 documenti - possibile collezione di test",
+      "action": "Verificare se chat_threads è ancora necessaria",
+      "impact": "1 documenti da rivedere"
+    },
+    {
+      "priority": "MEDIUM",
+      "type": "LOW_USAGE_COLLECTION",
+      "collection": "coachNotifications",
+      "reason": "Solo 3 documenti - possibile collezione di test",
+      "action": "Verificare se coachNotifications è ancora necessaria",
+      "impact": "3 documenti da rivedere"
+    },
+    {
+      "priority": "MEDIUM",
+      "type": "LOW_USAGE_COLLECTION",
+      "collection": "coach_delegations",
+      "reason": "Solo 2 documenti - possibile collezione di test",
+      "action": "Verificare se coach_delegations è ancora necessaria",
+      "impact": "2 documenti da rivedere"
+    },
+    {
+      "priority": "MEDIUM",
+      "type": "LOW_USAGE_COLLECTION",
+      "collection": "communityPrograms",
+      "reason": "Solo 2 documenti - possibile collezione di test",
+      "action": "Verificare se communityPrograms è ancora necessaria",
+      "impact": "2 documenti da rivedere"
+    },
+    {
+      "priority": "MEDIUM",
+      "type": "LOW_USAGE_COLLECTION",
+      "collection": "community_contributions",
+      "reason": "Solo 4 documenti - possibile collezione di test",
+      "action": "Verificare se community_contributions è ancora necessaria",
+      "impact": "4 documenti da rivedere"
+    },
+    {
+      "priority": "MEDIUM",
+      "type": "LOW_USAGE_COLLECTION",
+      "collection": "customTemplates",
+      "reason": "Solo 1 documenti - possibile collezione di test",
+      "action": "Verificare se customTemplates è ancora necessaria",
+      "impact": "1 documenti da rivedere"
+    },
+    {
+      "priority": "MEDIUM",
+      "type": "LOW_USAGE_COLLECTION",
+      "collection": "dropSetActivity",
+      "reason": "Solo 4 documenti - possibile collezione di test",
+      "action": "Verificare se dropSetActivity è ancora necessaria",
+      "impact": "4 documenti da rivedere"
+    },
+    {
+      "priority": "MEDIUM",
+      "type": "LOW_USAGE_COLLECTION",
+      "collection": "equipmentProfiles",
+      "reason": "Solo 1 documenti - possibile collezione di test",
+      "action": "Verificare se equipmentProfiles è ancora necessaria",
+      "impact": "1 documenti da rivedere"
+    },
+    {
+      "priority": "MEDIUM",
+      "type": "LOW_USAGE_COLLECTION",
+      "collection": "exercise_feedback",
+      "reason": "Solo 3 documenti - possibile collezione di test",
+      "action": "Verificare se exercise_feedback è ancora necessaria",
+      "impact": "3 documenti da rivedere"
+    },
+    {
+      "priority": "MEDIUM",
+      "type": "MOSTLY_EMPTY_FIELD",
+      "collection": "exercises_en",
+      "field": "warmupSets",
+      "reason": "Campo vuoto in 100% dei documenti (1492/1493)",
+      "action": "Considerare rimozione del campo \"warmupSets\" da exercises_en",
+      "impact": "1 documenti con dati"
+    },
+    {
+      "priority": "MEDIUM",
+      "type": "MOSTLY_EMPTY_FIELD",
+      "collection": "exercises_en",
+      "field": "tempoWarmup",
+      "reason": "Campo vuoto in 100% dei documenti (1492/1493)",
+      "action": "Considerare rimozione del campo \"tempoWarmup\" da exercises_en",
+      "impact": "1 documenti con dati"
+    },
+    {
+      "priority": "MEDIUM",
+      "type": "MOSTLY_EMPTY_FIELD",
+      "collection": "exercises_en",
+      "field": "drillTecnico",
+      "reason": "Campo vuoto in 100% dei documenti (1492/1493)",
+      "action": "Considerare rimozione del campo \"drillTecnico\" da exercises_en",
+      "impact": "1 documenti con dati"
+    },
+    {
+      "priority": "MEDIUM",
+      "type": "MOSTLY_EMPTY_FIELD",
+      "collection": "exercises_en",
+      "field": "spiegazioneTermini",
+      "reason": "Campo vuoto in 100% dei documenti (1492/1493)",
+      "action": "Considerare rimozione del campo \"spiegazioneTermini\" da exercises_en",
+      "impact": "1 documenti con dati"
+    },
+    {
+      "priority": "MEDIUM",
+      "type": "MOSTLY_EMPTY_FIELD",
+      "collection": "exercises_en",
+      "field": "tempoNote",
+      "reason": "Campo vuoto in 100% dei documenti (1492/1493)",
+      "action": "Considerare rimozione del campo \"tempoNote\" da exercises_en",
+      "impact": "1 documenti con dati"
+    },
+    {
+      "priority": "MEDIUM",
+      "type": "MOSTLY_EMPTY_FIELD",
+      "collection": "exercises_en",
+      "field": "cooldownConsigliato",
+      "reason": "Campo vuoto in 100% dei documenti (1492/1493)",
+      "action": "Considerare rimozione del campo \"cooldownConsigliato\" da exercises_en",
+      "impact": "1 documenti con dati"
+    },
+    {
+      "priority": "MEDIUM",
+      "type": "MOSTLY_EMPTY_FIELD",
+      "collection": "exercises_en",
+      "field": "tempoEsecuzione",
+      "reason": "Campo vuoto in 100% dei documenti (1492/1493)",
+      "action": "Considerare rimozione del campo \"tempoEsecuzione\" da exercises_en",
+      "impact": "1 documenti con dati"
+    },
+    {
+      "priority": "MEDIUM",
+      "type": "MOSTLY_EMPTY_FIELD",
+      "collection": "exercises_en",
+      "field": "prevenzioneInfortuni",
+      "reason": "Campo vuoto in 100% dei documenti (1492/1493)",
+      "action": "Considerare rimozione del campo \"prevenzioneInfortuni\" da exercises_en",
+      "impact": "1 documenti con dati"
+    },
+    {
+      "priority": "MEDIUM",
+      "type": "LOW_USAGE_COLLECTION",
+      "collection": "exercises_metadata",
+      "reason": "Solo 1 documenti - possibile collezione di test",
+      "action": "Verificare se exercises_metadata è ancora necessaria",
+      "impact": "1 documenti da rivedere"
+    },
+    {
+      "priority": "MEDIUM",
+      "type": "LOW_USAGE_COLLECTION",
+      "collection": "flexibleRoutines",
+      "reason": "Solo 1 documenti - possibile collezione di test",
+      "action": "Verificare se flexibleRoutines è ancora necessaria",
+      "impact": "1 documenti da rivedere"
+    },
+    {
+      "priority": "MEDIUM",
+      "type": "MOSTLY_EMPTY_FIELD",
+      "collection": "missing_exercise_requests",
+      "field": "adminNotes",
+      "reason": "Campo vuoto in 100% dei documenti (11/11)",
+      "action": "Considerare rimozione del campo \"adminNotes\" da missing_exercise_requests",
+      "impact": "0 documenti con dati"
+    },
+    {
+      "priority": "MEDIUM",
+      "type": "MOSTLY_EMPTY_FIELD",
+      "collection": "missing_exercise_requests",
+      "field": "reviewedBy",
+      "reason": "Campo vuoto in 100% dei documenti (11/11)",
+      "action": "Considerare rimozione del campo \"reviewedBy\" da missing_exercise_requests",
+      "impact": "0 documenti con dati"
+    },
+    {
+      "priority": "MEDIUM",
+      "type": "MOSTLY_EMPTY_FIELD",
+      "collection": "missing_exercise_requests",
+      "field": "reviewedAt",
+      "reason": "Campo vuoto in 100% dei documenti (11/11)",
+      "action": "Considerare rimozione del campo \"reviewedAt\" da missing_exercise_requests",
+      "impact": "0 documenti con dati"
+    },
+    {
+      "priority": "MEDIUM",
+      "type": "LOW_USAGE_COLLECTION",
+      "collection": "muscle_group_feedback",
+      "reason": "Solo 1 documenti - possibile collezione di test",
+      "action": "Verificare se muscle_group_feedback è ancora necessaria",
+      "impact": "1 documenti da rivedere"
+    },
+    {
+      "priority": "MEDIUM",
+      "type": "MOSTLY_EMPTY_FIELD",
+      "collection": "personalRecords",
+      "field": "previousValue",
+      "reason": "Campo vuoto in 87% dei documenti (86/99)",
+      "action": "Considerare rimozione del campo \"previousValue\" da personalRecords",
+      "impact": "13 documenti con dati"
+    },
+    {
+      "priority": "MEDIUM",
+      "type": "LOW_USAGE_COLLECTION",
+      "collection": "programDownloads",
+      "reason": "Solo 3 documenti - possibile collezione di test",
+      "action": "Verificare se programDownloads è ancora necessaria",
+      "impact": "3 documenti da rivedere"
+    },
+    {
+      "priority": "MEDIUM",
+      "type": "LOW_USAGE_COLLECTION",
+      "collection": "rateLimits",
+      "reason": "Solo 1 documenti - possibile collezione di test",
+      "action": "Verificare se rateLimits è ancora necessaria",
+      "impact": "1 documenti da rivedere"
+    },
+    {
+      "priority": "MEDIUM",
+      "type": "LOW_USAGE_COLLECTION",
+      "collection": "supersetActivity",
+      "reason": "Solo 2 documenti - possibile collezione di test",
+      "action": "Verificare se supersetActivity è ancora necessaria",
+      "impact": "2 documenti da rivedere"
+    },
+    {
+      "priority": "MEDIUM",
+      "type": "LOW_USAGE_COLLECTION",
+      "collection": "userConsents",
+      "reason": "Solo 2 documenti - possibile collezione di test",
+      "action": "Verificare se userConsents è ancora necessaria",
+      "impact": "2 documenti da rivedere"
+    },
+    {
+      "priority": "MEDIUM",
+      "type": "LOW_USAGE_COLLECTION",
+      "collection": "userExercisePreferences",
+      "reason": "Solo 1 documenti - possibile collezione di test",
+      "action": "Verificare se userExercisePreferences è ancora necessaria",
+      "impact": "1 documenti da rivedere"
+    },
+    {
+      "priority": "MEDIUM",
+      "type": "LOW_USAGE_COLLECTION",
+      "collection": "userFeedbackStats",
+      "reason": "Solo 1 documenti - possibile collezione di test",
+      "action": "Verificare se userFeedbackStats è ancora necessaria",
+      "impact": "1 documenti da rivedere"
+    },
+    {
+      "priority": "MEDIUM",
+      "type": "LOW_USAGE_COLLECTION",
+      "collection": "userPreferences",
+      "reason": "Solo 4 documenti - possibile collezione di test",
+      "action": "Verificare se userPreferences è ancora necessaria",
+      "impact": "4 documenti da rivedere"
+    },
+    {
+      "priority": "MEDIUM",
+      "type": "LOW_USAGE_COLLECTION",
+      "collection": "user_achievements",
+      "reason": "Solo 1 documenti - possibile collezione di test",
+      "action": "Verificare se user_achievements è ancora necessaria",
+      "impact": "1 documenti da rivedere"
+    },
+    {
+      "priority": "MEDIUM",
+      "type": "LOW_USAGE_COLLECTION",
+      "collection": "user_contribution_stats",
+      "reason": "Solo 1 documenti - possibile collezione di test",
+      "action": "Verificare se user_contribution_stats è ancora necessaria",
+      "impact": "1 documenti da rivedere"
+    },
+    {
+      "priority": "MEDIUM",
+      "type": "LOW_USAGE_COLLECTION",
+      "collection": "user_xp",
+      "reason": "Solo 1 documenti - possibile collezione di test",
+      "action": "Verificare se user_xp è ancora necessaria",
+      "impact": "1 documenti da rivedere"
+    },
+    {
+      "priority": "MEDIUM",
+      "type": "LOW_USAGE_COLLECTION",
+      "collection": "weeklyCheckIns",
+      "reason": "Solo 2 documenti - possibile collezione di test",
+      "action": "Verificare se weeklyCheckIns è ancora necessaria",
+      "impact": "2 documenti da rivedere"
+    },
+    {
+      "priority": "MEDIUM",
+      "type": "MOSTLY_EMPTY_FIELD",
+      "collection": "workoutHistory",
+      "field": "schedaName",
+      "reason": "Campo vuoto in 83% dei documenti (15/18)",
+      "action": "Considerare rimozione del campo \"schedaName\" da workoutHistory",
+      "impact": "3 documenti con dati"
+    },
+    {
+      "priority": "MEDIUM",
+      "type": "LOW_USAGE_COLLECTION",
+      "collection": "workoutTemplates",
+      "reason": "Solo 4 documenti - possibile collezione di test",
+      "action": "Verificare se workoutTemplates è ancora necessaria",
+      "impact": "4 documenti da rivedere"
+    },
+    {
+      "priority": "LOW",
+      "type": "RARELY_USED_FIELD",
+      "collection": "exerciseActivities",
+      "field": "deletedAt",
+      "reason": "Campo presente solo in 1% dei documenti (8/579)",
+      "action": "Verificare se campo \"deletedAt\" è deprecato",
+      "impact": "8 documenti interessati"
+    },
+    {
+      "priority": "LOW",
+      "type": "RARELY_USED_FIELD",
+      "collection": "exerciseActivities",
+      "field": "deleted",
+      "reason": "Campo presente solo in 1% dei documenti (8/579)",
+      "action": "Verificare se campo \"deleted\" è deprecato",
+      "impact": "8 documenti interessati"
+    },
+    {
+      "priority": "LOW",
+      "type": "RARELY_USED_FIELD",
+      "collection": "exerciseActivities",
+      "field": "image",
+      "reason": "Campo presente solo in 2% dei documenti (12/579)",
+      "action": "Verificare se campo \"image\" è deprecato",
+      "impact": "12 documenti interessati"
+    },
+    {
+      "priority": "LOW",
+      "type": "RARELY_USED_FIELD",
+      "collection": "exerciseActivities",
+      "field": "volume",
+      "reason": "Campo presente solo in 2% dei documenti (12/579)",
+      "action": "Verificare se campo \"volume\" è deprecato",
+      "impact": "12 documenti interessati"
+    },
+    {
+      "priority": "LOW",
+      "type": "RARELY_USED_FIELD",
+      "collection": "exerciseActivities",
+      "field": "type",
+      "reason": "Campo presente solo in 0% dei documenti (2/579)",
+      "action": "Verificare se campo \"type\" è deprecato",
+      "impact": "2 documenti interessati"
+    },
+    {
+      "priority": "LOW",
+      "type": "RARELY_USED_FIELD",
+      "collection": "exerciseActivities",
+      "field": "id",
+      "reason": "Campo presente solo in 0% dei documenti (2/579)",
+      "action": "Verificare se campo \"id\" è deprecato",
+      "impact": "2 documenti interessati"
+    },
+    {
+      "priority": "LOW",
+      "type": "RARELY_USED_FIELD",
+      "collection": "exerciseActivities",
+      "field": "timestamp",
+      "reason": "Campo presente solo in 0% dei documenti (1/579)",
+      "action": "Verificare se campo \"timestamp\" è deprecato",
+      "impact": "1 documenti interessati"
+    },
+    {
+      "priority": "LOW",
+      "type": "RARELY_USED_FIELD",
+      "collection": "schede",
+      "field": "lastModifiedAt",
+      "reason": "Campo presente solo in 5% dei documenti (2/42)",
+      "action": "Verificare se campo \"lastModifiedAt\" è deprecato",
+      "impact": "2 documenti interessati"
+    },
+    {
+      "priority": "LOW",
+      "type": "RARELY_USED_FIELD",
+      "collection": "schede",
+      "field": "lastModifiedByRole",
+      "reason": "Campo presente solo in 5% dei documenti (2/42)",
+      "action": "Verificare se campo \"lastModifiedByRole\" è deprecato",
+      "impact": "2 documenti interessati"
+    },
+    {
+      "priority": "LOW",
+      "type": "RARELY_USED_FIELD",
+      "collection": "schede",
+      "field": "lastModifiedBy",
+      "reason": "Campo presente solo in 5% dei documenti (2/42)",
+      "action": "Verificare se campo \"lastModifiedBy\" è deprecato",
+      "impact": "2 documenti interessati"
+    },
+    {
+      "priority": "LOW",
+      "type": "RARELY_USED_FIELD",
+      "collection": "schede",
+      "field": "id",
+      "reason": "Campo presente solo in 2% dei documenti (1/42)",
+      "action": "Verificare se campo \"id\" è deprecato",
+      "impact": "1 documenti interessati"
+    },
+    {
+      "priority": "LOW",
+      "type": "RARELY_USED_FIELD",
+      "collection": "schede",
+      "field": "archivedAt",
+      "reason": "Campo presente solo in 2% dei documenti (1/42)",
+      "action": "Verificare se campo \"archivedAt\" è deprecato",
+      "impact": "1 documenti interessati"
+    },
+    {
+      "priority": "LOW",
+      "type": "RARELY_USED_FIELD",
+      "collection": "schede",
+      "field": "archivedReason",
+      "reason": "Campo presente solo in 2% dei documenti (1/42)",
+      "action": "Verificare se campo \"archivedReason\" è deprecato",
+      "impact": "1 documenti interessati"
+    },
+    {
+      "priority": "LOW",
+      "type": "RARELY_USED_FIELD",
+      "collection": "schede",
+      "field": "restoredAt",
+      "reason": "Campo presente solo in 2% dei documenti (1/42)",
+      "action": "Verificare se campo \"restoredAt\" è deprecato",
+      "impact": "1 documenti interessati"
+    },
+    {
+      "priority": "LOW",
+      "type": "RARELY_USED_FIELD",
+      "collection": "schede",
+      "field": "active",
+      "reason": "Campo presente solo in 2% dei documenti (1/42)",
+      "action": "Verificare se campo \"active\" è deprecato",
+      "impact": "1 documenti interessati"
+    }
+  ],
+  "summary": {
+    "total_collections": 46,
+    "total_documents": 6610,
+    "empty_collections": 2,
+    "suggestions_by_priority": {
+      "HIGH": 2,
+      "MEDIUM": 37,
+      "LOW": 15
+    }
+  }
+}

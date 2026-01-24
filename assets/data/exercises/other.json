@@ -2,11 +2,11 @@
   {
     "id": "box_jump_multiple_response",
     "nome": "Box Jump (Multiple Response)",
-    "focus": "FEMOR",
+    "focus": "FEMO",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Box_Jump_Multiple_Response/0.jpg",
     "muscoliSecondari": [
       "ABDU",
-      "ADDU",
+      "ADD",
       "POLP",
       "GLUT",
       "QUAD"
@@ -30,13 +30,13 @@
   {
     "id": "atlas_stone_trainer",
     "nome": "Allenatore Atlas Stone",
-    "focus": "LOM",
+    "focus": "LOMB",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Atlas_Stone_Trainer/0.jpg",
     "muscoliSecondari": [
-      "BIC",
-      "AVAMB",
+      "BICI",
+      "AVA",
       "GLUT",
-      "FEMOR",
+      "FEMO",
       "QUAD"
     ],
     "difficolta": "Intermedio",
@@ -62,10 +62,10 @@
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Alternate_Leg_Diagonal_Bound/0.jpg",
     "muscoliSecondari": [
       "ABDU",
-      "ADDU",
+      "ADD",
       "POLP",
       "GLUT",
-      "FEMOR"
+      "FEMO"
     ],
     "difficolta": "Principiante",
     "tipoEsercizio": "Compound",
@@ -91,7 +91,7 @@
     "muscoliSecondari": [
       "POLP",
       "GLUT",
-      "FEMOR"
+      "FEMO"
     ],
     "difficolta": "Principiante",
     "tipoEsercizio": "Compound",
@@ -117,7 +117,7 @@
     "muscoliSecondari": [
       "POLP",
       "GLUT",
-      "FEMOR"
+      "FEMO"
     ],
     "difficolta": "Principiante",
     "tipoEsercizio": "Compound",
@@ -142,7 +142,7 @@
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Jerk_Balance/0.jpg",
     "muscoliSecondari": [
       "GLUT",
-      "FEMOR",
+      "FEMO",
       "QUAD",
       "TRIC"
     ],
@@ -170,7 +170,7 @@
     "muscoliSecondari": [
       "POLP",
       "GLUT",
-      "FEMOR",
+      "FEMO",
       "DELT",
       "TRIC"
     ],
@@ -196,10 +196,10 @@
     "focus": "QUAD",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Heaving_Snatch_Balance/0.jpg",
     "muscoliSecondari": [
-      "ADDOM",
-      "AVAMB",
+      "CORE",
+      "AVA",
       "GLUT",
-      "FEMOR",
+      "FEMO",
       "DELT",
       "TRIC"
     ],
@@ -222,11 +222,11 @@
   {
     "id": "front_box_jump",
     "nome": "Box Jump Frontale",
-    "focus": "FEMOR",
+    "focus": "FEMO",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Front_Box_Jump/0.jpg",
     "muscoliSecondari": [
       "ABDU",
-      "ADDU",
+      "ADD",
       "POLP",
       "GLUT",
       "QUAD"
@@ -250,13 +250,13 @@
   {
     "id": "lateral_box_jump",
     "nome": "Box Jump Lateral",
-    "focus": "ADDU",
+    "focus": "ADD",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Lateral_Box_Jump/0.jpg",
     "muscoliSecondari": [
       "ABDU",
       "POLP",
       "GLUT",
-      "FEMOR",
+      "FEMO",
       "QUAD"
     ],
     "difficolta": "Principiante",
@@ -282,10 +282,10 @@
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Double_Leg_Butt_Kick/0.jpg",
     "muscoliSecondari": [
       "ABDU",
-      "ADDU",
+      "ADD",
       "POLP",
       "GLUT",
-      "FEMOR"
+      "FEMO"
     ],
     "difficolta": "Principiante",
     "tipoEsercizio": "Compound",
@@ -310,7 +310,7 @@
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Single_Leg_Butt_Kick/0.jpg",
     "muscoliSecondari": [
       "POLP",
-      "FEMOR"
+      "FEMO"
     ],
     "difficolta": "Principiante",
     "tipoEsercizio": "Compound",
@@ -336,7 +336,7 @@
     "muscoliSecondari": [
       "POLP",
       "GLUT",
-      "FEMOR"
+      "FEMO"
     ],
     "difficolta": "Principiante",
     "tipoEsercizio": "Compound",
@@ -360,13 +360,13 @@
     "focus": "QUAD",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Yoke_Walk/0.jpg",
     "muscoliSecondari": [
-      "ADDOM",
+      "CORE",
       "ABDU",
-      "ADDU",
+      "ADD",
       "POLP",
       "GLUT",
-      "FEMOR",
-      "LOM"
+      "FEMO",
+      "LOMB"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Compound",
@@ -390,10 +390,10 @@
     "focus": "DELT",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Circus_Bell/0.jpg",
     "muscoliSecondari": [
-      "AVAMB",
+      "AVA",
       "GLUT",
-      "FEMOR",
-      "LOM",
+      "FEMO",
+      "LOMB",
       "TRAP",
       "TRIC"
     ],
@@ -416,16 +416,16 @@
   {
     "id": "keg_load",
     "nome": "Carico a Gambe",
-    "focus": "LOM",
+    "focus": "LOMB",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Keg_Load/0.jpg",
     "muscoliSecondari": [
-      "ADDOM",
-      "BIC",
+      "CORE",
+      "BICI",
       "POLP",
-      "AVAMB",
+      "AVA",
       "GLUT",
-      "FEMOR",
-      "DORSO",
+      "FEMO",
+      "LAT",
       "QUAD",
       "DELT",
       "TRAP"
@@ -452,14 +452,14 @@
     "focus": "QUAD",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Sandbag_Load/0.jpg",
     "muscoliSecondari": [
-      "ADDOM",
-      "BIC",
+      "CORE",
+      "BICI",
       "POLP",
-      "AVAMB",
+      "AVA",
       "GLUT",
-      "FEMOR",
-      "LOM",
-      "DORSO",
+      "FEMO",
+      "LOMB",
+      "LAT",
       "DELT",
       "TRAP"
     ],
@@ -482,14 +482,14 @@
   {
     "id": "carioca_quick_step",
     "nome": "Carioca Passo Veloce",
-    "focus": "ADDU",
+    "focus": "ADD",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Carioca_Quick_Step/0.jpg",
     "muscoliSecondari": [
-      "ADDOM",
+      "CORE",
       "ABDU",
       "POLP",
       "GLUT",
-      "FEMOR",
+      "FEMO",
       "QUAD"
     ],
     "difficolta": "Principiante",
@@ -516,7 +516,7 @@
     "muscoliSecondari": [
       "POLP",
       "GLUT",
-      "FEMOR"
+      "FEMO"
     ],
     "difficolta": "Principiante",
     "tipoEsercizio": "Compound",
@@ -541,7 +541,7 @@
     "muscoliSecondari": [
       "POLP",
       "GLUT",
-      "FEMOR"
+      "FEMO"
     ],
     "difficolta": "Principiante",
     "tipoEsercizio": "Compound",
@@ -590,7 +590,7 @@
     "focus": "DELT",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Rack_Delivery/0.jpg",
     "muscoliSecondari": [
-      "AVAMB",
+      "AVA",
       "TRAP"
     ],
     "difficolta": "Intermedio",
@@ -617,7 +617,7 @@
     "muscoliSecondari": [
       "POLP",
       "GLUT",
-      "FEMOR"
+      "FEMO"
     ],
     "difficolta": "Principiante",
     "tipoEsercizio": "Compound",
@@ -643,7 +643,7 @@
     "muscoliSecondari": [
       "POLP",
       "GLUT",
-      "FEMOR"
+      "FEMO"
     ],
     "difficolta": "Principiante",
     "tipoEsercizio": "Compound",
@@ -667,7 +667,7 @@
     "focus": "DELT_POST",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Crucifix/0.jpg",
     "muscoliSecondari": [
-      "AVAMB"
+      "AVA"
     ],
     "difficolta": "Principiante",
     "tipoEsercizio": "Isolation",
@@ -687,13 +687,13 @@
   {
     "id": "axle_deadlift",
     "nome": "Deadlift con Asse",
-    "focus": "LOM",
+    "focus": "LOMB",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Axle_Deadlift/0.jpg",
     "muscoliSecondari": [
-      "AVAMB",
+      "AVA",
       "GLUT",
-      "FEMOR",
-      "DORSO",
+      "FEMO",
+      "LAT",
       "QUAD",
       "TRAP"
     ],
@@ -719,10 +719,10 @@
     "focus": "QUAD",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Rickshaw_Deadlift/0.jpg",
     "muscoliSecondari": [
-      "AVAMB",
+      "AVA",
       "GLUT",
-      "FEMOR",
-      "LOM",
+      "FEMO",
+      "LOMB",
       "TRAP"
     ],
     "difficolta": "Intermedio",
@@ -747,7 +747,7 @@
     "focus": "DELT",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Kneeling_Arm_Drill/0.jpg",
     "muscoliSecondari": [
-      "ADDOM"
+      "CORE"
     ],
     "difficolta": "Principiante",
     "tipoEsercizio": "Compound",
@@ -768,7 +768,7 @@
   {
     "id": "isometric_neck_exercise___sides",
     "nome": "Esercizio Isometrico per il Collo - Lato",
-    "focus": "COLLO",
+    "focus": "COLL",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Isometric_Neck_Exercise_-_Sides/0.jpg",
     "muscoliSecondari": [],
     "difficolta": "Principiante",
@@ -790,7 +790,7 @@
   {
     "id": "isometric_neck_exercise___front_and_back",
     "nome": "Esercizio Isometrico per il Collo Anteriore e Posteriore",
-    "focus": "COLLO",
+    "focus": "COLL",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Isometric_Neck_Exercise_-_Front_And_Back/0.jpg",
     "muscoliSecondari": [],
     "difficolta": "Principiante",
@@ -816,7 +816,7 @@
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Split_Jerk/0.jpg",
     "muscoliSecondari": [
       "GLUT",
-      "FEMOR",
+      "FEMO",
       "DELT",
       "TRIC"
     ],
@@ -843,7 +843,7 @@
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Jogging_Treadmill/0.jpg",
     "muscoliSecondari": [
       "GLUT",
-      "FEMOR"
+      "FEMO"
     ],
     "difficolta": "Principiante",
     "tipoEsercizio": "Compound",
@@ -869,7 +869,7 @@
     "muscoliSecondari": [
       "POLP",
       "GLUT",
-      "FEMOR"
+      "FEMO"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Compound",
@@ -890,11 +890,11 @@
   {
     "id": "supine_two_arm_overhead_throw",
     "nome": "Lancio Sopra la testa a Due Braccia in Posizione Prona",
-    "focus": "ADDOM",
+    "focus": "CORE",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Supine_Two-Arm_Overhead_Throw/0.jpg",
     "muscoliSecondari": [
       "PETT",
-      "DORSO",
+      "LAT",
       "DELT"
     ],
     "difficolta": "Principiante",
@@ -916,11 +916,11 @@
   {
     "id": "supine_one_arm_overhead_throw",
     "nome": "Lancio Sopra la testa con un Braccio Sollevato in Posizione Supina",
-    "focus": "ADDOM",
+    "focus": "CORE",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Supine_One-Arm_Overhead_Throw/0.jpg",
     "muscoliSecondari": [
       "PETT",
-      "DORSO",
+      "LAT",
       "DELT"
     ],
     "difficolta": "Principiante",
@@ -971,7 +971,7 @@
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Standing_Two-Arm_Overhead_Throw/0.jpg",
     "muscoliSecondari": [
       "PETT",
-      "DORSO"
+      "LAT"
     ],
     "difficolta": "Principiante",
     "tipoEsercizio": "Compound",
@@ -995,8 +995,8 @@
     "focus": "DELT",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Medicine_Ball_Scoop_Throw/0.jpg",
     "muscoliSecondari": [
-      "ADDOM",
-      "FEMOR",
+      "CORE",
+      "FEMO",
       "QUAD"
     ],
     "difficolta": "Principiante",
@@ -1043,12 +1043,12 @@
     "focus": "DELT",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Log_Lift/0.jpg",
     "muscoliSecondari": [
-      "ADDOM",
+      "CORE",
       "PETT",
       "GLUT",
-      "FEMOR",
-      "LOM",
-      "DORSO",
+      "FEMO",
+      "LOMB",
+      "LAT",
       "QUAD",
       "TRAP",
       "TRIC"
@@ -1077,7 +1077,7 @@
     "muscoliSecondari": [
       "POLP",
       "GLUT",
-      "FEMOR"
+      "FEMO"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Compound",
@@ -1097,7 +1097,7 @@
   {
     "id": "neck_smr",
     "nome": "Massaggio del Collo",
-    "focus": "COLLO",
+    "focus": "COLL",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Neck-SMR/0.jpg",
     "muscoliSecondari": [],
     "difficolta": "Intermedio",
@@ -1119,7 +1119,7 @@
   {
     "id": "medicine_ball_full_twist",
     "nome": "Rotazione Completa con Palla Medica",
-    "focus": "ADDOM",
+    "focus": "CORE",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Medicine_Ball_Full_Twist/0.jpg",
     "muscoliSecondari": [
       "DELT"
@@ -1147,7 +1147,7 @@
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Mountain_Climbers/0.jpg",
     "muscoliSecondari": [
       "PETT",
-      "FEMOR",
+      "FEMO",
       "DELT"
     ],
     "difficolta": "Principiante",
@@ -1172,7 +1172,7 @@
     "focus": "PETT",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Chest_Push_multiple_response/0.jpg",
     "muscoliSecondari": [
-      "ADDOM",
+      "CORE",
       "DELT",
       "TRIC"
     ],
@@ -1195,7 +1195,7 @@
   {
     "id": "lying_face_down_plate_neck_resistance",
     "nome": "Resistenza Collo con Disco - Prono",
-    "focus": "COLLO",
+    "focus": "COLL",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Lying_Face_Down_Plate_Neck_Resistance/0.jpg",
     "muscoliSecondari": [],
     "difficolta": "Intermedio",
@@ -1217,7 +1217,7 @@
   {
     "id": "lying_face_up_plate_neck_resistance",
     "nome": "Resistenza Collo con Disco - Supino",
-    "focus": "COLLO",
+    "focus": "COLL",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Lying_Face_Up_Plate_Neck_Resistance/0.jpg",
     "muscoliSecondari": [],
     "difficolta": "Intermedio",
@@ -1243,10 +1243,10 @@
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Hang_Clean_-_Below_the_Knees/0.jpg",
     "muscoliSecondari": [
       "POLP",
-      "AVAMB",
+      "AVA",
       "GLUT",
-      "FEMOR",
-      "LOM",
+      "FEMO",
+      "LOMB",
       "DELT",
       "TRAP"
     ],
@@ -1269,7 +1269,7 @@
   {
     "id": "linear_acceleration_wall_drill",
     "nome": "Percorso di Accelerazione Lineare a Parete",
-    "focus": "FEMOR",
+    "focus": "FEMO",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Linear_Acceleration_Wall_Drill/0.jpg",
     "muscoliSecondari": [
       "POLP",
@@ -1295,17 +1295,17 @@
   {
     "id": "atlas_stones",
     "nome": "Pietre Atlas",
-    "focus": "LOM",
+    "focus": "LOMB",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Atlas_Stones/0.jpg",
     "muscoliSecondari": [
-      "ADDOM",
-      "ADDU",
-      "BIC",
+      "CORE",
+      "ADD",
+      "BICI",
       "POLP",
-      "AVAMB",
+      "AVA",
       "GLUT",
-      "FEMOR",
-      "DORSO",
+      "FEMO",
+      "LAT",
       "QUAD",
       "TRAP"
     ],
@@ -1328,14 +1328,14 @@
   {
     "id": "rickshaw_carry",
     "nome": "Rickshaw Carry",
-    "focus": "AVAMB",
+    "focus": "AVA",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Rickshaw_Carry/0.jpg",
     "muscoliSecondari": [
-      "ADDOM",
+      "CORE",
       "POLP",
       "GLUT",
-      "FEMOR",
-      "LOM",
+      "FEMO",
+      "LOMB",
       "QUAD",
       "TRAP"
     ],
@@ -1358,12 +1358,12 @@
   {
     "id": "wide_stance_stiff_legs",
     "nome": "Posizione Ampia con Gambe Rigide",
-    "focus": "FEMOR",
+    "focus": "FEMO",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Wide_Stance_Stiff_Legs/0.jpg",
     "muscoliSecondari": [
-      "ADDU",
+      "ADD",
       "GLUT",
-      "LOM"
+      "LOMB"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Compound",
@@ -1384,10 +1384,10 @@
   {
     "id": "catch_and_overhead_throw",
     "nome": "Presa e Lancio Sopra la testa",
-    "focus": "DORSO",
+    "focus": "LAT",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Catch_and_Overhead_Throw/0.jpg",
     "muscoliSecondari": [
-      "ADDOM",
+      "CORE",
       "PETT",
       "DELT"
     ],
@@ -1414,9 +1414,9 @@
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Single-Leg_Hop_Progression/0.jpg",
     "muscoliSecondari": [
       "ABDU",
-      "ADDU",
+      "ADD",
       "POLP",
-      "FEMOR"
+      "FEMO"
     ],
     "difficolta": "Principiante",
     "tipoEsercizio": "Compound",
@@ -1440,7 +1440,7 @@
     "focus": "PETT",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Chest_Push_single_response/0.jpg",
     "muscoliSecondari": [
-      "ADDOM",
+      "CORE",
       "DELT",
       "TRIC"
     ],
@@ -1463,13 +1463,13 @@
   {
     "id": "clean",
     "nome": "Clean",
-    "focus": "FEMOR",
+    "focus": "FEMO",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Clean/0.jpg",
     "muscoliSecondari": [
       "POLP",
-      "AVAMB",
+      "AVA",
       "GLUT",
-      "LOM",
+      "LOMB",
       "QUAD",
       "DELT",
       "TRAP"
@@ -1496,10 +1496,10 @@
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Hang_Clean/0.jpg",
     "muscoliSecondari": [
       "POLP",
-      "AVAMB",
+      "AVA",
       "GLUT",
-      "FEMOR",
-      "LOM",
+      "FEMO",
+      "LOMB",
       "DELT",
       "TRAP"
     ],
@@ -1526,10 +1526,10 @@
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Split_Clean/0.jpg",
     "muscoliSecondari": [
       "POLP",
-      "AVAMB",
+      "AVA",
       "GLUT",
-      "FEMOR",
-      "LOM",
+      "FEMO",
+      "LOMB",
       "DELT",
       "TRAP"
     ],
@@ -1552,13 +1552,13 @@
   {
     "id": "clean_deadlift",
     "nome": "Clean Deadlift",
-    "focus": "FEMOR",
+    "focus": "FEMO",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Clean_Deadlift/0.jpg",
     "muscoliSecondari": [
-      "AVAMB",
+      "AVA",
       "GLUT",
-      "LOM",
-      "DORSO",
+      "LOMB",
+      "LAT",
       "QUAD",
       "TRAP"
     ],
@@ -1581,7 +1581,7 @@
   {
     "id": "power_clean_from_blocks",
     "nome": "Power Clean from Blocks",
-    "focus": "FEMOR",
+    "focus": "FEMO",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Power_Clean_from_Blocks/0.jpg",
     "muscoliSecondari": [
       "QUAD"
@@ -1610,7 +1610,7 @@
     "muscoliSecondari": [
       "POLP",
       "GLUT",
-      "FEMOR",
+      "FEMO",
       "DELT",
       "TRAP"
     ],
@@ -1636,7 +1636,7 @@
     "focus": "TRAP",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Clean_Shrug/0.jpg",
     "muscoliSecondari": [
-      "AVAMB",
+      "AVA",
       "DELT"
     ],
     "difficolta": "Principiante",
@@ -1661,10 +1661,10 @@
     "focus": "DELT_ANT",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Clean_and_Jerk/0.jpg",
     "muscoliSecondari": [
-      "ADDOM",
+      "CORE",
       "GLUT",
-      "FEMOR",
-      "LOM",
+      "FEMO",
+      "LOMB",
       "QUAD",
       "TRAP",
       "TRIC",
@@ -1717,12 +1717,12 @@
     "focus": "QUAD",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Rowing_Stationary/0.jpg",
     "muscoliSecondari": [
-      "BIC",
+      "BICI",
       "POLP",
       "GLUT",
-      "FEMOR",
-      "LOM",
-      "DORSO"
+      "FEMO",
+      "LOMB",
+      "LAT"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Compound",
@@ -1743,7 +1743,7 @@
   {
     "id": "seated_head_harness_neck_resistance",
     "nome": "Resistenza Collo con Cinghia da Seduto",
-    "focus": "COLLO",
+    "focus": "COLL",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Seated_Head_Harness_Neck_Resistance/0.jpg",
     "muscoliSecondari": [],
     "difficolta": "Intermedio",
@@ -1791,12 +1791,12 @@
   {
     "id": "romanian_deadlift_from_deficit",
     "nome": "Romano Deadlift da Deficit",
-    "focus": "FEMOR",
+    "focus": "FEMO",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Romanian_Deadlift_from_Deficit/0.jpg",
     "muscoliSecondari": [
-      "AVAMB",
+      "AVA",
       "GLUT",
-      "LOM",
+      "LOMB",
       "TRAP"
     ],
     "difficolta": "Intermedio",
@@ -1821,11 +1821,11 @@
     "focus": "QUAD",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Conans_Wheel/0.jpg",
     "muscoliSecondari": [
-      "ADDOM",
-      "BIC",
+      "CORE",
+      "BICI",
       "POLP",
-      "AVAMB",
-      "LOM",
+      "AVA",
+      "LOMB",
       "DELT",
       "TRAP"
     ],
@@ -1852,10 +1852,10 @@
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Fast_Skipping/0.jpg",
     "muscoliSecondari": [
       "ABDU",
-      "ADDU",
+      "ADD",
       "POLP",
       "GLUT",
-      "FEMOR"
+      "FEMO"
     ],
     "difficolta": "Principiante",
     "tipoEsercizio": "Compound",
@@ -1880,10 +1880,10 @@
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Front_Cone_Hops_or_hurdle_hops/0.jpg",
     "muscoliSecondari": [
       "ABDU",
-      "ADDU",
+      "ADD",
       "POLP",
       "GLUT",
-      "FEMOR"
+      "FEMO"
     ],
     "difficolta": "Principiante",
     "tipoEsercizio": "Compound",
@@ -1904,13 +1904,13 @@
   {
     "id": "lateral_cone_hops",
     "nome": "Salti a Cono Laterale",
-    "focus": "ADDU",
+    "focus": "ADD",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Lateral_Cone_Hops/0.jpg",
     "muscoliSecondari": [
       "ABDU",
       "POLP",
       "GLUT",
-      "FEMOR",
+      "FEMO",
       "QUAD"
     ],
     "difficolta": "Principiante",
@@ -1932,14 +1932,14 @@
   {
     "id": "hurdle_hops",
     "nome": "Salti con Ostacolo",
-    "focus": "FEMOR",
+    "focus": "FEMO",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Hurdle_Hops/0.jpg",
     "muscoliSecondari": [
       "ABDU",
-      "ADDU",
+      "ADD",
       "POLP",
       "GLUT",
-      "FEMOR"
+      "FEMO"
     ],
     "difficolta": "Principiante",
     "tipoEsercizio": "Compound",
@@ -1960,13 +1960,13 @@
   {
     "id": "lateral_bound",
     "nome": "Salto Laterale",
-    "focus": "ADDU",
+    "focus": "ADD",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Lateral_Bound/0.jpg",
     "muscoliSecondari": [
       "ABDU",
       "POLP",
       "GLUT",
-      "FEMOR",
+      "FEMO",
       "QUAD"
     ],
     "difficolta": "Principiante",
@@ -1992,9 +1992,9 @@
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Single-Leg_Lateral_Hop/0.jpg",
     "muscoliSecondari": [
       "ABDU",
-      "ADDU",
+      "ADD",
       "POLP",
-      "FEMOR"
+      "FEMO"
     ],
     "difficolta": "Principiante",
     "tipoEsercizio": "Compound",
@@ -2020,7 +2020,7 @@
     "muscoliSecondari": [
       "POLP",
       "GLUT",
-      "FEMOR"
+      "FEMO"
     ],
     "difficolta": "Principiante",
     "tipoEsercizio": "Compound",
@@ -2046,7 +2046,7 @@
     "muscoliSecondari": [
       "POLP",
       "GLUT",
-      "FEMOR"
+      "FEMO"
     ],
     "difficolta": "Principiante",
     "tipoEsercizio": "Compound",
@@ -2071,7 +2071,7 @@
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Quick_Leap/0.jpg",
     "muscoliSecondari": [
       "POLP",
-      "FEMOR"
+      "FEMO"
     ],
     "difficolta": "Principiante",
     "tipoEsercizio": "Compound",
@@ -2096,7 +2096,7 @@
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Rocket_Jump/0.jpg",
     "muscoliSecondari": [
       "POLP",
-      "FEMOR"
+      "FEMO"
     ],
     "difficolta": "Principiante",
     "tipoEsercizio": "Compound",
@@ -2122,7 +2122,7 @@
     "muscoliSecondari": [
       "POLP",
       "GLUT",
-      "FEMOR",
+      "FEMO",
       "DELT"
     ],
     "difficolta": "Principiante",
@@ -2149,7 +2149,7 @@
     "muscoliSecondari": [
       "POLP",
       "GLUT",
-      "FEMOR"
+      "FEMO"
     ],
     "difficolta": "Principiante",
     "tipoEsercizio": "Compound",
@@ -2174,7 +2174,7 @@
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Scissors_Jump/0.jpg",
     "muscoliSecondari": [
       "GLUT",
-      "FEMOR"
+      "FEMO"
     ],
     "difficolta": "Principiante",
     "tipoEsercizio": "Compound",
@@ -2199,7 +2199,7 @@
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Rope_Jumping/0.jpg",
     "muscoliSecondari": [
       "POLP",
-      "FEMOR"
+      "FEMO"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Compound",
@@ -2224,9 +2224,9 @@
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Single-Leg_Stride_Jump/0.jpg",
     "muscoliSecondari": [
       "ABDU",
-      "ADDU",
+      "ADD",
       "POLP",
-      "FEMOR"
+      "FEMO"
     ],
     "difficolta": "Principiante",
     "tipoEsercizio": "Compound",
@@ -2247,11 +2247,11 @@
   {
     "id": "box_skip",
     "nome": "Salto della Scatola",
-    "focus": "FEMOR",
+    "focus": "FEMO",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Box_Skip/0.jpg",
     "muscoliSecondari": [
       "ABDU",
-      "ADDU",
+      "ADD",
       "POLP",
       "GLUT",
       "QUAD"
@@ -2279,10 +2279,10 @@
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Depth_Jump_Leap/0.jpg",
     "muscoliSecondari": [
       "ABDU",
-      "ADDU",
+      "ADD",
       "POLP",
       "GLUT",
-      "FEMOR"
+      "FEMO"
     ],
     "difficolta": "Principiante",
     "tipoEsercizio": "Compound",
@@ -2308,7 +2308,7 @@
     "muscoliSecondari": [
       "POLP",
       "GLUT",
-      "FEMOR"
+      "FEMO"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Compound",
@@ -2334,7 +2334,7 @@
     "muscoliSecondari": [
       "POLP",
       "GLUT",
-      "FEMOR"
+      "FEMO"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Compound",
@@ -2355,13 +2355,13 @@
   {
     "id": "power_stairs",
     "nome": "Scala del Potere",
-    "focus": "FEMOR",
+    "focus": "FEMO",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Power_Stairs/0.jpg",
     "muscoliSecondari": [
-      "ADDU",
+      "ADD",
       "POLP",
       "GLUT",
-      "LOM",
+      "LOMB",
       "QUAD",
       "DELT",
       "TRAP"
@@ -2385,7 +2385,7 @@
   {
     "id": "moving_claw_series",
     "nome": "Serie a Coda di Ragno",
-    "focus": "FEMOR",
+    "focus": "FEMO",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Moving_Claw_Series/0.jpg",
     "muscoliSecondari": [
       "POLP",
@@ -2414,9 +2414,9 @@
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Side_to_Side_Box_Shuffle/0.jpg",
     "muscoliSecondari": [
       "ABDU",
-      "ADDU",
+      "ADD",
       "POLP",
-      "FEMOR"
+      "FEMO"
     ],
     "difficolta": "Principiante",
     "tipoEsercizio": "Compound",
@@ -2441,10 +2441,10 @@
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Skating/0.jpg",
     "muscoliSecondari": [
       "ABDU",
-      "ADDU",
+      "ADD",
       "POLP",
       "GLUT",
-      "FEMOR"
+      "FEMO"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Compound",
@@ -2464,7 +2464,7 @@
   {
     "id": "overhead_slam",
     "nome": "Slam Sopra la testa",
-    "focus": "DORSO",
+    "focus": "LAT",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Overhead_Slam/0.jpg",
     "muscoliSecondari": [],
     "difficolta": "Principiante",
@@ -2486,14 +2486,14 @@
   {
     "id": "hang_snatch___below_knees",
     "nome": "Snatch Pendente sotto le Ginocchia",
-    "focus": "FEMOR",
+    "focus": "FEMO",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Hang_Snatch_-_Below_Knees/0.jpg",
     "muscoliSecondari": [
-      "ADDOM",
+      "CORE",
       "POLP",
-      "AVAMB",
+      "AVA",
       "GLUT",
-      "LOM",
+      "LOMB",
       "QUAD",
       "DELT",
       "TRAP"
@@ -2517,12 +2517,12 @@
   {
     "id": "power_snatch",
     "nome": "Power Snatch",
-    "focus": "FEMOR",
+    "focus": "FEMO",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Power_Snatch/0.jpg",
     "muscoliSecondari": [
       "POLP",
       "GLUT",
-      "LOM",
+      "LOMB",
       "QUAD",
       "DELT",
       "TRAP",
@@ -2547,14 +2547,14 @@
   {
     "id": "hang_snatch",
     "nome": "Hang Snatch",
-    "focus": "FEMOR",
+    "focus": "FEMO",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Hang_Snatch/0.jpg",
     "muscoliSecondari": [
-      "ADDOM",
+      "CORE",
       "POLP",
-      "AVAMB",
+      "AVA",
       "GLUT",
-      "LOM",
+      "LOMB",
       "QUAD",
       "DELT",
       "TRAP"
@@ -2578,11 +2578,11 @@
   {
     "id": "muscle_snatch",
     "nome": "Muscle Snatch",
-    "focus": "FEMOR",
+    "focus": "FEMO",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Muscle_Snatch/0.jpg",
     "muscoliSecondari": [
       "GLUT",
-      "LOM",
+      "LOMB",
       "QUAD",
       "DELT",
       "TRIC"
@@ -2610,10 +2610,10 @@
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Power_Snatch_from_Blocks/0.jpg",
     "muscoliSecondari": [
       "POLP",
-      "AVAMB",
+      "AVA",
       "GLUT",
-      "FEMOR",
-      "LOM",
+      "FEMO",
+      "LOMB",
       "DELT",
       "TRAP",
       "TRIC"
@@ -2637,14 +2637,14 @@
   {
     "id": "split_snatch",
     "nome": "Split Snatch",
-    "focus": "FEMOR",
+    "focus": "FEMO",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Split_Snatch/0.jpg",
     "muscoliSecondari": [
       "POLP",
-      "AVAMB",
+      "AVA",
       "GLUT",
-      "FEMOR",
-      "LOM",
+      "FEMO",
+      "LOMB",
       "QUAD",
       "DELT",
       "TRAP",
@@ -2672,7 +2672,7 @@
     "focus": "PETT",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Chest_Push_with_Run_Release/0.jpg",
     "muscoliSecondari": [
-      "ADDOM",
+      "CORE",
       "DELT",
       "TRIC"
     ],
@@ -2698,7 +2698,7 @@
     "focus": "PETT",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Chest_Push_from_3_point_stance/0.jpg",
     "muscoliSecondari": [
-      "ADDOM",
+      "CORE",
       "DELT",
       "TRIC"
     ],
@@ -2778,7 +2778,7 @@
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Single_Leg_Push-off/0.jpg",
     "muscoliSecondari": [
       "POLP",
-      "FEMOR"
+      "FEMO"
     ],
     "difficolta": "Principiante",
     "tipoEsercizio": "Compound",
@@ -2805,7 +2805,7 @@
       "POLP",
       "PETT",
       "GLUT",
-      "FEMOR",
+      "FEMO",
       "TRIC"
     ],
     "difficolta": "Principiante",
@@ -2831,9 +2831,9 @@
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Side_Hop-Sprint/0.jpg",
     "muscoliSecondari": [
       "ABDU",
-      "ADDU",
+      "ADD",
       "POLP",
-      "FEMOR"
+      "FEMO"
     ],
     "difficolta": "Principiante",
     "tipoEsercizio": "Compound",
@@ -2854,7 +2854,7 @@
   {
     "id": "prowler_sprint",
     "nome": "Sprint del Prowler",
-    "focus": "FEMOR",
+    "focus": "FEMO",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Prowler_Sprint/0.jpg",
     "muscoliSecondari": [
       "POLP",
@@ -2887,7 +2887,7 @@
     "muscoliSecondari": [
       "POLP",
       "GLUT",
-      "FEMOR"
+      "FEMO"
     ],
     "difficolta": "Principiante",
     "tipoEsercizio": "Compound",
@@ -2913,7 +2913,7 @@
     "muscoliSecondari": [
       "POLP",
       "GLUT",
-      "FEMOR"
+      "FEMO"
     ],
     "difficolta": "Principiante",
     "tipoEsercizio": "Compound",
@@ -2939,7 +2939,7 @@
     "muscoliSecondari": [
       "POLP",
       "GLUT",
-      "FEMOR"
+      "FEMO"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Compound",
@@ -2963,11 +2963,11 @@
     "focus": "QUAD",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Overhead_Squat/0.jpg",
     "muscoliSecondari": [
-      "ADDOM",
+      "CORE",
       "POLP",
       "GLUT",
-      "FEMOR",
-      "LOM",
+      "FEMO",
+      "LOMB",
       "DELT",
       "TRIC"
     ],
@@ -2993,7 +2993,7 @@
     "focus": "QUAD",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Jerk_Dip_Squat/0.jpg",
     "muscoliSecondari": [
-      "ADDOM",
+      "CORE",
       "POLP"
     ],
     "difficolta": "Intermedio",
@@ -3018,10 +3018,10 @@
     "focus": "QUAD",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Snatch/0.jpg",
     "muscoliSecondari": [
-      "BIC",
+      "BICI",
       "GLUT",
-      "FEMOR",
-      "LOM",
+      "FEMO",
+      "LOMB",
       "DELT",
       "TRAP",
       "TRIC"
@@ -3047,10 +3047,10 @@
     "focus": "QUAD",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Power_Jerk/0.jpg",
     "muscoliSecondari": [
-      "ADDOM",
+      "CORE",
       "POLP",
       "GLUT",
-      "FEMOR",
+      "FEMO",
       "DELT",
       "TRIC"
     ],
@@ -3073,13 +3073,13 @@
   {
     "id": "snatch_deadlift",
     "nome": "Snatch Deadlift",
-    "focus": "FEMOR",
+    "focus": "FEMO",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Snatch_Deadlift/0.jpg",
     "muscoliSecondari": [
-      "AVAMB",
+      "AVA",
       "GLUT",
-      "FEMOR",
-      "LOM",
+      "FEMO",
+      "LOMB",
       "QUAD",
       "TRAP"
     ],
@@ -3105,7 +3105,7 @@
     "focus": "TRAP",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Snatch_Shrug/0.jpg",
     "muscoliSecondari": [
-      "AVAMB",
+      "AVA",
       "DELT"
     ],
     "difficolta": "Intermedio",
@@ -3131,10 +3131,10 @@
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Snatch_from_Blocks/0.jpg",
     "muscoliSecondari": [
       "POLP",
-      "AVAMB",
+      "AVA",
       "GLUT",
-      "FEMOR",
-      "LOM",
+      "FEMO",
+      "LOMB",
       "DELT",
       "TRAP",
       "TRIC"
@@ -3161,10 +3161,10 @@
     "focus": "QUAD",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Car_Deadlift/0.jpg",
     "muscoliSecondari": [
-      "AVAMB",
+      "AVA",
       "GLUT",
-      "FEMOR",
-      "LOM",
+      "FEMO",
+      "LOMB",
       "TRAP"
     ],
     "difficolta": "Intermedio",
@@ -3186,7 +3186,7 @@
   {
     "id": "chin_to_chest_stretch",
     "nome": "Stiramento Chin-a-Chest",
-    "focus": "COLLO",
+    "focus": "COLL",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Chin_To_Chest_Stretch/0.jpg",
     "muscoliSecondari": [
       "TRAP"
@@ -3210,7 +3210,7 @@
   {
     "id": "side_neck_stretch",
     "nome": "Stretching laterale del collo",
-    "focus": "COLLO",
+    "focus": "COLL",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Side_Neck_Stretch/0.jpg",
     "muscoliSecondari": [],
     "difficolta": "Principiante",
@@ -3236,9 +3236,9 @@
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Stride_Jump_Crossover/0.jpg",
     "muscoliSecondari": [
       "ABDU",
-      "ADDU",
+      "ADD",
       "POLP",
-      "FEMOR"
+      "FEMO"
     ],
     "difficolta": "Principiante",
     "tipoEsercizio": "Compound",
@@ -3259,7 +3259,7 @@
   {
     "id": "vertical_swing",
     "nome": "Swing Verticale",
-    "focus": "FEMOR",
+    "focus": "FEMO",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Vertical_Swing/0.jpg",
     "muscoliSecondari": [
       "GLUT",
@@ -3285,13 +3285,13 @@
   {
     "id": "sledgehammer_swings",
     "nome": "Swings con il Martello da Slitta",
-    "focus": "ADDOM",
+    "focus": "CORE",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Sledgehammer_Swings/0.jpg",
     "muscoliSecondari": [
       "POLP",
-      "AVAMB",
-      "DORSO",
-      "DORSO",
+      "AVA",
+      "LAT",
+      "LAT",
       "DELT"
     ],
     "difficolta": "Principiante",
@@ -3318,7 +3318,7 @@
     "muscoliSecondari": [
       "POLP",
       "GLUT",
-      "FEMOR"
+      "FEMO"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Compound",
@@ -3339,7 +3339,7 @@
   {
     "id": "linear_3_part_start_technique",
     "nome": "Tecnica Linear 3 Parti per lo Start",
-    "focus": "FEMOR",
+    "focus": "FEMO",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Linear_3-Part_Start_Technique/0.jpg",
     "muscoliSecondari": [
       "POLP",
@@ -3367,7 +3367,7 @@
     "focus": "PETT",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Heavy_Bag_Thrust/0.jpg",
     "muscoliSecondari": [
-      "ADDOM",
+      "CORE",
       "DELT",
       "TRIC"
     ],
@@ -3393,10 +3393,10 @@
     "focus": "QUAD",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Clean_Pull/0.jpg",
     "muscoliSecondari": [
-      "AVAMB",
+      "AVA",
       "GLUT",
-      "FEMOR",
-      "LOM",
+      "FEMO",
+      "LOMB",
       "TRAP"
     ],
     "difficolta": "Intermedio",
@@ -3423,7 +3423,7 @@
     "muscoliSecondari": [
       "POLP",
       "GLUT",
-      "FEMOR",
+      "FEMO",
       "QUAD",
       "DELT",
       "TRIC"
@@ -3451,10 +3451,10 @@
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Backward_Drag/0.jpg",
     "muscoliSecondari": [
       "POLP",
-      "AVAMB",
+      "AVA",
       "GLUT",
-      "FEMOR",
-      "LOM"
+      "FEMO",
+      "LOMB"
     ],
     "difficolta": "Principiante",
     "tipoEsercizio": "Compound",
@@ -3480,7 +3480,7 @@
     "muscoliSecondari": [
       "POLP",
       "GLUT",
-      "FEMOR"
+      "FEMO"
     ],
     "difficolta": "Principiante",
     "tipoEsercizio": "Compound",
@@ -3506,7 +3506,7 @@
     "muscoliSecondari": [
       "POLP",
       "GLUT",
-      "FEMOR"
+      "FEMO"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Compound",
@@ -3527,11 +3527,11 @@
   {
     "id": "knee_tuck_jump",
     "nome": "Tuck Jump alle Ginocchia",
-    "focus": "FEMOR",
+    "focus": "FEMO",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Knee_Tuck_Jump/0.jpg",
     "muscoliSecondari": [
       "ABDU",
-      "ADDU",
+      "ADD",
       "POLP",
       "GLUT",
       "QUAD"

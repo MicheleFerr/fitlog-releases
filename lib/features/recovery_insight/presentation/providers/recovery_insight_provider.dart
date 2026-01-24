@@ -14,6 +14,9 @@ import 'package:health/health.dart' show NumericHealthValue;
 import 'package:gymbro_flutter_new/features/ai_coach/data/datasources/healthkit_datasource.dart';
 import 'package:gymbro_flutter_new/features/history/presentation/providers/workout_history_provider.dart';
 import 'package:gymbro_flutter_new/features/auth/presentation/providers/consolidated_user_provider.dart';
+import 'package:gymbro_flutter_new/features/health_sync/domain/entities/body_measurement.dart';
+import 'package:gymbro_flutter_new/features/health_sync/domain/entities/health_data_type.dart';
+import 'package:gymbro_flutter_new/features/health_sync/presentation/providers/health_sync_provider.dart';
 import 'package:gymbro_flutter_new/features/recovery_insight/domain/entities/recovery_insight.dart';
 import 'package:gymbro_flutter_new/features/recovery_insight/domain/entities/sleep_record.dart';
 import 'package:gymbro_flutter_new/features/recovery_insight/domain/entities/sleep_workout_correlation.dart';
@@ -290,6 +293,10 @@ final sleepRecordsProvider =
 ///
 /// **Free users**: Basic score and recommendation
 /// **Pro users**: Full correlation analysis
+///
+/// **Bodyweight Exercise Volume**:
+/// Automatically uses user's body weight from Body Measurements for
+/// bodyweight exercises (push-ups, pull-ups, etc.) to calculate accurate volume.
 final recoveryInsightProvider =
     FutureProvider.autoDispose<RecoveryInsight>((ref) async {
   final service = ref.watch(sleepWorkoutCorrelationServiceProvider);
@@ -308,6 +315,31 @@ final recoveryInsightProvider =
     workoutHistory = [];
   }
 
+  // Get user's body weight for bodyweight exercise volume calculation
+  double? userBodyWeightKg;
+  try {
+    final weightMeasurements = await ref.watch(
+      bodyMeasurementsProvider(HealthDataType.bodyWeight).future,
+    );
+    if (weightMeasurements.isNotEmpty) {
+      // Get most recent measurement
+      final latestWeight = weightMeasurements.first;
+      // Convert to kg if needed
+      userBodyWeightKg = latestWeight.unit == MeasurementUnit.pounds
+          ? latestWeight.value * 0.453592 // lbs to kg
+          : latestWeight.value;
+
+      if (kDebugMode) {
+        debugPrint('[RecoveryInsight] User body weight: ${userBodyWeightKg.toStringAsFixed(1)}kg');
+      }
+    }
+  } catch (e) {
+    if (kDebugMode) {
+      debugPrint('[RecoveryInsight] Could not fetch body weight: $e');
+    }
+    // Continue without body weight - bodyweight exercises will have volume = 0
+  }
+
   // Handle no sleep data
   if (sleepRecords.isEmpty) {
     return RecoveryInsight.noData();
@@ -320,6 +352,7 @@ final recoveryInsightProvider =
       sleepHistory: sleepRecords,
       workoutHistory: workoutHistory.cast(),
       periodDays: 30,
+      userBodyWeightKg: userBodyWeightKg,
     );
   }
 

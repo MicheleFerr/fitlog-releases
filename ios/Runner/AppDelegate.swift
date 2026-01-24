@@ -291,6 +291,12 @@ import FirebaseCore
         // Setup WatchConnectivity for Apple Watch companion app
         WatchConnectivityManager.shared.setupChannel(with: messenger)
 
+        // Setup AudioDebugTestHandler for timer audio debug tests
+        AudioDebugTestHandler.shared.setup(binaryMessenger: messenger)
+
+        // Setup TimerSoundFix channel for sound preview in settings
+        TimerSoundFix.shared.setupFlutterChannel(with: messenger)
+
         // Setup WorkoutSession Live Activity manager (iOS 17+)
         if #available(iOS 17.0, *) {
             WorkoutSessionManager.shared.setupMethodChannel(with: messenger)

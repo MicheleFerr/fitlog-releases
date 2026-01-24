@@ -201,6 +201,12 @@ class AppIcons {
   /// ‹ Chevron left
   static const IconData chevronLeft = Icons.chevron_left;
 
+  /// ∨ Chevron down (for expandable menus)
+  static const IconData chevronDown = Icons.keyboard_arrow_down;
+
+  /// ⚡ Lightning (for advanced features)
+  static const IconData lightning = Icons.bolt;
+
   /// ⊗ Clear
   static const IconData clear = Icons.clear;
 
@@ -1089,6 +1095,15 @@ class AppIcons {
 
   /// 💧 Water drop
   static const IconData waterDrop = Icons.water_drop;
+
+  /// 📱 Smartphone (generic)
+  static const IconData smartphone = Icons.smartphone;
+
+  /// 🖥️ Desktop/Computer
+  static const IconData desktop = Icons.desktop_windows;
+
+  /// 🔗 Open external link
+  static const IconData openExternal = Icons.open_in_new;
 }
 
 /// 📦 Icon Groups - For when you need multiple related icons

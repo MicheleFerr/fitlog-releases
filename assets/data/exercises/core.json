@@ -6,7 +6,7 @@
     "imageUrl": "https://static.exercisedb.dev/media/km2Ljzj.gif",
     "muscoliSecondari": [
       "DELT",
-      "FEMOR"
+      "FEMO"
     ],
     "difficolta": "Principiante",
     "tipoEsercizio": "Compound",
@@ -32,7 +32,7 @@
   {
     "id": "hug_knees_to_chest",
     "nome": "Abbraccia le ginocchia al petto",
-    "focus": "LOM",
+    "focus": "LOMB",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Hug_Knees_To_Chest/0.jpg",
     "muscoliSecondari": [
       "GLUT"
@@ -56,7 +56,7 @@
   {
     "id": "hug_a_ball",
     "nome": "Abbraccia una Palla",
-    "focus": "LOM",
+    "focus": "LOMB",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Hug_A_Ball/0.jpg",
     "muscoliSecondari": [
       "POLP",
@@ -81,13 +81,13 @@
   {
     "id": "crossover_reverse_lunge",
     "nome": "Affondi incrociati inversi",
-    "focus": "LOM",
+    "focus": "LOMB",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Crossover_Reverse_Lunge/0.jpg",
     "muscoliSecondari": [
-      "ADDOM",
+      "CORE",
       "ABDU",
       "GLUT",
-      "FEMOR",
+      "FEMO",
       "QUAD"
     ],
     "difficolta": "Intermedio",
@@ -112,7 +112,7 @@
     "focus": "CORE",
     "imageUrl": "https://static.exercisedb.dev/media/K9VL0Jq.gif",
     "muscoliSecondari": [
-      "FEMOR",
+      "FEMO",
       "GLUT",
       "QUAD"
     ],
@@ -305,7 +305,7 @@
     ],
     "countingMode": "weighted",
     "muscoliSecondari": [
-      "FEMOR"
+      "FEMO"
     ],
     "version": "1.0.2",
     "versionHistory": [
@@ -335,7 +335,7 @@
     ],
     "countingMode": "weighted",
     "muscoliSecondari": [
-      "FEMOR"
+      "FEMO"
     ],
     "version": "1.0.2",
     "versionHistory": [
@@ -365,7 +365,7 @@
     ],
     "countingMode": "weighted",
     "muscoliSecondari": [
-      "FEMOR"
+      "FEMO"
     ],
     "version": "1.0.2",
     "versionHistory": [
@@ -377,7 +377,7 @@
   {
     "id": "knee_hip_raise_on_parallel_bars",
     "nome": "Alzata Ginocchia/Fianco sulle parallele",
-    "focus": "ADDOM",
+    "focus": "CORE",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Knee_Hip_Raise_On_Parallel_Bars/0.jpg",
     "muscoliSecondari": [],
     "difficolta": "Principiante",
@@ -402,7 +402,7 @@
     "focus": "CORE",
     "imageUrl": "https://static.exercisedb.dev/media/196HJGw.gif",
     "muscoliSecondari": [
-      "FEMOR",
+      "FEMO",
       "GLUT"
     ],
     "difficolta": "Principiante",
@@ -452,7 +452,7 @@
     ],
     "countingMode": "timed",
     "muscoliSecondari": [
-      "FEMOR"
+      "FEMO"
     ],
     "version": "1.0.2",
     "versionHistory": [
@@ -484,7 +484,7 @@
     ],
     "countingMode": "timed",
     "muscoliSecondari": [
-      "FEMOR"
+      "FEMO"
     ],
     "version": "1.0.2",
     "versionHistory": [
@@ -516,7 +516,7 @@
     ],
     "countingMode": "reps",
     "muscoliSecondari": [
-      "FEMOR"
+      "FEMO"
     ],
     "version": "1.0.2",
     "versionHistory": [
@@ -544,7 +544,7 @@
     ],
     "countingMode": "weighted",
     "muscoliSecondari": [
-      "FEMOR"
+      "FEMO"
     ],
     "version": "1.0.2",
     "versionHistory": [
@@ -560,7 +560,7 @@
     "imageUrl": "https://static.exercisedb.dev/media/backextension.gif",
     "muscoliSecondari": [
       "GLUT",
-      "FEMOR"
+      "FEMO"
     ],
     "difficolta": "Principiante",
     "tipoEsercizio": "Isolation",
@@ -664,7 +664,7 @@
     ],
     "countingMode": "reps",
     "muscoliSecondari": [
-      "FEMOR"
+      "FEMO"
     ],
     "version": "1.0.2",
     "versionHistory": [
@@ -774,7 +774,7 @@
     "countingMode": "reps",
     "tempoEsecuzione": "2-1-2-0",
     "muscoliSecondari": [
-      "FEMOR"
+      "FEMO"
     ],
     "version": "1.0.2",
     "versionHistory": [
@@ -790,7 +790,7 @@
     "imageUrl": "https://static.exercisedb.dev/media/ZgsNQ6d.gif",
     "muscoliSecondari": [
       "DELT",
-      "FEMOR"
+      "FEMO"
     ],
     "difficolta": "Principiante",
     "tipoEsercizio": "Compound",
@@ -817,7 +817,7 @@
   {
     "id": "seated_good_mornings",
     "nome": "Buongiornate Seduti",
-    "focus": "LOM",
+    "focus": "LOMB",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Seated_Good_Mornings/0.jpg",
     "muscoliSecondari": [
       "GLUT"
@@ -841,11 +841,11 @@
   {
     "id": "stiff_leg_barbell_good_morning",
     "nome": "Buongiorno con Bastone da Panca con Gambe Rigide",
-    "focus": "LOM",
+    "focus": "LOMB",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Stiff_Leg_Barbell_Good_Morning/0.jpg",
     "muscoliSecondari": [
       "GLUT",
-      "FEMOR"
+      "FEMO"
     ],
     "difficolta": "Principiante",
     "tipoEsercizio": "Compound",
@@ -870,7 +870,7 @@
     "imageUrl": "https://static.exercisedb.dev/media/dK9394r.gif",
     "muscoliSecondari": [
       "DELT",
-      "FEMOR",
+      "FEMO",
       "POLP",
       "QUAD"
     ],
@@ -900,7 +900,7 @@
     "imageUrl": "https://static.exercisedb.dev/media/0JtKWum.gif",
     "muscoliSecondari": [
       "DELT",
-      "FEMOR",
+      "FEMO",
       "POLP",
       "QUAD"
     ],
@@ -943,7 +943,7 @@
     ],
     "countingMode": "reps",
     "muscoliSecondari": [
-      "FEMOR"
+      "FEMO"
     ],
     "version": "1.0.2",
     "versionHistory": [
@@ -955,11 +955,11 @@
   {
     "id": "suspended_fallout",
     "nome": "Caduta Suspenda",
-    "focus": "ADDOM",
+    "focus": "CORE",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Suspended_Fallout/0.jpg",
     "muscoliSecondari": [
       "PETT",
-      "LOM",
+      "LOMB",
       "DELT"
     ],
     "difficolta": "Intermedio",
@@ -1027,7 +1027,7 @@
   {
     "id": "one_arm_high_pulley_cable_side_bends",
     "nome": "Cavi Laterali con Una Sola Braccia in Alto",
-    "focus": "ADDOM",
+    "focus": "CORE",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/One-Arm_High-Pulley_Cable_Side_Bends/0.jpg",
     "muscoliSecondari": [],
     "difficolta": "Principiante",
@@ -1067,7 +1067,7 @@
     ],
     "countingMode": "reps",
     "muscoliSecondari": [
-      "FEMOR"
+      "FEMO"
     ],
     "version": "1.0.2",
     "versionHistory": [
@@ -1096,7 +1096,7 @@
     ],
     "countingMode": "reps",
     "muscoliSecondari": [
-      "FEMOR"
+      "FEMO"
     ],
     "version": "1.0.2",
     "versionHistory": [
@@ -1108,10 +1108,10 @@
   {
     "id": "one_arm_medicine_ball_slam",
     "nome": "Colpo della Palla da Medicina con una Sola Braccia",
-    "focus": "ADDOM",
+    "focus": "CORE",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/One-Arm_Medicine_Ball_Slam/0.jpg",
     "muscoliSecondari": [
-      "DORSO",
+      "LAT",
       "DELT"
     ],
     "difficolta": "Principiante",
@@ -1137,7 +1137,7 @@
     "imageUrl": "https://static.exercisedb.dev/media/OaE7CpD.gif",
     "muscoliSecondari": [
       "DELT",
-      "FEMOR"
+      "FEMO"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Compound",
@@ -1162,7 +1162,7 @@
   {
     "id": "spider_crawl",
     "nome": "Cracco della Ragno",
-    "focus": "ADDOM",
+    "focus": "CORE",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Spider_Crawl/0.jpg",
     "muscoliSecondari": [
       "PETT",
@@ -1222,7 +1222,7 @@
     "imageUrl": "https://static.exercisedb.dev/media/9c6T1YX.gif",
     "muscoliSecondari": [
       "DELT",
-      "FEMOR",
+      "FEMO",
       "GLUT",
       "QUAD"
     ],
@@ -1250,11 +1250,11 @@
   {
     "id": "gorilla_chin_crunch",
     "nome": "Crollo del Gorilla/Crunk",
-    "focus": "ADDOM",
+    "focus": "CORE",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Gorilla_Chin_Crunch/0.jpg",
     "muscoliSecondari": [
-      "BIC",
-      "DORSO"
+      "BICI",
+      "LAT"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Compound",
@@ -1275,7 +1275,7 @@
   {
     "id": "bosu_ball_cable_crunch_with_side_bends",
     "nome": "Crouch con la palla da bosu e piegamenti su cavo con curve laterali",
-    "focus": "ADDOM",
+    "focus": "CORE",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Bosu_Ball_Cable_Crunch_With_Side_Bends/0.jpg",
     "muscoliSecondari": [],
     "difficolta": "Principiante",
@@ -1297,7 +1297,7 @@
   {
     "id": "kneeling_cable_crunch_with_alternating_oblique_twists",
     "nome": "Crouching Cable Crunch con Alternating Oblique Twists",
-    "focus": "ADDOM",
+    "focus": "CORE",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Kneeling_Cable_Crunch_With_Alternating_Oblique_Twists/0.jpg",
     "muscoliSecondari": [],
     "difficolta": "Principiante",
@@ -1319,7 +1319,7 @@
   {
     "id": "crunches",
     "nome": "Crunch",
-    "focus": "ADDOM",
+    "focus": "CORE",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Crunches/0.jpg",
     "muscoliSecondari": [],
     "difficolta": "Principiante",
@@ -1425,7 +1425,7 @@
   {
     "id": "crunch___legs_on_exercise_ball",
     "nome": "Crunch Gambe su Palla da Esercizio",
-    "focus": "ADDOM",
+    "focus": "CORE",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Crunch_-_Legs_On_Exercise_Ball/0.jpg",
     "muscoliSecondari": [],
     "difficolta": "Principiante",
@@ -1620,7 +1620,7 @@
   {
     "id": "oblique_crunches",
     "nome": "Crunch Obliqui",
-    "focus": "ADDOM",
+    "focus": "CORE",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Oblique_Crunches/0.jpg",
     "muscoliSecondari": [],
     "difficolta": "Principiante",
@@ -1642,7 +1642,7 @@
   {
     "id": "oblique_crunches___on_the_floor",
     "nome": "Crunch Obliqui a Terra",
-    "focus": "ADDOM",
+    "focus": "CORE",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Oblique_Crunches_-_On_The_Floor/0.jpg",
     "muscoliSecondari": [],
     "difficolta": "Principiante",
@@ -1754,7 +1754,7 @@
   {
     "id": "standing_rope_crunch",
     "nome": "Crunch alla Corda in Posizione Inclusa",
-    "focus": "ADDOM",
+    "focus": "CORE",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Standing_Rope_Crunch/0.jpg",
     "muscoliSecondari": [],
     "difficolta": "Principiante",
@@ -1807,7 +1807,7 @@
   {
     "id": "weighted_crunches",
     "nome": "Crunch con Pesa",
-    "focus": "ADDOM",
+    "focus": "CORE",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Weighted_Crunches/0.jpg",
     "muscoliSecondari": [],
     "difficolta": "Principiante",
@@ -1915,7 +1915,7 @@
   {
     "id": "rope_crunch",
     "nome": "Crunch con la corda",
-    "focus": "ADDOM",
+    "focus": "CORE",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Rope_Crunch/0.jpg",
     "muscoliSecondari": [],
     "difficolta": "Principiante",
@@ -2051,7 +2051,7 @@
   {
     "id": "exercise_ball_crunch",
     "nome": "Crunch su Palla da Esercizio",
-    "focus": "ADDOM",
+    "focus": "CORE",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Exercise_Ball_Crunch/0.jpg",
     "muscoliSecondari": [],
     "difficolta": "Principiante",
@@ -2073,7 +2073,7 @@
   {
     "id": "cable_crunch",
     "nome": "Crusio al Cavo",
-    "focus": "ADDOM",
+    "focus": "CORE",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Cable_Crunch/0.jpg",
     "muscoliSecondari": [],
     "difficolta": "Principiante",
@@ -2113,7 +2113,7 @@
     ],
     "countingMode": "reps",
     "muscoliSecondari": [
-      "FEMOR"
+      "FEMO"
     ],
     "version": "1.0.2",
     "versionHistory": [
@@ -2173,7 +2173,7 @@
     "countingMode": "reps",
     "tempoEsecuzione": "2-1-2-1",
     "muscoliSecondari": [
-      "FEMOR"
+      "FEMO"
     ],
     "version": "1.0.2",
     "versionHistory": [
@@ -2185,14 +2185,14 @@
   {
     "id": "reverse_band_deadlift",
     "nome": "Deadlift con Banda al Contrario",
-    "focus": "LOM",
+    "focus": "LOMB",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Reverse_Band_Deadlift/0.jpg",
     "muscoliSecondari": [
       "ABDU",
-      "ADDU",
+      "ADD",
       "POLP",
       "GLUT",
-      "FEMOR",
+      "FEMO",
       "QUAD"
     ],
     "difficolta": "Avanzato",
@@ -2297,7 +2297,7 @@
   {
     "id": "decline_reverse_crunch",
     "nome": "Decrescente Crunch Inversione",
-    "focus": "ADDOM",
+    "focus": "CORE",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Decline_Reverse_Crunch/0.jpg",
     "muscoliSecondari": [],
     "difficolta": "Principiante",
@@ -2348,12 +2348,12 @@
   {
     "id": "weighted_ball_hyperextension",
     "nome": "Estensione Iperestensione con Palla Pesante",
-    "focus": "LOM",
+    "focus": "LOMB",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Weighted_Ball_Hyperextension/0.jpg",
     "muscoliSecondari": [
       "GLUT",
-      "FEMOR",
-      "DORSO"
+      "FEMO",
+      "LAT"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Compound",
@@ -2378,7 +2378,7 @@
     "imageUrl": "https://static.exercisedb.dev/media/rUXfn3R.gif",
     "muscoliSecondari": [
       "GLUT",
-      "FEMOR"
+      "FEMO"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Compound",
@@ -2493,11 +2493,11 @@
   {
     "id": "hyperextensions_back_extensions",
     "nome": "Estensioni Hiperextensive (Estensioni Dorso)",
-    "focus": "LOM",
+    "focus": "LOMB",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Hyperextensions_Back_Extensions/0.jpg",
     "muscoliSecondari": [
       "GLUT",
-      "FEMOR"
+      "FEMO"
     ],
     "difficolta": "Principiante",
     "tipoEsercizio": "Isolation",
@@ -2518,11 +2518,11 @@
   {
     "id": "hyperextensions_with_no_hyperextension_bench",
     "nome": "Estensioni Hiperextensive Senza Panca per Estensioni Hiperextensive",
-    "focus": "LOM",
+    "focus": "LOMB",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Hyperextensions_With_No_Hyperextension_Bench/0.jpg",
     "muscoliSecondari": [
       "GLUT",
-      "FEMOR"
+      "FEMO"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Compound",
@@ -2563,7 +2563,7 @@
     ],
     "countingMode": "reps",
     "muscoliSecondari": [
-      "FEMOR"
+      "FEMO"
     ],
     "version": "1.0.2",
     "versionHistory": [
@@ -2592,7 +2592,7 @@
     ],
     "countingMode": "reps",
     "muscoliSecondari": [
-      "FEMOR"
+      "FEMO"
     ],
     "version": "1.0.2",
     "versionHistory": [
@@ -2652,7 +2652,7 @@
     ],
     "countingMode": "reps",
     "muscoliSecondari": [
-      "FEMOR"
+      "FEMO"
     ],
     "version": "1.0.2",
     "versionHistory": [
@@ -2682,7 +2682,7 @@
     ],
     "countingMode": "weighted",
     "muscoliSecondari": [
-      "FEMOR"
+      "FEMO"
     ],
     "version": "1.0.2",
     "versionHistory": [
@@ -2744,7 +2744,7 @@
     ],
     "countingMode": "weighted",
     "muscoliSecondari": [
-      "FEMOR"
+      "FEMO"
     ],
     "version": "1.0.2",
     "versionHistory": [
@@ -2928,7 +2928,7 @@
     "countingMode": "reps",
     "tempoEsecuzione": "2-1-2-0",
     "muscoliSecondari": [
-      "FEMOR"
+      "FEMO"
     ],
     "version": "1.0.2",
     "versionHistory": [
@@ -2993,11 +2993,11 @@
   {
     "id": "landmine_180s",
     "nome": "I 180° Landmine",
-    "focus": "ADDOM",
+    "focus": "CORE",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Landmine_180s/0.jpg",
     "muscoliSecondari": [
       "GLUT",
-      "LOM",
+      "LOMB",
       "DELT"
     ],
     "difficolta": "Principiante",
@@ -3261,7 +3261,7 @@
     ],
     "countingMode": "weighted",
     "muscoliSecondari": [
-      "FEMOR"
+      "FEMO"
     ],
     "version": "1.0.2",
     "versionHistory": [
@@ -3289,7 +3289,7 @@
     ],
     "countingMode": "weighted",
     "muscoliSecondari": [
-      "FEMOR"
+      "FEMO"
     ],
     "version": "1.0.2",
     "versionHistory": [
@@ -3320,7 +3320,7 @@
     "countingMode": "weighted",
     "tempoEsecuzione": "2-1-2-0",
     "muscoliSecondari": [
-      "FEMOR"
+      "FEMO"
     ],
     "version": "1.0.2",
     "versionHistory": [
@@ -3336,7 +3336,7 @@
     "imageUrl": "https://static.exercisedb.dev/media/TV87DNB.gif",
     "muscoliSecondari": [
       "DELT",
-      "FEMOR"
+      "FEMO"
     ],
     "difficolta": "Principiante",
     "tipoEsercizio": "Compound",
@@ -3452,7 +3452,7 @@
     "imageUrl": "https://static.exercisedb.dev/media/zhMwOwE.gif",
     "muscoliSecondari": [
       "GLUT",
-      "FEMOR"
+      "FEMO"
     ],
     "difficolta": "Principiante",
     "tipoEsercizio": "Compound",
@@ -3482,7 +3482,7 @@
     "imageUrl": "https://static.exercisedb.dev/media/8urJS9b.gif",
     "muscoliSecondari": [
       "GLUT",
-      "FEMOR"
+      "FEMO"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Compound",
@@ -3512,7 +3512,7 @@
     "imageUrl": "https://static.exercisedb.dev/media/zkgRrbK.gif",
     "muscoliSecondari": [
       "GLUT",
-      "FEMOR"
+      "FEMO"
     ],
     "difficolta": "Principiante",
     "tipoEsercizio": "Compound",
@@ -3542,7 +3542,7 @@
     "imageUrl": "https://static.exercisedb.dev/media/mr7pkqP.gif",
     "muscoliSecondari": [
       "DELT",
-      "FEMOR",
+      "FEMO",
       "POLP",
       "QUAD"
     ],
@@ -3597,7 +3597,7 @@
   {
     "id": "side_jackknife",
     "nome": "Jackknife laterali",
-    "focus": "ADDOM",
+    "focus": "CORE",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Side_Jackknife/0.jpg",
     "muscoliSecondari": [],
     "difficolta": "Principiante",
@@ -3695,7 +3695,7 @@
     ],
     "countingMode": "timed",
     "muscoliSecondari": [
-      "FEMOR"
+      "FEMO"
     ],
     "version": "1.0.2",
     "versionHistory": [
@@ -3707,7 +3707,7 @@
   {
     "id": "weighted_ball_side_bend",
     "nome": "Lancio Laterale con Palla Pesante",
-    "focus": "ADDOM",
+    "focus": "CORE",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Weighted_Ball_Side_Bend/0.jpg",
     "muscoliSecondari": [],
     "difficolta": "Intermedio",
@@ -3781,7 +3781,7 @@
     "countingMode": "reps",
     "muscoliSecondari": [
       "TRIC",
-      "FEMOR"
+      "FEMO"
     ],
     "version": "1.0.2",
     "versionHistory": [
@@ -3809,7 +3809,7 @@
     ],
     "countingMode": "weighted",
     "muscoliSecondari": [
-      "FEMOR"
+      "FEMO"
     ],
     "version": "1.0.2",
     "versionHistory": [
@@ -3821,7 +3821,7 @@
   {
     "id": "ab_crunch_machine",
     "nome": "Macchina per Crunch Abdominali",
-    "focus": "ADDOM",
+    "focus": "CORE",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Ab_Crunch_Machine/0.jpg",
     "muscoliSecondari": [],
     "difficolta": "Intermedio",
@@ -3965,7 +3965,7 @@
   {
     "id": "scissor_kick",
     "nome": "Mossa Scissore",
-    "focus": "ADDOM",
+    "focus": "CORE",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Scissor_Kick/0.jpg",
     "muscoliSecondari": [],
     "difficolta": "Principiante",
@@ -4075,7 +4075,7 @@
   {
     "id": "decline_oblique_crunch",
     "nome": "Obliquo Declino Crunch",
-    "focus": "ADDOM",
+    "focus": "CORE",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Decline_Oblique_Crunch/0.jpg",
     "muscoliSecondari": [],
     "difficolta": "Principiante",
@@ -4117,7 +4117,7 @@
     "countingMode": "weighted",
     "tempoEsecuzione": "2-1-2-0",
     "muscoliSecondari": [
-      "FEMOR"
+      "FEMO"
     ],
     "version": "1.0.2",
     "versionHistory": [
@@ -4129,12 +4129,12 @@
   {
     "id": "bent_press",
     "nome": "Panca Piegata",
-    "focus": "ADDOM",
+    "focus": "CORE",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Bent_Press/0.jpg",
     "muscoliSecondari": [
       "GLUT",
-      "FEMOR",
-      "LOM",
+      "FEMO",
+      "LOMB",
       "QUAD",
       "DELT",
       "TRIC"
@@ -4158,11 +4158,11 @@
   {
     "id": "kettlebell_pass_between_the_legs",
     "nome": "Passa il Kettlebell tra le gambe",
-    "focus": "ADDOM",
+    "focus": "CORE",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Kettlebell_Pass_Between_The_Legs/0.jpg",
     "muscoliSecondari": [
       "GLUT",
-      "FEMOR",
+      "FEMO",
       "DELT"
     ],
     "difficolta": "Intermedio",
@@ -4188,7 +4188,7 @@
     "imageUrl": "https://static.exercisedb.dev/media/ErqK3UL.gif",
     "muscoliSecondari": [
       "DELT",
-      "FEMOR",
+      "FEMO",
       "GLUT",
       "QUAD"
     ],
@@ -4239,7 +4239,7 @@
     ],
     "countingMode": "reps",
     "muscoliSecondari": [
-      "FEMOR"
+      "FEMO"
     ],
     "version": "1.0.2",
     "versionHistory": [
@@ -4251,7 +4251,7 @@
   {
     "id": "press_sit_up",
     "nome": "Piegamenti su Panca",
-    "focus": "ADDOM",
+    "focus": "CORE",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Press_Sit-Up/0.jpg",
     "muscoliSecondari": [
       "PETT",
@@ -4293,7 +4293,7 @@
     ],
     "countingMode": "weighted",
     "muscoliSecondari": [
-      "FEMOR"
+      "FEMO"
     ],
     "version": "1.0.2",
     "versionHistory": [
@@ -4321,7 +4321,7 @@
     ],
     "countingMode": "weighted",
     "muscoliSecondari": [
-      "FEMOR"
+      "FEMO"
     ],
     "version": "1.0.2",
     "versionHistory": [
@@ -4450,7 +4450,7 @@
   {
     "id": "pyramid",
     "nome": "Piramide",
-    "focus": "LOM",
+    "focus": "LOMB",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Pyramid/0.jpg",
     "muscoliSecondari": [
       "DELT"
@@ -4473,7 +4473,7 @@
   {
     "id": "plank",
     "nome": "Planca",
-    "focus": "ADDOM",
+    "focus": "CORE",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Plank/0.jpg",
     "muscoliSecondari": [],
     "difficolta": "Principiante",
@@ -4626,7 +4626,7 @@
     "imageUrl": "https://static.exercisedb.dev/media/tFToB7l.gif",
     "muscoliSecondari": [
       "DELT",
-      "FEMOR",
+      "FEMO",
       "GLUT"
     ],
     "difficolta": "Principiante",
@@ -4784,7 +4784,7 @@
   {
     "id": "side_bridge",
     "nome": "Ponte laterale",
-    "focus": "ADDOM",
+    "focus": "CORE",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Side_Bridge/0.jpg",
     "muscoliSecondari": [
       "DELT"
@@ -4808,11 +4808,11 @@
   {
     "id": "childs_pose",
     "nome": "Posa del Bambino",
-    "focus": "LOM",
+    "focus": "LOMB",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Childs_Pose/0.jpg",
     "muscoliSecondari": [
       "GLUT",
-      "DORSO"
+      "LAT"
     ],
     "difficolta": "Principiante",
     "tipoEsercizio": "Compound",
@@ -4896,7 +4896,7 @@
   {
     "id": "pallof_press_with_rotation",
     "nome": "Pressa con Rotazione",
-    "focus": "ADDOM",
+    "focus": "CORE",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Pallof_Press_With_Rotation/0.jpg",
     "muscoliSecondari": [
       "PETT",
@@ -4922,7 +4922,7 @@
   {
     "id": "pallof_press",
     "nome": "Pressa con le Pallle",
-    "focus": "ADDOM",
+    "focus": "CORE",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Pallof_Press/0.jpg",
     "muscoliSecondari": [
       "PETT",
@@ -4995,7 +4995,7 @@
     ],
     "countingMode": "reps",
     "muscoliSecondari": [
-      "FEMOR"
+      "FEMO"
     ],
     "version": "1.0.2",
     "versionHistory": [
@@ -5007,7 +5007,7 @@
   {
     "id": "flat_bench_lying_leg_raise",
     "nome": "Alzate Gambe su Panca",
-    "focus": "ADDOM",
+    "focus": "CORE",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Flat_Bench_Lying_Leg_Raise/0.jpg",
     "muscoliSecondari": [],
     "difficolta": "Principiante",
@@ -5029,7 +5029,7 @@
   {
     "id": "smith_machine_hip_raise",
     "nome": "Alzata delle gambe alla Macchina Smith",
-    "focus": "ADDOM",
+    "focus": "CORE",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Smith_Machine_Hip_Raise/0.jpg",
     "muscoliSecondari": [],
     "difficolta": "Principiante",
@@ -5051,10 +5051,10 @@
   {
     "id": "barbell_ab_rollout",
     "nome": "Roll Out con Barbell per gli Addominali",
-    "focus": "ADDOM",
+    "focus": "CORE",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Barbell_Ab_Rollout/0.jpg",
     "muscoliSecondari": [
-      "LOM",
+      "LOMB",
       "DELT"
     ],
     "difficolta": "Intermedio",
@@ -5076,12 +5076,12 @@
   {
     "id": "barbell_rollout_from_bench",
     "nome": "Roll Out con Bilanciere da Panca",
-    "focus": "ADDOM",
+    "focus": "CORE",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Barbell_Rollout_from_Bench/0.jpg",
     "muscoliSecondari": [
       "GLUT",
-      "FEMOR",
-      "DORSO",
+      "FEMO",
+      "LAT",
       "DELT"
     ],
     "difficolta": "Intermedio",
@@ -5103,10 +5103,10 @@
   {
     "id": "barbell_ab_rollout___on_knees",
     "nome": "Roll Out sulle Ginocchia con Bilanciere",
-    "focus": "ADDOM",
+    "focus": "CORE",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Barbell_Ab_Rollout_-_On_Knees/0.jpg",
     "muscoliSecondari": [
-      "LOM",
+      "LOMB",
       "DELT"
     ],
     "difficolta": "Avanzato",
@@ -5128,7 +5128,7 @@
   {
     "id": "ab_roller",
     "nome": "Roller per Addome Ab Roll",
-    "focus": "ADDOM",
+    "focus": "CORE",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Ab_Roller/0.jpg",
     "muscoliSecondari": [
       "DELT"
@@ -5172,7 +5172,7 @@
     ],
     "countingMode": "weighted",
     "muscoliSecondari": [
-      "FEMOR"
+      "FEMO"
     ],
     "version": "1.0.2",
     "versionHistory": [
@@ -5200,7 +5200,7 @@
     ],
     "countingMode": "weighted",
     "muscoliSecondari": [
-      "FEMOR"
+      "FEMO"
     ],
     "version": "1.0.2",
     "versionHistory": [
@@ -5246,7 +5246,7 @@
   {
     "id": "torso_rotation",
     "nome": "Rotazione del Torso",
-    "focus": "ADDOM",
+    "focus": "CORE",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Torso_Rotation/0.jpg",
     "muscoliSecondari": [],
     "difficolta": "Principiante",
@@ -5307,7 +5307,7 @@
     "countingMode": "reps",
     "tempoEsecuzione": "1-0-1-0",
     "muscoliSecondari": [
-      "FEMOR"
+      "FEMO"
     ],
     "version": "1.0.2",
     "versionHistory": [
@@ -5339,7 +5339,7 @@
     ],
     "countingMode": "weighted",
     "muscoliSecondari": [
-      "FEMOR"
+      "FEMO"
     ],
     "version": "1.0.2",
     "versionHistory": [
@@ -5371,7 +5371,7 @@
     ],
     "countingMode": "weighted",
     "muscoliSecondari": [
-      "FEMOR"
+      "FEMO"
     ],
     "version": "1.0.2",
     "versionHistory": [
@@ -5403,7 +5403,7 @@
     ],
     "countingMode": "weighted",
     "muscoliSecondari": [
-      "FEMOR"
+      "FEMO"
     ],
     "version": "1.0.2",
     "versionHistory": [
@@ -5444,7 +5444,7 @@
     "focus": "CORE",
     "imageUrl": "https://static.exercisedb.dev/media/Qoujh3Q.gif",
     "muscoliSecondari": [
-      "FEMOR",
+      "FEMO",
       "POLP",
       "QUAD"
     ],
@@ -5475,7 +5475,7 @@
   {
     "id": "frog_sit_ups",
     "nome": "Schiaccianoci con Gambe Piegate",
-    "focus": "ADDOM",
+    "focus": "CORE",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Frog_Sit-Ups/0.jpg",
     "muscoliSecondari": [],
     "difficolta": "Intermedio",
@@ -5497,7 +5497,7 @@
   {
     "id": "lower_back_smr",
     "nome": "Schiena a Terra",
-    "focus": "LOM",
+    "focus": "LOMB",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Lower_Back-SMR/0.jpg",
     "muscoliSecondari": [],
     "difficolta": "Principiante",
@@ -5519,7 +5519,7 @@
   {
     "id": "standing_cable_wood_chop",
     "nome": "Scivolata in Legno da Stanca con Cavo",
-    "focus": "ADDOM",
+    "focus": "CORE",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Standing_Cable_Wood_Chop/0.jpg",
     "muscoliSecondari": [
       "DELT"
@@ -5543,7 +5543,7 @@
   {
     "id": "sit_up",
     "nome": "Sit Up",
-    "focus": "ADDOM",
+    "focus": "CORE",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Sit-Up/0.jpg",
     "muscoliSecondari": [],
     "difficolta": "Principiante",
@@ -5585,7 +5585,7 @@
     ],
     "countingMode": "reps",
     "muscoliSecondari": [
-      "FEMOR"
+      "FEMO"
     ],
     "version": "1.0.2",
     "versionHistory": [
@@ -5613,7 +5613,7 @@
     ],
     "countingMode": "weighted",
     "muscoliSecondari": [
-      "FEMOR"
+      "FEMO"
     ],
     "version": "1.0.2",
     "versionHistory": [
@@ -5645,7 +5645,7 @@
     ],
     "countingMode": "reps",
     "muscoliSecondari": [
-      "FEMOR"
+      "FEMO"
     ],
     "version": "1.0.2",
     "versionHistory": [
@@ -5674,7 +5674,7 @@
     ],
     "countingMode": "reps",
     "muscoliSecondari": [
-      "FEMOR"
+      "FEMO"
     ],
     "version": "1.0.2",
     "versionHistory": [
@@ -5874,7 +5874,7 @@
     ],
     "countingMode": "reps",
     "muscoliSecondari": [
-      "FEMOR"
+      "FEMO"
     ],
     "version": "1.0.2",
     "versionHistory": [
@@ -5995,10 +5995,10 @@
   {
     "id": "barbell_side_bend",
     "nome": "Side Bend con Bilanciere",
-    "focus": "ADDOM",
+    "focus": "CORE",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Barbell_Side_Bend/0.jpg",
     "muscoliSecondari": [
-      "LOM"
+      "LOMB"
     ],
     "difficolta": "Principiante",
     "tipoEsercizio": "Isolation",
@@ -6183,7 +6183,7 @@
   {
     "id": "weighted_sit_ups___with_bands",
     "nome": "Sit-up Pesanti con Fasce",
-    "focus": "ADDOM",
+    "focus": "CORE",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Weighted_Sit-Ups_-_With_Bands/0.jpg",
     "muscoliSecondari": [],
     "difficolta": "Intermedio",
@@ -6375,7 +6375,7 @@
     "focus": "CORE",
     "imageUrl": "https://static.exercisedb.dev/media/CqhoytW.gif",
     "muscoliSecondari": [
-      "FEMOR",
+      "FEMO",
       "GLUT"
     ],
     "difficolta": "Intermedio",
@@ -6426,7 +6426,7 @@
     "countingMode": "reps",
     "tempoEsecuzione": "2-1-2-0",
     "muscoliSecondari": [
-      "FEMOR"
+      "FEMO"
     ],
     "version": "1.0.2",
     "versionHistory": [
@@ -6455,7 +6455,7 @@
     ],
     "countingMode": "reps",
     "muscoliSecondari": [
-      "FEMOR"
+      "FEMO"
     ],
     "version": "1.0.2",
     "versionHistory": [
@@ -6487,7 +6487,7 @@
     ],
     "countingMode": "weighted",
     "muscoliSecondari": [
-      "FEMOR"
+      "FEMO"
     ],
     "version": "1.0.2",
     "versionHistory": [
@@ -6551,7 +6551,7 @@
     ],
     "countingMode": "reps",
     "muscoliSecondari": [
-      "FEMOR"
+      "FEMO"
     ],
     "version": "1.0.2",
     "versionHistory": [
@@ -6583,7 +6583,7 @@
     ],
     "countingMode": "reps",
     "muscoliSecondari": [
-      "FEMOR"
+      "FEMO"
     ],
     "version": "1.0.2",
     "versionHistory": [
@@ -6616,7 +6616,7 @@
     "countingMode": "reps",
     "muscoliSecondari": [
       "TRIC",
-      "FEMOR"
+      "FEMO"
     ],
     "version": "1.0.2",
     "versionHistory": [
@@ -6648,7 +6648,7 @@
     ],
     "countingMode": "reps",
     "muscoliSecondari": [
-      "FEMOR"
+      "FEMO"
     ],
     "version": "1.0.2",
     "versionHistory": [
@@ -6680,7 +6680,7 @@
     ],
     "countingMode": "reps",
     "muscoliSecondari": [
-      "FEMOR"
+      "FEMO"
     ],
     "version": "1.0.2",
     "versionHistory": [
@@ -6709,7 +6709,7 @@
     ],
     "countingMode": "reps",
     "muscoliSecondari": [
-      "FEMOR"
+      "FEMO"
     ],
     "version": "1.0.2",
     "versionHistory": [
@@ -6741,7 +6741,7 @@
     ],
     "countingMode": "reps",
     "muscoliSecondari": [
-      "FEMOR"
+      "FEMO"
     ],
     "version": "1.0.2",
     "versionHistory": [
@@ -6773,7 +6773,7 @@
     ],
     "countingMode": "reps",
     "muscoliSecondari": [
-      "FEMOR"
+      "FEMO"
     ],
     "version": "1.0.2",
     "versionHistory": [
@@ -6805,7 +6805,7 @@
     ],
     "countingMode": "weighted",
     "muscoliSecondari": [
-      "FEMOR"
+      "FEMO"
     ],
     "version": "1.0.2",
     "versionHistory": [
@@ -6837,7 +6837,7 @@
     ],
     "countingMode": "reps",
     "muscoliSecondari": [
-      "FEMOR"
+      "FEMO"
     ],
     "version": "1.0.2",
     "versionHistory": [
@@ -6869,7 +6869,7 @@
     ],
     "countingMode": "weighted",
     "muscoliSecondari": [
-      "FEMOR"
+      "FEMO"
     ],
     "version": "1.0.2",
     "versionHistory": [
@@ -6901,7 +6901,7 @@
     ],
     "countingMode": "weighted",
     "muscoliSecondari": [
-      "FEMOR"
+      "FEMO"
     ],
     "version": "1.0.2",
     "versionHistory": [
@@ -6930,7 +6930,7 @@
     ],
     "countingMode": "reps",
     "muscoliSecondari": [
-      "FEMOR"
+      "FEMO"
     ],
     "version": "1.0.2",
     "versionHistory": [
@@ -6942,7 +6942,7 @@
   {
     "id": "standing_cable_lift",
     "nome": "Sollevamento con Cavo in Posizione Inclinata",
-    "focus": "ADDOM",
+    "focus": "CORE",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Standing_Cable_Lift/0.jpg",
     "muscoliSecondari": [
       "DELT"
@@ -6966,7 +6966,7 @@
   {
     "id": "bent_knee_hip_raise",
     "nome": "Alzatamento delle gambe con Ginocchia piegate",
-    "focus": "ADDOM",
+    "focus": "CORE",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Bent-Knee_Hip_Raise/0.jpg",
     "muscoliSecondari": [],
     "difficolta": "Principiante",
@@ -7165,13 +7165,13 @@
   {
     "id": "deadlift_with_chains",
     "nome": "Stacco Con Catene",
-    "focus": "LOM",
+    "focus": "LOMB",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Deadlift_with_Chains/0.jpg",
     "muscoliSecondari": [
-      "AVAMB",
+      "AVA",
       "GLUT",
-      "FEMOR",
-      "DORSO",
+      "FEMO",
+      "LAT",
       "QUAD",
       "TRAP"
     ],
@@ -7194,13 +7194,13 @@
   {
     "id": "deadlift_with_bands",
     "nome": "Stacco con Fasce Elastiche",
-    "focus": "LOM",
+    "focus": "LOMB",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Deadlift_with_Bands/0.jpg",
     "muscoliSecondari": [
-      "AVAMB",
+      "AVA",
       "GLUT",
-      "FEMOR",
-      "DORSO",
+      "FEMO",
+      "LAT",
       "QUAD",
       "TRAP"
     ],
@@ -7223,13 +7223,13 @@
   {
     "id": "deficit_deadlift",
     "nome": "Stance per Deadlift con Deficit",
-    "focus": "LOM",
+    "focus": "LOMB",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Deficit_Deadlift/0.jpg",
     "muscoliSecondari": [
-      "AVAMB",
+      "AVA",
       "GLUT",
-      "FEMOR",
-      "DORSO",
+      "FEMO",
+      "LAT",
       "QUAD",
       "TRAP"
     ],
@@ -7284,12 +7284,12 @@
   {
     "id": "overhead_stretch",
     "nome": "Stretching a Capo Fermo",
-    "focus": "ADDOM",
+    "focus": "CORE",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Overhead_Stretch/0.jpg",
     "muscoliSecondari": [
       "PETT",
-      "AVAMB",
-      "DORSO",
+      "AVA",
+      "LAT",
       "TRIC"
     ],
     "difficolta": "Principiante",
@@ -7311,7 +7311,7 @@
   {
     "id": "seated_overhead_stretch",
     "nome": "Stretching a Capo Fisso Seduto",
-    "focus": "ADDOM",
+    "focus": "CORE",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Seated_Overhead_Stretch/0.jpg",
     "muscoliSecondari": [],
     "difficolta": "Principiante",
@@ -7333,10 +7333,10 @@
   {
     "id": "cat_stretch",
     "nome": "Stretching per la Cat",
-    "focus": "LOM",
+    "focus": "LOMB",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Cat_Stretch/0.jpg",
     "muscoliSecondari": [
-      "DORSO",
+      "LAT",
       "TRAP"
     ],
     "difficolta": "Principiante",
@@ -7358,7 +7358,7 @@
   {
     "id": "dancers_stretch",
     "nome": "Stretcho per Ballerini",
-    "focus": "LOM",
+    "focus": "LOMB",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Dancers_Stretch/0.jpg",
     "muscoliSecondari": [
       "ABDU",
@@ -7387,7 +7387,7 @@
     "imageUrl": "https://static.exercisedb.dev/media/suitcasecarry.gif",
     "muscoliSecondari": [
       "TRAP",
-      "AVAMB"
+      "AVA"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Compound",
@@ -7412,11 +7412,11 @@
   {
     "id": "superman",
     "nome": "Superman",
-    "focus": "LOM",
+    "focus": "LOMB",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Superman/0.jpg",
     "muscoliSecondari": [
       "GLUT",
-      "FEMOR"
+      "FEMO"
     ],
     "difficolta": "Principiante",
     "tipoEsercizio": "Compound",
@@ -7436,7 +7436,7 @@
   {
     "id": "seated_leg_tucks",
     "nome": "Tacchi alle gambe Seduti",
-    "focus": "ADDOM",
+    "focus": "CORE",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Seated_Leg_Tucks/0.jpg",
     "muscoliSecondari": [],
     "difficolta": "Principiante",
@@ -7458,12 +7458,12 @@
   {
     "id": "rack_pull_with_bands",
     "nome": "Tira al Rack con Fasce Elastiche",
-    "focus": "LOM",
+    "focus": "LOMB",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Rack_Pull_with_Bands/0.jpg",
     "muscoliSecondari": [
-      "AVAMB",
+      "AVA",
       "GLUT",
-      "FEMOR",
+      "FEMO",
       "QUAD",
       "TRAP"
     ],
@@ -7503,7 +7503,7 @@
     ],
     "countingMode": "weighted",
     "muscoliSecondari": [
-      "FEMOR"
+      "FEMO"
     ],
     "version": "1.0.2",
     "versionHistory": [
@@ -7535,7 +7535,7 @@
     ],
     "countingMode": "reps",
     "muscoliSecondari": [
-      "FEMOR"
+      "FEMO"
     ],
     "version": "1.0.2",
     "versionHistory": [
@@ -7567,7 +7567,7 @@
     ],
     "countingMode": "reps",
     "muscoliSecondari": [
-      "FEMOR"
+      "FEMO"
     ],
     "version": "1.0.2",
     "versionHistory": [
@@ -7599,7 +7599,7 @@
     ],
     "countingMode": "reps",
     "muscoliSecondari": [
-      "FEMOR"
+      "FEMO"
     ],
     "version": "1.0.2",
     "versionHistory": [
@@ -7638,7 +7638,7 @@
   {
     "id": "toe_touchers",
     "nome": "Toe Toucher",
-    "focus": "ADDOM",
+    "focus": "CORE",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Toe_Touchers/0.jpg",
     "muscoliSecondari": [],
     "difficolta": "Principiante",
@@ -7678,7 +7678,7 @@
     ],
     "countingMode": "weighted",
     "muscoliSecondari": [
-      "FEMOR"
+      "FEMO"
     ],
     "version": "1.0.2",
     "versionHistory": [
@@ -7710,7 +7710,7 @@
     ],
     "countingMode": "reps",
     "muscoliSecondari": [
-      "FEMOR"
+      "FEMO"
     ],
     "version": "1.0.2",
     "versionHistory": [
@@ -7742,7 +7742,7 @@
     ],
     "countingMode": "weighted",
     "muscoliSecondari": [
-      "FEMOR"
+      "FEMO"
     ],
     "version": "1.0.2",
     "versionHistory": [
@@ -7771,7 +7771,7 @@
     ],
     "countingMode": "weighted",
     "muscoliSecondari": [
-      "FEMOR"
+      "FEMO"
     ],
     "version": "1.0.2",
     "versionHistory": [
@@ -7802,7 +7802,7 @@
     ],
     "countingMode": "weighted",
     "muscoliSecondari": [
-      "FEMOR"
+      "FEMO"
     ],
     "version": "1.0.2",
     "versionHistory": [
@@ -7832,7 +7832,7 @@
     ],
     "countingMode": "weighted",
     "muscoliSecondari": [
-      "FEMOR"
+      "FEMO"
     ],
     "version": "1.0.2",
     "versionHistory": [
@@ -7860,7 +7860,7 @@
     ],
     "countingMode": "weighted",
     "muscoliSecondari": [
-      "FEMOR"
+      "FEMO"
     ],
     "version": "1.0.2",
     "versionHistory": [
@@ -7888,7 +7888,7 @@
     ],
     "countingMode": "weighted",
     "muscoliSecondari": [
-      "FEMOR"
+      "FEMO"
     ],
     "version": "1.0.2",
     "versionHistory": [
@@ -7916,7 +7916,7 @@
     ],
     "countingMode": "weighted",
     "muscoliSecondari": [
-      "FEMOR"
+      "FEMO"
     ],
     "version": "1.0.2",
     "versionHistory": [
@@ -7948,7 +7948,7 @@
     ],
     "countingMode": "weighted",
     "muscoliSecondari": [
-      "FEMOR"
+      "FEMO"
     ],
     "version": "1.0.2",
     "versionHistory": [
@@ -7976,7 +7976,7 @@
     ],
     "countingMode": "weighted",
     "muscoliSecondari": [
-      "FEMOR"
+      "FEMO"
     ],
     "version": "1.0.2",
     "versionHistory": [
@@ -8004,7 +8004,7 @@
     ],
     "countingMode": "weighted",
     "muscoliSecondari": [
-      "FEMOR"
+      "FEMO"
     ],
     "version": "1.0.2",
     "versionHistory": [
@@ -8016,7 +8016,7 @@
   {
     "id": "seated_flat_bench_leg_pull_in",
     "nome": "Trattamento Piegamenti con Gambe Piatte",
-    "focus": "ADDOM",
+    "focus": "CORE",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Seated_Flat_Bench_Leg_Pull-In/0.jpg",
     "muscoliSecondari": [],
     "difficolta": "Principiante",
@@ -8038,7 +8038,7 @@
   {
     "id": "flat_bench_leg_pull_in",
     "nome": "Trazione a Gambe Piana",
-    "focus": "ADDOM",
+    "focus": "CORE",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Flat_Bench_Leg_Pull-In/0.jpg",
     "muscoliSecondari": [],
     "difficolta": "Principiante",
@@ -8060,7 +8060,7 @@
   {
     "id": "exercise_ball_pull_in",
     "nome": "Trazione con Palla da Esercizio",
-    "focus": "ADDOM",
+    "focus": "CORE",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Exercise_Ball_Pull-In/0.jpg",
     "muscoliSecondari": [],
     "difficolta": "Principiante",
@@ -8098,7 +8098,7 @@
     ],
     "countingMode": "reps",
     "muscoliSecondari": [
-      "FEMOR"
+      "FEMO"
     ],
     "version": "1.0.2",
     "versionHistory": [
@@ -8110,12 +8110,12 @@
   {
     "id": "rack_pulls",
     "nome": "Trazioni al Rack",
-    "focus": "LOM",
+    "focus": "LOMB",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Rack_Pulls/0.jpg",
     "muscoliSecondari": [
-      "AVAMB",
+      "AVA",
       "GLUT",
-      "FEMOR",
+      "FEMO",
       "TRAP"
     ],
     "difficolta": "Intermedio",
@@ -8137,7 +8137,7 @@
   {
     "id": "leg_pull_in",
     "nome": "Trazioni alla Leg",
-    "focus": "ADDOM",
+    "focus": "CORE",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Leg_Pull-In/0.jpg",
     "muscoliSecondari": [],
     "difficolta": "Principiante",
@@ -8245,7 +8245,7 @@
   {
     "id": "seated_barbell_twist",
     "nome": "Twist alla Panca con Bilanciere Seduto",
-    "focus": "ADDOM",
+    "focus": "CORE",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Seated_Barbell_Twist/0.jpg",
     "muscoliSecondari": [],
     "difficolta": "Principiante",
@@ -8267,7 +8267,7 @@
   {
     "id": "plate_twist",
     "nome": "Twist della Panca",
-    "focus": "ADDOM",
+    "focus": "CORE",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Plate_Twist/0.jpg",
     "muscoliSecondari": [],
     "difficolta": "Intermedio",
@@ -8289,7 +8289,7 @@
   {
     "id": "cable_russian_twists",
     "nome": "Twisti Russiani al Cavo",
-    "focus": "ADDOM",
+    "focus": "CORE",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Cable_Russian_Twists/0.jpg",
     "muscoliSecondari": [],
     "difficolta": "Principiante",
@@ -8358,7 +8358,7 @@
     ],
     "countingMode": "reps",
     "muscoliSecondari": [
-      "FEMOR"
+      "FEMO"
     ],
     "version": "1.0.2",
     "versionHistory": [
@@ -8388,7 +8388,7 @@
     ],
     "countingMode": "weighted",
     "muscoliSecondari": [
-      "FEMOR"
+      "FEMO"
     ],
     "version": "1.0.2",
     "versionHistory": [
@@ -8400,7 +8400,7 @@
   {
     "id": "stomach_vacuum",
     "nome": "Vacuo Addominale",
-    "focus": "ADDOM",
+    "focus": "CORE",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Stomach_Vacuum/0.jpg",
     "muscoliSecondari": [],
     "difficolta": "Principiante",
@@ -8422,11 +8422,11 @@
   {
     "id": "advanced_kettlebell_windmill",
     "nome": "Vento Avanzato con Manubrio in Kayak",
-    "focus": "ADDOM",
+    "focus": "CORE",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Advanced_Kettlebell_Windmill/0.jpg",
     "muscoliSecondari": [
       "GLUT",
-      "FEMOR",
+      "FEMO",
       "DELT"
     ],
     "difficolta": "Intermedio",
@@ -8448,11 +8448,11 @@
   {
     "id": "double_kettlebell_windmill",
     "nome": "Vento Doppio con Manubri da Cuffia",
-    "focus": "ADDOM",
+    "focus": "CORE",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Double_Kettlebell_Windmill/0.jpg",
     "muscoliSecondari": [
       "GLUT",
-      "FEMOR",
+      "FEMO",
       "DELT",
       "TRIC"
     ],
@@ -8494,7 +8494,7 @@
     ],
     "countingMode": "weighted",
     "muscoliSecondari": [
-      "FEMOR"
+      "FEMO"
     ],
     "version": "1.0.2",
     "versionHistory": [

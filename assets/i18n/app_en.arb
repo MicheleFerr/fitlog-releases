@@ -32,15 +32,15 @@
   "motivationalQuote13": "Sweat now, shine later.",
   "greetingMorning": "Good morning",
   "@greetingMorning": {
-    "description": "Morning greeting without name"
+    "description": "Morning greeting (5:00-11:59)"
   },
   "greetingAfternoon": "Good afternoon",
   "@greetingAfternoon": {
-    "description": "Afternoon greeting without name"
+    "description": "Afternoon greeting (12:00-17:59)"
   },
   "greetingEvening": "Good evening",
   "@greetingEvening": {
-    "description": "Evening greeting without name"
+    "description": "Evening greeting (18:00-21:59)"
   },
   "welcomeDescription": "Track workouts, time your rest periods, and sync with Apple Health.",
   "@welcomeDescription": {
@@ -680,9 +680,9 @@
   "@autoSync": {
     "description": "Auto sync toggle label"
   },
-  "autoSyncDescription": "Automatically sync exercises in background",
+  "autoSyncDescription": "Sync data automatically in background",
   "@autoSyncDescription": {
-    "description": "Auto sync description"
+    "description": "Description of auto sync feature"
   },
   "syncFrequency": "Sync Frequency",
   "@syncFrequency": {
@@ -766,7 +766,7 @@
   },
   "done": "Done",
   "@done": {
-    "description": "Generic done/complete button label"
+    "description": "Button label to close dialog"
   },
   "hiitTraining": "HIIT Training",
   "@hiitTraining": {
@@ -783,6 +783,34 @@
   "addExercise": "Add Exercise",
   "@addExercise": {
     "description": "Add new exercise button"
+  },
+  "addSingleExercise": "Single Exercise",
+  "@addSingleExercise": {
+    "description": "Add single exercise option"
+  },
+  "addSingleExerciseHint": "Browse exercise database",
+  "@addSingleExerciseHint": {
+    "description": "Hint for single exercise option"
+  },
+  "addAdvancedSet": "Advanced Sets",
+  "@addAdvancedSet": {
+    "description": "Advanced sets menu option"
+  },
+  "addAdvancedSetHint": "Superset, Drop Set, Rest-Pause",
+  "@addAdvancedSetHint": {
+    "description": "Hint for advanced sets option"
+  },
+  "supersetHint": "Link 2+ exercises back-to-back",
+  "@supersetHint": {
+    "description": "Hint for superset option"
+  },
+  "dropSetHint": "Progressive weight reduction",
+  "@dropSetHint": {
+    "description": "Hint for drop set option"
+  },
+  "restPauseHint": "Brief rests within a single set",
+  "@restPauseHint": {
+    "description": "Hint for rest-pause option"
   },
   "completeWorkout": "Complete Workout",
   "@completeWorkout": {
@@ -884,7 +912,7 @@
   "@importSuccessful": {
     "description": "Import success message"
   },
-  "importing": "Importing...",
+  "importing": "Importing workouts...",
   "@importing": {
     "description": "Status text during import process"
   },
@@ -946,9 +974,9 @@
   "@exportSuccessful": {
     "description": "Export success message"
   },
-  "exportFailed": "Export failed. Please try again.",
+  "exportFailed": "Export Failed",
   "@exportFailed": {
-    "description": "Export failure message"
+    "description": "Export failed title"
   },
   "gymbroTemplatesExport": "FitLog Pro Workout Templates Export",
   "@gymbroTemplatesExport": {
@@ -1263,7 +1291,7 @@
   },
   "gotIt": "Got it",
   "@gotIt": {
-    "description": "Acknowledgment button in info dialogs"
+    "description": "Acknowledgment button in dialogs"
   },
   "openChatGPT": "Open ChatGPT",
   "@openChatGPT": {
@@ -1319,7 +1347,7 @@
   },
   "formCues": "Form Cues",
   "@formCues": {
-    "description": "Form cues section label"
+    "description": "Section title for form cues"
   },
   "formCuesHint": "Keep elbows tucked, touch chest...",
   "@formCuesHint": {
@@ -1405,7 +1433,7 @@
   "@workoutStatusPaused": {
     "description": "Paused workout status"
   },
-  "exercises": "exercises",
+  "exercises": "Exercises",
   "@exercises": {
     "description": "Plural form of exercises"
   },
@@ -1741,7 +1769,7 @@
   },
   "accentColor": "Accent Color",
   "@accentColor": {
-    "description": "Accent color setting"
+    "description": "Label for accent color picker"
   },
   "workout": "Workout",
   "@workout": {
@@ -2309,11 +2337,11 @@
   },
   "errorLoadingData": "Error loading data",
   "@errorLoadingData": {
-    "description": "Error loading data message"
+    "description": "Generic error message for loading data"
   },
   "exportData": "Export Data",
   "@exportData": {
-    "description": "Export data menu option"
+    "description": "Export data menu item title"
   },
   "viewDetails": "View Details",
   "@viewDetails": {
@@ -2366,9 +2394,9 @@
       }
     }
   },
-  "workouts": "Workouts",
+  "workouts": "workouts",
   "@workouts": {
-    "description": "Workouts stat label"
+    "description": "Plural label for workouts count"
   },
   "bestWorkoutDay": "Best workout day: {day}",
   "@bestWorkoutDay": {
@@ -2564,7 +2592,7 @@
   },
   "weeklyProgress": "Weekly Progress",
   "@weeklyProgress": {
-    "description": "Weekly progress title"
+    "description": "Title for weekly workout progress card"
   },
   "workoutGoal": "Workout Goal",
   "@workoutGoal": {
@@ -2681,7 +2709,7 @@
   },
   "errorLoadingTemplates": "Error loading templates",
   "@errorLoadingTemplates": {
-    "description": "Error message when templates fail to load"
+    "description": "Error message when templates cannot be loaded"
   },
   "syncingWorkouts": "Syncing workouts...",
   "@syncingWorkouts": {
@@ -2877,7 +2905,7 @@
   },
   "startToday": "Start today!",
   "@startToday": {
-    "description": "Encouragement to start a new streak"
+    "description": "Start today encouragement"
   },
   "workoutDaysPerWeek": "{days}/wk avg",
   "@workoutDaysPerWeek": {
@@ -3100,11 +3128,11 @@
   },
   "primaryMuscles": "Primary Muscles",
   "@primaryMuscles": {
-    "description": "Primary muscles section title"
+    "description": "Label for primary muscles field"
   },
-  "secondaryMuscles": "Secondary Muscles",
+  "secondaryMuscles": "Secondary muscles",
   "@secondaryMuscles": {
-    "description": "Label for secondary muscles"
+    "description": "Secondary muscles label"
   },
   "difficultyLevel": "Difficulty Level",
   "@difficultyLevel": {
@@ -3112,15 +3140,15 @@
   },
   "exerciseType": "Exercise Type",
   "@exerciseType": {
-    "description": "Exercise type field label"
+    "description": "Label for exercise type field"
   },
   "equipment": "Equipment",
   "@equipment": {
-    "description": "Equipment field label"
+    "description": "Label for exercise equipment"
   },
-  "movementPattern": "Movement Pattern",
+  "movementPattern": "Movement pattern",
   "@movementPattern": {
-    "description": "Movement pattern label"
+    "description": "Label for movement pattern"
   },
   "repRange": "Rep Range",
   "@repRange": {
@@ -3353,7 +3381,7 @@
   },
   "createTemplate": "Create Template",
   "@createTemplate": {
-    "description": "Create template button label"
+    "description": "Button to create new template"
   },
   "otherTools": "Other tools",
   "@otherTools": {
@@ -3792,10 +3820,6 @@
   "noRecord": "No record",
   "@noRecord": {
     "description": "No record placeholder"
-  },
-  "startToday": "Start today!",
-  "@startToday": {
-    "description": "Start today encouragement"
   },
   "great": "Great!",
   "@great": {
@@ -4242,7 +4266,7 @@
   },
   "skip": "Skip",
   "@skip": {
-    "description": "Button to skip weight selection and use default values"
+    "description": "Button to skip action"
   },
   "selectExerciseFromDatabase": "Select Exercise from Database",
   "@selectExerciseFromDatabase": {
@@ -4276,18 +4300,6 @@
   "@categorization": {
     "description": "Section title for categorization fields"
   },
-  "primaryMuscles": "Primary Muscles",
-  "@primaryMuscles": {
-    "description": "Label for primary muscles field"
-  },
-  "secondaryMuscles": "Secondary Muscles",
-  "@secondaryMuscles": {
-    "description": "Label for secondary muscles field"
-  },
-  "exerciseType": "Exercise Type",
-  "@exerciseType": {
-    "description": "Label for exercise type field"
-  },
   "compound": "Compound",
   "@compound": {
     "description": "Compound exercise type"
@@ -4295,14 +4307,6 @@
   "isolation": "Isolation",
   "@isolation": {
     "description": "Isolation exercise type"
-  },
-  "movementPattern": "Movement Pattern",
-  "@movementPattern": {
-    "description": "Label for movement pattern field"
-  },
-  "equipment": "Equipment",
-  "@equipment": {
-    "description": "Label for equipment field"
   },
   "categorizationWarning": "Modifying focus/pattern may affect Push/Pull ratio calculations",
   "@categorizationWarning": {
@@ -4314,11 +4318,11 @@
   },
   "exerciseNameRequired": "Exercise name is required",
   "@exerciseNameRequired": {
-    "description": "Validation error for empty name"
+    "description": "Exercise name validation message"
   },
   "barbell": "Barbell",
   "@barbell": {
-    "description": "Equipment type"
+    "description": "Barbell equipment type"
   },
   "dumbbells": "Dumbbells",
   "@dumbbells": {
@@ -4334,7 +4338,7 @@
   },
   "bodyweight": "Bodyweight",
   "@bodyweight": {
-    "description": "Equipment type"
+    "description": "Bodyweight exercises stats label"
   },
   "category": "Category",
   "@category": {
@@ -4564,9 +4568,9 @@
   "@avgVolumePerWorkout": {
     "description": "Average volume per workout statistic"
   },
-  "average": "Average",
+  "average": "avg",
   "@average": {
-    "description": "Average label"
+    "description": "Short label for average value"
   },
   "record": "Record",
   "@record": {
@@ -5338,13 +5342,12 @@
   "@restDay": {
     "description": "Label for rest day"
   },
-  "exerciseCount": "{count, plural, =0{No exercises} =1{1 exercise} other{{count} exercises}}",
+  "exerciseCount": "{count, plural, =1{1 exercise} other{{count} exercises}}",
   "@exerciseCount": {
-    "description": "Exercise count with pluralization",
+    "description": "Number of exercises in template",
     "placeholders": {
       "count": {
-        "type": "int",
-        "description": "Number of exercises"
+        "type": "int"
       }
     }
   },
@@ -5388,14 +5391,13 @@
   "exercise": "exercise",
   "roundNumber": "Round {number}",
   "@roundNumber": {
-    "description": "Round number label",
     "placeholders": {
       "number": {
         "type": "int"
       }
     }
   },
-  "editRoundData": "Edit round data",
+  "editRoundData": "Set weight and reps for this round",
   "@editRoundData": {
     "description": "Edit round data subtitle"
   },
@@ -5449,7 +5451,7 @@
       }
     }
   },
-  "plateCalculatorTitle": "Plate Calculator",
+  "plateCalculatorTitle": "Plate calculator",
   "@plateCalculatorTitle": {
     "description": "Plate calculator section title"
   },
@@ -5597,7 +5599,7 @@
   "@addAtLeastTwoExercises": {
     "description": "Minimum exercises requirement message"
   },
-  "addRound": "Add Round",
+  "addRound": "Add round",
   "@addRound": {
     "description": "Add round button text"
   },
@@ -5708,7 +5710,7 @@
   },
   "addStage": "Add Stage",
   "@addStage": {
-    "description": "Add new drop set stage button"
+    "description": "Button to confirm adding new stage"
   },
   "miniSets": "mini-sets",
   "@miniSets": {
@@ -5859,7 +5861,7 @@
   "@discardChanges": {
     "description": "Button to discard changes"
   },
-  "discardChangesMessage": "You have unsaved changes. Are you sure you want to discard them?",
+  "discardChangesMessage": "You have unsaved changes. Do you want to discard them?",
   "@discardChangesMessage": {
     "description": "Message when discarding unsaved changes"
   },
@@ -6570,10 +6572,6 @@
   "@importJson": {
     "description": "Import exercises from JSON menu item"
   },
-  "bodyweight": "Bodyweight",
-  "@bodyweight": {
-    "description": "Bodyweight exercises stats label"
-  },
   "uniqueMuscles": "Muscles",
   "@uniqueMuscles": {
     "description": "Unique muscles stats label"
@@ -6627,10 +6625,6 @@
       }
     }
   },
-  "exerciseNameRequired": "Exercise name is required",
-  "@exerciseNameRequired": {
-    "description": "Exercise name validation message"
-  },
   "updateExercise": "Update Exercise",
   "@updateExercise": {
     "description": "Update exercise button"
@@ -6679,7 +6673,7 @@
   "@expandDetails": {
     "description": "Expand details section button"
   },
-  "clearFilter": "Clear",
+  "clearFilter": "Clear filter",
   "@clearFilter": {
     "description": "Clear individual filter button"
   },
@@ -6928,9 +6922,9 @@
   "@unsavedChanges": {
     "description": "Title for unsaved changes dialog"
   },
-  "unsavedChangesMessage": "You have unsaved changes. Are you sure you want to discard them?",
+  "unsavedChangesMessage": "You have unsaved changes. They will be lost if you continue.",
   "@unsavedChangesMessage": {
-    "description": "Message for unsaved changes dialog"
+    "description": "Message for unsaved changes warning dialog"
   },
   "enterWorkoutName": "Enter workout name",
   "@enterWorkoutName": {
@@ -7314,7 +7308,7 @@
   "@templateNameLabel": {
     "description": "Template name field label"
   },
-  "templateNameRequired": "Name is required",
+  "templateNameRequired": "Template name is required",
   "@templateNameRequired": {
     "description": "Template name validation error"
   },
@@ -7458,7 +7452,7 @@
   "@warmupSuggestionsTooltip": {
     "description": "Warmup suggestions tooltip"
   },
-  "autoCollapseTitle": "Auto-Collapse Completed",
+  "autoCollapseTitle": "Collapse completed exercises",
   "@autoCollapseTitle": {
     "description": "Auto collapse toggle title"
   },
@@ -8203,10 +8197,6 @@
   "allTime": "All Time",
   "@allTime": {
     "description": "All time filter option"
-  },
-  "keepItUp": "Keep it up!",
-  "@keepItUp": {
-    "description": "Encouragement message for active streak"
   },
   "viewStats": "View Stats",
   "@viewStats": {
@@ -8990,7 +8980,7 @@
   },
   "exercisesThisWeek": "Exercises This Week",
   "@exercisesThisWeek": {
-    "description": "Section title for exercises performed this week"
+    "description": "Title for exercises counted this week card"
   },
   "rpeAndIntensity": "RPE & Intensity",
   "rpeIntensityDistribution": "Training intensity distribution",
@@ -9138,7 +9128,7 @@
   },
   "skipRest": "Skip Rest",
   "@skipRest": {
-    "description": "Button to skip rest period"
+    "description": "Button to skip rest timer"
   },
   "supersetCompleted": "Superset Completed",
   "@supersetCompleted": {
@@ -9640,10 +9630,6 @@
   "detectedEquipmentType": "Detected equipment",
   "@detectedEquipmentType": {
     "description": "Label for automatically detected equipment type"
-  },
-  "barbell": "Barbell",
-  "@barbell": {
-    "description": "Barbell equipment type"
   },
   "dumbbell": "Dumbbell",
   "@dumbbell": {
@@ -10185,9 +10171,9 @@
   "@autoAccountCreation": {
     "description": "Auto account creation explanation"
   },
-  "orDivider": "OR",
+  "orDivider": "or",
   "@orDivider": {
-    "description": "OR divider text between sections"
+    "description": "Divider text between options"
   },
   "fullName": "Full Name",
   "@fullName": {
@@ -10509,7 +10495,7 @@
   },
   "errorSavingTemplate": "Error saving template",
   "@errorSavingTemplate": {
-    "description": "Template save error message"
+    "description": "Error message when template cannot be saved"
   },
   "templateConfiguration": "Configuration",
   "@templateConfiguration": {
@@ -10760,10 +10746,6 @@
   "@quickWeightDrop": {
     "description": "Label for quick weight drop chips"
   },
-  "addStage": "Add Stage",
-  "@addStage": {
-    "description": "Button to confirm adding new stage"
-  },
   "dropsetNeedsMinStages": "DropSet needs at least 2 stages with valid weights",
   "@dropsetNeedsMinStages": {
     "description": "Error message when dropset has less than 2 valid stages"
@@ -10804,10 +10786,6 @@
   "secondsRest": "seconds rest",
   "@secondsRest": {
     "description": "Label for rest timer"
-  },
-  "skipRest": "Skip Rest",
-  "@skipRest": {
-    "description": "Button to skip rest timer"
   },
   "howManyReps": "How many reps did you complete?",
   "@howManyReps": {
@@ -11346,6 +11324,34 @@
   "settingsSoundsDesc": "Play sounds for timer and notifications",
   "@settingsSoundsDesc": {
     "description": "Sound toggle description"
+  },
+  "settingsTimerSound": "Timer Sound",
+  "@settingsTimerSound": {
+    "description": "Timer sound selection title"
+  },
+  "settingsTimerSoundDesc": "Choose the sound for timer completion",
+  "@settingsTimerSoundDesc": {
+    "description": "Timer sound selection description"
+  },
+  "settingsTimerSoundPreview": "Preview",
+  "@settingsTimerSoundPreview": {
+    "description": "Preview button for timer sound"
+  },
+  "settingsTimerSoundClassic": "Classic",
+  "@settingsTimerSoundClassic": {
+    "description": "Classic timer sound name (sound.caf)"
+  },
+  "settingsTimerSoundComplete": "Complete",
+  "@settingsTimerSoundComplete": {
+    "description": "Complete timer sound name (timer_complete.caf)"
+  },
+  "settingsTimerSoundLightWeight": "Light Weight",
+  "@settingsTimerSoundLightWeight": {
+    "description": "Light Weight timer sound name (Ronnie Coleman)"
+  },
+  "settingsTimerSoundYehBuddie": "Yeah Buddie",
+  "@settingsTimerSoundYehBuddie": {
+    "description": "Yeah Buddie timer sound name (Ronnie Coleman)"
   },
   "settingsKeepScreenAwake": "Keep Screen Awake",
   "@settingsKeepScreenAwake": {
@@ -12782,7 +12788,7 @@
   },
   "personalRecord": "Personal Record",
   "@personalRecord": {
-    "description": "Personal record full label"
+    "description": "PR label"
   },
   "averageWeight": "Avg Weight",
   "@averageWeight": {
@@ -12816,45 +12822,63 @@
   "@quickAnswerWeightUp": {
     "description": "Quick answer weight improvement message",
     "placeholders": {
-      "percent": {"type": "String"},
-      "period": {"type": "String"}
+      "percent": {
+        "type": "String"
+      },
+      "period": {
+        "type": "String"
+      }
     }
   },
   "quickAnswerWeightDown": "{percent}% weight drop in {period}",
   "@quickAnswerWeightDown": {
     "description": "Quick answer weight decline message",
     "placeholders": {
-      "percent": {"type": "String"},
-      "period": {"type": "String"}
+      "percent": {
+        "type": "String"
+      },
+      "period": {
+        "type": "String"
+      }
     }
   },
   "quickAnswerStableMessage": "Consistent performance over {period}",
   "@quickAnswerStableMessage": {
     "description": "Quick answer stable performance message",
     "placeholders": {
-      "period": {"type": "String"}
+      "period": {
+        "type": "String"
+      }
     }
   },
   "quickAnswerNextGoal": "Current PR: {current}kg → Next goal: {goal}kg",
   "@quickAnswerNextGoal": {
     "description": "Quick answer next goal suggestion",
     "placeholders": {
-      "current": {"type": "String"},
-      "goal": {"type": "String"}
+      "current": {
+        "type": "String"
+      },
+      "goal": {
+        "type": "String"
+      }
     }
   },
   "periodWeeks": "{count} weeks",
   "@periodWeeks": {
     "description": "Period in weeks",
     "placeholders": {
-      "count": {"type": "int"}
+      "count": {
+        "type": "int"
+      }
     }
   },
   "periodMonths": "{count} months",
   "@periodMonths": {
     "description": "Period in months",
     "placeholders": {
-      "count": {"type": "int"}
+      "count": {
+        "type": "int"
+      }
     }
   },
   "progressionCharts": "Progression Charts",
@@ -13169,7 +13193,7 @@
   "@feedbackOther": {
     "description": "Other issue type option"
   },
-  "describeProblem": "Describe the issue...",
+  "describeProblem": "Describe the problem",
   "@describeProblem": {
     "description": "Placeholder text for feedback message input"
   },
@@ -13949,7 +13973,7 @@
   "@gridView": {
     "description": "Grid view mode"
   },
-  "parsing": "Parsing...",
+  "parsing": "Parsing data...",
   "@parsing": {
     "description": "Import phase: parsing JSON"
   },
@@ -13965,7 +13989,7 @@
   "@finalizing": {
     "description": "Import phase: finalizing import"
   },
-  "importFailed": "❌ Import failed",
+  "importFailed": "Import Failed",
   "@importFailed": {
     "description": "Error status message when import fails"
   },
@@ -14028,10 +14052,6 @@
   "videoTutorial": "Video Tutorial",
   "@videoTutorial": {
     "description": "Section title for video tutorial"
-  },
-  "formCues": "Form Cues",
-  "@formCues": {
-    "description": "Section title for form cues"
   },
   "whyThisAnswer": "Why this answer?",
   "@whyThisAnswer": {
@@ -15385,7 +15405,7 @@
   },
   "alternatives": "Alternatives",
   "@alternatives": {
-    "description": "Button to show alternative workout suggestions"
+    "description": "Section title for alternative exercises"
   },
   "whyThisSuggestion": "Why This Suggestion?",
   "@whyThisSuggestion": {
@@ -16324,7 +16344,7 @@
   "@quickPreventionIconTooltip": {
     "description": "Tooltip for prevention icon toggle"
   },
-  "exerciseNotesTitle": "Exercise Notes",
+  "exerciseNotesTitle": "Exercise notes",
   "@exerciseNotesTitle": {
     "description": "Title for exercise notes toggle"
   },
@@ -16864,9 +16884,9 @@
   "@export": {
     "description": "Auto-generated for export"
   },
-  "exporting": "Exporting",
+  "exporting": "Exporting...",
   "@exporting": {
-    "description": "Auto-generated for exporting"
+    "description": "Export in progress message"
   },
   "failed": "Failed",
   "@failed": {
@@ -16956,9 +16976,9 @@
   "@improvementDetected": {
     "description": "Auto-generated for improvementDetected"
   },
-  "instagramHandle": "Instagram handle",
+  "instagramHandle": "Instagram Handle",
   "@instagramHandle": {
-    "description": "Auto-generated for instagramHandle"
+    "description": "Label for Instagram handle input"
   },
   "instagramVerified": "Instagram verified",
   "@instagramVerified": {
@@ -17472,9 +17492,9 @@
   "@volumeSettings": {
     "description": "Auto-generated for volumeSettings"
   },
-  "vsLastWeek": "Vs last week",
+  "vsLastWeek": "vs week",
   "@vsLastWeek": {
-    "description": "Auto-generated for vsLastWeek"
+    "description": "Comparison label - versus last week"
   },
   "weeklyDistribution": "Weekly distribution",
   "@weeklyDistribution": {
@@ -17552,7 +17572,7 @@
   "@workoutDuration": {
     "description": "Workout duration label"
   },
-  "tryAgain": "Try again",
+  "tryAgain": "Try Again",
   "@tryAgain": {
     "description": "Try again button"
   },
@@ -21342,7 +21362,7 @@
       }
     }
   },
-  "syncNow": "Sync Now",
+  "syncNow": "Sync now",
   "@syncNow": {
     "description": "Button to manually trigger sync to cloud"
   },
@@ -21478,7 +21498,7 @@
   "@dataRetentionPeriod": {
     "description": "Label for data retention period setting"
   },
-  "lastSynced": "Last Synced",
+  "lastSynced": "Last synced",
   "@lastSynced": {
     "description": "Label for last sync timestamp"
   },
@@ -21953,10 +21973,6 @@
   "@newPlural": {
     "description": "New (plural form)"
   },
-  "vsLastWeek": "vs week",
-  "@vsLastWeek": {
-    "description": "Comparison label - versus last week"
-  },
   "records": "Records",
   "@records": {
     "description": "Records tab label"
@@ -22226,7 +22242,7 @@
   },
   "typeMessage": "Type a message...",
   "@typeMessage": {
-    "description": "Chat input placeholder"
+    "description": "Placeholder for message input"
   },
   "mostUsed": "Most Used",
   "@mostUsed": {
@@ -23200,7 +23216,7 @@
   },
   "workoutsCompleted": "Workouts completed",
   "@workoutsCompleted": {
-    "description": "Label for completed workouts count"
+    "description": "Stat label for completed workouts"
   },
   "restDays": "Rest days",
   "@restDays": {
@@ -26320,9 +26336,9 @@
       }
     }
   },
-  "reminderTime": "Reminder time",
+  "reminderTime": "Reminder Time",
   "@reminderTime": {
-    "description": "Label for reminder time picker"
+    "description": "Label for time selector"
   },
   "confirmSchedule": "Confirm Schedule",
   "@confirmSchedule": {
@@ -26388,9 +26404,9 @@
   "@tutorialLoggingSetDesc": {
     "description": "Description for the logging set tutorial"
   },
-  "tutorialRestTimerTitle": "Rest Timer",
+  "tutorialRestTimerTitle": "Rest Timer Started",
   "@tutorialRestTimerTitle": {
-    "description": "Title for the rest timer tutorial"
+    "description": "Tutorial rest timer title"
   },
   "tutorialRestTimerDesc": "Your rest timer has started! You can adjust the time, skip it, or let it count down. A sound will play when it's time for your next set.",
   "@tutorialRestTimerDesc": {
@@ -26484,9 +26500,9 @@
   "@tutorialRoutineCenterDesc": {
     "description": "Description for the routine center tutorial"
   },
-  "tutorialSettingsTitle": "Settings",
+  "tutorialSettingsTitle": "Workout Settings",
   "@tutorialSettingsTitle": {
-    "description": "Title for the settings tutorial"
+    "description": "Tutorial settings title"
   },
   "tutorialSettingsDesc": "Customize your experience: timer durations, sounds, theme, units, and more. Make the app work your way!",
   "@tutorialSettingsDesc": {
@@ -26527,10 +26543,6 @@
   "volumeProgressionDescription": "Track your weekly training volume and spot trends over time",
   "@volumeProgressionDescription": {
     "description": "Volume progression feature description"
-  },
-  "exercisesThisWeek": "Exercises This Week",
-  "@exercisesThisWeek": {
-    "description": "Title for exercises counted this week card"
   },
   "noExercisesThisWeek": "No exercises recorded this week",
   "@noExercisesThisWeek": {
@@ -26916,9 +26928,9 @@
   "@expandExercise": {
     "description": "Semantic label for expand exercise button"
   },
-  "tapToExpand": "Tap to expand",
+  "tapToExpand": "Tap for details",
   "@tapToExpand": {
-    "description": "Hint text telling user to tap to expand content"
+    "description": "Hint to tap card for details"
   },
   "adminPremiumToggle": "Admin Premium Toggle",
   "@adminPremiumToggle": {
@@ -27156,18 +27168,6 @@
   "trendDeclining": "Declining",
   "@trendDeclining": {
     "description": "Trend status: declining"
-  },
-  "greetingMorning": "Good morning",
-  "@greetingMorning": {
-    "description": "Morning greeting (5:00-11:59)"
-  },
-  "greetingAfternoon": "Good afternoon",
-  "@greetingAfternoon": {
-    "description": "Afternoon greeting (12:00-17:59)"
-  },
-  "greetingEvening": "Good evening",
-  "@greetingEvening": {
-    "description": "Evening greeting (18:00-21:59)"
   },
   "greetingNight": "Good night",
   "@greetingNight": {
@@ -27817,7 +27817,7 @@
   },
   "noTemplatesFound": "No templates found",
   "@noTemplatesFound": {
-    "description": "Empty state when no templates exist"
+    "description": "Message when no templates match filter"
   },
   "errorAddingExercise": "Error adding exercise to template",
   "@errorAddingExercise": {
@@ -27831,11 +27831,14 @@
   "@addExerciseToTemplate": {
     "description": "Button to add exercise to selected template"
   },
-  "exerciseAddedToTemplate": "Exercise added to {templateName}",
+  "exerciseAddedToTemplate": "{exercise} added to {template}",
   "@exerciseAddedToTemplate": {
-    "description": "Success message after adding exercise",
+    "description": "Success message when exercise added",
     "placeholders": {
-      "templateName": {
+      "exercise": {
+        "type": "String"
+      },
+      "template": {
         "type": "String"
       }
     }
@@ -27896,14 +27899,24 @@
   },
   "understood": "Got it",
   "exerciseSummary": "Exercise Summary",
-  "@exerciseSummary": { "description": "Header for exercise summary in workout completion" },
+  "@exerciseSummary": {
+    "description": "Header for exercise summary in workout completion"
+  },
   "redirectingToHome": "Redirecting to home in {seconds}...",
-  "@redirectingToHome": { "description": "Countdown text", "placeholders": { "seconds": { "type": "String" } } },
+  "@redirectingToHome": {
+    "description": "Countdown text",
+    "placeholders": {
+      "seconds": {
+        "type": "String"
+      }
+    }
+  },
   "continueToHome": "Continue to Home",
-  "@continueToHome": { "description": "Button to go to home" },
+  "@continueToHome": {
+    "description": "Button to go to home"
+  },
   "@understood": {
-    
-    "description": "Button to dismiss info sheet"
+    "description": "Button text to dismiss explanation sheet"
   },
   "selectRestDuration": "Select rest duration",
   "@selectRestDuration": {
@@ -28030,10 +28043,6 @@
   "@tutorialSetInputMessage": {
     "description": "Tutorial set input message"
   },
-  "tutorialRestTimerTitle": "Rest Timer Started",
-  "@tutorialRestTimerTitle": {
-    "description": "Tutorial rest timer title"
-  },
   "tutorialRestTimerMessage": "Great job! 💪 The rest timer starts automatically. Take a break between sets.",
   "@tutorialRestTimerMessage": {
     "description": "Tutorial rest timer message"
@@ -28053,10 +28062,6 @@
   "tutorialReorderMessage": "Tap here to drag and reorder your exercises.",
   "@tutorialReorderMessage": {
     "description": "Tutorial reorder message"
-  },
-  "tutorialSettingsTitle": "Workout Settings",
-  "@tutorialSettingsTitle": {
-    "description": "Tutorial settings title"
   },
   "tutorialSettingsMessage": "Here you can customize your workout, save it as a template, or discard it.",
   "@tutorialSettingsMessage": {
@@ -28240,7 +28245,6 @@
   "@noAlternativesHint": {
     "description": "Hint text for empty alternatives state"
   },
-
   "helpCenter": "Help Center",
   "@helpCenter": {
     "description": "Help center title"
@@ -28253,7 +28257,6 @@
   "@helpCenterDescription": {
     "description": "Help center description"
   },
-
   "helpCategoryGettingStarted": "Getting Started",
   "helpCategoryGettingStartedDesc": "First steps and app basics",
   "helpCategoryWorkouts": "Workouts & Templates",
@@ -28278,190 +28281,128 @@
   "helpCategoryHealthSyncDesc": "Apple Health and Health Connect",
   "helpCategoryTroubleshooting": "Troubleshooting",
   "helpCategoryTroubleshootingDesc": "Problems and solutions",
-
   "faqWhatIsAppQuestion": "What is this app?",
   "faqWhatIsAppAnswer": "This is a complete workout tracking app designed to help you log your gym sessions, track progress over time, and achieve your fitness goals. It features a database of 800+ exercises, customizable templates, detailed analytics, and smart features like automatic rest timers.",
-
   "faqFirstWorkoutQuestion": "How do I start my first workout?",
   "faqFirstWorkoutAnswer": "From the home screen, tap 'Quick Start' to begin an empty workout, or select one of your saved templates. Once in a workout, tap the + button to add exercises from our database. Log your sets by entering weight and reps, then swipe right to complete each set.",
-
   "faqQuickStartQuestion": "What's the difference between Quick Start and templates?",
   "faqQuickStartAnswer": "Quick Start creates an empty workout where you add exercises as you go - great for flexible or spontaneous sessions. Templates are pre-saved routines with exercises already defined - perfect for consistent programs. You can save any completed workout as a new template.",
-
   "faqNavigationQuestion": "How do I navigate the app?",
   "faqNavigationAnswer": "The bottom bar has 4 main sections: Home (dashboard and quick start), Workout (active session), History (past workouts), and Profile (settings and stats). During a workout, swipe left/right to move between exercises, or use the mini-bar at the bottom for quick navigation.",
-
   "faqTemplatesIntroQuestion": "How do templates work?",
   "faqTemplatesIntroAnswer": "Templates save your workout structure including exercises, sets, reps, and rest times. Start a template-based workout by tapping it on the home screen. The app remembers your last weights and suggests progressive overload. Edit templates anytime from the Templates screen.",
-
   "faqCreateWorkoutQuestion": "How do I create a custom workout?",
   "faqCreateWorkoutAnswer": "Start a Quick Start workout and add your desired exercises. When finished, tap 'Complete' and choose 'Save as Template'. Name your template and it will appear on your home screen. Alternatively, go to Templates > Create New to build a template from scratch.",
-
   "faqTemplatesQuestion": "How do I manage my templates?",
   "faqTemplatesAnswer": "Go to the Templates screen (accessible from Home). Here you can view all templates, edit exercise order, modify sets/reps, rename templates, or delete them. Long-press a template for quick actions. Templates sync across devices when logged in.",
-
   "faqSaveTemplateQuestion": "Can I save a workout as a template?",
   "faqSaveTemplateAnswer": "Yes! After completing any workout, you'll see the option to 'Save as Template'. The template will preserve the exercises, order, and target sets/reps. Your logged weights become the starting point for future sessions.",
-
   "faqEditWorkoutQuestion": "Can I edit a workout while it's in progress?",
   "faqEditWorkoutAnswer": "Absolutely! During a workout you can: add or remove exercises, reorder exercises by dragging, change sets/reps, edit logged values, add notes, and even create supersets. Long-press an exercise to see all options.",
-
   "faqDraftRecoveryQuestion": "What happens if I accidentally close the app?",
   "faqDraftRecoveryAnswer": "Don't worry! The app automatically saves your workout progress every few seconds. If you close the app or it crashes, you'll be prompted to resume your workout when you return. Your data is never lost.",
-
   "faqCompleteWorkoutQuestion": "How do I finish a workout?",
   "faqCompleteWorkoutAnswer": "Tap the 'Complete Workout' button (checkmark icon) in the top right. You'll see a summary of your session including duration, volume, and any PRs achieved. Choose to save as template or just save the workout. Congratulations will appear for any new records!",
-
   "faqAddExerciseQuestion": "How do I add exercises to my workout?",
   "faqAddExerciseAnswer": "Tap the + button during a workout to open the exercise search. Browse by muscle group using the filter buttons, or search by name. The database includes 800+ exercises with descriptions and GIFs. Can't find one? Create a custom exercise with your own name and target muscles.",
-
   "faqSetsRepsQuestion": "How do I log sets and reps?",
   "faqSetsRepsAnswer": "Tap any set row to open the input modal. Enter your weight and reps using the picker or keyboard. Swipe the row to the right to mark it complete (turns green). Previous workout values are shown for reference - tap them to auto-fill!",
-
   "faqRpeRirQuestion": "What are RPE and RIR?",
   "faqRpeRirAnswer": "RPE (Rate of Perceived Exertion) measures effort on a 1-10 scale where 10 is max effort. RIR (Reps in Reserve) counts how many more reps you could do. Example: RPE 8 = RIR 2 (could do 2 more reps). Track these to optimize your training intensity.",
-
   "faqCountingModesQuestion": "What counting modes are available?",
   "faqCountingModesAnswer": "The app supports: Reps (standard count), Time (seconds for planks/holds), Distance (meters for carries/runs), and Calories. Change the mode per exercise by tapping the settings icon. Each mode has appropriate input fields.",
-
   "faqWarmupSetsQuestion": "How do I log warmup sets?",
   "faqWarmupSetsAnswer": "Tap the set number to toggle between working set and warmup. Warmup sets appear with a 'W' badge and lighter styling. They're excluded from volume calculations and PR tracking but still recorded in your history for reference.",
-
   "faqExerciseNotesQuestion": "Can I add notes to exercises?",
   "faqExerciseNotesAnswer": "Yes! Tap the notes icon on any exercise to add personal notes. Great for recording form cues, equipment settings, or modifications. Notes sync across devices and appear when you do the exercise again.",
-
   "faqSupersetsQuestion": "What are supersets and how do I use them?",
   "faqSupersetsAnswer": "Supersets are 2+ exercises performed back-to-back without rest - excellent for time efficiency and muscle pump. Long-press an exercise, select 'Create Superset', then add the paired exercise. The app guides you through alternating sets with appropriate rest between rounds.",
-
   "faqDropsetsQuestion": "How do drop sets work?",
   "faqDropsetsAnswer": "Drop sets involve reducing weight after reaching failure and continuing immediately. Enable drop set mode on any exercise, then log each drop within the set. The app calculates total volume including all drops. Great for maximizing muscle fatigue!",
-
   "faqRestPauseQuestion": "What is rest-pause training?",
   "faqRestPauseAnswer": "Rest-pause uses brief 10-15 second pauses within a set to extend it. Do reps to near-failure, rest 10-15 seconds, then continue. The app tracks your mini-sets and total reps, useful for pushing past normal failure points.",
-
   "faqAutoWarmupQuestion": "Does the app suggest warmup sets?",
   "faqAutoWarmupAnswer": "Yes! The auto-warmup feature suggests progressive warmup sets based on your working weight. For example, if squatting 100kg, it might suggest: bar only → 40kg → 60kg → 80kg. Customize the percentage progression in Settings.",
-
   "faqAutoRegulationQuestion": "What is auto-regulation?",
   "faqAutoRegulationAnswer": "Auto-regulation adjusts your training based on daily performance. If you're hitting more reps than expected, the app suggests increasing weight. Struggling? It might recommend reducing. This ensures optimal progressive overload adapted to your daily readiness.",
-
   "faqTimerQuestion": "How does the rest timer work?",
   "faqTimerAnswer": "The rest timer starts automatically after completing a set. It counts down your chosen rest time and notifies you when ready. The timer continues in background and shows on your lock screen (iOS). Customize default rest times per exercise or globally.",
-
   "faqTimerBackgroundQuestion": "Does the timer work when the app is closed?",
   "faqTimerBackgroundAnswer": "Yes! The timer continues counting even when you switch apps or lock your phone. On iOS, it shows as a Live Activity on your lock screen. You'll receive a notification when rest is complete so you never miss your next set.",
-
   "faqLiveActivitiesQuestion": "What are Live Activities?",
   "faqLiveActivitiesAnswer": "Live Activities (iOS 16+) show your timer on the lock screen and Dynamic Island. See remaining rest time at a glance without unlocking your phone. The activity updates in real-time and shows current set/exercise info. Enable in Settings > Timer.",
-
   "faqTimerSoundsQuestion": "Can I customize timer sounds?",
   "faqTimerSoundsAnswer": "Yes! Go to Settings > Timer > Sound. Choose from several alert sounds or select 'Vibrate Only' for silent gym sessions. You can also enable or disable the countdown beeps in the final seconds.",
-
   "faqDefaultRestQuestion": "How do I set default rest times?",
   "faqDefaultRestAnswer": "Go to Settings > Timer > Default Rest Time. Set a global default (e.g., 90 seconds). You can also set rest time per exercise - tap the clock icon on any exercise to customize. Exercise-specific times override the global default.",
-
   "faqTrackProgressQuestion": "How do I track my progress?",
   "faqTrackProgressAnswer": "The Analytics tab shows your fitness journey through interactive charts. Track strength progression per exercise, weekly volume trends, workout frequency, and muscle group balance. Filter by time period (week/month/year) to spot trends.",
-
   "faqPersonalRecordsQuestion": "What are Personal Records (PRs)?",
   "faqPersonalRecordsAnswer": "PRs are your best-ever performances for each exercise. The app tracks multiple PR types: 1RM (heaviest single), 5RM, 10RM, max reps at a weight, and more. You'll see celebratory animations when you beat a PR - keep pushing!",
-
   "faqVolumeQuestion": "What is training volume?",
   "faqVolumeAnswer": "Volume = Sets × Reps × Weight - a key metric for muscle growth. The app tracks daily and weekly volume per muscle group. Colored indicators show if you're in optimal range. Too little volume = limited growth; too much = overtraining risk.",
-
   "faqMuscleBalanceQuestion": "What is muscle balance analysis?",
   "faqMuscleBalanceAnswer": "The muscle balance feature compares volume across muscle groups to identify imbalances. It highlights if you're training push vs pull, front vs back, or upper vs lower disproportionately. Balanced training reduces injury risk and improves aesthetics.",
-
   "faqChartsQuestion": "What charts are available?",
   "faqChartsAnswer": "Analytics includes: strength progression (weight over time per exercise), volume trends (weekly tonnage), frequency chart (workouts per week), muscle heatmap (which muscles trained most), and PR timeline. Tap any chart to drill into details.",
-
   "faqHistoryQuestion": "Where can I see past workouts?",
   "faqHistoryAnswer": "The History tab shows all completed workouts in chronological order. Filter by date range, template, or search by exercise name. Tap any workout to see full details including every set, rest times, and notes. You can also repeat a past workout as a template.",
-
   "faqPremiumBenefitsQuestion": "What does Premium include?",
   "faqPremiumBenefitsAnswer": "Premium unlocks: unlimited workout history (free: 30 days), advanced analytics (muscle balance, trends), cloud sync across devices, custom exercise library, priority support, and removes all ads. Your training data is yours - never lost or limited.",
-
   "faqPremiumPricingQuestion": "How much does Premium cost?",
   "faqPremiumPricingAnswer": "Premium is available as monthly or annual subscription through the App Store/Google Play. Annual saves significantly compared to monthly. Prices may vary by region. Check the Premium screen for current pricing and any special offers.",
-
   "faqRestorePurchaseQuestion": "How do I restore my purchase?",
   "faqRestorePurchaseAnswer": "Go to Profile > Premium > Restore Purchase. Sign in with the same Apple ID/Google account used for the original purchase. The app will verify your subscription status and unlock Premium features. This also works when switching devices.",
-
   "faqCancelSubscriptionQuestion": "How do I cancel my subscription?",
   "faqCancelSubscriptionAnswer": "Subscriptions are managed through Apple/Google, not the app. On iOS: Settings > Apple ID > Subscriptions. On Android: Play Store > Subscriptions. You'll keep Premium access until the current period ends. Your data remains accessible even after.",
-
   "faqFreeVsPremiumQuestion": "What can I do with the free version?",
   "faqFreeVsPremiumAnswer": "The free version includes: full workout tracking, exercise database, rest timer, 30-day history, basic analytics, and templates. Premium adds: unlimited history, advanced analytics, cloud sync, and removes ads. Core training functionality works perfectly free!",
-
   "faqSignInMethodsQuestion": "How do I sign in?",
   "faqSignInMethodsAnswer": "The app supports: Apple Sign-In (recommended for iOS - fast and private), Google Sign-In, and email/password. Signing in enables cloud sync and backup. You can use the app without signing in, but data will only be stored locally.",
-
   "faqCloudSyncQuestion": "How does cloud sync work?",
   "faqCloudSyncAnswer": "When signed in (Premium), your workouts, templates, and settings sync automatically to the cloud. Changes appear on all your devices within seconds. The sync indicator shows status: green checkmark = synced, spinning = syncing, warning = offline mode.",
-
   "faqBackupQuestion": "Is my data backed up?",
   "faqBackupAnswer": "Yes! With Premium, data syncs to the cloud automatically. Even without Premium, workouts are stored locally on your device and can be exported manually. Go to Settings > Export Data for a complete backup file you can save anywhere.",
-
   "faqSwitchDeviceQuestion": "How do I transfer data to a new device?",
   "faqSwitchDeviceAnswer": "If you have Premium: just sign in on the new device and your data syncs automatically. Without Premium: export your data on the old device (Settings > Export), transfer the file, and import on the new device. All history and templates transfer.",
-
   "faqDeleteAccountQuestion": "How do I delete my account?",
   "faqDeleteAccountAnswer": "Go to Profile > Settings > Account > Delete Account. This permanently removes all cloud data associated with your account. Local data on your device remains unless you uninstall the app. This action cannot be undone - please export your data first.",
-
   "faqSetGoalsQuestion": "How do I set fitness goals?",
   "faqSetGoalsAnswer": "Go to Profile > Goals. Set targets for: workouts per week, specific lift goals (e.g., bench 100kg), body measurements, and more. The app tracks progress toward each goal and celebrates when you achieve them. Goals help maintain motivation!",
-
   "faqStreaksQuestion": "How do workout streaks work?",
   "faqStreaksAnswer": "Streaks count consecutive weeks where you met your workout goal. Miss a week and it resets - but don't worry, your longest streak is always saved! Streaks encourage consistency, which is key to long-term results. View your streaks on the Profile screen.",
-
   "faqBodyMeasurementsQuestion": "Can I track body measurements?",
   "faqBodyMeasurementsAnswer": "Yes! Go to Profile > Measurements. Track weight, body fat %, and circumferences (chest, arms, waist, etc.). Log regularly to see trends over time. These measurements complement your training data to show complete progress.",
-
   "faqXpLevelsQuestion": "What is the XP/Level system?",
   "faqXpLevelsAnswer": "Earn XP (experience points) for every workout, PR, and completed goal. XP fills your level bar - level up for achievements! The system gamifies your fitness journey. Higher levels unlock badges and show your dedication. Check your XP on the Profile screen.",
-
   "faqAchievementsQuestion": "What achievements can I earn?",
   "faqAchievementsAnswer": "Achievements reward milestones: first workout, 10/50/100 workouts completed, PR streaks, consistency streaks, and more. Each achievement grants XP and a badge. View your collection in Profile > Achievements. Can you collect them all?",
-
   "faqUnitsQuestion": "How do I change weight units?",
   "faqUnitsAnswer": "Go to Profile > Settings > Units. Choose kg (metric) or lb (imperial). All weights throughout the app convert automatically. Your data is stored in metric internally so switching is seamless and reversible anytime.",
-
   "faqLanguageQuestion": "Can I change the app language?",
   "faqLanguageAnswer": "The app follows your device's language setting. Currently supported: English and Italian. To change: go to your device Settings > Language. The app will restart in the new language. More languages coming based on user demand!",
-
   "faqThemeQuestion": "Can I change the app theme?",
   "faqThemeAnswer": "Yes! Go to Profile > Settings > Appearance. Choose: Light, Dark, or System (follows your device setting). The app also supports dynamic colors on compatible devices. Dark mode is great for early morning gym sessions!",
-
   "faqNotificationsQuestion": "How do I manage notifications?",
   "faqNotificationsAnswer": "Go to Settings > Notifications. Control: rest timer alerts, workout reminders, PR celebrations, weekly summaries, and more. Set reminder schedules for your preferred workout days and times. All notifications can be individually enabled or disabled.",
-
   "faqAppleHealthQuestion": "How do I sync with Apple Health?",
   "faqAppleHealthAnswer": "Go to Settings > Health Sync > Apple Health. Grant permissions for the data you want to share. The app can write workouts and read weight measurements. Your gym sessions will appear in the Health app alongside all your other fitness data.",
-
   "faqHealthConnectQuestion": "How do I sync with Health Connect?",
   "faqHealthConnectAnswer": "On Android, go to Settings > Health Sync > Health Connect. Grant the necessary permissions. The app writes workout data to Health Connect, which can be shared with other fitness apps. Make sure Health Connect is installed from the Play Store.",
-
   "faqHealthPermissionsQuestion": "What health permissions are needed?",
   "faqHealthPermissionsAnswer": "The app requests: Write Workouts (to log your sessions), Read Weight (to auto-update your body weight). All permissions are optional and can be changed anytime in your device's privacy settings. We never access data we don't need.",
-
   "faqWeightSyncQuestion": "Does my body weight sync automatically?",
   "faqWeightSyncAnswer": "If you grant permission, the app can read your latest weight from Apple Health or Health Connect. This keeps your calculated metrics (like volume per kg) accurate without manual entry. Weight updates appear within seconds of being recorded.",
-
   "faqDataLostQuestion": "I lost my workout data - what do I do?",
   "faqDataLostAnswer": "First, check if you're signed in (Profile screen shows account). Try Restore Purchase to verify Premium status. If signed in, try logging out and back in to force a resync. For local data issues, check if you have an export backup. Contact support if problems persist.",
-
   "faqTimerNotWorkingQuestion": "The timer isn't working in background - why?",
   "faqTimerNotWorkingAnswer": "Check: 1) Notifications are enabled for the app (device Settings), 2) Low Power Mode is off, 3) Background App Refresh is enabled. On iOS, ensure Live Activities are enabled. If issues persist, try reinstalling the app. The timer needs these permissions to work background.",
-
   "faqSyncIssuesQuestion": "My data isn't syncing between devices",
   "faqSyncIssuesAnswer": "Verify: 1) You're signed in with the same account on both devices, 2) You have an active Premium subscription, 3) Both devices have internet connection. Try pulling down on the main screen to force sync. Sync status appears at the top of the home screen.",
-
   "faqAppCrashQuestion": "The app keeps crashing - help!",
   "faqAppCrashAnswer": "Try these steps: 1) Force close and reopen the app, 2) Restart your device, 3) Check for app updates, 4) Reinstall the app (data syncs from cloud if signed in). If crashes continue, please contact support with your device model and iOS/Android version.",
-
   "faqContactSupportQuestion": "How do I contact support?",
   "faqContactSupportAnswer": "Go to Profile > Help Center > Contact Us, or email directly at support@gymbro.app. Include your device model, app version (shown in Settings), and a description of the issue. Screenshots help! We typically respond within 24 hours.",
-
   "configureSuperset": "Configure Superset",
   "@configureSuperset": {
     "description": "Title for superset configuration sheet"
@@ -28518,7 +28459,7 @@
   "@copyFromPrevious": {
     "description": "Button to copy values from previous round"
   },
-  "removeRound": "Remove Round",
+  "removeRound": "Remove round",
   "@removeRound": {
     "description": "Button tooltip to remove a round from superset"
   },
@@ -28616,7 +28557,6 @@
       }
     }
   },
-
   "dataBackup": "Data & Backup",
   "importData": "Import Data",
   "importFromOtherApp": "Import from another app",
@@ -28627,43 +28567,43 @@
   "exportStep1": "Open the other app and go to Settings",
   "exportStep2": "Find 'Export Data' or 'Export Workouts'",
   "exportStep3": "Save the CSV file and select it here",
-  "comingSoon": "Coming Soon",
-  "parsing": "Parsing data...",
-  "importing": "Importing workouts...",
-  "preview": "Preview",
   "mapExercises": "Map Exercises",
-  "confirm": "Confirm",
   "readyToImport": "Ready to import",
-  "workouts": "Workouts",
-  "exercises": "Exercises",
   "autoMapped": "Auto-mapped",
   "unmapped": "Need mapping",
   "warnings": "Warnings",
   "andMoreWarnings": "...and {count} more warnings",
   "@andMoreWarnings": {
     "placeholders": {
-      "count": {"type": "int"}
+      "count": {
+        "type": "int"
+      }
     }
   },
-  "recentWorkouts": "Recent Workouts",
   "andMoreWorkouts": "...and {count} more workouts",
   "@andMoreWorkouts": {
     "placeholders": {
-      "count": {"type": "int"}
+      "count": {
+        "type": "int"
+      }
     }
   },
   "rows": "Rows",
   "autoMappedExercises": "{count} exercises auto-mapped",
   "@autoMappedExercises": {
     "placeholders": {
-      "count": {"type": "int"}
+      "count": {
+        "type": "int"
+      }
     }
   },
   "autoMappedDescription": "These exercises were automatically matched to your database.",
   "needsMappingExercises": "{count} exercises need mapping",
   "@needsMappingExercises": {
     "placeholders": {
-      "count": {"type": "int"}
+      "count": {
+        "type": "int"
+      }
     }
   },
   "needsMappingDescription": "Select the correct exercise from suggestions or search manually.",
@@ -28671,7 +28611,9 @@
   "occurrences": "{count} occurrences",
   "@occurrences": {
     "placeholders": {
-      "count": {"type": "int"}
+      "count": {
+        "type": "int"
+      }
     }
   },
   "noSuggestionsFound": "No suggestions found. Use search to find the exercise.",
@@ -28679,11 +28621,12 @@
   "skipThisExercise": "Skip this exercise",
   "willImportWithOriginalName": "Will be imported with the original name",
   "importComplete": "Import Complete!",
-  "importFailed": "Import Failed",
   "importSuccessMessage": "Successfully imported {count} workouts to your history.",
   "@importSuccessMessage": {
     "placeholders": {
-      "count": {"type": "int"}
+      "count": {
+        "type": "int"
+      }
     }
   },
   "importFailedMessage": "There was an error importing your data. Please try again.",
@@ -28695,15 +28638,13 @@
   "andMoreErrors": "...and {count} more errors",
   "@andMoreErrors": {
     "placeholders": {
-      "count": {"type": "int"}
+      "count": {
+        "type": "int"
+      }
     }
   },
-  "done": "Done",
   "couldNotReadFile": "Could not read the selected file",
   "importError": "Import Error",
-  "tryAgain": "Try Again",
-  "reset": "Reset",
-
   "recoveryInsight": "Recovery Insight",
   "@recoveryInsight": {
     "description": "Title for recovery insight feature"
@@ -28772,10 +28713,6 @@
   "@weeklyTrend": {
     "description": "Label for weekly sleep trend sparkline"
   },
-  "average": "avg",
-  "@average": {
-    "description": "Short label for average value"
-  },
   "todaysRecommendation": "Today's Recommendation",
   "@todaysRecommendation": {
     "description": "Title for recommendation section"
@@ -28795,10 +28732,6 @@
   "poorSleepEffect": "With <6h sleep",
   "@poorSleepEffect": {
     "description": "Label for poor sleep volume effect"
-  },
-  "workouts": "workouts",
-  "@workouts": {
-    "description": "Plural label for workouts count"
   },
   "sleepCorrelationProDescription": "See how your sleep directly impacts your training volume and performance with detailed correlation analysis.",
   "@sleepCorrelationProDescription": {
@@ -28891,10 +28824,6 @@
   "streakDays": "Streak",
   "@streakDays": {
     "description": "Label for sleep streak days"
-  },
-  "errorLoadingData": "Error loading data",
-  "@errorLoadingData": {
-    "description": "Generic error message for loading data"
   },
   "noSleepDataFound": "No sleep data found",
   "@noSleepDataFound": {
@@ -29015,8 +28944,7 @@
         "example": "4200kg"
       }
     }
-  }
-,
+  },
   "clearSyncCache": "Clear Sync Cache",
   "@clearSyncCache": {
     "description": "Button label to clear health sync cache"
@@ -29056,10 +28984,6 @@
   "autoSyncDaily": "Auto Sync",
   "@autoSyncDaily": {
     "description": "Label for daily auto sync toggle"
-  },
-  "autoSyncDescription": "Sync data automatically in background",
-  "@autoSyncDescription": {
-    "description": "Description of auto sync feature"
   },
   "connected": "Connected",
   "@connected": {
@@ -29101,10 +29025,6 @@
   "@notAvailableOnDevice": {
     "description": "Message when feature is not available on device"
   },
-  "lastSynced": "Last synced",
-  "@lastSynced": {
-    "description": "Label for last sync timestamp"
-  },
   "nextSync": "Next sync",
   "@nextSync": {
     "description": "Label for next scheduled sync timestamp"
@@ -29116,10 +29036,6 @@
   "healthSyncHelpContent": "Apple Health & Health Connect Integration\n\nFeatures:\n• Import workouts from Apple Health / Health Connect\n• Sync body weight data (bidirectional)\n• Automatic daily background sync\n• Manual sync anytime\n\nPermissions:\n• Workout: Import workout sessions\n• Body Weight: Sync weight data\n\nBackground Sync:\n• Auto-syncs every 24 hours\n• Retry on failure (3 attempts max)\n• Can be disabled if needed",
   "@healthSyncHelpContent": {
     "description": "Help dialog content explaining health sync features"
-  },
-  "gotIt": "Got it",
-  "@gotIt": {
-    "description": "Acknowledgment button in dialogs"
   },
   "runDiagnosticTests": "Run Diagnostic Tests",
   "@runDiagnosticTests": {
@@ -29309,8 +29225,7 @@
         "type": "int"
       }
     }
-  }
-,
+  },
   "exerciseNotFoundCreate": "Exercise not found? Create a custom one",
   "@exerciseNotFoundCreate": {
     "description": "Message prompting user to create custom exercise"
@@ -29384,7 +29299,6 @@
   "@unlimitedCustomExercises": {
     "description": "Premium feature description for unlimited custom exercises"
   },
-
   "optimizeTraining": "Optimize Training",
   "@optimizeTraining": {
     "description": "Title for optimize training feature"
@@ -29539,34 +29453,13 @@
   "@loadingSuggestions": {
     "description": "Loading state for suggestions"
   },
-  "exerciseAddedToTemplate": "{exercise} added to {template}",
-  "@exerciseAddedToTemplate": {
-    "description": "Success message when exercise added",
-    "placeholders": {
-      "exercise": {
-        "type": "String"
-      },
-      "template": {
-        "type": "String"
-      }
-    }
-  },
   "added": "Added",
   "@added": {
     "description": "Badge for added items"
   },
-  "done": "Done",
-  "@done": {
-    "description": "Done button text"
-  },
-
   "optimizeTrainingDirect": "Here are suggestions to balance your training",
   "@optimizeTrainingDirect": {
     "description": "Direct subtitle for optimize training v2"
-  },
-  "tapToExpand": "Tap for details",
-  "@tapToExpand": {
-    "description": "Hint to tap card for details"
   },
   "alternativesCount": "{count} alternatives",
   "@alternativesCount": {
@@ -29677,10 +29570,6 @@
       }
     }
   },
-  "alternatives": "Alternatives",
-  "@alternatives": {
-    "description": "Section title for alternative exercises"
-  },
   "exercisesAddedCount": "{count} exercises added",
   "templateViewMode": "Presentation Mode",
   "@templateViewMode": {
@@ -29689,15 +29578,6 @@
   "noSetsConfigured": "No sets configured",
   "@noSetsConfigured": {
     "description": "Message when exercise has no sets"
-  },
-  "exerciseCount": "{count, plural, =1{1 exercise} other{{count} exercises}}",
-  "@exerciseCount": {
-    "description": "Number of exercises in template",
-    "placeholders": {
-      "count": {
-        "type": "int"
-      }
-    }
   },
   "menuOptions": "Menu options",
   "@menuOptions": {
@@ -29782,10 +29662,6 @@
   "severityMediumExplanation": "Slightly undertrained - approaching recommended volume",
   "@severityMediumExplanation": {
     "description": "Explanation for medium severity"
-  },
-  "understood": "Got it",
-  "@understood": {
-    "description": "Button text to dismiss explanation sheet"
   },
   "planned": "Planned",
   "@planned": {
@@ -29873,7 +29749,6 @@
       }
     }
   },
-
   "templateSuggestionTitle": "Suggested workout",
   "@templateSuggestionTitle": {
     "description": "Template suggestion card title on home screen"
@@ -29930,7 +29805,6 @@
   "@templateOptimalityLabel": {
     "description": "Label for optimality score in alternatives"
   },
-
   "completeToBalance": "Complete {templateName} to balance ✓",
   "@completeToBalance": {
     "description": "Predictive balance indicator showing which workout to complete",
@@ -29954,10 +29828,6 @@
         "example": "3"
       }
     }
-  },
-  "weeklyProgress": "Weekly Progress",
-  "@weeklyProgress": {
-    "description": "Title for weekly workout progress card"
   },
   "workoutsCompletedThisWeek": "{completed}/{expected} workouts this week",
   "@workoutsCompletedThisWeek": {
@@ -30017,15 +29887,10 @@
   "@unsavedChangesTitle": {
     "description": "Title for unsaved changes warning dialog"
   },
-  "unsavedChangesMessage": "You have unsaved changes. They will be lost if you continue.",
-  "@unsavedChangesMessage": {
-    "description": "Message for unsaved changes warning dialog"
-  },
   "continueText": "Continue",
   "@continueText": {
     "description": "Generic continue button text"
   },
-
   "mergeSuggestionTitle": "Similar exercises found",
   "@mergeSuggestionTitle": {
     "description": "Title for merge suggestion card on home"
@@ -30081,14 +29946,6 @@
   "sessionsToMerge": "Sessions to merge",
   "@sessionsToMerge": {
     "description": "Sessions count label"
-  },
-  "personalRecord": "Personal Record",
-  "@personalRecord": {
-    "description": "PR label"
-  },
-  "secondaryMuscles": "Secondary muscles",
-  "@secondaryMuscles": {
-    "description": "Secondary muscles label"
   },
   "mergeWarning": "This action cannot be undone. All history will be updated to the new exercise name.",
   "@mergeWarning": {
@@ -30176,19 +30033,10 @@
   "@muscles": {
     "description": "Label for muscle groups"
   },
-  "movementPattern": "Movement pattern",
-  "@movementPattern": {
-    "description": "Label for movement pattern"
-  },
   "exerciseUpgraded": "Exercise upgraded successfully",
   "@exerciseUpgraded": {
     "description": "Success message after upgrading exercise"
   },
-  "equipment": "Equipment",
-  "@equipment": {
-    "description": "Label for exercise equipment"
-  },
-
   "progressPhotos": "Progress Photos",
   "@progressPhotos": {
     "description": "Title for progress photos screen"
@@ -30217,7 +30065,6 @@
   "@gallery": {
     "description": "Gallery option for selecting photos"
   },
-
   "photoReminders": "Photo Reminders",
   "@photoReminders": {
     "description": "Title for photo reminder settings"
@@ -30258,10 +30105,6 @@
   "@customInterval": {
     "description": "Custom interval option"
   },
-  "reminderTime": "Reminder Time",
-  "@reminderTime": {
-    "description": "Label for time selector"
-  },
   "nextReminder": "Next Reminder",
   "@nextReminder": {
     "description": "Label for next scheduled reminder"
@@ -30277,11 +30120,6 @@
   "remindersAutoPausedDescription": "We noticed you've been skipping reminders. Enable them again when you're ready.",
   "@remindersAutoPausedDescription": {
     "description": "Description when reminders are auto-paused"
-  },
-
-  "exportData": "Export Data",
-  "@exportData": {
-    "description": "Export data menu item title"
   },
   "exportDataSubtitle": "Download your data (GDPR Art. 20)",
   "@exportDataSubtitle": {
@@ -30303,7 +30141,6 @@
   "@exportCategories": {
     "description": "Export categories selection header"
   },
-  "selectAll": "Select All",
   "@selectAll": {
     "description": "Select all button"
   },
@@ -30343,10 +30180,6 @@
   "@startExport": {
     "description": "Start export button"
   },
-  "exporting": "Exporting...",
-  "@exporting": {
-    "description": "Export in progress message"
-  },
   "exportCompleted": "Export Complete!",
   "@exportCompleted": {
     "description": "Export completed title"
@@ -30358,10 +30191,6 @@
   "shareExport": "Share Export",
   "@shareExport": {
     "description": "Share export button"
-  },
-  "exportFailed": "Export Failed",
-  "@exportFailed": {
-    "description": "Export failed title"
   },
   "exportFailedGeneric": "An error occurred during export. Please try again.",
   "@exportFailedGeneric": {
@@ -30411,10 +30240,9 @@
   "@exportCategoryAchievements": {
     "description": "Achievements export category"
   },
-
   "athlete": "Athlete",
   "@athlete": {
-    "description": "Generic athlete label"
+    "description": "Label for athlete role"
   },
   "athletes": "Athletes",
   "@athletes": {
@@ -30500,10 +30328,6 @@
   "todayStats": "Today",
   "@todayStats": {
     "description": "Today's stats section header"
-  },
-  "workoutsCompleted": "Workouts completed",
-  "@workoutsCompleted": {
-    "description": "Stat label for completed workouts"
   },
   "currentlyTraining": "Currently training",
   "@currentlyTraining": {
@@ -30614,10 +30438,6 @@
   "generateCoachCode": "Generate your coach code",
   "@generateCoachCode": {
     "description": "Prompt to generate coach code"
-  },
-  "orDivider": "or",
-  "@orDivider": {
-    "description": "Divider text between options"
   },
   "athleteDownloadsApp": "The athlete downloads FitLog and enters your coach code",
   "@athleteDownloadsApp": {
@@ -30743,10 +30563,6 @@
   "@createFirstCoachTemplate": {
     "description": "Empty state description for coach templates"
   },
-  "createTemplate": "Create Template",
-  "@createTemplate": {
-    "description": "Button to create new template"
-  },
   "noAssignedTemplatesYet": "No assigned templates",
   "@noAssignedTemplatesYet": {
     "description": "Empty state when no templates assigned"
@@ -30775,7 +30591,6 @@
   "@addAthletesFirst": {
     "description": "Hint when no athletes available"
   },
-
   "messages": "Messages",
   "@messages": {
     "description": "Title for chat/messages screen"
@@ -30804,10 +30619,6 @@
   "@noMessagesYet": {
     "description": "Placeholder when conversation has no messages"
   },
-  "athlete": "Athlete",
-  "@athlete": {
-    "description": "Label for athlete role"
-  },
   "coach": "Coach",
   "@coach": {
     "description": "Label for coach role"
@@ -30815,10 +30626,6 @@
   "startConversation": "Send a message to start the conversation",
   "@startConversation": {
     "description": "Hint to start chatting"
-  },
-  "typeMessage": "Type a message...",
-  "@typeMessage": {
-    "description": "Placeholder for message input"
   },
   "sendMessage": "Send message",
   "@sendMessage": {
@@ -30847,10 +30654,6 @@
   "captionOptional": "Caption (optional)",
   "@captionOptional": {
     "description": "Placeholder for optional caption"
-  },
-  "skip": "Skip",
-  "@skip": {
-    "description": "Button to skip action"
   },
   "send": "Send",
   "@send": {
@@ -30892,7 +30695,6 @@
   "@notAuthenticated": {
     "description": "Error when user is not authenticated"
   },
-
   "initialOnboardingWelcomeTitle": "Welcome to FitLog Pro",
   "@initialOnboardingWelcomeTitle": {
     "description": "Initial onboarding welcome title"
@@ -30921,7 +30723,6 @@
   "@initialOnboardingContinue": {
     "description": "Continue button in initial onboarding"
   },
-
   "initialOnboardingGoalTitle": "What's your goal?",
   "@initialOnboardingGoalTitle": {
     "description": "Goal selection title"
@@ -30962,7 +30763,6 @@
   "@initialOnboardingGoalStayFitDesc": {
     "description": "Stay fit goal description"
   },
-
   "initialOnboardingBodyTitle": "Tell us about yourself",
   "@initialOnboardingBodyTitle": {
     "description": "Body data step title"
@@ -31037,7 +30837,6 @@
       }
     }
   },
-
   "initialOnboardingExperienceTitle": "What's your experience?",
   "@initialOnboardingExperienceTitle": {
     "description": "Experience step title"
@@ -31078,7 +30877,6 @@
   "@initialOnboardingExperienceAthleteDesc": {
     "description": "Athlete description"
   },
-
   "initialOnboardingHealthKitTitle": "Connect Health",
   "@initialOnboardingHealthKitTitle": {
     "description": "HealthKit step title"
@@ -31139,7 +30937,6 @@
   "@initialOnboardingSelectWeight": {
     "description": "Title for weight presets bottom sheet"
   },
-
   "initialOnboardingFrequencyTitle": "How often do you train?",
   "@initialOnboardingFrequencyTitle": {
     "description": "Frequency step title"
@@ -31191,8 +30988,7 @@
   "initialOnboardingCompleteInfo": "You can change these settings anytime",
   "@initialOnboardingCompleteInfo": {
     "description": "Info text below complete button"
-  }
-,
+  },
   "tourXpProgressTitle": "Your Level",
   "@tourXpProgressTitle": {
     "description": "Home tour step 1 title - XP Progress"
@@ -31373,18 +31169,6 @@
   "@use": {
     "description": "Button text to use a template"
   },
-  "errorLoadingTemplates": "Error loading templates",
-  "@errorLoadingTemplates": {
-    "description": "Error message when templates cannot be loaded"
-  },
-  "noTemplatesFound": "No templates found",
-  "@noTemplatesFound": {
-    "description": "Message when no templates match filter"
-  },
-  "errorSavingTemplate": "Error saving template",
-  "@errorSavingTemplate": {
-    "description": "Error message when template cannot be saved"
-  },
   "duplicateTemplate": "Template Already Exists",
   "@duplicateTemplate": {
     "description": "Title for duplicate template warning dialog"
@@ -31449,6 +31233,14 @@
   "@textSize": {
     "description": "Label for font/text size selector"
   },
+  "interfaceSize": "Interface size",
+  "@interfaceSize": {
+    "description": "Label for unified interface size control (font + layout)"
+  },
+  "interfaceSizeSubtitle": "Text and spacing together",
+  "@interfaceSizeSubtitle": {
+    "description": "Subtitle explaining that interface size controls both text and layout spacing"
+  },
   "comfortable": "Comfortable",
   "@comfortable": {
     "description": "Display mode option for spacious layout"
@@ -31457,7 +31249,6 @@
   "@report": {
     "description": "Button text to submit a report"
   },
-
   "a11yStartWorkout": "Start workout",
   "@a11yStartWorkout": {
     "description": "Accessibility label for start workout button"
@@ -31566,7 +31357,6 @@
   "@a11yRestPause": {
     "description": "Accessibility label for rest-pause set"
   },
-
   "simpleMode": "Simple Mode",
   "@simpleMode": {
     "description": "Setting for simple mode toggle"
@@ -31583,7 +31373,6 @@
   "@simpleModeDisabled": {
     "description": "Confirmation when simple mode is turned off"
   },
-
   "templateFolders": "Template Folders",
   "@templateFolders": {
     "description": "Title for template folders section"
@@ -31624,7 +31413,6 @@
   "@rootFolder": {
     "description": "Root folder label"
   },
-
   "pdfBranding": "PDF Branding",
   "@pdfBranding": {
     "description": "Title for PDF branding settings"
@@ -31645,10 +31433,6 @@
   "@primaryColor": {
     "description": "Label for primary color picker"
   },
-  "accentColor": "Accent Color",
-  "@accentColor": {
-    "description": "Label for accent color picker"
-  },
   "logoUrl": "Logo URL",
   "@logoUrl": {
     "description": "Label for logo URL input"
@@ -31664,10 +31448,6 @@
   "websiteUrl": "Website URL",
   "@websiteUrl": {
     "description": "Label for website URL input"
-  },
-  "instagramHandle": "Instagram Handle",
-  "@instagramHandle": {
-    "description": "Label for Instagram handle input"
   },
   "footerText": "Footer Text",
   "@footerText": {
@@ -31713,10 +31493,6 @@
   "@deleteFolderConfirm": {
     "description": "Confirmation message for folder deletion"
   },
-  "done": "Done",
-  "@done": {
-    "description": "Button label to close dialog"
-  },
   "noCodeSkip": "Don't have a code? Skip",
   "reportProblem": "Report problem",
   "reportType": "Report type",
@@ -31724,25 +31500,17 @@
   "feedbackTypeSuggestion": "Suggestion",
   "feedbackTypeTypo": "Typo",
   "feedbackTypeOther": "Other",
-  "describeProblem": "Describe the problem",
   "describeProblemHint": "Describe the problem in detail...",
-  "exerciseFeedback": "Exercise Feedback",
   "reducePriority": "Reduce priority",
   "remove": "Remove",
   "deletePhotoTitle": "Delete Photo?",
   "deletePhotoMessage": "This photo will be moved to trash and permanently deleted after 30 days. You can restore it from trash before then.",
   "allPoses": "All poses",
-  "retry": "Retry",
-  "clearFilter": "Clear filter",
-  "status": "Status",
-  "lastSync": "Last sync",
   "totalTemplates": "Total templates",
   "offlineChangesMessage": "You have offline changes that will be synced on next access.",
   "syncCompleted": "Sync completed",
-  "syncNow": "Sync now",
   "weightOptional": "Weight (optional)",
   "weightHintExample": "e.g., 75.5",
-  "notesOptional": "Notes (optional)",
   "notesHintFeeling": "How are you feeling? Any changes noticed?",
   "setIsCompleted": "Set is completed",
   "setIsNotCompleted": "Set is not completed",
@@ -31754,7 +31522,6 @@
   "errorOpeningExerciseEditor": "Error opening exercise editor. Please try again.",
   "behaviorSection": "Behavior",
   "autoRestTimerSubtitle": "Start timer after each set",
-  "autoCollapseTitle": "Collapse completed exercises",
   "autoCollapseSubtitle": "Auto-minimize",
   "soundVibrationTitle": "Sounds and vibrations",
   "soundVibrationSubtitle": "Audio feedback during workout",
@@ -31772,35 +31539,22 @@
   "setDurationSubtitle": "Track time under tension",
   "appearanceSection": "Appearance",
   "appearanceSubtitle": "Customize interface",
-  "exerciseNotesTitle": "Exercise notes",
   "exerciseNotesSubtitle": "Show notes under each exercise",
   "progressChartsTitle": "Progress charts",
   "progressChartsSubtitle": "Show history and trends",
   "quickIconsTitle": "Quick icons",
   "quickIconsSubtitle": "Info, warmup, prevention",
-  "plateCalculatorTitle": "Plate calculator",
   "plateCalculatorSubtitle": "Show plates for weight",
   "changesAutoSaved": "Changes are saved automatically",
-  "restTimer": "Rest Timer",
-  "roundNumber": "Round {number}",
-  "@roundNumber": {
-    "placeholders": {
-      "number": {"type": "int"}
-    }
-  },
-  "removeRound": "Remove round",
-  "addRound": "Add round",
-  "editRoundData": "Set weight and reps for this round",
-  "templateNameRequired": "Template name is required",
-  "templateSaved": "Template saved successfully",
-  "discardChangesMessage": "You have unsaved changes. Do you want to discard them?",
   "recoverWeights": "Recover weights?",
   "progressiveOverload": "Progressive overload",
   "startEmpty": "Start empty",
   "previewWeights": "Preview weights {option}",
   "@previewWeights": {
     "placeholders": {
-      "option": {"type": "String"}
+      "option": {
+        "type": "String"
+      }
     }
   },
   "lastSessionToday": "Last session: today",
@@ -31808,7 +31562,9 @@
   "exercisesAddedToWorkout": "{count} exercises added to workout!",
   "@exercisesAddedToWorkout": {
     "placeholders": {
-      "count": {"type": "int"}
+      "count": {
+        "type": "int"
+      }
     }
   },
   "aboutCredits": "About & Credits",
@@ -31819,22 +31575,21 @@
   "appVersionValue": "Version {version}",
   "@appVersionValue": {
     "placeholders": {
-      "version": {"type": "String"}
+      "version": {
+        "type": "String"
+      }
     }
   },
   "exerciseImagesCredit": "Exercise Images",
   "exerciseImagesCreditDesc": "Powered by ExerciseDB",
   "openSourceLicenses": "Open Source Licenses",
   "openSourceLicensesDesc": "View third-party licenses",
-  "privacyPolicy": "Privacy Policy",
   "privacyPolicyDesc": "Read our privacy policy",
-  "termsOfService": "Terms of Service",
   "termsOfServiceDesc": "Read our terms of service",
   "madeWithLove": "Made with love in Italy",
   "exerciseDbAttribution": "Exercise demonstration GIFs provided by ExerciseDB (exercisedb.io)",
   "soundCredits": "Sound Effects",
   "soundCreditsDesc": "Original audio by FitLog Pro",
-
   "ghostModeSection": "Privacy & Focus",
   "@ghostModeSection": {
     "description": "Settings section title for ghost mode"
@@ -31856,7 +31611,6 @@
   "ghostModeHideCommunity": "Hide community features",
   "ghostModeHideComparisons": "Hide strength comparisons",
   "ghostModeHideAnimations": "Hide XP animations",
-
   "tooltipPR": "Personal Record",
   "@tooltipPR": {
     "description": "Tooltip title for PR"
@@ -31900,5 +31654,346 @@
   "tapForInfo": "Tap for info",
   "@tapForInfo": {
     "description": "Hint text for tappable terminology"
+  },
+  "weightUpdateNudgeTitle": "Update your weight",
+  "@weightUpdateNudgeTitle": {
+    "description": "Title for weight update reminder nudge"
+  },
+  "weightUpdateNudgeSubtitle": "Last updated {days} days ago. Keep it current for accurate stats.",
+  "@weightUpdateNudgeSubtitle": {
+    "description": "Subtitle for weight update reminder nudge",
+    "placeholders": {
+      "days": {
+        "type": "int",
+        "description": "Number of days since last weight update"
+      }
+    }
+  },
+  "appTagline": "Your ultimate workout companion",
+  "@appTagline": {
+    "description": "App tagline for landing page"
+  },
+  "webMobileMessage": "Best Experience on Mobile App",
+  "@webMobileMessage": {
+    "description": "Message for mobile web users"
+  },
+  "webMobileSubtitle": "Download the app for the full FitLog Pro experience",
+  "@webMobileSubtitle": {
+    "description": "Subtitle for mobile web users"
+  },
+  "continueOnDesktop": "Continue on Desktop",
+  "@continueOnDesktop": {
+    "description": "Button to continue on desktop web"
+  },
+  "downloadOnAppStore": "Download on App Store",
+  "@downloadOnAppStore": {
+    "description": "Download button for iOS App Store"
+  },
+  "getItOnGooglePlay": "Get it on Google Play",
+  "@getItOnGooglePlay": {
+    "description": "Download button for Google Play Store"
+  },
+  "featureTrackWorkouts": "Track Workouts",
+  "@featureTrackWorkouts": {
+    "description": "Feature: Track workouts"
+  },
+  "featureAnalytics": "Advanced Analytics",
+  "@featureAnalytics": {
+    "description": "Feature: Advanced analytics"
+  },
+  "featureRestTimer": "Smart Rest Timer",
+  "@featureRestTimer": {
+    "description": "Feature: Smart rest timer"
+  },
+  "featureCloudSync": "Cloud Sync",
+  "@featureCloudSync": {
+    "description": "Feature: Cloud sync"
+  },
+  "whyFitLog": "Why FitLog Pro?",
+  "@whyFitLog": {
+    "description": "Section title: Why FitLog Pro"
+  },
+  "exerciseDatabaseUpdated": "Exercise database updated",
+  "@exerciseDatabaseUpdated": {
+    "description": "Message when exercise database is updated"
+  },
+  "exerciseDatabaseUpdatedWithCount": "{count, plural, =1{1 exercise updated} other{{count} exercises updated}}",
+  "@exerciseDatabaseUpdatedWithCount": {
+    "description": "Message when exercise database is updated with count",
+    "placeholders": {
+      "count": {
+        "type": "int",
+        "description": "Number of exercises updated"
+      }
+    }
+  },
+  "exerciseSyncFailed": "Exercise sync failed",
+  "@exerciseSyncFailed": {
+    "description": "Message when exercise sync fails"
+  },
+  "mobileWebWarningTitle": "Mobile App Recommended",
+  "@mobileWebWarningTitle": {
+    "description": "Title for mobile web warning modal"
+  },
+  "mobileWebWarningDescription": "For the best FitLog Pro experience, we recommend using our native mobile app. It's faster, more reliable, and has all the features you need.",
+  "@mobileWebWarningDescription": {
+    "description": "Description for mobile web warning modal"
+  },
+  "openInApp": "Open in App",
+  "@openInApp": {
+    "description": "Button to open in native app"
+  },
+  "continueToWebsite": "Continue to Website",
+  "@continueToWebsite": {
+    "description": "Button to continue on mobile web"
+  }
+  ,
+  "audioDebugTests": "Audio Debug Tests",
+  "@audioDebugTests": {
+    "description": "Title for audio debug tests screen"
+  },
+  "quickTests": "Quick Tests",
+  "@quickTests": {
+    "description": "Tab title for quick tests"
+  },
+  "fullTests": "Full Tests",
+  "@fullTests": {
+    "description": "Tab title for full test matrix"
+  },
+  "quickTestsTitle": "Quick Tests (3 tests)",
+  "@quickTestsTitle": {
+    "description": "Title for quick test suite"
+  },
+  "quickTestsDescription": "Essential tests to quickly confirm timer audio bugs",
+  "@quickTestsDescription": {
+    "description": "Description of quick test suite"
+  },
+  "fullTestsDescription": "Complete test matrix for comprehensive audio bug analysis",
+  "@fullTestsDescription": {
+    "description": "Description of full test suite"
+  },
+  "fullTestsWarning": "Full tests take 2-3 hours. Make sure you have time and battery.",
+  "@fullTestsWarning": {
+    "description": "Warning message for full test duration"
+  },
+  "testADescription": "Foreground timer (30s) - Baseline test, should always work",
+  "@testADescription": {
+    "description": "Description for Test A"
+  },
+  "testBDescription": "Background timer WITHOUT Live Activity (90s) - ~60% success, occasional double play",
+  "@testBDescription": {
+    "description": "Description for Test B"
+  },
+  "testCDescription": "Background timer WITH Live Activity (90s) - Consistently fails with double play (LA + AVAudioPlayer)",
+  "@testCDescription": {
+    "description": "Description for Test C"
+  },
+  "alwaysWorks": "Always works (baseline)",
+  "@alwaysWorks": {
+    "description": "Expected result: always works"
+  },
+  "sixtyPercentSuccess": "~60% success (occasional double audio)",
+  "@sixtyPercentSuccess": {
+    "description": "Expected result: 60% success rate"
+  },
+  "consistentlyFails": "Consistently fails (double audio)",
+  "@consistentlyFails": {
+    "description": "Expected result: consistently fails"
+  },
+  "startQuickTests": "Start Quick Tests",
+  "@startQuickTests": {
+    "description": "Button to start quick tests"
+  },
+  "startFullTests": "Start Full Tests",
+  "@startFullTests": {
+    "description": "Button to start full test matrix"
+  },
+  "testing": "Testing...",
+  "@testing": {
+    "description": "Status text during test execution"
+  },
+  "passed": "Passed",
+  "@passed": {
+    "description": "Test status: passed"
+  },
+  "failed": "Failed",
+  "@failed": {
+    "description": "Test status: failed"
+  },
+  "successRate": "Success Rate",
+  "@successRate": {
+    "description": "Label for success rate metric"
+  },
+  "recommendation": "Recommendation",
+  "@recommendation": {
+    "description": "Label for recommendation section"
+  },
+  "testResults": "Test Results",
+  "@testResults": {
+    "description": "Title for test results section"
+  },
+  "detailedResults": "Detailed Results",
+  "@detailedResults": {
+    "description": "Title for detailed results dialog"
+  },
+  "viewResults": "View Results",
+  "@viewResults": {
+    "description": "Button to view test results"
+  },
+  "exportResults": "Export Results",
+  "@exportResults": {
+    "description": "Button to export test results"
+  },
+  "testMatrix": "Test Matrix",
+  "@testMatrix": {
+    "description": "Label for test matrix section"
+  },
+  "fullTestMatrix": "Full Test Matrix",
+  "@fullTestMatrix": {
+    "description": "Title for full test matrix"
+  },
+  "recommendedTemplates": "Recommended Templates",
+  "@recommendedTemplates": {
+    "description": "Section title for recommended superset templates"
+  },
+  "useTemplate": "Use Template",
+  "@useTemplate": {
+    "description": "Button to use a superset template"
+  },
+  "saveCustomCopy": "Save Custom Copy",
+  "@saveCustomCopy": {
+    "description": "Button to save a custom copy of a template"
+  },
+  "exercisePairing": "Exercise Pairing",
+  "@exercisePairing": {
+    "description": "Section title for exercise pairing in superset"
+  },
+  "scientificEvidence": "Scientific Evidence",
+  "@scientificEvidence": {
+    "description": "Section title for scientific evidence behind template"
+  },
+  "equipmentRequired": "Equipment Required",
+  "@equipmentRequired": {
+    "description": "Section title for required equipment"
+  },
+  "configuration": "Configuration",
+  "@configuration": {
+    "description": "Section title for superset configuration"
+  },
+  "repsRange": "Reps Range",
+  "@repsRange": {
+    "description": "Label for reps range"
+  },
+  "restBetweenExercises": "Rest Between Exercises",
+  "@restBetweenExercises": {
+    "description": "Label for rest time between exercises"
+  },
+  "restAfterRound": "Rest After Round",
+  "@restAfterRound": {
+    "description": "Label for rest time after completing a round"
+  },
+  "rounds": "Rounds",
+  "@rounds": {
+    "description": "Label for number of rounds in superset"
+  },
+  "recommendedForYou": "Recommended for You",
+  "@recommendedForYou": {
+    "description": "Section title for recommended superset templates"
+  },
+  "evidenceBased": "Evidence-Based",
+  "@evidenceBased": {
+    "description": "Section title for evidence-based templates"
+  },
+  "timeEfficient": "Time-Efficient",
+  "@timeEfficient": {
+    "description": "Section title for time-efficient templates (15-20min)"
+  },
+  "beginnerFriendly": "Beginner-Friendly",
+  "@beginnerFriendly": {
+    "description": "Section title for beginner-friendly templates"
+  },
+  "allTemplates": "All Templates",
+  "@allTemplates": {
+    "description": "Section title for all available templates"
+  },
+  "templateAddedToWorkout": "Template added to workout",
+  "@templateAddedToWorkout": {
+    "description": "Success message when a superset template is added to workout"
+  },
+  "someExercisesNotFound": "Some exercises not found",
+  "@someExercisesNotFound": {
+    "description": "Error message when some template exercises don't exist in database"
+  },
+  "errorAddingTemplate": "Error adding template",
+  "@errorAddingTemplate": {
+    "description": "Generic error message when template addition fails"
+  },
+  "weightTimesReps": "Weight × Reps",
+  "@weightTimesReps": {
+    "description": "Header label for weight × reps column in supersets"
+  },
+  "templateOptions": "Template Options",
+  "@templateOptions": {
+    "description": "Title for superset template options menu (long press)"
+  },
+  "duplicateTemplate": "Duplicate Template",
+  "@duplicateTemplate": {
+    "description": "Option to duplicate a superset template"
+  },
+  "editTemplate": "Edit Template",
+  "@editTemplate": {
+    "description": "Option to edit a custom superset template"
+  },
+  "deleteTemplate": "Delete Template",
+  "@deleteTemplate": {
+    "description": "Option to delete a custom superset template"
+  },
+  "noSupersetTemplates": "No superset templates yet",
+  "@noSupersetTemplates": {
+    "description": "Empty state for superset templates section"
+  },
+  "noDropsetTemplates": "No dropset templates yet",
+  "@noDropsetTemplates": {
+    "description": "Empty state for dropset templates section"
+  },
+  "noRestPauseTemplates": "No rest-pause templates yet",
+  "@noRestPauseTemplates": {
+    "description": "Empty state for rest-pause templates section"
+  },
+  "noCustomExercises": "No custom exercises yet",
+  "@noCustomExercises": {
+    "description": "Empty state for custom exercises section"
+  },
+  "deleteTemplateConfirmation": "Are you sure you want to delete this template? This action cannot be undone.",
+  "@deleteTemplateConfirmation": {
+    "description": "Confirmation message when deleting a template"
+  },
+  "optionalNotes": "Notes (optional)",
+  "@optionalNotes": {
+    "description": "Label for optional notes field"
+  },
+  "addAnotherExercise": "Add another exercise",
+  "@addAnotherExercise": {
+    "description": "Button to add another exercise to superset"
+  },
+  "maxExercisesReached": "Maximum 4 exercises per superset",
+  "@maxExercisesReached": {
+    "description": "Info text when max exercises reached"
+  },
+  "initialReps": "Initial reps",
+  "@initialReps": {
+    "description": "Label for initial reps in dropset/rest-pause"
+  },
+  "restBetweenDrops": "Rest between drops (sec)",
+  "@restBetweenDrops": {
+    "description": "Label for rest between drops in dropset"
+  },
+  "clusters": "Clusters",
+  "@clusters": {
+    "description": "Label for number of clusters in rest-pause"
+  },
+  "clusterReps": "Reps per cluster",
+  "@clusterReps": {
+    "description": "Label for reps per cluster in rest-pause"
   }
 }

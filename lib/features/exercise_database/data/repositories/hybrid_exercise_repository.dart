@@ -32,7 +32,7 @@ class HybridExerciseRepository extends OptimizedBaseHybridRepository<Exercise> {
        _versionService = versionService ?? ExerciseVersionService(),
        super(
          featureName: 'exercises',
-         collectionName: _exercisesCollection,
+         collectionName: _baseCollectionName, // Base name for super(), actual queries use _firestoreCollection
          requiresPremiumForCloud: false,
        ) {
     _initialize();
@@ -41,8 +41,14 @@ class HybridExerciseRepository extends OptimizedBaseHybridRepository<Exercise> {
   final ExerciseVersionService _versionService;
   final Locale locale;
 
-  static const String _exercisesCollection = 'exercises_master';
+  // FIX: Collection name is now dynamic based on locale
+  // The static const is kept for super() constructor compatibility
+  static const String _baseCollectionName = 'exercises';
   static const Duration _syncInterval = Duration(days: 7); // Weekly sync check
+
+  /// Dynamic Firestore collection based on user locale
+  /// Returns: exercises_it, exercises_en, etc.
+  String get _firestoreCollection => 'exercises_${locale.languageCode}';
 
   Timer? _syncTimer;
   final StreamController<SyncStatus> _syncStatusController = StreamController.broadcast();
@@ -220,6 +226,7 @@ class HybridExerciseRepository extends OptimizedBaseHybridRepository<Exercise> {
       }
 
       final firebaseExercises = await _getExercisesFromFirebase();
+
       if (firebaseExercises.isEmpty) {
         _syncStatusController.add(SyncStatus.error);
         return false;
@@ -227,6 +234,7 @@ class HybridExerciseRepository extends OptimizedBaseHybridRepository<Exercise> {
 
       // Aggiorna cache con locale
       final versionInfo = await _versionService.getRemoteVersion();
+
       if (versionInfo != null) {
         await _cacheManager.cacheExercises(firebaseExercises, versionInfo.version, locale: currentLocale);
         await _versionService.markUpdateCompleted(versionInfo.version, firebaseExercises.length);
@@ -279,11 +287,30 @@ class HybridExerciseRepository extends OptimizedBaseHybridRepository<Exercise> {
   }
 
   /// Ottiene esercizi da Firebase
+  /// Uses locale-aware collection: exercises_it, exercises_en, etc.
+  /// Falls back to exercises_it if locale collection is empty
   Future<List<Exercise>> _getExercisesFromFirebase() async {
+    // Try locale-specific collection first
+    var exercises = await _fetchFromCollection(_firestoreCollection);
+
+    // Fallback to Italian if locale collection is empty and we're not already using Italian
+    if (exercises.isEmpty && _firestoreCollection != 'exercises_it') {
+      if (kDebugMode) {
+        debugPrint('⚠️ $_firestoreCollection is empty, falling back to exercises_it');
+      }
+      exercises = await _fetchFromCollection('exercises_it');
+    }
+
+    return exercises;
+  }
+
+  /// Fetches exercises from a specific Firestore collection
+  Future<List<Exercise>> _fetchFromCollection(String collectionName) async {
     try {
+      // NOTE: Removed orderBy('nome') - Firestore requires index for ordered queries
+      // Exercises will be sorted client-side if needed
       final snapshot = await firestore
-          .collection(_exercisesCollection)
-          .orderBy('name')
+          .collection(collectionName)
           .get();
 
       final exercises = <Exercise>[];
@@ -332,8 +359,37 @@ class HybridExerciseRepository extends OptimizedBaseHybridRepository<Exercise> {
   }
 
   /// Converte formato Firebase a formato JSON locale
+  /// Supports both:
+  /// - Direct JSON format (from publish script): nome, focus, difficolta, etc.
+  /// - Legacy ExerciseTemplate format: name, muscleGroups, difficulty, etc.
   Map<String, dynamic> _convertFirebaseToLocalFormat(Map<String, dynamic> firebaseData) {
-    // Converte da formato Firebase (ExerciseTemplate) a formato JSON locale
+    // Check if data is already in local JSON format (has 'nome' field)
+    if (firebaseData.containsKey('nome')) {
+      // Data is already in correct format, return as-is with id
+      return {
+        'id': firebaseData['id'] ?? '',
+        'nome': firebaseData['nome'] ?? '',
+        'focus': firebaseData['focus'] ?? 'VARIO',
+        'imageUrl': firebaseData['imageUrl'] ?? '',
+        'muscoliSecondari': firebaseData['muscoliSecondari'] ?? '',
+        'difficolta': firebaseData['difficolta'] ?? 'Intermedio',
+        'tipoEsercizio': firebaseData['tipoEsercizio'] ?? 'Isolamento',
+        'attrezzatura': firebaseData['attrezzatura'] ?? 'Vario',
+        'patternMovimento': firebaseData['patternMovimento'] ?? '',
+        'rangeRipetizioni': firebaseData['rangeRipetizioni'] ?? '8-12',
+        'noteTecniche': firebaseData['noteTecniche'] ?? '',
+        'mobilitaPre': firebaseData['mobilitaPre'] ?? '',
+        'attivazionePre': firebaseData['attivazionePre'] ?? '',
+        'warmupSets': firebaseData['warmupSets'] ?? '',
+        'tempoWarmup': firebaseData['tempoWarmup'] ?? '',
+        'drillTecnico': firebaseData['drillTecnico'] ?? '',
+        'prevenzioneInfortuni': firebaseData['prevenzioneInfortuni'] ?? '',
+        'cooldownConsigliato': firebaseData['cooldownConsigliato'] ?? '',
+        'spiegazioneTermini': firebaseData['spiegazioneTermini'] ?? '',
+      };
+    }
+
+    // Legacy format: convert from ExerciseTemplate format to local JSON format
     return {
       'id': firebaseData['id'] ?? '',
       'nome': firebaseData['name'] ?? '',
@@ -407,6 +463,16 @@ class HybridExerciseRepository extends OptimizedBaseHybridRepository<Exercise> {
     if (kDebugMode) {
       debugPrint('🧹 Exercise cache cleared');
     }
+  }
+
+  /// Reset completo per testing - cancella cache E resetta versione
+  /// Dopo questo metodo, il prossimo sync scaricherà tutto da Firebase
+  Future<void> resetForTesting() async {
+    // 1. Clear exercise cache
+    await _cacheManager.clearCache();
+
+    // 2. Reset local version to force re-download
+    await _versionService.setLocalVersion('1.0.0-reset');
   }
 
   /// Ottiene statistiche cache

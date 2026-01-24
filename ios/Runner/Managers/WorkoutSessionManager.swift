@@ -234,10 +234,15 @@ class WorkoutSessionManager: NSObject {
         }
 
         Task {
+            // FIX: Use long staleDate (2 hours) instead of short one (endDate + 10s)
+            // This allows updates (extend timer, skip rest) to work even after timer expires
+            // iOS will still auto-dismiss after 2h if workout is abandoned
+            let longStaleDate = Date().addingTimeInterval(7200)  // 2 hours
+
             await activity.update(
                 ActivityContent(
                     state: updatedState,
-                    staleDate: endDate.addingTimeInterval(10)
+                    staleDate: longStaleDate
                 )
             )
 
@@ -478,10 +483,14 @@ class WorkoutSessionManager: NSObject {
         updatedState.lastUpdated = Date()
 
         Task {
+            // FIX: Use long staleDate (2 hours from now) to allow further updates
+            // This prevents iOS from ignoring updates when timer is extended multiple times
+            let longStaleDate = Date().addingTimeInterval(7200)  // 2 hours from now
+
             await activity.update(
                 ActivityContent(
                     state: updatedState,
-                    staleDate: newEndDate.addingTimeInterval(10)
+                    staleDate: longStaleDate
                 )
             )
 
@@ -585,11 +594,13 @@ class WorkoutSessionManager: NSObject {
 
         print("▶️ [WorkoutSession] Resuming with \(remainingSeconds)s remaining, new endDate: \(newEndDate)")
 
+        // FIX: Use long staleDate (2 hours from now) to allow future updates
+        // iOS ignores updates on "stale" activities
         Task {
             await activity.update(
                 ActivityContent(
                     state: updatedState,
-                    staleDate: newEndDate.addingTimeInterval(10)
+                    staleDate: Date().addingTimeInterval(7200)  // 2 hours from now
                 )
             )
 

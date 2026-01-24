@@ -34,6 +34,7 @@ library;
 import 'package:gymbro_flutter_new/features/analytics/domain/entities/analytics_set.dart';
 import 'package:gymbro_flutter_new/features/analytics/domain/entities/exercise_session.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/workout.dart';
+import 'package:gymbro_flutter_new/shared/domain/abstractions/exercise_counting_mode.dart';
 
 /// Data class for analytics conversion result
 class ExerciseAnalyticsData {
@@ -68,21 +69,36 @@ class WorkoutToAnalyticsConverter {
   ///
   /// **Returns**: List of analytics data, one per exercise with valid sets
   ///
+  /// **Parameters**:
+  /// - workout: The completed workout to convert
+  /// - userBodyWeightKg: Optional user body weight for bodyweight exercises
+  ///
   /// **Filters**:
   /// - Only completed sets
-  /// - Only sets with weight > 0
+  /// - Only sets with weight > 0 (or bodyweight exercises with reps > 0)
   /// - Only sets with reps > 0
+  ///
+  /// **Bodyweight Exercise Handling**:
+  /// For exercises with countingMode == ExerciseCountingMode.reps (bodyweight):
+  /// - Uses userBodyWeightKg as the weight if provided
+  /// - Falls back to 0 if no body weight available (still tracked for reps)
   ///
   /// **Example**:
   /// ```dart
   /// final workout = Workout(...); // Completed workout with 3 exercises
-  /// final analyticsData = WorkoutToAnalyticsConverter.convert(workout);
+  /// final analyticsData = WorkoutToAnalyticsConverter.convert(
+  ///   workout,
+  ///   userBodyWeightKg: 75.0,
+  /// );
   /// // Returns: [
   /// //   ExerciseAnalyticsData(exerciseName: 'Squat', muscleGroup: 'legs', ...),
-  /// //   ExerciseAnalyticsData(exerciseName: 'Bench Press', muscleGroup: 'chest', ...),
+  /// //   ExerciseAnalyticsData(exerciseName: 'Push-ups', muscleGroup: 'chest', ...),
   /// // ]
   /// ```
-  static List<ExerciseAnalyticsData> convert(Workout workout) {
+  static List<ExerciseAnalyticsData> convert(
+    Workout workout, {
+    double? userBodyWeightKg,
+  }) {
     // Extract session date (use workout startTime or createdAt)
     final sessionDate = workout.startTime ?? workout.createdAt;
 
@@ -90,23 +106,43 @@ class WorkoutToAnalyticsConverter {
 
     // Process each exercise
     for (final exercise in workout.exercises) {
+      // Check if this is a bodyweight exercise
+      final isBodyweight = exercise.countingMode == ExerciseCountingMode.reps;
+
       // Filter completed sets with valid data
-      final completedSets = exercise.sets
-          .where((set) =>
-              set.isCompleted &&
-              set.weight != null &&
-              set.weight! > 0 &&
-              (set.actualReps ?? set.reps) != null &&
-              (set.actualReps ?? set.reps)! > 0)
-          .toList();
+      // For bodyweight exercises: only require reps > 0
+      // For weighted exercises: require weight > 0 AND reps > 0
+      final completedSets = exercise.sets.where((set) {
+        if (!set.isCompleted) return false;
+
+        final reps = set.actualReps ?? set.reps;
+        if (reps == null || reps <= 0) return false;
+
+        if (isBodyweight) {
+          // Bodyweight: only need valid reps
+          return true;
+        } else {
+          // Weighted: need weight > 0
+          return set.weight != null && set.weight! > 0;
+        }
+      }).toList();
 
       // Skip exercises with no valid sets
       if (completedSets.isEmpty) continue;
 
       // Convert to AnalyticsSets
       final analyticsSets = completedSets.map((set) {
+        // Determine effective weight
+        double effectiveWeight;
+        if (isBodyweight) {
+          // Bodyweight exercise: use user's body weight if available
+          effectiveWeight = userBodyWeightKg ?? 0.0;
+        } else {
+          effectiveWeight = set.weight!;
+        }
+
         return AnalyticsSet(
-          weight: set.weight!,
+          weight: effectiveWeight,
           reps: set.actualReps ?? set.reps!,
           date: set.completedAt ?? sessionDate,
         );
@@ -140,6 +176,8 @@ class WorkoutToAnalyticsConverter {
   ///
   /// **Use Case**: Check before calling convert() to avoid empty results
   ///
+  /// **Note**: Bodyweight exercises (countingMode == reps) only need valid reps
+  ///
   /// **Example**:
   /// ```dart
   /// if (WorkoutToAnalyticsConverter.canConvert(workout)) {
@@ -149,12 +187,20 @@ class WorkoutToAnalyticsConverter {
   /// ```
   static bool canConvert(Workout workout) {
     return workout.exercises.any((exercise) {
-      return exercise.sets.any((set) =>
-          set.isCompleted &&
-          set.weight != null &&
-          set.weight! > 0 &&
-          (set.actualReps ?? set.reps) != null &&
-          (set.actualReps ?? set.reps)! > 0);
+      final isBodyweight = exercise.countingMode == ExerciseCountingMode.reps;
+
+      return exercise.sets.any((set) {
+        if (!set.isCompleted) return false;
+
+        final reps = set.actualReps ?? set.reps;
+        if (reps == null || reps <= 0) return false;
+
+        if (isBodyweight) {
+          return true; // Bodyweight only needs valid reps
+        } else {
+          return set.weight != null && set.weight! > 0;
+        }
+      });
     });
   }
 
@@ -164,6 +210,8 @@ class WorkoutToAnalyticsConverter {
   ///
   /// **Use Case**: Logging/debugging
   ///
+  /// **Note**: Bodyweight exercises (countingMode == reps) only need valid reps
+  ///
   /// **Example**:
   /// ```dart
   /// final count = WorkoutToAnalyticsConverter.countValidExercises(workout);
@@ -171,12 +219,20 @@ class WorkoutToAnalyticsConverter {
   /// ```
   static int countValidExercises(Workout workout) {
     return workout.exercises.where((exercise) {
-      return exercise.sets.any((set) =>
-          set.isCompleted &&
-          set.weight != null &&
-          set.weight! > 0 &&
-          (set.actualReps ?? set.reps) != null &&
-          (set.actualReps ?? set.reps)! > 0);
+      final isBodyweight = exercise.countingMode == ExerciseCountingMode.reps;
+
+      return exercise.sets.any((set) {
+        if (!set.isCompleted) return false;
+
+        final reps = set.actualReps ?? set.reps;
+        if (reps == null || reps <= 0) return false;
+
+        if (isBodyweight) {
+          return true; // Bodyweight only needs valid reps
+        } else {
+          return set.weight != null && set.weight! > 0;
+        }
+      });
     }).length;
   }
 }

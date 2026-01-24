@@ -16,6 +16,7 @@ import 'package:gymbro_flutter_new/features/recovery_insight/domain/entities/rec
 import 'package:gymbro_flutter_new/features/recovery_insight/domain/entities/sleep_record.dart';
 import 'package:gymbro_flutter_new/features/recovery_insight/domain/entities/sleep_workout_correlation.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/workout.dart';
+import 'package:gymbro_flutter_new/shared/domain/abstractions/exercise_counting_mode.dart';
 
 /// Service for calculating sleep-workout correlations and recovery insights
 class SleepWorkoutCorrelationService {
@@ -108,6 +109,9 @@ class SleepWorkoutCorrelationService {
   ///
   /// Analyzes how sleep duration affects workout volume.
   ///
+  /// **Parameters**:
+  /// - [userBodyWeightKg]: Optional user body weight for bodyweight exercise volume
+  ///
   /// **Returns**:
   /// - volumeChangeAbove7h: % change in volume with >7h sleep
   /// - volumeChangeBelow6h: % change in volume with <6h sleep
@@ -115,6 +119,7 @@ class SleepWorkoutCorrelationService {
     required List<SleepRecord> sleepHistory,
     required List<Workout> workoutHistory,
     int periodDays = 30,
+    double? userBodyWeightKg,
   }) {
     if (sleepHistory.isEmpty || workoutHistory.isEmpty) {
       return SleepWorkoutCorrelation.noData();
@@ -133,7 +138,10 @@ class SleepWorkoutCorrelationService {
       final previousNight = _findPreviousNightSleep(sleepHistory, workoutDate);
 
       if (previousNight != null) {
-        final volume = _calculateWorkoutVolume(workout);
+        final volume = _calculateWorkoutVolume(
+          workout,
+          userBodyWeightKg: userBodyWeightKg,
+        );
 
         dataPoints.add(SleepWorkoutDataPoint(
           workoutDate: workoutDate,
@@ -428,16 +436,36 @@ class SleepWorkoutCorrelationService {
   }
 
   /// Calculate total workout volume (simplified)
-  double _calculateWorkoutVolume(Workout workout) {
+  ///
+  /// **Bodyweight Exercise Handling**:
+  /// For exercises with `countingMode == ExerciseCountingMode.reps` (bodyweight),
+  /// uses the user's body weight instead of the set weight.
+  /// This provides more accurate volume tracking for push-ups, pull-ups, etc.
+  ///
+  /// **Parameters**:
+  /// - [workout]: The workout to calculate volume for
+  /// - [userBodyWeightKg]: Optional user body weight for bodyweight exercises
+  double _calculateWorkoutVolume(Workout workout, {double? userBodyWeightKg}) {
     double totalVolume = 0;
 
     for (final exercise in workout.exercises) {
       for (final set in exercise.sets) {
         if (set.isCompleted) {
-          // Volume = weight × reps
-          final weight = set.weight ?? 0;
           final reps = set.reps ?? 0;
-          totalVolume += weight * reps;
+
+          // Determine weight based on exercise type
+          double effectiveWeight;
+          if (exercise.countingMode == ExerciseCountingMode.reps &&
+              userBodyWeightKg != null) {
+            // Bodyweight exercise: use user's body weight
+            effectiveWeight = userBodyWeightKg;
+          } else {
+            // Weighted exercise: use set weight
+            effectiveWeight = set.weight ?? 0;
+          }
+
+          // Volume = weight × reps
+          totalVolume += effectiveWeight * reps;
         }
       }
     }

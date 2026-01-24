@@ -52,6 +52,13 @@ import 'package:gymbro_flutter_new/features/custom_exercises/domain/entities/cus
 import 'package:gymbro_flutter_new/features/custom_exercises/presentation/widgets/custom_exercise_form_sheet.dart';
 import 'package:gymbro_flutter_new/features/workout_templates/presentation/providers/default_templates_provider.dart';
 import 'package:uuid/uuid.dart';
+import 'package:gymbro_flutter_new/features/workout/domain/entities/superset_template.dart';
+import 'package:gymbro_flutter_new/features/workout/domain/entities/dropset_template.dart';
+import 'package:gymbro_flutter_new/features/workout/domain/entities/rest_pause_template.dart';
+import 'package:gymbro_flutter_new/features/workout/presentation/providers/superset_template_provider.dart';
+import 'package:gymbro_flutter_new/features/workout/presentation/providers/dropset_template_provider.dart';
+import 'package:gymbro_flutter_new/features/workout/presentation/providers/rest_pause_template_provider.dart';
+import 'package:gymbro_flutter_new/features/workout_templates/presentation/widgets/advanced_template_creation_modals.dart';
 
 class TemplatesHomeScreen extends ConsumerStatefulWidget {
   const TemplatesHomeScreen({super.key});
@@ -78,7 +85,7 @@ class _TemplatesHomeScreenState extends ConsumerState<TemplatesHomeScreen>
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: 4, vsync: this);
+    _tabController = TabController(length: 3, vsync: this);
     _tabController.addListener(() {
       if (mounted) {
         setState(() {});
@@ -115,10 +122,10 @@ class _TemplatesHomeScreenState extends ConsumerState<TemplatesHomeScreen>
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
     final myTemplatesAsync = ref.watch(customWorkoutTemplatesProvider);
-    // 🔧 PERF FIX: Use .select() to only watch publicTemplates.length for metrics
-    final publicTemplatesCount = ref.watch(
-      templateProvider.select((state) => state.publicTemplates.length),
-    );
+    // 🔧 PERF FIX: Access templateProvider state safely
+    // Note: We read the full state once but only extract the count we need
+    final templateState = ref.watch(templateProvider);
+    final publicTemplatesCount = templateState.publicTemplates.length;
 
     return Scaffold(
       body: Stack(
@@ -301,7 +308,6 @@ class _TemplatesHomeScreenState extends ConsumerState<TemplatesHomeScreen>
                       Tab(text: l10n.myTemplates),
                       Tab(text: l10n.exercises),
                       Tab(text: l10n.discover),
-                      Tab(text: l10n.trending),
                     ],
                   ),
                   backgroundColor: context.colors.surface,
@@ -314,9 +320,8 @@ class _TemplatesHomeScreenState extends ConsumerState<TemplatesHomeScreen>
                   controller: _tabController,
                   children: [
                     _buildMyTemplatesTab(context),
-                    _buildCustomExercisesTab(context),
+                    _buildAdvancedTemplatesTab(context),
                     _buildDiscoverTab(context),
-                    _buildTrendingTab(context),
                   ],
                 ),
               ),
@@ -328,9 +333,9 @@ class _TemplatesHomeScreenState extends ConsumerState<TemplatesHomeScreen>
             DraggableActionButton(
               onPressed: () => _tabController.index == 0
                   ? _createNewTemplate(context)
-                  : _createNewExercise(context),
+                  : _showAdvancedTemplateTypeSelector(context),
               icon: AppIcons.add,
-              label: _tabController.index == 0 ? l10n.newTemplate : l10n.createCustomExercise,
+              label: _tabController.index == 0 ? l10n.newTemplate : l10n.advancedTechniques,
               positionKey: 'templates_screen_fab',
               backgroundColor: _tabController.index == 0
                   ? context.colors.primary
@@ -1177,91 +1182,477 @@ class _TemplatesHomeScreenState extends ConsumerState<TemplatesHomeScreen>
     return result ?? false;
   }
 
-  Widget _buildTrendingTab(BuildContext context) {
+  /// Advanced Templates Tab - Aggregator for all template types
+  /// Shows sections for: Singoli, Superset, Dropset, Rest-Pause
+  Widget _buildAdvancedTemplatesTab(BuildContext context) {
     final l10n = AppLocalizations.of(context);
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          SemanticIcon(
-            icon: AppIcons.trendUp,
-            semanticLabel: l10n.trending,
-            size: AppIconSize.xxlarge,
-            color: context.colors.onSurfaceVariant.withValues(alpha: 0.5),
-          ),
-          const SizedBox(height: AppSpacing.md),
-          Text(
-            l10n.trendingComingSoon,
-            style: context.textTheme.bodyLarge?.copyWith(
-              color: context.colors.onSurfaceVariant,
+
+    // Watch all template providers
+    final customExercisesAsync = ref.watch(allCustomExercisesProvider);
+    final supersetTemplatesAsync = ref.watch(customSupersetTemplatesProvider);
+    final dropsetTemplatesAsync = ref.watch(customDropsetTemplatesProvider);
+    final restPauseTemplatesAsync = ref.watch(customRestPauseTemplatesProvider);
+
+    return RefreshIndicator(
+      onRefresh: () async {
+        ref.invalidate(allCustomExercisesProvider);
+        ref.invalidate(customSupersetTemplatesProvider);
+        ref.invalidate(customDropsetTemplatesProvider);
+        ref.invalidate(customRestPauseTemplatesProvider);
+      },
+      child: CustomScrollView(
+        slivers: [
+          // Header with description
+          SliverToBoxAdapter(
+            child: Padding(
+              padding: const EdgeInsets.all(AppSpacing.md),
+              child: Text(
+                l10n.advancedTechniques,
+                style: context.textTheme.titleMedium?.copyWith(
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
             ),
+          ),
+
+          // Single Exercises Section
+          SliverToBoxAdapter(
+            child: _buildTemplateSection(
+              context,
+              title: l10n.standard,
+              icon: AppIcons.workout,
+              color: context.colors.primary,
+              asyncValue: customExercisesAsync,
+              emptyMessage: l10n.noCustomExercises,
+              itemBuilder: (exercises) => Column(
+                children: exercises.take(3).map((exercise) =>
+                  _CustomExerciseCard(
+                    exercise: exercise,
+                    onTap: () => _editExercise(context, exercise),
+                    onDelete: () => _deleteExercise(context, exercise),
+                  ),
+                ).toList(),
+              ),
+              onViewAll: (customExercisesAsync.valueOrNull?.length ?? 0) > 3 ? () => _showAllCustomExercises(context) : null,
+              count: customExercisesAsync.valueOrNull?.length ?? 0,
+            ),
+          ),
+
+          // Superset Section
+          SliverToBoxAdapter(
+            child: _buildTemplateSection(
+              context,
+              title: l10n.superset,
+              icon: AppIcons.link,
+              color: context.colors.secondary,
+              asyncValue: supersetTemplatesAsync,
+              emptyMessage: l10n.noSupersetTemplates,
+              itemBuilder: (templates) => Column(
+                children: templates.take(3).map((template) =>
+                  _SupersetTemplateCard(
+                    template: template,
+                    onTap: () => _editSupersetTemplate(context, template),
+                    onDelete: () => _deleteSupersetTemplate(context, template),
+                  ),
+                ).toList(),
+              ),
+              onViewAll: (supersetTemplatesAsync.valueOrNull?.length ?? 0) > 3
+                  ? () => _showAllSupersetTemplates(context) : null,
+              count: supersetTemplatesAsync.valueOrNull?.length ?? 0,
+            ),
+          ),
+
+          // Dropset Section
+          SliverToBoxAdapter(
+            child: _buildTemplateSection(
+              context,
+              title: l10n.dropset,
+              icon: AppIcons.trendDown,
+              color: context.colors.tertiary,
+              asyncValue: dropsetTemplatesAsync,
+              emptyMessage: l10n.noDropsetTemplates,
+              itemBuilder: (templates) => Column(
+                children: templates.take(3).map((template) =>
+                  _DropsetTemplateCard(
+                    template: template,
+                    onTap: () => _editDropsetTemplate(context, template),
+                    onDelete: () => _deleteDropsetTemplate(context, template),
+                  ),
+                ).toList(),
+              ),
+              onViewAll: (dropsetTemplatesAsync.valueOrNull?.length ?? 0) > 3
+                  ? () => _showAllDropsetTemplates(context) : null,
+              count: dropsetTemplatesAsync.valueOrNull?.length ?? 0,
+            ),
+          ),
+
+          // Rest-Pause Section
+          SliverToBoxAdapter(
+            child: _buildTemplateSection(
+              context,
+              title: l10n.restPause,
+              icon: AppIcons.timer,
+              color: context.colors.error,
+              asyncValue: restPauseTemplatesAsync,
+              emptyMessage: l10n.noRestPauseTemplates,
+              itemBuilder: (templates) => Column(
+                children: templates.take(3).map((template) =>
+                  _RestPauseTemplateCard(
+                    template: template,
+                    onTap: () => _editRestPauseTemplate(context, template),
+                    onDelete: () => _deleteRestPauseTemplate(context, template),
+                  ),
+                ).toList(),
+              ),
+              onViewAll: (restPauseTemplatesAsync.valueOrNull?.length ?? 0) > 3
+                  ? () => _showAllRestPauseTemplates(context) : null,
+              count: restPauseTemplatesAsync.valueOrNull?.length ?? 0,
+            ),
+          ),
+
+          // Bottom padding for FAB
+          const SliverToBoxAdapter(
+            child: SizedBox(height: 100),
           ),
         ],
       ),
     );
   }
 
-  Widget _buildCustomExercisesTab(BuildContext context) {
-    final l10n = AppLocalizations.of(context);
-    final exercisesAsync = ref.watch(allCustomExercisesProvider);
-    final entitlements = ref.watch(tierEntitlementsProvider);
-
-    return exercisesAsync.when(
-      loading: () => const Center(child: LoadingIndicator()),
-      error: (error, stack) => Center(
-        child: Text(l10n.errorLoadingExercises),
+  /// Build a collapsible section for each template type
+  Widget _buildTemplateSection<T>(
+    BuildContext context, {
+    required String title,
+    required IconData icon,
+    required Color color,
+    required AsyncValue<List<T>> asyncValue,
+    required String emptyMessage,
+    required Widget Function(List<T>) itemBuilder,
+    VoidCallback? onViewAll,
+    required int count,
+  }) {
+    return Container(
+      margin: const EdgeInsets.symmetric(
+        horizontal: AppSpacing.md,
+        vertical: AppSpacing.sm,
       ),
-      data: (exercises) {
-        final sortedExercises = [...exercises]
-          ..sort((a, b) => b.createdAt.compareTo(a.createdAt));
-
-        return RefreshIndicator(
-          onRefresh: () => ref.refresh(allCustomExercisesProvider.future),
-          child: CustomScrollView(
-            slivers: [
-              // Quota indicator
-              SliverToBoxAdapter(
-                child: _buildExerciseQuotaBar(
-                  context,
-                  used: exercises.length,
-                  max: entitlements.maxCustomExercises,
+      decoration: BoxDecoration(
+        color: context.colors.surfaceContainerHighest.withValues(alpha: 0.3),
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(
+          color: color.withValues(alpha: 0.2),
+          width: 1,
+        ),
+      ),
+      child: Theme(
+        data: Theme.of(context).copyWith(dividerColor: Colors.transparent),
+        child: ExpansionTile(
+          leading: Container(
+            width: 40,
+            height: 40,
+            decoration: BoxDecoration(
+              color: color.withValues(alpha: 0.15),
+              borderRadius: BorderRadius.circular(10),
+            ),
+            child: Icon(icon, color: color, size: 20),
+          ),
+          title: Row(
+            children: [
+              Text(
+                title,
+                style: context.textTheme.titleSmall?.copyWith(
+                  fontWeight: FontWeight.bold,
                 ),
               ),
-
-              // Exercises content
-              if (exercises.isEmpty)
-                SliverFillRemaining(
-                  child: _EmptyExercisesState(
-                    onCreateTap: () => _createNewExercise(context),
-                  ),
-                )
-              else
-                SliverPadding(
-                  padding: const EdgeInsets.symmetric(horizontal: AppSpacing.md),
-                  sliver: SliverList(
-                    delegate: SliverChildBuilderDelegate(
-                      (context, index) {
-                        final exercise = sortedExercises[index];
-                        return _CustomExerciseCard(
-                          exercise: exercise,
-                          onTap: () => _editExercise(context, exercise),
-                          onDelete: () => _deleteExercise(context, exercise),
-                        );
-                      },
-                      childCount: sortedExercises.length,
-                    ),
+              const SizedBox(width: AppSpacing.xs),
+              Container(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: AppSpacing.xs,
+                  vertical: 2,
+                ),
+                decoration: BoxDecoration(
+                  color: color.withValues(alpha: 0.2),
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: Text(
+                  '$count',
+                  style: context.textTheme.labelSmall?.copyWith(
+                    color: color,
+                    fontWeight: FontWeight.bold,
                   ),
                 ),
-
-              // Bottom padding for FAB
-              const SliverToBoxAdapter(
-                child: SizedBox(height: 100),
               ),
             ],
           ),
-        );
-      },
+          initiallyExpanded: count > 0,
+          childrenPadding: const EdgeInsets.only(
+            left: AppSpacing.md,
+            right: AppSpacing.md,
+            bottom: AppSpacing.md,
+          ),
+          children: [
+            asyncValue.when(
+              loading: () => const Padding(
+                padding: EdgeInsets.all(AppSpacing.md),
+                child: LoadingIndicator(),
+              ),
+              error: (error, _) => Padding(
+                padding: const EdgeInsets.all(AppSpacing.md),
+                child: Text(
+                  error.toString(),
+                  style: TextStyle(color: context.colors.error),
+                ),
+              ),
+              data: (items) {
+                if (items.isEmpty) {
+                  return Padding(
+                    padding: const EdgeInsets.all(AppSpacing.md),
+                    child: Text(
+                      emptyMessage,
+                      style: context.textTheme.bodyMedium?.copyWith(
+                        color: context.colors.onSurfaceVariant,
+                      ),
+                    ),
+                  );
+                }
+                return Column(
+                  children: [
+                    itemBuilder(items),
+                    if (onViewAll != null)
+                      Padding(
+                        padding: const EdgeInsets.only(top: AppSpacing.sm),
+                        child: TextButton(
+                          onPressed: onViewAll,
+                          child: Text(AppLocalizations.of(context).viewAll),
+                        ),
+                      ),
+                  ],
+                );
+              },
+            ),
+          ],
+        ),
+      ),
     );
+  }
+
+  /// Show modal to select template type to create
+  void _showAdvancedTemplateTypeSelector(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+
+    HapticFeedback.mediumImpact();
+
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (context) => Container(
+        decoration: BoxDecoration(
+          color: context.colors.surface,
+          borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
+        ),
+        padding: const EdgeInsets.all(AppSpacing.lg),
+        child: SafeArea(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Handle bar
+              Center(
+                child: Container(
+                  width: 40,
+                  height: 4,
+                  decoration: BoxDecoration(
+                    color: context.colors.onSurfaceVariant.withValues(alpha: 0.3),
+                    borderRadius: BorderRadius.circular(2),
+                  ),
+                ),
+              ),
+              const SizedBox(height: AppSpacing.lg),
+
+              // Title
+              Text(
+                l10n.advancedTechniques,
+                style: context.textTheme.titleLarge?.copyWith(
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              const SizedBox(height: AppSpacing.md),
+
+              // Options
+              _TemplateTypeOption(
+                icon: AppIcons.workout,
+                title: l10n.standard,
+                subtitle: l10n.customExercises,
+                color: context.colors.primary,
+                onTap: () {
+                  Navigator.pop(context);
+                  _createNewExercise(context);
+                },
+              ),
+              _TemplateTypeOption(
+                icon: AppIcons.link,
+                title: l10n.superset,
+                subtitle: l10n.supersetDescription,
+                color: context.colors.secondary,
+                onTap: () {
+                  Navigator.pop(context);
+                  _createSupersetTemplate(context);
+                },
+              ),
+              _TemplateTypeOption(
+                icon: AppIcons.trendDown,
+                title: l10n.dropset,
+                subtitle: l10n.dropsetDescription,
+                color: context.colors.tertiary,
+                onTap: () {
+                  Navigator.pop(context);
+                  _createDropsetTemplate(context);
+                },
+              ),
+              _TemplateTypeOption(
+                icon: AppIcons.timer,
+                title: l10n.restPause,
+                subtitle: l10n.restPauseDescription,
+                color: context.colors.error,
+                onTap: () {
+                  Navigator.pop(context);
+                  _createRestPauseTemplate(context);
+                },
+              ),
+
+              const SizedBox(height: AppSpacing.md),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  // ============================================
+  // Template CRUD operations
+  // ============================================
+
+  void _showAllCustomExercises(BuildContext context) {
+    // Navigate to full list view
+    context.push('/templates/exercises');
+  }
+
+  void _showAllSupersetTemplates(BuildContext context) {
+    context.push('/templates/superset');
+  }
+
+  void _showAllDropsetTemplates(BuildContext context) {
+    context.push('/templates/dropset');
+  }
+
+  void _showAllRestPauseTemplates(BuildContext context) {
+    context.push('/templates/restpause');
+  }
+
+  void _createSupersetTemplate(BuildContext context) {
+    SupersetTemplateCreationModal.show(context);
+  }
+
+  void _createDropsetTemplate(BuildContext context) {
+    DropsetTemplateCreationModal.show(context);
+  }
+
+  void _createRestPauseTemplate(BuildContext context) {
+    RestPauseTemplateCreationModal.show(context);
+  }
+
+  void _editSupersetTemplate(BuildContext context, SupersetTemplate template) {
+    // TODO: Implement superset template edit
+  }
+
+  void _editDropsetTemplate(BuildContext context, DropsetTemplate template) {
+    // TODO: Implement dropset template edit
+  }
+
+  void _editRestPauseTemplate(BuildContext context, RestPauseTemplate template) {
+    // TODO: Implement rest-pause template edit
+  }
+
+  Future<void> _deleteSupersetTemplate(BuildContext context, SupersetTemplate template) async {
+    final l10n = AppLocalizations.of(context);
+    final confirm = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text(l10n.confirmDelete),
+        content: Text(l10n.deleteTemplateConfirmation),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(false),
+            child: Text(l10n.cancel),
+          ),
+          FilledButton(
+            onPressed: () => Navigator.of(context).pop(true),
+            style: FilledButton.styleFrom(backgroundColor: context.colors.error),
+            child: Text(l10n.delete),
+          ),
+        ],
+      ),
+    );
+
+    if (confirm == true) {
+      await ref.read(supersetTemplateNotifierProvider.notifier)
+          .deleteCustomTemplate(template.id);
+    }
+  }
+
+  Future<void> _deleteDropsetTemplate(BuildContext context, DropsetTemplate template) async {
+    final l10n = AppLocalizations.of(context);
+    final confirm = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text(l10n.confirmDelete),
+        content: Text(l10n.deleteTemplateConfirmation),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(false),
+            child: Text(l10n.cancel),
+          ),
+          FilledButton(
+            onPressed: () => Navigator.of(context).pop(true),
+            style: FilledButton.styleFrom(backgroundColor: context.colors.error),
+            child: Text(l10n.delete),
+          ),
+        ],
+      ),
+    );
+
+    if (confirm == true) {
+      await ref.read(dropsetTemplateNotifierProvider.notifier)
+          .deleteCustomTemplate(template.id);
+    }
+  }
+
+  Future<void> _deleteRestPauseTemplate(BuildContext context, RestPauseTemplate template) async {
+    final l10n = AppLocalizations.of(context);
+    final confirm = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text(l10n.confirmDelete),
+        content: Text(l10n.deleteTemplateConfirmation),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(false),
+            child: Text(l10n.cancel),
+          ),
+          FilledButton(
+            onPressed: () => Navigator.of(context).pop(true),
+            style: FilledButton.styleFrom(backgroundColor: context.colors.error),
+            child: Text(l10n.delete),
+          ),
+        ],
+      ),
+    );
+
+    if (confirm == true) {
+      await ref.read(restPauseTemplateNotifierProvider.notifier)
+          .deleteCustomTemplate(template.id);
+    }
   }
 
   Widget _buildExerciseQuotaBar(BuildContext context, {required int used, required int max}) {
@@ -2756,6 +3147,365 @@ class _DefaultTemplatePreviewSheet extends StatelessWidget {
             child: Text(AppLocalizations.of(context).ok),
           ),
         ],
+      ),
+    );
+  }
+}
+
+// ============================================================================
+// ADVANCED TEMPLATE CARDS
+// ============================================================================
+
+/// Option tile for template type selection modal
+class _TemplateTypeOption extends StatelessWidget {
+  const _TemplateTypeOption({
+    required this.icon,
+    required this.title,
+    required this.subtitle,
+    required this.color,
+    required this.onTap,
+  });
+
+  final IconData icon;
+  final String title;
+  final String subtitle;
+  final Color color;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      margin: const EdgeInsets.only(bottom: AppSpacing.sm),
+      child: ListTile(
+        onTap: onTap,
+        leading: Container(
+          width: 48,
+          height: 48,
+          decoration: BoxDecoration(
+            color: color.withValues(alpha: 0.15),
+            borderRadius: BorderRadius.circular(12),
+          ),
+          child: Icon(icon, color: color, size: 24),
+        ),
+        title: Text(
+          title,
+          style: context.textTheme.titleSmall?.copyWith(
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        subtitle: Text(
+          subtitle,
+          style: context.textTheme.bodySmall?.copyWith(
+            color: context.colors.onSurfaceVariant,
+          ),
+          maxLines: 2,
+          overflow: TextOverflow.ellipsis,
+        ),
+        trailing: Icon(
+          AppIcons.chevronRight,
+          color: context.colors.onSurfaceVariant,
+        ),
+      ),
+    );
+  }
+}
+
+/// Card for displaying a superset template
+class _SupersetTemplateCard extends StatelessWidget {
+  const _SupersetTemplateCard({
+    required this.template,
+    required this.onTap,
+    required this.onDelete,
+  });
+
+  final SupersetTemplate template;
+  final VoidCallback onTap;
+  final VoidCallback onDelete;
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+
+    return Card(
+      margin: const EdgeInsets.only(bottom: AppSpacing.sm),
+      child: ListTile(
+        onTap: onTap,
+        leading: Container(
+          width: 44,
+          height: 44,
+          decoration: BoxDecoration(
+            color: context.colors.secondaryContainer,
+            borderRadius: BorderRadius.circular(12),
+          ),
+          child: Center(
+            child: SemanticIcon(
+              icon: AppIcons.link,
+              semanticLabel: l10n.superset,
+              size: AppIconSize.small,
+              color: context.colors.secondary,
+            ),
+          ),
+        ),
+        title: Text(
+          template.name,
+          style: context.textTheme.titleSmall?.copyWith(
+            fontWeight: FontWeight.bold,
+          ),
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
+        ),
+        subtitle: Text(
+          '${template.exerciseIds.length} ${l10n.exercises}',
+          style: context.textTheme.bodySmall?.copyWith(
+            color: context.colors.onSurfaceVariant,
+          ),
+        ),
+        trailing: PopupMenuButton<String>(
+          onSelected: (value) {
+            if (value == 'edit') onTap();
+            if (value == 'delete') onDelete();
+          },
+          itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
+            PopupMenuItem<String>(
+              value: 'edit',
+              child: Row(
+                children: [
+                  SemanticIcon(
+                    icon: AppIcons.edit,
+                    semanticLabel: l10n.edit,
+                    size: AppIconSize.small,
+                    color: context.colors.onSurface,
+                  ),
+                  const SizedBox(width: AppSpacing.sm),
+                  Text(l10n.edit, style: context.textTheme.bodyMedium),
+                ],
+              ),
+            ),
+            const PopupMenuDivider(),
+            PopupMenuItem<String>(
+              value: 'delete',
+              child: Row(
+                children: [
+                  SemanticIcon(
+                    icon: AppIcons.delete,
+                    semanticLabel: l10n.delete,
+                    size: AppIconSize.small,
+                    color: context.colors.error,
+                  ),
+                  const SizedBox(width: AppSpacing.sm),
+                  Text(
+                    l10n.delete,
+                    style: context.textTheme.bodyMedium?.copyWith(
+                      color: context.colors.error,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+/// Card for displaying a dropset template
+class _DropsetTemplateCard extends StatelessWidget {
+  const _DropsetTemplateCard({
+    required this.template,
+    required this.onTap,
+    required this.onDelete,
+  });
+
+  final DropsetTemplate template;
+  final VoidCallback onTap;
+  final VoidCallback onDelete;
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+
+    return Card(
+      margin: const EdgeInsets.only(bottom: AppSpacing.sm),
+      child: ListTile(
+        onTap: onTap,
+        leading: Container(
+          width: 44,
+          height: 44,
+          decoration: BoxDecoration(
+            color: context.colors.tertiaryContainer,
+            borderRadius: BorderRadius.circular(12),
+          ),
+          child: Center(
+            child: SemanticIcon(
+              icon: AppIcons.trendDown,
+              semanticLabel: l10n.dropset,
+              size: AppIconSize.small,
+              color: context.colors.tertiary,
+            ),
+          ),
+        ),
+        title: Text(
+          template.name,
+          style: context.textTheme.titleSmall?.copyWith(
+            fontWeight: FontWeight.bold,
+          ),
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
+        ),
+        subtitle: Text(
+          '${template.drops} drops • ${template.exerciseName}',
+          style: context.textTheme.bodySmall?.copyWith(
+            color: context.colors.onSurfaceVariant,
+          ),
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
+        ),
+        trailing: PopupMenuButton<String>(
+          onSelected: (value) {
+            if (value == 'edit') onTap();
+            if (value == 'delete') onDelete();
+          },
+          itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
+            PopupMenuItem<String>(
+              value: 'edit',
+              child: Row(
+                children: [
+                  SemanticIcon(
+                    icon: AppIcons.edit,
+                    semanticLabel: l10n.edit,
+                    size: AppIconSize.small,
+                    color: context.colors.onSurface,
+                  ),
+                  const SizedBox(width: AppSpacing.sm),
+                  Text(l10n.edit, style: context.textTheme.bodyMedium),
+                ],
+              ),
+            ),
+            const PopupMenuDivider(),
+            PopupMenuItem<String>(
+              value: 'delete',
+              child: Row(
+                children: [
+                  SemanticIcon(
+                    icon: AppIcons.delete,
+                    semanticLabel: l10n.delete,
+                    size: AppIconSize.small,
+                    color: context.colors.error,
+                  ),
+                  const SizedBox(width: AppSpacing.sm),
+                  Text(
+                    l10n.delete,
+                    style: context.textTheme.bodyMedium?.copyWith(
+                      color: context.colors.error,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+/// Card for displaying a rest-pause template
+class _RestPauseTemplateCard extends StatelessWidget {
+  const _RestPauseTemplateCard({
+    required this.template,
+    required this.onTap,
+    required this.onDelete,
+  });
+
+  final RestPauseTemplate template;
+  final VoidCallback onTap;
+  final VoidCallback onDelete;
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+
+    return Card(
+      margin: const EdgeInsets.only(bottom: AppSpacing.sm),
+      child: ListTile(
+        onTap: onTap,
+        leading: Container(
+          width: 44,
+          height: 44,
+          decoration: BoxDecoration(
+            color: context.colors.errorContainer,
+            borderRadius: BorderRadius.circular(12),
+          ),
+          child: Center(
+            child: SemanticIcon(
+              icon: AppIcons.timer,
+              semanticLabel: l10n.restPause,
+              size: AppIconSize.small,
+              color: context.colors.error,
+            ),
+          ),
+        ),
+        title: Text(
+          template.name,
+          style: context.textTheme.titleSmall?.copyWith(
+            fontWeight: FontWeight.bold,
+          ),
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
+        ),
+        subtitle: Text(
+          '${template.pauseDuration}s rest • ${template.exerciseName}',
+          style: context.textTheme.bodySmall?.copyWith(
+            color: context.colors.onSurfaceVariant,
+          ),
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
+        ),
+        trailing: PopupMenuButton<String>(
+          onSelected: (value) {
+            if (value == 'edit') onTap();
+            if (value == 'delete') onDelete();
+          },
+          itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
+            PopupMenuItem<String>(
+              value: 'edit',
+              child: Row(
+                children: [
+                  SemanticIcon(
+                    icon: AppIcons.edit,
+                    semanticLabel: l10n.edit,
+                    size: AppIconSize.small,
+                    color: context.colors.onSurface,
+                  ),
+                  const SizedBox(width: AppSpacing.sm),
+                  Text(l10n.edit, style: context.textTheme.bodyMedium),
+                ],
+              ),
+            ),
+            const PopupMenuDivider(),
+            PopupMenuItem<String>(
+              value: 'delete',
+              child: Row(
+                children: [
+                  SemanticIcon(
+                    icon: AppIcons.delete,
+                    semanticLabel: l10n.delete,
+                    size: AppIconSize.small,
+                    color: context.colors.error,
+                  ),
+                  const SizedBox(width: AppSpacing.sm),
+                  Text(
+                    l10n.delete,
+                    style: context.textTheme.bodyMedium?.copyWith(
+                      color: context.colors.error,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

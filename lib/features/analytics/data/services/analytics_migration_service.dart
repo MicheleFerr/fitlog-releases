@@ -44,6 +44,7 @@ import 'package:gymbro_flutter_new/shared/domain/failures/failure.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/workout.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise.dart';
 import 'package:gymbro_flutter_new/shared/domain/services/secure_logger.dart'; // 🔐 SECURITY: Secure logging
+import 'package:gymbro_flutter_new/shared/domain/abstractions/exercise_counting_mode.dart'; // 🏋️ Bodyweight support
 
 /// Migration statistics
 class MigrationStats {
@@ -295,12 +296,21 @@ class AnalyticsMigrationService {
 
             // For completed workouts, consider all sets with valid weight/reps as completed
             // Don't rely on isCompleted field which may be false in older data
-            final validSets = exercise.sets
-                .where((set) =>
-                    (set.weight != null && set.weight! > 0) &&
-                    ((set.actualReps ?? set.reps) != null &&
-                        (set.actualReps ?? set.reps)! > 0))
-                .toList();
+            // 🏋️ Bodyweight support: For countingMode.reps, only require valid reps
+            final isBodyweight = exercise.countingMode == ExerciseCountingMode.reps;
+
+            final validSets = exercise.sets.where((set) {
+              final reps = set.actualReps ?? set.reps;
+              if (reps == null || reps <= 0) return false;
+
+              if (isBodyweight) {
+                // Bodyweight exercise: only need valid reps
+                return true;
+              } else {
+                // Weighted exercise: need weight > 0
+                return set.weight != null && set.weight! > 0;
+              }
+            }).toList();
 
             if (validSets.isEmpty) {
               SecureLogger.warning('Exercise has no valid sets with weight/reps', data: {
@@ -314,9 +324,11 @@ class AnalyticsMigrationService {
             final muscleGroup = _categoryToMuscleGroup(exercise.category);
 
             // Convert Exercise sets to AnalyticsSets
+            // 🏋️ For bodyweight exercises, weight will be 0 (historical data doesn't have user body weight)
             final analyticsSets = validSets.map((set) {
+              final effectiveWeight = isBodyweight ? 0.0 : set.weight!;
               return AnalyticsSet(
-                weight: set.weight!,
+                weight: effectiveWeight,
                 reps: set.actualReps ?? set.reps!,
                 date: set.completedAt ?? sessionDate,
               );

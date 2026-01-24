@@ -44,7 +44,7 @@
     ],
     "countingMode": "reps",
     "muscoliSecondari": [
-      "FEMOR"
+      "FEMO"
     ],
     "version": "1.0.2",
     "versionHistory": [
@@ -56,7 +56,7 @@
   {
     "id": "ab_crunch_machine",
     "nome": "Ab Crunch Machine",
-    "focus": "ADDOM",
+    "focus": "CORE",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Ab_Crunch_Machine/0.jpg",
     "muscoliSecondari": [],
     "difficolta": "Intermedio",
@@ -78,7 +78,7 @@
   {
     "id": "ab_roller",
     "nome": "Ab Roller",
-    "focus": "ADDOM",
+    "focus": "CORE",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Ab_Roller/0.jpg",
     "muscoliSecondari": [
       "DELT"
@@ -102,7 +102,7 @@
   {
     "id": "advanced_kettlebell_windmill",
     "nome": "Advanced Kettlebell Windmill",
-    "focus": "ADDOM",
+    "focus": "CORE",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Advanced_Kettlebell_Windmill/0.jpg",
     "muscoliSecondari": [
       "GLUT",
@@ -143,7 +143,7 @@
     ],
     "countingMode": "reps",
     "muscoliSecondari": [
-      "FEMOR"
+      "FEMO"
     ],
     "version": "1.0.2",
     "versionHistory": [
@@ -170,7 +170,7 @@
     ],
     "countingMode": "reps",
     "muscoliSecondari": [
-      "FEMOR"
+      "FEMO"
     ],
     "version": "1.0.2",
     "versionHistory": [
@@ -359,7 +359,7 @@
     ],
     "countingMode": "weighted",
     "muscoliSecondari": [
-      "FEMOR"
+      "FEMO"
     ],
     "version": "1.0.2",
     "versionHistory": [
@@ -479,7 +479,7 @@
     "nome": "Balance Board",
     "imageUrl": "https://static.exercisedb.dev/media/xAySMB0.gif",
     "muscoliSecondari": [
-      "FEMOR",
+      "FEMO",
       "GLUT",
       "POLP"
     ],
@@ -523,7 +523,7 @@
     ],
     "countingMode": "weighted",
     "muscoliSecondari": [
-      "FEMOR"
+      "FEMO"
     ],
     "version": "1.0.2",
     "versionHistory": [
@@ -552,7 +552,7 @@
     ],
     "countingMode": "weighted",
     "muscoliSecondari": [
-      "FEMOR"
+      "FEMO"
     ],
     "version": "1.0.2",
     "versionHistory": [
@@ -579,7 +579,7 @@
     ],
     "countingMode": "weighted",
     "muscoliSecondari": [
-      "FEMOR"
+      "FEMO"
     ],
     "version": "1.0.2",
     "versionHistory": [
@@ -710,7 +710,7 @@
     ],
     "countingMode": "weighted",
     "muscoliSecondari": [
-      "FEMOR"
+      "FEMO"
     ],
     "version": "1.0.2",
     "versionHistory": [
@@ -869,7 +869,7 @@
     ],
     "countingMode": "weighted",
     "muscoliSecondari": [
-      "FEMOR"
+      "FEMO"
     ],
     "version": "1.0.2",
     "versionHistory": [
@@ -937,7 +937,7 @@
   {
     "id": "barbell_ab_rollout",
     "nome": "Barbell Ab Rollout",
-    "focus": "ADDOM",
+    "focus": "CORE",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Barbell_Ab_Rollout/0.jpg",
     "muscoliSecondari": [
       "LOMB",
@@ -962,7 +962,7 @@
   {
     "id": "barbell_ab_rollout___on_knees",
     "nome": "Barbell Ab Rollout On Knees",
-    "focus": "ADDOM",
+    "focus": "CORE",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Barbell_Ab_Rollout_-_On_Knees/0.jpg",
     "muscoliSecondari": [
       "LOMB",
@@ -1032,7 +1032,7 @@
     ],
     "countingMode": "weighted",
     "muscoliSecondari": [
-      "FEMOR"
+      "FEMO"
     ],
     "version": "1.0.2",
     "versionHistory": [
@@ -1071,12 +1071,12 @@
   {
     "id": "barbell_rollout_from_bench",
     "nome": "Barbell Rollout From Bench",
-    "focus": "ADDOM",
+    "focus": "CORE",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Barbell_Rollout_from_Bench/0.jpg",
     "muscoliSecondari": [
       "GLUT",
       "FEMO",
-      "DORSO",
+      "LAT",
       "DELT"
     ],
     "difficolta": "Intermedio",
@@ -1123,7 +1123,7 @@
   {
     "id": "barbell_side_bend",
     "nome": "Barbell Side Bend",
-    "focus": "ADDOM",
+    "focus": "CORE",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Barbell_Side_Bend/0.jpg",
     "muscoliSecondari": [
       "LOMB"
@@ -1162,7 +1162,7 @@
     ],
     "countingMode": "weighted",
     "muscoliSecondari": [
-      "FEMOR"
+      "FEMO"
     ],
     "version": "1.0.2",
     "versionHistory": [
@@ -1189,7 +1189,7 @@
     ],
     "countingMode": "weighted",
     "muscoliSecondari": [
-      "FEMOR"
+      "FEMO"
     ],
     "version": "1.0.2",
     "versionHistory": [
@@ -1334,7 +1334,7 @@
   {
     "id": "bent_knee_hip_raise",
     "nome": "Bent Knee Hip Raise",
-    "focus": "ADDOM",
+    "focus": "CORE",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Bent-Knee_Hip_Raise/0.jpg",
     "muscoliSecondari": [],
     "difficolta": "Principiante",
@@ -1356,7 +1356,7 @@
   {
     "id": "bent_press",
     "nome": "Bent Press",
-    "focus": "ADDOM",
+    "focus": "CORE",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Bent_Press/0.jpg",
     "muscoliSecondari": [
       "GLUT",
@@ -1437,7 +1437,7 @@
   {
     "id": "bosu_ball_cable_crunch_with_side_bends",
     "nome": "Bosu Ball Cable Crunch With Side Bends",
-    "focus": "ADDOM",
+    "focus": "CORE",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Bosu_Ball_Cable_Crunch_With_Side_Bends/0.jpg",
     "muscoliSecondari": [],
     "difficolta": "Principiante",
@@ -1475,7 +1475,7 @@
     ],
     "countingMode": "reps",
     "muscoliSecondari": [
-      "FEMOR"
+      "FEMO"
     ],
     "version": "1.0.2",
     "versionHistory": [
@@ -1491,7 +1491,7 @@
     "imageUrl": "https://static.exercisedb.dev/media/9c6T1YX.gif",
     "muscoliSecondari": [
       "DELT",
-      "FEMOR",
+      "FEMO",
       "GLUT",
       "QUAD"
     ],
@@ -1522,7 +1522,7 @@
     "imageUrl": "https://static.exercisedb.dev/media/dK9394r.gif",
     "muscoliSecondari": [
       "DELT",
-      "FEMOR",
+      "FEMO",
       "PETT",
       "POLP",
       "QUAD"
@@ -1567,7 +1567,7 @@
     ],
     "countingMode": "reps",
     "muscoliSecondari": [
-      "FEMOR"
+      "FEMO"
     ],
     "version": "1.0.2",
     "versionHistory": [
@@ -1579,7 +1579,7 @@
   {
     "id": "cable_crunch",
     "nome": "Cable Crunch",
-    "focus": "ADDOM",
+    "focus": "CORE",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Cable_Crunch/0.jpg",
     "muscoliSecondari": [],
     "difficolta": "Principiante",
@@ -1732,7 +1732,7 @@
   {
     "id": "cable_russian_twists",
     "nome": "Cable Russian Twists",
-    "focus": "ADDOM",
+    "focus": "CORE",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Cable_Russian_Twists/0.jpg",
     "muscoliSecondari": [],
     "difficolta": "Principiante",
@@ -1844,7 +1844,7 @@
     ],
     "countingMode": "weighted",
     "muscoliSecondari": [
-      "FEMOR"
+      "FEMO"
     ],
     "version": "1.0.2",
     "versionHistory": [
@@ -1896,7 +1896,7 @@
     ],
     "countingMode": "weighted",
     "muscoliSecondari": [
-      "FEMOR"
+      "FEMO"
     ],
     "version": "1.0.2",
     "versionHistory": [
@@ -1998,7 +1998,7 @@
     ],
     "countingMode": "weighted",
     "muscoliSecondari": [
-      "FEMOR"
+      "FEMO"
     ],
     "version": "1.0.2",
     "versionHistory": [
@@ -2102,7 +2102,7 @@
     ],
     "countingMode": "reps",
     "muscoliSecondari": [
-      "FEMOR"
+      "FEMO"
     ],
     "version": "1.0.2",
     "versionHistory": [
@@ -2117,7 +2117,7 @@
     "focus": "LOMB",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Cat_Stretch/0.jpg",
     "muscoliSecondari": [
-      "DORSO",
+      "LAT",
       "TRAP"
     ],
     "difficolta": "Principiante",
@@ -2143,7 +2143,7 @@
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Childs_Pose/0.jpg",
     "muscoliSecondari": [
       "GLUT",
-      "DORSO"
+      "LAT"
     ],
     "difficolta": "Principiante",
     "tipoEsercizio": "Compound",
@@ -2181,7 +2181,7 @@
     ],
     "countingMode": "reps",
     "muscoliSecondari": [
-      "FEMOR"
+      "FEMO"
     ],
     "version": "1.0.2",
     "versionHistory": [
@@ -2208,7 +2208,7 @@
     ],
     "countingMode": "reps",
     "muscoliSecondari": [
-      "FEMOR"
+      "FEMO"
     ],
     "version": "1.0.2",
     "versionHistory": [
@@ -2273,8 +2273,8 @@
     "focus": "LOMB",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Crossover_Reverse_Lunge/0.jpg",
     "muscoliSecondari": [
-      "ADDOM",
-      "ABDUT",
+      "CORE",
+      "ABDU",
       "GLUT",
       "FEMO",
       "QUAD"
@@ -2398,7 +2398,7 @@
   {
     "id": "crunch___legs_on_exercise_ball",
     "nome": "Crunch Legs On Exercise Ball",
-    "focus": "ADDOM",
+    "focus": "CORE",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Crunch_-_Legs_On_Exercise_Ball/0.jpg",
     "muscoliSecondari": [],
     "difficolta": "Principiante",
@@ -2420,7 +2420,7 @@
   {
     "id": "crunches",
     "nome": "Crunches",
-    "focus": "ADDOM",
+    "focus": "CORE",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Crunches/0.jpg",
     "muscoliSecondari": [],
     "difficolta": "Principiante",
@@ -2458,7 +2458,7 @@
     ],
     "countingMode": "reps",
     "muscoliSecondari": [
-      "FEMOR"
+      "FEMO"
     ],
     "version": "1.0.2",
     "versionHistory": [
@@ -2473,7 +2473,7 @@
     "focus": "LOMB",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Dancers_Stretch/0.jpg",
     "muscoliSecondari": [
-      "ABDUT",
+      "ABDU",
       "GLUT"
     ],
     "difficolta": "Principiante",
@@ -2510,7 +2510,7 @@
     ],
     "countingMode": "reps",
     "muscoliSecondari": [
-      "FEMOR"
+      "FEMO"
     ],
     "version": "1.0.2",
     "versionHistory": [
@@ -2525,10 +2525,10 @@
     "focus": "LOMB",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Deadlift_with_Bands/0.jpg",
     "muscoliSecondari": [
-      "AVAMB",
+      "AVA",
       "GLUT",
       "FEMO",
-      "DORSO",
+      "LAT",
       "QUAD",
       "TRAP"
     ],
@@ -2554,10 +2554,10 @@
     "focus": "LOMB",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Deadlift_with_Chains/0.jpg",
     "muscoliSecondari": [
-      "AVAMB",
+      "AVA",
       "GLUT",
       "FEMO",
-      "DORSO",
+      "LAT",
       "QUAD",
       "TRAP"
     ],
@@ -2605,7 +2605,7 @@
   {
     "id": "decline_oblique_crunch",
     "nome": "Decline Oblique Crunch",
-    "focus": "ADDOM",
+    "focus": "CORE",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Decline_Oblique_Crunch/0.jpg",
     "muscoliSecondari": [],
     "difficolta": "Principiante",
@@ -2627,7 +2627,7 @@
   {
     "id": "decline_reverse_crunch",
     "nome": "Decline Reverse Crunch",
-    "focus": "ADDOM",
+    "focus": "CORE",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Decline_Reverse_Crunch/0.jpg",
     "muscoliSecondari": [],
     "difficolta": "Principiante",
@@ -2679,10 +2679,10 @@
     "focus": "LOMB",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Deficit_Deadlift/0.jpg",
     "muscoliSecondari": [
-      "AVAMB",
+      "AVA",
       "GLUT",
       "FEMO",
-      "DORSO",
+      "LAT",
       "QUAD",
       "TRAP"
     ],
@@ -2705,7 +2705,7 @@
   {
     "id": "double_kettlebell_windmill",
     "nome": "Double Kettlebell Windmill",
-    "focus": "ADDOM",
+    "focus": "CORE",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Double_Kettlebell_Windmill/0.jpg",
     "muscoliSecondari": [
       "GLUT",
@@ -2735,7 +2735,7 @@
     "imageUrl": "https://static.exercisedb.dev/media/0JtKWum.gif",
     "muscoliSecondari": [
       "DELT",
-      "FEMOR",
+      "FEMO",
       "POLP",
       "QUAD"
     ],
@@ -2777,7 +2777,7 @@
     ],
     "countingMode": "weighted",
     "muscoliSecondari": [
-      "FEMOR"
+      "FEMO"
     ],
     "version": "1.0.2",
     "versionHistory": [
@@ -2833,7 +2833,7 @@
     ],
     "countingMode": "reps",
     "muscoliSecondari": [
-      "FEMOR"
+      "FEMO"
     ],
     "version": "1.0.2",
     "versionHistory": [
@@ -2848,7 +2848,7 @@
     "focus": "CORE",
     "imageUrl": "https://static.exercisedb.dev/media/PERjVm8.gif",
     "muscoliSecondari": [
-      "FEMOR",
+      "FEMO",
       "GLUT",
       "TRAP"
     ],
@@ -2877,7 +2877,7 @@
     "focus": "CORE",
     "imageUrl": "https://static.exercisedb.dev/media/o1HGDSq.gif",
     "muscoliSecondari": [
-      "FEMOR",
+      "FEMO",
       "GLUT",
       "TRAP"
     ],
@@ -2906,7 +2906,7 @@
     "focus": "CORE",
     "imageUrl": "https://static.exercisedb.dev/media/WME869U.gif",
     "muscoliSecondari": [
-      "FEMOR",
+      "FEMO",
       "GLUT",
       "TRAP"
     ],
@@ -2932,7 +2932,7 @@
   {
     "id": "exercise_ball_crunch",
     "nome": "Exercise Ball Crunch",
-    "focus": "ADDOM",
+    "focus": "CORE",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Exercise_Ball_Crunch/0.jpg",
     "muscoliSecondari": [],
     "difficolta": "Principiante",
@@ -2957,7 +2957,7 @@
     "focus": "CORE",
     "imageUrl": "https://static.exercisedb.dev/media/yU7w7CA.gif",
     "muscoliSecondari": [
-      "FEMOR",
+      "FEMO",
       "GLUT",
       "TRAP"
     ],
@@ -2983,7 +2983,7 @@
   {
     "id": "exercise_ball_pull_in",
     "nome": "Exercise Ball Pull In",
-    "focus": "ADDOM",
+    "focus": "CORE",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Exercise_Ball_Pull-In/0.jpg",
     "muscoliSecondari": [],
     "difficolta": "Principiante",
@@ -3059,7 +3059,7 @@
   {
     "id": "flat_bench_leg_pull_in",
     "nome": "Flat Bench Leg Pull In",
-    "focus": "ADDOM",
+    "focus": "CORE",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Flat_Bench_Leg_Pull-In/0.jpg",
     "muscoliSecondari": [],
     "difficolta": "Principiante",
@@ -3081,7 +3081,7 @@
   {
     "id": "flat_bench_lying_leg_raise",
     "nome": "Flat Bench Lying Leg Raise",
-    "focus": "ADDOM",
+    "focus": "CORE",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Flat_Bench_Lying_Leg_Raise/0.jpg",
     "muscoliSecondari": [],
     "difficolta": "Principiante",
@@ -3118,7 +3118,7 @@
     ],
     "countingMode": "reps",
     "muscoliSecondari": [
-      "FEMOR"
+      "FEMO"
     ],
     "version": "1.0.2",
     "versionHistory": [
@@ -3210,7 +3210,7 @@
   {
     "id": "frog_sit_ups",
     "nome": "Frog Sit Ups",
-    "focus": "ADDOM",
+    "focus": "CORE",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Frog_Sit-Ups/0.jpg",
     "muscoliSecondari": [],
     "difficolta": "Intermedio",
@@ -3382,7 +3382,7 @@
     ],
     "countingMode": "reps",
     "muscoliSecondari": [
-      "FEMOR"
+      "FEMO"
     ],
     "version": "1.0.2",
     "versionHistory": [
@@ -3394,11 +3394,11 @@
   {
     "id": "gorilla_chin_crunch",
     "nome": "Gorilla Chin/crunch",
-    "focus": "ADDOM",
+    "focus": "CORE",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Gorilla_Chin_Crunch/0.jpg",
     "muscoliSecondari": [
-      "BIC",
-      "DORSO"
+      "BICI",
+      "LAT"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Compound",
@@ -3511,7 +3511,7 @@
     ],
     "countingMode": "time",
     "muscoliSecondari": [
-      "FEMOR"
+      "FEMO"
     ],
     "version": "1.0.2",
     "versionHistory": [
@@ -3669,7 +3669,7 @@
     ],
     "countingMode": "time",
     "muscoliSecondari": [
-      "FEMOR"
+      "FEMO"
     ],
     "version": "1.0.2",
     "versionHistory": [
@@ -3696,7 +3696,7 @@
     ],
     "countingMode": "time",
     "muscoliSecondari": [
-      "FEMOR"
+      "FEMO"
     ],
     "version": "1.0.2",
     "versionHistory": [
@@ -3761,7 +3761,7 @@
     "focus": "CORE",
     "imageUrl": "https://static.exercisedb.dev/media/196HJGw.gif",
     "muscoliSecondari": [
-      "FEMOR",
+      "FEMO",
       "GLUT"
     ],
     "difficolta": "Principiante",
@@ -3789,7 +3789,7 @@
     "focus": "LOMB",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Hug_A_Ball/0.jpg",
     "muscoliSecondari": [
-      "POLL",
+      "POLP",
       "GLUT"
     ],
     "difficolta": "Principiante",
@@ -3838,7 +3838,7 @@
     "focus": "CORE",
     "imageUrl": "https://static.exercisedb.dev/media/zhMwOwE.gif",
     "muscoliSecondari": [
-      "FEMOR",
+      "FEMO",
       "GLUT",
       "TRAP"
     ],
@@ -3869,7 +3869,7 @@
     "focus": "CORE",
     "imageUrl": "https://static.exercisedb.dev/media/zkgRrbK.gif",
     "muscoliSecondari": [
-      "FEMOR",
+      "FEMO",
       "GLUT",
       "TRAP"
     ],
@@ -3948,7 +3948,7 @@
     "focus": "CORE",
     "imageUrl": "https://static.exercisedb.dev/media/O3INw8V.gif",
     "muscoliSecondari": [
-      "FEMOR",
+      "FEMO",
       "GLUT",
       "TRAP"
     ],
@@ -3978,7 +3978,7 @@
     "imageUrl": "https://static.exercisedb.dev/media/ZgsNQ6d.gif",
     "muscoliSecondari": [
       "DELT",
-      "FEMOR"
+      "FEMO"
     ],
     "difficolta": "Principiante",
     "tipoEsercizio": "Compound",
@@ -4008,7 +4008,7 @@
     "imageUrl": "https://static.exercisedb.dev/media/TV87DNB.gif",
     "muscoliSecondari": [
       "DELT",
-      "FEMOR"
+      "FEMO"
     ],
     "difficolta": "Principiante",
     "tipoEsercizio": "Compound",
@@ -4114,7 +4114,7 @@
     "imageUrl": "https://static.exercisedb.dev/media/mr7pkqP.gif",
     "muscoliSecondari": [
       "DELT",
-      "FEMOR",
+      "FEMO",
       "POLP",
       "QUAD"
     ],
@@ -4253,7 +4253,7 @@
     "imageUrl": "https://static.exercisedb.dev/media/OaE7CpD.gif",
     "muscoliSecondari": [
       "DELT",
-      "FEMOR"
+      "FEMO"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Compound",
@@ -4304,7 +4304,7 @@
   {
     "id": "kettlebell_pass_between_the_legs",
     "nome": "Kettlebell Pass Between The Legs",
-    "focus": "ADDOM",
+    "focus": "CORE",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Kettlebell_Pass_Between_The_Legs/0.jpg",
     "muscoliSecondari": [
       "GLUT",
@@ -4382,7 +4382,7 @@
   {
     "id": "knee_hip_raise_on_parallel_bars",
     "nome": "Knee/hip Raise On Parallel Bars",
-    "focus": "ADDOM",
+    "focus": "CORE",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Knee_Hip_Raise_On_Parallel_Bars/0.jpg",
     "muscoliSecondari": [],
     "difficolta": "Principiante",
@@ -4404,7 +4404,7 @@
   {
     "id": "kneeling_cable_crunch_with_alternating_oblique_twists",
     "nome": "Kneeling Cable Crunch With Alternating Oblique Twists",
-    "focus": "ADDOM",
+    "focus": "CORE",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Kneeling_Cable_Crunch_With_Alternating_Oblique_Twists/0.jpg",
     "muscoliSecondari": [],
     "difficolta": "Principiante",
@@ -4470,7 +4470,7 @@
     ],
     "countingMode": "time",
     "muscoliSecondari": [
-      "FEMOR"
+      "FEMO"
     ],
     "version": "1.0.2",
     "versionHistory": [
@@ -4509,7 +4509,7 @@
   {
     "id": "landmine_180s",
     "nome": "Landmine 180's",
-    "focus": "ADDOM",
+    "focus": "CORE",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Landmine_180s/0.jpg",
     "muscoliSecondari": [
       "GLUT",
@@ -4563,7 +4563,7 @@
   {
     "id": "leg_pull_in",
     "nome": "Leg Pull In",
-    "focus": "ADDOM",
+    "focus": "CORE",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Leg_Pull-In/0.jpg",
     "muscoliSecondari": [],
     "difficolta": "Principiante",
@@ -4600,7 +4600,7 @@
     ],
     "countingMode": "reps",
     "muscoliSecondari": [
-      "FEMOR"
+      "FEMO"
     ],
     "version": "1.0.2",
     "versionHistory": [
@@ -4615,7 +4615,7 @@
     "focus": "CORE",
     "imageUrl": "https://static.exercisedb.dev/media/rUXfn3R.gif",
     "muscoliSecondari": [
-      "FEMOR",
+      "FEMO",
       "GLUT",
       "TRAP"
     ],
@@ -4756,7 +4756,7 @@
     ],
     "countingMode": "weighted",
     "muscoliSecondari": [
-      "FEMOR"
+      "FEMO"
     ],
     "version": "1.0.2",
     "versionHistory": [
@@ -4771,7 +4771,7 @@
     "focus": "CORE",
     "imageUrl": "https://static.exercisedb.dev/media/ANbbry2.gif",
     "muscoliSecondari": [
-      "FEMOR",
+      "FEMO",
       "GLUT",
       "TRAP"
     ],
@@ -4823,7 +4823,7 @@
     "focus": "CORE",
     "imageUrl": "https://static.exercisedb.dev/media/K9VL0Jq.gif",
     "muscoliSecondari": [
-      "FEMOR",
+      "FEMO",
       "GLUT",
       "QUAD"
     ],
@@ -4864,7 +4864,7 @@
     ],
     "countingMode": "reps",
     "muscoliSecondari": [
-      "FEMOR"
+      "FEMO"
     ],
     "version": "1.0.2",
     "versionHistory": [
@@ -4891,7 +4891,7 @@
     ],
     "countingMode": "reps",
     "muscoliSecondari": [
-      "FEMOR"
+      "FEMO"
     ],
     "version": "1.0.2",
     "versionHistory": [
@@ -5061,7 +5061,7 @@
   {
     "id": "oblique_crunches",
     "nome": "Oblique Crunches",
-    "focus": "ADDOM",
+    "focus": "CORE",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Oblique_Crunches/0.jpg",
     "muscoliSecondari": [],
     "difficolta": "Principiante",
@@ -5108,7 +5108,7 @@
   {
     "id": "oblique_crunches___on_the_floor",
     "nome": "Oblique Crunches On The Floor",
-    "focus": "ADDOM",
+    "focus": "CORE",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Oblique_Crunches_-_On_The_Floor/0.jpg",
     "muscoliSecondari": [],
     "difficolta": "Principiante",
@@ -5130,7 +5130,7 @@
   {
     "id": "one_arm_high_pulley_cable_side_bends",
     "nome": "One Arm High Pulley Cable Side Bends",
-    "focus": "ADDOM",
+    "focus": "CORE",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/One-Arm_High-Pulley_Cable_Side_Bends/0.jpg",
     "muscoliSecondari": [],
     "difficolta": "Principiante",
@@ -5152,10 +5152,10 @@
   {
     "id": "one_arm_medicine_ball_slam",
     "nome": "One Arm Medicine Ball Slam",
-    "focus": "ADDOM",
+    "focus": "CORE",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/One-Arm_Medicine_Ball_Slam/0.jpg",
     "muscoliSecondari": [
-      "DORSO",
+      "LAT",
       "DELT"
     ],
     "difficolta": "Principiante",
@@ -5221,7 +5221,7 @@
     ],
     "countingMode": "weighted",
     "muscoliSecondari": [
-      "FEMOR"
+      "FEMO"
     ],
     "version": "1.0.2",
     "versionHistory": [
@@ -5233,12 +5233,12 @@
   {
     "id": "overhead_stretch",
     "nome": "Overhead Stretch",
-    "focus": "ADDOM",
+    "focus": "CORE",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Overhead_Stretch/0.jpg",
     "muscoliSecondari": [
       "PETT",
-      "AVAMB",
-      "DORSO",
+      "AVA",
+      "LAT",
       "TRIC"
     ],
     "difficolta": "Principiante",
@@ -5260,7 +5260,7 @@
   {
     "id": "pallof_press",
     "nome": "Pallof Press",
-    "focus": "ADDOM",
+    "focus": "CORE",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Pallof_Press/0.jpg",
     "muscoliSecondari": [
       "PETT",
@@ -5286,7 +5286,7 @@
   {
     "id": "pallof_press_with_rotation",
     "nome": "Pallof Press With Rotation",
-    "focus": "ADDOM",
+    "focus": "CORE",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Pallof_Press_With_Rotation/0.jpg",
     "muscoliSecondari": [
       "PETT",
@@ -5327,7 +5327,7 @@
     ],
     "countingMode": "reps",
     "muscoliSecondari": [
-      "FEMOR"
+      "FEMO"
     ],
     "version": "1.0.2",
     "versionHistory": [
@@ -5339,7 +5339,7 @@
   {
     "id": "plank",
     "nome": "Plank",
-    "focus": "ADDOM",
+    "focus": "CORE",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Plank/0.jpg",
     "muscoliSecondari": [],
     "difficolta": "Principiante",
@@ -5360,7 +5360,7 @@
   {
     "id": "plate_twist",
     "nome": "Plate Twist",
-    "focus": "ADDOM",
+    "focus": "CORE",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Plate_Twist/0.jpg",
     "muscoliSecondari": [],
     "difficolta": "Intermedio",
@@ -5386,7 +5386,7 @@
     "imageUrl": "https://static.exercisedb.dev/media/ErqK3UL.gif",
     "muscoliSecondari": [
       "DELT",
-      "FEMOR",
+      "FEMO",
       "GLUT",
       "QUAD"
     ],
@@ -5469,7 +5469,7 @@
   {
     "id": "press_sit_up",
     "nome": "Press Sit Up",
-    "focus": "ADDOM",
+    "focus": "CORE",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Press_Sit-Up/0.jpg",
     "muscoliSecondari": [
       "PETT",
@@ -5564,7 +5564,7 @@
     ],
     "countingMode": "weighted",
     "muscoliSecondari": [
-      "FEMOR"
+      "FEMO"
     ],
     "version": "1.0.2",
     "versionHistory": [
@@ -5689,7 +5689,7 @@
     "focus": "LOMB",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Rack_Pull_with_Bands/0.jpg",
     "muscoliSecondari": [
-      "AVAMB",
+      "AVA",
       "GLUT",
       "FEMO",
       "QUAD",
@@ -5717,7 +5717,7 @@
     "focus": "LOMB",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Rack_Pulls/0.jpg",
     "muscoliSecondari": [
-      "AVAMB",
+      "AVA",
       "GLUT",
       "FEMO",
       "TRAP"
@@ -5744,9 +5744,9 @@
     "focus": "LOMB",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Reverse_Band_Deadlift/0.jpg",
     "muscoliSecondari": [
-      "ABDUT",
-      "ADDUT",
-      "POLL",
+      "ABDU",
+      "ADD",
+      "POLP",
       "GLUT",
       "FEMO",
       "QUAD"
@@ -5799,7 +5799,7 @@
     "imageUrl": "https://static.exercisedb.dev/media/tFToB7l.gif",
     "muscoliSecondari": [
       "DELT",
-      "FEMOR",
+      "FEMO",
       "GLUT"
     ],
     "difficolta": "Principiante",
@@ -5876,7 +5876,7 @@
   {
     "id": "rope_crunch",
     "nome": "Rope Crunch",
-    "focus": "ADDOM",
+    "focus": "CORE",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Rope_Crunch/0.jpg",
     "muscoliSecondari": [],
     "difficolta": "Principiante",
@@ -5943,7 +5943,7 @@
     ],
     "countingMode": "reps",
     "muscoliSecondari": [
-      "FEMOR"
+      "FEMO"
     ],
     "version": "1.0.2",
     "versionHistory": [
@@ -5980,7 +5980,7 @@
   {
     "id": "scissor_kick",
     "nome": "Scissor Kick",
-    "focus": "ADDOM",
+    "focus": "CORE",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Scissor_Kick/0.jpg",
     "muscoliSecondari": [],
     "difficolta": "Principiante",
@@ -6002,7 +6002,7 @@
   {
     "id": "seated_barbell_twist",
     "nome": "Seated Barbell Twist",
-    "focus": "ADDOM",
+    "focus": "CORE",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Seated_Barbell_Twist/0.jpg",
     "muscoliSecondari": [],
     "difficolta": "Principiante",
@@ -6024,7 +6024,7 @@
   {
     "id": "seated_flat_bench_leg_pull_in",
     "nome": "Seated Flat Bench Leg Pull In",
-    "focus": "ADDOM",
+    "focus": "CORE",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Seated_Flat_Bench_Leg_Pull-In/0.jpg",
     "muscoliSecondari": [],
     "difficolta": "Principiante",
@@ -6085,7 +6085,7 @@
     ],
     "countingMode": "reps",
     "muscoliSecondari": [
-      "FEMOR"
+      "FEMO"
     ],
     "version": "1.0.2",
     "versionHistory": [
@@ -6097,7 +6097,7 @@
   {
     "id": "seated_leg_tucks",
     "nome": "Seated Leg Tucks",
-    "focus": "ADDOM",
+    "focus": "CORE",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Seated_Leg_Tucks/0.jpg",
     "muscoliSecondari": [],
     "difficolta": "Principiante",
@@ -6122,7 +6122,7 @@
     "focus": "CORE",
     "imageUrl": "https://static.exercisedb.dev/media/QFmz6ch.gif",
     "muscoliSecondari": [
-      "FEMOR",
+      "FEMO",
       "GLUT",
       "TRAP"
     ],
@@ -6148,7 +6148,7 @@
   {
     "id": "seated_overhead_stretch",
     "nome": "Seated Overhead Stretch",
-    "focus": "ADDOM",
+    "focus": "CORE",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Seated_Overhead_Stretch/0.jpg",
     "muscoliSecondari": [],
     "difficolta": "Principiante",
@@ -6222,7 +6222,7 @@
   {
     "id": "side_bridge",
     "nome": "Side Bridge",
-    "focus": "ADDOM",
+    "focus": "CORE",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Side_Bridge/0.jpg",
     "muscoliSecondari": [
       "DELT"
@@ -6288,7 +6288,7 @@
     ],
     "countingMode": "reps",
     "muscoliSecondari": [
-      "FEMOR"
+      "FEMO"
     ],
     "version": "1.0.2",
     "versionHistory": [
@@ -6300,7 +6300,7 @@
   {
     "id": "side_jackknife",
     "nome": "Side Jackknife",
-    "focus": "ADDOM",
+    "focus": "CORE",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Side_Jackknife/0.jpg",
     "muscoliSecondari": [],
     "difficolta": "Principiante",
@@ -6339,7 +6339,7 @@
     ],
     "countingMode": "reps",
     "muscoliSecondari": [
-      "FEMOR"
+      "FEMO"
     ],
     "version": "1.0.2",
     "versionHistory": [
@@ -6376,7 +6376,7 @@
   {
     "id": "sit_up",
     "nome": "Sit Up",
-    "focus": "ADDOM",
+    "focus": "CORE",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Sit-Up/0.jpg",
     "muscoliSecondari": [],
     "difficolta": "Principiante",
@@ -6521,7 +6521,7 @@
     ],
     "countingMode": "reps",
     "muscoliSecondari": [
-      "FEMOR"
+      "FEMO"
     ],
     "version": "1.0.2",
     "versionHistory": [
@@ -6536,7 +6536,7 @@
     "focus": "CORE",
     "imageUrl": "https://static.exercisedb.dev/media/CqhoytW.gif",
     "muscoliSecondari": [
-      "FEMOR",
+      "FEMO",
       "GLUT"
     ],
     "difficolta": "Intermedio",
@@ -6561,7 +6561,7 @@
   {
     "id": "smith_machine_hip_raise",
     "nome": "Smith Machine Hip Raise",
-    "focus": "ADDOM",
+    "focus": "CORE",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Smith_Machine_Hip_Raise/0.jpg",
     "muscoliSecondari": [],
     "difficolta": "Principiante",
@@ -6598,7 +6598,7 @@
     ],
     "countingMode": "weighted",
     "muscoliSecondari": [
-      "FEMOR"
+      "FEMO"
     ],
     "version": "1.0.2",
     "versionHistory": [
@@ -6613,7 +6613,7 @@
     "focus": "CORE",
     "imageUrl": "https://static.exercisedb.dev/media/DIVyqrU.gif",
     "muscoliSecondari": [
-      "FEMOR",
+      "FEMO",
       "GLUT",
       "TRAP"
     ],
@@ -6641,7 +6641,7 @@
   {
     "id": "spider_crawl",
     "nome": "Spider Crawl",
-    "focus": "ADDOM",
+    "focus": "CORE",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Spider_Crawl/0.jpg",
     "muscoliSecondari": [
       "PETT",
@@ -6717,7 +6717,7 @@
   {
     "id": "standing_cable_lift",
     "nome": "Standing Cable Lift",
-    "focus": "ADDOM",
+    "focus": "CORE",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Standing_Cable_Lift/0.jpg",
     "muscoliSecondari": [
       "DELT"
@@ -6741,7 +6741,7 @@
   {
     "id": "standing_cable_wood_chop",
     "nome": "Standing Cable Wood Chop",
-    "focus": "ADDOM",
+    "focus": "CORE",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Standing_Cable_Wood_Chop/0.jpg",
     "muscoliSecondari": [
       "DELT"
@@ -6793,7 +6793,7 @@
   {
     "id": "standing_rope_crunch",
     "nome": "Standing Rope Crunch",
-    "focus": "ADDOM",
+    "focus": "CORE",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Standing_Rope_Crunch/0.jpg",
     "muscoliSecondari": [],
     "difficolta": "Principiante",
@@ -6867,7 +6867,7 @@
   {
     "id": "stomach_vacuum",
     "nome": "Stomach Vacuum",
-    "focus": "ADDOM",
+    "focus": "CORE",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Stomach_Vacuum/0.jpg",
     "muscoliSecondari": [],
     "difficolta": "Principiante",
@@ -6986,7 +6986,7 @@
     ],
     "countingMode": "weighted",
     "muscoliSecondari": [
-      "FEMOR"
+      "FEMO"
     ],
     "version": "1.0.2",
     "versionHistory": [
@@ -7013,7 +7013,7 @@
     ],
     "countingMode": "reps",
     "muscoliSecondari": [
-      "FEMOR"
+      "FEMO"
     ],
     "version": "1.0.2",
     "versionHistory": [
@@ -7042,7 +7042,7 @@
     ],
     "countingMode": "reps",
     "muscoliSecondari": [
-      "FEMOR"
+      "FEMO"
     ],
     "version": "1.0.2",
     "versionHistory": [
@@ -7054,7 +7054,7 @@
   {
     "id": "suspended_fallout",
     "nome": "Suspended Fallout",
-    "focus": "ADDOM",
+    "focus": "CORE",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Suspended_Fallout/0.jpg",
     "muscoliSecondari": [
       "PETT",
@@ -7105,7 +7105,7 @@
   {
     "id": "toe_touchers",
     "nome": "Toe Touchers",
-    "focus": "ADDOM",
+    "focus": "CORE",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Toe_Touchers/0.jpg",
     "muscoliSecondari": [],
     "difficolta": "Principiante",
@@ -7127,7 +7127,7 @@
   {
     "id": "torso_rotation",
     "nome": "Torso Rotation",
-    "focus": "ADDOM",
+    "focus": "CORE",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Torso_Rotation/0.jpg",
     "muscoliSecondari": [],
     "difficolta": "Principiante",
@@ -7189,7 +7189,7 @@
     ],
     "countingMode": "reps",
     "muscoliSecondari": [
-      "FEMOR"
+      "FEMO"
     ],
     "version": "1.0.2",
     "versionHistory": [
@@ -7216,7 +7216,7 @@
     ],
     "countingMode": "reps",
     "muscoliSecondari": [
-      "FEMOR"
+      "FEMO"
     ],
     "version": "1.0.2",
     "versionHistory": [
@@ -7231,7 +7231,7 @@
     "focus": "CORE",
     "imageUrl": "https://static.exercisedb.dev/media/p195zsJ.gif",
     "muscoliSecondari": [
-      "FEMOR",
+      "FEMO",
       "GLUT",
       "TRAP"
     ],
@@ -7303,7 +7303,7 @@
     ],
     "countingMode": "reps",
     "muscoliSecondari": [
-      "FEMOR"
+      "FEMO"
     ],
     "version": "1.0.2",
     "versionHistory": [
@@ -7330,7 +7330,7 @@
     ],
     "countingMode": "reps",
     "muscoliSecondari": [
-      "FEMOR"
+      "FEMO"
     ],
     "version": "1.0.2",
     "versionHistory": [
@@ -7347,7 +7347,7 @@
     "muscoliSecondari": [
       "GLUT",
       "FEMO",
-      "DORSO"
+      "LAT"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Compound",
@@ -7368,7 +7368,7 @@
   {
     "id": "weighted_ball_side_bend",
     "nome": "Weighted Ball Side Bend",
-    "focus": "ADDOM",
+    "focus": "CORE",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Weighted_Ball_Side_Bend/0.jpg",
     "muscoliSecondari": [],
     "difficolta": "Intermedio",
@@ -7415,7 +7415,7 @@
   {
     "id": "weighted_crunches",
     "nome": "Weighted Crunches",
-    "focus": "ADDOM",
+    "focus": "CORE",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Weighted_Crunches/0.jpg",
     "muscoliSecondari": [],
     "difficolta": "Principiante",
@@ -7521,7 +7521,7 @@
     "focus": "CORE",
     "imageUrl": "https://static.exercisedb.dev/media/8urJS9b.gif",
     "muscoliSecondari": [
-      "FEMOR",
+      "FEMO",
       "GLUT",
       "TRAP"
     ],
@@ -7687,7 +7687,7 @@
     ],
     "countingMode": "weighted",
     "muscoliSecondari": [
-      "FEMOR"
+      "FEMO"
     ],
     "version": "1.0.2",
     "versionHistory": [
@@ -7699,7 +7699,7 @@
   {
     "id": "weighted_sit_ups___with_bands",
     "nome": "Weighted Sit Ups With Bands",
-    "focus": "ADDOM",
+    "focus": "CORE",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Weighted_Sit-Ups_-_With_Bands/0.jpg",
     "muscoliSecondari": [],
     "difficolta": "Intermedio",
@@ -7736,7 +7736,7 @@
     ],
     "countingMode": "weighted",
     "muscoliSecondari": [
-      "FEMOR"
+      "FEMO"
     ],
     "version": "1.0.2",
     "versionHistory": [
@@ -7750,7 +7750,7 @@
     "nome": "Wheel Run",
     "imageUrl": "https://static.exercisedb.dev/media/km2Ljzj.gif",
     "muscoliSecondari": [
-      "FEMOR",
+      "FEMO",
       "POLP",
       "QUAD"
     ],
@@ -7780,7 +7780,7 @@
     "focus": "CORE",
     "imageUrl": "https://static.exercisedb.dev/media/Qoujh3Q.gif",
     "muscoliSecondari": [
-      "FEMOR",
+      "FEMO",
       "POLP",
       "QUAD"
     ],

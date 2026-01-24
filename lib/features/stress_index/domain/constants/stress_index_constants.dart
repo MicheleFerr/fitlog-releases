@@ -38,7 +38,7 @@ class StressIndexConstants {
   static const Map<String, int> muscleRecoveryHours = {
     'QUAD': 72, // Large muscle, compound movements
     'GLUT': 72, // Large muscle, compound movements
-    'FEMOR': 72, // Hamstrings
+    'FEMO': 72, // Hamstrings (canonical)
     'LAT': 72, // Large back muscles
     'PETT': 72, // Chest
     // Deltoid portions (P0 fix: split DELT into ANT/LAT/POST)
@@ -47,15 +47,17 @@ class StressIndexConstants {
     'DELT_POST': 48, // Posterior deltoid (rear delt work)
     'DELT': 48, // Generic shoulders (backward compatibility)
     'TRAP': 48, // Trapezius
+    'ROMB': 48, // Rhomboids (canonical - secondary back muscles)
     'BICI': 48, // Biceps
     'TRIC': 48, // Triceps
     'CORE': 48, // Core/Abs
+    'OBL': 48, // Obliques (canonical - core secondary muscles)
     'AVA': 48, // Forearms
     'POLP': 48, // Calves
     'ADD': 48, // Adductors
     'ABDU': 48, // Abductors
-    'LOMBAR': 72, // Lower back
-    'COLLO': 24, // Neck (smaller muscle, faster recovery)
+    'LOMB': 72, // Lower back (canonical)
+    'COLL': 24, // Neck (canonical - smaller muscle, faster recovery)
   };
 
   /// Default recovery hours for unknown muscle groups
@@ -142,7 +144,7 @@ class StressIndexConstants {
   static const Map<String, double> muscleFatigueModifiers = {
     'QUAD': 1.2, // Large muscle, slower fatigue decay
     'GLUT': 1.2,
-    'FEMOR': 1.1,
+    'FEMO': 1.1, // Hamstrings (canonical)
     'LAT': 1.1,
     'PETT': 1.0, // Reference
     'DELT_ANT': 0.9,
@@ -150,15 +152,17 @@ class StressIndexConstants {
     'DELT_POST': 0.9,
     'DELT': 0.9, // Backward compatibility
     'TRAP': 0.9,
+    'ROMB': 0.9, // Rhomboids (canonical) - similar to trap
     'BICI': 0.8, // Small muscle, faster fatigue decay
     'TRIC': 0.8,
     'CORE': 0.7, // Core recovers relatively fast
+    'OBL': 0.7, // Obliques (canonical) - similar to core
     'AVA': 0.7,
     'POLP': 0.8,
     'ADD': 0.9,
     'ABDU': 0.9,
-    'LOMBAR': 1.1, // Lower back is resilient but needs time
-    'COLLO': 0.6, // Neck recovers quickly
+    'LOMB': 1.1, // Lower back (canonical) - resilient but needs time
+    'COLL': 0.6, // Neck (canonical) - recovers quickly
   };
 
   /// Default fatigue modifier for unknown muscles

@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hive_ce_flutter/hive_flutter.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
 import 'package:gymbro_flutter_new/shared/domain/entities/app_config.dart';
+import 'package:gymbro_flutter_new/shared/domain/entities/interface_size.dart';
 import 'package:gymbro_flutter_new/core/data/providers/hive_box_manager_provider.dart';
 
 // App Configuration State Provider
@@ -23,8 +24,16 @@ class AppConfigNotifier extends Notifier<AppConfig> {
   int _initRetryCount = 0;
   static const int _maxInitRetries = 3;
 
+  // ✅ FIX: Static cache to survive provider rebuilds (background/foreground transitions)
+  // This prevents onboarding from restarting when app resumes
+  static AppConfig? _cachedConfig;
+
   @override
   AppConfig build() {
+    // ✅ FIX: Keep provider alive to prevent disposal during background
+    // This is CRITICAL to prevent onboarding restart on app resume
+    ref.keepAlive();
+
     // Register disposal callback
     ref.onDispose(() {
       if (kDebugMode) {
@@ -34,20 +43,14 @@ class AppConfigNotifier extends Notifier<AppConfig> {
       try {
         _isDisposed = true;
 
-        // Close Hive box if open
-        if (_configBox != null && _configBox!.isOpen) {
-          _configBox!.close();
-          if (kDebugMode) {
-            debugPrint('✅ [AppConfig] Config box closed');
-          }
-        }
+        // ✅ FIX: Do NOT close Hive box or clear cache on disposal
+        // The box should stay open for app lifetime
+        // _configBox stays available for quick re-init
 
-        // Null assignment for memory cleanup
-        _configBox = null;
         _initCompleter = null;
 
         if (kDebugMode) {
-          debugPrint('✅ [AppConfig] Disposal completed');
+          debugPrint('✅ [AppConfig] Disposal completed (cache preserved)');
         }
       } catch (e, stackTrace) {
         if (kDebugMode) {
@@ -56,6 +59,17 @@ class AppConfigNotifier extends Notifier<AppConfig> {
         }
       }
     });
+
+    // ✅ FIX: Return cached config if available (prevents onboarding restart)
+    if (_cachedConfig != null) {
+      if (kDebugMode) {
+        debugPrint('✅ [AppConfig] Returning cached config (initialOnboardingCompleted: ${_cachedConfig!.initialOnboardingCompleted})');
+      }
+      // Still trigger async init to ensure Hive box is ready
+      _initCompleter = Completer<void>();
+      _initializeConfig();
+      return _cachedConfig!;
+    }
 
     // Initialize asynchronously
     _initCompleter = Completer<void>();
@@ -77,10 +91,14 @@ class AppConfigNotifier extends Notifier<AppConfig> {
 
       if (savedConfig != null) {
         state = savedConfig;
+        // ✅ FIX: Update cache with loaded config
+        _cachedConfig = savedConfig;
         if (kDebugMode) {
-          debugPrint('✅ [AppConfig] Loaded saved configuration');
+          debugPrint('✅ [AppConfig] Loaded saved configuration (initialOnboardingCompleted: ${savedConfig.initialOnboardingCompleted})');
         }
       } else {
+        // ✅ FIX: Cache default config too
+        _cachedConfig = state;
         if (kDebugMode) {
           debugPrint('📋 [AppConfig] No saved config, using defaults');
         }
@@ -161,8 +179,11 @@ class AppConfigNotifier extends Notifier<AppConfig> {
 
       await _configBox!.put('config', state);
 
+      // ✅ FIX: Update cache after successful save
+      _cachedConfig = state;
+
       if (kDebugMode) {
-        debugPrint('✅ [AppConfig] Configuration saved successfully');
+        debugPrint('✅ [AppConfig] Configuration saved successfully (initialOnboardingCompleted: ${state.initialOnboardingCompleted})');
       }
     } catch (e, stackTrace) {
       if (kDebugMode) {
@@ -243,6 +264,7 @@ class AppConfigNotifier extends Notifier<AppConfig> {
     }
   }
 
+  @Deprecated('Use setInterfaceSize instead')
   Future<void> setFontSize(double fontSize) async {
     try {
       await _ensureInitialized();
@@ -256,15 +278,41 @@ class AppConfigNotifier extends Notifier<AppConfig> {
         return;
       }
 
-      state = state.copyWith(fontSize: fontSize);
-      await _saveConfig();
+      // Convert fontSize to InterfaceSize for unified control
+      final interfaceSize = InterfaceSize.fromFontSize(fontSize);
+      await setInterfaceSize(interfaceSize);
 
       if (kDebugMode) {
-        debugPrint('✅ [AppConfig] Font size set to: $fontSize');
+        debugPrint('✅ [AppConfig] Font size set to: $fontSize (migrated to $interfaceSize)');
       }
     } catch (e, stackTrace) {
       if (kDebugMode) {
         debugPrint('❌ [AppConfig] Error setting font size: $e');
+        debugPrint('📍 Stack trace: $stackTrace');
+      }
+    }
+  }
+
+  /// Sets the unified interface size (font + layout)
+  /// Replaces separate fontSize and setRowMode controls
+  Future<void> setInterfaceSize(InterfaceSize interfaceSize) async {
+    try {
+      await _ensureInitialized();
+      if (_isDisposed) return;
+
+      state = state.copyWith(
+        interfaceSize: interfaceSize,
+        fontSize: interfaceSize.fontSize, // Keep fontSize in sync for backward compat
+      );
+      await _saveConfig();
+
+      if (kDebugMode) {
+        debugPrint('✅ [AppConfig] Interface size set to: ${interfaceSize.name}');
+        debugPrint('   Font: ${interfaceSize.fontSize}x, Layout: ${interfaceSize.setRowMode}');
+      }
+    } catch (e, stackTrace) {
+      if (kDebugMode) {
+        debugPrint('❌ [AppConfig] Error setting interface size: $e');
         debugPrint('📍 Stack trace: $stackTrace');
       }
     }
@@ -341,6 +389,25 @@ class AppConfigNotifier extends Notifier<AppConfig> {
     } catch (e, stackTrace) {
       if (kDebugMode) {
         debugPrint('❌ [AppConfig] Error setting sound enabled: $e');
+        debugPrint('📍 Stack trace: $stackTrace');
+      }
+    }
+  }
+
+  Future<void> setTimerSound(String soundName) async {
+    try {
+      await _ensureInitialized();
+      if (_isDisposed) return;
+
+      state = state.copyWith(timerSound: soundName);
+      await _saveConfig();
+
+      if (kDebugMode) {
+        debugPrint('✅ [AppConfig] Timer sound set to: $soundName');
+      }
+    } catch (e, stackTrace) {
+      if (kDebugMode) {
+        debugPrint('❌ [AppConfig] Error setting timer sound: $e');
         debugPrint('📍 Stack trace: $stackTrace');
       }
     }
@@ -782,8 +849,16 @@ final defaultRestTimeProvider = Provider<int>((ref) {
   return ref.watch(appConfigProvider.select((c) => c.defaultRestTime));
 });
 
+@Deprecated('Use interfaceSizeProvider instead')
 final fontSizeProvider = Provider<double>((ref) {
   return ref.watch(appConfigProvider.select((c) => c.fontSize));
+});
+
+/// Provides the unified interface size (font + layout)
+/// Returns InterfaceSize.standard if not set (backward compatibility)
+final interfaceSizeProvider = Provider<InterfaceSize>((ref) {
+  final config = ref.watch(appConfigProvider);
+  return config.interfaceSize ?? InterfaceSize.fromFontSize(config.fontSize);
 });
 
 final preferredTemplateIdProvider = Provider<String?>((ref) {

@@ -63,11 +63,23 @@ class TemplateNotifier extends Notifier<TemplateState> {
 
   @override
   TemplateState build() {
-    _repository = ref.watch(templateRepositoryProvider);
+    // FIX: Use ref.read() to avoid re-initialization on rebuild
+    // Repository doesn't change, so we don't need to watch it
+    _repository = ref.read(templateRepositoryProvider);
 
-    // 🔧 FIX BUG #7: Watch currentUserProvider to rebuild on user change
-    // This ensures templates are reloaded when user logs out/in
-    ref.watch(currentUserProvider);
+    // 🔧 FIX: Use ref.listen instead of ref.watch to avoid blocking build()
+    // currentUserProvider is a StreamProvider<User?> that might be in loading state
+    // Using ref.watch() causes _SelectorSubscription errors when stream is loading
+    // ref.listen() reacts to user changes (login/logout) without blocking build
+    ref.listen(currentUserProvider, (previous, next) {
+      // Reload templates when user state changes (login/logout)
+      next.whenData((_) {
+        if (kDebugMode) {
+          debugPrint('🔄 [TemplateProvider] User state changed, reloading templates');
+        }
+        loadUserTemplates();
+      });
+    });
 
     // Load user templates on initialization
     Future.microtask(() => loadUserTemplates());

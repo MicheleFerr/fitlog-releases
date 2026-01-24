@@ -2,10 +2,10 @@
   {
     "id": "alternate_hammer_curl",
     "nome": "Alternate Hammer Curl",
-    "focus": "BIC",
+    "focus": "BICI",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Alternate_Hammer_Curl/0.jpg",
     "muscoliSecondari": [
-      "AVAMB"
+      "AVA"
     ],
     "difficolta": "Principiante",
     "tipoEsercizio": "Isolation",
@@ -26,10 +26,10 @@
   {
     "id": "alternate_incline_dumbbell_curl",
     "nome": "Alternate Incline Dumbbell Curl",
-    "focus": "BIC",
+    "focus": "BICI",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Alternate_Incline_Dumbbell_Curl/0.jpg",
     "muscoliSecondari": [
-      "AVAMB"
+      "AVA"
     ],
     "difficolta": "Principiante",
     "tipoEsercizio": "Isolation",
@@ -79,11 +79,11 @@
   {
     "id": "alternating_kettlebell_row",
     "nome": "Alternating Kettlebell Row",
-    "focus": "DORSO",
+    "focus": "LAT",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Alternating_Kettlebell_Row/0.jpg",
     "muscoliSecondari": [
-      "BIC",
-      "DORSO"
+      "BICI",
+      "LAT"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Isolation",
@@ -104,13 +104,13 @@
   {
     "id": "alternating_renegade_row",
     "nome": "Alternating Renegade Row",
-    "focus": "DORSO",
+    "focus": "LAT",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Alternating_Renegade_Row/0.jpg",
     "muscoliSecondari": [
-      "ADDOM",
-      "BIC",
+      "CORE",
+      "BICI",
       "PETT",
-      "DORSO",
+      "LAT",
       "TRIC"
     ],
     "difficolta": "Avanzato",
@@ -344,7 +344,7 @@
     "focus": "LAT",
     "imageUrl": "https://static.exercisedb.dev/media/qLpO4vV.gif",
     "muscoliSecondari": [
-      "FEMOR",
+      "FEMO",
       "GLUT",
       "TRAP"
     ],
@@ -1056,7 +1056,7 @@
   {
     "id": "barbell_curls_lying_against_an_incline",
     "nome": "Barbell Curls Lying Against An Incline",
-    "focus": "BIC",
+    "focus": "BICI",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Barbell_Curls_Lying_Against_An_Incline/0.jpg",
     "muscoliSecondari": [],
     "difficolta": "Principiante",
@@ -1759,8 +1759,8 @@
     "focus": "TRAP",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Barbell_Shrug_Behind_The_Back/0.jpg",
     "muscoliSecondari": [
-      "AVAMB",
-      "DORSO"
+      "AVA",
+      "LAT"
     ],
     "difficolta": "Principiante",
     "tipoEsercizio": "Isolation",
@@ -2065,11 +2065,11 @@
   {
     "id": "bent_arm_barbell_pullover",
     "nome": "Bent Arm Barbell Pullover",
-    "focus": "DORSO",
+    "focus": "LAT",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Bent-Arm_Barbell_Pullover/0.jpg",
     "muscoliSecondari": [
       "PETT",
-      "DORSO",
+      "LAT",
       "DELT",
       "TRIC"
     ],
@@ -2092,11 +2092,11 @@
   {
     "id": "bent_over_barbell_row",
     "nome": "Bent Over Barbell Row",
-    "focus": "DORSO",
+    "focus": "LAT",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Bent_Over_Barbell_Row/0.jpg",
     "muscoliSecondari": [
-      "BIC",
-      "DORSO",
+      "BICI",
+      "LAT",
       "DELT"
     ],
     "difficolta": "Principiante",
@@ -2118,11 +2118,11 @@
   {
     "id": "bent_over_one_arm_long_bar_row",
     "nome": "Bent Over One Arm Long Bar Row",
-    "focus": "DORSO",
+    "focus": "LAT",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Bent_Over_One-Arm_Long_Bar_Row/0.jpg",
     "muscoliSecondari": [
-      "BIC",
-      "DORSO",
+      "BICI",
+      "LAT",
       "LOMB",
       "TRAP"
     ],
@@ -2145,11 +2145,11 @@
   {
     "id": "bent_over_two_arm_long_bar_row",
     "nome": "Bent Over Two Arm Long Bar Row",
-    "focus": "DORSO",
+    "focus": "LAT",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Bent_Over_Two-Arm_Long_Bar_Row/0.jpg",
     "muscoliSecondari": [
-      "BIC",
-      "DORSO"
+      "BICI",
+      "LAT"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Compound",
@@ -2170,11 +2170,11 @@
   {
     "id": "bent_over_two_dumbbell_row",
     "nome": "Bent Over Two Dumbbell Row",
-    "focus": "DORSO",
+    "focus": "LAT",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Bent_Over_Two-Dumbbell_Row/0.jpg",
     "muscoliSecondari": [
-      "BIC",
-      "DORSO",
+      "BICI",
+      "LAT",
       "DELT"
     ],
     "difficolta": "Principiante",
@@ -2196,11 +2196,11 @@
   {
     "id": "bent_over_two_dumbbell_row_with_palms_in",
     "nome": "Bent Over Two Dumbbell Row With Palms In",
-    "focus": "DORSO",
+    "focus": "LAT",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Bent_Over_Two-Dumbbell_Row_With_Palms_In/0.jpg",
     "muscoliSecondari": [
-      "BIC",
-      "DORSO"
+      "BICI",
+      "LAT"
     ],
     "difficolta": "Principiante",
     "tipoEsercizio": "Compound",
@@ -2336,11 +2336,11 @@
   {
     "id": "bodyweight_mid_row",
     "nome": "Bodyweight Mid Row",
-    "focus": "DORSO",
+    "focus": "LAT",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Bodyweight_Mid_Row/0.jpg",
     "muscoliSecondari": [
-      "BIC",
-      "DORSO"
+      "BICI",
+      "LAT"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Compound",
@@ -2619,10 +2619,10 @@
   {
     "id": "bottoms_up_clean_from_the_hang_position",
     "nome": "Bottoms Up Clean From The Hang Position",
-    "focus": "AVAMB",
+    "focus": "AVA",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Bottoms-Up_Clean_From_The_Hang_Position/0.jpg",
     "muscoliSecondari": [
-      "BIC",
+      "BICI",
       "DELT"
     ],
     "difficolta": "Intermedio",
@@ -2644,7 +2644,7 @@
   {
     "id": "brachialis_smr",
     "nome": "Brachialis Smr",
-    "focus": "BIC",
+    "focus": "BICI",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Brachialis-SMR/0.jpg",
     "muscoliSecondari": [],
     "difficolta": "Intermedio",
@@ -2954,7 +2954,7 @@
   {
     "id": "cable_hammer_curls___rope_attachment",
     "nome": "Cable Hammer Curls Rope Attachment",
-    "focus": "BIC",
+    "focus": "BICI",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Cable_Hammer_Curls_-_Rope_Attachment/0.jpg",
     "muscoliSecondari": [],
     "difficolta": "Principiante",
@@ -4955,7 +4955,7 @@
   {
     "id": "chair_lower_back_stretch",
     "nome": "Chair Lower Back Stretch",
-    "focus": "DORSO",
+    "focus": "LAT",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Chair_Lower_Back_Stretch/0.jpg",
     "muscoliSecondari": [
       "LOMB"
@@ -5098,10 +5098,10 @@
   {
     "id": "close_grip_ez_bar_curl",
     "nome": "Close Grip Ez Bar Curl",
-    "focus": "BIC",
+    "focus": "BICI",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Close-Grip_EZ_Bar_Curl/0.jpg",
     "muscoliSecondari": [
-      "AVAMB"
+      "AVA"
     ],
     "difficolta": "Principiante",
     "tipoEsercizio": "Isolation",
@@ -5122,10 +5122,10 @@
   {
     "id": "close_grip_ez_bar_curl_with_band",
     "nome": "Close Grip Ez Bar Curl With Band",
-    "focus": "BIC",
+    "focus": "BICI",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Close-Grip_EZ-Bar_Curl_with_Band/0.jpg",
     "muscoliSecondari": [
-      "AVAMB"
+      "AVA"
     ],
     "difficolta": "Principiante",
     "tipoEsercizio": "Isolation",
@@ -5146,11 +5146,11 @@
   {
     "id": "close_grip_front_lat_pulldown",
     "nome": "Close Grip Front Lat Pulldown",
-    "focus": "DORSO",
+    "focus": "LAT",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Close-Grip_Front_Lat_Pulldown/0.jpg",
     "muscoliSecondari": [
-      "BIC",
-      "DORSO",
+      "BICI",
+      "LAT",
       "DELT"
     ],
     "difficolta": "Principiante",
@@ -5172,10 +5172,10 @@
   {
     "id": "close_grip_standing_barbell_curl",
     "nome": "Close Grip Standing Barbell Curl",
-    "focus": "BIC",
+    "focus": "BICI",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Close-Grip_Standing_Barbell_Curl/0.jpg",
     "muscoliSecondari": [
-      "AVAMB"
+      "AVA"
     ],
     "difficolta": "Principiante",
     "tipoEsercizio": "Isolation",
@@ -5196,10 +5196,10 @@
   {
     "id": "concentration_curls",
     "nome": "Concentration Curls",
-    "focus": "BIC",
+    "focus": "BICI",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Concentration_Curls/0.jpg",
     "muscoliSecondari": [
-      "AVAMB"
+      "AVA"
     ],
     "difficolta": "Principiante",
     "tipoEsercizio": "Isolation",
@@ -5247,10 +5247,10 @@
   {
     "id": "cross_body_hammer_curl",
     "nome": "Cross Body Hammer Curl",
-    "focus": "BIC",
+    "focus": "BICI",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Cross_Body_Hammer_Curl/0.jpg",
     "muscoliSecondari": [
-      "AVAMB"
+      "AVA"
     ],
     "difficolta": "Principiante",
     "tipoEsercizio": "Isolation",
@@ -5271,10 +5271,10 @@
   {
     "id": "drag_curl",
     "nome": "Drag Curl",
-    "focus": "BIC",
+    "focus": "BICI",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Drag_Curl/0.jpg",
     "muscoliSecondari": [
-      "AVAMB"
+      "AVA"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Compound",
@@ -5295,10 +5295,10 @@
   {
     "id": "dumbbell_alternate_bicep_curl",
     "nome": "Dumbbell Alternate Bicep Curl",
-    "focus": "BIC",
+    "focus": "BICI",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Dumbbell_Alternate_Bicep_Curl/0.jpg",
     "muscoliSecondari": [
-      "AVAMB"
+      "AVA"
     ],
     "difficolta": "Principiante",
     "tipoEsercizio": "Isolation",
@@ -5543,10 +5543,10 @@
   {
     "id": "dumbbell_bicep_curl",
     "nome": "Dumbbell Bicep Curl",
-    "focus": "BIC",
+    "focus": "BICI",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Dumbbell_Bicep_Curl/0.jpg",
     "muscoliSecondari": [
-      "AVAMB"
+      "AVA"
     ],
     "difficolta": "Principiante",
     "tipoEsercizio": "Isolation",
@@ -6410,7 +6410,7 @@
     "focus": "BICI",
     "imageUrl": "https://static.exercisedb.dev/media/Mz6lLcW.gif",
     "muscoliSecondari": [
-      "FEMOR",
+      "FEMO",
       "QUAD"
     ],
     "difficolta": "Intermedio",
@@ -8365,7 +8365,7 @@
     "focus": "BICI",
     "imageUrl": "https://static.exercisedb.dev/media/76vfTdU.gif",
     "muscoliSecondari": [
-      "FEMOR",
+      "FEMO",
       "GLUT",
       "QUAD"
     ],
@@ -8395,7 +8395,7 @@
     "focus": "BICI",
     "imageUrl": "https://static.exercisedb.dev/media/XE93sQZ.gif",
     "muscoliSecondari": [
-      "FEMOR",
+      "FEMO",
       "GLUT",
       "QUAD"
     ],
@@ -8508,7 +8508,7 @@
   {
     "id": "dynamic_back_stretch",
     "nome": "Dynamic Back Stretch",
-    "focus": "DORSO",
+    "focus": "LAT",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Dynamic_Back_Stretch/0.jpg",
     "muscoliSecondari": [],
     "difficolta": "Principiante",
@@ -8560,10 +8560,10 @@
   {
     "id": "elevated_cable_rows",
     "nome": "Elevated Cable Rows",
-    "focus": "DORSO",
+    "focus": "LAT",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Elevated_Cable_Rows/0.jpg",
     "muscoliSecondari": [
-      "DORSO",
+      "LAT",
       "TRAP"
     ],
     "difficolta": "Intermedio",
@@ -8673,7 +8673,7 @@
     "focus": "LAT",
     "imageUrl": "https://static.exercisedb.dev/media/WVD66ff.gif",
     "muscoliSecondari": [
-      "FEMOR",
+      "FEMO",
       "GLUT",
       "TRAP"
     ],
@@ -8812,7 +8812,7 @@
   {
     "id": "ez_bar_curl",
     "nome": "Ez Bar Curl",
-    "focus": "BIC",
+    "focus": "BICI",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/EZ-Bar_Curl/0.jpg",
     "muscoliSecondari": [],
     "difficolta": "Principiante",
@@ -9262,7 +9262,7 @@
   {
     "id": "flexor_incline_dumbbell_curls",
     "nome": "Flexor Incline Dumbbell Curls",
-    "focus": "BIC",
+    "focus": "BICI",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Flexor_Incline_Dumbbell_Curls/0.jpg",
     "muscoliSecondari": [],
     "difficolta": "Principiante",
@@ -9313,11 +9313,11 @@
   {
     "id": "full_range_of_motion_lat_pulldown",
     "nome": "Full Range Of Motion Lat Pulldown",
-    "focus": "DORSO",
+    "focus": "LAT",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Full_Range-Of-Motion_Lat_Pulldown/0.jpg",
     "muscoliSecondari": [
-      "BIC",
-      "DORSO",
+      "BICI",
+      "LAT",
       "DELT"
     ],
     "difficolta": "Intermedio",
@@ -9396,11 +9396,11 @@
   {
     "id": "gironda_sternum_chins",
     "nome": "Gironda Sternum Chins",
-    "focus": "DORSO",
+    "focus": "LAT",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Gironda_Sternum_Chins/0.jpg",
     "muscoliSecondari": [
-      "BIC",
-      "DORSO"
+      "BICI",
+      "LAT"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Compound",
@@ -9421,7 +9421,7 @@
   {
     "id": "hammer_curls",
     "nome": "Hammer Curls",
-    "focus": "BIC",
+    "focus": "BICI",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Hammer_Curls/0.jpg",
     "muscoliSecondari": [],
     "difficolta": "Principiante",
@@ -9443,7 +9443,7 @@
   {
     "id": "high_cable_curls",
     "nome": "High Cable Curls",
-    "focus": "BIC",
+    "focus": "BICI",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/High_Cable_Curls/0.jpg",
     "muscoliSecondari": [],
     "difficolta": "Intermedio",
@@ -9493,10 +9493,10 @@
   {
     "id": "incline_bench_pull",
     "nome": "Incline Bench Pull",
-    "focus": "DORSO",
+    "focus": "LAT",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Incline_Bench_Pull/0.jpg",
     "muscoliSecondari": [
-      "DORSO",
+      "LAT",
       "DELT"
     ],
     "difficolta": "Principiante",
@@ -9518,7 +9518,7 @@
   {
     "id": "incline_dumbbell_curl",
     "nome": "Incline Dumbbell Curl",
-    "focus": "BIC",
+    "focus": "BICI",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Incline_Dumbbell_Curl/0.jpg",
     "muscoliSecondari": [],
     "difficolta": "Principiante",
@@ -9540,7 +9540,7 @@
   {
     "id": "incline_hammer_curls",
     "nome": "Incline Hammer Curls",
-    "focus": "BIC",
+    "focus": "BICI",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Incline_Hammer_Curls/0.jpg",
     "muscoliSecondari": [],
     "difficolta": "Principiante",
@@ -9562,7 +9562,7 @@
   {
     "id": "incline_inner_biceps_curl",
     "nome": "Incline Inner Biceps Curl",
-    "focus": "BIC",
+    "focus": "BICI",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Incline_Inner_Biceps_Curl/0.jpg",
     "muscoliSecondari": [],
     "difficolta": "Principiante",
@@ -9897,7 +9897,7 @@
     "imageUrl": "https://static.exercisedb.dev/media/8ARQ9Hw.gif",
     "muscoliSecondari": [
       "DELT",
-      "FEMOR",
+      "FEMO",
       "GLUT"
     ],
     "difficolta": "Intermedio",
@@ -10008,7 +10008,7 @@
   {
     "id": "kneeling_forearm_stretch",
     "nome": "Kneeling Forearm Stretch",
-    "focus": "AVAMB",
+    "focus": "AVA",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Kneeling_Forearm_Stretch/0.jpg",
     "muscoliSecondari": [],
     "difficolta": "Principiante",
@@ -10030,11 +10030,11 @@
   {
     "id": "kneeling_high_pulley_row",
     "nome": "Kneeling High Pulley Row",
-    "focus": "DORSO",
+    "focus": "LAT",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Kneeling_High_Pulley_Row/0.jpg",
     "muscoliSecondari": [
-      "BIC",
-      "DORSO"
+      "BICI",
+      "LAT"
     ],
     "difficolta": "Principiante",
     "tipoEsercizio": "Compound",
@@ -10083,11 +10083,11 @@
   {
     "id": "kneeling_single_arm_high_pulley_row",
     "nome": "Kneeling Single Arm High Pulley Row",
-    "focus": "DORSO",
+    "focus": "LAT",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Kneeling_Single-Arm_High_Pulley_Row/0.jpg",
     "muscoliSecondari": [
-      "BIC",
-      "DORSO"
+      "BICI",
+      "LAT"
     ],
     "difficolta": "Principiante",
     "tipoEsercizio": "Compound",
@@ -10137,7 +10137,7 @@
   {
     "id": "latissimus_dorsi_smr",
     "nome": "Latissimus Dorsi Smr",
-    "focus": "DORSO",
+    "focus": "LAT",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Latissimus_Dorsi-SMR/0.jpg",
     "muscoliSecondari": [],
     "difficolta": "Principiante",
@@ -11010,10 +11010,10 @@
   {
     "id": "leverage_high_row",
     "nome": "Leverage High Row",
-    "focus": "DORSO",
+    "focus": "LAT",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Leverage_High_Row/0.jpg",
     "muscoliSecondari": [
-      "DORSO"
+      "LAT"
     ],
     "difficolta": "Principiante",
     "tipoEsercizio": "Compound",
@@ -11034,11 +11034,11 @@
   {
     "id": "leverage_iso_row",
     "nome": "Leverage Iso Row",
-    "focus": "DORSO",
+    "focus": "LAT",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Leverage_Iso_Row/0.jpg",
     "muscoliSecondari": [
-      "BIC",
-      "DORSO"
+      "BICI",
+      "LAT"
     ],
     "difficolta": "Principiante",
     "tipoEsercizio": "Compound",
@@ -11062,7 +11062,7 @@
     "focus": "TRAP",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Leverage_Shrug/0.jpg",
     "muscoliSecondari": [
-      "AVAMB"
+      "AVA"
     ],
     "difficolta": "Principiante",
     "tipoEsercizio": "Isolation",
@@ -11111,12 +11111,12 @@
   {
     "id": "london_bridges",
     "nome": "London Bridges",
-    "focus": "DORSO",
+    "focus": "LAT",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/London_Bridges/0.jpg",
     "muscoliSecondari": [
-      "BIC",
-      "AVAMB",
-      "DORSO"
+      "BICI",
+      "AVA",
+      "LAT"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Compound",
@@ -11137,7 +11137,7 @@
   {
     "id": "lying_cable_curl",
     "nome": "Lying Cable Curl",
-    "focus": "BIC",
+    "focus": "BICI",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Lying_Cable_Curl/0.jpg",
     "muscoliSecondari": [],
     "difficolta": "Intermedio",
@@ -11159,11 +11159,11 @@
   {
     "id": "lying_cambered_barbell_row",
     "nome": "Lying Cambered Barbell Row",
-    "focus": "DORSO",
+    "focus": "LAT",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Lying_Cambered_Barbell_Row/0.jpg",
     "muscoliSecondari": [
-      "BIC",
-      "DORSO",
+      "BICI",
+      "LAT",
       "TRAP"
     ],
     "difficolta": "Principiante",
@@ -11185,7 +11185,7 @@
   {
     "id": "lying_close_grip_bar_curl_on_high_pulley",
     "nome": "Lying Close Grip Bar Curl On High Pulley",
-    "focus": "BIC",
+    "focus": "BICI",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Lying_Close-Grip_Bar_Curl_On_High_Pulley/0.jpg",
     "muscoliSecondari": [],
     "difficolta": "Principiante",
@@ -11207,7 +11207,7 @@
   {
     "id": "lying_high_bench_barbell_curl",
     "nome": "Lying High Bench Barbell Curl",
-    "focus": "BIC",
+    "focus": "BICI",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Lying_High_Bench_Barbell_Curl/0.jpg",
     "muscoliSecondari": [],
     "difficolta": "Intermedio",
@@ -11229,7 +11229,7 @@
   {
     "id": "lying_supine_dumbbell_curl",
     "nome": "Lying Supine Dumbbell Curl",
-    "focus": "BIC",
+    "focus": "BICI",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Lying_Supine_Dumbbell_Curl/0.jpg",
     "muscoliSecondari": [],
     "difficolta": "Principiante",
@@ -11251,11 +11251,11 @@
   {
     "id": "lying_t_bar_row",
     "nome": "Lying T Bar Row",
-    "focus": "DORSO",
+    "focus": "LAT",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Lying_T-Bar_Row/0.jpg",
     "muscoliSecondari": [
-      "BIC",
-      "DORSO"
+      "BICI",
+      "LAT"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Compound",
@@ -11276,7 +11276,7 @@
   {
     "id": "machine_bicep_curl",
     "nome": "Machine Bicep Curl",
-    "focus": "BIC",
+    "focus": "BICI",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Machine_Bicep_Curl/0.jpg",
     "muscoliSecondari": [],
     "difficolta": "Principiante",
@@ -11298,7 +11298,7 @@
   {
     "id": "machine_preacher_curls",
     "nome": "Machine Preacher Curls",
-    "focus": "BIC",
+    "focus": "BICI",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Machine_Preacher_Curls/0.jpg",
     "muscoliSecondari": [],
     "difficolta": "Principiante",
@@ -11407,7 +11407,7 @@
   {
     "id": "middle_back_shrug",
     "nome": "Middle Back Shrug",
-    "focus": "DORSO",
+    "focus": "LAT",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Middle_Back_Shrug/0.jpg",
     "muscoliSecondari": [],
     "difficolta": "Intermedio",
@@ -11429,11 +11429,11 @@
   {
     "id": "middle_back_stretch",
     "nome": "Middle Back Stretch",
-    "focus": "DORSO",
+    "focus": "LAT",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Middle_Back_Stretch/0.jpg",
     "muscoliSecondari": [
-      "ADDOM",
-      "DORSO",
+      "CORE",
+      "LAT",
       "LOMB"
     ],
     "difficolta": "Principiante",
@@ -11455,11 +11455,11 @@
   {
     "id": "mixed_grip_chin",
     "nome": "Mixed Grip Chin",
-    "focus": "DORSO",
+    "focus": "LAT",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Mixed_Grip_Chin/0.jpg",
     "muscoliSecondari": [
-      "BIC",
-      "DORSO"
+      "BICI",
+      "LAT"
     ],
     "difficolta": "Avanzato",
     "tipoEsercizio": "Compound",
@@ -11738,7 +11738,7 @@
   {
     "id": "one_arm_dumbbell_preacher_curl",
     "nome": "One Arm Dumbbell Preacher Curl",
-    "focus": "BIC",
+    "focus": "BICI",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/One_Arm_Dumbbell_Preacher_Curl/0.jpg",
     "muscoliSecondari": [],
     "difficolta": "Principiante",
@@ -11760,11 +11760,11 @@
   {
     "id": "one_arm_dumbbell_row",
     "nome": "One Arm Dumbbell Row",
-    "focus": "DORSO",
+    "focus": "LAT",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/One-Arm_Dumbbell_Row/0.jpg",
     "muscoliSecondari": [
-      "BIC",
-      "DORSO",
+      "BICI",
+      "LAT",
       "DELT"
     ],
     "difficolta": "Principiante",
@@ -11786,11 +11786,11 @@
   {
     "id": "one_arm_kettlebell_row",
     "nome": "One Arm Kettlebell Row",
-    "focus": "DORSO",
+    "focus": "LAT",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/One-Arm_Kettlebell_Row/0.jpg",
     "muscoliSecondari": [
-      "BIC",
-      "DORSO"
+      "BICI",
+      "LAT"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Compound",
@@ -11811,11 +11811,11 @@
   {
     "id": "one_arm_lat_pulldown",
     "nome": "One Arm Lat Pulldown",
-    "focus": "DORSO",
+    "focus": "LAT",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/One_Arm_Lat_Pulldown/0.jpg",
     "muscoliSecondari": [
-      "BIC",
-      "DORSO"
+      "BICI",
+      "LAT"
     ],
     "difficolta": "Principiante",
     "tipoEsercizio": "Compound",
@@ -11836,11 +11836,11 @@
   {
     "id": "one_arm_long_bar_row",
     "nome": "One Arm Long Bar Row",
-    "focus": "DORSO",
+    "focus": "LAT",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/One-Arm_Long_Bar_Row/0.jpg",
     "muscoliSecondari": [
-      "BIC",
-      "DORSO"
+      "BICI",
+      "LAT"
     ],
     "difficolta": "Principiante",
     "tipoEsercizio": "Compound",
@@ -11889,10 +11889,10 @@
   {
     "id": "one_handed_hang",
     "nome": "One Handed Hang",
-    "focus": "DORSO",
+    "focus": "LAT",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/One_Handed_Hang/0.jpg",
     "muscoliSecondari": [
-      "BIC"
+      "BICI"
     ],
     "difficolta": "Principiante",
     "tipoEsercizio": "Compound",
@@ -11913,7 +11913,7 @@
   {
     "id": "overhead_cable_curl",
     "nome": "Overhead Cable Curl",
-    "focus": "BIC",
+    "focus": "BICI",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Overhead_Cable_Curl/0.jpg",
     "muscoliSecondari": [],
     "difficolta": "Intermedio",
@@ -11935,7 +11935,7 @@
   {
     "id": "overhead_lat",
     "nome": "Overhead Lat",
-    "focus": "DORSO",
+    "focus": "LAT",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Overhead_Lat/0.jpg",
     "muscoliSecondari": [
       "TRIC"
@@ -11959,7 +11959,7 @@
   {
     "id": "palms_down_dumbbell_wrist_curl_over_a_bench",
     "nome": "Palms Down Dumbbell Wrist Curl Over A Bench",
-    "focus": "AVAMB",
+    "focus": "AVA",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Palms-Down_Dumbbell_Wrist_Curl_Over_A_Bench/0.jpg",
     "muscoliSecondari": [],
     "difficolta": "Principiante",
@@ -11981,7 +11981,7 @@
   {
     "id": "palms_down_wrist_curl_over_a_bench",
     "nome": "Palms Down Wrist Curl Over A Bench",
-    "focus": "AVAMB",
+    "focus": "AVA",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Palms-Down_Wrist_Curl_Over_A_Bench/0.jpg",
     "muscoliSecondari": [],
     "difficolta": "Principiante",
@@ -12003,7 +12003,7 @@
   {
     "id": "palms_up_barbell_wrist_curl_over_a_bench",
     "nome": "Palms Up Barbell Wrist Curl Over A Bench",
-    "focus": "AVAMB",
+    "focus": "AVA",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Palms-Up_Barbell_Wrist_Curl_Over_A_Bench/0.jpg",
     "muscoliSecondari": [],
     "difficolta": "Principiante",
@@ -12025,7 +12025,7 @@
   {
     "id": "palms_up_dumbbell_wrist_curl_over_a_bench",
     "nome": "Palms Up Dumbbell Wrist Curl Over A Bench",
-    "focus": "AVAMB",
+    "focus": "AVA",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Palms-Up_Dumbbell_Wrist_Curl_Over_A_Bench/0.jpg",
     "muscoliSecondari": [],
     "difficolta": "Principiante",
@@ -12047,7 +12047,7 @@
   {
     "id": "plate_pinch",
     "nome": "Plate Pinch",
-    "focus": "AVAMB",
+    "focus": "AVA",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Plate_Pinch/0.jpg",
     "muscoliSecondari": [],
     "difficolta": "Intermedio",
@@ -12097,7 +12097,7 @@
   {
     "id": "preacher_curl",
     "nome": "Preacher Curl",
-    "focus": "BIC",
+    "focus": "BICI",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Preacher_Curl/0.jpg",
     "muscoliSecondari": [],
     "difficolta": "Principiante",
@@ -12119,10 +12119,10 @@
   {
     "id": "preacher_hammer_dumbbell_curl",
     "nome": "Preacher Hammer Dumbbell Curl",
-    "focus": "BIC",
+    "focus": "BICI",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Preacher_Hammer_Dumbbell_Curl/0.jpg",
     "muscoliSecondari": [
-      "AVAMB"
+      "AVA"
     ],
     "difficolta": "Principiante",
     "tipoEsercizio": "Isolation",
@@ -12231,11 +12231,11 @@
   {
     "id": "pullups",
     "nome": "Pullups",
-    "focus": "DORSO",
+    "focus": "LAT",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Pullups/0.jpg",
     "muscoliSecondari": [
-      "BIC",
-      "DORSO"
+      "BICI",
+      "LAT"
     ],
     "difficolta": "Principiante",
     "tipoEsercizio": "Compound",
@@ -12371,10 +12371,10 @@
   {
     "id": "reverse_barbell_curl",
     "nome": "Reverse Barbell Curl",
-    "focus": "BIC",
+    "focus": "BICI",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Reverse_Barbell_Curl/0.jpg",
     "muscoliSecondari": [
-      "AVAMB"
+      "AVA"
     ],
     "difficolta": "Principiante",
     "tipoEsercizio": "Isolation",
@@ -12395,10 +12395,10 @@
   {
     "id": "reverse_barbell_preacher_curls",
     "nome": "Reverse Barbell Preacher Curls",
-    "focus": "BIC",
+    "focus": "BICI",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Reverse_Barbell_Preacher_Curls/0.jpg",
     "muscoliSecondari": [
-      "AVAMB"
+      "AVA"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Isolation",
@@ -12419,10 +12419,10 @@
   {
     "id": "reverse_cable_curl",
     "nome": "Reverse Cable Curl",
-    "focus": "BIC",
+    "focus": "BICI",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Reverse_Cable_Curl/0.jpg",
     "muscoliSecondari": [
-      "AVAMB"
+      "AVA"
     ],
     "difficolta": "Principiante",
     "tipoEsercizio": "Isolation",
@@ -12443,11 +12443,11 @@
   {
     "id": "reverse_grip_bent_over_rows",
     "nome": "Reverse Grip Bent Over Rows",
-    "focus": "DORSO",
+    "focus": "LAT",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Reverse_Grip_Bent-Over_Rows/0.jpg",
     "muscoliSecondari": [
-      "BIC",
-      "DORSO",
+      "BICI",
+      "LAT",
       "DELT"
     ],
     "difficolta": "Intermedio",
@@ -12528,10 +12528,10 @@
   {
     "id": "reverse_plate_curls",
     "nome": "Reverse Plate Curls",
-    "focus": "BIC",
+    "focus": "BICI",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Reverse_Plate_Curls/0.jpg",
     "muscoliSecondari": [
-      "AVAMB"
+      "AVA"
     ],
     "difficolta": "Principiante",
     "tipoEsercizio": "Isolation",
@@ -12552,7 +12552,7 @@
   {
     "id": "rhomboids_smr",
     "nome": "Rhomboids Smr",
-    "focus": "DORSO",
+    "focus": "LAT",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Rhomboids-SMR/0.jpg",
     "muscoliSecondari": [
       "TRAP"
@@ -12576,11 +12576,11 @@
   {
     "id": "rocky_pull_ups_pulldowns",
     "nome": "Rocky Pull Ups/pulldowns",
-    "focus": "DORSO",
+    "focus": "LAT",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Rocky_Pull-Ups_Pulldowns/0.jpg",
     "muscoliSecondari": [
-      "BIC",
-      "DORSO",
+      "BICI",
+      "LAT",
       "DELT"
     ],
     "difficolta": "Intermedio",
@@ -12636,7 +12636,7 @@
     "focus": "LAT",
     "imageUrl": "https://static.exercisedb.dev/media/isofgzg.gif",
     "muscoliSecondari": [
-      "FEMOR",
+      "FEMO",
       "GLUT",
       "TRAP"
     ],
@@ -12718,7 +12718,7 @@
   {
     "id": "rope_straight_arm_pulldown",
     "nome": "Rope Straight Arm Pulldown",
-    "focus": "DORSO",
+    "focus": "LAT",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Rope_Straight-Arm_Pulldown/0.jpg",
     "muscoliSecondari": [],
     "difficolta": "Principiante",
@@ -12799,7 +12799,7 @@
   {
     "id": "seated_biceps",
     "nome": "Seated Biceps",
-    "focus": "BIC",
+    "focus": "BICI",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Seated_Biceps/0.jpg",
     "muscoliSecondari": [
       "PETT",
@@ -12824,11 +12824,11 @@
   {
     "id": "seated_cable_rows",
     "nome": "Seated Cable Rows",
-    "focus": "DORSO",
+    "focus": "LAT",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Seated_Cable_Rows/0.jpg",
     "muscoliSecondari": [
-      "BIC",
-      "DORSO",
+      "BICI",
+      "LAT",
       "DELT"
     ],
     "difficolta": "Principiante",
@@ -12850,7 +12850,7 @@
   {
     "id": "seated_close_grip_concentration_barbell_curl",
     "nome": "Seated Close Grip Concentration Barbell Curl",
-    "focus": "BIC",
+    "focus": "BICI",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Seated_Close-Grip_Concentration_Barbell_Curl/0.jpg",
     "muscoliSecondari": [],
     "difficolta": "Intermedio",
@@ -12872,7 +12872,7 @@
   {
     "id": "seated_dumbbell_curl",
     "nome": "Seated Dumbbell Curl",
-    "focus": "BIC",
+    "focus": "BICI",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Seated_Dumbbell_Curl/0.jpg",
     "muscoliSecondari": [],
     "difficolta": "Principiante",
@@ -12894,7 +12894,7 @@
   {
     "id": "seated_dumbbell_inner_biceps_curl",
     "nome": "Seated Dumbbell Inner Biceps Curl",
-    "focus": "BIC",
+    "focus": "BICI",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Seated_Dumbbell_Inner_Biceps_Curl/0.jpg",
     "muscoliSecondari": [],
     "difficolta": "Principiante",
@@ -12916,7 +12916,7 @@
   {
     "id": "seated_dumbbell_palms_down_wrist_curl",
     "nome": "Seated Dumbbell Palms Down Wrist Curl",
-    "focus": "AVAMB",
+    "focus": "AVA",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Seated_Dumbbell_Palms-Down_Wrist_Curl/0.jpg",
     "muscoliSecondari": [],
     "difficolta": "Principiante",
@@ -12938,7 +12938,7 @@
   {
     "id": "seated_dumbbell_palms_up_wrist_curl",
     "nome": "Seated Dumbbell Palms Up Wrist Curl",
-    "focus": "AVAMB",
+    "focus": "AVA",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Seated_Dumbbell_Palms-Up_Wrist_Curl/0.jpg",
     "muscoliSecondari": [],
     "difficolta": "Principiante",
@@ -12960,11 +12960,11 @@
   {
     "id": "seated_one_arm_cable_pulley_rows",
     "nome": "Seated One Arm Cable Pulley Rows",
-    "focus": "DORSO",
+    "focus": "LAT",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Seated_One-arm_Cable_Pulley_Rows/0.jpg",
     "muscoliSecondari": [
-      "BIC",
-      "DORSO",
+      "BICI",
+      "LAT",
       "TRAP"
     ],
     "difficolta": "Intermedio",
@@ -12986,7 +12986,7 @@
   {
     "id": "seated_one_arm_dumbbell_palms_down_wrist_curl",
     "nome": "Seated One Arm Dumbbell Palms Down Wrist Curl",
-    "focus": "AVAMB",
+    "focus": "AVA",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Seated_One-Arm_Dumbbell_Palms-Down_Wrist_Curl/0.jpg",
     "muscoliSecondari": [],
     "difficolta": "Intermedio",
@@ -13008,7 +13008,7 @@
   {
     "id": "seated_one_arm_dumbbell_palms_up_wrist_curl",
     "nome": "Seated One Arm Dumbbell Palms Up Wrist Curl",
-    "focus": "AVAMB",
+    "focus": "AVA",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Seated_One-Arm_Dumbbell_Palms-Up_Wrist_Curl/0.jpg",
     "muscoliSecondari": [],
     "difficolta": "Principiante",
@@ -13030,7 +13030,7 @@
   {
     "id": "seated_palm_up_barbell_wrist_curl",
     "nome": "Seated Palm Up Barbell Wrist Curl",
-    "focus": "AVAMB",
+    "focus": "AVA",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Seated_Palm-Up_Barbell_Wrist_Curl/0.jpg",
     "muscoliSecondari": [],
     "difficolta": "Principiante",
@@ -13052,7 +13052,7 @@
   {
     "id": "seated_palms_down_barbell_wrist_curl",
     "nome": "Seated Palms Down Barbell Wrist Curl",
-    "focus": "AVAMB",
+    "focus": "AVA",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Seated_Palms-Down_Barbell_Wrist_Curl/0.jpg",
     "muscoliSecondari": [],
     "difficolta": "Principiante",
@@ -13074,7 +13074,7 @@
   {
     "id": "seated_two_arm_palms_up_low_pulley_wrist_curl",
     "nome": "Seated Two Arm Palms Up Low Pulley Wrist Curl",
-    "focus": "AVAMB",
+    "focus": "AVA",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Seated_Two-Arm_Palms-Up_Low-Pulley_Wrist_Curl/0.jpg",
     "muscoliSecondari": [],
     "difficolta": "Principiante",
@@ -13096,11 +13096,11 @@
   {
     "id": "shotgun_row",
     "nome": "Shotgun Row",
-    "focus": "DORSO",
+    "focus": "LAT",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Shotgun_Row/0.jpg",
     "muscoliSecondari": [
-      "BIC",
-      "DORSO"
+      "BICI",
+      "LAT"
     ],
     "difficolta": "Principiante",
     "tipoEsercizio": "Compound",
@@ -13234,12 +13234,12 @@
   {
     "id": "side_to_side_chins",
     "nome": "Side To Side Chins",
-    "focus": "DORSO",
+    "focus": "LAT",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Side_To_Side_Chins/0.jpg",
     "muscoliSecondari": [
-      "BIC",
-      "AVAMB",
-      "DORSO",
+      "BICI",
+      "AVA",
+      "LAT",
       "DELT"
     ],
     "difficolta": "Intermedio",
@@ -13377,11 +13377,11 @@
   {
     "id": "sled_row",
     "nome": "Sled Row",
-    "focus": "DORSO",
+    "focus": "LAT",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Sled_Row/0.jpg",
     "muscoliSecondari": [
-      "BIC",
-      "DORSO"
+      "BICI",
+      "LAT"
     ],
     "difficolta": "Principiante",
     "tipoEsercizio": "Compound",
@@ -13509,11 +13509,11 @@
   {
     "id": "smith_machine_bent_over_row",
     "nome": "Smith Machine Bent Over Row",
-    "focus": "DORSO",
+    "focus": "LAT",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Smith_Machine_Bent_Over_Row/0.jpg",
     "muscoliSecondari": [
-      "BIC",
-      "DORSO",
+      "BICI",
+      "LAT",
       "DELT"
     ],
     "difficolta": "Principiante",
@@ -13566,8 +13566,8 @@
     "focus": "TRAP",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Smith_Machine_Upright_Row/0.jpg",
     "muscoliSecondari": [
-      "BIC",
-      "DORSO",
+      "BICI",
+      "LAT",
       "DELT"
     ],
     "difficolta": "Principiante",
@@ -13784,7 +13784,7 @@
   {
     "id": "spider_curl",
     "nome": "Spider Curl",
-    "focus": "BIC",
+    "focus": "BICI",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Spider_Curl/0.jpg",
     "muscoliSecondari": [],
     "difficolta": "Principiante",
@@ -13806,12 +13806,12 @@
   {
     "id": "spinal_stretch",
     "nome": "Spinal Stretch",
-    "focus": "DORSO",
+    "focus": "LAT",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Spinal_Stretch/0.jpg",
     "muscoliSecondari": [
-      "DORSO",
+      "LAT",
       "LOMB",
-      "COLLO",
+      "COLL",
       "TRAP"
     ],
     "difficolta": "Principiante",
@@ -13836,7 +13836,7 @@
     "focus": "LAT",
     "imageUrl": "https://static.exercisedb.dev/media/JbC2iaV.gif",
     "muscoliSecondari": [
-      "FEMOR",
+      "FEMO",
       "GLUT",
       "TRAP"
     ],
@@ -13976,7 +13976,7 @@
   {
     "id": "standing_biceps_cable_curl",
     "nome": "Standing Biceps Cable Curl",
-    "focus": "BIC",
+    "focus": "BICI",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Standing_Biceps_Cable_Curl/0.jpg",
     "muscoliSecondari": [],
     "difficolta": "Principiante",
@@ -13998,7 +13998,7 @@
   {
     "id": "standing_biceps_stretch",
     "nome": "Standing Biceps Stretch",
-    "focus": "BIC",
+    "focus": "BICI",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Standing_Biceps_Stretch/0.jpg",
     "muscoliSecondari": [
       "PETT",
@@ -14023,10 +14023,10 @@
   {
     "id": "standing_concentration_curl",
     "nome": "Standing Concentration Curl",
-    "focus": "BIC",
+    "focus": "BICI",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Standing_Concentration_Curl/0.jpg",
     "muscoliSecondari": [
-      "AVAMB"
+      "AVA"
     ],
     "difficolta": "Principiante",
     "tipoEsercizio": "Isolation",
@@ -14047,10 +14047,10 @@
   {
     "id": "standing_dumbbell_reverse_curl",
     "nome": "Standing Dumbbell Reverse Curl",
-    "focus": "BIC",
+    "focus": "BICI",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Standing_Dumbbell_Reverse_Curl/0.jpg",
     "muscoliSecondari": [
-      "AVAMB"
+      "AVA"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Isolation",
@@ -14074,7 +14074,7 @@
     "focus": "TRAP",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Standing_Dumbbell_Upright_Row/0.jpg",
     "muscoliSecondari": [
-      "BIC",
+      "BICI",
       "DELT"
     ],
     "difficolta": "Principiante",
@@ -14096,7 +14096,7 @@
   {
     "id": "standing_inner_biceps_curl",
     "nome": "Standing Inner Biceps Curl",
-    "focus": "BIC",
+    "focus": "BICI",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Standing_Inner-Biceps_Curl/0.jpg",
     "muscoliSecondari": [],
     "difficolta": "Intermedio",
@@ -14146,10 +14146,10 @@
   {
     "id": "standing_olympic_plate_hand_squeeze",
     "nome": "Standing Olympic Plate Hand Squeeze",
-    "focus": "AVAMB",
+    "focus": "AVA",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Standing_Olympic_Plate_Hand_Squeeze/0.jpg",
     "muscoliSecondari": [
-      "BIC"
+      "BICI"
     ],
     "difficolta": "Principiante",
     "tipoEsercizio": "Isolation",
@@ -14170,7 +14170,7 @@
   {
     "id": "standing_one_arm_cable_curl",
     "nome": "Standing One Arm Cable Curl",
-    "focus": "BIC",
+    "focus": "BICI",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Standing_One-Arm_Cable_Curl/0.jpg",
     "muscoliSecondari": [],
     "difficolta": "Intermedio",
@@ -14192,7 +14192,7 @@
   {
     "id": "standing_one_arm_dumbbell_curl_over_incline_bench",
     "nome": "Standing One Arm Dumbbell Curl Over Incline Bench",
-    "focus": "BIC",
+    "focus": "BICI",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Standing_One-Arm_Dumbbell_Curl_Over_Incline_Bench/0.jpg",
     "muscoliSecondari": [],
     "difficolta": "Principiante",
@@ -14214,7 +14214,7 @@
   {
     "id": "standing_palms_up_barbell_behind_the_back_wrist_curl",
     "nome": "Standing Palms Up Barbell Behind The Back Wrist Curl",
-    "focus": "AVAMB",
+    "focus": "AVA",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Standing_Palms-Up_Barbell_Behind_The_Back_Wrist_Curl/0.jpg",
     "muscoliSecondari": [],
     "difficolta": "Principiante",
@@ -14236,7 +14236,7 @@
   {
     "id": "straight_arm_pulldown",
     "nome": "Straight Arm Pulldown",
-    "focus": "DORSO",
+    "focus": "LAT",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Straight-Arm_Pulldown/0.jpg",
     "muscoliSecondari": [],
     "difficolta": "Principiante",
@@ -14258,11 +14258,11 @@
   {
     "id": "straight_bar_bench_mid_rows",
     "nome": "Straight Bar Bench Mid Rows",
-    "focus": "DORSO",
+    "focus": "LAT",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Straight_Bar_Bench_Mid_Rows/0.jpg",
     "muscoliSecondari": [
-      "BIC",
-      "DORSO"
+      "BICI",
+      "LAT"
     ],
     "difficolta": "Principiante",
     "tipoEsercizio": "Compound",
@@ -14311,11 +14311,11 @@
   {
     "id": "t_bar_row_with_handle",
     "nome": "T Bar Row With Handle",
-    "focus": "DORSO",
+    "focus": "LAT",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/T-Bar_Row_with_Handle/0.jpg",
     "muscoliSecondari": [
-      "BIC",
-      "DORSO"
+      "BICI",
+      "LAT"
     ],
     "difficolta": "Principiante",
     "tipoEsercizio": "Compound",
@@ -14395,7 +14395,7 @@
   {
     "id": "two_arm_dumbbell_preacher_curl",
     "nome": "Two Arm Dumbbell Preacher Curl",
-    "focus": "BIC",
+    "focus": "BICI",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Two-Arm_Dumbbell_Preacher_Curl/0.jpg",
     "muscoliSecondari": [],
     "difficolta": "Principiante",
@@ -14417,11 +14417,11 @@
   {
     "id": "two_arm_kettlebell_row",
     "nome": "Two Arm Kettlebell Row",
-    "focus": "DORSO",
+    "focus": "LAT",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Two-Arm_Kettlebell_Row/0.jpg",
     "muscoliSecondari": [
-      "BIC",
-      "DORSO"
+      "BICI",
+      "LAT"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Compound",
@@ -14442,11 +14442,11 @@
   {
     "id": "underhand_cable_pulldowns",
     "nome": "Underhand Cable Pulldowns",
-    "focus": "DORSO",
+    "focus": "LAT",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Underhand_Cable_Pulldowns/0.jpg",
     "muscoliSecondari": [
-      "BIC",
-      "DORSO",
+      "BICI",
+      "LAT",
       "DELT"
     ],
     "difficolta": "Principiante",
@@ -14544,11 +14544,11 @@
   {
     "id": "v_bar_pulldown",
     "nome": "V Bar Pulldown",
-    "focus": "DORSO",
+    "focus": "LAT",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/V-Bar_Pulldown/0.jpg",
     "muscoliSecondari": [
-      "BIC",
-      "DORSO",
+      "BICI",
+      "LAT",
       "DELT"
     ],
     "difficolta": "Intermedio",
@@ -14570,11 +14570,11 @@
   {
     "id": "v_bar_pullup",
     "nome": "V Bar Pullup",
-    "focus": "DORSO",
+    "focus": "LAT",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/V-Bar_Pullup/0.jpg",
     "muscoliSecondari": [
-      "BIC",
-      "DORSO",
+      "BICI",
+      "LAT",
       "DELT"
     ],
     "difficolta": "Principiante",
@@ -14742,11 +14742,11 @@
   {
     "id": "weighted_pull_ups",
     "nome": "Weighted Pull Ups",
-    "focus": "DORSO",
+    "focus": "LAT",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Weighted_Pull_Ups/0.jpg",
     "muscoliSecondari": [
-      "BIC",
-      "DORSO"
+      "BICI",
+      "LAT"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Compound",
@@ -14880,11 +14880,11 @@
   {
     "id": "wide_grip_lat_pulldown",
     "nome": "Wide Grip Lat Pulldown",
-    "focus": "DORSO",
+    "focus": "LAT",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Wide-Grip_Lat_Pulldown/0.jpg",
     "muscoliSecondari": [
-      "BIC",
-      "DORSO",
+      "BICI",
+      "LAT",
       "DELT"
     ],
     "difficolta": "Principiante",
@@ -14936,11 +14936,11 @@
   {
     "id": "wide_grip_pulldown_behind_the_neck",
     "nome": "Wide Grip Pulldown Behind The Neck",
-    "focus": "DORSO",
+    "focus": "LAT",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Wide-Grip_Pulldown_Behind_The_Neck/0.jpg",
     "muscoliSecondari": [
-      "BIC",
-      "DORSO",
+      "BICI",
+      "LAT",
       "DELT"
     ],
     "difficolta": "Intermedio",
@@ -14992,7 +14992,7 @@
   {
     "id": "wide_grip_standing_barbell_curl",
     "nome": "Wide Grip Standing Barbell Curl",
-    "focus": "BIC",
+    "focus": "BICI",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Wide-Grip_Standing_Barbell_Curl/0.jpg",
     "muscoliSecondari": [],
     "difficolta": "Principiante",
@@ -15043,7 +15043,7 @@
   {
     "id": "wrist_roller",
     "nome": "Wrist Roller",
-    "focus": "AVAMB",
+    "focus": "AVA",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Wrist_Roller/0.jpg",
     "muscoliSecondari": [
       "DELT"
@@ -15094,7 +15094,7 @@
   {
     "id": "wrist_rotations_with_straight_bar",
     "nome": "Wrist Rotations With Straight Bar",
-    "focus": "AVAMB",
+    "focus": "AVA",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Wrist_Rotations_with_Straight_Bar/0.jpg",
     "muscoliSecondari": [],
     "difficolta": "Principiante",
@@ -15116,10 +15116,10 @@
   {
     "id": "zottman_curl",
     "nome": "Zottman Curl",
-    "focus": "BIC",
+    "focus": "BICI",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Zottman_Curl/0.jpg",
     "muscoliSecondari": [
-      "AVAMB"
+      "AVA"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Isolation",
@@ -15140,10 +15140,10 @@
   {
     "id": "zottman_preacher_curl",
     "nome": "Zottman Preacher Curl",
-    "focus": "BIC",
+    "focus": "BICI",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Zottman_Preacher_Curl/0.jpg",
     "muscoliSecondari": [
-      "AVAMB"
+      "AVA"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Isolation",

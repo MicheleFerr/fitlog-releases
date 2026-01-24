@@ -1,6 +1,7 @@
 import ActivityKit
 import WidgetKit
 import SwiftUI
+import AppIntents
 
   // MARK: - Live Activity Widget
   @available(iOS 16.1, *)
@@ -258,7 +259,7 @@ import SwiftUI
                       .padding(.vertical, 8)
                       .background(Color(.systemGray6))
                       .cornerRadius(8)
-                      
+
                       VStack {
                           Text("⚡")
                               .font(.title2)
@@ -276,26 +277,79 @@ import SwiftUI
                       .cornerRadius(8)
                   }
               } else {
-                  // Timer Progress Bar with Native iOS Timer
-                  if let startDate = context.state.startDate, 
-                     let endDate = context.state.endDate,
-                     context.state.isRunning {
-                      // ✅ Native iOS Timer Progress Bar
-                      ProgressView(
-                          timerInterval: startDate...endDate,
-                          countsDown: true,
-                          label: { EmptyView() },
-                          currentValueLabel: { EmptyView() }
-                      )
-                      .progressViewStyle(LinearProgressViewStyle())
-                      .tint(context.state.progressColor)
-                      .scaleEffect(y: 2.0)
-                  } else {
-                      // Fallback for paused/stopped state
-                      ProgressView(value: context.state.progress)
+                  VStack(spacing: 8) {
+                      // Timer Progress Bar with Native iOS Timer
+                      if let startDate = context.state.startDate,
+                         let endDate = context.state.endDate,
+                         context.state.isRunning {
+                          // ✅ Native iOS Timer Progress Bar
+                          ProgressView(
+                              timerInterval: startDate...endDate,
+                              countsDown: true,
+                              label: { EmptyView() },
+                              currentValueLabel: { EmptyView() }
+                          )
                           .progressViewStyle(LinearProgressViewStyle())
                           .tint(context.state.progressColor)
                           .scaleEffect(y: 2.0)
+                      } else {
+                          // Fallback for paused/stopped state
+                          ProgressView(value: context.state.progress)
+                              .progressViewStyle(LinearProgressViewStyle())
+                              .tint(context.state.progressColor)
+                              .scaleEffect(y: 2.0)
+                      }
+
+                      // ✅ INTERACTIVE BUTTONS - INSTANT RESPONSE (NO APP WAKE)
+                      HStack(spacing: 12) {
+                          // Pause/Resume Button
+                          Button(intent: PauseResumeIntent()) {
+                              HStack(spacing: 6) {
+                                  Image(systemName: context.state.isRunning ? "pause.fill" : "play.fill")
+                                      .font(.system(size: 14, weight: .semibold))
+                                  Text(context.state.isRunning ? "Pause" : "Resume")
+                                      .font(.system(size: 14, weight: .semibold))
+                              }
+                              .frame(maxWidth: .infinity)
+                              .padding(.vertical, 10)
+                              .background(context.state.isRunning ? Color.orange : Color.green)
+                              .foregroundColor(.white)
+                              .cornerRadius(8)
+                          }
+                          .buttonStyle(.plain)
+
+                          // Add 30s Button
+                          Button(intent: AddTimeIntent()) {
+                              HStack(spacing: 6) {
+                                  Image(systemName: "plus.circle.fill")
+                                      .font(.system(size: 14, weight: .semibold))
+                                  Text("+30s")
+                                      .font(.system(size: 14, weight: .semibold))
+                              }
+                              .frame(maxWidth: .infinity)
+                              .padding(.vertical, 10)
+                              .background(Color.blue)
+                              .foregroundColor(.white)
+                              .cornerRadius(8)
+                          }
+                          .buttonStyle(.plain)
+
+                          // Skip Button
+                          Button(intent: SkipTimerIntent()) {
+                              HStack(spacing: 6) {
+                                  Image(systemName: "forward.fill")
+                                      .font(.system(size: 14, weight: .semibold))
+                                  Text("Skip")
+                                      .font(.system(size: 14, weight: .semibold))
+                              }
+                              .frame(maxWidth: .infinity)
+                              .padding(.vertical, 10)
+                              .background(Color(.systemGray3))
+                              .foregroundColor(.white)
+                              .cornerRadius(8)
+                          }
+                          .buttonStyle(.plain)
+                      }
                   }
               }
           }

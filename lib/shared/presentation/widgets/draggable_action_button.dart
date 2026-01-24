@@ -17,7 +17,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/premium_action_button.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
-import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/services/modal_service.dart';
 import 'package:gymbro_flutter_new/core/cache/user_cache_key_manager.dart';
@@ -81,6 +80,13 @@ class _DraggableActionButtonState extends State<DraggableActionButton> {
   static const double _buttonWidth = 160.0;
   static const double _bottomPadding = 16.0;
 
+  // 📱 RESPONSIVE SIZING (Material Design Guidelines)
+  // Screen < 460dp → FAB compatto circolare (56x56) solo icona "+"
+  // Screen >= 460dp → FAB esteso rettangolare (160xH) icona + "Add Exercise"
+  // Previene testo troncato su iPhone SE, schermi piccoli Android
+  static const double _compactButtonSize = 56.0;
+  static const double _compactScreenThreshold = 460.0;
+
   @override
   void initState() {
     super.initState();
@@ -127,10 +133,12 @@ class _DraggableActionButtonState extends State<DraggableActionButton> {
   /// Start the slide-in animation when showing button
   void _startShowAnimation() {
     final screenWidth = MediaQuery.of(context).size.width;
+    final isCompact = screenWidth < _compactScreenThreshold;
+    final buttonWidth = isCompact ? _compactButtonSize : _buttonWidth;
 
     // Set starting position off-screen
     _lastAnimatedX = _isOnLeft
-        ? -_buttonWidth - 20 // Start from left off-screen
+        ? -buttonWidth - 20 // Start from left off-screen
         : screenWidth + 20; // Start from right off-screen
 
     setState(() {
@@ -170,10 +178,11 @@ class _DraggableActionButtonState extends State<DraggableActionButton> {
     });
   }
 
-  double _getTargetX(double screenWidth) {
+  double _getTargetX(double screenWidth, bool isCompact) {
+    final buttonWidth = isCompact ? _compactButtonSize : _buttonWidth;
     return _isOnLeft
         ? _edgePadding
-        : screenWidth - _buttonWidth - _edgePadding;
+        : screenWidth - buttonWidth - _edgePadding;
   }
 
   void _onPanStart(DragStartDetails details) {
@@ -190,14 +199,15 @@ class _DraggableActionButtonState extends State<DraggableActionButton> {
     });
   }
 
-  void _onPanEnd(DragEndDetails details, double screenWidth) {
+  void _onPanEnd(DragEndDetails details, double screenWidth, bool isCompact) {
     final velocity = details.velocity.pixelsPerSecond.dx;
     final currentX = _targetX + _dragOffsetX;
+    final buttonWidth = isCompact ? _compactButtonSize : _buttonWidth;
 
     // Check if dragging towards edge to hide
     final isDraggingToHide = _isOnLeft
         ? (currentX < -_hideThreshold || velocity < -800)
-        : (currentX > screenWidth - _buttonWidth + _hideThreshold || velocity > 800);
+        : (currentX > screenWidth - buttonWidth + _hideThreshold || velocity > 800);
 
     if (isDraggingToHide) {
       // Start slide-off animation instead of instant hide
@@ -209,7 +219,7 @@ class _DraggableActionButtonState extends State<DraggableActionButton> {
 
     // Determine snap side based on position
     final centerX = screenWidth / 2;
-    final shouldSnapLeft = currentX + _buttonWidth / 2 < centerX;
+    final shouldSnapLeft = currentX + buttonWidth / 2 < centerX;
 
     setState(() {
       _isDragging = false;
@@ -224,199 +234,13 @@ class _DraggableActionButtonState extends State<DraggableActionButton> {
   void _showOptionsMenu(BuildContext context) {
     HapticFeedback.mediumImpact();
 
-    final safeMax = ModalService.safeMaxChildSize(context, preferredMax: 0.9);
-    showModalBottomSheet(
-      context: context,
-      isScrollControlled: true, // Required for DraggableScrollableSheet
-      backgroundColor: Theme.of(context).colorScheme.surface.withValues(alpha: 0),
-      builder: (context) => DraggableScrollableSheet(
-        initialChildSize: 0.5, // Start at 50%
-        minChildSize: 0.3, // Can shrink to 30%
-        maxChildSize: safeMax, // Safe max (avoids notch)
-        snap: true,
-        snapSizes: [0.5, safeMax], // Snap points
-        builder: (context, scrollController) => DecoratedBox(
-          decoration: BoxDecoration(
-            color: Theme.of(context).colorScheme.surface,
-            borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
-          ),
-          child: SingleChildScrollView(
-            controller: scrollController,
-            child: Padding(
-              padding: const EdgeInsets.symmetric(vertical: 16),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  // Handle bar
-                  Container(
-                    width: 40,
-                    height: 4,
-                    decoration: BoxDecoration(
-                      color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.2),
-                      borderRadius: BorderRadius.circular(2),
-                    ),
-                  ),
-                  const SizedBox(height: 16),
-
-                  // Title
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 16),
-                    child: Row(
-                      children: [
-                        Icon(
-                          widget.icon,
-                          color: Theme.of(context).colorScheme.primary,
-                        ),
-                        const SizedBox(width: 8),
-                        Text(
-                          widget.label,
-                          style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  const SizedBox(height: 20),
-
-                  // Main action
-                  ListTile(
-                    leading: Container(
-                      width: 40,
-                      height: 40,
-                      decoration: BoxDecoration(
-                        color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.1),
-                        shape: BoxShape.circle,
-                      ),
-                      child: Icon(
-                        widget.icon,
-                        color: Theme.of(context).colorScheme.primary,
-                      ),
-                    ),
-                    title: Text(widget.label),
-                    subtitle: Text(context.l10n.fabMainAction),
-                    onTap: () {
-                      Navigator.of(context).pop();
-                      widget.onPressed();
-                    },
-                  ),
-
-                  // History option
-                  if (widget.onShowHistory != null)
-                    ListTile(
-                      leading: Container(
-                        width: 40,
-                        height: 40,
-                        decoration: BoxDecoration(
-                          color: Theme.of(context).colorScheme.secondary.withValues(alpha: 0.1),
-                          shape: BoxShape.circle,
-                        ),
-                        child: Icon(
-                          AppIcons.history,
-                          color: Theme.of(context).colorScheme.secondary,
-                        ),
-                      ),
-                      title: Text(context.l10n.fabHistory),
-                      subtitle: Text(context.l10n.fabViewPreviousWorkouts),
-                      onTap: () {
-                        Navigator.of(context).pop();
-                        widget.onShowHistory!();
-                      },
-                    ),
-
-                  // Additional options
-                  if (widget.additionalOptions != null)
-                    ...widget.additionalOptions!.map((option) => ListTile(
-                      leading: Container(
-                        width: 40,
-                        height: 40,
-                        decoration: BoxDecoration(
-                          color: (option.color ?? Theme.of(context).colorScheme.tertiary).withValues(alpha: 0.1),
-                          shape: BoxShape.circle,
-                        ),
-                        child: Icon(
-                          option.icon,
-                          color: option.color ?? Theme.of(context).colorScheme.tertiary,
-                        ),
-                      ),
-                      title: Text(option.label),
-                      onTap: () {
-                        Navigator.of(context).pop();
-                        option.onTap();
-                      },
-                    )),
-
-                  // Hide button option
-                  ListTile(
-                    leading: Container(
-                      width: 40,
-                      height: 40,
-                      decoration: BoxDecoration(
-                        color: Theme.of(context)
-                            .colorScheme
-                            .surfaceContainerHighest
-                            .withValues(alpha: 0.5),
-                        shape: BoxShape.circle,
-                      ),
-                      child: Icon(
-                        AppIcons.chevronRight,
-                        color: Theme.of(context).colorScheme.onSurfaceVariant,
-                      ),
-                    ),
-                    title: Text(context.l10n.fabHideButton),
-                    subtitle: Text(context.l10n.fabHideDescription),
-                    onTap: () {
-                      Navigator.of(context).pop();
-                      _toggleHidden();
-                    },
-                  ),
-
-                  // Drag info
-                  const SizedBox(height: 8),
-                  Container(
-                    margin: const EdgeInsets.symmetric(horizontal: 16),
-                    padding: const EdgeInsets.all(12),
-                    decoration: BoxDecoration(
-                      color: Theme.of(context)
-                          .colorScheme
-                          .primaryContainer
-                          .withValues(alpha: 0.3),
-                      borderRadius: BorderRadius.circular(12),
-                      border: Border.all(
-                        color: Theme.of(context)
-                            .colorScheme
-                            .primary
-                            .withValues(alpha: 0.2),
-                      ),
-                    ),
-                    child: Row(
-                      children: [
-                        SemanticIcon(
-                          icon: AppIcons.swipe,
-                          semanticLabel: 'Swipe',
-                          size: AppIconSize.small,
-                          color: Theme.of(context).colorScheme.onPrimaryContainer,
-                        ),
-                        const SizedBox(width: 8),
-                        Expanded(
-                          child: Text(
-                            context.l10n.fabDragToHide,
-                            style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                              color: Theme.of(context).colorScheme.onPrimaryContainer,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  // Extra padding at bottom for safe area
-                  SizedBox(height: MediaQuery.of(context).padding.bottom + 16),
-                ],
-              ),
-            ),
-          ),
-        ),
-      ),
+    // Use the new expandable menu widget
+    _ExpandableExerciseMenu.show(
+      context,
+      onSingleExercise: widget.onPressed,
+      onShowHistory: widget.onShowHistory,
+      onHide: _toggleHidden,
+      additionalOptions: widget.additionalOptions,
     );
   }
 
@@ -429,19 +253,23 @@ class _DraggableActionButtonState extends State<DraggableActionButton> {
     final screenWidth = MediaQuery.of(context).size.width;
     final colorScheme = Theme.of(context).colorScheme;
 
+    // 📱 RESPONSIVE SIZING: Usa FAB compatto (solo icona) su schermi piccoli
+    final isCompact = screenWidth < _compactScreenThreshold;
+    final buttonWidth = isCompact ? _compactButtonSize : _buttonWidth;
+
     // When hidden, show only the tab handle
     if (_isHidden) {
       return _buildHiddenTab(context, colorScheme);
     }
 
-    _targetX = _getTargetX(screenWidth);
+    _targetX = _getTargetX(screenWidth, isCompact);
 
     // Calculate display position based on state
     double displayX;
     if (_isAnimatingToHide) {
       // Animate to off-screen position
       displayX = _isOnLeft
-          ? -_buttonWidth - 20 // Slide left off screen
+          ? -buttonWidth - 20 // Slide left off screen
           : screenWidth + 20; // Slide right off screen
     } else if (_isDragging) {
       displayX = _targetX + _dragOffsetX;
@@ -474,7 +302,7 @@ class _DraggableActionButtonState extends State<DraggableActionButton> {
             ? animatedX
             : animatedX.clamp(
                 _edgePadding,
-                screenWidth - _buttonWidth - _edgePadding,
+                screenWidth - buttonWidth - _edgePadding,
               );
 
         return Positioned(
@@ -483,12 +311,14 @@ class _DraggableActionButtonState extends State<DraggableActionButton> {
           child: GestureDetector(
             onPanStart: _onPanStart,
             onPanUpdate: _onPanUpdate,
-            onPanEnd: (details) => _onPanEnd(details, screenWidth),
+            onPanEnd: (details) => _onPanEnd(details, screenWidth, isCompact),
             onLongPress: () => _showOptionsMenu(context),
             child: AnimatedContainer(
               duration: const Duration(milliseconds: 100),
               decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(16),
+                borderRadius: isCompact
+                    ? BorderRadius.circular(28) // Circolare per compact
+                    : BorderRadius.circular(16),
                 border: _isDragging
                     ? Border.all(
                         color: colorScheme.outline.withValues(alpha: 0.3),
@@ -498,15 +328,23 @@ class _DraggableActionButtonState extends State<DraggableActionButton> {
               ),
               child: AbsorbPointer(
                 absorbing: _isDragging,
-                child: PremiumActionButton(
-                  onPressed: widget.onPressed,
-                  icon: widget.icon,
-                  label: widget.label,
-                  backgroundColor: widget.backgroundColor,
-                  foregroundColor: widget.foregroundColor,
-                  showShadow: !_isDragging,
-                  width: _buttonWidth,
-                ),
+                child: isCompact
+                    ? CompactActionButton(
+                        onPressed: widget.onPressed,
+                        icon: widget.icon,
+                        tooltip: widget.label, // Label diventa tooltip
+                        backgroundColor: widget.backgroundColor,
+                        foregroundColor: widget.foregroundColor,
+                      )
+                    : PremiumActionButton(
+                        onPressed: widget.onPressed,
+                        icon: widget.icon,
+                        label: widget.label,
+                        backgroundColor: widget.backgroundColor,
+                        foregroundColor: widget.foregroundColor,
+                        showShadow: !_isDragging,
+                        width: _buttonWidth,
+                      ),
               ),
             ),
           ),
@@ -627,4 +465,164 @@ class ActionButtonPosition {
       await prefs.remove(key);
     }
   }
+}
+
+/// Expandable menu for Add Exercise FAB with advanced sets dropdown
+/// Implements Option B from UX analysis with hierarchical navigation
+class _ExpandableExerciseMenu extends StatefulWidget {
+  const _ExpandableExerciseMenu({
+    required this.onSingleExercise,
+    this.onShowHistory,
+    this.onHide,
+    this.additionalOptions,
+  });
+
+  final VoidCallback onSingleExercise;
+  final VoidCallback? onShowHistory;
+  final VoidCallback? onHide;
+  final List<DraggableActionOption>? additionalOptions;
+
+  static Future<void> show(
+    BuildContext context, {
+    required VoidCallback onSingleExercise,
+    VoidCallback? onShowHistory,
+    VoidCallback? onHide,
+    List<DraggableActionOption>? additionalOptions,
+  }) {
+    final safeMax = ModalService.safeMaxChildSize(context, preferredMax: 0.9);
+    return showModalBottomSheet<void>(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Theme.of(context).colorScheme.surface.withValues(alpha: 0),
+      builder: (context) => DraggableScrollableSheet(
+        initialChildSize: 0.45,
+        minChildSize: 0.3,
+        maxChildSize: safeMax,
+        snap: true,
+        snapSizes: [0.45, safeMax],
+        builder: (context, scrollController) => _ExpandableExerciseMenu(
+          onSingleExercise: onSingleExercise,
+          onShowHistory: onShowHistory,
+          onHide: onHide,
+          additionalOptions: additionalOptions,
+        ),
+      ),
+    );
+  }
+
+  @override
+  State<_ExpandableExerciseMenu> createState() => _ExpandableExerciseMenuState();
+}
+
+class _ExpandableExerciseMenuState extends State<_ExpandableExerciseMenu> {
+  // ✅ FIX: Rimossa variabile _advancedExpanded (dropdown rimosso)
+
+  @override
+  Widget build(BuildContext context) {
+    return DecoratedBox(
+      decoration: BoxDecoration(
+        color: Theme.of(context).colorScheme.surface,
+        borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      child: SafeArea(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            // Handle bar
+            const SizedBox(height: 12),
+            Container(
+              width: 40,
+              height: 4,
+              decoration: BoxDecoration(
+                color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.2),
+                borderRadius: BorderRadius.circular(2),
+              ),
+            ),
+            const SizedBox(height: 20),
+
+            // Title
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              child: Row(
+                children: [
+                  Icon(
+                    AppIcons.add,
+                    color: Theme.of(context).colorScheme.primary,
+                  ),
+                  const SizedBox(width: 8),
+                  Text(
+                    context.l10n.addExercise,
+                    style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(height: 16),
+
+            // Opzione 1: Esercizio Singolo (PRIMARIA)
+            ListTile(
+              leading: Container(
+                width: 40,
+                height: 40,
+                decoration: BoxDecoration(
+                  color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.1),
+                  shape: BoxShape.circle,
+                ),
+                child: Icon(
+                  AppIcons.add,
+                  color: Theme.of(context).colorScheme.primary,
+                ),
+              ),
+              title: Text(context.l10n.addSingleExercise),
+              subtitle: Text(context.l10n.addSingleExerciseHint),
+              trailing: Icon(AppIcons.chevronRight),
+              onTap: () {
+                Navigator.of(context).pop();
+                widget.onSingleExercise();
+              },
+            ),
+
+            // ✅ FIX: Rimosso dropdown "Set Avanzati"
+            // Mostra direttamente le opzioni individuali (Superset, DropSet, Rest-Pause)
+
+            // Additional options (se presenti) - ora include Set Avanzati direttamente
+            if (widget.additionalOptions != null) ...[
+              const Divider(height: 1),
+              ...widget.additionalOptions!.map((option) {
+                return ListTile(
+                  leading: Container(
+                    width: 40,
+                    height: 40,
+                    decoration: BoxDecoration(
+                      color: (option.color ?? Theme.of(context).colorScheme.secondary).withValues(alpha: 0.1),
+                      shape: BoxShape.circle,
+                    ),
+                    child: Icon(
+                      option.icon,
+                      color: option.color ?? Theme.of(context).colorScheme.secondary,
+                    ),
+                  ),
+                  title: Text(option.label),
+                  trailing: Icon(AppIcons.chevronRight),
+                  onTap: () {
+                    Navigator.of(context).pop();
+                    option.onTap();
+                  },
+                );
+              }),
+            ],
+
+            // ✅ FIX: Rimosso "Storico" e "Nascondi pulsante"
+            // Menu deve mostrare solo: Singolo, Superset, DropSet, Rest-Pause
+
+            const SizedBox(height: 16),
+          ],
+        ),
+      ),
+    );
+  }
+
+  // ✅ FIX: Rimosso metodo _buildAdvancedOption (dropdown rimosso)
 }

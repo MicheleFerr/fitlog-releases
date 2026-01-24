@@ -29,6 +29,7 @@ import 'package:gymbro_flutter_new/features/stress_index/domain/services/fitness
 import 'package:gymbro_flutter_new/features/stress_index/presentation/providers/stress_index_provider.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/workout.dart';
+import 'package:gymbro_flutter_new/shared/domain/abstractions/exercise_counting_mode.dart';
 
 /// Internal accumulator for muscle stress data
 class _MuscleAccumulator {
@@ -67,10 +68,16 @@ class StressIndexCalculator {
   /// - [exerciseFocusMap]: Optional map of exercise name → focus list (deprecated)
   /// - [exerciseMuscleMap]: Optional map of exercise name → muscle data (primary + secondary)
   ///   If not provided, uses ExerciseCategory as fallback.
+  /// - [userBodyWeightKg]: Optional user body weight for bodyweight exercise stress calculation
   ///
   /// Stress distribution:
   /// - Primary muscles (focus): 70% of total stress
   /// - Secondary muscles: 30% of total stress (split among them)
+  ///
+  /// Bodyweight Exercise Handling:
+  /// - Exercises with countingMode == ExerciseCountingMode.reps are bodyweight
+  /// - Uses userBodyWeightKg as effective weight if provided
+  /// - Falls back to default 70kg if no body weight available
   ///
   /// Returns: [StressIndexResult] with primary/fallback scores and muscle breakdown
   static StressIndexResult calculate(
@@ -78,6 +85,7 @@ class StressIndexCalculator {
     @Deprecated('Use exerciseMuscleMap instead')
     Map<String, List<String>>? exerciseFocusMap,
     Map<String, ExerciseMuscleData>? exerciseMuscleMap,
+    double? userBodyWeightKg,
   }) {
     final muscleStress = <String, _MuscleAccumulator>{};
     int totalSets = 0;
@@ -96,13 +104,25 @@ class StressIndexCalculator {
       // Get movement multiplier
       final movementMultiplier = _getMovementMultiplier(exercise.movementType);
 
+      // 🏋️ Check if this is a bodyweight exercise
+      final isBodyweight = exercise.countingMode == ExerciseCountingMode.reps;
+
       for (final set in exercise.sets) {
         if (!set.isCompleted || set.isWarmup) continue;
 
-        final weight = set.weight ?? 0.0;
         final reps = set.actualReps ?? set.reps ?? 0;
+        if (reps <= 0) continue;
 
-        if (weight <= 0 || reps <= 0) continue;
+        // 🏋️ FIX: Handle bodyweight exercises
+        double effectiveWeight;
+        if (isBodyweight) {
+          // Bodyweight: use user's body weight or default 70kg
+          effectiveWeight = userBodyWeightKg ?? 70.0;
+        } else {
+          final weight = set.weight ?? 0.0;
+          if (weight <= 0) continue; // Weighted exercise needs weight
+          effectiveWeight = weight;
+        }
 
         totalSets++;
 
@@ -114,8 +134,8 @@ class StressIndexCalculator {
             : StressIndexConstants.defaultIntensity;
 
         final setStressWithRpe =
-            weight * reps * intensityWithRpe * movementMultiplier;
-        final setStressWithoutRpe = weight *
+            effectiveWeight * reps * intensityWithRpe * movementMultiplier;
+        final setStressWithoutRpe = effectiveWeight *
             reps *
             StressIndexConstants.defaultIntensity *
             movementMultiplier;
@@ -130,7 +150,7 @@ class StressIndexCalculator {
         rawScoreWithoutRpe += setStressWithoutRpe;
 
         // Distribute stress to muscles with weighted distribution
-        final totalVolume = weight * reps;
+        final totalVolume = effectiveWeight * reps;
         _distributeStressToMuscles(
           muscleStress: muscleStress,
           muscleData: muscleData,
@@ -484,13 +504,28 @@ class StressIndexCalculator {
   }
 
   /// Check if a workout can be calculated (has valid sets)
+  ///
+  /// **Bodyweight Support**:
+  /// - Weighted exercises: need weight > 0 AND reps > 0
+  /// - Bodyweight exercises (countingMode == reps): only need reps > 0
   static bool canCalculate(Workout workout) {
     return workout.exercises.any((exercise) {
-      return exercise.sets.any((set) =>
-          set.isCompleted &&
-          !set.isWarmup &&
-          (set.weight ?? 0) > 0 &&
-          ((set.actualReps ?? set.reps) ?? 0) > 0);
+      final isBodyweight = exercise.countingMode == ExerciseCountingMode.reps;
+
+      return exercise.sets.any((set) {
+        if (!set.isCompleted || set.isWarmup) return false;
+
+        final reps = (set.actualReps ?? set.reps) ?? 0;
+        if (reps <= 0) return false;
+
+        if (isBodyweight) {
+          // Bodyweight: only need valid reps
+          return true;
+        } else {
+          // Weighted: need weight > 0
+          return (set.weight ?? 0) > 0;
+        }
+      });
     });
   }
 

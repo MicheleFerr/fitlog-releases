@@ -1,0 +1,569 @@
+{
+  "code_collections": [
+    "achievements",
+    "analytics",
+    "assignedTemplates",
+    "athleteNotifications",
+    "coachNotifications",
+    "coachTemplates",
+    "coach_delegations",
+    "coach_settings",
+    "coach_templates",
+    "community_contributions",
+    "contribution_reports",
+    "conversations",
+    "customExercises",
+    "data",
+    "exercise_feedback",
+    "exercises",
+    "exercises_it",
+    "feedback",
+    "insight_feedback",
+    "items",
+    "messages",
+    "personalRecords",
+    "pr_celebrations",
+    "progress_photos",
+    "template_comments",
+    "template_folders",
+    "template_reviews",
+    "test_exercises",
+    "timers",
+    "userExercisePreferences",
+    "user_achievements",
+    "user_contribution_stats",
+    "user_saved_contributions",
+    "user_xp",
+    "users",
+    "users/$userId/analytics",
+    "workoutHistory",
+    "workoutMetrics",
+    "workoutTemplates",
+    "workout_templates",
+    "workouts"
+  ],
+  "database_collections": [
+    "achievements",
+    "cardioSessions",
+    "chat_threads",
+    "coachNotifications",
+    "coach_delegations",
+    "communityPrograms",
+    "community_contributions",
+    "customTemplates",
+    "dropSetActivity",
+    "equipmentProfiles",
+    "esercizi",
+    "exerciseActivities",
+    "exerciseActivities_backup_1758371900039",
+    "exercise_feedback",
+    "exercises_en",
+    "exercises_it",
+    "exercises_metadata",
+    "flexibleRoutines",
+    "insight_feedback",
+    "missing_exercise_requests",
+    "muscle_group_feedback",
+    "personalRecords",
+    "programDownloads",
+    "rateLimits",
+    "restPauseActivity",
+    "schede",
+    "sessionWorkouts",
+    "settings",
+    "supersetActivity",
+    "supersetsActivity",
+    "template_audit_logs",
+    "timings",
+    "userConsents",
+    "userExercisePreferences",
+    "userFeedbackStats",
+    "userMassimali",
+    "userPreferences",
+    "userSettings",
+    "user_achievements",
+    "user_contribution_stats",
+    "user_xp",
+    "users",
+    "weeklyCheckIns",
+    "workoutHistory",
+    "workoutTemplates",
+    "workouts"
+  ],
+  "comparison": {
+    "active": [
+      "achievements",
+      "coachNotifications",
+      "coach_delegations",
+      "community_contributions",
+      "exercise_feedback",
+      "exercises_it",
+      "insight_feedback",
+      "personalRecords",
+      "userExercisePreferences",
+      "user_achievements",
+      "user_contribution_stats",
+      "user_xp",
+      "users",
+      "workoutHistory",
+      "workoutTemplates",
+      "workouts"
+    ],
+    "only_in_code": [
+      "analytics",
+      "assignedTemplates",
+      "athleteNotifications",
+      "coachTemplates",
+      "coach_settings",
+      "coach_templates",
+      "contribution_reports",
+      "conversations",
+      "customExercises",
+      "data",
+      "exercises",
+      "feedback",
+      "items",
+      "messages",
+      "pr_celebrations",
+      "progress_photos",
+      "template_comments",
+      "template_folders",
+      "template_reviews",
+      "test_exercises",
+      "timers",
+      "user_saved_contributions",
+      "users/$userId/analytics",
+      "workoutMetrics",
+      "workout_templates"
+    ],
+    "zombies": [
+      {
+        "name": "cardioSessions",
+        "doc_count": 38,
+        "reason": "Collezione presente nel DB ma non usata nel codice"
+      },
+      {
+        "name": "chat_threads",
+        "doc_count": 1,
+        "reason": "Collezione presente nel DB ma non usata nel codice"
+      },
+      {
+        "name": "communityPrograms",
+        "doc_count": 2,
+        "reason": "Collezione presente nel DB ma non usata nel codice"
+      },
+      {
+        "name": "customTemplates",
+        "doc_count": 1,
+        "reason": "Collezione presente nel DB ma non usata nel codice"
+      },
+      {
+        "name": "dropSetActivity",
+        "doc_count": 4,
+        "reason": "Collezione presente nel DB ma non usata nel codice"
+      },
+      {
+        "name": "equipmentProfiles",
+        "doc_count": 1,
+        "reason": "Collezione presente nel DB ma non usata nel codice"
+      },
+      {
+        "name": "esercizi",
+        "doc_count": 1492,
+        "reason": "Collezione presente nel DB ma non usata nel codice"
+      },
+      {
+        "name": "exerciseActivities",
+        "doc_count": 579,
+        "reason": "Collezione presente nel DB ma non usata nel codice"
+      },
+      {
+        "name": "exerciseActivities_backup_1758371900039",
+        "doc_count": 537,
+        "reason": "Collezione presente nel DB ma non usata nel codice"
+      },
+      {
+        "name": "exercises_en",
+        "doc_count": 1493,
+        "reason": "Collezione presente nel DB ma non usata nel codice"
+      },
+      {
+        "name": "exercises_metadata",
+        "doc_count": 1,
+        "reason": "Collezione presente nel DB ma non usata nel codice"
+      },
+      {
+        "name": "flexibleRoutines",
+        "doc_count": 1,
+        "reason": "Collezione presente nel DB ma non usata nel codice"
+      },
+      {
+        "name": "missing_exercise_requests",
+        "doc_count": 11,
+        "reason": "Collezione presente nel DB ma non usata nel codice"
+      },
+      {
+        "name": "muscle_group_feedback",
+        "doc_count": 1,
+        "reason": "Collezione presente nel DB ma non usata nel codice"
+      },
+      {
+        "name": "programDownloads",
+        "doc_count": 3,
+        "reason": "Collezione presente nel DB ma non usata nel codice"
+      },
+      {
+        "name": "rateLimits",
+        "doc_count": 1,
+        "reason": "Collezione presente nel DB ma non usata nel codice"
+      },
+      {
+        "name": "restPauseActivity",
+        "doc_count": 10,
+        "reason": "Collezione presente nel DB ma non usata nel codice"
+      },
+      {
+        "name": "schede",
+        "doc_count": 42,
+        "reason": "Collezione presente nel DB ma non usata nel codice"
+      },
+      {
+        "name": "sessionWorkouts",
+        "doc_count": 97,
+        "reason": "Collezione presente nel DB ma non usata nel codice"
+      },
+      {
+        "name": "settings",
+        "doc_count": 10,
+        "reason": "Collezione presente nel DB ma non usata nel codice"
+      },
+      {
+        "name": "supersetActivity",
+        "doc_count": 2,
+        "reason": "Collezione presente nel DB ma non usata nel codice"
+      },
+      {
+        "name": "supersetsActivity",
+        "doc_count": 152,
+        "reason": "Collezione presente nel DB ma non usata nel codice"
+      },
+      {
+        "name": "template_audit_logs",
+        "doc_count": 12,
+        "reason": "Collezione presente nel DB ma non usata nel codice"
+      },
+      {
+        "name": "timings",
+        "doc_count": 283,
+        "reason": "Collezione presente nel DB ma non usata nel codice"
+      },
+      {
+        "name": "userConsents",
+        "doc_count": 2,
+        "reason": "Collezione presente nel DB ma non usata nel codice"
+      },
+      {
+        "name": "userFeedbackStats",
+        "doc_count": 1,
+        "reason": "Collezione presente nel DB ma non usata nel codice"
+      },
+      {
+        "name": "userPreferences",
+        "doc_count": 4,
+        "reason": "Collezione presente nel DB ma non usata nel codice"
+      },
+      {
+        "name": "userSettings",
+        "doc_count": 6,
+        "reason": "Collezione presente nel DB ma non usata nel codice"
+      },
+      {
+        "name": "weeklyCheckIns",
+        "doc_count": 2,
+        "reason": "Collezione presente nel DB ma non usata nel codice"
+      }
+    ],
+    "empty_zombies": [
+      "userMassimali"
+    ]
+  },
+  "deleted_empty_collections": [
+    "achievements",
+    "userMassimali"
+  ],
+  "recommendations": [
+    {
+      "priority": "HIGH",
+      "action": "DELETE",
+      "collection": "userMassimali",
+      "reason": "Vuota e non usata nel codice",
+      "impact": "Nessuno"
+    },
+    {
+      "priority": "MEDIUM",
+      "action": "REVIEW",
+      "collection": "cardioSessions",
+      "reason": "Collezione presente nel DB ma non usata nel codice",
+      "impact": "38 documenti"
+    },
+    {
+      "priority": "MEDIUM",
+      "action": "REVIEW",
+      "collection": "chat_threads",
+      "reason": "Collezione presente nel DB ma non usata nel codice",
+      "impact": "1 documenti"
+    },
+    {
+      "priority": "MEDIUM",
+      "action": "REVIEW",
+      "collection": "communityPrograms",
+      "reason": "Collezione presente nel DB ma non usata nel codice",
+      "impact": "2 documenti"
+    },
+    {
+      "priority": "MEDIUM",
+      "action": "REVIEW",
+      "collection": "customTemplates",
+      "reason": "Collezione presente nel DB ma non usata nel codice",
+      "impact": "1 documenti"
+    },
+    {
+      "priority": "MEDIUM",
+      "action": "REVIEW",
+      "collection": "dropSetActivity",
+      "reason": "Collezione presente nel DB ma non usata nel codice",
+      "impact": "4 documenti"
+    },
+    {
+      "priority": "MEDIUM",
+      "action": "REVIEW",
+      "collection": "equipmentProfiles",
+      "reason": "Collezione presente nel DB ma non usata nel codice",
+      "impact": "1 documenti"
+    },
+    {
+      "priority": "MEDIUM",
+      "action": "REVIEW",
+      "collection": "esercizi",
+      "reason": "Collezione presente nel DB ma non usata nel codice",
+      "impact": "1492 documenti"
+    },
+    {
+      "priority": "MEDIUM",
+      "action": "REVIEW",
+      "collection": "exerciseActivities",
+      "reason": "Collezione presente nel DB ma non usata nel codice",
+      "impact": "579 documenti"
+    },
+    {
+      "priority": "MEDIUM",
+      "action": "REVIEW",
+      "collection": "exerciseActivities_backup_1758371900039",
+      "reason": "Collezione presente nel DB ma non usata nel codice",
+      "impact": "537 documenti"
+    },
+    {
+      "priority": "MEDIUM",
+      "action": "REVIEW",
+      "collection": "exercises_en",
+      "reason": "Collezione presente nel DB ma non usata nel codice",
+      "impact": "1493 documenti"
+    },
+    {
+      "priority": "MEDIUM",
+      "action": "REVIEW",
+      "collection": "exercises_metadata",
+      "reason": "Collezione presente nel DB ma non usata nel codice",
+      "impact": "1 documenti"
+    },
+    {
+      "priority": "MEDIUM",
+      "action": "REVIEW",
+      "collection": "flexibleRoutines",
+      "reason": "Collezione presente nel DB ma non usata nel codice",
+      "impact": "1 documenti"
+    },
+    {
+      "priority": "MEDIUM",
+      "action": "REVIEW",
+      "collection": "missing_exercise_requests",
+      "reason": "Collezione presente nel DB ma non usata nel codice",
+      "impact": "11 documenti"
+    },
+    {
+      "priority": "MEDIUM",
+      "action": "REVIEW",
+      "collection": "muscle_group_feedback",
+      "reason": "Collezione presente nel DB ma non usata nel codice",
+      "impact": "1 documenti"
+    },
+    {
+      "priority": "MEDIUM",
+      "action": "REVIEW",
+      "collection": "programDownloads",
+      "reason": "Collezione presente nel DB ma non usata nel codice",
+      "impact": "3 documenti"
+    },
+    {
+      "priority": "MEDIUM",
+      "action": "REVIEW",
+      "collection": "rateLimits",
+      "reason": "Collezione presente nel DB ma non usata nel codice",
+      "impact": "1 documenti"
+    },
+    {
+      "priority": "MEDIUM",
+      "action": "REVIEW",
+      "collection": "restPauseActivity",
+      "reason": "Collezione presente nel DB ma non usata nel codice",
+      "impact": "10 documenti"
+    },
+    {
+      "priority": "MEDIUM",
+      "action": "REVIEW",
+      "collection": "schede",
+      "reason": "Collezione presente nel DB ma non usata nel codice",
+      "impact": "42 documenti"
+    },
+    {
+      "priority": "MEDIUM",
+      "action": "REVIEW",
+      "collection": "sessionWorkouts",
+      "reason": "Collezione presente nel DB ma non usata nel codice",
+      "impact": "97 documenti"
+    },
+    {
+      "priority": "MEDIUM",
+      "action": "REVIEW",
+      "collection": "settings",
+      "reason": "Collezione presente nel DB ma non usata nel codice",
+      "impact": "10 documenti"
+    },
+    {
+      "priority": "MEDIUM",
+      "action": "REVIEW",
+      "collection": "supersetActivity",
+      "reason": "Collezione presente nel DB ma non usata nel codice",
+      "impact": "2 documenti"
+    },
+    {
+      "priority": "MEDIUM",
+      "action": "REVIEW",
+      "collection": "supersetsActivity",
+      "reason": "Collezione presente nel DB ma non usata nel codice",
+      "impact": "152 documenti"
+    },
+    {
+      "priority": "MEDIUM",
+      "action": "REVIEW",
+      "collection": "template_audit_logs",
+      "reason": "Collezione presente nel DB ma non usata nel codice",
+      "impact": "12 documenti"
+    },
+    {
+      "priority": "MEDIUM",
+      "action": "REVIEW",
+      "collection": "timings",
+      "reason": "Collezione presente nel DB ma non usata nel codice",
+      "impact": "283 documenti"
+    },
+    {
+      "priority": "MEDIUM",
+      "action": "REVIEW",
+      "collection": "userConsents",
+      "reason": "Collezione presente nel DB ma non usata nel codice",
+      "impact": "2 documenti"
+    },
+    {
+      "priority": "MEDIUM",
+      "action": "REVIEW",
+      "collection": "userFeedbackStats",
+      "reason": "Collezione presente nel DB ma non usata nel codice",
+      "impact": "1 documenti"
+    },
+    {
+      "priority": "MEDIUM",
+      "action": "REVIEW",
+      "collection": "userPreferences",
+      "reason": "Collezione presente nel DB ma non usata nel codice",
+      "impact": "4 documenti"
+    },
+    {
+      "priority": "MEDIUM",
+      "action": "REVIEW",
+      "collection": "userSettings",
+      "reason": "Collezione presente nel DB ma non usata nel codice",
+      "impact": "6 documenti"
+    },
+    {
+      "priority": "MEDIUM",
+      "action": "REVIEW",
+      "collection": "weeklyCheckIns",
+      "reason": "Collezione presente nel DB ma non usata nel codice",
+      "impact": "2 documenti"
+    },
+    {
+      "priority": "LOW",
+      "action": "REVIEW",
+      "collection": "userExercisePreferences",
+      "reason": "Solo 1 documenti - possibile test/debug",
+      "impact": "1 documenti"
+    },
+    {
+      "priority": "LOW",
+      "action": "REVIEW",
+      "collection": "user_achievements",
+      "reason": "Solo 1 documenti - possibile test/debug",
+      "impact": "1 documenti"
+    },
+    {
+      "priority": "LOW",
+      "action": "REVIEW",
+      "collection": "user_contribution_stats",
+      "reason": "Solo 1 documenti - possibile test/debug",
+      "impact": "1 documenti"
+    },
+    {
+      "priority": "LOW",
+      "action": "REVIEW",
+      "collection": "user_xp",
+      "reason": "Solo 1 documenti - possibile test/debug",
+      "impact": "1 documenti"
+    },
+    {
+      "priority": "LOW",
+      "action": "REVIEW",
+      "collection": "coach_delegations",
+      "reason": "Solo 2 documenti - possibile test/debug",
+      "impact": "2 documenti"
+    },
+    {
+      "priority": "LOW",
+      "action": "REVIEW",
+      "collection": "coachNotifications",
+      "reason": "Solo 3 documenti - possibile test/debug",
+      "impact": "3 documenti"
+    },
+    {
+      "priority": "LOW",
+      "action": "REVIEW",
+      "collection": "exercise_feedback",
+      "reason": "Solo 3 documenti - possibile test/debug",
+      "impact": "3 documenti"
+    },
+    {
+      "priority": "LOW",
+      "action": "REVIEW",
+      "collection": "community_contributions",
+      "reason": "Solo 4 documenti - possibile test/debug",
+      "impact": "4 documenti"
+    },
+    {
+      "priority": "LOW",
+      "action": "REVIEW",
+      "collection": "workoutTemplates",
+      "reason": "Solo 4 documenti - possibile test/debug",
+      "impact": "4 documenti"
+    }
+  ]
+}

@@ -5,7 +5,7 @@
     "focus": "GLUT",
     "imageUrl": "https://static.exercisedb.dev/media/znP9SIh.gif",
     "muscoliSecondari": [
-      "FEMOR",
+      "FEMO",
       "QUAD"
     ],
     "difficolta": "Principiante",
@@ -38,7 +38,7 @@
     "focus": "GLUT",
     "imageUrl": "https://static.exercisedb.dev/media/mQ1tBXn.gif",
     "muscoliSecondari": [
-      "FEMOR"
+      "FEMO"
     ],
     "difficolta": "Principiante",
     "tipoEsercizio": "Compound",
@@ -112,7 +112,7 @@
     ],
     "countingMode": "weighted",
     "muscoliSecondari": [
-      "FEMOR"
+      "FEMO"
     ],
     "version": "1.0.2",
     "versionHistory": [
@@ -151,7 +151,7 @@
   {
     "id": "adductor",
     "nome": "Adduttore",
-    "focus": "ADDU",
+    "focus": "ADD",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Adductor/0.jpg",
     "muscoliSecondari": [],
     "difficolta": "Intermedio",
@@ -172,11 +172,11 @@
   {
     "id": "thigh_adductor",
     "nome": "Adductor Machine",
-    "focus": "ADDU",
+    "focus": "ADD",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Thigh_Adductor/0.jpg",
     "muscoliSecondari": [
       "GLUT",
-      "FEMOR"
+      "FEMO"
     ],
     "difficolta": "Principiante",
     "tipoEsercizio": "Isolation",
@@ -226,7 +226,7 @@
   {
     "id": "band_hip_adductions",
     "nome": "Adduzioni alle Anche con Fascia Elastica",
-    "focus": "ADDU",
+    "focus": "ADD",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Band_Hip_Adductions/0.jpg",
     "muscoliSecondari": [],
     "difficolta": "Principiante",
@@ -248,7 +248,7 @@
   {
     "id": "adductor_groin",
     "nome": "Aduttore/Groin",
-    "focus": "ADDU",
+    "focus": "ADD",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Adductor_Groin/0.jpg",
     "muscoliSecondari": [],
     "difficolta": "Intermedio",
@@ -275,7 +275,7 @@
     "muscoliSecondari": [
       "ABDU",
       "GLUT",
-      "FEMOR"
+      "FEMO"
     ],
     "difficolta": "Principiante",
     "tipoEsercizio": "Compound",
@@ -299,7 +299,7 @@
     "focus": "QUAD",
     "imageUrl": "https://static.exercisedb.dev/media/J9zIWig.gif",
     "muscoliSecondari": [
-      "FEMOR",
+      "FEMO",
       "POLP",
       "CORE",
       "GLUT"
@@ -332,10 +332,10 @@
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Squat_with_Plate_Movers/0.jpg",
     "muscoliSecondari": [
       "ABDU",
-      "ADDU",
+      "ADD",
       "POLP",
       "GLUT",
-      "FEMOR"
+      "FEMO"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Compound",
@@ -382,7 +382,7 @@
     "imageUrl": "https://static.exercisedb.dev/media/bulgariansplit.gif",
     "muscoliSecondari": [
       "GLUT",
-      "FEMOR"
+      "FEMO"
     ],
     "difficolta": "Principiante",
     "tipoEsercizio": "Compound",
@@ -412,7 +412,7 @@
     "imageUrl": "https://static.exercisedb.dev/media/bulgariansplit.gif",
     "muscoliSecondari": [
       "GLUT",
-      "FEMOR"
+      "FEMO"
     ],
     "difficolta": "Avanzato",
     "tipoEsercizio": "Compound",
@@ -442,7 +442,7 @@
     "imageUrl": "https://static.exercisedb.dev/media/bulgariansplit.gif",
     "muscoliSecondari": [
       "GLUT",
-      "FEMOR",
+      "FEMO",
       "CORE"
     ],
     "difficolta": "Intermedio",
@@ -473,7 +473,7 @@
     "imageUrl": "https://static.exercisedb.dev/media/bulgariansplit.gif",
     "muscoliSecondari": [
       "GLUT",
-      "FEMOR"
+      "FEMO"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Compound",
@@ -501,7 +501,7 @@
     "focus": "GLUT",
     "imageUrl": "https://static.exercisedb.dev/media/IZVHb27.gif",
     "muscoliSecondari": [
-      "FEMOR",
+      "FEMO",
       "POLP",
       "QUAD"
     ],
@@ -531,7 +531,7 @@
     "focus": "GLUT",
     "imageUrl": "https://static.exercisedb.dev/media/py1HSzx.gif",
     "muscoliSecondari": [
-      "FEMOR",
+      "FEMO",
       "POLP",
       "QUAD"
     ],
@@ -561,7 +561,7 @@
     "focus": "GLUT",
     "imageUrl": "https://static.exercisedb.dev/media/62Nw60O.gif",
     "muscoliSecondari": [
-      "FEMOR",
+      "FEMO",
       "POLP",
       "QUAD"
     ],
@@ -591,7 +591,7 @@
     "focus": "GLUT",
     "imageUrl": "https://static.exercisedb.dev/media/VaP75jl.gif",
     "muscoliSecondari": [
-      "FEMOR",
+      "FEMO",
       "POLP",
       "QUAD"
     ],
@@ -621,7 +621,7 @@
     "focus": "GLUT",
     "imageUrl": "https://static.exercisedb.dev/media/t8iSghb.gif",
     "muscoliSecondari": [
-      "FEMOR",
+      "FEMO",
       "POLP",
       "QUAD"
     ],
@@ -653,7 +653,7 @@
     "muscoliSecondari": [
       "POLP",
       "GLUT",
-      "FEMOR"
+      "FEMO"
     ],
     "difficolta": "Principiante",
     "tipoEsercizio": "Compound",
@@ -677,7 +677,7 @@
     "focus": "GLUT",
     "imageUrl": "https://static.exercisedb.dev/media/Uywa4S5.gif",
     "muscoliSecondari": [
-      "FEMOR",
+      "FEMO",
       "POLP",
       "QUAD"
     ],
@@ -707,7 +707,7 @@
     "focus": "GLUT",
     "imageUrl": "https://static.exercisedb.dev/media/WKMQzCD.gif",
     "muscoliSecondari": [
-      "FEMOR",
+      "FEMO",
       "POLP",
       "QUAD"
     ],
@@ -740,7 +740,7 @@
     "focus": "GLUT",
     "imageUrl": "https://static.exercisedb.dev/media/PM1PZjg.gif",
     "muscoliSecondari": [
-      "FEMOR",
+      "FEMO",
       "POLP",
       "QUAD"
     ],
@@ -771,7 +771,7 @@
     "focus": "GLUT",
     "imageUrl": "https://static.exercisedb.dev/media/5WiFcYk.gif",
     "muscoliSecondari": [
-      "FEMOR",
+      "FEMO",
       "POLP",
       "QUAD"
     ],
@@ -802,7 +802,7 @@
     "focus": "GLUT",
     "imageUrl": "https://static.exercisedb.dev/media/9vz4JlC.gif",
     "muscoliSecondari": [
-      "FEMOR",
+      "FEMO",
       "POLP",
       "QUAD"
     ],
@@ -834,7 +834,7 @@
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Elevated_Back_Lunge/0.jpg",
     "muscoliSecondari": [
       "GLUT",
-      "FEMOR"
+      "FEMO"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Compound",
@@ -858,7 +858,7 @@
     "focus": "GLUT",
     "imageUrl": "https://static.exercisedb.dev/media/13VW2VO.gif",
     "muscoliSecondari": [
-      "FEMOR",
+      "FEMO",
       "POLP",
       "QUAD"
     ],
@@ -889,7 +889,7 @@
     "focus": "GLUT",
     "imageUrl": "https://static.exercisedb.dev/media/ecl28tP.gif",
     "muscoliSecondari": [
-      "FEMOR",
+      "FEMO",
       "POLP",
       "QUAD"
     ],
@@ -919,7 +919,7 @@
     "focus": "GLUT",
     "imageUrl": "https://static.exercisedb.dev/media/kMzUs9Y.gif",
     "muscoliSecondari": [
-      "FEMOR",
+      "FEMO",
       "POLP",
       "QUAD"
     ],
@@ -950,7 +950,7 @@
     "focus": "GLUT",
     "imageUrl": "https://static.exercisedb.dev/media/Ql4g5s8.gif",
     "muscoliSecondari": [
-      "FEMOR",
+      "FEMO",
       "POLP",
       "QUAD"
     ],
@@ -981,7 +981,7 @@
     "focus": "GLUT",
     "imageUrl": "https://static.exercisedb.dev/media/hC6oYY5.gif",
     "muscoliSecondari": [
-      "FEMOR"
+      "FEMO"
     ],
     "difficolta": "Principiante",
     "tipoEsercizio": "Compound",
@@ -1010,7 +1010,7 @@
     "focus": "GLUT",
     "imageUrl": "https://static.exercisedb.dev/media/oMypNrz.gif",
     "muscoliSecondari": [
-      "FEMOR",
+      "FEMO",
       "QUAD"
     ],
     "difficolta": "Intermedio",
@@ -1040,7 +1040,7 @@
     "focus": "GLUT",
     "imageUrl": "https://static.exercisedb.dev/media/0L2KwtI.gif",
     "muscoliSecondari": [
-      "FEMOR",
+      "FEMO",
       "QUAD"
     ],
     "difficolta": "Intermedio",
@@ -1070,7 +1070,7 @@
     "focus": "GLUT",
     "imageUrl": "https://static.exercisedb.dev/media/pZwUsKB.gif",
     "muscoliSecondari": [
-      "FEMOR",
+      "FEMO",
       "QUAD"
     ],
     "difficolta": "Principiante",
@@ -1097,7 +1097,7 @@
   {
     "id": "leg_up_hamstring_stretch",
     "nome": "Allungamento Femorali Gamba Alzata",
-    "focus": "FEMOR",
+    "focus": "FEMO",
     "imageUrl": "https://static.exercisedb.dev/media/sU5BrfP.gif",
     "muscoliSecondari": [
       "GLUT"
@@ -1159,7 +1159,7 @@
     "focus": "GLUT",
     "imageUrl": "https://static.exercisedb.dev/media/2LQkNPW.gif",
     "muscoliSecondari": [
-      "FEMOR",
+      "FEMO",
       "QUAD"
     ],
     "difficolta": "Intermedio",
@@ -1189,7 +1189,7 @@
     "focus": "GLUT",
     "imageUrl": "https://static.exercisedb.dev/media/hjWjJEm.gif",
     "muscoliSecondari": [
-      "FEMOR",
+      "FEMO",
       "QUAD"
     ],
     "difficolta": "Intermedio",
@@ -1216,7 +1216,7 @@
   {
     "id": "chair_leg_extended_stretch_with_modified",
     "nome": "Allungamento Gamba Estesa su Sedia con Modifica",
-    "focus": "FEMOR",
+    "focus": "FEMO",
     "imageUrl": "https://static.exercisedb.dev/media/fF6GKVh.gif",
     "muscoliSecondari": [],
     "difficolta": "Principiante",
@@ -1246,7 +1246,7 @@
   {
     "id": "chair_leg_extended_stretch",
     "nome": "Allungamento Gambe su Sedia",
-    "focus": "FEMOR",
+    "focus": "FEMO",
     "imageUrl": "https://static.exercisedb.dev/media/xGgAGPm.gif",
     "muscoliSecondari": [],
     "difficolta": "Principiante",
@@ -1276,7 +1276,7 @@
     "focus": "GLUT",
     "imageUrl": "https://static.exercisedb.dev/media/yn0LjwL.gif",
     "muscoliSecondari": [
-      "FEMOR"
+      "FEMO"
     ],
     "difficolta": "Principiante",
     "tipoEsercizio": "Compound",
@@ -1304,7 +1304,7 @@
     "focus": "GLUT",
     "imageUrl": "https://static.exercisedb.dev/media/RQNVT10.gif",
     "muscoliSecondari": [
-      "FEMOR"
+      "FEMO"
     ],
     "difficolta": "Principiante",
     "tipoEsercizio": "Compound",
@@ -1330,7 +1330,7 @@
   {
     "id": "world_greatest_stretch",
     "nome": "Allungamento Più Completo Al Mondo",
-    "focus": "FEMOR",
+    "focus": "FEMO",
     "imageUrl": "https://static.exercisedb.dev/media/DFGXwZr.gif",
     "muscoliSecondari": [
       "GLUT",
@@ -1470,7 +1470,7 @@
     "focus": "GLUT",
     "imageUrl": "https://static.exercisedb.dev/media/2Dk4xQV.gif",
     "muscoliSecondari": [
-      "FEMOR",
+      "FEMO",
       "QUAD"
     ],
     "difficolta": "Principiante",
@@ -1606,7 +1606,7 @@
   {
     "id": "front_leg_raises",
     "nome": "Aumenti della Gambe Frontali",
-    "focus": "FEMOR",
+    "focus": "FEMO",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Front_Leg_Raises/0.jpg",
     "muscoliSecondari": [],
     "difficolta": "Principiante",
@@ -1631,8 +1631,8 @@
     "focus": "GLUT",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Downward_Facing_Balance/0.jpg",
     "muscoliSecondari": [
-      "ADDOM",
-      "FEMOR"
+      "CORE",
+      "FEMO"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Isolation",
@@ -1656,7 +1656,7 @@
     "focus": "QUAD",
     "imageUrl": "https://static.exercisedb.dev/media/Y7YcmIJ.gif",
     "muscoliSecondari": [
-      "FEMOR",
+      "FEMO",
       "CORE",
       "GLUT"
     ],
@@ -1687,7 +1687,7 @@
     "focus": "QUAD",
     "imageUrl": "https://static.exercisedb.dev/media/Gu2rNJd.gif",
     "muscoliSecondari": [
-      "FEMOR",
+      "FEMO",
       "POLP",
       "GLUT"
     ],
@@ -1717,7 +1717,7 @@
     "focus": "QUAD",
     "imageUrl": "https://static.exercisedb.dev/media/W9pFVv1.gif",
     "muscoliSecondari": [
-      "FEMOR",
+      "FEMO",
       "CORE",
       "GLUT"
     ],
@@ -1750,11 +1750,11 @@
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Box_Squat_with_Chains/0.jpg",
     "muscoliSecondari": [
       "ABDU",
-      "ADDU",
+      "ADD",
       "POLP",
       "GLUT",
-      "FEMOR",
-      "LOM"
+      "FEMO",
+      "LOMB"
     ],
     "difficolta": "Avanzato",
     "tipoEsercizio": "Compound",
@@ -1778,7 +1778,7 @@
     "focus": "QUAD",
     "imageUrl": "https://static.exercisedb.dev/media/uZKq7lo.gif",
     "muscoliSecondari": [
-      "FEMOR",
+      "FEMO",
       "POLP",
       "GLUT"
     ],
@@ -1806,11 +1806,11 @@
   {
     "id": "band_good_morning_pull_through",
     "nome": "Buongiorno Band (Pull Through)",
-    "focus": "FEMOR",
+    "focus": "FEMO",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Band_Good_Morning_Pull_Through/0.jpg",
     "muscoliSecondari": [
       "GLUT",
-      "LOM"
+      "LOMB"
     ],
     "difficolta": "Principiante",
     "tipoEsercizio": "Compound",
@@ -1831,12 +1831,12 @@
   {
     "id": "good_morning_off_pins",
     "nome": "Good Morning Off Pins",
-    "focus": "FEMOR",
+    "focus": "FEMO",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Good_Morning_off_Pins/0.jpg",
     "muscoliSecondari": [
-      "ADDOM",
+      "CORE",
       "GLUT",
-      "LOM"
+      "LOMB"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Compound",
@@ -1857,12 +1857,12 @@
   {
     "id": "hanging_bar_good_morning",
     "nome": "Buongiorno con la Barra Appendicata",
-    "focus": "FEMOR",
+    "focus": "FEMO",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Hanging_Bar_Good_Morning/0.jpg",
     "muscoliSecondari": [
-      "ADDOM",
+      "CORE",
       "GLUT",
-      "LOM"
+      "LOMB"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Compound",
@@ -1883,11 +1883,11 @@
   {
     "id": "band_good_morning",
     "nome": "Buongiorno con la Fascia Elastica",
-    "focus": "FEMOR",
+    "focus": "FEMO",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Band_Good_Morning/0.jpg",
     "muscoliSecondari": [
       "GLUT",
-      "LOM"
+      "LOMB"
     ],
     "difficolta": "Principiante",
     "tipoEsercizio": "Compound",
@@ -1908,12 +1908,12 @@
   {
     "id": "good_morning",
     "nome": "Good Morning",
-    "focus": "FEMOR",
+    "focus": "FEMO",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Good_Morning/0.jpg",
     "muscoliSecondari": [
-      "ADDOM",
+      "CORE",
       "GLUT",
-      "LOM"
+      "LOMB"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Compound",
@@ -1950,7 +1950,7 @@
     ],
     "countingMode": "reps",
     "muscoliSecondari": [
-      "FEMOR"
+      "FEMO"
     ],
     "version": "1.0.2",
     "versionHistory": [
@@ -1965,7 +1965,7 @@
     "focus": "GLUT",
     "imageUrl": "https://static.exercisedb.dev/media/SP3hUez.gif",
     "muscoliSecondari": [
-      "FEMOR",
+      "FEMO",
       "POLP",
       "QUAD"
     ],
@@ -2601,7 +2601,7 @@
     "focus": "GLUT",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/One-Legged_Cable_Kickback/0.jpg",
     "muscoliSecondari": [
-      "FEMOR"
+      "FEMO"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Isolation",
@@ -2625,7 +2625,7 @@
     "focus": "GLUT",
     "imageUrl": "https://static.exercisedb.dev/media/O95afRA.gif",
     "muscoliSecondari": [
-      "FEMOR",
+      "FEMO",
       "QUAD"
     ],
     "difficolta": "Principiante",
@@ -2655,7 +2655,7 @@
     "focus": "QUAD",
     "imageUrl": "https://static.exercisedb.dev/media/rjiM4L3.gif",
     "muscoliSecondari": [
-      "FEMOR",
+      "FEMO",
       "POLP",
       "GLUT"
     ],
@@ -2686,7 +2686,7 @@
     "focus": "QUAD",
     "imageUrl": "https://static.exercisedb.dev/media/a8VDgLw.gif",
     "muscoliSecondari": [
-      "FEMOR",
+      "FEMO",
       "GLUT",
       "POLP"
     ],
@@ -2717,7 +2717,7 @@
     "focus": "QUAD",
     "imageUrl": "https://static.exercisedb.dev/media/rjtuP6X.gif",
     "muscoliSecondari": [
-      "FEMOR",
+      "FEMO",
       "POLP",
       "GLUT"
     ],
@@ -2748,7 +2748,7 @@
     "focus": "QUAD",
     "imageUrl": "https://static.exercisedb.dev/media/pFuK3by.gif",
     "muscoliSecondari": [
-      "FEMOR",
+      "FEMO",
       "POLP",
       "GLUT"
     ],
@@ -2779,7 +2779,7 @@
     "focus": "QUAD",
     "imageUrl": "https://static.exercisedb.dev/media/j9Q5crt.gif",
     "muscoliSecondari": [
-      "FEMOR",
+      "FEMO",
       "POLP",
       "GLUT"
     ],
@@ -2810,7 +2810,7 @@
     "focus": "POLP",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Knee_Circles/0.jpg",
     "muscoliSecondari": [
-      "FEMOR",
+      "FEMO",
       "QUAD"
     ],
     "difficolta": "Principiante",
@@ -2835,7 +2835,7 @@
     "focus": "ABDU",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Hip_Circles_prone/0.jpg",
     "muscoliSecondari": [
-      "ADDU"
+      "ADD"
     ],
     "difficolta": "Principiante",
     "tipoEsercizio": "Isolation",
@@ -2859,7 +2859,7 @@
     "focus": "ABDU",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Standing_Hip_Circles/0.jpg",
     "muscoliSecondari": [
-      "ADDU"
+      "ADD"
     ],
     "difficolta": "Principiante",
     "tipoEsercizio": "Isolation",
@@ -2902,7 +2902,7 @@
     "focus": "GLUT",
     "imageUrl": "https://static.exercisedb.dev/media/7Hg55JG.gif",
     "muscoliSecondari": [
-      "FEMOR",
+      "FEMO",
       "POLP",
       "QUAD"
     ],
@@ -2932,7 +2932,7 @@
     "focus": "QUAD",
     "imageUrl": "https://static.exercisedb.dev/media/oLrKqDH.gif",
     "muscoliSecondari": [
-      "FEMOR",
+      "FEMO",
       "GLUT",
       "POLP"
     ],
@@ -2961,7 +2961,7 @@
     "focus": "QUAD",
     "imageUrl": "https://static.exercisedb.dev/media/CcWEoWV.gif",
     "muscoliSecondari": [
-      "FEMOR",
+      "FEMO",
       "POLP"
     ],
     "difficolta": "Principiante",
@@ -2991,7 +2991,7 @@
     "focus": "QUAD",
     "imageUrl": "https://static.exercisedb.dev/media/H1PESYI.gif",
     "muscoliSecondari": [
-      "FEMOR",
+      "FEMO",
       "GLUT",
       "POLP"
     ],
@@ -3022,7 +3022,7 @@
     "focus": "QUAD",
     "imageUrl": "https://static.exercisedb.dev/media/y5p0H8a.gif",
     "muscoliSecondari": [
-      "FEMOR",
+      "FEMO",
       "GLUT",
       "POLP"
     ],
@@ -3054,7 +3054,7 @@
     "focus": "GLUT",
     "imageUrl": "https://static.exercisedb.dev/media/yq3GAJX.gif",
     "muscoliSecondari": [
-      "FEMOR",
+      "FEMO",
       "POLP",
       "QUAD"
     ],
@@ -3131,7 +3131,7 @@
     "muscoliSecondari": [
       "POLP",
       "GLUT",
-      "FEMOR"
+      "FEMO"
     ],
     "difficolta": "Principiante",
     "tipoEsercizio": "Compound",
@@ -3152,7 +3152,7 @@
   {
     "id": "assisted_prone_hamstring",
     "nome": "Curl Femorali",
-    "focus": "FEMOR",
+    "focus": "FEMO",
     "imageUrl": "https://static.exercisedb.dev/media/VedGSby.gif",
     "muscoliSecondari": [
       "GLUT"
@@ -3180,7 +3180,7 @@
   {
     "id": "exercise_ball_one_legged_diagonal_kick_hamstring_curl",
     "nome": "Curl Femorali Diagonale Gamba su Fitball",
-    "focus": "FEMOR",
+    "focus": "FEMO",
     "imageUrl": "https://static.exercisedb.dev/media/GOJKFfO.gif",
     "muscoliSecondari": [
       "GLUT"
@@ -3208,7 +3208,7 @@
   {
     "id": "lever_lying_leg_curl",
     "nome": "Curl Sdraiato Leg Alla Macchina",
-    "focus": "FEMOR",
+    "focus": "FEMO",
     "imageUrl": "https://static.exercisedb.dev/media/17lJ1kr.gif",
     "muscoliSecondari": [
       "POLP"
@@ -3237,7 +3237,7 @@
   {
     "id": "lever_lying_two_one_leg_curl",
     "nome": "Curl Sdraiato Leg Due-una Gamba Alla Macchina",
-    "focus": "FEMOR",
+    "focus": "FEMO",
     "imageUrl": "https://static.exercisedb.dev/media/UXpKJoq.gif",
     "muscoliSecondari": [
       "GLUT"
@@ -3268,7 +3268,7 @@
   {
     "id": "lever_seated_leg_curl",
     "nome": "Curl Seduto Leg Alla Macchina",
-    "focus": "FEMOR",
+    "focus": "FEMO",
     "imageUrl": "https://static.exercisedb.dev/media/Zg3XY7P.gif",
     "muscoliSecondari": [
       "POLP"
@@ -3297,7 +3297,7 @@
   {
     "id": "lying_leg_curls",
     "nome": "Curl alle gambe Prese a Terra",
-    "focus": "FEMOR",
+    "focus": "FEMO",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Lying_Leg_Curls/0.jpg",
     "muscoliSecondari": [],
     "difficolta": "Principiante",
@@ -3319,7 +3319,7 @@
   {
     "id": "seated_leg_curl",
     "nome": "Curl delle gambe Seduti",
-    "focus": "FEMOR",
+    "focus": "FEMO",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Seated_Leg_Curl/0.jpg",
     "muscoliSecondari": [],
     "difficolta": "Principiante",
@@ -3341,7 +3341,7 @@
   {
     "id": "seated_band_hamstring_curl",
     "nome": "Curl delle gambe con Fune Seduto",
-    "focus": "FEMOR",
+    "focus": "FEMO",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Seated_Band_Hamstring_Curl/0.jpg",
     "muscoliSecondari": [],
     "difficolta": "Principiante",
@@ -3363,7 +3363,7 @@
   {
     "id": "standing_leg_curl",
     "nome": "Curl delle gambe in Posizione Eretta",
-    "focus": "FEMOR",
+    "focus": "FEMO",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Standing_Leg_Curl/0.jpg",
     "muscoliSecondari": [],
     "difficolta": "Principiante",
@@ -3385,7 +3385,7 @@
   {
     "id": "standing_single_leg_curl",
     "nome": "Curl in Piedi Leg a Una Gamba",
-    "focus": "FEMOR",
+    "focus": "FEMO",
     "imageUrl": "https://static.exercisedb.dev/media/C5jncD2.gif",
     "muscoliSecondari": [
       "GLUT"
@@ -3413,7 +3413,7 @@
   {
     "id": "ball_leg_curl",
     "nome": "Curl per Gambe con Palla",
-    "focus": "FEMOR",
+    "focus": "FEMO",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Ball_Leg_Curl/0.jpg",
     "muscoliSecondari": [
       "POLP",
@@ -3438,12 +3438,12 @@
   {
     "id": "kettlebell_dead_clean",
     "nome": "Dead Clean con Kettlebell",
-    "focus": "FEMOR",
+    "focus": "FEMO",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Kettlebell_Dead_Clean/0.jpg",
     "muscoliSecondari": [
       "POLP",
       "GLUT",
-      "LOM",
+      "LOMB",
       "QUAD",
       "TRAP"
     ],
@@ -3466,15 +3466,15 @@
   {
     "id": "reverse_band_sumo_deadlift",
     "nome": "Deadlift Summo in Posizione Inversa con Banda Elastica",
-    "focus": "FEMOR",
+    "focus": "FEMO",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Reverse_Band_Sumo_Deadlift/0.jpg",
     "muscoliSecondari": [
       "ABDU",
-      "ADDU",
+      "ADD",
       "POLP",
-      "AVAMB",
+      "AVA",
       "GLUT",
-      "LOM",
+      "LOMB",
       "QUAD",
       "TRAP"
     ],
@@ -3500,11 +3500,11 @@
     "focus": "QUAD",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/One-Arm_Side_Deadlift/0.jpg",
     "muscoliSecondari": [
-      "ADDOM",
+      "CORE",
       "POLP",
       "GLUT",
-      "FEMOR",
-      "LOM",
+      "FEMO",
+      "LOMB",
       "TRAP"
     ],
     "difficolta": "Avanzato",
@@ -3529,10 +3529,10 @@
     "focus": "QUAD",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Cable_Deadlifts/0.jpg",
     "muscoliSecondari": [
-      "AVAMB",
+      "AVA",
       "GLUT",
-      "FEMOR",
-      "LOM"
+      "FEMO",
+      "LOMB"
     ],
     "difficolta": "Principiante",
     "tipoEsercizio": "Compound",
@@ -3556,7 +3556,7 @@
     "focus": "GLUT",
     "imageUrl": "https://static.exercisedb.dev/media/UpAlold.gif",
     "muscoliSecondari": [
-      "FEMOR"
+      "FEMO"
     ],
     "difficolta": "Principiante",
     "tipoEsercizio": "Compound",
@@ -3704,7 +3704,7 @@
     "focus": "QUAD",
     "imageUrl": "https://static.exercisedb.dev/media/XSCHmiI.gif",
     "muscoliSecondari": [
-      "FEMOR",
+      "FEMO",
       "POLP",
       "GLUT"
     ],
@@ -3736,7 +3736,7 @@
     "focus": "QUAD",
     "imageUrl": "https://static.exercisedb.dev/media/PCUYOMs.gif",
     "muscoliSecondari": [
-      "FEMOR",
+      "FEMO",
       "POLP",
       "GLUT"
     ],
@@ -3767,7 +3767,7 @@
     "focus": "GLUT",
     "imageUrl": "https://static.exercisedb.dev/media/OPqShYN.gif",
     "muscoliSecondari": [
-      "FEMOR"
+      "FEMO"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Compound",
@@ -3795,7 +3795,7 @@
     "focus": "GLUT",
     "imageUrl": "https://static.exercisedb.dev/media/wSScovH.gif",
     "muscoliSecondari": [
-      "FEMOR"
+      "FEMO"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Compound",
@@ -3823,7 +3823,7 @@
     "focus": "GLUT",
     "imageUrl": "https://static.exercisedb.dev/media/u27Kcdz.gif",
     "muscoliSecondari": [
-      "FEMOR"
+      "FEMO"
     ],
     "difficolta": "Principiante",
     "tipoEsercizio": "Compound",
@@ -3874,7 +3874,7 @@
     "focus": "GLUT",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Hip_Extension_with_Bands/0.jpg",
     "muscoliSecondari": [
-      "FEMOR"
+      "FEMO"
     ],
     "difficolta": "Principiante",
     "tipoEsercizio": "Compound",
@@ -3917,7 +3917,7 @@
   {
     "id": "hamstring_stretch",
     "nome": "Femorali Allungamento",
-    "focus": "FEMOR",
+    "focus": "FEMO",
     "imageUrl": "https://static.exercisedb.dev/media/99rWm7w.gif",
     "muscoliSecondari": [
       "GLUT"
@@ -3945,7 +3945,7 @@
   {
     "id": "flexible_assisted_prone_hamstring",
     "nome": "Femorali Proni Assistiti Flessibili",
-    "focus": "FEMOR",
+    "focus": "FEMO",
     "imageUrl": "https://static.exercisedb.dev/media/fBnPpzd.gif",
     "muscoliSecondari": [
       "GLUT"
@@ -3996,7 +3996,7 @@
     "focus": "GLUT",
     "imageUrl": "https://static.exercisedb.dev/media/jNU1gFQ.gif",
     "muscoliSecondari": [
-      "FEMOR",
+      "FEMO",
       "POLP",
       "QUAD"
     ],
@@ -4031,7 +4031,7 @@
     "imageUrl": "https://static.exercisedb.dev/media/0br45wL.gif",
     "muscoliSecondari": [
       "CORE",
-      "FEMOR",
+      "FEMO",
       "POLP",
       "QUAD"
     ],
@@ -4093,7 +4093,7 @@
   {
     "id": "90_90_hamstring",
     "nome": "Flessione del Bicipite Femorale a 90 Gradi",
-    "focus": "FEMOR",
+    "focus": "FEMO",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/90_90_Hamstring/0.jpg",
     "muscoliSecondari": [
       "POLP"
@@ -4139,7 +4139,7 @@
   {
     "id": "seated_hamstring",
     "nome": "Flessione delle gambe Seduto",
-    "focus": "FEMOR",
+    "focus": "FEMO",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Seated_Hamstring/0.jpg",
     "muscoliSecondari": [
       "POLP"
@@ -4209,7 +4209,7 @@
   {
     "id": "lying_hamstring",
     "nome": "Flettore Coscia Prendendo",
-    "focus": "FEMOR",
+    "focus": "FEMO",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Lying_Hamstring/0.jpg",
     "muscoliSecondari": [
       "POLP"
@@ -4237,7 +4237,7 @@
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Knee_Across_The_Body/0.jpg",
     "muscoliSecondari": [
       "ABDU",
-      "LOM"
+      "LOMB"
     ],
     "difficolta": "Principiante",
     "tipoEsercizio": "Compound",
@@ -4283,7 +4283,7 @@
     "focus": "GLUT",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Seated_Glute/0.jpg",
     "muscoliSecondari": [
-      "ADDU"
+      "ADD"
     ],
     "difficolta": "Avanzato",
     "tipoEsercizio": "Compound",
@@ -4304,7 +4304,7 @@
   {
     "id": "glute_ham_raise",
     "nome": "Gluteo-ham Raise",
-    "focus": "FEMOR",
+    "focus": "FEMO",
     "imageUrl": "https://static.exercisedb.dev/media/Vvwjz6N.gif",
     "muscoliSecondari": [
       "GLUT"
@@ -4359,7 +4359,7 @@
     "focus": "QUAD",
     "imageUrl": "https://static.exercisedb.dev/media/yn8yg1r.gif",
     "muscoliSecondari": [
-      "FEMOR",
+      "FEMO",
       "CORE",
       "GLUT"
     ],
@@ -4391,7 +4391,7 @@
     "focus": "GLUT",
     "imageUrl": "https://static.exercisedb.dev/media/JrOHAZc.gif",
     "muscoliSecondari": [
-      "FEMOR"
+      "FEMO"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Compound",
@@ -4419,7 +4419,7 @@
     "focus": "GLUT",
     "imageUrl": "https://static.exercisedb.dev/media/1bQkKZK.gif",
     "muscoliSecondari": [
-      "FEMOR"
+      "FEMO"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Compound",
@@ -4445,7 +4445,7 @@
   {
     "id": "barbell_good_morning",
     "nome": "Good Morning con Bilanciere",
-    "focus": "FEMOR",
+    "focus": "FEMO",
     "imageUrl": "https://static.exercisedb.dev/media/XlZ4lAC.gif",
     "difficolta": "Intermedio",
     "tipoEsercizio": "Compound",
@@ -4499,7 +4499,7 @@
     "imageUrl": "https://static.exercisedb.dev/media/hacksquat.gif",
     "muscoliSecondari": [
       "GLUT",
-      "FEMOR"
+      "FEMO"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Compound",
@@ -4559,7 +4559,7 @@
     "muscoliSecondari": [
       "POLP",
       "GLUT",
-      "FEMOR"
+      "FEMO"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Compound",
@@ -4583,7 +4583,7 @@
     "focus": "QUAD",
     "imageUrl": "https://static.exercisedb.dev/media/6FMU51h.gif",
     "muscoliSecondari": [
-      "FEMOR",
+      "FEMO",
       "POLP",
       "GLUT"
     ],
@@ -4610,14 +4610,14 @@
   {
     "id": "double_kettlebell_alternating_hang_clean",
     "nome": "Double Kettlebell Alternating Hang Clean",
-    "focus": "FEMOR",
+    "focus": "FEMO",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Double_Kettlebell_Alternating_Hang_Clean/0.jpg",
     "muscoliSecondari": [
-      "BIC",
+      "BICI",
       "POLP",
-      "AVAMB",
+      "AVA",
       "GLUT",
-      "LOM",
+      "LOMB",
       "QUAD",
       "TRAP"
     ],
@@ -4640,7 +4640,7 @@
   {
     "id": "kettlebell_hang_clean",
     "nome": "Hang Clean con Kettlebell",
-    "focus": "FEMOR",
+    "focus": "FEMO",
     "imageUrl": "https://static.exercisedb.dev/media/LHWF7us.gif",
     "muscoliSecondari": [
       "GLUT",
@@ -4673,7 +4673,7 @@
     "focus": "QUAD",
     "imageUrl": "https://static.exercisedb.dev/media/ealLwvX.gif",
     "muscoliSecondari": [
-      "FEMOR",
+      "FEMO",
       "GLUT",
       "POLP",
       "CORE"
@@ -4725,7 +4725,7 @@
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Barbell_Hip_Thrust/0.jpg",
     "muscoliSecondari": [
       "POLP",
-      "FEMOR"
+      "FEMO"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Compound",
@@ -4749,7 +4749,7 @@
     "focus": "GLUT",
     "imageUrl": "https://static.exercisedb.dev/media/Pjbc0Kt.gif",
     "muscoliSecondari": [
-      "FEMOR",
+      "FEMO",
       "QUAD"
     ],
     "difficolta": "Intermedio",
@@ -4775,7 +4775,7 @@
   {
     "id": "standing_hamstring_and_calf_stretch_with_strap",
     "nome": "In Piedi Allungamento Femorali e Polpacci",
-    "focus": "FEMOR",
+    "focus": "FEMO",
     "imageUrl": "https://static.exercisedb.dev/media/xTjr103.gif",
     "muscoliSecondari": [
       "POLP"
@@ -5051,7 +5051,7 @@
     "focus": "GLUT",
     "imageUrl": "https://static.exercisedb.dev/media/Kpajagk.gif",
     "muscoliSecondari": [
-      "FEMOR",
+      "FEMO",
       "QUAD"
     ],
     "difficolta": "Intermedio",
@@ -5139,7 +5139,7 @@
     "imageUrl": "https://static.exercisedb.dev/media/vpleANJ.gif",
     "muscoliSecondari": [
       "CORE",
-      "FEMOR"
+      "FEMO"
     ],
     "difficolta": "Principiante",
     "tipoEsercizio": "Compound",
@@ -5169,7 +5169,7 @@
     "imageUrl": "https://static.exercisedb.dev/media/D9qe7CM.gif",
     "muscoliSecondari": [
       "CORE",
-      "FEMOR"
+      "FEMO"
     ],
     "difficolta": "Principiante",
     "tipoEsercizio": "Compound",
@@ -5198,7 +5198,7 @@
     "focus": "GLUT",
     "imageUrl": "https://static.exercisedb.dev/media/iqH55N8.gif",
     "muscoliSecondari": [
-      "FEMOR",
+      "FEMO",
       "POLP",
       "QUAD"
     ],
@@ -5226,7 +5226,7 @@
   {
     "id": "reverse_hyperextension",
     "nome": "Iperestensione Inversa",
-    "focus": "FEMOR",
+    "focus": "FEMO",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Reverse_Hyperextension/0.jpg",
     "muscoliSecondari": [
       "POLP",
@@ -5254,7 +5254,7 @@
     "focus": "GLUT",
     "imageUrl": "https://static.exercisedb.dev/media/Krmb3cB.gif",
     "muscoliSecondari": [
-      "FEMOR"
+      "FEMO"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Compound",
@@ -5282,7 +5282,7 @@
     "focus": "GLUT",
     "imageUrl": "https://static.exercisedb.dev/media/vM5YS2g.gif",
     "muscoliSecondari": [
-      "FEMOR"
+      "FEMO"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Compound",
@@ -5311,7 +5311,7 @@
     "focus": "GLUT",
     "imageUrl": "https://static.exercisedb.dev/media/p5v6rdT.gif",
     "muscoliSecondari": [
-      "FEMOR",
+      "FEMO",
       "QUAD"
     ],
     "difficolta": "Principiante",
@@ -5341,7 +5341,7 @@
     "focus": "QUAD",
     "imageUrl": "https://static.exercisedb.dev/media/RYcV1kH.gif",
     "muscoliSecondari": [
-      "FEMOR",
+      "FEMO",
       "POLP",
       "GLUT"
     ],
@@ -5374,7 +5374,7 @@
     "muscoliSecondari": [
       "POLP",
       "GLUT",
-      "FEMOR"
+      "FEMO"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Compound",
@@ -5425,7 +5425,7 @@
   {
     "id": "kick_out_sit",
     "nome": "Kick Out Sit",
-    "focus": "FEMOR",
+    "focus": "FEMO",
     "imageUrl": "https://static.exercisedb.dev/media/v7p5bYl.gif",
     "muscoliSecondari": [
       "GLUT",
@@ -5458,7 +5458,7 @@
     "focus": "GLUT",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Glute_Kickback/0.jpg",
     "muscoliSecondari": [
-      "FEMOR"
+      "FEMO"
     ],
     "difficolta": "Principiante",
     "tipoEsercizio": "Compound",
@@ -5482,7 +5482,7 @@
     "focus": "QUAD",
     "imageUrl": "https://static.exercisedb.dev/media/HUEqZ1y.gif",
     "muscoliSecondari": [
-      "FEMOR",
+      "FEMO",
       "GLUT"
     ],
     "difficolta": "Intermedio",
@@ -5512,7 +5512,7 @@
     "focus": "QUAD",
     "imageUrl": "https://static.exercisedb.dev/media/W31mMjd.gif",
     "muscoliSecondari": [
-      "FEMOR",
+      "FEMO",
       "GLUT"
     ],
     "difficolta": "Intermedio",
@@ -5539,7 +5539,7 @@
   {
     "id": "self_assisted_inverse_leg_curl",
     "nome": "Leg Curl Inverso Auto-assistito",
-    "focus": "FEMOR",
+    "focus": "FEMO",
     "imageUrl": "https://static.exercisedb.dev/media/E4PwJqI.gif",
     "muscoliSecondari": [
       "GLUT",
@@ -5570,7 +5570,7 @@
   {
     "id": "self_assisted_inverse_leg_curl_on_floor",
     "nome": "Leg Curl Inverso Auto-assistito a Terra",
-    "focus": "FEMOR",
+    "focus": "FEMO",
     "imageUrl": "https://static.exercisedb.dev/media/ZSY3MsL.gif",
     "muscoliSecondari": [
       "GLUT",
@@ -5601,7 +5601,7 @@
   {
     "id": "cable_assisted_inverse_leg_curl",
     "nome": "Leg Curl Inverso ai Cavi",
-    "focus": "FEMOR",
+    "focus": "FEMO",
     "imageUrl": "https://static.exercisedb.dev/media/zHEpuuc.gif",
     "muscoliSecondari": [
       "GLUT",
@@ -5631,7 +5631,7 @@
   {
     "id": "inverse_leg_curl_bench_support",
     "nome": "Leg Curl Inverso con Supporto Panca",
-    "focus": "FEMOR",
+    "focus": "FEMO",
     "imageUrl": "https://static.exercisedb.dev/media/ms7tjSG.gif",
     "muscoliSecondari": [
       "GLUT",
@@ -5660,7 +5660,7 @@
   {
     "id": "lever_kneeling_leg_curl",
     "nome": "Leg Curl in Ginocchio Alla Macchina",
-    "focus": "FEMOR",
+    "focus": "FEMO",
     "imageUrl": "https://static.exercisedb.dev/media/nnmCTLN.gif",
     "muscoliSecondari": [
       "GLUT"
@@ -5778,7 +5778,7 @@
     "focus": "GLUT",
     "imageUrl": "https://static.exercisedb.dev/media/tj41Nu6.gif",
     "muscoliSecondari": [
-      "FEMOR",
+      "FEMO",
       "POLP",
       "QUAD"
     ],
@@ -5809,7 +5809,7 @@
     "focus": "GLUT",
     "imageUrl": "https://static.exercisedb.dev/media/p0OCXGb.gif",
     "muscoliSecondari": [
-      "FEMOR",
+      "FEMO",
       "POLP",
       "QUAD"
     ],
@@ -5840,7 +5840,7 @@
     "focus": "GLUT",
     "imageUrl": "https://static.exercisedb.dev/media/10Z2DXU.gif",
     "muscoliSecondari": [
-      "FEMOR",
+      "FEMO",
       "POLP",
       "QUAD"
     ],
@@ -5871,7 +5871,7 @@
     "focus": "GLUT",
     "imageUrl": "https://static.exercisedb.dev/media/2Qh2J1e.gif",
     "muscoliSecondari": [
-      "FEMOR",
+      "FEMO",
       "POLP",
       "QUAD"
     ],
@@ -5902,7 +5902,7 @@
     "focus": "GLUT",
     "imageUrl": "https://static.exercisedb.dev/media/yn2lLSI.gif",
     "muscoliSecondari": [
-      "FEMOR",
+      "FEMO",
       "POLP",
       "QUAD"
     ],
@@ -5933,7 +5933,7 @@
     "focus": "QUAD",
     "imageUrl": "https://static.exercisedb.dev/media/V07qpXy.gif",
     "muscoliSecondari": [
-      "FEMOR",
+      "FEMO",
       "GLUT"
     ],
     "difficolta": "Intermedio",
@@ -5962,7 +5962,7 @@
     "focus": "GLUT",
     "imageUrl": "https://static.exercisedb.dev/media/7zdxRTl.gif",
     "muscoliSecondari": [
-      "FEMOR",
+      "FEMO",
       "POLP",
       "QUAD"
     ],
@@ -5993,7 +5993,7 @@
     "focus": "GLUT",
     "imageUrl": "https://static.exercisedb.dev/media/9KU9TYF.gif",
     "muscoliSecondari": [
-      "FEMOR",
+      "FEMO",
       "POLP",
       "QUAD"
     ],
@@ -6023,7 +6023,7 @@
     "focus": "GLUT",
     "imageUrl": "https://static.exercisedb.dev/media/WWD6FzI.gif",
     "muscoliSecondari": [
-      "FEMOR",
+      "FEMO",
       "POLP",
       "QUAD"
     ],
@@ -6057,7 +6057,7 @@
     "focus": "GLUT",
     "imageUrl": "https://static.exercisedb.dev/media/4H86mXM.gif",
     "muscoliSecondari": [
-      "FEMOR",
+      "FEMO",
       "POLP",
       "QUAD"
     ],
@@ -6088,10 +6088,10 @@
   {
     "id": "the_straddle",
     "nome": "Lo Straddle",
-    "focus": "FEMOR",
+    "focus": "FEMO",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/The_Straddle/0.jpg",
     "muscoliSecondari": [
-      "ADDU",
+      "ADD",
       "POLP"
     ],
     "difficolta": "Principiante",
@@ -6116,7 +6116,7 @@
     "focus": "GLUT",
     "imageUrl": "https://static.exercisedb.dev/media/RRWFUcw.gif",
     "muscoliSecondari": [
-      "FEMOR",
+      "FEMO",
       "POLP",
       "QUAD"
     ],
@@ -6143,7 +6143,7 @@
   {
     "id": "lunge_pass_through",
     "nome": "Lungo con Transizione",
-    "focus": "FEMOR",
+    "focus": "FEMO",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Lunge_Pass_Through/0.jpg",
     "muscoliSecondari": [
       "POLP",
@@ -6172,7 +6172,7 @@
     "focus": "GLUT",
     "imageUrl": "https://static.exercisedb.dev/media/GibBPPg.gif",
     "muscoliSecondari": [
-      "FEMOR",
+      "FEMO",
       "QUAD"
     ],
     "difficolta": "Principiante",
@@ -6202,7 +6202,7 @@
     "focus": "GLUT",
     "imageUrl": "https://static.exercisedb.dev/media/sVQCCeG.gif",
     "muscoliSecondari": [
-      "FEMOR",
+      "FEMO",
       "POLP",
       "QUAD"
     ],
@@ -6232,8 +6232,8 @@
     "focus": "QUAD",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/One_Half_Locust/0.jpg",
     "muscoliSecondari": [
-      "ADDOM",
-      "BIC",
+      "CORE",
+      "BICI",
       "PETT"
     ],
     "difficolta": "Principiante",
@@ -6259,7 +6259,7 @@
     "imageUrl": "https://static.exercisedb.dev/media/ia6kIIl.gif",
     "muscoliSecondari": [
       "GLUT",
-      "FEMOR"
+      "FEMO"
     ],
     "difficolta": "Principiante",
     "tipoEsercizio": "Compound",
@@ -6289,7 +6289,7 @@
     "imageUrl": "https://static.exercisedb.dev/media/v6EKk0O.gif",
     "muscoliSecondari": [
       "GLUT",
-      "FEMOR"
+      "FEMO"
     ],
     "difficolta": "Principiante",
     "tipoEsercizio": "Compound",
@@ -6319,8 +6319,8 @@
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Windmills/0.jpg",
     "muscoliSecondari": [
       "GLUT",
-      "FEMOR",
-      "LOM"
+      "FEMO",
+      "LOMB"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Compound",
@@ -6362,7 +6362,7 @@
   {
     "id": "groiners",
     "nome": "Groiners",
-    "focus": "ADDU",
+    "focus": "ADD",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Groiners/0.jpg",
     "muscoliSecondari": [],
     "difficolta": "Intermedio",
@@ -6383,7 +6383,7 @@
   {
     "id": "bodyweight_nordic_curl",
     "nome": "Nordic Femorale Curl a Corpo Libero",
-    "focus": "FEMOR",
+    "focus": "FEMO",
     "imageUrl": "https://static.exercisedb.dev/media/nordiccurl.gif",
     "muscoliSecondari": [
       "GLUT",
@@ -6418,7 +6418,7 @@
     "muscoliSecondari": [
       "CORE",
       "DELT",
-      "FEMOR",
+      "FEMO",
       "GLUT"
     ],
     "difficolta": "Intermedio",
@@ -6448,7 +6448,7 @@
     "focus": "GLUT",
     "imageUrl": "https://static.exercisedb.dev/media/OrETs32.gif",
     "muscoliSecondari": [
-      "FEMOR"
+      "FEMO"
     ],
     "difficolta": "Principiante",
     "tipoEsercizio": "Compound",
@@ -6473,14 +6473,14 @@
   {
     "id": "alternating_hang_clean",
     "nome": "Pendenza Alternata con Carico",
-    "focus": "FEMOR",
+    "focus": "FEMO",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Alternating_Hang_Clean/0.jpg",
     "muscoliSecondari": [
-      "BIC",
+      "BICI",
       "POLP",
-      "AVAMB",
+      "AVA",
       "GLUT",
-      "LOM",
+      "LOMB",
       "TRAP"
     ],
     "difficolta": "Intermedio",
@@ -6507,7 +6507,7 @@
     "muscoliSecondari": [
       "POLP",
       "GLUT",
-      "FEMOR",
+      "FEMO",
       "QUAD"
     ],
     "difficolta": "Intermedio",
@@ -6529,11 +6529,11 @@
   {
     "id": "smith_machine_hang_power_clean",
     "nome": "Peso Morto Pendente alla Macchina Smith",
-    "focus": "FEMOR",
+    "focus": "FEMO",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Smith_Machine_Hang_Power_Clean/0.jpg",
     "muscoliSecondari": [
       "GLUT",
-      "LOM",
+      "LOMB",
       "QUAD",
       "DELT",
       "TRAP"
@@ -6561,11 +6561,11 @@
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Box_Squat_with_Bands/0.jpg",
     "muscoliSecondari": [
       "ABDU",
-      "ADDU",
+      "ADD",
       "POLP",
       "GLUT",
-      "FEMOR",
-      "LOM"
+      "FEMO",
+      "LOMB"
     ],
     "difficolta": "Avanzato",
     "tipoEsercizio": "Compound",
@@ -6591,7 +6591,7 @@
     "muscoliSecondari": [
       "POLP",
       "GLUT",
-      "FEMOR"
+      "FEMO"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Compound",
@@ -6641,8 +6641,8 @@
     "muscoliSecondari": [
       "POLP",
       "GLUT",
-      "FEMOR",
-      "LOM"
+      "FEMO",
+      "LOMB"
     ],
     "difficolta": "Principiante",
     "tipoEsercizio": "Compound",
@@ -6668,7 +6668,7 @@
     "muscoliSecondari": [
       "POLP",
       "GLUT",
-      "FEMOR"
+      "FEMO"
     ],
     "difficolta": "Principiante",
     "tipoEsercizio": "Compound",
@@ -6689,7 +6689,7 @@
   {
     "id": "lying_bent_leg_groin",
     "nome": "Piegamento delle gambe Prono con Gambe Piegate",
-    "focus": "ADDU",
+    "focus": "ADD",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Lying_Bent_Leg_Groin/0.jpg",
     "muscoliSecondari": [],
     "difficolta": "Avanzato",
@@ -6746,7 +6746,7 @@
     "muscoliSecondari": [
       "POLP",
       "GLUT",
-      "FEMOR"
+      "FEMO"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Compound",
@@ -6770,7 +6770,7 @@
     "focus": "QUAD",
     "imageUrl": "https://static.exercisedb.dev/media/uKyN64F.gif",
     "muscoliSecondari": [
-      "FEMOR",
+      "FEMO",
       "CORE",
       "GLUT"
     ],
@@ -6852,8 +6852,8 @@
     "muscoliSecondari": [
       "POLP",
       "GLUT",
-      "FEMOR",
-      "LOM"
+      "FEMO",
+      "LOMB"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Compound",
@@ -6878,7 +6878,7 @@
     "imageUrl": "https://static.exercisedb.dev/media/u0cNiij.gif",
     "muscoliSecondari": [
       "CORE",
-      "FEMOR"
+      "FEMO"
     ],
     "difficolta": "Principiante",
     "tipoEsercizio": "Compound",
@@ -6908,7 +6908,7 @@
     "imageUrl": "https://static.exercisedb.dev/media/qg2PGl6.gif",
     "muscoliSecondari": [
       "CORE",
-      "FEMOR"
+      "FEMO"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Compound",
@@ -6936,7 +6936,7 @@
     "focus": "GLUT",
     "imageUrl": "https://static.exercisedb.dev/media/qKBpF7I.gif",
     "muscoliSecondari": [
-      "FEMOR"
+      "FEMO"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Compound",
@@ -6965,7 +6965,7 @@
     "focus": "GLUT",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Single_Leg_Glute_Bridge/0.jpg",
     "muscoliSecondari": [
-      "FEMOR"
+      "FEMO"
     ],
     "difficolta": "Principiante",
     "tipoEsercizio": "Isolation",
@@ -6989,7 +6989,7 @@
     "focus": "GLUT",
     "imageUrl": "https://static.exercisedb.dev/media/rmEukuS.gif",
     "muscoliSecondari": [
-      "FEMOR",
+      "FEMO",
       "QUAD"
     ],
     "difficolta": "Principiante",
@@ -7022,7 +7022,7 @@
     "focus": "GLUT",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Physioball_Hip_Bridge/0.jpg",
     "muscoliSecondari": [
-      "FEMOR"
+      "FEMO"
     ],
     "difficolta": "Principiante",
     "tipoEsercizio": "Compound",
@@ -7043,7 +7043,7 @@
   {
     "id": "reclining_big_toe_pose_with_rope",
     "nome": "Posizione Alluce Reclinata con Corda",
-    "focus": "FEMOR",
+    "focus": "FEMO",
     "imageUrl": "https://static.exercisedb.dev/media/K5xgdvI.gif",
     "muscoliSecondari": [
       "GLUT",
@@ -7076,7 +7076,7 @@
     "focus": "GLUT",
     "imageUrl": "https://static.exercisedb.dev/media/bWlZvXh.gif",
     "muscoliSecondari": [
-      "FEMOR"
+      "FEMO"
     ],
     "difficolta": "Principiante",
     "tipoEsercizio": "Compound",
@@ -7105,7 +7105,7 @@
     "focus": "GLUT",
     "imageUrl": "https://static.exercisedb.dev/media/SSsBDwB.gif",
     "muscoliSecondari": [
-      "FEMOR",
+      "FEMO",
       "POLP",
       "QUAD"
     ],
@@ -7132,7 +7132,7 @@
   {
     "id": "power_clean",
     "nome": "Power Clean",
-    "focus": "FEMOR",
+    "focus": "FEMO",
     "imageUrl": "https://static.exercisedb.dev/media/SiWCcTN.gif",
     "muscoliSecondari": [
       "GLUT",
@@ -7163,11 +7163,11 @@
   {
     "id": "upper_back_leg_grab",
     "nome": "Presa a Misto per le gambe per la schiena Superiore",
-    "focus": "FEMOR",
+    "focus": "FEMO",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Upper_Back-Leg_Grab/0.jpg",
     "muscoliSecondari": [
-      "LOM",
-      "DORSO"
+      "LOMB",
+      "LAT"
     ],
     "difficolta": "Principiante",
     "tipoEsercizio": "Compound",
@@ -7215,7 +7215,7 @@
     "muscoliSecondari": [
       "POLP",
       "GLUT",
-      "FEMOR"
+      "FEMO"
     ],
     "difficolta": "Principiante",
     "tipoEsercizio": "Compound",
@@ -7241,7 +7241,7 @@
     "muscoliSecondari": [
       "POLP",
       "GLUT",
-      "FEMOR"
+      "FEMO"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Compound",
@@ -7289,7 +7289,7 @@
     "muscoliSecondari": [
       "POLP",
       "GLUT",
-      "FEMOR"
+      "FEMO"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Compound",
@@ -7332,11 +7332,11 @@
   {
     "id": "open_palm_kettlebell_clean",
     "nome": "Open Palm Kettlebell Clean",
-    "focus": "FEMOR",
+    "focus": "FEMO",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Open_Palm_Kettlebell_Clean/0.jpg",
     "muscoliSecondari": [
       "GLUT",
-      "LOM",
+      "LOMB",
       "QUAD",
       "DELT"
     ],
@@ -7359,12 +7359,12 @@
   {
     "id": "one_arm_open_palm_kettlebell_clean",
     "nome": "One Arm Open Palm Kettlebell Clean",
-    "focus": "FEMOR",
+    "focus": "FEMO",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/One-Arm_Open_Palm_Kettlebell_Clean/0.jpg",
     "muscoliSecondari": [
-      "AVAMB",
+      "AVA",
       "GLUT",
-      "LOM",
+      "LOMB",
       "QUAD",
       "DELT"
     ],
@@ -7387,11 +7387,11 @@
   {
     "id": "one_arm_kettlebell_clean",
     "nome": "Clean da Una Sola Parte con Manubrio",
-    "focus": "FEMOR",
+    "focus": "FEMO",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/One-Arm_Kettlebell_Clean/0.jpg",
     "muscoliSecondari": [
       "GLUT",
-      "LOM",
+      "LOMB",
       "DELT",
       "TRAP"
     ],
@@ -7417,7 +7417,7 @@
     "focus": "GLUT",
     "imageUrl": "https://static.exercisedb.dev/media/VtTbiP3.gif",
     "muscoliSecondari": [
-      "FEMOR"
+      "FEMO"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Compound",
@@ -7445,7 +7445,7 @@
     "focus": "QUAD",
     "imageUrl": "https://static.exercisedb.dev/media/PrQbjvB.gif",
     "muscoliSecondari": [
-      "FEMOR",
+      "FEMO",
       "POLP",
       "GLUT"
     ],
@@ -7476,7 +7476,7 @@
     "focus": "QUAD",
     "imageUrl": "https://static.exercisedb.dev/media/mweqJin.gif",
     "muscoliSecondari": [
-      "FEMOR",
+      "FEMO",
       "POLP"
     ],
     "difficolta": "Principiante",
@@ -7506,7 +7506,7 @@
     "focus": "QUAD",
     "imageUrl": "https://static.exercisedb.dev/media/IBj3nsn.gif",
     "muscoliSecondari": [
-      "FEMOR",
+      "FEMO",
       "GLUT",
       "POLP"
     ],
@@ -7537,7 +7537,7 @@
     "focus": "GLUT",
     "imageUrl": "https://static.exercisedb.dev/media/za9Ni4z.gif",
     "muscoliSecondari": [
-      "FEMOR"
+      "FEMO"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Compound",
@@ -7566,7 +7566,7 @@
     "imageUrl": "https://static.exercisedb.dev/media/hacksquat.gif",
     "muscoliSecondari": [
       "QUAD",
-      "FEMOR"
+      "FEMO"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Compound",
@@ -7680,7 +7680,7 @@
   {
     "id": "side_leg_raises",
     "nome": "Alzata Laterale delle gambe",
-    "focus": "ADDU",
+    "focus": "ADD",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Side_Leg_Raises/0.jpg",
     "muscoliSecondari": [],
     "difficolta": "Principiante",
@@ -7702,12 +7702,12 @@
   {
     "id": "natural_glute_ham_raise",
     "nome": "Alzata Naturale dei Glutei e del Polpaccio",
-    "focus": "FEMOR",
+    "focus": "FEMO",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Natural_Glute_Ham_Raise/0.jpg",
     "muscoliSecondari": [
       "POLP",
       "GLUT",
-      "LOM"
+      "LOMB"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Compound",
@@ -7864,7 +7864,7 @@
     "imageUrl": "https://static.exercisedb.dev/media/oZjMu1t.gif",
     "muscoliSecondari": [
       "CORE",
-      "FEMOR",
+      "FEMO",
       "QUAD"
     ],
     "difficolta": "Intermedio",
@@ -7895,7 +7895,7 @@
     "imageUrl": "https://static.exercisedb.dev/media/kKYTkjJ.gif",
     "muscoliSecondari": [
       "CORE",
-      "FEMOR",
+      "FEMO",
       "QUAD"
     ],
     "difficolta": "Intermedio",
@@ -7929,7 +7929,7 @@
     "imageUrl": "https://static.exercisedb.dev/media/M72BExt.gif",
     "muscoliSecondari": [
       "CORE",
-      "FEMOR",
+      "FEMO",
       "QUAD"
     ],
     "difficolta": "Intermedio",
@@ -7977,7 +7977,7 @@
     ],
     "countingMode": "reps",
     "muscoliSecondari": [
-      "FEMOR"
+      "FEMO"
     ],
     "version": "1.0.2",
     "versionHistory": [
@@ -7989,7 +7989,7 @@
   {
     "id": "runners_stretch",
     "nome": "Runners Allungamento",
-    "focus": "FEMOR",
+    "focus": "FEMO",
     "imageUrl": "https://static.exercisedb.dev/media/0mB6wHO.gif",
     "muscoliSecondari": [
       "POLP",
@@ -8021,7 +8021,7 @@
     "focus": "GLUT",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Step-up_with_Knee_Raise/0.jpg",
     "muscoliSecondari": [
-      "FEMOR",
+      "FEMO",
       "QUAD"
     ],
     "difficolta": "Principiante",
@@ -8048,7 +8048,7 @@
     "muscoliSecondari": [
       "POLP",
       "GLUT",
-      "FEMOR"
+      "FEMO"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Compound",
@@ -8072,7 +8072,7 @@
     "focus": "POLP",
     "imageUrl": "https://static.exercisedb.dev/media/e1e76I2.gif",
     "muscoliSecondari": [
-      "FEMOR",
+      "FEMO",
       "GLUT",
       "CORE",
       "QUAD"
@@ -8104,7 +8104,7 @@
     "focus": "POLP",
     "imageUrl": "https://static.exercisedb.dev/media/iPm26QU.gif",
     "muscoliSecondari": [
-      "FEMOR",
+      "FEMO",
       "GLUT",
       "QUAD"
     ],
@@ -8138,7 +8138,7 @@
     "focus": "QUAD",
     "imageUrl": "https://static.exercisedb.dev/media/SaDOwk7.gif",
     "muscoliSecondari": [
-      "FEMOR",
+      "FEMO",
       "POLP",
       "GLUT"
     ],
@@ -8168,7 +8168,7 @@
     "focus": "QUAD",
     "imageUrl": "https://static.exercisedb.dev/media/Eh2v5Iu.gif",
     "muscoliSecondari": [
-      "FEMOR",
+      "FEMO",
       "POLP",
       "GLUT"
     ],
@@ -8196,7 +8196,7 @@
   {
     "id": "single_leg_platform_slide",
     "nome": "Scivolamento Piattaforma a Una Gamba",
-    "focus": "FEMOR",
+    "focus": "FEMO",
     "imageUrl": "https://static.exercisedb.dev/media/LNE3wfo.gif",
     "muscoliSecondari": [
       "GLUT",
@@ -8232,7 +8232,7 @@
     "focus": "GLUT",
     "imageUrl": "https://static.exercisedb.dev/media/c8f5cSY.gif",
     "muscoliSecondari": [
-      "FEMOR"
+      "FEMO"
     ],
     "difficolta": "Principiante",
     "tipoEsercizio": "Isolation",
@@ -8287,7 +8287,7 @@
   {
     "id": "dumbbell_lying_femoral",
     "nome": "Sdraiato Femoral con Manubri",
-    "focus": "FEMOR",
+    "focus": "FEMO",
     "imageUrl": "https://static.exercisedb.dev/media/FkBIE6a.gif",
     "muscoliSecondari": [
       "GLUT"
@@ -8318,7 +8318,7 @@
     "focus": "GLUT",
     "imageUrl": "https://static.exercisedb.dev/media/SNFfUff.gif",
     "muscoliSecondari": [
-      "FEMOR",
+      "FEMO",
       "QUAD"
     ],
     "difficolta": "Intermedio",
@@ -8363,7 +8363,7 @@
     ],
     "countingMode": "weighted",
     "muscoliSecondari": [
-      "FEMOR"
+      "FEMO"
     ],
     "version": "1.0.2",
     "versionHistory": [
@@ -8392,7 +8392,7 @@
     ],
     "countingMode": "reps",
     "muscoliSecondari": [
-      "FEMOR"
+      "FEMO"
     ],
     "version": "1.0.2",
     "versionHistory": [
@@ -8407,7 +8407,7 @@
     "focus": "GLUT",
     "imageUrl": "https://static.exercisedb.dev/media/0xDpB4L.gif",
     "muscoliSecondari": [
-      "FEMOR"
+      "FEMO"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Isolation",
@@ -8435,7 +8435,7 @@
     "focus": "GLUT",
     "imageUrl": "https://static.exercisedb.dev/media/CHpahtl.gif",
     "muscoliSecondari": [
-      "FEMOR"
+      "FEMO"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Isolation",
@@ -8463,7 +8463,7 @@
     "focus": "GLUT",
     "imageUrl": "https://static.exercisedb.dev/media/Qj0HRAZ.gif",
     "muscoliSecondari": [
-      "FEMOR"
+      "FEMO"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Isolation",
@@ -8493,7 +8493,7 @@
     "focus": "GLUT",
     "imageUrl": "https://static.exercisedb.dev/media/oHsrypV.gif",
     "muscoliSecondari": [
-      "FEMOR"
+      "FEMO"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Isolation",
@@ -8519,7 +8519,7 @@
   {
     "id": "exercise_ball_seated_hamstring_stretch",
     "nome": "Seduto Allungamento Femorali su Fitball",
-    "focus": "FEMOR",
+    "focus": "FEMO",
     "imageUrl": "https://static.exercisedb.dev/media/yRYyfdA.gif",
     "muscoliSecondari": [
       "GLUT"
@@ -8551,7 +8551,7 @@
     "focus": "GLUT",
     "imageUrl": "https://static.exercisedb.dev/media/DeDThfG.gif",
     "muscoliSecondari": [
-      "FEMOR"
+      "FEMO"
     ],
     "difficolta": "Principiante",
     "tipoEsercizio": "Compound",
@@ -8804,7 +8804,7 @@
     "focus": "GLUT",
     "imageUrl": "https://static.exercisedb.dev/media/XsCcxCC.gif",
     "muscoliSecondari": [
-      "FEMOR"
+      "FEMO"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Compound",
@@ -8832,7 +8832,7 @@
     "focus": "GLUT",
     "imageUrl": "https://static.exercisedb.dev/media/d960PgE.gif",
     "muscoliSecondari": [
-      "FEMOR"
+      "FEMO"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Compound",
@@ -8860,7 +8860,7 @@
     "focus": "GLUT",
     "imageUrl": "https://static.exercisedb.dev/media/QY39eBr.gif",
     "muscoliSecondari": [
-      "FEMOR"
+      "FEMO"
     ],
     "difficolta": "Principiante",
     "tipoEsercizio": "Compound",
@@ -8889,7 +8889,7 @@
     "focus": "GLUT",
     "imageUrl": "https://static.exercisedb.dev/media/9gbyYKk.gif",
     "muscoliSecondari": [
-      "FEMOR",
+      "FEMO",
       "QUAD"
     ],
     "difficolta": "Intermedio",
@@ -8942,7 +8942,7 @@
   {
     "id": "seated_wide_angle_pose_sequence",
     "nome": "Sequenza Posizione Seduta Ad Angolo Largo",
-    "focus": "FEMOR",
+    "focus": "FEMO",
     "imageUrl": "https://static.exercisedb.dev/media/HIgYKAB.gif",
     "muscoliSecondari": [
       "POLP",
@@ -9061,7 +9061,7 @@
     "focus": "QUAD",
     "imageUrl": "https://static.exercisedb.dev/media/zfNHMN9.gif",
     "muscoliSecondari": [
-      "FEMOR",
+      "FEMO",
       "POLP",
       "GLUT"
     ],
@@ -9091,7 +9091,7 @@
     "focus": "QUAD",
     "imageUrl": "https://static.exercisedb.dev/media/5MRH8H2.gif",
     "muscoliSecondari": [
-      "FEMOR",
+      "FEMO",
       "POLP",
       "GLUT"
     ],
@@ -9118,7 +9118,7 @@
   {
     "id": "platform_hamstring_slides",
     "nome": "Slitte per I Fogliari",
-    "focus": "FEMOR",
+    "focus": "FEMO",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Platform_Hamstring_Slides/0.jpg",
     "muscoliSecondari": [
       "GLUT"
@@ -9145,7 +9145,7 @@
     "focus": "GLUT",
     "imageUrl": "https://static.exercisedb.dev/media/HsjbB1z.gif",
     "muscoliSecondari": [
-      "FEMOR",
+      "FEMO",
       "POLP",
       "QUAD"
     ],
@@ -9198,7 +9198,7 @@
     "focus": "GLUT",
     "imageUrl": "https://static.exercisedb.dev/media/8IbNZwc.gif",
     "muscoliSecondari": [
-      "FEMOR",
+      "FEMO",
       "QUAD"
     ],
     "difficolta": "Intermedio",
@@ -9227,7 +9227,7 @@
     "focus": "GLUT",
     "imageUrl": "https://static.exercisedb.dev/media/E4R8Hz1.gif",
     "muscoliSecondari": [
-      "FEMOR",
+      "FEMO",
       "QUAD"
     ],
     "difficolta": "Intermedio",
@@ -9256,7 +9256,7 @@
     "focus": "GLUT",
     "imageUrl": "https://static.exercisedb.dev/media/AX1kB0o.gif",
     "muscoliSecondari": [
-      "FEMOR"
+      "FEMO"
     ],
     "difficolta": "Principiante",
     "tipoEsercizio": "Compound",
@@ -9286,7 +9286,7 @@
     "imageUrl": "https://static.exercisedb.dev/media/lCKm4Rs.gif",
     "muscoliSecondari": [
       "CORE",
-      "FEMOR"
+      "FEMO"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Compound",
@@ -9315,7 +9315,7 @@
     "focus": "GLUT",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Butt_Lift_Bridge/0.jpg",
     "muscoliSecondari": [
-      "FEMOR"
+      "FEMO"
     ],
     "difficolta": "Principiante",
     "tipoEsercizio": "Isolation",
@@ -9336,7 +9336,7 @@
   {
     "id": "floor_glute_ham_raise",
     "nome": "Alzatamento dei Glutei e della Coscia a Terra",
-    "focus": "FEMOR",
+    "focus": "FEMO",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Floor_Glute-Ham_Raise/0.jpg",
     "muscoliSecondari": [
       "POLP",
@@ -9365,7 +9365,7 @@
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Hip_Lift_with_Band/0.jpg",
     "muscoliSecondari": [
       "POLP",
-      "FEMOR"
+      "FEMO"
     ],
     "difficolta": "Principiante",
     "tipoEsercizio": "Compound",
@@ -9389,7 +9389,7 @@
     "focus": "GLUT",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Leg_Lift/0.jpg",
     "muscoliSecondari": [
-      "FEMOR"
+      "FEMO"
     ],
     "difficolta": "Principiante",
     "tipoEsercizio": "Isolation",
@@ -9467,7 +9467,7 @@
     "focus": "QUAD",
     "imageUrl": "https://static.exercisedb.dev/media/9E25EOx.gif",
     "muscoliSecondari": [
-      "FEMOR",
+      "FEMO",
       "POLP",
       "GLUT"
     ],
@@ -9498,7 +9498,7 @@
     "focus": "QUAD",
     "imageUrl": "https://static.exercisedb.dev/media/arsYEd3.gif",
     "muscoliSecondari": [
-      "FEMOR",
+      "FEMO",
       "GLUT"
     ],
     "difficolta": "Intermedio",
@@ -9528,7 +9528,7 @@
     "focus": "QUAD",
     "imageUrl": "https://static.exercisedb.dev/media/HBYyX94.gif",
     "muscoliSecondari": [
-      "FEMOR",
+      "FEMO",
       "GLUT"
     ],
     "difficolta": "Intermedio",
@@ -9558,7 +9558,7 @@
     "focus": "QUAD",
     "imageUrl": "https://static.exercisedb.dev/media/y8bYM8w.gif",
     "muscoliSecondari": [
-      "FEMOR",
+      "FEMO",
       "GLUT"
     ],
     "difficolta": "Intermedio",
@@ -9588,7 +9588,7 @@
     "focus": "QUAD",
     "imageUrl": "https://static.exercisedb.dev/media/wWFspEi.gif",
     "muscoliSecondari": [
-      "FEMOR",
+      "FEMO",
       "GLUT"
     ],
     "difficolta": "Intermedio",
@@ -9617,7 +9617,7 @@
     "focus": "QUAD",
     "imageUrl": "https://static.exercisedb.dev/media/gGNQmVt.gif",
     "muscoliSecondari": [
-      "FEMOR",
+      "FEMO",
       "GLUT"
     ],
     "difficolta": "Intermedio",
@@ -9647,7 +9647,7 @@
     "focus": "QUAD",
     "imageUrl": "https://static.exercisedb.dev/media/qx4fgX7.gif",
     "muscoliSecondari": [
-      "FEMOR",
+      "FEMO",
       "GLUT"
     ],
     "difficolta": "Intermedio",
@@ -9680,7 +9680,7 @@
     "muscoliSecondari": [
       "POLP",
       "GLUT",
-      "FEMOR"
+      "FEMO"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Compound",
@@ -9705,7 +9705,7 @@
     "imageUrl": "https://static.exercisedb.dev/media/KenZJQV.gif",
     "muscoliSecondari": [
       "CORE",
-      "FEMOR",
+      "FEMO",
       "POLP",
       "QUAD"
     ],
@@ -9737,7 +9737,7 @@
     "imageUrl": "https://static.exercisedb.dev/media/Gnfo4FM.gif",
     "muscoliSecondari": [
       "CORE",
-      "FEMOR",
+      "FEMO",
       "POLP",
       "QUAD"
     ],
@@ -9793,7 +9793,7 @@
     "focus": "QUAD",
     "imageUrl": "https://static.exercisedb.dev/media/r5DgrW9.gif",
     "muscoliSecondari": [
-      "FEMOR",
+      "FEMO",
       "GLUT"
     ],
     "difficolta": "Intermedio",
@@ -9823,7 +9823,7 @@
     "focus": "GLUT",
     "imageUrl": "https://static.exercisedb.dev/media/RGLscZM.gif",
     "muscoliSecondari": [
-      "FEMOR",
+      "FEMO",
       "POLP",
       "QUAD"
     ],
@@ -9853,7 +9853,7 @@
     "focus": "GLUT",
     "imageUrl": "https://static.exercisedb.dev/media/bTpEUcm.gif",
     "muscoliSecondari": [
-      "FEMOR",
+      "FEMO",
       "POLP",
       "QUAD"
     ],
@@ -9940,7 +9940,7 @@
     "focus": "GLUT",
     "imageUrl": "https://static.exercisedb.dev/media/NNoHCEA.gif",
     "muscoliSecondari": [
-      "FEMOR",
+      "FEMO",
       "POLP",
       "QUAD"
     ],
@@ -9971,7 +9971,7 @@
     "imageUrl": "https://static.exercisedb.dev/media/iYzB0Cz.gif",
     "muscoliSecondari": [
       "CORE",
-      "FEMOR",
+      "FEMO",
       "POLP",
       "QUAD"
     ],
@@ -10003,7 +10003,7 @@
     "imageUrl": "https://static.exercisedb.dev/media/DhMl549.gif",
     "muscoliSecondari": [
       "CORE",
-      "FEMOR",
+      "FEMO",
       "POLP",
       "QUAD"
     ],
@@ -10036,8 +10036,8 @@
     "muscoliSecondari": [
       "POLP",
       "GLUT",
-      "FEMOR",
-      "LOM"
+      "FEMO",
+      "LOMB"
     ],
     "difficolta": "Avanzato",
     "tipoEsercizio": "Compound",
@@ -10061,7 +10061,7 @@
     "focus": "GLUT",
     "imageUrl": "https://static.exercisedb.dev/media/GWoKnIm.gif",
     "muscoliSecondari": [
-      "FEMOR",
+      "FEMO",
       "POLP",
       "QUAD"
     ],
@@ -10091,7 +10091,7 @@
     "focus": "GLUT",
     "imageUrl": "https://static.exercisedb.dev/media/bdWcbaU.gif",
     "muscoliSecondari": [
-      "FEMOR",
+      "FEMO",
       "POLP",
       "QUAD"
     ],
@@ -10123,7 +10123,7 @@
     "imageUrl": "https://static.exercisedb.dev/media/IeTIEqg.gif",
     "muscoliSecondari": [
       "CORE",
-      "FEMOR",
+      "FEMO",
       "POLP",
       "QUAD"
     ],
@@ -10155,7 +10155,7 @@
     "imageUrl": "https://static.exercisedb.dev/media/zG0zs85.gif",
     "muscoliSecondari": [
       "CORE",
-      "FEMOR",
+      "FEMO",
       "POLP",
       "QUAD"
     ],
@@ -10217,7 +10217,7 @@
     "focus": "GLUT",
     "imageUrl": "https://static.exercisedb.dev/media/DB0n8AG.gif",
     "muscoliSecondari": [
-      "FEMOR",
+      "FEMO",
       "POLP",
       "QUAD"
     ],
@@ -10249,7 +10249,7 @@
     "imageUrl": "https://static.exercisedb.dev/media/qi996YS.gif",
     "muscoliSecondari": [
       "CORE",
-      "FEMOR",
+      "FEMO",
       "POLP",
       "QUAD"
     ],
@@ -10279,9 +10279,9 @@
     "focus": "QUAD",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Front_Squat_Clean_Grip/0.jpg",
     "muscoliSecondari": [
-      "ADDOM",
+      "CORE",
       "GLUT",
-      "FEMOR"
+      "FEMO"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Compound",
@@ -10306,7 +10306,7 @@
     "imageUrl": "https://static.exercisedb.dev/media/qXTaZnJ.gif",
     "muscoliSecondari": [
       "CORE",
-      "FEMOR",
+      "FEMO",
       "POLP",
       "QUAD"
     ],
@@ -10367,7 +10367,7 @@
     "focus": "GLUT",
     "imageUrl": "https://static.exercisedb.dev/media/ZA8b5hc.gif",
     "muscoliSecondari": [
-      "FEMOR",
+      "FEMO",
       "POLP",
       "QUAD"
     ],
@@ -10400,7 +10400,7 @@
     "muscoliSecondari": [
       "POLP",
       "GLUT",
-      "FEMOR"
+      "FEMO"
     ],
     "difficolta": "Principiante",
     "tipoEsercizio": "Compound",
@@ -10425,7 +10425,7 @@
     "imageUrl": "https://static.exercisedb.dev/media/ZuPXtCK.gif",
     "muscoliSecondari": [
       "GLUT",
-      "FEMOR",
+      "FEMO",
       "POLP"
     ],
     "difficolta": "Intermedio",
@@ -10455,7 +10455,7 @@
     "imageUrl": "https://static.exercisedb.dev/media/gf3ZjB9.gif",
     "muscoliSecondari": [
       "GLUT",
-      "FEMOR",
+      "FEMO",
       "POLP"
     ],
     "difficolta": "Intermedio",
@@ -10485,7 +10485,7 @@
     "imageUrl": "https://static.exercisedb.dev/media/5VCj6iH.gif",
     "muscoliSecondari": [
       "GLUT",
-      "FEMOR",
+      "FEMO",
       "POLP"
     ],
     "difficolta": "Intermedio",
@@ -10516,7 +10516,7 @@
     "imageUrl": "https://static.exercisedb.dev/media/Qa55kX1.gif",
     "muscoliSecondari": [
       "GLUT",
-      "FEMOR",
+      "FEMO",
       "POLP"
     ],
     "difficolta": "Intermedio",
@@ -10547,8 +10547,8 @@
     "muscoliSecondari": [
       "POLP",
       "GLUT",
-      "FEMOR",
-      "LOM",
+      "FEMO",
+      "LOMB",
       "TRAP"
     ],
     "difficolta": "Intermedio",
@@ -10573,7 +10573,7 @@
     "focus": "GLUT",
     "imageUrl": "https://static.exercisedb.dev/media/pkSoCW9.gif",
     "muscoliSecondari": [
-      "FEMOR",
+      "FEMO",
       "POLP",
       "QUAD"
     ],
@@ -10605,7 +10605,7 @@
     "imageUrl": "https://static.exercisedb.dev/media/IMRsOCn.gif",
     "muscoliSecondari": [
       "CORE",
-      "FEMOR",
+      "FEMO",
       "GLUT",
       "DELT"
     ],
@@ -10636,7 +10636,7 @@
     "focus": "GLUT",
     "imageUrl": "https://static.exercisedb.dev/media/TDYiji6.gif",
     "muscoliSecondari": [
-      "FEMOR",
+      "FEMO",
       "POLP",
       "QUAD"
     ],
@@ -10666,7 +10666,7 @@
     "focus": "GLUT",
     "imageUrl": "https://static.exercisedb.dev/media/jFtipLl.gif",
     "muscoliSecondari": [
-      "FEMOR",
+      "FEMO",
       "POLP",
       "QUAD"
     ],
@@ -10696,7 +10696,7 @@
     "focus": "GLUT",
     "imageUrl": "https://static.exercisedb.dev/media/qFHvMnv.gif",
     "muscoliSecondari": [
-      "FEMOR",
+      "FEMO",
       "POLP",
       "QUAD"
     ],
@@ -10729,8 +10729,8 @@
     "muscoliSecondari": [
       "POLP",
       "GLUT",
-      "FEMOR",
-      "LOM"
+      "FEMO",
+      "LOMB"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Compound",
@@ -10754,7 +10754,7 @@
     "focus": "GLUT",
     "imageUrl": "https://static.exercisedb.dev/media/nqs5HGV.gif",
     "muscoliSecondari": [
-      "FEMOR",
+      "FEMO",
       "POLP",
       "QUAD"
     ],
@@ -10784,7 +10784,7 @@
     "focus": "GLUT",
     "imageUrl": "https://static.exercisedb.dev/media/5bpPTHv.gif",
     "muscoliSecondari": [
-      "FEMOR",
+      "FEMO",
       "POLP",
       "QUAD"
     ],
@@ -10815,7 +10815,7 @@
     "focus": "GLUT",
     "imageUrl": "https://static.exercisedb.dev/media/S4pwGlc.gif",
     "muscoliSecondari": [
-      "FEMOR",
+      "FEMO",
       "POLP",
       "QUAD"
     ],
@@ -10846,7 +10846,7 @@
     "focus": "GLUT",
     "imageUrl": "https://static.exercisedb.dev/media/w1NOByi.gif",
     "muscoliSecondari": [
-      "FEMOR",
+      "FEMO",
       "LAT",
       "QUAD",
       "TRAP"
@@ -10879,7 +10879,7 @@
     "focus": "GLUT",
     "imageUrl": "https://static.exercisedb.dev/media/gUjqdei.gif",
     "muscoliSecondari": [
-      "FEMOR",
+      "FEMO",
       "POLP",
       "QUAD"
     ],
@@ -10911,8 +10911,8 @@
     "muscoliSecondari": [
       "POLP",
       "GLUT",
-      "FEMOR",
-      "LOM"
+      "FEMO",
+      "LOMB"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Compound",
@@ -10936,7 +10936,7 @@
     "focus": "GLUT",
     "imageUrl": "https://static.exercisedb.dev/media/9n2149Z.gif",
     "muscoliSecondari": [
-      "FEMOR",
+      "FEMO",
       "POLP",
       "QUAD"
     ],
@@ -10996,7 +10996,7 @@
     "imageUrl": "https://static.exercisedb.dev/media/lFhb2Rw.gif",
     "muscoliSecondari": [
       "CORE",
-      "FEMOR",
+      "FEMO",
       "POLP",
       "QUAD"
     ],
@@ -11026,7 +11026,7 @@
     "focus": "GLUT",
     "imageUrl": "https://static.exercisedb.dev/media/euI1BwR.gif",
     "muscoliSecondari": [
-      "FEMOR",
+      "FEMO",
       "POLP",
       "QUAD"
     ],
@@ -11086,7 +11086,7 @@
     "focus": "GLUT",
     "imageUrl": "https://static.exercisedb.dev/media/elhhVgj.gif",
     "muscoliSecondari": [
-      "FEMOR",
+      "FEMO",
       "POLP",
       "QUAD"
     ],
@@ -11117,7 +11117,7 @@
     "focus": "GLUT",
     "imageUrl": "https://static.exercisedb.dev/media/dzz6BiV.gif",
     "muscoliSecondari": [
-      "FEMOR",
+      "FEMO",
       "POLP",
       "QUAD"
     ],
@@ -11148,7 +11148,7 @@
     "imageUrl": "https://static.exercisedb.dev/media/Ha7SZ3y.gif",
     "muscoliSecondari": [
       "CORE",
-      "FEMOR",
+      "FEMO",
       "QUAD"
     ],
     "difficolta": "Intermedio",
@@ -11180,7 +11180,7 @@
     "focus": "GLUT",
     "imageUrl": "https://static.exercisedb.dev/media/cuC7529.gif",
     "muscoliSecondari": [
-      "FEMOR",
+      "FEMO",
       "POLP",
       "QUAD"
     ],
@@ -11213,7 +11213,7 @@
     "imageUrl": "https://static.exercisedb.dev/media/vR1vold.gif",
     "muscoliSecondari": [
       "CORE",
-      "FEMOR",
+      "FEMO",
       "POLP",
       "QUAD"
     ],
@@ -11245,7 +11245,7 @@
     "imageUrl": "https://static.exercisedb.dev/media/LSTChY9.gif",
     "muscoliSecondari": [
       "CORE",
-      "FEMOR",
+      "FEMO",
       "POLP",
       "QUAD"
     ],
@@ -11277,7 +11277,7 @@
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Single-Leg_High_Box_Squat/0.jpg",
     "muscoliSecondari": [
       "GLUT",
-      "FEMOR"
+      "FEMO"
     ],
     "difficolta": "Principiante",
     "tipoEsercizio": "Compound",
@@ -11302,7 +11302,7 @@
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Bodyweight_Squat/0.jpg",
     "muscoliSecondari": [
       "GLUT",
-      "FEMOR"
+      "FEMO"
     ],
     "difficolta": "Principiante",
     "tipoEsercizio": "Compound",
@@ -11326,7 +11326,7 @@
     "focus": "GLUT",
     "imageUrl": "https://static.exercisedb.dev/media/wfotm7S.gif",
     "muscoliSecondari": [
-      "FEMOR",
+      "FEMO",
       "POLP",
       "QUAD"
     ],
@@ -11358,7 +11358,7 @@
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Split_Squat_with_Dumbbells/0.jpg",
     "muscoliSecondari": [
       "GLUT",
-      "FEMOR"
+      "FEMO"
     ],
     "difficolta": "Principiante",
     "tipoEsercizio": "Compound",
@@ -11382,7 +11382,7 @@
     "focus": "GLUT",
     "imageUrl": "https://static.exercisedb.dev/media/C31LMnP.gif",
     "muscoliSecondari": [
-      "FEMOR",
+      "FEMO",
       "POLP",
       "QUAD"
     ],
@@ -11412,7 +11412,7 @@
     "focus": "GLUT",
     "imageUrl": "https://static.exercisedb.dev/media/H6ybluc.gif",
     "muscoliSecondari": [
-      "FEMOR",
+      "FEMO",
       "POLP",
       "QUAD"
     ],
@@ -11445,8 +11445,8 @@
     "muscoliSecondari": [
       "POLP",
       "GLUT",
-      "FEMOR",
-      "LOM"
+      "FEMO",
+      "LOMB"
     ],
     "difficolta": "Principiante",
     "tipoEsercizio": "Compound",
@@ -11471,12 +11471,12 @@
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Reverse_Band_Box_Squat/0.jpg",
     "muscoliSecondari": [
       "ABDU",
-      "ADDU",
+      "ADD",
       "POLP",
-      "AVAMB",
+      "AVA",
       "GLUT",
-      "FEMOR",
-      "LOM"
+      "FEMO",
+      "LOMB"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Compound",
@@ -11502,8 +11502,8 @@
     "muscoliSecondari": [
       "POLP",
       "GLUT",
-      "FEMOR",
-      "LOM"
+      "FEMO",
+      "LOMB"
     ],
     "difficolta": "Principiante",
     "tipoEsercizio": "Compound",
@@ -11529,7 +11529,7 @@
     "muscoliSecondari": [
       "POLP",
       "GLUT",
-      "FEMOR"
+      "FEMO"
     ],
     "difficolta": "Avanzato",
     "tipoEsercizio": "Compound",
@@ -11553,11 +11553,11 @@
     "focus": "QUAD",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Squat_with_Chains/0.jpg",
     "muscoliSecondari": [
-      "ADDU",
+      "ADD",
       "POLP",
       "GLUT",
-      "FEMOR",
-      "LOM"
+      "FEMO",
+      "LOMB"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Compound",
@@ -11581,7 +11581,7 @@
     "focus": "GLUT",
     "imageUrl": "https://static.exercisedb.dev/media/TUZLh71.gif",
     "muscoliSecondari": [
-      "FEMOR",
+      "FEMO",
       "POLP",
       "QUAD"
     ],
@@ -11612,11 +11612,11 @@
     "focus": "QUAD",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Squat_with_Bands/0.jpg",
     "muscoliSecondari": [
-      "ADDU",
+      "ADD",
       "POLP",
       "GLUT",
-      "FEMOR",
-      "LOM"
+      "FEMO",
+      "LOMB"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Compound",
@@ -11642,7 +11642,7 @@
     "muscoliSecondari": [
       "POLP",
       "GLUT",
-      "FEMOR",
+      "FEMO",
       "DELT"
     ],
     "difficolta": "Principiante",
@@ -11667,7 +11667,7 @@
     "focus": "GLUT",
     "imageUrl": "https://static.exercisedb.dev/media/HsvHqgf.gif",
     "muscoliSecondari": [
-      "FEMOR",
+      "FEMO",
       "POLP",
       "QUAD"
     ],
@@ -11699,10 +11699,10 @@
     "focus": "QUAD",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Plie_Dumbbell_Squat/0.jpg",
     "muscoliSecondari": [
-      "ADDOM",
+      "CORE",
       "POLP",
       "GLUT",
-      "FEMOR"
+      "FEMO"
     ],
     "difficolta": "Principiante",
     "tipoEsercizio": "Compound",
@@ -11728,7 +11728,7 @@
     "muscoliSecondari": [
       "POLP",
       "GLUT",
-      "FEMOR",
+      "FEMO",
       "DELT"
     ],
     "difficolta": "Avanzato",
@@ -11753,11 +11753,11 @@
     "focus": "QUAD",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Reverse_Band_Power_Squat/0.jpg",
     "muscoliSecondari": [
-      "ADDU",
+      "ADD",
       "POLP",
       "GLUT",
-      "FEMOR",
-      "LOM"
+      "FEMO",
+      "LOMB"
     ],
     "difficolta": "Avanzato",
     "tipoEsercizio": "Compound",
@@ -11781,7 +11781,7 @@
     "focus": "GLUT",
     "imageUrl": "https://static.exercisedb.dev/media/LIlE5Tn.gif",
     "muscoliSecondari": [
-      "FEMOR",
+      "FEMO",
       "POLP",
       "QUAD"
     ],
@@ -11811,7 +11811,7 @@
     "focus": "GLUT",
     "imageUrl": "https://static.exercisedb.dev/media/1gFNTZV.gif",
     "muscoliSecondari": [
-      "FEMOR",
+      "FEMO",
       "POLP",
       "QUAD"
     ],
@@ -11842,7 +11842,7 @@
     "focus": "GLUT",
     "imageUrl": "https://static.exercisedb.dev/media/UgDm3oy.gif",
     "muscoliSecondari": [
-      "FEMOR",
+      "FEMO",
       "POLP",
       "QUAD"
     ],
@@ -11874,7 +11874,7 @@
     "muscoliSecondari": [
       "POLP",
       "GLUT",
-      "FEMOR"
+      "FEMO"
     ],
     "difficolta": "Avanzato",
     "tipoEsercizio": "Compound",
@@ -11900,8 +11900,8 @@
     "muscoliSecondari": [
       "POLP",
       "GLUT",
-      "FEMOR",
-      "LOM"
+      "FEMO",
+      "LOMB"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Compound",
@@ -11925,7 +11925,7 @@
     "focus": "GLUT",
     "imageUrl": "https://static.exercisedb.dev/media/b63ZzGe.gif",
     "muscoliSecondari": [
-      "FEMOR",
+      "FEMO",
       "POLP",
       "QUAD"
     ],
@@ -11955,7 +11955,7 @@
     "focus": "GLUT",
     "imageUrl": "https://static.exercisedb.dev/media/JZuApnB.gif",
     "muscoliSecondari": [
-      "FEMOR",
+      "FEMO",
       "POLP",
       "QUAD"
     ],
@@ -11987,7 +11987,7 @@
     "muscoliSecondari": [
       "POLP",
       "GLUT",
-      "FEMOR"
+      "FEMO"
     ],
     "difficolta": "Avanzato",
     "tipoEsercizio": "Compound",
@@ -12011,11 +12011,11 @@
     "focus": "QUAD",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Box_Squat/0.jpg",
     "muscoliSecondari": [
-      "ADDU",
+      "ADD",
       "POLP",
       "GLUT",
-      "FEMOR",
-      "LOM"
+      "FEMO",
+      "LOMB"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Compound",
@@ -12041,7 +12041,7 @@
     "muscoliSecondari": [
       "POLP",
       "GLUT",
-      "FEMOR"
+      "FEMO"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Compound",
@@ -12065,9 +12065,9 @@
     "focus": "GLUT",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Kneeling_Squat/0.jpg",
     "muscoliSecondari": [
-      "ADDOM",
-      "FEMOR",
-      "LOM"
+      "CORE",
+      "FEMO",
+      "LOMB"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Compound",
@@ -12091,7 +12091,7 @@
     "focus": "GLUT",
     "imageUrl": "https://static.exercisedb.dev/media/echClj7.gif",
     "muscoliSecondari": [
-      "FEMOR",
+      "FEMO",
       "QUAD"
     ],
     "difficolta": "Intermedio",
@@ -12121,7 +12121,7 @@
     "focus": "GLUT",
     "imageUrl": "https://static.exercisedb.dev/media/oR7O9LW.gif",
     "muscoliSecondari": [
-      "FEMOR",
+      "FEMO",
       "QUAD"
     ],
     "difficolta": "Intermedio",
@@ -12173,7 +12173,7 @@
     "focus": "QUAD",
     "imageUrl": "https://static.exercisedb.dev/media/T2fA5Ir.gif",
     "muscoliSecondari": [
-      "FEMOR",
+      "FEMO",
       "POLP",
       "GLUT",
       "CORE"
@@ -12204,7 +12204,7 @@
     "focus": "GLUT",
     "imageUrl": "https://static.exercisedb.dev/media/mnzcrIB.gif",
     "muscoliSecondari": [
-      "FEMOR",
+      "FEMO",
       "POLP",
       "QUAD"
     ],
@@ -12266,7 +12266,7 @@
     "imageUrl": "https://static.exercisedb.dev/media/5BZHW9s.gif",
     "muscoliSecondari": [
       "DELT",
-      "FEMOR",
+      "FEMO",
       "GLUT",
       "CORE"
     ],
@@ -12298,8 +12298,8 @@
     "muscoliSecondari": [
       "POLP",
       "GLUT",
-      "FEMOR",
-      "LOM"
+      "FEMO",
+      "LOMB"
     ],
     "difficolta": "Avanzato",
     "tipoEsercizio": "Compound",
@@ -12323,7 +12323,7 @@
     "focus": "GLUT",
     "imageUrl": "https://static.exercisedb.dev/media/GUT8I22.gif",
     "muscoliSecondari": [
-      "FEMOR",
+      "FEMO",
       "QUAD"
     ],
     "difficolta": "Intermedio",
@@ -12352,7 +12352,7 @@
     "focus": "GLUT",
     "imageUrl": "https://static.exercisedb.dev/media/lHeUULr.gif",
     "muscoliSecondari": [
-      "FEMOR"
+      "FEMO"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Compound",
@@ -12380,7 +12380,7 @@
     "focus": "GLUT",
     "imageUrl": "https://static.exercisedb.dev/media/kuMiR2T.gif",
     "muscoliSecondari": [
-      "FEMOR"
+      "FEMO"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Compound",
@@ -12408,7 +12408,7 @@
     "focus": "GLUT",
     "imageUrl": "https://static.exercisedb.dev/media/5eLRITT.gif",
     "muscoliSecondari": [
-      "FEMOR"
+      "FEMO"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Compound",
@@ -12433,7 +12433,7 @@
   {
     "id": "intense_barbell_straight_leg_deadlift",
     "nome": "Stacco Gambe Tese Intenso con Bilanciere",
-    "focus": "FEMOR",
+    "focus": "FEMO",
     "imageUrl": "https://static.exercisedb.dev/media/oMwyl17.gif",
     "muscoliSecondari": [
       "GLUT"
@@ -12464,7 +12464,7 @@
     "focus": "GLUT",
     "imageUrl": "https://static.exercisedb.dev/media/PDHE73u.gif",
     "muscoliSecondari": [
-      "FEMOR"
+      "FEMO"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Compound",
@@ -12489,7 +12489,7 @@
   {
     "id": "fast_band_straight_leg_deadlift",
     "nome": "Stacco Gambe Tese Veloce con Elastico",
-    "focus": "FEMOR",
+    "focus": "FEMO",
     "imageUrl": "https://static.exercisedb.dev/media/lRcrlH8.gif",
     "muscoliSecondari": [
       "CORE",
@@ -12518,7 +12518,7 @@
   {
     "id": "barbell_straight_leg_deadlift",
     "nome": "Stacco Gambe Tese con Bilanciere",
-    "focus": "FEMOR",
+    "focus": "FEMO",
     "imageUrl": "https://static.exercisedb.dev/media/hrVQWvE.gif",
     "muscoliSecondari": [
       "GLUT"
@@ -12551,7 +12551,7 @@
     "muscoliSecondari": [
       "LAT",
       "TRAP",
-      "FEMOR"
+      "FEMO"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Compound",
@@ -12579,7 +12579,7 @@
     "focus": "GLUT",
     "imageUrl": "https://static.exercisedb.dev/media/oom75KC.gif",
     "muscoliSecondari": [
-      "FEMOR"
+      "FEMO"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Compound",
@@ -12607,7 +12607,7 @@
     "focus": "GLUT",
     "imageUrl": "https://static.exercisedb.dev/media/UfePqpx.gif",
     "muscoliSecondari": [
-      "FEMOR",
+      "FEMO",
       "QUAD"
     ],
     "difficolta": "Intermedio",
@@ -12634,15 +12634,15 @@
   {
     "id": "sumo_deadlift_with_chains",
     "nome": "Stacco Mortale Sumoto con Catene",
-    "focus": "FEMOR",
+    "focus": "FEMO",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Sumo_Deadlift_with_Chains/0.jpg",
     "muscoliSecondari": [
       "ABDU",
-      "ADDU",
-      "AVAMB",
+      "ADD",
+      "AVA",
       "GLUT",
-      "LOM",
-      "DORSO",
+      "LOMB",
+      "LAT",
       "QUAD",
       "TRAP"
     ],
@@ -12665,14 +12665,14 @@
   {
     "id": "sumo_deadlift_with_bands",
     "nome": "Stacco Mortale Sumoto con Fasce",
-    "focus": "FEMOR",
+    "focus": "FEMO",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Sumo_Deadlift_with_Bands/0.jpg",
     "muscoliSecondari": [
-      "ADDU",
-      "AVAMB",
+      "ADD",
+      "AVA",
       "GLUT",
-      "LOM",
-      "DORSO",
+      "LOMB",
+      "LAT",
       "QUAD",
       "TRAP"
     ],
@@ -12695,11 +12695,11 @@
   {
     "id": "kettlebell_one_legged_deadlift",
     "nome": "Stacco Mortale con Una gamba e un manubrio",
-    "focus": "FEMOR",
+    "focus": "FEMO",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Kettlebell_One-Legged_Deadlift/0.jpg",
     "muscoliSecondari": [
       "GLUT",
-      "LOM"
+      "LOMB"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Compound",
@@ -12723,7 +12723,7 @@
     "focus": "GLUT",
     "imageUrl": "https://static.exercisedb.dev/media/2Ty4idJ.gif",
     "muscoliSecondari": [
-      "FEMOR"
+      "FEMO"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Compound",
@@ -12749,12 +12749,12 @@
   {
     "id": "romanian_deadlift",
     "nome": "Stacco Rumeno",
-    "focus": "FEMOR",
+    "focus": "FEMO",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Romanian_Deadlift/0.jpg",
     "muscoliSecondari": [
       "POLP",
       "GLUT",
-      "LOM"
+      "LOMB"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Compound",
@@ -12778,7 +12778,7 @@
     "focus": "GLUT",
     "imageUrl": "https://static.exercisedb.dev/media/o6LqKKP.gif",
     "muscoliSecondari": [
-      "FEMOR"
+      "FEMO"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Compound",
@@ -12807,7 +12807,7 @@
     "focus": "GLUT",
     "imageUrl": "https://static.exercisedb.dev/media/wQ2c4XD.gif",
     "muscoliSecondari": [
-      "FEMOR"
+      "FEMO"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Compound",
@@ -12836,7 +12836,7 @@
     "focus": "GLUT",
     "imageUrl": "https://static.exercisedb.dev/media/rR0LJzx.gif",
     "muscoliSecondari": [
-      "FEMOR"
+      "FEMO"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Compound",
@@ -12866,7 +12866,7 @@
     "focus": "GLUT",
     "imageUrl": "https://static.exercisedb.dev/media/daBmy1Y.gif",
     "muscoliSecondari": [
-      "FEMOR"
+      "FEMO"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Compound",
@@ -12894,7 +12894,7 @@
     "focus": "GLUT",
     "imageUrl": "https://static.exercisedb.dev/media/KgI0tqW.gif",
     "muscoliSecondari": [
-      "FEMOR",
+      "FEMO",
       "QUAD"
     ],
     "difficolta": "Intermedio",
@@ -12920,14 +12920,14 @@
   {
     "id": "sumo_deadlift",
     "nome": "Stacco Sumo",
-    "focus": "FEMOR",
+    "focus": "FEMO",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Sumo_Deadlift/0.jpg",
     "muscoliSecondari": [
-      "ADDU",
-      "AVAMB",
+      "ADD",
+      "AVA",
       "GLUT",
-      "LOM",
-      "DORSO",
+      "LOMB",
+      "LAT",
       "QUAD",
       "TRAP"
     ],
@@ -12953,7 +12953,7 @@
     "focus": "GLUT",
     "imageUrl": "https://static.exercisedb.dev/media/2DxtqHL.gif",
     "muscoliSecondari": [
-      "FEMOR",
+      "FEMO",
       "QUAD"
     ],
     "difficolta": "Intermedio",
@@ -12983,7 +12983,7 @@
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Leverage_Deadlift/0.jpg",
     "muscoliSecondari": [
       "GLUT",
-      "FEMOR"
+      "FEMO"
     ],
     "difficolta": "Principiante",
     "tipoEsercizio": "Compound",
@@ -13004,7 +13004,7 @@
   {
     "id": "prone_manual_hamstring",
     "nome": "Stacco a T a Mani Pronte",
-    "focus": "FEMOR",
+    "focus": "FEMO",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Prone_Manual_Hamstring/0.jpg",
     "muscoliSecondari": [],
     "difficolta": "Principiante",
@@ -13029,7 +13029,7 @@
     "focus": "GLUT",
     "imageUrl": "https://static.exercisedb.dev/media/gEyURal.gif",
     "muscoliSecondari": [
-      "FEMOR"
+      "FEMO"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Compound",
@@ -13057,7 +13057,7 @@
     "focus": "GLUT",
     "imageUrl": "https://static.exercisedb.dev/media/gKozT8X.gif",
     "muscoliSecondari": [
-      "FEMOR"
+      "FEMO"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Compound",
@@ -13085,7 +13085,7 @@
     "focus": "GLUT",
     "imageUrl": "https://static.exercisedb.dev/media/eGDudUV.gif",
     "muscoliSecondari": [
-      "FEMOR",
+      "FEMO",
       "QUAD"
     ],
     "difficolta": "Intermedio",
@@ -13115,7 +13115,7 @@
     "focus": "GLUT",
     "imageUrl": "https://static.exercisedb.dev/media/nUwVh7b.gif",
     "muscoliSecondari": [
-      "FEMOR"
+      "FEMO"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Compound",
@@ -13143,7 +13143,7 @@
     "focus": "GLUT",
     "imageUrl": "https://static.exercisedb.dev/media/jQGwmxN.gif",
     "muscoliSecondari": [
-      "FEMOR",
+      "FEMO",
       "QUAD"
     ],
     "difficolta": "Intermedio",
@@ -13174,7 +13174,7 @@
     "focus": "GLUT",
     "imageUrl": "https://static.exercisedb.dev/media/ila4NZS.gif",
     "muscoliSecondari": [
-      "FEMOR"
+      "FEMO"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Compound",
@@ -13201,11 +13201,11 @@
   {
     "id": "stiff_legged_barbell_deadlift",
     "nome": "Stafida con Bilanciere a Gambe Rigide",
-    "focus": "FEMOR",
+    "focus": "FEMO",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Stiff-Legged_Barbell_Deadlift/0.jpg",
     "muscoliSecondari": [
       "GLUT",
-      "LOM"
+      "LOMB"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Compound",
@@ -13229,7 +13229,7 @@
     "focus": "QUAD",
     "imageUrl": "https://static.exercisedb.dev/media/HtfCpfi.gif",
     "muscoliSecondari": [
-      "FEMOR",
+      "FEMO",
       "POLP",
       "GLUT"
     ],
@@ -13260,7 +13260,7 @@
     "focus": "QUAD",
     "imageUrl": "https://static.exercisedb.dev/media/fNGumX0.gif",
     "muscoliSecondari": [
-      "FEMOR",
+      "FEMO",
       "POLP",
       "GLUT"
     ],
@@ -13293,7 +13293,7 @@
     "muscoliSecondari": [
       "POLP",
       "GLUT",
-      "FEMOR"
+      "FEMO"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Compound",
@@ -13317,7 +13317,7 @@
     "focus": "QUAD",
     "imageUrl": "https://static.exercisedb.dev/media/7858za8.gif",
     "muscoliSecondari": [
-      "FEMOR",
+      "FEMO",
       "POLP",
       "GLUT"
     ],
@@ -13347,7 +13347,7 @@
     "focus": "QUAD",
     "imageUrl": "https://static.exercisedb.dev/media/QjE2DcA.gif",
     "muscoliSecondari": [
-      "FEMOR",
+      "FEMO",
       "GLUT"
     ],
     "difficolta": "Intermedio",
@@ -13379,7 +13379,7 @@
     "focus": "QUAD",
     "imageUrl": "https://static.exercisedb.dev/media/gFyFj9z.gif",
     "muscoliSecondari": [
-      "FEMOR",
+      "FEMO",
       "POLP",
       "GLUT"
     ],
@@ -13409,7 +13409,7 @@
     "focus": "GLUT",
     "imageUrl": "https://static.exercisedb.dev/media/Kxquu2E.gif",
     "muscoliSecondari": [
-      "FEMOR",
+      "FEMO",
       "POLP",
       "QUAD"
     ],
@@ -13441,7 +13441,7 @@
     "focus": "GLUT",
     "imageUrl": "https://static.exercisedb.dev/media/d5bTEPV.gif",
     "muscoliSecondari": [
-      "FEMOR",
+      "FEMO",
       "POLP",
       "QUAD"
     ],
@@ -13473,7 +13473,7 @@
     "focus": "GLUT",
     "imageUrl": "https://static.exercisedb.dev/media/aXtJhlg.gif",
     "muscoliSecondari": [
-      "FEMOR",
+      "FEMO",
       "POLP",
       "QUAD"
     ],
@@ -13502,11 +13502,11 @@
   {
     "id": "smith_machine_stiff_legged_deadlift",
     "nome": "Stiff Legged Deadlift alla Macchina Smith",
-    "focus": "FEMOR",
+    "focus": "FEMO",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Smith_Machine_Stiff-Legged_Deadlift/0.jpg",
     "muscoliSecondari": [
       "GLUT",
-      "LOM"
+      "LOMB"
     ],
     "difficolta": "Principiante",
     "tipoEsercizio": "Compound",
@@ -13527,11 +13527,11 @@
   {
     "id": "stiff_legged_dumbbell_deadlift",
     "nome": "Stiff Legged Dumbbell Deadlift",
-    "focus": "FEMOR",
+    "focus": "FEMO",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Stiff-Legged_Dumbbell_Deadlift/0.jpg",
     "muscoliSecondari": [
       "GLUT",
-      "LOM"
+      "LOMB"
     ],
     "difficolta": "Principiante",
     "tipoEsercizio": "Compound",
@@ -13552,7 +13552,7 @@
   {
     "id": "hamstring_smr",
     "nome": "Stiramento del Bicipite Femorale",
-    "focus": "FEMOR",
+    "focus": "FEMO",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Hamstring-SMR/0.jpg",
     "muscoliSecondari": [],
     "difficolta": "Principiante",
@@ -13621,7 +13621,7 @@
     "focus": "POLP",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Standing_Gastrocnemius_Calf_Stretch/0.jpg",
     "muscoliSecondari": [
-      "FEMOR"
+      "FEMO"
     ],
     "difficolta": "Principiante",
     "tipoEsercizio": "Compound",
@@ -13642,7 +13642,7 @@
   {
     "id": "standing_hamstring_and_calf_stretch",
     "nome": "Stretching Gambe e Polpacci in Piedi",
-    "focus": "FEMOR",
+    "focus": "FEMO",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Standing_Hamstring_and_Calf_Stretch/0.jpg",
     "muscoliSecondari": [],
     "difficolta": "Principiante",
@@ -13667,7 +13667,7 @@
     "focus": "POLP",
     "imageUrl": "https://static.exercisedb.dev/media/X7jbxra.gif",
     "muscoliSecondari": [
-      "FEMOR",
+      "FEMO",
       "QUAD"
     ],
     "difficolta": "Principiante",
@@ -13711,7 +13711,7 @@
     ],
     "countingMode": "weighted",
     "muscoliSecondari": [
-      "FEMOR"
+      "FEMO"
     ],
     "version": "1.0.2",
     "versionHistory": [
@@ -13723,7 +13723,7 @@
   {
     "id": "seated_floor_hamstring_stretch",
     "nome": "Stretching Piegamenti alle gambe Seduti a Terra",
-    "focus": "FEMOR",
+    "focus": "FEMO",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Seated_Floor_Hamstring_Stretch/0.jpg",
     "muscoliSecondari": [
       "POLP"
@@ -13940,7 +13940,7 @@
   {
     "id": "seated_hamstring_and_calf_stretch",
     "nome": "Stretching Seduto dei Polpacci e delle Cosce posteriori",
-    "focus": "FEMOR",
+    "focus": "FEMO",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Seated_Hamstring_and_Calf_Stretch/0.jpg",
     "muscoliSecondari": [
       "POLP"
@@ -13967,7 +13967,7 @@
     "focus": "POLP",
     "imageUrl": "https://static.exercisedb.dev/media/DEEqoI2.gif",
     "muscoliSecondari": [
-      "FEMOR",
+      "FEMO",
       "QUAD"
     ],
     "difficolta": "Intermedio",
@@ -14018,7 +14018,7 @@
   {
     "id": "groin_and_back_stretch",
     "nome": "Stretching dei Piegamenti sulle gambe e sulla schiena",
-    "focus": "ADDU",
+    "focus": "ADD",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Groin_and_Back_Stretch/0.jpg",
     "muscoliSecondari": [],
     "difficolta": "Intermedio",
@@ -14040,10 +14040,10 @@
   {
     "id": "side_lying_groin_stretch",
     "nome": "Stretching del Piegamento Laterale con la Posizione a Lievo laterle",
-    "focus": "ADDU",
+    "focus": "ADD",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Side_Lying_Groin_Stretch/0.jpg",
     "muscoliSecondari": [
-      "FEMOR"
+      "FEMO"
     ],
     "difficolta": "Principiante",
     "tipoEsercizio": "Isolation",
@@ -14064,7 +14064,7 @@
   {
     "id": "intermediate_groin_stretch",
     "nome": "Stretching del Piegamento a Gambe Intermedie",
-    "focus": "FEMOR",
+    "focus": "FEMO",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Intermediate_Groin_Stretch/0.jpg",
     "muscoliSecondari": [],
     "difficolta": "Intermedio",
@@ -14133,8 +14133,8 @@
     "focus": "POLP",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Seated_Calf_Stretch/0.jpg",
     "muscoliSecondari": [
-      "FEMOR",
-      "LOM"
+      "FEMO",
+      "LOMB"
     ],
     "difficolta": "Principiante",
     "tipoEsercizio": "Compound",
@@ -14155,7 +14155,7 @@
   {
     "id": "worlds_greatest_stretch",
     "nome": "Stretching la Più Grande del Mondo",
-    "focus": "FEMOR",
+    "focus": "FEMO",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Worlds_Greatest_Stretch/0.jpg",
     "muscoliSecondari": [
       "POLP",
@@ -14185,7 +14185,7 @@
     "imageUrl": "https://static.exercisedb.dev/media/LFIOery.gif",
     "muscoliSecondari": [
       "CORE",
-      "FEMOR",
+      "FEMO",
       "QUAD"
     ],
     "difficolta": "Intermedio",
@@ -14215,7 +14215,7 @@
     "imageUrl": "https://static.exercisedb.dev/media/BmrwWzo.gif",
     "muscoliSecondari": [
       "CORE",
-      "FEMOR",
+      "FEMO",
       "QUAD"
     ],
     "difficolta": "Intermedio",
@@ -14244,7 +14244,7 @@
     "focus": "QUAD",
     "imageUrl": "https://static.exercisedb.dev/media/s7HX1BY.gif",
     "muscoliSecondari": [
-      "FEMOR",
+      "FEMO",
       "GLUT"
     ],
     "difficolta": "Intermedio",
@@ -14297,7 +14297,7 @@
     "imageUrl": "https://static.exercisedb.dev/media/UHJlbu3.gif",
     "muscoliSecondari": [
       "CORE",
-      "FEMOR"
+      "FEMO"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Compound",
@@ -14322,12 +14322,12 @@
   {
     "id": "one_arm_kettlebell_swings",
     "nome": "Swings con un manubrio da una Sola Mano",
-    "focus": "FEMOR",
+    "focus": "FEMO",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/One-Arm_Kettlebell_Swings/0.jpg",
     "muscoliSecondari": [
       "POLP",
       "GLUT",
-      "LOM",
+      "LOMB",
       "DELT"
     ],
     "difficolta": "Intermedio",
@@ -14352,7 +14352,7 @@
     "focus": "QUAD",
     "imageUrl": "https://static.exercisedb.dev/media/QpXqiq8.gif",
     "muscoliSecondari": [
-      "FEMOR",
+      "FEMO",
       "CORE",
       "GLUT"
     ],
@@ -14382,7 +14382,7 @@
     "focus": "GLUT",
     "imageUrl": "https://static.exercisedb.dev/media/RtyAsy1.gif",
     "muscoliSecondari": [
-      "FEMOR",
+      "FEMO",
       "POLP",
       "QUAD"
     ],
@@ -14413,7 +14413,7 @@
     "focus": "GLUT",
     "imageUrl": "https://static.exercisedb.dev/media/BbfB8Gb.gif",
     "muscoliSecondari": [
-      "FEMOR",
+      "FEMO",
       "POLP"
     ],
     "difficolta": "Principiante",
@@ -14443,7 +14443,7 @@
     "focus": "GLUT",
     "imageUrl": "https://static.exercisedb.dev/media/B5xca8s.gif",
     "muscoliSecondari": [
-      "FEMOR",
+      "FEMO",
       "POLP",
       "QUAD"
     ],
@@ -14488,7 +14488,7 @@
     ],
     "countingMode": "weighted",
     "muscoliSecondari": [
-      "FEMOR"
+      "FEMO"
     ],
     "version": "1.0.2",
     "versionHistory": [
@@ -14500,7 +14500,7 @@
   {
     "id": "standing_toe_touches",
     "nome": "Toe Touch in Posizione In piedi",
-    "focus": "FEMOR",
+    "focus": "FEMO",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Standing_Toe_Touches/0.jpg",
     "muscoliSecondari": [
       "POLP"
@@ -14549,7 +14549,7 @@
     "focus": "GLUT",
     "imageUrl": "https://static.exercisedb.dev/media/OM46QHm.gif",
     "muscoliSecondari": [
-      "FEMOR"
+      "FEMO"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Compound",
@@ -14574,7 +14574,7 @@
   {
     "id": "inverted_style_inverse_leg_curl_on_pull_up_cable_machine",
     "nome": "Trazioni Leg Curl Inverso Stile Invertito su Macch",
-    "focus": "FEMOR",
+    "focus": "FEMO",
     "imageUrl": "https://static.exercisedb.dev/media/fjjY3N4.gif",
     "muscoliSecondari": [
       "GLUT",
@@ -14605,7 +14605,7 @@
   {
     "id": "inverse_leg_curl_on_pull_up_cable_machine",
     "nome": "Trazioni Leg Curl Inverso su Macchina ai Cavi",
-    "focus": "FEMOR",
+    "focus": "FEMO",
     "imageUrl": "https://static.exercisedb.dev/media/0rHfvy9.gif",
     "muscoliSecondari": [
       "GLUT",
@@ -14639,8 +14639,8 @@
     "focus": "GLUT",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Pull_Through/0.jpg",
     "muscoliSecondari": [
-      "FEMOR",
-      "LOM"
+      "FEMO",
+      "LOMB"
     ],
     "difficolta": "Principiante",
     "tipoEsercizio": "Compound",
@@ -14665,7 +14665,7 @@
     "imageUrl": "https://static.exercisedb.dev/media/6pTkI99.gif",
     "muscoliSecondari": [
       "CORE",
-      "FEMOR",
+      "FEMO",
       "QUAD"
     ],
     "difficolta": "Intermedio",
@@ -14694,8 +14694,8 @@
     "focus": "GLUT",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/One_Knee_To_Chest/0.jpg",
     "muscoliSecondari": [
-      "FEMOR",
-      "LOM"
+      "FEMO",
+      "LOMB"
     ],
     "difficolta": "Principiante",
     "tipoEsercizio": "Compound",
@@ -14721,7 +14721,7 @@
     "muscoliSecondari": [
       "POLP",
       "GLUT",
-      "FEMOR"
+      "FEMO"
     ],
     "difficolta": "Principiante",
     "tipoEsercizio": "Compound",
@@ -14747,7 +14747,7 @@
     "muscoliSecondari": [
       "POLP",
       "GLUT",
-      "FEMOR"
+      "FEMO"
     ],
     "difficolta": "Avanzato",
     "tipoEsercizio": "Compound",

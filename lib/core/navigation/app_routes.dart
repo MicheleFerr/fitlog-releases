@@ -164,6 +164,10 @@ abstract final class AppRoutes {
   static const String unauthorizedPath = '/unauthorized';
   static const String unauthorizedName = 'unauthorized';
 
+  /// Web landing page (only page accessible from mobile web)
+  static const String webLandingPath = '/landing';
+  static const String webLandingName = 'web-landing';
+
   // ═══════════════════════════════════════════════════════════════════════════
   // Profile Sub-Routes (pushed from Profile hub quick actions)
   // ═══════════════════════════════════════════════════════════════════════════

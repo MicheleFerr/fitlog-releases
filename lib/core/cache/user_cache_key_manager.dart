@@ -65,6 +65,60 @@ class UserCacheKeyManager {
   }
 
   // ============================================
+  // Superset Template Cache Keys
+  // ============================================
+
+  /// Key for custom superset templates cache
+  /// Pattern: 'superset_templates_{userId}'
+  String get supersetTemplatesCacheKey {
+    _ensureLoggedIn();
+    return 'superset_templates_$currentUserId';
+  }
+
+  /// Key for superset predefined templates loaded flag
+  /// Pattern: 'superset_predefined_loaded_{userId}'
+  String get supersetPredefinedLoadedKey {
+    _ensureLoggedIn();
+    return 'superset_predefined_loaded_$currentUserId';
+  }
+
+  // ============================================
+  // Dropset Template Cache Keys
+  // ============================================
+
+  /// Key for custom dropset templates cache
+  /// Pattern: 'dropset_templates_{userId}'
+  String get dropsetTemplatesCacheKey {
+    _ensureLoggedIn();
+    return 'dropset_templates_$currentUserId';
+  }
+
+  /// Key for dropset predefined templates loaded flag
+  /// Pattern: 'dropset_predefined_loaded_{userId}'
+  String get dropsetPredefinedLoadedKey {
+    _ensureLoggedIn();
+    return 'dropset_predefined_loaded_$currentUserId';
+  }
+
+  // ============================================
+  // Rest-Pause Template Cache Keys
+  // ============================================
+
+  /// Key for custom rest-pause templates cache
+  /// Pattern: 'restpause_templates_{userId}'
+  String get restPauseTemplatesCacheKey {
+    _ensureLoggedIn();
+    return 'restpause_templates_$currentUserId';
+  }
+
+  /// Key for rest-pause predefined templates loaded flag
+  /// Pattern: 'restpause_predefined_loaded_{userId}'
+  String get restPausePredefinedLoadedKey {
+    _ensureLoggedIn();
+    return 'restpause_predefined_loaded_$currentUserId';
+  }
+
+  // ============================================
   // Analytics Cache Keys
   // ============================================
 

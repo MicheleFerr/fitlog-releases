@@ -1,6 +1,8 @@
 import 'dart:async' show unawaited;
 
+import 'package:flutter/foundation.dart' show kDebugMode;
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart' show MethodChannel;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
@@ -14,6 +16,7 @@ import 'package:gymbro_flutter_new/features/strength_standards/presentation/prov
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
 import 'package:gymbro_flutter_new/features/admin/presentation/screens/database_manager_screen.dart';
+import 'package:gymbro_flutter_new/features/settings/presentation/screens/audio_debug_test_screen.dart';
 import 'package:gymbro_flutter_new/features/analytics/presentation/widgets/migration_dialog.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
 import 'package:gymbro_flutter_new/features/onboarding/presentation/providers/tutorial_state_notifier.dart';
@@ -24,6 +27,7 @@ import 'package:gymbro_flutter_new/features/analytics/presentation/providers/wor
 import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator.dart';
 import 'package:gymbro_flutter_new/features/data_export/presentation/widgets/data_export_sheet.dart';
 import 'package:gymbro_flutter_new/shared/presentation/providers/ghost_mode_provider.dart';
+import 'package:gymbro_flutter_new/features/exercise_database/presentation/providers/hybrid_exercise_provider.dart';
 
 class SettingsScreen extends ConsumerWidget {
   const SettingsScreen({super.key});
@@ -209,46 +213,95 @@ class SettingsScreen extends ConsumerWidget {
                             ),
                           ],
                         ),
-                        const SizedBox(height: 12),
-                        // Admin Dashboard Button
-                        SizedBox(
-                          width: double.infinity,
-                          child: OutlinedButton.icon(
-                            onPressed: () => context.pushNamed('admin'),
-                            icon: const SemanticIcon(
-  icon: AppIcons.admin,
-  semanticLabel: 'Admin',
-),
-                            label: Text(context.l10n.adminDashboard),
-                            style: OutlinedButton.styleFrom(
-                              foregroundColor: context.colors.primary,
-                            ),
-                          ),
-                        ),
-                        const SizedBox(height: 12),
-                        // Database Manager Button (Direct Access)
-                        SizedBox(
-                          width: double.infinity,
-                          child: FilledButton.icon(
-                            onPressed: () {
-                              Navigator.of(context).push(
-                                MaterialPageRoute(
-                                  builder: (_) => const DatabaseManagerScreen(),
-                                ),
-                              );
-                            },
-                            icon: const SemanticIcon(
-  icon: AppIcons.storage,
-  semanticLabel: 'Storage',
-),
-                            label: Text(context.l10n.databaseManager),
-                            style: FilledButton.styleFrom(
-                              backgroundColor: context.colors.primary,
-                            ),
-                          ),
-                        ),
-                        // Admin Premium Toggle (admin only)
+                        // Admin Section (admin only - protected by isAdminCachedProvider)
                         if (ref.watch(isAdminCachedProvider)) ...[
+                          const SizedBox(height: 12),
+                          // Admin Dashboard Button
+                          SizedBox(
+                            width: double.infinity,
+                            child: OutlinedButton.icon(
+                              onPressed: () => context.pushNamed('admin'),
+                              icon: const SemanticIcon(
+                                icon: AppIcons.admin,
+                                semanticLabel: 'Admin',
+                              ),
+                              label: Text(context.l10n.adminDashboard),
+                              style: OutlinedButton.styleFrom(
+                                foregroundColor: context.colors.primary,
+                              ),
+                            ),
+                          ),
+                          const SizedBox(height: 12),
+                          // Database Manager Button (Direct Access)
+                          SizedBox(
+                            width: double.infinity,
+                            child: FilledButton.icon(
+                              onPressed: () {
+                                Navigator.of(context).push(
+                                  MaterialPageRoute(
+                                    builder: (_) => const DatabaseManagerScreen(),
+                                  ),
+                                );
+                              },
+                              icon: const SemanticIcon(
+                                icon: AppIcons.storage,
+                                semanticLabel: 'Storage',
+                              ),
+                              label: Text(context.l10n.databaseManager),
+                              style: FilledButton.styleFrom(
+                                backgroundColor: context.colors.primary,
+                              ),
+                            ),
+                          ),
+                          const SizedBox(height: 12),
+                          // 🔬 Audio Debug Tests
+                          SizedBox(
+                            width: double.infinity,
+                            child: FilledButton.icon(
+                              onPressed: () {
+                                Navigator.of(context).push(
+                                  MaterialPageRoute(
+                                    builder: (_) => const AudioDebugTestScreen(),
+                                  ),
+                                );
+                              },
+                              icon: const SemanticIcon(
+                                icon: AppIcons.bugReport,
+                                semanticLabel: 'Audio Debug',
+                              ),
+                              label: Text(context.l10n.audioDebugTests),
+                              style: FilledButton.styleFrom(
+                                backgroundColor: context.colors.warning,
+                              ),
+                            ),
+                          ),
+                          const SizedBox(height: 12),
+                          // 🧪 TEST: Reset Exercise Database
+                          SizedBox(
+                            width: double.infinity,
+                            child: OutlinedButton.icon(
+                              onPressed: () async {
+                                final actions = ref.read(exerciseSyncActionsProvider);
+                                SnackBarService.showInfo(context, '🧪 Resetting exercise database...');
+                                await actions.resetForTesting();
+                                if (context.mounted) {
+                                  SnackBarService.showInfo(context, '🧪 Forcing re-sync...');
+                                }
+                                await actions.forceSync();
+                                if (context.mounted) {
+                                  SnackBarService.showSuccess(context, '✅ Reset & sync complete!');
+                                }
+                              },
+                              icon: const SemanticIcon(
+                                icon: AppIcons.refresh,
+                                semanticLabel: 'Reset',
+                              ),
+                              label: Text('🧪 Reset Exercise DB'),
+                              style: OutlinedButton.styleFrom(
+                                foregroundColor: context.colors.warning,
+                              ),
+                            ),
+                          ),
                           const SizedBox(height: 16),
                           const Divider(),
                           const SizedBox(height: 8),
@@ -671,6 +724,11 @@ class SettingsScreen extends ConsumerWidget {
                 size: AppIconSize.medium,
               ),
             ),
+
+            const Divider(),
+
+            // Timer sound selection
+            _buildTimerSoundSelector(context, ref, config),
 
             const Divider(),
 
@@ -1329,6 +1387,159 @@ class SettingsScreen extends ConsumerWidget {
       secondary: leading,
       contentPadding: EdgeInsets.zero,
     );
+  }
+
+  // Timer sound selector with preview
+  Widget _buildTimerSoundSelector(BuildContext context, WidgetRef ref, AppConfig config) {
+    // Map internal sound names to display names
+    String getSoundDisplayName(String soundName) {
+      switch (soundName) {
+        case 'sound':
+          return context.l10n.settingsTimerSoundClassic;
+        case 'timer_complete':
+          return context.l10n.settingsTimerSoundComplete;
+        case 'LightWeight':
+          return context.l10n.settingsTimerSoundLightWeight;
+        case 'YehBuddie':
+          return context.l10n.settingsTimerSoundYehBuddie;
+        default:
+          return soundName;
+      }
+    }
+
+    return ListTile(
+      contentPadding: EdgeInsets.zero,
+      leading: const SemanticIcon(
+        icon: AppIcons.volumeUp,
+        semanticLabel: 'Timer sound',
+        size: AppIconSize.medium,
+      ),
+      title: Text(context.l10n.settingsTimerSound),
+      subtitle: Text(getSoundDisplayName(config.timerSound)),
+      trailing: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          // Preview button
+          IconButton(
+            icon: const SemanticIcon(
+              icon: AppIcons.playCircleFilled,
+              semanticLabel: 'Preview sound',
+              size: AppIconSize.medium,
+            ),
+            onPressed: () => _previewTimerSound(config.timerSound),
+            tooltip: context.l10n.settingsTimerSoundPreview,
+          ),
+          const SizedBox(width: 8),
+          const SemanticIcon(
+            icon: AppIcons.chevronRight,
+            semanticLabel: 'Select sound',
+          ),
+        ],
+      ),
+      onTap: () => _showTimerSoundPicker(context, ref, config),
+    );
+  }
+
+  // Show timer sound picker bottom sheet
+  void _showTimerSoundPicker(BuildContext context, WidgetRef ref, AppConfig config) {
+    final availableSounds = [
+      {'name': 'sound', 'displayName': context.l10n.settingsTimerSoundClassic},
+      {'name': 'timer_complete', 'displayName': context.l10n.settingsTimerSoundComplete},
+      {'name': 'LightWeight', 'displayName': context.l10n.settingsTimerSoundLightWeight},
+      {'name': 'YehBuddie', 'displayName': context.l10n.settingsTimerSoundYehBuddie},
+    ];
+
+    showModalBottomSheet(
+      context: context,
+      builder: (BuildContext bottomSheetContext) {
+        return Container(
+          padding: const EdgeInsets.symmetric(vertical: 16),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              // Header
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                child: Row(
+                  children: [
+                    const SemanticIcon(
+                      icon: AppIcons.volumeUp,
+                      semanticLabel: 'Timer sound',
+                      size: AppIconSize.medium,
+                    ),
+                    const SizedBox(width: 12),
+                    Text(
+                      context.l10n.settingsTimerSound,
+                      style: context.textTheme.titleLarge?.copyWith(
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              const Divider(),
+              // Sound list
+              ...availableSounds.map((sound) {
+                final soundName = sound['name']!;
+                final displayName = sound['displayName']!;
+                final isSelected = config.timerSound == soundName;
+
+                return ListTile(
+                  leading: SemanticIcon(
+                    icon: isSelected ? AppIcons.checkCircle : AppIcons.radioButtonUnchecked,
+                    semanticLabel: isSelected ? 'Selected' : 'Not selected',
+                    size: AppIconSize.medium,
+                    color: isSelected ? context.colors.primary : null,
+                  ),
+                  title: Text(
+                    displayName,
+                    style: context.textTheme.bodyLarge?.copyWith(
+                      fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+                      color: isSelected ? context.colors.primary : null,
+                    ),
+                  ),
+                  trailing: IconButton(
+                    icon: const SemanticIcon(
+                      icon: AppIcons.playCircleFilled,
+                      semanticLabel: 'Preview',
+                      size: AppIconSize.medium,
+                    ),
+                    onPressed: () => _previewTimerSound(soundName),
+                  ),
+                  onTap: () {
+                    ref.read(appConfigProvider.notifier).setTimerSound(soundName);
+                    Navigator.of(bottomSheetContext).pop();
+
+                    // Show feedback
+                    SnackBarService.showSuccess(
+                      context,
+                      '${context.l10n.settingsTimerSound}: $displayName',
+                    );
+                  },
+                );
+              }),
+              const SizedBox(height: 8),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  // Preview timer sound using platform channel
+  void _previewTimerSound(String soundName) {
+    const platform = MethodChannel('com.gymbro.timer_sound_fix');
+
+    try {
+      // Use TimerSoundFix channel to play the sound
+      platform.invokeMethod('playTimerSound', {
+        'soundName': soundName,
+      });
+    } catch (e) {
+      if (kDebugMode) {
+        debugPrint('Failed to preview timer sound: $e');
+      }
+    }
   }
 
   // Stress Index Recalculation

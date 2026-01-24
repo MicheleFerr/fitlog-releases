@@ -266,6 +266,9 @@ class _QuickEditOverlayV2State extends ConsumerState<QuickEditOverlayV2>
     final measurementUnit = ref.watch(
       appConfigProvider.select((config) => config.measurementUnit)
     );
+    final plateCalculatorEnabled = ref.watch(
+      appConfigProvider.select((config) => config.plateCalculator ?? true)
+    );
 
     final theme = Theme.of(context);
     final screenSize = MediaQuery.of(context).size; // Get screen size here
@@ -320,7 +323,7 @@ class _QuickEditOverlayV2State extends ConsumerState<QuickEditOverlayV2>
                           // ✅ NEW: Show swipe hint if navigation is available
                           if (_hasSwipeNavigation) _buildSwipeHint(theme),
                           const SizedBox(height: 12),
-                          _buildContent(theme, measurementUnit),
+                          _buildContent(theme, measurementUnit, plateCalculatorEnabled),
                         ],
                       ),
                     ),
@@ -374,7 +377,7 @@ class _QuickEditOverlayV2State extends ConsumerState<QuickEditOverlayV2>
                   children: [
                     _buildHeader(theme),
                     const SizedBox(height: 12),
-                    _buildContent(theme, measurementUnit),
+                    _buildContent(theme, measurementUnit, plateCalculatorEnabled),
                   ],
                 ),
               ),
@@ -441,7 +444,7 @@ class _QuickEditOverlayV2State extends ConsumerState<QuickEditOverlayV2>
     );
   }
 
-  Widget _buildContent(ThemeData theme, String measurementUnit) {
+  Widget _buildContent(ThemeData theme, String measurementUnit, bool plateCalculatorEnabled) {
     return Padding(
       padding: const EdgeInsets.all(16),
       child: Column(
@@ -490,7 +493,7 @@ class _QuickEditOverlayV2State extends ConsumerState<QuickEditOverlayV2>
           ],
           
           // NEW: Primary Control Toolbar
-          _buildPrimaryToolbar(theme, measurementUnit),
+          _buildPrimaryToolbar(theme, measurementUnit, plateCalculatorEnabled),
           
           const SizedBox(height: 12),
           
@@ -1258,7 +1261,7 @@ class _QuickEditOverlayV2State extends ConsumerState<QuickEditOverlayV2>
   }
 
   // NEW: Redesigned Primary Toolbar
-  Widget _buildPrimaryToolbar(ThemeData theme, String measurementUnit) {
+  Widget _buildPrimaryToolbar(ThemeData theme, String measurementUnit, bool plateCalculatorEnabled) {
     return Container(
       height: 48,
       padding: const EdgeInsets.symmetric(horizontal: 8),
@@ -1272,7 +1275,7 @@ class _QuickEditOverlayV2State extends ConsumerState<QuickEditOverlayV2>
       child: Row(
         children: [
           // Mode Toggle - Clear segmented control
-          _buildModeToggle(theme),
+          _buildModeToggle(theme, plateCalculatorEnabled, measurementUnit),
 
           const SizedBox(width: 12),
 
@@ -1285,15 +1288,15 @@ class _QuickEditOverlayV2State extends ConsumerState<QuickEditOverlayV2>
 
           const SizedBox(width: 12),
 
-          // ✅ MODIFICATO: Plate Calculator - Only visible for weighted mode
-          if (widget.countingMode.requiresWeight)
+          // ✅ FIXED: Plate Calculator - Only visible for weighted mode AND when toggle enabled
+          if (widget.countingMode.requiresWeight && plateCalculatorEnabled)
             _buildPlateCalculatorButton(theme, measurementUnit),
         ],
       ),
     );
   }
 
-  Widget _buildModeToggle(ThemeData theme) {
+  Widget _buildModeToggle(ThemeData theme, bool plateCalculatorEnabled, String measurementUnit) {
     // ✅ MODIFICATO: Different labels based on counting mode
     final String absoluteLabel = widget.countingMode.requiresTime
         ? AppLocalizations.of(context).duration // "Secondi" or "Duration"

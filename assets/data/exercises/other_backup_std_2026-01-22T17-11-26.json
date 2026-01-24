@@ -1,0 +1,3555 @@
+[
+  {
+    "id": "box_jump_multiple_response",
+    "nome": "Box Jump (Multiple Response)",
+    "focus": "FEMOR",
+    "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Box_Jump_Multiple_Response/0.jpg",
+    "muscoliSecondari": [
+      "ABDU",
+      "ADDU",
+      "POLP",
+      "GLUT",
+      "QUAD"
+    ],
+    "difficolta": "Principiante",
+    "tipoEsercizio": "Compound",
+    "attrezzatura": "Altro",
+    "patternMovimento": "Plyometrics",
+    "rangeRipetizioni": "8-12",
+    "noteTecniche": "Passo 1: Assumi una posizione rilassata di fronte al box, a circa un braccio di distanza. Braccia lungo i fianchi e gambe leggermente piegate. | Passo 2: Usa le braccia per darti slancio, salta in alto e in avanti atterrando con entrambi i piedi sulla cima del box. | Passo 3: Scendi immediatamente o salta giù tornando alla posizione iniziale, poi ripeti la sequenza.",
+    "aliases": [
+      "box jump multiple re",
+      "box"
+    ],
+    "countingMode": "reps",
+    "version": "1.0.0",
+    "versionHistory": [
+      "1.0.0 (2025-12-17): Imported from free-exercise-db"
+    ]
+  },
+  {
+    "id": "atlas_stone_trainer",
+    "nome": "Allenatore Atlas Stone",
+    "focus": "LOM",
+    "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Atlas_Stone_Trainer/0.jpg",
+    "muscoliSecondari": [
+      "BIC",
+      "AVAMB",
+      "GLUT",
+      "FEMOR",
+      "QUAD"
+    ],
+    "difficolta": "Intermedio",
+    "tipoEsercizio": "Compound",
+    "attrezzatura": "Altro",
+    "patternMovimento": "Strongman",
+    "rangeRipetizioni": "8-12",
+    "noteTecniche": "Passo 1: Questo attrezzo è efficace per sviluppare la forza per le Atlas Stone per chi non ha accesso alle pietre. È tipicamente realizzato con estremità di bilanciere o tubi pesanti. | Passo 2: Inizia caricando il peso desiderato sulla sbarra. Posizionati a cavaliere del peso, avvolgendo le braccia attorno all'attrezzo e piegandoti sulle anche. | Passo 3: Solleva il peso oltre le ginocchia estendendo le anche. Quando il peso supera le ginocchia, puoi appoggiarlo sulle cosce e sederti leggermente indietro, stringendolo forte al petto. | Passo 4: Completa il movimento estendendo anche e ginocchia per sollevare il peso il più in alto possibile. Riporta il peso sulle cosce o a terra per le ripetizioni successive.",
+    "aliases": [
+      "atlas",
+      "atlas stone trainer"
+    ],
+    "countingMode": "reps",
+    "version": "1.0.0",
+    "versionHistory": [
+      "1.0.0 (2025-12-17): Imported from free-exercise-db"
+    ]
+  },
+  {
+    "id": "alternate_leg_diagonal_bound",
+    "nome": "Balzi Diagonali Alternati",
+    "focus": "QUAD",
+    "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Alternate_Leg_Diagonal_Bound/0.jpg",
+    "muscoliSecondari": [
+      "ABDU",
+      "ADDU",
+      "POLP",
+      "GLUT",
+      "FEMOR"
+    ],
+    "difficolta": "Principiante",
+    "tipoEsercizio": "Compound",
+    "attrezzatura": "Corpo Libero",
+    "patternMovimento": "Plyometrics",
+    "rangeRipetizioni": "8-12",
+    "noteTecniche": "Passo 1: Assumi una posizione comoda con un piede leggermente davanti all'altro. | Passo 2: Spingi con la gamba anteriore, portando il ginocchio opposto in avanti e il più in alto possibile prima di atterrare. Cerca di coprire più distanza possibile verso ogni lato ad ogni balzo. | Passo 3: Può essere utile usare una linea sul pavimento per misurare la distanza da un lato all'altro. | Passo 4: Ripeti la sequenza con l'altra gamba.",
+    "aliases": [
+      "alternate leg diagon",
+      "alternate"
+    ],
+    "countingMode": "reps",
+    "version": "1.0.0",
+    "versionHistory": [
+      "1.0.0 (2025-12-17): Imported from free-exercise-db"
+    ]
+  },
+  {
+    "id": "recumbent_bike",
+    "nome": "Bicicletta Recumbente",
+    "focus": "QUAD",
+    "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Recumbent_Bike/0.jpg",
+    "muscoliSecondari": [
+      "POLP",
+      "GLUT",
+      "FEMOR"
+    ],
+    "difficolta": "Principiante",
+    "tipoEsercizio": "Compound",
+    "attrezzatura": "Macchina",
+    "patternMovimento": "Cardio",
+    "rangeRipetizioni": "30-60s",
+    "noteTecniche": "Passo 1: Per iniziare, siediti sulla cyclette e regola il sedile alla tua altezza. | Passo 2: Seleziona l'opzione desiderata dal menu. Potresti dover iniziare a pedalare per accenderla. Puoi usare l'impostazione manuale o selezionare un programma. Generalmente puoi inserire età e peso per stimare le calorie bruciate. Il livello di resistenza può essere modificato durante l'allenamento. Le maniglie possono essere usate per monitorare la frequenza cardiaca. | Passo 3: Le cyclette reclinabili offrono comodità, benefici cardiovascolari e minor impatto rispetto ad altre attività. Una persona di 70 kg brucia circa 230 calorie pedalando a ritmo moderato per 30 minuti.",
+    "aliases": [
+      "recumbent bike",
+      "recumbent"
+    ],
+    "countingMode": "timed",
+    "version": "1.0.0",
+    "versionHistory": [
+      "1.0.0 (2025-12-17): Imported from free-exercise-db"
+    ]
+  },
+  {
+    "id": "bicycling_fermo",
+    "nome": "Bicicletta, Stazionaria",
+    "focus": "QUAD",
+    "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Bicycling_Stationary/0.jpg",
+    "muscoliSecondari": [
+      "POLP",
+      "GLUT",
+      "FEMOR"
+    ],
+    "difficolta": "Principiante",
+    "tipoEsercizio": "Compound",
+    "attrezzatura": "Macchina",
+    "patternMovimento": "Cardio",
+    "rangeRipetizioni": "30-60s",
+    "noteTecniche": "Passo 1: Per iniziare, siediti sulla cyclette e regola il sedile alla tua altezza. | Passo 2: Seleziona l'opzione desiderata dal menu. Potresti dover iniziare a pedalare per accenderla. Puoi usare l'impostazione manuale o selezionare un programma. Generalmente puoi inserire età e peso per stimare le calorie bruciate. Il livello di resistenza può essere modificato durante l'allenamento. Le maniglie possono essere usate per monitorare la frequenza cardiaca e mantenere l'intensità appropriata.",
+    "aliases": [
+      "bicycling fermo",
+      "bicycling,"
+    ],
+    "countingMode": "timed",
+    "version": "1.0.0",
+    "versionHistory": [
+      "1.0.0 (2025-12-17): Imported from free-exercise-db"
+    ]
+  },
+  {
+    "id": "jerk_balance",
+    "nome": "Jerk Balance",
+    "focus": "DELT",
+    "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Jerk_Balance/0.jpg",
+    "muscoliSecondari": [
+      "GLUT",
+      "FEMOR",
+      "QUAD",
+      "TRIC"
+    ],
+    "difficolta": "Intermedio",
+    "tipoEsercizio": "Compound",
+    "attrezzatura": "Bilanciere",
+    "patternMovimento": "Olympic Lifting",
+    "rangeRipetizioni": "8-12",
+    "noteTecniche": "Passo 1: Questo esercizio ti aiuta a imparare a spingerti abbastanza in basso durante il jerk e corregge chi si muove all'indietro. Inizia con il bilanciere in posizione di jerk, spalle in avanti, busto eretto e piedi in posizione split leggera. | Passo 2: Inizia il movimento come un jerk normale, piegando le ginocchia mantenendo il busto verticale, poi spingi verso l'alto con forza usando lo slancio e non le braccia per sollevare il peso. | Passo 3: Mantieni il piede posteriore in posizione, usandolo per spingere il corpo in avanti in uno split completo mentre sollevi il peso sopra la testa.",
+    "aliases": [
+      "jerk balance",
+      "jerk"
+    ],
+    "countingMode": "reps",
+    "version": "1.0.0",
+    "versionHistory": [
+      "1.0.0 (2025-12-17): Imported from free-exercise-db"
+    ]
+  },
+  {
+    "id": "snatch_balance",
+    "nome": "Snatch Balance",
+    "focus": "QUAD",
+    "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Snatch_Balance/0.jpg",
+    "muscoliSecondari": [
+      "POLP",
+      "GLUT",
+      "FEMOR",
+      "DELT",
+      "TRIC"
+    ],
+    "difficolta": "Intermedio",
+    "tipoEsercizio": "Compound",
+    "attrezzatura": "Bilanciere",
+    "patternMovimento": "Olympic Lifting",
+    "rangeRipetizioni": "8-12",
+    "noteTecniche": "Passo 1: Inizia con i piedi in posizione di tirata, il bilanciere appoggiato dietro le spalle e le mani in presa ampia da snatch. | Passo 2: Solleva il bilanciere con un rapido piegamento e spinta delle ginocchia, poi scendi aggressivamente sotto la sbarra passando alla posizione di ricezione. | Passo 3: Ricevi il bilanciere bloccato sopra la testa vicino al fondo dello squat. Il busto deve rimanere verticale, abbassando le anche tra le gambe. | Passo 4: Continua a scendere fino alla massima profondità, poi torna in posizione eretta. Abbassa il peso con controllo.",
+    "aliases": [
+      "snatch",
+      "snatch balance"
+    ],
+    "countingMode": "reps",
+    "version": "1.0.0",
+    "versionHistory": [
+      "1.0.0 (2025-12-17): Imported from free-exercise-db"
+    ]
+  },
+  {
+    "id": "heaving_snatch_balance",
+    "nome": "Heaving Snatch Balance",
+    "focus": "QUAD",
+    "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Heaving_Snatch_Balance/0.jpg",
+    "muscoliSecondari": [
+      "ADDOM",
+      "AVAMB",
+      "GLUT",
+      "FEMOR",
+      "DELT",
+      "TRIC"
+    ],
+    "difficolta": "Intermedio",
+    "tipoEsercizio": "Compound",
+    "attrezzatura": "Bilanciere",
+    "patternMovimento": "Olympic Lifting",
+    "rangeRipetizioni": "8-12",
+    "noteTecniche": "Passo 1: Questo esercizio ti aiuta a imparare lo snatch. Inizia con un peso leggero sulle spalle. I piedi devono essere leggermente più larghi delle anche con le punte verso l'esterno, la stessa posizione dello squat. | Passo 2: Inizia piegando leggermente le ginocchia, poi spingi verso l'alto per alleggerire brevemente il bilanciere. Scendi rapidamente sotto la sbarra, sollevandola sopra la testa mentre scendi in uno squat completo. | Passo 3: Torna in posizione eretta.",
+    "aliases": [
+      "heaving snatch balan",
+      "heaving"
+    ],
+    "countingMode": "reps",
+    "version": "1.0.0",
+    "versionHistory": [
+      "1.0.0 (2025-12-17): Imported from free-exercise-db"
+    ]
+  },
+  {
+    "id": "front_box_jump",
+    "nome": "Box Jump Frontale",
+    "focus": "FEMOR",
+    "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Front_Box_Jump/0.jpg",
+    "muscoliSecondari": [
+      "ABDU",
+      "ADDU",
+      "POLP",
+      "GLUT",
+      "QUAD"
+    ],
+    "difficolta": "Principiante",
+    "tipoEsercizio": "Compound",
+    "attrezzatura": "Altro",
+    "patternMovimento": "Plyometrics",
+    "rangeRipetizioni": "8-12",
+    "noteTecniche": "Passo 1: Posiziona un box di altezza appropriata a 30-60 cm davanti a te. Stai in piedi con i piedi alla larghezza delle spalle. Questa è la posizione iniziale. | Passo 2: Esegui un breve squat in preparazione al salto, oscillando le braccia dietro di te. | Passo 3: Rimbalza da questa posizione estendendo anche, ginocchia e caviglie per saltare il più in alto possibile, portando le braccia in avanti e verso l'alto. | Passo 4: Atterra sul box con le ginocchia piegate, assorbendo l'impatto con le gambe. Puoi saltare giù dal box o preferibilmente scendere un piede alla volta.",
+    "aliases": [
+      "front",
+      "front box jump"
+    ],
+    "countingMode": "reps",
+    "version": "1.0.0",
+    "versionHistory": [
+      "1.0.0 (2025-12-17): Imported from free-exercise-db"
+    ]
+  },
+  {
+    "id": "lateral_box_jump",
+    "nome": "Box Jump Lateral",
+    "focus": "ADDU",
+    "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Lateral_Box_Jump/0.jpg",
+    "muscoliSecondari": [
+      "ABDU",
+      "POLP",
+      "GLUT",
+      "FEMOR",
+      "QUAD"
+    ],
+    "difficolta": "Principiante",
+    "tipoEsercizio": "Compound",
+    "attrezzatura": "Altro",
+    "patternMovimento": "Plyometrics",
+    "rangeRipetizioni": "8-12",
+    "noteTecniche": "Passo 1: Assumi una posizione comoda in piedi, con un box basso posizionato di fianco a te. Questa è la posizione iniziale. | Passo 2: Scendi velocemente in un quarto di squat per attivare il riflesso di allungamento, poi inverti immediatamente la direzione per saltare verso l'alto e di lato. | Passo 3: Porta le ginocchia abbastanza in alto da superare il box con buon margine. | Passo 4: Atterra al centro del box, usando le gambe per assorbire l'impatto. | Passo 5: Salta con controllo dall'altro lato del box e continua ad alternare per diverse ripetizioni.",
+    "aliases": [
+      "lateral box jump",
+      "lateral"
+    ],
+    "countingMode": "reps",
+    "version": "1.0.0",
+    "versionHistory": [
+      "1.0.0 (2025-12-17): Imported from free-exercise-db"
+    ]
+  },
+  {
+    "id": "double_leg_glutei_kick",
+    "nome": "Calcio Doppio al Gluteo con le gambe",
+    "focus": "QUAD",
+    "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Double_Leg_Butt_Kick/0.jpg",
+    "muscoliSecondari": [
+      "ABDU",
+      "ADDU",
+      "POLP",
+      "GLUT",
+      "FEMOR"
+    ],
+    "difficolta": "Principiante",
+    "tipoEsercizio": "Compound",
+    "attrezzatura": "Corpo Libero",
+    "patternMovimento": "Plyometrics",
+    "rangeRipetizioni": "8-12",
+    "noteTecniche": "Passo 1: Inizia in piedi con le ginocchia leggermente piegate. | Passo 2: Esegui velocemente un breve squat, piegando anche e ginocchia, poi estendi immediatamente per saltare alla massima altezza verticale. | Passo 3: Durante la salita, porta i talloni verso i glutei piegando le ginocchia, cercando di toccare i glutei. | Passo 4: Concludi il movimento atterrando con le ginocchia solo parzialmente piegate, usando le gambe per assorbire l'impatto.",
+    "aliases": [
+      "double leg glutei kick",
+      "double"
+    ],
+    "countingMode": "reps",
+    "version": "1.0.0",
+    "versionHistory": [
+      "1.0.0 (2025-12-17): Imported from free-exercise-db"
+    ]
+  },
+  {
+    "id": "single_leg_glutei_kick",
+    "nome": "Calcio al Gluteo con una Solda",
+    "focus": "QUAD",
+    "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Single_Leg_Butt_Kick/0.jpg",
+    "muscoliSecondari": [
+      "POLP",
+      "FEMOR"
+    ],
+    "difficolta": "Principiante",
+    "tipoEsercizio": "Compound",
+    "attrezzatura": "Corpo Libero",
+    "patternMovimento": "Plyometrics",
+    "rangeRipetizioni": "8-12",
+    "noteTecniche": "Passo 1: Inizia in piedi su una gamba, con il ginocchio dell'altra gamba piegato e sollevato. Questa è la posizione iniziale. | Passo 2: Usando un contromovimento, salta verso l'alto estendendo anca, ginocchio e caviglia della gamba di appoggio. | Passo 3: Piega immediatamente il ginocchio e cerca di toccare il gluteo con il tallone della gamba che salta. | Passo 4: Riporta la gamba in posizione parzialmente piegata sotto l'anca e atterra. La gamba opposta deve rimanere relativamente nella stessa posizione durante tutto l'esercizio.",
+    "aliases": [
+      "single",
+      "single leg glutei kick"
+    ],
+    "countingMode": "reps",
+    "version": "1.0.0",
+    "versionHistory": [
+      "1.0.0 (2025-12-17): Imported from free-exercise-db"
+    ]
+  },
+  {
+    "id": "walking_treadmill",
+    "nome": "Camminare, Tapis roulant",
+    "focus": "QUAD",
+    "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Walking_Treadmill/0.jpg",
+    "muscoliSecondari": [
+      "POLP",
+      "GLUT",
+      "FEMOR"
+    ],
+    "difficolta": "Principiante",
+    "tipoEsercizio": "Compound",
+    "attrezzatura": "Macchina",
+    "patternMovimento": "Cardio",
+    "rangeRipetizioni": "30-60s",
+    "noteTecniche": "Passo 1: Sali sul tapis roulant e seleziona l'opzione desiderata dal menu. La maggior parte dei tapis roulant ha un'impostazione manuale o puoi selezionare un programma. Generalmente puoi inserire età e peso per stimare le calorie bruciate. L'inclinazione può essere regolata per modificare l'intensità dell'allenamento. | Passo 2: Il tapis roulant offre comodità, benefici cardiovascolari e solitamente minor impatto rispetto alla camminata all'aperto. Cammina a un ritmo da moderato a veloce, non troppo lento. Una persona di 70 kg brucia circa 175 calorie camminando a 6 km/h per 30 minuti. Mantieni una postura corretta e usa le maniglie solo quando necessario, come per scendere o controllare la frequenza cardiaca.",
+    "aliases": [
+      "walking treadmill",
+      "walking,"
+    ],
+    "countingMode": "timed",
+    "version": "1.0.0",
+    "versionHistory": [
+      "1.0.0 (2025-12-17): Imported from free-exercise-db"
+    ]
+  },
+  {
+    "id": "yoke_walk",
+    "nome": "Camminata con la Cella",
+    "focus": "QUAD",
+    "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Yoke_Walk/0.jpg",
+    "muscoliSecondari": [
+      "ADDOM",
+      "ABDU",
+      "ADDU",
+      "POLP",
+      "GLUT",
+      "FEMOR",
+      "LOM"
+    ],
+    "difficolta": "Intermedio",
+    "tipoEsercizio": "Compound",
+    "attrezzatura": "Altro",
+    "patternMovimento": "Strongman",
+    "rangeRipetizioni": "8-12",
+    "noteTecniche": "Passo 1: Lo yoke walk si esegue tipicamente con un'attrezzatura specifica, ma a volte si può usare un frigorifero o altri oggetti pesanti. | Passo 2: Inizia posizionando l'attrezzo sulle spalle dietro la schiena. Con la testa rivolta in avanti e la schiena inarcata, solleva lo yoke spingendo attraverso i talloni. | Passo 3: Cammina il più velocemente possibile usando passi brevi e rapidi. Puoi tenere i montanti laterali dello yoke per stabilizzarlo. Continua per la distanza prestabilita il più velocemente possibile, solitamente 20-30 metri.",
+    "aliases": [
+      "yoke",
+      "yoke walk"
+    ],
+    "countingMode": "reps",
+    "version": "1.0.0",
+    "versionHistory": [
+      "1.0.0 (2025-12-17): Imported from free-exercise-db"
+    ]
+  },
+  {
+    "id": "circus_bell",
+    "nome": "Campana da Circo",
+    "focus": "DELT",
+    "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Circus_Bell/0.jpg",
+    "muscoliSecondari": [
+      "AVAMB",
+      "GLUT",
+      "FEMOR",
+      "LOM",
+      "TRAP",
+      "TRIC"
+    ],
+    "difficolta": "Avanzato",
+    "tipoEsercizio": "Compound",
+    "attrezzatura": "Altro",
+    "patternMovimento": "Strongman",
+    "rangeRipetizioni": "8-12",
+    "noteTecniche": "Passo 1: La campana da circo è un manubrio sovradimensionato con un'impugnatura spessa. Inizia con il manubrio tra i piedi e afferra l'impugnatura con entrambe le mani. | Passo 2: Porta il manubrio alla spalla estendendo anche e ginocchia, poi lascia andare una mano. | Passo 3: Assicurati di portare una delle teste del manubrio dietro la spalla per mantenere l'equilibrio. Per sollevarlo sopra la testa, piega le ginocchia e spingi verso l'alto estendendo il manubrio, inclinandoti leggermente dalla parte opposta. | Passo 4: Guida con controllo la campana verso il pavimento. È consigliabile eseguire questo esercizio su un tappetino di gomma spesso per proteggere il pavimento.",
+    "aliases": [
+      "circus bell",
+      "circus"
+    ],
+    "countingMode": "reps",
+    "version": "1.0.0",
+    "versionHistory": [
+      "1.0.0 (2025-12-17): Imported from free-exercise-db"
+    ]
+  },
+  {
+    "id": "keg_load",
+    "nome": "Carico a Gambe",
+    "focus": "LOM",
+    "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Keg_Load/0.jpg",
+    "muscoliSecondari": [
+      "ADDOM",
+      "BIC",
+      "POLP",
+      "AVAMB",
+      "GLUT",
+      "FEMOR",
+      "DORSO",
+      "QUAD",
+      "DELT",
+      "TRAP"
+    ],
+    "difficolta": "Intermedio",
+    "tipoEsercizio": "Compound",
+    "attrezzatura": "Altro",
+    "patternMovimento": "Strongman",
+    "rangeRipetizioni": "8-12",
+    "noteTecniche": "Passo 1: Per caricare i barili, posiziona il numero desiderato a una certa distanza dalla piattaforma, tipicamente 10-15 metri. | Passo 2: Inizia afferrando la maniglia vicina del primo barile, inclinandolo sul lato per afferrare il bordo opposto del fondo. Solleva il barile al petto. | Passo 3: Più in alto riesci a posizionare il barile, più velocemente potrai muoverti verso la piattaforma. Mantieni una presa salda sul barile. Muoviti il più velocemente possibile verso la piattaforma e caricalo, estendendo anche, ginocchia e caviglie per portarlo il più in alto possibile. | Passo 4: Torna alla posizione di partenza per recuperare il barile successivo e ripeti fino a completare l'esercizio.",
+    "aliases": [
+      "keg",
+      "keg load"
+    ],
+    "countingMode": "reps",
+    "version": "1.0.0",
+    "versionHistory": [
+      "1.0.0 (2025-12-17): Imported from free-exercise-db"
+    ]
+  },
+  {
+    "id": "sandbag_load",
+    "nome": "Carico con Sacchi da Box",
+    "focus": "QUAD",
+    "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Sandbag_Load/0.jpg",
+    "muscoliSecondari": [
+      "ADDOM",
+      "BIC",
+      "POLP",
+      "AVAMB",
+      "GLUT",
+      "FEMOR",
+      "LOM",
+      "DORSO",
+      "DELT",
+      "TRAP"
+    ],
+    "difficolta": "Principiante",
+    "tipoEsercizio": "Compound",
+    "attrezzatura": "Altro",
+    "patternMovimento": "Strongman",
+    "rangeRipetizioni": "8-12",
+    "noteTecniche": "Passo 1: Per caricare i sacchi di sabbia, inizia con gli attrezzi posizionati a distanza dalla piattaforma, tipicamente 15 metri. | Passo 2: Inizia sollevando il sacco di sabbia. I sacchi sono molto scomodi da maneggiare e il modo di sollevarli può variare. Abbraccia il sacco il più possibile, estendendo anche e ginocchia per sollevarlo in alto. | Passo 3: Muoviti il più velocemente possibile verso la piattaforma e caricalo, estendendo anche, ginocchia e caviglie per portarlo il più in alto possibile. Posizionalo sulla piattaforma assicurandoti che non cada. | Passo 4: Torna alla posizione di partenza per recuperare il sacco successivo e ripeti fino a completare l'esercizio.",
+    "aliases": [
+      "sandbag",
+      "sandbag load"
+    ],
+    "countingMode": "reps",
+    "version": "1.0.0",
+    "versionHistory": [
+      "1.0.0 (2025-12-17): Imported from free-exercise-db"
+    ]
+  },
+  {
+    "id": "carioca_quick_step",
+    "nome": "Carioca Passo Veloce",
+    "focus": "ADDU",
+    "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Carioca_Quick_Step/0.jpg",
+    "muscoliSecondari": [
+      "ADDOM",
+      "ABDU",
+      "POLP",
+      "GLUT",
+      "FEMOR",
+      "QUAD"
+    ],
+    "difficolta": "Principiante",
+    "tipoEsercizio": "Compound",
+    "attrezzatura": "Corpo Libero",
+    "patternMovimento": "Plyometrics",
+    "rangeRipetizioni": "8-12",
+    "noteTecniche": "Passo 1: Inizia con i piedi a pochi centimetri di distanza e il braccio sinistro alzato in una posizione atletica rilassata. | Passo 2: Con il piede destro, fai un passo rapido dietro e porta il ginocchio verso l'alto. | Passo 3: Slancia le braccia verso l'alto quando porti su il ginocchio destro, assicurandoti che il ginocchio vada dritto su e giù. Evita di ruotare i piedi mentre ti muovi e continua a guardare in avanti mentre ti sposti lateralmente.",
+    "aliases": [
+      "carioca quick step",
+      "carioca"
+    ],
+    "countingMode": "reps",
+    "version": "1.0.0",
+    "versionHistory": [
+      "1.0.0 (2025-12-17): Imported from free-exercise-db"
+    ]
+  },
+  {
+    "id": "bicycling",
+    "nome": "Ciclismo",
+    "focus": "QUAD",
+    "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Bicycling/0.jpg",
+    "muscoliSecondari": [
+      "POLP",
+      "GLUT",
+      "FEMOR"
+    ],
+    "difficolta": "Principiante",
+    "tipoEsercizio": "Compound",
+    "attrezzatura": "Altro",
+    "patternMovimento": "Cardio",
+    "rangeRipetizioni": "30-60s",
+    "noteTecniche": "Passo 1: Per iniziare, siediti sulla bicicletta e regola il sellino alla tua altezza.",
+    "aliases": [
+      "bicycling"
+    ],
+    "countingMode": "timed",
+    "version": "1.0.0",
+    "versionHistory": [
+      "1.0.0 (2025-12-17): Imported from free-exercise-db"
+    ]
+  },
+  {
+    "id": "sled_drag___harness",
+    "nome": "Cinghia per Traino con Sled",
+    "focus": "QUAD",
+    "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Sled_Drag_-_Harness/0.jpg",
+    "muscoliSecondari": [
+      "POLP",
+      "GLUT",
+      "FEMOR"
+    ],
+    "difficolta": "Principiante",
+    "tipoEsercizio": "Compound",
+    "attrezzatura": "Altro",
+    "patternMovimento": "Strongman",
+    "rangeRipetizioni": "8-12",
+    "noteTecniche": "Passo 1: Per iniziare, carica la slitta con il peso desiderato e attacca la cinghia di traino. Puoi tirare con le maniglie, usare un'imbracatura o attaccare la cinghia a una cintura con pesi. | Passo 2: Che tu stia tirando in avanti o all'indietro, inclinati nella direzione del movimento e avanza estendendo anche e ginocchia.",
+    "aliases": [
+      "sled",
+      "sled drag   harness"
+    ],
+    "countingMode": "reps",
+    "version": "1.0.0",
+    "versionHistory": [
+      "1.0.0 (2025-12-17): Imported from free-exercise-db"
+    ]
+  },
+  {
+    "id": "isometric_chest_squeezes",
+    "nome": "Compressione Isometrica del Petto",
+    "focus": "PETT",
+    "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Isometric_Chest_Squeezes/0.jpg",
+    "muscoliSecondari": [
+      "DELT",
+      "TRIC"
+    ],
+    "difficolta": "Principiante",
+    "tipoEsercizio": "Compound",
+    "attrezzatura": "Corpo Libero",
+    "patternMovimento": "Plyometrics",
+    "rangeRipetizioni": "8-12",
+    "noteTecniche": "Passo 1: Da seduto o in piedi, piega le braccia a 90 gradi e posiziona i palmi delle mani insieme davanti al petto. Suggerimento: Le mani devono essere aperte con i palmi insieme e le dita rivolte in avanti (perpendicolari al busto). | Passo 2: Spingi entrambe le mani l'una contro l'altra mentre contrai il petto. Inizia con tensione lenta e aumenta gradualmente. Continua a respirare normalmente mentre esegui questa contrazione. | Passo 3: Mantieni per il numero raccomandato di secondi. | Passo 4: Ora rilascia la tensione lentamente. | Passo 5: Riposa per il tempo raccomandato e ripeti.",
+    "aliases": [
+      "isometric chest sque",
+      "isometric"
+    ],
+    "countingMode": "reps",
+    "version": "1.0.0",
+    "versionHistory": [
+      "1.0.0 (2025-12-17): Imported from free-exercise-db"
+    ]
+  },
+  {
+    "id": "rack_delivery",
+    "nome": "Consegna al Rack",
+    "focus": "DELT",
+    "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Rack_Delivery/0.jpg",
+    "muscoliSecondari": [
+      "AVAMB",
+      "TRAP"
+    ],
+    "difficolta": "Intermedio",
+    "tipoEsercizio": "Compound",
+    "attrezzatura": "Bilanciere",
+    "patternMovimento": "Olympic Lifting",
+    "rangeRipetizioni": "8-12",
+    "noteTecniche": "Passo 1: Questo esercizio insegna a portare il bilanciere in posizione sulle spalle. Inizia tenendo la sbarra in posizione 'scarecrow', con la parte superiore delle braccia parallela al pavimento e gli avambracci pendenti. Usa una presa a gancio, con le dita avvolte sopra i pollici. | Passo 2: Inizia ruotando i gomiti attorno alla sbarra, portandola alle spalle. Quando i gomiti vengono in avanti, rilassa la presa. Le spalle devono essere protratte, creando un appoggio per la sbarra che dovrebbe sfiorare leggermente la gola. | Passo 3: È importante che la sbarra resti vicina al corpo in ogni momento, poiché con carichi pesanti qualsiasi distanza potrebbe causare una collisione indesiderata. Man mano che il movimento diventa più fluido, velocità e carico possono essere aumentati.",
+    "aliases": [
+      "rack delivery",
+      "rack"
+    ],
+    "countingMode": "reps",
+    "version": "1.0.0",
+    "versionHistory": [
+      "1.0.0 (2025-12-17): Imported from free-exercise-db"
+    ]
+  },
+  {
+    "id": "running_treadmill",
+    "nome": "Corsa, Tapis roulant",
+    "focus": "QUAD",
+    "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Running_Treadmill/0.jpg",
+    "muscoliSecondari": [
+      "POLP",
+      "GLUT",
+      "FEMOR"
+    ],
+    "difficolta": "Principiante",
+    "tipoEsercizio": "Compound",
+    "attrezzatura": "Macchina",
+    "patternMovimento": "Cardio",
+    "rangeRipetizioni": "30-60s",
+    "noteTecniche": "Passo 1: Sali sul tapis roulant e seleziona l'opzione desiderata dal menu. La maggior parte dei tapis roulant ha un'impostazione manuale o puoi selezionare un programma. Generalmente puoi inserire età e peso per stimare le calorie bruciate. L'inclinazione può essere regolata per modificare l'intensità. | Passo 2: Il tapis roulant offre comodità, benefici cardiovascolari e solitamente minor impatto rispetto alla corsa all'aperto. Una persona di 70 kg brucia oltre 450 calorie correndo a 12 km/h per 30 minuti. Mantieni una postura corretta mentre corri e usa le maniglie solo quando necessario.",
+    "aliases": [
+      "running treadmill",
+      "running,"
+    ],
+    "countingMode": "timed",
+    "version": "1.0.0",
+    "versionHistory": [
+      "1.0.0 (2025-12-17): Imported from free-exercise-db"
+    ]
+  },
+  {
+    "id": "trail_running_walking",
+    "nome": "Corsa/Camminata in Salita",
+    "focus": "QUAD",
+    "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Trail_Running_Walking/0.jpg",
+    "muscoliSecondari": [
+      "POLP",
+      "GLUT",
+      "FEMOR"
+    ],
+    "difficolta": "Principiante",
+    "tipoEsercizio": "Compound",
+    "attrezzatura": "Corpo Libero",
+    "patternMovimento": "Cardio",
+    "rangeRipetizioni": "30-60s",
+    "noteTecniche": "Passo 1: Correre o camminare sui sentieri aumenta immediatamente la frequenza cardiaca. Assicurati di avere scarpe adatte. Mentre usi i muscoli dei polpacci e dei glutei per salire, ginocchia, articolazioni e caviglie assorbono l'impatto in discesa. Fai passi più corti in discesa, mantieni le ginocchia piegate per ridurre l'impatto e rallenta per evitare cadute. | Passo 2: Una persona di 70 kg può bruciare oltre 200 calorie in 30 minuti camminando in salita, rispetto a 175 su superficie piana. Correndo sui sentieri si possono bruciare oltre 500 calorie in 30 minuti.",
+    "aliases": [
+      "trail",
+      "trail running walkin"
+    ],
+    "countingMode": "timed",
+    "version": "1.0.0",
+    "versionHistory": [
+      "1.0.0 (2025-12-17): Imported from free-exercise-db"
+    ]
+  },
+  {
+    "id": "crucifix",
+    "nome": "Croci",
+    "focus": "DELT_POST",
+    "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Crucifix/0.jpg",
+    "muscoliSecondari": [
+      "AVAMB"
+    ],
+    "difficolta": "Principiante",
+    "tipoEsercizio": "Isolation",
+    "attrezzatura": "Altro",
+    "patternMovimento": "Strongman",
+    "rangeRipetizioni": "8-12",
+    "noteTecniche": "Passo 1: Nel crucifix mantieni staticamente i pesi ai lati per un certo tempo. Sebbene l'esercizio possa essere praticato con manubri, è meglio allenarsi con gli attrezzi specifici usati in gara, come asce e martelli, poiché la sensazione è diversa. | Passo 2: Inizia in piedi e alza le braccia ai lati tenendo gli attrezzi. Le braccia devono essere parallele al suolo. In gara, giudici o sensori segnalano quando si rompe il parallelo. Mantieni la posizione il più a lungo possibile. Tipicamente il peso deve essere abbastanza pesante da farti cedere in 30-60 secondi.",
+    "aliases": [
+      "crucifix"
+    ],
+    "countingMode": "reps",
+    "version": "1.0.0",
+    "versionHistory": [
+      "1.0.0 (2025-12-17): Imported from free-exercise-db"
+    ]
+  },
+  {
+    "id": "axle_deadlift",
+    "nome": "Deadlift con Asse",
+    "focus": "LOM",
+    "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Axle_Deadlift/0.jpg",
+    "muscoliSecondari": [
+      "AVAMB",
+      "GLUT",
+      "FEMOR",
+      "DORSO",
+      "QUAD",
+      "TRAP"
+    ],
+    "difficolta": "Intermedio",
+    "tipoEsercizio": "Compound",
+    "attrezzatura": "Altro",
+    "patternMovimento": "Strongman",
+    "rangeRipetizioni": "8-12",
+    "noteTecniche": "Passo 1: Avvicinati alla sbarra posizionandola al centro dei piedi. I piedi devono essere circa alla larghezza delle anche. Piegati sulle anche per afferrare la sbarra alla larghezza delle spalle, permettendo alle scapole di protrarsi. Tipicamente si usa una presa mista (sopra/sotto). | Passo 2: Con piedi e presa pronti, fai un respiro profondo, abbassa le anche e piega le ginocchia finché gli stinchi non toccano la sbarra. Guarda in avanti, mantieni il petto alto e la schiena inarcata, poi inizia a spingere attraverso i talloni per sollevare il peso. | Passo 3: Quando la sbarra supera le ginocchia, tirala aggressivamente indietro, avvicinando le scapole mentre spingi le anche in avanti verso la sbarra. | Passo 4: Abbassa la sbarra piegandoti sulle anche e guidandola verso il pavimento.",
+    "aliases": [
+      "axle deadlift",
+      "axle"
+    ],
+    "countingMode": "reps",
+    "version": "1.0.0",
+    "versionHistory": [
+      "1.0.0 (2025-12-17): Imported from free-exercise-db"
+    ]
+  },
+  {
+    "id": "rickshaw_deadlift",
+    "nome": "Deadlift con Rickshaw",
+    "focus": "QUAD",
+    "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Rickshaw_Deadlift/0.jpg",
+    "muscoliSecondari": [
+      "AVAMB",
+      "GLUT",
+      "FEMOR",
+      "LOM",
+      "TRAP"
+    ],
+    "difficolta": "Intermedio",
+    "tipoEsercizio": "Compound",
+    "attrezzatura": "Altro",
+    "patternMovimento": "Strongman",
+    "rangeRipetizioni": "8-12",
+    "noteTecniche": "Passo 1: Carica il telaio con il peso desiderato. Posizionati al centro tra le maniglie. I piedi devono essere circa alla larghezza delle anche. Piegati sulle anche per afferrare le maniglie, permettendo alle scapole di protrarsi. | Passo 2: Con piedi e presa pronti, fai un respiro profondo, abbassa le anche e piega le ginocchia. Guarda in avanti, mantieni il petto alto e la schiena inarcata, poi inizia a spingere attraverso i talloni per sollevare il peso. Mentre il peso sale, avvicina le scapole spingendo le anche in avanti. | Passo 3: Abbassa il peso piegandoti sulle anche e guidandolo verso il pavimento.",
+    "aliases": [
+      "rickshaw deadlift",
+      "rickshaw"
+    ],
+    "countingMode": "reps",
+    "version": "1.0.0",
+    "versionHistory": [
+      "1.0.0 (2025-12-17): Imported from free-exercise-db"
+    ]
+  },
+  {
+    "id": "kneeling_arm_drill",
+    "nome": "Drill con Braccia in Ginocchia",
+    "focus": "DELT",
+    "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Kneeling_Arm_Drill/0.jpg",
+    "muscoliSecondari": [
+      "ADDOM"
+    ],
+    "difficolta": "Principiante",
+    "tipoEsercizio": "Compound",
+    "attrezzatura": "Corpo Libero",
+    "patternMovimento": "Plyometrics",
+    "rangeRipetizioni": "8-12",
+    "noteTecniche": "Passo 1: Questo esercizio aiuta ad aumentare l'efficienza delle braccia durante la corsa. Inizia in ginocchio, piede sinistro avanti, ginocchio destro a terra. Premi attraverso il tallone anteriore per mantenere attivi glutei e bicipiti femorali. | Passo 2: Inizia oscillando le braccia con movimenti lunghi a pendolo. Riduci l'angolo delle braccia, oscillando come durante il jogging, poi progredisci verso la corsa e infine lo sprint. | Passo 3: Appena le mani superano l'anca, accelerale in avanti durante il movimento di sprint per muoverle il più velocemente possibile. | Passo 4: Cambia ginocchio e ripeti.",
+    "aliases": [
+      "kneeling",
+      "kneeling arm drill"
+    ],
+    "countingMode": "reps",
+    "version": "1.0.0",
+    "versionHistory": [
+      "1.0.0 (2025-12-17): Imported from free-exercise-db"
+    ]
+  },
+  {
+    "id": "isometric_neck_exercise___sides",
+    "nome": "Esercizio Isometrico per il Collo - Lato",
+    "focus": "COLLO",
+    "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Isometric_Neck_Exercise_-_Sides/0.jpg",
+    "muscoliSecondari": [],
+    "difficolta": "Principiante",
+    "tipoEsercizio": "Isolation",
+    "attrezzatura": "Corpo Libero",
+    "patternMovimento": "Strength",
+    "rangeRipetizioni": "8-12",
+    "noteTecniche": "Passo 1: Con testa e collo in posizione neutra (posizione normale con la testa eretta rivolta in avanti), posiziona la mano sinistra sul lato sinistro della testa. | Passo 2: Spingi delicatamente verso sinistra contraendo i muscoli del collo ma resistendo a qualsiasi movimento della testa. Inizia con tensione leggera e aumenta gradualmente. Continua a respirare normalmente durante la contrazione. | Passo 3: Mantieni per il numero di secondi consigliato. | Passo 4: Rilascia la tensione lentamente. | Passo 5: Riposa per il tempo consigliato e ripeti con la mano destra posizionata sul lato destro della testa.",
+    "aliases": [
+      "isometric neck exerc",
+      "isometric"
+    ],
+    "countingMode": "reps",
+    "version": "1.0.0",
+    "versionHistory": [
+      "1.0.0 (2025-12-17): Imported from free-exercise-db"
+    ]
+  },
+  {
+    "id": "isometric_neck_exercise___front_and_back",
+    "nome": "Esercizio Isometrico per il Collo Anteriore e Posteriore",
+    "focus": "COLLO",
+    "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Isometric_Neck_Exercise_-_Front_And_Back/0.jpg",
+    "muscoliSecondari": [],
+    "difficolta": "Principiante",
+    "tipoEsercizio": "Isolation",
+    "attrezzatura": "Corpo Libero",
+    "patternMovimento": "Strength",
+    "rangeRipetizioni": "8-12",
+    "noteTecniche": "Passo 1: Con testa e collo in posizione neutra (posizione normale con la testa eretta rivolta in avanti), posiziona entrambe le mani sulla parte anteriore della testa. | Passo 2: Spingi delicatamente in avanti contraendo i muscoli del collo ma resistendo a qualsiasi movimento della testa. Inizia con tensione leggera e aumenta gradualmente. Continua a respirare normalmente durante la contrazione. | Passo 3: Mantieni per il numero di secondi consigliato. | Passo 4: Rilascia la tensione lentamente. | Passo 5: Riposa per il tempo consigliato e ripeti con le mani posizionate sulla parte posteriore della testa.",
+    "aliases": [
+      "isometric neck exerc",
+      "isometric"
+    ],
+    "countingMode": "reps",
+    "version": "1.0.0",
+    "versionHistory": [
+      "1.0.0 (2025-12-17): Imported from free-exercise-db"
+    ]
+  },
+  {
+    "id": "split_jerk",
+    "nome": "Split Jerk",
+    "focus": "QUAD",
+    "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Split_Jerk/0.jpg",
+    "muscoliSecondari": [
+      "GLUT",
+      "FEMOR",
+      "DELT",
+      "TRIC"
+    ],
+    "difficolta": "Intermedio",
+    "tipoEsercizio": "Compound",
+    "attrezzatura": "Bilanciere",
+    "patternMovimento": "Olympic Lifting",
+    "rangeRipetizioni": "8-12",
+    "noteTecniche": "Passo 1: In piedi con il peso appoggiato sulla parte anteriore delle spalle, inizia il dip. Con i piedi direttamente sotto le anche, piega le ginocchia senza spostare le anche indietro. | Passo 2: Scendi solo leggermente, poi inverti la direzione con la massima potenza possibile. Spingi attraverso i talloni per creare velocità e forza, assicurandoti di spostare la testa mentre il bilanciere lascia le spalle. Nel momento in cui i piedi lasciano il pavimento, devono essere riposizionati nella posizione di ricezione il più velocemente possibile. | Passo 3: Nel breve momento in cui i piedi non spingono attivamente contro la piattaforma, lo sforzo per spingere il bilanciere verso l'alto ti porterà verso il basso. I piedi devono essere spostati in posizione split, un piede avanti e uno indietro, con le ginocchia parzialmente piegate. Ricevi la sbarra con le braccia bloccate sopra la testa. | Passo 4: Torna in posizione eretta riportando i piedi insieme.",
+    "aliases": [
+      "split jerk",
+      "split"
+    ],
+    "countingMode": "reps",
+    "version": "1.0.0",
+    "versionHistory": [
+      "1.0.0 (2025-12-17): Imported from free-exercise-db"
+    ]
+  },
+  {
+    "id": "jogging_treadmill",
+    "nome": "Jogging, Tapis roulant",
+    "focus": "QUAD",
+    "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Jogging_Treadmill/0.jpg",
+    "muscoliSecondari": [
+      "GLUT",
+      "FEMOR"
+    ],
+    "difficolta": "Principiante",
+    "tipoEsercizio": "Compound",
+    "attrezzatura": "Macchina",
+    "patternMovimento": "Cardio",
+    "rangeRipetizioni": "30-60s",
+    "noteTecniche": "Passo 1: Sali sul tapis roulant e seleziona l'opzione desiderata dal menu. La maggior parte dei tapis roulant ha un'impostazione manuale o puoi selezionare un programma. Generalmente puoi inserire età e peso per stimare le calorie bruciate. L'inclinazione può essere regolata per modificare l'intensità. | Passo 2: Il tapis roulant offre comodità, benefici cardiovascolari e solitamente minor impatto rispetto al jogging all'aperto. Una persona di 70 kg brucia circa 250 calorie facendo jogging per 30 minuti. Mantieni una postura corretta e usa le maniglie solo quando necessario.",
+    "aliases": [
+      "jogging,",
+      "jogging treadmill"
+    ],
+    "countingMode": "timed",
+    "version": "1.0.0",
+    "versionHistory": [
+      "1.0.0 (2025-12-17): Imported from free-exercise-db"
+    ]
+  },
+  {
+    "id": "dumbbell_seated_box_jump",
+    "nome": "Jumping Box con Manubri Seduti",
+    "focus": "QUAD",
+    "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Dumbbell_Seated_Box_Jump/0.jpg",
+    "muscoliSecondari": [
+      "POLP",
+      "GLUT",
+      "FEMOR"
+    ],
+    "difficolta": "Intermedio",
+    "tipoEsercizio": "Compound",
+    "attrezzatura": "Manubri",
+    "patternMovimento": "Plyometrics",
+    "rangeRipetizioni": "8-12",
+    "noteTecniche": "Passo 1: Posiziona un box a circa 60 cm di fronte a una panca. Tieni un manubrio al petto con entrambe le mani e siediti sulla panca rivolto verso il box. Questa è la posizione iniziale. | Passo 2: Pianta saldamente i piedi a terra mentre ti inclini in avanti, estendendo anche e ginocchia per saltare in alto e in avanti. | Passo 3: Atterra sul box con entrambi i piedi, assorbendo l'impatto piegando anche e ginocchia. | Passo 4: Scendi e torna alla posizione iniziale.",
+    "aliases": [
+      "dumbbell seated box ",
+      "dumbbell"
+    ],
+    "countingMode": "reps",
+    "version": "1.0.0",
+    "versionHistory": [
+      "1.0.0 (2025-12-17): Imported from free-exercise-db"
+    ]
+  },
+  {
+    "id": "supine_two_arm_overhead_throw",
+    "nome": "Lancio Sopra la testa a Due Braccia in Posizione Prona",
+    "focus": "ADDOM",
+    "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Supine_Two-Arm_Overhead_Throw/0.jpg",
+    "muscoliSecondari": [
+      "PETT",
+      "DORSO",
+      "DELT"
+    ],
+    "difficolta": "Principiante",
+    "tipoEsercizio": "Compound",
+    "attrezzatura": "Palla Medica",
+    "patternMovimento": "Plyometrics",
+    "rangeRipetizioni": "8-12",
+    "noteTecniche": "Passo 1: Sdraiati a terra sulla schiena con le ginocchia piegate. | Passo 2: Tieni la palla con entrambe le mani, estendendo le braccia completamente dietro la testa. Questa è la posizione iniziale. | Passo 3: Inizia il movimento dalla spalla, lanciando la palla direttamente davanti a te mentre ti siedi, cercando di raggiungere la massima distanza. | Passo 4: La palla può essere lanciata a un partner o fatta rimbalzare contro un muro.",
+    "aliases": [
+      "supine",
+      "supine two arm overh"
+    ],
+    "countingMode": "reps",
+    "version": "1.0.0",
+    "versionHistory": [
+      "1.0.0 (2025-12-17): Imported from free-exercise-db"
+    ]
+  },
+  {
+    "id": "supine_one_arm_overhead_throw",
+    "nome": "Lancio Sopra la testa con un Braccio Sollevato in Posizione Supina",
+    "focus": "ADDOM",
+    "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Supine_One-Arm_Overhead_Throw/0.jpg",
+    "muscoliSecondari": [
+      "PETT",
+      "DORSO",
+      "DELT"
+    ],
+    "difficolta": "Principiante",
+    "tipoEsercizio": "Compound",
+    "attrezzatura": "Palla Medica",
+    "patternMovimento": "Plyometrics",
+    "rangeRipetizioni": "8-12",
+    "noteTecniche": "Passo 1: Sdraiati a terra sulla schiena con le ginocchia piegate. Tieni la palla con una mano, estendendo il braccio completamente dietro la testa. Questa è la posizione iniziale. | Passo 2: Inizia il movimento dalla spalla, lanciando la palla direttamente davanti a te mentre ti siedi, cercando di raggiungere la massima distanza. | Passo 3: La palla può essere lanciata a un partner o fatta rimbalzare contro un muro.",
+    "aliases": [
+      "supine",
+      "supine one arm overh"
+    ],
+    "countingMode": "reps",
+    "version": "1.0.0",
+    "versionHistory": [
+      "1.0.0 (2025-12-17): Imported from free-exercise-db"
+    ]
+  },
+  {
+    "id": "supine_chest_throw",
+    "nome": "Lancio Supino del Petto",
+    "focus": "TRIC",
+    "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Supine_Chest_Throw/0.jpg",
+    "muscoliSecondari": [
+      "PETT",
+      "DELT"
+    ],
+    "difficolta": "Principiante",
+    "tipoEsercizio": "Compound",
+    "attrezzatura": "Palla Medica",
+    "patternMovimento": "Plyometrics",
+    "rangeRipetizioni": "8-12",
+    "noteTecniche": "Passo 1: Questo esercizio è ottimo per i passaggi al petto quando non hai un partner o un muro abbastanza resistente. Sdraiati a terra sulla schiena con le ginocchia piegate. | Passo 2: Inizia con la palla sul petto, tenuta con entrambe le mani nella parte inferiore. | Passo 3: Esplodi verso l'alto, estendendo i gomiti per lanciare la palla direttamente sopra di te il più in alto possibile. | Passo 4: Afferra la palla con entrambe le mani quando scende.",
+    "aliases": [
+      "supine",
+      "supine chest throw"
+    ],
+    "countingMode": "reps",
+    "version": "1.0.0",
+    "versionHistory": [
+      "1.0.0 (2025-12-17): Imported from free-exercise-db"
+    ]
+  },
+  {
+    "id": "standing_two_arm_overhead_throw",
+    "nome": "Lancio a Due Braccia in Piega da Stando in Piedi",
+    "focus": "DELT",
+    "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Standing_Two-Arm_Overhead_Throw/0.jpg",
+    "muscoliSecondari": [
+      "PETT",
+      "DORSO"
+    ],
+    "difficolta": "Principiante",
+    "tipoEsercizio": "Compound",
+    "attrezzatura": "Palla Medica",
+    "patternMovimento": "Plyometrics",
+    "rangeRipetizioni": "8-12",
+    "noteTecniche": "Passo 1: Stai in piedi con i piedi alla larghezza delle spalle tenendo una palla medica con entrambe le mani. Porta la palla medica completamente dietro la testa piegando leggermente le ginocchia e inclinandoti all'indietro. | Passo 2: Lancia con forza la palla in avanti, flettendo le anche e usando tutto il corpo per completare il movimento. | Passo 3: La palla medica può essere lanciata a un partner o contro un muro, ricevandola al rimbalzo.",
+    "aliases": [
+      "standing two arm ove",
+      "standing"
+    ],
+    "countingMode": "reps",
+    "version": "1.0.0",
+    "versionHistory": [
+      "1.0.0 (2025-12-17): Imported from free-exercise-db"
+    ]
+  },
+  {
+    "id": "medicine_ball_scoop_throw",
+    "nome": "Lancio del Medaglione con Scavetto",
+    "focus": "DELT",
+    "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Medicine_Ball_Scoop_Throw/0.jpg",
+    "muscoliSecondari": [
+      "ADDOM",
+      "FEMOR",
+      "QUAD"
+    ],
+    "difficolta": "Principiante",
+    "tipoEsercizio": "Compound",
+    "attrezzatura": "Palla Medica",
+    "patternMovimento": "Plyometrics",
+    "rangeRipetizioni": "8-12",
+    "noteTecniche": "Passo 1: Assumi una posizione di mezzo squat con una palla medica tra le mani. Le braccia devono pendere in modo che la palla sia vicino ai piedi. | Passo 2: Inizia spingendo le anche in avanti mentre estendi le gambe e salti verso l'alto. | Passo 3: Durante il salto, oscilla le braccia verso l'alto e sopra la testa, mantenendole estese, e rilascia la palla al culmine del movimento. L'obiettivo è lanciare la palla alla massima distanza dietro di te.",
+    "aliases": [
+      "medicine ball scoop ",
+      "medicine"
+    ],
+    "countingMode": "reps",
+    "version": "1.0.0",
+    "versionHistory": [
+      "1.0.0 (2025-12-17): Imported from free-exercise-db"
+    ]
+  },
+  {
+    "id": "backward_medicine_ball_throw",
+    "nome": "Lancio della Palla da Medicina all'Indietro",
+    "focus": "DELT",
+    "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Backward_Medicine_Ball_Throw/0.jpg",
+    "muscoliSecondari": [],
+    "difficolta": "Principiante",
+    "tipoEsercizio": "Compound",
+    "attrezzatura": "Palla Medica",
+    "patternMovimento": "Plyometrics",
+    "rangeRipetizioni": "8-12",
+    "noteTecniche": "Passo 1: Questo esercizio è migliore con un partner. Se non hai un partner, la palla può essere lanciata e recuperata o lanciata contro un muro. | Passo 2: Inizia in piedi a qualche metro davanti al partner, entrambi rivolti nella stessa direzione. Inizia tenendo la palla tra le gambe. | Passo 3: Scendi in squat poi inverti con forza la direzione, arrivando a piena estensione mentre lanci la palla sopra la testa al partner. | Passo 4: Il tuo partner può poi farti rotolare la palla indietro. Ripeti per il numero desiderato di ripetizioni.",
+    "aliases": [
+      "backward medicine ba",
+      "backward"
+    ],
+    "countingMode": "reps",
+    "version": "1.0.0",
+    "versionHistory": [
+      "1.0.0 (2025-12-17): Imported from free-exercise-db"
+    ]
+  },
+  {
+    "id": "log_lift",
+    "nome": "Log Lift",
+    "focus": "DELT",
+    "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Log_Lift/0.jpg",
+    "muscoliSecondari": [
+      "ADDOM",
+      "PETT",
+      "GLUT",
+      "FEMOR",
+      "LOM",
+      "DORSO",
+      "QUAD",
+      "TRAP",
+      "TRIC"
+    ],
+    "difficolta": "Intermedio",
+    "tipoEsercizio": "Compound",
+    "attrezzatura": "Altro",
+    "patternMovimento": "Strongman",
+    "rangeRipetizioni": "8-12",
+    "noteTecniche": "Passo 1: Inizia in piedi con il log davanti a te. Afferra le maniglie e inizia il clean del log. Mentre sei piegato per iniziare il clean, cerca di portare il log il più in alto possibile, tirandolo verso il petto. Estendi anche e ginocchia per completare il clean. | Passo 2: Spingi la testa indietro e guarda in alto, creando un appoggio sul petto per il log. Inizia la press con un dip, piegando leggermente le ginocchia e invertendo il movimento. Questo push press genera slancio per far muovere il log verticalmente. Continua estendendo i gomiti per spingere il log sopra la testa. Non ci sono regole rigide sulla tecnica, usa ciò che funziona meglio per te. Mentre spingi il log, assicurati di spingere la testa in avanti ad ogni ripetizione, guardando avanti. | Passo 3: Ripeti il più possibile. Cerca di controllare la discesa del log quando lo riporti a terra.",
+    "aliases": [
+      "log",
+      "log lift"
+    ],
+    "countingMode": "reps",
+    "version": "1.0.0",
+    "versionHistory": [
+      "1.0.0 (2025-12-17): Imported from free-exercise-db"
+    ]
+  },
+  {
+    "id": "stairmaster",
+    "nome": "Stairmaster",
+    "focus": "QUAD",
+    "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Stairmaster/0.jpg",
+    "muscoliSecondari": [
+      "POLP",
+      "GLUT",
+      "FEMOR"
+    ],
+    "difficolta": "Intermedio",
+    "tipoEsercizio": "Compound",
+    "attrezzatura": "Macchina",
+    "patternMovimento": "Cardio",
+    "rangeRipetizioni": "30-60s",
+    "noteTecniche": "Passo 1: Sali sullo stairmaster e seleziona l'opzione desiderata dal menu. Puoi scegliere un'impostazione manuale o selezionare un programma. Generalmente puoi inserire età e peso per stimare le calorie bruciate. | Passo 2: Muovi le gambe su e giù con un ritmo regolare, spingendo i pedali verso il basso ma senza arrivare fino in fondo. È consigliato mantenersi alle maniglie per non cadere. Le maniglie possono essere usate per monitorare la frequenza cardiaca e mantenere l'intensità appropriata. | Passo 3: Lo stairmaster offre comodità, benefici cardiovascolari e solitamente minor impatto rispetto alla corsa all'aperto. È tipicamente più impegnativo di altri attrezzi cardio. Una persona di 70 kg brucia circa 300 calorie in 30 minuti, rispetto alle circa 175 calorie camminando.",
+    "aliases": [
+      "stairmaster"
+    ],
+    "countingMode": "timed",
+    "version": "1.0.0",
+    "versionHistory": [
+      "1.0.0 (2025-12-17): Imported from free-exercise-db"
+    ]
+  },
+  {
+    "id": "neck_smr",
+    "nome": "Massaggio del Collo",
+    "focus": "COLLO",
+    "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Neck-SMR/0.jpg",
+    "muscoliSecondari": [],
+    "difficolta": "Intermedio",
+    "tipoEsercizio": "Compound",
+    "attrezzatura": "Altro",
+    "patternMovimento": "Flexibility",
+    "rangeRipetizioni": "30-60s",
+    "noteTecniche": "Passo 1: Usando un foam rullo o un matterello, posiziona il rullo dietro la testa contro il collo. Assicurati di non posizionarlo direttamente contro la colonna vertebrale, ma leggermente inclinato in modo che prema contro i muscoli ai lati della colonna. Questa sarà la posizione iniziale. | Passo 2: Partendo dalla parte alta del collo, fai rotolare lentamente lungo i muscoli, fermandoti nei punti di tensione per 10-30 secondi.",
+    "aliases": [
+      "neck-smr",
+      "neck smr"
+    ],
+    "countingMode": "timed",
+    "version": "1.0.0",
+    "versionHistory": [
+      "1.0.0 (2025-12-17): Imported from free-exercise-db"
+    ]
+  },
+  {
+    "id": "medicine_ball_full_twist",
+    "nome": "Rotazione Completa con Palla Medica",
+    "focus": "ADDOM",
+    "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Medicine_Ball_Full_Twist/0.jpg",
+    "muscoliSecondari": [
+      "DELT"
+    ],
+    "difficolta": "Principiante",
+    "tipoEsercizio": "Compound",
+    "attrezzatura": "Palla Medica",
+    "patternMovimento": "Plyometrics",
+    "rangeRipetizioni": "8-12",
+    "noteTecniche": "Passo 1: Per questo esercizio servono una palla medica e un partner. Stai in piedi schiena a schiena con il partner, distanziati di circa un metro. Questa è la posizione iniziale. | Passo 2: Tieni la palla davanti al busto. Apri le anche e ruota le spalle contemporaneamente verso il partner. | Passo 3: Per una rotazione completa, tu e il partner dovete ruotare nella stessa direzione, cioè entrambi in senso antiorario. | Passo 4: Passa la palla al partner, poi entrambi ruotate nella direzione opposta e ripetete.",
+    "aliases": [
+      "medicine ball full t",
+      "medicine"
+    ],
+    "countingMode": "reps",
+    "version": "1.0.0",
+    "versionHistory": [
+      "1.0.0 (2025-12-17): Imported from free-exercise-db"
+    ]
+  },
+  {
+    "id": "mountain_climbers",
+    "nome": "Mountain Climbers",
+    "focus": "QUAD",
+    "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Mountain_Climbers/0.jpg",
+    "muscoliSecondari": [
+      "PETT",
+      "FEMOR",
+      "DELT"
+    ],
+    "difficolta": "Principiante",
+    "tipoEsercizio": "Compound",
+    "attrezzatura": "Corpo Libero",
+    "patternMovimento": "Plyometrics",
+    "rangeRipetizioni": "8-12",
+    "noteTecniche": "Passo 1: Inizia in posizione di push-up, con il peso sostenuto da mani e punte dei piedi. Flettendo ginocchio e anca, porta una gamba avanti finché il ginocchio è circa sotto l'anca. Questa è la posizione iniziale. | Passo 2: Inverti esplosivamente la posizione delle gambe, estendendo la gamba piegata finché è dritta e sostenuta dalla punta, portando l'altro piede in avanti con anca e ginocchio flessi. Ripeti alternando per 20-30 secondi.",
+    "aliases": [
+      "mountain climbers",
+      "mountain"
+    ],
+    "countingMode": "reps",
+    "version": "1.0.0",
+    "versionHistory": [
+      "1.0.0 (2025-12-17): Imported from free-exercise-db"
+    ]
+  },
+  {
+    "id": "chest_push_multiple_response",
+    "nome": "Passaggio al Petto con Risposta Multipla",
+    "focus": "PETT",
+    "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Chest_Push_multiple_response/0.jpg",
+    "muscoliSecondari": [
+      "ADDOM",
+      "DELT",
+      "TRIC"
+    ],
+    "difficolta": "Principiante",
+    "tipoEsercizio": "Compound",
+    "attrezzatura": "Palla Medica",
+    "patternMovimento": "Plyometrics",
+    "rangeRipetizioni": "8-12",
+    "noteTecniche": "Passo 1: Inizia in ginocchio rivolto verso un muro o con un partner. Tieni la palla stretta al petto con entrambe le mani. | Passo 2: Esegui il passaggio esplodendo in avanti sulle anche mentre spingi la palla il più forte possibile. | Passo 3: Concludi lasciandoti cadere in avanti, fermandoti con le mani. | Passo 4: Torna immediatamente in posizione eretta. Ripeti per il numero desiderato di ripetizioni.",
+    "aliases": [
+      "chest",
+      "chest push multiple "
+    ],
+    "countingMode": "reps",
+    "version": "1.0.0",
+    "versionHistory": [
+      "1.0.0 (2025-12-17): Imported from free-exercise-db"
+    ]
+  },
+  {
+    "id": "lying_face_down_plate_neck_resistance",
+    "nome": "Resistenza Collo con Disco - Prono",
+    "focus": "COLLO",
+    "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Lying_Face_Down_Plate_Neck_Resistance/0.jpg",
+    "muscoliSecondari": [],
+    "difficolta": "Intermedio",
+    "tipoEsercizio": "Isolation",
+    "attrezzatura": "Altro",
+    "patternMovimento": "Strength",
+    "rangeRipetizioni": "8-12",
+    "noteTecniche": "Passo 1: Sdraiati a faccia in giù con il corpo dritto su una panca piana, tenendo un disco dietro la testa. Posizionati in modo che le spalle siano leggermente oltre il bordo della panca, così che petto superiore, collo e viso siano oltre la panca. Questa è la posizione iniziale. | Passo 2: Tenendo il disco fermo dietro la testa, abbassa lentamente la testa (come per dire 'sì') inspirando. | Passo 3: Solleva la testa tornando alla posizione di partenza con un movimento semicircolare, espirando. Mantieni la contrazione per un secondoo. | Passo 4: Ripeti per il numero di ripetizioni consigliato.",
+    "aliases": [
+      "lying",
+      "lying face down plat"
+    ],
+    "countingMode": "reps",
+    "version": "1.0.0",
+    "versionHistory": [
+      "1.0.0 (2025-12-17): Imported from free-exercise-db"
+    ]
+  },
+  {
+    "id": "lying_face_up_plate_neck_resistance",
+    "nome": "Resistenza Collo con Disco - Supino",
+    "focus": "COLLO",
+    "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Lying_Face_Up_Plate_Neck_Resistance/0.jpg",
+    "muscoliSecondari": [],
+    "difficolta": "Intermedio",
+    "tipoEsercizio": "Isolation",
+    "attrezzatura": "Altro",
+    "patternMovimento": "Strength",
+    "rangeRipetizioni": "8-12",
+    "noteTecniche": "Passo 1: Sdraiati a faccia in su con il corpo dritto su una panca piana, tenendo un disco sulla fronte. Posizionati in modo che le spalle siano leggermente oltre il bordo della panca, così che trapezi, collo e testa siano oltre la panca. Questa è la posizione iniziale. | Passo 2: Tenendo il disco fermo sulla fronte, abbassa lentamente la testa indietro con un movimento semicircolare, inspirando. | Passo 3: Solleva la testa tornando alla posizione di partenza con un movimento semicircolare, espirando. Mantieni la contrazione per un secondoo. | Passo 4: Ripeti per il numero di ripetizioni consigliato.",
+    "aliases": [
+      "lying",
+      "lying face up plate "
+    ],
+    "countingMode": "reps",
+    "version": "1.0.0",
+    "versionHistory": [
+      "1.0.0 (2025-12-17): Imported from free-exercise-db"
+    ]
+  },
+  {
+    "id": "hang_clean___below_the_knees",
+    "nome": "Hang Clean - Sotto le Ginocchia",
+    "focus": "QUAD",
+    "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Hang_Clean_-_Below_the_Knees/0.jpg",
+    "muscoliSecondari": [
+      "POLP",
+      "AVAMB",
+      "GLUT",
+      "FEMOR",
+      "LOM",
+      "DELT",
+      "TRAP"
+    ],
+    "difficolta": "Intermedio",
+    "tipoEsercizio": "Compound",
+    "attrezzatura": "Bilanciere",
+    "patternMovimento": "Olympic Lifting",
+    "rangeRipetizioni": "8-12",
+    "noteTecniche": "Passo 1: Inizia con una presa alla larghezza delle spalle, doppia pronata o a gancio, con la sbarra appena sotto le ginocchia. La schiena deve essere dritta e leggermente inclinata in avanti. | Passo 2: Estendi aggressivamente attraverso anche, ginocchia e caviglie, spingendo il peso verso l'alto. Contemporaneamente, solleva le spalle verso le orecchie. Raggiunta la piena estensione, passa alla terza tirata scrollando aggressivamente e flettendo le braccia con i gomiti alti. | Passo 3: Al picco dell'estensione, tiriti aggressivamente verso il basso, ruotando i gomiti sotto la sbarra. Ricevi la sbarra in posizione di front squat, la cui profondità dipende dall'altezza raggiunta alla fine della terza tirata. La sbarra deve essere appoggiata sulle spalle protratte, sfiorando leggermente la gola con le mani rilassate. Continua a scendere fino in fondo allo squat per facilitare il recupero. | Passo 4: Risali immediatamente spingendo attraverso i talloni, mantenendo il busto eretto e i gomiti alti. Continua fino a tornare in posizione eretta.",
+    "aliases": [
+      "hang",
+      "hang clean   below t"
+    ],
+    "countingMode": "reps",
+    "version": "1.0.0",
+    "versionHistory": [
+      "1.0.0 (2025-12-17): Imported from free-exercise-db"
+    ]
+  },
+  {
+    "id": "linear_acceleration_wall_drill",
+    "nome": "Percorso di Accelerazione Lineare a Parete",
+    "focus": "FEMOR",
+    "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Linear_Acceleration_Wall_Drill/0.jpg",
+    "muscoliSecondari": [
+      "POLP",
+      "GLUT",
+      "QUAD"
+    ],
+    "difficolta": "Principiante",
+    "tipoEsercizio": "Compound",
+    "attrezzatura": "Corpo Libero",
+    "patternMovimento": "Plyometrics",
+    "rangeRipetizioni": "8-12",
+    "noteTecniche": "Passo 1: Inclinati a circa 45 gradi contro un muro. I piedi devono essere uniti, i glutei contratti. | Passo 2: Inizia sollevando velocemente il ginocchio destro, fai una pausa, poi spingilo dritto verso il pavimento. | Passo 3: Cambia gamba, sollevando il ginocchio opposto, poi attacca il pavimento verso il basso. | Passo 4: Ripeti ancora con la gamba destra, e appena il piede destro tocca il pavimento, esegui rapidamente alternando sinistra e destra il più velocemente possibile.",
+    "aliases": [
+      "linear acceleration ",
+      "linear"
+    ],
+    "countingMode": "reps",
+    "version": "1.0.0",
+    "versionHistory": [
+      "1.0.0 (2025-12-17): Imported from free-exercise-db"
+    ]
+  },
+  {
+    "id": "atlas_stones",
+    "nome": "Pietre Atlas",
+    "focus": "LOM",
+    "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Atlas_Stones/0.jpg",
+    "muscoliSecondari": [
+      "ADDOM",
+      "ADDU",
+      "BIC",
+      "POLP",
+      "AVAMB",
+      "GLUT",
+      "FEMOR",
+      "DORSO",
+      "QUAD",
+      "TRAP"
+    ],
+    "difficolta": "Avanzato",
+    "tipoEsercizio": "Compound",
+    "attrezzatura": "Altro",
+    "patternMovimento": "Strongman",
+    "rangeRipetizioni": "8-12",
+    "noteTecniche": "Passo 1: Inizia con la pietra Atlas tra i piedi. Piegati sulle anche per avvolgere le braccia verticalmente attorno alla pietra, cercando di infilare le dita sotto. Molte pietre hanno una piccola porzione piatta sul fondo che facilita la presa. | Passo 2: Tirando la pietra verso il busto, spingi attraverso il centro dei piedi per sollevarla da terra. | Passo 3: Quando la pietra supera le ginocchia, appoggiala sulle cosce sedendoti leggermente indietro. | Passo 4: Abbassati portando la pietra in alto sul petto mentre cambi presa per raggiungerla da sopra. Alzati spingendo con le anche. Avvicinati alla pedana e inclinati indietro, estendendo le anche per portare la pietra il più in alto possibile.",
+    "aliases": [
+      "atlas stones",
+      "atlas"
+    ],
+    "countingMode": "reps",
+    "version": "1.0.0",
+    "versionHistory": [
+      "1.0.0 (2025-12-17): Imported from free-exercise-db"
+    ]
+  },
+  {
+    "id": "rickshaw_carry",
+    "nome": "Rickshaw Carry",
+    "focus": "AVAMB",
+    "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Rickshaw_Carry/0.jpg",
+    "muscoliSecondari": [
+      "ADDOM",
+      "POLP",
+      "GLUT",
+      "FEMOR",
+      "LOM",
+      "QUAD",
+      "TRAP"
+    ],
+    "difficolta": "Intermedio",
+    "tipoEsercizio": "Compound",
+    "attrezzatura": "Altro",
+    "patternMovimento": "Strongman",
+    "rangeRipetizioni": "8-12",
+    "noteTecniche": "Passo 1: Posiziona il telaio al punto di partenza e carica il peso appropriato. In piedi al centro del telaio, afferra le maniglie e spingi attraverso i talloni per sollevarlo. Assicurati che petto e testa siano in alto e la schiena dritta. | Passo 2: Inizia immediatamente a camminare velocemente con passi rapidi e controllati. Mantieni il petto alto e la testa rivolta in avanti, continuando a respirare. Appoggia il telaio a terra una volta raggiunto il punto finale.",
+    "aliases": [
+      "rickshaw carry",
+      "rickshaw"
+    ],
+    "countingMode": "reps",
+    "version": "1.0.0",
+    "versionHistory": [
+      "1.0.0 (2025-12-17): Imported from free-exercise-db"
+    ]
+  },
+  {
+    "id": "wide_stance_stiff_legs",
+    "nome": "Posizione Ampia con Gambe Rigide",
+    "focus": "FEMOR",
+    "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Wide_Stance_Stiff_Legs/0.jpg",
+    "muscoliSecondari": [
+      "ADDU",
+      "GLUT",
+      "LOM"
+    ],
+    "difficolta": "Intermedio",
+    "tipoEsercizio": "Compound",
+    "attrezzatura": "Bilanciere",
+    "patternMovimento": "Olympic Lifting",
+    "rangeRipetizioni": "8-12",
+    "noteTecniche": "Passo 1: Inizia con un bilanciere caricato a terra. Assumi una posizione ampia, poi piegati sulle anche per afferrare la sbarra. Le anche devono essere il più indietro possibile e le gambe quasi dritte. Mantieni la schiena dritta e testa e petto in alto. Questa è la posizione iniziale. | Passo 2: Inizia il movimento attivando le anche, spingendole in avanti mentre lasci le braccia pendere dritte. Continua finché sei completamente in piedi, poi riporta lentamente il peso alla posizione iniziale. Per le ripetizioni successive, il peso non deve necessariamente toccare il pavimento.",
+    "aliases": [
+      "wide stance stiff le",
+      "wide"
+    ],
+    "countingMode": "reps",
+    "version": "1.0.0",
+    "versionHistory": [
+      "1.0.0 (2025-12-17): Imported from free-exercise-db"
+    ]
+  },
+  {
+    "id": "catch_and_overhead_throw",
+    "nome": "Presa e Lancio Sopra la testa",
+    "focus": "DORSO",
+    "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Catch_and_Overhead_Throw/0.jpg",
+    "muscoliSecondari": [
+      "ADDOM",
+      "PETT",
+      "DELT"
+    ],
+    "difficolta": "Principiante",
+    "tipoEsercizio": "Compound",
+    "attrezzatura": "Palla Medica",
+    "patternMovimento": "Plyometrics",
+    "rangeRipetizioni": "8-12",
+    "noteTecniche": "Passo 1: Inizia in piedi rivolto verso un muro o un partner. | Passo 2: Usando entrambe le mani, posiziona la palla dietro la testa, allungando il più possibile, e lancia con forza in avanti. | Passo 3: Assicurati di completare il movimento, pronto a ricevere il rimbalzo. Se lanci contro il muro, assicurati di essere abbastanza vicino per ricevere il rimbalzo, e mira leggermente più in alto rispetto a quando lanci con un partner.",
+    "aliases": [
+      "catch",
+      "catch and overhead t"
+    ],
+    "countingMode": "reps",
+    "version": "1.0.0",
+    "versionHistory": [
+      "1.0.0 (2025-12-17): Imported from free-exercise-db"
+    ]
+  },
+  {
+    "id": "single_leg_hop_progression",
+    "nome": "Progresione del Salto con una Sola gamba",
+    "focus": "QUAD",
+    "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Single-Leg_Hop_Progression/0.jpg",
+    "muscoliSecondari": [
+      "ABDU",
+      "ADDU",
+      "POLP",
+      "FEMOR"
+    ],
+    "difficolta": "Principiante",
+    "tipoEsercizio": "Compound",
+    "attrezzatura": "Altro",
+    "patternMovimento": "Plyometrics",
+    "rangeRipetizioni": "8-12",
+    "noteTecniche": "Passo 1: Disponi una fila di coni davanti a te. Assumi una posizione rilassata in piedi, in equilibrio su una gamba. Solleva il ginocchio dell'altra gamba. Questa è la posizione iniziale. | Passo 2: Salta in avanti, atterrando sulla stessa gamba oltre il cono. | Passo 3: Usa un salto con contromovimento per saltare da cono a cono. | Passo 4: Alla fine, girati e torna indietro sull'altra gamba.",
+    "aliases": [
+      "single-leg",
+      "single leg hop progr"
+    ],
+    "countingMode": "reps",
+    "version": "1.0.0",
+    "versionHistory": [
+      "1.0.0 (2025-12-17): Imported from free-exercise-db"
+    ]
+  },
+  {
+    "id": "chest_push_single_response",
+    "nome": "Passaggio al Petto a Risposta Singola",
+    "focus": "PETT",
+    "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Chest_Push_single_response/0.jpg",
+    "muscoliSecondari": [
+      "ADDOM",
+      "DELT",
+      "TRIC"
+    ],
+    "difficolta": "Principiante",
+    "tipoEsercizio": "Compound",
+    "attrezzatura": "Palla Medica",
+    "patternMovimento": "Plyometrics",
+    "rangeRipetizioni": "8-12",
+    "noteTecniche": "Passo 1: Inizia in ginocchio tenendo la palla medica stretta al petto con entrambe le mani. | Passo 2: Esegui il passaggio esplodendo in avanti sulle anche mentre spingi la palla il più lontano possibile. | Passo 3: Concludi lasciandoti cadere in avanti, fermandoti con le mani.",
+    "aliases": [
+      "chest push single re",
+      "chest"
+    ],
+    "countingMode": "reps",
+    "version": "1.0.0",
+    "versionHistory": [
+      "1.0.0 (2025-12-17): Imported from free-exercise-db"
+    ]
+  },
+  {
+    "id": "clean",
+    "nome": "Clean",
+    "focus": "FEMOR",
+    "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Clean/0.jpg",
+    "muscoliSecondari": [
+      "POLP",
+      "AVAMB",
+      "GLUT",
+      "LOM",
+      "QUAD",
+      "DELT",
+      "TRAP"
+    ],
+    "difficolta": "Intermedio",
+    "tipoEsercizio": "Compound",
+    "attrezzatura": "Bilanciere",
+    "patternMovimento": "Olympic Lifting",
+    "rangeRipetizioni": "8-12",
+    "noteTecniche": "Passo 1: Con il bilanciere a terra vicino agli stinchi, afferra con presa pronata (o a gancio) appena fuori dalle gambe. Abbassa le anche con il peso sui talloni, schiena dritta, testa in avanti, petto alto, spalle davanti alla sbarra. Questa è la posizione iniziale. | Passo 2: Inizia la prima tirata spingendo attraverso i talloni ed estendendo le ginocchia. L'angolo della schiena deve restare costante e le braccia dritte. Muovi il peso con controllo oltre le ginocchia. | Passo 3: Segue la seconda tirata, la principale fonte di accelerazione. Quando la sbarra arriva a metà coscia, inizia ad estendere le anche. Con un movimento esplosivo, accelera estendendo anche, ginocchia e caviglie per muovere la sbarra verso l'alto. Non serve tirare attivamente con le braccia; alla fine della seconda tirata il corpo deve essere completamente esteso, leggermente inclinato indietro, braccia ancora tese. | Passo 4: Raggiunta la piena estensione, passa alla terza tirata scrollando aggressivamente e flettendo le braccia con gomiti alti. Al picco, tiriti verso il basso ruotando i gomiti sotto la sbarra. Ricevi in posizione di front squat, con la sbarra appoggiata sulle spalle protratte, sfiorando la gola con mani rilassate. Scendi fino in fondo per facilitare il recupero. | Passo 5: Risali subito spingendo attraverso i talloni, busto eretto e gomiti alti, fino a tornare in posizione eretta.",
+    "aliases": [
+      "clean"
+    ],
+    "countingMode": "reps",
+    "version": "1.0.0",
+    "versionHistory": [
+      "1.0.0 (2025-12-17): Imported from free-exercise-db"
+    ]
+  },
+  {
+    "id": "hang_clean",
+    "nome": "Hang Clean",
+    "focus": "QUAD",
+    "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Hang_Clean/0.jpg",
+    "muscoliSecondari": [
+      "POLP",
+      "AVAMB",
+      "GLUT",
+      "FEMOR",
+      "LOM",
+      "DELT",
+      "TRAP"
+    ],
+    "difficolta": "Intermedio",
+    "tipoEsercizio": "Compound",
+    "attrezzatura": "Bilanciere",
+    "patternMovimento": "Olympic Lifting",
+    "rangeRipetizioni": "8-12",
+    "noteTecniche": "Passo 1: Inizia con una presa alla larghezza delle spalle, doppia pronata o a gancio, con la sbarra a metà coscia. La schiena deve essere dritta e leggermente inclinata in avanti. | Passo 2: Estendi aggressivamente attraverso anche, ginocchia e caviglie, spingendo il peso verso l'alto. Contemporaneamente scrolla le spalle verso le orecchie. | Passo 3: Risali subito spingendo attraverso i talloni, mantenendo il busto eretto e i gomiti alti, fino a tornare in posizione eretta.",
+    "aliases": [
+      "hang clean",
+      "hang"
+    ],
+    "countingMode": "reps",
+    "version": "1.0.0",
+    "versionHistory": [
+      "1.0.0 (2025-12-17): Imported from free-exercise-db"
+    ]
+  },
+  {
+    "id": "split_clean",
+    "nome": "Split Clean",
+    "focus": "QUAD",
+    "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Split_Clean/0.jpg",
+    "muscoliSecondari": [
+      "POLP",
+      "AVAMB",
+      "GLUT",
+      "FEMOR",
+      "LOM",
+      "DELT",
+      "TRAP"
+    ],
+    "difficolta": "Intermedio",
+    "tipoEsercizio": "Compound",
+    "attrezzatura": "Bilanciere",
+    "patternMovimento": "Olympic Lifting",
+    "rangeRipetizioni": "8-12",
+    "noteTecniche": "Passo 1: Con il bilanciere a terra vicino agli stinchi, afferra con presa pronata appena fuori dalle gambe. Abbassa le anche con peso sui talloni, schiena dritta, testa in avanti, petto alto, spalle davanti alla sbarra. Questa è la posizione iniziale. | Passo 2: Inizia la prima tirata spingendo attraverso i talloni ed estendendo le ginocchia. L'angolo della schiena resta costante e le braccia dritte. Muovi il peso con controllo oltre le ginocchia. | Passo 3: Segue la seconda tirata. Quando la sbarra arriva a metà coscia, estendi le anche con un movimento esplosivo, accelerando anche, ginocchia e caviglie. Non serve tirare con le braccia; alla fine il corpo deve essere esteso, leggermente inclinato indietro, braccia tese. | Passo 4: Raggiunta la piena estensione, passa alla terza tirata scrollando e flettendo le braccia con gomiti alti. Al picco, tiriti verso il basso ruotando i gomiti sotto la sbarra. | Passo 5: Ricevi la sbarra con i piedi in split, muovendo aggressivamente un piede avanti e uno indietro. La sbarra appoggia sulle spalle protratte, sfiorando la gola. Scendi in basso per facilitare il recupero. | Passo 6: Risali subito spingendo attraverso i talloni, busto eretto e gomiti alti. Riporta i piedi insieme mentre ti alzi.",
+    "aliases": [
+      "split clean",
+      "split"
+    ],
+    "countingMode": "reps",
+    "version": "1.0.0",
+    "versionHistory": [
+      "1.0.0 (2025-12-17): Imported from free-exercise-db"
+    ]
+  },
+  {
+    "id": "clean_deadlift",
+    "nome": "Clean Deadlift",
+    "focus": "FEMOR",
+    "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Clean_Deadlift/0.jpg",
+    "muscoliSecondari": [
+      "AVAMB",
+      "GLUT",
+      "LOM",
+      "DORSO",
+      "QUAD",
+      "TRAP"
+    ],
+    "difficolta": "Principiante",
+    "tipoEsercizio": "Compound",
+    "attrezzatura": "Bilanciere",
+    "patternMovimento": "Olympic Lifting",
+    "rangeRipetizioni": "8-12",
+    "noteTecniche": "Passo 1: Inizia in piedi con il bilanciere vicino agli stinchi. I piedi devono essere direttamente sotto le anche con le punte leggermente verso l'esterno. Afferra la sbarra con presa doppia pronata o a gancio, circa alla larghezza delle spalle. Scendi in squat alla sbarra. La colonna deve essere in piena estensione, con un angolo della schiena che posiziona le spalle davanti alla sbarra e la schiena il più verticale possibile. | Passo 2: Inizia spingendo attraverso il pavimento con la parte anteriore dei talloni. Mentre la sbarra sale, mantieni costante l'angolo della schiena. Apri le ginocchia verso l'esterno per tenerle fuori dalla traiettoria della sbarra. | Passo 3: Dopo che la sbarra supera le ginocchia, completa la tirata spingendo le anche verso la sbarra finché anche e ginocchia sono completamente estese.",
+    "aliases": [
+      "clean",
+      "clean deadlift"
+    ],
+    "countingMode": "reps",
+    "version": "1.0.0",
+    "versionHistory": [
+      "1.0.0 (2025-12-17): Imported from free-exercise-db"
+    ]
+  },
+  {
+    "id": "power_clean_from_blocks",
+    "nome": "Power Clean from Blocks",
+    "focus": "FEMOR",
+    "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Power_Clean_from_Blocks/0.jpg",
+    "muscoliSecondari": [
+      "QUAD"
+    ],
+    "difficolta": "Intermedio",
+    "tipoEsercizio": "Compound",
+    "attrezzatura": "Bilanciere",
+    "patternMovimento": "Olympic Lifting",
+    "rangeRipetizioni": "8-12",
+    "noteTecniche": "Passo 1: Con il bilanciere sui box all'altezza desiderata, afferra appena fuori dalle gambe. Abbassa le anche con peso sui talloni, schiena dritta, testa in avanti, petto alto, spalle davanti alla sbarra. Questa è la posizione iniziale. | Passo 2: Inizia la prima tirata spingendo attraverso i talloni ed estendendo le ginocchia. L'angolo della schiena resta costante e le braccia dritte. Quando la sbarra arriva a metà coscia, inizia ad estendere le anche. | Passo 3: Con un movimento esplosivo, accelera estendendo anche, ginocchia e caviglie. Non serve tirare con le braccia. Alla fine della seconda tirata il corpo deve essere esteso, leggermente inclinato indietro, braccia tese. | Passo 4: Raggiunta la piena estensione, passa alla terza tirata scrollando e flettendo le braccia con gomiti alti. Al picco, tiriti sotto la sbarra quel tanto che basta per appoggiarla sulle spalle, ruotando i gomiti sotto. La sbarra appoggia sulle spalle protratte, sfiorando la gola con mani rilassate. | Passo 5: Risali subito spingendo attraverso i talloni, busto eretto e gomiti alti, fino a tornare in posizione eretta. Riporta il peso sui box per la ripetizione successiva.",
+    "aliases": [
+      "power clean from blo",
+      "power"
+    ],
+    "countingMode": "reps",
+    "version": "1.0.0",
+    "versionHistory": [
+      "1.0.0 (2025-12-17): Imported from free-exercise-db"
+    ]
+  },
+  {
+    "id": "clean_from_blocks",
+    "nome": "Clean from Blocks",
+    "focus": "QUAD",
+    "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Clean_from_Blocks/0.jpg",
+    "muscoliSecondari": [
+      "POLP",
+      "GLUT",
+      "FEMOR",
+      "DELT",
+      "TRAP"
+    ],
+    "difficolta": "Intermedio",
+    "tipoEsercizio": "Compound",
+    "attrezzatura": "Bilanciere",
+    "patternMovimento": "Olympic Lifting",
+    "rangeRipetizioni": "8-12",
+    "noteTecniche": "Passo 1: Con il bilanciere su box o supporti all'altezza desiderata, afferra con presa pronata o a gancio appena fuori dalle gambe. Abbassa le anche con peso sui talloni, schiena dritta, testa in avanti, petto alto, spalle davanti alla sbarra. Questa è la posizione iniziale. | Passo 2: Inizia la prima tirata spingendo attraverso i talloni ed estendendo le ginocchia. L'angolo della schiena resta costante e le braccia dritte con gomiti verso l'esterno. | Passo 3: Raggiunta la piena estensione, passa alla posizione di ricezione scrollando aggressivamente e flettendo le braccia con gomiti alti. Tiriti aggressivamente verso il basso, ruotando i gomiti sotto la sbarra. Ricevi in posizione di front squat, con la sbarra appoggiata sulle spalle protratte, sfiorando la gola con mani rilassate. Scendi fino in fondo per facilitare il recupero. | Passo 4: Risali subito spingendo attraverso i talloni, busto eretto e gomiti alti, fino a tornare in posizione eretta. Riporta il peso sui box per la ripetizione successiva.",
+    "aliases": [
+      "clean from blocks",
+      "clean"
+    ],
+    "countingMode": "reps",
+    "version": "1.0.0",
+    "versionHistory": [
+      "1.0.0 (2025-12-17): Imported from free-exercise-db"
+    ]
+  },
+  {
+    "id": "clean_shrug",
+    "nome": "Clean Shrug",
+    "focus": "TRAP",
+    "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Clean_Shrug/0.jpg",
+    "muscoliSecondari": [
+      "AVAMB",
+      "DELT"
+    ],
+    "difficolta": "Principiante",
+    "tipoEsercizio": "Compound",
+    "attrezzatura": "Bilanciere",
+    "patternMovimento": "Olympic Lifting",
+    "rangeRipetizioni": "8-12",
+    "noteTecniche": "Passo 1: Inizia con una presa alla larghezza delle spalle, doppia pronata o a gancio, con la sbarra a metà coscia. La schiena deve essere dritta e leggermente inclinata in avanti. | Passo 2: Scrolla le spalle verso le orecchie. Sebbene questo esercizio possa solitamente essere caricato con pesi maggiori rispetto al clean, evita di sovraccaricare al punto che l'esecuzione rallenti.",
+    "aliases": [
+      "clean shrug",
+      "clean"
+    ],
+    "countingMode": "reps",
+    "version": "1.0.0",
+    "versionHistory": [
+      "1.0.0 (2025-12-17): Imported from free-exercise-db"
+    ]
+  },
+  {
+    "id": "clean_and_jerk",
+    "nome": "Girata e Slancio",
+    "focus": "DELT_ANT",
+    "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Clean_and_Jerk/0.jpg",
+    "muscoliSecondari": [
+      "ADDOM",
+      "GLUT",
+      "FEMOR",
+      "LOM",
+      "QUAD",
+      "TRAP",
+      "TRIC",
+      "DELT_LAT"
+    ],
+    "difficolta": "Avanzato",
+    "tipoEsercizio": "Compound",
+    "attrezzatura": "Bilanciere",
+    "patternMovimento": "Olympic Lifting",
+    "rangeRipetizioni": "8-12",
+    "noteTecniche": "Passo 1: Con il bilanciere a terra vicino agli stinchi, afferra con presa pronata o a gancio appena fuori dalle gambe. Abbassa le anche con peso sui talloni, schiena dritta, testa in avanti, petto alto, spalle davanti alla sbarra. Questa è la posizione iniziale. | Passo 2: Inizia la prima tirata spingendo attraverso i talloni ed estendendo le ginocchia. L'angolo della schiena resta costante e le braccia dritte. Muovi il peso con controllo oltre le ginocchia. | Passo 3: Segue la seconda tirata. Quando la sbarra arriva a metà coscia, estendi le anche con movimento esplosivo, accelerando anche, ginocchia e caviglie. Alla fine il corpo deve essere esteso, leggermente inclinato indietro, braccia tese. | Passo 4: Raggiunta la piena estensione, passa alla terza tirata scrollando e flettendo le braccia con gomiti alti. Al picco, tiriti verso il basso ruotando i gomiti sotto la sbarra. Ricevi in front squat, con la sbarra sulle spalle protratte. Scendi fino in fondo per facilitare il recupero. | Passo 5: Risali spingendo attraverso i talloni, busto eretto e gomiti alti, fino a tornare in posizione eretta. | Passo 6: La seconda fase è il jerk, che porta il peso sopra la testa. Con il peso appoggiato sulla parte anteriore delle spalle, inizia il dip. Con i piedi sotto le anche, fletti le ginocchia senza spostare le anche indietro. Scendi solo leggermente e inverti la direzione con massima potenza. | Passo 7: Spingi attraverso i talloni per creare massima velocità e forza, spostando la testa mentre la sbarra lascia le spalle. | Passo 8: Quando i piedi lasciano il pavimento, devono essere riposizionati nella posizione di ricezione il più velocemente possibile. I piedi devono essere in split, uno avanti e uno indietro. Ricevi la sbarra con le braccia bloccate sopra la testa. Torna in posizione eretta.",
+    "aliases": [
+      "clean",
+      "clean and jerk"
+    ],
+    "countingMode": "reps",
+    "version": "1.0.0",
+    "versionHistory": [
+      "1.0.0 (2025-12-17): Imported from free-exercise-db"
+    ]
+  },
+  {
+    "id": "drop_push",
+    "nome": "Drop Push",
+    "focus": "PETT",
+    "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Drop_Push/0.jpg",
+    "muscoliSecondari": [
+      "DELT",
+      "TRIC"
+    ],
+    "difficolta": "Intermedio",
+    "tipoEsercizio": "Compound",
+    "attrezzatura": "Altro",
+    "patternMovimento": "Plyometrics",
+    "rangeRipetizioni": "8-12",
+    "noteTecniche": "Passo 1: Posiziona box bassi o altre piattaforme a circa 60-90 cm di distanza. | Passo 2: Mettiti in posizione di push-up tra di essi, sostenendoti posizionando le mani sui box. | Passo 3: Con buona postura, lasciati cadere dalle piattaforme spingendo su e portando le mani alla larghezza delle spalle, ammortizzando l'atterraggio assorbendo l'impatto attraverso le braccia.",
+    "aliases": [
+      "drop",
+      "drop push"
+    ],
+    "countingMode": "reps",
+    "version": "1.0.0",
+    "versionHistory": [
+      "1.0.0 (2025-12-17): Imported from free-exercise-db"
+    ]
+  },
+  {
+    "id": "rowing_fermo",
+    "nome": "Remo, Stazionario",
+    "focus": "QUAD",
+    "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Rowing_Stationary/0.jpg",
+    "muscoliSecondari": [
+      "BIC",
+      "POLP",
+      "GLUT",
+      "FEMOR",
+      "LOM",
+      "DORSO"
+    ],
+    "difficolta": "Intermedio",
+    "tipoEsercizio": "Compound",
+    "attrezzatura": "Macchina",
+    "patternMovimento": "Cardio",
+    "rangeRipetizioni": "30-60s",
+    "noteTecniche": "Passo 1: Siediti sul vogatore. Assicurati che i talloni siano appoggiati comodamente sulla base dei pedali e che le cinghie siano fissate. Seleziona il programma desiderato, se applicabile. Siediti dritto e piegati in avanti sulle anche. | Passo 2: Ci sono tre fasi di movimento. Nella prima fase vieni in avanti sul vogatore: le ginocchia sono piegate verso il petto e la parte superiore del corpo è leggermente inclinata in avanti mantenendo una buona postura. Poi spingi contro i pedali ed estendi le gambe portando le mani verso l'addome superiore, contraendo le spalle indietro. Per evitare di affaticare la schiena, usa principalmente i muscoli delle gambe e delle anche. | Passo 3: La fase di recupero consiste nel distendere le braccia, piegare le ginocchia e portare il corpo in avanti tornando alla prima fase.",
+    "aliases": [
+      "rowing,",
+      "rowing fermo"
+    ],
+    "countingMode": "timed",
+    "version": "1.0.0",
+    "versionHistory": [
+      "1.0.0 (2025-12-17): Imported from free-exercise-db"
+    ]
+  },
+  {
+    "id": "seated_head_harness_neck_resistance",
+    "nome": "Resistenza Collo con Cinghia da Seduto",
+    "focus": "COLLO",
+    "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Seated_Head_Harness_Neck_Resistance/0.jpg",
+    "muscoliSecondari": [],
+    "difficolta": "Intermedio",
+    "tipoEsercizio": "Isolation",
+    "attrezzatura": "Altro",
+    "patternMovimento": "Strength",
+    "rangeRipetizioni": "8-12",
+    "noteTecniche": "Passo 1: Posiziona una cinghia per collo sul pavimento alla fine di una panca piana. Dopo aver selezionato il peso, siediti alla fine della panca con i piedi più larghi delle spalle e le punte verso l'esterno. | Passo 2: Inclina lentamente il busto in avanti finché è quasi parallelo al pavimento. Fissa bene la cinghia attorno alla testa. Assicurati che il peso sia ancora a terra per evitare tensioni sul collo. Poi afferra il peso con entrambe le mani sollevando il busto finché è quasi perpendicolare al pavimento. Nota: testa e busto devono essere leggermente inclinati in avanti. | Passo 3: Posiziona entrambe le mani sulle ginocchia. Questa è la posizione iniziale. | Passo 4: Abbassa lentamente il collo finché il mento tocca la parte superiore del petto, inspirando. | Passo 5: Espirando, riporta il collo alla posizione iniziale. | Passo 6: Ripeti per il numero di ripetizioni consigliato.",
+    "aliases": [
+      "seated",
+      "seated head harness "
+    ],
+    "countingMode": "reps",
+    "version": "1.0.0",
+    "versionHistory": [
+      "1.0.0 (2025-12-17): Imported from free-exercise-db"
+    ]
+  },
+  {
+    "id": "return_push_from_stance",
+    "nome": "Ritorno da Spinta in Posizione Inclinata",
+    "focus": "DELT_ANT",
+    "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Return_Push_from_Stance/0.jpg",
+    "muscoliSecondari": [
+      "PETT",
+      "TRIC",
+      "DELT_LAT"
+    ],
+    "difficolta": "Principiante",
+    "tipoEsercizio": "Compound",
+    "attrezzatura": "Palla Medica",
+    "patternMovimento": "Plyometrics",
+    "rangeRipetizioni": "8-12",
+    "noteTecniche": "Passo 1: Serve un partner per questo esercizio. | Passo 2: Inizia in posizione atletica a 2 o 3 appoggi. | Passo 3: Al segnale, spostati in posizione per ricevere il passaggio dal partner. | Passo 4: Afferra la palla medica con entrambe le mani e lanciala immediatamente al partner. | Passo 5: Puoi modificare l'esercizio correndo su diversi percorsi.",
+    "aliases": [
+      "return push from sta",
+      "return"
+    ],
+    "countingMode": "reps",
+    "version": "1.0.0",
+    "versionHistory": [
+      "1.0.0 (2025-12-17): Imported from free-exercise-db"
+    ]
+  },
+  {
+    "id": "romanian_deadlift_from_deficit",
+    "nome": "Romano Deadlift da Deficit",
+    "focus": "FEMOR",
+    "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Romanian_Deadlift_from_Deficit/0.jpg",
+    "muscoliSecondari": [
+      "AVAMB",
+      "GLUT",
+      "LOM",
+      "TRAP"
+    ],
+    "difficolta": "Intermedio",
+    "tipoEsercizio": "Compound",
+    "attrezzatura": "Bilanciere",
+    "patternMovimento": "Olympic Lifting",
+    "rangeRipetizioni": "8-12",
+    "noteTecniche": "Passo 1: Inizia in piedi tenendo una sbarra a braccia tese davanti a te. Puoi stare su una pedana rialzata per aumentare il range di movimento. | Passo 2: Fletti leggermente le ginocchia, poi piegati sulle anche portando i glutei il più indietro possibile, abbassando il busto fin dove la flessibilità lo permette. La schiena deve rimanere in estensione assoluta per tutto il tempo e la sbarra deve restare a contatto con le gambe. Se eseguito correttamente, si deve sentire una forte tensione nei femorali. | Passo 3: Inverti il movimento per tornare alla posizione iniziale.",
+    "aliases": [
+      "romanian",
+      "romanian deadlift fr"
+    ],
+    "countingMode": "reps",
+    "version": "1.0.0",
+    "versionHistory": [
+      "1.0.0 (2025-12-17): Imported from free-exercise-db"
+    ]
+  },
+  {
+    "id": "conans_wheel",
+    "nome": "Ruota di Conan",
+    "focus": "QUAD",
+    "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Conans_Wheel/0.jpg",
+    "muscoliSecondari": [
+      "ADDOM",
+      "BIC",
+      "POLP",
+      "AVAMB",
+      "LOM",
+      "DELT",
+      "TRAP"
+    ],
+    "difficolta": "Intermedio",
+    "tipoEsercizio": "Compound",
+    "attrezzatura": "Altro",
+    "patternMovimento": "Strongman",
+    "rangeRipetizioni": "8-12",
+    "noteTecniche": "Passo 1: Con il peso caricato, usa una presa Zercher all'estremità dell'attrezzo. Posiziona la sbarra nella piega del gomito e tienila con i polsi. Cerca di sostenere il peso con gli avambracci. | Passo 2: Inizia sollevando il peso da terra. Mantieni una postura stretta e dritta mentre cammini con passi brevi e veloci. Guarda in alto e lontano mentre giri in cerchio. Non trattenere il respiro durante l'esercizio. Continua a camminare finché non completi uno o più giri completi.",
+    "aliases": [
+      "conans wheel",
+      "conan's"
+    ],
+    "countingMode": "reps",
+    "version": "1.0.0",
+    "versionHistory": [
+      "1.0.0 (2025-12-17): Imported from free-exercise-db"
+    ]
+  },
+  {
+    "id": "fast_skipping",
+    "nome": "Saltare Veloce",
+    "focus": "QUAD",
+    "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Fast_Skipping/0.jpg",
+    "muscoliSecondari": [
+      "ABDU",
+      "ADDU",
+      "POLP",
+      "GLUT",
+      "FEMOR"
+    ],
+    "difficolta": "Principiante",
+    "tipoEsercizio": "Compound",
+    "attrezzatura": "Corpo Libero",
+    "patternMovimento": "Plyometrics",
+    "rangeRipetizioni": "8-12",
+    "noteTecniche": "Passo 1: Inizia in posizione rilassata con una gamba leggermente avanti. Questa è la posizione iniziale. | Passo 2: Esegui saltelli con uno schema passo-salto: destra-destra-passo, sinistra-sinistra-passo, alternando avanti e indietro. | Passo 3: Per saltelli veloci, mantieni il contatto ravvicinato con il suolo, riduci il tempo in aria e muoviti il più velocemente possibile.",
+    "aliases": [
+      "fast",
+      "fast skipping"
+    ],
+    "countingMode": "reps",
+    "version": "1.0.0",
+    "versionHistory": [
+      "1.0.0 (2025-12-17): Imported from free-exercise-db"
+    ]
+  },
+  {
+    "id": "front_cone_hops_or_hurdle_hops",
+    "nome": "Saltelli sui Coni Frontali",
+    "focus": "QUAD",
+    "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Front_Cone_Hops_or_hurdle_hops/0.jpg",
+    "muscoliSecondari": [
+      "ABDU",
+      "ADDU",
+      "POLP",
+      "GLUT",
+      "FEMOR"
+    ],
+    "difficolta": "Principiante",
+    "tipoEsercizio": "Compound",
+    "attrezzatura": "Altro",
+    "patternMovimento": "Plyometrics",
+    "rangeRipetizioni": "8-12",
+    "noteTecniche": "Passo 1: Disponi una fila di coni o altre piccole barriere a circa un metro di distanza. | Passo 2: Stai in piedi davanti al primo cono con i piedi alla larghezza delle spalle. Questa è la posizione iniziale. | Passo 3: Inizia saltando con entrambi i piedi sopra il primo cono, oscillando le braccia durante il salto. | Passo 4: Assorbi l'impatto dell'atterraggio piegando le ginocchia, rimbalzando per saltare sopra il cono successivo. | Passo 5: Continua finché non hai saltato sopra tutti i coni.",
+    "aliases": [
+      "front cone hops or h",
+      "front"
+    ],
+    "countingMode": "reps",
+    "version": "1.0.0",
+    "versionHistory": [
+      "1.0.0 (2025-12-17): Imported from free-exercise-db"
+    ]
+  },
+  {
+    "id": "lateral_cone_hops",
+    "nome": "Salti a Cono Laterale",
+    "focus": "ADDU",
+    "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Lateral_Cone_Hops/0.jpg",
+    "muscoliSecondari": [
+      "ABDU",
+      "POLP",
+      "GLUT",
+      "FEMOR",
+      "QUAD"
+    ],
+    "difficolta": "Principiante",
+    "tipoEsercizio": "Compound",
+    "attrezzatura": "Altro",
+    "patternMovimento": "Plyometrics",
+    "rangeRipetizioni": "8-12",
+    "noteTecniche": "Passo 1: Posiziona diversi coni in fila a circa un metro di distanza. | Passo 2: Stai in piedi di fianco alla fila di coni, rivolto a 90 gradi rispetto alla direzione di spostamento. Questa è la posizione iniziale. | Passo 3: Inizia il salto piegando le ginocchia per attivare il riflesso di allungamento, poi inverti immediatamente la direzione spingendo dal suolo, saltando in alto e di lato sopra il cono. | Passo 4: Usa le gambe per assorbire l'impatto all'atterraggio e rimbalza nel salto successivo, continuando lungo la fila di coni.",
+    "aliases": [
+      "lateral cone hops",
+      "lateral"
+    ],
+    "countingMode": "reps",
+    "version": "1.0.0",
+    "versionHistory": [
+      "1.0.0 (2025-12-17): Imported from free-exercise-db"
+    ]
+  },
+  {
+    "id": "hurdle_hops",
+    "nome": "Salti con Ostacolo",
+    "focus": "FEMOR",
+    "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Hurdle_Hops/0.jpg",
+    "muscoliSecondari": [
+      "ABDU",
+      "ADDU",
+      "POLP",
+      "GLUT",
+      "FEMOR"
+    ],
+    "difficolta": "Principiante",
+    "tipoEsercizio": "Compound",
+    "attrezzatura": "Altro",
+    "patternMovimento": "Plyometrics",
+    "rangeRipetizioni": "8-12",
+    "noteTecniche": "Passo 1: Disponi una fila di ostacoli o altre piccole barriere a circa un metro di distanza. | Passo 2: Stai in piedi davanti al primo ostacolo con i piedi alla larghezza delle spalle. Questa è la posizione iniziale. | Passo 3: Inizia saltando con entrambi i piedi sopra il primo ostacolo, oscillando le braccia durante il salto. | Passo 4: Assorbi l'impatto dell'atterraggio piegando le ginocchia, rimbalzando per saltare sopra l'ostacolo successivo. Continua finché non hai saltato sopra tutti gli ostacoli.",
+    "aliases": [
+      "hurdle",
+      "hurdle hops"
+    ],
+    "countingMode": "reps",
+    "version": "1.0.0",
+    "versionHistory": [
+      "1.0.0 (2025-12-17): Imported from free-exercise-db"
+    ]
+  },
+  {
+    "id": "lateral_bound",
+    "nome": "Salto Laterale",
+    "focus": "ADDU",
+    "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Lateral_Bound/0.jpg",
+    "muscoliSecondari": [
+      "ABDU",
+      "POLP",
+      "GLUT",
+      "FEMOR",
+      "QUAD"
+    ],
+    "difficolta": "Principiante",
+    "tipoEsercizio": "Compound",
+    "attrezzatura": "Corpo Libero",
+    "patternMovimento": "Plyometrics",
+    "rangeRipetizioni": "8-12",
+    "noteTecniche": "Passo 1: Assumi una posizione di mezzo squat rivolto a 90 gradi rispetto alla direzione di spostamento. Questa è la posizione iniziale. | Passo 2: Lascia che la gamba avanti faccia un contromovimento verso l'interno mentre sposti il peso sulla gamba esterna. | Passo 3: Spingi immediatamente ed estendi, cercando di balzare lateralmente il più lontano possibile. | Passo 4: All'atterraggio, spingi subito nella direzione opposta, tornando alla posizione iniziale. | Passo 5: Continua avanti e indietro per diverse ripetizioni.",
+    "aliases": [
+      "lateral bound",
+      "lateral"
+    ],
+    "countingMode": "reps",
+    "version": "1.0.0",
+    "versionHistory": [
+      "1.0.0 (2025-12-17): Imported from free-exercise-db"
+    ]
+  },
+  {
+    "id": "single_leg_lateral_hop",
+    "nome": "Salto Laterale con una Sola gamba",
+    "focus": "QUAD",
+    "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Single-Leg_Lateral_Hop/0.jpg",
+    "muscoliSecondari": [
+      "ABDU",
+      "ADDU",
+      "POLP",
+      "FEMOR"
+    ],
+    "difficolta": "Principiante",
+    "tipoEsercizio": "Compound",
+    "attrezzatura": "Altro",
+    "patternMovimento": "Plyometrics",
+    "rangeRipetizioni": "8-12",
+    "noteTecniche": "Passo 1: Stai in piedi di fianco a un cono o ostacolo. Per raggiungere la posizione di partenza, stai su una gamba con il ginocchio leggermente piegato. | Passo 2: Esegui un controsalto per saltellare lateralmente sopra il cono. | Passo 3: Atterra sulla gamba da salto e rimbalza immediatamente tornando alla posizione iniziale. | Passo 4: Continua a saltellare avanti e indietro.",
+    "aliases": [
+      "single-leg",
+      "single leg lateral h"
+    ],
+    "countingMode": "reps",
+    "version": "1.0.0",
+    "versionHistory": [
+      "1.0.0 (2025-12-17): Imported from free-exercise-db"
+    ]
+  },
+  {
+    "id": "side_standing_long_jump",
+    "nome": "Salto Lungo Laterale in piedi",
+    "focus": "QUAD",
+    "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Side_Standing_Long_Jump/0.jpg",
+    "muscoliSecondari": [
+      "POLP",
+      "GLUT",
+      "FEMOR"
+    ],
+    "difficolta": "Principiante",
+    "tipoEsercizio": "Compound",
+    "attrezzatura": "Corpo Libero",
+    "patternMovimento": "Plyometrics",
+    "rangeRipetizioni": "8-12",
+    "noteTecniche": "Passo 1: Inizia in piedi con i piedi alla larghezza delle anche in posizione atletica. Testa e petto devono essere in alto, ginocchia e anche leggermente piegate. Questa è la posizione iniziale. | Passo 2: Inclinandoti verso destra, estendi attraverso anche, ginocchia e caviglie per saltare. Usa le braccia per guidare il movimento, saltando il più lontano possibile verso destra. | Passo 3: Atterra rivolto nella stessa direzione con i piedi alla larghezza delle anche, assorbendo l'impatto con la parte inferiore del corpo.",
+    "aliases": [
+      "side standing long j",
+      "side"
+    ],
+    "countingMode": "reps",
+    "version": "1.0.0",
+    "versionHistory": [
+      "1.0.0 (2025-12-17): Imported from free-exercise-db"
+    ]
+  },
+  {
+    "id": "standing_long_jump",
+    "nome": "Salto Lungo in Posizione Eretta",
+    "focus": "QUAD",
+    "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Standing_Long_Jump/0.jpg",
+    "muscoliSecondari": [
+      "POLP",
+      "GLUT",
+      "FEMOR"
+    ],
+    "difficolta": "Principiante",
+    "tipoEsercizio": "Compound",
+    "attrezzatura": "Corpo Libero",
+    "patternMovimento": "Plyometrics",
+    "rangeRipetizioni": "8-12",
+    "noteTecniche": "Passo 1: Questo esercizio è meglio eseguirlo su sabbia o altra superficie morbida per l'atterraggio. Assicurati di poter misurare la distanza. Stai in piedi in posizione di squat parziale con i piedi alla larghezza delle spalle. | Passo 2: Usando una grande oscillazione delle braccia e un contromovimento delle gambe, salta in avanti il più lontano possibile. | Passo 3: Cerca di atterrare con i piedi davanti a te, raggiungendo il più lontano possibile con le gambe. | Passo 4: Misura la distanza dal punto di atterraggio al punto di partenza e registra i risultati.",
+    "aliases": [
+      "standing long jump",
+      "standing"
+    ],
+    "countingMode": "reps",
+    "version": "1.0.0",
+    "versionHistory": [
+      "1.0.0 (2025-12-17): Imported from free-exercise-db"
+    ]
+  },
+  {
+    "id": "quick_leap",
+    "nome": "Salto Rapido",
+    "focus": "QUAD",
+    "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Quick_Leap/0.jpg",
+    "muscoliSecondari": [
+      "POLP",
+      "FEMOR"
+    ],
+    "difficolta": "Principiante",
+    "tipoEsercizio": "Compound",
+    "attrezzatura": "Altro",
+    "patternMovimento": "Plyometrics",
+    "rangeRipetizioni": "8-12",
+    "noteTecniche": "Passo 1: Avrai bisogno di un box per questo esercizio. | Passo 2: Inizia rivolto verso il box in piedi a 30-60 cm dal bordo. | Passo 3: Usando le anche, salta sul box atterrando su entrambe le gambe. Assicurati di atterrare con le gambe piegate e i piedi piatti. | Passo 4: Immediatamente dopo l'atterraggio, estendi completamente tutto il corpo e oscilla le braccia sopra la testa per esplodere via dal box. Usa le gambe per assorbire l'impatto dell'atterraggio.",
+    "aliases": [
+      "quick leap",
+      "quick"
+    ],
+    "countingMode": "reps",
+    "version": "1.0.0",
+    "versionHistory": [
+      "1.0.0 (2025-12-17): Imported from free-exercise-db"
+    ]
+  },
+  {
+    "id": "rocket_jump",
+    "nome": "Salto Rocket",
+    "focus": "QUAD",
+    "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Rocket_Jump/0.jpg",
+    "muscoliSecondari": [
+      "POLP",
+      "FEMOR"
+    ],
+    "difficolta": "Principiante",
+    "tipoEsercizio": "Compound",
+    "attrezzatura": "Corpo Libero",
+    "patternMovimento": "Plyometrics",
+    "rangeRipetizioni": "8-12",
+    "noteTecniche": "Passo 1: Inizia in posizione rilassata con i piedi alla larghezza delle spalle e le braccia lungo il corpo. | Passo 2: Per iniziare il movimento, accovacciati a metà ed esplodi verso l'alto più in alto possibile. | Passo 3: Estendi completamente tutto il corpo, raggiungendo sopra la testa il più lontano possibile. Mentre atterri, assorbire l'impatto attraverso le gambe.",
+    "aliases": [
+      "rocket",
+      "rocket jump"
+    ],
+    "countingMode": "reps",
+    "version": "1.0.0",
+    "versionHistory": [
+      "1.0.0 (2025-12-17): Imported from free-exercise-db"
+    ]
+  },
+  {
+    "id": "star_jump",
+    "nome": "Salto Star",
+    "focus": "QUAD",
+    "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Star_Jump/0.jpg",
+    "muscoliSecondari": [
+      "POLP",
+      "GLUT",
+      "FEMOR",
+      "DELT"
+    ],
+    "difficolta": "Principiante",
+    "tipoEsercizio": "Compound",
+    "attrezzatura": "Corpo Libero",
+    "patternMovimento": "Plyometrics",
+    "rangeRipetizioni": "8-12",
+    "noteTecniche": "Passo 1: Inizia in posizione rilassata con i piedi alla larghezza delle spalle e le braccia lungo il corpo. | Passo 2: Per iniziare il movimento, accovacciati a metà ed esplodi verso l'alto più in alto possibile. Estendi completamente tutto il corpo, allargando gambe e braccia lontano dal corpo. | Passo 3: Mentre atterri, riporta gli arti verso il corpo e assorbire l'impatto attraverso le gambe.",
+    "aliases": [
+      "star jump",
+      "star"
+    ],
+    "countingMode": "reps",
+    "version": "1.0.0",
+    "versionHistory": [
+      "1.0.0 (2025-12-17): Imported from free-exercise-db"
+    ]
+  },
+  {
+    "id": "split_jump",
+    "nome": "Salto a Gambe Divise",
+    "focus": "QUAD",
+    "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Split_Jump/0.jpg",
+    "muscoliSecondari": [
+      "POLP",
+      "GLUT",
+      "FEMOR"
+    ],
+    "difficolta": "Principiante",
+    "tipoEsercizio": "Compound",
+    "attrezzatura": "Corpo Libero",
+    "patternMovimento": "Plyometrics",
+    "rangeRipetizioni": "8-12",
+    "noteTecniche": "Passo 1: Assumi una posizione di affondo con un piede in avanti e il ginocchio piegato, e il ginocchio posteriore che quasi tocca il suolo. | Passo 2: Assicurati che il ginocchio anteriore sia sopra la linea mediana del piede. | Passo 3: Estendendo attraverso entrambe le gambe, salta più in alto possibile, oscillando le braccia per guadagnare slancio. | Passo 4: Mentre salti, porta i piedi insieme e muovili di nuovo alle loro posizioni iniziali mentre atterri. | Passo 5: Assorbi l'impatto tornando alla posizione iniziale.",
+    "aliases": [
+      "split jump",
+      "split"
+    ],
+    "countingMode": "reps",
+    "version": "1.0.0",
+    "versionHistory": [
+      "1.0.0 (2025-12-17): Imported from free-exercise-db"
+    ]
+  },
+  {
+    "id": "scissors_jump",
+    "nome": "Salto a Scissa",
+    "focus": "QUAD",
+    "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Scissors_Jump/0.jpg",
+    "muscoliSecondari": [
+      "GLUT",
+      "FEMOR"
+    ],
+    "difficolta": "Principiante",
+    "tipoEsercizio": "Compound",
+    "attrezzatura": "Corpo Libero",
+    "patternMovimento": "Plyometrics",
+    "rangeRipetizioni": "8-12",
+    "noteTecniche": "Passo 1: Assumi una posizione di affondo con un piede in avanti e il ginocchio piegato, e il ginocchio posteriore che quasi tocca il suolo. | Passo 2: Assicurati che il ginocchio anteriore sia sopra la linea mediana del piede. Estendendo attraverso entrambe le gambe, salta più in alto possibile, oscillando le braccia per guadagnare slancio. | Passo 3: Mentre salti più in alto possibile, inverti la posizione delle gambe, muovendo la gamba anteriore dietro e quella posteriore davanti. | Passo 4: Mentre atterri, assorbire l'impatto attraverso le gambe adottando la posizione di affondo, e ripeti.",
+    "aliases": [
+      "scissors jump",
+      "scissors"
+    ],
+    "countingMode": "reps",
+    "version": "1.0.0",
+    "versionHistory": [
+      "1.0.0 (2025-12-17): Imported from free-exercise-db"
+    ]
+  },
+  {
+    "id": "rope_jumping",
+    "nome": "Salto con la corda",
+    "focus": "QUAD",
+    "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Rope_Jumping/0.jpg",
+    "muscoliSecondari": [
+      "POLP",
+      "FEMOR"
+    ],
+    "difficolta": "Intermedio",
+    "tipoEsercizio": "Compound",
+    "attrezzatura": "Altro",
+    "patternMovimento": "Cardio",
+    "rangeRipetizioni": "30-60s",
+    "noteTecniche": "Passo 1: Tieni un'estremità della corda in ogni mano. Posiziona la corda dietro di te a terra. Alza le braccia e fai girare la corda sopra la testa portandola giù davanti a te. Quando raggiunge il suolo, saltala. Trova un buon ritmo di rotazione che può essere mantenuto. Diverse velocità e tecniche possono essere usate per variare. | Passo 2: Saltare la corda è stimolante, sfida la coordinazione e richiede molta energia. Una persona di 70 kg brucia circa 350 calorie saltando la corda per 30 minuti, rispetto alle oltre 450 calorie correndo.",
+    "aliases": [
+      "rope jumping",
+      "rope"
+    ],
+    "countingMode": "timed",
+    "version": "1.0.0",
+    "versionHistory": [
+      "1.0.0 (2025-12-17): Imported from free-exercise-db"
+    ]
+  },
+  {
+    "id": "single_leg_stride_jump",
+    "nome": "Salto con Slancio su una Gamba",
+    "focus": "QUAD",
+    "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Single-Leg_Stride_Jump/0.jpg",
+    "muscoliSecondari": [
+      "ABDU",
+      "ADDU",
+      "POLP",
+      "FEMOR"
+    ],
+    "difficolta": "Principiante",
+    "tipoEsercizio": "Compound",
+    "attrezzatura": "Altro",
+    "patternMovimento": "Plyometrics",
+    "rangeRipetizioni": "8-12",
+    "noteTecniche": "Passo 1: Stai in piedi di fianco a un box con il piede interno sopra di esso, vicino al bordo. | Passo 2: Inizia oscillando le braccia verso l'alto mentre spingi con la gamba superiore, saltando il più in alto possibile. Cerca di spingere il ginocchio opposto verso l'alto. | Passo 3: Atterra nella stessa posizione di partenza, usando la gamba interna per decelerare l'impatto.",
+    "aliases": [
+      "single-leg",
+      "single leg stride ju"
+    ],
+    "countingMode": "reps",
+    "version": "1.0.0",
+    "versionHistory": [
+      "1.0.0 (2025-12-17): Imported from free-exercise-db"
+    ]
+  },
+  {
+    "id": "box_skip",
+    "nome": "Salto della Scatola",
+    "focus": "FEMOR",
+    "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Box_Skip/0.jpg",
+    "muscoliSecondari": [
+      "ABDU",
+      "ADDU",
+      "POLP",
+      "GLUT",
+      "QUAD"
+    ],
+    "difficolta": "Principiante",
+    "tipoEsercizio": "Compound",
+    "attrezzatura": "Altro",
+    "patternMovimento": "Plyometrics",
+    "rangeRipetizioni": "8-12",
+    "noteTecniche": "Passo 1: Avrai bisogno di hai bisogno several boxes lined su circa 8 piedi apart. | Passo 2: Inizia rivolti verso il first box con una gamba leggermente dietro il altro. | Passo 3: Drive dalla schiena gamba, attemptando a gain come much altezza sull'anche come possible. | Passo 4: Immediately upon landando sulla box, drive il altro gamba in avanti e verso l'alto a gain altezza e distanza, leapando dalla box. Le tralla first two boxes sull'stesso gamba thallanded sulla first box. | Passo 5: poi, step alla successivamente box e ripeti.",
+    "aliases": [
+      "box skip",
+      "box"
+    ],
+    "countingMode": "reps",
+    "version": "1.0.0",
+    "versionHistory": [
+      "1.0.0 (2025-12-17): Imported from free-exercise-db"
+    ]
+  },
+  {
+    "id": "depth_jump_leap",
+    "nome": "Salto in Profondità",
+    "focus": "QUAD",
+    "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Depth_Jump_Leap/0.jpg",
+    "muscoliSecondari": [
+      "ABDU",
+      "ADDU",
+      "POLP",
+      "GLUT",
+      "FEMOR"
+    ],
+    "difficolta": "Principiante",
+    "tipoEsercizio": "Compound",
+    "attrezzatura": "Altro",
+    "patternMovimento": "Plyometrics",
+    "rangeRipetizioni": "8-12",
+    "noteTecniche": "Passo 1: Per questo esercizio avrai bisogno di due box o panche, uno alto 30-40 cm e l'altro alto 55-65 cm. | Passo 2: Stai in piedi su uno dei due box con le braccia lungo i fianchi; i piedi devono essere uniti e leggermente dal bordo come nel depth jump. Posiziona l'altro box a circa 60-90 cm davanti e di fronte a te. | Passo 3: Inizia lasciandoti cadere dal box iniziale, atterrando e immediatamente saltando con entrambi i piedi. | Passo 4: Rimbalza spingendo verso l'alto e in avanti il più intensamente possibile, usando le braccia e l'estensione completa del corpo per saltare sul box più alto. Di nuovo, permetti alle gambe di assorbire l'impatto.",
+    "aliases": [
+      "depth jump leap",
+      "depth"
+    ],
+    "countingMode": "reps",
+    "version": "1.0.0",
+    "versionHistory": [
+      "1.0.0 (2025-12-17): Imported from free-exercise-db"
+    ]
+  },
+  {
+    "id": "linear_depth_jump",
+    "nome": "Salto in Profondità Lineare",
+    "focus": "QUAD",
+    "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Linear_Depth_Jump/0.jpg",
+    "muscoliSecondari": [
+      "POLP",
+      "GLUT",
+      "FEMOR"
+    ],
+    "difficolta": "Intermedio",
+    "tipoEsercizio": "Compound",
+    "attrezzatura": "Altro",
+    "patternMovimento": "Plyometrics",
+    "rangeRipetizioni": "8-12",
+    "noteTecniche": "Passo 1: Avrai bisogno di due box o panche distanziati di alcuni passi. Inizia in piedi su un box rivolto verso l'altra piattaforma. | Passo 2: Per iniziare il movimento, lasciati cadere delicatamente verso il suolo tra le piattaforme, permettendo a ginocchia e anche di flettersi. | Passo 3: Inverti il movimento esplodendo, estendendo attraverso anche, ginocchia e caviglie per saltare sull'altra piattaforma. | Passo 4: Atterra dolcemente, assorbendo l'impatto attraverso le gambe.",
+    "aliases": [
+      "linear depth jump",
+      "linear"
+    ],
+    "countingMode": "reps",
+    "version": "1.0.0",
+    "versionHistory": [
+      "1.0.0 (2025-12-17): Imported from free-exercise-db"
+    ]
+  },
+  {
+    "id": "bench_jump",
+    "nome": "Salto sulla Panca",
+    "focus": "QUAD",
+    "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Bench_Jump/0.jpg",
+    "muscoliSecondari": [
+      "POLP",
+      "GLUT",
+      "FEMOR"
+    ],
+    "difficolta": "Intermedio",
+    "tipoEsercizio": "Compound",
+    "attrezzatura": "Corpo Libero",
+    "patternMovimento": "Plyometrics",
+    "rangeRipetizioni": "8-12",
+    "noteTecniche": "Passo 1: Inizia con un box o panca a 30-60 cm davanti a te. Stai in piedi con i piedi alla larghezza delle spalle. Questa sarà la posizione iniziale. | Passo 2: Esegui un breve squat in preparazione per il salto; oscilla le braccia dietro di te. | Passo 3: Esplodi da questa posizione, estendendo attraverso anche, ginocchia e caviglie per saltare più in alto possibile. Oscilla le braccia in avanti e in alto. | Passo 4: Salta oltre la panca, atterrando con le ginocchia piegate, assorbendo l'impatto attraverso le gambe. | Passo 5: Girati e rivolgiti nella direzione opposta, poi salta di nuovo oltre la panca.",
+    "aliases": [
+      "bench jump",
+      "bench"
+    ],
+    "countingMode": "reps",
+    "version": "1.0.0",
+    "versionHistory": [
+      "1.0.0 (2025-12-17): Imported from free-exercise-db"
+    ]
+  },
+  {
+    "id": "power_stairs",
+    "nome": "Scala del Potere",
+    "focus": "FEMOR",
+    "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Power_Stairs/0.jpg",
+    "muscoliSecondari": [
+      "ADDU",
+      "POLP",
+      "GLUT",
+      "LOM",
+      "QUAD",
+      "DELT",
+      "TRAP"
+    ],
+    "difficolta": "Intermedio",
+    "tipoEsercizio": "Compound",
+    "attrezzatura": "Altro",
+    "patternMovimento": "Strongman",
+    "rangeRipetizioni": "8-12",
+    "noteTecniche": "Passo 1: Nel power stairs, gli attrezzi vengono spostati su una scala. Per l'allenamento, questo può essere eseguito con un pneumatico o box. | Passo 2: Inizia afferrando l'attrezzo con entrambe le mani. Posiziona i piedi larghi, con testa e petto alti. Spingi attraverso il suolo con i talloni, estendendo ginocchia e anche per alzare il peso dal suolo. | Passo 3: Mentre ti inclini indietro, cerca di oscillare il peso sulle scale, che sono solitamente alte circa 40-45 cm. Puoi usare le gambe per aiutare a spingere il peso sulla scala. | Passo 4: Ripeti per 3-5 ripetizioni e continua con un peso più pesante, muovendoti il più velocemente possibile.",
+    "aliases": [
+      "power stairs",
+      "power"
+    ],
+    "countingMode": "reps",
+    "version": "1.0.0",
+    "versionHistory": [
+      "1.0.0 (2025-12-17): Imported from free-exercise-db"
+    ]
+  },
+  {
+    "id": "moving_claw_series",
+    "nome": "Serie a Coda di Ragno",
+    "focus": "FEMOR",
+    "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Moving_Claw_Series/0.jpg",
+    "muscoliSecondari": [
+      "POLP",
+      "QUAD"
+    ],
+    "difficolta": "Principiante",
+    "tipoEsercizio": "Compound",
+    "attrezzatura": "Corpo Libero",
+    "patternMovimento": "Plyometrics",
+    "rangeRipetizioni": "8-12",
+    "noteTecniche": "Passo 1: Questo movimento aiuta a preparare la forma di corsa per eccellere nello sprint. Mentre corri, assicurati di flettere il ginocchio, mirando a calciare i glutei mentre l'anca si estende. | Passo 2: Ricarica il quadricipite mentre la gamba si muove nuovamente in avanti, attaccando il suolo sul passo successivo. | Passo 3: Assicurati che mentre corri, blocchi con le braccia, colpendo attraverso un movimento rapido 1-2.",
+    "aliases": [
+      "moving claw series",
+      "moving"
+    ],
+    "countingMode": "reps",
+    "version": "1.0.0",
+    "versionHistory": [
+      "1.0.0 (2025-12-17): Imported from free-exercise-db"
+    ]
+  },
+  {
+    "id": "side_to_side_box_shuffle",
+    "nome": "Shuttle laterale della scatola",
+    "focus": "QUAD",
+    "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Side_to_Side_Box_Shuffle/0.jpg",
+    "muscoliSecondari": [
+      "ABDU",
+      "ADDU",
+      "POLP",
+      "FEMOR"
+    ],
+    "difficolta": "Principiante",
+    "tipoEsercizio": "Compound",
+    "attrezzatura": "Altro",
+    "patternMovimento": "Plyometrics",
+    "rangeRipetizioni": "8-12",
+    "noteTecniche": "Passo 1: Stai in piedi a un lato del box con il piede sinistro appoggiato al centro di esso. | Passo 2: Salta in alto e sopra all'altro lato del box, atterrando con il piede destro sopra il box e il sinistro sul pavimento. Oscilla le braccia per aiutare il movimento. | Passo 3: Continua a scivolare avanti e indietro attraverso il box.",
+    "aliases": [
+      "side to side box shu",
+      "side"
+    ],
+    "countingMode": "reps",
+    "version": "1.0.0",
+    "versionHistory": [
+      "1.0.0 (2025-12-17): Imported from free-exercise-db"
+    ]
+  },
+  {
+    "id": "skating",
+    "nome": "Skating",
+    "focus": "QUAD",
+    "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Skating/0.jpg",
+    "muscoliSecondari": [
+      "ABDU",
+      "ADDU",
+      "POLP",
+      "GLUT",
+      "FEMOR"
+    ],
+    "difficolta": "Intermedio",
+    "tipoEsercizio": "Compound",
+    "attrezzatura": "Altro",
+    "patternMovimento": "Cardio",
+    "rangeRipetizioni": "30-60s",
+    "noteTecniche": "Passo 1: Il pattinaggio su rotelle è un'attività divertente che può essere efficace nel migliorare il fitness cardiorespiratorio e la resistenza muscolare. Richiede un discreto equilibrio e coordinazione. È necessario imparare le basi del pattinaggio incluse curve e frenate e indossare equipaggiamento protettivo per evitare possibili infortuni. | Passo 2: Puoi pattinare a un ritmo confortevole per 30 minuti consecutivi. Se vuoi una sfida cardio, fai intervalli di pattinaggio — pattina veloce per due minuti ogni cinque minuti, usando i tre minuti rimanenti per recuperare. Una persona di 70 kg brucia tipicamente circa 175 calorie in 30 minuti pattinando a un ritmo confortevole, simile a una camminata veloce.",
+    "aliases": [
+      "skating"
+    ],
+    "countingMode": "timed",
+    "version": "1.0.0",
+    "versionHistory": [
+      "1.0.0 (2025-12-17): Imported from free-exercise-db"
+    ]
+  },
+  {
+    "id": "overhead_slam",
+    "nome": "Slam Sopra la testa",
+    "focus": "DORSO",
+    "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Overhead_Slam/0.jpg",
+    "muscoliSecondari": [],
+    "difficolta": "Principiante",
+    "tipoEsercizio": "Compound",
+    "attrezzatura": "Palla Medica",
+    "patternMovimento": "Plyometrics",
+    "rangeRipetizioni": "8-12",
+    "noteTecniche": "Passo 1: Tieni una palla medica con entrambe le mani e stai in piedi con i piedi alla larghezza delle spalle. Questa sarà la posizione iniziale. | Passo 2: Inizia il contromovimento alzando la palla sopra la testa ed estendendo completamente il corpo. | Passo 3: Inverti il movimento, sbattendo la palla verso il suolo direttamente davanti a te più forte che puoi. | Passo 4: Riprendi la palla con entrambe le mani al rimbalzo e ripeti il movimento.",
+    "aliases": [
+      "overhead",
+      "overhead slam"
+    ],
+    "countingMode": "reps",
+    "version": "1.0.0",
+    "versionHistory": [
+      "1.0.0 (2025-12-17): Imported from free-exercise-db"
+    ]
+  },
+  {
+    "id": "hang_snatch___below_knees",
+    "nome": "Snatch Pendente sotto le Ginocchia",
+    "focus": "FEMOR",
+    "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Hang_Snatch_-_Below_Knees/0.jpg",
+    "muscoliSecondari": [
+      "ADDOM",
+      "POLP",
+      "AVAMB",
+      "GLUT",
+      "LOM",
+      "QUAD",
+      "DELT",
+      "TRAP"
+    ],
+    "difficolta": "Avanzato",
+    "tipoEsercizio": "Compound",
+    "attrezzatura": "Bilanciere",
+    "patternMovimento": "Olympic Lifting",
+    "rangeRipetizioni": "8-12",
+    "noteTecniche": "Passo 1: Inizia con una presa ampia sulla sbarra, con presa prona o a gancio. I piedi devono essere direttamente sotto le anche con i piedi ruotati verso l'esterno. Le ginocchia devono essere leggermente piegate e il busto inclinato in avanti. La colonna deve essere completamente estesa e la testa rivolta in avanti. La sbarra deve essere appena sotto le ginocchia. Questa sarà la posizione iniziale. | Passo 2: Estendi aggressivamente attraverso gambe e anche. Al picco dell'estensione, scrolla le spalle e permetti ai gomiti di flettersi lateralmente. | Passo 3: Mentre muovi i piedi nella posizione di ricezione, tirati con forza sotto la sbarra mentre la elevi sopra la testa. Ricevi la sbarra con il corpo il più basso possibile e le braccia completamente estese sopra la testa. | Passo 4: Torna in posizione eretta con il peso sopra la testa, poi riporta il peso verso il pavimento sotto controllo.",
+    "aliases": [
+      "hang snatch   below ",
+      "hang"
+    ],
+    "countingMode": "reps",
+    "version": "1.0.0",
+    "versionHistory": [
+      "1.0.0 (2025-12-17): Imported from free-exercise-db"
+    ]
+  },
+  {
+    "id": "power_snatch",
+    "nome": "Power Snatch",
+    "focus": "FEMOR",
+    "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Power_Snatch/0.jpg",
+    "muscoliSecondari": [
+      "POLP",
+      "GLUT",
+      "LOM",
+      "QUAD",
+      "DELT",
+      "TRAP",
+      "TRIC"
+    ],
+    "difficolta": "Avanzato",
+    "tipoEsercizio": "Compound",
+    "attrezzatura": "Bilanciere",
+    "patternMovimento": "Olympic Lifting",
+    "rangeRipetizioni": "8-12",
+    "noteTecniche": "Passo 1: Inizia con un bilanciere caricato sul pavimento. La sbarra deve essere vicina o a contatto con le tibie, e deve essere usata una presa ampia. I piedi devono essere direttamente sotto le anche, con i piedi ruotati verso l'esterno secondo necessità. Abbassa le anche, con il petto alto e la testa rivolta in avanti. Le spalle devono essere appena davanti alla sbarra. Questa sarà la posizione iniziale. | Passo 2: Inizia la prima tirata spingendo attraverso la parte anteriore dei talloni, alzando la sbarra dal suolo. L'angolo della schiena deve rimanere costante finché la sbarra supera le ginocchia. | Passo 3: Transita nella seconda tirata estendendo attraverso anche, ginocchia e caviglie, spingendo la sbarra verso l'alto il più velocemente possibile. La sbarra deve rimanere vicina al corpo. Al picco dell'estensione, scrolla le spalle e permetti ai gomiti di flettersi lateralmente. | Passo 4: Mentre muovi i piedi nella posizione di ricezione, una posizione leggermente più ampia, tirati sotto la sbarra mentre la elevi sopra la testa. La sbarra deve essere ricevuta in uno squat parziale. Continua ad alzare la sbarra nella posizione sopra la testa, ricevendo la sbarra con le braccia bloccate. | Passo 5: Torna in posizione eretta con il peso sopra la testa.",
+    "aliases": [
+      "power snatch",
+      "power"
+    ],
+    "countingMode": "reps",
+    "version": "1.0.0",
+    "versionHistory": [
+      "1.0.0 (2025-12-17): Imported from free-exercise-db"
+    ]
+  },
+  {
+    "id": "hang_snatch",
+    "nome": "Hang Snatch",
+    "focus": "FEMOR",
+    "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Hang_Snatch/0.jpg",
+    "muscoliSecondari": [
+      "ADDOM",
+      "POLP",
+      "AVAMB",
+      "GLUT",
+      "LOM",
+      "QUAD",
+      "DELT",
+      "TRAP"
+    ],
+    "difficolta": "Avanzato",
+    "tipoEsercizio": "Compound",
+    "attrezzatura": "Bilanciere",
+    "patternMovimento": "Olympic Lifting",
+    "rangeRipetizioni": "8-12",
+    "noteTecniche": "Passo 1: Inizia con una presa ampia sulla sbarra, con presa prona o a gancio. I piedi devono essere direttamente sotto le anche con i piedi ruotati verso l'esterno. Le ginocchia devono essere leggermente piegate e il busto inclinato in avanti. La colonna deve essere completamente estesa e la testa rivolta in avanti. La sbarra deve essere all'altezza delle anche. Questa sarà la posizione iniziale. | Passo 2: Estendi aggressivamente attraverso gambe e anche. Al picco dell'estensione, scrolla le spalle e permetti ai gomiti di flettersi lateralmente. | Passo 3: Mentre muovi i piedi nella posizione di ricezione, tirati con forza sotto la sbarra mentre la elevi sopra la testa. Ricevi la sbarra con il corpo il più basso possibile e le braccia completamente estese sopra la testa. | Passo 4: Torna in posizione eretta con il peso sopra la testa. Poi riporta il peso verso il suolo sotto controllo.",
+    "aliases": [
+      "hang snatch",
+      "hang"
+    ],
+    "countingMode": "reps",
+    "version": "1.0.0",
+    "versionHistory": [
+      "1.0.0 (2025-12-17): Imported from free-exercise-db"
+    ]
+  },
+  {
+    "id": "muscle_snatch",
+    "nome": "Muscle Snatch",
+    "focus": "FEMOR",
+    "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Muscle_Snatch/0.jpg",
+    "muscoliSecondari": [
+      "GLUT",
+      "LOM",
+      "QUAD",
+      "DELT",
+      "TRIC"
+    ],
+    "difficolta": "Intermedio",
+    "tipoEsercizio": "Compound",
+    "attrezzatura": "Bilanciere",
+    "patternMovimento": "Olympic Lifting",
+    "rangeRipetizioni": "8-12",
+    "noteTecniche": "Passo 1: Inizia con un bilanciere caricato tenuto a metà coscia con una presa larga. I piedi devono essere direttamente sotto le anche, con i piedi ruotati verso l'esterno secondo necessità. Abbassa le anche, con il petto alto e la testa rivolta in avanti. Le spalle devono essere appena davanti alla sbarra. Questa sarà la posizione iniziale. | Passo 2: Inizia la tirata spingendo attraverso la parte anteriore dei talloni, alzando la sbarra. Transita nella seconda tirata estendendo attraverso anche, ginocchia e caviglie, spingendo la sbarra verso l'alto il più velocemente possibile. La sbarra deve rimanere vicina al corpo. | Passo 3: Continua ad alzare la sbarra nella posizione sopra la testa, senza ripiegare le ginocchia.",
+    "aliases": [
+      "muscle",
+      "muscle snatch"
+    ],
+    "countingMode": "reps",
+    "version": "1.0.0",
+    "versionHistory": [
+      "1.0.0 (2025-12-17): Imported from free-exercise-db"
+    ]
+  },
+  {
+    "id": "power_snatch_from_blocks",
+    "nome": "Power Snatch from Blocks",
+    "focus": "QUAD",
+    "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Power_Snatch_from_Blocks/0.jpg",
+    "muscoliSecondari": [
+      "POLP",
+      "AVAMB",
+      "GLUT",
+      "FEMOR",
+      "LOM",
+      "DELT",
+      "TRAP",
+      "TRIC"
+    ],
+    "difficolta": "Intermedio",
+    "tipoEsercizio": "Compound",
+    "attrezzatura": "Bilanciere",
+    "patternMovimento": "Olympic Lifting",
+    "rangeRipetizioni": "8-12",
+    "noteTecniche": "Passo 1: Inizia con un bilanciere caricato su box o supporti all'altezza desiderata. Deve essere usata una presa ampia sulla sbarra. I piedi devono essere direttamente sotto le anche, con i piedi ruotati verso l'esterno secondo necessità. Abbassa le anche, con il petto alto e la testa rivolta in avanti. Le spalle devono essere appena davanti alla sbarra, con i gomiti verso l'esterno. Questa sarà la posizione iniziale. | Passo 2: Inizia la prima tirata spingendo attraverso la parte anteriore dei talloni, alzando la sbarra dai box. | Passo 3: Transita nella seconda tirata estendendo attraverso anche, ginocchia e caviglie, spingendo la sbarra verso l'alto il più velocemente possibile. La sbarra deve rimanere vicina al corpo. Al picco dell'estensione, scrolla le spalle e permetti ai gomiti di flettersi lateralmente. | Passo 4: Mentre muovi i piedi nella posizione di ricezione, tirati con forza sotto la sbarra mentre la elevi sopra la testa. I piedi devono muoversi appena fuori dalle anche, ruotati come necessario. Ricevi la sbarra in uno squat completo con le braccia completamente estese sopra la testa. | Passo 5: Mantenendo la sbarra allineata sopra la parte anteriore dei talloni, con testa e petto alti, spingi attraverso i talloni per tornare in posizione eretta. Riporta con cura il peso sui box.",
+    "aliases": [
+      "power snatch from bl",
+      "power"
+    ],
+    "countingMode": "reps",
+    "version": "1.0.0",
+    "versionHistory": [
+      "1.0.0 (2025-12-17): Imported from free-exercise-db"
+    ]
+  },
+  {
+    "id": "split_snatch",
+    "nome": "Split Snatch",
+    "focus": "FEMOR",
+    "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Split_Snatch/0.jpg",
+    "muscoliSecondari": [
+      "POLP",
+      "AVAMB",
+      "GLUT",
+      "FEMOR",
+      "LOM",
+      "QUAD",
+      "DELT",
+      "TRAP",
+      "TRIC"
+    ],
+    "difficolta": "Avanzato",
+    "tipoEsercizio": "Compound",
+    "attrezzatura": "Bilanciere",
+    "patternMovimento": "Olympic Lifting",
+    "rangeRipetizioni": "8-12",
+    "noteTecniche": "Passo 1: Inizia con un bilanciere caricato sul pavimento. La sbarra deve essere vicina o a contatto con le tibie, e deve essere usata una presa ampia. I piedi devono essere direttamente sotto le anche, con i piedi ruotati verso l'esterno secondo necessità. Abbassa le anche, con il petto alto e la testa rivolta in avanti. Le spalle devono essere appena davanti alla sbarra. Questa sarà la posizione iniziale. | Passo 2: Inizia la prima tirata spingendo attraverso la parte anteriore dei talloni, alzando la sbarra dal suolo. L'angolo della schiena deve rimanere costante finché la sbarra supera le ginocchia. | Passo 3: Transita nella seconda tirata estendendo attraverso anche, ginocchia e caviglie, spingendo la sbarra verso l'alto il più velocemente possibile. La sbarra deve rimanere vicina al corpo. Al picco dell'estensione, scrolla le spalle e permetti ai gomiti di flettersi lateralmente. | Passo 4: Mentre muovi i piedi nella posizione di ricezione, tirati con forza sotto la sbarra mentre la elevi sopra la testa. I piedi devono muoversi con forza in una posizione split, un piede in avanti e uno indietro. Ricevi la sbarra con il corpo il più basso possibile e le braccia completamente estese sopra la testa. | Passo 5: Mantenendo la sbarra allineata sopra la parte anteriore dei talloni, con testa e petto alti, spingi attraverso i talloni per tornare in posizione eretta, unendo i piedi. | Passo 6: Riporta con cura il peso a terra.",
+    "aliases": [
+      "split snatch",
+      "split"
+    ],
+    "countingMode": "reps",
+    "version": "1.0.0",
+    "versionHistory": [
+      "1.0.0 (2025-12-17): Imported from free-exercise-db"
+    ]
+  },
+  {
+    "id": "chest_push_with_run_release",
+    "nome": "Spinta al Petto con Rilasciamento della Corsa",
+    "focus": "PETT",
+    "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Chest_Push_with_Run_Release/0.jpg",
+    "muscoliSecondari": [
+      "ADDOM",
+      "DELT",
+      "TRIC"
+    ],
+    "difficolta": "Principiante",
+    "tipoEsercizio": "Compound",
+    "attrezzatura": "Palla Medica",
+    "patternMovimento": "Plyometrics",
+    "rangeRipetizioni": "8-12",
+    "noteTecniche": "Passo 1: Inizia in posizione atletica con le ginocchia piegate, anche indietro e schiena dritta. Mantieni la palla medica vicino alle gambe. Questa sarà la posizione iniziale. | Passo 2: Mentre fai il primo passo, porta la palla medica al petto. | Passo 3: Mentre fai il secondo passo, spingi esplosivamente la palla in avanti, scattando immediatamente per 10 metri dopo il rilascio. Se sei davvero veloce, puoi riprendere il tuo stesso lancio!",
+    "aliases": [
+      "chest push with run ",
+      "chest"
+    ],
+    "countingMode": "reps",
+    "version": "1.0.0",
+    "versionHistory": [
+      "1.0.0 (2025-12-17): Imported from free-exercise-db"
+    ]
+  },
+  {
+    "id": "chest_push_from_3_point_stance",
+    "nome": "Spinta al Petto da una Posizione a Tre Punti",
+    "focus": "PETT",
+    "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Chest_Push_from_3_point_stance/0.jpg",
+    "muscoliSecondari": [
+      "ADDOM",
+      "DELT",
+      "TRIC"
+    ],
+    "difficolta": "Principiante",
+    "tipoEsercizio": "Compound",
+    "attrezzatura": "Palla Medica",
+    "patternMovimento": "Plyometrics",
+    "rangeRipetizioni": "8-12",
+    "noteTecniche": "Passo 1: Inizia in posizione a tre punti, accovacciato con la schiena dritta e una mano a terra. Posiziona la palla medica direttamente davanti a te. | Passo 2: Fai il primo passo mentre porti la palla al petto, posizionando entrambe le mani per prepararti al lancio. | Passo 3: Durante il secondo passo, rilascia esplosivamente la palla in avanti più forte possibile.",
+    "aliases": [
+      "chest",
+      "chest push from 3 po"
+    ],
+    "countingMode": "reps",
+    "version": "1.0.0",
+    "versionHistory": [
+      "1.0.0 (2025-12-17): Imported from free-exercise-db"
+    ]
+  },
+  {
+    "id": "push_press",
+    "nome": "Spinta con Piegamenti",
+    "focus": "DELT_ANT",
+    "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Push_Press/0.jpg",
+    "muscoliSecondari": [
+      "QUAD",
+      "TRIC",
+      "DELT_LAT"
+    ],
+    "difficolta": "Avanzato",
+    "tipoEsercizio": "Compound",
+    "attrezzatura": "Bilanciere",
+    "patternMovimento": "Olympic Lifting",
+    "rangeRipetizioni": "8-12",
+    "noteTecniche": "Esegui l'esercizio con forma corretta.",
+    "aliases": [
+      "push press",
+      "push"
+    ],
+    "countingMode": "reps",
+    "version": "1.0.0",
+    "versionHistory": [
+      "1.0.0 (2025-12-17): Imported from free-exercise-db"
+    ]
+  },
+  {
+    "id": "push_press___behind_the_neck",
+    "nome": "Spinta con Piegamento Dietro la testa",
+    "focus": "DELT_ANT",
+    "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Push_Press_-_Behind_the_Neck/0.jpg",
+    "muscoliSecondari": [
+      "POLP",
+      "QUAD",
+      "TRIC",
+      "DELT_LAT"
+    ],
+    "difficolta": "Intermedio",
+    "tipoEsercizio": "Compound",
+    "attrezzatura": "Bilanciere",
+    "patternMovimento": "Olympic Lifting",
+    "rangeRipetizioni": "8-12",
+    "noteTecniche": "Passo 1: In piedi con il peso appoggiato sulla parte posteriore delle spalle, inizia il dip. Con i piedi direttamente sotto le anche, fletti le ginocchia senza muovere le anche all'indietro. Scendi solo leggermente e inverti la direzione il più potentemente possibile. Spingi attraverso i talloni per creare la massima velocità e forza possibile, muovendo la sbarra in un percorso verticale. | Passo 2: Usando lo slancio generato, concludi spingendo il peso sopra la testa estendendo le braccia. | Passo 3: Torna alla posizione di partenza, usando le gambe per assorbire l'impatto.",
+    "aliases": [
+      "push press   behind ",
+      "push"
+    ],
+    "countingMode": "reps",
+    "version": "1.0.0",
+    "versionHistory": [
+      "1.0.0 (2025-12-17): Imported from free-exercise-db"
+    ]
+  },
+  {
+    "id": "single_leg_push_off",
+    "nome": "Spinta con una Sola gamba",
+    "focus": "QUAD",
+    "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Single_Leg_Push-off/0.jpg",
+    "muscoliSecondari": [
+      "POLP",
+      "FEMOR"
+    ],
+    "difficolta": "Principiante",
+    "tipoEsercizio": "Compound",
+    "attrezzatura": "Altro",
+    "patternMovimento": "Plyometrics",
+    "rangeRipetizioni": "8-12",
+    "noteTecniche": "Passo 1: Stai in piedi a terra con un piede appoggiato sul box, il tallone vicino al bordo. | Passo 2: Spingi con il piede sul box, cercando di guadagnare più altezza possibile estendendo attraverso anca e ginocchio. | Passo 3: Atterra sullo stesso piede sul box, riportando l'altro piede alla posizione iniziale.",
+    "aliases": [
+      "single",
+      "single leg push off"
+    ],
+    "countingMode": "reps",
+    "version": "1.0.0",
+    "versionHistory": [
+      "1.0.0 (2025-12-17): Imported from free-exercise-db"
+    ]
+  },
+  {
+    "id": "sled_push",
+    "nome": "Spinta del Trattore",
+    "focus": "QUAD",
+    "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Sled_Push/0.jpg",
+    "muscoliSecondari": [
+      "POLP",
+      "PETT",
+      "GLUT",
+      "FEMOR",
+      "TRIC"
+    ],
+    "difficolta": "Principiante",
+    "tipoEsercizio": "Compound",
+    "attrezzatura": "Altro",
+    "patternMovimento": "Strongman",
+    "rangeRipetizioni": "8-12",
+    "noteTecniche": "Passo 1: Carica la slitta con il peso desiderato. | Passo 2: Assumi una postura atletica, inclinandoti sulla slitta con le braccia completamente estese, afferrando le maniglie. Spingi la slitta il più velocemente possibile, concentrandoti sull'estensione di anche e ginocchia per rafforzare la catena posteriore.",
+    "aliases": [
+      "sled push",
+      "sled"
+    ],
+    "countingMode": "reps",
+    "version": "1.0.0",
+    "versionHistory": [
+      "1.0.0 (2025-12-17): Imported from free-exercise-db"
+    ]
+  },
+  {
+    "id": "side_hop_sprint",
+    "nome": "Sprint Laterale Salto",
+    "focus": "QUAD",
+    "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Side_Hop-Sprint/0.jpg",
+    "muscoliSecondari": [
+      "ABDU",
+      "ADDU",
+      "POLP",
+      "FEMOR"
+    ],
+    "difficolta": "Principiante",
+    "tipoEsercizio": "Compound",
+    "attrezzatura": "Altro",
+    "patternMovimento": "Plyometrics",
+    "rangeRipetizioni": "8-12",
+    "noteTecniche": "Passo 1: Stai in piedi di lato rispetto a un cono o ostacolo. | Passo 2: Inizia questo esercizio saltando lateralmente sopra l'ostacolo, rimbalzando dall'atterraggio per saltare di nuovo al punto di partenza. | Passo 3: Salta per il numero prescritto di ripetizioni il più velocemente possibile, e finisci l'esercizio con uno sprint breve dopo l'ultimo salto.",
+    "aliases": [
+      "side",
+      "side hop sprint"
+    ],
+    "countingMode": "reps",
+    "version": "1.0.0",
+    "versionHistory": [
+      "1.0.0 (2025-12-17): Imported from free-exercise-db"
+    ]
+  },
+  {
+    "id": "prowler_sprint",
+    "nome": "Sprint del Prowler",
+    "focus": "FEMOR",
+    "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Prowler_Sprint/0.jpg",
+    "muscoliSecondari": [
+      "POLP",
+      "PETT",
+      "GLUT",
+      "QUAD",
+      "DELT"
+    ],
+    "difficolta": "Principiante",
+    "tipoEsercizio": "Compound",
+    "attrezzatura": "Altro",
+    "patternMovimento": "Cardio",
+    "rangeRipetizioni": "30-60s",
+    "noteTecniche": "Passo 1: Posiziona la slitta su una superficie appropriata, caricata con un peso adatto. La slitta deve fornire abbastanza resistenza da richiedere sforzo, ma non così pesante da rallentarti significativamente. | Passo 2: Puoi usare le maniglie alte o basse per questo esercizio. Posiziona le mani sulle maniglie con le braccia estese, inclinandoti verso l'attrezzo. | Passo 3: Con buona postura, spingi attraverso il suolo con passi brevi alternati. Muoviti il più velocemente possibile per una breve distanza.",
+    "aliases": [
+      "prowler",
+      "prowler sprint"
+    ],
+    "countingMode": "timed",
+    "version": "1.0.0",
+    "versionHistory": [
+      "1.0.0 (2025-12-17): Imported from free-exercise-db"
+    ]
+  },
+  {
+    "id": "single_cone_sprint_drill",
+    "nome": "Sprint in Cono Singolo",
+    "focus": "QUAD",
+    "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Single-Cone_Sprint_Drill/0.jpg",
+    "muscoliSecondari": [
+      "POLP",
+      "GLUT",
+      "FEMOR"
+    ],
+    "difficolta": "Principiante",
+    "tipoEsercizio": "Compound",
+    "attrezzatura": "Altro",
+    "patternMovimento": "Plyometrics",
+    "rangeRipetizioni": "8-12",
+    "noteTecniche": "Passo 1: Questo esercizio insegna l'azione rapida dei piedi. Ti serve un singolo cono. Inizia in piedi accanto al cono con un braccio indietro e un braccio in avanti. | Passo 2: Muovi i piedi il più velocemente possibile, bloccando con le braccia. Gira attorno al cono mantenendo le ginocchia alte, con azione vigorosa dei piedi. | Passo 3: Riposa dopo tre giri attorno al cono.",
+    "aliases": [
+      "single-cone",
+      "single cone sprint d"
+    ],
+    "countingMode": "reps",
+    "version": "1.0.0",
+    "versionHistory": [
+      "1.0.0 (2025-12-17): Imported from free-exercise-db"
+    ]
+  },
+  {
+    "id": "bench_sprint",
+    "nome": "Sprint sulla Panca",
+    "focus": "QUAD",
+    "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Bench_Sprint/0.jpg",
+    "muscoliSecondari": [
+      "POLP",
+      "GLUT",
+      "FEMOR"
+    ],
+    "difficolta": "Principiante",
+    "tipoEsercizio": "Compound",
+    "attrezzatura": "Altro",
+    "patternMovimento": "Plyometrics",
+    "rangeRipetizioni": "8-12",
+    "noteTecniche": "Passo 1: Stai in piedi a terra con un piede appoggiato su una panca o box con il tallone vicino al bordo. | Passo 2: Spingi con il piede sulla panca, estendendo attraverso anca e ginocchio. | Passo 3: Atterra sul piede opposto sul box, riportando l'altro piede alla posizione iniziale. | Passo 4: Continua alternando da un piede all'altro per completare la serie.",
+    "aliases": [
+      "bench sprint",
+      "bench"
+    ],
+    "countingMode": "reps",
+    "version": "1.0.0",
+    "versionHistory": [
+      "1.0.0 (2025-12-17): Imported from free-exercise-db"
+    ]
+  },
+  {
+    "id": "olympic_squat",
+    "nome": "Squat Olimpico",
+    "focus": "QUAD",
+    "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Olympic_Squat/0.jpg",
+    "muscoliSecondari": [
+      "POLP",
+      "GLUT",
+      "FEMOR"
+    ],
+    "difficolta": "Intermedio",
+    "tipoEsercizio": "Compound",
+    "attrezzatura": "Bilanciere",
+    "patternMovimento": "Olympic Lifting",
+    "rangeRipetizioni": "8-12",
+    "noteTecniche": "Passo 1: Inizia con il bilanciere appoggiato sui trapezi. Il petto deve essere sollevato e la testa rivolta in avanti. Adotta una posizione con i piedi alla larghezza delle anche, ruotati verso l'esterno secondo necessità. | Passo 2: Scendi flettendo le ginocchia, evitando di portare le anche troppo indietro. Questo richiede che le ginocchia si muovano in avanti; assicurati che rimangano allineate con i piedi. L'obiettivo è mantenere il busto il più verticale possibile. Continua fino in fondo, mantenendo il peso sulla parte anteriore del tallone. | Passo 3: Nel momento in cui le cosce toccano i polpacci, inverti il movimento spingendo il peso verso l'alto.",
+    "aliases": [
+      "olympic squat",
+      "olympic"
+    ],
+    "countingMode": "reps",
+    "version": "1.0.0",
+    "versionHistory": [
+      "1.0.0 (2025-12-17): Imported from free-exercise-db"
+    ]
+  },
+  {
+    "id": "overhead_squat",
+    "nome": "Squat Overhead",
+    "focus": "QUAD",
+    "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Overhead_Squat/0.jpg",
+    "muscoliSecondari": [
+      "ADDOM",
+      "POLP",
+      "GLUT",
+      "FEMOR",
+      "LOM",
+      "DELT",
+      "TRIC"
+    ],
+    "difficolta": "Avanzato",
+    "tipoEsercizio": "Compound",
+    "attrezzatura": "Bilanciere",
+    "patternMovimento": "Olympic Lifting",
+    "rangeRipetizioni": "8-12",
+    "noteTecniche": "Passo 1: Inizia con il bilanciere davanti a te sul pavimento. I piedi devono essere più larghi della larghezza delle spalle. | Passo 2: Piega le ginocchia e usa una presa prona (palmi rivolti verso di te) per afferrare il bilanciere. Le mani devono essere più larghe della larghezza delle spalle. Una volta posizionato, solleva il bilanciere fino a farlo appoggiare sul petto. | Passo 3: Muovi il bilanciere sopra e leggermente dietro la testa, assicurandoti che le braccia siano completamente estese. Mantieni la testa alta e la schiena dritta. Ritrai le scapole. Questa è la posizione iniziale. | Passo 4: Abbassa lentamente il peso piegando le ginocchia fino a quando le cosce sono parallele al suolo inspirando. Suggerimento: Mantieni la schiena dritta per evitare infortuni e le braccia devono rimanere estese sopra la testa in ogni momento. | Passo 5: Usa piedi e gambe per riportare il peso alla posizione di partenza espirando. | Passo 6: Ripeti per il numero raccomandato di ripetizioni.",
+    "aliases": [
+      "overhead",
+      "overhead squat"
+    ],
+    "countingMode": "reps",
+    "version": "1.0.0",
+    "versionHistory": [
+      "1.0.0 (2025-12-17): Imported from free-exercise-db"
+    ]
+  },
+  {
+    "id": "jerk_dip_squat",
+    "nome": "Jerk Dip Squat",
+    "focus": "QUAD",
+    "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Jerk_Dip_Squat/0.jpg",
+    "muscoliSecondari": [
+      "ADDOM",
+      "POLP"
+    ],
+    "difficolta": "Intermedio",
+    "tipoEsercizio": "Compound",
+    "attrezzatura": "Bilanciere",
+    "patternMovimento": "Olympic Lifting",
+    "rangeRipetizioni": "8-12",
+    "noteTecniche": "Passo 1: Questo movimento rafforza la porzione del dip nel jerk. Inizia con la sbarra in posizione di jerk, con le spalle in avanti per creare un appoggio e la sbarra che tocca leggermente la gola. I piedi devono essere direttamente sotto le anche, con i piedi ruotati verso l'esterno secondo comodità. | Passo 2: Mantenendo il busto verticale, esegui il dip flettendo le ginocchia, permettendo loro di andare in avanti senza muovere le anche all'indietro. Il dip non deve essere eccessivo. Riporta il peso alla posizione di partenza spingendo con forza attraverso i piedi.",
+    "aliases": [
+      "jerk dip squat",
+      "jerk"
+    ],
+    "countingMode": "reps",
+    "version": "1.0.0",
+    "versionHistory": [
+      "1.0.0 (2025-12-17): Imported from free-exercise-db"
+    ]
+  },
+  {
+    "id": "snatch",
+    "nome": "Strappo",
+    "focus": "QUAD",
+    "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Snatch/0.jpg",
+    "muscoliSecondari": [
+      "BIC",
+      "GLUT",
+      "FEMOR",
+      "LOM",
+      "DELT",
+      "TRAP",
+      "TRIC"
+    ],
+    "difficolta": "Intermedio",
+    "tipoEsercizio": "Compound",
+    "attrezzatura": "Bilanciere",
+    "patternMovimento": "Olympic Lifting",
+    "rangeRipetizioni": "8-12",
+    "noteTecniche": "Passo 1: Posiziona i piedi alla larghezza delle spalle con il bilanciere sopra la connessione tra le dita e il resto del piede. | Passo 2: Con presa prona, piega le ginocchia mantenendo la schiena dritta e afferra la sbarra con una presa più larga delle spalle. Abbassa le anche come se stessi per sederti su una sedia. Questa sarà la posizione iniziale. | Passo 3: Inizia spingendo con i piedi sul pavimento, sollevando il bilanciere e mantenendolo vicino alle gambe. | Passo 4: Quando la sbarra raggiunge metà coscia, spingi con le gambe e solleva il corpo in estensione completa con un movimento esplosivo. | Passo 5: Solleva le spalle in un movimento di scrollata mentre porti la sbarra in alto, alzando i gomiti verso l'esterno e mantenendoli sopra la sbarra il più a lungo possibile. | Passo 6: Con un movimento rapido e potente, porta il corpo sotto il bilanciere quando ha raggiunto un punto abbastanza alto, blocca le braccia e mantieni il bilanciere sopra la testa assumendo una posizione di squat. | Passo 7: Concludi il movimento alzandoti dalla posizione di squat. Alla fine del sollevamento entrambi i piedi devono essere allineati e le braccia completamente estese con il bilanciere sopra la testa.",
+    "aliases": [
+      "snatch"
+    ],
+    "countingMode": "reps",
+    "version": "1.0.0",
+    "versionHistory": [
+      "1.0.0 (2025-12-17): Imported from free-exercise-db"
+    ]
+  },
+  {
+    "id": "power_jerk",
+    "nome": "Power Jerk",
+    "focus": "QUAD",
+    "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Power_Jerk/0.jpg",
+    "muscoliSecondari": [
+      "ADDOM",
+      "POLP",
+      "GLUT",
+      "FEMOR",
+      "DELT",
+      "TRIC"
+    ],
+    "difficolta": "Avanzato",
+    "tipoEsercizio": "Compound",
+    "attrezzatura": "Bilanciere",
+    "patternMovimento": "Olympic Lifting",
+    "rangeRipetizioni": "8-12",
+    "noteTecniche": "Passo 1: In piedi con il peso in appoggio sulla parte anteriore delle spalle, inizia il dip. Con i piedi direttamente sotto le anche, fletti le ginocchia senza muovere le anche all'indietro. Scendi solo leggermente e inverti la direzione il più potentemente possibile. | Passo 2: Spingi attraverso i talloni per creare la massima velocità e forza possibile, assicurandoti di muovere la testa fuori dalla traiettoria mentre la sbarra lascia le spalle. | Passo 3: Nel momento in cui i piedi lasciano il pavimento, devono essere posizionati nella posizione di ricezione il più velocemente possibile. Nel breve momento in cui i piedi non spingono attivamente contro la piattaforma, lo sforzo dell'atleta per spingere la sbarra in alto li spingerà verso il basso. I piedi devono essere spostati in una posizione leggermente più larga, con le ginocchia parzialmente piegate. | Passo 4: Ricevi la sbarra con le braccia bloccate sopra la testa. | Passo 5: Torna in posizione eretta.",
+    "aliases": [
+      "power jerk",
+      "power"
+    ],
+    "countingMode": "reps",
+    "version": "1.0.0",
+    "versionHistory": [
+      "1.0.0 (2025-12-17): Imported from free-exercise-db"
+    ]
+  },
+  {
+    "id": "snatch_deadlift",
+    "nome": "Snatch Deadlift",
+    "focus": "FEMOR",
+    "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Snatch_Deadlift/0.jpg",
+    "muscoliSecondari": [
+      "AVAMB",
+      "GLUT",
+      "FEMOR",
+      "LOM",
+      "QUAD",
+      "TRAP"
+    ],
+    "difficolta": "Intermedio",
+    "tipoEsercizio": "Compound",
+    "attrezzatura": "Bilanciere",
+    "patternMovimento": "Olympic Lifting",
+    "rangeRipetizioni": "8-12",
+    "noteTecniche": "Passo 1: Lo stacco da terra per snatch rafforza la prima tirata dello snatch. Inizia con una presa ampia da snatch sul bilanciere posizionato sulla pedana. I piedi devono essere direttamente sotto le anche, con i piedi ruotati verso l'esterno. Accovacciati verso la sbarra, mantenendo la schiena in estensione assoluta con la testa rivolta in avanti. | Passo 2: Inizia il movimento spingendo attraverso i talloni, alzando le anche. L'angolo della schiena deve rimanere costante finché la sbarra supera le ginocchia. | Passo 3: A quel punto, spingi le anche attraverso la sbarra mentre ti inclini indietro. Riporta la sbarra alla pedana invertendo il movimento.",
+    "aliases": [
+      "snatch deadlift",
+      "snatch"
+    ],
+    "countingMode": "reps",
+    "version": "1.0.0",
+    "versionHistory": [
+      "1.0.0 (2025-12-17): Imported from free-exercise-db"
+    ]
+  },
+  {
+    "id": "snatch_shrug",
+    "nome": "Snatch Shrug",
+    "focus": "TRAP",
+    "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Snatch_Shrug/0.jpg",
+    "muscoliSecondari": [
+      "AVAMB",
+      "DELT"
+    ],
+    "difficolta": "Intermedio",
+    "tipoEsercizio": "Compound",
+    "attrezzatura": "Bilanciere",
+    "patternMovimento": "Olympic Lifting",
+    "rangeRipetizioni": "8-12",
+    "noteTecniche": "Passo 1: Inizia con una presa larga, con la sbarra sospesa a metà coscia. Puoi usare una presa a gancio o prona. La schiena deve essere dritta e inclinata leggermente in avanti. | Passo 2: Scrolla le spalle verso le orecchie. Anche se questo esercizio può solitamente essere caricato con un peso maggiore rispetto allo snatch, evita di sovraccaricare al punto che l'esecuzione rallenti.",
+    "aliases": [
+      "snatch",
+      "snatch shrug"
+    ],
+    "countingMode": "reps",
+    "version": "1.0.0",
+    "versionHistory": [
+      "1.0.0 (2025-12-17): Imported from free-exercise-db"
+    ]
+  },
+  {
+    "id": "snatch_from_blocks",
+    "nome": "Snatch from Blocks",
+    "focus": "QUAD",
+    "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Snatch_from_Blocks/0.jpg",
+    "muscoliSecondari": [
+      "POLP",
+      "AVAMB",
+      "GLUT",
+      "FEMOR",
+      "LOM",
+      "DELT",
+      "TRAP",
+      "TRIC"
+    ],
+    "difficolta": "Avanzato",
+    "tipoEsercizio": "Compound",
+    "attrezzatura": "Bilanciere",
+    "patternMovimento": "Olympic Lifting",
+    "rangeRipetizioni": "8-12",
+    "noteTecniche": "Passo 1: Inizia con un bilanciere caricato su box o supporti all'altezza desiderata. Deve essere usata una presa ampia sulla sbarra. I piedi devono essere direttamente sotto le anche, con i piedi ruotati verso l'esterno secondo necessità. Abbassa le anche, con il petto alto e la testa rivolta in avanti. Le spalle devono essere appena davanti alla sbarra, con i gomiti verso l'esterno. Questa sarà la posizione iniziale. | Passo 2: Inizia la prima tirata spingendo attraverso la parte anteriore dei talloni, alzando la sbarra dai box. | Passo 3: Transita nella seconda tirata estendendo attraverso anche, ginocchia e caviglie, spingendo la sbarra verso l'alto il più velocemente possibile. La sbarra deve rimanere vicina al corpo. Al picco dell'estensione, scrolla le spalle e permetti ai gomiti di flettersi lateralmente. | Passo 4: Mentre muovi i piedi nella posizione di ricezione, tirati con forza sotto la sbarra mentre la elevi sopra la testa. I piedi devono muoversi appena fuori dalle anche, ruotati come necessario. Ricevi la sbarra con il corpo il più basso possibile e le braccia completamente estese sopra la testa. | Passo 5: Mantenendo la sbarra allineata sopra la parte anteriore dei talloni, con testa e petto alti, spingi attraverso i talloni per tornare in posizione eretta. Riporta con cura il peso sui box.",
+    "aliases": [
+      "snatch",
+      "snatch from blocks"
+    ],
+    "countingMode": "reps",
+    "version": "1.0.0",
+    "versionHistory": [
+      "1.0.0 (2025-12-17): Imported from free-exercise-db"
+    ]
+  },
+  {
+    "id": "car_deadlift",
+    "nome": "Stacco da Terra",
+    "focus": "QUAD",
+    "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Car_Deadlift/0.jpg",
+    "muscoliSecondari": [
+      "AVAMB",
+      "GLUT",
+      "FEMOR",
+      "LOM",
+      "TRAP"
+    ],
+    "difficolta": "Intermedio",
+    "tipoEsercizio": "Compound",
+    "attrezzatura": "Altro",
+    "patternMovimento": "Strongman",
+    "rangeRipetizioni": "8-12",
+    "noteTecniche": "Passo 1: Questo attrezzo ha tipicamente maniglie con presa neutra, anche se alcuni hanno una sbarra dritta che puoi affrontare come un deadlift normale. L'attrezzo può essere caricato con un veicolo o altri oggetti pesanti come gomme di trattore o fusti. | Passo 2: Posizionati al centro tra le maniglie se sei forte nello squat, o arretra di alcuni centimetri se sei forte nel deadlift. I piedi devono essere circa alla larghezza delle anche. Piegati all'anca per afferrare le maniglie. Con piedi e presa posizionati, fai un respiro profondo poi abbassa le anche e fletti le ginocchia. | Passo 3: Guarda avanti, mantieni il petto alto e la schiena inarcata, e inizia spingendo attraverso i talloni per spostare il peso verso l'alto. Mentre il peso sale, unisci le scapole mentre spingi le anche in avanti. | Passo 4: Abbassa il peso piegandoti alle anche e guidandolo verso il pavimento.",
+    "aliases": [
+      "car deadlift",
+      "car"
+    ],
+    "countingMode": "reps",
+    "version": "1.0.0",
+    "versionHistory": [
+      "1.0.0 (2025-12-17): Imported from free-exercise-db"
+    ]
+  },
+  {
+    "id": "chin_to_chest_stretch",
+    "nome": "Stiramento Chin-a-Chest",
+    "focus": "COLLO",
+    "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Chin_To_Chest_Stretch/0.jpg",
+    "muscoliSecondari": [
+      "TRAP"
+    ],
+    "difficolta": "Principiante",
+    "tipoEsercizio": "Compound",
+    "attrezzatura": "Corpo Libero",
+    "patternMovimento": "Flexibility",
+    "rangeRipetizioni": "30-60s",
+    "noteTecniche": "Passo 1: Get ina un seated posizione sul pavimento. | Passo 2: Posiziona entrambe le mani alla retro del tuo head, dita interbloccato, thumbs che puntano giù e gomiti che puntano dritto ahead. lentamente tira la tua testa giù al petto. Mantieni per 20-30 secondi.",
+    "aliases": [
+      "chin to chest stretc",
+      "chin"
+    ],
+    "countingMode": "timed",
+    "version": "1.0.0",
+    "versionHistory": [
+      "1.0.0 (2025-12-17): Imported from free-exercise-db"
+    ]
+  },
+  {
+    "id": "side_neck_stretch",
+    "nome": "Stretching laterale del collo",
+    "focus": "COLLO",
+    "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Side_Neck_Stretch/0.jpg",
+    "muscoliSecondari": [],
+    "difficolta": "Principiante",
+    "tipoEsercizio": "Isolation",
+    "attrezzatura": "Corpo Libero",
+    "patternMovimento": "Flexibility",
+    "rangeRipetizioni": "30-60s",
+    "noteTecniche": "Passo 1: Inizia con le spalle rilassate, inclina delicatamente la testa verso la spalla. | Passo 2: Assisti lo stretching con una leggera trazione sul lato della testa.",
+    "aliases": [
+      "side neck stretch",
+      "side"
+    ],
+    "countingMode": "timed",
+    "version": "1.0.0",
+    "versionHistory": [
+      "1.0.0 (2025-12-17): Imported from free-exercise-db"
+    ]
+  },
+  {
+    "id": "stride_jump_crossover",
+    "nome": "Stride Jump Crossover",
+    "focus": "QUAD",
+    "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Stride_Jump_Crossover/0.jpg",
+    "muscoliSecondari": [
+      "ABDU",
+      "ADDU",
+      "POLP",
+      "FEMOR"
+    ],
+    "difficolta": "Principiante",
+    "tipoEsercizio": "Compound",
+    "attrezzatura": "Altro",
+    "patternMovimento": "Plyometrics",
+    "rangeRipetizioni": "8-12",
+    "noteTecniche": "Passo 1: Stai in piedi di lato rispetto a un box con il piede interno sulla cima, vicino al bordo. | Passo 2: Inizia oscillando le braccia verso l'alto mentre spingi attraverso la gamba superiore, saltando più in alto possibile. Cerca di spingere il ginocchio opposto verso l'alto. | Passo 3: Atterra nella posizione opposta a quella di partenza, sul lato opposto del box. Il piede che era inizialmente sul box sarà ora a terra, con il piede opposto sul box. | Passo 4: Ripeti il movimento, attraversando nuovamente sull'altro lato.",
+    "aliases": [
+      "stride jump crossove",
+      "stride"
+    ],
+    "countingMode": "reps",
+    "version": "1.0.0",
+    "versionHistory": [
+      "1.0.0 (2025-12-17): Imported from free-exercise-db"
+    ]
+  },
+  {
+    "id": "vertical_swing",
+    "nome": "Swing Verticale",
+    "focus": "FEMOR",
+    "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Vertical_Swing/0.jpg",
+    "muscoliSecondari": [
+      "GLUT",
+      "QUAD",
+      "DELT"
+    ],
+    "difficolta": "Principiante",
+    "tipoEsercizio": "Compound",
+    "attrezzatura": "Manubri",
+    "patternMovimento": "Plyometrics",
+    "rangeRipetizioni": "8-12",
+    "noteTecniche": "Passo 1: Lascia che il manubrio penda a braccia distese tra le gambe, tenendolo con entrambe le mani. Mantieni la schiena dritta e la testa alta. | Passo 2: Oscilla il manubrio tra le gambe, flettendo le anche e piegando leggermente le ginocchia. | Passo 3: Inverti potentemente il movimento estendendo anche, ginocchia e caviglie per spingerti verso l'alto, oscillando il manubrio sopra la testa. | Passo 4: Mentre atterri, assorbire l'impatto attraverso le gambe e porta il manubrio al busto prima della ripetizione successiva.",
+    "aliases": [
+      "vertical swing",
+      "vertical"
+    ],
+    "countingMode": "reps",
+    "version": "1.0.0",
+    "versionHistory": [
+      "1.0.0 (2025-12-17): Imported from free-exercise-db"
+    ]
+  },
+  {
+    "id": "sledgehammer_swings",
+    "nome": "Swings con il Martello da Slitta",
+    "focus": "ADDOM",
+    "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Sledgehammer_Swings/0.jpg",
+    "muscoliSecondari": [
+      "POLP",
+      "AVAMB",
+      "DORSO",
+      "DORSO",
+      "DELT"
+    ],
+    "difficolta": "Principiante",
+    "tipoEsercizio": "Compound",
+    "attrezzatura": "Altro",
+    "patternMovimento": "Plyometrics",
+    "rangeRipetizioni": "8-12",
+    "noteTecniche": "Passo 1: Avrai bisogno di un pneumatico e una mazza per questo esercizio. Stai in piedi davanti al pneumatico a circa 60 cm di distanza con una posizione sfalsata. Impugna la mazza. | Passo 2: Se sei destrimano, la mano sinistra deve essere in basso sull'impugnatura e la mano destra più vicina alla testa della mazza. | Passo 3: Mentre sollevi la mazza, la mano destra scorre verso la testa; mentre la fai oscillare verso il basso, la mano destra scorre verso il basso unendosi alla mano sinistra. Colpisci il pneumatico più forte che puoi. Controlla il rimbalzo della mazza dal pneumatico. | Passo 4: Ripeti sul lato opposto.",
+    "aliases": [
+      "sledgehammer swings",
+      "sledgehammer"
+    ],
+    "countingMode": "reps",
+    "version": "1.0.0",
+    "versionHistory": [
+      "1.0.0 (2025-12-17): Imported from free-exercise-db"
+    ]
+  },
+  {
+    "id": "step_mill",
+    "nome": "Tapis roulant",
+    "focus": "QUAD",
+    "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Step_Mill/0.jpg",
+    "muscoliSecondari": [
+      "POLP",
+      "GLUT",
+      "FEMOR"
+    ],
+    "difficolta": "Intermedio",
+    "tipoEsercizio": "Compound",
+    "attrezzatura": "Macchina",
+    "patternMovimento": "Cardio",
+    "rangeRipetizioni": "30-60s",
+    "noteTecniche": "Passo 1: Sali sullo stepmill e seleziona l'opzione desiderata dal menu. Puoi scegliere un'impostazione manuale o selezionare un programma. Tipicamente puoi inserire età e peso per stimare le calorie bruciate durante l'esercizio. Fai attenzione a non inciampare mentre sali le scale. È consigliato mantenere la presa sulle maniglie per non cadere. | Passo 2: Gli stepmill offrono praticità, benefici cardiovascolari e generalmente hanno meno impatto rispetto alla corsa all'aperto, pur offrendo un tasso simile di calorie bruciate. Sono tipicamente molto più impegnativi di altre attrezzature cardio. Una persona di 70 kg brucia tipicamente circa 300 calorie in 30 minuti, rispetto a circa 175 calorie camminando.",
+    "aliases": [
+      "step mill",
+      "step"
+    ],
+    "countingMode": "timed",
+    "version": "1.0.0",
+    "versionHistory": [
+      "1.0.0 (2025-12-17): Imported from free-exercise-db"
+    ]
+  },
+  {
+    "id": "linear_3_part_start_technique",
+    "nome": "Tecnica Linear 3 Parti per lo Start",
+    "focus": "FEMOR",
+    "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Linear_3-Part_Start_Technique/0.jpg",
+    "muscoliSecondari": [
+      "POLP",
+      "QUAD"
+    ],
+    "difficolta": "Principiante",
+    "tipoEsercizio": "Compound",
+    "attrezzatura": "Corpo Libero",
+    "patternMovimento": "Plyometrics",
+    "rangeRipetizioni": "8-12",
+    "noteTecniche": "Passo 1: Questo esercizio ti aiuta ad accelerare il più velocemente possibile in uno sprint da fermo. È utile usare una linea da cui partire. Inizia con entrambi i piedi sulla linea. Posiziona il piede sinistro sulla punta accanto alla caviglia destra. Posiziona il piede destro 10-15 cm dietro il sinistro. | Passo 2: Posiziona la mano destra sulla linea, portando il naso vicino al ginocchio sinistro. | Passo 3: Accovacciati inclinandoti in avanti, con la testa più bassa delle anche e il peso caricato sulla gamba sinistra. Questa sarà la posizione iniziale. | Passo 4: Porta la mano sinistra in alto in modo che sia parallela al suolo, puntando dietro di te, ed esplodi in avanti quando sei pronto.",
+    "aliases": [
+      "linear",
+      "linear 3 part start "
+    ],
+    "countingMode": "reps",
+    "version": "1.0.0",
+    "versionHistory": [
+      "1.0.0 (2025-12-17): Imported from free-exercise-db"
+    ]
+  },
+  {
+    "id": "heavy_bag_thrust",
+    "nome": "Thrust con la Borsa Pesante",
+    "focus": "PETT",
+    "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Heavy_Bag_Thrust/0.jpg",
+    "muscoliSecondari": [
+      "ADDOM",
+      "DELT",
+      "TRIC"
+    ],
+    "difficolta": "Principiante",
+    "tipoEsercizio": "Compound",
+    "attrezzatura": "Altro",
+    "patternMovimento": "Plyometrics",
+    "rangeRipetizioni": "8-12",
+    "noteTecniche": "Passo 1: Usa un sacco pesante per questo esercizio. Assumi una posizione eretta accanto al sacco, con i piedi sfalsati, abbastanza distanziati. Posiziona la mano sul sacco circa all'altezza del petto. Questa sarà la posizione iniziale. | Passo 2: Inizia ruotando dalla vita, spingendo il sacco in avanti più forte possibile. Esegui questo movimento velocemente, spingendo il sacco lontano dal corpo. | Passo 3: Ricevi il sacco quando oscilla indietro invertendo questi passaggi.",
+    "aliases": [
+      "heavy bag thrust",
+      "heavy"
+    ],
+    "countingMode": "reps",
+    "version": "1.0.0",
+    "versionHistory": [
+      "1.0.0 (2025-12-17): Imported from free-exercise-db"
+    ]
+  },
+  {
+    "id": "clean_pull",
+    "nome": "Clean Pull",
+    "focus": "QUAD",
+    "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Clean_Pull/0.jpg",
+    "muscoliSecondari": [
+      "AVAMB",
+      "GLUT",
+      "FEMOR",
+      "LOM",
+      "TRAP"
+    ],
+    "difficolta": "Intermedio",
+    "tipoEsercizio": "Compound",
+    "attrezzatura": "Bilanciere",
+    "patternMovimento": "Olympic Lifting",
+    "rangeRipetizioni": "8-12",
+    "noteTecniche": "Passo 1: Con il bilanciere sul pavimento vicino agli stinchi, afferralo con presa prona o a gancio appena fuori dalle gambe. Abbassa le anche con il peso concentrato sui talloni, schiena dritta, testa rivolta in avanti, petto alto, con le spalle appena davanti alla sbarra. Questa sarà la posizione iniziale. | Passo 2: Inizia la prima tirata spingendo attraverso i talloni, estendendo le ginocchia. L'angolo della schiena deve rimanere costante e le braccia dritte con i gomiti verso l'esterno. Muovi il peso con controllo mentre sali sopra le ginocchia. | Passo 3: Poi viene la seconda tirata, la principale fonte di accelerazione per il clean. Quando la sbarra si avvicina a metà coscia, inizia ad estendere le anche. Con un movimento esplosivo, accelera estendendo anche, ginocchia e caviglie, usando la velocità per muovere la sbarra verso l'alto. Non c'è bisogno di tirare attivamente con le braccia; alla fine della seconda tirata, il corpo deve essere completamente esteso, inclinato leggermente indietro, con le braccia ancora tese. L'estensione completa deve essere violenta e brusca.",
+    "aliases": [
+      "clean pull",
+      "clean"
+    ],
+    "countingMode": "reps",
+    "version": "1.0.0",
+    "versionHistory": [
+      "1.0.0 (2025-12-17): Imported from free-exercise-db"
+    ]
+  },
+  {
+    "id": "forward_drag_with_press",
+    "nome": "Trazione Avanti con Press",
+    "focus": "PETT",
+    "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Forward_Drag_with_Press/0.jpg",
+    "muscoliSecondari": [
+      "POLP",
+      "GLUT",
+      "FEMOR",
+      "QUAD",
+      "DELT",
+      "TRIC"
+    ],
+    "difficolta": "Intermedio",
+    "tipoEsercizio": "Compound",
+    "attrezzatura": "Altro",
+    "patternMovimento": "Strongman",
+    "rangeRipetizioni": "8-12",
+    "noteTecniche": "Passo 1: Attacca una catena o corda con doppia maniglia alla slitta. Devi essere rivolto lontano dalla slitta, tenendo una maniglia in ogni mano. | Passo 2: Inizia il movimento facendo un passo in avanti. Inclinandoti in avanti, estendi attraverso gambe e anche per muoverti, fermandoti ad ogni passo per estendere i gomiti, spingendo le mani in avanti. Continua a fare passi in avanti tornando alla posizione iniziale pronto per la spinta successiva.",
+    "aliases": [
+      "forward drag with pr",
+      "forward"
+    ],
+    "countingMode": "reps",
+    "version": "1.0.0",
+    "versionHistory": [
+      "1.0.0 (2025-12-17): Imported from free-exercise-db"
+    ]
+  },
+  {
+    "id": "backward_drag",
+    "nome": "Trazione all'Indietro",
+    "focus": "QUAD",
+    "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Backward_Drag/0.jpg",
+    "muscoliSecondari": [
+      "POLP",
+      "AVAMB",
+      "GLUT",
+      "FEMOR",
+      "LOM"
+    ],
+    "difficolta": "Principiante",
+    "tipoEsercizio": "Compound",
+    "attrezzatura": "Altro",
+    "patternMovimento": "Strongman",
+    "rangeRipetizioni": "8-12",
+    "noteTecniche": "Passo 1: Carica la slitta con il peso desiderato, attaccando una corda o cinghie alla slitta che puoi afferrare. | Passo 2: Inizia l'esercizio muovendoti all'indietro per una distanza data. Inclinandoti indietro, estendi attraverso le gambe con passi brevi per muoverti il più velocemente possibile.",
+    "aliases": [
+      "backward",
+      "backward drag"
+    ],
+    "countingMode": "reps",
+    "version": "1.0.0",
+    "versionHistory": [
+      "1.0.0 (2025-12-17): Imported from free-exercise-db"
+    ]
+  },
+  {
+    "id": "bear_crawl_sled_drags",
+    "nome": "Trazioni allo Sled in Posizione Prona",
+    "focus": "QUAD",
+    "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Bear_Crawl_Sled_Drags/0.jpg",
+    "muscoliSecondari": [
+      "POLP",
+      "GLUT",
+      "FEMOR"
+    ],
+    "difficolta": "Principiante",
+    "tipoEsercizio": "Compound",
+    "attrezzatura": "Altro",
+    "patternMovimento": "Strongman",
+    "rangeRipetizioni": "8-12",
+    "noteTecniche": "Passo 1: Indossando un'imbracatura o una cintura con pesi lenta, attacca la catena alla schiena in modo da essere rivolto lontano dalla slitta. Piegati in modo che le mani siano sul suolo. La schiena deve essere dritta e le ginocchia piegate. Questa è la posizione iniziale. | Passo 2: Inizia spingendo con le gambe, alternando sinistra e destra. Usa le mani per mantenere l'equilibrio e aiutare a tirare. Cerca di mantenere la schiena dritta mentre ti muovi per una distanza data.",
+    "aliases": [
+      "bear crawl sled drag",
+      "bear"
+    ],
+    "countingMode": "reps",
+    "version": "1.0.0",
+    "versionHistory": [
+      "1.0.0 (2025-12-17): Imported from free-exercise-db"
+    ]
+  },
+  {
+    "id": "elliptical_trainer",
+    "nome": "Treadmill Ellittico",
+    "focus": "QUAD",
+    "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Elliptical_Trainer/0.jpg",
+    "muscoliSecondari": [
+      "POLP",
+      "GLUT",
+      "FEMOR"
+    ],
+    "difficolta": "Intermedio",
+    "tipoEsercizio": "Compound",
+    "attrezzatura": "Macchina",
+    "patternMovimento": "Cardio",
+    "rangeRipetizioni": "30-60s",
+    "noteTecniche": "Passo 1: Sali sull'ellittica e seleziona l'opzione desiderata dal menu. La maggior parte delle ellittiche ha un'impostazione manuale, oppure puoi selezionare un programma. Tipicamente puoi inserire età e peso per stimare le calorie bruciate durante l'esercizio. L'inclinazione può essere regolata per cambiare l'intensità dell'allenamento. | Passo 2: Le maniglie possono essere usate per monitorare la frequenza cardiaca e aiutarti a mantenere un'intensità appropriata.",
+    "aliases": [
+      "elliptical trainer",
+      "elliptical"
+    ],
+    "countingMode": "timed",
+    "version": "1.0.0",
+    "versionHistory": [
+      "1.0.0 (2025-12-17): Imported from free-exercise-db"
+    ]
+  },
+  {
+    "id": "knee_tuck_jump",
+    "nome": "Tuck Jump alle Ginocchia",
+    "focus": "FEMOR",
+    "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Knee_Tuck_Jump/0.jpg",
+    "muscoliSecondari": [
+      "ABDU",
+      "ADDU",
+      "POLP",
+      "GLUT",
+      "QUAD"
+    ],
+    "difficolta": "Principiante",
+    "tipoEsercizio": "Compound",
+    "attrezzatura": "Corpo Libero",
+    "patternMovimento": "Plyometrics",
+    "rangeRipetizioni": "8-12",
+    "noteTecniche": "Passo 1: Inizia in una posizione eretta comoda con le ginocchia leggermente piegate. Tieni le mani davanti a te, palmi verso il basso con le punte delle dita unite all'altezza del petto. Questa sarà la posizione iniziale. | Passo 2: Scendi rapidamente in un quarto di squat ed esplodi immediatamente verso l'alto. Porta le ginocchia verso il petto, cercando di toccarle con i palmi delle mani. | Passo 3: Salta più in alto possibile, sollevando le ginocchia, poi assicurati un buon atterraggio ri-estendendo le gambe e assorbendo l'impatto piegando le ginocchia.",
+    "aliases": [
+      "knee tuck jump",
+      "knee"
+    ],
+    "countingMode": "reps",
+    "version": "1.0.0",
+    "versionHistory": [
+      "1.0.0 (2025-12-17): Imported from free-exercise-db"
+    ]
+  }
+]

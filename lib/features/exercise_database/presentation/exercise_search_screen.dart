@@ -1,5 +1,7 @@
 import 'dart:async';
 
+import 'package:collection/collection.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -8,7 +10,7 @@ import 'package:gymbro_flutter_new/shared/presentation/providers/app_config_prov
 import 'package:gymbro_flutter_new/shared/domain/converters/exercise_converter.dart';
 import 'package:gymbro_flutter_new/shared/domain/services/request_throttler.dart';
 import 'package:gymbro_flutter_new/features/exercise_database/domain/entities/exercise.dart';
-import 'package:gymbro_flutter_new/features/exercise_database/data/repositories/json_exercise_repository.dart';
+import 'package:gymbro_flutter_new/features/exercise_database/presentation/providers/hybrid_exercise_provider.dart' hide exerciseSearchQueryProvider;
 import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise.dart' as WorkoutExercise;
 import 'package:gymbro_flutter_new/features/workout/presentation/widgets/exercise_options_modal.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/widgets/exercise_history_bottom_sheet.dart';
@@ -30,6 +32,12 @@ import 'package:gymbro_flutter_new/shared/presentation/services/snackbar_service
 import 'package:gymbro_flutter_new/shared/domain/abstractions/i_exercise_preferences.dart';
 import 'package:gymbro_flutter_new/features/exercise_database/domain/entities/exercise_counting_mode.dart';
 import 'package:gymbro_flutter_new/features/stress_index/data/mappers/muscle_abbreviation_mapper.dart';
+import 'package:gymbro_flutter_new/features/workout/presentation/providers/superset_template_provider.dart';
+import 'package:gymbro_flutter_new/features/workout/presentation/widgets/superset_template_card.dart';
+import 'package:gymbro_flutter_new/features/workout/presentation/widgets/superset_template_preview_sheet.dart';
+import 'package:gymbro_flutter_new/features/workout/domain/entities/superset_converter.dart';
+import 'package:gymbro_flutter_new/features/workout/domain/entities/superset_configuration.dart';
+import 'package:gymbro_flutter_new/features/workout/domain/entities/superset_template.dart';
 // Exercise search tutorial REMOVED - UX 2025 analysis: search UI is standard pattern
 
 class ExerciseSearchScreen extends ConsumerStatefulWidget { // New: Just select and return exercise template (for DropSet/Rest-Pause)
@@ -39,10 +47,12 @@ class ExerciseSearchScreen extends ConsumerStatefulWidget { // New: Just select 
     this.onExerciseAdded,
     this.multiSelectMode = false,
     this.selectionMode = false,
+    this.showSupersetTemplates, // ✅ FIX: Control when to show superset templates
   });
   final Function(WorkoutExercise.Exercise)? onExerciseAdded; // 🔥 FIX: Add callback parameter
   final bool multiSelectMode; // New: Support multi-select for superset builder
   final bool selectionMode;
+  final bool? showSupersetTemplates; // ✅ FIX: null = auto (true for multiSelect, false for single)
 
   @override
   ConsumerState<ExerciseSearchScreen> createState() => _ExerciseSearchScreenState();
@@ -105,6 +115,16 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
     super.dispose();
   }
 
+  /// ✅ FIX: Check if superset templates should be shown
+  bool _shouldShowSupersetTemplates() {
+    // If explicitly specified, use that value
+    if (widget.showSupersetTemplates != null) {
+      return widget.showSupersetTemplates!;
+    }
+    // Otherwise show only for multiSelectMode (superset builder)
+    return widget.multiSelectMode;
+  }
+
   /// Carica statistiche utilizzo esercizi (frequent/trending)
   Future<void> _loadUsageStats() async {
     try {
@@ -132,6 +152,69 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
         debugPrint('⚠️ Error loading usage stats: $e');
       }
     }
+  }
+
+  /// Build recommended superset templates section
+  Widget _buildRecommendedTemplatesSection() {
+    final templatesAsync = ref.watch(recommendedSupersetTemplatesProvider);
+
+    return templatesAsync.when(
+      data: (templates) {
+        if (templates.isEmpty) return const SizedBox.shrink();
+
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Container(
+              width: double.infinity,
+              padding: const EdgeInsets.fromLTRB(16, 12, 16, 4),
+              child: Row(
+                children: [
+                  Icon(AppIcons.link, size: 16, color: context.colors.primary),
+                  const SizedBox(width: 8),
+                  Text(
+                    context.l10n.recommendedTemplates,
+                    style: context.textTheme.titleSmall?.copyWith(
+                      fontWeight: FontWeight.w600,
+                      color: context.colors.primary,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            SizedBox(
+              height: 168, // Card height 160 + padding
+              child: ListView.builder(
+                scrollDirection: Axis.horizontal,
+                padding: const EdgeInsets.symmetric(horizontal: 12),
+                itemCount: templates.length,
+                itemBuilder: (context, index) {
+                  final template = templates[index];
+                  return Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 4),
+                    child: SupersetTemplateCard(
+                      template: template,
+                      onTap: () {
+                        SupersetTemplatePreviewSheet.show(
+                          context,
+                          ref: ref,
+                          template: template,
+                          source: 'exercise_search',
+                          onUseTemplate: () => _handleUseTemplate(template),
+                        );
+                      },
+                    ),
+                  );
+                },
+              ),
+            ),
+            const Divider(height: 16),
+          ],
+        );
+      },
+      loading: () => const SizedBox.shrink(),
+      error: (_, __) => const SizedBox.shrink(),
+    );
   }
 
   /// Gestisce negative feedback con opzioni (decrementa o rimuovi)
@@ -624,6 +707,12 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
 
     return Column(
       children: [
+        // Recommended Superset Templates (when no search)
+        // ✅ FIX: Show only for superset mode, not for single exercise selection
+        if (_searchQuery.isEmpty && _shouldShowSupersetTemplates()) ...[
+          _buildRecommendedTemplatesSection(),
+        ],
+
         // P1-3 FIX: Show recent exercises for quick access (when no search)
         if (recentExercises.isNotEmpty) ...[
           Container(
@@ -1784,9 +1873,89 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
   
   void _selectExercises() {
     if (_selectedExercises.isEmpty) return;
-    
+
     // Return selected exercises directly to caller (for superset builder)
     Navigator.of(context).pop(_selectedExercises.toList());
+  }
+
+  /// ✅ FIX #2: Convert SupersetTemplate to workout and add to current workout
+  Future<void> _handleUseTemplate(SupersetTemplate template) async {
+    try {
+      // 1. Get all exercises from database
+      final repository = ref.read(hybridExerciseRepositoryProvider);
+      final allExercises = await repository.getAllExercises();
+
+      // 2. Find exercises matching template names
+      final selectedExercises = <Exercise>[];
+      for (final name in template.exerciseNames) {
+        final match = allExercises.firstWhereOrNull(
+          (ex) => ex.nome.toLowerCase() == name.toLowerCase(),
+        );
+        if (match != null) {
+          selectedExercises.add(match);
+        }
+      }
+
+      // Verify we found all exercises
+      if (selectedExercises.length != template.exerciseNames.length) {
+        if (!mounted) return;
+        SnackBarService.showError(
+          context,
+          context.l10n.someExercisesNotFound ?? 'Some exercises not found',
+        );
+        return;
+      }
+
+      // 3. Parse reps range to get target reps (take first number from "10-12" or "8-10")
+      final repsMatch = RegExp(r'(\d+)').firstMatch(template.repsRange);
+      final targetReps = repsMatch != null ? int.parse(repsMatch.group(1)!) : 10;
+
+      // 4. Create SupersetRounds
+      final rounds = List.generate(
+        template.rounds,
+        (index) => SupersetRound.uniform(
+          roundNumber: index + 1,
+          targetReps: targetReps,
+          targetWeight: null, // User will set weight during workout
+          exerciseIds: selectedExercises.map((e) => e.id).toList(),
+        ),
+      );
+
+      // 5. Create SupersetConfiguration
+      final config = SupersetConfiguration(
+        name: template.name,
+        exercises: selectedExercises,
+        rounds: rounds,
+        restBetweenExercises: template.restBetween,
+        restAfterRound: template.restAfterRound,
+      );
+
+      // 6. Convert to SupersetExercise
+      final supersetExercise = SupersetConverter.configurationToSupersetExercise(config);
+
+      // 7. Add to workout
+      if (widget.onExerciseAdded != null) {
+        widget.onExerciseAdded!(supersetExercise);
+      }
+
+      // 8. Close modal and show success
+      if (!mounted) return;
+      Navigator.of(context).pop();
+      SnackBarService.showSuccess(
+        context,
+        '✅ ${context.l10n.templateAddedToWorkout ?? "Template added to workout"}',
+      );
+
+    } catch (e) {
+      if (kDebugMode) {
+        debugPrint('❌ Error using template: $e');
+      }
+      if (!mounted) return;
+      SnackBarService.showError(
+        context,
+        context.l10n.errorAddingTemplate ?? 'Error adding template',
+      );
+    }
   }
 
   WorkoutExercise.Exercise _convertToWorkoutExercise(Exercise exercise) {

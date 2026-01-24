@@ -26,6 +26,7 @@ import 'package:gymbro_flutter_new/features/recovery_insight/presentation/widget
 import 'package:gymbro_flutter_new/features/stress_index/presentation/widgets/template_suggestion_card.dart';
 import 'package:gymbro_flutter_new/features/stress_index/presentation/widgets/stress_prediction_card.dart';
 import 'package:gymbro_flutter_new/features/exercise_merge/presentation/widgets/merge_suggestion_card.dart';
+import 'package:gymbro_flutter_new/features/home/presentation/widgets/weight_update_nudge_card.dart';
 import 'package:gymbro_flutter_new/features/onboarding/domain/services/workout_tutorial_service.dart';
 import 'package:gymbro_flutter_new/features/onboarding/domain/services/home_tour_service.dart';
 import 'package:gymbro_flutter_new/shared/presentation/providers/ghost_mode_provider.dart';
@@ -206,6 +207,10 @@ class _MinimalHomeScreenState extends ConsumerState<MinimalHomeScreen> {
                     child: ActivityRingsWidget(),
                   ),
                 ),
+                const SizedBox(height: 16),
+
+                // 0.78 Weight Update Nudge (reminder to update bodyweight)
+                const WeightUpdateNudgeCard(),
                 const SizedBox(height: 16),
 
                 // 0.85 Pro Insights Preview (CTA for Pro Analytics)

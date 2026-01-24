@@ -333,10 +333,19 @@ class ExerciseVersionInfo {
       }).where((s) => s.isNotEmpty).toList();
     }
 
+    // Parse total exercises - supports both old format and new locale-specific format
+    int totalExercises = data['total_exercises'] as int? ?? 0;
+    if (totalExercises == 0) {
+      // Try locale-specific fields (use max of en/it as fallback)
+      final enCount = data['total_exercises_en'] as int? ?? 0;
+      final itCount = data['total_exercises_it'] as int? ?? 0;
+      totalExercises = enCount > itCount ? enCount : itCount;
+    }
+
     return ExerciseVersionInfo(
       version: version,
       lastUpdated: (data['last_updated'] as Timestamp?)?.toDate() ?? DateTime.now(),
-      totalExercises: data['total_exercises'] as int? ?? 0,
+      totalExercises: totalExercises,
       changelog: changelog,
     );
   }

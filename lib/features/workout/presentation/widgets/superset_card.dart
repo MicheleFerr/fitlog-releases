@@ -352,7 +352,7 @@ class _SupersetCardState extends ConsumerState<SupersetCard> {
                 ),
                 const Spacer(),
                 Text(
-                  'Weight × Reps',
+                  context.l10n.weightTimesReps,
                   style: context.textTheme.bodySmall?.copyWith(
                     color: context.colors.onSurfaceVariant,
                   ),

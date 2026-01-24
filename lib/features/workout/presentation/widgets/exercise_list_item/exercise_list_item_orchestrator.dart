@@ -1627,12 +1627,12 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem>
     // ✅ Required when using AutomaticKeepAliveClientMixin
     super.build(context);
 
-    // ✅ PERFORMANCE FIX: Use ref.read instead of ref.watch for config
-    // AppConfig rarely changes during a workout session, and watching it
-    // causes unnecessary rebuilds of ALL exercise cards when ANY config property changes.
-    // This was the root cause of the insight chip flickering during scroll.
-    // If config changes mid-session (rare), user can scroll to refresh the card.
-    final config = ref.read(appConfigProvider);
+    // ✅ REACTIVITY FIX: Use ref.watch to respond immediately to config changes
+    // Previously used ref.read to avoid rebuilds, but this prevented immediate toggle reactivity.
+    // Config changes are rare during workout (only when user opens settings modal),
+    // so the rebuild cost is acceptable for better UX.
+    // To minimize rebuilds, we could use .select() for specific fields if performance becomes an issue.
+    final config = ref.watch(appConfigProvider);
 
     // ✅ PERFORMANCE FIX: Watch ONLY the specific properties needed for rendering
     // Previously, getters with ref.watch were causing rebuild chains when accessed.
@@ -1667,6 +1667,18 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem>
               '✅ [AutoCollapse] Exercise "${widget.exercise.name}" auto-collapsed',
             );
           }
+        }
+      },
+    );
+
+    // ✅ FIX: Listen for autoCollapseCompleted toggle changes
+    // This ensures immediate reactivity when user changes the toggle in settings modal
+    ref.listen(
+      appConfigProvider.select((c) => c.autoCollapseCompleted),
+      (previous, next) {
+        // When toggle is enabled and exercise is completed, trigger auto-collapse
+        if (next == true && previous == false && _areAllSetsCompleted()) {
+          _autoCollapseIfCompleted();
         }
       },
     );
@@ -1726,13 +1738,20 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem>
         padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 6),
         child: DecoratedBox(
           decoration: BoxDecoration(
-            // ✅ DESIGN: Lighter background color for cleaner look
-            color: context.colors.surfaceContainer,
+            // ✅ UX IMPROVEMENT: Visual state differentiation
+            // Collapsed cards are slightly lighter to indicate "completed/inactive" state
+            // Expanded cards use normal surfaceContainer for "active" feel
+            color: !isExpanded
+                ? context.colors.surfaceContainerLowest
+                : context.colors.surfaceContainer,
             // ✅ DESIGN: Slightly softer corners
             borderRadius: BorderRadius.circular(16),
-            // ✅ DESIGN: Subtle border instead of heavy shadow
+            // ✅ UX IMPROVEMENT: Collapsed cards have more subtle border
+            // This creates hierarchy: expanded = active (prominent), collapsed = inactive (subtle)
             border: Border.all(
-              color: context.colors.outlineVariant.withValues(alpha: 0.3),
+              color: !isExpanded
+                  ? context.colors.outline.withValues(alpha: 0.15)
+                  : context.colors.outlineVariant.withValues(alpha: 0.3),
               width: 1,
             ),
             boxShadow: [
@@ -1863,88 +1882,77 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem>
                   },
                 ),
 
-                // Sets section (expanded only)
-                if (isExpanded)
-                  Padding(
-                    padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
-                    child: ExerciseListItemSets(
-                      exercise: widget.exercise,
-                      config: config,
-                      onExerciseUpdate: (exercise) {
-                        widget.onExerciseUpdate?.call(exercise);
-                      },
-                      onSetToggleComplete: (set) {
-                        widget.onSetToggleComplete?.call(set);
-                      },
-                      onStartRestTimer: _handleStartRestTimer,
-                      onExecuteDropSet: _handleExecuteDropSet,
-                      onExecuteRestPause: _handleExecuteRestPause,
-                      onCollapseExercise: _handleCollapseExercise,
-                      tutorialFirstSetKey: widget.tutorialFirstSetKey,
-                    ),
-                  ),
+                // Sets section with smooth animation
+                // ✅ UX IMPROVEMENT: AnimatedSize provides smooth expand/collapse transition
+                // Instead of instant show/hide, content animates in/out for better UX
+                AnimatedSize(
+                  duration: const Duration(milliseconds: 250),
+                  curve: Curves.easeInOut,
+                  alignment: Alignment.topCenter,
+                  child: isExpanded
+                      ? Padding(
+                          padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
+                          child: ExerciseListItemSets(
+                            exercise: widget.exercise,
+                            config: config,
+                            onExerciseUpdate: (exercise) {
+                              widget.onExerciseUpdate?.call(exercise);
+                            },
+                            onSetToggleComplete: (set) {
+                              widget.onSetToggleComplete?.call(set);
+                            },
+                            onStartRestTimer: _handleStartRestTimer,
+                            onExecuteDropSet: _handleExecuteDropSet,
+                            onExecuteRestPause: _handleExecuteRestPause,
+                            onCollapseExercise: _handleCollapseExercise,
+                            tutorialFirstSetKey: widget.tutorialFirstSetKey,
+                          ),
+                        )
+                      : const SizedBox.shrink(),
+                ),
 
-                // BUG FIX #4: Visual hint to expand collapsed exercise
-                // ✅ FIX: Removed infinite rebuild loop caused by onEnd + setState
-                // Previous implementation called setState() in onEnd to restart animation,
-                // causing ~1.6s rebuild loops for ALL collapsed exercise cards.
-                // Now uses static hint without pulsing - better for performance.
-                // 🐛 BUG FIX #5: Added InkWell to make hint tappable
-                // The outer GestureDetector doesn't receive taps because Material widget
-                // and header's interactive widgets (InkWell, PopupMenuButton) consume them.
+                // ✅ DESIGN FIX: Minimal expansion hint (Opzione A)
+                // Replaces prominent chip with discrete, integrated hint
+                // Consistent with app design system and user-friendly for all personas
                 if (!isExpanded)
                   Padding(
                     padding: const EdgeInsets.only(bottom: 12),
                     child: Center(
-                      child: Material(
-                        color: context.colors.surface.withValues(alpha: 0),
-                        child: InkWell(
-                          onTap: () {
-                            _expansionNotifier.expand();
-                            HapticFeedback.lightImpact();
-                            if (kDebugMode) {
-                              debugPrint(
-                                '📖 [Expand] Exercise "${widget.exercise.name}" expanded via hint tap',
-                              );
-                            }
-                          },
-                          borderRadius: BorderRadius.circular(20),
-                          child: Container(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 16,
-                              vertical: 8,
-                            ),
-                            decoration: BoxDecoration(
-                              color: context.colors.primaryContainer.withValues(
-                                alpha: 0.3,
+                      child: InkWell(
+                        onTap: () {
+                          _expansionNotifier.expand();
+                          HapticFeedback.lightImpact();
+                          if (kDebugMode) {
+                            debugPrint(
+                              '📖 [Expand] Exercise "${widget.exercise.name}" expanded via hint tap',
+                            );
+                          }
+                        },
+                        borderRadius: BorderRadius.circular(12),
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 12,
+                            vertical: 6,
+                          ),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Icon(
+                                AppIcons.expandMore,
+                                size: AppIconSize.tiny,
+                                color: context.colors.onSurfaceVariant
+                                    .withValues(alpha: 0.5),
                               ),
-                              borderRadius: BorderRadius.circular(20),
-                              border: Border.all(
-                                color: context.colors.primary.withValues(
-                                  alpha: 0.4,
+                              const SizedBox(width: 4),
+                              Text(
+                                context.l10n.tapToExpand,
+                                style: context.textTheme.labelSmall?.copyWith(
+                                  color: context.colors.onSurfaceVariant
+                                      .withValues(alpha: 0.5),
+                                  fontSize: 11,
                                 ),
-                                width: 1,
                               ),
-                            ),
-                            child: Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                SemanticIcon(
-                                  icon: AppIcons.expandMore,
-                                  semanticLabel: context.l10n.expandExercise,
-                                  size: AppIconSize.small,
-                                  color: context.colors.primary,
-                                ),
-                                const SizedBox(width: 8),
-                                Text(
-                                  context.l10n.tapToExpand,
-                                  style: context.textTheme.bodyMedium?.copyWith(
-                                    color: context.colors.primary,
-                                    fontWeight: FontWeight.w600,
-                                  ),
-                                ),
-                              ],
-                            ),
+                            ],
                           ),
                         ),
                       ),

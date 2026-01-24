@@ -25,6 +25,7 @@ import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dar
 import 'package:gymbro_flutter_new/shared/presentation/mixins/safe_set_state_mixin.dart';
 import 'package:gymbro_flutter_new/shared/presentation/constants/app_animations.dart';
 import 'package:gymbro_flutter_new/features/analytics/presentation/widgets/pro_insights_badge.dart';
+import 'package:gymbro_flutter_new/features/analytics/presentation/widgets/exercise_avatar.dart';
 
 /// Filter options for exercise list
 ///
@@ -1009,9 +1010,17 @@ class _ExerciseHistoryCard extends ConsumerWidget{
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Row 1: Exercise name + stats inline
+              // Row 1: Exercise avatar + name + stats inline
               Row(
                 children: [
+                  // Exercise avatar (40px for compact card)
+                  ExerciseAvatar(
+                    exerciseId: history.exerciseId,
+                    exerciseName: history.exerciseName,
+                    muscleGroup: history.muscleGroup,
+                    size: 40,
+                  ),
+                  const SizedBox(width: AppSpacing.sm),
                   // Exercise name (flexible width)
                   Expanded(
                     child: Text(

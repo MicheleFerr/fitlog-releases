@@ -39,6 +39,9 @@ final class BackgroundAudioManager {
     private var scheduledCompletionTime: Date?
     private var audioScheduled = false
 
+    // 🔬 DISTRIBUTED TRACING: Track trace ID for debugging race conditions
+    private var currentTraceId: String?
+
     // Health monitoring cleanup
     private var healthMonitoringWorkItem: DispatchWorkItem?
     
@@ -53,6 +56,40 @@ final class BackgroundAudioManager {
     private init() {
         Logger.shared.log(.info, "BackgroundAudioManager initialized", category: .audioSession)
         setupSilentLoopPlayer()
+        // Pre-activate audio session at init so it's ready when needed
+        preactivateAudioSession()
+    }
+
+    // MARK: - Pre-activation (CRITICAL for background audio)
+
+    /// Pre-activates the audio session so it's ready for background use.
+    /// MUST be called while app is in FOREGROUND, before user locks the device.
+    /// This is the key to making background audio work - iOS won't let you activate
+    /// a new audio session when already in background.
+    func preactivateAudioSession() {
+        Logger.shared.log(.info, """
+            🔑 [PRE-ACTIVATE] Pre-activating audio session for future background use
+            - This ensures audio works even after device is locked
+            - MUST happen while app is in foreground
+            """, category: .audioSession)
+
+        do {
+            let session = AVAudioSession.sharedInstance()
+
+            // Use .mixWithOthers to NOT interrupt user's music
+            // Do NOT use .duckOthers - that would lower music volume
+            try session.setCategory(.playback, mode: .default, options: [.mixWithOthers])
+            try session.setActive(true)
+
+            Logger.shared.log(.info, """
+                ✅ [PRE-ACTIVATE] Audio session pre-activated successfully!
+                - Category: \(session.category.rawValue)
+                - Options: \(session.categoryOptions.rawValue)
+                - Ready for background audio
+                """, category: .audioSession)
+        } catch {
+            Logger.shared.log(.error, "❌ [PRE-ACTIVATE] Failed to pre-activate audio session: \(error)", category: .audioSession)
+        }
     }
     
     deinit {
@@ -65,7 +102,30 @@ final class BackgroundAudioManager {
     /// Schedula l'audio per il timer con strategia basata sulla durata
     /// NOTE: For Live Activities, notification is pre-scheduled by LiveActivityHandler
     func scheduleTimerAudio(duration: TimeInterval, soundName: String = "sound", skipNotification: Bool = false) {
-        let appState = UIApplication.shared.applicationState
+        // 🔬 DISTRIBUTED TRACING: Create new trace for this timer
+        let traceId = AudioTraceLogger.shared.startTrace(
+            duration: duration,
+            soundName: soundName,
+            skipNotification: skipNotification
+        )
+        stateQueue.sync {
+            self.currentTraceId = traceId
+        }
+
+        // ✅ CRITICAL FIX: Pre-activate audio session BEFORE scheduling timer
+        // This MUST happen while app is still in foreground to guarantee background audio works
+        // If we wait until app is backgrounded, iOS will refuse to activate the session
+        preactivateAudioSession()
+
+        // ✅ MAIN THREAD FIX: Get app state on main thread to avoid Main Thread Checker error
+        var appState: UIApplication.State = .active
+        if Thread.isMainThread {
+            appState = UIApplication.shared.applicationState
+        } else {
+            DispatchQueue.main.sync {
+                appState = UIApplication.shared.applicationState
+            }
+        }
         Logger.shared.log(.info, "🎯 Timer audio scheduled: \(duration)s, sound: \(soundName), state: \(appState == .active ? "Active" : "Background")", category: .audioSession)
 
         // Cancel any existing audio
@@ -77,29 +137,35 @@ final class BackgroundAudioManager {
             self.audioScheduled = true
         }
 
-        // HYBRID STRATEGY: Critical Alerts + Silent Loop Fallback
-        // Critical Alerts require Apple entitlement approval
-        // Silent loop works immediately as fallback for mute bypass
-        let minDurationForLoop: TimeInterval = 30  // Don't use loop for timers < 30s
+        // CRITICAL FIX: ALWAYS start silent loop immediately when timer starts
+        // The silent loop MUST be started while app is in foreground (or shortly after)
+        // If we wait until app is in background, iOS won't let us activate audio session
         let maxSilentDuration: TimeInterval = 600  // 10 minutes max
 
-        // Start silent loop as FALLBACK for mute bypass
-        // This ensures audio works even before Critical Alerts entitlement is approved
-        if duration >= minDurationForLoop && duration <= maxSilentDuration {
-            let loopDuration = min(duration + 5, maxSilentDuration)
-            Logger.shared.log(.info, """
-                🔇 [FALLBACK] Starting silent loop for mute bypass:
+        // ✅ FIX: Start silent loop for ALL timers (removed 30s minimum)
+        // This ensures the app stays alive in background for any timer duration
+        if duration <= maxSilentDuration {
+            let loopDuration = min(duration + 10, maxSilentDuration)  // Add buffer
+            Logger.shared.log(.warning, """
+                🔇 [SILENT-LOOP] IMMEDIATELY starting silent loop:
                 - Timer duration: \(duration)s
                 - Loop duration: \(loopDuration)s
                 - App state: \(appState == .active ? "Active" : "Background")
-                - Critical Alerts: pending Apple approval
-                - Silent loop: ✅ active as fallback
+                - This keeps the app alive so audio session remains active
+                - Sound will play via AVAudioPlayer when timer completes
                 """, category: .audioSession)
+
+            // 🔬 TRACE: Log silent loop start
+            AudioTraceLogger.shared.logEvent(
+                traceId: traceId,
+                path: .silentLoop,
+                action: .started,
+                metadata: ["loopDuration": loopDuration]
+            )
+
             startSilentLoop(maxDuration: loopDuration)
-        } else if duration < minDurationForLoop {
-            Logger.shared.log(.info, "⚡ Timer too short (\(duration)s) - skipping silent loop", category: .audioSession)
         } else {
-            Logger.shared.log(.info, "⏱️ Timer too long (\(duration)s) - using notification only", category: .audioSession)
+            Logger.shared.log(.info, "⏱️ Timer too long (\(duration)s > \(maxSilentDuration)s) - using notification only", category: .audioSession)
         }
 
         // 🔔 CRITICAL: Check if notification should be scheduled
@@ -113,6 +179,15 @@ final class BackgroundAudioManager {
                 - Duration: \(duration)s
                 - Sound: \(soundName)
                 """, category: .audioSession)
+
+            // 🔬 TRACE: Log notification scheduled
+            AudioTraceLogger.shared.logEvent(
+                traceId: traceId,
+                path: .notification,
+                action: .scheduled,
+                metadata: ["duration": duration, "sound": soundName]
+            )
+
             scheduleSmartNotification(after: duration, soundName: soundName)
         } else {
             Logger.shared.log(.info, """
@@ -121,26 +196,39 @@ final class BackgroundAudioManager {
                 - Live Activity will handle the notification
                 - This prevents duplicate notifications
                 """, category: .audioSession)
+
+            // 🔬 TRACE: Log notification skipped (Live Activity will handle it)
+            AudioTraceLogger.shared.logEvent(
+                traceId: traceId,
+                path: .liveActivity,
+                action: .scheduled,
+                metadata: ["reason": "skipNotification=true"]
+            )
         }
 
         // HYBRID: Silent loop keeps app alive for dispatch timer to fire
         // Schedule dispatch timer for AVAudioPlayer playback (bypasses mute)
-        if duration < minDurationForLoop {
-            // Short timer: use background task
-            scheduleShortTimerAudio(duration: duration, soundName: soundName)
-            Logger.shared.log(.info, "⚡ Short timer scheduled with background task (\(duration)s)", category: .audioSession)
-        } else if duration <= maxSilentDuration {
-            // Medium timer: silent loop + dispatch timer for mute bypass
-            scheduleShortTimerAudio(duration: duration, soundName: soundName)
-            Logger.shared.log(.info, """
+        // ✅ FIX: Schedule dispatch timer for ALL timers up to maxSilentDuration (10 min)
+        // The silent loop keeps the app alive, then dispatch timer triggers AVAudioPlayer
+        if duration <= maxSilentDuration {
+            // 🔬 TRACE: Log dispatch timer scheduled
+            AudioTraceLogger.shared.logEvent(
+                traceId: traceId,
+                path: .dispatchTimer,
+                action: .scheduled,
+                metadata: ["duration": duration]
+            )
+
+            scheduleShortTimerAudio(duration: duration, soundName: soundName, traceId: traceId)
+            Logger.shared.log(.warning, """
                 🔇 [HYBRID] Timer scheduled with silent loop + dispatch timer:
                 - Duration: \(duration)s
-                - Silent loop keeps app alive
-                - Dispatch timer fires → AVAudioPlayer plays → mute bypassed!
-                - Critical Alert notification as additional backup
+                - Silent loop keeps app alive in background
+                - Dispatch timer fires → AVAudioPlayer plays → sound works even if locked!
+                - Notification as additional backup
                 """, category: .audioSession)
         } else {
-            // Long timer: notifications only
+            // Long timer (>10 min): notifications only
             Logger.shared.log(.info, "⏱️ Very long timer (\(duration)s) - using notification only", category: .audioSession)
         }
 
@@ -199,8 +287,8 @@ final class BackgroundAudioManager {
     }
     
     // MARK: - Strategia 1: Timer con Background Task (≤180s)
-    private func scheduleShortTimerAudio(duration: TimeInterval, soundName: String) {
-        Logger.shared.log(.info, "[TIMER-DEBUG] scheduleShortTimerAudio: \(duration)s, sound: \(soundName)", category: .audioSession)
+    private func scheduleShortTimerAudio(duration: TimeInterval, soundName: String, traceId: String) {
+        Logger.shared.log(.info, "[TIMER-DEBUG] scheduleShortTimerAudio: \(duration)s, sound: \(soundName), traceId: \(traceId.prefix(8))", category: .audioSession)
 
         // ✅ FIX: Cancel any existing short timer work item to prevent multiple timers
         shortTimerWorkItem?.cancel()
@@ -226,16 +314,38 @@ final class BackgroundAudioManager {
             // This prevents audio from playing after skip
             if self.shortTimerWorkItem?.isCancelled == true {
                 Logger.shared.log(.info, "⏭️ [TIMER-FIX] Timer was cancelled/skipped - NOT playing audio", category: .audioSession)
+
+                // 🔬 TRACE: Log dispatch timer cancelled
+                AudioTraceLogger.shared.logEvent(
+                    traceId: traceId,
+                    path: .dispatchTimer,
+                    action: .cancelled,
+                    metadata: ["reason": "work item cancelled"]
+                )
+
                 if useBackgroundTask {
                     self.endBackgroundTask()
                 }
                 return
             }
 
-            let appState = UIApplication.shared.applicationState
+            // ✅ MAIN THREAD FIX: Get app state on main thread
+            var appState: UIApplication.State = .active
+            DispatchQueue.main.sync {
+                appState = UIApplication.shared.applicationState
+            }
             Logger.shared.log(.info, "⏰ Timer completed: \(soundName), state: \(appState == .active ? "Active" : "Background")", category: .audioSession)
+
+            // 🔬 TRACE: Log dispatch timer completed
+            AudioTraceLogger.shared.logEvent(
+                traceId: traceId,
+                path: .dispatchTimer,
+                action: .completed,
+                metadata: ["appState": appState == .active ? "active" : "background"]
+            )
+
             // v3.0.0: Play actual sounds, not just vibration!
-            self.playCompletionSound(soundName: soundName)
+            self.playCompletionSound(soundName: soundName, traceId: traceId)
 
             // Only end background task if we started one
             if useBackgroundTask {
@@ -374,29 +484,62 @@ final class BackgroundAudioManager {
     }
 
     // MARK: - Audio Playback
-    private func playCompletionSound(soundName: String) {
+    private func playCompletionSound(soundName: String, traceId: String) {
         Logger.shared.log(.info, """
             🎵 [TIMER-DEBUG] playCompletionSound called:
+            - Trace ID: \(traceId.prefix(8))
             - Sound: \(soundName)
             - Time: \(Date())
             - Last played: \(audioPlayedTimestamp?.description ?? "never")
             - Using Critical Alerts: ✅
             """, category: .audioSession)
 
-        // CRITICAL FIX: Audio deduplication to prevent double sounds (Problem #1)
-        if let lastTimestamp = audioPlayedTimestamp,
-           Date().timeIntervalSince(lastTimestamp) < 2.0 {
-            let timeSince = Date().timeIntervalSince(lastTimestamp)
-            Logger.shared.log(.warning, "⚠️ [TIMER-DEBUG] DEDUPLICATION: Audio already played \(timeSince)s ago, skipping duplicate", category: .audioSession)
+        // ✅ THREAD-SAFE FIX: Use stateQueue to prevent race condition
+        let shouldProceed = stateQueue.sync { () -> Bool in
+            // Check deduplication INSIDE critical section
+            if let lastTimestamp = audioPlayedTimestamp {
+                let elapsed = Date().timeIntervalSince(lastTimestamp)
+                if elapsed < 2.0 {
+                    // Deduplicate - log and return false
+                    Logger.shared.log(.warning, "⚠️ [TIMER-DEBUG] DEDUPLICATION: Audio already played \(elapsed)s ago, skipping duplicate", category: .audioSession)
+
+                    AudioTraceLogger.shared.logEvent(
+                        traceId: traceId,
+                        path: .deduplication,
+                        action: .blocked,
+                        metadata: ["timeSinceLastPlay": elapsed, "threshold": 2.0]
+                    )
+                    return false
+                }
+            }
+
+            // Passed deduplication - immediately set timestamp to claim this execution
+            audioPlayedTimestamp = Date()
+            lastCompletedSoundName = soundName
+
+            AudioTraceLogger.shared.logEvent(
+                traceId: traceId,
+                path: .deduplication,
+                action: .completed,
+                metadata: ["decision": "allow"]
+            )
+            return true
+        }
+
+        // Exit early if another thread already claimed this execution
+        guard shouldProceed else {
             return
         }
 
-        // Track when audio is played to prevent double playback (MUST be set immediately)
-        audioPlayedTimestamp = Date()
-        lastCompletedSoundName = soundName
-
-        // CRITICAL FIX: Check app state to determine audio strategy
-        let appState = UIApplication.shared.applicationState
+        // ✅ MAIN THREAD FIX: Check app state on main thread
+        var appState: UIApplication.State = .active
+        if Thread.isMainThread {
+            appState = UIApplication.shared.applicationState
+        } else {
+            DispatchQueue.main.sync {
+                appState = UIApplication.shared.applicationState
+            }
+        }
         let isInBackground = (appState == .background || appState == .inactive)
 
         Logger.shared.log(.info, "📱 App state: \(appState == .active ? "Active" : appState == .background ? "Background" : "Inactive")", category: .audioSession)
@@ -421,6 +564,29 @@ final class BackgroundAudioManager {
                         if audioPlayer?.play() == true {
                             soundPlayed = true
                             Logger.shared.log(.info, "✅ Background sound played with AVAudioPlayer: \(soundName).\(ext)", category: .audioSession)
+
+                            // 🔬 TRACE: Log audio played via AVAudioPlayer (background + silent loop)
+                            AudioTraceLogger.shared.logEvent(
+                                traceId: traceId,
+                                path: .audioPlayer,
+                                action: .played,
+                                metadata: [
+                                    "method": "AVAudioPlayer",
+                                    "context": "background+silentLoop",
+                                    "sound": "\(soundName).\(ext)"
+                                ]
+                            )
+
+                            // 📣 POST NOTIFICATION: Notify AudioDebugTestHandler that audio completed
+                            NotificationCenter.default.post(
+                                name: NSNotification.Name("TimerAudioCompleted"),
+                                object: nil,
+                                userInfo: [
+                                    "traceId": traceId,
+                                    "soundCount": 1
+                                ]
+                            )
+
                             break
                         }
                     } catch {
@@ -432,7 +598,29 @@ final class BackgroundAudioManager {
             // Fallback to TimerSoundFix only if manual player failed
             if !soundPlayed {
                 Logger.shared.log(.warning, "⚠️ Manual AVAudioPlayer failed, trying TimerSoundFix fallback", category: .audioSession)
+
+                // 🔬 TRACE: Log fallback to notification
+                AudioTraceLogger.shared.logEvent(
+                    traceId: traceId,
+                    path: .notification,
+                    action: .played,
+                    metadata: ["method": "TimerSoundFix", "reason": "AVAudioPlayer failed"]
+                )
+
                 TimerSoundFix.shared.playTimerCompletionSound(preferredSound: soundName)
+            } else {
+                // ✅ ANTI-DUPLICATION FIX: Cancel pending notification since AVAudioPlayer played successfully
+                // This prevents the notification from also playing sound = double sound
+                // 🔬 TRACE: Log notification cancelled AFTER audio played
+                AudioTraceLogger.shared.logEvent(
+                    traceId: traceId,
+                    path: .notification,
+                    action: .cancelled,
+                    metadata: ["reason": "AVAudioPlayer played successfully", "timing": "AFTER_PLAY"]
+                )
+
+                cancelAllTimerNotifications()
+                Logger.shared.log(.warning, "🔕 [ANTI-DUP] Cancelled pending timer notifications - AVAudioPlayer handled audio", category: .audioSession)
             }
 
             // Stop silent loop after playing sound
@@ -446,8 +634,27 @@ final class BackgroundAudioManager {
         } else if isInBackground {
             // BACKGROUND WITHOUT SILENT LOOP: Use notification + vibrate
             Logger.shared.log(.info, "🔔 App in background without silent loop - using notification", category: .audioSession)
+
+            // 🔬 TRACE: Log notification played (no silent loop available)
+            AudioTraceLogger.shared.logEvent(
+                traceId: traceId,
+                path: .notification,
+                action: .played,
+                metadata: ["method": "TimerSoundFix", "context": "background no silent loop"]
+            )
+
             TimerSoundFix.shared.playTimerCompletionSound(preferredSound: soundName)
             AudioServicesPlaySystemSound(kSystemSoundID_Vibrate)
+
+            // 📣 POST NOTIFICATION: Notify AudioDebugTestHandler that audio completed
+            NotificationCenter.default.post(
+                name: NSNotification.Name("TimerAudioCompleted"),
+                object: nil,
+                userInfo: [
+                    "traceId": traceId,
+                    "soundCount": 1
+                ]
+            )
 
         } else {
             // FOREGROUND: Try AVAudioPlayer first (will work if app is active)
@@ -470,6 +677,29 @@ final class BackgroundAudioManager {
                         if audioPlayer?.play() == true {
                             soundPlayed = true
                             Logger.shared.log(.info, "✅ Sound played: \(soundName).\(ext)", category: .audioSession)
+
+                            // 🔬 TRACE: Log audio played via AVAudioPlayer (foreground)
+                            AudioTraceLogger.shared.logEvent(
+                                traceId: traceId,
+                                path: .audioPlayer,
+                                action: .played,
+                                metadata: [
+                                    "method": "AVAudioPlayer",
+                                    "context": "foreground",
+                                    "sound": "\(soundName).\(ext)"
+                                ]
+                            )
+
+                            // 📣 POST NOTIFICATION: Notify AudioDebugTestHandler that audio completed
+                            NotificationCenter.default.post(
+                                name: NSNotification.Name("TimerAudioCompleted"),
+                                object: nil,
+                                userInfo: [
+                                    "traceId": traceId,
+                                    "soundCount": 1
+                                ]
+                            )
+
                             break
                         }
                     } catch {
@@ -477,28 +707,51 @@ final class BackgroundAudioManager {
                     }
                 }
             }
-            
+
             if !soundPlayed {
                 // Fallback to notification even in foreground
                 Logger.shared.log(.warning, "⚠️ AVAudioPlayer failed, using notification fallback", category: .audioSession)
-                
+
+                // 🔬 TRACE: Log system sound fallback
+                AudioTraceLogger.shared.logEvent(
+                    traceId: traceId,
+                    path: .audioPlayer,
+                    action: .skipped,
+                    metadata: ["reason": "AVAudioPlayer failed", "fallback": "system sound"]
+                )
+
                 // CRITICAL FIX: Don't send notification for timer completion in foreground
                 // This was causing immediate notifications when app opens
                 // Instead, just play a system sound for immediate feedback
                 AudioServicesPlaySystemSound(1005)  // System sound as fallback
                 Logger.shared.log(.info, "📢 Played system sound as fallback instead of notification", category: .audioSession)
-                
+
                 // NOTE: The actual timer completion notification is already scheduled
                 // by scheduleSmartNotification() or LiveActivityHandler when timer starts
                 // We don't need another notification here
+            } else {
+                // ✅ ANTI-DUPLICATION FIX: Cancel pending notification since AVAudioPlayer played successfully
+                // 🔬 TRACE: Log notification cancelled AFTER audio played
+                AudioTraceLogger.shared.logEvent(
+                    traceId: traceId,
+                    path: .notification,
+                    action: .cancelled,
+                    metadata: ["reason": "AVAudioPlayer played successfully", "context": "foreground", "timing": "AFTER_PLAY"]
+                )
+
+                cancelAllTimerNotifications()
+                Logger.shared.log(.warning, "🔕 [ANTI-DUP] Cancelled pending timer notifications - AVAudioPlayer handled audio (foreground)", category: .audioSession)
             }
-            
+
             // Vibrate for feedback
             AudioServicesPlaySystemSound(kSystemSoundID_Vibrate)
         }
         
         Logger.shared.log(.info, "📝 Audio playback tracked at \(audioPlayedTimestamp!)", category: .audioSession)
-        
+
+        // 🔬 TRACE: End trace and generate summary
+        AudioTraceLogger.shared.endTrace(traceId: traceId, finalAction: .completed)
+
         // Notify Flutter
         DispatchQueue.main.async {
             if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
@@ -509,11 +762,25 @@ final class BackgroundAudioManager {
                     "timestamp": Date().timeIntervalSince1970,
                     "source": "background_audio",
                     "soundName": soundName,
-                    "method": isInBackground ? "notification" : "avplayer"
+                    "method": isInBackground ? "notification" : "avplayer",
+                    "traceId": traceId
                 ])
-                Logger.shared.log(.info, "✅ Notified Flutter", category: .audioSession)
+                Logger.shared.log(.info, "✅ Notified Flutter with trace ID: \(traceId.prefix(8))", category: .audioSession)
             }
         }
+    }
+
+    // MARK: - 🔬 Diagnostic Tools
+
+    /// Get detailed diagnostic report for audio tracing
+    /// Useful for debugging race conditions and duplicate audio issues
+    func getAudioDiagnosticReport() -> String {
+        return AudioTraceLogger.shared.getDiagnosticReport()
+    }
+
+    /// Detect current race conditions in active traces
+    func detectAudioRaceConditions() -> [String] {
+        return AudioTraceLogger.shared.detectRaceConditions()
     }
     
     // MARK: - Audio Tracking
@@ -563,17 +830,21 @@ final class BackgroundAudioManager {
     // MARK: - Silent Loop Management
     
     private func setupSilentLoopPlayer() {
-        // Try to find silent loop file
+        // Try to find silent loop file - check both .caf and .wav
         var silentURL: URL?
-        
-        if let path = Bundle.main.path(forResource: Config.silentLoopFileName, ofType: "wav") {
+
+        // ✅ FIX: Check .caf first (iOS preferred format), then .wav
+        if let path = Bundle.main.path(forResource: Config.silentLoopFileName, ofType: "caf") {
             silentURL = URL(fileURLWithPath: path)
-            Logger.shared.log(.info, "✅ Found silent loop file", category: .audioSession)
+            Logger.shared.log(.info, "✅ Found silent loop file: \(Config.silentLoopFileName).caf", category: .audioSession)
+        } else if let path = Bundle.main.path(forResource: Config.silentLoopFileName, ofType: "wav") {
+            silentURL = URL(fileURLWithPath: path)
+            Logger.shared.log(.info, "✅ Found silent loop file: \(Config.silentLoopFileName).wav", category: .audioSession)
         } else {
-            Logger.shared.log(.warning, "⚠️ Silent loop file not found", category: .audioSession)
+            Logger.shared.log(.warning, "⚠️ [AUDIO-SESSION] Could not find \(Config.silentLoopFileName).caf in bundle", category: .audioSession)
             return
         }
-        
+
         guard let audioURL = silentURL else { return }
         
         do {
@@ -609,6 +880,7 @@ final class BackgroundAudioManager {
 
         // STRATEGY: Different audio session configurations per attempt
         // ✅ FIX: All attempts now use .mixWithOthers to avoid "Cannot interrupt other audio" error
+        // ✅ FIX #2: Don't fail if setActive fails - category being correct is often enough
         do {
             let session = AVAudioSession.sharedInstance()
 
@@ -619,19 +891,63 @@ final class BackgroundAudioManager {
                 Logger.shared.log(.info, "✅ [RETRY-\(attempt)] Audio session configured via AudioSessionManager", category: .audioSession)
 
             case 2:
-                // Second attempt: Direct category change without deactivating
-                // ✅ FIX: Don't deactivate first - just set category directly
-                try session.setCategory(.playback, mode: .default, options: [.mixWithOthers])
-                try session.setActive(true, options: [])
-                Logger.shared.log(.info, "✅ [RETRY-\(attempt)] Audio session configured directly (no deactivate)", category: .audioSession)
+                // Second attempt: Check if already configured, then just ensure active
+                // ✅ FIX: Only set category if needed - this avoids unnecessary reconfiguration
+                if session.category != .playback || !session.categoryOptions.contains(.mixWithOthers) {
+                    try session.setCategory(.playback, mode: .default, options: [.mixWithOthers])
+                    Logger.shared.log(.info, "✅ [RETRY-\(attempt)] Category set to .playback/.mixWithOthers", category: .audioSession)
+                } else {
+                    Logger.shared.log(.info, "✅ [RETRY-\(attempt)] Category already correct (.playback/.mixWithOthers)", category: .audioSession)
+                }
+
+                // ✅ FIX: setActive can fail even when session is functional - don't fail entirely
+                do {
+                    try session.setActive(true, options: [])
+                    Logger.shared.log(.info, "✅ [RETRY-\(attempt)] Session activated", category: .audioSession)
+                } catch {
+                    Logger.shared.log(.warning, "⚠️ [RETRY-\(attempt)] setActive failed (\(error.audioSessionErrorDescription)) - continuing anyway, session may already be active", category: .audioSession)
+                }
 
             case 3:
-                // Third attempt: Minimal configuration with longer delay
-                // ✅ FIX: Still use .mixWithOthers! Empty options = exclusive = FAIL
-                Thread.sleep(forTimeInterval: 0.2)  // Longer delay for system to settle
-                try session.setCategory(.playback, mode: .default, options: [.mixWithOthers])
-                try session.setActive(true, options: [])
-                Logger.shared.log(.info, "✅ [RETRY-\(attempt)] Audio session configured with delay", category: .audioSession)
+                // Third attempt: Recreate player with fresh audio session
+                // ✅ FIX: If previous attempts failed, the player might have been created with wrong session config
+                Logger.shared.log(.info, "🔄 [RETRY-\(attempt)] Recreating player with fresh session (category: \(session.category.rawValue), options: \(session.categoryOptions.rawValue))", category: .audioSession)
+
+                Thread.sleep(forTimeInterval: 0.3)  // Longer delay for system to settle
+
+                // Only set category if needed
+                if session.category != .playback || !session.categoryOptions.contains(.mixWithOthers) {
+                    try session.setCategory(.playback, mode: .default, options: [.mixWithOthers])
+                }
+
+                // Try to activate (ignore failure)
+                try? session.setActive(true, options: [])
+
+                // ✅ FIX: Recreate player AFTER session is configured
+                // This ensures the player is initialized with the correct audio session settings
+                // ✅ FIX: Check .caf first, then .wav
+                let silentURL = Bundle.main.url(forResource: Config.silentLoopFileName, withExtension: "caf")
+                               ?? Bundle.main.url(forResource: Config.silentLoopFileName, withExtension: "wav")
+                if let silentURL = silentURL {
+                    do {
+                        let freshPlayer = try AVAudioPlayer(contentsOf: silentURL)
+                        freshPlayer.numberOfLoops = -1
+                        freshPlayer.volume = 0.01
+
+                        if freshPlayer.prepareToPlay(), freshPlayer.play() {
+                            silentLoopPlayer = freshPlayer
+                            silentLoopActive = true
+                            Logger.shared.log(.info, "✅ [RETRY-\(attempt)] Fresh player created and started successfully!", category: .audioSession)
+                            return  // Success! Exit retry loop
+                        } else {
+                            Logger.shared.log(.warning, "⚠️ [RETRY-\(attempt)] Fresh player created but failed to play", category: .audioSession)
+                        }
+                    } catch {
+                        Logger.shared.log(.error, "❌ [RETRY-\(attempt)] Failed to create fresh player: \(error)", category: .audioSession)
+                    }
+                }
+
+                // Fall through to use original player as fallback
 
             default:
                 break
@@ -646,8 +962,8 @@ final class BackgroundAudioManager {
                 }
                 return
             } else {
-                Logger.shared.log(.error, "❌ [RETRY-FAILED] All retry attempts exhausted - falling back to notification-only mode", category: .audioSession)
-                return
+                // ✅ FIX: On final failure, still try to play - might work even if session config fails
+                Logger.shared.log(.warning, "⚠️ [RETRY-FAILED] All retry attempts exhausted - attempting to play anyway", category: .audioSession)
             }
         }
 
@@ -826,10 +1142,12 @@ final class BackgroundAudioManager {
         timerWorkItem?.cancel()
         
         timerWorkItem = DispatchWorkItem { [weak self] in
-            self?.stopSilentLoop()
-            self?.playCompletionSound(soundName: soundName)
-            self?.timerCompletionHandler?()
-            
+            guard let self = self else { return }
+            self.stopSilentLoop()
+            let traceId = self.currentTraceId ?? "legacy-timer"
+            self.playCompletionSound(soundName: soundName, traceId: traceId)
+            self.timerCompletionHandler?()
+
             Logger.shared.log(.info, "✅ Timer completed", category: .audioSession)
         }
         
@@ -843,12 +1161,14 @@ final class BackgroundAudioManager {
         timerWorkItem?.cancel()
         
         timerWorkItem = DispatchWorkItem { [weak self] in
+            guard let self = self else { return }
             // v3.0.1 FIX: Play system sounds for long timers too!
             // This ensures audio plays even for timers > 30s
-            self?.playCompletionSound(soundName: soundName)
-            
+            let traceId = self.currentTraceId ?? "legacy-timer"
+            self.playCompletionSound(soundName: soundName, traceId: traceId)
+
             // Notifications handle backup audio
-            self?.timerCompletionHandler?()
+            self.timerCompletionHandler?()
             
             Logger.shared.log(.info, "✅ Timer completed - system sounds played + notification backup", category: .audioSession)
         }
@@ -886,6 +1206,26 @@ final class BackgroundAudioManager {
             self.audioScheduled = false
         }
 
+        // ✅ CRITICAL FIX: Don't stop audio player if it's currently playing completion sound
+        // This prevents interrupting the sound while it's still playing
+        if let player = audioPlayer, player.isPlaying {
+            // Check if sound was played recently (< 3 seconds ago)
+            if let lastPlayed = audioPlayedTimestamp, Date().timeIntervalSince(lastPlayed) < 3.0 {
+                Logger.shared.log(.warning, """
+                    🔊 [PROTECTION] Audio player is currently playing completion sound - NOT stopping it
+                    - Time since playback started: \(Date().timeIntervalSince(lastPlayed))s
+                    - Allowing sound to finish naturally
+                    """, category: .audioSession)
+
+                // Let it finish, but still clean up other resources
+                endBackgroundTask()
+                AudioSessionManager.shared.cleanupForSkip()
+                Logger.shared.log(.info, "All scheduled audio cancelled (except active playback)", category: .audioSession)
+                return
+            }
+        }
+
+        // Safe to stop - either not playing or old playback
         audioPlayer?.stop()
         endBackgroundTask()
 
@@ -894,7 +1234,36 @@ final class BackgroundAudioManager {
 
         Logger.shared.log(.info, "All scheduled audio cancelled", category: .audioSession)
     }
-    
+
+    /// ✅ ANTI-DUPLICATION: Cancel ALL pending timer notifications by category
+    /// Called when AVAudioPlayer successfully plays to prevent notification from also playing sound
+    private func cancelAllTimerNotifications() {
+        let center = UNUserNotificationCenter.current()
+
+        center.getPendingNotificationRequests { requests in
+            let timerNotificationIds = requests
+                .filter { $0.content.categoryIdentifier == "TIMER_COMPLETE" }
+                .map { $0.identifier }
+
+            if !timerNotificationIds.isEmpty {
+                center.removePendingNotificationRequests(withIdentifiers: timerNotificationIds)
+                Logger.shared.log(.warning, """
+                    🔕 [ANTI-DUP] Cancelled \(timerNotificationIds.count) timer notification(s):
+                    - IDs: \(timerNotificationIds)
+                    - Reason: AVAudioPlayer handled the audio
+                    - This prevents double sound (AVAudioPlayer + notification)
+                    """, category: .audioSession)
+            } else {
+                Logger.shared.log(.info, "🔕 [ANTI-DUP] No pending timer notifications to cancel", category: .audioSession)
+            }
+        }
+
+        // Also clear our tracked notification ID
+        stateQueue.async { [weak self] in
+            self?.scheduledNotification = nil
+        }
+    }
+
     // MARK: - Lockscreen Support
     
     /// Configure audio session specifically for lockscreen notifications
@@ -967,7 +1336,15 @@ final class BackgroundAudioManager {
 
         // Test 4: Timing Configuration
         let testDuration: TimeInterval = 60
-        let appState = UIApplication.shared.applicationState
+        // ✅ MAIN THREAD FIX: Get app state on main thread
+        var appState: UIApplication.State = .active
+        if Thread.isMainThread {
+            appState = UIApplication.shared.applicationState
+        } else {
+            DispatchQueue.main.sync {
+                appState = UIApplication.shared.applicationState
+            }
+        }
         Logger.shared.log(.info, """
             ✅ [TEST-4] Timing Configuration Test:
             - Test Duration: \(testDuration)s
@@ -1170,7 +1547,15 @@ final class BackgroundAudioManager {
 
         // Test 5: Background Audio Flow Simulation
         Logger.shared.log(.info, "🔍 [E2E-5] Simulating background audio flow", category: .audioSession)
-        let currentState = UIApplication.shared.applicationState
+        // ✅ MAIN THREAD FIX: Get app state on main thread
+        var currentState: UIApplication.State = .active
+        if Thread.isMainThread {
+            currentState = UIApplication.shared.applicationState
+        } else {
+            DispatchQueue.main.sync {
+                currentState = UIApplication.shared.applicationState
+            }
+        }
         Logger.shared.log(.info, "   Current app state: \(currentState == .active ? "Active" : currentState == .background ? "Background" : "Inactive")", category: .audioSession)
 
         // Simulate the exact scenario from user's logs

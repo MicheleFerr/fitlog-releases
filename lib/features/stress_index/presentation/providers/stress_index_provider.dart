@@ -10,6 +10,9 @@ library;
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/features/exercise_database/presentation/providers/hybrid_exercise_provider.dart';
+import 'package:gymbro_flutter_new/features/health_sync/domain/entities/body_measurement.dart';
+import 'package:gymbro_flutter_new/features/health_sync/domain/entities/health_data_type.dart';
+import 'package:gymbro_flutter_new/features/health_sync/presentation/providers/health_sync_provider.dart';
 import 'package:gymbro_flutter_new/features/history/presentation/providers/workout_history_provider.dart';
 import 'package:gymbro_flutter_new/features/recovery_insight/domain/entities/sleep_record.dart';
 import 'package:gymbro_flutter_new/features/recovery_insight/presentation/providers/recovery_insight_provider.dart';
@@ -209,6 +212,9 @@ class StressIndexNotifier extends StateNotifier<AsyncValue<StressIndexState>> {
           .read(exerciseMuscleMapProvider.future)
           .catchError((_) => <String, ExerciseMuscleData>{});
 
+      // 🏋️ Get user body weight for bodyweight exercise stress calculation
+      final userBodyWeightKg = await _getUserBodyWeightKg();
+
       final repository = _ref.read(stressIndexRepositoryProvider);
       int count = 0;
 
@@ -222,6 +228,7 @@ class StressIndexNotifier extends StateNotifier<AsyncValue<StressIndexState>> {
         final result = StressIndexCalculator.calculate(
           workout,
           exerciseMuscleMap: muscleMap,
+          userBodyWeightKg: userBodyWeightKg,
         );
 
         final adjustedResult = StressIndexResult(
@@ -259,10 +266,14 @@ class StressIndexNotifier extends StateNotifier<AsyncValue<StressIndexState>> {
       final muscleMap =
           await _ref.read(exerciseMuscleMapProvider.future).catchError((_) => <String, ExerciseMuscleData>{});
 
+      // 🏋️ Get user body weight for bodyweight exercise stress calculation
+      final userBodyWeightKg = await _getUserBodyWeightKg();
+
       // Calculate stress index
       final result = StressIndexCalculator.calculate(
         workout,
         exerciseMuscleMap: muscleMap,
+        userBodyWeightKg: userBodyWeightKg,
       );
 
       // Save to repository
@@ -366,6 +377,9 @@ class StressIndexNotifier extends StateNotifier<AsyncValue<StressIndexState>> {
           .read(exerciseMuscleMapProvider.future)
           .catchError((_) => <String, ExerciseMuscleData>{});
 
+      // 🏋️ Get user body weight for bodyweight exercise stress calculation
+      final userBodyWeightKg = await _getUserBodyWeightKg();
+
       final repository = _ref.read(stressIndexRepositoryProvider);
       int processedCount = 0;
 
@@ -388,6 +402,7 @@ class StressIndexNotifier extends StateNotifier<AsyncValue<StressIndexState>> {
         final result = StressIndexCalculator.calculate(
           workout,
           exerciseMuscleMap: muscleMap,
+          userBodyWeightKg: userBodyWeightKg,
         );
 
         // Override calculatedAt with the actual workout completion date
@@ -432,6 +447,29 @@ class StressIndexNotifier extends StateNotifier<AsyncValue<StressIndexState>> {
       }
       return 0;
     }
+  }
+
+  /// Get user's body weight in kg from Body Measurements
+  ///
+  /// Returns null if not available. Used for bodyweight exercise
+  /// stress calculations (push-ups, pull-ups, dips).
+  /// Falls back to default 70kg in calculator if null.
+  Future<double?> _getUserBodyWeightKg() async {
+    try {
+      final weightMeasurements = await _ref.read(
+        bodyMeasurementsProvider(HealthDataType.bodyWeight).future,
+      );
+      if (weightMeasurements.isNotEmpty) {
+        final latestWeight = weightMeasurements.first;
+        // Convert to kg if stored in pounds
+        return latestWeight.unit == MeasurementUnit.pounds
+            ? latestWeight.value * 0.453592
+            : latestWeight.value;
+      }
+    } catch (_) {
+      // Ignore - bodyweight exercises will use default fallback (70kg)
+    }
+    return null;
   }
 }
 
@@ -639,3 +677,4 @@ final hasSleepImpactProvider = Provider.autoDispose<bool>((ref) {
   final dataAsync = ref.watch(sleepAwareStressDataProvider);
   return dataAsync.valueOrNull?.hasSleepImpact ?? false;
 });
+

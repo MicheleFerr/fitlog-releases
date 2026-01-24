@@ -63,9 +63,11 @@ class SchedulingNotifier extends Notifier<SchedulingState> {
 
   @override
   SchedulingState build() {
-    _repository = ref.watch(schedulingRepositoryProvider);
-    _notificationService = ref.watch(schedulingNotificationServiceProvider);
-    _liveActivityService = ref.watch(scheduleLiveActivityServiceProvider);
+    // FIX: Use ref.read() to avoid re-initialization on rebuild
+    // These services don't change, so we don't need to watch them
+    _repository = ref.read(schedulingRepositoryProvider);
+    _notificationService = ref.read(schedulingNotificationServiceProvider);
+    _liveActivityService = ref.read(scheduleLiveActivityServiceProvider);
 
     // Initialize on creation (fire-and-forget)
     Future.microtask(() => initialize());

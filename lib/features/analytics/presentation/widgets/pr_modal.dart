@@ -31,6 +31,8 @@ library;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:gymbro_flutter_new/features/analytics/domain/entities/exercise_history.dart';
+import 'package:gymbro_flutter_new/features/analytics/presentation/widgets/exercise_avatar.dart';
+import 'package:gymbro_flutter_new/features/analytics/presentation/widgets/pr_detail_sheet.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/services/snackbar_service.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
@@ -41,13 +43,17 @@ import 'package:intl/intl.dart';
 /// Personal Record data for display
 class _PRInfo {
   const _PRInfo({
+    required this.exerciseId,
     required this.exerciseName,
+    required this.muscleGroup,
     required this.personalRecord,
     required this.achievedDate,
     required this.isRecent,
   });
 
+  final String exerciseId;
   final String exerciseName;
+  final String muscleGroup;
   final double personalRecord;
   final DateTime achievedDate;
   final bool isRecent; // Achieved in last 7 days
@@ -115,7 +121,9 @@ class PRModal extends StatelessWidget {
       final isRecent = !prDateOnly.isBefore(weekStart) && !prDateOnly.isAfter(today);
 
       prInfoList.add(_PRInfo(
+        exerciseId: history.exerciseId,
         exerciseName: history.exerciseName,
+        muscleGroup: history.muscleGroup,
         personalRecord: pr,
         achievedDate: prDate,
         isRecent: isRecent,
@@ -441,90 +449,126 @@ class PRModal extends StatelessWidget {
     );
   }
 
-  /// Individual PR item
+  /// Individual PR item (clickable)
   Widget _buildPRItem(BuildContext context, _PRInfo pr) {
-    return Container(
-      margin: const EdgeInsets.only(bottom: 8),
-      padding: const EdgeInsets.all(12),
-      decoration: BoxDecoration(
-        color: pr.isRecent
-            ? context.colors.successContainer.withValues(alpha: 0.3)
-            : context.colors.surfaceContainerHighest,
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        onTap: () => _showPRDetail(context, pr),
         borderRadius: BorderRadius.circular(8),
-        border: pr.isRecent
-            ? Border.all(
-                color: context.colors.success.withValues(alpha: 0.5),
-                width: 1,
-              )
-            : null,
-      ),
-      child: Row(
-        children: [
-          // Trophy icon (colored if recent)
-          SemanticIcon(
-            icon: AppIcons.achievement,
-            semanticLabel: context.l10n.pr,
-            size: AppIconSize.medium,
+        child: Container(
+          margin: const EdgeInsets.only(bottom: 8),
+          padding: const EdgeInsets.all(12),
+          decoration: BoxDecoration(
             color: pr.isRecent
-                ? context.colors.success
-                : context.colors.onSurfaceVariant,
+                ? context.colors.successContainer.withValues(alpha: 0.3)
+                : context.colors.surfaceContainerHighest,
+            borderRadius: BorderRadius.circular(8),
+            border: pr.isRecent
+                ? Border.all(
+                    color: context.colors.success.withValues(alpha: 0.5),
+                    width: 1,
+                  )
+                : null,
           ),
-          const SizedBox(width: 12),
-
-          // Exercise name + date
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  pr.exerciseName,
-                  style: context.textTheme.bodyLarge?.copyWith(
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                const SizedBox(height: 2),
-                Text(
-                  pr.formatDate(context),
-                  style: context.textTheme.bodySmall?.copyWith(
-                    color: context.colors.onSurfaceVariant,
-                  ),
-                ),
-              ],
-            ),
-          ),
-
-          // PR value
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.end,
+          child: Row(
             children: [
-              Text(
-                pr.formatWeight(),
-                style: context.textTheme.titleMedium?.copyWith(
-                  fontWeight: FontWeight.bold,
-                  color: pr.isRecent
-                      ? context.colors.success
-                      : context.colors.primary,
+              // Exercise avatar (48px circular image)
+              ExerciseAvatar(
+                exerciseId: pr.exerciseId,
+                exerciseName: pr.exerciseName,
+                muscleGroup: pr.muscleGroup,
+                size: 48,
+                backgroundColor: pr.isRecent
+                    ? context.colors.successContainer.withValues(alpha: 0.5)
+                    : null,
+              ),
+              const SizedBox(width: 12),
+
+              // Exercise name + date
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      pr.exerciseName,
+                      style: context.textTheme.bodyLarge?.copyWith(
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    const SizedBox(height: 2),
+                    Text(
+                      pr.formatDate(context),
+                      style: context.textTheme.bodySmall?.copyWith(
+                        color: context.colors.onSurfaceVariant,
+                      ),
+                    ),
+                  ],
                 ),
               ),
-              if (pr.isRecent)
-                Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-                  decoration: BoxDecoration(
-                    color: context.colors.success,
-                    borderRadius: BorderRadius.circular(12),
+
+              // PR value + chevron
+              Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      Text(
+                        pr.formatWeight(),
+                        style: context.textTheme.titleMedium?.copyWith(
+                          fontWeight: FontWeight.bold,
+                          color: pr.isRecent
+                              ? context.colors.success
+                              : context.colors.primary,
+                        ),
+                      ),
+                      if (pr.isRecent)
+                        Container(
+                          padding:
+                              const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                          decoration: BoxDecoration(
+                            color: context.colors.success,
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          child: Text(
+                            context.l10n.newLabel,
+                            style: context.textTheme.labelSmall?.copyWith(
+                              color: context.colors.onSuccess,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 10,
+                            ),
+                          ),
+                        ),
+                    ],
                   ),
-                  child: Text(
-                    context.l10n.newLabel,
-                    style: context.textTheme.labelSmall?.copyWith(
-                      color: context.colors.onSuccess,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 10,
-                    ),
+                  const SizedBox(width: 8),
+                  SemanticIcon(
+                    icon: AppIcons.chevronRight,
+                    semanticLabel: context.l10n.viewDetails,
+                    size: AppIconSize.medium,
+                    color: context.colors.onSurfaceVariant,
                   ),
-                ),
+                ],
+              ),
             ],
           ),
-        ],
+        ),
+      ),
+    );
+  }
+
+  /// Show PR detail popup
+  void _showPRDetail(BuildContext context, _PRInfo pr) {
+    HapticFeedback.lightImpact();
+    showPRDetailSheet(
+      context: context,
+      data: PRDetailData(
+        exerciseId: pr.exerciseId,
+        exerciseName: pr.exerciseName,
+        muscleGroup: pr.muscleGroup,
+        prValue: pr.personalRecord,
+        achievedDate: pr.achievedDate,
       ),
     );
   }

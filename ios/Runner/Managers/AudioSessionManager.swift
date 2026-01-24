@@ -319,8 +319,46 @@ final class AudioSessionManager: AudioSessionManaging {
             Logger.shared.log(.info, "📱 Audio session already configured correctly, skipping category change")
         }
 
-        // Activate session (safe to call even if already active)
-        try session.setActive(true, options: [])
+        // ✅ FIX: setActive can fail with error 561015905 even when session is functional
+        // This often happens when:
+        // - Another app briefly interrupts audio
+        // - Session is already active
+        // - System is in a transitional state
+        // - App is already backgrounded (iOS refuses new activation)
+        // The category being correct (.playback + .mixWithOthers) is often sufficient for audio to work
+        // ✅ CRITICAL FIX: Don't fail even on other errors if category is already correct!
+        do {
+            try session.setActive(true, options: [])
+            Logger.shared.log(.info, "✅ Audio session activated for lockscreen playback")
+        } catch {
+            let nsError = error as NSError
+            let categoryCorrect = session.category == .playback && session.categoryOptions.contains(.mixWithOthers)
+
+            // ✅ FIX: If category is configured correctly, treat ALL activation failures as warnings
+            // The silent loop player can often work even without explicit activation if:
+            // 1. Category is set to .playback
+            // 2. Options include .mixWithOthers
+            // 3. Session was previously activated (in foreground)
+            if categoryCorrect {
+                Logger.shared.log(.warning, """
+                    ⚠️ [RESILIENT] Audio session setActive failed with error \(nsError.code):
+                    - Error: \(error.audioSessionErrorDescription)
+                    - Category is correct: \(session.category.rawValue)
+                    - Options correct: .mixWithOthers = \(session.categoryOptions.contains(.mixWithOthers))
+                    - Continuing anyway - silent loop will likely still work if session was pre-activated
+                    """, category: .audioSession)
+                // ✅ DON'T THROW - category is configured, audio should still work
+            } else {
+                // Only fail if category config is also wrong (very rare)
+                Logger.shared.log(.error, """
+                    ❌ [RESILIENT] Audio session activation failed AND category incorrect:
+                    - Error: \(error.audioSessionErrorDescription)
+                    - Category: \(session.category.rawValue) (expected .playback)
+                    - Options: \(session.categoryOptions.rawValue) (expected .mixWithOthers)
+                    """, category: .audioSession)
+                throw error
+            }
+        }
 
         Logger.shared.log(.info, "✅ Audio session configured for lockscreen playback")
     }

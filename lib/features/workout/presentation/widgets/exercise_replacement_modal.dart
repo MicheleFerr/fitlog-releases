@@ -8,7 +8,7 @@ import 'package:gymbro_flutter_new/features/workout/domain/services/exercise_com
 import 'package:gymbro_flutter_new/features/exercise_database/presentation/providers/exercise_json_provider.dart';
 // Removed: FuzzySearchService (overengineered - simple token matching is sufficient)
 import 'package:gymbro_flutter_new/features/exercise_database/domain/entities/exercise.dart' as exercise_db;
-import 'package:gymbro_flutter_new/features/exercise_database/data/repositories/json_exercise_repository.dart';
+import 'package:gymbro_flutter_new/features/exercise_database/presentation/providers/hybrid_exercise_provider.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
@@ -85,11 +85,11 @@ class _ExerciseReplacementModalState extends ConsumerState<ExerciseReplacementMo
     super.dispose();
   }
 
-  /// Load exercises from JSON database for fuzzy search
+  /// Load exercises from hybrid repository (Firebase synced cache)
   Future<void> _loadDatabaseExercises() async {
     try {
-      final locale = Localizations.localeOf(context);
-      final repository = JsonExerciseRepository(locale: locale);
+      // Use hybrid repository for Firebase-synced exercises
+      final repository = ref.read(hybridExerciseRepositoryProvider);
       final exercises = await repository.getAllExercises();
       if (mounted) {
         setState(() {

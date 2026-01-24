@@ -1292,6 +1292,48 @@ abstract class AppLocalizations {
   /// **'Add Exercise'**
   String get addExercise;
 
+  /// Add single exercise option
+  ///
+  /// In en, this message translates to:
+  /// **'Single Exercise'**
+  String get addSingleExercise;
+
+  /// Hint for single exercise option
+  ///
+  /// In en, this message translates to:
+  /// **'Browse exercise database'**
+  String get addSingleExerciseHint;
+
+  /// Advanced sets menu option
+  ///
+  /// In en, this message translates to:
+  /// **'Advanced Sets'**
+  String get addAdvancedSet;
+
+  /// Hint for advanced sets option
+  ///
+  /// In en, this message translates to:
+  /// **'Superset, Drop Set, Rest-Pause'**
+  String get addAdvancedSetHint;
+
+  /// Hint for superset option
+  ///
+  /// In en, this message translates to:
+  /// **'Link 2+ exercises back-to-back'**
+  String get supersetHint;
+
+  /// Hint for drop set option
+  ///
+  /// In en, this message translates to:
+  /// **'Progressive weight reduction'**
+  String get dropSetHint;
+
+  /// Hint for rest-pause option
+  ///
+  /// In en, this message translates to:
+  /// **'Brief rests within a single set'**
+  String get restPauseHint;
+
   /// Complete workout button tooltip
   ///
   /// In en, this message translates to:
@@ -2018,7 +2060,7 @@ abstract class AppLocalizations {
   /// **'1RM (Est.)'**
   String get oneRmEstimated;
 
-  /// Weight times reps metric label
+  /// Header label for weight × reps column in supersets
   ///
   /// In en, this message translates to:
   /// **'Weight × Reps'**
@@ -6143,7 +6185,7 @@ abstract class AppLocalizations {
   /// **'Upgrade to Premium'**
   String get upgradeToPremium;
 
-  /// Delete template menu item
+  /// Option to delete a custom superset template
   ///
   /// In en, this message translates to:
   /// **'Delete Template'**
@@ -7967,10 +8009,10 @@ abstract class AppLocalizations {
   /// **'Tap to select from database'**
   String get tapToSelectFromDatabase;
 
-  /// Rest time between exercises label
+  /// Label for rest time between exercises
   ///
   /// In en, this message translates to:
-  /// **'Rest between exercises'**
+  /// **'Rest Between Exercises'**
   String get restBetweenExercises;
 
   /// Seconds time unit
@@ -9485,7 +9527,7 @@ abstract class AppLocalizations {
   /// **'Start workout with this template'**
   String get startWorkoutWithTemplate;
 
-  /// Edit template menu item
+  /// Option to edit a custom superset template
   ///
   /// In en, this message translates to:
   /// **'Edit Template'**
@@ -16940,6 +16982,48 @@ abstract class AppLocalizations {
   /// **'Play sounds for timer and notifications'**
   String get settingsSoundsDesc;
 
+  /// Timer sound selection title
+  ///
+  /// In en, this message translates to:
+  /// **'Timer Sound'**
+  String get settingsTimerSound;
+
+  /// Timer sound selection description
+  ///
+  /// In en, this message translates to:
+  /// **'Choose the sound for timer completion'**
+  String get settingsTimerSoundDesc;
+
+  /// Preview button for timer sound
+  ///
+  /// In en, this message translates to:
+  /// **'Preview'**
+  String get settingsTimerSoundPreview;
+
+  /// Classic timer sound name (sound.caf)
+  ///
+  /// In en, this message translates to:
+  /// **'Classic'**
+  String get settingsTimerSoundClassic;
+
+  /// Complete timer sound name (timer_complete.caf)
+  ///
+  /// In en, this message translates to:
+  /// **'Complete'**
+  String get settingsTimerSoundComplete;
+
+  /// Light Weight timer sound name (Ronnie Coleman)
+  ///
+  /// In en, this message translates to:
+  /// **'Light Weight'**
+  String get settingsTimerSoundLightWeight;
+
+  /// Yeah Buddie timer sound name (Ronnie Coleman)
+  ///
+  /// In en, this message translates to:
+  /// **'Yeah Buddie'**
+  String get settingsTimerSoundYehBuddie;
+
   /// Keep screen awake toggle title
   ///
   /// In en, this message translates to:
@@ -22446,7 +22530,7 @@ abstract class AppLocalizations {
   /// **'Start Workout'**
   String get homeEmptyExpertCTA;
 
-  /// Button to use a workout template
+  /// Button to use a superset template
   ///
   /// In en, this message translates to:
   /// **'Use Template'**
@@ -24702,7 +24786,7 @@ abstract class AppLocalizations {
   /// **'Exporting...'**
   String get exporting;
 
-  /// Auto-generated for failed
+  /// Test status: failed
   ///
   /// In en, this message translates to:
   /// **'Failed'**
@@ -41409,10 +41493,10 @@ abstract class AppLocalizations {
   /// **'R1 → All'**
   String get copyR1ToAll;
 
-  /// Label for rest time between superset rounds
+  /// Label for rest time after completing a round
   ///
   /// In en, this message translates to:
-  /// **'Rest after round'**
+  /// **'Rest After Round'**
   String get restAfterRound;
 
   /// Button to apply changes to all rounds
@@ -41463,10 +41547,10 @@ abstract class AppLocalizations {
   /// **'Edit Configuration'**
   String get editConfiguration;
 
-  /// Plural form of round
+  /// Label for number of rounds in superset
   ///
   /// In en, this message translates to:
-  /// **'rounds'**
+  /// **'Rounds'**
   String get rounds;
 
   /// Button to copy values from previous round
@@ -45044,7 +45128,7 @@ abstract class AppLocalizations {
   /// **'Tap here to dive deep into exercise-specific progress with graphs and strength standards.'**
   String get tourDetailedAnalysisDescription;
 
-  /// Label for evidence-based templates section
+  /// Section title for evidence-based templates
   ///
   /// In en, this message translates to:
   /// **'Evidence-Based'**
@@ -45122,10 +45206,10 @@ abstract class AppLocalizations {
   /// **'Use'**
   String get use;
 
-  /// Title for duplicate template warning dialog
+  /// Option to duplicate a superset template
   ///
   /// In en, this message translates to:
-  /// **'Template Already Exists'**
+  /// **'Duplicate Template'**
   String get duplicateTemplate;
 
   /// Message for duplicate template warning
@@ -45199,6 +45283,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Text size'**
   String get textSize;
+
+  /// Label for unified interface size control (font + layout)
+  ///
+  /// In en, this message translates to:
+  /// **'Interface size'**
+  String get interfaceSize;
+
+  /// Subtitle explaining that interface size controls both text and layout spacing
+  ///
+  /// In en, this message translates to:
+  /// **'Text and spacing together'**
+  String get interfaceSizeSubtitle;
 
   /// Display mode option for spacious layout
   ///
@@ -46153,6 +46249,432 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Tap for info'**
   String get tapForInfo;
+
+  /// Title for weight update reminder nudge
+  ///
+  /// In en, this message translates to:
+  /// **'Update your weight'**
+  String get weightUpdateNudgeTitle;
+
+  /// Subtitle for weight update reminder nudge
+  ///
+  /// In en, this message translates to:
+  /// **'Last updated {days} days ago. Keep it current for accurate stats.'**
+  String weightUpdateNudgeSubtitle(int days);
+
+  /// App tagline for landing page
+  ///
+  /// In en, this message translates to:
+  /// **'Your ultimate workout companion'**
+  String get appTagline;
+
+  /// Message for mobile web users
+  ///
+  /// In en, this message translates to:
+  /// **'Best Experience on Mobile App'**
+  String get webMobileMessage;
+
+  /// Subtitle for mobile web users
+  ///
+  /// In en, this message translates to:
+  /// **'Download the app for the full FitLog Pro experience'**
+  String get webMobileSubtitle;
+
+  /// Button to continue on desktop web
+  ///
+  /// In en, this message translates to:
+  /// **'Continue on Desktop'**
+  String get continueOnDesktop;
+
+  /// Download button for iOS App Store
+  ///
+  /// In en, this message translates to:
+  /// **'Download on App Store'**
+  String get downloadOnAppStore;
+
+  /// Download button for Google Play Store
+  ///
+  /// In en, this message translates to:
+  /// **'Get it on Google Play'**
+  String get getItOnGooglePlay;
+
+  /// Feature: Track workouts
+  ///
+  /// In en, this message translates to:
+  /// **'Track Workouts'**
+  String get featureTrackWorkouts;
+
+  /// Feature: Advanced analytics
+  ///
+  /// In en, this message translates to:
+  /// **'Advanced Analytics'**
+  String get featureAnalytics;
+
+  /// Feature: Smart rest timer
+  ///
+  /// In en, this message translates to:
+  /// **'Smart Rest Timer'**
+  String get featureRestTimer;
+
+  /// Feature: Cloud sync
+  ///
+  /// In en, this message translates to:
+  /// **'Cloud Sync'**
+  String get featureCloudSync;
+
+  /// Section title: Why FitLog Pro
+  ///
+  /// In en, this message translates to:
+  /// **'Why FitLog Pro?'**
+  String get whyFitLog;
+
+  /// Message when exercise database is updated
+  ///
+  /// In en, this message translates to:
+  /// **'Exercise database updated'**
+  String get exerciseDatabaseUpdated;
+
+  /// Message when exercise database is updated with count
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 exercise updated} other{{count} exercises updated}}'**
+  String exerciseDatabaseUpdatedWithCount(int count);
+
+  /// Message when exercise sync fails
+  ///
+  /// In en, this message translates to:
+  /// **'Exercise sync failed'**
+  String get exerciseSyncFailed;
+
+  /// Title for mobile web warning modal
+  ///
+  /// In en, this message translates to:
+  /// **'Mobile App Recommended'**
+  String get mobileWebWarningTitle;
+
+  /// Description for mobile web warning modal
+  ///
+  /// In en, this message translates to:
+  /// **'For the best FitLog Pro experience, we recommend using our native mobile app. It\'s faster, more reliable, and has all the features you need.'**
+  String get mobileWebWarningDescription;
+
+  /// Button to open in native app
+  ///
+  /// In en, this message translates to:
+  /// **'Open in App'**
+  String get openInApp;
+
+  /// Button to continue on mobile web
+  ///
+  /// In en, this message translates to:
+  /// **'Continue to Website'**
+  String get continueToWebsite;
+
+  /// Title for audio debug tests screen
+  ///
+  /// In en, this message translates to:
+  /// **'Audio Debug Tests'**
+  String get audioDebugTests;
+
+  /// Tab title for quick tests
+  ///
+  /// In en, this message translates to:
+  /// **'Quick Tests'**
+  String get quickTests;
+
+  /// Tab title for full test matrix
+  ///
+  /// In en, this message translates to:
+  /// **'Full Tests'**
+  String get fullTests;
+
+  /// Title for quick test suite
+  ///
+  /// In en, this message translates to:
+  /// **'Quick Tests (3 tests)'**
+  String get quickTestsTitle;
+
+  /// Description of quick test suite
+  ///
+  /// In en, this message translates to:
+  /// **'Essential tests to quickly confirm timer audio bugs'**
+  String get quickTestsDescription;
+
+  /// Description of full test suite
+  ///
+  /// In en, this message translates to:
+  /// **'Complete test matrix for comprehensive audio bug analysis'**
+  String get fullTestsDescription;
+
+  /// Warning message for full test duration
+  ///
+  /// In en, this message translates to:
+  /// **'Full tests take 2-3 hours. Make sure you have time and battery.'**
+  String get fullTestsWarning;
+
+  /// Description for Test A
+  ///
+  /// In en, this message translates to:
+  /// **'Foreground timer (30s) - Baseline test, should always work'**
+  String get testADescription;
+
+  /// Description for Test B
+  ///
+  /// In en, this message translates to:
+  /// **'Background timer WITHOUT Live Activity (90s) - ~60% success, occasional double play'**
+  String get testBDescription;
+
+  /// Description for Test C
+  ///
+  /// In en, this message translates to:
+  /// **'Background timer WITH Live Activity (90s) - Consistently fails with double play (LA + AVAudioPlayer)'**
+  String get testCDescription;
+
+  /// Expected result: always works
+  ///
+  /// In en, this message translates to:
+  /// **'Always works (baseline)'**
+  String get alwaysWorks;
+
+  /// Expected result: 60% success rate
+  ///
+  /// In en, this message translates to:
+  /// **'~60% success (occasional double audio)'**
+  String get sixtyPercentSuccess;
+
+  /// Expected result: consistently fails
+  ///
+  /// In en, this message translates to:
+  /// **'Consistently fails (double audio)'**
+  String get consistentlyFails;
+
+  /// Button to start quick tests
+  ///
+  /// In en, this message translates to:
+  /// **'Start Quick Tests'**
+  String get startQuickTests;
+
+  /// Button to start full test matrix
+  ///
+  /// In en, this message translates to:
+  /// **'Start Full Tests'**
+  String get startFullTests;
+
+  /// Status text during test execution
+  ///
+  /// In en, this message translates to:
+  /// **'Testing...'**
+  String get testing;
+
+  /// Test status: passed
+  ///
+  /// In en, this message translates to:
+  /// **'Passed'**
+  String get passed;
+
+  /// Label for success rate metric
+  ///
+  /// In en, this message translates to:
+  /// **'Success Rate'**
+  String get successRate;
+
+  /// Title for test results section
+  ///
+  /// In en, this message translates to:
+  /// **'Test Results'**
+  String get testResults;
+
+  /// Title for detailed results dialog
+  ///
+  /// In en, this message translates to:
+  /// **'Detailed Results'**
+  String get detailedResults;
+
+  /// Button to view test results
+  ///
+  /// In en, this message translates to:
+  /// **'View Results'**
+  String get viewResults;
+
+  /// Button to export test results
+  ///
+  /// In en, this message translates to:
+  /// **'Export Results'**
+  String get exportResults;
+
+  /// Label for test matrix section
+  ///
+  /// In en, this message translates to:
+  /// **'Test Matrix'**
+  String get testMatrix;
+
+  /// Title for full test matrix
+  ///
+  /// In en, this message translates to:
+  /// **'Full Test Matrix'**
+  String get fullTestMatrix;
+
+  /// Section title for recommended superset templates
+  ///
+  /// In en, this message translates to:
+  /// **'Recommended Templates'**
+  String get recommendedTemplates;
+
+  /// Button to save a custom copy of a template
+  ///
+  /// In en, this message translates to:
+  /// **'Save Custom Copy'**
+  String get saveCustomCopy;
+
+  /// Section title for exercise pairing in superset
+  ///
+  /// In en, this message translates to:
+  /// **'Exercise Pairing'**
+  String get exercisePairing;
+
+  /// Section title for scientific evidence behind template
+  ///
+  /// In en, this message translates to:
+  /// **'Scientific Evidence'**
+  String get scientificEvidence;
+
+  /// Section title for required equipment
+  ///
+  /// In en, this message translates to:
+  /// **'Equipment Required'**
+  String get equipmentRequired;
+
+  /// Section title for superset configuration
+  ///
+  /// In en, this message translates to:
+  /// **'Configuration'**
+  String get configuration;
+
+  /// Label for reps range
+  ///
+  /// In en, this message translates to:
+  /// **'Reps Range'**
+  String get repsRange;
+
+  /// Section title for recommended superset templates
+  ///
+  /// In en, this message translates to:
+  /// **'Recommended for You'**
+  String get recommendedForYou;
+
+  /// Section title for time-efficient templates (15-20min)
+  ///
+  /// In en, this message translates to:
+  /// **'Time-Efficient'**
+  String get timeEfficient;
+
+  /// Section title for beginner-friendly templates
+  ///
+  /// In en, this message translates to:
+  /// **'Beginner-Friendly'**
+  String get beginnerFriendly;
+
+  /// Section title for all available templates
+  ///
+  /// In en, this message translates to:
+  /// **'All Templates'**
+  String get allTemplates;
+
+  /// Success message when a superset template is added to workout
+  ///
+  /// In en, this message translates to:
+  /// **'Template added to workout'**
+  String get templateAddedToWorkout;
+
+  /// Error message when some template exercises don't exist in database
+  ///
+  /// In en, this message translates to:
+  /// **'Some exercises not found'**
+  String get someExercisesNotFound;
+
+  /// Generic error message when template addition fails
+  ///
+  /// In en, this message translates to:
+  /// **'Error adding template'**
+  String get errorAddingTemplate;
+
+  /// Title for superset template options menu (long press)
+  ///
+  /// In en, this message translates to:
+  /// **'Template Options'**
+  String get templateOptions;
+
+  /// Empty state for superset templates section
+  ///
+  /// In en, this message translates to:
+  /// **'No superset templates yet'**
+  String get noSupersetTemplates;
+
+  /// Empty state for dropset templates section
+  ///
+  /// In en, this message translates to:
+  /// **'No dropset templates yet'**
+  String get noDropsetTemplates;
+
+  /// Empty state for rest-pause templates section
+  ///
+  /// In en, this message translates to:
+  /// **'No rest-pause templates yet'**
+  String get noRestPauseTemplates;
+
+  /// Empty state for custom exercises section
+  ///
+  /// In en, this message translates to:
+  /// **'No custom exercises yet'**
+  String get noCustomExercises;
+
+  /// Confirmation message when deleting a template
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to delete this template? This action cannot be undone.'**
+  String get deleteTemplateConfirmation;
+
+  /// Label for optional notes field
+  ///
+  /// In en, this message translates to:
+  /// **'Notes (optional)'**
+  String get optionalNotes;
+
+  /// Button to add another exercise to superset
+  ///
+  /// In en, this message translates to:
+  /// **'Add another exercise'**
+  String get addAnotherExercise;
+
+  /// Info text when max exercises reached
+  ///
+  /// In en, this message translates to:
+  /// **'Maximum 4 exercises per superset'**
+  String get maxExercisesReached;
+
+  /// Label for initial reps in dropset/rest-pause
+  ///
+  /// In en, this message translates to:
+  /// **'Initial reps'**
+  String get initialReps;
+
+  /// Label for rest between drops in dropset
+  ///
+  /// In en, this message translates to:
+  /// **'Rest between drops (sec)'**
+  String get restBetweenDrops;
+
+  /// Label for number of clusters in rest-pause
+  ///
+  /// In en, this message translates to:
+  /// **'Clusters'**
+  String get clusters;
+
+  /// Label for reps per cluster in rest-pause
+  ///
+  /// In en, this message translates to:
+  /// **'Reps per cluster'**
+  String get clusterReps;
 }
 
 class _AppLocalizationsDelegate

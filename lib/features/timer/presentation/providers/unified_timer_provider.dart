@@ -681,11 +681,12 @@ class UnifiedTimerProvider extends Notifier<UnifiedTimerState?>
           if (fromLiveActivity) {
             // Called from LA button - LA already updated by AppIntent, only notify Watch
             debugPrint('[UnifiedTimer] 📡 From LA: skipping LA update, notifying Watch only...');
+            // ✅ FIX: Send REMAINING time (not total) for accurate Watch sync
             await ref.read(watchConnectivityProvider.notifier).sendRestTimerExtended(
               seconds,
-              newTotalDurationSeconds,
+              newRemainingSeconds,  // REMAINING, not total!
             );
-            debugPrint('[UnifiedTimer] ✅ Synced: LA (already updated) ✓ Watch notification sent ✓');
+            debugPrint('[UnifiedTimer] ✅ Synced: LA (already updated) ✓ Watch notification sent (remaining=${newRemainingSeconds}s)');
           } else {
             // Called from Flutter app - need to update both LA and Watch
             debugPrint('[UnifiedTimer] 📡 From app: syncing +$seconds to Workout Session LA & Watch');
@@ -696,11 +697,12 @@ class UnifiedTimerProvider extends Notifier<UnifiedTimerState?>
             debugPrint('[UnifiedTimer] ✅ Workout Session LA extended');
 
             // Notify Apple Watch
+            // ✅ FIX: Send REMAINING time (not total) for accurate Watch sync
             await ref.read(watchConnectivityProvider.notifier).sendRestTimerExtended(
               seconds,
-              newTotalDurationSeconds,
+              newRemainingSeconds,  // REMAINING, not total!
             );
-            debugPrint('[UnifiedTimer] ✅ Watch notification sent');
+            debugPrint('[UnifiedTimer] ✅ Watch notification sent (remaining=${newRemainingSeconds}s)');
 
             debugPrint('[UnifiedTimer] ✅ Synced: WorkoutSession LA ✓ Watch ✓');
           }

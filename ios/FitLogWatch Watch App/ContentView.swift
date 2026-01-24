@@ -1151,6 +1151,7 @@ struct ExerciseControlView: View {
                 exerciseName: connectivity.currentExerciseName,
                 formCues: connectivity.formCues ?? "",
                 locale: connectivity.appLocale,
+                tut: connectivity.tut,  // ✅ Pass TUT for detailed view
                 onDismiss: {
                     showingFormCues = false
                 }
@@ -1630,7 +1631,7 @@ struct SimplifiedSetView: View {
             )
         }
         .sheet(isPresented: $showingQuickEdit) {
-            QuickEditSheetView()
+            QuickEditSheetView(showCopyButtons: false)  // No copy buttons in simplified view
                 .environmentObject(connectivity)
         }
     }
@@ -1779,48 +1780,47 @@ struct AdvancedInfoView: View {
                 .accessibilityLabel(isItalian ? "Esercizio: \(connectivity.currentExerciseName), Serie \(connectivity.currentSetNumber) di \(connectivity.totalSets)" : "Exercise: \(connectivity.currentExerciseName), Set \(connectivity.currentSetNumber) of \(connectivity.totalSets)")
                 .accessibilityHint(isItalian ? "Tocca per selezionare una serie da modificare" : "Tap to select a set to edit")
 
-                // Quick Edit Button
-                Button(action: {
-                    WKInterfaceDevice.current().play(.click)
-                    showingQuickEdit = true
-                }) {
-                    HStack(spacing: 4) {
-                        Image(systemName: "slider.horizontal.3")
-                            .font(.system(size: 12))
-                        Text(quickEditText)
-                            .font(.system(size: 13, weight: .medium))
-                    }
-                    .frame(maxWidth: .infinity)
-                    .frame(height: 36)
-                }
-                .buttonStyle(.bordered)
-                .tint(.blue)
-                .accessibilityLabel(quickEditText)
-                .accessibilityHint(isItalian ? "Modifica peso e ripetizioni" : "Edit weight and reps")
-
-                // Change Exercise Button (only if we have multiple exercises)
-                if canChangeExercise {
+                // ✅ Action buttons on same row to fit in one screen
+                HStack(spacing: 6) {
+                    // Quick Edit Button
                     Button(action: {
                         WKInterfaceDevice.current().play(.click)
-                        showingExercisePicker = true
+                        showingQuickEdit = true
                     }) {
-                        HStack(spacing: 4) {
-                            Image(systemName: "arrow.left.arrow.right")
-                                .font(.system(size: 11))
-                            Text(changeExerciseText)
-                                .font(.system(size: 12, weight: .medium))
-                            Spacer()
-                            Text("\(connectivity.currentExerciseIndex + 1)/\(connectivity.totalExercises)")
+                        VStack(spacing: 2) {
+                            Image(systemName: "slider.horizontal.3")
+                                .font(.system(size: 14))
+                            Text(quickEditText)
                                 .font(.system(size: 10, weight: .medium))
-                                .foregroundColor(.secondary)
                         }
                         .frame(maxWidth: .infinity)
-                        .frame(height: 32)
+                        .frame(height: 44)
                     }
                     .buttonStyle(.bordered)
-                    .tint(.green)
-                    .accessibilityLabel(changeExerciseText)
-                    .accessibilityHint(isItalian ? "Vai a un altro esercizio" : "Go to another exercise")
+                    .tint(.blue)
+                    .accessibilityLabel(quickEditText)
+                    .accessibilityHint(isItalian ? "Modifica peso e ripetizioni" : "Edit weight and reps")
+
+                    // Change Exercise Button (only if we have multiple exercises)
+                    if canChangeExercise {
+                        Button(action: {
+                            WKInterfaceDevice.current().play(.click)
+                            showingExercisePicker = true
+                        }) {
+                            VStack(spacing: 2) {
+                                Image(systemName: "arrow.left.arrow.right")
+                                    .font(.system(size: 14))
+                                Text("\(connectivity.currentExerciseIndex + 1)/\(connectivity.totalExercises)")
+                                    .font(.system(size: 10, weight: .medium))
+                            }
+                            .frame(maxWidth: .infinity)
+                            .frame(height: 44)
+                        }
+                        .buttonStyle(.bordered)
+                        .tint(.green)
+                        .accessibilityLabel(changeExerciseText)
+                        .accessibilityHint(isItalian ? "Vai a un altro esercizio" : "Go to another exercise")
+                    }
                 }
             }
             .padding(.horizontal, 8)
@@ -1831,11 +1831,12 @@ struct AdvancedInfoView: View {
                 exerciseName: connectivity.currentExerciseName,
                 formCues: connectivity.formCues ?? "",
                 locale: connectivity.appLocale,
+                tut: connectivity.tut,  // ✅ Pass TUT for detailed view
                 onDismiss: { showingFormCues = false }
             )
         }
         .sheet(isPresented: $showingQuickEdit) {
-            QuickEditSheetView()
+            QuickEditSheetView(showCopyButtons: false)  // No copy buttons - too cluttered
                 .environmentObject(connectivity)
         }
         .sheet(isPresented: $showingSetPicker) {
@@ -1886,7 +1887,17 @@ struct SetPickerSheetView: View {
     let onSelect: (Int) -> Void
     let onCancel: () -> Void
 
-    @State private var selectedSet: Int = 1
+    @State private var selectedSet: Int
+
+    init(totalSets: Int, currentSet: Int, locale: String, onSelect: @escaping (Int) -> Void, onCancel: @escaping () -> Void) {
+        self.totalSets = totalSets
+        self.currentSet = currentSet
+        self.locale = locale
+        self.onSelect = onSelect
+        self.onCancel = onCancel
+        // Initialize state with current set value
+        _selectedSet = State(initialValue: currentSet)
+    }
 
     private var isItalian: Bool { locale == "it" }
     private var titleText: String { isItalian ? "Seleziona Serie" : "Select Set" }
@@ -1929,9 +1940,6 @@ struct SetPickerSheetView: View {
             }
         }
         .padding()
-        .onAppear {
-            selectedSet = currentSet
-        }
     }
 }
 
@@ -2006,6 +2014,9 @@ struct ExercisePickerSheetView: View {
 struct QuickEditSheetView: View {
     @EnvironmentObject var connectivity: ConnectivityManager
     @Environment(\.dismiss) var dismiss
+
+    // Configuration: whether to show copy buttons (only in AdvancedInfoView, not in SimplifiedSetView)
+    var showCopyButtons: Bool = true
 
     @State private var editingWeight: Double = 0
     @State private var editingReps: Int = 1
@@ -2088,50 +2099,52 @@ struct QuickEditSheetView: View {
 
                 Divider()
 
-                // Copy buttons
-                VStack(spacing: 6) {
-                    // Copy to all sets
-                    Button(action: {
-                        WKInterfaceDevice.current().play(.click)
-                        connectivity.copyToAllSets(weight: editingWeight, reps: editingReps)
-                        WKInterfaceDevice.current().play(.success)
-                        dismiss()
-                    }) {
-                        HStack(spacing: 4) {
-                            Image(systemName: "doc.on.doc")
-                                .font(.system(size: 10))
-                            Text(copyAllText)
-                                .font(.system(size: 11, weight: .medium))
-                        }
-                        .frame(maxWidth: .infinity)
-                        .frame(height: 30)
-                    }
-                    .buttonStyle(.bordered)
-                    .tint(.orange)
-
-                    // Copy from previous (only if not first set)
-                    if canCopyFromPrevious {
+                // Copy buttons (only shown in AdvancedInfoView)
+                if showCopyButtons {
+                    VStack(spacing: 6) {
+                        // Copy to all sets
                         Button(action: {
                             WKInterfaceDevice.current().play(.click)
-                            connectivity.copyFromPreviousSet()
+                            connectivity.copyToAllSets(weight: editingWeight, reps: editingReps)
                             WKInterfaceDevice.current().play(.success)
                             dismiss()
                         }) {
                             HStack(spacing: 4) {
-                                Image(systemName: "arrow.left.doc")
+                                Image(systemName: "doc.on.doc")
                                     .font(.system(size: 10))
-                                Text(copyPrevText)
+                                Text(copyAllText)
                                     .font(.system(size: 11, weight: .medium))
                             }
                             .frame(maxWidth: .infinity)
                             .frame(height: 30)
                         }
                         .buttonStyle(.bordered)
-                        .tint(.purple)
-                    }
-                }
+                        .tint(.orange)
 
-                Divider()
+                        // Copy from previous (only if not first set)
+                        if canCopyFromPrevious {
+                            Button(action: {
+                                WKInterfaceDevice.current().play(.click)
+                                connectivity.copyFromPreviousSet()
+                                WKInterfaceDevice.current().play(.success)
+                                dismiss()
+                            }) {
+                                HStack(spacing: 4) {
+                                    Image(systemName: "arrow.left.doc")
+                                        .font(.system(size: 10))
+                                    Text(copyPrevText)
+                                        .font(.system(size: 11, weight: .medium))
+                                }
+                                .frame(maxWidth: .infinity)
+                                .frame(height: 30)
+                            }
+                            .buttonStyle(.bordered)
+                            .tint(.purple)
+                        }
+                    }
+
+                    Divider()
+                }
 
                 // Save/Cancel buttons
                 HStack(spacing: 8) {
@@ -2155,13 +2168,14 @@ struct QuickEditSheetView: View {
             .padding(.horizontal, 8)
             .padding(.vertical, 4)
         }
+        .scrollDisabled(true)  // Disable scroll to prevent flash when using Crown
         .focusable()
         .focused($isFocused)
         .digitalCrownRotation(
             $crownValue,
             from: editingField == .weight ? 0 : 1,
             through: editingField == .weight ? 500 : 100,
-            by: editingField == .weight ? 0.5 : 1,
+            by: editingField == .weight ? 0.25 : 1,  // 0.25kg steps for weight
             sensitivity: .medium,
             isContinuous: false,
             isHapticFeedbackEnabled: true
@@ -2531,15 +2545,50 @@ struct FormCuesSheetView: View {
     let exerciseName: String
     let formCues: String
     let locale: String
+    let tut: String?  // ✅ Add TUT parameter
     let onDismiss: () -> Void
 
     private var isItalian: Bool { locale == "it" }
-    private var titleText: String { isItalian ? "Form Cues" : "Form Cues" }
+    private var titleText: String { isItalian ? "Note Tecniche" : "Form Cues" }
     private var doneText: String { isItalian ? "Fatto" : "Done" }
+
+    // ✅ Parse TUT into readable format (e.g., "3-1-2-0" → steps)
+    private var tutSteps: [(label: String, value: String)]? {
+        guard let tut = tut, !tut.isEmpty else { return nil }
+        let parts = tut.split(separator: "-").map { String($0) }
+        guard parts.count == 4 else { return nil }
+
+        if isItalian {
+            return [
+                ("Eccentrica", "\(parts[0])s"),
+                ("Pausa bassa", "\(parts[1])s"),
+                ("Concentrica", "\(parts[2])s"),
+                ("Pausa alta", "\(parts[3])s")
+            ]
+        } else {
+            return [
+                ("Eccentric", "\(parts[0])s"),
+                ("Pause (bottom)", "\(parts[1])s"),
+                ("Concentric", "\(parts[2])s"),
+                ("Pause (top)", "\(parts[3])s")
+            ]
+        }
+    }
+
+    // ✅ Parse form cues into steps with proper spacing
+    private var formattedCues: [String] {
+        // Split by common patterns: numbered lists, bullet points, or newlines
+        let lines = formCues
+            .replacingOccurrences(of: "\\n", with: "\n")
+            .split(separator: "\n", omittingEmptySubsequences: false)
+            .map { String($0).trimmingCharacters(in: .whitespaces) }
+            .filter { !$0.isEmpty }
+        return lines
+    }
 
     var body: some View {
         ScrollView {
-            VStack(spacing: 12) {
+            VStack(spacing: 8) {
                 // Header with pin icon
                 HStack(spacing: 6) {
                     Image(systemName: "pin.fill")
@@ -2555,26 +2604,66 @@ struct FormCuesSheetView: View {
 
                 // Exercise name
                 Text(exerciseName)
-                    .font(.system(size: 16, weight: .bold))
+                    .font(.system(size: 15, weight: .bold))
                     .multilineTextAlignment(.center)
-                    .lineLimit(2)
+                    .fixedSize(horizontal: false, vertical: true)
+
+                // ✅ TUT Section (if available)
+                if let steps = tutSteps {
+                    VStack(spacing: 4) {
+                        HStack(spacing: 4) {
+                            Image(systemName: "timer")
+                                .font(.system(size: 10))
+                            Text("TUT: \(tut ?? "")")
+                                .font(.system(size: 11, weight: .semibold))
+                        }
+                        .foregroundColor(.blue)
+
+                        HStack(spacing: 8) {
+                            ForEach(Array(steps.enumerated()), id: \.offset) { _, step in
+                                VStack(spacing: 1) {
+                                    Text(step.value)
+                                        .font(.system(size: 12, weight: .bold))
+                                    Text(step.label)
+                                        .font(.system(size: 8))
+                                        .foregroundColor(.secondary)
+                                }
+                            }
+                        }
+                    }
+                    .padding(.vertical, 6)
+                    .padding(.horizontal, 8)
+                    .background(
+                        RoundedRectangle(cornerRadius: 8)
+                            .fill(Color.blue.opacity(0.1))
+                    )
+                    .padding(.horizontal, 8)
+                }
 
                 Divider()
                     .padding(.horizontal, 20)
                     .accessibilityHidden(true)
 
-                // Form cues content
-                Text(formCues)
-                    .font(.system(size: 14, weight: .regular))
-                    .multilineTextAlignment(.leading)
-                    .padding(.horizontal, 12)
-                    .padding(.vertical, 8)
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                    .background(
-                        RoundedRectangle(cornerRadius: 10)
-                            .fill(Color.blue.opacity(0.1))
-                    )
-                    .padding(.horizontal, 8)
+                // ✅ Form cues content - properly formatted with spacing
+                VStack(alignment: .leading, spacing: 0) {
+                    ForEach(Array(formattedCues.enumerated()), id: \.offset) { index, line in
+                        if index > 0 {
+                            Spacer().frame(height: 10)  // ✅ Space before each step
+                        }
+                        Text(line)
+                            .font(.system(size: 13, weight: .regular))
+                            .multilineTextAlignment(.leading)
+                            .fixedSize(horizontal: false, vertical: true)  // ✅ Don't truncate
+                    }
+                }
+                .padding(.horizontal, 12)
+                .padding(.vertical, 10)
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .background(
+                    RoundedRectangle(cornerRadius: 10)
+                        .fill(Color.gray.opacity(0.1))
+                )
+                .padding(.horizontal, 8)
 
                 // Done button
                 Button(action: {
@@ -2983,11 +3072,18 @@ struct RestTimerView: View {
             .accessibilityLabel(connectivity.isTimerPaused ? (isItalian ? "Riposo in pausa" : "Rest paused") : restText)
 
             // Time display (no animation = battery savings)
+            // ✅ Tappable when timer is at 00:00 to add more time
             Text(formatTime(connectivity.restTimeRemaining))
                 .font(.system(size: 52, weight: .bold))
                 .monospacedDigit()
                 .foregroundColor(timerTextColor)
                 .accessibilityLabel(isItalian ? "Tempo rimanente: \(formatTime(connectivity.restTimeRemaining))" : "Time remaining: \(formatTime(connectivity.restTimeRemaining))")
+                .onTapGesture {
+                    if connectivity.restTimeRemaining == 0 {
+                        WKInterfaceDevice.current().play(.click)
+                        showQuickAddTime = true
+                    }
+                }
 
             // Next set info (read-only display)
             // Note: Weight/reps editing moved to ExerciseControlView for cleaner UX

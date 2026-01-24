@@ -1001,6 +1001,24 @@ service cloud.firestore {
         request.auth.token.admin == true;
     }
 
+    // ============= EXERCISES BY LOCALE =============
+    // Localized exercise databases (exercises_it, exercises_en)
+    match /exercises_it/{exerciseId} {
+      // All authenticated users can read exercises
+      allow read: if request.auth != null;
+      // Only admin can write
+      allow write: if request.auth != null &&
+        request.auth.token.admin == true;
+    }
+
+    match /exercises_en/{exerciseId} {
+      // All authenticated users can read exercises
+      allow read: if request.auth != null;
+      // Only admin can write
+      allow write: if request.auth != null &&
+        request.auth.token.admin == true;
+    }
+
     // ============= EXERCISE PATCHES (USER CORRECTIONS) =============
     match /exercise_patches/{patchId} {
       // CREATE: Only authenticated users, must match userId

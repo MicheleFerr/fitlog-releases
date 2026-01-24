@@ -15,8 +15,26 @@ class OnboardingStateNotifier extends Notifier<OnboardingState> {
   static const String _boxName = 'onboarding_state';
   late Box<OnboardingState> _onboardingBox;
 
+  // ✅ FIX: Static cache to survive provider rebuilds (background/foreground transitions)
+  // This prevents onboarding from restarting when app resumes
+  static OnboardingState? _cachedState;
+
   @override
   OnboardingState build() {
+    // ✅ FIX: Keep provider alive to prevent disposal during background
+    // This is CRITICAL to prevent onboarding restart on app resume
+    ref.keepAlive();
+
+    // ✅ FIX: Return cached state if available (prevents onboarding restart)
+    if (_cachedState != null) {
+      if (kDebugMode) {
+        debugPrint('✅ [Onboarding] Returning cached state (hasSeenGlobalOnboarding: ${_cachedState!.hasSeenGlobalOnboarding})');
+      }
+      // Still trigger async init to ensure Hive box is ready
+      _initializeOnboarding();
+      return _cachedState!;
+    }
+
     // Initialize onboarding asynchronously
     _initializeOnboarding();
     return const OnboardingState();
@@ -34,12 +52,16 @@ class OnboardingStateNotifier extends Notifier<OnboardingState> {
       final savedState = _onboardingBox.get('state');
       if (savedState != null) {
         state = savedState;
+        // ✅ FIX: Update cache with loaded state
+        _cachedState = savedState;
         if (kDebugMode) {
-          debugPrint('📋 Onboarding state loaded: step ${savedState.currentStep}/${OnboardingState.totalSteps}');
+          debugPrint('📋 Onboarding state loaded: step ${savedState.currentStep}/${OnboardingState.totalSteps}, hasSeenGlobal: ${savedState.hasSeenGlobalOnboarding}');
         }
         // Validate and fix any inconsistencies
         await validateOnboardingState();
       } else {
+        // ✅ FIX: Cache default state too
+        _cachedState = state;
         if (kDebugMode) {
           debugPrint('📋 No saved onboarding state, checking for legacy migration');
         }
@@ -101,8 +123,10 @@ class OnboardingStateNotifier extends Notifier<OnboardingState> {
     while (retries > 0) {
       try {
         await _onboardingBox.put('state', state);
+        // ✅ FIX: Update cache after successful save
+        _cachedState = state;
         if (kDebugMode) {
-          debugPrint('💾 Onboarding state saved successfully: step ${state.currentStep}, completed: ${state.hasSeenGlobalOnboarding}');
+          debugPrint('💾 Onboarding state saved successfully: step ${state.currentStep}, hasSeenGlobal: ${state.hasSeenGlobalOnboarding}');
         }
         return; // Success, exit retry loop
       } catch (e, stackTrace) {

@@ -13,6 +13,8 @@ library;
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/workout.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise.dart';
+import 'package:gymbro_flutter_new/shared/domain/abstractions/exercise_counting_mode.dart';
+import 'package:gymbro_flutter_new/features/stress_index/data/mappers/muscle_abbreviation_mapper.dart';
 
 /// Complete workout history with all exercise details
 class WorkoutHistoryDetail { // ID of the workout template used
@@ -227,6 +229,12 @@ class ExerciseHistoryDetail {
 
   /// Create from Map
   factory ExerciseHistoryDetail.fromMap(Map<dynamic, dynamic> map) {
+    // Extract and normalize exerciseData to convert old muscle names to canonical
+    final rawExerciseData = map['exerciseData'] as Map<dynamic, dynamic>? ?? {};
+    final normalizedExerciseData = _normalizeExerciseData(
+      Map<String, dynamic>.from(rawExerciseData),
+    );
+
     return ExerciseHistoryDetail(
       id: map['id'] ?? '',
       name: map['name'] ?? '',
@@ -235,8 +243,71 @@ class ExerciseHistoryDetail {
       sets: (map['sets'] as List<dynamic>?)
           ?.map((s) => SetHistoryDetail.fromMap(s as Map<dynamic, dynamic>))
           .toList() ?? [],
-      exerciseData: Map<String, dynamic>.from(map['exerciseData'] ?? {}),
+      exerciseData: normalizedExerciseData,
     );
+  }
+
+  /// Normalize exerciseData to convert old muscle names to canonical
+  ///
+  /// Converts legacy muscle abbreviations (FEMOR, BIC, LOMBAR, etc.) to
+  /// canonical 4-letter standard (FEMO, BICI, LOMB) using MuscleAbbreviationMapper.
+  ///
+  /// **Fields normalized**:
+  /// - `focus`: List<String> of primary muscles
+  /// - `muscoliSecondari`: List<String> of secondary muscles
+  ///
+  /// **Example**:
+  /// ```dart
+  /// {
+  ///   'focus': ['FEMOR', 'GLUT'],  // Old
+  ///   'muscoliSecondari': ['BIC', 'LOMBAR']
+  /// }
+  /// // After normalization:
+  /// {
+  ///   'focus': ['FEMO', 'GLUT'],   // New canonical
+  ///   'muscoliSecondari': ['BICI', 'LOMB']
+  /// }
+  /// ```
+  static Map<String, dynamic> _normalizeExerciseData(Map<String, dynamic> data) {
+    final normalized = Map<String, dynamic>.from(data);
+
+    // Normalize focus field (primary muscles)
+    if (normalized['focus'] != null) {
+      final focus = normalized['focus'];
+      if (focus is List) {
+        normalized['focus'] = focus
+            .map((muscle) => MuscleAbbreviationMapper.normalizeToCanonicalId(
+                  muscle.toString(),
+                ))
+            .toList();
+      } else if (focus is String) {
+        // Handle comma-separated string format
+        final muscles = focus.split(',').map((m) => m.trim()).where((m) => m.isNotEmpty);
+        normalized['focus'] = muscles
+            .map((muscle) => MuscleAbbreviationMapper.normalizeToCanonicalId(muscle))
+            .toList();
+      }
+    }
+
+    // Normalize muscoliSecondari field (secondary muscles)
+    if (normalized['muscoliSecondari'] != null) {
+      final secondary = normalized['muscoliSecondari'];
+      if (secondary is List) {
+        normalized['muscoliSecondari'] = secondary
+            .map((muscle) => MuscleAbbreviationMapper.normalizeToCanonicalId(
+                  muscle.toString(),
+                ))
+            .toList();
+      } else if (secondary is String) {
+        // Handle comma-separated string format
+        final muscles = secondary.split(',').map((m) => m.trim()).where((m) => m.isNotEmpty);
+        normalized['muscoliSecondari'] = muscles
+            .map((muscle) => MuscleAbbreviationMapper.normalizeToCanonicalId(muscle))
+            .toList();
+      }
+    }
+
+    return normalized;
   }
   final String id;
   final String name;
@@ -258,8 +329,12 @@ class ExerciseHistoryDetail {
   }
 
   /// Calculated properties
+  ///
+  /// Total volume for this exercise across all sets.
+  /// - Weighted exercises: sum of (weight × reps) for each set
+  /// - Bodyweight exercises: sum of reps (rep count as volume proxy)
   double get totalVolume {
-    return sets.fold(0.0, (sum, set) => sum + (set.weight * set.reps));
+    return sets.fold(0.0, (sum, set) => sum + set.volume);
   }
 
   int get totalReps {
@@ -298,6 +373,10 @@ class ExerciseHistoryDetail {
 
   /// Convert to Exercise entity for editing
   Exercise toExercise() {
+    // 🔧 FIX: Read countingMode from exerciseData for bodyweight volume calculation
+    final countingModeStr = exerciseData['countingMode'] as String?;
+    final countingMode = ExerciseCountingMode.fromString(countingModeStr);
+
     return Exercise(
       id: id,
       name: name,
@@ -305,6 +384,7 @@ class ExerciseHistoryDetail {
       category: _parseCategory(category),
       sets: sets.map((s) => s.toExerciseSet()).toList(),
       notes: notes,
+      countingMode: countingMode,
     );
   }
 
@@ -395,7 +475,11 @@ class SetHistoryDetail {            // Actual reps completed (vs planned reps)
   }
 
   /// Calculated properties
-  double get volume => weight * reps;
+  ///
+  /// Volume for this set.
+  /// - Weighted exercises (weight > 0): volume = weight × reps
+  /// - Bodyweight exercises (weight = 0): volume = reps (rep count as proxy)
+  double get volume => weight > 0 ? weight * reps : reps.toDouble();
 
   /// Estimated 1RM using Epley formula
   double get estimated1RM {

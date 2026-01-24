@@ -3,13 +3,20 @@
 /// Maps abbreviated muscle names from exercise JSON files (focus field)
 /// to standardized muscle identifiers for stress index calculation.
 ///
-/// Abbreviations found in exercises JSON files:
-/// Arms: TRIC, BICI, BIC, AVA, AVAMB
-/// Back: LAT, TRAP, LOMBAR, LOMB, LOM, DORSO
+/// **CANONICAL ABBREVIATIONS (4-letter standard):**
+/// Arms: TRIC, BICI, AVA (3)
+/// Back: LAT (3), TRAP, LOMB
 /// Chest: PETT
-/// Shoulders: DELT, COLLO
-/// Legs: GLUT, QUAD, FEMOR, FEMO, POLP, POLL, ADD, ADDO, ADDUT, ADDU, ABDUT, ABDU
-/// Core: CORE, ADDOM
+/// Shoulders: DELT, DELT_ANT, DELT_LAT, DELT_POST, COLL
+/// Legs: GLUT, QUAD, FEMO, POLP, ADD (3), ABDU
+/// Core: CORE
+///
+/// **VARIANTS (mapped to canonical):**
+/// Arms: BIC→BICI, AVAMB→AVA
+/// Back: LOMBAR→LOMB, LOM→LOMB, DORSO→LAT
+/// Shoulders: COLLO→COLL
+/// Legs: FEMOR→FEMO, POLL→POLP, ADDO→ADD, ADDUT→ADD, ADDU→ADD, ABDUT→ABDU
+/// Core: ADDOM→CORE
 library;
 
 import 'package:gymbro_flutter_new/features/stress_index/domain/constants/stress_index_constants.dart';
@@ -103,20 +110,20 @@ class MuscleAbbreviationMapper {
       displayNameIt: 'Trapezio',
       category: MuscleCategory.back,
     ),
-    'LOMBAR': MuscleInfo(
-      id: 'LOMBAR',
+    'LOMB': MuscleInfo(
+      id: 'LOMB',
       displayNameEn: 'Lower Back',
       displayNameIt: 'Lombari',
       category: MuscleCategory.back,
     ),
-    'LOMB': MuscleInfo(
-      id: 'LOMBAR',
+    'LOMBAR': MuscleInfo(
+      id: 'LOMB',
       displayNameEn: 'Lower Back',
       displayNameIt: 'Lombari',
       category: MuscleCategory.back,
     ),
     'LOM': MuscleInfo(
-      id: 'LOMBAR',
+      id: 'LOMB',
       displayNameEn: 'Lower Back',
       displayNameIt: 'Lombari',
       category: MuscleCategory.back,
@@ -162,8 +169,14 @@ class MuscleAbbreviationMapper {
       displayNameIt: 'Deltoidi',
       category: MuscleCategory.shoulders,
     ),
+    'COLL': MuscleInfo(
+      id: 'COLL',
+      displayNameEn: 'Neck',
+      displayNameIt: 'Collo',
+      category: MuscleCategory.shoulders,
+    ),
     'COLLO': MuscleInfo(
-      id: 'COLLO',
+      id: 'COLL',
       displayNameEn: 'Neck',
       displayNameIt: 'Collo',
       category: MuscleCategory.shoulders,
@@ -182,14 +195,14 @@ class MuscleAbbreviationMapper {
       displayNameIt: 'Quadricipiti',
       category: MuscleCategory.legs,
     ),
-    'FEMOR': MuscleInfo(
-      id: 'FEMOR',
+    'FEMO': MuscleInfo(
+      id: 'FEMO',
       displayNameEn: 'Hamstrings',
       displayNameIt: 'Femorali',
       category: MuscleCategory.legs,
     ),
-    'FEMO': MuscleInfo(
-      id: 'FEMOR',
+    'FEMOR': MuscleInfo(
+      id: 'FEMO',
       displayNameEn: 'Hamstrings',
       displayNameIt: 'Femorali',
       category: MuscleCategory.legs,
@@ -255,6 +268,32 @@ class MuscleAbbreviationMapper {
       displayNameEn: 'Abs',
       displayNameIt: 'Addominali',
       category: MuscleCategory.core,
+    ),
+    'OBL': MuscleInfo(
+      id: 'OBL',
+      displayNameEn: 'Obliques',
+      displayNameIt: 'Obliqui',
+      category: MuscleCategory.core,
+    ),
+    'OBLIQUI': MuscleInfo(
+      id: 'OBL',
+      displayNameEn: 'Obliques',
+      displayNameIt: 'Obliqui',
+      category: MuscleCategory.core,
+    ),
+
+    // Back - Rhomboids (added for secondary muscles)
+    'ROMB': MuscleInfo(
+      id: 'ROMB',
+      displayNameEn: 'Rhomboids',
+      displayNameIt: 'Romboidi',
+      category: MuscleCategory.back,
+    ),
+    'ROMBOIDI': MuscleInfo(
+      id: 'ROMB',
+      displayNameEn: 'Rhomboids',
+      displayNameIt: 'Romboidi',
+      category: MuscleCategory.back,
     ),
   };
 
@@ -412,7 +451,8 @@ class MuscleAbbreviationMapper {
     // Back
     'LAT': 'lats',
     'TRAP': 'trapezius',
-    'LOMBAR': 'lower_back',
+    'LOMB': 'lower_back',
+    'ROMB': 'trapezius', // Rhomboids group with upper back
     // Chest
     'PETT': 'chest',
     // Shoulders
@@ -420,20 +460,21 @@ class MuscleAbbreviationMapper {
     'DELT_ANT': 'shoulders',
     'DELT_LAT': 'shoulders',
     'DELT_POST': 'shoulders',
-    'COLLO': 'neck',
+    'COLL': 'neck',
     // Arms
     'BICI': 'biceps',
     'TRIC': 'triceps',
     'AVA': 'forearms',
     // Legs
     'QUAD': 'quadriceps',
-    'FEMOR': 'hamstrings',
+    'FEMO': 'hamstrings',
     'GLUT': 'glutes',
     'POLP': 'calves',
     'ADD': 'adductors',
     'ABDU': 'abductors',
     // Core
     'CORE': 'abs',
+    'OBL': 'abs', // Obliques group with core
   };
 
   /// Convert any muscle abbreviation to the SVG heatmap group key
@@ -536,12 +577,12 @@ class MuscleAbbreviationMapper {
       'trapezio': 'TRAP',
       'quadricipiti': 'QUAD',
       'glutei': 'GLUT',
-      'femorali': 'FEMOR',
+      'femorali': 'FEMO',
       'polpacci': 'POLP',
       'addominali': 'CORE',
       'core': 'CORE',
       'avambracci': 'AVA',
-      'lombari': 'LOMBAR',
+      'lombari': 'LOMB',
       'adduttori': 'ADD',
       'abduttori': 'ABDU',
       // English names
@@ -556,12 +597,12 @@ class MuscleAbbreviationMapper {
       'quads': 'QUAD',
       'quadriceps': 'QUAD',
       'glutes': 'GLUT',
-      'hamstrings': 'FEMOR',
+      'hamstrings': 'FEMO',
       'calves': 'POLP',
       'abs': 'CORE',
       'forearms': 'AVA',
-      'lower back': 'LOMBAR',
-      'lower_back': 'LOMBAR',
+      'lower back': 'LOMB',
+      'lower_back': 'LOMB',
       'adductors': 'ADD',
       'abductors': 'ABDU',
     };
@@ -623,17 +664,22 @@ class MuscleAbbreviationMapper {
       'DELT_ANT': 'Deltoidi Anteriori',
       'DELT_LAT': 'Deltoidi Laterali',
       'DELT_POST': 'Deltoidi Posteriori',
+      'COLL': 'Collo',
       // Arms
       'TRIC': 'Tricipiti',
       'BICI': 'Bicipiti',
+      'AVA': 'Avambracci',
       // Back
       'LAT': 'Dorsali',
       'TRAP': 'Trapezio',
+      'LOMB': 'Lombari',
       // Legs
       'QUAD': 'Quadricipiti',
-      'FEMOR': 'Femorali',
+      'FEMO': 'Femorali',
       'GLUT': 'Glutei',
       'POLP': 'Polpacci',
+      'ADD': 'Adduttori',
+      'ABDU': 'Abduttori',
       // Core
       'CORE': 'Core',
     };
@@ -692,19 +738,19 @@ class MuscleAbbreviationMapper {
     const patternMap = {
       // Movement patterns
       'push': ['PETT', 'TRIC', 'DELT', 'DELT_ANT'],
-      'pull': ['LAT', 'TRAP', 'BICI', 'LOMBAR'],
-      'legs': ['QUAD', 'GLUT', 'FEMOR', 'POLP', 'ADD'],
-      'hinge': ['FEMOR', 'GLUT', 'LOMBAR', 'TRAP'],
+      'pull': ['LAT', 'TRAP', 'BICI', 'LOMB'],
+      'legs': ['QUAD', 'GLUT', 'FEMO', 'POLP', 'ADD'],
+      'hinge': ['FEMO', 'GLUT', 'LOMB', 'TRAP'],
       'squat': ['QUAD', 'GLUT'],
       // Body regions
       'upper body': ['PETT', 'LAT', 'DELT', 'BICI', 'TRIC', 'TRAP'],
-      'lower body': ['QUAD', 'GLUT', 'FEMOR', 'POLP', 'ADD'],
-      'full body': ['PETT', 'LAT', 'DELT', 'BICI', 'TRIC', 'QUAD', 'GLUT', 'FEMOR'],
+      'lower body': ['QUAD', 'GLUT', 'FEMO', 'POLP', 'ADD'],
+      'full body': ['PETT', 'LAT', 'DELT', 'BICI', 'TRIC', 'QUAD', 'GLUT', 'FEMO'],
       'core': ['CORE'],
       // Italian patterns
       'braccia': ['BICI', 'TRIC', 'AVA'],
-      'gambe': ['QUAD', 'GLUT', 'FEMOR', 'POLP', 'ADD'],
-      'schiena': ['LAT', 'TRAP', 'LOMBAR'],
+      'gambe': ['QUAD', 'GLUT', 'FEMO', 'POLP', 'ADD'],
+      'schiena': ['LAT', 'TRAP', 'LOMB'],
     };
 
     if (patternMap.containsKey(lower)) {

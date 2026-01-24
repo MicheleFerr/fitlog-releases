@@ -90,10 +90,15 @@ import 'package:gymbro_flutter_new/features/home/providers/user_xp_provider.dart
 import 'package:gymbro_flutter_new/features/health_sync/presentation/providers/watch_connectivity_provider.dart';
 // 🍎 HealthKit Integration for Apple Fitness / Activity rings sync
 import 'package:gymbro_flutter_new/features/health_sync/presentation/providers/health_permission_provider.dart';
+// 📏 Body Measurements for bodyweight exercise volume calculation
+import 'package:gymbro_flutter_new/features/health_sync/presentation/providers/health_sync_provider.dart';
+import 'package:gymbro_flutter_new/features/health_sync/domain/entities/health_data_type.dart';
+import 'package:gymbro_flutter_new/features/health_sync/domain/entities/body_measurement.dart';
 // 📚 Exercise Database for real TUT lookup
 import 'package:gymbro_flutter_new/features/exercise_database/presentation/providers/hybrid_exercise_provider.dart';
 // 📱 iOS 17+ Workout Session Live Activity
 import 'package:gymbro_flutter_new/features/workout/presentation/providers/workout_session_la_provider.dart';
+import 'package:gymbro_flutter_new/features/workout/data/services/workout_session_la_service.dart' show WorkoutSessionMode;
 
 // Hybrid Exercise Activity Repository provider
 final hybridExerciseActivityRepositoryProvider = Provider<HybridExerciseActivityRepository>((ref) {
@@ -877,6 +882,17 @@ class CurrentWorkoutNotifier extends Notifier<Workout?> {
     final laState = ref.read(workoutSessionLAProvider);
     if (!laState.isActive) return;
 
+    // ✅ FIX: Don't call transitionToExercise during RPE or REST mode
+    // During RPE selection: the user is confirming effort, then completeSet will handle transition
+    // During REST: the timer will handle the transition back to exercise mode
+    // This prevents race condition where updateExercise calls transitionToExercise
+    // BEFORE completeSet calls transitionToRest, causing iOS to show wrong mode
+    if (laState.mode == WorkoutSessionMode.rpe ||
+        laState.mode == WorkoutSessionMode.rest) {
+      debugPrint('[WorkoutProvider] 📱 Skipping LA update - mode is ${laState.mode} (will transition after)');
+      return;
+    }
+
     final workout = state!;
 
     // Find current exercise (first with incomplete sets)
@@ -1118,7 +1134,10 @@ class CurrentWorkoutNotifier extends Notifier<Workout?> {
           category: exercise.category.name,
           notes: sanitizedExerciseNotes,
           sets: setsHistory,
-          exerciseData: {},
+          exerciseData: {
+            // 🔧 FIX: Preserve countingMode for bodyweight volume calculation
+            'countingMode': exercise.countingMode.name,
+          },
         );
       }).toList();
 
@@ -1153,10 +1172,12 @@ class CurrentWorkoutNotifier extends Notifier<Workout?> {
           // 📜 HISTORY: Salva anche nel box workout_history_enhanced per la cronologia
           // FIX: La cronologia legge da questo box, non da 'workouts'
           // Senza questo, il workout non appare nella history finché Firebase non sincronizza
+          // 🔧 FIX: Key format MUST match repository format: workout_{userId}_{workoutId}
+          // Without userId in key, repository's _getLocalWorkouts() won't find it!
           try {
             final boxManager = ref.read(hiveBoxManagerProvider);
             final historyBox = await boxManager.openBox('workout_history_enhanced');
-            final historyKey = 'workout_${workoutHistoryDetail.id}';
+            final historyKey = 'workout_${effectiveUserId}_${workoutHistoryDetail.id}';
             await historyBox.put(historyKey, workoutHistoryDetail.toMap());
 
             if (kDebugMode) {
@@ -1185,7 +1206,33 @@ class CurrentWorkoutNotifier extends Notifier<Workout?> {
           // This populates users/{userId}/analytics/{exerciseName} for efficient querying
           try {
             final analyticsRepo = ref.read(analyticsRepositoryProvider);
-            final analyticsData = WorkoutToAnalyticsConverter.convert(workout);
+
+            // 🏋️ Get user body weight for bodyweight exercise volume calculation
+            double? userBodyWeightKg;
+            try {
+              final weightMeasurements = await ref.read(
+                bodyMeasurementsProvider(HealthDataType.bodyWeight).future,
+              );
+              if (weightMeasurements.isNotEmpty) {
+                final latestWeight = weightMeasurements.first;
+                userBodyWeightKg = latestWeight.unit == MeasurementUnit.pounds
+                    ? latestWeight.value * 0.453592 // lbs to kg
+                    : latestWeight.value;
+                if (kDebugMode) {
+                  debugLog(LogCategory.workout, '📏 [WorkoutProvider] User body weight for analytics: ${userBodyWeightKg.toStringAsFixed(1)}kg');
+                }
+              }
+            } catch (weightError) {
+              // Non-critical: bodyweight exercises will have volume = 0
+              if (kDebugMode) {
+                debugLog(LogCategory.workout, '⚠️ [WorkoutProvider] Could not fetch body weight: $weightError');
+              }
+            }
+
+            final analyticsData = WorkoutToAnalyticsConverter.convert(
+              workout,
+              userBodyWeightKg: userBodyWeightKg,
+            );
 
             if (kDebugMode) {
               debugLog(LogCategory.workout, '📊 [WorkoutProvider] Converting ${analyticsData.length} exercises to analytics');
@@ -2456,15 +2503,17 @@ class CurrentWorkoutNotifier extends Notifier<Workout?> {
 
   /// ⌚ Update current set target (weight/reps) from Watch
   /// Called when user edits the target using Digital Crown before completing
+  /// [setNumber] - 1-indexed set number being modified
   /// [isSuperset] - true if editing a superset exercise
   /// [exerciseIndexInSuperset] - 0-indexed position of exercise within superset
   void _updateCurrentSetTargetFromWatch(
     double weight,
     int reps, {
+    required int setNumber,
     bool isSuperset = false,
     int? exerciseIndexInSuperset,
   }) {
-    debugPrint('⌚ [FLUTTER] ✏️ Updating current set target: ${weight}kg × $reps reps (superset: $isSuperset, exerciseIndex: $exerciseIndexInSuperset)');
+    debugPrint('⌚ [FLUTTER] ✏️ Updating set #$setNumber target: ${weight}kg × $reps reps (superset: $isSuperset, exerciseIndex: $exerciseIndexInSuperset)');
 
     if (state == null) {
       debugPrint('⌚ [FLUTTER] ⚠️ No active workout');
@@ -2507,23 +2556,18 @@ class CurrentWorkoutNotifier extends Notifier<Workout?> {
       return;
     }
 
-    // Standard exercise handling
-    // Find the first incomplete set (current set to modify)
-    int currentSetIndex = -1;
-    for (int i = 0; i < currentExercise.sets.length; i++) {
-      if (!currentExercise.sets[i].isCompleted) {
-        currentSetIndex = i;
-        break;
-      }
-    }
+    // ✅ FIX: Use setNumber from Watch instead of finding first incomplete set
+    // setNumber is 1-indexed, convert to 0-indexed
+    final currentSetIndex = setNumber - 1;
 
-    if (currentSetIndex < 0) {
-      debugPrint('⌚ [FLUTTER] ⚠️ No incomplete set found');
+    // Validate index bounds
+    if (currentSetIndex < 0 || currentSetIndex >= currentExercise.sets.length) {
+      debugPrint('⌚ [FLUTTER] ⚠️ Invalid set index: $currentSetIndex (setNumber: $setNumber, total sets: ${currentExercise.sets.length})');
       return;
     }
 
     final currentSet = currentExercise.sets[currentSetIndex];
-    debugPrint('⌚ [FLUTTER] Found current set: #${currentSet.setNumber} at index $currentSetIndex');
+    debugPrint('⌚ [FLUTTER] ✅ Targeting set #$setNumber at index $currentSetIndex');
 
     // Update the set with new weight and reps
     final updatedSet = currentSet.copyWith(
@@ -2651,6 +2695,7 @@ class CurrentWorkoutNotifier extends Notifier<Workout?> {
     _updateCurrentSetTargetFromWatch(
       weight,
       reps,
+      setNumber: 1, // Not used for superset (uses exerciseIndexInSuperset instead)
       isSuperset: true,
       exerciseIndexInSuperset: exerciseIndexInSuperset,
     );

@@ -144,6 +144,17 @@ class AnalyticsEvents {
   /// Workout template deleted
   static const String templateDeleted = 'template_deleted';
 
+  // ===== SUPERSET TEMPLATE EVENTS =====
+
+  /// Superset template previewed/viewed
+  static const String supersetTemplateViewed = 'superset_template_viewed';
+
+  /// Superset template custom copy saved
+  static const String supersetTemplateSaved = 'superset_template_saved';
+
+  /// Superset tab opened in templates screen
+  static const String supersetTabOpened = 'superset_tab_opened';
+
   // ===== ROUTINE EVENTS =====
 
   /// Routine created
@@ -358,6 +369,18 @@ class AnalyticsParameters {
 
   /// Template name
   static const String templateName = 'template_name';
+
+  /// Template difficulty (beginner, intermediate, advanced)
+  static const String templateDifficulty = 'template_difficulty';
+
+  /// Template is custom (true/false)
+  static const String isCustomTemplate = 'is_custom_template';
+
+  /// Template has scientific basis (true/false)
+  static const String hasScientificBasis = 'has_scientific_basis';
+
+  /// Template is predefined (true/false)
+  static const String isPredefinedTemplate = 'is_predefined_template';
 
   // ===== ROUTINE PARAMETERS =====
 

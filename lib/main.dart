@@ -10,6 +10,7 @@ import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:gymbro_flutter_new/app/app.dart';
 import 'package:gymbro_flutter_new/shared/domain/entities/app_config.dart';
+import 'package:gymbro_flutter_new/shared/domain/entities/interface_size.dart';
 import 'package:gymbro_flutter_new/shared/providers/shared_preferences_provider.dart';
 // 🔄 AppLifecycleManager per flush batch queue quando app va in background
 import 'package:gymbro_flutter_new/shared/presentation/widgets/app_lifecycle_manager.dart';
@@ -134,6 +135,9 @@ void main() async {
   // Register Hive adapters BEFORE opening boxes
   if (!Hive.isAdapterRegistered(AppConfigAdapter().typeId)) {
     Hive.registerAdapter(AppConfigAdapter());
+  }
+  if (!Hive.isAdapterRegistered(InterfaceSizeAdapter().typeId)) {
+    Hive.registerAdapter(InterfaceSizeAdapter());
   }
   if (!Hive.isAdapterRegistered(OnboardingStateAdapter().typeId)) {
     Hive.registerAdapter(OnboardingStateAdapter());

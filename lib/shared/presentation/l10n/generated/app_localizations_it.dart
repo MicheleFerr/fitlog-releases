@@ -666,6 +666,27 @@ class AppLocalizationsIt extends AppLocalizations {
   String get addExercise => 'Aggiungi Esercizio';
 
   @override
+  String get addSingleExercise => 'Esercizio Singolo';
+
+  @override
+  String get addSingleExerciseHint => 'Sfoglia database esercizi';
+
+  @override
+  String get addAdvancedSet => 'Set Avanzati';
+
+  @override
+  String get addAdvancedSetHint => 'Superset, Drop Set, Rest-Pause';
+
+  @override
+  String get supersetHint => 'Collega 2+ esercizi di fila';
+
+  @override
+  String get dropSetHint => 'Riduzione progressiva del peso';
+
+  @override
+  String get restPauseHint => 'Pause brevi durante un set';
+
+  @override
   String get completeWorkout => 'Completa Allenamento';
 
   @override
@@ -3626,7 +3647,7 @@ class AppLocalizationsIt extends AppLocalizations {
   String get insight => 'Suggerimento';
 
   @override
-  String get recommendation => 'Consiglio';
+  String get recommendation => 'Raccomandazione';
 
   @override
   String get expand => 'Espandi';
@@ -4343,7 +4364,7 @@ class AppLocalizationsIt extends AppLocalizations {
   String get tapToSelectFromDatabase => 'Tocca per selezionare dal database';
 
   @override
-  String get restBetweenExercises => 'Riposo tra esercizi';
+  String get restBetweenExercises => 'Riposo Tra Esercizi';
 
   @override
   String get seconds => 'secondi';
@@ -9559,6 +9580,28 @@ class AppLocalizationsIt extends AppLocalizations {
   String get settingsSoundsDesc => 'Riproduci suoni per timer e notifiche';
 
   @override
+  String get settingsTimerSound => 'Suono Timer';
+
+  @override
+  String get settingsTimerSoundDesc =>
+      'Scegli il suono per il completamento del timer';
+
+  @override
+  String get settingsTimerSoundPreview => 'Prova';
+
+  @override
+  String get settingsTimerSoundClassic => 'Classico';
+
+  @override
+  String get settingsTimerSoundComplete => 'Completo';
+
+  @override
+  String get settingsTimerSoundLightWeight => 'Light Weight';
+
+  @override
+  String get settingsTimerSoundYehBuddie => 'Yeah Buddie';
+
+  @override
   String get settingsKeepScreenAwake => 'Mantieni Schermo Attivo';
 
   @override
@@ -14087,7 +14130,7 @@ class AppLocalizationsIt extends AppLocalizations {
   String get exporting => 'Esportazione in corso...';
 
   @override
-  String get failed => 'Failed';
+  String get failed => 'Fallito';
 
   @override
   String get fatigue => 'Fatigue';
@@ -23398,7 +23441,7 @@ class AppLocalizationsIt extends AppLocalizations {
   String get copyR1ToAll => 'R1 → Tutti';
 
   @override
-  String get restAfterRound => 'Riposo dopo round';
+  String get restAfterRound => 'Riposo Dopo Round';
 
   @override
   String get applyToAllRounds => 'Tutti i round';
@@ -23427,7 +23470,7 @@ class AppLocalizationsIt extends AppLocalizations {
   String get editConfiguration => 'Modifica Configurazione';
 
   @override
-  String get rounds => 'round';
+  String get rounds => 'Round';
 
   @override
   String get copyFromPrevious => 'Copia da Precedente';
@@ -25486,7 +25529,7 @@ class AppLocalizationsIt extends AppLocalizations {
       'Tocca qui per approfondire i progressi per esercizio con grafici e standard di forza.';
 
   @override
-  String get evidenceBased => 'Basato su Evidenze';
+  String get evidenceBased => 'Basati su Evidenze';
 
   @override
   String get defaultTemplatesSubtitle =>
@@ -25527,7 +25570,7 @@ class AppLocalizationsIt extends AppLocalizations {
   String get use => 'Usa';
 
   @override
-  String get duplicateTemplate => 'Template Già Presente';
+  String get duplicateTemplate => 'Duplica Template';
 
   @override
   String duplicateTemplateMessage(String name) {
@@ -25569,6 +25612,12 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get textSize => 'Dimensione testo';
+
+  @override
+  String get interfaceSize => 'Dimensione interfaccia';
+
+  @override
+  String get interfaceSizeSubtitle => 'Testo e spaziatura insieme';
 
   @override
   String get comfortable => 'Comodo';
@@ -26066,4 +26115,236 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get tapForInfo => 'Tocca per info';
+
+  @override
+  String get weightUpdateNudgeTitle => 'Aggiorna il tuo peso';
+
+  @override
+  String weightUpdateNudgeSubtitle(int days) {
+    return 'Ultimo aggiornamento $days giorni fa. Mantienilo aggiornato per statistiche accurate.';
+  }
+
+  @override
+  String get appTagline => 'Il tuo compagno di allenamento definitivo';
+
+  @override
+  String get webMobileMessage => 'Migliore Esperienza sull\'App Mobile';
+
+  @override
+  String get webMobileSubtitle =>
+      'Scarica l\'app per l\'esperienza completa di FitLog Pro';
+
+  @override
+  String get continueOnDesktop => 'Continua su Desktop';
+
+  @override
+  String get downloadOnAppStore => 'Scarica su App Store';
+
+  @override
+  String get getItOnGooglePlay => 'Scarica da Google Play';
+
+  @override
+  String get featureTrackWorkouts => 'Traccia Allenamenti';
+
+  @override
+  String get featureAnalytics => 'Analisi Avanzate';
+
+  @override
+  String get featureRestTimer => 'Timer Riposo Intelligente';
+
+  @override
+  String get featureCloudSync => 'Sincronizzazione Cloud';
+
+  @override
+  String get whyFitLog => 'Perché FitLog Pro?';
+
+  @override
+  String get exerciseDatabaseUpdated => 'Database esercizi aggiornato';
+
+  @override
+  String exerciseDatabaseUpdatedWithCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count esercizi aggiornati',
+      one: '1 esercizio aggiornato',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get exerciseSyncFailed => 'Sincronizzazione esercizi fallita';
+
+  @override
+  String get mobileWebWarningTitle => 'App Mobile Consigliata';
+
+  @override
+  String get mobileWebWarningDescription =>
+      'Per la migliore esperienza FitLog Pro, consigliamo di usare la nostra app mobile nativa. È più veloce, più affidabile e ha tutte le funzionalità di cui hai bisogno.';
+
+  @override
+  String get openInApp => 'Apri nell\'App';
+
+  @override
+  String get continueToWebsite => 'Continua sul Sito Web';
+
+  @override
+  String get audioDebugTests => 'Test Audio Debug';
+
+  @override
+  String get quickTests => 'Test Rapidi';
+
+  @override
+  String get fullTests => 'Test Completi';
+
+  @override
+  String get quickTestsTitle => 'Test Rapidi (3 test)';
+
+  @override
+  String get quickTestsDescription =>
+      'Test essenziali per confermare rapidamente i bug audio del timer';
+
+  @override
+  String get fullTestsDescription =>
+      'Matrice completa di test per analisi approfondita dei bug audio';
+
+  @override
+  String get fullTestsWarning =>
+      'I test completi richiedono 2-3 ore. Assicurati di avere tempo e batteria sufficienti.';
+
+  @override
+  String get testADescription =>
+      'Timer in primo piano (30s) - Test baseline, dovrebbe funzionare sempre';
+
+  @override
+  String get testBDescription =>
+      'Timer in background SENZA Live Activity (90s) - Successo ~60%, doppia riproduzione occasionale';
+
+  @override
+  String get testCDescription =>
+      'Timer in background CON Live Activity (90s) - Fallisce costantemente con doppia riproduzione (LA + AVAudioPlayer)';
+
+  @override
+  String get alwaysWorks => 'Funziona sempre (baseline)';
+
+  @override
+  String get sixtyPercentSuccess => '~60% successo (doppio audio occasionale)';
+
+  @override
+  String get consistentlyFails => 'Fallisce costantemente (doppio audio)';
+
+  @override
+  String get startQuickTests => 'Avvia Test Rapidi';
+
+  @override
+  String get startFullTests => 'Avvia Test Completi';
+
+  @override
+  String get testing => 'Test in corso...';
+
+  @override
+  String get passed => 'Superato';
+
+  @override
+  String get successRate => 'Tasso di Successo';
+
+  @override
+  String get testResults => 'Risultati Test';
+
+  @override
+  String get detailedResults => 'Risultati Dettagliati';
+
+  @override
+  String get viewResults => 'Visualizza Risultati';
+
+  @override
+  String get exportResults => 'Esporta Risultati';
+
+  @override
+  String get testMatrix => 'Matrice Test';
+
+  @override
+  String get fullTestMatrix => 'Matrice Test Completa';
+
+  @override
+  String get recommendedTemplates => 'Template Consigliati';
+
+  @override
+  String get saveCustomCopy => 'Salva Copia Personalizzata';
+
+  @override
+  String get exercisePairing => 'Accoppiamento Esercizi';
+
+  @override
+  String get scientificEvidence => 'Evidenza Scientifica';
+
+  @override
+  String get equipmentRequired => 'Attrezzatura Richiesta';
+
+  @override
+  String get configuration => 'Configurazione';
+
+  @override
+  String get repsRange => 'Range Ripetizioni';
+
+  @override
+  String get recommendedForYou => 'Consigliati per Te';
+
+  @override
+  String get timeEfficient => 'Efficienti nel Tempo';
+
+  @override
+  String get beginnerFriendly => 'Adatti ai Principianti';
+
+  @override
+  String get allTemplates => 'Tutti i Template';
+
+  @override
+  String get templateAddedToWorkout => 'Template aggiunto al workout';
+
+  @override
+  String get someExercisesNotFound => 'Alcuni esercizi non trovati';
+
+  @override
+  String get errorAddingTemplate => 'Errore nell\'aggiungere il template';
+
+  @override
+  String get templateOptions => 'Opzioni Template';
+
+  @override
+  String get noSupersetTemplates => 'Nessun template superset';
+
+  @override
+  String get noDropsetTemplates => 'Nessun template dropset';
+
+  @override
+  String get noRestPauseTemplates => 'Nessun template rest-pause';
+
+  @override
+  String get noCustomExercises => 'Nessun esercizio personalizzato';
+
+  @override
+  String get deleteTemplateConfirmation =>
+      'Sei sicuro di voler eliminare questo template? Questa azione non può essere annullata.';
+
+  @override
+  String get optionalNotes => 'Note (opzionale)';
+
+  @override
+  String get addAnotherExercise => 'Aggiungi altro esercizio';
+
+  @override
+  String get maxExercisesReached => 'Massimo 4 esercizi per superset';
+
+  @override
+  String get initialReps => 'Ripetizioni iniziali';
+
+  @override
+  String get restBetweenDrops => 'Riposo tra drop (sec)';
+
+  @override
+  String get clusters => 'Cluster';
+
+  @override
+  String get clusterReps => 'Ripetizioni per cluster';
 }

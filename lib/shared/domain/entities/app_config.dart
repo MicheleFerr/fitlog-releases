@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:hive_ce_flutter/hive_flutter.dart';
 
+import 'package:gymbro_flutter_new/shared/domain/entities/interface_size.dart';
+
 part 'app_config.g.dart';
 
 @HiveType(typeId: 0)
@@ -58,9 +60,19 @@ class AppConfig { // Auto-adjust rest time based on RPE feedback
     this.skipExerciseDeleteConfirmation = false, // Show confirmation dialog by default (P0-2)
     this.simpleMode = false, // Simple mode for elderly/accessibility users (P2-2)
     this.keepScreenAwakeDuringWorkout = true, // Keep screen on during workout by default
+    this.interfaceSize, // Unified interface size (font + layout), null = use fontSize for backward compat
   });
 
   factory AppConfig.fromJson(Map<String, dynamic> json) {
+    // Migration: Convert old fontSize to new interfaceSize
+    InterfaceSize? interfaceSize;
+    if (json['interfaceSize'] != null) {
+      interfaceSize = InterfaceSize.fromJson(json['interfaceSize']);
+    } else if (json['fontSize'] != null) {
+      // Backward compatibility: migrate from fontSize
+      interfaceSize = InterfaceSize.fromFontSize(json['fontSize'].toDouble());
+    }
+
     return AppConfig(
       languageCode: json['languageCode'] ?? 'en',
       countryCode: json['countryCode'] ?? 'US',
@@ -81,7 +93,7 @@ class AppConfig { // Auto-adjust rest time based on RPE feedback
       primaryColor: json['primaryColor'] ?? '2196F3', // Material Blue 500
       enableLiveActivities: json['enableLiveActivities'] ?? true,
       syncWithHealthKit: json['syncWithHealthKit'] ?? false,
-      fontSize: json['fontSize']?.toDouble() ?? 1.0,
+      fontSize: json['fontSize']?.toDouble() ?? interfaceSize?.fontSize ?? 1.0,
       preferredTemplateId: json['preferredTemplateId'],
       rpeTracking: json['rpeTracking'] ?? true,
       autoRestTimer: json['autoRestTimer'] ?? true,
@@ -94,6 +106,7 @@ class AppConfig { // Auto-adjust rest time based on RPE feedback
       skipExerciseDeleteConfirmation: json['skipExerciseDeleteConfirmation'] ?? false,
       simpleMode: json['simpleMode'] ?? false,
       keepScreenAwakeDuringWorkout: json['keepScreenAwakeDuringWorkout'] ?? true,
+      interfaceSize: interfaceSize,
     );
   }
   @HiveField(0)
@@ -145,6 +158,7 @@ class AppConfig { // Auto-adjust rest time based on RPE feedback
   final bool syncWithHealthKit;
   
   @HiveField(12)
+  @Deprecated('Use interfaceSize instead. Kept for backward compatibility.')
   final double fontSize; // Scale factor: 0.8 to 1.2
   
   @HiveField(17)
@@ -254,6 +268,9 @@ class AppConfig { // Auto-adjust rest time based on RPE feedback
   @HiveField(51)
   final bool keepScreenAwakeDuringWorkout; // Prevent auto-lock during active workout
 
+  @HiveField(52)
+  final InterfaceSize? interfaceSize; // Unified interface size control (font + layout)
+
   Locale get locale => Locale(languageCode, countryCode);
 
   AppConfig copyWith({
@@ -308,6 +325,7 @@ class AppConfig { // Auto-adjust rest time based on RPE feedback
     bool? skipExerciseDeleteConfirmation,
     bool? simpleMode,
     bool? keepScreenAwakeDuringWorkout,
+    InterfaceSize? interfaceSize,
   }) {
     return AppConfig(
       languageCode: languageCode ?? this.languageCode,
@@ -361,6 +379,7 @@ class AppConfig { // Auto-adjust rest time based on RPE feedback
       skipExerciseDeleteConfirmation: skipExerciseDeleteConfirmation ?? this.skipExerciseDeleteConfirmation,
       simpleMode: simpleMode ?? this.simpleMode,
       keepScreenAwakeDuringWorkout: keepScreenAwakeDuringWorkout ?? this.keepScreenAwakeDuringWorkout,
+      interfaceSize: interfaceSize ?? this.interfaceSize,
     );
   }
 
@@ -392,6 +411,7 @@ class AppConfig { // Auto-adjust rest time based on RPE feedback
       'skipExerciseDeleteConfirmation': skipExerciseDeleteConfirmation,
       'simpleMode': simpleMode,
       'keepScreenAwakeDuringWorkout': keepScreenAwakeDuringWorkout,
+      'interfaceSize': interfaceSize?.toJson(),
     };
   }
 
@@ -480,12 +500,13 @@ class AppConfigPresets {
   );
 
   /// Simple mode preset for elderly users (P2-2)
-  /// - Large font (1.3x)
+  /// - Large interface (large text + comfortable spacing)
   /// - No advanced features
   /// - Simplified animations
   /// - Sound/vibration enabled
   static const AppConfig simpleModeConfig = AppConfig(
-    fontSize: 1.3, // 30% larger text
+    interfaceSize: InterfaceSize.large, // Large text + comfortable spacing
+    fontSize: 1.2, // Kept for backward compatibility
     simpleMode: true,
     simplifiedAnimations: true,
     showIntensityTechniques: false, // Hide dropsets, rest-pause etc

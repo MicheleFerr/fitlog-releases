@@ -10,20 +10,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/providers/set_display_provider.dart';
+import 'package:gymbro_flutter_new/shared/domain/entities/interface_size.dart';
 import 'package:gymbro_flutter_new/shared/presentation/providers/app_config_provider.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/shared/presentation/services/snackbar_service.dart';
-
-/// Font size options for the selector
-enum _FontSize {
-  small(0.8),
-  medium(1.0),
-  large(1.2);
-
-  const _FontSize(this.value);
-  final double value;
-}
 
 /// Simplified Workout Customization Modal
 class WorkoutCustomizationModalV3 extends ConsumerStatefulWidget {
@@ -62,7 +53,7 @@ class _WorkoutCustomizationModalV3State
   late bool _showExerciseInsights;
   late bool _showQuickIcons; // Unified: was 3 separate toggles
   late bool _plateCalculator;
-  late double _fontSize;
+  late InterfaceSize _interfaceSize;
 
   // ✅ Initial values for change tracking (feedback on close)
   late bool _initialAutoRestTimer;
@@ -77,7 +68,7 @@ class _WorkoutCustomizationModalV3State
   late bool _initialShowExerciseInsights;
   late bool _initialShowQuickIcons;
   late bool _initialPlateCalculator;
-  late double _initialFontSize;
+  late InterfaceSize _initialInterfaceSize;
 
   @override
   void initState() {
@@ -103,7 +94,15 @@ class _WorkoutCustomizationModalV3State
         (config.showWarmupIcon ?? false) ||
         (config.showPreventionIcon ?? false);
     _plateCalculator = config.plateCalculator ?? true;
-    _fontSize = config.fontSize;
+    _interfaceSize = config.interfaceSize ?? InterfaceSize.fromFontSize(config.fontSize);
+
+    // Sync set display mode with interface size on init
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final displayMode = _interfaceSize.setRowMode == 'compact'
+          ? SetDisplayMode.compact
+          : SetDisplayMode.comfortable;
+      ref.read(setDisplayProvider.notifier).setMode(displayMode);
+    });
 
     // ✅ Store initial values for change tracking
     _initialAutoRestTimer = _autoRestTimer;
@@ -118,7 +117,7 @@ class _WorkoutCustomizationModalV3State
     _initialShowExerciseInsights = _showExerciseInsights;
     _initialShowQuickIcons = _showQuickIcons;
     _initialPlateCalculator = _plateCalculator;
-    _initialFontSize = _fontSize;
+    _initialInterfaceSize = _interfaceSize;
   }
 
   /// ✅ Calculate number of changes made in this session
@@ -136,7 +135,7 @@ class _WorkoutCustomizationModalV3State
     if (_showExerciseInsights != _initialShowExerciseInsights) changes++;
     if (_showQuickIcons != _initialShowQuickIcons) changes++;
     if (_plateCalculator != _initialPlateCalculator) changes++;
-    if (_fontSize != _initialFontSize) changes++;
+    if (_interfaceSize != _initialInterfaceSize) changes++;
     return changes;
   }
 
@@ -256,7 +255,7 @@ class _WorkoutCustomizationModalV3State
                         value: _soundEnabled,
                         onChanged: (v) {
                           setState(() => _soundEnabled = v);
-                          _saveSound();
+                          _saveAll();
                         },
                       ),
                       _buildDivider(),
@@ -363,9 +362,6 @@ class _WorkoutCustomizationModalV3State
                     color: context.colors.secondary,
                     initiallyExpanded: false,
                     children: [
-                      // Set size selector
-                      _buildSetSizeSelector(context),
-                      _buildDivider(),
                       _buildToggleRow(
                         context,
                         icon: AppIcons.noteAlt,
@@ -414,7 +410,7 @@ class _WorkoutCustomizationModalV3State
                         },
                       ),
                       _buildDivider(),
-                      _buildFontSizeSelector(context),
+                      _buildInterfaceSizeSelector(context),
                     ],
                   ),
 
@@ -619,71 +615,10 @@ class _WorkoutCustomizationModalV3State
     );
   }
 
-  Widget _buildSetSizeSelector(BuildContext context) {
+  /// Interface Size Selector (unified font + layout)
+  /// Replaces separate Font Size + Set Row Size controls
+  Widget _buildInterfaceSizeSelector(BuildContext context) {
     final theme = Theme.of(context);
-    final displayMode = ref.watch(setDisplayProvider);
-
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 12),
-      child: Row(
-        children: [
-          Icon(
-            AppIcons.viewComfy,
-            size: 22,
-            color: theme.colorScheme.primary,
-          ),
-          const SizedBox(width: 12),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  context.l10n.setRowSize,
-                  style: theme.textTheme.bodyLarge?.copyWith(
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-                const SizedBox(height: 8),
-                SegmentedButton<SetDisplayMode>(
-                  segments: [
-                    ButtonSegment(
-                      value: SetDisplayMode.compact,
-                      label: Text(context.l10n.compact),
-                    ),
-                    ButtonSegment(
-                      value: SetDisplayMode.comfortable,
-                      label: Text(context.l10n.comfortable),
-                    ),
-                  ],
-                  selected: {displayMode},
-                  onSelectionChanged: (selected) {
-                    HapticFeedback.selectionClick();
-                    ref
-                        .read(setDisplayProvider.notifier)
-                        .setMode(selected.first);
-                  },
-                  style: const ButtonStyle(
-                    visualDensity: VisualDensity.compact,
-                    tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildFontSizeSelector(BuildContext context) {
-    final theme = Theme.of(context);
-
-    // Map fontSize to enum for SegmentedButton
-    _FontSize currentSize() {
-      if (_fontSize <= 0.85) return _FontSize.small;
-      if (_fontSize <= 1.05) return _FontSize.medium;
-      return _FontSize.large;
-    }
 
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 12),
@@ -700,33 +635,47 @@ class _WorkoutCustomizationModalV3State
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  context.l10n.textSize,
+                  context.l10n.interfaceSize,
                   style: theme.textTheme.bodyLarge?.copyWith(
                     fontWeight: FontWeight.w500,
                   ),
                 ),
+                Text(
+                  context.l10n.interfaceSizeSubtitle,
+                  style: theme.textTheme.bodySmall?.copyWith(
+                    color: theme.colorScheme.onSurfaceVariant,
+                  ),
+                ),
                 const SizedBox(height: 8),
-                SegmentedButton<_FontSize>(
+                SegmentedButton<InterfaceSize>(
                   segments: [
                     ButtonSegment(
-                      value: _FontSize.small,
-                      label: Text(context.l10n.small),
+                      value: InterfaceSize.compact,
+                      label: Text(context.l10n.compact),
                     ),
                     ButtonSegment(
-                      value: _FontSize.medium,
-                      label: Text(context.l10n.medium),
+                      value: InterfaceSize.standard,
+                      label: Text(context.l10n.standard),
                     ),
                     ButtonSegment(
-                      value: _FontSize.large,
+                      value: InterfaceSize.large,
                       label: Text(context.l10n.large),
                     ),
                   ],
-                  selected: {currentSize()},
+                  selected: {_interfaceSize},
                   onSelectionChanged: (selected) {
                     HapticFeedback.selectionClick();
-                    final newSize = selected.first.value;
-                    setState(() => _fontSize = newSize);
-                    ref.read(appConfigProvider.notifier).setFontSize(newSize);
+                    final newSize = selected.first;
+                    setState(() => _interfaceSize = newSize);
+
+                    // Save interface size
+                    ref.read(appConfigProvider.notifier).setInterfaceSize(newSize);
+
+                    // Sync set display mode with interface size
+                    final displayMode = newSize.setRowMode == 'compact'
+                        ? SetDisplayMode.compact
+                        : SetDisplayMode.comfortable;
+                    ref.read(setDisplayProvider.notifier).setMode(displayMode);
                   },
                   style: const ButtonStyle(
                     visualDensity: VisualDensity.compact,
@@ -772,9 +721,8 @@ class _WorkoutCustomizationModalV3State
           showWarmupIcon: _showQuickIcons,
           showPreventionIcon: _showQuickIcons,
         );
-  }
 
-  void _saveSound() {
+    // Save sound setting
     ref.read(appConfigProvider.notifier).setSoundEnabled(_soundEnabled);
   }
 }
