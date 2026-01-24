@@ -89,10 +89,18 @@ final class DirectNotificationManager: NSObject {
 
             // NOTIFICATION SOUND: Using regular sound (Critical Alert entitlement pending)
             // Use regular notification sound - works without Critical Alert entitlement
-            // Sound will play if device is NOT muted
-            content.sound = UNNotificationSound(named: UNNotificationSoundName(rawValue: soundFileName))
-            print("🔊 Sound configured: \(soundFileName)")
-            print("   - Using regular notification sound (Critical Alert pending Apple approval)")
+            // FIX: Actually use the file verification result!
+            if let _ = Bundle.main.path(forResource: soundFileBase, ofType: "caf") {
+                content.sound = UNNotificationSound(named: UNNotificationSoundName(rawValue: soundFileName))
+                print("🔊 Sound configured: \(soundFileName)")
+                print("   - Using regular notification sound (Critical Alert pending Apple approval)")
+                print("   - File verified and found in bundle ✅")
+            } else {
+                content.sound = .default
+                print("⚠️ Custom sound NOT FOUND in bundle: \(soundFileName)")
+                print("   - Falling back to system default sound")
+                print("   - Check that \(soundFileBase).caf is included in Copy Bundle Resources")
+            }
             
             // For immediate notifications on iOS 15+
             if #available(iOS 15.0, *) {
@@ -116,10 +124,11 @@ final class DirectNotificationManager: NSObject {
                 }
             }
             
-            // Also try to play sound directly if app is active
-            if UIApplication.shared.applicationState == .active {
-                TimerSoundFix.shared.playTimerCompletionSound(preferredSound: soundName)
-            }
+            // CRITICAL FIX: ALWAYS try to play sound with AVAudioPlayer as backup
+            // This ensures audio plays even if notification sound fails
+            // AVAudioPlayer bypasses notification system issues
+            print("🔊 [BACKUP] Playing sound with AVAudioPlayer as additional guarantee")
+            TimerSoundFix.shared.playTimerCompletionSound(preferredSound: soundName)
         } else {
             // Schedule for future - this is the correct way for timer notifications
             _ = scheduleTimerNotification(
