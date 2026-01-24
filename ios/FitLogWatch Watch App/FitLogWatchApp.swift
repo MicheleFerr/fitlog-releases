@@ -88,13 +88,21 @@ struct FitLogWatch_Watch_AppApp: App {
                                 print("⌚ [APP] 🔄 Foreground recovery: iPhone workout active but HKWorkoutSession not running")
                                 print("⌚ [APP] 🔄 Current HKWorkoutSession state: \(workoutManager.workoutState.rawValue)")
 
+                                // 🧹 Clean up stale session if exists
+                                if workoutManager.session != nil {
+                                    print("⌚ [APP] 🧹 Cleaning stale session before foreground restart")
+                                    await workoutManager.forceResetSession()
+                                }
+
                                 do {
                                     let workoutType = mapWorkoutType(connectivityManager.workoutType)
                                     print("⌚ [APP] 🔄 Restarting HKWorkoutSession with type: \(workoutType.rawValue)")
                                     try await workoutManager.startWorkout(type: workoutType, isCompanion: true)
                                     print("⌚ [APP] ✅ HKWorkoutSession restarted successfully on foreground")
                                 } catch {
-                                    print("⌚ [APP] ⚠️ Failed to restart HKWorkoutSession on foreground: \(error.localizedDescription)")
+                                    print("⌚ [APP] ❌ Failed to restart HKWorkoutSession on foreground: \(error.localizedDescription)")
+                                    let nsError = error as NSError
+                                    print("⌚ [APP] Error domain: \(nsError.domain), code: \(nsError.code)")
                                 }
                             }
                         }
@@ -109,13 +117,22 @@ struct FitLogWatch_Watch_AppApp: App {
                         // HKWorkoutSession keeps screen on and enables always-on display
                         print("⌚ [APP] Workout became active - starting HKWorkoutSession for always-on display")
                         Task {
-                            // ✅ FIX: Check workout STATE not just isWorkoutActive flag
-                            // A stale session might have isWorkoutActive=true but state=ended
-                            // Only skip if session is actually running
-                            if workoutManager.workoutState == .running {
-                                print("⌚ [APP] HKWorkoutSession already running, skipping start")
+                            // ✅ FIX: Check for ANY active session (running OR paused)
+                            // Only skip if session is truly active and healthy
+                            if workoutManager.workoutState == .running || workoutManager.workoutState == .paused {
+                                print("⌚ [APP] HKWorkoutSession already active (state: \(workoutManager.workoutState.rawValue)), skipping start")
                                 return
                             }
+
+                            // 🧹 CRITICAL FIX: Force cleanup of stale sessions before starting new one
+                            // This prevents "Unable to transition from Ended state" errors
+                            // that occur when previous workout didn't clean up properly
+                            if workoutManager.session != nil {
+                                print("⌚ [APP] 🧹 Detected stale HKWorkoutSession (state: \(workoutManager.workoutState.rawValue))")
+                                print("⌚ [APP] 🧹 Cleaning up before starting new session...")
+                                await workoutManager.forceResetSession()
+                            }
+
                             do {
                                 // ✅ FIX: Use workout type from iPhone instead of hardcoding
                                 let workoutType = mapWorkoutType(connectivityManager.workoutType)
@@ -125,7 +142,10 @@ struct FitLogWatch_Watch_AppApp: App {
                                 try await workoutManager.startWorkout(type: workoutType, isCompanion: true)
                                 print("⌚ [APP] ✅ HKWorkoutSession started successfully (always-on display enabled)")
                             } catch {
-                                print("⌚ [APP] ⚠️ Failed to start HKWorkoutSession: \(error.localizedDescription)")
+                                print("⌚ [APP] ❌ Failed to start HKWorkoutSession: \(error.localizedDescription)")
+                                // Log the full error for debugging
+                                let nsError = error as NSError
+                                print("⌚ [APP] Error domain: \(nsError.domain), code: \(nsError.code)")
                             }
                         }
                     } else if !newValue && oldValue {

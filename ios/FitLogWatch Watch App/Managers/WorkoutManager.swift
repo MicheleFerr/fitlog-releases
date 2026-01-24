@@ -164,11 +164,22 @@ class WorkoutManager: NSObject, ObservableObject {
     ///   - isCompanion: If true, this session is started as companion to iPhone workout
     ///                  (haptic feedback is skipped since ConnectivityManager already played it)
     func startWorkout(type: WorkoutType, isCompanion: Bool = false) async throws {
-        // ✅ FIX: Always clear any stale session before starting new one
+        // 🧹 CRITICAL FIX: Force cleanup any stale session before starting new one
         // This prevents "Unable to transition from Ended state" errors
         if session != nil {
-            print("⌚ [WORKOUT] Clearing stale session before starting new one")
+            print("⌚ [WORKOUT] ⚠️ Detected stale session (state: \(workoutState.rawValue))")
+            print("⌚ [WORKOUT] 🧹 Force cleaning up before starting new session...")
+
+            // End the stale session first (important!)
+            session?.end()
+
+            // Then clear all state
             resetState()
+
+            // Small delay to let HealthKit process the cleanup
+            try? await Task.sleep(nanoseconds: 100_000_000)  // 0.1s
+
+            print("⌚ [WORKOUT] ✅ Stale session cleaned up")
         }
 
         // 1. Request authorization ONLY if not already determined
@@ -203,11 +214,16 @@ class WorkoutManager: NSObject, ObservableObject {
 
         // 5. Start session and builder
         let startDate = Date()
+        print("⌚ [WORKOUT] 🚀 Starting HKWorkoutSession...")
         session?.startActivity(with: startDate)
+        print("⌚ [WORKOUT] 🚀 Beginning data collection...")
         try await builder?.beginCollection(at: startDate)
 
         self.workoutStartDate = startDate
         isWorkoutActive = true
+
+        print("⌚ [WORKOUT] ✅ HKWorkoutSession started successfully!")
+        print("⌚ [WORKOUT] Type: \(type.rawValue), StartDate: \(startDate)")
 
         // NOTE: No timers needed!
         // - Elapsed time: Views use Text(workoutStartDate, style: .timer) - native, battery efficient
@@ -382,6 +398,28 @@ class WorkoutManager: NSObject, ObservableObject {
         self.builder = nil
         self.workoutStartDate = nil
         self.isWorkoutActive = false
+    }
+
+    /// Force reset session state (callable from external code)
+    /// Used to clean up stale sessions before starting a new workout
+    /// This prevents "Unable to transition from Ended state" errors
+    func forceResetSession() async {
+        print("⌚ [WORKOUT] 🧹 Force resetting stale session (state: \(workoutState.rawValue))")
+
+        // End any lingering session gracefully
+        if let session = session {
+            session.end()
+            print("⌚ [WORKOUT] Ended stale session")
+        }
+
+        // Clear all state
+        resetState()
+
+        // Small delay to let HealthKit process the end
+        // This ensures the session is fully cleaned up before we create a new one
+        try? await Task.sleep(nanoseconds: 100_000_000)  // 0.1s
+
+        print("⌚ [WORKOUT] ✅ Session reset complete")
     }
 
     /// Flag to track if we initiated the workout end
