@@ -21,25 +21,25 @@ import 'package:gymbro_flutter_new/features/custom_exercises/domain/repositories
 /// - Tracking expired exercises needing renewal
 ///
 /// ✅ FIXED: Uses consolidated tier limits (UserTier + AccountTier)
-/// Instead of boolean isPremium, receives maxCustomExercises from tierEntitlementsProvider
+/// Instead of boolean isPremium, receives maxCustomSingleExercises from tierEntitlementsProvider
 class CustomExerciseLimitService {
   CustomExerciseLimitService({
     required CustomExerciseRepository repository,
-    required int maxCustomExercises,
+    required int maxCustomSingleExercises,
   })  : _repository = repository,
-        _maxCustomExercises = maxCustomExercises;
+        _maxCustomSingleExercises = maxCustomSingleExercises;
 
   final CustomExerciseRepository _repository;
-  final int _maxCustomExercises;
+  final int _maxCustomSingleExercises;
 
   /// Days a temporary unlock lasts after watching ad
   static const int tempUnlockDays = 7;
 
   /// Check if user has unlimited exercises (999 = unlimited)
-  bool get hasUnlimitedExercises => _maxCustomExercises >= 999;
+  bool get hasUnlimitedExercises => _maxCustomSingleExercises >= 999;
 
   /// Maximum custom exercises for this user (from consolidated tier entitlements)
-  int get maxExercises => _maxCustomExercises;
+  int get maxExercises => _maxCustomSingleExercises;
 
   /// Check if user can create a new permanent exercise
   ///

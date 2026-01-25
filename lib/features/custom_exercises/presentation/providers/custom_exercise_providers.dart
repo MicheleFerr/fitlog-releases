@@ -90,7 +90,7 @@ final customExerciseLimitServiceProvider = Provider<CustomExerciseLimitService>(
 
   return CustomExerciseLimitService(
     repository: repository,
-    maxCustomExercises: entitlements.maxCustomExercises,
+    maxCustomSingleExercises: entitlements.maxCustomSingleExercises,
   );
 });
 

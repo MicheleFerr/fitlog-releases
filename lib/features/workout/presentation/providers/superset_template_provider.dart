@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/superset_template.dart';
 import 'package:gymbro_flutter_new/features/workout/data/repositories/superset_template_repository.dart';
 import 'package:gymbro_flutter_new/features/exercise_database/presentation/providers/hybrid_exercise_provider.dart';
+import 'package:gymbro_flutter_new/core/providers/tier_entitlements_provider.dart';
 
 // Repository provider
 // Injects HybridExerciseRepository for localized exercise name lookup
@@ -207,7 +208,11 @@ class SupersetTemplateNotifier extends Notifier<SupersetTemplateState> {
       }
 
       final repository = ref.read(supersetTemplateRepositoryProvider);
-      await repository.saveCustomTemplate(template);
+      final entitlements = ref.read(tierEntitlementsProvider);
+      await repository.saveCustomTemplate(
+        template,
+        maxCustomSupersets: entitlements.maxCustomSupersets,
+      );
 
       if (kDebugMode) {
         debugPrint('💾 SUPERSET PROVIDER: Template saved, reloading...');

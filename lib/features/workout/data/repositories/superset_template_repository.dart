@@ -178,7 +178,12 @@ class SupersetTemplateRepository {
   }
 
   /// Save a custom template
-  Future<void> saveCustomTemplate(SupersetTemplate template) async {
+  ///
+  /// [maxCustomSupersets] - Maximum custom superset templates (from tierEntitlementsProvider)
+  Future<void> saveCustomTemplate(
+    SupersetTemplate template, {
+    required int maxCustomSupersets,
+  }) async {
     if (kDebugMode) {
       debugPrint(
         '💾 Saving custom superset template "${template.name}" with ${template.exerciseNames.length} exercises',
@@ -187,6 +192,15 @@ class SupersetTemplateRepository {
 
     try {
       final customTemplates = await getCustomTemplates();
+
+      // Check limit BEFORE saving (skip if updating existing template)
+      final isUpdate = customTemplates.any((t) => t.id == template.id);
+      if (!isUpdate && customTemplates.length >= maxCustomSupersets) {
+        throw Exception(
+          'Custom superset limit reached: ${customTemplates.length}/$maxCustomSupersets. '
+          'Delete existing templates or upgrade tier for more slots.',
+        );
+      }
 
       // Remove existing template if updating
       customTemplates.removeWhere((t) => t.id == template.id);
@@ -203,7 +217,7 @@ class SupersetTemplateRepository {
 
       if (kDebugMode) {
         debugPrint(
-          '✅ Custom template saved. Total custom templates: ${customTemplates.length}',
+          '✅ Custom template saved. Total custom templates: ${customTemplates.length}/$maxCustomSupersets',
         );
       }
     } catch (e) {

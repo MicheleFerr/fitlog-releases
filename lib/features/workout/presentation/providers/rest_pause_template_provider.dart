@@ -2,6 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/rest_pause_template.dart';
 import 'package:gymbro_flutter_new/features/workout/data/repositories/rest_pause_template_repository.dart';
+import 'package:gymbro_flutter_new/core/providers/tier_entitlements_provider.dart';
 
 // Repository provider
 final restPauseTemplateRepositoryProvider = Provider<RestPauseTemplateRepository>((ref) {
@@ -162,7 +163,11 @@ class RestPauseTemplateNotifier extends Notifier<RestPauseTemplateState> {
       }
 
       final repository = ref.read(restPauseTemplateRepositoryProvider);
-      await repository.saveCustomTemplate(template);
+      final entitlements = ref.read(tierEntitlementsProvider);
+      await repository.saveCustomTemplate(
+        template,
+        maxCustomRestPause: entitlements.maxCustomRestPause,
+      );
 
       if (kDebugMode) {
         debugPrint('💾 RESTPAUSE PROVIDER: Template saved, reloading...');

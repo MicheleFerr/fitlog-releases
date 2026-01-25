@@ -195,7 +195,7 @@ class _PersonalizedContentCardState
                                 _StatChip(
                                   icon: AppIcons.workout,
                                   count: exerciseCount,
-                                  max: entitlements.maxCustomExercises,
+                                  max: entitlements.maxCustomSingleExercises,
                                   label: context.l10n.exercises,
                                   color: colorScheme.tertiary,
                                 ),

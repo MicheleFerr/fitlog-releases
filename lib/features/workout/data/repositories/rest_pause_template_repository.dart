@@ -92,7 +92,12 @@ class RestPauseTemplateRepository {
   }
 
   /// Save a custom template
-  Future<void> saveCustomTemplate(RestPauseTemplate template) async {
+  ///
+  /// [maxCustomRestPause] - Maximum custom rest-pause templates (from tierEntitlementsProvider)
+  Future<void> saveCustomTemplate(
+    RestPauseTemplate template, {
+    required int maxCustomRestPause,
+  }) async {
     if (kDebugMode) {
       debugPrint(
         '💾 Saving custom rest-pause template "${template.name}"',
@@ -101,6 +106,15 @@ class RestPauseTemplateRepository {
 
     try {
       final customTemplates = await getCustomTemplates();
+
+      // Check limit BEFORE saving (skip if updating existing template)
+      final isUpdate = customTemplates.any((t) => t.id == template.id);
+      if (!isUpdate && customTemplates.length >= maxCustomRestPause) {
+        throw Exception(
+          'Custom rest-pause limit reached: ${customTemplates.length}/$maxCustomRestPause. '
+          'Delete existing templates or upgrade tier for more slots.',
+        );
+      }
 
       // Remove existing template if updating
       customTemplates.removeWhere((t) => t.id == template.id);
@@ -117,7 +131,7 @@ class RestPauseTemplateRepository {
 
       if (kDebugMode) {
         debugPrint(
-          '✅ Custom rest-pause template saved. Total: ${customTemplates.length}',
+          '✅ Custom template saved. Total custom templates: ${customTemplates.length}/$maxCustomRestPause',
         );
       }
     } catch (e) {

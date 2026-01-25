@@ -1712,7 +1712,7 @@ class _TemplatesHomeScreenState extends ConsumerState<TemplatesHomeScreen>
     final exerciseCount = exercisesAsync.valueOrNull?.length ?? 0;
     final l10n = AppLocalizations.of(context);
 
-    if (!entitlements.canCreateCustomExercise(exerciseCount)) {
+    if (!entitlements.canCreateCustomSingleExercise(exerciseCount)) {
       SnackBarService.showCustom(
         context,
         message: l10n.customExerciseLimit,

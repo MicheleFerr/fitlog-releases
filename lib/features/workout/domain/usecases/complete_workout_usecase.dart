@@ -66,7 +66,6 @@ class CompleteWorkoutUseCase {
         completedWorkout: completedWorkout,
         activityIds: activityIds,
         stats: stats,
-        achievements: _checkAchievements(completedWorkout, stats),
       ));
       
     } catch (e) {
@@ -202,62 +201,6 @@ class CompleteWorkoutUseCase {
     );
   }
   
-  /// Check for achievements unlocked
-  List<Achievement> _checkAchievements(Workout workout, WorkoutCompletionStats stats) {
-    final achievements = <Achievement>[];
-    
-    // Duration-based achievements
-    if (stats.duration.inMinutes >= 60) {
-      achievements.add(const Achievement(
-        id: 'marathon_workout',
-        name: 'Marathon Warrior',
-        description: 'Complete a workout longer than 60 minutes',
-        iconPath: '🏃‍♂️',
-      ));
-    }
-    
-    // Volume-based achievements
-    if (stats.totalVolume >= 1000) {
-      achievements.add(const Achievement(
-        id: 'volume_beast',
-        name: 'Volume Beast',
-        description: 'Move over 1000kg in a single workout',
-        iconPath: '💪',
-      ));
-    }
-    
-    // Set count achievements
-    if (stats.completedSets >= 50) {
-      achievements.add(const Achievement(
-        id: 'set_master',
-        name: 'Set Master',
-        description: 'Complete 50+ sets in one workout',
-        iconPath: '🎯',
-      ));
-    }
-    
-    // Perfect completion
-    if (stats.completionRate == 1.0) {
-      achievements.add(const Achievement(
-        id: 'perfectionist',
-        name: 'Perfectionist',
-        description: 'Complete every planned set',
-        iconPath: '⭐',
-      ));
-    }
-    
-    // Variety achievement
-    if (stats.exercisesByCategory.length >= 4) {
-      achievements.add(const Achievement(
-        id: 'well_rounded',
-        name: 'Well Rounded',
-        description: 'Train 4+ muscle groups in one workout',
-        iconPath: '🎯',
-      ));
-    }
-    
-    return achievements;
-  }
 }
 
 /// Parameters for CompleteWorkoutUseCase
@@ -275,19 +218,17 @@ class CompleteWorkoutParams {
 
 /// Result of completing a workout
 class CompleteWorkoutResult {
-  
+
   const CompleteWorkoutResult({
     required this.workoutId,
     required this.completedWorkout,
     required this.activityIds,
     required this.stats,
-    required this.achievements,
   });
   final String workoutId;
   final Workout completedWorkout;
   final List<String> activityIds;
   final WorkoutCompletionStats stats;
-  final List<Achievement> achievements;
 }
 
 /// Workout completion statistics
@@ -309,19 +250,4 @@ class WorkoutCompletionStats {
   final Duration averageRestTime;
   final Map<ExerciseCategory, int> exercisesByCategory;
   final double? averageRpe;
-}
-
-/// Achievement unlocked during workout
-class Achievement {
-  
-  const Achievement({
-    required this.id,
-    required this.name,
-    required this.description,
-    required this.iconPath,
-  });
-  final String id;
-  final String name;
-  final String description;
-  final String iconPath;
 }

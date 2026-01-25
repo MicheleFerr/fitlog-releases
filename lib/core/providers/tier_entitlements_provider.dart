@@ -77,8 +77,17 @@ class TierEntitlements {
   /// Maximum public templates user can share (consolidated from both tiers)
   int get maxPublicTemplates => _quota.maxPublicTemplates;
 
-  /// Maximum custom exercises user can create
-  int get maxCustomExercises => _tier.maxCustomExercises;
+  /// Maximum custom single exercises user can create
+  int get maxCustomSingleExercises => _tier.maxCustomSingleExercises;
+
+  /// Maximum custom superset templates user can create
+  int get maxCustomSupersets => _tier.maxCustomSupersets;
+
+  /// Maximum custom dropset templates user can create
+  int get maxCustomDropsets => _tier.maxCustomDropsets;
+
+  /// Maximum custom rest-pause templates user can create
+  int get maxCustomRestPause => _tier.maxCustomRestPause;
 
   /// Whether to show banner ads (Premium/Pro users have no ads)
   bool get shouldShowAds => _accountTier == AccountTier.free && _tier.showAds;
@@ -95,8 +104,17 @@ class TierEntitlements {
   /// Check if user can save another public template
   bool canSavePublicTemplate(int currentCount) => currentCount < maxPublicTemplates;
 
-  /// Check if user can create another custom exercise
-  bool canCreateCustomExercise(int currentCount) => currentCount < maxCustomExercises;
+  /// Check if user can create another custom single exercise
+  bool canCreateCustomSingleExercise(int currentCount) => currentCount < maxCustomSingleExercises;
+
+  /// Check if user can create another custom superset
+  bool canCreateCustomSuperset(int currentCount) => currentCount < maxCustomSupersets;
+
+  /// Check if user can create another custom dropset
+  bool canCreateCustomDropset(int currentCount) => currentCount < maxCustomDropsets;
+
+  /// Check if user can create another custom rest-pause
+  bool canCreateCustomRestPause(int currentCount) => currentCount < maxCustomRestPause;
 
   /// Get remaining private template slots
   int remainingTemplates(int currentCount) =>
@@ -106,9 +124,21 @@ class TierEntitlements {
   int remainingPublicTemplates(int currentCount) =>
       (maxPublicTemplates - currentCount).clamp(0, maxPublicTemplates);
 
-  /// Get remaining custom exercise slots
-  int remainingCustomExercises(int currentCount) =>
-      (maxCustomExercises - currentCount).clamp(0, maxCustomExercises);
+  /// Get remaining custom single exercise slots
+  int remainingCustomSingleExercises(int currentCount) =>
+      (maxCustomSingleExercises - currentCount).clamp(0, maxCustomSingleExercises);
+
+  /// Get remaining custom superset slots
+  int remainingCustomSupersets(int currentCount) =>
+      (maxCustomSupersets - currentCount).clamp(0, maxCustomSupersets);
+
+  /// Get remaining custom dropset slots
+  int remainingCustomDropsets(int currentCount) =>
+      (maxCustomDropsets - currentCount).clamp(0, maxCustomDropsets);
+
+  /// Get remaining custom rest-pause slots
+  int remainingCustomRestPause(int currentCount) =>
+      (maxCustomRestPause - currentCount).clamp(0, maxCustomRestPause);
 
   /// Check if feature is locked (for UI display)
   bool isFeatureLocked(TierFeature feature) {
@@ -201,11 +231,38 @@ final maxPublicTemplatesProvider = Provider<int>((ref) {
   );
 });
 
-/// Maximum custom exercises user can create
+/// Maximum custom single exercises user can create
 ///
-/// Use this when checking custom exercise creation limits.
-final maxCustomExercisesProvider = Provider<int>((ref) {
+/// Use this when checking custom single exercise creation limits.
+final maxCustomSingleExercisesProvider = Provider<int>((ref) {
   return ref.watch(
-    tierEntitlementsProvider.select((e) => e.maxCustomExercises),
+    tierEntitlementsProvider.select((e) => e.maxCustomSingleExercises),
+  );
+});
+
+/// Maximum custom superset templates user can create
+///
+/// Use this when checking custom superset template creation limits.
+final maxCustomSupersetsProvider = Provider<int>((ref) {
+  return ref.watch(
+    tierEntitlementsProvider.select((e) => e.maxCustomSupersets),
+  );
+});
+
+/// Maximum custom dropset templates user can create
+///
+/// Use this when checking custom dropset template creation limits.
+final maxCustomDropsetsProvider = Provider<int>((ref) {
+  return ref.watch(
+    tierEntitlementsProvider.select((e) => e.maxCustomDropsets),
+  );
+});
+
+/// Maximum custom rest-pause templates user can create
+///
+/// Use this when checking custom rest-pause template creation limits.
+final maxCustomRestPauseProvider = Provider<int>((ref) {
+  return ref.watch(
+    tierEntitlementsProvider.select((e) => e.maxCustomRestPause),
   );
 });

@@ -17,7 +17,7 @@ import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart'
 import 'package:gymbro_flutter_new/core/domain/entities/user_tier.dart';
 import 'package:gymbro_flutter_new/features/home/providers/user_xp_provider.dart';
 import 'package:gymbro_flutter_new/features/streak/presentation/providers/streak_provider.dart';
-import 'package:gymbro_flutter_new/features/progress/presentation/providers/progress_provider.dart';
+import 'package:gymbro_flutter_new/features/progress/presentation/providers/progress_provider.dart' hide currentStreakProvider;
 import 'package:gymbro_flutter_new/features/profile/presentation/widgets/level_info_modal.dart';
 import 'package:gymbro_flutter_new/shared/presentation/providers/ghost_mode_provider.dart';
 

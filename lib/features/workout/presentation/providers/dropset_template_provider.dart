@@ -2,6 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/dropset_template.dart';
 import 'package:gymbro_flutter_new/features/workout/data/repositories/dropset_template_repository.dart';
+import 'package:gymbro_flutter_new/core/providers/tier_entitlements_provider.dart';
 
 // Repository provider
 final dropsetTemplateRepositoryProvider = Provider<DropsetTemplateRepository>((ref) {
@@ -162,7 +163,11 @@ class DropsetTemplateNotifier extends Notifier<DropsetTemplateState> {
       }
 
       final repository = ref.read(dropsetTemplateRepositoryProvider);
-      await repository.saveCustomTemplate(template);
+      final entitlements = ref.read(tierEntitlementsProvider);
+      await repository.saveCustomTemplate(
+        template,
+        maxCustomDropsets: entitlements.maxCustomDropsets,
+      );
 
       if (kDebugMode) {
         debugPrint('💾 DROPSET PROVIDER: Template saved, reloading...');

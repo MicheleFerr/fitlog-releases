@@ -92,7 +92,12 @@ class DropsetTemplateRepository {
   }
 
   /// Save a custom template
-  Future<void> saveCustomTemplate(DropsetTemplate template) async {
+  ///
+  /// [maxCustomDropsets] - Maximum custom dropset templates (from tierEntitlementsProvider)
+  Future<void> saveCustomTemplate(
+    DropsetTemplate template, {
+    required int maxCustomDropsets,
+  }) async {
     if (kDebugMode) {
       debugPrint(
         '💾 Saving custom dropset template "${template.name}"',
@@ -101,6 +106,15 @@ class DropsetTemplateRepository {
 
     try {
       final customTemplates = await getCustomTemplates();
+
+      // Check limit BEFORE saving (skip if updating existing template)
+      final isUpdate = customTemplates.any((t) => t.id == template.id);
+      if (!isUpdate && customTemplates.length >= maxCustomDropsets) {
+        throw Exception(
+          'Custom dropset limit reached: ${customTemplates.length}/$maxCustomDropsets. '
+          'Delete existing templates or upgrade tier for more slots.',
+        );
+      }
 
       // Remove existing template if updating
       customTemplates.removeWhere((t) => t.id == template.id);
@@ -117,7 +131,7 @@ class DropsetTemplateRepository {
 
       if (kDebugMode) {
         debugPrint(
-          '✅ Custom dropset template saved. Total: ${customTemplates.length}',
+          '✅ Custom template saved. Total custom templates: ${customTemplates.length}/$maxCustomDropsets',
         );
       }
     } catch (e) {

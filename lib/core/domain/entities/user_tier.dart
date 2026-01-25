@@ -19,14 +19,17 @@ import 'package:flutter/material.dart';
 /// This is the single source of truth for tier definitions and rewards.
 ///
 /// Tier Rewards Matrix:
-/// | Feature           | Starter | Bronze | Silver | Gold | Platinum |
-/// |-------------------|---------|--------|--------|------|----------|
-/// | Private Templates | 4       | 4      | 5      | 5    | 7        |
-/// | Public Templates  | 2       | 2      | 3      | 3    | 5        |
-/// | Custom Exercises  | 3       | 5      | 7      | 10   | 999      |
-/// | Banner Ads        | Yes     | Yes    | Yes    | Yes  | No       |
-/// | Pro Analytics     | No      | No     | No     | No   | Yes      |
-/// | Cloud Sync        | No      | No     | No     | No   | Yes      |
+/// | Feature              | Starter | Bronze | Silver | Gold | Platinum |
+/// |----------------------|---------|--------|--------|------|----------|
+/// | Private Templates    | 4       | 4      | 5      | 5    | 7        |
+/// | Public Templates     | 2       | 2      | 3      | 3    | 5        |
+/// | Custom Singles       | 3       | 5      | 7      | 10   | 999      |
+/// | Custom Supersets     | 3       | 5      | 7      | 10   | 999      |
+/// | Custom Dropsets      | 3       | 5      | 7      | 10   | 999      |
+/// | Custom Rest-Pause    | 3       | 5      | 7      | 10   | 999      |
+/// | Banner Ads           | Yes     | Yes    | Yes    | Yes  | No       |
+/// | Pro Analytics        | No      | No     | No     | No   | Yes      |
+/// | Cloud Sync           | No      | No     | No     | No   | Yes      |
 enum UserTier {
   starter(
     minXP: 0,
@@ -34,7 +37,10 @@ enum UserTier {
     color: Color(0xFF9E9E9E),
     maxTemplates: 4,
     maxPublicTemplates: 2,
-    maxCustomExercises: 3,
+    maxCustomSingleExercises: 3,
+    maxCustomSupersets: 3,
+    maxCustomDropsets: 3,
+    maxCustomRestPause: 3,
     showAds: true,
     hasProAnalytics: false,
     hasCloudSync: false,
@@ -45,7 +51,10 @@ enum UserTier {
     color: Color(0xFFCD7F32),
     maxTemplates: 4,
     maxPublicTemplates: 2,
-    maxCustomExercises: 5,
+    maxCustomSingleExercises: 5,
+    maxCustomSupersets: 5,
+    maxCustomDropsets: 5,
+    maxCustomRestPause: 5,
     showAds: true,
     hasProAnalytics: false,
     hasCloudSync: false,
@@ -56,7 +65,10 @@ enum UserTier {
     color: Color(0xFFC0C0C0),
     maxTemplates: 5,
     maxPublicTemplates: 3,
-    maxCustomExercises: 7,
+    maxCustomSingleExercises: 7,
+    maxCustomSupersets: 7,
+    maxCustomDropsets: 7,
+    maxCustomRestPause: 7,
     showAds: true,
     hasProAnalytics: false,
     hasCloudSync: false,
@@ -67,7 +79,10 @@ enum UserTier {
     color: Color(0xFFFFD700),
     maxTemplates: 5,
     maxPublicTemplates: 3,
-    maxCustomExercises: 10,
+    maxCustomSingleExercises: 10,
+    maxCustomSupersets: 10,
+    maxCustomDropsets: 10,
+    maxCustomRestPause: 10,
     showAds: true,
     hasProAnalytics: false,
     hasCloudSync: false,
@@ -78,7 +93,10 @@ enum UserTier {
     color: Color(0xFFE5E4E2),
     maxTemplates: 7,
     maxPublicTemplates: 5,
-    maxCustomExercises: 999,
+    maxCustomSingleExercises: 999,
+    maxCustomSupersets: 999,
+    maxCustomDropsets: 999,
+    maxCustomRestPause: 999,
     showAds: false,
     hasProAnalytics: true,
     hasCloudSync: true,
@@ -90,7 +108,10 @@ enum UserTier {
     required this.color,
     required this.maxTemplates,
     required this.maxPublicTemplates,
-    required this.maxCustomExercises,
+    required this.maxCustomSingleExercises,
+    required this.maxCustomSupersets,
+    required this.maxCustomDropsets,
+    required this.maxCustomRestPause,
     required this.showAds,
     required this.hasProAnalytics,
     required this.hasCloudSync,
@@ -115,8 +136,17 @@ enum UserTier {
   /// Maximum number of public templates user can share
   final int maxPublicTemplates;
 
-  /// Maximum number of custom exercises user can create
-  final int maxCustomExercises;
+  /// Maximum number of custom single exercises user can create
+  final int maxCustomSingleExercises;
+
+  /// Maximum number of custom superset templates user can create
+  final int maxCustomSupersets;
+
+  /// Maximum number of custom dropset templates user can create
+  final int maxCustomDropsets;
+
+  /// Maximum number of custom rest-pause templates user can create
+  final int maxCustomRestPause;
 
   /// Whether to show banner ads
   final bool showAds;
