@@ -4,9 +4,10 @@
 /// 🎯 Feature: Custom Exercise Limit Management
 /// 🔧 Type: Service (Business Logic)
 ///
-/// Manages free tier limits (5 permanent exercises) and ad-unlock flow.
-/// - Free users: 5 permanent + unlimited temporary (7-day via ads)
-/// - Premium users: unlimited permanent
+/// Manages tier-based limits and ad-unlock flow for custom single exercises.
+/// - Tier-based limits: Starter (3), Bronze (5), Silver (7), Gold (10), Platinum (999)
+/// - Premium/Pro users: unlimited (999) regardless of XP tier
+/// - Ad-unlock flow: temporary 7-day unlocks when tier limit reached
 library;
 
 import 'package:gymbro_flutter_new/features/custom_exercises/domain/entities/custom_exercise.dart';
@@ -327,13 +328,13 @@ class CustomExerciseLimitService {
 
 /// Limit status for UI display
 enum LimitStatus {
-  /// Has free slots available (< 5 permanent)
+  /// Has free slots available (< tier limit)
   available,
 
-  /// Limit reached, needs ad (>= 5 permanent)
+  /// Limit reached, needs ad (>= tier limit)
   requiresAd,
 
-  /// Premium user, unlimited
+  /// Premium/Pro user or Platinum tier, unlimited (999)
   unlimited,
 }
 
@@ -349,7 +350,7 @@ class LimitCheckResult {
   /// Current limit status
   final LimitStatus status;
 
-  /// Remaining permanent slots (0-5 for free, 999 for premium)
+  /// Remaining permanent slots (0-tier_limit, 999 for unlimited)
   final int remainingSlots;
 
   /// Current count of permanent exercises

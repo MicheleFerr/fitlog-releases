@@ -77,17 +77,29 @@ class TierEntitlements {
   /// Maximum public templates user can share (consolidated from both tiers)
   int get maxPublicTemplates => _quota.maxPublicTemplates;
 
-  /// Maximum custom single exercises user can create
-  int get maxCustomSingleExercises => _tier.maxCustomSingleExercises;
+  /// Maximum custom single exercises user can create (consolidated from both tiers)
+  int get maxCustomSingleExercises =>
+      _accountTier != AccountTier.free
+          ? 999  // Premium/Pro users have unlimited
+          : _tier.maxCustomSingleExercises;
 
-  /// Maximum custom superset templates user can create
-  int get maxCustomSupersets => _tier.maxCustomSupersets;
+  /// Maximum custom superset templates user can create (consolidated from both tiers)
+  int get maxCustomSupersets =>
+      _accountTier != AccountTier.free
+          ? 999  // Premium/Pro users have unlimited
+          : _tier.maxCustomSupersets;
 
-  /// Maximum custom dropset templates user can create
-  int get maxCustomDropsets => _tier.maxCustomDropsets;
+  /// Maximum custom dropset templates user can create (consolidated from both tiers)
+  int get maxCustomDropsets =>
+      _accountTier != AccountTier.free
+          ? 999  // Premium/Pro users have unlimited
+          : _tier.maxCustomDropsets;
 
-  /// Maximum custom rest-pause templates user can create
-  int get maxCustomRestPause => _tier.maxCustomRestPause;
+  /// Maximum custom rest-pause templates user can create (consolidated from both tiers)
+  int get maxCustomRestPause =>
+      _accountTier != AccountTier.free
+          ? 999  // Premium/Pro users have unlimited
+          : _tier.maxCustomRestPause;
 
   /// Whether to show banner ads (Premium/Pro users have no ads)
   bool get shouldShowAds => _accountTier == AccountTier.free && _tier.showAds;

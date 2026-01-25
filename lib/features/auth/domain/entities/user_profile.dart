@@ -62,8 +62,8 @@ class TemplateQuota {
         );
       case AccountTier.premium:
         return TemplateQuota(
-          maxPrivateTemplates: 20,
-          maxPublicTemplates: 10,
+          maxPrivateTemplates: 999, // Unlimited for premium
+          maxPublicTemplates: 999,  // Unlimited for premium
           usedPrivateTemplates: usedPrivate,
           usedPublicTemplates: usedPublic,
         );

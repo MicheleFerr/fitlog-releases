@@ -136,6 +136,3 @@ abstract class TemplateComment with _$TemplateComment {
   factory TemplateComment.fromJson(Map<String, dynamic> json) =>
       _$TemplateCommentFromJson(json);
 }
-
-// REMOVED: TemplateQuota duplicata - usa invece quella in user_profile.dart
-// che supporta il pattern consolidato (max di UserTier + AccountTier)

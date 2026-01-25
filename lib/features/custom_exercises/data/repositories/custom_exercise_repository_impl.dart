@@ -17,14 +17,14 @@
 /// - Cloud sync: Background sync for Premium users only
 /// - Conflict resolution: Local wins (most recent timestamp)
 ///
-/// **Free Tier**:
-/// - 5 permanent custom exercises
-/// - Unlimited temporary exercises (7-day expiry)
-///
-/// **Premium Tier**:
-/// - Unlimited permanent custom exercises
-/// - Cloud sync across devices
-/// - No expiration
+/// **Tier-based Limits** (enforced by CustomExerciseLimitService):
+/// - Starter (0 XP): 3 permanent exercises
+/// - Bronze (100 XP): 5 permanent exercises
+/// - Silver (500 XP): 7 permanent exercises
+/// - Gold (1500 XP): 10 permanent exercises
+/// - Platinum (5000 XP): 999 (unlimited) permanent exercises
+/// - Premium/Pro: 999 (unlimited) regardless of XP
+/// - Temporary exercises: 7-day expiry with ad-unlock renewal
 library;
 
 import 'dart:async';
@@ -62,7 +62,6 @@ class CustomExerciseRepositoryImpl
   final FirebaseAuth _auth;
 
   static const String _firestoreCollection = 'custom_exercises';
-  static const int _freeUserLimit = 5;
 
   // Cache user profile to reduce Firestore queries
   UserProfile? _cachedUserProfile;
@@ -71,42 +70,6 @@ class CustomExerciseRepositoryImpl
 
   /// Get current user ID
   String? get _currentUserId => _auth.currentUser?.uid;
-
-  /// Check if current user is Premium
-  Future<bool> _isPremiumUser() async {
-    final userId = _currentUserId;
-    if (userId == null) return false;
-
-    // Check cache first
-    if (_cachedUserProfile != null &&
-        _profileCacheTime != null &&
-        DateTime.now().difference(_profileCacheTime!) < _cacheValidity) {
-      return _cachedUserProfile!.isPremium;
-    }
-
-    // Fetch from Firestore using error mapper
-    final result = await handleFirebaseOperation(
-      () async {
-        final doc = await _firestore.collection('users').doc(userId).get();
-        if (!doc.exists) return false;
-
-        final data = doc.data();
-        if (data == null) return false;
-
-        _cachedUserProfile = UserProfile.fromJson(data);
-        _profileCacheTime = DateTime.now();
-
-        return _cachedUserProfile!.isPremium;
-      },
-      operationName: 'Check Premium status',
-    );
-
-    // Return false on error (fallback to free tier)
-    return result.fold(
-      (failure) => false,
-      (isPremium) => isPremium,
-    );
-  }
 
   // ============================================================
   // READ OPERATIONS
@@ -197,24 +160,9 @@ class CustomExerciseRepositoryImpl
     }
   }
 
-  @override
-  Future<Either<Failure, bool>> hasReachedFreeLimit() async {
-    try {
-      // Premium users never reach limit
-      final isPremium = await _isPremiumUser();
-      if (isPremium) return right(false);
-
-      // Check if free user has reached limit
-      final countResult = await getPermanentCount();
-      return countResult.fold(
-        (failure) => left(failure),
-        (permanentCount) => right(permanentCount >= _freeUserLimit),
-      );
-    } catch (e) {
-      debugPrint('❌ Failed to check free limit: $e');
-      return left(CacheFailure(e.toString()));
-    }
-  }
+  /// Note: hasReachedFreeLimit() removed - quota validation now handled by
+  /// CustomExerciseLimitService which uses consolidated tier entitlements
+  /// (UserTier + AccountTier) instead of hardcoded limits.
 
   // ============================================================
   // WRITE OPERATIONS
@@ -228,30 +176,16 @@ class CustomExerciseRepositoryImpl
         return left(const AuthenticationFailure('User not authenticated'));
       }
 
-      // Validate free tier limits
-      if (exercise.isPermanent) {
-        final hasReachedLimit = await hasReachedFreeLimit();
-        final limitReached = hasReachedLimit.fold(
-          (failure) => false,
-          (reached) => reached,
-        );
-
-        if (limitReached) {
-          return left(
-            const QuotaExceededFailure(
-              'Free tier limit reached (5 permanent exercises). Upgrade to Premium for unlimited.',
-              code: 'QUOTA_EXCEEDED',
-            ),
-          );
-        }
-      }
+      // Note: Quota validation removed from repository layer.
+      // Business logic (including tier limits) is now handled by
+      // CustomExerciseLimitService which uses consolidated entitlements.
+      // Repository only handles CRUD operations (Clean Architecture).
 
       // Save to local storage
       await _localDatasource.save(exercise);
 
-      // Background sync for Premium users
-      final isPremium = await _isPremiumUser();
-      if (isPremium) {
+      // Background sync for Premium users (check cached profile)
+      if (_cachedUserProfile?.isPremium == true) {
         unawaited(_syncToCloudBackground(exercise, userId));
       }
 
@@ -293,30 +227,14 @@ class CustomExerciseRepositoryImpl
         );
       }
 
-      // Cannot change isPermanent from false to true if limit reached
-      if (!existing.isPermanent && exercise.isPermanent) {
-        final hasReachedLimit = await hasReachedFreeLimit();
-        final limitReached = hasReachedLimit.fold(
-          (failure) => false,
-          (reached) => reached,
-        );
-
-        if (limitReached) {
-          return left(
-            const QuotaExceededFailure(
-              'Cannot make permanent: Free tier limit reached',
-              code: 'QUOTA_EXCEEDED',
-            ),
-          );
-        }
-      }
+      // Note: Quota check for isPermanent change (false→true) removed.
+      // Business logic now handled by CustomExerciseLimitService.
 
       // Update local storage
       await _localDatasource.save(exercise);
 
-      // Background sync for Premium users
-      final isPremium = await _isPremiumUser();
-      if (isPremium) {
+      // Background sync for Premium users (check cached profile)
+      if (_cachedUserProfile?.isPremium == true) {
         unawaited(_syncToCloudBackground(exercise, userId));
       }
 
@@ -339,7 +257,7 @@ class CustomExerciseRepositoryImpl
       await _localDatasource.delete(id);
 
       // Background sync for Premium users
-      final isPremium = await _isPremiumUser();
+      final isPremium = _cachedUserProfile?.isPremium ?? false;
       if (isPremium) {
         unawaited(_deleteFromCloudBackground(id, userId));
       }
@@ -420,7 +338,8 @@ class CustomExerciseRepositoryImpl
       return left(const AuthenticationFailure('User not authenticated'));
     }
 
-    final isPremium = await _isPremiumUser();
+    // Check Premium status from cached profile or Firestore
+    final isPremium = _cachedUserProfile?.isPremium ?? false;
     if (!isPremium) {
       return left(
         const PermissionDeniedFailure(
@@ -465,7 +384,8 @@ class CustomExerciseRepositoryImpl
       return left(const AuthenticationFailure('User not authenticated'));
     }
 
-    final isPremium = await _isPremiumUser();
+    // Check Premium status from cached profile or Firestore
+    final isPremium = _cachedUserProfile?.isPremium ?? false;
     if (!isPremium) {
       return left(
         const PermissionDeniedFailure(

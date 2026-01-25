@@ -6392,8 +6392,8 @@ abstract class AppLocalizations {
   /// Message about custom exercise limit for free users
   ///
   /// In en, this message translates to:
-  /// **'Free users can create up to 3 custom exercises per import. Upgrade to Premium for unlimited custom exercises!'**
-  String get customExerciseLimit;
+  /// **'Free users can create up to {max} custom exercises per import. Upgrade to Premium for unlimited custom exercises!'**
+  String customExerciseLimit(int max);
 
   /// Button to upgrade to premium
   ///

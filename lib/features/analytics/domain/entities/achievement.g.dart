@@ -37,5 +37,4 @@ const _$BadgeTypeEnumMap = {
   BadgeType.workoutCompletionist100: 'workoutCompletionist100',
   BadgeType.workoutCompletionist500: 'workoutCompletionist500',
   BadgeType.consistencyChampion: 'consistencyChampion',
-  BadgeType.formMaster: 'formMaster',
 };

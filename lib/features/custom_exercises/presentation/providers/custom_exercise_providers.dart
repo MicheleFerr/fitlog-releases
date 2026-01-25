@@ -73,13 +73,13 @@ final customExerciseRepositoryProvider = Provider<CustomExerciseRepository>((ref
 /// Business logic for tier-based limits and ad-unlock flow.
 /// ✅ FIXED: Uses consolidated tier entitlements (UserTier + AccountTier)
 ///
-/// Limits by tier:
-/// - Bronze (XP 0-999): 3 exercises
-/// - Silver (XP 1000-4999): 5 exercises
-/// - Gold (XP 5000-19999): 7 exercises
-/// - Platinum (XP 20000-99999): 10 exercises
-/// - Diamond (XP 100000+): 999 (unlimited)
-/// - Premium (subscription): takes MAX with XP tier
+/// Limits by tier (XP-based):
+/// - Starter (XP 0-99): 3 exercises
+/// - Bronze (XP 100-499): 5 exercises
+/// - Silver (XP 500-1499): 7 exercises
+/// - Gold (XP 1500-4999): 10 exercises
+/// - Platinum (XP 5000+): 999 (unlimited)
+/// - Premium/Pro (subscription): 999 (unlimited) regardless of XP tier
 ///
 /// **Dependencies**:
 /// - Repository for data access

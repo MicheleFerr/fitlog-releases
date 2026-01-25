@@ -3439,8 +3439,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get premiumFeature => 'Premium Feature';
 
   @override
-  String get customExerciseLimit =>
-      'Free users can create up to 3 custom exercises per import. Upgrade to Premium for unlimited custom exercises!';
+  String customExerciseLimit(int max) {
+    return 'Free users can create up to $max custom exercises per import. Upgrade to Premium for unlimited custom exercises!';
+  }
 
   @override
   String get upgradeToPremium => 'Upgrade to Premium';

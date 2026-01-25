@@ -4512,9 +4512,15 @@
   "@premiumFeature": {
     "description": "Dialog title for premium features"
   },
-  "customExerciseLimit": "Free users can create up to 3 custom exercises per import. Upgrade to Premium for unlimited custom exercises!",
+  "customExerciseLimit": "Free users can create up to {max} custom exercises per import. Upgrade to Premium for unlimited custom exercises!",
   "@customExerciseLimit": {
-    "description": "Message about custom exercise limit for free users"
+    "description": "Message about custom exercise limit for free users",
+    "placeholders": {
+      "max": {
+        "type": "int",
+        "example": "3"
+      }
+    }
   },
   "upgradeToPremium": "Upgrade to Premium",
   "@upgradeToPremium": {

@@ -1169,7 +1169,7 @@
   "customExerciseNote": "Questo esercizio verrà salvato nella tua lista personale",
   "create": "Crea",
   "premiumFeature": "Funzionalità Premium",
-  "customExerciseLimit": "Gli utenti gratuiti possono creare fino a 3 esercizi personalizzati per import. Passa a Premium per esercizi personalizzati illimitati!",
+  "customExerciseLimit": "Gli utenti gratuiti possono creare fino a {max} esercizi personalizzati per import. Passa a Premium per esercizi personalizzati illimitati!",
   "upgradeToPremium": "Passa a Premium",
   "deleteTemplate": "Elimina Template",
   "confirmDeleteTemplate": "Sei sicuro di voler eliminare \"{templateName}\"?",

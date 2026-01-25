@@ -175,32 +175,18 @@ abstract class CustomExerciseRepository {
   /// ```
   Future<Either<Failure, int>> getPermanentCount();
 
-  /// Check if user has reached free limit (5 exercises)
+  /// Note: hasReachedFreeLimit() removed.
   ///
-  /// **Returns**: Either<Failure, bool>
-  /// - Left: Failure if query fails
-  /// - Right: true if count >= 5 (free limit), false otherwise
-  ///
-  /// **Logic**:
-  /// - Free users: Returns true if permanentCount >= 5
-  /// - Premium users: Always returns false
-  ///
-  /// **Use Cases**:
-  /// - Disable "Make Permanent" button
-  /// - Show premium upsell
-  /// - Validation before save
+  /// **Migration**: Use CustomExerciseLimitService instead for quota checks.
+  /// Service provides tier-based limits (3/5/7/10/999) with consolidated
+  /// AccountTier support (Premium/Pro = unlimited).
   ///
   /// **Example**:
   /// ```dart
-  /// final result = await repository.hasReachedFreeLimit();
-  /// result.fold(
-  ///   (failure) => false,
-  ///   (hasReached) => hasReached
-  ///     ? showPremiumUpsell()
-  ///     : allowCreation(),
-  /// );
+  /// final limitService = ref.watch(customExerciseLimitServiceProvider);
+  /// final canCreate = await limitService.canCreatePermanent();
+  /// final requiresAd = await limitService.requiresAdForNext();
   /// ```
-  Future<Either<Failure, bool>> hasReachedFreeLimit();
 
   // === WRITE OPERATIONS ===
 
