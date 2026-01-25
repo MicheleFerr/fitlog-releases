@@ -37,6 +37,7 @@ import 'package:gymbro_flutter_new/features/custom_exercises/domain/services/cus
 import 'package:gymbro_flutter_new/features/custom_exercises/data/repositories/custom_exercise_repository_impl.dart';
 import 'package:gymbro_flutter_new/features/custom_exercises/data/datasources/custom_exercise_local_datasource.dart';
 import 'package:gymbro_flutter_new/features/auth/presentation/providers/consolidated_user_provider.dart';
+import 'package:gymbro_flutter_new/core/providers/tier_entitlements_provider.dart';
 import 'package:gymbro_flutter_new/shared/domain/failures/failure.dart';
 import 'package:fpdart/fpdart.dart' hide State;
 
@@ -69,20 +70,27 @@ final customExerciseRepositoryProvider = Provider<CustomExerciseRepository>((ref
 
 /// Limit service provider
 ///
-/// Business logic for free tier limits and ad-unlock flow.
-/// - Free users: 5 permanent + unlimited temporary (7-day)
-/// - Premium users: unlimited permanent
+/// Business logic for tier-based limits and ad-unlock flow.
+/// ✅ FIXED: Uses consolidated tier entitlements (UserTier + AccountTier)
+///
+/// Limits by tier:
+/// - Bronze (XP 0-999): 3 exercises
+/// - Silver (XP 1000-4999): 5 exercises
+/// - Gold (XP 5000-19999): 7 exercises
+/// - Platinum (XP 20000-99999): 10 exercises
+/// - Diamond (XP 100000+): 999 (unlimited)
+/// - Premium (subscription): takes MAX with XP tier
 ///
 /// **Dependencies**:
 /// - Repository for data access
-/// - isPremiumUserProvider for tier checking
+/// - tierEntitlementsProvider for consolidated limits
 final customExerciseLimitServiceProvider = Provider<CustomExerciseLimitService>((ref) {
   final repository = ref.watch(customExerciseRepositoryProvider);
-  final isPremium = ref.watch(isPremiumUserProvider);
+  final entitlements = ref.watch(tierEntitlementsProvider);
 
   return CustomExerciseLimitService(
     repository: repository,
-    isPremiumUser: () => isPremium,
+    maxCustomExercises: entitlements.maxCustomExercises,
   );
 });
 

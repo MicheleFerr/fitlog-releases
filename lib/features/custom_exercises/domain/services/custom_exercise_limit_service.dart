@@ -19,65 +19,68 @@ import 'package:gymbro_flutter_new/features/custom_exercises/domain/repositories
 /// - Managing ad-unlock flow (7-day temporary unlocks)
 /// - Converting temporary to permanent slots
 /// - Tracking expired exercises needing renewal
+///
+/// ✅ FIXED: Uses consolidated tier limits (UserTier + AccountTier)
+/// Instead of boolean isPremium, receives maxCustomExercises from tierEntitlementsProvider
 class CustomExerciseLimitService {
   CustomExerciseLimitService({
     required CustomExerciseRepository repository,
-    required bool Function() isPremiumUser,
+    required int maxCustomExercises,
   })  : _repository = repository,
-        _isPremiumUser = isPremiumUser;
+        _maxCustomExercises = maxCustomExercises;
 
   final CustomExerciseRepository _repository;
-  final bool Function() _isPremiumUser;
-
-  /// Maximum permanent exercises for free tier
-  static const int freeLimit = 5;
+  final int _maxCustomExercises;
 
   /// Days a temporary unlock lasts after watching ad
   static const int tempUnlockDays = 7;
 
-  /// Check if user is premium
-  bool get isPremium => _isPremiumUser();
+  /// Check if user has unlimited exercises (999 = unlimited)
+  bool get hasUnlimitedExercises => _maxCustomExercises >= 999;
+
+  /// Maximum custom exercises for this user (from consolidated tier entitlements)
+  int get maxExercises => _maxCustomExercises;
 
   /// Check if user can create a new permanent exercise
   ///
   /// Returns true if:
-  /// - User is premium (unlimited)
-  /// - User has not reached free tier limit (< 5 permanent)
+  /// - User has unlimited (999)
+  /// - User has not reached tier limit
   Future<bool> canCreatePermanent() async {
-    // Premium users have unlimited
-    if (isPremium) return true;
+    // Unlimited users (999) always can create
+    if (hasUnlimitedExercises) return true;
 
-    // Free users: check permanent count
+    // Check against consolidated tier limit
     final permanentCount = await getPermanentCount();
-    return permanentCount < freeLimit;
+    return permanentCount < maxExercises;
   }
 
   /// Check if user needs to watch ad for next exercise
   ///
   /// Returns true if:
-  /// - User is NOT premium
-  /// - User has reached free tier limit (>= 5 permanent)
+  /// - User is NOT unlimited
+  /// - User has reached tier limit
   Future<bool> requiresAdForNext() async {
-    // Premium users never need ads
-    if (isPremium) return false;
+    // Unlimited users never need ads
+    if (hasUnlimitedExercises) return false;
 
-    // Free users: check if limit reached
+    // Check if tier limit reached
     final permanentCount = await getPermanentCount();
-    return permanentCount >= freeLimit;
+    return permanentCount >= maxExercises;
   }
 
-  /// Get remaining permanent slots for free tier
+  /// Get remaining permanent slots based on tier
   ///
   /// Returns:
-  /// - 999 for premium users (unlimited)
-  /// - 0-5 for free users based on current usage
+  /// - 999 for unlimited users
+  /// - 0-maxExercises for limited users based on current usage
   Future<int> getRemainingPermanentSlots() async {
-    // Premium users have unlimited
-    if (isPremium) return 999;
+    // Unlimited users
+    if (hasUnlimitedExercises) return 999;
 
-    // Free users: calculate remaining
+    // Calculate remaining against tier limit
     final permanentCount = await getPermanentCount();
-    final remaining = freeLimit - permanentCount;
+    final remaining = maxExercises - permanentCount;
     return remaining < 0 ? 0 : remaining;
   }
 
@@ -110,9 +113,9 @@ class CustomExerciseLimitService {
     final remaining = await getRemainingPermanentSlots();
 
     LimitStatus status;
-    if (isPremium) {
+    if (hasUnlimitedExercises) {
       status = LimitStatus.unlimited;
-    } else if (permanentCount < freeLimit) {
+    } else if (permanentCount < maxExercises) {
       status = LimitStatus.available;
     } else {
       status = LimitStatus.requiresAd;
@@ -129,14 +132,14 @@ class CustomExerciseLimitService {
   /// Prepare exercise for save with appropriate unlock status
   ///
   /// Business logic:
-  /// - Premium users: always permanent (unlockedUntil = null)
-  /// - Free users with slots: permanent (unlockedUntil = null)
-  /// - Free users without slots: temporary 7-day unlock
+  /// - Unlimited users: always permanent (unlockedUntil = null)
+  /// - Users with slots: permanent (unlockedUntil = null)
+  /// - Users without slots: temporary 7-day unlock
   ///
   /// Returns exercise with correct unlockedUntil field
   Future<CustomExercise> prepareExerciseForSave(CustomExercise exercise) async {
-    // Premium users always get permanent
-    if (isPremium) {
+    // Unlimited users always get permanent
+    if (hasUnlimitedExercises) {
       // Note: copyWith doesn't support nullable fields properly
       // We need to return a new instance
       return CustomExercise(
