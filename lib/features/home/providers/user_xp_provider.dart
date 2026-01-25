@@ -12,7 +12,6 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:gymbro_flutter_new/features/auth/presentation/providers/auth_provider.dart';
-import 'package:gymbro_flutter_new/features/home/providers/achievement_xp_provider.dart';
 import 'package:gymbro_flutter_new/features/home/providers/daily_login_provider.dart';
 import 'package:gymbro_flutter_new/features/home/domain/models/level_system.dart';
 import 'package:gymbro_flutter_new/core/domain/entities/user_tier.dart';
@@ -100,21 +99,6 @@ class UserXPNotifier extends Notifier<UserXPState> {
   }
 
   void _setupListeners() {
-    // Listen to achievement XP changes
-    ref.listen<AsyncValue<AchievementData>>(
-      achievementXPProvider,
-      (previous, next) {
-        next.whenData((data) {
-          if (state.achievementXP != data.totalXP) {
-            state = state.copyWith(achievementXP: data.totalXP);
-            if (kDebugMode) {
-              debugPrint('📊 [UserXP] Achievement XP updated: ${data.totalXP}');
-            }
-          }
-        });
-      },
-    );
-
     // Listen to daily login XP changes
     ref.listen<DailyLoginState>(
       dailyLoginProvider,
@@ -137,22 +121,12 @@ class UserXPNotifier extends Notifier<UserXPState> {
         return;
       }
 
-      // Load achievement XP
-      int achievementXP = 0;
-      try {
-        final achievementData = await ref.read(achievementXPProvider.future);
-        achievementXP = achievementData.totalXP;
-      } catch (e) {
-        if (kDebugMode) {
-          debugPrint('⚠️ [UserXP] Failed to load achievement XP: $e');
-        }
-      }
-
       // Load daily login XP
       final dailyLoginState = ref.read(dailyLoginProvider);
       final dailyLoginXP = dailyLoginState.totalXpEarned;
 
-      // Load workout XP from Firestore
+      // Load achievement XP and workout XP from Firestore
+      int achievementXP = 0;
       int workoutXP = 0;
       try {
         final doc = await _firestore
@@ -161,11 +135,13 @@ class UserXPNotifier extends Notifier<UserXPState> {
             .get();
 
         if (doc.exists) {
-          workoutXP = (doc.data()?['workoutXP'] as num?)?.toInt() ?? 0;
+          final data = doc.data();
+          achievementXP = (data?['achievementXP'] as num?)?.toInt() ?? 0;
+          workoutXP = (data?['workoutXP'] as num?)?.toInt() ?? 0;
         }
       } catch (e) {
         if (kDebugMode) {
-          debugPrint('⚠️ [UserXP] Failed to load workout XP: $e');
+          debugPrint('⚠️ [UserXP] Failed to load XP from Firestore: $e');
         }
       }
 
@@ -262,6 +238,38 @@ class UserXPNotifier extends Notifier<UserXPState> {
     } catch (e) {
       if (kDebugMode) {
         debugPrint('❌ [UserXP] Failed to add daily login XP: $e');
+      }
+      return 0;
+    }
+  }
+
+  /// Add achievement XP when badge is unlocked
+  ///
+  /// Called from achievement unlock flow when user unlocks a new badge.
+  Future<int> addAchievementXP(int xp, {required String badgeName}) async {
+    try {
+      final user = await ref.read(currentUserProvider.future);
+      if (user == null) return 0;
+
+      // Update Firestore
+      await _firestore.collection('user_xp').doc(user.uid).set({
+        'achievementXP': FieldValue.increment(xp),
+        'lastAchievementXP': xp,
+        'lastAchievementName': badgeName,
+        'lastUpdated': FieldValue.serverTimestamp(),
+      }, SetOptions(merge: true));
+
+      // Update local state
+      state = state.copyWith(achievementXP: state.achievementXP + xp);
+
+      if (kDebugMode) {
+        debugPrint('🏆 [UserXP] Achievement XP awarded: +$xp for "$badgeName" (total achievement XP: ${state.achievementXP})');
+      }
+
+      return xp;
+    } catch (e) {
+      if (kDebugMode) {
+        debugPrint('❌ [UserXP] Failed to add achievement XP: $e');
       }
       return 0;
     }

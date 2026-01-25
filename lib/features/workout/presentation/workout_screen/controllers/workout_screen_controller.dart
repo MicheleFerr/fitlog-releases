@@ -15,8 +15,12 @@ import 'package:gymbro_flutter_new/features/workout/presentation/widgets/templat
 import 'package:gymbro_flutter_new/features/workout/presentation/widgets/workout_completion_celebration.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/widgets/workout_time_edit_sheet.dart';
 import 'package:gymbro_flutter_new/features/onboarding/presentation/providers/onboarding_state_provider.dart';
+import 'package:gymbro_flutter_new/features/analytics/domain/entities/achievement.dart';
 import 'package:gymbro_flutter_new/features/analytics/domain/entities/pr_celebration.dart';
 import 'package:gymbro_flutter_new/features/analytics/presentation/providers/achievement_provider.dart';
+import 'package:gymbro_flutter_new/features/analytics/presentation/providers/workout_analytics_provider.dart';
+import 'package:gymbro_flutter_new/features/analytics/presentation/widgets/achievement_unlock_modal.dart';
+import 'package:gymbro_flutter_new/features/home/providers/user_xp_provider.dart';
 import 'package:gymbro_flutter_new/shared/data/services/interstitial_ad_service.dart';
 import 'package:gymbro_flutter_new/features/auth/presentation/providers/consolidated_user_provider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -185,6 +189,68 @@ class WorkoutScreenController extends Notifier<WorkoutScreenState> {
       // User confirmed - now check template and save
       if (kDebugMode) {
         debugPrint('✅ [WorkoutScreenController] User confirmed - proceeding with save');
+      }
+
+      // 🏆 Check for achievement unlocks after workout completion
+      if (context.mounted) {
+        try {
+          // Calculate workout metrics for achievement checking
+          final user = await ref.read(currentUserProvider.future);
+          if (user != null) {
+            // Get metrics for the completed workout
+            final metricsUseCase = ref.read(calculateWorkoutMetricsUseCaseProvider);
+            final metrics = metricsUseCase.execute(workoutForCelebration);
+
+            // Check and unlock achievements
+            final useCase = ref.read(checkAndUnlockAchievementsUseCaseProvider);
+            final result = await useCase(user.uid, metrics);
+
+            // Extract achievements from Either result
+            final unlockedAchievements = result.fold(
+              (failure) {
+                if (kDebugMode) {
+                  debugPrint('⚠️ [WorkoutScreenController] Failed to check achievements: ${failure.message}');
+                }
+                return <Achievement>[];
+              },
+              (achievements) => achievements,
+            );
+
+            // Award XP and show modal if achievements unlocked
+            if (unlockedAchievements.isNotEmpty && context.mounted) {
+              if (kDebugMode) {
+                debugPrint('🎉 [WorkoutScreenController] ${unlockedAchievements.length} achievements unlocked!');
+                for (final achievement in unlockedAchievements) {
+                  debugPrint('   - ${achievement.badgeType.name}');
+                }
+              }
+
+              // Award XP for each unlocked achievement
+              try {
+                for (final achievement in unlockedAchievements) {
+                  final xpReward = achievement.badgeType.xpReward;
+                  await ref.read(userXPProvider.notifier).addAchievementXP(
+                    xpReward,
+                    badgeName: achievement.badgeType.name,
+                  );
+                }
+              } catch (xpError) {
+                if (kDebugMode) {
+                  debugPrint('⚠️ [WorkoutScreenController] Failed to award achievement XP: $xpError');
+                }
+              }
+
+              // Check context is still mounted before showing modal
+              if (context.mounted) {
+                showAchievementUnlockModal(context, unlockedAchievements);
+              }
+            }
+          }
+        } catch (e) {
+          if (kDebugMode) {
+            debugPrint('⚠️ [WorkoutScreenController] Failed to check achievements: $e');
+          }
+        }
       }
 
       // Re-read workout after potential modifications

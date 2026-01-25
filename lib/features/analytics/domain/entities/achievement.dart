@@ -31,9 +31,6 @@ enum BadgeType {
 
   /// Consistency in last 90 days (max gap ≤ 7 days)
   consistencyChampion,
-
-  /// Form improvement count (5+ improvements)
-  formMaster,
 }
 
 /// Achievement entity representing an unlocked badge/milestone
@@ -65,4 +62,40 @@ abstract class Achievement with _$Achievement {
 
   factory Achievement.fromJson(Map<String, dynamic> json) =>
       _$AchievementFromJson(json);
+}
+
+/// Extension for badge XP rewards
+extension BadgeTypeXP on BadgeType {
+  /// XP awarded when unlocking this badge
+  int get xpReward {
+    switch (this) {
+      // Starter badges - 50 XP
+      case BadgeType.firstPR:
+        return 50;
+
+      // Common milestones - 100 XP
+      case BadgeType.streakMaster7:
+      case BadgeType.volumeLegend10k:
+      case BadgeType.workoutCompletionist50:
+        return 100;
+
+      // Intermediate milestones - 150 XP
+      case BadgeType.streakMaster14:
+      case BadgeType.volumeLegend50k:
+      case BadgeType.workoutCompletionist100:
+        return 150;
+
+      // Advanced milestones - 200 XP
+      case BadgeType.streakMaster30:
+      case BadgeType.balancedBuilder:
+      case BadgeType.oneRepMonarch:
+      case BadgeType.consistencyChampion:
+        return 200;
+
+      // Elite milestones - 300 XP
+      case BadgeType.volumeLegend100k:
+      case BadgeType.workoutCompletionist500:
+        return 300;
+    }
+  }
 }

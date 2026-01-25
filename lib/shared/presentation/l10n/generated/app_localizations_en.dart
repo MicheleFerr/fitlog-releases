@@ -2282,6 +2282,129 @@ class AppLocalizationsEn extends AppLocalizations {
   String get achievements => 'Achievements';
 
   @override
+  String get signInToViewAchievements => 'Sign in to view achievements';
+
+  @override
+  String get errorLoadingAchievements => 'Error loading achievements';
+
+  @override
+  String get errorLoadingUser => 'Error loading user';
+
+  @override
+  String achievementsUnlockedCount(int count, int total) {
+    return '$count / $total';
+  }
+
+  @override
+  String get achievementsUnlockedLabel => 'Achievements Unlocked';
+
+  @override
+  String get streaks => 'Streaks';
+
+  @override
+  String get volumeMilestones => 'Volume Milestones';
+
+  @override
+  String get workoutCount => 'Workout Count';
+
+  @override
+  String get special => 'Special';
+
+  @override
+  String get closeDialog => 'Close';
+
+  @override
+  String get badgeFirstPR => 'First PR';
+
+  @override
+  String get badgeFirstPRDescription =>
+      'Achieve your first personal record on any exercise.';
+
+  @override
+  String get badgeStreakMaster7 => '7-Day Streak';
+
+  @override
+  String get badgeStreakMaster7Description =>
+      'Train for 7 consecutive days without missing.';
+
+  @override
+  String get badgeStreakMaster14 => '14-Day Streak';
+
+  @override
+  String get badgeStreakMaster14Description =>
+      'Train for 14 consecutive days without missing.';
+
+  @override
+  String get badgeStreakMaster30 => '30-Day Streak';
+
+  @override
+  String get badgeStreakMaster30Description =>
+      'Train for 30 consecutive days without missing.';
+
+  @override
+  String get badgeVolumeLegend10k => '10k Volume';
+
+  @override
+  String get badgeVolumeLegend10kDescription =>
+      'Lift a total of 10,000 kg across all workouts.';
+
+  @override
+  String get badgeVolumeLegend50k => '50k Volume';
+
+  @override
+  String get badgeVolumeLegend50kDescription =>
+      'Lift a total of 50,000 kg across all workouts.';
+
+  @override
+  String get badgeVolumeLegend100k => '100k Volume';
+
+  @override
+  String get badgeVolumeLegend100kDescription =>
+      'Lift a total of 100,000 kg across all workouts.';
+
+  @override
+  String get badgeBalancedBuilder => 'Balanced';
+
+  @override
+  String get badgeBalancedBuilderDescription =>
+      'Maintain balanced push/pull training (within 15%).';
+
+  @override
+  String get badgeOneRepMonarch => 'Strength King';
+
+  @override
+  String get badgeOneRepMonarchDescription =>
+      'Achieve 3 or more one-rep max PRs.';
+
+  @override
+  String get badgeWorkoutCompletionist50 => '50 Workouts';
+
+  @override
+  String get badgeWorkoutCompletionist50Description =>
+      'Complete 50 total workouts.';
+
+  @override
+  String get badgeWorkoutCompletionist100 => '100 Workouts';
+
+  @override
+  String get badgeWorkoutCompletionist100Description =>
+      'Complete 100 total workouts.';
+
+  @override
+  String get badgeWorkoutCompletionist500 => '500 Workouts';
+
+  @override
+  String get badgeWorkoutCompletionist500Description =>
+      'Complete 500 total workouts.';
+
+  @override
+  String get badgeConsistencyChampion => 'Consistent';
+
+  @override
+  String get badgeConsistencyChampionDescription =>
+      'Train consistently with max 7-day gaps over 90 days.';
+
+  @override
   String get exerciseInfo => 'Info';
 
   @override
@@ -17286,7 +17409,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get newPersonalRecord => 'New Personal Record';
 
   @override
-  String get awesome => 'Awesome';
+  String get awesome => 'Awesome!';
 
   @override
   String get remaining => 'left';

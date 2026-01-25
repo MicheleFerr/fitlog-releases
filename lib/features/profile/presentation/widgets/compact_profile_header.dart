@@ -15,9 +15,9 @@ import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
 import 'package:gymbro_flutter_new/core/domain/entities/user_tier.dart';
-import 'package:gymbro_flutter_new/features/home/providers/achievement_xp_provider.dart';
 import 'package:gymbro_flutter_new/features/home/providers/user_xp_provider.dart';
 import 'package:gymbro_flutter_new/features/streak/presentation/providers/streak_provider.dart';
+import 'package:gymbro_flutter_new/features/progress/presentation/providers/progress_provider.dart';
 import 'package:gymbro_flutter_new/features/profile/presentation/widgets/level_info_modal.dart';
 import 'package:gymbro_flutter_new/shared/presentation/providers/ghost_mode_provider.dart';
 
@@ -44,8 +44,8 @@ class CompactProfileHeader extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     // 🎮 FIX: Use central XP provider for accurate total XP
     final userXPState = ref.watch(userXPProvider);
-    final achievementDataAsync = ref.watch(achievementXPProvider);
     final streakAsync = ref.watch(currentStreakProvider);
+    final totalWorkoutsAsync = ref.watch(completedWorkoutsCountProvider);
 
     // 👻 Ghost Mode: Hide tier and streak when enabled
     final shouldHideTier = ref.watch(shouldHideTierProvider);
@@ -60,12 +60,8 @@ class CompactProfileHeader extends ConsumerWidget {
     // Get streak
     final streak = streakAsync.valueOrNull?.currentStreak ?? 0;
 
-    // Get total workouts from achievement provider (for workout count only)
-    final totalWorkouts =
-        achievementDataAsync.valueOrNull?.allAchievements
-            .where((a) => a.isUnlocked && a.type == AchievementType.workout)
-            .length ??
-        0;
+    // Get total workouts from progress provider
+    final totalWorkouts = totalWorkoutsAsync.valueOrNull ?? 0;
 
     return SafeArea(
       bottom: false,

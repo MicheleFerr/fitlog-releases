@@ -2951,6 +2951,162 @@
   "@achievements": {
     "description": "Achievements label"
   },
+  "signInToViewAchievements": "Sign in to view achievements",
+  "@signInToViewAchievements": {
+    "description": "Message shown when user is not signed in"
+  },
+  "errorLoadingAchievements": "Error loading achievements",
+  "@errorLoadingAchievements": {
+    "description": "Error message when achievements fail to load"
+  },
+  "errorLoadingUser": "Error loading user",
+  "@errorLoadingUser": {
+    "description": "Error message when user data fails to load"
+  },
+  "achievementsUnlockedCount": "{count} / {total}",
+  "@achievementsUnlockedCount": {
+    "description": "Shows achievement progress (X/Y unlocked)",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "achievementsUnlockedLabel": "Achievements Unlocked",
+  "@achievementsUnlockedLabel": {
+    "description": "Label for unlocked achievements count"
+  },
+  "personalRecords": "Personal Records",
+  "@personalRecords": {
+    "description": "Achievement category: Personal Records"
+  },
+  "streaks": "Streaks",
+  "@streaks": {
+    "description": "Achievement category: Streaks"
+  },
+  "volumeMilestones": "Volume Milestones",
+  "@volumeMilestones": {
+    "description": "Achievement category: Volume Milestones"
+  },
+  "workoutCount": "Workout Count",
+  "@workoutCount": {
+    "description": "Achievement category: Workout Count"
+  },
+  "special": "Special",
+  "@special": {
+    "description": "Achievement category: Special"
+  },
+  "closeDialog": "Close",
+  "@closeDialog": {
+    "description": "Button to close dialog"
+  },
+  "badgeFirstPR": "First PR",
+  "@badgeFirstPR": {
+    "description": "Name of First PR badge"
+  },
+  "badgeFirstPRDescription": "Achieve your first personal record on any exercise.",
+  "@badgeFirstPRDescription": {
+    "description": "Description of First PR badge"
+  },
+  "badgeStreakMaster7": "7-Day Streak",
+  "@badgeStreakMaster7": {
+    "description": "Name of 7-Day Streak badge"
+  },
+  "badgeStreakMaster7Description": "Train for 7 consecutive days without missing.",
+  "@badgeStreakMaster7Description": {
+    "description": "Description of 7-Day Streak badge"
+  },
+  "badgeStreakMaster14": "14-Day Streak",
+  "@badgeStreakMaster14": {
+    "description": "Name of 14-Day Streak badge"
+  },
+  "badgeStreakMaster14Description": "Train for 14 consecutive days without missing.",
+  "@badgeStreakMaster14Description": {
+    "description": "Description of 14-Day Streak badge"
+  },
+  "badgeStreakMaster30": "30-Day Streak",
+  "@badgeStreakMaster30": {
+    "description": "Name of 30-Day Streak badge"
+  },
+  "badgeStreakMaster30Description": "Train for 30 consecutive days without missing.",
+  "@badgeStreakMaster30Description": {
+    "description": "Description of 30-Day Streak badge"
+  },
+  "badgeVolumeLegend10k": "10k Volume",
+  "@badgeVolumeLegend10k": {
+    "description": "Name of 10k Volume badge"
+  },
+  "badgeVolumeLegend10kDescription": "Lift a total of 10,000 kg across all workouts.",
+  "@badgeVolumeLegend10kDescription": {
+    "description": "Description of 10k Volume badge"
+  },
+  "badgeVolumeLegend50k": "50k Volume",
+  "@badgeVolumeLegend50k": {
+    "description": "Name of 50k Volume badge"
+  },
+  "badgeVolumeLegend50kDescription": "Lift a total of 50,000 kg across all workouts.",
+  "@badgeVolumeLegend50kDescription": {
+    "description": "Description of 50k Volume badge"
+  },
+  "badgeVolumeLegend100k": "100k Volume",
+  "@badgeVolumeLegend100k": {
+    "description": "Name of 100k Volume badge"
+  },
+  "badgeVolumeLegend100kDescription": "Lift a total of 100,000 kg across all workouts.",
+  "@badgeVolumeLegend100kDescription": {
+    "description": "Description of 100k Volume badge"
+  },
+  "badgeBalancedBuilder": "Balanced",
+  "@badgeBalancedBuilder": {
+    "description": "Name of Balanced Builder badge"
+  },
+  "badgeBalancedBuilderDescription": "Maintain balanced push/pull training (within 15%).",
+  "@badgeBalancedBuilderDescription": {
+    "description": "Description of Balanced Builder badge"
+  },
+  "badgeOneRepMonarch": "Strength King",
+  "@badgeOneRepMonarch": {
+    "description": "Name of One-Rep Monarch badge"
+  },
+  "badgeOneRepMonarchDescription": "Achieve 3 or more one-rep max PRs.",
+  "@badgeOneRepMonarchDescription": {
+    "description": "Description of One-Rep Monarch badge"
+  },
+  "badgeWorkoutCompletionist50": "50 Workouts",
+  "@badgeWorkoutCompletionist50": {
+    "description": "Name of 50 Workouts badge"
+  },
+  "badgeWorkoutCompletionist50Description": "Complete 50 total workouts.",
+  "@badgeWorkoutCompletionist50Description": {
+    "description": "Description of 50 Workouts badge"
+  },
+  "badgeWorkoutCompletionist100": "100 Workouts",
+  "@badgeWorkoutCompletionist100": {
+    "description": "Name of 100 Workouts badge"
+  },
+  "badgeWorkoutCompletionist100Description": "Complete 100 total workouts.",
+  "@badgeWorkoutCompletionist100Description": {
+    "description": "Description of 100 Workouts badge"
+  },
+  "badgeWorkoutCompletionist500": "500 Workouts",
+  "@badgeWorkoutCompletionist500": {
+    "description": "Name of 500 Workouts badge"
+  },
+  "badgeWorkoutCompletionist500Description": "Complete 500 total workouts.",
+  "@badgeWorkoutCompletionist500Description": {
+    "description": "Description of 500 Workouts badge"
+  },
+  "badgeConsistencyChampion": "Consistent",
+  "@badgeConsistencyChampion": {
+    "description": "Name of Consistency Champion badge"
+  },
+  "badgeConsistencyChampionDescription": "Train consistently with max 7-day gaps over 90 days.",
+  "@badgeConsistencyChampionDescription": {
+    "description": "Description of Consistency Champion badge"
+  },
   "exerciseInfo": "Info",
   "@exerciseInfo": {
     "description": "Exercise information chip label"
@@ -31995,5 +32151,18 @@
   "clusterReps": "Reps per cluster",
   "@clusterReps": {
     "description": "Label for reps per cluster in rest-pause"
+  }
+,
+  "achievementUnlocked": "Achievement Unlocked!",
+  "@achievementUnlocked": {
+    "description": "Title for achievement unlock modal"
+  },
+  "awesome": "Awesome!",
+  "@awesome": {
+    "description": "Button text to close achievement modal"
+  },
+  "next": "Next",
+  "@next": {
+    "description": "Button text to see next achievement in modal"
   }
 }

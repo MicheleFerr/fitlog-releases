@@ -3385,7 +3385,7 @@ abstract class AppLocalizations {
   /// **'Per Session'**
   String get perSession;
 
-  /// Semantic label for personal records icon
+  /// Achievement category: Personal Records
   ///
   /// In en, this message translates to:
   /// **'Personal Records'**
@@ -4320,6 +4320,222 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Achievements'**
   String get achievements;
+
+  /// Message shown when user is not signed in
+  ///
+  /// In en, this message translates to:
+  /// **'Sign in to view achievements'**
+  String get signInToViewAchievements;
+
+  /// Error message when achievements fail to load
+  ///
+  /// In en, this message translates to:
+  /// **'Error loading achievements'**
+  String get errorLoadingAchievements;
+
+  /// Error message when user data fails to load
+  ///
+  /// In en, this message translates to:
+  /// **'Error loading user'**
+  String get errorLoadingUser;
+
+  /// Shows achievement progress (X/Y unlocked)
+  ///
+  /// In en, this message translates to:
+  /// **'{count} / {total}'**
+  String achievementsUnlockedCount(int count, int total);
+
+  /// Label for unlocked achievements count
+  ///
+  /// In en, this message translates to:
+  /// **'Achievements Unlocked'**
+  String get achievementsUnlockedLabel;
+
+  /// Achievement category: Streaks
+  ///
+  /// In en, this message translates to:
+  /// **'Streaks'**
+  String get streaks;
+
+  /// Achievement category: Volume Milestones
+  ///
+  /// In en, this message translates to:
+  /// **'Volume Milestones'**
+  String get volumeMilestones;
+
+  /// Achievement category: Workout Count
+  ///
+  /// In en, this message translates to:
+  /// **'Workout Count'**
+  String get workoutCount;
+
+  /// Achievement category: Special
+  ///
+  /// In en, this message translates to:
+  /// **'Special'**
+  String get special;
+
+  /// Button to close dialog
+  ///
+  /// In en, this message translates to:
+  /// **'Close'**
+  String get closeDialog;
+
+  /// Name of First PR badge
+  ///
+  /// In en, this message translates to:
+  /// **'First PR'**
+  String get badgeFirstPR;
+
+  /// Description of First PR badge
+  ///
+  /// In en, this message translates to:
+  /// **'Achieve your first personal record on any exercise.'**
+  String get badgeFirstPRDescription;
+
+  /// Name of 7-Day Streak badge
+  ///
+  /// In en, this message translates to:
+  /// **'7-Day Streak'**
+  String get badgeStreakMaster7;
+
+  /// Description of 7-Day Streak badge
+  ///
+  /// In en, this message translates to:
+  /// **'Train for 7 consecutive days without missing.'**
+  String get badgeStreakMaster7Description;
+
+  /// Name of 14-Day Streak badge
+  ///
+  /// In en, this message translates to:
+  /// **'14-Day Streak'**
+  String get badgeStreakMaster14;
+
+  /// Description of 14-Day Streak badge
+  ///
+  /// In en, this message translates to:
+  /// **'Train for 14 consecutive days without missing.'**
+  String get badgeStreakMaster14Description;
+
+  /// Name of 30-Day Streak badge
+  ///
+  /// In en, this message translates to:
+  /// **'30-Day Streak'**
+  String get badgeStreakMaster30;
+
+  /// Description of 30-Day Streak badge
+  ///
+  /// In en, this message translates to:
+  /// **'Train for 30 consecutive days without missing.'**
+  String get badgeStreakMaster30Description;
+
+  /// Name of 10k Volume badge
+  ///
+  /// In en, this message translates to:
+  /// **'10k Volume'**
+  String get badgeVolumeLegend10k;
+
+  /// Description of 10k Volume badge
+  ///
+  /// In en, this message translates to:
+  /// **'Lift a total of 10,000 kg across all workouts.'**
+  String get badgeVolumeLegend10kDescription;
+
+  /// Name of 50k Volume badge
+  ///
+  /// In en, this message translates to:
+  /// **'50k Volume'**
+  String get badgeVolumeLegend50k;
+
+  /// Description of 50k Volume badge
+  ///
+  /// In en, this message translates to:
+  /// **'Lift a total of 50,000 kg across all workouts.'**
+  String get badgeVolumeLegend50kDescription;
+
+  /// Name of 100k Volume badge
+  ///
+  /// In en, this message translates to:
+  /// **'100k Volume'**
+  String get badgeVolumeLegend100k;
+
+  /// Description of 100k Volume badge
+  ///
+  /// In en, this message translates to:
+  /// **'Lift a total of 100,000 kg across all workouts.'**
+  String get badgeVolumeLegend100kDescription;
+
+  /// Name of Balanced Builder badge
+  ///
+  /// In en, this message translates to:
+  /// **'Balanced'**
+  String get badgeBalancedBuilder;
+
+  /// Description of Balanced Builder badge
+  ///
+  /// In en, this message translates to:
+  /// **'Maintain balanced push/pull training (within 15%).'**
+  String get badgeBalancedBuilderDescription;
+
+  /// Name of One-Rep Monarch badge
+  ///
+  /// In en, this message translates to:
+  /// **'Strength King'**
+  String get badgeOneRepMonarch;
+
+  /// Description of One-Rep Monarch badge
+  ///
+  /// In en, this message translates to:
+  /// **'Achieve 3 or more one-rep max PRs.'**
+  String get badgeOneRepMonarchDescription;
+
+  /// Name of 50 Workouts badge
+  ///
+  /// In en, this message translates to:
+  /// **'50 Workouts'**
+  String get badgeWorkoutCompletionist50;
+
+  /// Description of 50 Workouts badge
+  ///
+  /// In en, this message translates to:
+  /// **'Complete 50 total workouts.'**
+  String get badgeWorkoutCompletionist50Description;
+
+  /// Name of 100 Workouts badge
+  ///
+  /// In en, this message translates to:
+  /// **'100 Workouts'**
+  String get badgeWorkoutCompletionist100;
+
+  /// Description of 100 Workouts badge
+  ///
+  /// In en, this message translates to:
+  /// **'Complete 100 total workouts.'**
+  String get badgeWorkoutCompletionist100Description;
+
+  /// Name of 500 Workouts badge
+  ///
+  /// In en, this message translates to:
+  /// **'500 Workouts'**
+  String get badgeWorkoutCompletionist500;
+
+  /// Description of 500 Workouts badge
+  ///
+  /// In en, this message translates to:
+  /// **'Complete 500 total workouts.'**
+  String get badgeWorkoutCompletionist500Description;
+
+  /// Name of Consistency Champion badge
+  ///
+  /// In en, this message translates to:
+  /// **'Consistent'**
+  String get badgeConsistencyChampion;
+
+  /// Description of Consistency Champion badge
+  ///
+  /// In en, this message translates to:
+  /// **'Train consistently with max 7-day gaps over 90 days.'**
+  String get badgeConsistencyChampionDescription;
 
   /// Exercise information chip label
   ///
@@ -7973,7 +8189,7 @@ abstract class AppLocalizations {
   /// **'Set completed'**
   String get setCompleted;
 
-  /// Next button
+  /// Button text to see next achievement in modal
   ///
   /// In en, this message translates to:
   /// **'Next'**
@@ -30918,10 +31134,10 @@ abstract class AppLocalizations {
   /// **'New Personal Record'**
   String get newPersonalRecord;
 
-  /// Celebration button text
+  /// Button text to close achievement modal
   ///
   /// In en, this message translates to:
-  /// **'Awesome'**
+  /// **'Awesome!'**
   String get awesome;
 
   /// Text indicating XP remaining to next tier
@@ -31020,7 +31236,7 @@ abstract class AppLocalizations {
   /// **'{days} days'**
   String milestoneCustom(int days);
 
-  /// Title for achievement unlock animation
+  /// Title for achievement unlock modal
   ///
   /// In en, this message translates to:
   /// **'Achievement Unlocked!'**

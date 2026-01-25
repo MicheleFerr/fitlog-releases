@@ -2301,6 +2301,131 @@ class AppLocalizationsIt extends AppLocalizations {
   String get achievements => 'Obiettivi';
 
   @override
+  String get signInToViewAchievements =>
+      'Accedi per visualizzare gli obiettivi';
+
+  @override
+  String get errorLoadingAchievements =>
+      'Errore nel caricamento degli obiettivi';
+
+  @override
+  String get errorLoadingUser => 'Errore nel caricamento utente';
+
+  @override
+  String achievementsUnlockedCount(int count, int total) {
+    return '$count / $total';
+  }
+
+  @override
+  String get achievementsUnlockedLabel => 'Obiettivi Sbloccati';
+
+  @override
+  String get streaks => 'Serie';
+
+  @override
+  String get volumeMilestones => 'Traguardi Volume';
+
+  @override
+  String get workoutCount => 'Numero Allenamenti';
+
+  @override
+  String get special => 'Speciali';
+
+  @override
+  String get closeDialog => 'Chiudi';
+
+  @override
+  String get badgeFirstPR => 'Primo PR';
+
+  @override
+  String get badgeFirstPRDescription =>
+      'Ottieni il tuo primo record personale su qualsiasi esercizio.';
+
+  @override
+  String get badgeStreakMaster7 => 'Serie 7 Giorni';
+
+  @override
+  String get badgeStreakMaster7Description =>
+      'Allenati per 7 giorni consecutivi senza saltare.';
+
+  @override
+  String get badgeStreakMaster14 => 'Serie 14 Giorni';
+
+  @override
+  String get badgeStreakMaster14Description =>
+      'Allenati per 14 giorni consecutivi senza saltare.';
+
+  @override
+  String get badgeStreakMaster30 => 'Serie 30 Giorni';
+
+  @override
+  String get badgeStreakMaster30Description =>
+      'Allenati per 30 giorni consecutivi senza saltare.';
+
+  @override
+  String get badgeVolumeLegend10k => 'Volume 10k';
+
+  @override
+  String get badgeVolumeLegend10kDescription =>
+      'Solleva un totale di 10.000 kg in tutti gli allenamenti.';
+
+  @override
+  String get badgeVolumeLegend50k => 'Volume 50k';
+
+  @override
+  String get badgeVolumeLegend50kDescription =>
+      'Solleva un totale di 50.000 kg in tutti gli allenamenti.';
+
+  @override
+  String get badgeVolumeLegend100k => 'Volume 100k';
+
+  @override
+  String get badgeVolumeLegend100kDescription =>
+      'Solleva un totale di 100.000 kg in tutti gli allenamenti.';
+
+  @override
+  String get badgeBalancedBuilder => 'Equilibrato';
+
+  @override
+  String get badgeBalancedBuilderDescription =>
+      'Mantieni un allenamento bilanciato push/pull (entro il 15%).';
+
+  @override
+  String get badgeOneRepMonarch => 'Re della Forza';
+
+  @override
+  String get badgeOneRepMonarchDescription =>
+      'Ottieni 3 o più PR sul massimale (1RM).';
+
+  @override
+  String get badgeWorkoutCompletionist50 => '50 Allenamenti';
+
+  @override
+  String get badgeWorkoutCompletionist50Description =>
+      'Completa 50 allenamenti totali.';
+
+  @override
+  String get badgeWorkoutCompletionist100 => '100 Allenamenti';
+
+  @override
+  String get badgeWorkoutCompletionist100Description =>
+      'Completa 100 allenamenti totali.';
+
+  @override
+  String get badgeWorkoutCompletionist500 => '500 Allenamenti';
+
+  @override
+  String get badgeWorkoutCompletionist500Description =>
+      'Completa 500 allenamenti totali.';
+
+  @override
+  String get badgeConsistencyChampion => 'Costante';
+
+  @override
+  String get badgeConsistencyChampionDescription =>
+      'Allenati con costanza con max 7 giorni di pausa in 90 giorni.';
+
+  @override
   String get exerciseInfo => 'Info';
 
   @override
@@ -17456,7 +17581,7 @@ class AppLocalizationsIt extends AppLocalizations {
   String get newPersonalRecord => 'Nuovo Record Personale';
 
   @override
-  String get awesome => 'Fantastico';
+  String get awesome => 'Fantastico!';
 
   @override
   String get remaining => 'mancanti';
@@ -17509,7 +17634,7 @@ class AppLocalizationsIt extends AppLocalizations {
   }
 
   @override
-  String get achievementUnlocked => 'Obiettivo Sbloccato!';
+  String get achievementUnlocked => 'Achievement Sbloccato!';
 
   @override
   String get rarityCommon => 'Comune';

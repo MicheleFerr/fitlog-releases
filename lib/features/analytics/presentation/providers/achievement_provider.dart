@@ -7,6 +7,8 @@ import 'package:gymbro_flutter_new/features/analytics/domain/usecases/check_and_
 import 'package:gymbro_flutter_new/features/analytics/data/repositories/achievement_repository_impl.dart';
 import 'package:gymbro_flutter_new/features/analytics/data/repositories/pr_celebration_repository_impl.dart';
 import 'package:gymbro_flutter_new/features/analytics/domain/services/pr_tracker.dart';
+import 'package:gymbro_flutter_new/features/streak/presentation/providers/streak_provider.dart';
+import 'package:gymbro_flutter_new/features/workout/presentation/providers/workout_repository_provider.dart';
 import 'package:gymbro_flutter_new/core/providers/analytics_provider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
@@ -42,11 +44,14 @@ final prCelebrationRepositoryProvider = Provider((ref) {
 /// Provider for CheckAndUnlockAchievementsUseCase
 ///
 /// Use case for checking and unlocking achievements after workout completion.
+/// Includes all dependencies for badge checking (PRs, streaks, volume, workouts).
 final checkAndUnlockAchievementsUseCaseProvider =
     Provider<CheckAndUnlockAchievementsUseCase>((ref) {
   return CheckAndUnlockAchievementsUseCase(
     achievementRepository: ref.watch(achievementRepositoryProvider),
     prTracker: ref.watch(prTrackerProvider),
+    streakRepository: ref.watch(streakRepositoryProvider),
+    workoutRepository: ref.watch(workoutRepositoryProvider),
   );
 });
 
