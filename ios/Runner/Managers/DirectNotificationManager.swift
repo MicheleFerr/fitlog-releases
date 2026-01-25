@@ -31,6 +31,13 @@ final class DirectNotificationManager: NSObject {
     }
     
     /// Send a timer notification with custom sound (wrapper for Flutter bridge)
+    /// - Parameters:
+    ///   - title: Notification title
+    ///   - body: Notification body text
+    ///   - soundName: Sound file name (without .caf extension)
+    ///   - categoryIdentifier: iOS notification category
+    ///   - delay: Delay before sending (0 = immediate, >0 = scheduled)
+    /// - Note: Delegates to helper methods for cleaner implementation
     func sendTimerNotification(
         title: String,
         body: String,
@@ -39,97 +46,21 @@ final class DirectNotificationManager: NSObject {
         delay: TimeInterval = 0
     ) {
         if delay <= 0 {
-            // For immediate notifications, we need to send a notification RIGHT NOW
-            // This is important for when the app is in background/locked
-            print("🔔 ============================================")
-            print("🔔 IMMEDIATE TIMER NOTIFICATION - DIAGNOSTIC")
-            print("🔔 ============================================")
-            print("   Title: \(title)")
-            print("   Body: \(body)")
-            print("   Sound: \(soundName)")
-            print("   App State: \(UIApplication.shared.applicationState == .active ? "ACTIVE" : UIApplication.shared.applicationState == .background ? "BACKGROUND" : "INACTIVE")")
+            // Immediate notification path (trigger: nil)
+            logNotificationDiagnostics(title: title, body: body, soundName: soundName)
 
-            // DIAGNOSTIC: Check notification settings BEFORE sending
-            UNUserNotificationCenter.current().getNotificationSettings { settings in
-                print("📊 NOTIFICATION SETTINGS:")
-                print("   - Authorization: \(settings.authorizationStatus.rawValue) (\(self.authStatusString(settings.authorizationStatus)))")
-                print("   - Sound Setting: \(settings.soundSetting.rawValue) (\(settings.soundSetting == .enabled ? "✅ ENABLED" : "❌ DISABLED"))")
-                print("   - Alert Setting: \(settings.alertSetting.rawValue) (\(settings.alertSetting == .enabled ? "✅ ENABLED" : "❌ DISABLED"))")
-                if #available(iOS 15.0, *) {
-                    print("   - Time Sensitive: \(settings.timeSensitiveSetting.rawValue) (\(settings.timeSensitiveSetting == .enabled ? "✅ ENABLED" : "❌ DISABLED"))")
-                }
-
-                // Check audio
-                let session = AVAudioSession.sharedInstance()
-                print("📊 AUDIO STATUS:")
-                print("   - Output Volume: \(session.outputVolume) (\(session.outputVolume > 0.1 ? "✅ OK" : "⚠️ LOW"))")
-                print("   - Audio Route: \(session.currentRoute.outputs.map { $0.portType.rawValue }.joined(separator: ", "))")
-            }
-
-            // DIAGNOSTIC: Verify sound file exists
-            let soundFileName = soundName.hasSuffix(".caf") ? soundName : "\(soundName).caf"
-            let soundFileBase = soundName.replacingOccurrences(of: ".caf", with: "")
-            if let path = Bundle.main.path(forResource: soundFileBase, ofType: "caf") {
-                print("✅ Sound file FOUND: \(path)")
-                if let attrs = try? FileManager.default.attributesOfItem(atPath: path),
-                   let size = attrs[.size] as? Int64 {
-                    print("   - File size: \(size) bytes")
-                }
-            } else {
-                print("❌ Sound file NOT FOUND: \(soundFileName)")
-                print("   - Searching for: \(soundFileBase).caf")
-            }
-
-            // Send immediate notification with custom sound
-            let center = UNUserNotificationCenter.current()
-            let content = UNMutableNotificationContent()
-            content.title = title
-            content.body = body
-            content.categoryIdentifier = categoryIdentifier
-
-            // NOTIFICATION SOUND: Using regular sound (Critical Alert entitlement pending)
-            // Use regular notification sound - works without Critical Alert entitlement
-            // FIX: Actually use the file verification result!
-            if let _ = Bundle.main.path(forResource: soundFileBase, ofType: "caf") {
-                content.sound = UNNotificationSound(named: UNNotificationSoundName(rawValue: soundFileName))
-                print("🔊 Sound configured: \(soundFileName)")
-                print("   - Using regular notification sound (Critical Alert pending Apple approval)")
-                print("   - File verified and found in bundle ✅")
-            } else {
-                content.sound = .default
-                print("⚠️ Custom sound NOT FOUND in bundle: \(soundFileName)")
-                print("   - Falling back to system default sound")
-                print("   - Check that \(soundFileBase).caf is included in Copy Bundle Resources")
-            }
-            
-            // For immediate notifications on iOS 15+
-            if #available(iOS 15.0, *) {
-                content.interruptionLevel = .timeSensitive
-                content.relevanceScore = 1.0
-            }
-            
-            // Create request with no trigger (immediate delivery)
-            let request = UNNotificationRequest(
-                identifier: UUID().uuidString,
-                content: content,
-                trigger: nil  // nil trigger = immediate delivery
+            let content = createNotificationContent(
+                title: title,
+                body: body,
+                soundName: soundName,
+                categoryIdentifier: categoryIdentifier,
+                isForWatchDisplay: false,
+                silentLoopHandlesAudio: false
             )
-            
-            // Add the notification
-            center.add(request) { error in
-                if let error = error {
-                    print("❌ Failed to send immediate notification: \(error)")
-                    // ONLY play backup if notification fails
-                    print("🔊 [BACKUP] Notification failed - using AVAudioPlayer as fallback")
-                    TimerSoundFix.shared.playTimerCompletionSound(preferredSound: soundName)
-                } else {
-                    print("✅ Immediate notification sent with sound: \(soundFileName)")
-                    print("   - trigger: nil ensures delivery")
-                    print("   - Backup AVAudioPlayer NOT needed (notification handles audio)")
-                }
-            }
+
+            sendImmediateNotification(content: content, fallbackSoundName: soundName)
         } else {
-            // Schedule for future - this is the correct way for timer notifications
+            // Scheduled notification path (TimeIntervalTrigger)
             _ = scheduleTimerNotification(
                 after: delay,
                 soundName: soundName,
@@ -974,10 +905,12 @@ final class DirectNotificationManager: NSObject {
     /// Logs comprehensive diagnostics for notification sending (SYNCHRONOUS version to preserve log order)
     /// - Parameters:
     ///   - title: Notification title
+    ///   - body: Notification body text
     ///   - soundName: Sound file name
     /// - Note: Uses synchronous DispatchQueue.main.sync for settings check to preserve log order
     private func logNotificationDiagnostics(
         title: String,
+        body: String,
         soundName: String
     ) {
         let appState = UIApplication.shared.applicationState
@@ -985,7 +918,7 @@ final class DirectNotificationManager: NSObject {
         print("🔔 IMMEDIATE TIMER NOTIFICATION - DIAGNOSTIC")
         print("🔔 ============================================")
         print("   Title: \(title)")
-        print("   Body: \(soundName)")
+        print("   Body: \(body)")
         print("   Sound: \(soundName)")
         print("   App State: \(appState == .active ? "ACTIVE" : appState == .background ? "BACKGROUND" : "INACTIVE")")
 
