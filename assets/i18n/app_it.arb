@@ -840,7 +840,6 @@
   "errorLoadingUser": "Errore nel caricamento utente",
   "achievementsUnlockedCount": "{count} / {total}",
   "achievementsUnlockedLabel": "Obiettivi Sbloccati",
-  "personalRecords": "Record Personali",
   "streaks": "Serie",
   "volumeMilestones": "Traguardi Volume",
   "workoutCount": "Numero Allenamenti",
@@ -1265,7 +1264,7 @@
   "recentWorkouts": "Allenamenti Recenti",
   "highPriority": "Alta Priorità",
   "insight": "Suggerimento",
-  "recommendation": "Consiglio",
+  "recommendation": "Raccomandazione",
   "expand": "Espandi",
   "collapse": "Comprimi",
   "scientificStrategies": "Strategie Scientifiche",
@@ -1475,7 +1474,7 @@
   "dropset": "Drop Set",
   "restPause": "Rest-Pause",
   "tapToSelectFromDatabase": "Tocca per selezionare dal database",
-  "restBetweenExercises": "Riposo tra esercizi",
+  "restBetweenExercises": "Riposo Tra Esercizi",
   "seconds": "secondi",
   "selectExercisesForSuperset": "Seleziona esercizi per superset",
   "selectExerciseForDropset": "Seleziona esercizio per dropset",
@@ -6220,7 +6219,7 @@
   "expertTemplate": "Expert modello",
   "export": "Esporta",
   "exporting": "Esportazione in corso...",
-  "failed": "Failed",
+  "failed": "Fallito",
   "fatigue": "Fatigue",
   "fatto": "Fatto",
   "fieldRequired": "Field required",
@@ -9398,9 +9397,9 @@
   "@newPersonalRecord": {
     "description": "Titolo celebrazione PR"
   },
-  "awesome": "Fantastico",
+  "awesome": "Fantastico!",
   "@awesome": {
-    "description": "Testo pulsante celebrazione"
+    "description": "Testo bottone per chiudere modal achievement"
   },
   "remaining": "mancanti",
   "@remaining": {
@@ -9490,9 +9489,9 @@
       }
     }
   },
-  "achievementUnlocked": "Obiettivo Sbloccato!",
+  "achievementUnlocked": "Achievement Sbloccato!",
   "@achievementUnlocked": {
-    "description": "Titolo per animazione sblocco obiettivo"
+    "description": "Titolo per modal di achievement sbloccato"
   },
   "rarityCommon": "Comune",
   "@rarityCommon": {
@@ -16886,7 +16885,7 @@
   "configureSuperset": "Configura Superset",
   "copiedToAllRounds": "Copiato a tutti i round",
   "copyR1ToAll": "R1 → Tutti",
-  "restAfterRound": "Riposo dopo round",
+  "restAfterRound": "Riposo Dopo Round",
   "applyToAllRounds": "Tutti i round",
   "inWorkout": "In Scheda",
   "fromDatabase": "Dal DB",
@@ -16895,7 +16894,7 @@
   "configured": "Configurato",
   "configureRounds": "Configura Round",
   "editConfiguration": "Modifica Configurazione",
-  "rounds": "round",
+  "rounds": "Round",
   "copyFromPrevious": "Copia da Precedente",
   "removeRound": "Rimuovi round",
   "tapToConfigure": "Tocca per configurare",
@@ -19135,7 +19134,7 @@
   "@tourDetailedAnalysisDescription": {
     "description": "Analytics tour step 6 description"
   },
-  "evidenceBased": "Basato su Evidenze",
+  "evidenceBased": "Basati su Evidenze",
   "defaultTemplatesSubtitle": "Programmi di allenamento pronti all'uso basati su ricerca scientifica",
   "beginnerPrograms": "Programmi Principianti",
   "beginnerProgramsSubtitle": "Perfetti per 0-6 mesi di esperienza",
@@ -19148,7 +19147,7 @@
   "addToMyTemplates": "Aggiungi ai Miei Template",
   "templateAddedToLibrary": "Template aggiunto alla tua libreria",
   "use": "Usa",
-  "duplicateTemplate": "Template Già Presente",
+  "duplicateTemplate": "Duplica Template",
   "duplicateTemplateMessage": "Hai già un template chiamato \"{name}\". Aggiungere comunque con un nome diverso?",
   "addAnyway": "Aggiungi Comunque",
   "emptyTemplate": "Questo template non ha esercizi",
@@ -19409,9 +19408,7 @@
   "startFullTests": "Avvia Test Completi",
   "testing": "Test in corso...",
   "passed": "Superato",
-  "failed": "Fallito",
   "successRate": "Tasso di Successo",
-  "recommendation": "Raccomandazione",
   "testResults": "Risultati Test",
   "detailedResults": "Risultati Dettagliati",
   "viewResults": "Visualizza Risultati",
@@ -19420,9 +19417,8 @@
   "fullTestMatrix": "Matrice Test Completa",
   "recommendedTemplates": "Template Consigliati",
   "@recommendedTemplates": {
-    "description": "Titolo sezione per i template superset consigliati"
+    "description": "Header per sezione template predefiniti/consigliati"
   },
-  "useTemplate": "Usa Template",
   "@useTemplate": {
     "description": "Pulsante per usare un template predefinito"
   },
@@ -19450,15 +19446,12 @@
   "@repsRange": {
     "description": "Etichetta per il range di ripetizioni consigliato"
   },
-  "restBetweenExercises": "Riposo Tra Esercizi",
   "@restBetweenExercises": {
     "description": "Etichetta per il tempo di riposo tra esercizi in un superset"
   },
-  "restAfterRound": "Riposo Dopo Round",
   "@restAfterRound": {
     "description": "Etichetta per il tempo di riposo dopo aver completato un round completo"
   },
-  "rounds": "Round",
   "@rounds": {
     "description": "Etichetta per il numero di round in un superset"
   },
@@ -19466,7 +19459,6 @@
   "@recommendedForYou": {
     "description": "Titolo sezione per template personalizzati in base al profilo utente"
   },
-  "evidenceBased": "Basati su Evidenze",
   "@evidenceBased": {
     "description": "Titolo sezione per template con supporto scientifico"
   },
@@ -19494,7 +19486,6 @@
   "@errorAddingTemplate": {
     "description": "Messaggio di errore generico quando l'aggiunta del template fallisce"
   },
-  "weightTimesReps": "Peso × Rip",
   "@weightTimesReps": {
     "description": "Etichetta header per colonna peso × ripetizioni nei superset"
   },
@@ -19502,15 +19493,12 @@
   "@templateOptions": {
     "description": "Titolo menu opzioni per template superset (long press)"
   },
-  "duplicateTemplate": "Duplica Template",
   "@duplicateTemplate": {
     "description": "Opzione per duplicare un template superset"
   },
-  "editTemplate": "Modifica Template",
   "@editTemplate": {
     "description": "Opzione per modificare un template superset personalizzato"
   },
-  "deleteTemplate": "Elimina Template",
   "@deleteTemplate": {
     "description": "Opzione per eliminare un template superset personalizzato"
   },
@@ -19561,21 +19549,10 @@
   "clusterReps": "Ripetizioni per cluster",
   "@clusterReps": {
     "description": "Label per ripetizioni per cluster nel rest-pause"
-  }
-,
-  "achievementUnlocked": "Achievement Sbloccato!",
-  "@achievementUnlocked": {
-    "description": "Titolo per modal di achievement sbloccato"
   },
-  "awesome": "Fantastico!",
-  "@awesome": {
-    "description": "Testo bottone per chiudere modal achievement"
-  },
-  "next": "Avanti",
   "@next": {
     "description": "Testo bottone per vedere prossimo achievement"
-  }
-,
+  },
   "templateSupersetChestBackFoundation": "Petto + Schiena Base",
   "@templateSupersetChestBackFoundation": {
     "description": "Nome template superset: Petto + Schiena Base"
@@ -19695,19 +19672,13 @@
   "templateRestPauseCableRow": "Cable Row Rest-Pause",
   "@templateRestPauseCableRow": {
     "description": "Nome template rest-pause: Cable Row Rest-Pause"
-  }
-,
-  "yourTemplates": "I Tuoi Template",
+  },
   "@yourTemplates": {
     "description": "Header per sezione template personalizzati dell'utente"
   },
   "discoverMoreTemplates": "Scopri altri template",
   "@discoverMoreTemplates": {
     "description": "Link per espandere e mostrare i template predefiniti"
-  },
-  "recommendedTemplates": "Template Consigliati",
-  "@recommendedTemplates": {
-    "description": "Header per sezione template predefiniti/consigliati"
   },
   "hideTemplates": "Nascondi",
   "@hideTemplates": {

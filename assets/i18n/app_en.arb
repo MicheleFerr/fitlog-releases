@@ -1331,7 +1331,7 @@
   },
   "weightTimesReps": "Weight × Reps",
   "@weightTimesReps": {
-    "description": "Weight times reps metric label"
+    "description": "Header label for weight × reps column in supersets"
   },
   "reps": "Reps",
   "@reps": {
@@ -1993,7 +1993,7 @@
   },
   "yourTemplates": "Your Templates",
   "@yourTemplates": {
-    "description": "Your templates tab title"
+    "description": "Header for user's custom templates section"
   },
   "popularTemplates": "Popular Templates",
   "@popularTemplates": {
@@ -2257,7 +2257,7 @@
   },
   "personalRecords": "Personal Records",
   "@personalRecords": {
-    "description": "Semantic label for personal records icon"
+    "description": "Achievement category: Personal Records"
   },
   "newPRs": "New PRs",
   "@newPRs": {
@@ -2978,10 +2978,6 @@
   "achievementsUnlockedLabel": "Achievements Unlocked",
   "@achievementsUnlockedLabel": {
     "description": "Label for unlocked achievements count"
-  },
-  "personalRecords": "Personal Records",
-  "@personalRecords": {
-    "description": "Achievement category: Personal Records"
   },
   "streaks": "Streaks",
   "@streaks": {
@@ -4528,7 +4524,7 @@
   },
   "deleteTemplate": "Delete Template",
   "@deleteTemplate": {
-    "description": "Delete template menu item"
+    "description": "Option to delete a custom superset template"
   },
   "confirmDeleteTemplate": "Are you sure you want to delete \"{templateName}\"?",
   "@confirmDeleteTemplate": {
@@ -5820,7 +5816,7 @@
   },
   "next": "Next",
   "@next": {
-    "description": "Next button"
+    "description": "Button text to see next achievement in modal"
   },
   "single": "Single",
   "@single": {
@@ -5842,9 +5838,9 @@
   "@tapToSelectFromDatabase": {
     "description": "Instruction to select exercise from database"
   },
-  "restBetweenExercises": "Rest between exercises",
+  "restBetweenExercises": "Rest Between Exercises",
   "@restBetweenExercises": {
-    "description": "Rest time between exercises label"
+    "description": "Label for rest time between exercises"
   },
   "seconds": "seconds",
   "@seconds": {
@@ -6919,7 +6915,7 @@
   },
   "editTemplate": "Edit Template",
   "@editTemplate": {
-    "description": "Edit template menu item"
+    "description": "Option to edit a custom superset template"
   },
   "editTemplateSubtitle": "Modify exercises and sets",
   "@editTemplateSubtitle": {
@@ -15466,7 +15462,7 @@
   },
   "useTemplate": "Use Template",
   "@useTemplate": {
-    "description": "Button to use a workout template"
+    "description": "Button to use a superset template"
   },
   "bullet": "Bullet point",
   "@bullet": {
@@ -17052,7 +17048,7 @@
   },
   "failed": "Failed",
   "@failed": {
-    "description": "Auto-generated for failed"
+    "description": "Test status: failed"
   },
   "fatigue": "Fatigue",
   "@fatigue": {
@@ -21141,9 +21137,9 @@
   "@newPersonalRecord": {
     "description": "Title for PR celebration"
   },
-  "awesome": "Awesome",
+  "awesome": "Awesome!",
   "@awesome": {
-    "description": "Celebration button text"
+    "description": "Button text to close achievement modal"
   },
   "remaining": "left",
   "@remaining": {
@@ -21217,7 +21213,7 @@
   },
   "achievementUnlocked": "Achievement Unlocked!",
   "@achievementUnlocked": {
-    "description": "Title for achievement unlock animation"
+    "description": "Title for achievement unlock modal"
   },
   "rarityCommon": "Common",
   "@rarityCommon": {
@@ -28577,9 +28573,9 @@
   "@copyR1ToAll": {
     "description": "Button to copy round 1 configuration to all rounds"
   },
-  "restAfterRound": "Rest after round",
+  "restAfterRound": "Rest After Round",
   "@restAfterRound": {
-    "description": "Label for rest time between superset rounds"
+    "description": "Label for rest time after completing a round"
   },
   "applyToAllRounds": "All rounds",
   "@applyToAllRounds": {
@@ -28613,9 +28609,9 @@
   "@editConfiguration": {
     "description": "Button to edit existing configuration"
   },
-  "rounds": "rounds",
+  "rounds": "Rounds",
   "@rounds": {
-    "description": "Plural form of round"
+    "description": "Label for number of rounds in superset"
   },
   "copyFromPrevious": "Copy from Previous",
   "@copyFromPrevious": {
@@ -31281,7 +31277,7 @@
   },
   "evidenceBased": "Evidence-Based",
   "@evidenceBased": {
-    "description": "Label for evidence-based templates section"
+    "description": "Section title for evidence-based templates"
   },
   "defaultTemplatesSubtitle": "Ready-made training programs based on scientific research",
   "@defaultTemplatesSubtitle": {
@@ -31331,9 +31327,9 @@
   "@use": {
     "description": "Button text to use a template"
   },
-  "duplicateTemplate": "Template Already Exists",
+  "duplicateTemplate": "Duplicate Template",
   "@duplicateTemplate": {
-    "description": "Title for duplicate template warning dialog"
+    "description": "Option to duplicate a superset template"
   },
   "duplicateTemplateMessage": "You already have a template named \"{name}\". Add anyway with a different name?",
   "@duplicateTemplateMessage": {
@@ -31908,8 +31904,7 @@
   "continueToWebsite": "Continue to Website",
   "@continueToWebsite": {
     "description": "Button to continue on mobile web"
-  }
-  ,
+  },
   "audioDebugTests": "Audio Debug Tests",
   "@audioDebugTests": {
     "description": "Title for audio debug tests screen"
@@ -31982,17 +31977,9 @@
   "@passed": {
     "description": "Test status: passed"
   },
-  "failed": "Failed",
-  "@failed": {
-    "description": "Test status: failed"
-  },
   "successRate": "Success Rate",
   "@successRate": {
     "description": "Label for success rate metric"
-  },
-  "recommendation": "Recommendation",
-  "@recommendation": {
-    "description": "Label for recommendation section"
   },
   "testResults": "Test Results",
   "@testResults": {
@@ -32020,11 +32007,7 @@
   },
   "recommendedTemplates": "Recommended Templates",
   "@recommendedTemplates": {
-    "description": "Section title for recommended superset templates"
-  },
-  "useTemplate": "Use Template",
-  "@useTemplate": {
-    "description": "Button to use a superset template"
+    "description": "Header for predefined/recommended templates section"
   },
   "saveCustomCopy": "Save Custom Copy",
   "@saveCustomCopy": {
@@ -32050,25 +32033,9 @@
   "@repsRange": {
     "description": "Label for reps range"
   },
-  "restBetweenExercises": "Rest Between Exercises",
-  "@restBetweenExercises": {
-    "description": "Label for rest time between exercises"
-  },
-  "restAfterRound": "Rest After Round",
-  "@restAfterRound": {
-    "description": "Label for rest time after completing a round"
-  },
-  "rounds": "Rounds",
-  "@rounds": {
-    "description": "Label for number of rounds in superset"
-  },
   "recommendedForYou": "Recommended for You",
   "@recommendedForYou": {
     "description": "Section title for recommended superset templates"
-  },
-  "evidenceBased": "Evidence-Based",
-  "@evidenceBased": {
-    "description": "Section title for evidence-based templates"
   },
   "timeEfficient": "Time-Efficient",
   "@timeEfficient": {
@@ -32094,25 +32061,9 @@
   "@errorAddingTemplate": {
     "description": "Generic error message when template addition fails"
   },
-  "weightTimesReps": "Weight × Reps",
-  "@weightTimesReps": {
-    "description": "Header label for weight × reps column in supersets"
-  },
   "templateOptions": "Template Options",
   "@templateOptions": {
     "description": "Title for superset template options menu (long press)"
-  },
-  "duplicateTemplate": "Duplicate Template",
-  "@duplicateTemplate": {
-    "description": "Option to duplicate a superset template"
-  },
-  "editTemplate": "Edit Template",
-  "@editTemplate": {
-    "description": "Option to edit a custom superset template"
-  },
-  "deleteTemplate": "Delete Template",
-  "@deleteTemplate": {
-    "description": "Option to delete a custom superset template"
   },
   "noSupersetTemplates": "No superset templates yet",
   "@noSupersetTemplates": {
@@ -32161,21 +32112,7 @@
   "clusterReps": "Reps per cluster",
   "@clusterReps": {
     "description": "Label for reps per cluster in rest-pause"
-  }
-,
-  "achievementUnlocked": "Achievement Unlocked!",
-  "@achievementUnlocked": {
-    "description": "Title for achievement unlock modal"
   },
-  "awesome": "Awesome!",
-  "@awesome": {
-    "description": "Button text to close achievement modal"
-  },
-  "next": "Next",
-  "@next": {
-    "description": "Button text to see next achievement in modal"
-  }
-,
   "templateSupersetChestBackFoundation": "Chest + Back Foundation",
   "@templateSupersetChestBackFoundation": {
     "description": "Superset template name: Chest + Back Foundation"
@@ -32295,19 +32232,10 @@
   "templateRestPauseCableRow": "Cable Row Rest-Pause",
   "@templateRestPauseCableRow": {
     "description": "Rest-Pause template name: Cable Row Rest-Pause"
-  }
-,
-  "yourTemplates": "Your Templates",
-  "@yourTemplates": {
-    "description": "Header for user's custom templates section"
   },
   "discoverMoreTemplates": "Discover more templates",
   "@discoverMoreTemplates": {
     "description": "Link to expand and show predefined templates"
-  },
-  "recommendedTemplates": "Recommended Templates",
-  "@recommendedTemplates": {
-    "description": "Header for predefined/recommended templates section"
   },
   "hideTemplates": "Hide",
   "@hideTemplates": {
