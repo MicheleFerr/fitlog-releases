@@ -90,6 +90,12 @@ class _TemplatesHomeScreenState extends ConsumerState<TemplatesHomeScreen>
   bool _isDropsetsExpanded = false;
   bool _isRestPauseExpanded = false;
 
+  // ═══════════════════════════════════════════════════════════════════════════
+  // Category filter for Discover tab
+  // null = show all categories, otherwise show only selected category
+  // ═══════════════════════════════════════════════════════════════════════════
+  String? _selectedCategory;
+
   @override
   void initState() {
     super.initState();
@@ -861,14 +867,34 @@ class _TemplatesHomeScreenState extends ConsumerState<TemplatesHomeScreen>
       child: CustomScrollView(
         slivers: [
           // ═══════════════════════════════════════════════════════════════════
-          // SECTION 1: Workout Templates (existing)
+          // SECTION 0: Category Filter Chips (sticky)
+          // ═══════════════════════════════════════════════════════════════════
+          SliverPersistentHeader(
+            pinned: true,
+            delegate: _CategoryFilterDelegate(
+              selectedCategory: _selectedCategory,
+              onCategorySelected: (category) {
+                HapticFeedback.selectionClick();
+                setState(() => _selectedCategory = category);
+              },
+            ),
+          ),
+
+          // ═══════════════════════════════════════════════════════════════════
+          // SECTION 1: Workout Templates (filtered by category)
           // ═══════════════════════════════════════════════════════════════════
           defaultTemplatesAsync.when(
-            loading: () => const SliverFillRemaining(
-              child: Center(child: LoadingIndicator()),
+            loading: () => const SliverToBoxAdapter(
+              child: Padding(
+                padding: EdgeInsets.all(AppSpacing.lg),
+                child: Center(child: LoadingIndicator()),
+              ),
             ),
-            error: (error, _) => SliverFillRemaining(
-              child: Center(child: Text(l10n.errorLoadingTemplates)),
+            error: (error, _) => SliverToBoxAdapter(
+              child: Padding(
+                padding: const EdgeInsets.all(AppSpacing.lg),
+                child: Center(child: Text(l10n.errorLoadingTemplates)),
+              ),
             ),
             data: (templates) {
               if (templates.isEmpty) {
@@ -904,12 +930,17 @@ class _TemplatesHomeScreenState extends ConsumerState<TemplatesHomeScreen>
                 'home', 'dumbbell', 'express', 'specialty',
               ];
 
+              // Filter categories based on selection
+              final categoriesToShow = _selectedCategory != null
+                  ? [_selectedCategory!]
+                  : orderedCategories;
+
               return SliverPadding(
                 padding: const EdgeInsets.symmetric(horizontal: AppSpacing.md, vertical: AppSpacing.sm),
                 sliver: SliverList(
                   delegate: SliverChildBuilderDelegate(
                     (context, index) {
-                      final categoryKey = orderedCategories[index];
+                      final categoryKey = categoriesToShow[index];
                       final categoryTemplates = categories[categoryKey];
                       if (categoryTemplates == null || categoryTemplates.isEmpty) {
                         return const SizedBox.shrink();
@@ -920,34 +951,35 @@ class _TemplatesHomeScreenState extends ConsumerState<TemplatesHomeScreen>
                       return Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          // Compact category header
-                          Padding(
-                            padding: const EdgeInsets.symmetric(vertical: AppSpacing.sm),
-                            child: Row(
-                              children: [
-                                SemanticIcon(
-                                  icon: categoryIcon,
-                                  semanticLabel: categoryName,
-                                  size: AppIconSize.small,
-                                  color: context.colors.primary,
-                                ),
-                                const SizedBox(width: AppSpacing.sm),
-                                Text(
-                                  categoryName,
-                                  style: context.textTheme.titleSmall?.copyWith(
-                                    fontWeight: FontWeight.bold,
+                          // Compact category header (only show if viewing all)
+                          if (_selectedCategory == null)
+                            Padding(
+                              padding: const EdgeInsets.symmetric(vertical: AppSpacing.sm),
+                              child: Row(
+                                children: [
+                                  SemanticIcon(
+                                    icon: categoryIcon,
+                                    semanticLabel: categoryName,
+                                    size: AppIconSize.small,
+                                    color: context.colors.primary,
                                   ),
-                                ),
-                                const Spacer(),
-                                Text(
-                                  '${categoryTemplates.length}',
-                                  style: context.textTheme.labelMedium?.copyWith(
-                                    color: context.colors.onSurfaceVariant,
+                                  const SizedBox(width: AppSpacing.sm),
+                                  Text(
+                                    categoryName,
+                                    style: context.textTheme.titleSmall?.copyWith(
+                                      fontWeight: FontWeight.bold,
+                                    ),
                                   ),
-                                ),
-                              ],
+                                  const Spacer(),
+                                  Text(
+                                    '${categoryTemplates.length}',
+                                    style: context.textTheme.labelMedium?.copyWith(
+                                      color: context.colors.onSurfaceVariant,
+                                    ),
+                                  ),
+                                ],
+                              ),
                             ),
-                          ),
 
                           // Horizontal scrollable templates
                           SizedBox(
@@ -970,7 +1002,7 @@ class _TemplatesHomeScreenState extends ConsumerState<TemplatesHomeScreen>
                         ],
                       );
                     },
-                    childCount: orderedCategories.length,
+                    childCount: categoriesToShow.length,
                   ),
                 ),
               );
@@ -3760,6 +3792,100 @@ class _SectionHeader extends StatelessWidget {
           ),
         ),
       ],
+    );
+  }
+}
+
+/// Delegate for sticky category filter chips
+class _CategoryFilterDelegate extends SliverPersistentHeaderDelegate {
+  _CategoryFilterDelegate({
+    required this.selectedCategory,
+    required this.onCategorySelected,
+  });
+
+  final String? selectedCategory;
+  final void Function(String?) onCategorySelected;
+
+  @override
+  double get minExtent => 56;
+
+  @override
+  double get maxExtent => 56;
+
+  @override
+  bool shouldRebuild(covariant _CategoryFilterDelegate oldDelegate) {
+    return selectedCategory != oldDelegate.selectedCategory;
+  }
+
+  @override
+  Widget build(BuildContext context, double shrinkOffset, bool overlapsContent) {
+    final l10n = AppLocalizations.of(context);
+
+    // Category data with localized names and icons
+    final categoryData = [
+      (key: null, label: l10n.all, icon: AppIcons.gridView),
+      (key: 'beginner', label: l10n.beginner, icon: AppIcons.school),
+      (key: 'intermediate', label: l10n.intermediate, icon: AppIcons.trendUp),
+      (key: 'advanced', label: l10n.advanced, icon: AppIcons.localFireDepartment),
+      (key: 'home', label: l10n.homeWorkouts, icon: AppIcons.home),
+      (key: 'dumbbell', label: l10n.dumbbellOnly, icon: AppIcons.workout),
+      (key: 'express', label: l10n.express, icon: AppIcons.timer),
+      (key: 'specialty', label: l10n.specialty, icon: AppIcons.star),
+    ];
+
+    return Container(
+      color: context.colors.surface,
+      child: Column(
+        children: [
+          Expanded(
+            child: ListView.separated(
+              scrollDirection: Axis.horizontal,
+              padding: const EdgeInsets.symmetric(
+                horizontal: AppSpacing.md,
+                vertical: AppSpacing.xs,
+              ),
+              itemCount: categoryData.length,
+              separatorBuilder: (_, __) => const SizedBox(width: AppSpacing.xs),
+              itemBuilder: (context, index) {
+                final category = categoryData[index];
+                final isSelected = selectedCategory == category.key;
+
+                return FilterChip(
+                  selected: isSelected,
+                  showCheckmark: false,
+                  avatar: isSelected
+                      ? null
+                      : SemanticIcon(
+                          icon: category.icon,
+                          semanticLabel: category.label,
+                          size: AppIconSize.tiny,
+                          color: context.colors.onSurfaceVariant,
+                        ),
+                  label: Text(category.label),
+                  labelStyle: context.textTheme.labelMedium?.copyWith(
+                    color: isSelected
+                        ? context.colors.onSecondaryContainer
+                        : context.colors.onSurfaceVariant,
+                    fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+                  ),
+                  selectedColor: context.colors.secondaryContainer,
+                  backgroundColor: context.colors.surfaceContainerHighest,
+                  side: BorderSide.none,
+                  padding: const EdgeInsets.symmetric(horizontal: AppSpacing.xs),
+                  onSelected: (_) => onCategorySelected(category.key),
+                );
+              },
+            ),
+          ),
+          // Subtle divider when scrolled
+          if (shrinkOffset > 0)
+            Divider(
+              height: 1,
+              thickness: 1,
+              color: context.colors.outlineVariant.withValues(alpha: 0.5),
+            ),
+        ],
+      ),
     );
   }
 }
