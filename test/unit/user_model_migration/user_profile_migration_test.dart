@@ -15,7 +15,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:mocktail/mocktail.dart';
-import 'package:gymbro_flutter_new/features/auth/domain/entities/user_profile_consolidated.dart';
+import 'package:gymbro_flutter_new/features/auth/domain/entities/user_profile.dart';
 
 // Mocks
 class MockDocumentSnapshot extends Mock implements DocumentSnapshot<Map<String, dynamic>> {}

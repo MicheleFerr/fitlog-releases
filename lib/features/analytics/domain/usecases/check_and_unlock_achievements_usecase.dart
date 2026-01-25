@@ -10,11 +10,13 @@ import 'package:gymbro_flutter_new/shared/domain/entities/pr_type.dart';
 
 /// Use case for checking and unlocking achievements based on workout metrics
 ///
-/// Evaluates all 8 badge types against current user performance and unlocks
-/// newly-eligible achievements. Called after workout completion or on demand.
+/// Evaluates all 13 badge types (7 categories) against current user performance
+/// and unlocks newly-eligible achievements. Called after workout completion.
 ///
-/// Note: This is a simplified implementation that checks basic badge conditions.
-/// Full implementation with all 8 badge types will be completed in future iterations.
+/// Badge Categories (13 total):
+/// - FirstPR (1), StreakMaster (3 tiers), VolumeLegend (3 tiers)
+/// - BalancedBuilder (1), OneRepMonarch (1), WorkoutCompletionist (3 tiers)
+/// - ConsistencyChampion (1)
 class CheckAndUnlockAchievementsUseCase {
   CheckAndUnlockAchievementsUseCase({
     required this.achievementRepository,
@@ -30,17 +32,14 @@ class CheckAndUnlockAchievementsUseCase {
 
   /// Check for new achievements and unlock them
   ///
-  /// Implemented (7/8):
+  /// All 13 badges implemented across 7 categories:
   /// 1. FirstPR - First personal record ever achieved ✅
-  /// 2. StreakMaster (7, 14, 30 days) - Workout streak milestones ✅
-  /// 3. VolumeLegend (10k, 50k, 100k kg) - Total volume milestones ✅
+  /// 2. StreakMaster7/14/30 - Workout streak milestones ✅
+  /// 3. VolumeLegend10k/50k/100k - Total volume milestones ✅
   /// 4. BalancedBuilder - Push/pull balance ✅
   /// 5. OneRepMonarch - Multiple one-rep max PRs (3+) ✅
-  /// 6. WorkoutCompletionist (50, 100, 500) - Workout count milestones ✅
+  /// 6. WorkoutCompletionist50/100/500 - Workout count milestones ✅
   /// 7. ConsistencyChampion - Max 7-day gap in 90 days ✅
-  ///
-  /// TODO:
-  /// 8. FormMaster - Requires form tracking integration (FUTURE FEATURE)
   ///
   /// [userId] - User to check achievements for
   /// [metrics] - Current workout metrics
