@@ -798,6 +798,230 @@ final class DirectNotificationManager: NSObject {
         }
     }
 
+    // MARK: - Notification Content Creation Helpers
+
+    /// Creates a UNMutableNotificationContent configured for timer notifications
+    /// - Parameters:
+    ///   - title: Notification title
+    ///   - body: Notification body text
+    ///   - soundName: Name of sound file (without .caf extension)
+    ///   - categoryIdentifier: iOS notification category (default: "TIMER_COMPLETE")
+    ///   - isForWatchDisplay: If true, notification is silent (for Watch UI only)
+    ///   - silentLoopHandlesAudio: If true, AVAudioPlayer handles audio (notification is visual)
+    /// - Returns: Configured UNMutableNotificationContent ready for use
+    private func createNotificationContent(
+        title: String,
+        body: String,
+        soundName: String,
+        categoryIdentifier: String = "TIMER_COMPLETE",
+        isForWatchDisplay: Bool = false,
+        silentLoopHandlesAudio: Bool = false
+    ) -> UNMutableNotificationContent {
+        var content = UNMutableNotificationContent()
+        content.title = title
+        content.body = body
+        content.categoryIdentifier = categoryIdentifier
+        content.badge = 0
+        content.threadIdentifier = "gym-timer"
+
+        configureSoundForNotification(
+            content: &content,
+            soundName: soundName,
+            shouldHaveSound: !isForWatchDisplay && !silentLoopHandlesAudio,
+            silentLoopHandlesAudio: silentLoopHandlesAudio
+        )
+
+        configureIOSFeaturesForNotification(
+            content: &content,
+            isForWatchDisplay: isForWatchDisplay
+        )
+
+        return content
+    }
+
+    /// Configures sound settings for notification content
+    /// - Parameters:
+    ///   - content: Notification content to configure (modified in-place via inout)
+    ///   - soundName: Name of sound file to use
+    ///   - shouldHaveSound: Whether notification should play sound
+    ///   - silentLoopHandlesAudio: Whether silent loop is handling audio
+    /// - Note: Modifies content.sound and content.userInfo in-place
+    private func configureSoundForNotification(
+        content: inout UNMutableNotificationContent,
+        soundName: String,
+        shouldHaveSound: Bool,
+        silentLoopHandlesAudio: Bool
+    ) {
+        if shouldHaveSound {
+            let soundFileName = soundName.hasSuffix(".caf") ? soundName : "\(soundName).caf"
+
+            if verifyAudioFile(soundName) {
+                content.sound = UNNotificationSound(named: UNNotificationSoundName(rawValue: soundFileName))
+                print("🔊 [NOTIFICATION-SOUND] Using regular notification sound: \(soundFileName)")
+                print("   - Critical Alert entitlement: ⏳ PENDING Apple approval")
+                print("   - Fallback: Using regular sound (respects mute switch)")
+                print("   - Sound will play if device is NOT muted")
+            } else {
+                content.sound = .default
+                print("⚠️ [NOTIFICATION-SOUND] Custom sound not found, using system default")
+            }
+
+            content.userInfo = [
+                "gymbro_timer_sound": soundName,
+                "is_critical_alert": false,
+                "scheduled_at": Date().timeIntervalSince1970
+            ]
+            print("📝 [NOTIFICATION] Timer notification configured with regular sound (Critical Alert pending)")
+        } else {
+            content.sound = .none
+            content.userInfo = [
+                "gymbro_timer_sound": soundName,
+                "is_critical_alert": false,
+                "silent_loop_handles_audio": silentLoopHandlesAudio,
+                "scheduled_at": Date().timeIntervalSince1970
+            ]
+
+            if silentLoopHandlesAudio {
+                print("🔇 [SILENT-NOTIFICATION] Silent loop handles audio - notification is visual only")
+                print("   - AVAudioPlayer will play sound (bypasses mute)")
+                print("   - Notification shows but doesn't play sound")
+            } else {
+                print("📱 [WATCH] This notification is for Watch UI only")
+                print("   - Timer completion sound will be handled separately by app")
+            }
+        }
+    }
+
+    /// Configures iOS 15+ features for notification content
+    /// - Parameters:
+    ///   - content: Notification content to configure (modified in-place via inout)
+    ///   - isForWatchDisplay: Whether this is for Watch UI (affects interruption level)
+    /// - Note: Modifies content.interruptionLevel and content.relevanceScore on iOS 15+
+    private func configureIOSFeaturesForNotification(
+        content: inout UNMutableNotificationContent,
+        isForWatchDisplay: Bool
+    ) {
+        if #available(iOS 15.0, *) {
+            if isForWatchDisplay {
+                content.interruptionLevel = .active
+                content.relevanceScore = 0.7
+                print("📱 [WATCH] Using active interruption level for Watch display")
+            } else {
+                content.interruptionLevel = .timeSensitive
+                content.relevanceScore = 1.0
+                print("📱 [LOCKSCREEN] Using timeSensitive for DnD bypass (visual only)")
+                print("   - Notification will SHOW even in DnD/Focus mode")
+                print("   - Notification SOUND respects mute switch")
+                print("   - Mute bypass handled by AVAudioPlayer (BackgroundAudioManager)")
+            }
+        }
+    }
+
+    // MARK: - Notification Sending Helpers
+
+    /// Sends an immediate notification (trigger: nil for instant delivery)
+    /// - Parameters:
+    ///   - content: Configured notification content
+    ///   - fallbackSoundName: Sound to play via AVAudioPlayer if notification fails
+    /// - Note: Falls back to AVAudioPlayer on notification error (with [weak self] to prevent retain cycles)
+    private func sendImmediateNotification(
+        content: UNMutableNotificationContent,
+        fallbackSoundName: String = "sound"
+    ) {
+        let center = UNUserNotificationCenter.current()
+        let request = UNNotificationRequest(
+            identifier: UUID().uuidString,
+            content: content,
+            trigger: nil  // nil trigger = immediate delivery
+        )
+
+        center.add(request) { [weak self] error in
+            if let error = error {
+                print("❌ Failed to send immediate notification: \(error)")
+                print("🔊 [BACKUP] Notification failed - using AVAudioPlayer as fallback")
+                TimerSoundFix.shared.playTimerCompletionSound(preferredSound: fallbackSoundName)
+            } else {
+                print("✅ Immediate notification sent with sound: \(content.sound?.debugDescription ?? "none")")
+                print("   - trigger: nil ensures delivery")
+                print("   - Backup AVAudioPlayer NOT needed (notification handles audio)")
+            }
+        }
+    }
+
+    // MARK: - Diagnostic Helpers
+
+    /// Verifies sound file exists in bundle and logs diagnostic info
+    /// - Parameter soundName: Name of sound file (with or without .caf extension)
+    /// - Returns: True if sound file exists and is valid
+    private func verifyAndLogSoundFile(_ soundName: String) -> Bool {
+        let soundFileName = soundName.hasSuffix(".caf") ? soundName : "\(soundName).caf"
+        let soundFileBase = soundName.replacingOccurrences(of: ".caf", with: "")
+
+        if let path = Bundle.main.path(forResource: soundFileBase, ofType: "caf") {
+            print("✅ Sound file FOUND: \(path)")
+            if let attrs = try? FileManager.default.attributesOfItem(atPath: path),
+               let size = attrs[.size] as? Int64 {
+                print("   - File size: \(size) bytes")
+            }
+            return true
+        } else {
+            print("❌ Sound file NOT FOUND: \(soundFileName)")
+            print("   - Searching for: \(soundFileBase).caf")
+            return false
+        }
+    }
+
+    /// Logs comprehensive diagnostics for notification sending (SYNCHRONOUS version to preserve log order)
+    /// - Parameters:
+    ///   - title: Notification title
+    ///   - soundName: Sound file name
+    /// - Note: Uses synchronous DispatchQueue.main.sync for settings check to preserve log order
+    private func logNotificationDiagnostics(
+        title: String,
+        soundName: String
+    ) {
+        let appState = UIApplication.shared.applicationState
+        print("🔔 ============================================")
+        print("🔔 IMMEDIATE TIMER NOTIFICATION - DIAGNOSTIC")
+        print("🔔 ============================================")
+        print("   Title: \(title)")
+        print("   Body: \(soundName)")
+        print("   Sound: \(soundName)")
+        print("   App State: \(appState == .active ? "ACTIVE" : appState == .background ? "BACKGROUND" : "INACTIVE")")
+
+        // SYNC settings check to preserve log order (ADJUSTMENT from original async version)
+        let settings = DispatchQueue.main.sync {
+            var settingsResult: UNNotificationSettings?
+            let semaphore = DispatchSemaphore(value: 0)
+
+            UNUserNotificationCenter.current().getNotificationSettings { settings in
+                settingsResult = settings
+                semaphore.signal()
+            }
+
+            semaphore.wait()
+            return settingsResult
+        }
+
+        if let settings = settings {
+            print("📊 NOTIFICATION SETTINGS:")
+            print("   - Authorization: \(settings.authorizationStatus.rawValue) (\(authStatusString(settings.authorizationStatus)))")
+            print("   - Sound Setting: \(settings.soundSetting.rawValue) (\(settings.soundSetting == .enabled ? "✅ ENABLED" : "❌ DISABLED"))")
+            print("   - Alert Setting: \(settings.alertSetting.rawValue) (\(settings.alertSetting == .enabled ? "✅ ENABLED" : "❌ DISABLED"))")
+
+            if #available(iOS 15.0, *) {
+                print("   - Time Sensitive: \(settings.timeSensitiveSetting.rawValue) (\(settings.timeSensitiveSetting == .enabled ? "✅ ENABLED" : "❌ DISABLED"))")
+            }
+        }
+
+        let session = AVAudioSession.sharedInstance()
+        print("📊 AUDIO STATUS:")
+        print("   - Output Volume: \(session.outputVolume) (\(session.outputVolume > 0.1 ? "✅ OK" : "⚠️ LOW"))")
+        print("   - Audio Route: \(session.currentRoute.outputs.map { $0.portType.rawValue }.joined(separator: ", "))")
+
+        _ = verifyAndLogSoundFile(soundName)
+    }
+
     // MARK: - Helper Functions
 
     /// Convert authorization status to readable string
