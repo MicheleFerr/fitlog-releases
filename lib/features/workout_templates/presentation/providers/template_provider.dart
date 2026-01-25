@@ -17,6 +17,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/features/workout_templates/domain/entities/workout_template.dart';
 import 'package:gymbro_flutter_new/features/workout_templates/data/repositories/template_repository.dart';
+import 'package:gymbro_flutter_new/core/providers/tier_entitlements_provider.dart';
 import 'package:gymbro_flutter_new/features/auth/presentation/providers/consolidated_user_provider.dart';
 
 // State class
@@ -160,14 +161,19 @@ class TemplateNotifier extends Notifier<TemplateState> {
     state = state.copyWith(isLoading: true, error: null);
 
     try {
-      // ✅ FIXED: Pass premium status to repository
-      final isPremium = ref.read(isPremiumUserProvider);
+      // ✅ FIXED: Use consolidated tier entitlements (UserTier + AccountTier)
+      final entitlements = ref.read(tierEntitlementsProvider);
 
       if (kDebugMode) {
-        debugPrint('📝 [TemplateProvider] Creating template: ${template.name} (isPremium: $isPremium)');
+        debugPrint('📝 [TemplateProvider] Creating template: ${template.name} '
+            '(maxPrivate: ${entitlements.maxTemplates}, maxPublic: ${entitlements.maxPublicTemplates})');
       }
 
-      final templateId = await _repository.createTemplate(template, isPremium: isPremium);
+      final templateId = await _repository.createTemplate(
+        template,
+        maxPrivateTemplates: entitlements.maxTemplates,
+        maxPublicTemplates: entitlements.maxPublicTemplates,
+      );
 
       if (kDebugMode) {
         debugPrint('✅ [TemplateProvider] Template created with ID: $templateId');
@@ -204,11 +210,19 @@ class TemplateNotifier extends Notifier<TemplateState> {
     state = state.copyWith(isLoading: true, error: null);
 
     try {
+      // ✅ FIXED: Pass consolidated tier limits for quota check
+      final entitlements = ref.read(tierEntitlementsProvider);
+
       if (kDebugMode) {
-        debugPrint('📥 [TemplateProvider] Downloading template: $templateId');
+        debugPrint('📥 [TemplateProvider] Downloading template: $templateId '
+            '(maxPrivate: ${entitlements.maxTemplates})');
       }
 
-      await _repository.downloadTemplate(templateId);
+      await _repository.downloadTemplate(
+        templateId,
+        maxPrivateTemplates: entitlements.maxTemplates,
+        maxPublicTemplates: entitlements.maxPublicTemplates,
+      );
 
       if (kDebugMode) {
         debugPrint('✅ [TemplateProvider] Template downloaded successfully');
@@ -396,19 +410,13 @@ class TemplateNotifier extends Notifier<TemplateState> {
           .where((t) => t.visibility == visibility)
           .length;
 
-      // ✅ FIXED: Use actual premium check from provider
-      final isPremium = ref.read(isPremiumUserProvider);
+      // ✅ FIXED: Use consolidated tier entitlements (UserTier + AccountTier)
+      final entitlements = ref.read(tierEntitlementsProvider);
 
       if (visibility == TemplateVisibility.private) {
-        final limit = isPremium
-            ? TemplateQuota.maxPremiumPrivateTemplates
-            : TemplateQuota.maxPrivateTemplates;
-        return limit - userTemplateCount;
+        return entitlements.maxTemplates - userTemplateCount;
       } else {
-        final limit = isPremium
-            ? TemplateQuota.maxPremiumPublicTemplates
-            : TemplateQuota.maxPublicTemplates;
-        return limit - userTemplateCount;
+        return entitlements.maxPublicTemplates - userTemplateCount;
       }
     } catch (e) {
       if (kDebugMode) {

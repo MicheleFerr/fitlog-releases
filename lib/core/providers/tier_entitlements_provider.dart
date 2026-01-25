@@ -14,14 +14,28 @@ library;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/core/domain/entities/user_tier.dart';
 import 'package:gymbro_flutter_new/features/home/providers/user_xp_provider.dart';
+import 'package:gymbro_flutter_new/features/auth/presentation/providers/consolidated_user_provider.dart';
+import 'package:gymbro_flutter_new/features/auth/domain/entities/user_profile.dart';
 
 /// Centralized entitlement provider (Policy Decision Point)
 ///
 /// Pattern: PDP from entitlement architecture
 /// All access decisions should go through this provider.
+///
+/// CONSOLIDATED: Takes max of XP tier (UserTier) and Account tier (AccountTier/Premium)
+/// This ensures Premium users always get at least their subscription benefits,
+/// while XP progression can grant additional slots.
 final tierEntitlementsProvider = Provider<TierEntitlements>((ref) {
-  final tier = ref.watch(userTierProvider);
-  return TierEntitlements(tier);
+  final userTier = ref.watch(userTierProvider);
+  final accountTier = ref.watch(
+    userProfileProvider.select((profile) =>
+      profile.valueOrNull?.accountTier ?? AccountTier.free
+    ),
+  );
+  return TierEntitlements.consolidated(
+    userTier: userTier,
+    accountTier: accountTier,
+  );
 });
 
 /// Entitlements wrapper with helper methods
@@ -29,29 +43,51 @@ final tierEntitlementsProvider = Provider<TierEntitlements>((ref) {
 /// Provides convenient access to tier entitlements with
 /// additional helper methods for common checks.
 class TierEntitlements {
-  TierEntitlements(this._tier);
-  final UserTier _tier;
+  /// Create entitlements from XP tier only (legacy)
+  TierEntitlements(this._tier)
+    : _quota = TemplateQuota.forUserTier(_tier),
+      _accountTier = AccountTier.free;
 
-  /// Current user tier
+  /// Create consolidated entitlements (XP tier + Account tier)
+  /// Takes the MAXIMUM of both tiers to ensure Premium users always
+  /// get at least their subscription benefits
+  TierEntitlements.consolidated({
+    required UserTier userTier,
+    required AccountTier accountTier,
+  }) : _tier = userTier,
+       _accountTier = accountTier,
+       _quota = TemplateQuota.consolidated(
+         userTier: userTier,
+         accountTier: accountTier,
+       );
+
+  final UserTier _tier;
+  final AccountTier _accountTier;
+  final TemplateQuota _quota;
+
+  /// Current user tier (XP-based)
   UserTier get tier => _tier;
 
-  /// Maximum private templates user can create
-  int get maxTemplates => _tier.maxTemplates;
+  /// Current account tier (Premium toggle)
+  AccountTier get accountTier => _accountTier;
 
-  /// Maximum public templates user can share
-  int get maxPublicTemplates => _tier.maxPublicTemplates;
+  /// Maximum private templates user can create (consolidated from both tiers)
+  int get maxTemplates => _quota.maxPrivateTemplates;
+
+  /// Maximum public templates user can share (consolidated from both tiers)
+  int get maxPublicTemplates => _quota.maxPublicTemplates;
 
   /// Maximum custom exercises user can create
   int get maxCustomExercises => _tier.maxCustomExercises;
 
-  /// Whether to show banner ads
-  bool get shouldShowAds => _tier.showAds;
+  /// Whether to show banner ads (Premium/Pro users have no ads)
+  bool get shouldShowAds => _accountTier == AccountTier.free && _tier.showAds;
 
   /// Whether user has Pro Analytics access
-  bool get hasProAnalytics => _tier.hasProAnalytics;
+  bool get hasProAnalytics => _accountTier != AccountTier.free || _tier.hasProAnalytics;
 
   /// Whether user has Cloud Sync access
-  bool get hasCloudSync => _tier.hasCloudSync;
+  bool get hasCloudSync => _accountTier != AccountTier.free || _tier.hasCloudSync;
 
   /// Check if user can save another private template
   bool canSaveTemplate(int currentCount) => currentCount < maxTemplates;

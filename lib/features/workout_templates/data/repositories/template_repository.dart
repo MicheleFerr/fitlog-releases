@@ -43,12 +43,24 @@ class TemplateRepository {
   // CRUD Operations
   
   /// Crea un nuovo template
-  Future<String> createTemplate(WorkoutTemplate template, {bool isPremium = false}) async {
+  ///
+  /// [maxPrivateTemplates] - Max private templates (from tierEntitlementsProvider)
+  /// [maxPublicTemplates] - Max public templates (from tierEntitlementsProvider)
+  Future<String> createTemplate(
+    WorkoutTemplate template, {
+    required int maxPrivateTemplates,
+    required int maxPublicTemplates,
+  }) async {
     final userId = _auth.currentUser?.uid;
     if (userId == null) throw Exception('User not authenticated');
 
-    // Controlla quota utente
-    await _checkUserQuota(userId, template.visibility, isPremium: isPremium);
+    // Controlla quota utente con limiti consolidati (UserTier + AccountTier)
+    await _checkUserQuota(
+      userId,
+      template.visibility,
+      maxPrivate: maxPrivateTemplates,
+      maxPublic: maxPublicTemplates,
+    );
 
     final doc = _templatesCollection.doc();
     final newTemplate = template.copyWith(
@@ -123,16 +135,23 @@ class TemplateRepository {
   }
   
   /// Download/Copia template pubblico
-  Future<void> downloadTemplate(String templateId) async {
+  ///
+  /// [maxPrivateTemplates] - Max private templates (from tierEntitlementsProvider)
+  /// [maxPublicTemplates] - Max public templates (from tierEntitlementsProvider)
+  Future<void> downloadTemplate(
+    String templateId, {
+    required int maxPrivateTemplates,
+    required int maxPublicTemplates,
+  }) async {
     final userId = _auth.currentUser?.uid;
     if (userId == null) throw Exception('User not authenticated');
-    
+
     // Ottieni il template
     final templateDoc = await _templatesCollection.doc(templateId).get();
     if (!templateDoc.exists) throw Exception('Template not found');
-    
+
     final template = WorkoutTemplate.fromJson(templateDoc.data() as Map<String, dynamic>);
-    
+
     // Crea una copia privata per l'utente
     final userCopy = template.copyWith(
       id: '', // Verrà generato nuovo ID
@@ -145,9 +164,13 @@ class TemplateRepository {
       reviewCount: 0,
       averageRating: 0.0,
     );
-    
-    await createTemplate(userCopy);
-    
+
+    await createTemplate(
+      userCopy,
+      maxPrivateTemplates: maxPrivateTemplates,
+      maxPublicTemplates: maxPublicTemplates,
+    );
+
     // Incrementa download count del template originale
     await _templatesCollection.doc(templateId).update({
       'downloadCount': FieldValue.increment(1),
@@ -233,7 +256,16 @@ class TemplateRepository {
   
   // Helper methods
   
-  Future<void> _checkUserQuota(String userId, TemplateVisibility visibility, {required bool isPremium}) async {
+  /// Check user template quota
+  ///
+  /// Uses consolidated limits from tierEntitlementsProvider (passed by caller)
+  /// Pattern: Takes MAX of UserTier (XP) + AccountTier (Premium)
+  Future<void> _checkUserQuota(
+    String userId,
+    TemplateVisibility visibility, {
+    required int maxPrivate,
+    required int maxPublic,
+  }) async {
     final userTemplates = await _templatesCollection
         .where('userId', isEqualTo: userId)
         .where('visibility', isEqualTo: visibility.name)
@@ -241,22 +273,17 @@ class TemplateRepository {
 
     final count = userTemplates.docs.length;
 
-    // ✅ FIXED: Use premium status from parameter (passed by caller with ref access)
+    // ✅ FIXED: Use consolidated limits (UserTier + AccountTier)
+    // Limits passed from caller with tierEntitlementsProvider access
+    final limit = visibility == TemplateVisibility.private
+        ? maxPrivate
+        : maxPublic;
 
-    if (visibility == TemplateVisibility.private) {
-      final limit = isPremium
-          ? TemplateQuota.maxPremiumPrivateTemplates
-          : TemplateQuota.maxPrivateTemplates;
-      if (count >= limit) {
-        throw Exception('You have reached the maximum number of private templates ($limit)');
-      }
-    } else if (visibility == TemplateVisibility.public) {
-      final limit = isPremium
-          ? TemplateQuota.maxPremiumPublicTemplates
-          : TemplateQuota.maxPublicTemplates;
-      if (count >= limit) {
-        throw Exception('You have reached the maximum number of public templates ($limit)');
-      }
+    if (count >= limit) {
+      throw Exception(
+        'Template limit reached: $count/$limit ${visibility.name} templates. '
+        'Delete existing templates or upgrade tier for more slots.',
+      );
     }
   }
   

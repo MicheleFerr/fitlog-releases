@@ -412,6 +412,7 @@ class _TemplatesHomeScreenState extends ConsumerState<TemplatesHomeScreen>
   Widget _buildMyTemplatesTab(BuildContext context) {
     final l10n = AppLocalizations.of(context);
     final templatesAsync = ref.watch(customWorkoutTemplatesProvider);
+    final entitlements = ref.watch(tierEntitlementsProvider);
 
     return templatesAsync.when(
       loading: () => const Center(child: LoadingIndicator()),
@@ -430,8 +431,8 @@ class _TemplatesHomeScreenState extends ConsumerState<TemplatesHomeScreen>
                   child: TemplateQuotaIndicator(
                     usedPrivate: templates.where((t) => !t.isPublic).length,
                     usedPublic: templates.where((t) => t.isPublic).length,
-                    maxPrivate: TemplateQuota.maxPrivateTemplates,
-                    maxPublic: TemplateQuota.maxPublicTemplates,
+                    maxPrivate: entitlements.maxTemplates,
+                    maxPublic: entitlements.maxPublicTemplates,
                   ),
                 ),
               ),

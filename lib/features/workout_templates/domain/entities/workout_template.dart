@@ -137,10 +137,5 @@ abstract class TemplateComment with _$TemplateComment {
       _$TemplateCommentFromJson(json);
 }
 
-// Limiti per utente
-class TemplateQuota {
-  static const int maxPrivateTemplates = 4; // Max template privati per utente free
-  static const int maxPublicTemplates = 2;  // Max template pubblici per utente free
-  static const int maxPremiumPrivateTemplates = 20; // Per utenti premium
-  static const int maxPremiumPublicTemplates = 10;  // Per utenti premium
-}
+// REMOVED: TemplateQuota duplicata - usa invece quella in user_profile.dart
+// che supporta il pattern consolidato (max di UserTier + AccountTier)
