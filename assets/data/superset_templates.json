@@ -1,10 +1,11 @@
 {
   "version": "1.1.0",
-  "lastUpdated": "2026-01-24",
+  "lastUpdated": "2026-01-25",
   "templates": [
     {
       "id": "marco_chest_back_foundation",
       "name": "Petto + Schiena Base",
+      "nameKey": "templateSupersetChestBackFoundation",
       "exerciseIds": ["barbell_bench_press", "seated_cable_rows"],
       "rounds": 2,
       "repsRange": "10-12",
@@ -23,6 +24,7 @@
     {
       "id": "marco_leg_core_foundation",
       "name": "Gambe + Core Base",
+      "nameKey": "templateSupersetLegCoreFoundation",
       "exerciseIds": ["leg_press", "plank"],
       "rounds": 2,
       "repsRange": "12-15 / 30s hold",
@@ -41,6 +43,7 @@
     {
       "id": "marco_arms_simple",
       "name": "Braccia Semplici",
+      "nameKey": "templateSupersetArmsSimple",
       "exerciseIds": ["barbell_curl", "triceps_pushdown___rope_attachment"],
       "rounds": 2,
       "repsRange": "10-12",
@@ -58,6 +61,7 @@
     {
       "id": "chiara_fullbody_express",
       "name": "Total Body 15min",
+      "nameKey": "templateSupersetTotalBody15min",
       "exerciseIds": ["dumbbell_bench_press", "bent_over_two_dumbbell_row"],
       "rounds": 3,
       "repsRange": "10-12",
@@ -76,6 +80,7 @@
     {
       "id": "chiara_lower_express",
       "name": "Gambe Potenti 12min",
+      "nameKey": "templateSupersetPowerLegs12min",
       "exerciseIds": ["goblet_squat", "romanian_deadlift"],
       "rounds": 3,
       "repsRange": "8-10",
@@ -93,6 +98,7 @@
     {
       "id": "chiara_upper_home",
       "name": "Upper Body Casa",
+      "nameKey": "templateSupersetUpperBodyHome",
       "exerciseIds": ["push_up", "resistance_band_seated_straight_back_row"],
       "rounds": 3,
       "repsRange": "12-15",
@@ -111,6 +117,7 @@
     {
       "id": "luca_chest_back_strength",
       "name": "Bench + Row Powerlifting",
+      "nameKey": "templateSupersetBenchRowPowerlifting",
       "exerciseIds": ["barbell_bench_press", "bent_over_barbell_row"],
       "rounds": 5,
       "repsRange": "5-6",
@@ -129,6 +136,7 @@
     {
       "id": "luca_leg_power",
       "name": "Squat + RDL Power",
+      "nameKey": "templateSupersetSquatRdlPower",
       "exerciseIds": ["barbell_squat", "romanian_deadlift"],
       "rounds": 4,
       "repsRange": "4-6",
@@ -147,6 +155,7 @@
     {
       "id": "luca_deadlift_ohp",
       "name": "Deadlift + OHP Compound",
+      "nameKey": "templateSupersetDeadliftOhpCompound",
       "exerciseIds": ["barbell_deadlift", "barbell_shoulder_press"],
       "rounds": 4,
       "repsRange": "5-6",
@@ -165,6 +174,7 @@
     {
       "id": "sofia_chest_back_sculpt",
       "name": "Petto + Schiena Definizione",
+      "nameKey": "templateSupersetChestBackDefinition",
       "exerciseIds": ["dumbbell_incline_bench_press", "lat_pulldown_wide_grip"],
       "rounds": 4,
       "repsRange": "10-15",
@@ -184,6 +194,7 @@
     {
       "id": "sofia_shoulder_arms",
       "name": "Spalle + Braccia Tonicità",
+      "nameKey": "templateSupersetShoulderArmsTone",
       "exerciseIds": ["dumbbell_lateral_raise", "face_pull"],
       "rounds": 3,
       "repsRange": "12-15",
@@ -202,6 +213,7 @@
     {
       "id": "sofia_glute_ham",
       "name": "Glutei + Femorali Sculpt",
+      "nameKey": "templateSupersetGluteHamSculpt",
       "exerciseIds": ["barbell_hip_thrust", "seated_leg_curl"],
       "rounds": 4,
       "repsRange": "12-15",
@@ -220,6 +232,7 @@
     {
       "id": "roberto_travel_hotel",
       "name": "Hotel Gym Total Body",
+      "nameKey": "templateSupersetHotelGymTotalBody",
       "exerciseIds": ["dumbbell_bench_press", "bent_over_two_dumbbell_row"],
       "rounds": 3,
       "repsRange": "10-12",
@@ -238,6 +251,7 @@
     {
       "id": "roberto_bodyweight_anywhere",
       "name": "Bodyweight Ovunque",
+      "nameKey": "templateSupersetBodyweightAnywhere",
       "exerciseIds": ["push_up", "pull_up"],
       "rounds": 4,
       "repsRange": "AMRAP-2",
@@ -256,6 +270,7 @@
     {
       "id": "roberto_functional_quick",
       "name": "Functional 20min",
+      "nameKey": "templateSupersetFunctional20min",
       "exerciseIds": ["goblet_squat", "barbell_shoulder_press"],
       "rounds": 3,
       "repsRange": "10-12",
@@ -273,6 +288,7 @@
     {
       "id": "evidence_bench_row",
       "name": "Bench + Row (Ricerca)",
+      "nameKey": "templateSupersetBenchRowResearch",
       "exerciseIds": ["barbell_bench_press", "bent_over_barbell_row"],
       "rounds": 4,
       "repsRange": "8-10",
@@ -290,6 +306,7 @@
     {
       "id": "evidence_squat_legcurl",
       "name": "Squat + Leg Curl (Ricerca)",
+      "nameKey": "templateSupersetSquatLegCurlResearch",
       "exerciseIds": ["barbell_squat", "seated_leg_curl"],
       "rounds": 4,
       "repsRange": "8-10",
@@ -307,6 +324,7 @@
     {
       "id": "evidence_bicep_tricep",
       "name": "Bicep + Tricep (Ricerca)",
+      "nameKey": "templateSupersetBicepTricepResearch",
       "exerciseIds": ["barbell_curl", "triceps_dip"],
       "rounds": 3,
       "repsRange": "10-12",

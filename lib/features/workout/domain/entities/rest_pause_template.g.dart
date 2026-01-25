@@ -10,6 +10,7 @@ _RestPauseTemplate _$RestPauseTemplateFromJson(Map<String, dynamic> json) =>
     _RestPauseTemplate(
       id: json['id'] as String,
       name: json['name'] as String,
+      nameKey: json['nameKey'] as String?,
       exerciseName: json['exerciseName'] as String,
       initialReps: json['initialReps'] as String,
       clusters: (json['clusters'] as num).toInt(),
@@ -41,6 +42,7 @@ Map<String, dynamic> _$RestPauseTemplateToJson(_RestPauseTemplate instance) =>
     <String, dynamic>{
       'id': instance.id,
       'name': instance.name,
+      'nameKey': instance.nameKey,
       'exerciseName': instance.exerciseName,
       'initialReps': instance.initialReps,
       'clusters': instance.clusters,

@@ -26062,6 +26062,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get audioDebugTests => 'Audio Debug Tests';
 
   @override
+  String get tierLimitsTest => 'Tier Limits Test';
+
+  @override
   String get quickTests => 'Quick Tests';
 
   @override
@@ -26217,4 +26220,101 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get clusterReps => 'Reps per cluster';
+
+  @override
+  String get templateSupersetChestBackFoundation => 'Chest + Back Foundation';
+
+  @override
+  String get templateSupersetLegCoreFoundation => 'Legs + Core Foundation';
+
+  @override
+  String get templateSupersetArmsSimple => 'Simple Arms';
+
+  @override
+  String get templateSupersetTotalBody15min => 'Total Body 15min';
+
+  @override
+  String get templateSupersetPowerLegs12min => 'Power Legs 12min';
+
+  @override
+  String get templateSupersetUpperBodyHome => 'Upper Body Home';
+
+  @override
+  String get templateSupersetBenchRowPowerlifting => 'Bench + Row Powerlifting';
+
+  @override
+  String get templateSupersetSquatRdlPower => 'Squat + RDL Power';
+
+  @override
+  String get templateSupersetDeadliftOhpCompound => 'Deadlift + OHP Compound';
+
+  @override
+  String get templateSupersetChestBackDefinition => 'Chest + Back Definition';
+
+  @override
+  String get templateSupersetShoulderArmsTone => 'Shoulders + Arms Tone';
+
+  @override
+  String get templateSupersetGluteHamSculpt => 'Glutes + Hamstrings Sculpt';
+
+  @override
+  String get templateSupersetHotelGymTotalBody => 'Hotel Gym Total Body';
+
+  @override
+  String get templateSupersetBodyweightAnywhere => 'Bodyweight Anywhere';
+
+  @override
+  String get templateSupersetFunctional20min => 'Functional 20min';
+
+  @override
+  String get templateSupersetBenchRowResearch => 'Bench + Row (Research)';
+
+  @override
+  String get templateSupersetSquatLegCurlResearch =>
+      'Squat + Leg Curl (Research)';
+
+  @override
+  String get templateSupersetBicepTricepResearch => 'Bicep + Tricep (Research)';
+
+  @override
+  String get templateDropsetBicepCurl => 'Bicep Curl Dropset';
+
+  @override
+  String get templateDropsetLegPress => 'Leg Press Dropset';
+
+  @override
+  String get templateDropsetLateralRaise => 'Lateral Raise Dropset';
+
+  @override
+  String get templateDropsetTricepPushdown => 'Tricep Pushdown Dropset';
+
+  @override
+  String get templateDropsetCableFly => 'Cable Fly Dropset';
+
+  @override
+  String get templateDropsetLegCurl => 'Leg Curl Dropset';
+
+  @override
+  String get templateRestPauseBenchPress => 'Bench Press Rest-Pause';
+
+  @override
+  String get templateRestPauseSquat => 'Squat Rest-Pause';
+
+  @override
+  String get templateRestPauseLatPulldown => 'Lat Pulldown Rest-Pause';
+
+  @override
+  String get templateRestPauseLegExtension => 'Leg Extension Rest-Pause';
+
+  @override
+  String get templateRestPauseShoulderPress => 'Shoulder Press Rest-Pause';
+
+  @override
+  String get templateRestPauseCableRow => 'Cable Row Rest-Pause';
+
+  @override
+  String get discoverMoreTemplates => 'Discover more templates';
+
+  @override
+  String get hideTemplates => 'Hide';
 }

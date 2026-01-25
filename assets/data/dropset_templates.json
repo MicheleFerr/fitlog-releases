@@ -1,10 +1,11 @@
 {
   "version": "1.0.0",
-  "lastUpdated": "2026-01-24",
+  "lastUpdated": "2026-01-25",
   "templates": [
     {
       "id": "dropset_bicep_curl",
       "name": "Bicep Curl Dropset",
+      "nameKey": "templateDropsetBicepCurl",
       "exerciseName": "Dumbbell Bicep Curl",
       "drops": 3,
       "initialReps": "8-10",
@@ -23,6 +24,7 @@
     {
       "id": "dropset_leg_press",
       "name": "Leg Press Dropset",
+      "nameKey": "templateDropsetLegPress",
       "exerciseName": "Leg Press",
       "drops": 4,
       "initialReps": "10-12",
@@ -41,6 +43,7 @@
     {
       "id": "dropset_lateral_raise",
       "name": "Lateral Raise Dropset",
+      "nameKey": "templateDropsetLateralRaise",
       "exerciseName": "Dumbbell Lateral Raise",
       "drops": 3,
       "initialReps": "10-12",
@@ -59,6 +62,7 @@
     {
       "id": "dropset_cable_pushdown",
       "name": "Tricep Pushdown Dropset",
+      "nameKey": "templateDropsetTricepPushdown",
       "exerciseName": "Cable Tricep Pushdown",
       "drops": 3,
       "initialReps": "10-12",
@@ -77,6 +81,7 @@
     {
       "id": "dropset_chest_fly",
       "name": "Cable Fly Dropset",
+      "nameKey": "templateDropsetCableFly",
       "exerciseName": "Cable Fly",
       "drops": 3,
       "initialReps": "12-15",
@@ -95,6 +100,7 @@
     {
       "id": "dropset_leg_curl",
       "name": "Leg Curl Dropset",
+      "nameKey": "templateDropsetLegCurl",
       "exerciseName": "Lying Leg Curl",
       "drops": 3,
       "initialReps": "10-12",

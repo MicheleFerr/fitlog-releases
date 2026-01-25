@@ -29,6 +29,9 @@ abstract class SupersetTemplate with _$SupersetTemplate {
   const factory SupersetTemplate({
     required String id,
     required String name,
+    /// Localization key for predefined templates (e.g., "templateChestBackFoundation")
+    /// If present, use l10n lookup for display name. If null (custom templates), use name directly.
+    String? nameKey,
     /// Exercise IDs for database lookup (stored in JSON)
     required List<String> exerciseIds,
     /// Exercise names - populated at runtime from database lookup (localized)

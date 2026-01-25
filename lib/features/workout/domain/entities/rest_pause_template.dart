@@ -23,6 +23,9 @@ abstract class RestPauseTemplate with _$RestPauseTemplate {
   const factory RestPauseTemplate({
     required String id,
     required String name,
+    /// Localization key for predefined templates (e.g., "templateBenchPressRestPause")
+    /// If present, use l10n lookup for display name. If null (custom templates), use name directly.
+    String? nameKey,
 
     /// The exercise to perform (e.g., "Bench Press", "Leg Extension")
     required String exerciseName,

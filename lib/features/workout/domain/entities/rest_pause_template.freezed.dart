@@ -15,7 +15,9 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$RestPauseTemplate {
 
- String get id; String get name;/// The exercise to perform (e.g., "Bench Press", "Leg Extension")
+ String get id; String get name;/// Localization key for predefined templates (e.g., "templateBenchPressRestPause")
+/// If present, use l10n lookup for display name. If null (custom templates), use name directly.
+ String? get nameKey;/// The exercise to perform (e.g., "Bench Press", "Leg Extension")
  String get exerciseName;/// Initial reps to perform before first pause (e.g., "6-8")
  String get initialReps;/// Number of rest-pause clusters (typically 2-3)
  int get clusters;/// Target reps per cluster after initial set (e.g., "2-4")
@@ -45,16 +47,16 @@ $RestPauseTemplateCopyWith<RestPauseTemplate> get copyWith => _$RestPauseTemplat
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is RestPauseTemplate&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.exerciseName, exerciseName) || other.exerciseName == exerciseName)&&(identical(other.initialReps, initialReps) || other.initialReps == initialReps)&&(identical(other.clusters, clusters) || other.clusters == clusters)&&(identical(other.clusterReps, clusterReps) || other.clusterReps == clusterReps)&&(identical(other.pauseDuration, pauseDuration) || other.pauseDuration == pauseDuration)&&(identical(other.totalSets, totalSets) || other.totalSets == totalSets)&&(identical(other.restBetweenSets, restBetweenSets) || other.restBetweenSets == restBetweenSets)&&(identical(other.difficulty, difficulty) || other.difficulty == difficulty)&&(identical(other.estimatedTimeMinutes, estimatedTimeMinutes) || other.estimatedTimeMinutes == estimatedTimeMinutes)&&(identical(other.scientificBasis, scientificBasis) || other.scientificBasis == scientificBasis)&&(identical(other.notes, notes) || other.notes == notes)&&(identical(other.tut, tut) || other.tut == tut)&&const DeepCollectionEquality().equals(other.equipmentRequired, equipmentRequired)&&const DeepCollectionEquality().equals(other.equipmentAlternatives, equipmentAlternatives)&&const DeepCollectionEquality().equals(other.targetMuscles, targetMuscles)&&(identical(other.isCustom, isCustom) || other.isCustom == isCustom)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is RestPauseTemplate&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.nameKey, nameKey) || other.nameKey == nameKey)&&(identical(other.exerciseName, exerciseName) || other.exerciseName == exerciseName)&&(identical(other.initialReps, initialReps) || other.initialReps == initialReps)&&(identical(other.clusters, clusters) || other.clusters == clusters)&&(identical(other.clusterReps, clusterReps) || other.clusterReps == clusterReps)&&(identical(other.pauseDuration, pauseDuration) || other.pauseDuration == pauseDuration)&&(identical(other.totalSets, totalSets) || other.totalSets == totalSets)&&(identical(other.restBetweenSets, restBetweenSets) || other.restBetweenSets == restBetweenSets)&&(identical(other.difficulty, difficulty) || other.difficulty == difficulty)&&(identical(other.estimatedTimeMinutes, estimatedTimeMinutes) || other.estimatedTimeMinutes == estimatedTimeMinutes)&&(identical(other.scientificBasis, scientificBasis) || other.scientificBasis == scientificBasis)&&(identical(other.notes, notes) || other.notes == notes)&&(identical(other.tut, tut) || other.tut == tut)&&const DeepCollectionEquality().equals(other.equipmentRequired, equipmentRequired)&&const DeepCollectionEquality().equals(other.equipmentAlternatives, equipmentAlternatives)&&const DeepCollectionEquality().equals(other.targetMuscles, targetMuscles)&&(identical(other.isCustom, isCustom) || other.isCustom == isCustom)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hashAll([runtimeType,id,name,exerciseName,initialReps,clusters,clusterReps,pauseDuration,totalSets,restBetweenSets,difficulty,estimatedTimeMinutes,scientificBasis,notes,tut,const DeepCollectionEquality().hash(equipmentRequired),const DeepCollectionEquality().hash(equipmentAlternatives),const DeepCollectionEquality().hash(targetMuscles),isCustom,createdAt]);
+int get hashCode => Object.hashAll([runtimeType,id,name,nameKey,exerciseName,initialReps,clusters,clusterReps,pauseDuration,totalSets,restBetweenSets,difficulty,estimatedTimeMinutes,scientificBasis,notes,tut,const DeepCollectionEquality().hash(equipmentRequired),const DeepCollectionEquality().hash(equipmentAlternatives),const DeepCollectionEquality().hash(targetMuscles),isCustom,createdAt]);
 
 @override
 String toString() {
-  return 'RestPauseTemplate(id: $id, name: $name, exerciseName: $exerciseName, initialReps: $initialReps, clusters: $clusters, clusterReps: $clusterReps, pauseDuration: $pauseDuration, totalSets: $totalSets, restBetweenSets: $restBetweenSets, difficulty: $difficulty, estimatedTimeMinutes: $estimatedTimeMinutes, scientificBasis: $scientificBasis, notes: $notes, tut: $tut, equipmentRequired: $equipmentRequired, equipmentAlternatives: $equipmentAlternatives, targetMuscles: $targetMuscles, isCustom: $isCustom, createdAt: $createdAt)';
+  return 'RestPauseTemplate(id: $id, name: $name, nameKey: $nameKey, exerciseName: $exerciseName, initialReps: $initialReps, clusters: $clusters, clusterReps: $clusterReps, pauseDuration: $pauseDuration, totalSets: $totalSets, restBetweenSets: $restBetweenSets, difficulty: $difficulty, estimatedTimeMinutes: $estimatedTimeMinutes, scientificBasis: $scientificBasis, notes: $notes, tut: $tut, equipmentRequired: $equipmentRequired, equipmentAlternatives: $equipmentAlternatives, targetMuscles: $targetMuscles, isCustom: $isCustom, createdAt: $createdAt)';
 }
 
 
@@ -65,7 +67,7 @@ abstract mixin class $RestPauseTemplateCopyWith<$Res>  {
   factory $RestPauseTemplateCopyWith(RestPauseTemplate value, $Res Function(RestPauseTemplate) _then) = _$RestPauseTemplateCopyWithImpl;
 @useResult
 $Res call({
- String id, String name, String exerciseName, String initialReps, int clusters, String clusterReps, int pauseDuration, int totalSets, int restBetweenSets, RestPauseDifficulty difficulty, int estimatedTimeMinutes, String scientificBasis, String? notes, String? tut, List<String>? equipmentRequired, List<String>? equipmentAlternatives, List<String>? targetMuscles, bool isCustom, DateTime? createdAt
+ String id, String name, String? nameKey, String exerciseName, String initialReps, int clusters, String clusterReps, int pauseDuration, int totalSets, int restBetweenSets, RestPauseDifficulty difficulty, int estimatedTimeMinutes, String scientificBasis, String? notes, String? tut, List<String>? equipmentRequired, List<String>? equipmentAlternatives, List<String>? targetMuscles, bool isCustom, DateTime? createdAt
 });
 
 
@@ -82,11 +84,12 @@ class _$RestPauseTemplateCopyWithImpl<$Res>
 
 /// Create a copy of RestPauseTemplate
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? name = null,Object? exerciseName = null,Object? initialReps = null,Object? clusters = null,Object? clusterReps = null,Object? pauseDuration = null,Object? totalSets = null,Object? restBetweenSets = null,Object? difficulty = null,Object? estimatedTimeMinutes = null,Object? scientificBasis = null,Object? notes = freezed,Object? tut = freezed,Object? equipmentRequired = freezed,Object? equipmentAlternatives = freezed,Object? targetMuscles = freezed,Object? isCustom = null,Object? createdAt = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? name = null,Object? nameKey = freezed,Object? exerciseName = null,Object? initialReps = null,Object? clusters = null,Object? clusterReps = null,Object? pauseDuration = null,Object? totalSets = null,Object? restBetweenSets = null,Object? difficulty = null,Object? estimatedTimeMinutes = null,Object? scientificBasis = null,Object? notes = freezed,Object? tut = freezed,Object? equipmentRequired = freezed,Object? equipmentAlternatives = freezed,Object? targetMuscles = freezed,Object? isCustom = null,Object? createdAt = freezed,}) {
   return _then(_self.copyWith(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
-as String,exerciseName: null == exerciseName ? _self.exerciseName : exerciseName // ignore: cast_nullable_to_non_nullable
+as String,nameKey: freezed == nameKey ? _self.nameKey : nameKey // ignore: cast_nullable_to_non_nullable
+as String?,exerciseName: null == exerciseName ? _self.exerciseName : exerciseName // ignore: cast_nullable_to_non_nullable
 as String,initialReps: null == initialReps ? _self.initialReps : initialReps // ignore: cast_nullable_to_non_nullable
 as String,clusters: null == clusters ? _self.clusters : clusters // ignore: cast_nullable_to_non_nullable
 as int,clusterReps: null == clusterReps ? _self.clusterReps : clusterReps // ignore: cast_nullable_to_non_nullable
@@ -188,10 +191,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String name,  String exerciseName,  String initialReps,  int clusters,  String clusterReps,  int pauseDuration,  int totalSets,  int restBetweenSets,  RestPauseDifficulty difficulty,  int estimatedTimeMinutes,  String scientificBasis,  String? notes,  String? tut,  List<String>? equipmentRequired,  List<String>? equipmentAlternatives,  List<String>? targetMuscles,  bool isCustom,  DateTime? createdAt)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String name,  String? nameKey,  String exerciseName,  String initialReps,  int clusters,  String clusterReps,  int pauseDuration,  int totalSets,  int restBetweenSets,  RestPauseDifficulty difficulty,  int estimatedTimeMinutes,  String scientificBasis,  String? notes,  String? tut,  List<String>? equipmentRequired,  List<String>? equipmentAlternatives,  List<String>? targetMuscles,  bool isCustom,  DateTime? createdAt)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _RestPauseTemplate() when $default != null:
-return $default(_that.id,_that.name,_that.exerciseName,_that.initialReps,_that.clusters,_that.clusterReps,_that.pauseDuration,_that.totalSets,_that.restBetweenSets,_that.difficulty,_that.estimatedTimeMinutes,_that.scientificBasis,_that.notes,_that.tut,_that.equipmentRequired,_that.equipmentAlternatives,_that.targetMuscles,_that.isCustom,_that.createdAt);case _:
+return $default(_that.id,_that.name,_that.nameKey,_that.exerciseName,_that.initialReps,_that.clusters,_that.clusterReps,_that.pauseDuration,_that.totalSets,_that.restBetweenSets,_that.difficulty,_that.estimatedTimeMinutes,_that.scientificBasis,_that.notes,_that.tut,_that.equipmentRequired,_that.equipmentAlternatives,_that.targetMuscles,_that.isCustom,_that.createdAt);case _:
   return orElse();
 
 }
@@ -209,10 +212,10 @@ return $default(_that.id,_that.name,_that.exerciseName,_that.initialReps,_that.c
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String name,  String exerciseName,  String initialReps,  int clusters,  String clusterReps,  int pauseDuration,  int totalSets,  int restBetweenSets,  RestPauseDifficulty difficulty,  int estimatedTimeMinutes,  String scientificBasis,  String? notes,  String? tut,  List<String>? equipmentRequired,  List<String>? equipmentAlternatives,  List<String>? targetMuscles,  bool isCustom,  DateTime? createdAt)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String name,  String? nameKey,  String exerciseName,  String initialReps,  int clusters,  String clusterReps,  int pauseDuration,  int totalSets,  int restBetweenSets,  RestPauseDifficulty difficulty,  int estimatedTimeMinutes,  String scientificBasis,  String? notes,  String? tut,  List<String>? equipmentRequired,  List<String>? equipmentAlternatives,  List<String>? targetMuscles,  bool isCustom,  DateTime? createdAt)  $default,) {final _that = this;
 switch (_that) {
 case _RestPauseTemplate():
-return $default(_that.id,_that.name,_that.exerciseName,_that.initialReps,_that.clusters,_that.clusterReps,_that.pauseDuration,_that.totalSets,_that.restBetweenSets,_that.difficulty,_that.estimatedTimeMinutes,_that.scientificBasis,_that.notes,_that.tut,_that.equipmentRequired,_that.equipmentAlternatives,_that.targetMuscles,_that.isCustom,_that.createdAt);case _:
+return $default(_that.id,_that.name,_that.nameKey,_that.exerciseName,_that.initialReps,_that.clusters,_that.clusterReps,_that.pauseDuration,_that.totalSets,_that.restBetweenSets,_that.difficulty,_that.estimatedTimeMinutes,_that.scientificBasis,_that.notes,_that.tut,_that.equipmentRequired,_that.equipmentAlternatives,_that.targetMuscles,_that.isCustom,_that.createdAt);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -229,10 +232,10 @@ return $default(_that.id,_that.name,_that.exerciseName,_that.initialReps,_that.c
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String name,  String exerciseName,  String initialReps,  int clusters,  String clusterReps,  int pauseDuration,  int totalSets,  int restBetweenSets,  RestPauseDifficulty difficulty,  int estimatedTimeMinutes,  String scientificBasis,  String? notes,  String? tut,  List<String>? equipmentRequired,  List<String>? equipmentAlternatives,  List<String>? targetMuscles,  bool isCustom,  DateTime? createdAt)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String name,  String? nameKey,  String exerciseName,  String initialReps,  int clusters,  String clusterReps,  int pauseDuration,  int totalSets,  int restBetweenSets,  RestPauseDifficulty difficulty,  int estimatedTimeMinutes,  String scientificBasis,  String? notes,  String? tut,  List<String>? equipmentRequired,  List<String>? equipmentAlternatives,  List<String>? targetMuscles,  bool isCustom,  DateTime? createdAt)?  $default,) {final _that = this;
 switch (_that) {
 case _RestPauseTemplate() when $default != null:
-return $default(_that.id,_that.name,_that.exerciseName,_that.initialReps,_that.clusters,_that.clusterReps,_that.pauseDuration,_that.totalSets,_that.restBetweenSets,_that.difficulty,_that.estimatedTimeMinutes,_that.scientificBasis,_that.notes,_that.tut,_that.equipmentRequired,_that.equipmentAlternatives,_that.targetMuscles,_that.isCustom,_that.createdAt);case _:
+return $default(_that.id,_that.name,_that.nameKey,_that.exerciseName,_that.initialReps,_that.clusters,_that.clusterReps,_that.pauseDuration,_that.totalSets,_that.restBetweenSets,_that.difficulty,_that.estimatedTimeMinutes,_that.scientificBasis,_that.notes,_that.tut,_that.equipmentRequired,_that.equipmentAlternatives,_that.targetMuscles,_that.isCustom,_that.createdAt);case _:
   return null;
 
 }
@@ -244,11 +247,14 @@ return $default(_that.id,_that.name,_that.exerciseName,_that.initialReps,_that.c
 @JsonSerializable()
 
 class _RestPauseTemplate implements RestPauseTemplate {
-  const _RestPauseTemplate({required this.id, required this.name, required this.exerciseName, required this.initialReps, required this.clusters, required this.clusterReps, required this.pauseDuration, required this.totalSets, required this.restBetweenSets, required this.difficulty, required this.estimatedTimeMinutes, required this.scientificBasis, this.notes, this.tut, final  List<String>? equipmentRequired, final  List<String>? equipmentAlternatives, final  List<String>? targetMuscles, this.isCustom = false, this.createdAt}): _equipmentRequired = equipmentRequired,_equipmentAlternatives = equipmentAlternatives,_targetMuscles = targetMuscles;
+  const _RestPauseTemplate({required this.id, required this.name, this.nameKey, required this.exerciseName, required this.initialReps, required this.clusters, required this.clusterReps, required this.pauseDuration, required this.totalSets, required this.restBetweenSets, required this.difficulty, required this.estimatedTimeMinutes, required this.scientificBasis, this.notes, this.tut, final  List<String>? equipmentRequired, final  List<String>? equipmentAlternatives, final  List<String>? targetMuscles, this.isCustom = false, this.createdAt}): _equipmentRequired = equipmentRequired,_equipmentAlternatives = equipmentAlternatives,_targetMuscles = targetMuscles;
   factory _RestPauseTemplate.fromJson(Map<String, dynamic> json) => _$RestPauseTemplateFromJson(json);
 
 @override final  String id;
 @override final  String name;
+/// Localization key for predefined templates (e.g., "templateBenchPressRestPause")
+/// If present, use l10n lookup for display name. If null (custom templates), use name directly.
+@override final  String? nameKey;
 /// The exercise to perform (e.g., "Bench Press", "Leg Extension")
 @override final  String exerciseName;
 /// Initial reps to perform before first pause (e.g., "6-8")
@@ -324,16 +330,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _RestPauseTemplate&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.exerciseName, exerciseName) || other.exerciseName == exerciseName)&&(identical(other.initialReps, initialReps) || other.initialReps == initialReps)&&(identical(other.clusters, clusters) || other.clusters == clusters)&&(identical(other.clusterReps, clusterReps) || other.clusterReps == clusterReps)&&(identical(other.pauseDuration, pauseDuration) || other.pauseDuration == pauseDuration)&&(identical(other.totalSets, totalSets) || other.totalSets == totalSets)&&(identical(other.restBetweenSets, restBetweenSets) || other.restBetweenSets == restBetweenSets)&&(identical(other.difficulty, difficulty) || other.difficulty == difficulty)&&(identical(other.estimatedTimeMinutes, estimatedTimeMinutes) || other.estimatedTimeMinutes == estimatedTimeMinutes)&&(identical(other.scientificBasis, scientificBasis) || other.scientificBasis == scientificBasis)&&(identical(other.notes, notes) || other.notes == notes)&&(identical(other.tut, tut) || other.tut == tut)&&const DeepCollectionEquality().equals(other._equipmentRequired, _equipmentRequired)&&const DeepCollectionEquality().equals(other._equipmentAlternatives, _equipmentAlternatives)&&const DeepCollectionEquality().equals(other._targetMuscles, _targetMuscles)&&(identical(other.isCustom, isCustom) || other.isCustom == isCustom)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _RestPauseTemplate&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.nameKey, nameKey) || other.nameKey == nameKey)&&(identical(other.exerciseName, exerciseName) || other.exerciseName == exerciseName)&&(identical(other.initialReps, initialReps) || other.initialReps == initialReps)&&(identical(other.clusters, clusters) || other.clusters == clusters)&&(identical(other.clusterReps, clusterReps) || other.clusterReps == clusterReps)&&(identical(other.pauseDuration, pauseDuration) || other.pauseDuration == pauseDuration)&&(identical(other.totalSets, totalSets) || other.totalSets == totalSets)&&(identical(other.restBetweenSets, restBetweenSets) || other.restBetweenSets == restBetweenSets)&&(identical(other.difficulty, difficulty) || other.difficulty == difficulty)&&(identical(other.estimatedTimeMinutes, estimatedTimeMinutes) || other.estimatedTimeMinutes == estimatedTimeMinutes)&&(identical(other.scientificBasis, scientificBasis) || other.scientificBasis == scientificBasis)&&(identical(other.notes, notes) || other.notes == notes)&&(identical(other.tut, tut) || other.tut == tut)&&const DeepCollectionEquality().equals(other._equipmentRequired, _equipmentRequired)&&const DeepCollectionEquality().equals(other._equipmentAlternatives, _equipmentAlternatives)&&const DeepCollectionEquality().equals(other._targetMuscles, _targetMuscles)&&(identical(other.isCustom, isCustom) || other.isCustom == isCustom)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hashAll([runtimeType,id,name,exerciseName,initialReps,clusters,clusterReps,pauseDuration,totalSets,restBetweenSets,difficulty,estimatedTimeMinutes,scientificBasis,notes,tut,const DeepCollectionEquality().hash(_equipmentRequired),const DeepCollectionEquality().hash(_equipmentAlternatives),const DeepCollectionEquality().hash(_targetMuscles),isCustom,createdAt]);
+int get hashCode => Object.hashAll([runtimeType,id,name,nameKey,exerciseName,initialReps,clusters,clusterReps,pauseDuration,totalSets,restBetweenSets,difficulty,estimatedTimeMinutes,scientificBasis,notes,tut,const DeepCollectionEquality().hash(_equipmentRequired),const DeepCollectionEquality().hash(_equipmentAlternatives),const DeepCollectionEquality().hash(_targetMuscles),isCustom,createdAt]);
 
 @override
 String toString() {
-  return 'RestPauseTemplate(id: $id, name: $name, exerciseName: $exerciseName, initialReps: $initialReps, clusters: $clusters, clusterReps: $clusterReps, pauseDuration: $pauseDuration, totalSets: $totalSets, restBetweenSets: $restBetweenSets, difficulty: $difficulty, estimatedTimeMinutes: $estimatedTimeMinutes, scientificBasis: $scientificBasis, notes: $notes, tut: $tut, equipmentRequired: $equipmentRequired, equipmentAlternatives: $equipmentAlternatives, targetMuscles: $targetMuscles, isCustom: $isCustom, createdAt: $createdAt)';
+  return 'RestPauseTemplate(id: $id, name: $name, nameKey: $nameKey, exerciseName: $exerciseName, initialReps: $initialReps, clusters: $clusters, clusterReps: $clusterReps, pauseDuration: $pauseDuration, totalSets: $totalSets, restBetweenSets: $restBetweenSets, difficulty: $difficulty, estimatedTimeMinutes: $estimatedTimeMinutes, scientificBasis: $scientificBasis, notes: $notes, tut: $tut, equipmentRequired: $equipmentRequired, equipmentAlternatives: $equipmentAlternatives, targetMuscles: $targetMuscles, isCustom: $isCustom, createdAt: $createdAt)';
 }
 
 
@@ -344,7 +350,7 @@ abstract mixin class _$RestPauseTemplateCopyWith<$Res> implements $RestPauseTemp
   factory _$RestPauseTemplateCopyWith(_RestPauseTemplate value, $Res Function(_RestPauseTemplate) _then) = __$RestPauseTemplateCopyWithImpl;
 @override @useResult
 $Res call({
- String id, String name, String exerciseName, String initialReps, int clusters, String clusterReps, int pauseDuration, int totalSets, int restBetweenSets, RestPauseDifficulty difficulty, int estimatedTimeMinutes, String scientificBasis, String? notes, String? tut, List<String>? equipmentRequired, List<String>? equipmentAlternatives, List<String>? targetMuscles, bool isCustom, DateTime? createdAt
+ String id, String name, String? nameKey, String exerciseName, String initialReps, int clusters, String clusterReps, int pauseDuration, int totalSets, int restBetweenSets, RestPauseDifficulty difficulty, int estimatedTimeMinutes, String scientificBasis, String? notes, String? tut, List<String>? equipmentRequired, List<String>? equipmentAlternatives, List<String>? targetMuscles, bool isCustom, DateTime? createdAt
 });
 
 
@@ -361,11 +367,12 @@ class __$RestPauseTemplateCopyWithImpl<$Res>
 
 /// Create a copy of RestPauseTemplate
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? name = null,Object? exerciseName = null,Object? initialReps = null,Object? clusters = null,Object? clusterReps = null,Object? pauseDuration = null,Object? totalSets = null,Object? restBetweenSets = null,Object? difficulty = null,Object? estimatedTimeMinutes = null,Object? scientificBasis = null,Object? notes = freezed,Object? tut = freezed,Object? equipmentRequired = freezed,Object? equipmentAlternatives = freezed,Object? targetMuscles = freezed,Object? isCustom = null,Object? createdAt = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? name = null,Object? nameKey = freezed,Object? exerciseName = null,Object? initialReps = null,Object? clusters = null,Object? clusterReps = null,Object? pauseDuration = null,Object? totalSets = null,Object? restBetweenSets = null,Object? difficulty = null,Object? estimatedTimeMinutes = null,Object? scientificBasis = null,Object? notes = freezed,Object? tut = freezed,Object? equipmentRequired = freezed,Object? equipmentAlternatives = freezed,Object? targetMuscles = freezed,Object? isCustom = null,Object? createdAt = freezed,}) {
   return _then(_RestPauseTemplate(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
-as String,exerciseName: null == exerciseName ? _self.exerciseName : exerciseName // ignore: cast_nullable_to_non_nullable
+as String,nameKey: freezed == nameKey ? _self.nameKey : nameKey // ignore: cast_nullable_to_non_nullable
+as String?,exerciseName: null == exerciseName ? _self.exerciseName : exerciseName // ignore: cast_nullable_to_non_nullable
 as String,initialReps: null == initialReps ? _self.initialReps : initialReps // ignore: cast_nullable_to_non_nullable
 as String,clusters: null == clusters ? _self.clusters : clusters // ignore: cast_nullable_to_non_nullable
 as int,clusterReps: null == clusterReps ? _self.clusterReps : clusterReps // ignore: cast_nullable_to_non_nullable

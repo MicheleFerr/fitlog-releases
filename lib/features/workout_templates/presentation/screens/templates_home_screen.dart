@@ -82,6 +82,14 @@ class _TemplatesHomeScreenState extends ConsumerState<TemplatesHomeScreen>
   late AnimationController _minimizeController;
   late Animation<double> _minimizeAnimation;
 
+  // ═══════════════════════════════════════════════════════════════════════════
+  // Expansion state for "Discover more templates" sections
+  // Default: collapsed (false) - shows only user's custom templates
+  // ═══════════════════════════════════════════════════════════════════════════
+  bool _isSupersetsExpanded = false;
+  bool _isDropsetsExpanded = false;
+  bool _isRestPauseExpanded = false;
+
   @override
   void initState() {
     super.initState();
@@ -672,7 +680,6 @@ class _TemplatesHomeScreenState extends ConsumerState<TemplatesHomeScreen>
       }
 
       if (context.mounted) {
-        final l10n = AppLocalizations.of(context);
         SnackBarService.showSuccess(context, context.l10n.workoutStartedFromTemplate(template.name));
         // Navigate to workout tab (separate branch in StatefulShellRoute)
         context.go(AppRoutes.workoutPath);
@@ -836,6 +843,10 @@ class _TemplatesHomeScreenState extends ConsumerState<TemplatesHomeScreen>
     final predefinedSupersetsAsync = ref.watch(predefinedSupersetTemplatesProvider);
     final predefinedDropsetsAsync = ref.watch(predefinedDropsetTemplatesProvider);
     final predefinedRestPauseAsync = ref.watch(predefinedRestPauseTemplatesProvider);
+    // Watch custom advanced technique templates (user's saved templates)
+    final customSupersetsAsync = ref.watch(customSupersetTemplatesProvider);
+    final customDropsetsAsync = ref.watch(customDropsetTemplatesProvider);
+    final customRestPauseAsync = ref.watch(customRestPauseTemplatesProvider);
 
     return RefreshIndicator(
       onRefresh: () async {
@@ -843,6 +854,9 @@ class _TemplatesHomeScreenState extends ConsumerState<TemplatesHomeScreen>
         ref.invalidate(predefinedSupersetTemplatesProvider);
         ref.invalidate(predefinedDropsetTemplatesProvider);
         ref.invalidate(predefinedRestPauseTemplatesProvider);
+        ref.invalidate(customSupersetTemplatesProvider);
+        ref.invalidate(customDropsetTemplatesProvider);
+        ref.invalidate(customRestPauseTemplatesProvider);
       },
       child: CustomScrollView(
         slivers: [
@@ -993,15 +1007,24 @@ class _TemplatesHomeScreenState extends ConsumerState<TemplatesHomeScreen>
           ),
 
           // ═══════════════════════════════════════════════════════════════════
-          // SECTION 3: Superset Templates
+          // SECTION 3: Superset Templates (Custom first, then Predefined)
           // ═══════════════════════════════════════════════════════════════════
-          _buildAdvancedTechniqueSection<SupersetTemplate>(
+          _buildAdvancedTechniqueWithCustom<SupersetTemplate>(
             context: context,
             title: l10n.superset,
             icon: AppIcons.link,
             color: context.colors.secondary,
-            asyncValue: predefinedSupersetsAsync,
-            cardBuilder: (template) => _CompactSupersetCard(
+            customAsync: customSupersetsAsync,
+            predefinedAsync: predefinedSupersetsAsync,
+            isExpanded: _isSupersetsExpanded,
+            onToggleExpanded: () => setState(() => _isSupersetsExpanded = !_isSupersetsExpanded),
+            customCardBuilder: (template) => _CompactSupersetCard(
+              template: template,
+              onTap: () => _previewPredefinedSuperset(context, template),
+              onUse: () => _usePredefinedSuperset(context, template),
+              isCustom: true,
+            ),
+            predefinedCardBuilder: (template) => _CompactSupersetCard(
               template: template,
               onTap: () => _previewPredefinedSuperset(context, template),
               onUse: () => _usePredefinedSuperset(context, template),
@@ -1009,15 +1032,24 @@ class _TemplatesHomeScreenState extends ConsumerState<TemplatesHomeScreen>
           ),
 
           // ═══════════════════════════════════════════════════════════════════
-          // SECTION 4: Dropset Templates
+          // SECTION 4: Dropset Templates (Custom first, then Predefined)
           // ═══════════════════════════════════════════════════════════════════
-          _buildAdvancedTechniqueSection<DropsetTemplate>(
+          _buildAdvancedTechniqueWithCustom<DropsetTemplate>(
             context: context,
             title: l10n.dropset,
             icon: AppIcons.trendDown,
             color: context.colors.tertiary,
-            asyncValue: predefinedDropsetsAsync,
-            cardBuilder: (template) => _CompactDropsetCard(
+            customAsync: customDropsetsAsync,
+            predefinedAsync: predefinedDropsetsAsync,
+            isExpanded: _isDropsetsExpanded,
+            onToggleExpanded: () => setState(() => _isDropsetsExpanded = !_isDropsetsExpanded),
+            customCardBuilder: (template) => _CompactDropsetCard(
+              template: template,
+              onTap: () => _previewPredefinedDropset(context, template),
+              onUse: () => _usePredefinedDropset(context, template),
+              isCustom: true,
+            ),
+            predefinedCardBuilder: (template) => _CompactDropsetCard(
               template: template,
               onTap: () => _previewPredefinedDropset(context, template),
               onUse: () => _usePredefinedDropset(context, template),
@@ -1025,15 +1057,24 @@ class _TemplatesHomeScreenState extends ConsumerState<TemplatesHomeScreen>
           ),
 
           // ═══════════════════════════════════════════════════════════════════
-          // SECTION 5: Rest-Pause Templates
+          // SECTION 5: Rest-Pause Templates (Custom first, then Predefined)
           // ═══════════════════════════════════════════════════════════════════
-          _buildAdvancedTechniqueSection<RestPauseTemplate>(
+          _buildAdvancedTechniqueWithCustom<RestPauseTemplate>(
             context: context,
             title: l10n.restPause,
             icon: AppIcons.timer,
             color: context.colors.error,
-            asyncValue: predefinedRestPauseAsync,
-            cardBuilder: (template) => _CompactRestPauseCard(
+            customAsync: customRestPauseAsync,
+            predefinedAsync: predefinedRestPauseAsync,
+            isExpanded: _isRestPauseExpanded,
+            onToggleExpanded: () => setState(() => _isRestPauseExpanded = !_isRestPauseExpanded),
+            customCardBuilder: (template) => _CompactRestPauseCard(
+              template: template,
+              onTap: () => _previewPredefinedRestPause(context, template),
+              onUse: () => _usePredefinedRestPause(context, template),
+              isCustom: true,
+            ),
+            predefinedCardBuilder: (template) => _CompactRestPauseCard(
               template: template,
               onTap: () => _previewPredefinedRestPause(context, template),
               onUse: () => _usePredefinedRestPause(context, template),
@@ -1049,92 +1090,282 @@ class _TemplatesHomeScreenState extends ConsumerState<TemplatesHomeScreen>
     );
   }
 
-  /// Helper to build advanced technique sections
-  SliverToBoxAdapter _buildAdvancedTechniqueSection<T>({
+  /// Helper to build advanced technique sections with custom/predefined logic
+  ///
+  /// Logic:
+  /// - If user has custom templates → show "Your Templates" first + "Discover more" expandable
+  /// - If no custom templates → show predefined as "Recommended Templates"
+  SliverToBoxAdapter _buildAdvancedTechniqueWithCustom<T>({
     required BuildContext context,
     required String title,
     required IconData icon,
     required Color color,
-    required AsyncValue<List<T>> asyncValue,
-    required Widget Function(T template) cardBuilder,
+    required AsyncValue<List<T>> customAsync,
+    required AsyncValue<List<T>> predefinedAsync,
+    required bool isExpanded,
+    required VoidCallback onToggleExpanded,
+    required Widget Function(T template) customCardBuilder,
+    required Widget Function(T template) predefinedCardBuilder,
   }) {
-    return SliverToBoxAdapter(
-      child: asyncValue.when(
-        loading: () => const Padding(
+    final l10n = AppLocalizations.of(context);
+
+    // Handle loading/error states
+    if (customAsync.isLoading || predefinedAsync.isLoading) {
+      return const SliverToBoxAdapter(
+        child: Padding(
           padding: EdgeInsets.all(AppSpacing.md),
           child: Center(child: LoadingIndicator()),
         ),
-        error: (_, __) => const SizedBox.shrink(),
-        data: (templates) {
-          if (templates.isEmpty) return const SizedBox.shrink();
+      );
+    }
 
-          return Padding(
-            padding: const EdgeInsets.symmetric(horizontal: AppSpacing.md),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // Section header
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: AppSpacing.sm),
-                  child: Row(
-                    children: [
-                      Container(
-                        padding: const EdgeInsets.all(6),
-                        decoration: BoxDecoration(
-                          color: color.withValues(alpha: 0.15),
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                        child: SemanticIcon(
-                          icon: icon,
-                          semanticLabel: title,
-                          size: AppIconSize.small,
-                          color: color,
-                        ),
+    final customTemplates = customAsync.valueOrNull ?? [];
+    final predefinedTemplates = predefinedAsync.valueOrNull ?? [];
+
+    // If no templates at all, show nothing
+    if (customTemplates.isEmpty && predefinedTemplates.isEmpty) {
+      return const SliverToBoxAdapter(child: SizedBox.shrink());
+    }
+
+    final hasCustom = customTemplates.isNotEmpty;
+
+    return SliverToBoxAdapter(
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: AppSpacing.md),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Main section header with icon
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: AppSpacing.sm),
+              child: Row(
+                children: [
+                  Container(
+                    padding: const EdgeInsets.all(6),
+                    decoration: BoxDecoration(
+                      color: color.withValues(alpha: 0.15),
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: SemanticIcon(
+                      icon: icon,
+                      semanticLabel: title,
+                      size: AppIconSize.small,
+                      color: color,
+                    ),
+                  ),
+                  const SizedBox(width: AppSpacing.sm),
+                  Text(
+                    title,
+                    style: context.textTheme.titleSmall?.copyWith(
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+
+            // ═══════════════════════════════════════════════════════════════
+            // CASE 1: User has custom templates
+            // ═══════════════════════════════════════════════════════════════
+            if (hasCustom) ...[
+              // "Your Templates" subsection
+              Padding(
+                padding: const EdgeInsets.only(bottom: AppSpacing.xs),
+                child: Row(
+                  children: [
+                    Text(
+                      l10n.yourTemplates,
+                      style: context.textTheme.labelMedium?.copyWith(
+                        color: context.colors.onSurfaceVariant,
                       ),
-                      const SizedBox(width: AppSpacing.sm),
-                      Text(
-                        title,
-                        style: context.textTheme.titleSmall?.copyWith(
+                    ),
+                    const SizedBox(width: AppSpacing.xs),
+                    Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: AppSpacing.xs,
+                        vertical: 2,
+                      ),
+                      decoration: BoxDecoration(
+                        color: color.withValues(alpha: 0.2),
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: Text(
+                        '${customTemplates.length}',
+                        style: context.textTheme.labelSmall?.copyWith(
+                          color: color,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
-                      const Spacer(),
+                    ),
+                  ],
+                ),
+              ),
+
+              // Custom templates horizontal list
+              SizedBox(
+                height: 130,
+                child: ListView.separated(
+                  scrollDirection: Axis.horizontal,
+                  itemCount: customTemplates.length,
+                  separatorBuilder: (_, __) => const SizedBox(width: AppSpacing.sm),
+                  itemBuilder: (context, i) => customCardBuilder(customTemplates[i]),
+                ),
+              ),
+              const SizedBox(height: AppSpacing.sm),
+
+              // "Discover more templates" expandable link
+              if (predefinedTemplates.isNotEmpty)
+                InkWell(
+                  onTap: () {
+                    HapticFeedback.lightImpact();
+                    onToggleExpanded();
+                  },
+                  borderRadius: BorderRadius.circular(8),
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(vertical: AppSpacing.xs),
+                    child: Row(
+                      children: [
+                        SemanticIcon(
+                          icon: AppIcons.lightbulb,
+                          semanticLabel: l10n.discoverMoreTemplates,
+                          size: AppIconSize.small,
+                          color: context.colors.primary,
+                        ),
+                        const SizedBox(width: AppSpacing.xs),
+                        Text(
+                          l10n.discoverMoreTemplates,
+                          style: context.textTheme.labelMedium?.copyWith(
+                            color: context.colors.primary,
+                          ),
+                        ),
+                        const Spacer(),
+                        SemanticIcon(
+                          icon: isExpanded ? AppIcons.expandLess : AppIcons.expandMore,
+                          semanticLabel: isExpanded ? l10n.hideTemplates : l10n.discoverMoreTemplates,
+                          size: AppIconSize.small,
+                          color: context.colors.primary,
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+
+              // Expanded predefined templates section
+              if (isExpanded && predefinedTemplates.isNotEmpty) ...[
+                const SizedBox(height: AppSpacing.sm),
+                // "Recommended Templates" subsection header
+                Padding(
+                  padding: const EdgeInsets.only(bottom: AppSpacing.xs),
+                  child: Row(
+                    children: [
+                      Text(
+                        l10n.recommendedTemplates,
+                        style: context.textTheme.labelMedium?.copyWith(
+                          color: context.colors.onSurfaceVariant,
+                        ),
+                      ),
+                      const SizedBox(width: AppSpacing.xs),
                       Container(
                         padding: const EdgeInsets.symmetric(
                           horizontal: AppSpacing.xs,
                           vertical: 2,
                         ),
                         decoration: BoxDecoration(
-                          color: color.withValues(alpha: 0.2),
+                          color: context.colors.surfaceContainerHighest,
                           borderRadius: BorderRadius.circular(8),
                         ),
                         child: Text(
-                          '${templates.length}',
+                          '${predefinedTemplates.length}',
                           style: context.textTheme.labelSmall?.copyWith(
-                            color: color,
+                            color: context.colors.onSurfaceVariant,
                             fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                      const Spacer(),
+                      TextButton(
+                        onPressed: () {
+                          HapticFeedback.lightImpact();
+                          onToggleExpanded();
+                        },
+                        style: TextButton.styleFrom(
+                          padding: const EdgeInsets.symmetric(horizontal: AppSpacing.sm),
+                          minimumSize: Size.zero,
+                          tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                        ),
+                        child: Text(
+                          l10n.hideTemplates,
+                          style: context.textTheme.labelSmall?.copyWith(
+                            color: context.colors.primary,
                           ),
                         ),
                       ),
                     ],
                   ),
                 ),
-
-                // Horizontal scrollable templates
+                // Predefined templates horizontal list
                 SizedBox(
                   height: 130,
                   child: ListView.separated(
                     scrollDirection: Axis.horizontal,
-                    itemCount: templates.length,
+                    itemCount: predefinedTemplates.length,
                     separatorBuilder: (_, __) => const SizedBox(width: AppSpacing.sm),
-                    itemBuilder: (context, i) => cardBuilder(templates[i]),
+                    itemBuilder: (context, i) => predefinedCardBuilder(predefinedTemplates[i]),
                   ),
                 ),
-                const SizedBox(height: AppSpacing.md),
               ],
-            ),
-          );
-        },
+            ]
+            // ═══════════════════════════════════════════════════════════════
+            // CASE 2: No custom templates - show predefined as recommended
+            // ═══════════════════════════════════════════════════════════════
+            else ...[
+              // "Recommended Templates" header
+              Padding(
+                padding: const EdgeInsets.only(bottom: AppSpacing.xs),
+                child: Row(
+                  children: [
+                    Text(
+                      l10n.recommendedTemplates,
+                      style: context.textTheme.labelMedium?.copyWith(
+                        color: context.colors.onSurfaceVariant,
+                      ),
+                    ),
+                    const SizedBox(width: AppSpacing.xs),
+                    Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: AppSpacing.xs,
+                        vertical: 2,
+                      ),
+                      decoration: BoxDecoration(
+                        color: color.withValues(alpha: 0.2),
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: Text(
+                        '${predefinedTemplates.length}',
+                        style: context.textTheme.labelSmall?.copyWith(
+                          color: color,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              // Predefined templates horizontal list
+              SizedBox(
+                height: 130,
+                child: ListView.separated(
+                  scrollDirection: Axis.horizontal,
+                  itemCount: predefinedTemplates.length,
+                  separatorBuilder: (_, __) => const SizedBox(width: AppSpacing.sm),
+                  itemBuilder: (context, i) => predefinedCardBuilder(predefinedTemplates[i]),
+                ),
+              ),
+            ],
+
+            const SizedBox(height: AppSpacing.md),
+          ],
+        ),
       ),
     );
   }
@@ -3113,11 +3344,13 @@ class _CompactSupersetCard extends StatelessWidget {
     required this.template,
     required this.onTap,
     required this.onUse,
+    this.isCustom = false,
   });
 
   final SupersetTemplate template;
   final VoidCallback onTap;
   final VoidCallback onUse;
+  final bool isCustom;
 
   @override
   Widget build(BuildContext context) {
@@ -3214,11 +3447,13 @@ class _CompactDropsetCard extends StatelessWidget {
     required this.template,
     required this.onTap,
     required this.onUse,
+    this.isCustom = false,
   });
 
   final DropsetTemplate template;
   final VoidCallback onTap;
   final VoidCallback onUse;
+  final bool isCustom;
 
   @override
   Widget build(BuildContext context) {
@@ -3315,11 +3550,13 @@ class _CompactRestPauseCard extends StatelessWidget {
     required this.template,
     required this.onTap,
     required this.onUse,
+    this.isCustom = false,
   });
 
   final RestPauseTemplate template;
   final VoidCallback onTap;
   final VoidCallback onUse;
+  final bool isCustom;
 
   @override
   Widget build(BuildContext context) {

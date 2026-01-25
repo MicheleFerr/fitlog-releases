@@ -3037,7 +3037,7 @@ abstract class AppLocalizations {
   /// **'Use Default Timer'**
   String get useDefaultRestTime;
 
-  /// Your templates tab title
+  /// Header for user's custom templates section
   ///
   /// In en, this message translates to:
   /// **'Your Templates'**
@@ -46592,6 +46592,12 @@ abstract class AppLocalizations {
   /// **'Audio Debug Tests'**
   String get audioDebugTests;
 
+  /// Title for tier limits test screen (admin only)
+  ///
+  /// In en, this message translates to:
+  /// **'Tier Limits Test'**
+  String get tierLimitsTest;
+
   /// Tab title for quick tests
   ///
   /// In en, this message translates to:
@@ -46730,7 +46736,7 @@ abstract class AppLocalizations {
   /// **'Full Test Matrix'**
   String get fullTestMatrix;
 
-  /// Section title for recommended superset templates
+  /// Header for predefined/recommended templates section
   ///
   /// In en, this message translates to:
   /// **'Recommended Templates'**
@@ -46891,6 +46897,198 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Reps per cluster'**
   String get clusterReps;
+
+  /// Superset template name: Chest + Back Foundation
+  ///
+  /// In en, this message translates to:
+  /// **'Chest + Back Foundation'**
+  String get templateSupersetChestBackFoundation;
+
+  /// Superset template name: Legs + Core Foundation
+  ///
+  /// In en, this message translates to:
+  /// **'Legs + Core Foundation'**
+  String get templateSupersetLegCoreFoundation;
+
+  /// Superset template name: Simple Arms
+  ///
+  /// In en, this message translates to:
+  /// **'Simple Arms'**
+  String get templateSupersetArmsSimple;
+
+  /// Superset template name: Total Body 15min
+  ///
+  /// In en, this message translates to:
+  /// **'Total Body 15min'**
+  String get templateSupersetTotalBody15min;
+
+  /// Superset template name: Power Legs 12min
+  ///
+  /// In en, this message translates to:
+  /// **'Power Legs 12min'**
+  String get templateSupersetPowerLegs12min;
+
+  /// Superset template name: Upper Body Home
+  ///
+  /// In en, this message translates to:
+  /// **'Upper Body Home'**
+  String get templateSupersetUpperBodyHome;
+
+  /// Superset template name: Bench + Row Powerlifting
+  ///
+  /// In en, this message translates to:
+  /// **'Bench + Row Powerlifting'**
+  String get templateSupersetBenchRowPowerlifting;
+
+  /// Superset template name: Squat + RDL Power
+  ///
+  /// In en, this message translates to:
+  /// **'Squat + RDL Power'**
+  String get templateSupersetSquatRdlPower;
+
+  /// Superset template name: Deadlift + OHP Compound
+  ///
+  /// In en, this message translates to:
+  /// **'Deadlift + OHP Compound'**
+  String get templateSupersetDeadliftOhpCompound;
+
+  /// Superset template name: Chest + Back Definition
+  ///
+  /// In en, this message translates to:
+  /// **'Chest + Back Definition'**
+  String get templateSupersetChestBackDefinition;
+
+  /// Superset template name: Shoulders + Arms Tone
+  ///
+  /// In en, this message translates to:
+  /// **'Shoulders + Arms Tone'**
+  String get templateSupersetShoulderArmsTone;
+
+  /// Superset template name: Glutes + Hamstrings Sculpt
+  ///
+  /// In en, this message translates to:
+  /// **'Glutes + Hamstrings Sculpt'**
+  String get templateSupersetGluteHamSculpt;
+
+  /// Superset template name: Hotel Gym Total Body
+  ///
+  /// In en, this message translates to:
+  /// **'Hotel Gym Total Body'**
+  String get templateSupersetHotelGymTotalBody;
+
+  /// Superset template name: Bodyweight Anywhere
+  ///
+  /// In en, this message translates to:
+  /// **'Bodyweight Anywhere'**
+  String get templateSupersetBodyweightAnywhere;
+
+  /// Superset template name: Functional 20min
+  ///
+  /// In en, this message translates to:
+  /// **'Functional 20min'**
+  String get templateSupersetFunctional20min;
+
+  /// Superset template name: Bench + Row (Research)
+  ///
+  /// In en, this message translates to:
+  /// **'Bench + Row (Research)'**
+  String get templateSupersetBenchRowResearch;
+
+  /// Superset template name: Squat + Leg Curl (Research)
+  ///
+  /// In en, this message translates to:
+  /// **'Squat + Leg Curl (Research)'**
+  String get templateSupersetSquatLegCurlResearch;
+
+  /// Superset template name: Bicep + Tricep (Research)
+  ///
+  /// In en, this message translates to:
+  /// **'Bicep + Tricep (Research)'**
+  String get templateSupersetBicepTricepResearch;
+
+  /// Dropset template name: Bicep Curl Dropset
+  ///
+  /// In en, this message translates to:
+  /// **'Bicep Curl Dropset'**
+  String get templateDropsetBicepCurl;
+
+  /// Dropset template name: Leg Press Dropset
+  ///
+  /// In en, this message translates to:
+  /// **'Leg Press Dropset'**
+  String get templateDropsetLegPress;
+
+  /// Dropset template name: Lateral Raise Dropset
+  ///
+  /// In en, this message translates to:
+  /// **'Lateral Raise Dropset'**
+  String get templateDropsetLateralRaise;
+
+  /// Dropset template name: Tricep Pushdown Dropset
+  ///
+  /// In en, this message translates to:
+  /// **'Tricep Pushdown Dropset'**
+  String get templateDropsetTricepPushdown;
+
+  /// Dropset template name: Cable Fly Dropset
+  ///
+  /// In en, this message translates to:
+  /// **'Cable Fly Dropset'**
+  String get templateDropsetCableFly;
+
+  /// Dropset template name: Leg Curl Dropset
+  ///
+  /// In en, this message translates to:
+  /// **'Leg Curl Dropset'**
+  String get templateDropsetLegCurl;
+
+  /// Rest-Pause template name: Bench Press Rest-Pause
+  ///
+  /// In en, this message translates to:
+  /// **'Bench Press Rest-Pause'**
+  String get templateRestPauseBenchPress;
+
+  /// Rest-Pause template name: Squat Rest-Pause
+  ///
+  /// In en, this message translates to:
+  /// **'Squat Rest-Pause'**
+  String get templateRestPauseSquat;
+
+  /// Rest-Pause template name: Lat Pulldown Rest-Pause
+  ///
+  /// In en, this message translates to:
+  /// **'Lat Pulldown Rest-Pause'**
+  String get templateRestPauseLatPulldown;
+
+  /// Rest-Pause template name: Leg Extension Rest-Pause
+  ///
+  /// In en, this message translates to:
+  /// **'Leg Extension Rest-Pause'**
+  String get templateRestPauseLegExtension;
+
+  /// Rest-Pause template name: Shoulder Press Rest-Pause
+  ///
+  /// In en, this message translates to:
+  /// **'Shoulder Press Rest-Pause'**
+  String get templateRestPauseShoulderPress;
+
+  /// Rest-Pause template name: Cable Row Rest-Pause
+  ///
+  /// In en, this message translates to:
+  /// **'Cable Row Rest-Pause'**
+  String get templateRestPauseCableRow;
+
+  /// Link to expand and show predefined templates
+  ///
+  /// In en, this message translates to:
+  /// **'Discover more templates'**
+  String get discoverMoreTemplates;
+
+  /// Button to collapse the recommended templates section
+  ///
+  /// In en, this message translates to:
+  /// **'Hide'**
+  String get hideTemplates;
 }
 
 class _AppLocalizationsDelegate

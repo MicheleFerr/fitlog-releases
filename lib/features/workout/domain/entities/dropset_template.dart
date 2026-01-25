@@ -22,6 +22,9 @@ abstract class DropsetTemplate with _$DropsetTemplate {
   const factory DropsetTemplate({
     required String id,
     required String name,
+    /// Localization key for predefined templates (e.g., "templateBicepCurlDropset")
+    /// If present, use l10n lookup for display name. If null (custom templates), use name directly.
+    String? nameKey,
 
     /// The exercise to perform (e.g., "Bicep Curl", "Leg Press")
     required String exerciseName,

@@ -10,6 +10,7 @@ _SupersetTemplate _$SupersetTemplateFromJson(Map<String, dynamic> json) =>
     _SupersetTemplate(
       id: json['id'] as String,
       name: json['name'] as String,
+      nameKey: json['nameKey'] as String?,
       exerciseIds: (json['exerciseIds'] as List<dynamic>)
           .map((e) => e as String)
           .toList(),
@@ -50,6 +51,7 @@ Map<String, dynamic> _$SupersetTemplateToJson(_SupersetTemplate instance) =>
     <String, dynamic>{
       'id': instance.id,
       'name': instance.name,
+      'nameKey': instance.nameKey,
       'exerciseIds': instance.exerciseIds,
       'exerciseNames': instance.exerciseNames,
       'rounds': instance.rounds,

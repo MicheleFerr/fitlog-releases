@@ -31914,6 +31914,10 @@
   "@audioDebugTests": {
     "description": "Title for audio debug tests screen"
   },
+  "tierLimitsTest": "Tier Limits Test",
+  "@tierLimitsTest": {
+    "description": "Title for tier limits test screen (admin only)"
+  },
   "quickTests": "Quick Tests",
   "@quickTests": {
     "description": "Tab title for quick tests"
@@ -32170,5 +32174,143 @@
   "next": "Next",
   "@next": {
     "description": "Button text to see next achievement in modal"
+  }
+,
+  "templateSupersetChestBackFoundation": "Chest + Back Foundation",
+  "@templateSupersetChestBackFoundation": {
+    "description": "Superset template name: Chest + Back Foundation"
+  },
+  "templateSupersetLegCoreFoundation": "Legs + Core Foundation",
+  "@templateSupersetLegCoreFoundation": {
+    "description": "Superset template name: Legs + Core Foundation"
+  },
+  "templateSupersetArmsSimple": "Simple Arms",
+  "@templateSupersetArmsSimple": {
+    "description": "Superset template name: Simple Arms"
+  },
+  "templateSupersetTotalBody15min": "Total Body 15min",
+  "@templateSupersetTotalBody15min": {
+    "description": "Superset template name: Total Body 15min"
+  },
+  "templateSupersetPowerLegs12min": "Power Legs 12min",
+  "@templateSupersetPowerLegs12min": {
+    "description": "Superset template name: Power Legs 12min"
+  },
+  "templateSupersetUpperBodyHome": "Upper Body Home",
+  "@templateSupersetUpperBodyHome": {
+    "description": "Superset template name: Upper Body Home"
+  },
+  "templateSupersetBenchRowPowerlifting": "Bench + Row Powerlifting",
+  "@templateSupersetBenchRowPowerlifting": {
+    "description": "Superset template name: Bench + Row Powerlifting"
+  },
+  "templateSupersetSquatRdlPower": "Squat + RDL Power",
+  "@templateSupersetSquatRdlPower": {
+    "description": "Superset template name: Squat + RDL Power"
+  },
+  "templateSupersetDeadliftOhpCompound": "Deadlift + OHP Compound",
+  "@templateSupersetDeadliftOhpCompound": {
+    "description": "Superset template name: Deadlift + OHP Compound"
+  },
+  "templateSupersetChestBackDefinition": "Chest + Back Definition",
+  "@templateSupersetChestBackDefinition": {
+    "description": "Superset template name: Chest + Back Definition"
+  },
+  "templateSupersetShoulderArmsTone": "Shoulders + Arms Tone",
+  "@templateSupersetShoulderArmsTone": {
+    "description": "Superset template name: Shoulders + Arms Tone"
+  },
+  "templateSupersetGluteHamSculpt": "Glutes + Hamstrings Sculpt",
+  "@templateSupersetGluteHamSculpt": {
+    "description": "Superset template name: Glutes + Hamstrings Sculpt"
+  },
+  "templateSupersetHotelGymTotalBody": "Hotel Gym Total Body",
+  "@templateSupersetHotelGymTotalBody": {
+    "description": "Superset template name: Hotel Gym Total Body"
+  },
+  "templateSupersetBodyweightAnywhere": "Bodyweight Anywhere",
+  "@templateSupersetBodyweightAnywhere": {
+    "description": "Superset template name: Bodyweight Anywhere"
+  },
+  "templateSupersetFunctional20min": "Functional 20min",
+  "@templateSupersetFunctional20min": {
+    "description": "Superset template name: Functional 20min"
+  },
+  "templateSupersetBenchRowResearch": "Bench + Row (Research)",
+  "@templateSupersetBenchRowResearch": {
+    "description": "Superset template name: Bench + Row (Research)"
+  },
+  "templateSupersetSquatLegCurlResearch": "Squat + Leg Curl (Research)",
+  "@templateSupersetSquatLegCurlResearch": {
+    "description": "Superset template name: Squat + Leg Curl (Research)"
+  },
+  "templateSupersetBicepTricepResearch": "Bicep + Tricep (Research)",
+  "@templateSupersetBicepTricepResearch": {
+    "description": "Superset template name: Bicep + Tricep (Research)"
+  },
+  "templateDropsetBicepCurl": "Bicep Curl Dropset",
+  "@templateDropsetBicepCurl": {
+    "description": "Dropset template name: Bicep Curl Dropset"
+  },
+  "templateDropsetLegPress": "Leg Press Dropset",
+  "@templateDropsetLegPress": {
+    "description": "Dropset template name: Leg Press Dropset"
+  },
+  "templateDropsetLateralRaise": "Lateral Raise Dropset",
+  "@templateDropsetLateralRaise": {
+    "description": "Dropset template name: Lateral Raise Dropset"
+  },
+  "templateDropsetTricepPushdown": "Tricep Pushdown Dropset",
+  "@templateDropsetTricepPushdown": {
+    "description": "Dropset template name: Tricep Pushdown Dropset"
+  },
+  "templateDropsetCableFly": "Cable Fly Dropset",
+  "@templateDropsetCableFly": {
+    "description": "Dropset template name: Cable Fly Dropset"
+  },
+  "templateDropsetLegCurl": "Leg Curl Dropset",
+  "@templateDropsetLegCurl": {
+    "description": "Dropset template name: Leg Curl Dropset"
+  },
+  "templateRestPauseBenchPress": "Bench Press Rest-Pause",
+  "@templateRestPauseBenchPress": {
+    "description": "Rest-Pause template name: Bench Press Rest-Pause"
+  },
+  "templateRestPauseSquat": "Squat Rest-Pause",
+  "@templateRestPauseSquat": {
+    "description": "Rest-Pause template name: Squat Rest-Pause"
+  },
+  "templateRestPauseLatPulldown": "Lat Pulldown Rest-Pause",
+  "@templateRestPauseLatPulldown": {
+    "description": "Rest-Pause template name: Lat Pulldown Rest-Pause"
+  },
+  "templateRestPauseLegExtension": "Leg Extension Rest-Pause",
+  "@templateRestPauseLegExtension": {
+    "description": "Rest-Pause template name: Leg Extension Rest-Pause"
+  },
+  "templateRestPauseShoulderPress": "Shoulder Press Rest-Pause",
+  "@templateRestPauseShoulderPress": {
+    "description": "Rest-Pause template name: Shoulder Press Rest-Pause"
+  },
+  "templateRestPauseCableRow": "Cable Row Rest-Pause",
+  "@templateRestPauseCableRow": {
+    "description": "Rest-Pause template name: Cable Row Rest-Pause"
+  }
+,
+  "yourTemplates": "Your Templates",
+  "@yourTemplates": {
+    "description": "Header for user's custom templates section"
+  },
+  "discoverMoreTemplates": "Discover more templates",
+  "@discoverMoreTemplates": {
+    "description": "Link to expand and show predefined templates"
+  },
+  "recommendedTemplates": "Recommended Templates",
+  "@recommendedTemplates": {
+    "description": "Header for predefined/recommended templates section"
+  },
+  "hideTemplates": "Hide",
+  "@hideTemplates": {
+    "description": "Button to collapse the recommended templates section"
   }
 }

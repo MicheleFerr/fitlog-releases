@@ -10,6 +10,7 @@ _DropsetTemplate _$DropsetTemplateFromJson(Map<String, dynamic> json) =>
     _DropsetTemplate(
       id: json['id'] as String,
       name: json['name'] as String,
+      nameKey: json['nameKey'] as String?,
       exerciseName: json['exerciseName'] as String,
       drops: (json['drops'] as num).toInt(),
       initialReps: json['initialReps'] as String,
@@ -41,6 +42,7 @@ Map<String, dynamic> _$DropsetTemplateToJson(_DropsetTemplate instance) =>
     <String, dynamic>{
       'id': instance.id,
       'name': instance.name,
+      'nameKey': instance.nameKey,
       'exerciseName': instance.exerciseName,
       'drops': instance.drops,
       'initialReps': instance.initialReps,
