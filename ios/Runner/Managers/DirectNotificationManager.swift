@@ -144,29 +144,9 @@ final class DirectNotificationManager: NSObject {
 
         let center = UNUserNotificationCenter.current()
 
-        // Crea il contenuto della notifica
-        let content = UNMutableNotificationContent()
-        content.title = title
-        content.body = body
-        content.categoryIdentifier = "TIMER_COMPLETE"
-
-        // DOUBLE SOUND FIX: Determine if notification should have sound
+        // Create notification content using extracted helper method
+        // This consolidates ~100 lines of content creation logic
         let shouldHaveSound = !isForWatchDisplay && !silentLoopHandlesAudio
-
-        // APPLE WATCH FIX / SILENT LOOP FIX: Conditional sound based on purpose
-        if isForWatchDisplay {
-            // For Watch display: NO SOUND to prevent premature audio trigger
-            content.sound = .none
-            print("   - This notification is for Watch UI only")
-            print("   - Timer completion sound will be handled separately by app")
-        } else if silentLoopHandlesAudio {
-            // DOUBLE SOUND FIX: Silent loop is active, AVAudioPlayer handles audio
-            content.sound = .none
-            print("🔇 [SILENT-NOTIFICATION] Silent loop handles audio - notification is visual only")
-            print("   - AVAudioPlayer will play sound (bypasses mute)")
-            print("   - Notification shows but doesn't play sound")
-        }
-        // NOTE: Timer completion sound (Critical Alert) is configured below
 
         if shouldHaveSound {
             print("📢 Custom sound configured for timer completion")
@@ -180,75 +160,15 @@ final class DirectNotificationManager: NSObject {
             print("⏰ Will show timer info on Watch in \(seconds) seconds")
         }
 
-        // iOS 15+ features for lockscreen visibility
-        if #available(iOS 15.0, *) {
-            if isForWatchDisplay {
-                // Watch display: lower priority to avoid interrupting user
-                content.interruptionLevel = .active
-                content.relevanceScore = 0.7
-                print("📱 [WATCH] Using active interruption level for Watch display")
-            } else {
-                // Timer completion: highest priority for lockscreen visibility
-                // NOTE: timeSensitive bypasses DnD/Focus modes for VISUAL notification
-                // However, notification sound STILL respects mute switch!
-                // The actual audio bypass is handled by AVAudioPlayer in BackgroundAudioManager
-                content.interruptionLevel = .timeSensitive
-                content.relevanceScore = 1.0
-                print("📱 [LOCKSCREEN] Using timeSensitive for DnD bypass (visual only)")
-                print("   - Notification will SHOW even in DnD/Focus mode")
-                if silentLoopHandlesAudio {
-                    print("   - Sound: NONE (silent loop handles audio)")
-                } else {
-                    print("   - Notification SOUND respects mute switch")
-                    print("   - Mute bypass handled by AVAudioPlayer (BackgroundAudioManager)")
-                }
-            }
-        }
+        let content = createNotificationContent(
+            title: title,
+            body: body,
+            soundName: soundName,
+            categoryIdentifier: "TIMER_COMPLETE",
+            isForWatchDisplay: isForWatchDisplay,
+            silentLoopHandlesAudio: silentLoopHandlesAudio
+        )
 
-        // NOTIFICATION SOUND CONFIGURATION
-        // NOTE: Critical Alerts require com.apple.developer.usernotifications.critical-alerts entitlement
-        // Without the entitlement, criticalSoundNamed() silently fails - NO SOUND PLAYS!
-        // WORKAROUND: Use regular notification sound until entitlement is approved
-        if shouldHaveSound {
-            let soundFileName = soundName.hasSuffix(".caf") ? soundName : "\(soundName).caf"
-
-            // TEMPORARY FIX: Use REGULAR notification sound instead of Critical Alert
-            // This ensures sound plays (respects mute switch, but at least it plays when unmuted)
-            // TODO: Re-enable Critical Alerts once Apple approves the entitlement
-            if verifyAudioFile(soundName) {
-                // Use regular notification sound (works without entitlement)
-                content.sound = UNNotificationSound(named: UNNotificationSoundName(rawValue: soundFileName))
-                print("🔊 [NOTIFICATION-SOUND] Using regular notification sound: \(soundFileName)")
-                print("   - Critical Alert entitlement: ⏳ PENDING Apple approval")
-                print("   - Fallback: Using regular sound (respects mute switch)")
-                print("   - Sound will play if device is NOT muted")
-            } else {
-                // Fallback to default sound if custom file not found
-                content.sound = .default
-                print("⚠️ [NOTIFICATION-SOUND] Custom sound not found, using system default")
-            }
-
-            // Add user info for tracking
-            content.userInfo = [
-                "gymbro_timer_sound": soundName,
-                "is_critical_alert": false,  // Using regular sound (Critical Alert pending approval)
-                "scheduled_at": Date().timeIntervalSince1970
-            ]
-            print("📝 [NOTIFICATION] Timer notification configured with regular sound (Critical Alert pending)")
-        } else {
-            // No sound but still add user info for tracking
-            content.userInfo = [
-                "gymbro_timer_sound": soundName,
-                "is_critical_alert": false,
-                "silent_loop_handles_audio": silentLoopHandlesAudio,
-                "scheduled_at": Date().timeIntervalSince1970
-            ]
-        }
-        
-        // Aggiungi badge e thread ID
-        content.badge = 0  // Reset badge
-        content.threadIdentifier = "gym-timer"
-        
         // Crea il trigger
         let trigger = UNTimeIntervalNotificationTrigger(
             timeInterval: seconds,
