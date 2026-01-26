@@ -68,6 +68,69 @@ lib/features/{name}/
 
 ---
 
+## 💳 TIER SYSTEM - DUAL ARCHITECTURE
+
+**CRITICAL**: FitLog ha DUE sistemi tier SEPARATI:
+
+### 1️⃣ **UserTier** (XP-based) - ✅ ATTIVO
+
+```dart
+enum UserTier {
+  starter,   // 0 XP
+  bronze,    // 100 XP
+  silver,    // 500 XP
+  gold,      // 1500 XP
+  platinum,  // 5000 XP
+}
+```
+
+**Fonte**: Progressione XP da allenamenti/achievements
+**Usato per**: Determinare limiti custom exercises/templates
+**Provider**: `userTierProvider` in `user_xp_provider.dart`
+
+### 2️⃣ **AccountTier** (Subscription) - ⚠️ NON IMPLEMENTATO
+
+```dart
+enum AccountTier {
+  free,     // Default (TUTTI gli utenti)
+  premium,  // SOLO per testing (non rilasciato)
+}
+```
+
+**Status**: Codice preparatorio per monetizzazione futura
+**Attualmente**: Tutti gli utenti sono `AccountTier.free`
+**Usato per**: Testing limiti nel debug screen admin-only
+
+### ⚠️ REGOLE SVILUPPO
+
+```dart
+// ✅ CORRETTO - Usa UserTier (XP)
+final tier = ref.watch(userTierProvider);
+final maxExercises = tier.maxCustomSingleExercises;
+
+// ❌ SBAGLIATO - Non usare AccountTier in produzione
+if (accountTier == AccountTier.premium) { ... }  // Mai true!
+
+// ✅ OK - Solo nel debug screen
+final testAccount = AccountTier.premium;  // Per testing admin
+```
+
+### 📊 Logica Consolidamento
+
+`TierEntitlements` prende il **massimo** tra XP tier e Account tier:
+
+```dart
+// UserTier.starter (4 templates) + AccountTier.premium (999)
+// Result: 999 templates (premium vince)
+
+// UserTier.platinum (30) + AccountTier.free (4)
+// Result: 30 templates (XP tier vince)
+```
+
+**Quando sarà implementato premium**: Logica già pronta, basta attivare IAP.
+
+---
+
 ## ⚡ PERFORMANCE RULES (MANDATORY)
 
 ### 🤖 CLAUDE - AUTOMATIC CHECK BEFORE CODING

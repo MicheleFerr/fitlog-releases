@@ -20,7 +20,6 @@ import 'package:gymbro_flutter_new/core/domain/entities/user_tier.dart';
 enum AccountTier {
   free,
   premium,
-  pro,
 }
 
 /// Template quota information
@@ -64,13 +63,6 @@ class TemplateQuota {
         return TemplateQuota(
           maxPrivateTemplates: 999, // Unlimited for premium
           maxPublicTemplates: 999,  // Unlimited for premium
-          usedPrivateTemplates: usedPrivate,
-          usedPublicTemplates: usedPublic,
-        );
-      case AccountTier.pro:
-        return TemplateQuota(
-          maxPrivateTemplates: 999, // Virtually unlimited
-          maxPublicTemplates: 50,
           usedPrivateTemplates: usedPrivate,
           usedPublicTemplates: usedPublic,
         );
@@ -150,6 +142,9 @@ class UserProfile {
     this.stats = const {},
     this.isGuest = false,
     this.isAdmin = false,
+    this.debugTierOverride,
+    this.debugAccountOverride,
+    this.debugXPOverride,
   });
   
   /// Create from JSON data (for caching)
@@ -175,6 +170,25 @@ class UserProfile {
       );
     }
     
+    // Parse debug overrides (admin only)
+    UserTier? debugTier;
+    if (json['debugTierOverride'] != null) {
+      final tierName = json['debugTierOverride'] as String;
+      debugTier = UserTier.values.firstWhere(
+        (t) => t.name == tierName,
+        orElse: () => UserTier.starter,
+      );
+    }
+
+    AccountTier? debugAccount;
+    if (json['debugAccountOverride'] != null) {
+      final accountName = json['debugAccountOverride'] as String;
+      debugAccount = AccountTier.values.firstWhere(
+        (a) => a.name == accountName,
+        orElse: () => AccountTier.free,
+      );
+    }
+
     return UserProfile(
       uid: json['uid'] ?? '',
       email: json['email'] ?? '',
@@ -188,6 +202,9 @@ class UserProfile {
       stats: Map<String, dynamic>.from(json['stats'] ?? {}),
       isGuest: json['isGuest'] ?? false,
       isAdmin: json['isAdmin'] ?? false,
+      debugTierOverride: debugTier,
+      debugAccountOverride: debugAccount,
+      debugXPOverride: json['debugXPOverride'] as int?,
     );
   }
 
@@ -216,6 +233,25 @@ class UserProfile {
       );
     }
     
+    // Parse debug overrides (admin only)
+    UserTier? debugTier;
+    if (data['debugTierOverride'] != null) {
+      final tierName = data['debugTierOverride'] as String;
+      debugTier = UserTier.values.firstWhere(
+        (t) => t.name == tierName,
+        orElse: () => UserTier.starter,
+      );
+    }
+
+    AccountTier? debugAccount;
+    if (data['debugAccountOverride'] != null) {
+      final accountName = data['debugAccountOverride'] as String;
+      debugAccount = AccountTier.values.firstWhere(
+        (a) => a.name == accountName,
+        orElse: () => AccountTier.free,
+      );
+    }
+
     return UserProfile(
       uid: doc.id,
       email: data['email'] ?? '',
@@ -229,6 +265,9 @@ class UserProfile {
       stats: data['stats'] ?? {},
       isGuest: data['isGuest'] ?? false,
       isAdmin: data['isAdmin'] ?? false,
+      debugTierOverride: debugTier,
+      debugAccountOverride: debugAccount,
+      debugXPOverride: data['debugXPOverride'] as int?,
     );
   }
   final String uid;
@@ -243,10 +282,15 @@ class UserProfile {
   final Map<String, dynamic> stats;
   final bool isGuest;
   final bool isAdmin;
+
+  /// Debug overrides (admin only, for testing tier limits)
+  final UserTier? debugTierOverride;
+  final AccountTier? debugAccountOverride;
+  final int? debugXPOverride;
   
   /// Convert to JSON (for caching)
   Map<String, dynamic> toJson() {
-    return {
+    final json = {
       'uid': uid,
       'email': email,
       'displayName': displayName,
@@ -260,11 +304,24 @@ class UserProfile {
       'isGuest': isGuest,
       'isAdmin': isAdmin,
     };
+
+    // Add debug overrides if present
+    if (debugTierOverride != null) {
+      json['debugTierOverride'] = debugTierOverride!.name;
+    }
+    if (debugAccountOverride != null) {
+      json['debugAccountOverride'] = debugAccountOverride!.name;
+    }
+    if (debugXPOverride != null) {
+      json['debugXPOverride'] = debugXPOverride;
+    }
+
+    return json;
   }
 
   /// Convert to Firestore document
   Map<String, dynamic> toFirestore() {
-    return {
+    final data = {
       'uid': uid,
       'email': email,
       'displayName': displayName,
@@ -278,6 +335,19 @@ class UserProfile {
       'isGuest': isGuest,
       'isAdmin': isAdmin,
     };
+
+    // Add debug overrides if present
+    if (debugTierOverride != null) {
+      data['debugTierOverride'] = debugTierOverride!.name;
+    }
+    if (debugAccountOverride != null) {
+      data['debugAccountOverride'] = debugAccountOverride!.name;
+    }
+    if (debugXPOverride != null) {
+      data['debugXPOverride'] = debugXPOverride;
+    }
+
+    return data;
   }
   
   /// Copy with updated values
@@ -293,6 +363,10 @@ class UserProfile {
     Map<String, dynamic>? preferences,
     Map<String, dynamic>? stats,
     bool? isGuest,
+    bool? isAdmin,
+    UserTier? debugTierOverride,
+    AccountTier? debugAccountOverride,
+    int? debugXPOverride,
   }) {
     return UserProfile(
       uid: uid ?? this.uid,
@@ -306,6 +380,10 @@ class UserProfile {
       preferences: preferences ?? this.preferences,
       stats: stats ?? this.stats,
       isGuest: isGuest ?? this.isGuest,
+      isAdmin: isAdmin ?? this.isAdmin,
+      debugTierOverride: debugTierOverride ?? this.debugTierOverride,
+      debugAccountOverride: debugAccountOverride ?? this.debugAccountOverride,
+      debugXPOverride: debugXPOverride ?? this.debugXPOverride,
     );
   }
   
@@ -342,7 +420,7 @@ class UserProfile {
   }
 
   /// Check if user has premium account
-  bool get isPremium => accountTier == AccountTier.premium || accountTier == AccountTier.pro;
+  bool get isPremium => accountTier != AccountTier.free;
 
   /// Get day cutoff hour for workout tracking (default: 4 = 04:00)
   /// Used to determine when "today" starts for workout completion

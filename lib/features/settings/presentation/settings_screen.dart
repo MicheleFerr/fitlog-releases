@@ -17,6 +17,7 @@ import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
 import 'package:gymbro_flutter_new/features/admin/presentation/screens/database_manager_screen.dart';
 import 'package:gymbro_flutter_new/features/settings/presentation/screens/audio_debug_test_screen.dart';
+import 'package:gymbro_flutter_new/features/debug/presentation/screens/tier_limits_test_screen.dart';
 import 'package:gymbro_flutter_new/features/analytics/presentation/widgets/migration_dialog.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
 import 'package:gymbro_flutter_new/features/onboarding/presentation/providers/tutorial_state_notifier.dart';
@@ -276,6 +277,28 @@ class SettingsScreen extends ConsumerWidget {
                             ),
                           ),
                           const SizedBox(height: 12),
+                          // 🧪 Tier Limits Test
+                          SizedBox(
+                            width: double.infinity,
+                            child: FilledButton.icon(
+                              onPressed: () {
+                                Navigator.of(context).push(
+                                  MaterialPageRoute(
+                                    builder: (_) => const TierLimitsTestScreen(),
+                                  ),
+                                );
+                              },
+                              icon: const SemanticIcon(
+                                icon: AppIcons.trophy,
+                                semanticLabel: 'Tier Limits Test',
+                              ),
+                              label: Text(context.l10n.tierLimitsTest),
+                              style: FilledButton.styleFrom(
+                                backgroundColor: context.colors.primary,
+                              ),
+                            ),
+                          ),
+                          const SizedBox(height: 12),
                           // 🧪 TEST: Reset Exercise Database
                           SizedBox(
                             width: double.infinity,
@@ -324,7 +347,7 @@ class SettingsScreen extends ConsumerWidget {
     final profileAsync = ref.watch(userProfileProvider);
     final profile = profileAsync.valueOrNull;
     final accountTier = profile?.accountTier ?? AccountTier.free;
-    final isPremium = accountTier == AccountTier.premium || accountTier == AccountTier.pro;
+    final isPremium = accountTier != AccountTier.free;
 
     return Container(
       padding: const EdgeInsets.all(12),

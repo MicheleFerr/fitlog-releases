@@ -128,8 +128,7 @@ abstract class BaseHybridRepository<T> with FirestoreCacheFirstMixin {
 
   /// Check if user is premium
   bool get isPremiumUser {
-    return _userProfile?.accountTier == AccountTier.premium ||
-        _userProfile?.accountTier == AccountTier.pro;
+    return _userProfile?.accountTier != AccountTier.free;
   }
 
   /// Get current user ID

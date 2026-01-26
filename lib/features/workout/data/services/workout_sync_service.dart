@@ -81,8 +81,7 @@ class WorkoutSyncService {
   
   /// Check if user is premium
   bool get _isPremiumUser {
-    return _userProfile?.accountTier == AccountTier.premium ||
-           _userProfile?.accountTier == AccountTier.pro;
+    return _userProfile?.accountTier != AccountTier.free;
   }
   
   /// Start periodic sync for premium users

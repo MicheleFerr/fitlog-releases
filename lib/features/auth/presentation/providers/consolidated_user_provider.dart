@@ -35,7 +35,9 @@ library;
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/foundation.dart' show kDebugMode;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:gymbro_flutter_new/core/domain/entities/user_tier.dart';
 import 'package:gymbro_flutter_new/features/auth/domain/entities/user_profile.dart';
 
 /// ============================================================================
@@ -397,6 +399,59 @@ class UserProfileNotifier extends Notifier<AsyncValue<UserProfile?>> {
       state = AsyncValue.error(e, StackTrace.current);
     }
   }
+
+  /// Set debug overrides (admin only, for testing tier limits)
+  /// Pass null to a parameter to REMOVE that override
+  Future<void> setDebugOverrides({
+    UserTier? debugTier,
+    AccountTier? debugAccount,
+    int? debugXP,
+    bool clearAll = false,
+  }) async {
+    final currentProfile = state.valueOrNull;
+    if (currentProfile == null) return;
+
+    // Only allow for admin users
+    if (!currentProfile.isAdmin) {
+      throw Exception('Debug overrides are only allowed for admin users');
+    }
+
+    try {
+      final updates = <String, dynamic>{};
+
+      if (clearAll) {
+        // Clear all overrides by using FieldValue.delete()
+        updates['debugTierOverride'] = FieldValue.delete();
+        updates['debugAccountOverride'] = FieldValue.delete();
+        updates['debugXPOverride'] = FieldValue.delete();
+      } else {
+        // Set individual overrides (or clear if explicitly null in a non-clearAll context)
+        if (debugTier != null) {
+          updates['debugTierOverride'] = debugTier.name;
+        }
+        if (debugAccount != null) {
+          updates['debugAccountOverride'] = debugAccount.name;
+        }
+        if (debugXP != null) {
+          updates['debugXPOverride'] = debugXP;
+        }
+      }
+
+      // Update Firestore
+      await _firestore.collection('users').doc(currentProfile.uid).update(updates);
+
+      // Update local state
+      final updatedProfile = currentProfile.copyWith(
+        debugTierOverride: clearAll ? null : debugTier,
+        debugAccountOverride: clearAll ? null : debugAccount,
+        debugXPOverride: clearAll ? null : debugXP,
+      );
+
+      state = AsyncValue.data(updatedProfile);
+    } catch (e) {
+      state = AsyncValue.error(e, StackTrace.current);
+    }
+  }
 }
 
 /// Provider for user profile notifier (for mutations)
@@ -415,7 +470,7 @@ final isPremiumUserProvider = Provider<bool>((ref) {
     userProfileProvider.select((asyncValue) => asyncValue.valueOrNull?.accountTier),
   );
 
-  return accountTier == AccountTier.premium || accountTier == AccountTier.pro;
+  return accountTier != AccountTier.free;
 });
 
 /// Get user's display name
@@ -432,12 +487,22 @@ final userDisplayNameProvider = Provider<String>((ref) {
 /// Get user's account tier
 /// Replaces: currentAccountTierProvider, unifiedAccountTierProvider
 /// 🔧 PERF FIX: Use .select() to only rebuild when accountTier changes
+///
+/// Supports debug override for testing tier limits.
+/// Override stored in UserProfile.debugAccountOverride (persisted in Firestore).
 final accountTierProvider = Provider<AccountTier>((ref) {
-  final accountTier = ref.watch(
-    userProfileProvider.select((asyncValue) => asyncValue.valueOrNull?.accountTier),
+  // Get profile once
+  final profile = ref.watch(
+    userProfileProvider.select((asyncValue) => asyncValue.valueOrNull),
   );
 
-  return accountTier ?? AccountTier.free;
+  // Check for persistent debug override (admin only)
+  if (kDebugMode && profile?.debugAccountOverride != null) {
+    return profile!.debugAccountOverride!;
+  }
+
+  // Normal flow: return real account tier
+  return profile?.accountTier ?? AccountTier.free;
 });
 
 /// Get template quota

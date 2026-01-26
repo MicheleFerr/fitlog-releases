@@ -261,8 +261,7 @@ class HybridWorkoutRepositoryImpl
 
   /// Check if current user is premium
   bool get isPremiumUser {
-    return _cachedUserProfile?.accountTier == AccountTier.premium ||
-        _cachedUserProfile?.accountTier == AccountTier.pro;
+    return _cachedUserProfile?.accountTier != AccountTier.free;
   }
 
   /// Check if current user is admin (always has cloud access)

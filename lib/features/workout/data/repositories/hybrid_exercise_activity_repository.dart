@@ -79,8 +79,7 @@ class HybridExerciseActivityRepository {
   
   /// Check if user is premium
   bool get _isPremiumUser {
-    return _userProfile?.accountTier == AccountTier.premium ||
-           _userProfile?.accountTier == AccountTier.pro;
+    return _userProfile?.accountTier != AccountTier.free;
   }
   
   /// Get user activities within a date range (optimized for lazy loading)
