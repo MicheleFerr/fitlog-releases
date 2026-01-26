@@ -22,6 +22,8 @@ import 'package:gymbro_flutter_new/features/exercise_database/presentation/provi
 import 'package:gymbro_flutter_new/features/exercise_database/presentation/providers/missing_exercise_provider.dart';
 import 'package:gymbro_flutter_new/features/custom_exercises/presentation/widgets/custom_exercise_form_sheet.dart';
 import 'package:gymbro_flutter_new/features/custom_exercises/presentation/providers/custom_exercise_providers.dart';
+import 'package:gymbro_flutter_new/features/custom_exercises/domain/entities/custom_exercise.dart';
+import 'package:gymbro_flutter_new/core/providers/tier_entitlements_provider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
@@ -674,9 +676,17 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
   Widget _buildSearchResults(List<Exercise> exercises) {
     final l10n = context.l10n;
 
-    // Watch custom exercises and merge with catalog
-    final customExercisesAsync = ref.watch(activeCustomExercisesProvider);
+    // Watch ALL custom exercises (including expired) and merge with catalog
+    // UX FIX: Show all custom exercises so users can see/renew expired ones
+    final customExercisesAsync = ref.watch(allCustomExercisesProvider);
     final customExercises = customExercisesAsync.valueOrNull ?? [];
+
+    // Check if user has unlimited exercises (Premium/Platinum)
+    final entitlements = ref.watch(tierEntitlementsProvider);
+    final hasUnlimitedExercises = entitlements.maxCustomSingleExercises >= 999;
+
+    // Create lookup map for custom exercise status (for UI badges)
+    final customExerciseMap = {for (final c in customExercises) c.id: c};
 
     // Convert custom exercises to Exercise format for display
     final customAsExercises = customExercises.map((custom) => Exercise(
@@ -802,12 +812,16 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
               final exercise = allExercises[index];
               final isSelected = _selectedExercises.contains(exercise);
               final isCustom = index < customAsExercises.length;
+              // Get original CustomExercise for status info (if custom)
+              final customExercise = isCustom ? customExerciseMap[exercise.id] : null;
 
               // Add tutorial key to first exercise card
               return _buildExerciseCard(
                 exercise,
                 isSelected,
                 isCustom: isCustom,
+                customExercise: customExercise,
+                hasUnlimitedExercises: hasUnlimitedExercises,
                 tutorialKey: index == 0 ? _exerciseCardKey : null,
               );
             },
@@ -1348,6 +1362,8 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
     Exercise exercise,
     bool isSelected, {
     bool isCustom = false,
+    CustomExercise? customExercise,
+    bool hasUnlimitedExercises = false,
     GlobalKey? tutorialKey,
   }) {
     return Card(
@@ -1367,8 +1383,9 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
                     ),
                   ),
                 ),
-                if (isCustom)
-                  Text('⚡', style: context.textTheme.titleMedium),
+                // Custom exercise status badge
+                if (isCustom && customExercise != null)
+                  _buildCustomExerciseBadge(customExercise, hasUnlimitedExercises: hasUnlimitedExercises),
               ],
             ),
             subtitle: Column(
@@ -1788,6 +1805,196 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
         return context.colors.error;
       default:
         return context.colors.surfaceContainerHighest;
+    }
+  }
+
+  /// Build badge showing custom exercise status: permanent, temporary (days left), or expired
+  /// For Premium users (hasUnlimitedExercises=true), just show ⚡ without extra badges
+  Widget _buildCustomExerciseBadge(CustomExercise customExercise, {required bool hasUnlimitedExercises}) {
+    final l10n = context.l10n;
+
+    // Determine status and colors
+    final bool isExpired = customExercise.isExpired;
+    final bool isTemporary = customExercise.isTemporary && !isExpired;
+
+    // Premium users: just show ⚡ (all their exercises are permanent)
+    // Also show just ⚡ for permanent exercises when user is Premium
+    if (hasUnlimitedExercises || customExercise.isPermanent) {
+      // For Premium: clean UI with just lightning bolt
+      // For Free with permanent: also clean (they earned the permanent slot)
+      return Text('⚡', style: context.textTheme.titleMedium);
+    }
+
+    // Badge color based on status (only for Free users with temporary/expired)
+    final Color badgeColor;
+    final String badgeText;
+    final IconData badgeIcon;
+
+    if (isExpired) {
+      badgeColor = context.colors.error;
+      badgeText = l10n.exerciseExpired;
+      badgeIcon = AppIcons.warning;
+    } else if (isTemporary) {
+      final daysLeft = customExercise.daysRemaining ?? 0;
+      badgeColor = daysLeft <= 2 ? context.colors.warning : context.colors.secondary;
+      badgeText = l10n.exerciseExpiresInDays(daysLeft);
+      badgeIcon = AppIcons.schedule;
+    } else {
+      // Fallback (shouldn't reach here but safety)
+      return Text('⚡', style: context.textTheme.titleMedium);
+    }
+
+    // Temporary or Expired badge
+    return GestureDetector(
+      onTap: () => _showExerciseStatusSheet(customExercise),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Text('⚡', style: context.textTheme.titleMedium),
+          const SizedBox(width: 4),
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+            decoration: BoxDecoration(
+              color: badgeColor.withValues(alpha: 0.2),
+              borderRadius: BorderRadius.circular(8),
+              border: Border.all(color: badgeColor.withValues(alpha: 0.5)),
+            ),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Icon(badgeIcon, size: 12, color: badgeColor),
+                const SizedBox(width: 2),
+                Text(
+                  badgeText,
+                  style: context.textTheme.labelSmall?.copyWith(
+                    color: badgeColor,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  /// Show bottom sheet for expired/temporary exercise actions
+  void _showExerciseStatusSheet(CustomExercise customExercise) {
+    final l10n = context.l10n;
+    final isExpired = customExercise.isExpired;
+
+    showModalBottomSheet(
+      context: context,
+      builder: (sheetContext) => Padding(
+        padding: const EdgeInsets.all(24),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Header
+            Row(
+              children: [
+                Icon(
+                  isExpired ? AppIcons.warning : AppIcons.schedule,
+                  color: isExpired ? context.colors.error : context.colors.warning,
+                  size: 28,
+                ),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: Text(
+                    customExercise.nome,
+                    style: context.textTheme.titleLarge?.copyWith(
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 16),
+
+            // Status description
+            Text(
+              isExpired
+                  ? l10n.exerciseExpiredDescription
+                  : l10n.exerciseTemporaryDescription(customExercise.daysRemaining ?? 0),
+              style: context.textTheme.bodyMedium?.copyWith(
+                color: context.colors.onSurfaceVariant,
+              ),
+            ),
+            const SizedBox(height: 24),
+
+            // Actions
+            // Option 1: Watch ad to renew (7 days)
+            FilledButton.icon(
+              onPressed: () {
+                Navigator.pop(sheetContext);
+                _handleWatchAdForRenewal(customExercise);
+              },
+              icon: const Icon(AppIcons.playCircle),
+              label: Text(l10n.renewWithAd),
+              style: FilledButton.styleFrom(
+                minimumSize: const Size(double.infinity, 48),
+              ),
+            ),
+            const SizedBox(height: 12),
+
+            // Option 2: Upgrade to premium
+            OutlinedButton.icon(
+              onPressed: () {
+                Navigator.pop(sheetContext);
+                context.push('/subscription');
+              },
+              icon: const Icon(AppIcons.star),
+              label: Text(l10n.upgradeForUnlimited),
+              style: OutlinedButton.styleFrom(
+                minimumSize: const Size(double.infinity, 48),
+              ),
+            ),
+            const SizedBox(height: 8),
+
+            // Cancel
+            TextButton(
+              onPressed: () => Navigator.pop(sheetContext),
+              child: Text(l10n.cancel),
+              style: TextButton.styleFrom(
+                minimumSize: const Size(double.infinity, 40),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  /// Handle ad watch for exercise renewal
+  Future<void> _handleWatchAdForRenewal(CustomExercise customExercise) async {
+    final l10n = context.l10n;
+
+    // TODO: Integrate with actual ad provider (AdMob/Unity Ads)
+    // For now, simulate successful ad watch
+    try {
+      // Show loading indicator
+      SnackBarService.showInfo(context, l10n.loadingAd);
+
+      // Simulate ad delay (in production: show rewarded ad)
+      await Future.delayed(const Duration(seconds: 2));
+
+      // Call limit service to extend exercise
+      final limitService = ref.read(customExerciseLimitServiceProvider);
+      await limitService.onAdWatched(customExercise.id);
+
+      // Refresh providers
+      ref.invalidate(allCustomExercisesProvider);
+
+      // Show success
+      if (mounted) {
+        SnackBarService.showSuccess(context, l10n.exerciseRenewed);
+      }
+    } catch (e) {
+      if (mounted) {
+        SnackBarService.showError(context, l10n.renewalFailed);
+      }
     }
   }
 

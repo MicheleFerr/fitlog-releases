@@ -13,7 +13,7 @@ import 'package:gymbro_flutter_new/features/home/providers/user_xp_provider.dart
 
 void main() {
   group('TierEntitlementsProvider - Consolidation Logic', () {
-    test('Free user Starter tier should get Starter limits', () {
+    test('Free user Starter tier should get Starter limits', () async {
       final now = DateTime.now();
       final profile = UserProfile(
         uid: 'test-user',
@@ -32,6 +32,9 @@ void main() {
         ],
       );
 
+      // Wait for stream to emit
+      await container.read(userProfileProvider.future);
+
       final entitlements = container.read(tierEntitlementsProvider);
 
       // Templates: Starter (4 private, 2 public)
@@ -47,7 +50,7 @@ void main() {
       container.dispose();
     });
 
-    test('Free user Bronze tier should get Bronze limits', () {
+    test('Free user Bronze tier should get Bronze limits', () async {
       final now = DateTime.now();
       final profile = UserProfile(
         uid: 'test-user',
@@ -66,6 +69,9 @@ void main() {
         ],
       );
 
+      // Wait for stream to emit
+      await container.read(userProfileProvider.future);
+
       final entitlements = container.read(tierEntitlementsProvider);
 
       // Templates: Bronze (4 private, 2 public)
@@ -81,7 +87,7 @@ void main() {
       container.dispose();
     });
 
-    test('Free user Platinum tier should get Platinum limits', () {
+    test('Free user Platinum tier should get Platinum limits', () async {
       final now = DateTime.now();
       final profile = UserProfile(
         uid: 'test-user',
@@ -100,6 +106,9 @@ void main() {
         ],
       );
 
+      // Wait for stream to emit
+      await container.read(userProfileProvider.future);
+
       final entitlements = container.read(tierEntitlementsProvider);
 
       // Templates: Platinum (7 private, 5 public)
@@ -115,7 +124,7 @@ void main() {
       container.dispose();
     });
 
-    test('CRITICAL: Premium user with Starter tier should get 999 unlimited', () {
+    test('CRITICAL: Premium user with Starter tier should get 999 unlimited', () async {
       final now = DateTime.now();
       final premiumProfile = UserProfile(
         uid: 'test-user',
@@ -135,6 +144,9 @@ void main() {
           userProfileProvider.overrideWith((ref) => Stream.value(premiumProfile)),
         ],
       );
+
+      // Wait for stream to emit
+      await container.read(userProfileProvider.future);
 
       final entitlements = container.read(tierEntitlementsProvider);
 
@@ -157,7 +169,7 @@ void main() {
       container.dispose();
     });
 
-    test('Pro user with Starter tier should get 999 unlimited', () {
+    test('Pro user with Starter tier should get 999 unlimited', () async {
       final now = DateTime.now();
       final proProfile = UserProfile(
         uid: 'test-user',
@@ -176,11 +188,16 @@ void main() {
         ],
       );
 
+      // Wait for stream to emit
+      await container.read(userProfileProvider.future);
+
       final entitlements = container.read(tierEntitlementsProvider);
 
-      // All limits should be 999
-      expect(entitlements.maxTemplates, 999);
-      expect(entitlements.maxPublicTemplates, 999);
+      // Pro: 999 private, 50 public, 999 custom exercises
+      expect(entitlements.maxTemplates, 999,
+          reason: 'Pro user should get 999 private templates');
+      expect(entitlements.maxPublicTemplates, 50,
+          reason: 'Pro user gets 50 public templates (not unlimited like Premium)');
       expect(entitlements.maxCustomSingleExercises, 999);
       expect(entitlements.maxCustomSupersets, 999);
       expect(entitlements.maxCustomDropsets, 999);
@@ -189,7 +206,7 @@ void main() {
       container.dispose();
     });
 
-    test('Premium user with Platinum tier should still get 999 unlimited', () {
+    test('Premium user with Platinum tier should still get 999 unlimited', () async {
       final now = DateTime.now();
       final premiumProfile = UserProfile(
         uid: 'test-user',
@@ -208,6 +225,9 @@ void main() {
         ],
       );
 
+      // Wait for stream to emit
+      await container.read(userProfileProvider.future);
+
       final entitlements = container.read(tierEntitlementsProvider);
 
       // All limits should be 999 (Platinum already gives 999, Premium also gives 999)
@@ -221,7 +241,7 @@ void main() {
       container.dispose();
     });
 
-    test('Tier progression: Starter → Bronze → Silver → Gold → Platinum', () {
+    test('Tier progression: Starter → Bronze → Silver → Gold → Platinum', () async {
       final tiers = [
         UserTier.starter,
         UserTier.bronze,
@@ -251,6 +271,9 @@ void main() {
           ],
         );
 
+        // Wait for stream to emit
+        await container.read(userProfileProvider.future);
+
         final entitlements = container.read(tierEntitlementsProvider);
 
         expect(
@@ -263,7 +286,7 @@ void main() {
       }
     });
 
-    test('Selective providers should expose individual limits', () {
+    test('Selective providers should expose individual limits', () async {
       final now = DateTime.now();
       final profile = UserProfile(
         uid: 'test-user',
@@ -282,6 +305,9 @@ void main() {
         ],
       );
 
+      // Wait for stream to emit
+      await container.read(userProfileProvider.future);
+
       // Test selective providers (PEP pattern)
       expect(container.read(maxCustomSingleExercisesProvider), 7);
       expect(container.read(maxCustomSupersetsProvider), 7);
@@ -293,7 +319,7 @@ void main() {
   });
 
   group('TierEntitlementsProvider - Edge Cases', () {
-    test('Should handle null/uninitialized user profile gracefully', () {
+    test('Should handle null/uninitialized user profile gracefully', () async {
       final container = ProviderContainer(
         overrides: [
           userTierProvider.overrideWithValue(UserTier.starter),
@@ -310,7 +336,7 @@ void main() {
       container.dispose();
     });
 
-    test('Free user limits should never exceed 999', () {
+    test('Free user limits should never exceed 999', () async {
       final now = DateTime.now();
       final profile = UserProfile(
         uid: 'test-user',
@@ -329,6 +355,9 @@ void main() {
         ],
       );
 
+      // Wait for stream to emit
+      await container.read(userProfileProvider.future);
+
       final entitlements = container.read(tierEntitlementsProvider);
 
       // Even Platinum shouldn't exceed 999
@@ -338,7 +367,7 @@ void main() {
       container.dispose();
     });
 
-    test('Premium limits should always be exactly 999', () {
+    test('Premium limits should always be exactly 999', () async {
       final now = DateTime.now();
       final premiumProfile = UserProfile(
         uid: 'test-user',
@@ -356,6 +385,9 @@ void main() {
           userProfileProvider.overrideWith((ref) => Stream.value(premiumProfile)),
         ],
       );
+
+      // Wait for stream to emit
+      await container.read(userProfileProvider.future);
 
       final entitlements = container.read(tierEntitlementsProvider);
 

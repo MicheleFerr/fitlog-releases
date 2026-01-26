@@ -1055,6 +1055,11 @@
   "totalWorkoutsInfo": "Numero totale di sessioni di allenamento che hai completato.",
   "weeklyFrequencyInfo": "Numero medio di giorni di allenamento per settimana nelle ultime 4 settimane.",
   "retry": "Riprova",
+  "offlineMode": "Visualizzazione versione offline",
+  "tosAcceptanceRequired": "Devi accettare i Termini di Servizio per continuare",
+  "iAcceptThe": "Accetto i ",
+  "andThe": " e la ",
+  "tosCheckboxHint": "Richiesto per creare account",
   "community": "Community",
   "communityComingSoonTitle": "Funzionalità Community in Arrivo",
   "communityComingSoonDescription": "Stiamo lavorando per creare una fantastica funzionalità community dove potrai connetterti con altri atleti, condividere i tuoi progressi e imparare gli uni dagli altri. Resta sintonizzato!",
@@ -6087,6 +6092,7 @@
   "@termsOfService": {
     "description": "Titolo dei Termini di Servizio"
   },
+  "coachAgreement": "Accordo Coach",
   "tosSubtitle": "Accordi utente e limitazioni di responsabilità",
   "@tosSubtitle": {
     "description": "Sottotitolo dei Termini di Servizio"
@@ -8876,6 +8882,8 @@
   "youHaveAccessToAllFeatures": "Hai accesso a tutte le funzionalità",
   "planWillBeAvailableSoon": "Il piano {plan} sarà presto disponibile!",
   "saveVsMonthly": "Risparmia 33% rispetto al mensile",
+  "premiumComingSoonBadge": "Prossimamente",
+  "viewPlans": "Vedi Piani",
   "pleaseLoginToViewAnalytics": "Accedi per visualizzare le tue analisi",
   "adminPanel": "Pannello Admin",
   "userReportsAndBugs": "Segnalazioni e bug utenti",
@@ -19683,5 +19691,57 @@
   "hideTemplates": "Nascondi",
   "@hideTemplates": {
     "description": "Bottone per collassare la sezione template consigliati"
+  },
+  "exerciseExpired": "Scaduto",
+  "@exerciseExpired": {
+    "description": "Badge per esercizio custom scaduto"
+  },
+  "exerciseExpiresInDays": "{days}gg",
+  "@exerciseExpiresInDays": {
+    "description": "Badge con giorni rimanenti per esercizio temporaneo",
+    "placeholders": {
+      "days": {
+        "type": "int",
+        "example": "5"
+      }
+    }
+  },
+  "permanentExercise": "Permanente",
+  "@permanentExercise": {
+    "description": "Badge per esercizio custom permanente"
+  },
+  "exerciseExpiredDescription": "Questo esercizio custom è scaduto. Guarda un video per rinnovarlo per 7 giorni, oppure passa a Premium per esercizi illimitati.",
+  "@exerciseExpiredDescription": {
+    "description": "Descrizione quando utente tocca esercizio scaduto"
+  },
+  "exerciseTemporaryDescription": "Questo esercizio scade tra {days} giorni. Guarda un video per estenderlo, oppure passa a Premium per esercizi illimitati.",
+  "@exerciseTemporaryDescription": {
+    "description": "Descrizione per stato esercizio temporaneo",
+    "placeholders": {
+      "days": {
+        "type": "int",
+        "example": "5"
+      }
+    }
+  },
+  "renewWithAd": "Guarda video per rinnovare (7gg)",
+  "@renewWithAd": {
+    "description": "Bottone per guardare video e rinnovare esercizio"
+  },
+  "upgradeForUnlimited": "Passa a Premium",
+  "@upgradeForUnlimited": {
+    "description": "Bottone per upgrade abbonamento"
+  },
+  "loadingAd": "Caricamento video...",
+  "@loadingAd": {
+    "description": "Messaggio durante caricamento video reward"
+  },
+  "exerciseRenewed": "Esercizio rinnovato per 7 giorni!",
+  "@exerciseRenewed": {
+    "description": "Messaggio successo dopo rinnovo esercizio"
+  },
+  "renewalFailed": "Impossibile rinnovare l'esercizio. Riprova.",
+  "@renewalFailed": {
+    "description": "Messaggio errore quando il rinnovo fallisce"
   }
 }

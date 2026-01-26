@@ -5711,6 +5711,36 @@ abstract class AppLocalizations {
   /// **'Retry'**
   String get retry;
 
+  /// Banner shown when viewing local fallback content
+  ///
+  /// In en, this message translates to:
+  /// **'Viewing offline version'**
+  String get offlineMode;
+
+  /// Error message when ToS not accepted
+  ///
+  /// In en, this message translates to:
+  /// **'You must accept the Terms of Service to continue'**
+  String get tosAcceptanceRequired;
+
+  /// Start of ToS acceptance text
+  ///
+  /// In en, this message translates to:
+  /// **'I accept the '**
+  String get iAcceptThe;
+
+  /// Connector between ToS and Privacy Policy
+  ///
+  /// In en, this message translates to:
+  /// **' and the '**
+  String get andThe;
+
+  /// Hint for ToS checkbox
+  ///
+  /// In en, this message translates to:
+  /// **'Required to create account'**
+  String get tosCheckboxHint;
+
   /// Community section title
   ///
   /// In en, this message translates to:
@@ -24498,6 +24528,12 @@ abstract class AppLocalizations {
   /// **'Terms of Service'**
   String get termsOfService;
 
+  /// Coach Agreement title for coach-specific terms
+  ///
+  /// In en, this message translates to:
+  /// **'Coach Agreement'**
+  String get coachAgreement;
+
   /// Terms of Service subtitle
   ///
   /// In en, this message translates to:
@@ -29711,6 +29747,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Save 33% vs monthly'**
   String get saveVsMonthly;
+
+  /// Badge shown next to Premium section in Settings
+  ///
+  /// In en, this message translates to:
+  /// **'Coming Soon'**
+  String get premiumComingSoonBadge;
+
+  /// Button text to view premium pricing plans
+  ///
+  /// In en, this message translates to:
+  /// **'View Plans'**
+  String get viewPlans;
 
   /// No description provided for @pleaseLoginToViewAnalytics.
   ///
@@ -42950,16 +42998,16 @@ abstract class AppLocalizations {
   /// **'Unlock for 7 days'**
   String get unlockFor7Days;
 
-  /// Label for expired custom exercise
+  /// Badge text for expired custom exercise
   ///
   /// In en, this message translates to:
-  /// **'Expired - Renew'**
+  /// **'Expired'**
   String get exerciseExpired;
 
-  /// Button text to renew with ad
+  /// Button to watch ad and renew exercise
   ///
   /// In en, this message translates to:
-  /// **'Renew with ad'**
+  /// **'Watch ad to renew (7 days)'**
   String get renewWithAd;
 
   /// Premium feature description for unlimited custom exercises
@@ -47089,6 +47137,54 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Hide'**
   String get hideTemplates;
+
+  /// Badge showing days remaining for temporary exercise
+  ///
+  /// In en, this message translates to:
+  /// **'{days}d left'**
+  String exerciseExpiresInDays(int days);
+
+  /// Badge for permanent custom exercise
+  ///
+  /// In en, this message translates to:
+  /// **'Permanent'**
+  String get permanentExercise;
+
+  /// Description shown when user taps on expired exercise
+  ///
+  /// In en, this message translates to:
+  /// **'This custom exercise has expired. Watch an ad to renew it for 7 days, or upgrade to Premium for unlimited exercises.'**
+  String get exerciseExpiredDescription;
+
+  /// Description for temporary exercise status
+  ///
+  /// In en, this message translates to:
+  /// **'This exercise expires in {days} days. Watch an ad to extend, or upgrade to Premium for unlimited exercises.'**
+  String exerciseTemporaryDescription(int days);
+
+  /// Button to upgrade subscription
+  ///
+  /// In en, this message translates to:
+  /// **'Upgrade to Premium'**
+  String get upgradeForUnlimited;
+
+  /// Message while loading rewarded ad
+  ///
+  /// In en, this message translates to:
+  /// **'Loading ad...'**
+  String get loadingAd;
+
+  /// Success message after exercise renewal
+  ///
+  /// In en, this message translates to:
+  /// **'Exercise renewed for 7 days!'**
+  String get exerciseRenewed;
+
+  /// Error message when renewal fails
+  ///
+  /// In en, this message translates to:
+  /// **'Could not renew exercise. Please try again.'**
+  String get renewalFailed;
 }
 
 class _AppLocalizationsDelegate

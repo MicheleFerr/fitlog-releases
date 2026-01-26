@@ -9,6 +9,7 @@ import 'package:gymbro_flutter_new/shared/presentation/services/snackbar_service
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_spacing.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator.dart';
+import 'package:gymbro_flutter_new/features/onboarding/presentation/screens/legal_document_screen.dart';
 
 class RegisterScreen extends ConsumerStatefulWidget {
   const RegisterScreen({super.key});
@@ -28,6 +29,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen>
   bool _obscurePassword = true;
   bool _obscureConfirmPassword = true;
   bool _showEmailForm = false;
+  bool _tosAccepted = false;
 
   // Animation controller for pulsing icon
   late AnimationController _pulseController;
@@ -260,12 +262,19 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen>
   ) {
     return Column(
       children: [
+        // ToS Acceptance Checkbox (shown for social signup too)
+        _buildTosCheckbox(colorScheme),
+
+        const SizedBox(height: AppSpacing.md),
+
         // Google Sign Up
         SizedBox(
           width: double.infinity,
           height: 56,
           child: FilledButton.icon(
-            onPressed: authController.isLoading ? null : _handleGoogleSignUp,
+            onPressed: authController.isLoading || !_tosAccepted
+                ? null
+                : _handleGoogleSignUp,
             icon: authController.isLoading
                 ? const SizedBox(
                     height: 20,
@@ -295,7 +304,9 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen>
             width: double.infinity,
             height: 56,
             child: FilledButton.icon(
-              onPressed: authController.isLoading ? null : _handleAppleSignUp,
+              onPressed: authController.isLoading || !_tosAccepted
+                  ? null
+                  : _handleAppleSignUp,
               style: FilledButton.styleFrom(
                 backgroundColor: colorScheme.onSurface,
                 foregroundColor: colorScheme.surface,
@@ -491,6 +502,11 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen>
               return null;
             },
           ),
+          const SizedBox(height: AppSpacing.md),
+
+          // ToS Acceptance Checkbox
+          _buildTosCheckbox(colorScheme),
+
           const SizedBox(height: AppSpacing.lg),
 
           // Register Button
@@ -498,7 +514,9 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen>
             width: double.infinity,
             height: 56,
             child: FilledButton(
-              onPressed: authController.isLoading ? null : _handleRegister,
+              onPressed: authController.isLoading || !_tosAccepted
+                  ? null
+                  : _handleRegister,
               style: FilledButton.styleFrom(
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(16),
@@ -527,6 +545,83 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen>
             label: Text(context.l10n.backToOptions),
           ),
         ],
+      ),
+    );
+  }
+
+  Widget _buildTosCheckbox(ColorScheme colorScheme) {
+    return Container(
+      decoration: BoxDecoration(
+        color: colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(
+          color: _tosAccepted
+              ? colorScheme.primary.withValues(alpha: 0.5)
+              : colorScheme.outlineVariant.withValues(alpha: 0.5),
+        ),
+      ),
+      child: InkWell(
+        onTap: () => setState(() => _tosAccepted = !_tosAccepted),
+        borderRadius: BorderRadius.circular(12),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(
+            horizontal: AppSpacing.sm,
+            vertical: AppSpacing.xs,
+          ),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Checkbox(
+                value: _tosAccepted,
+                onChanged: (value) =>
+                    setState(() => _tosAccepted = value ?? false),
+                materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+              ),
+              Expanded(
+                child: Wrap(
+                  children: [
+                    Text(
+                      context.l10n.iAcceptThe,
+                      style: context.textTheme.bodySmall?.copyWith(
+                        color: colorScheme.onSurfaceVariant,
+                      ),
+                    ),
+                    GestureDetector(
+                      onTap: () =>
+                          LegalDocumentScreen.showTermsOfService(context),
+                      child: Text(
+                        context.l10n.termsOfService,
+                        style: context.textTheme.bodySmall?.copyWith(
+                          color: colorScheme.primary,
+                          decoration: TextDecoration.underline,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ),
+                    Text(
+                      context.l10n.andThe,
+                      style: context.textTheme.bodySmall?.copyWith(
+                        color: colorScheme.onSurfaceVariant,
+                      ),
+                    ),
+                    GestureDetector(
+                      onTap: () =>
+                          LegalDocumentScreen.showPrivacyPolicy(context),
+                      child: Text(
+                        context.l10n.privacyPolicy,
+                        style: context.textTheme.bodySmall?.copyWith(
+                          color: colorScheme.primary,
+                          decoration: TextDecoration.underline,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }

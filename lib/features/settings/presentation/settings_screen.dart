@@ -28,6 +28,7 @@ import 'package:gymbro_flutter_new/features/analytics/presentation/providers/wor
 import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator.dart';
 import 'package:gymbro_flutter_new/features/data_export/presentation/widgets/data_export_sheet.dart';
 import 'package:gymbro_flutter_new/shared/presentation/providers/ghost_mode_provider.dart';
+import 'package:gymbro_flutter_new/features/onboarding/presentation/screens/legal_document_screen.dart';
 import 'package:gymbro_flutter_new/features/exercise_database/presentation/providers/hybrid_exercise_provider.dart';
 
 class SettingsScreen extends ConsumerWidget {
@@ -115,6 +116,10 @@ class SettingsScreen extends ConsumerWidget {
 
             // Advanced Settings (power users)
             _buildAdvancedSettingsSection(context, ref, config),
+            const SizedBox(height: 24),
+
+            // Premium (Coming Soon)
+            _buildPremiumSection(context),
             const SizedBox(height: 24),
 
             // Account Actions
@@ -1273,7 +1278,7 @@ class SettingsScreen extends ConsumerWidget {
                 icon: AppIcons.shield,
                 semanticLabel: 'Privacy',
               ),
-              onTap: () => context.pushNamed('privacy-policy'),
+              onTap: () => LegalDocumentScreen.showPrivacyPolicy(context),
             ),
 
             const Divider(),
@@ -1302,6 +1307,78 @@ class SettingsScreen extends ConsumerWidget {
                 context.l10n.madeWithLove,
                 style: context.textTheme.bodySmall?.copyWith(
                   color: context.colors.onSurfaceVariant,
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildPremiumSection(BuildContext context) {
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Header
+            Row(
+              children: [
+                SemanticIcon(
+                  icon: AppIcons.star,
+                  semanticLabel: context.l10n.gymbroPremium,
+                  size: AppIconSize.medium,
+                  color: context.colors.primary,
+                ),
+                const SizedBox(width: 8),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        context.l10n.gymbroPremium,
+                        style: context.textTheme.titleMedium?.copyWith(
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      Text(
+                        context.l10n.premiumComingSoonBadge,
+                        style: context.textTheme.bodySmall?.copyWith(
+                          color: context.colors.primary,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 16),
+
+            // Premium features tile
+            _buildSettingTile(
+              context,
+              title: context.l10n.unlockPremium,
+              subtitle: context.l10n.getUnlimitedAccess,
+              leading: SemanticIcon(
+                icon: AppIcons.unlock,
+                semanticLabel: context.l10n.unlockPremium,
+              ),
+              onTap: () => context.pushNamed('premium'),
+              trailing: Container(
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                decoration: BoxDecoration(
+                  color: context.colors.primaryContainer,
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: Text(
+                  context.l10n.viewPlans,
+                  style: context.textTheme.labelSmall?.copyWith(
+                    color: context.colors.onPrimaryContainer,
+                    fontWeight: FontWeight.w600,
+                  ),
                 ),
               ),
             ),

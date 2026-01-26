@@ -1,6 +1,6 @@
 # TERMS OF SERVICE - FITlog Pro
 
-**Last updated**: December 21, 2025
+**Last updated**: January 26, 2026
 **Provider**: Michele, Brescia, Italy
 **Email**: ferrara-michele@hotmail.it
 
@@ -200,7 +200,72 @@ ToS + Privacy Policy = entire agreement (supersede prior communications).
 
 ---
 
-## 12. CONTACTS
+## 12. COACH FEATURES
+
+### 12.1 Nature of Coach Service
+The "Coach" features allow users ("Coaches") to view and interact with data from other users ("Athletes") who have explicitly authorized them via a connection code.
+
+**FitLog Pro acts exclusively as a technology platform** that facilitates the connection between Coaches and Athletes. FitLog Pro does NOT:
+- ❌ Verify qualifications, certifications, or competencies of Coaches
+- ❌ Guarantee the quality, safety, or effectiveness of services offered by Coaches
+- ❌ Act as a party in the Coach-Athlete relationship
+- ❌ Provide supervision over programs assigned by Coaches
+- ❌ Certify or approve Coaches in any way
+
+### 12.2 Athlete Responsibility
+Athletes who choose to follow a Coach through FitLog Pro:
+- **Explicitly acknowledge** that FitLog Pro does NOT verify Coach qualifications
+- **Accept** that the relationship with the Coach is entirely at their own risk and discretion
+- **Remain SOLELY responsible** for exercise execution and assessing their appropriateness
+- **Must independently evaluate** the suitability of programs proposed by the Coach
+- **Must consult a physician** before starting any program suggested by the Coach
+- **Must immediately stop** any exercise in case of pain or discomfort
+
+### 12.3 Coach Obligations and Responsibilities
+Users of Coach features declare and warrant that they:
+
+**Qualifications and Compliance:**
+- Operate in compliance with the laws and regulations of their country
+- Possess any qualifications, certifications, or licenses required by applicable regulations
+- Do NOT represent themselves as qualified professionals if not in possession of relevant credentials
+
+**Activity Limitations:**
+- Do NOT provide medical diagnoses or substitute professional medical opinions
+- Do NOT prescribe personalized diets or meal plans (activities reserved for healthcare professionals)
+- Do NOT offer physiotherapy, rehabilitation, or therapeutic treatments
+- Do NOT perform any activity requiring professional licenses they do not hold
+
+**Insurance:**
+- Maintain adequate professional liability insurance (if required by regulations)
+
+### 12.4 Indemnification
+Coaches agree to **indemnify and hold harmless** FitLog Pro, its owners, employees, collaborators, and affiliates from any claims, demands, damages, costs, expenses (including reasonable legal fees) arising from or in connection with:
+
+- Injuries, harm, or damages suffered by followed Athletes
+- Complaints regarding quality, safety, or effectiveness of Coach's services
+- Violations of laws, regulations, or standards by the Coach
+- Improper use of Athletes' personal data
+- Any false or misleading statements by the Coach
+- Unauthorized practice of profession or unauthorized activities
+
+### 12.5 Specific Limitation of Liability
+**FitLog Pro is NOT liable for**:
+- Any action, omission, or conduct of Coaches
+- The quality, safety, legality, or effectiveness of services offered by Coaches
+- Injuries or damages resulting from exercises suggested by Coaches
+- Content, programs, or guidance provided by Coaches to Athletes
+- Disputes or controversies between Coaches and Athletes
+
+### 12.6 Coach Feature Suspension
+FitLog Pro reserves the right to suspend or revoke Coach features at any time and without notice in case of:
+- Violation of these Terms of Service
+- Substantiated complaints from Athletes
+- Suspected illegal or non-compliant activity
+- At its reasonable discretion to protect platform users
+
+---
+
+## 13. CONTACTS
 
 **Provider**:
 - Name: Michele
@@ -216,4 +281,4 @@ ToS + Privacy Policy = entire agreement (supersede prior communications).
 By clicking "I Accept" or using the App, you declare that you have read, understood, and fully accepted these Terms of Service.
 
 **Acceptance date**: [Automatically recorded at registration]
-**Version**: 1.1 (December 21, 2025)
+**Version**: 1.2 (January 26, 2026)

@@ -3096,6 +3096,22 @@ class AppLocalizationsIt extends AppLocalizations {
   String get retry => 'Riprova';
 
   @override
+  String get offlineMode => 'Visualizzazione versione offline';
+
+  @override
+  String get tosAcceptanceRequired =>
+      'Devi accettare i Termini di Servizio per continuare';
+
+  @override
+  String get iAcceptThe => 'Accetto i ';
+
+  @override
+  String get andThe => ' e la ';
+
+  @override
+  String get tosCheckboxHint => 'Richiesto per creare account';
+
+  @override
   String get community => 'Community';
 
   @override
@@ -13998,6 +14014,9 @@ class AppLocalizationsIt extends AppLocalizations {
   String get termsOfService => 'Termini di Servizio';
 
   @override
+  String get coachAgreement => 'Accordo Coach';
+
+  @override
   String get tosSubtitle => 'Accordi utente e limitazioni di responsabilità';
 
   @override
@@ -16787,6 +16806,12 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get saveVsMonthly => 'Risparmia 33% rispetto al mensile';
+
+  @override
+  String get premiumComingSoonBadge => 'Prossimamente';
+
+  @override
+  String get viewPlans => 'Vedi Piani';
 
   @override
   String get pleaseLoginToViewAnalytics =>
@@ -24286,10 +24311,10 @@ class AppLocalizationsIt extends AppLocalizations {
   String get unlockFor7Days => 'Sblocca per 7 giorni';
 
   @override
-  String get exerciseExpired => 'Scaduto - Rinnova';
+  String get exerciseExpired => 'Scaduto';
 
   @override
-  String get renewWithAd => 'Rinnova con annuncio';
+  String get renewWithAd => 'Guarda video per rinnovare (7gg)';
 
   @override
   String get unlimitedCustomExercises =>
@@ -26574,4 +26599,33 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get hideTemplates => 'Nascondi';
+
+  @override
+  String exerciseExpiresInDays(int days) {
+    return '${days}gg';
+  }
+
+  @override
+  String get permanentExercise => 'Permanente';
+
+  @override
+  String get exerciseExpiredDescription =>
+      'Questo esercizio custom è scaduto. Guarda un video per rinnovarlo per 7 giorni, oppure passa a Premium per esercizi illimitati.';
+
+  @override
+  String exerciseTemporaryDescription(int days) {
+    return 'Questo esercizio scade tra $days giorni. Guarda un video per estenderlo, oppure passa a Premium per esercizi illimitati.';
+  }
+
+  @override
+  String get upgradeForUnlimited => 'Passa a Premium';
+
+  @override
+  String get loadingAd => 'Caricamento video...';
+
+  @override
+  String get exerciseRenewed => 'Esercizio rinnovato per 7 giorni!';
+
+  @override
+  String get renewalFailed => 'Impossibile rinnovare l\'esercizio. Riprova.';
 }

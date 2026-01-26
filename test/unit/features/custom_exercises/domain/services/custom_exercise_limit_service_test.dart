@@ -16,9 +16,15 @@ import 'package:gymbro_flutter_new/shared/domain/failures/failure.dart';
 class MockCustomExerciseRepository extends Mock
     implements CustomExerciseRepository {}
 
+class FakeCustomExercise extends Fake implements CustomExercise {}
+
 void main() {
   late MockCustomExerciseRepository mockRepository;
   late CustomExerciseLimitService service;
+
+  setUpAll(() {
+    registerFallbackValue(FakeCustomExercise());
+  });
 
   setUp(() {
     mockRepository = MockCustomExerciseRepository();

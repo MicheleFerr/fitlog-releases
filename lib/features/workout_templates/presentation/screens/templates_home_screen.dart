@@ -96,6 +96,12 @@ class _TemplatesHomeScreenState extends ConsumerState<TemplatesHomeScreen>
   // ═══════════════════════════════════════════════════════════════════════════
   String? _selectedCategory;
 
+  // ═══════════════════════════════════════════════════════════════════════════
+  // Discover sub-tab: 0 = Workout Templates, 1 = Advanced Techniques
+  // Separates content to reduce cognitive load
+  // ═══════════════════════════════════════════════════════════════════════════
+  int _discoverSubTabIndex = 0;
+
   @override
   void initState() {
     super.initState();
@@ -867,23 +873,60 @@ class _TemplatesHomeScreenState extends ConsumerState<TemplatesHomeScreen>
       child: CustomScrollView(
         slivers: [
           // ═══════════════════════════════════════════════════════════════════
-          // SECTION 0: Category Filter Chips (sticky)
+          // SECTION 0: Sub-tab selector (Workout Templates / Advanced Techniques)
           // ═══════════════════════════════════════════════════════════════════
-          SliverPersistentHeader(
-            pinned: true,
-            delegate: _CategoryFilterDelegate(
-              selectedCategory: _selectedCategory,
-              onCategorySelected: (category) {
-                HapticFeedback.selectionClick();
-                setState(() => _selectedCategory = category);
-              },
+          SliverToBoxAdapter(
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(
+                AppSpacing.md,
+                AppSpacing.sm,
+                AppSpacing.md,
+                AppSpacing.xs,
+              ),
+              child: SegmentedButton<int>(
+                segments: [
+                  ButtonSegment<int>(
+                    value: 0,
+                    label: Text(l10n.workoutTemplates),
+                    icon: const Icon(AppIcons.workout, size: AppIconSize.small),
+                  ),
+                  ButtonSegment<int>(
+                    value: 1,
+                    label: Text(l10n.advancedTechniques),
+                    icon: const Icon(AppIcons.science, size: AppIconSize.small),
+                  ),
+                ],
+                selected: {_discoverSubTabIndex},
+                onSelectionChanged: (Set<int> selected) {
+                  HapticFeedback.selectionClick();
+                  setState(() => _discoverSubTabIndex = selected.first);
+                },
+                style: ButtonStyle(
+                  visualDensity: VisualDensity.compact,
+                  tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                ),
+              ),
             ),
           ),
 
           // ═══════════════════════════════════════════════════════════════════
-          // SECTION 1: Workout Templates (filtered by category)
+          // SUB-TAB 0: Workout Templates
           // ═══════════════════════════════════════════════════════════════════
-          defaultTemplatesAsync.when(
+          if (_discoverSubTabIndex == 0) ...[
+            // Category Filter Chips (sticky)
+            SliverPersistentHeader(
+              pinned: true,
+              delegate: _CategoryFilterDelegate(
+                selectedCategory: _selectedCategory,
+                onCategorySelected: (category) {
+                  HapticFeedback.selectionClick();
+                  setState(() => _selectedCategory = category);
+                },
+              ),
+            ),
+
+            // Workout Templates (filtered by category)
+            defaultTemplatesAsync.when(
             loading: () => const SliverToBoxAdapter(
               child: Padding(
                 padding: EdgeInsets.all(AppSpacing.lg),
@@ -1008,40 +1051,34 @@ class _TemplatesHomeScreenState extends ConsumerState<TemplatesHomeScreen>
               );
             },
           ),
+          ], // END SUB-TAB 0: Workout Templates
 
           // ═══════════════════════════════════════════════════════════════════
-          // SECTION 2: Advanced Techniques Header
+          // SUB-TAB 1: Advanced Techniques
           // ═══════════════════════════════════════════════════════════════════
-          SliverToBoxAdapter(
-            child: Padding(
-              padding: const EdgeInsets.fromLTRB(AppSpacing.md, AppSpacing.lg, AppSpacing.md, AppSpacing.sm),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const Divider(),
-                  const SizedBox(height: AppSpacing.sm),
-                  Text(
-                    l10n.advancedTechniques,
-                    style: context.textTheme.titleMedium?.copyWith(
-                      fontWeight: FontWeight.bold,
-                    ),
+          if (_discoverSubTabIndex == 1) ...[
+            // Description header for advanced techniques
+            SliverToBoxAdapter(
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(
+                  AppSpacing.md,
+                  AppSpacing.sm,
+                  AppSpacing.md,
+                  AppSpacing.md,
+                ),
+                child: Text(
+                  l10n.advancedTechniquesDesc,
+                  style: context.textTheme.bodyMedium?.copyWith(
+                    color: context.colors.onSurfaceVariant,
                   ),
-                  const SizedBox(height: 4),
-                  Text(
-                    l10n.advancedTechniquesDesc,
-                    style: context.textTheme.bodySmall?.copyWith(
-                      color: context.colors.onSurfaceVariant,
-                    ),
-                  ),
-                ],
+                ),
               ),
             ),
-          ),
 
-          // ═══════════════════════════════════════════════════════════════════
-          // SECTION 3: Superset Templates (Custom first, then Predefined)
-          // ═══════════════════════════════════════════════════════════════════
-          _buildAdvancedTechniqueWithCustom<SupersetTemplate>(
+            // ═══════════════════════════════════════════════════════════════════
+            // Superset Templates (Custom first, then Predefined)
+            // ═══════════════════════════════════════════════════════════════════
+            _buildAdvancedTechniqueWithCustom<SupersetTemplate>(
             context: context,
             title: l10n.superset,
             icon: AppIcons.link,
@@ -1064,7 +1101,7 @@ class _TemplatesHomeScreenState extends ConsumerState<TemplatesHomeScreen>
           ),
 
           // ═══════════════════════════════════════════════════════════════════
-          // SECTION 4: Dropset Templates (Custom first, then Predefined)
+          // Dropset Templates (Custom first, then Predefined)
           // ═══════════════════════════════════════════════════════════════════
           _buildAdvancedTechniqueWithCustom<DropsetTemplate>(
             context: context,
@@ -1089,7 +1126,7 @@ class _TemplatesHomeScreenState extends ConsumerState<TemplatesHomeScreen>
           ),
 
           // ═══════════════════════════════════════════════════════════════════
-          // SECTION 5: Rest-Pause Templates (Custom first, then Predefined)
+          // Rest-Pause Templates (Custom first, then Predefined)
           // ═══════════════════════════════════════════════════════════════════
           _buildAdvancedTechniqueWithCustom<RestPauseTemplate>(
             context: context,
@@ -1112,6 +1149,7 @@ class _TemplatesHomeScreenState extends ConsumerState<TemplatesHomeScreen>
               onUse: () => _usePredefinedRestPause(context, template),
             ),
           ),
+          ], // END SUB-TAB 1: Advanced Techniques
 
           // Bottom padding for FAB
           const SliverToBoxAdapter(
