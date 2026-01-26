@@ -29,8 +29,8 @@ class UserProfileFactory {
       templateQuota: TemplateQuota.forTier(AccountTier.free),
       createdAt: DateTime.now(),
       lastLoginAt: DateTime.now(),
-      preferences: const UserPreferences(),
-      stats: const UserStats(),
+      preferences: const <String, dynamic>{},
+      stats: const <String, dynamic>{},
     );
   }
 
@@ -46,8 +46,8 @@ class UserProfileFactory {
       templateQuota: TemplateQuota.forTier(AccountTier.premium),
       createdAt: DateTime.now(),
       lastLoginAt: DateTime.now(),
-      preferences: const UserPreferences(),
-      stats: const UserStats(),
+      preferences: const <String, dynamic>{},
+      stats: const <String, dynamic>{},
     );
   }
 }
@@ -436,8 +436,8 @@ void main() {
           templateQuota: TemplateQuota.forTier(AccountTier.free),
           createdAt: DateTime.now(),
           lastLoginAt: DateTime.now(),
-          preferences: const UserPreferences(),
-          stats: const UserStats(),
+          preferences: const <String, dynamic>{},
+          stats: const <String, dynamic>{},
         );
 
         // Act

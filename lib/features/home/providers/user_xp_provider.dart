@@ -11,7 +11,7 @@ library;
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:gymbro_flutter_new/features/auth/presentation/providers/auth_provider.dart';
+import 'package:gymbro_flutter_new/features/auth/presentation/providers/consolidated_user_provider.dart';
 import 'package:gymbro_flutter_new/features/home/providers/daily_login_provider.dart';
 import 'package:gymbro_flutter_new/features/home/domain/models/level_system.dart';
 import 'package:gymbro_flutter_new/core/domain/entities/user_tier.dart';
@@ -293,7 +293,19 @@ final totalUserXPProvider = Provider<int>((ref) {
 });
 
 /// Convenience provider for current tier
+///
+/// Supports debug override for testing tier limits.
+/// Override stored in UserProfile.debugTierOverride (persisted in Firestore).
 final userTierProvider = Provider<UserTier>((ref) {
+  // Check for persistent debug override in user profile (admin only)
+  if (kDebugMode) {
+    final profile = ref.watch(userProfileProvider).valueOrNull;
+    if (profile?.debugTierOverride != null) {
+      return profile!.debugTierOverride!;
+    }
+  }
+
+  // Normal flow: return tier based on XP
   return ref.watch(userXPProvider).currentTier;
 });
 
