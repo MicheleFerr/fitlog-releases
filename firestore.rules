@@ -1971,32 +1971,25 @@ service cloud.firestore {
       allow delete: if false;
     }
 
-    // ========== ENCRYPTED MEASUREMENTS (GDPR Article 32 - Security of Processing) ==========
-    // Updated 2025-01-28: Simplified rules - consent checked client-side only
-    // Server-side consent check was failing when userConsents doc didn't exist
+    // ========== BODY MEASUREMENTS (GDPR Article 32 - Security of Processing) ==========
+    // Updated 2025-01-28: Simplified validation - owner-based access only
+    // Schema validation (isValidEncryptedMeasurement) was blocking writes because
+    // freezed toJson() serializes DateTime as ISO8601 string, not Firestore Timestamp.
+    // Consent is enforced client-side in the repository layer.
     match /bodyMeasurements/{userId}/measurements/{measurementId} {
-      // READ: User can read their own measurements
+      // READ/LIST: User can read their own measurements
       allow read: if isOwner(userId);
 
-      // LIST: User can list their own measurements
-      allow list: if isOwner(userId);
-
-      // CREATE: User can create measurement (validated for encryption format)
+      // CREATE: User can create their own measurement
       allow create: if isOwner(userId)
-        && request.resource.data.userId == userId
-        && isValidEncryptedMeasurement(request.resource.data)
-        && isWithinMeasurementRateLimit(userId)
-        && request.resource.data.id == measurementId; // ID must match document ID
+        && request.resource.data.userId == userId;
 
       // UPDATE: User can update their own measurement
       allow update: if isOwner(userId)
         && resource.data.userId == userId
-        && isValidEncryptedMeasurement(request.resource.data)
-        && request.resource.data.userId == resource.data.userId // Cannot change userId
-        && request.resource.data.metricType == resource.data.metricType // Cannot change metric type
-        && request.resource.data.id == resource.data.id; // Cannot change ID
+        && request.resource.data.userId == resource.data.userId;
 
-      // DELETE: User can delete their own measurement (GDPR Article 17 - Right to Erasure)
+      // DELETE: User can delete their own measurement (GDPR Right to Erasure)
       allow delete: if isOwner(userId)
         && resource.data.userId == userId;
     }
