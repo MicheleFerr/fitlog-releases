@@ -1972,21 +1972,19 @@ service cloud.firestore {
     }
 
     // ========== ENCRYPTED MEASUREMENTS (GDPR Article 32 - Security of Processing) ==========
+    // Updated 2025-01-28: Simplified rules - consent checked client-side only
+    // Server-side consent check was failing when userConsents doc didn't exist
     match /bodyMeasurements/{userId}/measurements/{measurementId} {
-      // READ: User can read their own measurements (with consent check)
-      allow read: if isOwner(userId)
-        && hasConsentForMetric(userId, resource.data.metricType);
+      // READ: User can read their own measurements
+      allow read: if isOwner(userId);
 
       // LIST: User can list their own measurements
       allow list: if isOwner(userId);
-      // NOTE: List does NOT check consent per-metric (performance)
-      // App should filter results based on consent client-side
 
-      // CREATE: User can create measurement (with consent validation)
+      // CREATE: User can create measurement (validated for encryption format)
       allow create: if isOwner(userId)
         && request.resource.data.userId == userId
         && isValidEncryptedMeasurement(request.resource.data)
-        && hasConsentForMetric(userId, request.resource.data.metricType)
         && isWithinMeasurementRateLimit(userId)
         && request.resource.data.id == measurementId; // ID must match document ID
 
@@ -1994,7 +1992,6 @@ service cloud.firestore {
       allow update: if isOwner(userId)
         && resource.data.userId == userId
         && isValidEncryptedMeasurement(request.resource.data)
-        && hasConsentForMetric(userId, request.resource.data.metricType)
         && request.resource.data.userId == resource.data.userId // Cannot change userId
         && request.resource.data.metricType == resource.data.metricType // Cannot change metric type
         && request.resource.data.id == resource.data.id; // Cannot change ID

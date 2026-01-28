@@ -143,7 +143,14 @@ class MetricDisplay extends StatelessWidget {
               ),
               const SizedBox(width: 6),
             ],
-            Text(label, style: effectiveLabelStyle),
+            Flexible(
+              child: Text(
+                label,
+                style: effectiveLabelStyle,
+                overflow: TextOverflow.ellipsis,
+                maxLines: 1,
+              ),
+            ),
           ],
         ),
         SizedBox(height: spacing),
