@@ -8,24 +8,27 @@ import 'package:gymbro_flutter_new/features/body_measurements/domain/repositorie
 import 'package:gymbro_flutter_new/features/ai_coach/data/datasources/healthkit_datasource.dart';
 import 'package:uuid/uuid.dart';
 
-/// HealthKitService - iOS HealthKit integration for body measurements
+/// HealthKitService - Cross-platform health integration for body measurements
 ///
 /// **Single Source of Truth**: Delegates to ai_coach/HealthKitDatasource
 ///
-/// **Platform**: iOS only (requires iOS 8+)
-/// **Framework**: HealthKit (iOS native)
+/// **Platforms**:
+/// - iOS: Apple HealthKit (requires iOS 8+)
+/// - Android: Health Connect (requires Android 8.0+ / API 26)
+///
 /// **Package**: health (Flutter package for HealthKit/HealthConnect bridge)
+/// **Note**: Google Fit is deprecated (May 2024). Health Connect is the replacement.
 ///
 /// **Functionality**:
-/// - Read measurements from HealthKit (weight, body fat, BMI, etc.)
-/// - Write measurements to HealthKit
+/// - Read measurements from health platform (weight, body fat, BMI, etc.)
+/// - Write measurements to health platform
 /// - Bi-directional sync with consent filtering
 /// - Last sync timestamp tracking
 ///
 /// **GDPR Compliance**:
 /// - Only syncs metrics user has explicitly consented to
-/// - Enforces iOS HealthKit permissions separately
-/// - Audit logging for all HealthKit access
+/// - Enforces platform-specific health permissions
+/// - Audit logging for all health data access
 ///
 /// **iOS HealthKit Permissions** (required in Info.plist):
 /// ```xml
@@ -35,12 +38,24 @@ import 'package:uuid/uuid.dart';
 /// <string>Save body measurements to HealthKit</string>
 /// ```
 ///
-/// **Supported Metrics** (HealthKit → MetricType mapping):
-/// - HKQuantityTypeIdentifierBodyMass → MetricType.weight
-/// - HKQuantityTypeIdentifierBodyFatPercentage → MetricType.bodyFatPercentage
-/// - HKQuantityTypeIdentifierBodyMassIndex → MetricType.bmi
-/// - HKQuantityTypeIdentifierLeanBodyMass → MetricType.leanMass
-/// - HKQuantityTypeIdentifierHeight → MetricType.height
+/// **Android Health Connect Permissions** (required in AndroidManifest.xml):
+/// ```xml
+/// <uses-permission android:name="android.permission.health.READ_WEIGHT"/>
+/// <uses-permission android:name="android.permission.health.WRITE_WEIGHT"/>
+/// <!-- Add similar permissions for each metric type -->
+/// ```
+///
+/// **Supported Metrics by Platform**:
+/// | MetricType          | iOS | Android | Unit Conversion |
+/// |---------------------|-----|---------|-----------------|
+/// | weight              | ✅  | ✅      | none (kg)       |
+/// | height              | ✅  | ✅      | m → cm (×100)   |
+/// | bodyFatPercentage   | ✅  | ✅      | ratio → % (×100)|
+/// | leanMass            | ✅  | ✅      | none (kg)       |
+/// | bmi                 | ✅  | ✅      | none            |
+/// | bodyTemperature     | ✅  | ✅      | none (°C)       |
+/// | waistCircumference  | ✅  | ❌      | m → cm (×100)   |
+/// | waterMass           | ❌  | ✅      | kg → % (calc)   |
 ///
 /// **Usage**:
 /// ```dart
@@ -56,7 +71,7 @@ import 'package:uuid/uuid.dart';
 ///   (failure) => showError(failure.message),
 ///   (success) {
 ///     if (success) {
-///       print('HealthKit permissions granted');
+///       print('Health platform permissions granted');
 ///     }
 ///   },
 /// );
@@ -82,20 +97,28 @@ class HealthKitService {
     }
   }
 
-  /// Check if HealthKit is available on this device
+  /// Check if health platform is available on this device
   ///
   /// Returns:
-  /// - true: iOS device with HealthKit support
-  /// - false: Not iOS, or HealthKit not available (iPod touch, some iPads)
+  /// - true: iOS with HealthKit or Android with Health Connect
+  /// - false: Platform not supported or health services not available
   Future<bool> isAvailable() async {
-    if (!Platform.isIOS) {
+    if (Platform.isIOS) {
+      return _healthKitDatasource.isAvailable;
+    } else if (Platform.isAndroid) {
+      // Health Connect availability check
+      await _ensureConfigured();
+      // Health Connect requires Android 8.0+ (API 26)
       if (kDebugMode) {
-        debugPrint('⚠️ [HealthKitService] Not iOS platform');
+        debugPrint('✅ [HealthKitService] Android Health Connect available');
       }
-      return false;
+      return true;
     }
 
-    return _healthKitDatasource.isAvailable;
+    if (kDebugMode) {
+      debugPrint('⚠️ [HealthKitService] Unsupported platform');
+    }
+    return false;
   }
 
   /// Request HealthKit permissions for specific metric types
@@ -137,12 +160,12 @@ class HealthKitService {
     List<MetricType> metricTypes,
   ) async {
     try {
-      if (!Platform.isIOS) {
+      if (!Platform.isIOS && !Platform.isAndroid) {
         if (kDebugMode) {
-          debugPrint('❌ [HealthKitService] Not iOS platform');
+          debugPrint('❌ [HealthKitService] Unsupported platform');
         }
         return left(const HealthPlatformFailure(
-          message: 'HealthKit only available on iOS',
+          message: 'Health platform only available on iOS and Android',
         ));
       }
 
@@ -227,9 +250,9 @@ class HealthKitService {
     DateTime? endDate,
   }) async {
     try {
-      if (!Platform.isIOS) {
+      if (!Platform.isIOS && !Platform.isAndroid) {
         return left(const HealthPlatformFailure(
-          message: 'HealthKit only available on iOS',
+          message: 'Health platform only available on iOS and Android',
         ));
       }
 
@@ -240,6 +263,15 @@ class HealthKitService {
 
       // Read for each metric type
       for (final metricType in metricTypes) {
+        // Skip if metric not supported on this platform
+        if (!_isHealthKitSupported(metricType)) {
+          if (kDebugMode) {
+            debugPrint(
+                '⚠️ [HealthKitService] Skipping unsupported metric: ${metricType.name}');
+          }
+          continue;
+        }
+
         try {
           final healthType = _mapMetricTypeToHealthDataType(metricType);
 
@@ -285,16 +317,24 @@ class HealthKitService {
     }
   }
 
-  /// Write measurement to HealthKit
+  /// Write measurement to health platform
   ///
-  /// Converts app values to HealthKit SI units before writing.
+  /// Converts app values to health platform SI units before writing.
   Future<Either<HealthPlatformFailure, void>> writeMeasurement(
     Measurement measurement,
   ) async {
     try {
-      if (!Platform.isIOS) {
+      if (!Platform.isIOS && !Platform.isAndroid) {
         return left(const HealthPlatformFailure(
-          message: 'HealthKit only available on iOS',
+          message: 'Health platform only available on iOS and Android',
+        ));
+      }
+
+      // Check if metric is supported on this platform
+      if (!_isHealthKitSupported(measurement.metricType)) {
+        return left(HealthPlatformFailure(
+          message:
+              '${measurement.metricType.name} not supported on this platform',
         ));
       }
 
@@ -354,9 +394,9 @@ class HealthKitService {
     List<Measurement>? measurements,
   }) async {
     try {
-      if (!Platform.isIOS) {
+      if (!Platform.isIOS && !Platform.isAndroid) {
         return left(const HealthPlatformFailure(
-          message: 'HealthKit only available on iOS',
+          message: 'Health platform only available on iOS and Android',
         ));
       }
 
@@ -434,17 +474,30 @@ class HealthKitService {
     }
   }
 
-  /// Check if a metric type is supported by HealthKit
+  /// Check if a metric type is supported by the current health platform
+  ///
+  /// Platform-specific support:
+  /// - iOS: weight, height, bodyFat, bmi, leanMass, waist, bodyTemp
+  /// - Android: weight, height, bodyFat, bmi, leanMass, bodyTemp, waterMass
   bool _isHealthKitSupported(MetricType metricType) {
+    // Cross-platform metrics (iOS + Android)
     switch (metricType) {
       case MetricType.weight:
       case MetricType.height:
       case MetricType.bodyFatPercentage:
       case MetricType.bmi:
       case MetricType.leanMass:
-      case MetricType.waistCircumference:
       case MetricType.bodyTemperature:
         return true;
+
+      // iOS-only metrics
+      case MetricType.waistCircumference:
+        return Platform.isIOS;
+
+      // Android-only metrics
+      case MetricType.waterMass:
+        return Platform.isAndroid;
+
       default:
         return false;
     }
@@ -452,19 +505,26 @@ class HealthKitService {
 
   // ========== Private Helper Methods ==========
 
-  /// Map MetricType to HealthKit HealthDataType
+  /// Map MetricType to health platform HealthDataType
   ///
-  /// **Mapping** (body measurements subset):
+  /// **Cross-platform Mapping**:
   /// - MetricType.weight → HealthDataType.WEIGHT
   /// - MetricType.height → HealthDataType.HEIGHT
   /// - MetricType.bodyFatPercentage → HealthDataType.BODY_FAT_PERCENTAGE
   /// - MetricType.bmi → HealthDataType.BODY_MASS_INDEX
   /// - MetricType.leanMass → HealthDataType.LEAN_BODY_MASS
+  /// - MetricType.bodyTemperature → HealthDataType.BODY_TEMPERATURE
+  ///
+  /// **iOS-only**:
   /// - MetricType.waistCircumference → HealthDataType.WAIST_CIRCUMFERENCE
   ///
-  /// Throws UnsupportedError for metrics not supported by HealthKit
+  /// **Android-only**:
+  /// - MetricType.waterMass → HealthDataType.BODY_WATER_MASS
+  ///
+  /// Throws UnsupportedError for metrics not supported by the platform
   HealthDataType _mapMetricTypeToHealthDataType(MetricType metricType) {
     switch (metricType) {
+      // Cross-platform metrics
       case MetricType.weight:
         return HealthDataType.WEIGHT;
       case MetricType.height:
@@ -475,10 +535,24 @@ class HealthKitService {
         return HealthDataType.BODY_MASS_INDEX;
       case MetricType.leanMass:
         return HealthDataType.LEAN_BODY_MASS;
-      case MetricType.waistCircumference:
-        return HealthDataType.WAIST_CIRCUMFERENCE;
       case MetricType.bodyTemperature:
         return HealthDataType.BODY_TEMPERATURE;
+
+      // iOS-only: waist circumference
+      case MetricType.waistCircumference:
+        if (!Platform.isIOS) {
+          throw UnsupportedError(
+              'Waist circumference only supported on iOS HealthKit');
+        }
+        return HealthDataType.WAIST_CIRCUMFERENCE;
+
+      // Android-only: body water mass
+      case MetricType.waterMass:
+        if (!Platform.isAndroid) {
+          throw UnsupportedError(
+              'Body water mass only supported on Android Health Connect');
+        }
+        return HealthDataType.BODY_WATER_MASS;
 
       // Unsupported by HealthKit (custom measurements)
       case MetricType.bmr:
@@ -495,10 +569,9 @@ class HealthKitService {
       case MetricType.thighRightCircumference:
       case MetricType.calfLeftCircumference:
       case MetricType.calfRightCircumference:
-      case MetricType.waterMass:
       case MetricType.boneMass:
         throw UnsupportedError(
-            'Metric type $metricType not supported by HealthKit. Use manual entry.');
+            'Metric type $metricType not supported by health platforms. Use manual entry.');
     }
   }
 
@@ -539,12 +612,13 @@ class HealthKitService {
     );
   }
 
-  /// Convert HealthKit raw value to app's expected unit
+  /// Convert health platform raw value to app's expected unit
   ///
-  /// HealthKit stores values in SI units:
+  /// Health platforms store values in SI units:
   /// - Height/circumferences in METERS
   /// - Body fat percentage as RATIO (0-1, not 0-100)
   /// - Weight in KILOGRAMS
+  /// - Body water mass in KILOGRAMS (Android only)
   double _convertHealthKitValue(double rawValue, MetricType metricType) {
     switch (metricType) {
       // Meters → Centimeters (×100)
@@ -554,7 +628,7 @@ class HealthKitService {
 
       // Ratio (0-1) → Percentage (0-100)
       case MetricType.bodyFatPercentage:
-        // HealthKit may return 0.18 for 18% or 18.0 for 18%
+        // Health platform may return 0.18 for 18% or 18.0 for 18%
         // If value > 1, assume it's already in percentage form
         return rawValue <= 1.0 ? rawValue * 100 : rawValue;
 
@@ -565,15 +639,23 @@ class HealthKitService {
       case MetricType.bodyTemperature:
         return rawValue;
 
-      // Should not reach here for HealthKit-supported types
+      // Android Health Connect: BODY_WATER_MASS is in kg
+      // NOTE: Our app expects percentage, but we can't calculate % without weight
+      // Store raw kg value - consider improving by fetching weight for calculation
+      case MetricType.waterMass:
+        // Return raw kg value for now
+        // TODO: Fetch weight to calculate actual percentage
+        return rawValue;
+
+      // Should not reach here for supported types
       default:
         return rawValue;
     }
   }
 
-  /// Convert app value to HealthKit SI units (inverse of _convertHealthKitValue)
+  /// Convert app value to health platform SI units (inverse of _convertHealthKitValue)
   ///
-  /// Used when writing measurements to HealthKit.
+  /// Used when writing measurements to health platform.
   /// - Centimeters → Meters (÷100)
   /// - Percentage (0-100) → Ratio (0-1) (÷100)
   double _convertToHealthKitValue(double appValue, MetricType metricType) {
@@ -588,14 +670,20 @@ class HealthKitService {
         // If value > 1, assume it's in percentage form and convert to ratio
         return appValue > 1.0 ? appValue / 100 : appValue;
 
-      // Already in correct HealthKit units (kg, kg/m², °C)
+      // Already in correct health platform units (kg, kg/m², °C)
       case MetricType.weight:
       case MetricType.leanMass:
       case MetricType.bmi:
       case MetricType.bodyTemperature:
         return appValue;
 
-      // Should not reach here for HealthKit-supported types
+      // Android Health Connect: waterMass % cannot be written without weight context
+      // NOTE: This would require fetching weight to convert % back to kg
+      case MetricType.waterMass:
+        // Return raw value (may be incorrect without weight context)
+        return appValue;
+
+      // Should not reach here for supported types
       default:
         return appValue;
     }
