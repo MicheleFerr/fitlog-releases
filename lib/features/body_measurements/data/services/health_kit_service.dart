@@ -70,6 +70,17 @@ class HealthKitService {
 
   final HealthKitDatasource _healthKitDatasource;
   final Health _health;
+  bool _isConfigured = false;
+
+  /// Configure the Health package (required before any HealthKit operation)
+  Future<void> _ensureConfigured() async {
+    if (_isConfigured) return;
+    await _health.configure();
+    _isConfigured = true;
+    if (kDebugMode) {
+      debugPrint('✅ [HealthKitService] Health package configured');
+    }
+  }
 
   /// Check if HealthKit is available on this device
   ///
@@ -134,6 +145,8 @@ class HealthKitService {
           message: 'HealthKit only available on iOS',
         ));
       }
+
+      await _ensureConfigured();
 
       if (kDebugMode) {
         debugPrint(
@@ -220,6 +233,8 @@ class HealthKitService {
         ));
       }
 
+      await _ensureConfigured();
+
       final endDateTime = endDate ?? DateTime.now();
       final measurements = <Measurement>[];
 
@@ -281,6 +296,8 @@ class HealthKitService {
         ));
       }
 
+      await _ensureConfigured();
+
       final healthType = _mapMetricTypeToHealthDataType(measurement.metricType);
 
       final success = await _health.writeHealthData(
@@ -314,11 +331,19 @@ class HealthKitService {
   }
 
   /// Sync measurements between app and HealthKit
+  ///
+  /// Parameters:
+  /// - [userId]: Firebase Auth UID
+  /// - [consentedMetrics]: Metrics user has consented to sync
+  /// - [direction]: Read, write, or both
+  /// - [startDate]: Start date for read sync (default: 30 days ago)
+  /// - [measurements]: Local measurements to write to HealthKit (required for write/both)
   Future<Either<HealthPlatformFailure, SyncResult>> syncMeasurements({
     required String userId,
     required List<MetricType> consentedMetrics,
     required SyncDirection direction,
     DateTime? startDate,
+    List<Measurement>? measurements,
   }) async {
     try {
       if (!Platform.isIOS) {
@@ -329,7 +354,8 @@ class HealthKitService {
 
       final syncStart = startDate ?? DateTime.now().subtract(const Duration(days: 30));
       int readCount = 0;
-      final int writeCount = 0;
+      int writeCount = 0;
+      List<Measurement> readMeasurementsData = [];
 
       // Read from HealthKit (if needed)
       if (direction == SyncDirection.read || direction == SyncDirection.both) {
@@ -345,14 +371,37 @@ class HealthKitService {
               debugPrint('⚠️ [HealthKitService] Sync read failed: ${failure.message}');
             }
           },
-          (measurements) {
-            readCount = measurements.length;
+          (readData) {
+            readCount = readData.length;
+            readMeasurementsData = readData;
           },
         );
       }
 
-      // Write to HealthKit would go here (if direction = write or both)
-      // Not implemented yet - requires local database integration
+      // Write local measurements to HealthKit
+      if (direction == SyncDirection.write || direction == SyncDirection.both) {
+        if (measurements != null && measurements.isNotEmpty) {
+          for (final measurement in measurements) {
+            // Only write metrics supported by HealthKit
+            if (!_isHealthKitSupported(measurement.metricType)) continue;
+            // Only write consented metrics
+            if (!consentedMetrics.contains(measurement.metricType)) continue;
+
+            final writeResult = await writeMeasurement(measurement);
+            writeResult.fold(
+              (failure) {
+                if (kDebugMode) {
+                  debugPrint(
+                      '⚠️ [HealthKitService] Write failed for ${measurement.metricType.name}: ${failure.message}');
+                }
+              },
+              (_) {
+                writeCount++;
+              },
+            );
+          }
+        }
+      }
 
       if (kDebugMode) {
         debugPrint(
@@ -364,6 +413,7 @@ class HealthKitService {
         writeCount: writeCount,
         conflictCount: 0,
         syncedAt: DateTime.now(),
+        importedMeasurements: readMeasurementsData,
       ));
     } catch (e) {
       if (kDebugMode) {
@@ -373,6 +423,22 @@ class HealthKitService {
         message: 'Failed to sync with HealthKit: $e',
         error: e,
       ));
+    }
+  }
+
+  /// Check if a metric type is supported by HealthKit
+  bool _isHealthKitSupported(MetricType metricType) {
+    switch (metricType) {
+      case MetricType.weight:
+      case MetricType.height:
+      case MetricType.bodyFatPercentage:
+      case MetricType.bmi:
+      case MetricType.leanMass:
+      case MetricType.waistCircumference:
+      case MetricType.bodyTemperature:
+        return true;
+      default:
+        return false;
     }
   }
 

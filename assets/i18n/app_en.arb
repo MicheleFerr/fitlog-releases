@@ -25962,6 +25962,67 @@
   "@bodyMeasurementsHealthKitConsentGranted": {
     "description": "Success message after granting consent"
   },
+  "bodyMeasurementsNoData": "--",
+  "@bodyMeasurementsNoData": {
+    "description": "Placeholder for card without data"
+  },
+  "bodyMeasurementsTapToAdd": "Tap to add",
+  "@bodyMeasurementsTapToAdd": {
+    "description": "Hint text on metric card without data"
+  },
+  "bodyMeasurementsExportToHealth": "Export to Apple Health",
+  "@bodyMeasurementsExportToHealth": {
+    "description": "Export measurements to Apple Health"
+  },
+  "bodyMeasurementsSyncWithHealth": "Sync with Apple Health",
+  "@bodyMeasurementsSyncWithHealth": {
+    "description": "Sync measurements with Apple Health"
+  },
+  "bodyMeasurementsExportSuccess": "Exported {count} measurements",
+  "@bodyMeasurementsExportSuccess": {
+    "description": "Success message after exporting measurements",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "bodyMeasurementsEssentialMetrics": "Essential Metrics",
+  "@bodyMeasurementsEssentialMetrics": {
+    "description": "Section title for essential metrics"
+  },
+  "bodyMeasurementsCircumferences": "Circumferences",
+  "@bodyMeasurementsCircumferences": {
+    "description": "Section title for circumference metrics"
+  },
+  "bodyMeasurementsVitals": "Vitals",
+  "@bodyMeasurementsVitals": {
+    "description": "Section title for vital metrics"
+  },
+  "bodyMeasurementsChartsSummaryMin": "Min",
+  "@bodyMeasurementsChartsSummaryMin": {
+    "description": "Minimum value label in chart summary"
+  },
+  "bodyMeasurementsChartsSummaryMax": "Max",
+  "@bodyMeasurementsChartsSummaryMax": {
+    "description": "Maximum value label in chart summary"
+  },
+  "bodyMeasurementsChartsSummaryCurrent": "Current",
+  "@bodyMeasurementsChartsSummaryCurrent": {
+    "description": "Current value label in chart summary"
+  },
+  "bodyMeasurementsChartsTrend": "Trend",
+  "@bodyMeasurementsChartsTrend": {
+    "description": "Trend label in chart summary"
+  },
+  "bodyMeasurementsStartWithWeight": "Start with your weight",
+  "@bodyMeasurementsStartWithWeight": {
+    "description": "Suggestion to start tracking weight"
+  },
+  "bodyMeasurementsRecentHistory": "Recent History",
+  "@bodyMeasurementsRecentHistory": {
+    "description": "Section title for recent measurement history"
+  },
   "weeks": "weeks",
   "@weeks": {
     "description": "Unit for weeks"

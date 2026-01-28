@@ -21041,6 +21041,50 @@ class AppLocalizationsEn extends AppLocalizations {
       'Health data access granted';
 
   @override
+  String get bodyMeasurementsNoData => '--';
+
+  @override
+  String get bodyMeasurementsTapToAdd => 'Tap to add';
+
+  @override
+  String get bodyMeasurementsExportToHealth => 'Export to Apple Health';
+
+  @override
+  String get bodyMeasurementsSyncWithHealth => 'Sync with Apple Health';
+
+  @override
+  String bodyMeasurementsExportSuccess(int count) {
+    return 'Exported $count measurements';
+  }
+
+  @override
+  String get bodyMeasurementsEssentialMetrics => 'Essential Metrics';
+
+  @override
+  String get bodyMeasurementsCircumferences => 'Circumferences';
+
+  @override
+  String get bodyMeasurementsVitals => 'Vitals';
+
+  @override
+  String get bodyMeasurementsChartsSummaryMin => 'Min';
+
+  @override
+  String get bodyMeasurementsChartsSummaryMax => 'Max';
+
+  @override
+  String get bodyMeasurementsChartsSummaryCurrent => 'Current';
+
+  @override
+  String get bodyMeasurementsChartsTrend => 'Trend';
+
+  @override
+  String get bodyMeasurementsStartWithWeight => 'Start with your weight';
+
+  @override
+  String get bodyMeasurementsRecentHistory => 'Recent History';
+
+  @override
   String get weeks => 'weeks';
 
   @override

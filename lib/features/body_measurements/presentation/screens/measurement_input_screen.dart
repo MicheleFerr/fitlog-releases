@@ -41,10 +41,15 @@ class MeasurementInputScreen extends ConsumerStatefulWidget {
     super.key,
     required this.userId,
     this.existingMeasurement,
+    this.focusedMetric,
   });
 
   final String userId;
   final Measurement? existingMeasurement;
+
+  /// When set, shows only this metric's input field (single-metric mode).
+  /// Used when tapping a specific metric card from the dashboard.
+  final MetricType? focusedMetric;
 
   @override
   ConsumerState<MeasurementInputScreen> createState() =>
@@ -60,6 +65,10 @@ class _MeasurementInputScreenState
   bool _isLoading = false;
   bool _isDraft = false;
   List<MetricType> _consentedMetrics = [];
+
+  /// Whether we're in single-metric mode (quick add from dashboard card)
+  bool get _isSingleMetricMode =>
+      widget.focusedMetric != null && widget.existingMeasurement == null;
 
   final _validator = MeasurementValidator();
 
@@ -89,6 +98,11 @@ class _MeasurementInputScreenState
       _controllers[measurement.metricType] = TextEditingController(
         text: measurement.value.toString(),
       );
+    }
+
+    // Pre-create controller for focused metric (single-metric mode)
+    if (widget.focusedMetric != null && !_controllers.containsKey(widget.focusedMetric)) {
+      _controllers[widget.focusedMetric!] = TextEditingController();
     }
   }
 
@@ -516,160 +530,191 @@ class _MeasurementInputScreenState
     }
   }
 
+  /// Build a single metric field widget
+  Widget _buildMetricField(MetricType metric) {
+    final controller = _controllers[metric];
+    if (controller == null) return const SizedBox.shrink();
+
+    final isCalculated = _isCalculatedMetric(metric);
+    final wasManuallyEdited = _manuallyEditedFields.contains(metric);
+
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 16),
+      child: TextFormField(
+        controller: controller,
+        keyboardType: const TextInputType.numberWithOptions(decimal: true),
+        autofocus: _isSingleMetricMode,
+        onChanged: isCalculated
+            ? (value) {
+                if (value.isNotEmpty) {
+                  _manuallyEditedFields.add(metric);
+                } else {
+                  _manuallyEditedFields.remove(metric);
+                  _recalculateAll();
+                }
+              }
+            : null,
+        decoration: InputDecoration(
+          labelText: _getMetricLabel(metric),
+          hintText: '0.0',
+          suffixText: metric.defaultUnit,
+          border: const OutlineInputBorder(
+            borderRadius: BorderRadius.all(Radius.circular(12)),
+          ),
+          enabledBorder: OutlineInputBorder(
+            borderRadius: const BorderRadius.all(Radius.circular(12)),
+            borderSide: BorderSide(color: context.colors.outline),
+          ),
+          focusedBorder: OutlineInputBorder(
+            borderRadius: const BorderRadius.all(Radius.circular(12)),
+            borderSide: BorderSide(color: context.colors.primary, width: 2),
+          ),
+          errorText: _errors[metric],
+          filled: true,
+          fillColor: isCalculated && !wasManuallyEdited
+              ? context.colors.surfaceContainerHighest.withValues(alpha: 0.5)
+              : context.colors.surfaceContainerLowest,
+          prefixIcon: isCalculated
+              ? SemanticIcon(
+                  icon: AppIcons.calculate,
+                  semanticLabel: context.l10n.bodyMeasurementsAutoCalculated,
+                  color: wasManuallyEdited
+                      ? context.colors.outline
+                      : context.colors.primary,
+                )
+              : null,
+          helperText: isCalculated ? _getCalculationHelper(metric) : null,
+          helperStyle: context.textTheme.bodySmall?.copyWith(
+            color: wasManuallyEdited
+                ? context.colors.outline
+                : context.colors.primary,
+            fontStyle: FontStyle.italic,
+          ),
+        ),
+        validator: (value) => _validateField(metric, value ?? ''),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
+    final isEditing = widget.existingMeasurement != null;
+
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          widget.existingMeasurement == null
-              ? context.l10n.bodyMeasurementsInputTitle
-              : context.l10n.bodyMeasurementsInputEditTitle,
+          isEditing
+              ? context.l10n.bodyMeasurementsInputEditTitle
+              : _isSingleMetricMode
+                  ? _getMetricLabel(widget.focusedMetric!)
+                  : context.l10n.bodyMeasurementsInputTitle,
         ),
         actions: [
-          // Auto-save draft button
           if (_isDraft)
-            Icon(
-              AppIcons.cloudDone,
-              color: context.colors.success,
-            ),
+            Icon(AppIcons.cloudDone, color: context.colors.success),
           const SizedBox(width: 16),
         ],
       ),
       body: _consentedMetrics.isEmpty
-          ? const Center(
-              child: LoadingIndicator(),
-            )
+          ? const Center(child: LoadingIndicator())
           : _isLoading
-              ? const Center(
-                  child: LoadingIndicator(),
-                )
+              ? const Center(child: LoadingIndicator())
               : Form(
                   key: _formKey,
                   onChanged: () {
-                    // Auto-save after 2 seconds of inactivity
                     Future.delayed(const Duration(seconds: 2), () {
-                      if (mounted) {
-                        _saveDraft();
-                      }
+                      if (mounted) _saveDraft();
                     });
                   },
                   child: ListView(
                     padding: const EdgeInsets.all(16),
                     children: [
-                      // Info card
-                      Container(
-                        padding: const EdgeInsets.all(12),
-                        decoration: BoxDecoration(
-                          color: context.colors.surfaceContainerHighest,
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                        child: Text(
-                          context.l10n.bodyMeasurementsInputDescription,
-                          style: context.textTheme.bodySmall,
-                        ),
-                      ),
-                      const SizedBox(height: 24),
-
-                      // Group by MetricGroup
-                      ...MetricGroup.values.map((group) {
-                        final groupMetrics = _consentedMetrics
-                            .where((metric) => metric.group == group)
-                            .toList();
-
-                        if (groupMetrics.isEmpty) {
-                          return const SizedBox.shrink();
-                        }
-
-                        return Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            // Group header
-                            Padding(
-                              padding: const EdgeInsets.only(bottom: 12),
-                              child: Text(
-                                _getGroupLabel(group),
-                                style: context.textTheme.titleMedium?.copyWith(
-                                  fontWeight: FontWeight.bold,
+                      // Single-metric mode: show only the focused field
+                      if (_isSingleMetricMode) ...[
+                        // Info hint
+                        Container(
+                          padding: const EdgeInsets.all(12),
+                          decoration: BoxDecoration(
+                            color: context.colors.primaryContainer.withValues(alpha: 0.3),
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          child: Row(
+                            children: [
+                              Icon(
+                                AppIcons.info,
+                                size: 20,
+                                color: context.colors.primary,
+                              ),
+                              const SizedBox(width: 12),
+                              Expanded(
+                                child: Text(
+                                  context.l10n.bodyMeasurementsInputDescription,
+                                  style: context.textTheme.bodySmall?.copyWith(
+                                    color: context.colors.onSurface,
+                                  ),
                                 ),
                               ),
-                            ),
-
-                            // Fields for this group
-                            ...groupMetrics.map((metric) {
-                              final controller = _controllers[metric]!;
-                              final isCalculated = _isCalculatedMetric(metric);
-                              final wasManuallyEdited = _manuallyEditedFields.contains(metric);
-                              return Padding(
-                                padding: const EdgeInsets.only(bottom: 16),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    TextFormField(
-                                      controller: controller,
-                                      keyboardType: const TextInputType.numberWithOptions(
-                                        decimal: true,
-                                      ),
-                                      onChanged: isCalculated
-                                          ? (value) {
-                                              // Track manual edits to calculated fields
-                                              if (value.isNotEmpty) {
-                                                _manuallyEditedFields.add(metric);
-                                              } else {
-                                                // If cleared, allow auto-calculation again
-                                                _manuallyEditedFields.remove(metric);
-                                                _recalculateAll();
-                                              }
-                                            }
-                                          : null,
-                                      decoration: InputDecoration(
-                                        labelText: _getMetricLabel(metric),
-                                        suffixText: metric.defaultUnit,
-                                        border: const OutlineInputBorder(),
-                                        errorText: _errors[metric],
-                                        filled: isCalculated && !wasManuallyEdited,
-                                        fillColor: isCalculated && !wasManuallyEdited
-                                            ? context.colors.surfaceContainerHighest.withValues(alpha: 0.5)
-                                            : null,
-                                        prefixIcon: isCalculated
-                                            ? SemanticIcon(
-                                                icon: AppIcons.calculate,
-                                                semanticLabel: context.l10n.bodyMeasurementsAutoCalculated,
-                                                color: wasManuallyEdited
-                                                    ? context.colors.outline
-                                                    : context.colors.primary,
-                                              )
-                                            : null,
-                                        helperText: isCalculated
-                                            ? _getCalculationHelper(metric)
-                                            : null,
-                                        helperStyle: context.textTheme.bodySmall?.copyWith(
-                                          color: wasManuallyEdited
-                                              ? context.colors.outline
-                                              : context.colors.primary,
-                                          fontStyle: FontStyle.italic,
-                                        ),
-                                      ),
-                                      validator: (value) => _validateField(metric, value ?? ''),
-                                    ),
-                                    if (_errors[metric] != null)
-                                      Padding(
-                                        padding: const EdgeInsets.only(top: 4),
-                                        child: Text(
-                                          _errors[metric]!,
-                                          style: context.textTheme.bodySmall?.copyWith(
-                                            color: context.colors.error,
-                                          ),
-                                        ),
-                                      ),
-                                  ],
+                            ],
+                          ),
+                        ),
+                        const SizedBox(height: 24),
+                        _buildMetricField(widget.focusedMetric!),
+                      ] else ...[
+                        // Full form mode: info card + all grouped fields
+                        Container(
+                          padding: const EdgeInsets.all(12),
+                          decoration: BoxDecoration(
+                            color: context.colors.surfaceContainerHighest,
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          child: Row(
+                            children: [
+                              Icon(
+                                AppIcons.info,
+                                size: 20,
+                                color: context.colors.onSurfaceVariant,
+                              ),
+                              const SizedBox(width: 12),
+                              Expanded(
+                                child: Text(
+                                  context.l10n.bodyMeasurementsInputDescription,
+                                  style: context.textTheme.bodySmall,
                                 ),
-                              );
-                            }),
+                              ),
+                            ],
+                          ),
+                        ),
+                        const SizedBox(height: 24),
 
-                            const SizedBox(height: 16),
-                          ],
-                        );
-                      }),
+                        // Group by MetricGroup
+                        ...MetricGroup.values.map((group) {
+                          final groupMetrics = _consentedMetrics
+                              .where((metric) => metric.group == group)
+                              .toList();
+
+                          if (groupMetrics.isEmpty) {
+                            return const SizedBox.shrink();
+                          }
+
+                          return Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.only(bottom: 12),
+                                child: Text(
+                                  _getGroupLabel(group),
+                                  style: context.textTheme.titleSmall?.copyWith(
+                                    fontWeight: FontWeight.bold,
+                                    color: context.colors.primary,
+                                  ),
+                                ),
+                              ),
+                              ...groupMetrics.map(_buildMetricField),
+                              const SizedBox(height: 16),
+                            ],
+                          );
+                        }),
+                      ],
                     ],
                   ),
                 ),
@@ -678,9 +723,10 @@ class _MeasurementInputScreenState
           : SafeArea(
               child: Padding(
                 padding: const EdgeInsets.all(16),
-                child: FilledButton(
+                child: FilledButton.icon(
                   onPressed: _submitMeasurements,
-                  child: Text(context.l10n.bodyMeasurementsInputSubmit),
+                  icon: const Icon(AppIcons.save),
+                  label: Text(context.l10n.bodyMeasurementsInputSubmit),
                 ),
               ),
             ),

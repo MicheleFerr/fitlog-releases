@@ -21243,6 +21243,50 @@ class AppLocalizationsIt extends AppLocalizations {
       'Accesso ai dati salute concesso';
 
   @override
+  String get bodyMeasurementsNoData => '--';
+
+  @override
+  String get bodyMeasurementsTapToAdd => 'Tocca per aggiungere';
+
+  @override
+  String get bodyMeasurementsExportToHealth => 'Esporta su Apple Health';
+
+  @override
+  String get bodyMeasurementsSyncWithHealth => 'Sincronizza con Apple Health';
+
+  @override
+  String bodyMeasurementsExportSuccess(int count) {
+    return 'Esportate $count misurazioni';
+  }
+
+  @override
+  String get bodyMeasurementsEssentialMetrics => 'Metriche essenziali';
+
+  @override
+  String get bodyMeasurementsCircumferences => 'Circonferenze';
+
+  @override
+  String get bodyMeasurementsVitals => 'Vitali';
+
+  @override
+  String get bodyMeasurementsChartsSummaryMin => 'Min';
+
+  @override
+  String get bodyMeasurementsChartsSummaryMax => 'Max';
+
+  @override
+  String get bodyMeasurementsChartsSummaryCurrent => 'Attuale';
+
+  @override
+  String get bodyMeasurementsChartsTrend => 'Trend';
+
+  @override
+  String get bodyMeasurementsStartWithWeight => 'Inizia col peso';
+
+  @override
+  String get bodyMeasurementsRecentHistory => 'Cronologia recente';
+
+  @override
   String get weeks => 'settimane';
 
   @override

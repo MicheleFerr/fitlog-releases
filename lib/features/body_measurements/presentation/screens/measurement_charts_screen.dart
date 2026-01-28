@@ -10,25 +10,7 @@ import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator
 import 'package:gymbro_flutter_new/shared/presentation/services/snackbar_service.dart';
 import 'package:intl/intl.dart';
 
-/// MeasurementChartsScreen - Display progress charts for body measurements
-///
-/// **Features**:
-/// - Line charts showing measurement trends over time
-/// - Period selector (week/month/year)
-/// - Metric selector dropdown (weight, body fat, circumferences, etc.)
-/// - Empty state when no data for selected metric
-/// - Theme-aware chart colors
-/// - Fully localized (EN/IT)
-///
-/// **Usage**:
-/// ```dart
-/// Navigator.push(
-///   context,
-///   MaterialPageRoute(
-///     builder: (_) => MeasurementChartsScreen(userId: currentUser.uid),
-///   ),
-/// );
-/// ```
+/// MeasurementChartsScreen - Progress charts with auto-selection and summary
 class MeasurementChartsScreen extends ConsumerStatefulWidget {
   const MeasurementChartsScreen({
     super.key,
@@ -51,46 +33,27 @@ enum ChartPeriod {
 
 class _MeasurementChartsScreenState
     extends ConsumerState<MeasurementChartsScreen> {
-  List<Measurement> _measurements = [];
+  List<Measurement> _allMeasurements = [];
+  List<Measurement> _filteredMeasurements = [];
   bool _isLoading = true;
-  MetricType? _selectedMetric;
+  MetricType _selectedMetric = MetricType.weight;
   ChartPeriod _selectedPeriod = ChartPeriod.month;
+
+  /// Metrics that have data (for chip display)
+  Set<MetricType> _metricsWithData = {};
 
   @override
   void initState() {
     super.initState();
-    _loadMeasurements();
+    _loadAllMeasurements();
   }
 
-  /// Load measurements from repository
-  Future<void> _loadMeasurements() async {
-    setState(() {
-      _isLoading = true;
-    });
+  /// Load all measurements once, then filter locally
+  Future<void> _loadAllMeasurements() async {
+    setState(() => _isLoading = true);
 
     final measurementRepo = ref.read(measurementRepositoryProvider);
-
-    // Calculate date range based on selected period
-    final now = DateTime.now();
-    DateTime dateFrom;
-
-    switch (_selectedPeriod) {
-      case ChartPeriod.week:
-        dateFrom = now.subtract(const Duration(days: 7));
-        break;
-      case ChartPeriod.month:
-        dateFrom = now.subtract(const Duration(days: 30));
-        break;
-      case ChartPeriod.year:
-        dateFrom = now.subtract(const Duration(days: 365));
-        break;
-    }
-
-    final result = await measurementRepo.getMeasurements(
-      widget.userId,
-      filterByType: _selectedMetric,
-      dateFrom: dateFrom,
-    );
+    final result = await measurementRepo.getMeasurements(widget.userId);
 
     result.fold(
       (failure) {
@@ -99,37 +62,66 @@ class _MeasurementChartsScreenState
           context,
           'Failed to load measurements: $failure',
         );
-        setState(() {
-          _isLoading = false;
-        });
+        setState(() => _isLoading = false);
       },
       (measurements) {
         if (!mounted) return;
-        setState(() {
-          _measurements = measurements;
-          _isLoading = false;
-        });
+        _allMeasurements = measurements;
+
+        // Discover which metrics have data
+        _metricsWithData = measurements
+            .map((m) => m.metricType)
+            .toSet();
+
+        // Auto-select weight if available, otherwise first with data
+        if (_metricsWithData.contains(MetricType.weight)) {
+          _selectedMetric = MetricType.weight;
+        } else if (_metricsWithData.isNotEmpty) {
+          _selectedMetric = _metricsWithData.first;
+        }
+
+        _applyFilters();
+        setState(() => _isLoading = false);
       },
     );
   }
 
-  /// Handle metric selection change
-  void _onMetricChanged(MetricType? newMetric) {
-    setState(() {
-      _selectedMetric = newMetric;
-    });
-    _loadMeasurements();
+  /// Apply metric and period filters to the loaded data
+  void _applyFilters() {
+    final now = DateTime.now();
+    final DateTime dateFrom;
+
+    switch (_selectedPeriod) {
+      case ChartPeriod.week:
+        dateFrom = now.subtract(const Duration(days: 7));
+      case ChartPeriod.month:
+        dateFrom = now.subtract(const Duration(days: 30));
+      case ChartPeriod.year:
+        dateFrom = now.subtract(const Duration(days: 365));
+    }
+
+    _filteredMeasurements = _allMeasurements
+        .where((m) =>
+            m.metricType == _selectedMetric &&
+            m.timestamp.isAfter(dateFrom))
+        .toList()
+      ..sort((a, b) => a.timestamp.compareTo(b.timestamp));
   }
 
-  /// Handle period selection change
+  void _onMetricChanged(MetricType newMetric) {
+    setState(() {
+      _selectedMetric = newMetric;
+      _applyFilters();
+    });
+  }
+
   void _onPeriodChanged(ChartPeriod newPeriod) {
     setState(() {
       _selectedPeriod = newPeriod;
+      _applyFilters();
     });
-    _loadMeasurements();
   }
 
-  /// Get localized label for metric type
   String _getMetricLabel(MetricType metric) {
     switch (metric) {
       case MetricType.weight:
@@ -181,7 +173,6 @@ class _MeasurementChartsScreenState
     }
   }
 
-  /// Get localized label for period
   String _getPeriodLabel(ChartPeriod period) {
     switch (period) {
       case ChartPeriod.week:
@@ -198,106 +189,162 @@ class _MeasurementChartsScreenState
     return Scaffold(
       appBar: AppBar(
         title: Text(context.l10n.bodyMeasurementsChartsTitle),
-        actions: [
-          // Metric selector dropdown
-          PopupMenuButton<MetricType?>(
-            icon: const Icon(AppIcons.straighten),
-            tooltip: context.l10n.bodyMeasurementsListFilterByMetric,
-            onSelected: _onMetricChanged,
-            itemBuilder: (context) {
-              return MetricType.values.map((metric) {
-                return PopupMenuItem<MetricType?>(
-                  value: metric,
-                  child: Row(
-                    children: [
-                      if (_selectedMetric == metric)
-                        Icon(
-                          AppIcons.check,
-                          color: context.colors.primary,
-                          size: 20,
-                        ),
-                      if (_selectedMetric == metric) const SizedBox(width: 8),
-                      Expanded(
-                        child: Text(_getMetricLabel(metric)),
+      ),
+      body: _isLoading
+          ? const Center(child: LoadingIndicator())
+          : Column(
+              children: [
+                // Period selector
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                  child: SegmentedButton<ChartPeriod>(
+                    segments: [
+                      ButtonSegment(
+                        value: ChartPeriod.week,
+                        label: Text(_getPeriodLabel(ChartPeriod.week)),
+                      ),
+                      ButtonSegment(
+                        value: ChartPeriod.month,
+                        label: Text(_getPeriodLabel(ChartPeriod.month)),
+                      ),
+                      ButtonSegment(
+                        value: ChartPeriod.year,
+                        label: Text(_getPeriodLabel(ChartPeriod.year)),
                       ),
                     ],
+                    selected: {_selectedPeriod},
+                    onSelectionChanged: (Set<ChartPeriod> newSelection) {
+                      _onPeriodChanged(newSelection.first);
+                    },
                   ),
-                );
-              }).toList();
-            },
-          ),
-        ],
-      ),
-      body: Column(
-        children: [
-          // Period selector
-          Container(
-            padding: const EdgeInsets.all(16),
-            child: SegmentedButton<ChartPeriod>(
-              segments: [
-                ButtonSegment(
-                  value: ChartPeriod.week,
-                  label: Text(_getPeriodLabel(ChartPeriod.week)),
                 ),
-                ButtonSegment(
-                  value: ChartPeriod.month,
-                  label: Text(_getPeriodLabel(ChartPeriod.month)),
-                ),
-                ButtonSegment(
-                  value: ChartPeriod.year,
-                  label: Text(_getPeriodLabel(ChartPeriod.year)),
+
+                // Metric selector chips (only metrics with data)
+                if (_metricsWithData.isNotEmpty)
+                  SizedBox(
+                    height: 48,
+                    child: ListView(
+                      scrollDirection: Axis.horizontal,
+                      padding: const EdgeInsets.symmetric(horizontal: 16),
+                      children: _metricsWithData.map((metric) {
+                        final isSelected = metric == _selectedMetric;
+                        return Padding(
+                          padding: const EdgeInsets.only(right: 8),
+                          child: FilterChip(
+                            label: Text(_getMetricLabel(metric)),
+                            selected: isSelected,
+                            onSelected: (_) => _onMetricChanged(metric),
+                            showCheckmark: false,
+                          ),
+                        );
+                      }).toList(),
+                    ),
+                  ),
+
+                const SizedBox(height: 8),
+
+                // Summary card
+                if (_filteredMeasurements.isNotEmpty)
+                  _buildSummaryCard(),
+
+                // Chart or empty state
+                Expanded(
+                  child: _filteredMeasurements.isEmpty
+                      ? _buildEmptyState()
+                      : _buildChart(),
                 ),
               ],
-              selected: {_selectedPeriod},
-              onSelectionChanged: (Set<ChartPeriod> newSelection) {
-                _onPeriodChanged(newSelection.first);
-              },
             ),
-          ),
-
-          // Chart or empty state
-          Expanded(
-            child: _isLoading
-                ? const Center(child: LoadingIndicator())
-                : _selectedMetric == null
-                    ? _buildSelectMetricState()
-                    : _measurements.isEmpty
-                        ? _buildEmptyState()
-                        : _buildChart(),
-          ),
-        ],
-      ),
     );
   }
 
-  /// Build "select metric" state
-  Widget _buildSelectMetricState() {
-    return Center(
-      child: Padding(
-        padding: const EdgeInsets.all(24),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(
-              AppIcons.straighten,
-              size: 80,
-              color: context.colors.onSurfaceVariant,
-            ),
-            const SizedBox(height: 24),
-            Text(
-              context.l10n.bodyMeasurementsChartsSelectMetric,
-              textAlign: TextAlign.center,
-              style: context.textTheme.bodyLarge?.copyWith(
-                color: context.colors.onSurfaceVariant,
-              ),
-            ),
-          ],
+  /// Summary card with current, min, max, trend
+  Widget _buildSummaryCard() {
+    final values = _filteredMeasurements.map((m) => m.value).toList();
+    final current = _filteredMeasurements.last.value;
+    final minVal = values.reduce((a, b) => a < b ? a : b);
+    final maxVal = values.reduce((a, b) => a > b ? a : b);
+
+    String? trendText;
+    if (_filteredMeasurements.length >= 2) {
+      final diff = _filteredMeasurements.last.value - _filteredMeasurements.first.value;
+      final sign = diff > 0 ? '+' : '';
+      trendText = '$sign${diff.toStringAsFixed(1)}';
+    }
+
+    final unit = _filteredMeasurements.last.unit;
+
+    final items = [
+      _SummaryData(
+        context.l10n.bodyMeasurementsChartsSummaryCurrent,
+        current.toStringAsFixed(1),
+        unit,
+      ),
+      _SummaryData(
+        context.l10n.bodyMeasurementsChartsSummaryMin,
+        minVal.toStringAsFixed(1),
+        unit,
+      ),
+      _SummaryData(
+        context.l10n.bodyMeasurementsChartsSummaryMax,
+        maxVal.toStringAsFixed(1),
+        unit,
+      ),
+      if (trendText != null)
+        _SummaryData(
+          context.l10n.bodyMeasurementsChartsTrend,
+          trendText,
+          unit,
+        ),
+    ];
+
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16),
+      child: Card(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 16),
+          child: Row(
+            children: items.map((item) {
+              return Expanded(
+                child: _buildSummaryItem(item.label, item.value, item.unit),
+              );
+            }).toList(),
+          ),
         ),
       ),
     );
   }
 
-  /// Build empty state when no measurements for selected metric
+  Widget _buildSummaryItem(String label, String value, String unit) {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Text(
+          label,
+          style: context.textTheme.labelSmall?.copyWith(
+            color: context.colors.onSurfaceVariant,
+          ),
+          textAlign: TextAlign.center,
+        ),
+        const SizedBox(height: 4),
+        Text(
+          value,
+          style: context.textTheme.titleSmall?.copyWith(
+            fontWeight: FontWeight.bold,
+          ),
+          textAlign: TextAlign.center,
+        ),
+        Text(
+          unit,
+          style: context.textTheme.labelSmall?.copyWith(
+            color: context.colors.onSurfaceVariant,
+          ),
+          textAlign: TextAlign.center,
+        ),
+      ],
+    );
+  }
+
   Widget _buildEmptyState() {
     return Center(
       child: Padding(
@@ -324,55 +371,23 @@ class _MeasurementChartsScreenState
     );
   }
 
-  /// Build line chart
   Widget _buildChart() {
-    // Sort measurements by date ascending
-    final sortedMeasurements = List<Measurement>.from(_measurements)
-      ..sort((a, b) => a.timestamp.compareTo(b.timestamp));
+    final sortedMeasurements = _filteredMeasurements;
 
-    // Create data points for chart
     final spots = sortedMeasurements.asMap().entries.map((entry) {
-      final index = entry.key;
-      final measurement = entry.value;
-      return FlSpot(index.toDouble(), measurement.value);
+      return FlSpot(entry.key.toDouble(), entry.value.value);
     }).toList();
 
-    // Calculate min/max values for Y axis
     final values = sortedMeasurements.map((m) => m.value).toList();
     final minValue = values.reduce((a, b) => a < b ? a : b);
     final maxValue = values.reduce((a, b) => a > b ? a : b);
-    final padding = (maxValue - minValue) * 0.1;
+    final range = maxValue - minValue;
+    final padding = range > 0 ? range * 0.1 : 1.0;
 
     return Padding(
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.fromLTRB(8, 16, 16, 16),
       child: Column(
         children: [
-          // Chart title with current metric and unit
-          Padding(
-            padding: const EdgeInsets.only(bottom: 16),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  _selectedMetric != null
-                      ? _getMetricLabel(_selectedMetric!)
-                      : '',
-                  style: context.textTheme.titleMedium?.copyWith(
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                if (_selectedMetric != null) const SizedBox(width: 8),
-                if (_selectedMetric != null)
-                  Text(
-                    '(${_selectedMetric!.defaultUnit})',
-                    style: context.textTheme.bodyMedium?.copyWith(
-                      color: context.colors.onSurfaceVariant,
-                    ),
-                  ),
-              ],
-            ),
-          ),
-
           // Line chart
           Expanded(
             child: LineChart(
@@ -480,8 +495,7 @@ class _MeasurementChartsScreenState
                     getTooltipItems: (touchedSpots) {
                       return touchedSpots.map((LineBarSpot touchedSpot) {
                         final index = touchedSpot.x.toInt();
-                        if (index < 0 ||
-                            index >= sortedMeasurements.length) {
+                        if (index < 0 || index >= sortedMeasurements.length) {
                           return null;
                         }
 
@@ -508,4 +522,13 @@ class _MeasurementChartsScreenState
       ),
     );
   }
+}
+
+/// Helper class for summary card data
+class _SummaryData {
+  const _SummaryData(this.label, this.value, this.unit);
+
+  final String label;
+  final String value;
+  final String unit;
 }

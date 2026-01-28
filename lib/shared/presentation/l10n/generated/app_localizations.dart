@@ -37656,6 +37656,90 @@ abstract class AppLocalizations {
   /// **'Health data access granted'**
   String get bodyMeasurementsHealthKitConsentGranted;
 
+  /// Placeholder for card without data
+  ///
+  /// In en, this message translates to:
+  /// **'--'**
+  String get bodyMeasurementsNoData;
+
+  /// Hint text on metric card without data
+  ///
+  /// In en, this message translates to:
+  /// **'Tap to add'**
+  String get bodyMeasurementsTapToAdd;
+
+  /// Export measurements to Apple Health
+  ///
+  /// In en, this message translates to:
+  /// **'Export to Apple Health'**
+  String get bodyMeasurementsExportToHealth;
+
+  /// Sync measurements with Apple Health
+  ///
+  /// In en, this message translates to:
+  /// **'Sync with Apple Health'**
+  String get bodyMeasurementsSyncWithHealth;
+
+  /// Success message after exporting measurements
+  ///
+  /// In en, this message translates to:
+  /// **'Exported {count} measurements'**
+  String bodyMeasurementsExportSuccess(int count);
+
+  /// Section title for essential metrics
+  ///
+  /// In en, this message translates to:
+  /// **'Essential Metrics'**
+  String get bodyMeasurementsEssentialMetrics;
+
+  /// Section title for circumference metrics
+  ///
+  /// In en, this message translates to:
+  /// **'Circumferences'**
+  String get bodyMeasurementsCircumferences;
+
+  /// Section title for vital metrics
+  ///
+  /// In en, this message translates to:
+  /// **'Vitals'**
+  String get bodyMeasurementsVitals;
+
+  /// Minimum value label in chart summary
+  ///
+  /// In en, this message translates to:
+  /// **'Min'**
+  String get bodyMeasurementsChartsSummaryMin;
+
+  /// Maximum value label in chart summary
+  ///
+  /// In en, this message translates to:
+  /// **'Max'**
+  String get bodyMeasurementsChartsSummaryMax;
+
+  /// Current value label in chart summary
+  ///
+  /// In en, this message translates to:
+  /// **'Current'**
+  String get bodyMeasurementsChartsSummaryCurrent;
+
+  /// Trend label in chart summary
+  ///
+  /// In en, this message translates to:
+  /// **'Trend'**
+  String get bodyMeasurementsChartsTrend;
+
+  /// Suggestion to start tracking weight
+  ///
+  /// In en, this message translates to:
+  /// **'Start with your weight'**
+  String get bodyMeasurementsStartWithWeight;
+
+  /// Section title for recent measurement history
+  ///
+  /// In en, this message translates to:
+  /// **'Recent History'**
+  String get bodyMeasurementsRecentHistory;
+
   /// Unit for weeks
   ///
   /// In en, this message translates to:

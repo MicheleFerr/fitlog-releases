@@ -15,29 +15,13 @@ import 'package:gymbro_flutter_new/features/body_measurements/presentation/scree
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator.dart';
 import 'package:gymbro_flutter_new/shared/presentation/services/snackbar_service.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/metric_display.dart';
 import 'package:intl/intl.dart';
 
-/// MeasurementListScreen - Display list of user's body measurements
+/// MeasurementListScreen - Dashboard-style display of body measurements
 ///
-/// **Features**:
-/// - List view with pagination (infinite scroll)
-/// - Filter by MetricType dropdown
-/// - Edit action (navigate to input screen)
-/// - Delete action with confirmation dialog
-/// - Empty state when no measurements
-/// - Pull-to-refresh functionality
-/// - Theme-aware design
-/// - Fully localized (EN/IT)
-///
-/// **Usage**:
-/// ```dart
-/// Navigator.push(
-///   context,
-///   MaterialPageRoute(
-///     builder: (_) => MeasurementListScreen(userId: currentUser.uid),
-///   ),
-/// );
-/// ```
+/// Shows metric cards grid (always visible), collapsible sections,
+/// and recent measurement history below.
 class MeasurementListScreen extends ConsumerStatefulWidget {
   const MeasurementListScreen({
     super.key,
@@ -53,14 +37,124 @@ class MeasurementListScreen extends ConsumerStatefulWidget {
 
 class _MeasurementListScreenState extends ConsumerState<MeasurementListScreen> {
   List<Measurement> _measurements = [];
+  Map<MetricType, Measurement> _latestByType = {};
   bool _isLoading = true;
   bool _isImporting = false;
-  MetricType? _selectedFilter;
+  bool _circumferencesExpanded = false;
+  bool _vitalsExpanded = false;
+
+  /// Essential metrics shown as top-level cards
+  static const _essentialMetrics = [
+    MetricType.weight,
+    MetricType.height,
+    MetricType.bodyFatPercentage,
+    MetricType.bmi,
+    MetricType.leanMass,
+    MetricType.bmr,
+  ];
+
+  /// Circumference metrics
+  static const _circumferenceMetrics = [
+    MetricType.waistCircumference,
+    MetricType.chestCircumference,
+    MetricType.shoulderCircumference,
+    MetricType.hipCircumference,
+    MetricType.neckCircumference,
+    MetricType.abdomenCircumference,
+    MetricType.bicepLeftCircumference,
+    MetricType.bicepRightCircumference,
+    MetricType.forearmLeftCircumference,
+    MetricType.forearmRightCircumference,
+    MetricType.thighLeftCircumference,
+    MetricType.thighRightCircumference,
+    MetricType.calfLeftCircumference,
+    MetricType.calfRightCircumference,
+  ];
+
+  /// Vital metrics
+  static const _vitalMetrics = [
+    MetricType.bodyTemperature,
+    MetricType.waterMass,
+    MetricType.boneMass,
+  ];
 
   @override
   void initState() {
     super.initState();
-    _loadMeasurements();
+    _loadData();
+  }
+
+  Future<void> _loadData() async {
+    setState(() => _isLoading = true);
+
+    final measurementRepo = ref.read(measurementRepositoryProvider);
+
+    // Load latest by type and all measurements in parallel
+    final results = await Future.wait([
+      measurementRepo.getLatestMeasurementsByType(widget.userId),
+      measurementRepo.getMeasurements(widget.userId),
+    ]);
+
+    final latestResult = results[0] as dynamic;
+    final allResult = results[1] as dynamic;
+
+    if (!mounted) return;
+
+    latestResult.fold(
+      (_) {},
+      (Map<MetricType, Measurement> latest) {
+        _latestByType = latest;
+      },
+    );
+
+    allResult.fold(
+      (failure) {
+        SnackBarService.showError(
+          context,
+          'Failed to load measurements: $failure',
+        );
+      },
+      (List<Measurement> measurements) {
+        _measurements = measurements;
+      },
+    );
+
+    setState(() => _isLoading = false);
+
+    // Auto-expand sections if they have data
+    final hasCircumferenceData = _circumferenceMetrics.any(
+      (m) => _latestByType.containsKey(m),
+    );
+    final hasVitalsData = _vitalMetrics.any(
+      (m) => _latestByType.containsKey(m),
+    );
+    if (hasCircumferenceData) {
+      setState(() => _circumferencesExpanded = true);
+    }
+    if (hasVitalsData) {
+      setState(() => _vitalsExpanded = true);
+    }
+  }
+
+  /// Navigate to input screen for a specific metric
+  void _onMetricCardTap(MetricType metricType) async {
+    final existing = _latestByType[metricType];
+
+    final result = await Navigator.push<bool>(
+      context,
+      MaterialPageRoute(
+        builder: (_) => MeasurementInputScreen(
+          userId: widget.userId,
+          existingMeasurement: existing,
+          // Single-metric mode when card has no data (quick add)
+          focusedMetric: existing == null ? metricType : null,
+        ),
+      ),
+    );
+
+    if (result == true) {
+      await _loadData();
+    }
   }
 
   /// Import measurements from HealthKit (iOS only)
@@ -73,53 +167,39 @@ class _MeasurementListScreenState extends ConsumerState<MeasurementListScreen> {
       return;
     }
 
-    setState(() {
-      _isImporting = true;
-    });
+    setState(() => _isImporting = true);
 
     try {
       final healthKitService = ref.read(healthKitServiceProvider);
       final consentRepo = ref.read(consentRepositoryProvider);
 
-      // Get consented metrics
       var consentResult = await consentRepo.getConsentedMetrics(widget.userId);
       var consentedMetrics = consentResult.getOrElse((_) => <MetricType>[]);
 
-      // If no consented metrics, show consent dialog automatically
       if (consentedMetrics.isEmpty) {
         if (!mounted) return;
-
         final consentGranted = await _showHealthKitConsentDialog();
-
         if (!consentGranted) {
           if (!mounted) return;
-          setState(() {
-            _isImporting = false;
-          });
+          setState(() => _isImporting = false);
           return;
         }
 
-        // Refresh consented metrics after grant
         consentResult = await consentRepo.getConsentedMetrics(widget.userId);
         consentedMetrics = consentResult.getOrElse((_) => <MetricType>[]);
 
-        // Safety check - if still empty something went wrong
         if (consentedMetrics.isEmpty) {
           if (!mounted) return;
           SnackBarService.showError(
             context,
             context.l10n.bodyMeasurementsNoConsentedMetrics,
           );
-          setState(() {
-            _isImporting = false;
-          });
+          setState(() => _isImporting = false);
           return;
         }
       }
 
-      // Request HealthKit permissions
       final permissionResult = await healthKitService.requestPermissions(consentedMetrics);
-
       final permissionsGranted = permissionResult.fold(
         (failure) {
           if (!mounted) return false;
@@ -135,13 +215,10 @@ class _MeasurementListScreenState extends ConsumerState<MeasurementListScreen> {
           context,
           context.l10n.bodyMeasurementsHealthKitPermissionDenied,
         );
-        setState(() {
-          _isImporting = false;
-        });
+        setState(() => _isImporting = false);
         return;
       }
 
-      // Sync from HealthKit
       final syncResult = await healthKitService.syncMeasurements(
         userId: widget.userId,
         consentedMetrics: consentedMetrics,
@@ -154,26 +231,102 @@ class _MeasurementListScreenState extends ConsumerState<MeasurementListScreen> {
           if (!mounted) return;
           SnackBarService.showError(context, failure.message);
         },
-        (result) {
+        (result) async {
+          // Save imported measurements to local repository
+          if (result.importedMeasurements.isNotEmpty) {
+            final measurementRepo = ref.read(measurementRepositoryProvider);
+            for (final measurement in result.importedMeasurements) {
+              await measurementRepo.addMeasurement(
+                measurement,
+                hasConsent: true, // Already verified consent above
+              );
+            }
+          }
           if (!mounted) return;
           SnackBarService.showSuccess(
             context,
             context.l10n.bodyMeasurementsImportSuccess(result.readCount),
           );
-          _loadMeasurements();
+          _loadData();
         },
       );
     } finally {
       if (mounted) {
-        setState(() {
-          _isImporting = false;
-        });
+        setState(() => _isImporting = false);
+      }
+    }
+  }
+
+  /// Export measurements to HealthKit (iOS only)
+  Future<void> _exportToHealthKit() async {
+    if (!Platform.isIOS) return;
+
+    setState(() => _isImporting = true);
+
+    try {
+      final healthKitService = ref.read(healthKitServiceProvider);
+      final consentRepo = ref.read(consentRepositoryProvider);
+
+      final consentResult = await consentRepo.getConsentedMetrics(widget.userId);
+      final consentedMetrics = consentResult.getOrElse((_) => <MetricType>[]);
+
+      if (consentedMetrics.isEmpty) {
+        if (!mounted) return;
+        SnackBarService.showError(
+          context,
+          context.l10n.bodyMeasurementsNoConsentedMetrics,
+        );
+        return;
+      }
+
+      final permissionResult = await healthKitService.requestPermissions(consentedMetrics);
+      final permissionsGranted = permissionResult.fold(
+        (failure) {
+          if (!mounted) return false;
+          SnackBarService.showError(context, failure.message);
+          return false;
+        },
+        (granted) => granted,
+      );
+
+      if (!permissionsGranted) {
+        if (!mounted) return;
+        SnackBarService.showInfo(
+          context,
+          context.l10n.bodyMeasurementsHealthKitPermissionDenied,
+        );
+        return;
+      }
+
+      final syncResult = await healthKitService.syncMeasurements(
+        userId: widget.userId,
+        consentedMetrics: consentedMetrics,
+        direction: SyncDirection.write,
+        startDate: DateTime.now().subtract(const Duration(days: 90)),
+        measurements: _measurements,
+      );
+
+      syncResult.fold(
+        (failure) {
+          if (!mounted) return;
+          SnackBarService.showError(context, failure.message);
+        },
+        (result) {
+          if (!mounted) return;
+          SnackBarService.showSuccess(
+            context,
+            context.l10n.bodyMeasurementsExportSuccess(result.writeCount),
+          );
+        },
+      );
+    } finally {
+      if (mounted) {
+        setState(() => _isImporting = false);
       }
     }
   }
 
   /// Show HealthKit consent dialog and handle consent grant
-  /// Returns true if consent was granted, false otherwise
   Future<bool> _showHealthKitConsentDialog() async {
     final l10n = context.l10n;
 
@@ -255,21 +408,15 @@ class _MeasurementListScreenState extends ConsumerState<MeasurementListScreen> {
       ),
     );
 
-    if (result != true) {
-      return false;
-    }
+    if (result != true) return false;
 
-    // User accepted - grant consent for essential metrics
     final consentRepo = ref.read(consentRepositoryProvider);
-
-    // First check if consent record exists, if not create it
     final existingConsent = await consentRepo.getConsent(widget.userId);
 
     if (existingConsent.isLeft()) {
-      // No consent record exists - create initial consent
       final createResult = await consentRepo.createInitialConsent(
         userId: widget.userId,
-        ipAddress: '0.0.0.0', // Placeholder - can't get real IP easily
+        ipAddress: '0.0.0.0',
       );
 
       final createFailed = createResult.fold(
@@ -288,7 +435,6 @@ class _MeasurementListScreenState extends ConsumerState<MeasurementListScreen> {
       }
     }
 
-    // Grant consent for essential metrics (weight, body fat, height, lean mass, BMI, BMR)
     final grantResult = await consentRepo.grantConsent(
       userId: widget.userId,
       group: MetricGroup.essential,
@@ -325,11 +471,7 @@ class _MeasurementListScreenState extends ConsumerState<MeasurementListScreen> {
       padding: const EdgeInsets.only(bottom: 4),
       child: Row(
         children: [
-          Icon(
-            AppIcons.check,
-            size: 16,
-            color: context.colors.primary,
-          ),
+          Icon(AppIcons.check, size: 16, color: context.colors.primary),
           const SizedBox(width: 8),
           Text(text, style: context.textTheme.bodySmall),
         ],
@@ -337,7 +479,6 @@ class _MeasurementListScreenState extends ConsumerState<MeasurementListScreen> {
     );
   }
 
-  /// Get error message from ConsentFailure
   String _getConsentFailureMessage(ConsentFailure failure) {
     return switch (failure) {
       FirebaseConsentFailure(:final message) => message,
@@ -350,68 +491,8 @@ class _MeasurementListScreenState extends ConsumerState<MeasurementListScreen> {
     };
   }
 
-  /// Load measurements from repository
-  Future<void> _loadMeasurements() async {
-    setState(() {
-      _isLoading = true;
-    });
-
-    final measurementRepo = ref.read(measurementRepositoryProvider);
-    final result = await measurementRepo.getMeasurements(
-      widget.userId,
-      filterByType: _selectedFilter,
-    );
-
-    result.fold(
-      (failure) {
-        if (!mounted) return;
-        SnackBarService.showError(
-          context,
-          'Failed to load measurements: $failure',
-        );
-        setState(() {
-          _isLoading = false;
-        });
-      },
-      (measurements) {
-        if (!mounted) return;
-        setState(() {
-          _measurements = measurements;
-          _isLoading = false;
-        });
-      },
-    );
-  }
-
-  /// Handle filter change
-  Future<void> _onFilterChanged(MetricType? newFilter) async {
-    setState(() {
-      _selectedFilter = newFilter;
-    });
-    await _loadMeasurements();
-  }
-
-  /// Handle edit action
-  void _onEdit(Measurement measurement) async {
-    final result = await Navigator.push<bool>(
-      context,
-      MaterialPageRoute(
-        builder: (_) => MeasurementInputScreen(
-          userId: widget.userId,
-          existingMeasurement: measurement,
-        ),
-      ),
-    );
-
-    // Reload list if measurement was updated
-    if (result == true) {
-      await _loadMeasurements();
-    }
-  }
-
   /// Handle delete action
   Future<void> _onDelete(Measurement measurement) async {
-    // Show confirmation dialog
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (_) => AlertDialog(
@@ -435,7 +516,6 @@ class _MeasurementListScreenState extends ConsumerState<MeasurementListScreen> {
 
     if (confirmed != true) return;
 
-    // Perform deletion
     final measurementRepo = ref.read(measurementRepositoryProvider);
     final result = await measurementRepo.deleteMeasurement(
       measurementId: measurement.id,
@@ -456,12 +536,28 @@ class _MeasurementListScreenState extends ConsumerState<MeasurementListScreen> {
           context,
           context.l10n.bodyMeasurementsListDeleteSuccess,
         );
-        _loadMeasurements();
+        _loadData();
       },
     );
   }
 
-  /// Get localized label for metric type
+  /// Handle edit action
+  void _onEdit(Measurement measurement) async {
+    final result = await Navigator.push<bool>(
+      context,
+      MaterialPageRoute(
+        builder: (_) => MeasurementInputScreen(
+          userId: widget.userId,
+          existingMeasurement: measurement,
+        ),
+      ),
+    );
+
+    if (result == true) {
+      await _loadData();
+    }
+  }
+
   String _getMetricLabel(MetricType metric) {
     switch (metric) {
       case MetricType.weight:
@@ -513,7 +609,44 @@ class _MeasurementListScreenState extends ConsumerState<MeasurementListScreen> {
     }
   }
 
-  /// Format date for display
+  IconData _getMetricIcon(MetricType metric) {
+    switch (metric) {
+      case MetricType.weight:
+        return AppIcons.weight;
+      case MetricType.height:
+        return AppIcons.height;
+      case MetricType.bodyFatPercentage:
+        return AppIcons.percent;
+      case MetricType.leanMass:
+        return AppIcons.workout;
+      case MetricType.bmi:
+        return AppIcons.calculate;
+      case MetricType.bmr:
+        return AppIcons.streak;
+      case MetricType.neckCircumference:
+      case MetricType.shoulderCircumference:
+      case MetricType.chestCircumference:
+      case MetricType.waistCircumference:
+      case MetricType.abdomenCircumference:
+      case MetricType.hipCircumference:
+      case MetricType.bicepLeftCircumference:
+      case MetricType.bicepRightCircumference:
+      case MetricType.forearmLeftCircumference:
+      case MetricType.forearmRightCircumference:
+      case MetricType.thighLeftCircumference:
+      case MetricType.thighRightCircumference:
+      case MetricType.calfLeftCircumference:
+      case MetricType.calfRightCircumference:
+        return AppIcons.straighten;
+      case MetricType.bodyTemperature:
+        return AppIcons.thermostat;
+      case MetricType.waterMass:
+        return AppIcons.waterDrop;
+      case MetricType.boneMass:
+        return AppIcons.accessibility;
+    }
+  }
+
   String _formatDate(DateTime date) {
     final now = DateTime.now();
     final difference = now.difference(date);
@@ -529,6 +662,35 @@ class _MeasurementListScreenState extends ConsumerState<MeasurementListScreen> {
       return DateFormat.yMd(Localizations.localeOf(context).toString())
           .format(date);
     }
+  }
+
+  /// Compute trend text for a metric by comparing last two values
+  String? _getTrendText(MetricType metricType) {
+    final filtered = _measurements
+        .where((m) => m.metricType == metricType)
+        .toList()
+      ..sort((a, b) => b.timestamp.compareTo(a.timestamp));
+
+    if (filtered.length < 2) return null;
+
+    final diff = filtered[0].value - filtered[1].value;
+    if (diff == 0) return null;
+    final sign = diff > 0 ? '+' : '';
+    return '$sign${diff.toStringAsFixed(1)}';
+  }
+
+  TrendDirection? _getTrendDirection(MetricType metricType) {
+    final filtered = _measurements
+        .where((m) => m.metricType == metricType)
+        .toList()
+      ..sort((a, b) => b.timestamp.compareTo(a.timestamp));
+
+    if (filtered.length < 2) return null;
+
+    final diff = filtered[0].value - filtered[1].value;
+    if (diff > 0) return TrendDirection.up;
+    if (diff < 0) return TrendDirection.down;
+    return TrendDirection.neutral;
   }
 
   @override
@@ -550,74 +712,53 @@ class _MeasurementListScreenState extends ConsumerState<MeasurementListScreen> {
               );
             },
           ),
-          // Import from HealthKit button (iOS only)
+          // Apple Health sync menu (iOS only)
           if (Platform.isIOS)
             _isImporting
                 ? const Padding(
                     padding: EdgeInsets.all(16),
                     child: LoadingIndicator(size: 20),
                   )
-                : IconButton(
-                    icon: const Icon(AppIcons.download),
-                    tooltip: context.l10n.bodyMeasurementsImportFromHealth,
-                    onPressed: _importFromHealthKit,
-                  ),
-          // Filter dropdown
-          PopupMenuButton<MetricType?>(
-            icon: const Icon(AppIcons.filterListOutlined),
-            tooltip: context.l10n.bodyMeasurementsListFilterByMetric,
-            onSelected: _onFilterChanged,
-            itemBuilder: (context) {
-              return [
-                // "All" option
-                PopupMenuItem<MetricType?>(
-                  value: null,
-                  child: Row(
-                    children: [
-                      if (_selectedFilter == null)
-                        Icon(
-                          AppIcons.check,
-                          color: context.colors.primary,
-                          size: 20,
+                : PopupMenuButton<String>(
+                    icon: const Icon(AppIcons.healthAndSafety),
+                    tooltip: context.l10n.bodyMeasurementsSyncWithHealth,
+                    onSelected: (action) {
+                      if (action == 'import') {
+                        _importFromHealthKit();
+                      } else if (action == 'export') {
+                        _exportToHealthKit();
+                      }
+                    },
+                    itemBuilder: (context) => [
+                      PopupMenuItem(
+                        value: 'import',
+                        child: Row(
+                          children: [
+                            const Icon(AppIcons.download, size: 20),
+                            const SizedBox(width: 8),
+                            Text(context.l10n.bodyMeasurementsImportFromHealth),
+                          ],
                         ),
-                      if (_selectedFilter == null) const SizedBox(width: 8),
-                      Text(context.l10n.bodyMeasurementsListFilterAll),
+                      ),
+                      PopupMenuItem(
+                        value: 'export',
+                        child: Row(
+                          children: [
+                            const Icon(AppIcons.upload, size: 20),
+                            const SizedBox(width: 8),
+                            Text(context.l10n.bodyMeasurementsExportToHealth),
+                          ],
+                        ),
+                      ),
                     ],
                   ),
-                ),
-                const PopupMenuDivider(),
-                // Metric type options
-                ...MetricType.values.map((metric) {
-                  return PopupMenuItem<MetricType?>(
-                    value: metric,
-                    child: Row(
-                      children: [
-                        if (_selectedFilter == metric)
-                          Icon(
-                            AppIcons.check,
-                            color: context.colors.primary,
-                            size: 20,
-                          ),
-                        if (_selectedFilter == metric) const SizedBox(width: 8),
-                        Expanded(
-                          child: Text(_getMetricLabel(metric)),
-                        ),
-                      ],
-                    ),
-                  );
-                }),
-              ];
-            },
-          ),
         ],
       ),
       body: RefreshIndicator(
-        onRefresh: _loadMeasurements,
+        onRefresh: _loadData,
         child: _isLoading
             ? const Center(child: LoadingIndicator())
-            : _measurements.isEmpty
-                ? _buildEmptyState()
-                : _buildMeasurementList(),
+            : _buildDashboard(),
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
@@ -627,10 +768,8 @@ class _MeasurementListScreenState extends ConsumerState<MeasurementListScreen> {
               builder: (_) => MeasurementInputScreen(userId: widget.userId),
             ),
           );
-
-          // Reload list if measurement was added
           if (result == true) {
-            await _loadMeasurements();
+            await _loadData();
           }
         },
         child: const Icon(AppIcons.add),
@@ -638,106 +777,193 @@ class _MeasurementListScreenState extends ConsumerState<MeasurementListScreen> {
     );
   }
 
-  /// Build empty state when no measurements
-  Widget _buildEmptyState() {
-    return Center(
-      child: Padding(
-        padding: const EdgeInsets.all(24),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(
-              AppIcons.straighten,
-              size: 80,
-              color: context.colors.onSurfaceVariant,
-            ),
-            const SizedBox(height: 24),
-            Text(
-              context.l10n.bodyMeasurementsListEmpty,
-              textAlign: TextAlign.center,
-              style: context.textTheme.bodyLarge?.copyWith(
-                color: context.colors.onSurfaceVariant,
-              ),
-            ),
-            const SizedBox(height: 24),
-            FilledButton.icon(
-              onPressed: () async {
-                final result = await Navigator.push<bool>(
-                  context,
-                  MaterialPageRoute(
-                    builder: (_) =>
-                        MeasurementInputScreen(userId: widget.userId),
-                  ),
-                );
+  Widget _buildDashboard() {
+    return ListView(
+      padding: const EdgeInsets.all(16),
+      children: [
+        // A) Essential Metrics Dashboard
+        _buildSectionHeader(context.l10n.bodyMeasurementsEssentialMetrics),
+        const SizedBox(height: 8),
+        _buildMetricGrid(_essentialMetrics),
 
-                if (result == true) {
-                  await _loadMeasurements();
-                }
-              },
-              icon: const Icon(AppIcons.add),
-              label: Text(context.l10n.bodyMeasurementsInputTitle),
-            ),
-          ],
+        const SizedBox(height: 24),
+
+        // B) Circumferences (collapsible)
+        _buildCollapsibleSection(
+          title: context.l10n.bodyMeasurementsCircumferences,
+          metrics: _circumferenceMetrics,
+          isExpanded: _circumferencesExpanded,
+          onToggle: () => setState(() {
+            _circumferencesExpanded = !_circumferencesExpanded;
+          }),
         ),
+
+        const SizedBox(height: 16),
+
+        // C) Vitals (collapsible)
+        _buildCollapsibleSection(
+          title: context.l10n.bodyMeasurementsVitals,
+          metrics: _vitalMetrics,
+          isExpanded: _vitalsExpanded,
+          onToggle: () => setState(() {
+            _vitalsExpanded = !_vitalsExpanded;
+          }),
+        ),
+
+        const SizedBox(height: 24),
+
+        // D) Recent history
+        if (_measurements.isNotEmpty) ...[
+          _buildSectionHeader(context.l10n.bodyMeasurementsRecentHistory),
+          const SizedBox(height: 8),
+          _buildRecentHistory(),
+        ],
+      ],
+    );
+  }
+
+  Widget _buildSectionHeader(String title) {
+    return Text(
+      title,
+      style: context.textTheme.titleSmall?.copyWith(
+        fontWeight: FontWeight.bold,
+        color: context.colors.primary,
       ),
     );
   }
 
-  /// Build measurement list
-  Widget _buildMeasurementList() {
-    // Group measurements by date
+  Widget _buildMetricGrid(List<MetricType> metrics) {
+    return GridView.builder(
+      shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
+      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: 2,
+        childAspectRatio: 1.4,
+        crossAxisSpacing: 12,
+        mainAxisSpacing: 12,
+      ),
+      itemCount: metrics.length,
+      itemBuilder: (context, index) {
+        final metric = metrics[index];
+        final latest = _latestByType[metric];
+        final hasData = latest != null;
+        final trendText = _getTrendText(metric);
+        final trendDir = _getTrendDirection(metric);
+
+        return MetricCard(
+          label: _getMetricLabel(metric),
+          value: hasData
+              ? latest.value.toStringAsFixed(1)
+              : context.l10n.bodyMeasurementsNoData,
+          unit: hasData ? latest.unit : null,
+          icon: _getMetricIcon(metric),
+          trend: trendDir,
+          trendValue: trendText,
+          size: MetricSize.small,
+          onTap: () => _onMetricCardTap(metric),
+          backgroundColor: hasData
+              ? null
+              : context.colors.surfaceContainerHighest.withValues(alpha: 0.3),
+        );
+      },
+    );
+  }
+
+  Widget _buildCollapsibleSection({
+    required String title,
+    required List<MetricType> metrics,
+    required bool isExpanded,
+    required VoidCallback onToggle,
+  }) {
+    final hasAnyData = metrics.any((m) => _latestByType.containsKey(m));
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        InkWell(
+          onTap: onToggle,
+          borderRadius: BorderRadius.circular(8),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(vertical: 8),
+            child: Row(
+              children: [
+                Icon(
+                  isExpanded ? AppIcons.expandLess : AppIcons.expandMore,
+                  color: context.colors.onSurfaceVariant,
+                ),
+                const SizedBox(width: 8),
+                Text(
+                  title,
+                  style: context.textTheme.titleSmall?.copyWith(
+                    fontWeight: FontWeight.bold,
+                    color: context.colors.primary,
+                  ),
+                ),
+                if (!hasAnyData) ...[
+                  const SizedBox(width: 8),
+                  Text(
+                    context.l10n.bodyMeasurementsTapToAdd,
+                    style: context.textTheme.bodySmall?.copyWith(
+                      color: context.colors.onSurfaceVariant,
+                    ),
+                  ),
+                ],
+              ],
+            ),
+          ),
+        ),
+        if (isExpanded) ...[
+          const SizedBox(height: 8),
+          _buildMetricGrid(metrics),
+        ],
+      ],
+    );
+  }
+
+  Widget _buildRecentHistory() {
+    // Group measurements by date (show only last 20)
+    final recentMeasurements = _measurements.take(20).toList();
     final groupedMeasurements = <DateTime, List<Measurement>>{};
-    for (final measurement in _measurements) {
+
+    for (final measurement in recentMeasurements) {
       final date = DateTime(
         measurement.timestamp.year,
         measurement.timestamp.month,
         measurement.timestamp.day,
       );
-
-      if (!groupedMeasurements.containsKey(date)) {
-        groupedMeasurements[date] = [];
-      }
-      groupedMeasurements[date]!.add(measurement);
+      groupedMeasurements.putIfAbsent(date, () => []).add(measurement);
     }
 
-    // Sort dates descending (most recent first)
     final sortedDates = groupedMeasurements.keys.toList()
       ..sort((a, b) => b.compareTo(a));
 
-    return ListView.builder(
-      padding: const EdgeInsets.all(16),
-      itemCount: sortedDates.length,
-      itemBuilder: (context, index) {
-        final date = sortedDates[index];
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: sortedDates.map((date) {
         final measurements = groupedMeasurements[date]!;
-
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Date header
             Padding(
               padding: const EdgeInsets.only(left: 4, bottom: 8),
               child: Text(
                 _formatDate(date),
-                style: context.textTheme.titleSmall?.copyWith(
-                  fontWeight: FontWeight.bold,
-                  color: context.colors.primary,
+                style: context.textTheme.labelMedium?.copyWith(
+                  color: context.colors.onSurfaceVariant,
                 ),
               ),
             ),
-
-            // Measurements for this date
             ...measurements.map((measurement) {
               return Card(
-                margin: const EdgeInsets.only(bottom: 12),
+                margin: const EdgeInsets.only(bottom: 8),
                 child: ListTile(
                   contentPadding: const EdgeInsets.symmetric(
                     horizontal: 16,
-                    vertical: 8,
+                    vertical: 4,
                   ),
                   leading: Container(
-                    width: 48,
-                    height: 48,
+                    width: 40,
+                    height: 40,
                     decoration: BoxDecoration(
                       color: context.colors.primaryContainer,
                       borderRadius: BorderRadius.circular(8),
@@ -745,9 +971,13 @@ class _MeasurementListScreenState extends ConsumerState<MeasurementListScreen> {
                     child: Icon(
                       _getMetricIcon(measurement.metricType),
                       color: context.colors.onPrimaryContainer,
+                      size: 20,
                     ),
                   ),
-                  title: Text(_getMetricLabel(measurement.metricType)),
+                  title: Text(
+                    _getMetricLabel(measurement.metricType),
+                    style: context.textTheme.bodyMedium,
+                  ),
                   subtitle: Text(
                     DateFormat.Hm(Localizations.localeOf(context).toString())
                         .format(measurement.timestamp),
@@ -756,30 +986,30 @@ class _MeasurementListScreenState extends ConsumerState<MeasurementListScreen> {
                   trailing: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      // Value display
-                      Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.end,
-                        children: [
-                          Text(
-                            measurement.value.toStringAsFixed(1),
-                            style: context.textTheme.titleMedium?.copyWith(
-                              fontWeight: FontWeight.bold,
+                      Text.rich(
+                        TextSpan(
+                          children: [
+                            TextSpan(
+                              text: measurement.value.toStringAsFixed(1),
+                              style: context.textTheme.titleSmall?.copyWith(
+                                fontWeight: FontWeight.bold,
+                              ),
                             ),
-                          ),
-                          Text(
-                            measurement.unit,
-                            style: context.textTheme.bodySmall?.copyWith(
-                              color: context.colors.onSurfaceVariant,
+                            TextSpan(
+                              text: ' ${measurement.unit}',
+                              style: context.textTheme.bodySmall?.copyWith(
+                                color: context.colors.onSurfaceVariant,
+                              ),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
-                      const SizedBox(width: 16),
-
-                      // Actions menu
                       PopupMenuButton<String>(
-                        icon: const Icon(AppIcons.moreVert),
+                        icon: Icon(
+                          AppIcons.moreVert,
+                          size: 20,
+                          color: context.colors.onSurfaceVariant,
+                        ),
                         onSelected: (action) {
                           if (action == 'edit') {
                             _onEdit(measurement);
@@ -824,50 +1054,10 @@ class _MeasurementListScreenState extends ConsumerState<MeasurementListScreen> {
                 ),
               );
             }),
-
             const SizedBox(height: 8),
           ],
         );
-      },
+      }).toList(),
     );
-  }
-
-  /// Get icon for metric type
-  IconData _getMetricIcon(MetricType metric) {
-    switch (metric) {
-      case MetricType.weight:
-        return AppIcons.weight;
-      case MetricType.height:
-        return AppIcons.height;
-      case MetricType.bodyFatPercentage:
-        return AppIcons.percent;
-      case MetricType.leanMass:
-        return AppIcons.workout;
-      case MetricType.bmi:
-        return AppIcons.calculate;
-      case MetricType.bmr:
-        return AppIcons.streak;
-      case MetricType.neckCircumference:
-      case MetricType.shoulderCircumference:
-      case MetricType.chestCircumference:
-      case MetricType.waistCircumference:
-      case MetricType.abdomenCircumference:
-      case MetricType.hipCircumference:
-      case MetricType.bicepLeftCircumference:
-      case MetricType.bicepRightCircumference:
-      case MetricType.forearmLeftCircumference:
-      case MetricType.forearmRightCircumference:
-      case MetricType.thighLeftCircumference:
-      case MetricType.thighRightCircumference:
-      case MetricType.calfLeftCircumference:
-      case MetricType.calfRightCircumference:
-        return AppIcons.straighten;
-      case MetricType.bodyTemperature:
-        return AppIcons.thermostat;
-      case MetricType.waterMass:
-        return AppIcons.waterDrop;
-      case MetricType.boneMass:
-        return AppIcons.accessibility;
-    }
   }
 }

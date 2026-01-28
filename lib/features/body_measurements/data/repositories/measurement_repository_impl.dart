@@ -273,6 +273,25 @@ class MeasurementRepositoryImpl with FirebaseErrorMapperMixin implements Measure
   }
 
   @override
+  Future<Either<MeasurementFailure, Map<MetricType, Measurement>>> getLatestMeasurementsByType(
+    String userId,
+  ) async {
+    // Get all measurements then group by type and pick latest
+    final result = await getMeasurements(userId);
+
+    return result.map((measurements) {
+      final latestByType = <MetricType, Measurement>{};
+      for (final m in measurements) {
+        final existing = latestByType[m.metricType];
+        if (existing == null || m.timestamp.isAfter(existing.timestamp)) {
+          latestByType[m.metricType] = m;
+        }
+      }
+      return latestByType;
+    });
+  }
+
+  @override
   Future<Either<MeasurementFailure, void>> updateMeasurement(
     Measurement measurement,
   ) async {

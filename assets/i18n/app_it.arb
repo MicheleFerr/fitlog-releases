@@ -14616,6 +14616,67 @@
   "@bodyMeasurementsHealthKitConsentGranted": {
     "description": "Messaggio successo dopo consenso"
   },
+  "bodyMeasurementsNoData": "--",
+  "@bodyMeasurementsNoData": {
+    "description": "Placeholder per card senza dati"
+  },
+  "bodyMeasurementsTapToAdd": "Tocca per aggiungere",
+  "@bodyMeasurementsTapToAdd": {
+    "description": "Testo suggerimento su card metrica senza dati"
+  },
+  "bodyMeasurementsExportToHealth": "Esporta su Apple Health",
+  "@bodyMeasurementsExportToHealth": {
+    "description": "Esporta misurazioni su Apple Health"
+  },
+  "bodyMeasurementsSyncWithHealth": "Sincronizza con Apple Health",
+  "@bodyMeasurementsSyncWithHealth": {
+    "description": "Sincronizza misurazioni con Apple Health"
+  },
+  "bodyMeasurementsExportSuccess": "Esportate {count} misurazioni",
+  "@bodyMeasurementsExportSuccess": {
+    "description": "Messaggio successo dopo esportazione",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "bodyMeasurementsEssentialMetrics": "Metriche essenziali",
+  "@bodyMeasurementsEssentialMetrics": {
+    "description": "Titolo sezione metriche essenziali"
+  },
+  "bodyMeasurementsCircumferences": "Circonferenze",
+  "@bodyMeasurementsCircumferences": {
+    "description": "Titolo sezione circonferenze"
+  },
+  "bodyMeasurementsVitals": "Vitali",
+  "@bodyMeasurementsVitals": {
+    "description": "Titolo sezione metriche vitali"
+  },
+  "bodyMeasurementsChartsSummaryMin": "Min",
+  "@bodyMeasurementsChartsSummaryMin": {
+    "description": "Etichetta valore minimo nel riepilogo grafico"
+  },
+  "bodyMeasurementsChartsSummaryMax": "Max",
+  "@bodyMeasurementsChartsSummaryMax": {
+    "description": "Etichetta valore massimo nel riepilogo grafico"
+  },
+  "bodyMeasurementsChartsSummaryCurrent": "Attuale",
+  "@bodyMeasurementsChartsSummaryCurrent": {
+    "description": "Etichetta valore attuale nel riepilogo grafico"
+  },
+  "bodyMeasurementsChartsTrend": "Trend",
+  "@bodyMeasurementsChartsTrend": {
+    "description": "Etichetta trend nel riepilogo grafico"
+  },
+  "bodyMeasurementsStartWithWeight": "Inizia col peso",
+  "@bodyMeasurementsStartWithWeight": {
+    "description": "Suggerimento per iniziare a tracciare il peso"
+  },
+  "bodyMeasurementsRecentHistory": "Cronologia recente",
+  "@bodyMeasurementsRecentHistory": {
+    "description": "Titolo sezione cronologia recente"
+  },
   "weeks": "settimane",
   "@weeks": {
     "description": "Unità per settimane"

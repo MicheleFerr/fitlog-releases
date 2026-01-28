@@ -182,6 +182,21 @@ abstract class MeasurementRepository {
     required SyncDirection direction,
   });
 
+  /// Get the latest measurement for each metric type
+  ///
+  /// Returns a map of MetricType -> latest Measurement for efficient dashboard display.
+  /// Only returns metrics user has consented to.
+  ///
+  /// Parameters:
+  /// - [userId]: Firebase Auth UID
+  ///
+  /// Returns:
+  /// - Right(Map<MetricType, Measurement>): Latest measurement per metric type
+  /// - Left(StorageFailure): Error fetching data
+  Future<Either<MeasurementFailure, Map<MetricType, Measurement>>> getLatestMeasurementsByType(
+    String userId,
+  );
+
   /// Get sync conflicts (measurements with different values on device vs cloud)
   ///
   /// Conflicts occur when:
@@ -256,11 +271,15 @@ class SyncResult {
   /// Timestamp when sync completed
   final DateTime syncedAt;
 
+  /// Measurements imported from health platform (for persistence by caller)
+  final List<Measurement> importedMeasurements;
+
   const SyncResult({
     required this.readCount,
     required this.writeCount,
     required this.conflictCount,
     required this.syncedAt,
+    this.importedMeasurements = const [],
   });
 }
 
