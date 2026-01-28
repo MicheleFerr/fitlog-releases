@@ -286,6 +286,8 @@ class HealthKitService {
   }
 
   /// Write measurement to HealthKit
+  ///
+  /// Converts app values to HealthKit SI units before writing.
   Future<Either<HealthPlatformFailure, void>> writeMeasurement(
     Measurement measurement,
   ) async {
@@ -300,8 +302,14 @@ class HealthKitService {
 
       final healthType = _mapMetricTypeToHealthDataType(measurement.metricType);
 
+      // Convert app units back to HealthKit SI units
+      final healthKitValue = _convertToHealthKitValue(
+        measurement.value,
+        measurement.metricType,
+      );
+
       final success = await _health.writeHealthData(
-        value: measurement.value,
+        value: healthKitValue,
         type: healthType,
         startTime: measurement.timestamp,
         endTime: measurement.timestamp,
@@ -495,6 +503,16 @@ class HealthKitService {
   }
 
   /// Convert HealthKit HealthDataPoint to Measurement entity
+  ///
+  /// **Unit Conversion** (HealthKit uses SI units):
+  /// - HEIGHT: meters → cm (×100)
+  /// - BODY_FAT_PERCENTAGE: ratio (0-1) → % (0-100) (×100)
+  /// - WAIST_CIRCUMFERENCE: meters → cm (×100)
+  /// - WEIGHT, LEAN_BODY_MASS: kg (no conversion)
+  /// - BMI: kg/m² (no conversion)
+  /// - BODY_TEMPERATURE: °C (no conversion)
+  ///
+  /// Reference: https://pub.dev/packages/health
   Measurement _healthDataPointToMeasurement(
     HealthDataPoint dataPoint,
     String userId,
@@ -502,19 +520,84 @@ class HealthKitService {
   ) {
     // health package v13+ returns NumericHealthValue, not raw num
     final healthValue = dataPoint.value;
-    final numericValue = healthValue is NumericHealthValue
+    final rawValue = healthValue is NumericHealthValue
         ? healthValue.numericValue.toDouble()
         : 0.0;
+
+    // Apply unit conversion based on metric type
+    final convertedValue = _convertHealthKitValue(rawValue, metricType);
 
     return Measurement(
       id: const Uuid().v4(),
       userId: userId,
       metricType: metricType,
-      value: numericValue,
+      value: convertedValue,
       unit: metricType.defaultUnit,
       timestamp: dataPoint.dateFrom,
       source: MeasurementSource.healthKit,
       notes: 'Imported from HealthKit',
     );
+  }
+
+  /// Convert HealthKit raw value to app's expected unit
+  ///
+  /// HealthKit stores values in SI units:
+  /// - Height/circumferences in METERS
+  /// - Body fat percentage as RATIO (0-1, not 0-100)
+  /// - Weight in KILOGRAMS
+  double _convertHealthKitValue(double rawValue, MetricType metricType) {
+    switch (metricType) {
+      // Meters → Centimeters (×100)
+      case MetricType.height:
+      case MetricType.waistCircumference:
+        return rawValue * 100;
+
+      // Ratio (0-1) → Percentage (0-100)
+      case MetricType.bodyFatPercentage:
+        // HealthKit may return 0.18 for 18% or 18.0 for 18%
+        // If value > 1, assume it's already in percentage form
+        return rawValue <= 1.0 ? rawValue * 100 : rawValue;
+
+      // Already in correct units (kg, kg/m², °C)
+      case MetricType.weight:
+      case MetricType.leanMass:
+      case MetricType.bmi:
+      case MetricType.bodyTemperature:
+        return rawValue;
+
+      // Should not reach here for HealthKit-supported types
+      default:
+        return rawValue;
+    }
+  }
+
+  /// Convert app value to HealthKit SI units (inverse of _convertHealthKitValue)
+  ///
+  /// Used when writing measurements to HealthKit.
+  /// - Centimeters → Meters (÷100)
+  /// - Percentage (0-100) → Ratio (0-1) (÷100)
+  double _convertToHealthKitValue(double appValue, MetricType metricType) {
+    switch (metricType) {
+      // Centimeters → Meters (÷100)
+      case MetricType.height:
+      case MetricType.waistCircumference:
+        return appValue / 100;
+
+      // Percentage (0-100) → Ratio (0-1)
+      case MetricType.bodyFatPercentage:
+        // If value > 1, assume it's in percentage form and convert to ratio
+        return appValue > 1.0 ? appValue / 100 : appValue;
+
+      // Already in correct HealthKit units (kg, kg/m², °C)
+      case MetricType.weight:
+      case MetricType.leanMass:
+      case MetricType.bmi:
+      case MetricType.bodyTemperature:
+        return appValue;
+
+      // Should not reach here for HealthKit-supported types
+      default:
+        return appValue;
+    }
   }
 }
