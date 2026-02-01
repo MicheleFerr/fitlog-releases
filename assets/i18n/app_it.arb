@@ -19900,5 +19900,21 @@
   "renewalFailed": "Impossibile rinnovare l'esercizio. Riprova.",
   "@renewalFailed": {
     "description": "Messaggio errore quando il rinnovo fallisce"
+  },
+  "weightSuggestionFromHistory": "Ultimo allenamento",
+  "@weightSuggestionFromHistory": {
+    "description": "Etichetta chip suggerimento peso - dallo storico"
+  },
+  "weightSuggestionFromStandard": "Suggerito per te",
+  "@weightSuggestionFromStandard": {
+    "description": "Etichetta chip suggerimento peso - da strength standards"
+  },
+  "weightSuggestionProgressiveOverload": "Sovraccarico progressivo",
+  "@weightSuggestionProgressiveOverload": {
+    "description": "Etichetta chip suggerimento peso - aumento progressivo"
+  },
+  "weightSuggestionFallback": "Stima conservativa",
+  "@weightSuggestionFallback": {
+    "description": "Etichetta chip suggerimento peso - stima fallback"
   }
 }

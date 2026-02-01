@@ -26493,4 +26493,16 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get renewalFailed => 'Could not renew exercise. Please try again.';
+
+  @override
+  String get weightSuggestionFromHistory => 'Last workout';
+
+  @override
+  String get weightSuggestionFromStandard => 'Suggested for you';
+
+  @override
+  String get weightSuggestionProgressiveOverload => 'Progressive overload';
+
+  @override
+  String get weightSuggestionFallback => 'Conservative estimate';
 }

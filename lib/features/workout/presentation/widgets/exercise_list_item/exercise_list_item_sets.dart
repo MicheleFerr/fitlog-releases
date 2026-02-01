@@ -9,6 +9,7 @@ import 'package:gymbro_flutter_new/features/workout/presentation/widgets/rpe_sel
 import 'package:gymbro_flutter_new/features/workout/presentation/widgets/add_dropset_stage_modal.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/widgets/add_rest_pause_set_modal.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/providers/exercise_expansion_provider.dart';
+import 'package:gymbro_flutter_new/features/workout/presentation/providers/exercise_weight_prefill_provider.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/providers/set_display_provider.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/providers/set_duration_tracker_provider.dart';
 import 'package:gymbro_flutter_new/shared/domain/entities/app_config.dart';
@@ -94,6 +95,29 @@ class _ExerciseListItemSetsState extends ConsumerState<ExerciseListItemSets> {
         oldWidget.exercise.id != widget.exercise.id) {
       _cachedCountingMode = ExerciseCountingModeService.getModeFromWorkoutExercise(widget.exercise);
     }
+  }
+
+  /// Localized label for a [PrefillSource].
+  String _prefillSourceLabel(PrefillSource source) {
+    switch (source) {
+      case PrefillSource.history:
+        return context.l10n.weightSuggestionFromHistory;
+      case PrefillSource.progressiveOverload:
+        return context.l10n.weightSuggestionProgressiveOverload;
+      case PrefillSource.strengthStandard:
+        return context.l10n.weightSuggestionFromStandard;
+      case PrefillSource.fallback:
+        return context.l10n.weightSuggestionFallback;
+    }
+  }
+
+  /// Whether [set]'s weight matches the prefill suggestion (not yet edited).
+  bool _isSuggestedWeight(ExerciseSet set) {
+    if (set.isCompleted || set.weight == null) return false;
+    final prefill = ref.read(exerciseWeightPrefillProvider(widget.exercise.name));
+    final prefillValue = prefill.valueOrNull;
+    if (prefillValue == null) return false;
+    return (set.weight! - prefillValue.weight).abs() < 0.01;
   }
 
   @override
@@ -511,6 +535,16 @@ class _ExerciseListItemSetsState extends ConsumerState<ExerciseListItemSets> {
                   children: [
                     ..._buildSetDetailsForMode(set, config),
 
+                    // Suggested weight indicator (lightbulb)
+                    if (_isSuggestedWeight(set)) ...[
+                      const SizedBox(width: 4),
+                      Icon(
+                        AppIcons.lightbulbOutline,
+                        size: 14,
+                        color: context.colors.primary,
+                      ),
+                    ],
+
                     // RPE indicator if completed
                     if (set.isCompleted && set.rpe != null) ...[
                       const SizedBox(width: 8),
@@ -829,9 +863,17 @@ class _ExerciseListItemSetsState extends ConsumerState<ExerciseListItemSets> {
     // Haptic feedback for quick edit
     HapticFeedback.selectionClick();
 
+    // Suggested weight from prefill provider
+    final prefill = ref.read(exerciseWeightPrefillProvider(widget.exercise.name)).valueOrNull;
+    final suggestedSource = prefill != null
+        ? _prefillSourceLabel(prefill.source)
+        : null;
+
     // ✅ NEW: Use MinimalSetEditSheet for cleaner UX
     context.showMinimalSetEditSheet(
       exerciseSet: set,
+      suggestedWeight: prefill?.weight,
+      suggestedSource: suggestedSource,
       onSave: (updatedSet) {
         final updatedSets = widget.exercise.sets.map((s) {
           return s.id == set.id ? updatedSet : s;

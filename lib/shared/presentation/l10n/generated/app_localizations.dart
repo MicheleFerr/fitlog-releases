@@ -47407,6 +47407,30 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Could not renew exercise. Please try again.'**
   String get renewalFailed;
+
+  /// Weight suggestion chip label - from workout history
+  ///
+  /// In en, this message translates to:
+  /// **'Last workout'**
+  String get weightSuggestionFromHistory;
+
+  /// Weight suggestion chip label - from strength standards
+  ///
+  /// In en, this message translates to:
+  /// **'Suggested for you'**
+  String get weightSuggestionFromStandard;
+
+  /// Weight suggestion chip label - progressive overload bump
+  ///
+  /// In en, this message translates to:
+  /// **'Progressive overload'**
+  String get weightSuggestionProgressiveOverload;
+
+  /// Weight suggestion chip label - fallback estimate
+  ///
+  /// In en, this message translates to:
+  /// **'Conservative estimate'**
+  String get weightSuggestionFallback;
 }
 
 class _AppLocalizationsDelegate

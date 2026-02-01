@@ -15,12 +15,12 @@ import 'package:gymbro_flutter_new/features/workout/services/pdf_template_servic
 import 'package:share_plus/share_plus.dart';
 import 'package:path_provider/path_provider.dart';
 import 'dart:io';
+import 'package:gymbro_flutter_new/features/workout/presentation/providers/exercise_weight_prefill_provider.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/providers/workout_provider.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/providers/workout_template_provider.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/providers/pdf_preferences_provider.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/widgets/add_exercise_modal.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/widgets/pdf_export_bottom_sheet.dart';
-import 'package:gymbro_flutter_new/features/workout/presentation/widgets/create_template_modal.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/widgets/quick_start/context_gathering_bottom_sheet.dart';
 import 'package:gymbro_flutter_new/features/scheduling/presentation/widgets/schedule_bottom_sheet.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/helpers/save_template_helper.dart';
@@ -28,7 +28,6 @@ import 'package:gymbro_flutter_new/features/workout/presentation/widgets/workout
 import 'package:gymbro_flutter_new/features/workout/presentation/screens/edit_template_screen.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/screens/workout_templates_screen.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/widgets/workout_customization_modal_v3.dart';
-import 'package:gymbro_flutter_new/features/timer/presentation/providers/unified_timer_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/services/snackbar_service.dart';
 import 'package:flutter/foundation.dart';
@@ -213,7 +212,6 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen>
     final fullWorkout = ref.read(currentWorkoutProvider);
 
     final controllerState = ref.watch(workoutScreenControllerProvider);
-    final shouldShowTimer = ref.watch(shouldShowTier1TimerProvider);
 
     // Determine which view to show
     // Note: paused workouts should show WorkoutView (not PreloadedView)
@@ -674,10 +672,14 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen>
       context,
       initialTab: initialTab,
       initialAdvancedTab: initialAdvancedTab,
-      onExerciseAdded: (exercise) {
+      onExerciseAdded: (exercise) async {
         debugPrint('🎯 [WorkoutScreen] CALLBACK RECEIVED: name=${exercise.name}, countingMode=${exercise.countingMode}');
         exerciseWasAdded = true;
-        ref.read(workoutScreenControllerProvider.notifier).addExercise(exercise);
+
+        // Pre-fill sets with suggested weight/reps (non-blocking, 2s timeout)
+        final exerciseToAdd = await _applyWeightPrefill(exercise);
+
+        ref.read(workoutScreenControllerProvider.notifier).addExercise(exerciseToAdd);
         // Note: Navigator.pop() is called by AddExerciseModal after this callback
         // Do NOT call pop() here - it would cause double-pop and black screen!
 
@@ -703,14 +705,39 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen>
     });
   }
 
-  /// Show create template modal
+  /// Apply weight pre-fill suggestions to an exercise's sets.
+  /// Returns the exercise with updated sets, or the original if no suggestion.
+  Future<Exercise> _applyWeightPrefill(Exercise exercise) async {
+    try {
+      final prefill = await ref
+          .read(exerciseWeightPrefillProvider(exercise.name).future)
+          .timeout(const Duration(seconds: 2), onTimeout: () => null);
+
+      if (prefill == null) return exercise;
+
+      final updatedSets = exercise.sets.map((s) {
+        return s.copyWith(
+          weight: s.weight ?? prefill.weight,
+          reps: s.reps ?? prefill.reps,
+        );
+      }).toList();
+
+      debugPrint(
+        '💡 [WeightPrefill] ${exercise.name}: '
+        '${prefill.weight}kg × ${prefill.reps} (${prefill.source.name})',
+      );
+
+      return exercise.copyWith(sets: updatedSets);
+    } catch (e) {
+      debugPrint('⚠️ [WeightPrefill] Error: $e');
+      return exercise;
+    }
+  }
+
+  /// Navigate to templates screen for template creation
+  /// Template creation now happens only from "Le mie schede" section
   void _showCreateTemplateModal(BuildContext context) {
-    showModalBottomSheet(
-      context: context,
-      isScrollControlled: true,
-      backgroundColor: context.colors.surface.withValues(alpha: 0),
-      builder: (context) => const CreateTemplateModal(),
-    );
+    context.go('/templates');
   }
 
   // ========================================================================

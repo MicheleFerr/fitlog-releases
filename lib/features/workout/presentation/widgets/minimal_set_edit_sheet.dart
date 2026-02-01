@@ -53,6 +53,8 @@ class MinimalSetEditSheet extends StatefulWidget {
     this.allSets,
     this.measurementUnit = 'kg',
     this.recentWeights,
+    this.suggestedWeight,
+    this.suggestedSource,
   });
 
   final ExerciseSet exerciseSet;
@@ -67,6 +69,8 @@ class MinimalSetEditSheet extends StatefulWidget {
   final List<ExerciseSet>? allSets; // All sets for dot indicators
   final String measurementUnit;
   final List<double>? recentWeights; // History of recent weights for quick select
+  final double? suggestedWeight; // Pre-fill weight from suggestion provider
+  final String? suggestedSource; // Source label for the suggestion chip
 
   @override
   State<MinimalSetEditSheet> createState() => _MinimalSetEditSheetState();
@@ -296,6 +300,10 @@ class _MinimalSetEditSheetState extends State<MinimalSetEditSheet> {
 
               // Dot indicators for sets
               if (_hasMultipleSets) _buildDotIndicators(),
+
+              // Suggested weight chip
+              if (widget.suggestedWeight != null)
+                _buildSuggestionChip(),
 
               // Recent weights chips
               if (widget.recentWeights != null && widget.recentWeights!.isNotEmpty)
@@ -912,6 +920,55 @@ class _MinimalSetEditSheetState extends State<MinimalSetEditSheet> {
     );
   }
 
+  /// Builds a highlighted chip for the AI-suggested weight.
+  Widget _buildSuggestionChip() {
+    final weight = widget.suggestedWeight!;
+    final isSelected = (_weight - weight).abs() < 0.01;
+    final label = widget.suggestedSource ?? '';
+
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 4),
+      child: Row(
+        children: [
+          ActionChip(
+            avatar: Icon(
+              AppIcons.lightbulbOutline,
+              size: 16,
+              color: isSelected
+                  ? context.colors.onPrimary
+                  : context.colors.primary,
+            ),
+            label: Text(
+              '${_formatWeight(weight)} ${widget.measurementUnit}'
+              '${label.isNotEmpty ? ' · $label' : ''}',
+            ),
+            labelStyle: context.textTheme.labelMedium?.copyWith(
+              color: isSelected
+                  ? context.colors.onPrimary
+                  : context.colors.primary,
+              fontWeight: FontWeight.w600,
+            ),
+            backgroundColor: isSelected
+                ? context.colors.primary
+                : context.colors.primary.withValues(alpha: 0.12),
+            side: BorderSide(
+              color: context.colors.primary.withValues(alpha: 0.4),
+            ),
+            onPressed: () {
+              HapticFeedback.selectionClick();
+              setState(() => _weight = weight);
+              _weightTextController.text = _formatWeight(weight);
+              final weightIndex = ((weight - _minWeight) / _weightStep)
+                  .round()
+                  .clamp(0, _weightItemCount - 1);
+              _weightController.jumpToItem(weightIndex);
+            },
+          ),
+        ],
+      ),
+    );
+  }
+
   /// Builds chips row with recent weights for quick selection
   Widget _buildRecentWeightsChips() {
     final weights = widget.recentWeights!;
@@ -1004,6 +1061,8 @@ extension MinimalSetEditSheetExtension on BuildContext {
     List<ExerciseSet>? allSets,
     String measurementUnit = 'kg',
     List<double>? recentWeights,
+    double? suggestedWeight,
+    String? suggestedSource,
   }) {
     return showModalBottomSheet<void>(
       context: this,
@@ -1022,6 +1081,8 @@ extension MinimalSetEditSheetExtension on BuildContext {
         allSets: allSets,
         measurementUnit: measurementUnit,
         recentWeights: recentWeights,
+        suggestedWeight: suggestedWeight,
+        suggestedSource: suggestedSource,
       ),
     );
   }

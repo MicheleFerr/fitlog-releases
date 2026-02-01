@@ -32481,5 +32481,21 @@
   "renewalFailed": "Could not renew exercise. Please try again.",
   "@renewalFailed": {
     "description": "Error message when renewal fails"
+  },
+  "weightSuggestionFromHistory": "Last workout",
+  "@weightSuggestionFromHistory": {
+    "description": "Weight suggestion chip label - from workout history"
+  },
+  "weightSuggestionFromStandard": "Suggested for you",
+  "@weightSuggestionFromStandard": {
+    "description": "Weight suggestion chip label - from strength standards"
+  },
+  "weightSuggestionProgressiveOverload": "Progressive overload",
+  "@weightSuggestionProgressiveOverload": {
+    "description": "Weight suggestion chip label - progressive overload bump"
+  },
+  "weightSuggestionFallback": "Conservative estimate",
+  "@weightSuggestionFallback": {
+    "description": "Weight suggestion chip label - fallback estimate"
   }
 }
