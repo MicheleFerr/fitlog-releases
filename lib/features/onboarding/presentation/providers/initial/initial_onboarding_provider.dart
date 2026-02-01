@@ -4,13 +4,22 @@ import 'package:gymbro_flutter_new/features/onboarding/domain/entities/initial/i
 import 'package:gymbro_flutter_new/features/strength_standards/domain/entities/user_fitness_questionnaire.dart';
 import 'package:gymbro_flutter_new/features/health_sync/domain/entities/health_data_type.dart';
 
-/// State for initial onboarding flow (5 steps, HealthKit moved to post-workout)
+/// State for initial onboarding flow (6 steps, Yazio-inspired)
+///
+/// Step 0: Welcome
+/// Step 1: Goal selection
+/// Step 2: Personal Info (sex + age)
+/// Step 3: Body measurements (height + weight + HealthKit)
+/// Step 4: Experience level
+/// Step 5: Frequency + Summary
 class InitialOnboardingState {
   const InitialOnboardingState({
     this.currentStep = 0,
-    this.totalSteps = 5,
+    this.totalSteps = 6,
     this.goal,
     this.sex,
+    this.age,
+    this.heightCm,
     this.bodyweightKg,
     this.experience,
     this.healthKitConnected = false,
@@ -27,21 +36,25 @@ class InitialOnboardingState {
   /// Total number of steps
   final int totalSteps;
 
-  // Step 2: Goal
+  // Step 1: Goal
   final TrainingGoalUI? goal;
 
-  // Step 3: Body data
+  // Step 2: Personal Info
   final BiologicalSex? sex;
+  final int? age;
+
+  // Step 3: Body measurements
+  final double? heightCm;
   final double? bodyweightKg;
 
   // Step 4: Experience
   final ExperienceLevelUI? experience;
 
-  // Step 5: HealthKit
+  // HealthKit
   final bool healthKitConnected;
   final List<HealthDataType> selectedHealthTypes;
 
-  // Step 6: Frequency
+  // Step 5: Frequency
   final int workoutsPerWeek;
 
   // UI State
@@ -56,11 +69,13 @@ class InitialOnboardingState {
         return true;
       case 1: // Goal
         return goal != null;
-      case 2: // Body data
-        return sex != null && bodyweightKg != null && bodyweightKg! >= 30;
-      case 3: // Experience
+      case 2: // Personal Info (sex + age)
+        return sex != null && age != null;
+      case 3: // Body measurements (height + weight)
+        return heightCm != null && bodyweightKg != null && bodyweightKg! >= 30;
+      case 4: // Experience
         return experience != null;
-      case 4: // Frequency (HealthKit moved to post-workout)
+      case 5: // Frequency + Summary
         return workoutsPerWeek >= 1 && workoutsPerWeek <= 7;
       default:
         return false;
@@ -71,6 +86,8 @@ class InitialOnboardingState {
   bool get isComplete =>
       goal != null &&
       sex != null &&
+      age != null &&
+      heightCm != null &&
       bodyweightKg != null &&
       experience != null;
 
@@ -81,6 +98,8 @@ class InitialOnboardingState {
     return InitialOnboardingData(
       goal: goal!,
       sex: sex!,
+      age: age!,
+      heightCm: heightCm!,
       bodyweightKg: bodyweightKg!,
       experience: experience!,
       healthKitConnected: healthKitConnected,
@@ -99,6 +118,8 @@ class InitialOnboardingState {
     int? totalSteps,
     TrainingGoalUI? goal,
     BiologicalSex? sex,
+    int? age,
+    double? heightCm,
     double? bodyweightKg,
     ExperienceLevelUI? experience,
     bool? healthKitConnected,
@@ -114,6 +135,8 @@ class InitialOnboardingState {
       totalSteps: totalSteps ?? this.totalSteps,
       goal: goal ?? this.goal,
       sex: sex ?? this.sex,
+      age: age ?? this.age,
+      heightCm: heightCm ?? this.heightCm,
       bodyweightKg: bodyweightKg ?? this.bodyweightKg,
       experience: experience ?? this.experience,
       healthKitConnected: healthKitConnected ?? this.healthKitConnected,
@@ -166,7 +189,7 @@ class InitialOnboardingNotifier extends Notifier<InitialOnboardingState> {
   }
 
   // ============================================================
-  // STEP 2: GOAL
+  // STEP 1: GOAL
   // ============================================================
 
   /// Set training goal and auto-advance
@@ -177,12 +200,30 @@ class InitialOnboardingNotifier extends Notifier<InitialOnboardingState> {
   }
 
   // ============================================================
-  // STEP 3: BODY DATA
+  // STEP 2: PERSONAL INFO
   // ============================================================
 
   /// Set biological sex
   void setSex(BiologicalSex sex) {
     state = state.copyWith(sex: sex, clearError: true);
+  }
+
+  /// Set age
+  void setAge(int age) {
+    if (age >= 14 && age <= 80) {
+      state = state.copyWith(age: age, clearError: true);
+    }
+  }
+
+  // ============================================================
+  // STEP 3: BODY MEASUREMENTS
+  // ============================================================
+
+  /// Set height in cm
+  void setHeight(double cm) {
+    if (cm >= 140 && cm <= 220) {
+      state = state.copyWith(heightCm: cm, clearError: true);
+    }
   }
 
   /// Set bodyweight in kg
@@ -211,7 +252,7 @@ class InitialOnboardingNotifier extends Notifier<InitialOnboardingState> {
   }
 
   // ============================================================
-  // STEP 5: HEALTHKIT
+  // HEALTHKIT
   // ============================================================
 
   /// Toggle a health data type for permission request
@@ -240,7 +281,7 @@ class InitialOnboardingNotifier extends Notifier<InitialOnboardingState> {
   }
 
   // ============================================================
-  // STEP 6: FREQUENCY
+  // STEP 5: FREQUENCY
   // ============================================================
 
   /// Set workouts per week

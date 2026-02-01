@@ -11,6 +11,8 @@ _InitialOnboardingData _$InitialOnboardingDataFromJson(
 ) => _InitialOnboardingData(
   goal: $enumDecode(_$TrainingGoalUIEnumMap, json['goal']),
   sex: $enumDecode(_$BiologicalSexEnumMap, json['sex']),
+  age: (json['age'] as num).toInt(),
+  heightCm: (json['heightCm'] as num).toDouble(),
   bodyweightKg: (json['bodyweightKg'] as num).toDouble(),
   experience: $enumDecode(_$ExperienceLevelUIEnumMap, json['experience']),
   healthKitConnected: json['healthKitConnected'] as bool? ?? false,
@@ -30,6 +32,8 @@ Map<String, dynamic> _$InitialOnboardingDataToJson(
 ) => <String, dynamic>{
   'goal': _$TrainingGoalUIEnumMap[instance.goal]!,
   'sex': _$BiologicalSexEnumMap[instance.sex]!,
+  'age': instance.age,
+  'heightCm': instance.heightCm,
   'bodyweightKg': instance.bodyweightKg,
   'experience': _$ExperienceLevelUIEnumMap[instance.experience]!,
   'healthKitConnected': instance.healthKitConnected,

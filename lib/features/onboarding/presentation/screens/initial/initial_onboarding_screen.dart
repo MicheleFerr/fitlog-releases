@@ -6,6 +6,7 @@ import 'package:gymbro_flutter_new/features/onboarding/domain/services/initial/i
 import 'package:gymbro_flutter_new/features/onboarding/presentation/providers/initial/initial_onboarding_provider.dart';
 import 'package:gymbro_flutter_new/features/onboarding/presentation/widgets/initial/steps/welcome_step.dart';
 import 'package:gymbro_flutter_new/features/onboarding/presentation/widgets/initial/steps/goal_selection_step.dart';
+import 'package:gymbro_flutter_new/features/onboarding/presentation/widgets/initial/steps/personal_info_step.dart';
 import 'package:gymbro_flutter_new/features/onboarding/presentation/widgets/initial/steps/body_data_step.dart';
 import 'package:gymbro_flutter_new/features/onboarding/presentation/widgets/initial/steps/experience_step.dart';
 import 'package:gymbro_flutter_new/features/onboarding/presentation/widgets/initial/steps/frequency_summary_step.dart';
@@ -14,16 +15,14 @@ import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
 import 'package:gymbro_flutter_new/features/onboarding/domain/services/home_tour_service.dart';
 
-/// Main screen for initial onboarding flow.
+/// Main screen for initial onboarding flow (Yazio-inspired, 6 steps).
 ///
-/// Uses PageView to display 5 steps:
-/// 1. Welcome
-/// 2. Goal selection
-/// 3. Body data (sex, weight)
-/// 4. Experience level
-/// 5. Frequency + Summary
-///
-/// Note: HealthKit permissions moved to post-first-workout flow (P1-2)
+/// Step 0: Welcome
+/// Step 1: Goal selection
+/// Step 2: Personal Info (sex + age)
+/// Step 3: Body measurements (height + weight + HealthKit)
+/// Step 4: Experience level
+/// Step 5: Frequency + Summary
 class InitialOnboardingScreen extends ConsumerStatefulWidget {
   const InitialOnboardingScreen({
     super.key,
@@ -50,13 +49,15 @@ class _InitialOnboardingScreenState
       body: SafeArea(
         child: Column(
           children: [
-            // Progress indicator
-            _ProgressBar(
+            // Linear progress bar (Yazio-style)
+            _LinearProgressBar(
               currentStep: state.currentStep,
               totalSteps: state.totalSteps,
-              onStepTap: (step) {
-                ref.read(initialOnboardingNotifierProvider.notifier).goToStep(step);
-              },
+              onBack: state.currentStep > 0
+                  ? () => ref
+                      .read(initialOnboardingNotifierProvider.notifier)
+                      .previousStep()
+                  : null,
             ),
 
             // Page content
@@ -67,6 +68,7 @@ class _InitialOnboardingScreenState
                 children: [
                   const WelcomeStep(),
                   const GoalSelectionStep(),
+                  const PersonalInfoStep(),
                   const BodyDataStep(),
                   const ExperienceStep(),
                   FrequencySummaryStep(
@@ -117,86 +119,69 @@ class _InitialOnboardingScreenState
   }
 }
 
-/// Progress bar showing current step with tappable indicators
-class _ProgressBar extends StatelessWidget {
-  const _ProgressBar({
+/// Yazio-style linear progress bar with back button
+class _LinearProgressBar extends StatelessWidget {
+  const _LinearProgressBar({
     required this.currentStep,
     required this.totalSteps,
-    required this.onStepTap,
+    this.onBack,
   });
 
   final int currentStep;
   final int totalSteps;
-  final ValueChanged<int> onStepTap;
+  final VoidCallback? onBack;
 
   @override
   Widget build(BuildContext context) {
+    // Progress: step 0 = 0%, step 1 = 1/total, ..., last step = 1.0
+    final progress = totalSteps > 1
+        ? currentStep / (totalSteps - 1)
+        : 1.0;
+
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
       child: Row(
         children: [
-          // Back button (visible from step 1 onwards)
-          if (currentStep > 0)
-            IconButton(
-              onPressed: () => onStepTap(currentStep - 1),
-              icon: Icon(
-                AppIcons.arrowBackIosRounded,
-                color: context.colors.onSurface,
-                size: AppIconSize.small,
-              ),
-            )
-          else
-            const SizedBox(width: 48),
+          // Back button
+          SizedBox(
+            width: 40,
+            height: 40,
+            child: onBack != null
+                ? IconButton(
+                    onPressed: onBack,
+                    icon: Icon(
+                      AppIcons.arrowBackIosRounded,
+                      color: context.colors.onSurface,
+                      size: AppIconSize.small,
+                    ),
+                    padding: EdgeInsets.zero,
+                  )
+                : const SizedBox.shrink(),
+          ),
 
-          // Step indicators
+          const SizedBox(width: 12),
+
+          // Linear progress indicator
           Expanded(
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: List.generate(
-                totalSteps,
-                (index) => _StepIndicator(
-                  isActive: index <= currentStep,
-                  isCurrent: index == currentStep,
-                  onTap: index < currentStep ? () => onStepTap(index) : null,
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(4),
+              child: AnimatedContainer(
+                duration: const Duration(milliseconds: 300),
+                height: 6,
+                child: LinearProgressIndicator(
+                  value: progress,
+                  backgroundColor: context.colors.surfaceContainerHighest,
+                  valueColor: AlwaysStoppedAnimation<Color>(
+                    context.colors.primary,
+                  ),
+                  minHeight: 6,
                 ),
               ),
             ),
           ),
 
-          // Skip button placeholder for balance
-          const SizedBox(width: 48),
+          const SizedBox(width: 52), // Balance for back button
         ],
-      ),
-    );
-  }
-}
-
-/// Individual step indicator dot
-class _StepIndicator extends StatelessWidget {
-  const _StepIndicator({
-    required this.isActive,
-    required this.isCurrent,
-    this.onTap,
-  });
-
-  final bool isActive;
-  final bool isCurrent;
-  final VoidCallback? onTap;
-
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        margin: const EdgeInsets.symmetric(horizontal: 4),
-        width: isCurrent ? 24 : 8,
-        height: 8,
-        decoration: BoxDecoration(
-          color: isActive
-              ? context.colors.primary
-              : context.colors.onSurface.withValues(alpha: 0.2),
-          borderRadius: BorderRadius.circular(8),
-        ),
       ),
     );
   }

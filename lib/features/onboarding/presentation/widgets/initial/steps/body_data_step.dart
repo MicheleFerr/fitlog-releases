@@ -9,14 +9,13 @@ import 'package:gymbro_flutter_new/features/health_sync/presentation/providers/h
 import 'package:gymbro_flutter_new/features/health_sync/presentation/providers/health_sync_provider.dart';
 import 'package:gymbro_flutter_new/features/onboarding/presentation/providers/initial/initial_onboarding_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'package:gymbro_flutter_new/features/strength_standards/domain/entities/user_fitness_questionnaire.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator.dart';
 import 'package:gymbro_flutter_new/shared/presentation/services/snackbar_service.dart';
 import 'package:keyboard_actions/keyboard_actions.dart';
 
-/// Step 3: Body data (biological sex and weight)
+/// Step 3: Body measurements (height and weight)
 class BodyDataStep extends ConsumerStatefulWidget {
   const BodyDataStep({super.key});
 
@@ -33,10 +32,9 @@ class _BodyDataStepState extends ConsumerState<BodyDataStep> {
   void initState() {
     super.initState();
     // Pre-fill weight if already set
-    final currentWeight =
-        ref.read(initialOnboardingNotifierProvider).bodyweightKg;
-    if (currentWeight != null) {
-      _weightController.text = currentWeight.toStringAsFixed(0);
+    final state = ref.read(initialOnboardingNotifierProvider);
+    if (state.bodyweightKg != null) {
+      _weightController.text = state.bodyweightKg!.toStringAsFixed(0);
     }
   }
 
@@ -201,6 +199,7 @@ class _BodyDataStepState extends ConsumerState<BodyDataStep> {
   @override
   Widget build(BuildContext context) {
     final state = ref.watch(initialOnboardingNotifierProvider);
+    final heightCm = state.heightCm ?? 175.0;
 
     return KeyboardActions(
       config: _buildKeyboardActionsConfig(context),
@@ -211,196 +210,244 @@ class _BodyDataStepState extends ConsumerState<BodyDataStep> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-          const SizedBox(height: 24),
+              const SizedBox(height: 24),
 
-          // Title
-          Text(
-            context.l10n.initialOnboardingBodyTitle,
-            style: context.textTheme.headlineSmall?.copyWith(
-              fontWeight: FontWeight.bold,
-              color: context.colors.onSurface,
-            ),
-          ),
-
-          const SizedBox(height: 8),
-
-          // Subtitle
-          Text(
-            context.l10n.initialOnboardingBodySubtitle,
-            style: context.textTheme.bodyMedium?.copyWith(
-              color: context.colors.onSurface.withValues(alpha: 0.7),
-            ),
-          ),
-
-          const SizedBox(height: 32),
-
-          // Sex selection
-          Text(
-            context.l10n.initialOnboardingSexLabel,
-            style: context.textTheme.titleMedium?.copyWith(
-              fontWeight: FontWeight.w600,
-              color: context.colors.onSurface,
-            ),
-          ),
-
-          const SizedBox(height: 12),
-
-          Row(
-            children: [
-              Expanded(
-                child: _SexOption(
-                  sex: BiologicalSex.male,
-                  emoji: '\u{1F6B9}', // 🚹
-                  label: context.l10n.initialOnboardingSexMale,
-                  isSelected: state.sex == BiologicalSex.male,
-                  onTap: () => ref
-                      .read(initialOnboardingNotifierProvider.notifier)
-                      .setSex(BiologicalSex.male),
+              // Title
+              Text(
+                context.l10n.initialOnboardingBodyMeasurementsTitle,
+                style: context.textTheme.headlineMedium?.copyWith(
+                  fontWeight: FontWeight.bold,
+                  color: context.colors.onSurface,
                 ),
               ),
-              const SizedBox(width: 12),
-              Expanded(
-                child: _SexOption(
-                  sex: BiologicalSex.female,
-                  emoji: '\u{1F6BA}', // 🚺
-                  label: context.l10n.initialOnboardingSexFemale,
-                  isSelected: state.sex == BiologicalSex.female,
-                  onTap: () => ref
-                      .read(initialOnboardingNotifierProvider.notifier)
-                      .setSex(BiologicalSex.female),
-                ),
-              ),
-            ],
-          ),
 
-          const SizedBox(height: 32),
+              const SizedBox(height: 8),
 
-          // Weight input
-          Text(
-            context.l10n.initialOnboardingWeightLabel,
-            style: context.textTheme.titleMedium?.copyWith(
-              fontWeight: FontWeight.w600,
-              color: context.colors.onSurface,
-            ),
-          ),
-
-          const SizedBox(height: 12),
-
-          // Weight text field
-          TextField(
-            controller: _weightController,
-            focusNode: _weightFocusNode,
-            keyboardType: const TextInputType.numberWithOptions(decimal: true),
-            textInputAction: TextInputAction.done,
-            inputFormatters: [
-              FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d*')),
-            ],
-            decoration: InputDecoration(
-              hintText: '75',
-              suffixText: 'kg',
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(12),
-              ),
-              contentPadding: const EdgeInsets.symmetric(
-                horizontal: 16,
-                vertical: 16,
-              ),
-            ),
-            onChanged: (value) {
-              final weight = double.tryParse(value);
-              if (weight != null) {
-                ref
-                    .read(initialOnboardingNotifierProvider.notifier)
-                    .setBodyweight(weight);
-              }
-            },
-            onSubmitted: (_) => FocusScope.of(context).unfocus(),
-          ),
-
-          const SizedBox(height: 16),
-
-          // Import from HealthKit button (iOS/macOS only)
-          if (Platform.isIOS || Platform.isMacOS)
-            OutlinedButton.icon(
-              onPressed: _isImportingFromHealth ? null : _importFromHealthKit,
-              icon: _isImportingFromHealth
-                  ? SizedBox(
-                      width: 20,
-                      height: 20,
-                      child: LoadingIndicator(size: 16),
-                    )
-                  : Icon(AppIcons.healthAndSafety, size: 20),
-              label: Text(
-                _isImportingFromHealth
-                    ? context.l10n.initialOnboardingImporting
-                    : context.l10n.initialOnboardingImportHealthKit,
-              ),
-              style: OutlinedButton.styleFrom(
-                padding:
-                    const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
-                ),
-              ),
-            ),
-
-          const Spacer(),
-
-          // Info text
-          Container(
-            padding: const EdgeInsets.all(12),
-            decoration: BoxDecoration(
-              color: context.colors.surfaceContainerHighest,
-              borderRadius: BorderRadius.circular(12),
-            ),
-            child: Row(
-              children: [
-                Icon(
-                  AppIcons.infoOutline,
-                  size: 20,
+              // Subtitle
+              Text(
+                context.l10n.initialOnboardingBodyMeasurementsSubtitle,
+                style: context.textTheme.bodyMedium?.copyWith(
                   color: context.colors.onSurface.withValues(alpha: 0.7),
                 ),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: Text(
-                    context.l10n.initialOnboardingBodyInfo,
-                    style: context.textTheme.bodySmall?.copyWith(
+              ),
+
+              const SizedBox(height: 32),
+
+              // Height section
+              Text(
+                context.l10n.initialOnboardingHeightLabel,
+                style: context.textTheme.titleMedium?.copyWith(
+                  fontWeight: FontWeight.w600,
+                  color: context.colors.onSurface,
+                ),
+              ),
+
+              const SizedBox(height: 16),
+
+              // Height value display
+              Center(
+                child: Text(
+                  '${heightCm.round()} ${context.l10n.initialOnboardingHeightCm}',
+                  style: context.textTheme.displaySmall?.copyWith(
+                    fontWeight: FontWeight.bold,
+                    color: context.colors.primary,
+                  ),
+                ),
+              ),
+
+              const SizedBox(height: 12),
+
+              // Height slider
+              SliderTheme(
+                data: SliderThemeData(
+                  trackHeight: 6,
+                  thumbShape: const RoundSliderThumbShape(
+                    enabledThumbRadius: 12,
+                  ),
+                  overlayShape: const RoundSliderOverlayShape(
+                    overlayRadius: 24,
+                  ),
+                  activeTrackColor: context.colors.primary,
+                  inactiveTrackColor:
+                      context.colors.primary.withValues(alpha: 0.2),
+                  thumbColor: context.colors.primary,
+                  overlayColor: context.colors.primary.withValues(alpha: 0.2),
+                ),
+                child: Slider(
+                  value: heightCm,
+                  min: 140,
+                  max: 220,
+                  divisions: 80,
+                  onChanged: (value) {
+                    ref
+                        .read(initialOnboardingNotifierProvider.notifier)
+                        .setHeight(value);
+                  },
+                ),
+              ),
+
+              const SizedBox(height: 32),
+
+              // Weight section
+              Text(
+                context.l10n.initialOnboardingWeightLabel,
+                style: context.textTheme.titleMedium?.copyWith(
+                  fontWeight: FontWeight.w600,
+                  color: context.colors.onSurface,
+                ),
+              ),
+
+              const SizedBox(height: 12),
+
+              // Weight text field
+              TextField(
+                controller: _weightController,
+                focusNode: _weightFocusNode,
+                keyboardType:
+                    const TextInputType.numberWithOptions(decimal: true),
+                textInputAction: TextInputAction.done,
+                inputFormatters: [
+                  FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d*')),
+                ],
+                decoration: InputDecoration(
+                  hintText: '75',
+                  suffixText: 'kg',
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  contentPadding: const EdgeInsets.symmetric(
+                    horizontal: 16,
+                    vertical: 20,
+                  ),
+                ),
+                onChanged: (value) {
+                  final weight = double.tryParse(value);
+                  if (weight != null) {
+                    ref
+                        .read(initialOnboardingNotifierProvider.notifier)
+                        .setBodyweight(weight);
+                  }
+                },
+                onSubmitted: (_) => FocusScope.of(context).unfocus(),
+              ),
+
+              const SizedBox(height: 24),
+
+              // HealthKit import card (iOS/macOS only)
+              if (Platform.isIOS || Platform.isMacOS)
+                Container(
+                  padding: const EdgeInsets.all(16),
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                      color: context.colors.outline.withValues(alpha: 0.3),
+                    ),
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: Row(
+                    children: [
+                      Icon(
+                        AppIcons.healthAndSafety,
+                        size: 32,
+                        color: context.colors.primary,
+                      ),
+                      const SizedBox(width: 16),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Text(
+                              context.l10n.initialOnboardingImportHealthKit,
+                              style: context.textTheme.titleSmall?.copyWith(
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      const SizedBox(width: 8),
+                      if (_isImportingFromHealth)
+                        const SizedBox(
+                          width: 24,
+                          height: 24,
+                          child: LoadingIndicator(size: 20),
+                        )
+                      else
+                        FilledButton.tonal(
+                          onPressed: _importFromHealthKit,
+                          style: FilledButton.styleFrom(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 16,
+                              vertical: 8,
+                            ),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                          ),
+                          child: Text(context.l10n.importAction),
+                        ),
+                    ],
+                  ),
+                ),
+
+              const Spacer(),
+
+              // Info text
+              Container(
+                padding: const EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                  color: context.colors.surfaceContainerHighest,
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: Row(
+                  children: [
+                    Icon(
+                      AppIcons.infoOutline,
+                      size: 20,
                       color: context.colors.onSurface.withValues(alpha: 0.7),
+                    ),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: Text(
+                        context.l10n.initialOnboardingBodyInfo,
+                        style: context.textTheme.bodySmall?.copyWith(
+                          color:
+                              context.colors.onSurface.withValues(alpha: 0.7),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+
+              const SizedBox(height: 16),
+
+              // Continue button
+              SizedBox(
+                width: double.infinity,
+                child: FilledButton(
+                  onPressed: state.canProceedFromStep(3)
+                      ? () => ref
+                          .read(initialOnboardingNotifierProvider.notifier)
+                          .nextStep()
+                      : null,
+                  style: FilledButton.styleFrom(
+                    padding: const EdgeInsets.symmetric(vertical: 16),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                  ),
+                  child: Text(
+                    context.l10n.initialOnboardingContinue,
+                    style: const TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w600,
                     ),
                   ),
                 ),
-              ],
-            ),
-          ),
-
-          const SizedBox(height: 16),
-
-          // Continue button
-          SizedBox(
-            width: double.infinity,
-            child: FilledButton(
-              onPressed: state.canProceedFromStep(2)
-                  ? () => ref
-                      .read(initialOnboardingNotifierProvider.notifier)
-                      .nextStep()
-                  : null,
-              style: FilledButton.styleFrom(
-                padding: const EdgeInsets.symmetric(vertical: 16),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
-                ),
               ),
-              child: Text(
-                context.l10n.initialOnboardingContinue,
-                style: const TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-            ),
-          ),
 
-            const SizedBox(height: 32),
+              const SizedBox(height: 32),
             ],
           ),
         ),
@@ -417,7 +464,9 @@ class _BodyDataStepState extends ConsumerState<BodyDataStep> {
     try {
       // 1. Request ALL essential permissions (workout + bodyWeight)
       // This way user grants everything the app needs in one dialog
-      debugPrint('[HealthKit] Requesting essential permissions (workout + bodyWeight)...');
+      debugPrint(
+        '[HealthKit] Requesting essential permissions (workout + bodyWeight)...',
+      );
       final permissionController =
           ref.read(healthPermissionControllerProvider.notifier);
       await permissionController.requestPermissions(
@@ -431,13 +480,14 @@ class _BodyDataStepState extends ConsumerState<BodyDataStep> {
 
       // 2. Check if bodyWeight permission was granted (we need this for import)
       final permissionState = ref.read(healthPermissionControllerProvider);
-      final hasWeightPermission = permissionState.valueOrNull
-              ?.canSync(HealthDataType.bodyWeight) ??
-          false;
-      final hasWorkoutPermission = permissionState.valueOrNull
-              ?.canSync(HealthDataType.workout) ??
-          false;
-      debugPrint('[HealthKit] Permissions granted - workout: $hasWorkoutPermission, bodyWeight: $hasWeightPermission');
+      final hasWeightPermission =
+          permissionState.valueOrNull?.canSync(HealthDataType.bodyWeight) ??
+              false;
+      final hasWorkoutPermission =
+          permissionState.valueOrNull?.canSync(HealthDataType.workout) ?? false;
+      debugPrint(
+        '[HealthKit] Permissions granted - workout: $hasWorkoutPermission, bodyWeight: $hasWeightPermission',
+      );
 
       if (!hasWeightPermission) {
         // Permission denied - show dialog with option to open Settings
@@ -457,7 +507,9 @@ class _BodyDataStepState extends ConsumerState<BodyDataStep> {
       if (!mounted) return;
 
       // 4. Get cached measurements
-      debugPrint('[HealthKit] Fetching cached measurements (last 90 days)...');
+      debugPrint(
+        '[HealthKit] Fetching cached measurements (last 90 days)...',
+      );
       final repository = ref.read(healthRepositoryProvider);
       final result = await repository.getMeasurements(
         dataType: HealthDataType.bodyWeight,
@@ -559,62 +611,6 @@ class _BodyDataStepState extends ConsumerState<BodyDataStep> {
             child: Text(context.l10n.initialOnboardingOpenSettings),
           ),
         ],
-      ),
-    );
-  }
-}
-
-/// Sex selection option card
-class _SexOption extends StatelessWidget {
-  const _SexOption({
-    required this.sex,
-    required this.emoji,
-    required this.label,
-    required this.isSelected,
-    required this.onTap,
-  });
-
-  final BiologicalSex sex;
-  final String emoji;
-  final String label;
-  final bool isSelected;
-  final VoidCallback onTap;
-
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onTap,
-      child: AnimatedContainer(
-        duration: const Duration(milliseconds: 200),
-        padding: const EdgeInsets.symmetric(vertical: 20),
-        decoration: BoxDecoration(
-          color: isSelected
-              ? context.colors.primary.withValues(alpha: 0.1)
-              : context.colors.surface,
-          border: Border.all(
-            color: isSelected
-                ? context.colors.primary
-                : context.colors.outline.withValues(alpha: 0.3),
-            width: isSelected ? 2 : 1,
-          ),
-          borderRadius: BorderRadius.circular(16),
-        ),
-        child: Column(
-          children: [
-            Text(
-              emoji,
-              style: const TextStyle(fontSize: 32),
-            ),
-            const SizedBox(height: 8),
-            Text(
-              label,
-              style: context.textTheme.titleMedium?.copyWith(
-                fontWeight: FontWeight.w600,
-                color: context.colors.onSurface,
-              ),
-            ),
-          ],
-        ),
       ),
     );
   }

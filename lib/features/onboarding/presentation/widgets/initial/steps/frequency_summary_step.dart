@@ -2,11 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/features/onboarding/domain/entities/initial/initial_onboarding_data.dart';
 import 'package:gymbro_flutter_new/features/onboarding/presentation/providers/initial/initial_onboarding_provider.dart';
+import 'package:gymbro_flutter_new/features/strength_standards/domain/entities/user_fitness_questionnaire.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator.dart';
 
-/// Step 6: Workout frequency + Summary
+/// Step 5: Workout frequency + Summary (Yazio-inspired)
 class FrequencySummaryStep extends ConsumerWidget {
   const FrequencySummaryStep({
     super.key,
@@ -30,7 +31,7 @@ class FrequencySummaryStep extends ConsumerWidget {
           // Title
           Text(
             context.l10n.initialOnboardingFrequencyTitle,
-            style: context.textTheme.headlineSmall?.copyWith(
+            style: context.textTheme.headlineMedium?.copyWith(
               fontWeight: FontWeight.bold,
               color: context.colors.onSurface,
             ),
@@ -41,29 +42,29 @@ class FrequencySummaryStep extends ConsumerWidget {
           // Subtitle
           Text(
             context.l10n.initialOnboardingFrequencySubtitle,
-            style: context.textTheme.bodyMedium?.copyWith(
+            style: context.textTheme.bodyLarge?.copyWith(
               color: context.colors.onSurface.withValues(alpha: 0.7),
             ),
           ),
 
-          const SizedBox(height: 32),
+          const SizedBox(height: 28),
 
-          // Frequency selector
+          // Frequency selector - pill shaped
           _FrequencySelector(
             value: state.workoutsPerWeek,
             onChanged: (value) => notifier.setWorkoutsPerWeek(value),
           ),
 
-          const SizedBox(height: 32),
+          const SizedBox(height: 28),
 
           // Divider
           Divider(
-            color: context.colors.outline.withValues(alpha: 0.3),
+            color: context.colors.outline.withValues(alpha: 0.2),
           ),
 
           const SizedBox(height: 16),
 
-          // Summary section
+          // Summary title
           Text(
             context.l10n.initialOnboardingSummaryTitle,
             style: context.textTheme.titleMedium?.copyWith(
@@ -72,46 +73,68 @@ class FrequencySummaryStep extends ConsumerWidget {
             ),
           ),
 
-          const SizedBox(height: 16),
+          const SizedBox(height: 12),
 
-          // Summary items
-          _SummaryItem(
-            label: context.l10n.initialOnboardingSummaryGoal,
-            value: state.goal != null
-                ? '${state.goal!.icon} ${_getGoalLabel(context, state.goal!)}'
-                : '-',
+          // Summary cards
+          Expanded(
+            child: ListView(
+              children: [
+                _SummaryCard(
+                  icon: AppIcons.flagCircle,
+                  label: context.l10n.initialOnboardingSummaryGoal,
+                  value: state.goal != null
+                      ? '${state.goal!.icon} ${_getGoalLabel(context, state.goal!)}'
+                      : '-',
+                ),
+                const SizedBox(height: 8),
+                _SummaryCard(
+                  icon: AppIcons.person,
+                  label: context.l10n.initialOnboardingSummarySex,
+                  value: state.sex != null
+                      ? _getSexLabel(context, state.sex!)
+                      : '-',
+                ),
+                const SizedBox(height: 8),
+                _SummaryCard(
+                  icon: AppIcons.calendar,
+                  label: context.l10n.initialOnboardingSummaryAge,
+                  value: state.age != null
+                      ? '${state.age} ${context.l10n.initialOnboardingAgeYears}'
+                      : '-',
+                ),
+                const SizedBox(height: 8),
+                _SummaryCard(
+                  icon: AppIcons.straighten,
+                  label: context.l10n.initialOnboardingSummaryHeight,
+                  value: state.heightCm != null
+                      ? '${state.heightCm!.toStringAsFixed(0)} ${context.l10n.initialOnboardingHeightCm}'
+                      : '-',
+                ),
+                const SizedBox(height: 8),
+                _SummaryCard(
+                  icon: AppIcons.weight,
+                  label: context.l10n.initialOnboardingSummaryWeight,
+                  value: state.bodyweightKg != null
+                      ? '${state.bodyweightKg!.toStringAsFixed(0)} kg'
+                      : '-',
+                ),
+                const SizedBox(height: 8),
+                _SummaryCard(
+                  icon: AppIcons.trendUp,
+                  label: context.l10n.initialOnboardingSummaryExperience,
+                  value: state.experience != null
+                      ? '${state.experience!.icon} ${_getExperienceLabel(context, state.experience!)}'
+                      : '-',
+                ),
+                const SizedBox(height: 8),
+                _SummaryCard(
+                  icon: AppIcons.schedule,
+                  label: context.l10n.initialOnboardingSummaryFrequency,
+                  value: '${state.workoutsPerWeek}x / ${context.l10n.initialOnboardingWeek}',
+                ),
+              ],
+            ),
           ),
-          const SizedBox(height: 12),
-          _SummaryItem(
-            label: context.l10n.initialOnboardingSummaryWeight,
-            value: state.bodyweightKg != null
-                ? '${state.bodyweightKg!.toStringAsFixed(0)} kg'
-                : '-',
-          ),
-          const SizedBox(height: 12),
-          _SummaryItem(
-            label: context.l10n.initialOnboardingSummaryExperience,
-            value: state.experience != null
-                ? '${state.experience!.icon} ${_getExperienceLabel(context, state.experience!)}'
-                : '-',
-          ),
-          const SizedBox(height: 12),
-          _SummaryItem(
-            label: context.l10n.initialOnboardingSummaryFrequency,
-            value: '${state.workoutsPerWeek}x / ${context.l10n.initialOnboardingWeek}',
-          ),
-          const SizedBox(height: 12),
-          _SummaryItem(
-            label: context.l10n.initialOnboardingSummaryHealth,
-            value: state.healthKitConnected
-                ? context.l10n.initialOnboardingConnected
-                : context.l10n.initialOnboardingNotConnected,
-            valueColor: state.healthKitConnected
-                ? context.colors.success
-                : context.colors.onSurface.withValues(alpha: 0.5),
-          ),
-
-          const Spacer(),
 
           // Error message
           if (state.errorMessage != null) ...[
@@ -162,7 +185,7 @@ class FrequencySummaryStep extends ConsumerWidget {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         const Text(
-                          '\u{1F680}', // 🚀
+                          '\u{1F680}', // Rocket
                           style: TextStyle(fontSize: 20),
                         ),
                         const SizedBox(width: 8),
@@ -195,39 +218,43 @@ class FrequencySummaryStep extends ConsumerWidget {
     );
   }
 
-  String _getGoalLabel(BuildContext context, dynamic goal) {
-    // Match the goal enum to localized string
-    switch (goal.toString()) {
-      case 'TrainingGoalUI.buildMuscle':
-        return context.l10n.initialOnboardingGoalBuildMuscle;
-      case 'TrainingGoalUI.getStronger':
-        return context.l10n.initialOnboardingGoalGetStronger;
-      case 'TrainingGoalUI.endurance':
-        return context.l10n.initialOnboardingGoalEndurance;
-      case 'TrainingGoalUI.stayFit':
-        return context.l10n.initialOnboardingGoalStayFit;
-      default:
-        return '-';
+  String _getSexLabel(BuildContext context, BiologicalSex sex) {
+    switch (sex) {
+      case BiologicalSex.male:
+        return context.l10n.initialOnboardingSexMale;
+      case BiologicalSex.female:
+        return context.l10n.initialOnboardingSexFemale;
     }
   }
 
-  String _getExperienceLabel(BuildContext context, dynamic experience) {
-    switch (experience.toString()) {
-      case 'ExperienceLevelUI.beginner':
+  String _getGoalLabel(BuildContext context, TrainingGoalUI goal) {
+    switch (goal) {
+      case TrainingGoalUI.buildMuscle:
+        return context.l10n.initialOnboardingGoalBuildMuscle;
+      case TrainingGoalUI.getStronger:
+        return context.l10n.initialOnboardingGoalGetStronger;
+      case TrainingGoalUI.endurance:
+        return context.l10n.initialOnboardingGoalEndurance;
+      case TrainingGoalUI.stayFit:
+        return context.l10n.initialOnboardingGoalStayFit;
+    }
+  }
+
+  String _getExperienceLabel(BuildContext context, ExperienceLevelUI experience) {
+    switch (experience) {
+      case ExperienceLevelUI.beginner:
         return context.l10n.initialOnboardingExperienceBeginner;
-      case 'ExperienceLevelUI.someExperience':
+      case ExperienceLevelUI.someExperience:
         return context.l10n.initialOnboardingExperienceSome;
-      case 'ExperienceLevelUI.experienced':
+      case ExperienceLevelUI.experienced:
         return context.l10n.initialOnboardingExperienceExperienced;
-      case 'ExperienceLevelUI.athlete':
+      case ExperienceLevelUI.athlete:
         return context.l10n.initialOnboardingExperienceAthlete;
-      default:
-        return '-';
     }
   }
 }
 
-/// Frequency selector (1-7 days)
+/// Frequency selector with pill-shaped buttons
 class _FrequencySelector extends StatelessWidget {
   const _FrequencySelector({
     required this.value,
@@ -254,12 +281,13 @@ class _FrequencySelector extends StatelessWidget {
             decoration: BoxDecoration(
               color: isSelected
                   ? context.colors.primary
-                  : context.colors.surfaceContainerHighest,
-              borderRadius: BorderRadius.circular(12),
+                  : context.colors.surfaceContainerHighest.withValues(alpha: 0.5),
+              borderRadius: BorderRadius.circular(22),
               border: Border.all(
                 color: isSelected
                     ? context.colors.primary
-                    : context.colors.outline.withValues(alpha: 0.3),
+                    : context.colors.outline.withValues(alpha: 0.2),
+                width: isSelected ? 2 : 1,
               ),
             ),
             child: Center(
@@ -280,37 +308,50 @@ class _FrequencySelector extends StatelessWidget {
   }
 }
 
-/// Summary item row
-class _SummaryItem extends StatelessWidget {
-  const _SummaryItem({
+/// Summary card with icon, label and value
+class _SummaryCard extends StatelessWidget {
+  const _SummaryCard({
+    required this.icon,
     required this.label,
     required this.value,
-    this.valueColor,
   });
 
+  final IconData icon;
   final String label;
   final String value;
-  final Color? valueColor;
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Text(
-          label,
-          style: context.textTheme.bodyMedium?.copyWith(
-            color: context.colors.onSurface.withValues(alpha: 0.7),
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+      decoration: BoxDecoration(
+        color: context.colors.surfaceContainerHighest.withValues(alpha: 0.3),
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: Row(
+        children: [
+          Icon(
+            icon,
+            size: 20,
+            color: context.colors.primary,
           ),
-        ),
-        Text(
-          value,
-          style: context.textTheme.bodyMedium?.copyWith(
-            fontWeight: FontWeight.w600,
-            color: valueColor ?? context.colors.onSurface,
+          const SizedBox(width: 12),
+          Text(
+            label,
+            style: context.textTheme.bodyMedium?.copyWith(
+              color: context.colors.onSurface.withValues(alpha: 0.7),
+            ),
           ),
-        ),
-      ],
+          const Spacer(),
+          Text(
+            value,
+            style: context.textTheme.bodyMedium?.copyWith(
+              fontWeight: FontWeight.w600,
+              color: context.colors.onSurface,
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

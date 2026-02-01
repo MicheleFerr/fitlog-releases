@@ -21287,6 +21287,49 @@ class AppLocalizationsIt extends AppLocalizations {
   String get bodyMeasurementsRecentHistory => 'Cronologia recente';
 
   @override
+  String get bodyMeasurementsImportNoData =>
+      'Nessuna misurazione trovata in Apple Salute nell\'ultimo anno. Prova prima ad aggiungere dati nell\'app Salute.';
+
+  @override
+  String bodyMeasurementsImportPartialSuccess(int imported, int total) {
+    return 'Importate $imported di $total misurazioni. Alcune voci non sono state salvate.';
+  }
+
+  @override
+  String get bodyMeasurementsOpenSettings => 'Apri Impostazioni';
+
+  @override
+  String get bodyMeasurementsPermissionDeniedTitle => 'Permesso Richiesto';
+
+  @override
+  String get bodyMeasurementsPermissionDeniedMessage =>
+      'Per importare i tuoi dati sulla salute, abilita l\'accesso a Salute per FitLog Pro nelle impostazioni del dispositivo.';
+
+  @override
+  String get bodyMeasurementsHealthConnectRequired =>
+      'L\'app Health Connect è necessaria per sincronizzare i dati sulla salute su Android.';
+
+  @override
+  String get bodyMeasurementsInstallHealthConnect => 'Installa Health Connect';
+
+  @override
+  String get bodyMeasurementsImportInProgress => 'Importazione in corso...';
+
+  @override
+  String get bodyMeasurementsExportInProgress => 'Esportazione in corso...';
+
+  @override
+  String get bodyMeasurementsInvalidValue =>
+      'Valore non valido rilevato e ignorato';
+
+  @override
+  String get bodyMeasurementsNetworkError =>
+      'Errore di rete. Controlla la connessione e riprova.';
+
+  @override
+  String get bodyMeasurementsRetry => 'Riprova';
+
+  @override
   String get weeks => 'settimane';
 
   @override
@@ -25610,6 +25653,41 @@ class AppLocalizationsIt extends AppLocalizations {
   @override
   String get initialOnboardingCompleteInfo =>
       'Puoi modificare tutto dalle Impostazioni in qualsiasi momento';
+
+  @override
+  String get initialOnboardingPersonalInfoTitle => 'Parlaci di te';
+
+  @override
+  String get initialOnboardingPersonalInfoSubtitle =>
+      'Ci aiuta a personalizzare la tua esperienza';
+
+  @override
+  String get initialOnboardingAgeLabel => 'Quanti anni hai?';
+
+  @override
+  String get initialOnboardingAgeYears => 'anni';
+
+  @override
+  String get initialOnboardingHeightLabel => 'Altezza';
+
+  @override
+  String get initialOnboardingHeightCm => 'cm';
+
+  @override
+  String get initialOnboardingBodyMeasurementsTitle => 'Le tue misure';
+
+  @override
+  String get initialOnboardingBodyMeasurementsSubtitle =>
+      'Ci aiuta a suggerirti i pesi giusti';
+
+  @override
+  String get initialOnboardingSummaryAge => 'Eta';
+
+  @override
+  String get initialOnboardingSummaryHeight => 'Altezza';
+
+  @override
+  String get initialOnboardingSummarySex => 'Sesso';
 
   @override
   String get tourXpProgressTitle => 'Il Tuo Livello';

@@ -37740,6 +37740,78 @@ abstract class AppLocalizations {
   /// **'Recent History'**
   String get bodyMeasurementsRecentHistory;
 
+  /// Message when HealthKit import returns no data
+  ///
+  /// In en, this message translates to:
+  /// **'No measurements found in Apple Health for the last year. Try adding data in the Health app first.'**
+  String get bodyMeasurementsImportNoData;
+
+  /// Message when some imports failed
+  ///
+  /// In en, this message translates to:
+  /// **'Imported {imported} of {total} measurements. Some entries could not be saved.'**
+  String bodyMeasurementsImportPartialSuccess(int imported, int total);
+
+  /// Button to open system settings
+  ///
+  /// In en, this message translates to:
+  /// **'Open Settings'**
+  String get bodyMeasurementsOpenSettings;
+
+  /// Title for permission denied dialog
+  ///
+  /// In en, this message translates to:
+  /// **'Permission Required'**
+  String get bodyMeasurementsPermissionDeniedTitle;
+
+  /// Message explaining how to enable permissions
+  ///
+  /// In en, this message translates to:
+  /// **'To import your health data, please enable Health access for FitLog Pro in your device settings.'**
+  String get bodyMeasurementsPermissionDeniedMessage;
+
+  /// Message when Health Connect is not installed
+  ///
+  /// In en, this message translates to:
+  /// **'Health Connect app is required to sync health data on Android.'**
+  String get bodyMeasurementsHealthConnectRequired;
+
+  /// Button to install Health Connect
+  ///
+  /// In en, this message translates to:
+  /// **'Install Health Connect'**
+  String get bodyMeasurementsInstallHealthConnect;
+
+  /// Loading message during import
+  ///
+  /// In en, this message translates to:
+  /// **'Importing data...'**
+  String get bodyMeasurementsImportInProgress;
+
+  /// Loading message during export
+  ///
+  /// In en, this message translates to:
+  /// **'Exporting data...'**
+  String get bodyMeasurementsExportInProgress;
+
+  /// Warning when a measurement has invalid value
+  ///
+  /// In en, this message translates to:
+  /// **'Invalid value detected and skipped'**
+  String get bodyMeasurementsInvalidValue;
+
+  /// Error message for network issues
+  ///
+  /// In en, this message translates to:
+  /// **'Network error. Please check your connection and try again.'**
+  String get bodyMeasurementsNetworkError;
+
+  /// Retry button text
+  ///
+  /// In en, this message translates to:
+  /// **'Retry'**
+  String get bodyMeasurementsRetry;
+
   /// Unit for weeks
   ///
   /// In en, this message translates to:
@@ -45283,6 +45355,72 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'You can change these settings anytime'**
   String get initialOnboardingCompleteInfo;
+
+  /// Personal info step title
+  ///
+  /// In en, this message translates to:
+  /// **'About you'**
+  String get initialOnboardingPersonalInfoTitle;
+
+  /// Personal info step subtitle
+  ///
+  /// In en, this message translates to:
+  /// **'Help us personalize your experience'**
+  String get initialOnboardingPersonalInfoSubtitle;
+
+  /// Age picker label
+  ///
+  /// In en, this message translates to:
+  /// **'How old are you?'**
+  String get initialOnboardingAgeLabel;
+
+  /// Years suffix for age
+  ///
+  /// In en, this message translates to:
+  /// **'years'**
+  String get initialOnboardingAgeYears;
+
+  /// Height input label
+  ///
+  /// In en, this message translates to:
+  /// **'Height'**
+  String get initialOnboardingHeightLabel;
+
+  /// Centimeters unit
+  ///
+  /// In en, this message translates to:
+  /// **'cm'**
+  String get initialOnboardingHeightCm;
+
+  /// Body measurements step title
+  ///
+  /// In en, this message translates to:
+  /// **'Your measurements'**
+  String get initialOnboardingBodyMeasurementsTitle;
+
+  /// Body measurements step subtitle
+  ///
+  /// In en, this message translates to:
+  /// **'This helps us suggest the right weights'**
+  String get initialOnboardingBodyMeasurementsSubtitle;
+
+  /// Summary label for age
+  ///
+  /// In en, this message translates to:
+  /// **'Age'**
+  String get initialOnboardingSummaryAge;
+
+  /// Summary label for height
+  ///
+  /// In en, this message translates to:
+  /// **'Height'**
+  String get initialOnboardingSummaryHeight;
+
+  /// Summary label for sex
+  ///
+  /// In en, this message translates to:
+  /// **'Sex'**
+  String get initialOnboardingSummarySex;
 
   /// Home tour step 1 title - XP Progress
   ///

@@ -21085,6 +21085,49 @@ class AppLocalizationsEn extends AppLocalizations {
   String get bodyMeasurementsRecentHistory => 'Recent History';
 
   @override
+  String get bodyMeasurementsImportNoData =>
+      'No measurements found in Apple Health for the last year. Try adding data in the Health app first.';
+
+  @override
+  String bodyMeasurementsImportPartialSuccess(int imported, int total) {
+    return 'Imported $imported of $total measurements. Some entries could not be saved.';
+  }
+
+  @override
+  String get bodyMeasurementsOpenSettings => 'Open Settings';
+
+  @override
+  String get bodyMeasurementsPermissionDeniedTitle => 'Permission Required';
+
+  @override
+  String get bodyMeasurementsPermissionDeniedMessage =>
+      'To import your health data, please enable Health access for FitLog Pro in your device settings.';
+
+  @override
+  String get bodyMeasurementsHealthConnectRequired =>
+      'Health Connect app is required to sync health data on Android.';
+
+  @override
+  String get bodyMeasurementsInstallHealthConnect => 'Install Health Connect';
+
+  @override
+  String get bodyMeasurementsImportInProgress => 'Importing data...';
+
+  @override
+  String get bodyMeasurementsExportInProgress => 'Exporting data...';
+
+  @override
+  String get bodyMeasurementsInvalidValue =>
+      'Invalid value detected and skipped';
+
+  @override
+  String get bodyMeasurementsNetworkError =>
+      'Network error. Please check your connection and try again.';
+
+  @override
+  String get bodyMeasurementsRetry => 'Retry';
+
+  @override
   String get weeks => 'weeks';
 
   @override
@@ -25354,6 +25397,41 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get initialOnboardingCompleteInfo =>
       'You can change these settings anytime';
+
+  @override
+  String get initialOnboardingPersonalInfoTitle => 'About you';
+
+  @override
+  String get initialOnboardingPersonalInfoSubtitle =>
+      'Help us personalize your experience';
+
+  @override
+  String get initialOnboardingAgeLabel => 'How old are you?';
+
+  @override
+  String get initialOnboardingAgeYears => 'years';
+
+  @override
+  String get initialOnboardingHeightLabel => 'Height';
+
+  @override
+  String get initialOnboardingHeightCm => 'cm';
+
+  @override
+  String get initialOnboardingBodyMeasurementsTitle => 'Your measurements';
+
+  @override
+  String get initialOnboardingBodyMeasurementsSubtitle =>
+      'This helps us suggest the right weights';
+
+  @override
+  String get initialOnboardingSummaryAge => 'Age';
+
+  @override
+  String get initialOnboardingSummaryHeight => 'Height';
+
+  @override
+  String get initialOnboardingSummarySex => 'Sex';
 
   @override
   String get tourXpProgressTitle => 'Your Level';

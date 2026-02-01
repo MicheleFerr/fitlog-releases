@@ -4,146 +4,199 @@ import 'package:gymbro_flutter_new/features/onboarding/presentation/providers/in
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
-/// Step 1: Welcome screen with app intro
-class WelcomeStep extends ConsumerWidget {
+/// Step 1: Welcome screen with Yazio-inspired design
+class WelcomeStep extends ConsumerStatefulWidget {
   const WelcomeStep({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 24),
-      child: Column(
-        children: [
-          const Spacer(flex: 2),
+  ConsumerState<WelcomeStep> createState() => _WelcomeStepState();
+}
 
-          // App icon/logo
-          Container(
-            width: 120,
-            height: 120,
-            decoration: BoxDecoration(
-              color: context.colors.primary.withValues(alpha: 0.1),
-              shape: BoxShape.circle,
-            ),
-            child: Icon(
-              AppIcons.workout,
-              size: 64,
-              color: context.colors.primary,
-            ),
-          ),
+class _WelcomeStepState extends ConsumerState<WelcomeStep> {
+  bool _visible = false;
 
-          const SizedBox(height: 32),
+  @override
+  void initState() {
+    super.initState();
+    // Trigger fade-in animation after first frame
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) {
+        setState(() {
+          _visible = true;
+        });
+      }
+    });
+  }
 
-          // Title
-          Text(
-            context.l10n.initialOnboardingWelcomeTitle,
-            style: context.textTheme.headlineMedium?.copyWith(
-              fontWeight: FontWeight.bold,
-              color: context.colors.onSurface,
-            ),
-            textAlign: TextAlign.center,
-          ),
+  @override
+  Widget build(BuildContext context) {
+    return AnimatedOpacity(
+      opacity: _visible ? 1.0 : 0.0,
+      duration: const Duration(milliseconds: 800),
+      curve: Curves.easeInOut,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 32),
+        child: Column(
+          children: [
+            const Spacer(flex: 2),
 
-          const SizedBox(height: 16),
-
-          // Subtitle
-          Text(
-            context.l10n.initialOnboardingWelcomeSubtitle,
-            style: context.textTheme.bodyLarge?.copyWith(
-              color: context.colors.onSurface.withValues(alpha: 0.7),
-            ),
-            textAlign: TextAlign.center,
-          ),
-
-          const SizedBox(height: 48),
-
-          // Feature list
-          _FeatureItem(
-            icon: AppIcons.exercise,
-            text: context.l10n.initialOnboardingFeature1,
-          ),
-          const SizedBox(height: 16),
-          _FeatureItem(
-            icon: AppIcons.tip,
-            text: context.l10n.initialOnboardingFeature2,
-          ),
-          const SizedBox(height: 16),
-          _FeatureItem(
-            icon: AppIcons.analytics,
-            text: context.l10n.initialOnboardingFeature3,
-          ),
-
-          const Spacer(flex: 3),
-
-          // CTA Button
-          SizedBox(
-            width: double.infinity,
-            child: FilledButton(
-              onPressed: () {
-                ref.read(initialOnboardingNotifierProvider.notifier).nextStep();
-              },
-              style: FilledButton.styleFrom(
-                padding: const EdgeInsets.symmetric(vertical: 16),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
+            // Large emoji/icon area
+            Container(
+              width: 180,
+              height: 180,
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  colors: [
+                    context.colors.primary.withValues(alpha: 0.15),
+                    context.colors.primary.withValues(alpha: 0.05),
+                  ],
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                ),
+                shape: BoxShape.circle,
+              ),
+              child: const Center(
+                child: Text(
+                  '\u{1F4AA}', // 💪 emoji
+                  style: TextStyle(fontSize: 80),
                 ),
               ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    context.l10n.initialOnboardingStart,
-                    style: const TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w600,
-                    ),
+            ),
+
+            const SizedBox(height: 40),
+
+            // Title
+            Text(
+              context.l10n.initialOnboardingWelcomeTitle,
+              style: context.textTheme.headlineLarge?.copyWith(
+                fontWeight: FontWeight.bold,
+                color: context.colors.onSurface,
+              ),
+              textAlign: TextAlign.center,
+            ),
+
+            const SizedBox(height: 16),
+
+            // Subtitle
+            Text(
+              context.l10n.initialOnboardingWelcomeSubtitle,
+              style: context.textTheme.bodyLarge?.copyWith(
+                color: context.colors.onSurface.withValues(alpha: 0.65),
+                height: 1.5,
+              ),
+              textAlign: TextAlign.center,
+            ),
+
+            const SizedBox(height: 56),
+
+            // Feature list with colored backgrounds
+            _FeatureItem(
+              icon: AppIcons.exercise,
+              text: context.l10n.initialOnboardingFeature1,
+              backgroundColor: context.colors.primary,
+            ),
+            const SizedBox(height: 20),
+            _FeatureItem(
+              icon: AppIcons.tip,
+              text: context.l10n.initialOnboardingFeature2,
+              backgroundColor: context.colors.tertiary,
+            ),
+            const SizedBox(height: 20),
+            _FeatureItem(
+              icon: AppIcons.analytics,
+              text: context.l10n.initialOnboardingFeature3,
+              backgroundColor: context.colors.secondary,
+            ),
+
+            const Spacer(flex: 3),
+
+            // CTA Button with gradient feel
+            SizedBox(
+              width: double.infinity,
+              child: FilledButton(
+                onPressed: () {
+                  ref
+                      .read(initialOnboardingNotifierProvider.notifier)
+                      .nextStep();
+                },
+                style: FilledButton.styleFrom(
+                  padding: const EdgeInsets.symmetric(
+                    vertical: 18,
+                    horizontal: 32,
                   ),
-                  const SizedBox(width: 8),
-                  const Icon(AppIcons.arrowForward, size: 20),
-                ],
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(16),
+                  ),
+                  elevation: 2,
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      context.l10n.initialOnboardingStart,
+                      style: const TextStyle(
+                        fontSize: 17,
+                        fontWeight: FontWeight.w600,
+                        letterSpacing: 0.3,
+                      ),
+                    ),
+                    const SizedBox(width: 12),
+                    Icon(
+                      AppIcons.arrowForward,
+                      size: 22,
+                      color: context.colors.onPrimary,
+                    ),
+                  ],
+                ),
               ),
             ),
-          ),
 
-          const SizedBox(height: 32),
-        ],
+            const SizedBox(height: 48),
+          ],
+        ),
       ),
     );
   }
 }
 
-/// Feature item with icon and text
+/// Feature item with colored circle background
 class _FeatureItem extends StatelessWidget {
   const _FeatureItem({
     required this.icon,
     required this.text,
+    required this.backgroundColor,
   });
 
   final IconData icon;
   final String text;
+  final Color backgroundColor;
 
   @override
   Widget build(BuildContext context) {
     return Row(
       children: [
+        // Colored circle background
         Container(
-          width: 40,
-          height: 40,
+          width: 56,
+          height: 56,
           decoration: BoxDecoration(
-            color: context.colors.primary.withValues(alpha: 0.1),
-            borderRadius: BorderRadius.circular(12),
+            color: backgroundColor.withValues(alpha: 0.15),
+            shape: BoxShape.circle,
           ),
           child: Icon(
             icon,
-            color: context.colors.primary,
-            size: 20,
+            color: backgroundColor,
+            size: 26,
           ),
         ),
-        const SizedBox(width: 16),
+        const SizedBox(width: 20),
         Expanded(
           child: Text(
             text,
-            style: context.textTheme.bodyMedium?.copyWith(
+            style: context.textTheme.bodyLarge?.copyWith(
               color: context.colors.onSurface,
+              fontWeight: FontWeight.w500,
+              height: 1.4,
             ),
           ),
         ),

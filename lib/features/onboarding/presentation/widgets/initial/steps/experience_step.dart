@@ -5,7 +5,7 @@ import 'package:gymbro_flutter_new/features/onboarding/presentation/providers/in
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
-/// Step 4: Experience level selection
+/// Step 4: Experience level selection (Yazio-inspired)
 class ExperienceStep extends ConsumerWidget {
   const ExperienceStep({super.key});
 
@@ -23,7 +23,7 @@ class ExperienceStep extends ConsumerWidget {
           // Title
           Text(
             context.l10n.initialOnboardingExperienceTitle,
-            style: context.textTheme.headlineSmall?.copyWith(
+            style: context.textTheme.headlineMedium?.copyWith(
               fontWeight: FontWeight.bold,
               color: context.colors.onSurface,
             ),
@@ -34,7 +34,7 @@ class ExperienceStep extends ConsumerWidget {
           // Subtitle
           Text(
             context.l10n.initialOnboardingExperienceSubtitle,
-            style: context.textTheme.bodyMedium?.copyWith(
+            style: context.textTheme.bodyLarge?.copyWith(
               color: context.colors.onSurface.withValues(alpha: 0.7),
             ),
           ),
@@ -55,7 +55,7 @@ class ExperienceStep extends ConsumerWidget {
                       .read(initialOnboardingNotifierProvider.notifier)
                       .setExperience(ExperienceLevelUI.beginner),
                 ),
-                const SizedBox(height: 12),
+                const SizedBox(height: 16),
                 _ExperienceCard(
                   level: ExperienceLevelUI.someExperience,
                   emoji: ExperienceLevelUI.someExperience.icon,
@@ -66,7 +66,7 @@ class ExperienceStep extends ConsumerWidget {
                       .read(initialOnboardingNotifierProvider.notifier)
                       .setExperience(ExperienceLevelUI.someExperience),
                 ),
-                const SizedBox(height: 12),
+                const SizedBox(height: 16),
                 _ExperienceCard(
                   level: ExperienceLevelUI.experienced,
                   emoji: ExperienceLevelUI.experienced.icon,
@@ -77,7 +77,7 @@ class ExperienceStep extends ConsumerWidget {
                       .read(initialOnboardingNotifierProvider.notifier)
                       .setExperience(ExperienceLevelUI.experienced),
                 ),
-                const SizedBox(height: 12),
+                const SizedBox(height: 16),
                 _ExperienceCard(
                   level: ExperienceLevelUI.athlete,
                   emoji: ExperienceLevelUI.athlete.icon,
@@ -97,7 +97,7 @@ class ExperienceStep extends ConsumerWidget {
   }
 }
 
-/// Experience level card
+/// Experience level card (Yazio-inspired with gradient and animated checkmark)
 class _ExperienceCard extends StatelessWidget {
   const _ExperienceCard({
     required this.level,
@@ -123,31 +123,39 @@ class _ExperienceCard extends StatelessWidget {
         duration: const Duration(milliseconds: 200),
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
-          color: isSelected
-              ? context.colors.primary.withValues(alpha: 0.1)
-              : context.colors.surface,
+          gradient: isSelected
+              ? LinearGradient(
+                  colors: [
+                    context.colors.primary.withValues(alpha: 0.1),
+                    context.colors.primary.withValues(alpha: 0.03),
+                  ],
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                )
+              : null,
+          color: isSelected ? null : context.colors.surface,
           border: Border.all(
             color: isSelected
                 ? context.colors.primary
-                : context.colors.outline.withValues(alpha: 0.3),
-            width: isSelected ? 2 : 1,
+                : context.colors.outline.withValues(alpha: 0.2),
+            width: isSelected ? 2.5 : 1,
           ),
           borderRadius: BorderRadius.circular(16),
         ),
         child: Row(
           children: [
-            // Emoji
+            // Emoji container
             Container(
-              width: 56,
-              height: 56,
+              width: 64,
+              height: 64,
               decoration: BoxDecoration(
-                color: context.colors.surfaceContainerHighest,
-                borderRadius: BorderRadius.circular(12),
+                color: context.colors.surfaceContainerHighest.withValues(alpha: 0.7),
+                borderRadius: BorderRadius.circular(16),
               ),
               child: Center(
                 child: Text(
                   emoji,
-                  style: const TextStyle(fontSize: 28),
+                  style: const TextStyle(fontSize: 32),
                 ),
               ),
             ),
@@ -170,20 +178,23 @@ class _ExperienceCard extends StatelessWidget {
                   Text(
                     subtitle,
                     style: context.textTheme.bodySmall?.copyWith(
-                      color: context.colors.onSurface.withValues(alpha: 0.7),
+                      color: context.colors.onSurface.withValues(alpha: 0.6),
                     ),
                   ),
                 ],
               ),
             ),
 
-            // Selection indicator
-            if (isSelected)
-              Icon(
+            // Animated checkmark
+            AnimatedScale(
+              scale: isSelected ? 1.0 : 0.0,
+              duration: const Duration(milliseconds: 200),
+              child: Icon(
                 AppIcons.checkCircle,
                 color: context.colors.primary,
                 size: 24,
               ),
+            ),
           ],
         ),
       ),

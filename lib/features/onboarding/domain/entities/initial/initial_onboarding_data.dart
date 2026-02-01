@@ -12,11 +12,15 @@ part 'initial_onboarding_data.g.dart';
 @freezed
 abstract class InitialOnboardingData with _$InitialOnboardingData {
   const factory InitialOnboardingData({
-    // Step 2: Goal
+    // Step 1: Goal
     required TrainingGoalUI goal,
 
-    // Step 3: Body data
+    // Step 2: Personal Info
     required BiologicalSex sex,
+    required int age,
+
+    // Step 3: Body data
+    required double heightCm,
     required double bodyweightKg,
 
     // Step 4: Experience
@@ -26,7 +30,7 @@ abstract class InitialOnboardingData with _$InitialOnboardingData {
     @Default(false) bool healthKitConnected,
     @Default([]) List<String> healthKitPermissionsGranted,
 
-    // Step 6: Frequency
+    // Step 5: Frequency
     @Default(3) int workoutsPerWeek,
 
     // Meta
@@ -45,9 +49,8 @@ abstract class InitialOnboardingData with _$InitialOnboardingData {
       sex: sex,
       experienceLevel: experience.toExperienceLevel(),
       trainingGoal: goal.toTrainingGoal(),
-      // Defaults for fields not collected in initial onboarding
-      age: 30,
-      heightCm: 175,
+      age: age,
+      heightCm: heightCm,
       completedAt: completedAt ?? DateTime.now(),
     );
   }

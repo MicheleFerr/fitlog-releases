@@ -14677,6 +14677,58 @@
   "@bodyMeasurementsRecentHistory": {
     "description": "Titolo sezione cronologia recente"
   },
+  "bodyMeasurementsImportNoData": "Nessuna misurazione trovata in Apple Salute nell'ultimo anno. Prova prima ad aggiungere dati nell'app Salute.",
+  "@bodyMeasurementsImportNoData": {
+    "description": "Messaggio quando l'importazione HealthKit non trova dati"
+  },
+  "bodyMeasurementsImportPartialSuccess": "Importate {imported} di {total} misurazioni. Alcune voci non sono state salvate.",
+  "@bodyMeasurementsImportPartialSuccess": {
+    "description": "Messaggio quando alcune importazioni falliscono",
+    "placeholders": {
+      "imported": { "type": "int" },
+      "total": { "type": "int" }
+    }
+  },
+  "bodyMeasurementsOpenSettings": "Apri Impostazioni",
+  "@bodyMeasurementsOpenSettings": {
+    "description": "Pulsante per aprire impostazioni di sistema"
+  },
+  "bodyMeasurementsPermissionDeniedTitle": "Permesso Richiesto",
+  "@bodyMeasurementsPermissionDeniedTitle": {
+    "description": "Titolo dialog permesso negato"
+  },
+  "bodyMeasurementsPermissionDeniedMessage": "Per importare i tuoi dati sulla salute, abilita l'accesso a Salute per FitLog Pro nelle impostazioni del dispositivo.",
+  "@bodyMeasurementsPermissionDeniedMessage": {
+    "description": "Messaggio che spiega come abilitare i permessi"
+  },
+  "bodyMeasurementsHealthConnectRequired": "L'app Health Connect è necessaria per sincronizzare i dati sulla salute su Android.",
+  "@bodyMeasurementsHealthConnectRequired": {
+    "description": "Messaggio quando Health Connect non è installato"
+  },
+  "bodyMeasurementsInstallHealthConnect": "Installa Health Connect",
+  "@bodyMeasurementsInstallHealthConnect": {
+    "description": "Pulsante per installare Health Connect"
+  },
+  "bodyMeasurementsImportInProgress": "Importazione in corso...",
+  "@bodyMeasurementsImportInProgress": {
+    "description": "Messaggio di caricamento durante import"
+  },
+  "bodyMeasurementsExportInProgress": "Esportazione in corso...",
+  "@bodyMeasurementsExportInProgress": {
+    "description": "Messaggio di caricamento durante export"
+  },
+  "bodyMeasurementsInvalidValue": "Valore non valido rilevato e ignorato",
+  "@bodyMeasurementsInvalidValue": {
+    "description": "Avviso quando una misurazione ha valore non valido"
+  },
+  "bodyMeasurementsNetworkError": "Errore di rete. Controlla la connessione e riprova.",
+  "@bodyMeasurementsNetworkError": {
+    "description": "Messaggio errore per problemi di rete"
+  },
+  "bodyMeasurementsRetry": "Riprova",
+  "@bodyMeasurementsRetry": {
+    "description": "Testo pulsante riprova"
+  },
   "weeks": "settimane",
   "@weeks": {
     "description": "Unità per settimane"
@@ -19134,6 +19186,50 @@
   "initialOnboardingCompleteInfo": "Puoi modificare tutto dalle Impostazioni in qualsiasi momento",
   "@initialOnboardingCompleteInfo": {
     "description": "Testo info sotto pulsante completa"
+  },
+  "initialOnboardingPersonalInfoTitle": "Parlaci di te",
+  "@initialOnboardingPersonalInfoTitle": {
+    "description": "Titolo step info personali"
+  },
+  "initialOnboardingPersonalInfoSubtitle": "Ci aiuta a personalizzare la tua esperienza",
+  "@initialOnboardingPersonalInfoSubtitle": {
+    "description": "Sottotitolo step info personali"
+  },
+  "initialOnboardingAgeLabel": "Quanti anni hai?",
+  "@initialOnboardingAgeLabel": {
+    "description": "Label picker eta"
+  },
+  "initialOnboardingAgeYears": "anni",
+  "@initialOnboardingAgeYears": {
+    "description": "Suffisso anni per eta"
+  },
+  "initialOnboardingHeightLabel": "Altezza",
+  "@initialOnboardingHeightLabel": {
+    "description": "Label input altezza"
+  },
+  "initialOnboardingHeightCm": "cm",
+  "@initialOnboardingHeightCm": {
+    "description": "Unita centimetri"
+  },
+  "initialOnboardingBodyMeasurementsTitle": "Le tue misure",
+  "@initialOnboardingBodyMeasurementsTitle": {
+    "description": "Titolo step misure corporee"
+  },
+  "initialOnboardingBodyMeasurementsSubtitle": "Ci aiuta a suggerirti i pesi giusti",
+  "@initialOnboardingBodyMeasurementsSubtitle": {
+    "description": "Sottotitolo step misure corporee"
+  },
+  "initialOnboardingSummaryAge": "Eta",
+  "@initialOnboardingSummaryAge": {
+    "description": "Label summary per eta"
+  },
+  "initialOnboardingSummaryHeight": "Altezza",
+  "@initialOnboardingSummaryHeight": {
+    "description": "Label summary per altezza"
+  },
+  "initialOnboardingSummarySex": "Sesso",
+  "@initialOnboardingSummarySex": {
+    "description": "Label summary per sesso"
   },
   "tourXpProgressTitle": "Il Tuo Livello",
   "tourXpProgressDescription": "Traccia i tuoi progressi! Guadagna XP completando allenamenti e sali di livello.",

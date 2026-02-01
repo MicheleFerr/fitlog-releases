@@ -15,11 +15,12 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$InitialOnboardingData {
 
-// Step 2: Goal
- TrainingGoalUI get goal;// Step 3: Body data
- BiologicalSex get sex; double get bodyweightKg;// Step 4: Experience
+// Step 1: Goal
+ TrainingGoalUI get goal;// Step 2: Personal Info
+ BiologicalSex get sex; int get age;// Step 3: Body data
+ double get heightCm; double get bodyweightKg;// Step 4: Experience
  ExperienceLevelUI get experience;// Step 5: HealthKit (tracking only, not persisted)
- bool get healthKitConnected; List<String> get healthKitPermissionsGranted;// Step 6: Frequency
+ bool get healthKitConnected; List<String> get healthKitPermissionsGranted;// Step 5: Frequency
  int get workoutsPerWeek;// Meta
  DateTime? get completedAt;
 /// Create a copy of InitialOnboardingData
@@ -34,16 +35,16 @@ $InitialOnboardingDataCopyWith<InitialOnboardingData> get copyWith => _$InitialO
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is InitialOnboardingData&&(identical(other.goal, goal) || other.goal == goal)&&(identical(other.sex, sex) || other.sex == sex)&&(identical(other.bodyweightKg, bodyweightKg) || other.bodyweightKg == bodyweightKg)&&(identical(other.experience, experience) || other.experience == experience)&&(identical(other.healthKitConnected, healthKitConnected) || other.healthKitConnected == healthKitConnected)&&const DeepCollectionEquality().equals(other.healthKitPermissionsGranted, healthKitPermissionsGranted)&&(identical(other.workoutsPerWeek, workoutsPerWeek) || other.workoutsPerWeek == workoutsPerWeek)&&(identical(other.completedAt, completedAt) || other.completedAt == completedAt));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is InitialOnboardingData&&(identical(other.goal, goal) || other.goal == goal)&&(identical(other.sex, sex) || other.sex == sex)&&(identical(other.age, age) || other.age == age)&&(identical(other.heightCm, heightCm) || other.heightCm == heightCm)&&(identical(other.bodyweightKg, bodyweightKg) || other.bodyweightKg == bodyweightKg)&&(identical(other.experience, experience) || other.experience == experience)&&(identical(other.healthKitConnected, healthKitConnected) || other.healthKitConnected == healthKitConnected)&&const DeepCollectionEquality().equals(other.healthKitPermissionsGranted, healthKitPermissionsGranted)&&(identical(other.workoutsPerWeek, workoutsPerWeek) || other.workoutsPerWeek == workoutsPerWeek)&&(identical(other.completedAt, completedAt) || other.completedAt == completedAt));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,goal,sex,bodyweightKg,experience,healthKitConnected,const DeepCollectionEquality().hash(healthKitPermissionsGranted),workoutsPerWeek,completedAt);
+int get hashCode => Object.hash(runtimeType,goal,sex,age,heightCm,bodyweightKg,experience,healthKitConnected,const DeepCollectionEquality().hash(healthKitPermissionsGranted),workoutsPerWeek,completedAt);
 
 @override
 String toString() {
-  return 'InitialOnboardingData(goal: $goal, sex: $sex, bodyweightKg: $bodyweightKg, experience: $experience, healthKitConnected: $healthKitConnected, healthKitPermissionsGranted: $healthKitPermissionsGranted, workoutsPerWeek: $workoutsPerWeek, completedAt: $completedAt)';
+  return 'InitialOnboardingData(goal: $goal, sex: $sex, age: $age, heightCm: $heightCm, bodyweightKg: $bodyweightKg, experience: $experience, healthKitConnected: $healthKitConnected, healthKitPermissionsGranted: $healthKitPermissionsGranted, workoutsPerWeek: $workoutsPerWeek, completedAt: $completedAt)';
 }
 
 
@@ -54,7 +55,7 @@ abstract mixin class $InitialOnboardingDataCopyWith<$Res>  {
   factory $InitialOnboardingDataCopyWith(InitialOnboardingData value, $Res Function(InitialOnboardingData) _then) = _$InitialOnboardingDataCopyWithImpl;
 @useResult
 $Res call({
- TrainingGoalUI goal, BiologicalSex sex, double bodyweightKg, ExperienceLevelUI experience, bool healthKitConnected, List<String> healthKitPermissionsGranted, int workoutsPerWeek, DateTime? completedAt
+ TrainingGoalUI goal, BiologicalSex sex, int age, double heightCm, double bodyweightKg, ExperienceLevelUI experience, bool healthKitConnected, List<String> healthKitPermissionsGranted, int workoutsPerWeek, DateTime? completedAt
 });
 
 
@@ -71,11 +72,13 @@ class _$InitialOnboardingDataCopyWithImpl<$Res>
 
 /// Create a copy of InitialOnboardingData
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? goal = null,Object? sex = null,Object? bodyweightKg = null,Object? experience = null,Object? healthKitConnected = null,Object? healthKitPermissionsGranted = null,Object? workoutsPerWeek = null,Object? completedAt = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? goal = null,Object? sex = null,Object? age = null,Object? heightCm = null,Object? bodyweightKg = null,Object? experience = null,Object? healthKitConnected = null,Object? healthKitPermissionsGranted = null,Object? workoutsPerWeek = null,Object? completedAt = freezed,}) {
   return _then(_self.copyWith(
 goal: null == goal ? _self.goal : goal // ignore: cast_nullable_to_non_nullable
 as TrainingGoalUI,sex: null == sex ? _self.sex : sex // ignore: cast_nullable_to_non_nullable
-as BiologicalSex,bodyweightKg: null == bodyweightKg ? _self.bodyweightKg : bodyweightKg // ignore: cast_nullable_to_non_nullable
+as BiologicalSex,age: null == age ? _self.age : age // ignore: cast_nullable_to_non_nullable
+as int,heightCm: null == heightCm ? _self.heightCm : heightCm // ignore: cast_nullable_to_non_nullable
+as double,bodyweightKg: null == bodyweightKg ? _self.bodyweightKg : bodyweightKg // ignore: cast_nullable_to_non_nullable
 as double,experience: null == experience ? _self.experience : experience // ignore: cast_nullable_to_non_nullable
 as ExperienceLevelUI,healthKitConnected: null == healthKitConnected ? _self.healthKitConnected : healthKitConnected // ignore: cast_nullable_to_non_nullable
 as bool,healthKitPermissionsGranted: null == healthKitPermissionsGranted ? _self.healthKitPermissionsGranted : healthKitPermissionsGranted // ignore: cast_nullable_to_non_nullable
@@ -166,10 +169,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( TrainingGoalUI goal,  BiologicalSex sex,  double bodyweightKg,  ExperienceLevelUI experience,  bool healthKitConnected,  List<String> healthKitPermissionsGranted,  int workoutsPerWeek,  DateTime? completedAt)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( TrainingGoalUI goal,  BiologicalSex sex,  int age,  double heightCm,  double bodyweightKg,  ExperienceLevelUI experience,  bool healthKitConnected,  List<String> healthKitPermissionsGranted,  int workoutsPerWeek,  DateTime? completedAt)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _InitialOnboardingData() when $default != null:
-return $default(_that.goal,_that.sex,_that.bodyweightKg,_that.experience,_that.healthKitConnected,_that.healthKitPermissionsGranted,_that.workoutsPerWeek,_that.completedAt);case _:
+return $default(_that.goal,_that.sex,_that.age,_that.heightCm,_that.bodyweightKg,_that.experience,_that.healthKitConnected,_that.healthKitPermissionsGranted,_that.workoutsPerWeek,_that.completedAt);case _:
   return orElse();
 
 }
@@ -187,10 +190,10 @@ return $default(_that.goal,_that.sex,_that.bodyweightKg,_that.experience,_that.h
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( TrainingGoalUI goal,  BiologicalSex sex,  double bodyweightKg,  ExperienceLevelUI experience,  bool healthKitConnected,  List<String> healthKitPermissionsGranted,  int workoutsPerWeek,  DateTime? completedAt)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( TrainingGoalUI goal,  BiologicalSex sex,  int age,  double heightCm,  double bodyweightKg,  ExperienceLevelUI experience,  bool healthKitConnected,  List<String> healthKitPermissionsGranted,  int workoutsPerWeek,  DateTime? completedAt)  $default,) {final _that = this;
 switch (_that) {
 case _InitialOnboardingData():
-return $default(_that.goal,_that.sex,_that.bodyweightKg,_that.experience,_that.healthKitConnected,_that.healthKitPermissionsGranted,_that.workoutsPerWeek,_that.completedAt);case _:
+return $default(_that.goal,_that.sex,_that.age,_that.heightCm,_that.bodyweightKg,_that.experience,_that.healthKitConnected,_that.healthKitPermissionsGranted,_that.workoutsPerWeek,_that.completedAt);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -207,10 +210,10 @@ return $default(_that.goal,_that.sex,_that.bodyweightKg,_that.experience,_that.h
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( TrainingGoalUI goal,  BiologicalSex sex,  double bodyweightKg,  ExperienceLevelUI experience,  bool healthKitConnected,  List<String> healthKitPermissionsGranted,  int workoutsPerWeek,  DateTime? completedAt)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( TrainingGoalUI goal,  BiologicalSex sex,  int age,  double heightCm,  double bodyweightKg,  ExperienceLevelUI experience,  bool healthKitConnected,  List<String> healthKitPermissionsGranted,  int workoutsPerWeek,  DateTime? completedAt)?  $default,) {final _that = this;
 switch (_that) {
 case _InitialOnboardingData() when $default != null:
-return $default(_that.goal,_that.sex,_that.bodyweightKg,_that.experience,_that.healthKitConnected,_that.healthKitPermissionsGranted,_that.workoutsPerWeek,_that.completedAt);case _:
+return $default(_that.goal,_that.sex,_that.age,_that.heightCm,_that.bodyweightKg,_that.experience,_that.healthKitConnected,_that.healthKitPermissionsGranted,_that.workoutsPerWeek,_that.completedAt);case _:
   return null;
 
 }
@@ -222,13 +225,16 @@ return $default(_that.goal,_that.sex,_that.bodyweightKg,_that.experience,_that.h
 @JsonSerializable()
 
 class _InitialOnboardingData extends InitialOnboardingData {
-  const _InitialOnboardingData({required this.goal, required this.sex, required this.bodyweightKg, required this.experience, this.healthKitConnected = false, final  List<String> healthKitPermissionsGranted = const [], this.workoutsPerWeek = 3, this.completedAt}): _healthKitPermissionsGranted = healthKitPermissionsGranted,super._();
+  const _InitialOnboardingData({required this.goal, required this.sex, required this.age, required this.heightCm, required this.bodyweightKg, required this.experience, this.healthKitConnected = false, final  List<String> healthKitPermissionsGranted = const [], this.workoutsPerWeek = 3, this.completedAt}): _healthKitPermissionsGranted = healthKitPermissionsGranted,super._();
   factory _InitialOnboardingData.fromJson(Map<String, dynamic> json) => _$InitialOnboardingDataFromJson(json);
 
-// Step 2: Goal
+// Step 1: Goal
 @override final  TrainingGoalUI goal;
-// Step 3: Body data
+// Step 2: Personal Info
 @override final  BiologicalSex sex;
+@override final  int age;
+// Step 3: Body data
+@override final  double heightCm;
 @override final  double bodyweightKg;
 // Step 4: Experience
 @override final  ExperienceLevelUI experience;
@@ -241,7 +247,7 @@ class _InitialOnboardingData extends InitialOnboardingData {
   return EqualUnmodifiableListView(_healthKitPermissionsGranted);
 }
 
-// Step 6: Frequency
+// Step 5: Frequency
 @override@JsonKey() final  int workoutsPerWeek;
 // Meta
 @override final  DateTime? completedAt;
@@ -259,16 +265,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _InitialOnboardingData&&(identical(other.goal, goal) || other.goal == goal)&&(identical(other.sex, sex) || other.sex == sex)&&(identical(other.bodyweightKg, bodyweightKg) || other.bodyweightKg == bodyweightKg)&&(identical(other.experience, experience) || other.experience == experience)&&(identical(other.healthKitConnected, healthKitConnected) || other.healthKitConnected == healthKitConnected)&&const DeepCollectionEquality().equals(other._healthKitPermissionsGranted, _healthKitPermissionsGranted)&&(identical(other.workoutsPerWeek, workoutsPerWeek) || other.workoutsPerWeek == workoutsPerWeek)&&(identical(other.completedAt, completedAt) || other.completedAt == completedAt));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _InitialOnboardingData&&(identical(other.goal, goal) || other.goal == goal)&&(identical(other.sex, sex) || other.sex == sex)&&(identical(other.age, age) || other.age == age)&&(identical(other.heightCm, heightCm) || other.heightCm == heightCm)&&(identical(other.bodyweightKg, bodyweightKg) || other.bodyweightKg == bodyweightKg)&&(identical(other.experience, experience) || other.experience == experience)&&(identical(other.healthKitConnected, healthKitConnected) || other.healthKitConnected == healthKitConnected)&&const DeepCollectionEquality().equals(other._healthKitPermissionsGranted, _healthKitPermissionsGranted)&&(identical(other.workoutsPerWeek, workoutsPerWeek) || other.workoutsPerWeek == workoutsPerWeek)&&(identical(other.completedAt, completedAt) || other.completedAt == completedAt));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,goal,sex,bodyweightKg,experience,healthKitConnected,const DeepCollectionEquality().hash(_healthKitPermissionsGranted),workoutsPerWeek,completedAt);
+int get hashCode => Object.hash(runtimeType,goal,sex,age,heightCm,bodyweightKg,experience,healthKitConnected,const DeepCollectionEquality().hash(_healthKitPermissionsGranted),workoutsPerWeek,completedAt);
 
 @override
 String toString() {
-  return 'InitialOnboardingData(goal: $goal, sex: $sex, bodyweightKg: $bodyweightKg, experience: $experience, healthKitConnected: $healthKitConnected, healthKitPermissionsGranted: $healthKitPermissionsGranted, workoutsPerWeek: $workoutsPerWeek, completedAt: $completedAt)';
+  return 'InitialOnboardingData(goal: $goal, sex: $sex, age: $age, heightCm: $heightCm, bodyweightKg: $bodyweightKg, experience: $experience, healthKitConnected: $healthKitConnected, healthKitPermissionsGranted: $healthKitPermissionsGranted, workoutsPerWeek: $workoutsPerWeek, completedAt: $completedAt)';
 }
 
 
@@ -279,7 +285,7 @@ abstract mixin class _$InitialOnboardingDataCopyWith<$Res> implements $InitialOn
   factory _$InitialOnboardingDataCopyWith(_InitialOnboardingData value, $Res Function(_InitialOnboardingData) _then) = __$InitialOnboardingDataCopyWithImpl;
 @override @useResult
 $Res call({
- TrainingGoalUI goal, BiologicalSex sex, double bodyweightKg, ExperienceLevelUI experience, bool healthKitConnected, List<String> healthKitPermissionsGranted, int workoutsPerWeek, DateTime? completedAt
+ TrainingGoalUI goal, BiologicalSex sex, int age, double heightCm, double bodyweightKg, ExperienceLevelUI experience, bool healthKitConnected, List<String> healthKitPermissionsGranted, int workoutsPerWeek, DateTime? completedAt
 });
 
 
@@ -296,11 +302,13 @@ class __$InitialOnboardingDataCopyWithImpl<$Res>
 
 /// Create a copy of InitialOnboardingData
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? goal = null,Object? sex = null,Object? bodyweightKg = null,Object? experience = null,Object? healthKitConnected = null,Object? healthKitPermissionsGranted = null,Object? workoutsPerWeek = null,Object? completedAt = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? goal = null,Object? sex = null,Object? age = null,Object? heightCm = null,Object? bodyweightKg = null,Object? experience = null,Object? healthKitConnected = null,Object? healthKitPermissionsGranted = null,Object? workoutsPerWeek = null,Object? completedAt = freezed,}) {
   return _then(_InitialOnboardingData(
 goal: null == goal ? _self.goal : goal // ignore: cast_nullable_to_non_nullable
 as TrainingGoalUI,sex: null == sex ? _self.sex : sex // ignore: cast_nullable_to_non_nullable
-as BiologicalSex,bodyweightKg: null == bodyweightKg ? _self.bodyweightKg : bodyweightKg // ignore: cast_nullable_to_non_nullable
+as BiologicalSex,age: null == age ? _self.age : age // ignore: cast_nullable_to_non_nullable
+as int,heightCm: null == heightCm ? _self.heightCm : heightCm // ignore: cast_nullable_to_non_nullable
+as double,bodyweightKg: null == bodyweightKg ? _self.bodyweightKg : bodyweightKg // ignore: cast_nullable_to_non_nullable
 as double,experience: null == experience ? _self.experience : experience // ignore: cast_nullable_to_non_nullable
 as ExperienceLevelUI,healthKitConnected: null == healthKitConnected ? _self.healthKitConnected : healthKitConnected // ignore: cast_nullable_to_non_nullable
 as bool,healthKitPermissionsGranted: null == healthKitPermissionsGranted ? _self._healthKitPermissionsGranted : healthKitPermissionsGranted // ignore: cast_nullable_to_non_nullable

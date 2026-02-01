@@ -5,7 +5,7 @@ import 'package:gymbro_flutter_new/features/onboarding/presentation/providers/in
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
-/// Step 2: Goal selection with visual cards
+/// Step 2: Goal selection with visual cards (Yazio-inspired design)
 class GoalSelectionStep extends ConsumerWidget {
   const GoalSelectionStep({super.key});
 
@@ -13,91 +13,95 @@ class GoalSelectionStep extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final state = ref.watch(initialOnboardingNotifierProvider);
 
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 24),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const SizedBox(height: 24),
+    return AnimatedOpacity(
+      opacity: 1.0,
+      duration: const Duration(milliseconds: 400),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 24),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const SizedBox(height: 24),
 
-          // Title
-          Text(
-            context.l10n.initialOnboardingGoalTitle,
-            style: context.textTheme.headlineSmall?.copyWith(
-              fontWeight: FontWeight.bold,
-              color: context.colors.onSurface,
+            // Title - bigger and bolder
+            Text(
+              context.l10n.initialOnboardingGoalTitle,
+              style: context.textTheme.headlineMedium?.copyWith(
+                fontWeight: FontWeight.bold,
+                color: context.colors.onSurface,
+              ),
             ),
-          ),
 
-          const SizedBox(height: 8),
+            const SizedBox(height: 8),
 
-          // Subtitle
-          Text(
-            context.l10n.initialOnboardingGoalSubtitle,
-            style: context.textTheme.bodyMedium?.copyWith(
-              color: context.colors.onSurface.withValues(alpha: 0.7),
+            // Subtitle - larger text
+            Text(
+              context.l10n.initialOnboardingGoalSubtitle,
+              style: context.textTheme.bodyLarge?.copyWith(
+                color: context.colors.onSurface.withValues(alpha: 0.7),
+              ),
             ),
-          ),
 
-          const SizedBox(height: 32),
+            const SizedBox(height: 32),
 
-          // Goal options
-          Expanded(
-            child: ListView(
-              children: [
-                _GoalCard(
-                  goal: TrainingGoalUI.buildMuscle,
-                  emoji: TrainingGoalUI.buildMuscle.icon,
-                  title: context.l10n.initialOnboardingGoalBuildMuscle,
-                  subtitle: context.l10n.initialOnboardingGoalBuildMuscleDesc,
-                  isSelected: state.goal == TrainingGoalUI.buildMuscle,
-                  onTap: () => ref
-                      .read(initialOnboardingNotifierProvider.notifier)
-                      .setGoal(TrainingGoalUI.buildMuscle),
-                ),
-                const SizedBox(height: 12),
-                _GoalCard(
-                  goal: TrainingGoalUI.getStronger,
-                  emoji: TrainingGoalUI.getStronger.icon,
-                  title: context.l10n.initialOnboardingGoalGetStronger,
-                  subtitle: context.l10n.initialOnboardingGoalGetStrongerDesc,
-                  isSelected: state.goal == TrainingGoalUI.getStronger,
-                  onTap: () => ref
-                      .read(initialOnboardingNotifierProvider.notifier)
-                      .setGoal(TrainingGoalUI.getStronger),
-                ),
-                const SizedBox(height: 12),
-                _GoalCard(
-                  goal: TrainingGoalUI.endurance,
-                  emoji: TrainingGoalUI.endurance.icon,
-                  title: context.l10n.initialOnboardingGoalEndurance,
-                  subtitle: context.l10n.initialOnboardingGoalEnduranceDesc,
-                  isSelected: state.goal == TrainingGoalUI.endurance,
-                  onTap: () => ref
-                      .read(initialOnboardingNotifierProvider.notifier)
-                      .setGoal(TrainingGoalUI.endurance),
-                ),
-                const SizedBox(height: 12),
-                _GoalCard(
-                  goal: TrainingGoalUI.stayFit,
-                  emoji: TrainingGoalUI.stayFit.icon,
-                  title: context.l10n.initialOnboardingGoalStayFit,
-                  subtitle: context.l10n.initialOnboardingGoalStayFitDesc,
-                  isSelected: state.goal == TrainingGoalUI.stayFit,
-                  onTap: () => ref
-                      .read(initialOnboardingNotifierProvider.notifier)
-                      .setGoal(TrainingGoalUI.stayFit),
-                ),
-              ],
+            // Goal options with increased spacing
+            Expanded(
+              child: ListView(
+                children: [
+                  _GoalCard(
+                    goal: TrainingGoalUI.buildMuscle,
+                    emoji: TrainingGoalUI.buildMuscle.icon,
+                    title: context.l10n.initialOnboardingGoalBuildMuscle,
+                    subtitle: context.l10n.initialOnboardingGoalBuildMuscleDesc,
+                    isSelected: state.goal == TrainingGoalUI.buildMuscle,
+                    onTap: () => ref
+                        .read(initialOnboardingNotifierProvider.notifier)
+                        .setGoal(TrainingGoalUI.buildMuscle),
+                  ),
+                  const SizedBox(height: 16),
+                  _GoalCard(
+                    goal: TrainingGoalUI.getStronger,
+                    emoji: TrainingGoalUI.getStronger.icon,
+                    title: context.l10n.initialOnboardingGoalGetStronger,
+                    subtitle: context.l10n.initialOnboardingGoalGetStrongerDesc,
+                    isSelected: state.goal == TrainingGoalUI.getStronger,
+                    onTap: () => ref
+                        .read(initialOnboardingNotifierProvider.notifier)
+                        .setGoal(TrainingGoalUI.getStronger),
+                  ),
+                  const SizedBox(height: 16),
+                  _GoalCard(
+                    goal: TrainingGoalUI.endurance,
+                    emoji: TrainingGoalUI.endurance.icon,
+                    title: context.l10n.initialOnboardingGoalEndurance,
+                    subtitle: context.l10n.initialOnboardingGoalEnduranceDesc,
+                    isSelected: state.goal == TrainingGoalUI.endurance,
+                    onTap: () => ref
+                        .read(initialOnboardingNotifierProvider.notifier)
+                        .setGoal(TrainingGoalUI.endurance),
+                  ),
+                  const SizedBox(height: 16),
+                  _GoalCard(
+                    goal: TrainingGoalUI.stayFit,
+                    emoji: TrainingGoalUI.stayFit.icon,
+                    title: context.l10n.initialOnboardingGoalStayFit,
+                    subtitle: context.l10n.initialOnboardingGoalStayFitDesc,
+                    isSelected: state.goal == TrainingGoalUI.stayFit,
+                    onTap: () => ref
+                        .read(initialOnboardingNotifierProvider.notifier)
+                        .setGoal(TrainingGoalUI.stayFit),
+                  ),
+                ],
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
 }
 
-/// Visual goal card with emoji, title and description
+/// Visual goal card with emoji, title, description and animated selection
 class _GoalCard extends StatelessWidget {
   const _GoalCard({
     required this.goal,
@@ -123,23 +127,31 @@ class _GoalCard extends StatelessWidget {
         duration: const Duration(milliseconds: 200),
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
-          color: isSelected
-              ? context.colors.primary.withValues(alpha: 0.1)
-              : context.colors.surface,
+          gradient: isSelected
+              ? LinearGradient(
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                  colors: [
+                    context.colors.primary.withValues(alpha: 0.08),
+                    context.colors.primary.withValues(alpha: 0.02),
+                  ],
+                )
+              : null,
+          color: isSelected ? null : context.colors.surface,
           border: Border.all(
             color: isSelected
                 ? context.colors.primary
                 : context.colors.outline.withValues(alpha: 0.3),
-            width: isSelected ? 2 : 1,
+            width: isSelected ? 2.5 : 1,
           ),
           borderRadius: BorderRadius.circular(16),
         ),
         child: Row(
           children: [
-            // Emoji
+            // Emoji - larger container
             Container(
-              width: 56,
-              height: 56,
+              width: 64,
+              height: 64,
               decoration: BoxDecoration(
                 color: context.colors.surfaceContainerHighest,
                 borderRadius: BorderRadius.circular(12),
@@ -147,7 +159,7 @@ class _GoalCard extends StatelessWidget {
               child: Center(
                 child: Text(
                   emoji,
-                  style: const TextStyle(fontSize: 28),
+                  style: const TextStyle(fontSize: 32),
                 ),
               ),
             ),
@@ -177,13 +189,17 @@ class _GoalCard extends StatelessWidget {
               ),
             ),
 
-            // Selection indicator
-            if (isSelected)
-              Icon(
+            // Animated checkmark
+            AnimatedScale(
+              scale: isSelected ? 1.0 : 0.0,
+              duration: const Duration(milliseconds: 200),
+              curve: Curves.easeOutBack,
+              child: Icon(
                 AppIcons.checkCircle,
                 color: context.colors.primary,
                 size: 24,
               ),
+            ),
           ],
         ),
       ),
