@@ -112,10 +112,15 @@ class _ImportScreenState extends ConsumerState<ImportScreen> {
           const SizedBox(height: 32),
 
           // Pick file button
-          FilledButton.icon(
-            onPressed: _pickAndParseFile,
-            icon: const Icon(AppIcons.uploadFile),
-            label: Text(context.l10n.selectCsvFile),
+          // Accessibility: Select file button with semantic label
+          Semantics(
+            label: context.l10n.selectCsvFile,
+            button: true,
+            child: FilledButton.icon(
+              onPressed: _pickAndParseFile,
+              icon: const Icon(AppIcons.uploadFile),
+              label: Text(context.l10n.selectCsvFile),
+            ),
           ),
 
           const SizedBox(height: 16),
@@ -400,11 +405,16 @@ class _ImportScreenState extends ConsumerState<ImportScreen> {
               ),
             ),
             const SizedBox(height: 24),
-            FilledButton.icon(
-              onPressed: () =>
-                  ref.read(importNotifierProvider.notifier).reset(),
-              icon: const Icon(AppIcons.refresh),
-              label: Text(context.l10n.tryAgain),
+            // Accessibility: Try again button with semantic label
+            Semantics(
+              label: context.l10n.tryAgain,
+              button: true,
+              child: FilledButton.icon(
+                onPressed: () =>
+                    ref.read(importNotifierProvider.notifier).reset(),
+                icon: const Icon(AppIcons.refresh),
+                label: Text(context.l10n.tryAgain),
+              ),
             ),
           ],
         ),
