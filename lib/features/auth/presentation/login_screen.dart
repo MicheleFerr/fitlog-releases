@@ -400,6 +400,8 @@ class _LoginScreenState extends ConsumerState<LoginScreen>
                 color: colorScheme.onSurfaceVariant,
               ),
             ),
+            // Accessibility: Semantic label for screen readers
+            semanticLabel: context.l10n.tryWithoutAccount,
             style: TextButton.styleFrom(
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(16),
