@@ -154,6 +154,8 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen>
                         fontWeight: FontWeight.w600,
                       ),
                     ),
+                    // Accessibility: Semantic label for screen readers
+                    semanticLabel: context.l10n.signIn,
                   ),
                 ],
               ),
@@ -271,29 +273,34 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen>
         SizedBox(
           width: double.infinity,
           height: 56,
-          child: FilledButton.icon(
-            onPressed: authController.isLoading || !_tosAccepted
-                ? null
-                : _handleGoogleSignUp,
-            icon: authController.isLoading
-                ? const SizedBox(
-                    height: 20,
-                    width: 20,
-                    child: LoadingIndicator(),
-                  )
-                : const Icon(AppIcons.gMobiledata, size: 24),
-            label: Text(
-              context.l10n.continueWithGoogle,
-              style: context.textTheme.titleMedium?.copyWith(
-                fontWeight: FontWeight.w600,
+          // Accessibility: Semantic label for screen readers
+          child: Semantics(
+            label: context.l10n.continueWithGoogle,
+            child: FilledButton.icon(
+              onPressed: authController.isLoading || !_tosAccepted
+                  ? null
+                  : _handleGoogleSignUp,
+              icon: authController.isLoading
+                  ? const SizedBox(
+                      height: 20,
+                      width: 20,
+                      child: LoadingIndicator(),
+                    )
+                  : const Icon(AppIcons.gMobiledata, size: 24),
+              label: Text(
+                context.l10n.continueWithGoogle,
+                style: context.textTheme.titleMedium?.copyWith(
+                  fontWeight: FontWeight.w600,
+                ),
               ),
-            ),
-            style: FilledButton.styleFrom(
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(16),
+              style: FilledButton.styleFrom(
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(16),
+                ),
               ),
             ),
           ),
+        ),
         ),
 
         const SizedBox(height: AppSpacing.md),
@@ -303,28 +310,32 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen>
           SizedBox(
             width: double.infinity,
             height: 56,
-            child: FilledButton.icon(
-              onPressed: authController.isLoading || !_tosAccepted
-                  ? null
-                  : _handleAppleSignUp,
-              style: FilledButton.styleFrom(
-                backgroundColor: colorScheme.onSurface,
-                foregroundColor: colorScheme.surface,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(16),
+            // Accessibility: Semantic label for screen readers
+            child: Semantics(
+              label: context.l10n.continueWithApple,
+              child: FilledButton.icon(
+                onPressed: authController.isLoading || !_tosAccepted
+                    ? null
+                    : _handleAppleSignUp,
+                style: FilledButton.styleFrom(
+                  backgroundColor: colorScheme.onSurface,
+                  foregroundColor: colorScheme.surface,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(16),
+                  ),
                 ),
-              ),
-              icon: authController.isLoading
-                  ? const SizedBox(
-                      height: 20,
-                      width: 20,
-                      child: LoadingIndicator(),
-                    )
-                  : const Icon(AppIcons.apple),
-              label: Text(
-                context.l10n.continueWithApple,
-                style: context.textTheme.titleMedium?.copyWith(
-                  fontWeight: FontWeight.w600,
+                icon: authController.isLoading
+                    ? const SizedBox(
+                        height: 20,
+                        width: 20,
+                        child: LoadingIndicator(),
+                      )
+                    : const Icon(AppIcons.apple),
+                label: Text(
+                  context.l10n.continueWithApple,
+                  style: context.textTheme.titleMedium?.copyWith(
+                    fontWeight: FontWeight.w600,
+                  ),
                 ),
               ),
             ),
@@ -520,36 +531,44 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen>
           SizedBox(
             width: double.infinity,
             height: 56,
-            child: FilledButton(
-              onPressed: authController.isLoading || !_tosAccepted
-                  ? null
-                  : _handleRegister,
-              style: FilledButton.styleFrom(
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(16),
+            // Accessibility: Semantic label for screen readers
+            child: Semantics(
+              label: context.l10n.createAccount,
+              child: FilledButton(
+                onPressed: authController.isLoading || !_tosAccepted
+                    ? null
+                    : _handleRegister,
+                style: FilledButton.styleFrom(
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(16),
+                  ),
                 ),
-              ),
-              child: authController.isLoading
-                  ? const SizedBox(
-                      height: 20,
-                      width: 20,
-                      child: LoadingIndicator(),
-                    )
-                  : Text(
-                      context.l10n.createAccount,
-                      style: context.textTheme.titleMedium?.copyWith(
-                        fontWeight: FontWeight.w600,
+                child: authController.isLoading
+                    ? const SizedBox(
+                        height: 20,
+                        width: 20,
+                        child: LoadingIndicator(),
+                      )
+                    : Text(
+                        context.l10n.createAccount,
+                        style: context.textTheme.titleMedium?.copyWith(
+                          fontWeight: FontWeight.w600,
+                        ),
                       ),
-                    ),
+              ),
             ),
           ),
           const SizedBox(height: AppSpacing.md),
 
           // Back to options
-          TextButton.icon(
-            onPressed: () => setState(() => _showEmailForm = false),
-            icon: const Icon(AppIcons.arrowBack),
-            label: Text(context.l10n.backToOptions),
+          // Accessibility: Semantic label for screen readers
+          Semantics(
+            label: context.l10n.backToOptions,
+            child: TextButton.icon(
+              onPressed: () => setState(() => _showEmailForm = false),
+              icon: const Icon(AppIcons.arrowBack),
+              label: Text(context.l10n.backToOptions),
+            ),
           ),
         ],
       ),
