@@ -5,7 +5,7 @@
 
 set -e
 
-L10N_DIR="lib/shared/presentation/l10n"
+L10N_DIR="assets/i18n"
 EN_FILE="$L10N_DIR/app_en.arb"
 IT_FILE="$L10N_DIR/app_it.arb"
 
