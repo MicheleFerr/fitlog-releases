@@ -1,6 +1,6 @@
 {
-  "lastUpdate": "2026-02-02T13:00:00Z",
-  "iteration": 22,
+  "lastUpdate": "2026-02-02T14:00:00Z",
+  "iteration": 25,
   "phase": "Accessibility Rollout (Active)",
   "completedTasks": [
     "icons_consistency",
@@ -19,11 +19,17 @@
     "edit_profile_screen_accessibility_complete",
     "onboarding_initial_screen_accessibility_complete",
     "achievements_screen_accessibility_complete",
-    "pro_analytics_screen_accessibility_complete"
+    "pro_analytics_screen_accessibility_complete",
+    "streak_calendar_screen_accessibility_complete",
+    "my_photos_screen_accessibility_complete",
+    "legal_document_screen_accessibility_complete",
+    "import_screen_accessibility_complete",
+    "photo_comparison_screen_accessibility_complete",
+    "health_sync_settings_screen_accessibility_complete",
+    "audio_debug_test_screen_accessibility_complete"
   ],
   "inProgressTasks": [
-    "accessibility_remaining_18_screens",
-    "accessibility_analytics_screens"
+    "accessibility_remaining_13_screens"
   ],
   "blockedTasks": [
     "fontSize_deprecation_refactor",

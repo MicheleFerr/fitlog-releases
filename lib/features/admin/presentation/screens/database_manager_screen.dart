@@ -343,20 +343,30 @@ class _DatabaseManagerScreenState extends ConsumerState<DatabaseManagerScreen> {
           const Spacer(),
 
           // Bulk actions
-          TextButton.icon(
-            onPressed: () => _showBulkEditDialog(context, l10n),
-            icon: const Icon(AppIcons.edit, size: 18),
-            label: Text(l10n.bulkEdit),
+          // Accessibility: Bulk edit button with semantic label
+          Semantics(
+            label: l10n.bulkEdit,
+            button: true,
+            child: TextButton.icon(
+              onPressed: () => _showBulkEditDialog(context, l10n),
+              icon: const Icon(AppIcons.edit, size: 18),
+              label: Text(l10n.bulkEdit),
+            ),
           ),
           const SizedBox(width: 8),
 
-          TextButton.icon(
-            onPressed: () => _confirmBulkDelete(context, l10n),
-            icon: Icon(AppIcons.delete, size: 18, color: context.colors.error),
-            label: Text(
-              l10n.delete,
-              style: context.textTheme.bodyMedium?.copyWith(
-                color: context.colors.error,
+          // Accessibility: Bulk delete button with semantic label
+          Semantics(
+            label: l10n.delete,
+            button: true,
+            child: TextButton.icon(
+              onPressed: () => _confirmBulkDelete(context, l10n),
+              icon: Icon(AppIcons.delete, size: 18, color: context.colors.error),
+              label: Text(
+                l10n.delete,
+                style: context.textTheme.bodyMedium?.copyWith(
+                  color: context.colors.error,
+                ),
               ),
             ),
           ),
@@ -466,6 +476,7 @@ class _DatabaseManagerScreenState extends ConsumerState<DatabaseManagerScreen> {
       onPressed: () => _openExerciseEditor(context, null),
       icon: const Icon(AppIcons.add),
       label: Text(l10n.addExercise),
+      tooltip: l10n.addExercise,
     );
   }
 
@@ -560,17 +571,27 @@ class _DatabaseManagerScreenState extends ConsumerState<DatabaseManagerScreen> {
           ],
         ),
         actions: [
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(),
-            child: Text(l10n.cancel),
+          // Accessibility: Cancel button with semantic label
+          Semantics(
+            label: l10n.cancel,
+            button: true,
+            child: TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: Text(l10n.cancel),
+            ),
           ),
-          ElevatedButton(
-            onPressed: () {
-              Navigator.of(context).pop();
-              // TODO: Implement file picker and import
-              SnackBarService.showInfo(context, l10n.comingSoon);
-            },
-            child: Text(l10n.selectFile),
+          // Accessibility: Select file button with semantic label
+          Semantics(
+            label: l10n.selectFile,
+            button: true,
+            child: ElevatedButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+                // TODO: Implement file picker and import
+                SnackBarService.showInfo(context, l10n.comingSoon);
+              },
+              child: Text(l10n.selectFile),
+            ),
           ),
         ],
       ),
@@ -651,13 +672,23 @@ class _DatabaseManagerScreenState extends ConsumerState<DatabaseManagerScreen> {
           ],
         ),
         actions: [
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(false),
-            child: Text(l10n.cancel),
+          // Accessibility: Cancel button with semantic label
+          Semantics(
+            label: l10n.cancel,
+            button: true,
+            child: TextButton(
+              onPressed: () => Navigator.of(context).pop(false),
+              child: Text(l10n.cancel),
+            ),
           ),
-          ElevatedButton(
-            onPressed: () => Navigator.of(context).pop(true),
-            child: const Text('Start Migration'),
+          // Accessibility: Start migration button with semantic label
+          Semantics(
+            label: 'Start Migration',
+            button: true,
+            child: ElevatedButton(
+              onPressed: () => Navigator.of(context).pop(true),
+              child: const Text('Start Migration'),
+            ),
           ),
         ],
       ),
