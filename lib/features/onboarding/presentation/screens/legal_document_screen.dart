@@ -254,16 +254,21 @@ class _LegalDocumentScreenState extends State<LegalDocumentScreen> {
                 textAlign: TextAlign.center,
               ),
               const SizedBox(height: 16),
-              FilledButton.icon(
-                onPressed: () {
-                  setState(() {
-                    _isLoading = true;
-                    _errorMessage = null;
-                  });
-                  _tryOpenWebView();
-                },
-                icon: const Icon(AppIcons.refresh),
-                label: Text(context.l10n.retry),
+              // Accessibility: Retry button with semantic label
+              Semantics(
+                label: context.l10n.retry,
+                button: true,
+                child: FilledButton.icon(
+                  onPressed: () {
+                    setState(() {
+                      _isLoading = true;
+                      _errorMessage = null;
+                    });
+                    _tryOpenWebView();
+                  },
+                  icon: const Icon(AppIcons.refresh),
+                  label: Text(context.l10n.retry),
+                ),
               ),
             ],
           ),
