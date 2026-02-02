@@ -55,9 +55,13 @@ class _BodyDataStepState extends ConsumerState<BodyDataStep> {
           displayDoneButton: false,
           toolbarButtons: [
             // Left side: Weight presets button
-            (node) => GestureDetector(
-              onTap: () => _showWeightPresets(context),
-              child: Padding(
+            // Accessibility: Weight presets button with semantic label
+            (node) => Semantics(
+              label: context.l10n.initialOnboardingQuickSelect,
+              button: true,
+              child: GestureDetector(
+                onTap: () => _showWeightPresets(context),
+                child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16),
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
@@ -82,9 +86,13 @@ class _BodyDataStepState extends ConsumerState<BodyDataStep> {
             // Spacer
             (node) => const Expanded(child: SizedBox()),
             // Right side: Done button
-            (node) => GestureDetector(
-              onTap: () => node.unfocus(),
-              child: Padding(
+            // Accessibility: Done button with semantic label
+            (node) => Semantics(
+              label: context.l10n.done,
+              button: true,
+              child: GestureDetector(
+                onTap: () => node.unfocus(),
+                child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16),
                 child: Text(
                   context.l10n.done,
@@ -148,15 +156,20 @@ class _BodyDataStepState extends ConsumerState<BodyDataStep> {
                       double.tryParse(_weightController.text) ?? 0;
                   final isSelected = currentWeight.round() == weight;
 
-                  return GestureDetector(
-                    onTap: () {
-                      _weightController.text = weight.toString();
-                      ref
-                          .read(initialOnboardingNotifierProvider.notifier)
-                          .setBodyweight(weight.toDouble());
-                      Navigator.pop(sheetContext);
-                      _weightFocusNode.unfocus();
-                    },
+                  // Accessibility: Weight preset button with semantic label
+                  return Semantics(
+                    label: '$weight kg${isSelected ? ', selected' : ''}',
+                    button: true,
+                    selected: isSelected,
+                    child: GestureDetector(
+                      onTap: () {
+                        _weightController.text = weight.toString();
+                        ref
+                            .read(initialOnboardingNotifierProvider.notifier)
+                            .setBodyweight(weight.toDouble());
+                        Navigator.pop(sheetContext);
+                        _weightFocusNode.unfocus();
+                      },
                     child: Container(
                       width: 64,
                       padding: const EdgeInsets.symmetric(
