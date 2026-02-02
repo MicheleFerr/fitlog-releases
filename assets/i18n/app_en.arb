@@ -26031,8 +26031,12 @@
   "@bodyMeasurementsImportPartialSuccess": {
     "description": "Message when some imports failed",
     "placeholders": {
-      "imported": { "type": "int" },
-      "total": { "type": "int" }
+      "imported": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
     }
   },
   "bodyMeasurementsOpenSettings": "Open Settings",
@@ -29590,13 +29594,13 @@
   "@unlockFor7Days": {
     "description": "Label indicating unlock duration"
   },
-  "exerciseExpired": "Expired - Renew",
+  "exerciseExpired": "Expired",
   "@exerciseExpired": {
-    "description": "Label for expired custom exercise"
+    "description": "Badge text for expired custom exercise"
   },
-  "renewWithAd": "Renew with ad",
+  "renewWithAd": "Watch ad to renew (7 days)",
   "@renewWithAd": {
-    "description": "Button text to renew with ad"
+    "description": "Button to watch ad and renew exercise"
   },
   "unlimitedCustomExercises": "Get unlimited custom exercises",
   "@unlimitedCustomExercises": {
@@ -32430,10 +32434,6 @@
   "@hideTemplates": {
     "description": "Button to collapse the recommended templates section"
   },
-  "exerciseExpired": "Expired",
-  "@exerciseExpired": {
-    "description": "Badge text for expired custom exercise"
-  },
   "exerciseExpiresInDays": "{days}d left",
   "@exerciseExpiresInDays": {
     "description": "Badge showing days remaining for temporary exercise",
@@ -32461,10 +32461,6 @@
         "example": "5"
       }
     }
-  },
-  "renewWithAd": "Watch ad to renew (7 days)",
-  "@renewWithAd": {
-    "description": "Button to watch ad and renew exercise"
   },
   "upgradeForUnlimited": "Upgrade to Premium",
   "@upgradeForUnlimited": {
@@ -32497,5 +32493,8 @@
   "weightSuggestionFallback": "Conservative estimate",
   "@weightSuggestionFallback": {
     "description": "Weight suggestion chip label - fallback estimate"
-  }
+  },
+  "showPassword": "Show password",
+  "hidePassword": "Hide password",
+  "togglePasswordVisibility": "Toggle password visibility"
 }

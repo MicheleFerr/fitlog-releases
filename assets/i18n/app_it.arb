@@ -14685,8 +14685,12 @@
   "@bodyMeasurementsImportPartialSuccess": {
     "description": "Messaggio quando alcune importazioni falliscono",
     "placeholders": {
-      "imported": { "type": "int" },
-      "total": { "type": "int" }
+      "imported": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
     }
   },
   "bodyMeasurementsOpenSettings": "Apri Impostazioni",
@@ -17457,13 +17461,13 @@
   "@unlockFor7Days": {
     "description": "Etichetta che indica la durata dello sblocco"
   },
-  "exerciseExpired": "Scaduto - Rinnova",
+  "exerciseExpired": "Scaduto",
   "@exerciseExpired": {
-    "description": "Etichetta per esercizio personalizzato scaduto"
+    "description": "Badge per esercizio custom scaduto"
   },
-  "renewWithAd": "Rinnova con annuncio",
+  "renewWithAd": "Guarda video per rinnovare (7gg)",
   "@renewWithAd": {
-    "description": "Testo pulsante per rinnovare con annuncio"
+    "description": "Bottone per guardare video e rinnovare esercizio"
   },
   "unlimitedCustomExercises": "Ottieni esercizi personalizzati illimitati",
   "@unlimitedCustomExercises": {
@@ -19849,10 +19853,6 @@
   "@hideTemplates": {
     "description": "Bottone per collassare la sezione template consigliati"
   },
-  "exerciseExpired": "Scaduto",
-  "@exerciseExpired": {
-    "description": "Badge per esercizio custom scaduto"
-  },
   "exerciseExpiresInDays": "{days}gg",
   "@exerciseExpiresInDays": {
     "description": "Badge con giorni rimanenti per esercizio temporaneo",
@@ -19880,10 +19880,6 @@
         "example": "5"
       }
     }
-  },
-  "renewWithAd": "Guarda video per rinnovare (7gg)",
-  "@renewWithAd": {
-    "description": "Bottone per guardare video e rinnovare esercizio"
   },
   "upgradeForUnlimited": "Passa a Premium",
   "@upgradeForUnlimited": {
@@ -19916,5 +19912,43 @@
   "weightSuggestionFallback": "Stima conservativa",
   "@weightSuggestionFallback": {
     "description": "Etichetta chip suggerimento peso - stima fallback"
-  }
+  },
+  "addAthletesFirst": "Aggiungi prima degli atleti per assegnare i template",
+  "almostReady": "Quasi Pronto",
+  "approve": "Approva",
+  "assignmentsUpdated": "Assegnazioni aggiornate",
+  "assignTemplatesToAthletes": "Assegna template per iniziare il coaching",
+  "createFirstCoachTemplate": "Crea il tuo primo template da assegnare agli atleti",
+  "exerciseInfo": "Info",
+  "exhaustedMuscle": "Necessita Riposo",
+  "fatiguedMuscle": "Affaticato",
+  "fullyRecovered": "Completamente Recuperato",
+  "lastUpdated": "Ultimo aggiornamento: {date}",
+  "migrationWizardApplying": "Applicazione modifiche...",
+  "migrationWizardExerciseProgress": "Esercizio {current} di {total}",
+  "migrationWizardFromProfile": "Da",
+  "migrationWizardImpactSummary": "Riepilogo Impatto",
+  "migrationWizardKeepExerciseHint": "Otterrò questa attrezzatura",
+  "migrationWizardNoAlternatives": "Nessuna alternativa compatibile trovata",
+  "migrationWizardNoImpact": "Nessun esercizio è interessato da questa modifica.",
+  "migrationWizardReviewChanges": "Rivedi Modifiche",
+  "migrationWizardSummaryKept": "Mantenuti",
+  "migrationWizardSummaryRemoved": "Rimossi",
+  "migrationWizardSummaryReplaced": "Sostituiti",
+  "migrationWizardToProfile": "A",
+  "migrationWizardUpdated": "Aggiornato",
+  "migrationWizardWillUpdate": "Questo aggiornerà",
+  "migrationWizardWithAlternatives": "con alternative",
+  "migrationWizardWithoutAlternatives": "senza alternative",
+  "noActiveAthletes": "Nessun atleta attivo",
+  "noAssignedTemplatesYet": "Nessun template assegnato",
+  "noCoachTemplatesYet": "Nessun template ancora",
+  "notAssigned": "Non assegnato",
+  "recovering": "In recupero",
+  "reject": "Rifiuta",
+  "saveAssignments": "Salva",
+  "templateDay": "Giorno",
+  "showPassword": "Mostra password",
+  "hidePassword": "Nascondi password",
+  "togglePasswordVisibility": "Mostra/nascondi password"
 }
