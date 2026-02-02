@@ -375,18 +375,23 @@ class _BodyDataStepState extends ConsumerState<BodyDataStep> {
                           child: LoadingIndicator(size: 20),
                         )
                       else
-                        FilledButton.tonal(
-                          onPressed: _importFromHealthKit,
-                          style: FilledButton.styleFrom(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 16,
-                              vertical: 8,
+                        // Accessibility: Import button with semantic label
+                        Semantics(
+                          label: context.l10n.importAction,
+                          button: true,
+                          child: FilledButton.tonal(
+                            onPressed: _importFromHealthKit,
+                            style: FilledButton.styleFrom(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 16,
+                                vertical: 8,
+                              ),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(8),
+                              ),
                             ),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(8),
-                            ),
+                            child: Text(context.l10n.importAction),
                           ),
-                          child: Text(context.l10n.importAction),
                         ),
                     ],
                   ),
@@ -426,25 +431,30 @@ class _BodyDataStepState extends ConsumerState<BodyDataStep> {
               const SizedBox(height: 16),
 
               // Continue button
+              // Accessibility: Continue button with semantic label
               SizedBox(
                 width: double.infinity,
-                child: FilledButton(
-                  onPressed: state.canProceedFromStep(3)
-                      ? () => ref
-                            .read(initialOnboardingNotifierProvider.notifier)
-                            .nextStep()
-                      : null,
-                  style: FilledButton.styleFrom(
-                    padding: const EdgeInsets.symmetric(vertical: 16),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
+                child: Semantics(
+                  label: context.l10n.initialOnboardingContinue,
+                  button: true,
+                  child: FilledButton(
+                    onPressed: state.canProceedFromStep(3)
+                        ? () => ref
+                              .read(initialOnboardingNotifierProvider.notifier)
+                              .nextStep()
+                        : null,
+                    style: FilledButton.styleFrom(
+                      padding: const EdgeInsets.symmetric(vertical: 16),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
                     ),
-                  ),
-                  child: Text(
-                    context.l10n.initialOnboardingContinue,
-                    style: const TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w600,
+                    child: Text(
+                      context.l10n.initialOnboardingContinue,
+                      style: const TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w600,
+                      ),
                     ),
                   ),
                 ),

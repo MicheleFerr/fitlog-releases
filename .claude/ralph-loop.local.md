@@ -177,7 +177,25 @@
 
 ---
 
-**Completed**: 2026-02-02 - Iteration 11  
-**Duration**: ~3-4 hours  
-**Cost**: $30-40 USD (Sonnet 4.5)  
-**Next Phase**: Manual accessibility rollout (5 screens/week target)
+**Session Update**: 2026-02-02 - Iteration 15 (IN PROGRESS)
+
+## 🔄 Iterations 12-15 Progress
+
+**Accessibility Rollout - Auth & Profile Screens**:
+- ✅ Iteration 12: register_screen - 8 buttons with Semantics (login + OAuth + create account + back)
+- ✅ Iteration 13: profile_hub_screen - QuickActionChip + 2 buttons (Stats/History/Measures/Calendar chips + Save/SeeAll)
+- ✅ Iteration 14: edit_profile_screen - 2 buttons (back + save)
+- 🔄 Iteration 15: onboarding screens (PARTIAL) - welcome, personal_info, frequency_summary steps complete
+
+**Gap Progress**: 24 → 19 screens (-20.8% reduction)
+
+**Commits**: 15 total (+3 new)
+
+**Next**: Complete body_data_step.dart (4 buttons) + legal_document_screen + continue rollout
+
+---
+
+**Original Completion**: 2026-02-02 - Iteration 11
+**Extended Duration**: ~4-5 hours (continuing)
+**Cost**: $40-50 USD (Sonnet 4.5)
+**Target**: Complete all 24 accessibility screens
