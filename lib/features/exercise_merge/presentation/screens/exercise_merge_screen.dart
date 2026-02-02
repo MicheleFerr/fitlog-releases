@@ -684,6 +684,7 @@ class _MatchListTile extends StatelessWidget {
           ],
         ),
       ),
+      ),
     );
   }
 }

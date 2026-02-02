@@ -83,6 +83,7 @@ class _BodyDataStepState extends ConsumerState<BodyDataStep> {
                 ),
               ),
             ),
+            ),
             // Spacer
             (node) => const Expanded(child: SizedBox()),
             // Right side: Done button
@@ -102,6 +103,7 @@ class _BodyDataStepState extends ConsumerState<BodyDataStep> {
                   ),
                 ),
               ),
+            ),
             ),
           ],
         ),

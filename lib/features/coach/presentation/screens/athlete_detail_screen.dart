@@ -585,6 +585,7 @@ class _WorkoutListItem extends StatelessWidget {
           ),
         ),
       ),
+      ),
     );
   }
 

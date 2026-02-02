@@ -470,6 +470,7 @@ class ExerciseFeedbackScreen extends ConsumerWidget {
           ),
         ),
       ),
+      ),
     );
   }
 

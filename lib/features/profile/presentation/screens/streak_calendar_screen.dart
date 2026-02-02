@@ -407,6 +407,7 @@ class _StreakCalendarScreenState extends ConsumerState<StreakCalendarScreen> {
                   ),
                 ),
               ),
+            ),
             );
           },
         ),
@@ -573,6 +574,7 @@ class _StreakCalendarScreenState extends ConsumerState<StreakCalendarScreen> {
           ),
         ],
       ),
+      ),
     );
   }
 
@@ -683,6 +685,7 @@ class _StreakCalendarScreenState extends ConsumerState<StreakCalendarScreen> {
             ),
           ],
         ),
+      ),
       ),
     );
   }
@@ -1049,6 +1052,7 @@ class _WorkoutCard extends StatelessWidget {
             ),
           ],
         ),
+      ),
       ),
     );
   }

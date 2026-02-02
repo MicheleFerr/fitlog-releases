@@ -316,6 +316,7 @@ class _ProAnalyticsTabbedScreenState
                 ),
               ),
             ),
+            ),
           ],
         ),
       ),

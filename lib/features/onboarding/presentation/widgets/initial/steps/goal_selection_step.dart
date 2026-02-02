@@ -205,6 +205,7 @@ class _GoalCard extends StatelessWidget {
           ],
         ),
       ),
+      ),
     );
   }
 }

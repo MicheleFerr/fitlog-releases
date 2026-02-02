@@ -1287,6 +1287,7 @@ class _MeasurementListScreenState extends ConsumerState<MeasurementListScreen> {
             ),
           ),
         ),
+        ),
         if (isExpanded) ...[
           const SizedBox(height: 8),
           _buildMetricGrid(metrics),
