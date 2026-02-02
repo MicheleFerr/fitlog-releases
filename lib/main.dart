@@ -258,6 +258,12 @@ void main() async {
         debugPrint('🔐 [Security] ✅ Migration complete: $migratedCount/${results.length} boxes encrypted');
         debugPrint('   Flag set: $migrationKey = true');
       }
+
+      // ✅ ADDED: Track migration success in production
+      final migratedCount = results.values.where((v) => v).length;
+      await FirebaseCrashlytics.instance.log(
+        '✅ Hive encryption migration: $migratedCount/${results.length} boxes migrated',
+      );
     } else {
       if (kDebugMode) {
         debugPrint('🔐 [Security] Encryption already applied (skipping migration)');
@@ -271,7 +277,14 @@ void main() async {
       debugPrint('📍 Stack trace: $stackTrace');
       debugPrint('⚠️ App will continue with unencrypted boxes (user data at risk!)');
     }
-    // TODO: Consider adding telemetry to track migration failures in production
+
+    // ✅ ADDED: Track migration failures in production
+    await FirebaseCrashlytics.instance.recordError(
+      e,
+      stackTrace,
+      reason: 'Hive encryption migration failed',
+      fatal: false,
+    );
   }
 
   // ========================================

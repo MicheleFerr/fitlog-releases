@@ -1,6 +1,7 @@
 import 'dart:async' show Timer, unawaited, Completer, TimeoutException;
 import 'dart:io';
-import 'package:flutter/foundation.dart' show kDebugMode;
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
+import 'package:flutter/foundation.dart' show kDebugMode, debugPrint;
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -326,7 +327,17 @@ class UnifiedTimerProvider extends Notifier<UnifiedTimerState?>
       }
 
       // UnifiedTimerProvider initialized successfully
-    } catch (e) {}
+    } catch (e, stackTrace) {
+      debugPrint('⚠️ [UnifiedTimer] Error: $e');
+      unawaited(
+        FirebaseCrashlytics.instance.recordError(
+          e,
+          stackTrace,
+          reason: 'UnifiedTimer operation failed',
+          fatal: false,
+        ),
+      );
+    }
   }
 
   /// Initialize notification system for Android
@@ -505,7 +516,17 @@ class UnifiedTimerProvider extends Notifier<UnifiedTimerState?>
       await _saveState();
 
       // Timer started: ${durationSeconds}s
-    } catch (e) {}
+    } catch (e, stackTrace) {
+      debugPrint('⚠️ [UnifiedTimer] Error: $e');
+      unawaited(
+        FirebaseCrashlytics.instance.recordError(
+          e,
+          stackTrace,
+          reason: 'UnifiedTimer operation failed',
+          fatal: false,
+        ),
+      );
+    }
   }
 
   /// Pause the current timer
@@ -561,7 +582,17 @@ class UnifiedTimerProvider extends Notifier<UnifiedTimerState?>
 
       await _saveState();
       // Timer paused
-    } catch (e) {}
+    } catch (e, stackTrace) {
+      debugPrint('⚠️ [UnifiedTimer] Error: $e');
+      unawaited(
+        FirebaseCrashlytics.instance.recordError(
+          e,
+          stackTrace,
+          reason: 'UnifiedTimer operation failed',
+          fatal: false,
+        ),
+      );
+    }
   }
 
   /// Resume the paused timer
@@ -618,7 +649,17 @@ class UnifiedTimerProvider extends Notifier<UnifiedTimerState?>
 
       await _saveState();
       // Timer resumed
-    } catch (e) {}
+    } catch (e, stackTrace) {
+      debugPrint('⚠️ [UnifiedTimer] Error: $e');
+      unawaited(
+        FirebaseCrashlytics.instance.recordError(
+          e,
+          stackTrace,
+          reason: 'UnifiedTimer operation failed',
+          fatal: false,
+        ),
+      );
+    }
   }
 
   /// Stop and reset the timer
@@ -642,7 +683,17 @@ class UnifiedTimerProvider extends Notifier<UnifiedTimerState?>
       await _clearState();
 
       // Timer stopped
-    } catch (e) {}
+    } catch (e, stackTrace) {
+      debugPrint('⚠️ [UnifiedTimer] Error: $e');
+      unawaited(
+        FirebaseCrashlytics.instance.recordError(
+          e,
+          stackTrace,
+          reason: 'UnifiedTimer operation failed',
+          fatal: false,
+        ),
+      );
+    }
   }
 
   /// Reset timer to initial state
@@ -664,7 +715,17 @@ class UnifiedTimerProvider extends Notifier<UnifiedTimerState?>
 
       await _saveState();
       // Timer reset
-    } catch (e) {}
+    } catch (e, stackTrace) {
+      debugPrint('⚠️ [UnifiedTimer] Error: $e');
+      unawaited(
+        FirebaseCrashlytics.instance.recordError(
+          e,
+          stackTrace,
+          reason: 'UnifiedTimer operation failed',
+          fatal: false,
+        ),
+      );
+    }
   }
 
   /// Add time to current timer
@@ -886,7 +947,17 @@ class UnifiedTimerProvider extends Notifier<UnifiedTimerState?>
       await _saveState();
 
       // Timer skipped - no audio will play
-    } catch (e) {}
+    } catch (e, stackTrace) {
+      debugPrint('⚠️ [UnifiedTimer] Error: $e');
+      unawaited(
+        FirebaseCrashlytics.instance.recordError(
+          e,
+          stackTrace,
+          reason: 'UnifiedTimer operation failed',
+          fatal: false,
+        ),
+      );
+    }
   }
 
   /// Internal ticker for timer updates
@@ -1230,7 +1301,17 @@ class UnifiedTimerProvider extends Notifier<UnifiedTimerState?>
           'body': 'Your timer finished but had technical issues',
           'error': error,
         });
-      } catch (e) {}
+      } catch (e, stackTrace) {
+      debugPrint('⚠️ [UnifiedTimer] Error: $e');
+      unawaited(
+        FirebaseCrashlytics.instance.recordError(
+          e,
+          stackTrace,
+          reason: 'UnifiedTimer operation failed',
+          fatal: false,
+        ),
+      );
+    }
     } else {
       try {
         // Use Android local notification as absolute last resort
@@ -1251,7 +1332,17 @@ class UnifiedTimerProvider extends Notifier<UnifiedTimerState?>
             ),
           );
         }
-      } catch (e) {}
+      } catch (e, stackTrace) {
+      debugPrint('⚠️ [UnifiedTimer] Error: $e');
+      unawaited(
+        FirebaseCrashlytics.instance.recordError(
+          e,
+          stackTrace,
+          reason: 'UnifiedTimer operation failed',
+          fatal: false,
+        ),
+      );
+    }
     }
   }
 
@@ -1437,7 +1528,17 @@ class UnifiedTimerProvider extends Notifier<UnifiedTimerState?>
       }
 
       state = state!.scheduleNotification();
-    } catch (e) {}
+    } catch (e, stackTrace) {
+      debugPrint('⚠️ [UnifiedTimer] Error: $e');
+      unawaited(
+        FirebaseCrashlytics.instance.recordError(
+          e,
+          stackTrace,
+          reason: 'UnifiedTimer operation failed',
+          fatal: false,
+        ),
+      );
+    }
   }
 
   /// PROBLEM #4 FIX: Determine optimal background strategy
@@ -1502,7 +1603,17 @@ class UnifiedTimerProvider extends Notifier<UnifiedTimerState?>
         // Android: Use flutter_local_notifications
         await _notifications!.cancelAll();
       }
-    } catch (e) {}
+    } catch (e, stackTrace) {
+      debugPrint('⚠️ [UnifiedTimer] Error: $e');
+      unawaited(
+        FirebaseCrashlytics.instance.recordError(
+          e,
+          stackTrace,
+          reason: 'UnifiedTimer operation failed',
+          fatal: false,
+        ),
+      );
+    }
   }
 
   /// Send timer completion notification using the unified notification system
@@ -1728,7 +1839,17 @@ class UnifiedTimerProvider extends Notifier<UnifiedTimerState?>
         'lastUpdated': DateTime.now().millisecondsSinceEpoch,
         'skipped': state!.skipped, // Send skip status to iOS
       });
-    } catch (e) {}
+    } catch (e, stackTrace) {
+      debugPrint('⚠️ [UnifiedTimer] Error: $e');
+      unawaited(
+        FirebaseCrashlytics.instance.recordError(
+          e,
+          stackTrace,
+          reason: 'UnifiedTimer operation failed',
+          fatal: false,
+        ),
+      );
+    }
   }
 
   /// Stop iOS Live Activity
@@ -1749,7 +1870,17 @@ class UnifiedTimerProvider extends Notifier<UnifiedTimerState?>
         );
         await _saveState();
       }
-    } catch (e) {}
+    } catch (e, stackTrace) {
+      debugPrint('⚠️ [UnifiedTimer] Error: $e');
+      unawaited(
+        FirebaseCrashlytics.instance.recordError(
+          e,
+          stackTrace,
+          reason: 'UnifiedTimer operation failed',
+          fatal: false,
+        ),
+      );
+    }
   }
 
   /// Stop Live Activity with auto-dismissal after 5 seconds (for completed timers)
@@ -1836,7 +1967,17 @@ class UnifiedTimerProvider extends Notifier<UnifiedTimerState?>
                   );
                   audioAlreadyPlayed = result == true;
                   if (audioAlreadyPlayed) {}
-                } catch (e) {}
+                } catch (e, stackTrace) {
+      debugPrint('⚠️ [UnifiedTimer] Error: $e');
+      unawaited(
+        FirebaseCrashlytics.instance.recordError(
+          e,
+          stackTrace,
+          reason: 'UnifiedTimer operation failed',
+          fatal: false,
+        ),
+      );
+    }
               }
 
               if (!audioAlreadyPlayed) {
@@ -1885,7 +2026,17 @@ class UnifiedTimerProvider extends Notifier<UnifiedTimerState?>
             return;
           }
         }
-      } catch (emergencyError) {}
+      } catch (emergencyError, stackTrace) {
+        debugPrint('⚠️ [UnifiedTimer] Emergency state recovery failed: $emergencyError');
+        unawaited(
+          FirebaseCrashlytics.instance.recordError(
+            emergencyError,
+            stackTrace,
+            reason: 'UnifiedTimer emergency state recovery failed',
+            fatal: false,
+          ),
+        );
+      }
 
       // Complete failure - clear corrupted state and log for debugging
       await _clearState();
@@ -1974,7 +2125,17 @@ class UnifiedTimerProvider extends Notifier<UnifiedTimerState?>
   Future<void> _clearState() async {
     try {
       await _storage?.delete(_storageKey);
-    } catch (e) {}
+    } catch (e, stackTrace) {
+      debugPrint('⚠️ [UnifiedTimer] Error: $e');
+      unawaited(
+        FirebaseCrashlytics.instance.recordError(
+          e,
+          stackTrace,
+          reason: 'UnifiedTimer operation failed',
+          fatal: false,
+        ),
+      );
+    }
   }
 
   /// Get notification title based on timer context with proper localization
@@ -2120,7 +2281,17 @@ class UnifiedTimerProvider extends Notifier<UnifiedTimerState?>
       // 1. Remove lifecycle observer with null check
       try {
         WidgetsBinding.instance.removeObserver(this);
-      } catch (e) {}
+      } catch (e, stackTrace) {
+      debugPrint('⚠️ [UnifiedTimer] Error: $e');
+      unawaited(
+        FirebaseCrashlytics.instance.recordError(
+          e,
+          stackTrace,
+          reason: 'UnifiedTimer operation failed',
+          fatal: false,
+        ),
+      );
+    }
 
       // 2. Stop and cleanup timer with comprehensive error handling
       try {
@@ -2232,13 +2403,33 @@ class UnifiedTimerProvider extends Notifier<UnifiedTimerState?>
                 .timeout(const Duration(seconds: 1), onTimeout: () {})
                 .catchError((e) {}),
           );
-        } catch (e) {}
+        } catch (e, stackTrace) {
+      debugPrint('⚠️ [UnifiedTimer] Error: $e');
+      unawaited(
+        FirebaseCrashlytics.instance.recordError(
+          e,
+          stackTrace,
+          reason: 'UnifiedTimer operation failed',
+          fatal: false,
+        ),
+      );
+    }
       }
 
       // 6. MEMORY LEAK FIX: Clear method channel handler safely
       try {
         _unifiedChannel.setMethodCallHandler(null);
-      } catch (e) {}
+      } catch (e, stackTrace) {
+      debugPrint('⚠️ [UnifiedTimer] Error: $e');
+      unawaited(
+        FirebaseCrashlytics.instance.recordError(
+          e,
+          stackTrace,
+          reason: 'UnifiedTimer operation failed',
+          fatal: false,
+        ),
+      );
+    }
 
       // 7. Enhanced Hive box lifecycle management with proper error handling
       try {
@@ -2274,7 +2465,17 @@ class UnifiedTimerProvider extends Notifier<UnifiedTimerState?>
         if (_completionInProgress) {}
         if (_audioInProgress) {}
         if (_stateWriteInProgress) {}
-      } catch (e) {}
+      } catch (e, stackTrace) {
+      debugPrint('⚠️ [UnifiedTimer] Error: $e');
+      unawaited(
+        FirebaseCrashlytics.instance.recordError(
+          e,
+          stackTrace,
+          reason: 'UnifiedTimer operation failed',
+          fatal: false,
+        ),
+      );
+    }
 
       // 9. MEMORY LEAK FIX: Clear all references to prevent memory leaks
       try {
@@ -2282,12 +2483,32 @@ class UnifiedTimerProvider extends Notifier<UnifiedTimerState?>
         _currentExerciseId = null;
         _lastTick = null;
         _accuracyErrorCount = 0;
-      } catch (e) {}
+      } catch (e, stackTrace) {
+      debugPrint('⚠️ [UnifiedTimer] Error: $e');
+      unawaited(
+        FirebaseCrashlytics.instance.recordError(
+          e,
+          stackTrace,
+          reason: 'UnifiedTimer operation failed',
+          fatal: false,
+        ),
+      );
+    }
 
       // 10. CRITICAL: Null out state LAST to prevent accessing null state
       try {
         state = null;
-      } catch (e) {}
+      } catch (e, stackTrace) {
+      debugPrint('⚠️ [UnifiedTimer] Error: $e');
+      unawaited(
+        FirebaseCrashlytics.instance.recordError(
+          e,
+          stackTrace,
+          reason: 'UnifiedTimer operation failed',
+          fatal: false,
+        ),
+      );
+    }
     } catch (e) {
       // CRITICAL: Even if disposal fails, log the error and continue
 
