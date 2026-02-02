@@ -26,9 +26,11 @@ class AchievementsScreen extends ConsumerWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text(context.l10n.achievements),
+        // Accessibility: Back button with tooltip
         leading: IconButton(
           icon: Icon(AppIcons.arrowBack, size: AppIconSize.medium),
           onPressed: () => Navigator.of(context).pop(),
+          tooltip: MaterialLocalizations.of(context).backButtonTooltip,
         ),
       ),
       body: userAsync.when(
@@ -317,9 +319,14 @@ class _BadgeCard extends StatelessWidget {
         title: Text(_getBadgeName(context, type)),
         content: Text(description),
         actions: [
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(),
-            child: Text(context.l10n.closeDialog),
+          // Accessibility: Close button with semantic label
+          Semantics(
+            label: context.l10n.closeDialog,
+            button: true,
+            child: TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: Text(context.l10n.closeDialog),
+            ),
           ),
         ],
       ),
