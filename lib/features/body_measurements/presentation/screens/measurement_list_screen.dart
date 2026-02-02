@@ -1105,6 +1105,7 @@ class _MeasurementListScreenState extends ConsumerState<MeasurementListScreen> {
             ? const Center(child: LoadingIndicator())
             : _buildDashboard(),
       ),
+      // Accessibility: Add measurement button with tooltip
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
           final result = await Navigator.push<bool>(
@@ -1117,6 +1118,7 @@ class _MeasurementListScreenState extends ConsumerState<MeasurementListScreen> {
             await _loadData();
           }
         },
+        tooltip: context.l10n.addMeasurement,
         child: const Icon(AppIcons.add),
       ),
     );
