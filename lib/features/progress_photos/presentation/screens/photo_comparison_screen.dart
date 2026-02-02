@@ -138,10 +138,15 @@ class _PhotoComparisonScreenState extends ConsumerState<PhotoComparisonScreen> {
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: 24),
-            FilledButton.icon(
-              onPressed: () => _startSelection(isSelectingBefore: true),
-              icon: const Icon(AppIcons.add),
-              label: Text(context.l10n.selectBeforePhoto),
+            // Accessibility: Select before photo button
+            Semantics(
+              label: context.l10n.selectBeforePhoto,
+              button: true,
+              child: FilledButton.icon(
+                onPressed: () => _startSelection(isSelectingBefore: true),
+                icon: const Icon(AppIcons.add),
+                label: Text(context.l10n.selectBeforePhoto),
+              ),
             ),
           ],
         ),
@@ -200,12 +205,17 @@ class _PhotoComparisonScreenState extends ConsumerState<PhotoComparisonScreen> {
         SafeArea(
           child: Padding(
             padding: const EdgeInsets.all(16),
-            child: FilledButton.icon(
-              onPressed: () => _startSelection(isSelectingBefore: needsBefore),
-              icon: const Icon(AppIcons.add),
-              label: Text('Select ${needsBefore ? "Before" : "After"} Photo'),
-              style: FilledButton.styleFrom(
-                minimumSize: const Size.fromHeight(56),
+            // Accessibility: Select photo button with dynamic label
+            child: Semantics(
+              label: 'Select ${needsBefore ? "Before" : "After"} Photo',
+              button: true,
+              child: FilledButton.icon(
+                onPressed: () => _startSelection(isSelectingBefore: needsBefore),
+                icon: const Icon(AppIcons.add),
+                label: Text('Select ${needsBefore ? "Before" : "After"} Photo'),
+                style: FilledButton.styleFrom(
+                  minimumSize: const Size.fromHeight(56),
+                ),
               ),
             ),
           ),
