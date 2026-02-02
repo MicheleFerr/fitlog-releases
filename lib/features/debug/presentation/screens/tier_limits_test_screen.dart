@@ -548,7 +548,10 @@ class _TierLimitsTestScreenState extends ConsumerState<TierLimitsTestScreen> {
           Expanded(
             child: Text(
               '$expected',
-              style: const TextStyle(fontSize: 13, color: Colors.grey),
+              style: TextStyle(
+                fontSize: 13,
+                color: context.colors.onSurfaceVariant,
+              ),
               textAlign: TextAlign.center,
             ),
           ),
