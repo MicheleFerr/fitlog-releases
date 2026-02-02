@@ -39,10 +39,11 @@ if [ -z "$SCREENS" ]; then
 else
     MISSING_SEMANTICS=0
     for screen in $SCREENS; do
-        # Check if screen has interactive widgets but no Semantics
+        # Check if screen has interactive widgets but no Semantics or semanticLabel
         if grep -q "IconButton\|ElevatedButton\|TextButton\|GestureDetector" "$screen" 2>/dev/null; then
-            if ! grep -q "Semantics" "$screen" 2>/dev/null; then
-                echo "  ⚠️  $screen has interactive widgets but no Semantics"
+            # Check for both Semantics widget AND semanticLabel property
+            if ! grep -q "Semantics\|semanticLabel" "$screen" 2>/dev/null; then
+                echo "  ⚠️  $screen has interactive widgets but no Semantics/semanticLabel"
                 MISSING_SEMANTICS=$((MISSING_SEMANTICS + 1))
             fi
         fi
