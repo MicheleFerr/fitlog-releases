@@ -47431,6 +47431,48 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Conservative estimate'**
   String get weightSuggestionFallback;
+
+  /// No description provided for @showPassword.
+  ///
+  /// In en, this message translates to:
+  /// **'Show password'**
+  String get showPassword;
+
+  /// No description provided for @hidePassword.
+  ///
+  /// In en, this message translates to:
+  /// **'Hide password'**
+  String get hidePassword;
+
+  /// No description provided for @togglePasswordVisibility.
+  ///
+  /// In en, this message translates to:
+  /// **'Toggle password visibility'**
+  String get togglePasswordVisibility;
+
+  /// No description provided for @copyLogsToClipboard.
+  ///
+  /// In en, this message translates to:
+  /// **'Copy logs to clipboard'**
+  String get copyLogsToClipboard;
+
+  /// No description provided for @clearLogs.
+  ///
+  /// In en, this message translates to:
+  /// **'Clear logs'**
+  String get clearLogs;
+
+  /// No description provided for @runAllTests.
+  ///
+  /// In en, this message translates to:
+  /// **'Run All Tests'**
+  String get runAllTests;
+
+  /// No description provided for @runningTests.
+  ///
+  /// In en, this message translates to:
+  /// **'Running Tests...'**
+  String get runningTests;
 }
 
 class _AppLocalizationsDelegate

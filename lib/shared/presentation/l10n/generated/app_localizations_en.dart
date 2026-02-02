@@ -26505,4 +26505,25 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get weightSuggestionFallback => 'Conservative estimate';
+
+  @override
+  String get showPassword => 'Show password';
+
+  @override
+  String get hidePassword => 'Hide password';
+
+  @override
+  String get togglePasswordVisibility => 'Toggle password visibility';
+
+  @override
+  String get copyLogsToClipboard => 'Copy logs to clipboard';
+
+  @override
+  String get clearLogs => 'Clear logs';
+
+  @override
+  String get runAllTests => 'Run All Tests';
+
+  @override
+  String get runningTests => 'Running Tests...';
 }

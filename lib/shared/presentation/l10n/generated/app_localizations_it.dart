@@ -5047,10 +5047,10 @@ class AppLocalizationsIt extends AppLocalizations {
       'Sei sicuro di voler approvare questa correzione?';
 
   @override
-  String get approve => 'Approve';
+  String get approve => 'Approva';
 
   @override
-  String get reject => 'Reject';
+  String get reject => 'Rifiuta';
 
   @override
   String get rejectionReason => 'Motivo del Rifiuto';
@@ -9954,7 +9954,7 @@ class AppLocalizationsIt extends AppLocalizations {
   String get templateStartError => 'Errore nell\'avvio del workout';
 
   @override
-  String get templateDay => 'Day';
+  String get templateDay => 'Giorno';
 
   @override
   String get copyPreviousSet => 'Copia Set Precedente';
@@ -12313,13 +12313,13 @@ class AppLocalizationsIt extends AppLocalizations {
   String get migrationWizardImpactAnalysisTitle => 'Analisi Impatto';
 
   @override
-  String get migrationWizardImpactSummary => 'Impact Summary';
+  String get migrationWizardImpactSummary => 'Riepilogo Impatto';
 
   @override
-  String get migrationWizardFromProfile => 'From';
+  String get migrationWizardFromProfile => 'Da';
 
   @override
-  String get migrationWizardToProfile => 'To';
+  String get migrationWizardToProfile => 'A';
 
   @override
   String migrationWizardAffectedExercises(int count) {
@@ -12333,10 +12333,10 @@ class AppLocalizationsIt extends AppLocalizations {
   }
 
   @override
-  String get migrationWizardWithAlternatives => 'with alternatives';
+  String get migrationWizardWithAlternatives => 'con alternative';
 
   @override
-  String get migrationWizardWithoutAlternatives => 'without alternatives';
+  String get migrationWizardWithoutAlternatives => 'senza alternative';
 
   @override
   String migrationWizardAffectedRoutines(int count) {
@@ -12361,11 +12361,11 @@ class AppLocalizationsIt extends AppLocalizations {
   }
 
   @override
-  String get migrationWizardReviewChanges => 'Review Changes';
+  String get migrationWizardReviewChanges => 'Rivedi Modifiche';
 
   @override
   String get migrationWizardNoImpact =>
-      'No exercises are affected by this change.';
+      'Nessun esercizio è interessato da questa modifica.';
 
   @override
   String get migrationWizardNoImpactMessage =>
@@ -12376,7 +12376,7 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String migrationWizardExerciseProgress(int current, int total) {
-    return 'Exercise $current of $total';
+    return 'Esercizio $current di $total';
   }
 
   @override
@@ -12393,7 +12393,7 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get migrationWizardNoAlternatives =>
-      'No compatible alternatives found';
+      'Nessuna alternativa compatibile trovata';
 
   @override
   String get migrationWizardNoAlternativesMessage =>
@@ -12411,7 +12411,7 @@ class AppLocalizationsIt extends AppLocalizations {
   String get migrationWizardKeepExercise => 'Mantieni Comunque';
 
   @override
-  String get migrationWizardKeepExerciseHint => 'I\'ll get this equipment';
+  String get migrationWizardKeepExerciseHint => 'Otterrò questa attrezzatura';
 
   @override
   String get migrationWizardRemoveExercise => 'Rimuovi Esercizio';
@@ -12424,22 +12424,22 @@ class AppLocalizationsIt extends AppLocalizations {
       'Rivedi le tue decisioni prima di applicare le modifiche:';
 
   @override
-  String get migrationWizardSummaryReplaced => 'Replaced';
+  String get migrationWizardSummaryReplaced => 'Sostituiti';
 
   @override
-  String get migrationWizardSummaryKept => 'Kept';
+  String get migrationWizardSummaryKept => 'Mantenuti';
 
   @override
-  String get migrationWizardSummaryRemoved => 'Removed';
+  String get migrationWizardSummaryRemoved => 'Rimossi';
 
   @override
-  String get migrationWizardWillUpdate => 'This will update';
+  String get migrationWizardWillUpdate => 'Questo aggiornerà';
 
   @override
   String get migrationWizardApplyChanges => 'Applica Modifiche';
 
   @override
-  String get migrationWizardApplying => 'Applying changes...';
+  String get migrationWizardApplying => 'Applicazione modifiche...';
 
   @override
   String get migrationWizardSuccessTitle => 'Migrazione Completata';
@@ -12485,7 +12485,7 @@ class AppLocalizationsIt extends AppLocalizations {
   }
 
   @override
-  String get migrationWizardUpdated => 'Updated';
+  String get migrationWizardUpdated => 'Aggiornato';
 
   @override
   String get migrationWizardAnalyzing => 'Analisi in corso...';
@@ -22678,19 +22678,19 @@ class AppLocalizationsIt extends AppLocalizations {
   }
 
   @override
-  String get fullyRecovered => 'Fully Recovered';
+  String get fullyRecovered => 'Completamente Recuperato';
 
   @override
-  String get almostReady => 'Almost Ready';
+  String get almostReady => 'Quasi Pronto';
 
   @override
-  String get recovering => 'Recovering';
+  String get recovering => 'In recupero';
 
   @override
-  String get fatiguedMuscle => 'Fatigued';
+  String get fatiguedMuscle => 'Affaticato';
 
   @override
-  String get exhaustedMuscle => 'Needs Rest';
+  String get exhaustedMuscle => 'Necessita Riposo';
 
   @override
   String get completeWorkoutForStressIndex =>
@@ -25263,7 +25263,7 @@ class AppLocalizationsIt extends AppLocalizations {
   String get alreadyAssigned => 'Già assegnato';
 
   @override
-  String get notAssigned => 'Not assigned';
+  String get notAssigned => 'Non assegnato';
 
   @override
   String get changesWillSync =>
@@ -25295,7 +25295,7 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String lastUpdated(String date) {
-    return 'Last updated: $date';
+    return 'Ultimo aggiornamento: $date';
   }
 
   @override
@@ -25308,32 +25308,34 @@ class AppLocalizationsIt extends AppLocalizations {
   String get libraryTab => 'Libreria';
 
   @override
-  String get noCoachTemplatesYet => 'No templates yet';
+  String get noCoachTemplatesYet => 'Nessun template ancora';
 
   @override
   String get createFirstCoachTemplate =>
-      'Create your first template to assign to athletes';
+      'Crea il tuo primo template da assegnare agli atleti';
 
   @override
-  String get noAssignedTemplatesYet => 'No assigned templates';
+  String get noAssignedTemplatesYet => 'Nessun template assegnato';
 
   @override
-  String get assignTemplatesToAthletes => 'Assign templates to start coaching';
+  String get assignTemplatesToAthletes =>
+      'Assegna template per iniziare il coaching';
 
   @override
   String get selectAthletes => 'Seleziona Atleti';
 
   @override
-  String get saveAssignments => 'Save';
+  String get saveAssignments => 'Salva';
 
   @override
-  String get assignmentsUpdated => 'Assignments updated';
+  String get assignmentsUpdated => 'Assegnazioni aggiornate';
 
   @override
-  String get noActiveAthletes => 'No active athletes';
+  String get noActiveAthletes => 'Nessun atleta attivo';
 
   @override
-  String get addAthletesFirst => 'Add athletes first to assign templates';
+  String get addAthletesFirst =>
+      'Aggiungi prima degli atleti per assegnare i template';
 
   @override
   String get messages => 'Messaggi';
@@ -26762,4 +26764,25 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get weightSuggestionFallback => 'Stima conservativa';
+
+  @override
+  String get showPassword => 'Mostra password';
+
+  @override
+  String get hidePassword => 'Nascondi password';
+
+  @override
+  String get togglePasswordVisibility => 'Mostra/nascondi password';
+
+  @override
+  String get copyLogsToClipboard => 'Copia log negli appunti';
+
+  @override
+  String get clearLogs => 'Cancella log';
+
+  @override
+  String get runAllTests => 'Esegui tutti i test';
+
+  @override
+  String get runningTests => 'Esecuzione test...';
 }

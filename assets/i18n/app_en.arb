@@ -32496,5 +32496,9 @@
   },
   "showPassword": "Show password",
   "hidePassword": "Hide password",
-  "togglePasswordVisibility": "Toggle password visibility"
+  "togglePasswordVisibility": "Toggle password visibility",
+  "copyLogsToClipboard": "Copy logs to clipboard",
+  "clearLogs": "Clear logs",
+  "runAllTests": "Run All Tests",
+  "runningTests": "Running Tests..."
 }

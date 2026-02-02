@@ -624,7 +624,7 @@ class _HealthKitDebugScreenState extends State<HealthKitDebugScreen> {
                   ? context.colors.onPrimary.withValues(alpha: 0.5)
                   : context.colors.onPrimary,
             ),
-            tooltip: 'Copy logs to clipboard',
+            tooltip: context.l10n.copyLogsToClipboard,
           ),
           // Clear logs button
           IconButton(
@@ -642,7 +642,7 @@ class _HealthKitDebugScreenState extends State<HealthKitDebugScreen> {
                   ? context.colors.onPrimary.withValues(alpha: 0.5)
                   : context.colors.onPrimary,
             ),
-            tooltip: 'Clear logs',
+            tooltip: context.l10n.clearLogs,
           ),
         ],
       ),
@@ -725,42 +725,49 @@ class _HealthKitDebugScreenState extends State<HealthKitDebugScreen> {
           Container(
             padding: const EdgeInsets.all(16),
             width: double.infinity,
-            child: ElevatedButton(
-              onPressed: _isRunning ? null : _runAllTests,
-              style: ElevatedButton.styleFrom(
-                backgroundColor: context.colors.primary,
-                foregroundColor: context.colors.onPrimary,
-                padding: const EdgeInsets.symmetric(vertical: 16),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
+            child: Semantics(
+              label: _isRunning
+                  ? context.l10n.runningTests
+                  : context.l10n.runAllTests,
+              button: true,
+              enabled: !_isRunning,
+              child: ElevatedButton(
+                onPressed: _isRunning ? null : _runAllTests,
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: context.colors.primary,
+                  foregroundColor: context.colors.onPrimary,
+                  padding: const EdgeInsets.symmetric(vertical: 16),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
                 ),
-              ),
-              child: _isRunning
-                  ? Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        SizedBox(
-                          width: 20,
-                          height: 20,
-                          child: LoadingIndicator(),
-                        ),
-                        const SizedBox(width: 12),
-                        const Text(
-                          'Running Tests...',
-                          style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
+                child: _isRunning
+                    ? Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          const SizedBox(
+                            width: 20,
+                            height: 20,
+                            child: LoadingIndicator(),
                           ),
+                          const SizedBox(width: 12),
+                          Text(
+                            context.l10n.runningTests,
+                            style: const TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ],
+                      )
+                    : Text(
+                        context.l10n.runAllTests,
+                        style: const TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
                         ),
-                      ],
-                    )
-                  : const Text(
-                      'Run All Tests',
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
                       ),
-                    ),
+              ),
             ),
           ),
         ],

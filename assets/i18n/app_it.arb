@@ -19950,5 +19950,9 @@
   "templateDay": "Giorno",
   "showPassword": "Mostra password",
   "hidePassword": "Nascondi password",
-  "togglePasswordVisibility": "Mostra/nascondi password"
+  "togglePasswordVisibility": "Mostra/nascondi password",
+  "copyLogsToClipboard": "Copia log negli appunti",
+  "clearLogs": "Cancella log",
+  "runAllTests": "Esegui tutti i test",
+  "runningTests": "Esecuzione test..."
 }
