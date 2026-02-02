@@ -368,17 +368,27 @@ class _MeasurementListScreenState extends ConsumerState<MeasurementListScreen> {
         ),
         content: Text(l10n.bodyMeasurementsPermissionDeniedMessage),
         actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(dialogContext),
-            child: Text(l10n.bodyMeasurementsInputCancel),
+          // Accessibility: Cancel button with semantic label
+          Semantics(
+            label: l10n.bodyMeasurementsInputCancel,
+            button: true,
+            child: TextButton(
+              onPressed: () => Navigator.pop(dialogContext),
+              child: Text(l10n.bodyMeasurementsInputCancel),
+            ),
           ),
-          FilledButton(
-            onPressed: () async {
-              Navigator.pop(dialogContext);
-              // Open iOS Settings for this app
-              await _openAppSettings();
-            },
-            child: Text(l10n.bodyMeasurementsOpenSettings),
+          // Accessibility: Open settings button with semantic label
+          Semantics(
+            label: l10n.bodyMeasurementsOpenSettings,
+            button: true,
+            child: FilledButton(
+              onPressed: () async {
+                Navigator.pop(dialogContext);
+                // Open iOS Settings for this app
+                await _openAppSettings();
+              },
+              child: Text(l10n.bodyMeasurementsOpenSettings),
+            ),
           ),
         ],
       ),
@@ -625,22 +635,32 @@ class _MeasurementListScreenState extends ConsumerState<MeasurementListScreen> {
         ),
         content: Text(l10n.bodyMeasurementsHealthConnectRequired),
         actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(dialogContext),
-            child: Text(l10n.bodyMeasurementsInputCancel),
+          // Accessibility: Cancel button with semantic label
+          Semantics(
+            label: l10n.bodyMeasurementsInputCancel,
+            button: true,
+            child: TextButton(
+              onPressed: () => Navigator.pop(dialogContext),
+              child: Text(l10n.bodyMeasurementsInputCancel),
+            ),
           ),
-          FilledButton(
-            onPressed: () async {
-              Navigator.pop(dialogContext);
-              // Open Play Store to install Health Connect
-              final uri = Uri.parse(
-                'https://play.google.com/store/apps/details?id=com.google.android.apps.healthdata',
-              );
-              if (await canLaunchUrl(uri)) {
-                await launchUrl(uri, mode: LaunchMode.externalApplication);
-              }
-            },
-            child: Text(l10n.bodyMeasurementsInstallHealthConnect),
+          // Accessibility: Install Health Connect button with semantic label
+          Semantics(
+            label: l10n.bodyMeasurementsInstallHealthConnect,
+            button: true,
+            child: FilledButton(
+              onPressed: () async {
+                Navigator.pop(dialogContext);
+                // Open Play Store to install Health Connect
+                final uri = Uri.parse(
+                  'https://play.google.com/store/apps/details?id=com.google.android.apps.healthdata',
+                );
+                if (await canLaunchUrl(uri)) {
+                  await launchUrl(uri, mode: LaunchMode.externalApplication);
+                }
+              },
+              child: Text(l10n.bodyMeasurementsInstallHealthConnect),
+            ),
           ),
         ],
       ),
@@ -823,13 +843,23 @@ class _MeasurementListScreenState extends ConsumerState<MeasurementListScreen> {
           ),
         ),
         actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(dialogContext, false),
-            child: Text(l10n.bodyMeasurementsInputCancel),
+          // Accessibility: Cancel button with semantic label
+          Semantics(
+            label: l10n.bodyMeasurementsInputCancel,
+            button: true,
+            child: TextButton(
+              onPressed: () => Navigator.pop(dialogContext, false),
+              child: Text(l10n.bodyMeasurementsInputCancel),
+            ),
           ),
-          FilledButton(
-            onPressed: () => Navigator.pop(dialogContext, true),
-            child: Text(l10n.bodyMeasurementsHealthKitConsentGrant),
+          // Accessibility: Grant consent button with semantic label
+          Semantics(
+            label: l10n.bodyMeasurementsHealthKitConsentGrant,
+            button: true,
+            child: FilledButton(
+              onPressed: () => Navigator.pop(dialogContext, true),
+              child: Text(l10n.bodyMeasurementsHealthKitConsentGrant),
+            ),
           ),
         ],
       ),
@@ -1221,10 +1251,14 @@ class _MeasurementListScreenState extends ConsumerState<MeasurementListScreen> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        InkWell(
-          onTap: onToggle,
-          borderRadius: BorderRadius.circular(8),
-          child: Padding(
+        // Accessibility: Section toggle with semantic label
+        Semantics(
+          label: '${isExpanded ? "Collapse" : "Expand"} $title',
+          button: true,
+          child: InkWell(
+            onTap: onToggle,
+            borderRadius: BorderRadius.circular(8),
+            child: Padding(
             padding: const EdgeInsets.symmetric(vertical: 8),
             child: Row(
               children: [
