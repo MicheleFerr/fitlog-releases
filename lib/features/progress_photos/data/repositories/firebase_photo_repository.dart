@@ -451,12 +451,12 @@ class FirebasePhotoRepository
       await photoResult.fold(
         (failure) => throw base.ServerFailure(failure.toString()),
         (photo) async {
-          // Delete from Storage
+          // Delete from Storage (parallel for performance)
           try {
-            await _storageRef(userId).child(photo.storagePath).delete();
-            await _storageRef(
-              userId,
-            ).child(photo.thumbnailStoragePath).delete();
+            await Future.wait([
+              _storageRef(userId).child(photo.storagePath).delete(),
+              _storageRef(userId).child(photo.thumbnailStoragePath).delete(),
+            ]);
           } catch (_) {
             // Ignore storage errors (file might already be deleted)
           }
@@ -513,16 +513,16 @@ class FirebasePhotoRepository
       return await photosResult.fold(
         (failure) => throw base.ServerFailure(failure.toString()),
         (photos) async {
-          // Delete all storage files
-          for (final photo in photos) {
-            try {
-              await _storageRef(userId).child(photo.storagePath).delete();
-              await _storageRef(
-                userId,
-              ).child(photo.thumbnailStoragePath).delete();
-            } catch (_) {
-              // Continue even if some files fail
-            }
+          // Delete all storage files (parallel for performance)
+          final storageDeletions = photos.expand((photo) => [
+            _storageRef(userId).child(photo.storagePath).delete(),
+            _storageRef(userId).child(photo.thumbnailStoragePath).delete(),
+          ]).toList();
+
+          try {
+            await Future.wait(storageDeletions, eagerError: false);
+          } catch (_) {
+            // Some files may have failed, continue anyway
           }
 
           // Delete all Firestore documents
