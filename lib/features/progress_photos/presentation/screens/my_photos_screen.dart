@@ -133,12 +133,17 @@ class _MyPhotosScreenState extends ConsumerState<MyPhotosScreen> {
                       style: context.textTheme.titleMedium,
                     ),
                     const SizedBox(height: 8),
-                    TextButton.icon(
-                      onPressed: () => ref.invalidate(
-                        userPhotosStreamProvider(widget.userId),
+                    // Accessibility: Retry button with semantic label
+                    Semantics(
+                      label: context.l10n.retry,
+                      button: true,
+                      child: TextButton.icon(
+                        onPressed: () => ref.invalidate(
+                          userPhotosStreamProvider(widget.userId),
+                        ),
+                        icon: const Icon(AppIcons.refresh),
+                        label: Text(context.l10n.retry),
                       ),
-                      icon: const Icon(AppIcons.refresh),
-                      label: Text(context.l10n.retry),
                     ),
                   ],
                 ),
@@ -250,11 +255,16 @@ class _MyPhotosScreenState extends ConsumerState<MyPhotosScreen> {
             ),
             if (hasFilter) ...[
               const SizedBox(height: 16),
-              TextButton(
-                onPressed: () {
-                  ref.read(photoFilterPoseProvider.notifier).state = null;
-                },
-                child: Text(context.l10n.clearFilter),
+              // Accessibility: Clear filter button with semantic label
+              Semantics(
+                label: context.l10n.clearFilter,
+                button: true,
+                child: TextButton(
+                  onPressed: () {
+                    ref.read(photoFilterPoseProvider.notifier).state = null;
+                  },
+                  child: Text(context.l10n.clearFilter),
+                ),
               ),
             ],
           ],
@@ -317,9 +327,13 @@ class _MyPhotosScreenState extends ConsumerState<MyPhotosScreen> {
   }
 
   Widget _buildPhotoThumbnail(ProgressPhoto photo) {
-    return GestureDetector(
-      onTap: () => _showPhotoDetail(photo),
-      child: Hero(
+    // Accessibility: Photo thumbnail with semantic label
+    return Semantics(
+      label: 'Progress photo, ${photo.pose.name}, ${DateFormat.yMMMd().format(photo.capturedAt)}',
+      button: true,
+      child: GestureDetector(
+        onTap: () => _showPhotoDetail(photo),
+        child: Hero(
         tag: 'photo_${photo.id}',
         child: ClipRRect(
           borderRadius: BorderRadius.circular(8),
