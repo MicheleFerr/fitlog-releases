@@ -64,12 +64,14 @@ class _ExerciseMergeScreenState extends ConsumerState<ExerciseMergeScreen> {
         leading: IconButton(
           icon: const Icon(AppIcons.arrowBack),
           onPressed: () => context.pop(),
+          tooltip: MaterialLocalizations.of(context).backButtonTooltip,
         ),
         title: Text(l10n.mergeExercisesTitle),
         actions: [
           IconButton(
             icon: const Icon(AppIcons.help),
             onPressed: () => _showHelpDialog(context),
+            tooltip: l10n.help,
           ),
         ],
       ),
@@ -373,9 +375,14 @@ class _ExerciseMergeScreenState extends ConsumerState<ExerciseMergeScreen> {
         ),
         content: Text(l10n.mergeHelpContent),
         actions: [
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(),
-            child: Text(l10n.ok),
+          // Accessibility: OK button with semantic label
+          Semantics(
+            label: l10n.ok,
+            button: true,
+            child: TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: Text(l10n.ok),
+            ),
           ),
         ],
       ),
@@ -545,12 +552,17 @@ class _CandidateExpansionTile extends StatelessWidget {
             if (selectedMatch != null)
               Padding(
                 padding: const EdgeInsets.all(AppSpacing.md),
-                child: FilledButton.icon(
-                  onPressed: onMergePressed,
-                  icon: const Icon(AppIcons.merge),
-                  label: Text(l10n.mergeExercises),
-                  style: FilledButton.styleFrom(
-                    minimumSize: const Size(double.infinity, 48),
+                // Accessibility: Merge button with semantic label
+                child: Semantics(
+                  label: l10n.mergeExercises,
+                  button: true,
+                  child: FilledButton.icon(
+                    onPressed: onMergePressed,
+                    icon: const Icon(AppIcons.merge),
+                    label: Text(l10n.mergeExercises),
+                    style: FilledButton.styleFrom(
+                      minimumSize: const Size(double.infinity, 48),
+                    ),
                   ),
                 ),
               ),
@@ -579,9 +591,14 @@ class _MatchListTile extends StatelessWidget {
     final colorScheme = context.colors;
     final textTheme = context.textTheme;
 
-    return InkWell(
-      onTap: onTap,
-      child: Container(
+    // Accessibility: Exercise selection with semantic label
+    return Semantics(
+      label: '${isSelected ? "Selected" : "Select"} ${match.exercise.nome}',
+      button: true,
+      selected: isSelected,
+      child: InkWell(
+        onTap: onTap,
+        child: Container(
         padding: const EdgeInsets.symmetric(
           horizontal: AppSpacing.md,
           vertical: AppSpacing.sm,
