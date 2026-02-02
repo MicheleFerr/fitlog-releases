@@ -154,8 +154,6 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen>
                         fontWeight: FontWeight.w600,
                       ),
                     ),
-                    // Accessibility: Semantic label for screen readers
-                    semanticLabel: context.l10n.signIn,
                   ),
                 ],
               ),

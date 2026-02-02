@@ -137,6 +137,7 @@ class _QuickActionChipState extends State<QuickActionChip>
           ),
         ),
       ),
+      ),
     );
   }
 }

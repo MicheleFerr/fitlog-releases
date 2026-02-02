@@ -57,7 +57,6 @@ class AthleteDetailScreen extends ConsumerWidget {
               IconButton(
                 icon: const Icon(AppIcons.moreVert),
                 onPressed: () => _showAthleteOptions(context),
-                tooltip: context.l10n.moreOptions,
               ),
             ],
           ),

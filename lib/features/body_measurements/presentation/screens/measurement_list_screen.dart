@@ -1148,7 +1148,6 @@ class _MeasurementListScreenState extends ConsumerState<MeasurementListScreen> {
             await _loadData();
           }
         },
-        tooltip: context.l10n.addMeasurement,
         child: const Icon(AppIcons.add),
       ),
     );

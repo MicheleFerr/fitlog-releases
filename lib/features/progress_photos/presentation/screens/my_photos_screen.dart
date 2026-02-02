@@ -329,7 +329,7 @@ class _MyPhotosScreenState extends ConsumerState<MyPhotosScreen> {
   Widget _buildPhotoThumbnail(ProgressPhoto photo) {
     // Accessibility: Photo thumbnail with semantic label
     return Semantics(
-      label: 'Progress photo, ${photo.pose.name}, ${DateFormat.yMMMd().format(photo.capturedAt)}',
+      label: 'Progress photo, ${photo.pose.name}, ${DateFormat.yMMMd().format(photo.takenAt)}',
       button: true,
       child: GestureDetector(
         onTap: () => _showPhotoDetail(photo),
@@ -402,6 +402,7 @@ class _MyPhotosScreenState extends ConsumerState<MyPhotosScreen> {
             ],
           ),
         ),
+      ),
       ),
     );
   }

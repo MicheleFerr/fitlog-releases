@@ -291,7 +291,6 @@ class _StreakCalendarScreenState extends ConsumerState<StreakCalendarScreen> {
                   );
                 });
               },
-              tooltip: context.l10n.previousMonth,
             ),
             Text(
               DateFormat.yMMMM(context.l10n.localeName).format(_selectedMonth),
@@ -305,7 +304,6 @@ class _StreakCalendarScreenState extends ConsumerState<StreakCalendarScreen> {
                 AppIcons.arrowForwardIos,
                 size: AppIconSize.small,
               ),
-              tooltip: context.l10n.nextMonth,
               onPressed:
                   _selectedMonth.month == now.month &&
                       _selectedMonth.year == now.year

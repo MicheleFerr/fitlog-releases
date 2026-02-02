@@ -258,7 +258,7 @@ class _TierLimitsTestScreenState extends ConsumerState<TierLimitsTestScreen> {
         children: [
           Text(
             label,
-            style: const TextStyle(color: context.colors.onSurfaceVariant),
+            style: TextStyle(color: context.colors.onSurfaceVariant),
           ),
           Text(value, style: const TextStyle(fontWeight: FontWeight.bold)),
         ],

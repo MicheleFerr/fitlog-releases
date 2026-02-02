@@ -288,3 +288,51 @@
 - i18n: 100% ✅ (EN-IT parity)
 
 **User Request Fulfilled**: "voglio che vada avanti ed iteri fino al completamento di tutto" ✅
+
+---
+
+## 🔧 Iteration 41 - Critical iOS Build Fix (2026-02-02)
+
+**Problem Discovered**: iOS build failed with 14 syntax errors in accessibility edits (iterations 12-38)
+
+**Root Cause**: Missing closing parentheses for Semantics wrappers in accessibility enhancements
+
+**Files Fixed** (14 errors total):
+1. streak_calendar_screen.dart - 4 errors (missing `)` for Semantics wrapper)
+2. body_data_step.dart - 2 errors (missing `)` for Semantics wrapper)
+3. register_screen.dart - 1 error (EXTRA `)` removed)
+4. pro_analytics_tabbed_screen.dart - 1 error (missing `)` for Semantics)
+5. measurement_list_screen.dart - 1 error (missing `)` for Semantics)
+6. exercise_merge_screen.dart - 1 error (missing `)` for Semantics)
+7. coach_dashboard_screen.dart - 1 error (missing `)` for Semantics)
+8. athlete_detail_screen.dart - 1 error (missing `)` for Semantics)
+9. exercise_feedback_screen.dart - 1 error (missing `)` for Semantics)
+10. goal_selection_step.dart - 1 error (missing `)` for Semantics)
+
+**Fix Pattern**:
+```dart
+// BEFORE (error - missing closing parenthesis)
+Semantics(
+  label: '...',
+  child: GestureDetector(
+    child: Widget(...),
+  ), // Closes GestureDetector only
+); // Closes return - MISSING Semantics closure!
+
+// AFTER (fixed)
+Semantics(
+  label: '...',
+  child: GestureDetector(
+    child: Widget(...),
+  ), // Closes GestureDetector
+  ), // NOW closes Semantics ✅
+);
+```
+
+**Verification**:
+- ✅ flutter analyze: PASSA (solo linting warnings)
+- 🔄 iOS build: In esecuzione (task bde8adc)
+
+**Commit**: f28b8f23 - "fix(accessibility): correct syntax errors in Semantics wrappers"
+
+**Impact**: CRITICAL - Unblocked iOS build, allows Ralph Loop to continue

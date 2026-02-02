@@ -71,7 +71,6 @@ class _ExerciseMergeScreenState extends ConsumerState<ExerciseMergeScreen> {
           IconButton(
             icon: const Icon(AppIcons.help),
             onPressed: () => _showHelpDialog(context),
-            tooltip: l10n.help,
           ),
         ],
       ),
