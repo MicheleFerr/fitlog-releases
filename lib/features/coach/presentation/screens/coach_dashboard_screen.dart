@@ -45,6 +45,7 @@ class CoachDashboardScreen extends ConsumerWidget {
                 onPressed: () {
                   context.pushNamed(AppRoutes.coachSettingsName);
                 },
+                tooltip: context.l10n.settings,
               ),
             ],
           ),
@@ -154,13 +155,17 @@ class _QuickActionCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Material(
-      color: color.withValues(alpha: 0.1),
-      borderRadius: BorderRadius.circular(16),
-      child: InkWell(
-        onTap: onTap,
+    // Accessibility: Quick action card with semantic label
+    return Semantics(
+      label: label,
+      button: true,
+      child: Material(
+        color: color.withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(16),
-        child: Padding(
+        child: InkWell(
+          onTap: onTap,
+          borderRadius: BorderRadius.circular(16),
+          child: Padding(
           padding: const EdgeInsets.symmetric(
             horizontal: AppSpacing.md,
             vertical: AppSpacing.lg,
@@ -307,9 +312,14 @@ class _AthletesSection extends ConsumerWidget {
         if (hasMore || athletes.isNotEmpty)
           SizedBox(
             width: double.infinity,
-            child: TextButton(
-              onPressed: () => _navigateToAthletesList(context),
-              child: Text(context.l10n.viewAllAthletes(athletes.length)),
+            // Accessibility: View all athletes button with semantic label
+            child: Semantics(
+              label: context.l10n.viewAllAthletes(athletes.length),
+              button: true,
+              child: TextButton(
+                onPressed: () => _navigateToAthletesList(context),
+                child: Text(context.l10n.viewAllAthletes(athletes.length)),
+              ),
             ),
           ),
       ],
@@ -347,12 +357,17 @@ class _AthletesSection extends ConsumerWidget {
             textAlign: TextAlign.center,
           ),
           const SizedBox(height: AppSpacing.md),
-          FilledButton.icon(
-            onPressed: () {
-              // TODO: Navigate to add athlete
-            },
-            icon: const Icon(AppIcons.personAdd),
-            label: Text(context.l10n.addAthlete),
+          // Accessibility: Add athlete button with semantic label
+          Semantics(
+            label: context.l10n.addAthlete,
+            button: true,
+            child: FilledButton.icon(
+              onPressed: () {
+                // TODO: Navigate to add athlete
+              },
+              icon: const Icon(AppIcons.personAdd),
+              label: Text(context.l10n.addAthlete),
+            ),
           ),
         ],
       ),
@@ -589,10 +604,15 @@ class _CoachCodeSection extends ConsumerWidget {
               ),
             ),
             const SizedBox(width: AppSpacing.sm),
-            FilledButton.icon(
-              onPressed: () => _shareCode(context, code),
-              icon: const Icon(AppIcons.share, size: 18),
-              label: Text(context.l10n.shareCode),
+            // Accessibility: Share code button with semantic label
+            Semantics(
+              label: context.l10n.shareCode,
+              button: true,
+              child: FilledButton.icon(
+                onPressed: () => _shareCode(context, code),
+                icon: const Icon(AppIcons.share, size: 18),
+                label: Text(context.l10n.shareCode),
+              ),
             ),
           ],
         ),
