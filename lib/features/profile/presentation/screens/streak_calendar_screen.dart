@@ -370,11 +370,16 @@ class _StreakCalendarScreenState extends ConsumerState<StreakCalendarScreen> {
                 date.year == now.year;
             final isFuture = date.isAfter(now);
 
-            return GestureDetector(
-              onTap: hasWorkout || !isFuture
-                  ? () => _showDayDetails(context, date, workouts)
-                  : null,
-              child: DecoratedBox(
+            // Accessibility: Calendar day with semantic label
+            return Semantics(
+              label: '${DateFormat('MMMM d').format(date)}${hasWorkout ? ', has workout' : ''}${isToday ? ', today' : ''}',
+              button: hasWorkout || !isFuture,
+              enabled: hasWorkout || !isFuture,
+              child: GestureDetector(
+                onTap: hasWorkout || !isFuture
+                    ? () => _showDayDetails(context, date, workouts)
+                    : null,
+                child: DecoratedBox(
                 decoration: BoxDecoration(
                   color: hasWorkout
                       ? context.colors.primary
@@ -501,15 +506,19 @@ class _StreakCalendarScreenState extends ConsumerState<StreakCalendarScreen> {
     final totalCells = daysInMonth + (startWeekday - 1);
     final rows = (totalCells / 7).ceil();
 
-    return GestureDetector(
-      onTap: () {
-        HapticFeedback.selectionClick();
-        setState(() {
-          _selectedMonth = DateTime(year, month);
-          _viewMode = _StreakViewMode.monthly;
-        });
-      },
-      child: Column(
+    // Accessibility: Month selector with semantic label
+    return Semantics(
+      label: 'View $monthName $year',
+      button: true,
+      child: GestureDetector(
+        onTap: () {
+          HapticFeedback.selectionClick();
+          setState(() {
+            _selectedMonth = DateTime(year, month);
+            _viewMode = _StreakViewMode.monthly;
+          });
+        },
+        child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           // Month name
@@ -636,15 +645,19 @@ class _StreakCalendarScreenState extends ConsumerState<StreakCalendarScreen> {
   ) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 16),
-      child: GestureDetector(
-        onTap: () {
-          HapticFeedback.selectionClick();
-          setState(() {
-            _selectedMonth = DateTime(year, 1);
-            _viewMode = _StreakViewMode.annual;
-          });
-        },
-        child: Row(
+      // Accessibility: Year selector with semantic label
+      child: Semantics(
+        label: 'View year $year',
+        button: true,
+        child: GestureDetector(
+          onTap: () {
+            HapticFeedback.selectionClick();
+            setState(() {
+              _selectedMonth = DateTime(year, 1);
+              _viewMode = _StreakViewMode.annual;
+            });
+          },
+          child: Row(
           children: [
             // Year label
             SizedBox(
@@ -926,14 +939,18 @@ class _WorkoutCard extends StatelessWidget {
     final timeFormat = DateFormat.Hm(context.l10n.localeName);
     final durationMinutes = workout.duration.inMinutes;
 
-    return GestureDetector(
-      onTap: () {
-        HapticFeedback.lightImpact();
-        Navigator.pop(context);
-        // Navigate to workout history
-        context.pushNamed(AppRoutes.workoutHistoryName);
-      },
-      child: Container(
+    // Accessibility: Workout card with semantic label
+    return Semantics(
+      label: 'View ${workout.name}, ${timeFormat.format(workout.completedAt)}, $durationMinutes minutes',
+      button: true,
+      child: GestureDetector(
+        onTap: () {
+          HapticFeedback.lightImpact();
+          Navigator.pop(context);
+          // Navigate to workout history
+          context.pushNamed(AppRoutes.workoutHistoryName);
+        },
+        child: Container(
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
           color: context.colors.surfaceContainerHighest,
