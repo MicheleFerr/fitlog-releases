@@ -99,9 +99,14 @@ class _LinkCoachScreenState extends ConsumerState<LinkCoachScreen> {
               const SizedBox(height: AppSpacing.md),
 
               // Skip option
-              TextButton(
-                onPressed: _skip,
-                child: Text(context.l10n.noCodeSkip),
+              // Accessibility: Skip button with semantic label
+              Semantics(
+                label: context.l10n.noCodeSkip,
+                button: true,
+                child: TextButton(
+                  onPressed: _skip,
+                  child: Text(context.l10n.noCodeSkip),
+                ),
               ),
             ],
           ),
@@ -302,14 +307,20 @@ class _LinkCoachScreenState extends ConsumerState<LinkCoachScreen> {
   Widget _buildActionButton(BuildContext context) {
     final isEnabled = _foundCoach != null && !_isLoading;
 
-    return FilledButton(
-      onPressed: isEnabled ? _linkToCoach : null,
-      style: FilledButton.styleFrom(
-        minimumSize: const Size(double.infinity, 56),
+    // Accessibility: Link to coach button with semantic label
+    return Semantics(
+      label: context.l10n.linkToCoach,
+      button: true,
+      enabled: isEnabled,
+      child: FilledButton(
+        onPressed: isEnabled ? _linkToCoach : null,
+        style: FilledButton.styleFrom(
+          minimumSize: const Size(double.infinity, 56),
+        ),
+        child: _isLoading
+            ? LoadingIndicator(size: 24, color: context.colors.onPrimary)
+            : Text(context.l10n.linkToCoach),
       ),
-      child: _isLoading
-          ? LoadingIndicator(size: 24, color: context.colors.onPrimary)
-          : Text(context.l10n.linkToCoach),
     );
   }
 
