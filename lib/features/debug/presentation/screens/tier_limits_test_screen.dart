@@ -261,7 +261,7 @@ class _TierLimitsTestScreenState extends ConsumerState<TierLimitsTestScreen> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text(label, style: const TextStyle(color: Colors.grey)),
+          Text(label, style: const TextStyle(color: context.colors.onSurfaceVariant)),
           Text(
             value,
             style: const TextStyle(fontWeight: FontWeight.bold),
@@ -379,7 +379,7 @@ class _TierLimitsTestScreenState extends ConsumerState<TierLimitsTestScreen> {
             }
           },
           selectedColor: account == AccountTier.premium
-              ? Colors.amber
+              ? context.colors.warning
               : context.colors.primary,
           backgroundColor: context.colors.surface,
         );
@@ -395,7 +395,7 @@ class _TierLimitsTestScreenState extends ConsumerState<TierLimitsTestScreen> {
           icon: '🔥',
           label: 'CRITICAL: Premium + 0 XP',
           description: 'Test the main bug fix (Premium should get 999)',
-          color: Colors.red,
+          color: context.colors.error,
           onTap: () {
             setState(() {
               _selectedTier = UserTier.starter;
@@ -413,7 +413,7 @@ class _TierLimitsTestScreenState extends ConsumerState<TierLimitsTestScreen> {
           icon: '📈',
           label: 'Simulate Tier Progression',
           description: 'Starter → Bronze → Silver → Gold → Platinum',
-          color: Colors.blue,
+          color: context.colors.primary,
           onTap: () {
             // TODO: Animate progression
             SnackBarService.showInfo(context, 'Progressing through tiers...');
@@ -427,7 +427,7 @@ class _TierLimitsTestScreenState extends ConsumerState<TierLimitsTestScreen> {
           icon: '🗑️',
           label: 'Reset Custom Exercises',
           description: 'Delete all custom exercises (admin only)',
-          color: Colors.orange,
+          color: context.colors.warning,
           onTap: () {
             // TODO: Implement reset
             SnackBarService.showWarning(
@@ -475,7 +475,7 @@ class _TierLimitsTestScreenState extends ConsumerState<TierLimitsTestScreen> {
                     description,
                     style: TextStyle(
                       fontSize: 12,
-                      color: Colors.grey[600],
+                      color: context.colors.onSurfaceVariant,
                     ),
                   ),
                 ],
@@ -562,7 +562,7 @@ class _TierLimitsTestScreenState extends ConsumerState<TierLimitsTestScreen> {
               style: TextStyle(
                 fontSize: 13,
                 fontWeight: FontWeight.bold,
-                color: matches ? Colors.green : Colors.red,
+                color: matches ? context.colors.success : context.colors.error,
               ),
               textAlign: TextAlign.center,
             ),
@@ -570,7 +570,7 @@ class _TierLimitsTestScreenState extends ConsumerState<TierLimitsTestScreen> {
           Icon(
             matches ? AppIcons.checkCircle : AppIcons.error,
             size: 16,
-            color: matches ? Colors.green : Colors.red,
+            color: matches ? context.colors.success : context.colors.error,
           ),
         ],
       ),
