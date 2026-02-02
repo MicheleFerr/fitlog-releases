@@ -166,10 +166,12 @@ class _MyPhotosScreenState extends ConsumerState<MyPhotosScreen> {
           ),
         ],
       ),
+      // Accessibility: Add photo button with tooltip
       floatingActionButton: FloatingActionButton.extended(
         onPressed: _showCaptureSheet,
         icon: const Icon(AppIcons.camera),
         label: Text(context.l10n.addPhoto),
+        tooltip: context.l10n.addPhoto,
       ),
     );
   }
